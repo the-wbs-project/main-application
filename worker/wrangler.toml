@@ -1,0 +1,22 @@
+name = "wbs-app"
+type = "javascript"
+zone_id = "5491aca876a47684c4b5025af0d4aa32"
+account_id = "ce9999d7d59fce98a0bc0e7911cb6e1f"
+webpack_config = "./workers-site/webpack.config.js"
+compatibility_date = "2021-10-24"
+
+[build]
+command = "yarn && yarn run build"
+[build.upload]
+format = "service-worker"
+
+[site]
+bucket = "./public"
+entry-point = "workers-site"
+
+[env.dev]
+vars = { CORS_URLS = "http://localhost:88" }
+
+[env.prod]
+route = "https://www.thewbsproject.com/*"
+vars = { CORS_URLS = "https://www.thewbsproject.com" }
