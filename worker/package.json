@@ -8,7 +8,8 @@
     "build:watch": "webpack --watch",
     "publish": "wrangler publish --env prod",
     "dev": "miniflare ./workers-site/worker.js -p 88 --wrangler-env dev --kv KVDATA --kv KVAUTH --env local.env --kv-persist kv --watch",
-    "go": "npm run build && concurrently \"npm run dev\" \"npm run build:watch\""
+    "go": "npm run build && concurrently \"npm run dev\" \"npm run build:watch\"",
+    "test": "jest --config jestconfig.json --verbose"
   },
   "author": "author",
   "license": "MIT OR Apache-2.0",
@@ -17,17 +18,25 @@
     "extends": [
       "typescript",
       "prettier"
-    ]
+    ],
+    "rules": {
+      "no-nested-ternary": "error"
+    }
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^3.0.0",
+    "@types/jest": "^27.0.2",
+    "@types/service-worker-mock": "^2.0.1",
     "@typescript-eslint/eslint-plugin": "^4.16.1",
     "@typescript-eslint/parser": "^4.16.1",
     "concurrently": "^6.3.0",
     "eslint": "^7.21.0",
     "eslint-config-prettier": "^8.1.0",
     "eslint-config-typescript": "^3.0.0",
+    "jest": "^27.3.1",
     "prettier": "^2.3.0",
+    "service-worker-mock": "^2.0.5",
+    "ts-jest": "^27.0.7",
     "ts-loader": "^9.2.2",
     "typescript": "^4.3.2",
     "webpack": "^5.38.1",
@@ -35,6 +44,6 @@
   },
   "dependencies": {
     "@cloudflare/kv-asset-handler": "^0.1.3",
-    "tiny-request-router": "^1.2.2"
+    "itty-router": "^2.4.4"
   }
 }

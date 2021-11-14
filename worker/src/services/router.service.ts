@@ -1,44 +1,41 @@
-import { Router, Method } from 'tiny-request-router';
+import { Request, Router } from 'itty-router';
 import { ResponseService } from './response.service';
 import { MailGunService } from './mail-gun.service';
 import { SiteHttpService } from './site.http-service';
 import { WorkerCall } from './worker-call.service';
 
 export class RouterService {
-  private readonly router = new Router();
-  private readonly responses = new ResponseService();
+  private readonly router = Router();
 
   constructor(
     private readonly email: MailGunService,
+    private readonly responses: ResponseService,
     private readonly site: SiteHttpService,
-  ) {}
-
-  setup(): void {
+  ) {
     this.router.options('*', () => this.responses.optionsAsync());
-    this.router.get('*', (call: WorkerCall) =>
-      this.site.getSiteResourceAsync(call),
+    this.router.get('*', (request: Request, call: WorkerCall) =>
+      this.site.getSiteResourceAsync(request, call),
     );
-    this.router.post('/api/send', (call: WorkerCall) =>
-      this.email.handleRequestAsync(call.request),
+    this.router.post('/api/send', (request: Request) =>
+      this.email.handleRequestAsync(request),
     );
   }
 
-  async matchAsync(call: WorkerCall): Promise<Response> {
-    const request = call.request;
-    const path = new URL(request.url).pathname.toLowerCase();
-    const match = this.router.match(request.method as Method, path);
-    if (!match)
-      return new Response('Not Found', {
-        status: 404,
+  async matchAsync(event: FetchEvent): Promise<Response> {
+    const errorHandler = (error: { message: string; status: number }) =>
+      new Response(error.message || 'Server Error', {
+        status: error.status || 500,
       });
 
-    call.params = match.params;
-    //
-    //  decode parameters
-    //
-    for (const name of Object.getOwnPropertyNames(call.params)) {
-      call.params[name] = decodeURIComponent(call.params[name]);
+    const result: Response | number = await this.router
+      .handle(event.request, event)
+      .catch(errorHandler);
+
+    if (typeof result === 'number') {
+      return new Response(null, {
+        status: result,
+      });
     }
-    return await match.handler(call);
+    return result;
   }
 }

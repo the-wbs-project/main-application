@@ -1,4 +1,5 @@
-import { mapRequestToAsset } from '@cloudflare/kv-asset-handler';
+import { mapRequestToAsset, Options } from '@cloudflare/kv-asset-handler';
+import { Request as Request2 } from 'itty-router';
 import { ResponseService } from './response.service';
 import { WorkerCall } from './worker-call.service';
 
@@ -12,9 +13,12 @@ export class SiteHttpService {
   //  return new Response(ROBOT);
   //}
 
-  async getSiteResourceAsync(call: WorkerCall): Promise<Response> {
+  async getSiteResourceAsync(
+    request: Request2,
+    call: WorkerCall,
+  ): Promise<Response> {
     try {
-      const res = await this.getFromKvAsync(call);
+      const res = await this.getFromKvAsync(request, call);
 
       return this.responses.rebuild(res);
     } catch (e) {
@@ -28,13 +32,15 @@ export class SiteHttpService {
     }
   }
 
-  private async getFromKvAsync(call: WorkerCall): Promise<Response> {
-    const options: any = {};
+  private async getFromKvAsync(
+    request: Request2,
+    call: WorkerCall,
+  ): Promise<Response> {
+    const options: Partial<Options> = {};
     options.mapRequestToAsset = this.handlePrefix();
     options.cacheControl = {
-      mapRequestToAsset: this.handlePrefix(),
       bypassCache: false,
-      browserTTL: this.getTtl(call.request),
+      browserTTL: this.getTtl(request),
     };
 
     try {
@@ -91,7 +97,7 @@ export class SiteHttpService {
     };
   }
 
-  private getTtl(request: Request): number | null {
+  private getTtl(request: Request2): number | undefined {
     const path = new URL(request.url).pathname.toLowerCase();
 
     if (
@@ -103,7 +109,5 @@ export class SiteHttpService {
     if (path.indexOf('.ttf') > -1 || path.indexOf('.woff') > -1) return 86400;
     if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1) return 600;
     if (path.indexOf('.ico') > -1) return 600;
-
-    return null;
   }
 }

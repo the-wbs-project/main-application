@@ -1,9 +1,11 @@
+import { Config } from './config.service';
+
 export class ResponseService {
   private readonly headers: { [key: string]: string };
 
-  constructor() {
+  constructor(config: Config) {
     this.headers = {
-      'Access-Control-Allow-Origin': CORS_URLS,
+      'Access-Control-Allow-Origin': config.corsUrl ?? '',
       'Access-Control-Request-Method': 'POST',
     };
   }

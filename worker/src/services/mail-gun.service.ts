@@ -1,42 +1,35 @@
-export interface EmailRequestBlob {
+import { Request } from 'itty-router';
+
+interface EmailRequestBlob {
   email: string;
   name: string;
   subject: string;
   message: string;
 }
-
-export interface EmailData {
-  from: string;
-  to: string;
-  subject: string;
-  text?: string;
-  html?: string;
-  cc?: string;
-  bcc?: string;
-  'h-Reply-To'?: string;
-  'o:testmode'?: boolean;
-}
+declare type EmailData = { [s: string]: string };
 
 export class MailGunService {
-  private urlEncodeObject(obj: { [s: string]: any }) {
+  private urlEncodeObject(obj: EmailData) {
     return Object.keys(obj)
       .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
       .join('&');
   }
 
   async handleRequestAsync(request: Request): Promise<Response> {
+    if (!request.json) return new Response('Error', { status: 500 });
+
     const blob: EmailRequestBlob = await request.json();
     const html = `
     <p>Name: ${blob.name}</p>
     <p>Subject: ${blob.subject}</p>
     <p>Messasge: ${blob.message}</p>`;
-    const data: EmailData = {
+
+    return await this.sendMail({
       from: 'Homepage <homepage@thewbsproject.com>',
       to: 'chrisw@thewbsproject.com',
       subject: `New Inquiry From Homepage`,
       html,
-    };
-    return await this.sendMail(data);
+    });
   }
 
   async sendMail(data: EmailData): Promise<Response> {
