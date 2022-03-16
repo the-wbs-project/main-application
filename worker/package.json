@@ -48,8 +48,8 @@
     "@cloudflare/kv-asset-handler": "^0.1.0",
     "@types/cookie": "^0.4.1",
     "@types/crypto-js": "^4.0.2",
-    "cookie": "^0.4.1",
+    "cookie": "^0.4.2",
     "crypto-js": "^4.1.1",
-    "itty-router": "^2.4.4"
+    "itty-router": "^2.5.2"
   }
 }
