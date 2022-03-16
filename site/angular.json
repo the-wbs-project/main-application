@@ -34,6 +34,8 @@
               "src/assets"
             ],
             "styles": [
+              "src/variables.scss",
+              "src/styles.theme-kendo.scss",
               "src/styles.scss"
             ],
             "scripts": []

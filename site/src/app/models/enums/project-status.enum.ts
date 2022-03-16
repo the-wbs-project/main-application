@@ -1,0 +1,12 @@
+export enum PROJECT_STATI {
+  PLANNING = 'planning',
+  EXECUTION = 'execution',
+  FOLLOW_UP = 'follow-up',
+  CLOSED = 'closed',
+}
+
+export type PROJECT_STATI_TYPE =
+  | PROJECT_STATI.CLOSED
+  | PROJECT_STATI.EXECUTION
+  | PROJECT_STATI.FOLLOW_UP
+  | PROJECT_STATI.PLANNING;

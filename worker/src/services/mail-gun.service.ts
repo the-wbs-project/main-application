@@ -1,4 +1,5 @@
 import { Request } from 'itty-router';
+import { MailgunConfig } from '../config';
 
 interface EmailRequestBlob {
   email: string;
@@ -9,6 +10,8 @@ interface EmailRequestBlob {
 declare type EmailData = { [s: string]: string };
 
 export class MailGunService {
+  constructor(private readonly service: MailgunConfig) {}
+
   private urlEncodeObject(obj: EmailData) {
     return Object.keys(obj)
       .map((k) => encodeURIComponent(k) + '=' + encodeURIComponent(obj[k]))
@@ -37,13 +40,13 @@ export class MailGunService {
     const opts = {
       method: 'POST',
       headers: {
-        Authorization: 'Basic ' + btoa('api:' + MAILGUN_API_KEY),
+        Authorization: 'Basic ' + btoa('api:' + this.service.key),
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': dataUrlEncoded.length.toString(),
       },
       body: dataUrlEncoded,
     };
 
-    return fetch(`${MAILGUN_API_BASE_URL}/messages`, opts);
+    return fetch(`${this.service.url}/messages`, opts);
   }
 }

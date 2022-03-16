@@ -1,0 +1,15 @@
+{
+  "name": "the-wbs-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "data": "npm run --prefix data/tool run:w",
+    "site": "yarn --cwd site run s:app",
+    "worker": "yarn --cwd worker run go"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -15,7 +15,7 @@ bucket = "./public"
 entry-point = "workers-site"
 
 [env.dev]
-vars = { CORS_URLS = "http://localhost:88" }
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55 " }
 
 [env.prod]
 route = "https://www.thewbsproject.com/*"

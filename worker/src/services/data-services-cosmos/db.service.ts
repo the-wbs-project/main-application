@@ -1,20 +1,7 @@
-import {
-  CosmosClient,
-  CosmosClientConfig,
-  QueryDocumentsArgs,
-} from '@cfworker/cosmos';
+import { CosmosClient, QueryDocumentsArgs } from '@cfworker/cosmos';
 import { DbObject } from '../../models';
 
 export class DbService {
-  static getConfiguration(): CosmosClientConfig {
-    return {
-      endpoint: COSMOS_ENDPOINT,
-      masterKey: COSMOS_KEY,
-      collId: COSMOS_COLLECTION,
-      dbId: COSMOS_DB,
-    };
-  }
-
   async getDocumentAsync<T extends DbObject>(
     db: CosmosClient,
     pk: string,

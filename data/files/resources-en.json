@@ -1,0 +1,16 @@
+[{
+    "id": "en",
+    "pk": "Resources",
+    "values": {
+        "General": {},
+        "Pages": {},
+        "Identity": {},
+        "Emails": {},
+        "Landing": {}
+    },
+    "_rid": "cQYYAPHJG8RyAAAAAAAAAA==",
+    "_self": "dbs/cQYYAA==/colls/cQYYAPHJG8Q=/docs/cQYYAPHJG8RyAAAAAAAAAA==/",
+    "_etag": "\"030029b4-0000-0b00-0000-61475a380000\"",
+    "_attachments": "attachments/",
+    "_ts": 1632066104
+  }]

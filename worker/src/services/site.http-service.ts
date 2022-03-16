@@ -1,14 +1,11 @@
 import { mapRequestToAsset, Options } from '@cloudflare/kv-asset-handler';
 import { Request as Request2 } from 'itty-router';
-import { ResponseService } from './response.service';
 import { WorkerCall } from './worker-call.service';
 
 //const ROBOT = `User-agent: *
 //Disallow: /`;
 
 export class SiteHttpService {
-  constructor(private readonly responses: ResponseService) {}
-
   //robot(): Response {
   //  return new Response(ROBOT);
   //}
@@ -18,15 +15,13 @@ export class SiteHttpService {
     call: WorkerCall,
   ): Promise<Response> {
     try {
-      const res = await this.getFromKvAsync(request, call);
-
-      return this.responses.rebuild(res);
+      return await this.getFromKvAsync(request, call);
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
       call.logException(
         'An error occured trying to get a static file.',
         'SiteService.getSiteResourceAsync',
-        e,
+        <Error>e,
       );
       return new Response('Not Found', { status: 404 });
     }
@@ -49,7 +44,7 @@ export class SiteHttpService {
       call.logException(
         'An error occured trying to get a static file from KV.',
         'SiteService.getFromKvAsync',
-        e,
+        <Error>e,
       );
       if (e instanceof Error)
         return new Response(e.message || e.toString(), { status: 500 });

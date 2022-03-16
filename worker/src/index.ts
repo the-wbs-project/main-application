@@ -1,16 +1,10 @@
-import {
-  ConfigEnvironment,
-  MailGunService,
-  ResponseService,
-  RouterService,
-  SiteHttpService,
-} from './services';
+import { EnvironmentConfig } from './config';
+import { MailGunService, RouterService, SiteHttpService } from './services';
 
-const config = new ConfigEnvironment();
-const mailgun = new MailGunService();
-const responses = new ResponseService(config);
-const site = new SiteHttpService(responses);
-const router = new RouterService(mailgun, responses, site);
+const config = new EnvironmentConfig();
+const mailgun = new MailGunService(config.mailgun);
+const site = new SiteHttpService();
+const router = new RouterService(config, mailgun, site);
 
 addEventListener('fetch', (event) => {
   event.respondWith(router.matchAsync(event));

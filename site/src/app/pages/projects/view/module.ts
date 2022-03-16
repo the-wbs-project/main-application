@@ -3,12 +3,17 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { PipeModule } from '@app/pipes';
 import { TranslateModule } from '@ngx-translate/core';
-import { HomeComponent } from './component';
+import { ProjectsViewComponent } from './component';
+import { ProjectSortPipe } from './pipes';
+import { ViewDataResolver } from './services';
 
 const routes: Routes = [
   {
-    path: '',
-    component: HomeComponent,
+    path: ':listType/:filter',
+    component: ProjectsViewComponent,
+    data: {
+      vm: ViewDataResolver,
+    },
   },
 ];
 
@@ -20,6 +25,6 @@ const routes: Routes = [
     TranslateModule,
   ],
   providers: [],
-  declarations: [HomeComponent],
+  declarations: [ProjectSortPipe, ProjectsViewComponent],
 })
-export class HomeModule {}
+export class ProjectsViewModule {}

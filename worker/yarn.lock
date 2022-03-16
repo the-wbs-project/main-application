@@ -309,41 +309,36 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cfworker/cosmos@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@cfworker/cosmos/-/cosmos-1.10.2.tgz#c39153159109ed99cef39d85feccf094ca13befe"
-  integrity sha512-cwTcrNtvDYfMqmH3phiXA9fGoiRphUHDfxXswPjzH2vmo3gofbIO4sJGTX0ve8qXL1EC+OIwIC9emve36ufZAg==
+"@cfworker/cosmos@1.6.10":
+  version "1.6.10"
+  resolved "https://registry.yarnpkg.com/@cfworker/cosmos/-/cosmos-1.6.10.tgz#da1e02767084afe66f96776ac26c17f5751221dd"
+  integrity sha512-l6ZBDZDMqlQhRGiJqTZk/sMSvxm3/FzRRJSMtUQJOfrVey66yUOAWvUOFIaiUqwLtv8q9XlOQF78yxLVgFwj4Q==
   dependencies:
-    "@cfworker/worker-types" "^1.10.2"
+    "@cfworker/worker-types" "^1.6.8"
     "@cloudflare/workers-types" "^2.1.0"
     base64-arraybuffer "^0.2.0"
 
-"@cfworker/uuid@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@cfworker/uuid/-/uuid-1.10.2.tgz#2785628289d44d80acf8af9b773d76532b589ae7"
-  integrity sha512-w/p47shq1lFfAlekyU1TP+1X6Ek7Qz/V2bfbDHC9cFGDqMXT0RsoxrFFyBg2sL8AGRlgSQ9yP6SrwwAY6LJr2Q==
+"@cfworker/uuid@^1.9.1":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@cfworker/uuid/-/uuid-1.12.0.tgz#9845cf592e1f4af52a1486ab60641d9731477d8c"
+  integrity sha512-IgT5lbJ2CbFmDRgo4pTpB+Bn0eORTIkq3soblPG98KDcGEHw+hQl68NeeC99L/WZ9o37EP5raqxHdXxwKLxkcA==
 
-"@cfworker/worker-types@^1.10.2":
-  version "1.10.2"
-  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.10.2.tgz#3c975ef4855346571656c3f754491a68192417a8"
-  integrity sha512-dj+T8Ph11+IIhjF2dqGfIDcc3BCS7PJEITBWAxsbLpK12T6V6YNNnYgS48UFtwsuaJLiLuK08sIEYDPSOxF5+g==
+"@cfworker/worker-types@^1.6.8":
+  version "1.12.0"
+  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.0.tgz#6ccaaaf4d37df6737ccfcae1cbc0458157e8031e"
+  integrity sha512-RejonzXzGHBkNNE8vLppN6PRnN+SsjfH1II44ZeYp2lJVu+7/h+L1jt6vrdi2enl4grhfFO5LC6z1/2QjfG3yg==
 
-"@cloudflare/kv-asset-handler@^0.1.3":
+"@cloudflare/kv-asset-handler@^0.1.0":
   version "0.1.3"
   resolved "https://registry.yarnpkg.com/@cloudflare/kv-asset-handler/-/kv-asset-handler-0.1.3.tgz#3eaaf962b16c48a7189db5d5ac1c4dca4e2ed1a0"
   integrity sha512-FNcunDuTmEfQTLRLtA6zz+buIXUHj1soPvSWzzQFBC+n2lsy+CGf/NIrR3SEPCmsVNQj70/Jx2lViCpq+09YpQ==
   dependencies:
     mime "^2.5.2"
 
-"@cloudflare/workers-types@^2.1.0":
+"@cloudflare/workers-types@^2.1.0", "@cloudflare/workers-types@^2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-2.2.2.tgz#1bced16bba801d7af987da835467545bb5cc7ac6"
   integrity sha512-kaMn2rueJ0PL1TYVGknTCh0X0x0d9G+FNXAFep7/4uqecEZoQb/63o6rOmMuiqI09zLuHV6xhKRXinokV/MY9A==
-
-"@cloudflare/workers-types@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-3.0.0.tgz#9d8e7b691115db8fb3f24f8d39b79e2f875638ea"
-  integrity sha512-RsasworfxdRyZC2iBN2Okgziydaq52uTStENePdH2JTmoA0bki53jOchvznk+ezu34WyXQLDpk4ogGyQ6BSVkw==
 
 "@discoveryjs/json-ext@^0.5.0":
   version "0.5.5"
@@ -3535,10 +3530,10 @@ typedarray-to-buffer@^3.1.5:
   dependencies:
     is-typedarray "^1.0.0"
 
-typescript@^4.3.2:
-  version "4.4.4"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-4.4.4.tgz#2cd01a1a1f160704d3101fd5a58ff0f9fcb8030c"
-  integrity sha512-DqGhF5IKoBl8WNf8C1gu8q0xZSInh9j1kJJMqT3a94w1JzVaBU4EXOSMrz9yDqMT0xt3selp83fuFMQ0uzv6qA==
+typescript@^3.9.7:
+  version "3.9.10"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-3.9.10.tgz#70f3910ac7a51ed6bef79da7800690b19bf778b8"
+  integrity sha512-w6fIxVE/H1PkLKcCPsFqKE7Kv7QUwhU8qQY2MueZXWx5cPZdwFupLgKK3vntcK98BtNHZtAF4LA/yl2a7k8R6Q==
 
 universalify@^0.1.2:
   version "0.1.2"

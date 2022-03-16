@@ -10,4 +10,5 @@ export interface Project {
   roles: any[];
   activity: Activity[];
   thread: any;
+  lastModified: Date;
 }

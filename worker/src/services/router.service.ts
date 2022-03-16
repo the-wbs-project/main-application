@@ -1,5 +1,6 @@
 import { Request, Router } from 'itty-router';
-import { ResponseService } from './response.service';
+import { Config } from '../config';
+import { Logger } from './logger.service';
 import { MailGunService } from './mail-gun.service';
 import { SiteHttpService } from './site.http-service';
 import { WorkerCall } from './worker-call.service';
@@ -8,11 +9,11 @@ export class RouterService {
   private readonly router = Router();
 
   constructor(
+    private readonly config: Config,
     private readonly email: MailGunService,
-    private readonly responses: ResponseService,
     private readonly site: SiteHttpService,
   ) {
-    this.router.options('*', () => this.responses.optionsAsync());
+    this.router.options('*', () => new Response(''));
     this.router.get('*', (request: Request, call: WorkerCall) =>
       this.site.getSiteResourceAsync(request, call),
     );
@@ -27,8 +28,14 @@ export class RouterService {
         status: error.status || 500,
       });
 
+    const call = new WorkerCall(
+      this.config.db,
+      new Logger(this.config.appInsightsKey, event.request),
+      event,
+    );
+
     const result: Response | number = await this.router
-      .handle(event.request, event)
+      .handle(event.request, call)
       .catch(errorHandler);
 
     if (typeof result === 'number') {

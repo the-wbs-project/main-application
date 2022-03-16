@@ -1,4 +1,6 @@
-export interface TrainingMaterial {
+import { TaggedObject } from './app-models';
+
+export interface TrainingMaterial extends TaggedObject {
   id: string;
   name: string;
   tags: string[];
@@ -8,5 +10,4 @@ export interface TrainingMaterial {
   suggestions: any[];
   documents: any[];
   links: any[];
-  
 }
