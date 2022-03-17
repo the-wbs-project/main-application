@@ -1,48 +1,35 @@
 import { Request, Router } from 'itty-router';
 import { Config } from '../config';
-import { Logger } from './logger.service';
+import { HttpServiceFactory } from './http-services';
 import { MailGunService } from './mail-gun.service';
-import { SiteHttpService } from './site.http-service';
-import { WorkerCall } from './worker-call.service';
+import { WorkerRequest } from './worker-request.service';
 
 export class RouterService {
-  private readonly router = Router();
+  private readonly router = Router<WorkerRequest>();
 
   constructor(
     private readonly config: Config,
     private readonly email: MailGunService,
-    private readonly site: SiteHttpService,
+    private readonly http: HttpServiceFactory,
   ) {
     this.router.options('*', () => new Response(''));
-    this.router.get('*', (request: Request, call: WorkerCall) =>
-      this.site.getSiteResourceAsync(request, call),
+    this.router.get('/logout', () =>
+      Response.redirect(this.config.auth.logoutCallbackUrl),
     );
     this.router.post('/api/send', (request: Request) =>
       this.email.handleRequestAsync(request),
     );
+    this.router.get('*', (request: WorkerRequest) =>
+      this.http.site.getSiteResourceAsync(request),
+    );
   }
 
-  async matchAsync(event: FetchEvent): Promise<Response> {
-    const errorHandler = (error: { message: string; status: number }) =>
-      new Response(error.message || 'Server Error', {
-        status: error.status || 500,
-      });
+  async matchAsync(req: WorkerRequest): Promise<Response> {
+    const responseOrCode = await this.router.handle(req);
 
-    const call = new WorkerCall(
-      this.config.db,
-      new Logger(this.config.appInsightsKey, event.request),
-      event,
-    );
+    if (typeof responseOrCode === 'number')
+      return new Response('', { status: responseOrCode });
 
-    const result: Response | number = await this.router
-      .handle(event.request, call)
-      .catch(errorHandler);
-
-    if (typeof result === 'number') {
-      return new Response(null, {
-        status: result,
-      });
-    }
-    return result;
+    return responseOrCode;
   }
 }

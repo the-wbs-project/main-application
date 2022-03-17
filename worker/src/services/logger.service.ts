@@ -1,24 +1,19 @@
 import * as cookie from 'cookie';
 
 export class Logger {
-  private readonly tags: { [key: string]: string | null };
   private readonly namePrefix: string;
   private readonly logs: any[] = [];
 
-  constructor(
-    private readonly appInsightsKey: string,
-    private readonly request: Request,
-  ) {
+  constructor(private readonly appInsightsKey: string) {
     this.namePrefix = `Microsoft.ApplicationInsights.${this.appInsightsKey.replace(
       /-/g,
       '',
     )}`;
-    this.tags = this.getTags(request);
   }
 
-  trackRequest(response: Response, duration: number): void {
-    const tags = { ...this.tags };
-    const cf: Partial<IncomingRequestCfProperties> = this.request.cf || {};
+  trackRequest(request: Request, response: Response, duration: number): void {
+    const tags = this.getTags(request);
+    const cf: any = request.cf || {};
 
     // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
     this.logs.push({
@@ -33,24 +28,29 @@ export class Logger {
           id: this.generateUniqueId(),
           properties: {
             // You can add more properties if needed
-            HttpReferer: this.request.headers.get('Referer'),
+            HttpReferer: request.headers.get('Referer'),
             Country: cf.country,
             City: cf.city,
           },
           measurements: {},
           responseCode: response.status,
           success: response.status >= 200 && response.status < 400,
-          url: this.request.url,
-          source: this.request.headers.get('CF-Connecting-IP') || '',
+          url: request.url,
+          source: request.headers.get('CF-Connecting-IP') || '',
           duration, //: 1, // Cloudflare doesn't allow to measure duration. performance.now() is not implemented, and new Date() always return the same value
         },
       },
     });
   }
 
-  trackException(message: string, location: string, exception: Error): void {
-    const tags = { ...this.tags };
-    const cf: Partial<IncomingRequestCfProperties> = this.request.cf || {};
+  trackException(
+    request: Request,
+    message: string,
+    location: string,
+    exception: Error,
+  ): void {
+    const tags = this.getTags(request);
+    const cf: any = request.cf || {};
 
     // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
     this.logs.push({
@@ -64,7 +64,7 @@ export class Logger {
           ver: 2,
           properties: {
             // You can add more properties if needed
-            HttpReferer: this.request.headers.get('Referer'),
+            HttpReferer: request.headers.get('Referer'),
             Country: cf.country,
             City: cf.city,
             Message: message,
@@ -77,7 +77,7 @@ export class Logger {
               typeName: 'Error',
               hasFullStack: false,
               message: exception.message,
-              stack: exception.stack ? exception.stack.toString() : null,
+              stack: exception?.stack?.toString(),
             },
           ],
         },
@@ -86,15 +86,16 @@ export class Logger {
   }
 
   trackDependency(
+    request: Request,
     url: string,
-    method: string,
+    method: string | undefined,
     duration: number,
     response: Response | null,
   ): void {
     const url2 = new URL(url);
-    const tags = { ...this.tags };
+    const tags = this.getTags(request);
     const name = `${method} ${url2.pathname}`;
-    const cf: Partial<IncomingRequestCfProperties> = this.request.cf || {};
+    const cf: any = request.cf || {};
 
     // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
     this.logs.push({
@@ -115,9 +116,9 @@ export class Logger {
             Country: cf.country,
             City: cf.city,
           },
-          resultCode: response?.status,
+          resultCode: (response || {}).status,
           success:
-            (response?.status === 200 || response?.status === 204) ?? false,
+            response && (response.status === 200 || response.status === 204),
           target: url2.hostname,
           type: 'Worker',
         },
@@ -132,10 +133,10 @@ export class Logger {
     });
   }
 
-  private getTags(request: Request): { [key: string]: string | null } {
+  private getTags(request: Request): { [key: string]: string } {
     const cookieValue = request.headers.get('Cookie');
-    const tags: { [key: string]: string | null } = {
-      'ai.location.ip': request.headers.get('CF-Connecting-IP'),
+    const tags: { [key: string]: string } = {
+      'ai.location.ip': <string>request.headers.get('CF-Connecting-IP'),
     };
 
     if (cookieValue) {

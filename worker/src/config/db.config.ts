@@ -1,6 +1,5 @@
 export interface DbConfig {
-  collId: string;
-  dbId: string;
+  database: string;
   endpoint: string;
   key: string;
 }
