@@ -1,19 +1,16 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {} from '@app/actions';
-import { Project, PROJECT_FILTER, PROJECT_STATI } from '@app/models';
+import { ProjectLite, PROJECT_FILTER, PROJECT_STATI } from '@app/models';
 import { StartupService } from '@app/services';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 
-interface Bucket {
-  list: Project[];
-  watched: Project[];
+interface StateModel {
+  list: ProjectLite[];
+  watched: ProjectLite[];
   navType: PROJECT_FILTER | null;
 }
 
 @Injectable()
-@State<Bucket>({
+@State<StateModel>({
   name: 'projects',
   defaults: {
     list: [],
@@ -25,56 +22,56 @@ export class ProjectState implements NgxsOnInit {
   constructor(private readonly loader: StartupService) {}
 
   @Selector()
-  static list(state: Bucket): Project[] {
-    return state?.list;
+  static list(state: StateModel): ProjectLite[] {
+    return state.list;
   }
 
   @Selector()
-  static watched(state: Bucket): Project[] {
-    return state?.watched;
+  static watched(state: StateModel): ProjectLite[] {
+    return state.watched;
   }
 
   @Selector()
-  static count(state: Bucket): number {
+  static count(state: StateModel): number {
     return ProjectState.list(state).length;
   }
 
   @Selector()
-  static planningList(state: Bucket): Project[] {
+  static planningList(state: StateModel): ProjectLite[] {
     return state?.list.filter((x) => x.status === PROJECT_STATI.PLANNING);
   }
 
   @Selector()
-  static planningCount(state: Bucket): number {
+  static planningCount(state: StateModel): number {
     return ProjectState.planningList(state).length;
   }
 
   @Selector()
-  static executionList(state: Bucket): Project[] {
+  static executionList(state: StateModel): ProjectLite[] {
     return state?.list.filter((x) => x.status === PROJECT_STATI.EXECUTION);
   }
 
   @Selector()
-  static executionCount(state: Bucket): number {
+  static executionCount(state: StateModel): number {
     return ProjectState.executionList(state).length;
   }
 
   @Selector()
-  static followupList(state: Bucket): Project[] {
+  static followupList(state: StateModel): ProjectLite[] {
     return state?.list.filter((x) => x.status === PROJECT_STATI.FOLLOW_UP);
   }
 
   @Selector()
-  static followupCount(state: Bucket): number {
+  static followupCount(state: StateModel): number {
     return ProjectState.followupList(state).length;
   }
 
   @Selector()
-  static navType(state: Bucket): PROJECT_FILTER | null {
+  static navType(state: StateModel): PROJECT_FILTER | null {
     return state.navType;
   }
 
-  ngxsOnInit(ctx: StateContext<Bucket>) {
+  ngxsOnInit(ctx: StateContext<StateModel>) {
     ctx.patchState({
       list: this.loader.myProjects ?? [],
       watched: this.loader.watchedProjects ?? [],

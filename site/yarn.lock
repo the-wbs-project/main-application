@@ -1787,6 +1787,14 @@
     "@telerik/kendo-draggable" "^2.2.0"
     tslib "^1.9.0"
 
+"@progress/kendo-angular-notification@^3.0.5":
+  version "3.0.5"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-notification/-/kendo-angular-notification-3.0.5.tgz#10c04d4011a355ff47b89da55610ae41874850d1"
+  integrity sha512-VJz3jyVdtK1cvlYSI6vKg9p4A1Wqld7K0EudIJER35VPc7X7/ot9LfJ2qsq5CUyVcEpuRXh+0xgnFp0ASPCk/w==
+  dependencies:
+    "@progress/kendo-schematics" "^2.0.0"
+    tslib "^1.9.0"
+
 "@progress/kendo-angular-popup@^4.0.5":
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/@progress/kendo-angular-popup/-/kendo-angular-popup-4.0.5.tgz#33a03947624a211f99a8b1774072b6ba2fe3209d"

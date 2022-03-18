@@ -1,9 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Project } from '@app/models';
+import { Project, ProjectLite } from '@app/models';
 import { TitleService } from '@app/services';
-import { AuthState } from '@app/states';
-import { Select, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectsViewModel } from './view-models';
@@ -14,7 +13,7 @@ import { ProjectsViewModel } from './view-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsViewComponent {
-  readonly projects$: Observable<Project[]>;
+  readonly projects$: Observable<ProjectLite[]>;
   readonly filters$: Observable<string[]>;
 
   constructor(

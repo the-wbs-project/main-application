@@ -1,11 +1,10 @@
 import { Injectable } from '@angular/core';
-import { User } from '@app/models';
-import { Project } from '@app/models/project.model';
+import { ProjectLite, User } from '@app/models';
 
 @Injectable({ providedIn: 'root' })
 export class StartupService {
-  private _myProjects: Project[] | undefined;
-  private _watchedProjects: Project[] | undefined;
+  private _myProjects: ProjectLite[] | undefined;
+  private _watchedProjects: ProjectLite[] | undefined;
   private _resources: any | undefined;
   private _user: User | undefined;
 
@@ -13,7 +12,7 @@ export class StartupService {
     this.initiate();
   }
 
-  get myProjects(): Project[] | undefined {
+  get myProjects(): ProjectLite[] | undefined {
     return this._myProjects;
   }
 
@@ -25,7 +24,7 @@ export class StartupService {
     return this._user;
   }
 
-  get watchedProjects(): Project[] | undefined {
+  get watchedProjects(): ProjectLite[] | undefined {
     return this._watchedProjects;
   }
 

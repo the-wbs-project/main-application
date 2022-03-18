@@ -16,7 +16,11 @@ export class RouterService {
     this.router.get('/logout', () =>
       Response.redirect(this.config.auth.logoutCallbackUrl),
     );
-    this.router.post('/api/send', (request: Request) =>
+    this.router.get(
+      '/api/projects/:ownerId/:projectId',
+      (request: WorkerRequest) => this.http.project.getByIdAsync(request),
+    );
+    this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
     );
     this.router.get('*', (request: WorkerRequest) =>

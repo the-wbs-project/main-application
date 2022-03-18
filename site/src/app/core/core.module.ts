@@ -8,8 +8,10 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { IconModule } from '@progress/kendo-angular-icons';
 import { DrawerModule } from '@progress/kendo-angular-layout';
+import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ToastrModule } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 import {
@@ -26,7 +28,7 @@ import {
   ProjectListFilterPipe,
 } from './pipes';
 import { AuthState, ProjectState } from '../states';
-import { NavbarComponent } from './components';
+import { DirectivesModule } from './directives';
 
 @NgModule({
   imports: [
@@ -34,6 +36,8 @@ import { NavbarComponent } from './components';
     BrowserAnimationsModule,
     ButtonModule,
     CommonModule,
+    DialogModule,
+    DirectivesModule,
     DrawerModule,
     HttpClientModule,
     IconModule,
@@ -42,6 +46,7 @@ import { NavbarComponent } from './components';
       disabled: environment.production,
     }),
     NgxsRouterPluginModule.forRoot(),
+    NotificationModule,
     ToastrModule.forRoot(),
     TranslateModule.forRoot(),
   ],

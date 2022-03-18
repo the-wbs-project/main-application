@@ -1,3 +1,4 @@
+export * from './data-services';
 export * from './analytics.service';
 export * from './app-initializer.service';
 export * from './container.service';

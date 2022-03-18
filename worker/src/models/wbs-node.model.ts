@@ -3,5 +3,5 @@ export interface WbsNode {
   title: string;
   parentWbsId?: string | null;
   parentNodeId?: string | null;
-  levels: { [phase: string]: number[] };
+  levels: { p: number[]; d: number[] };
 }

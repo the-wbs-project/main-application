@@ -139,19 +139,18 @@ export class SiteHttpService {
     req: WorkerRequest,
     response: Response,
   ): Promise<Response> {
-    return response; /*
     const data = JSON.stringify(
-      await req.data.initial.getHydrateDataAsync(req.user)
+      await req.data.initial.getHydrateDataAsync(req.user),
     );
     return new HTMLRewriter()
-      .on("head", new ElementHandler(this.config.appInsightsSnippet))
+      .on('head', new ElementHandler(this.config.appInsightsSnippet))
       .on(
-        "head",
+        'head',
         new ElementHandler(
-          `<script id="edge_state" type="application/json">${data}</script>`
-        )
+          `<script id="edge_state" type="application/json">${data}</script>`,
+        ),
       )
-      .transform(response); */
+      .transform(response);
   }
 
   private isHtml(hdrs: Headers): boolean {

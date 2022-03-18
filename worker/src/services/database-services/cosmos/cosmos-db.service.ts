@@ -12,7 +12,6 @@ export class CosmosDbService implements DbService {
     config: Config,
     container: string,
     logger: Logger,
-    mainRequest: Request,
     private readonly pkVariable = 'pk',
   ) {
     this.db = new CosmosClient({
@@ -21,7 +20,7 @@ export class CosmosDbService implements DbService {
       dbId: config.db.database,
       collId: container,
       fetch: (info: RequestInfo, init?: RequestInit) => {
-        return myFetch(mainRequest, logger, info, init);
+        return myFetch(logger, info, init);
       },
     });
   }

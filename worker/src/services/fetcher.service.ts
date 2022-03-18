@@ -1,7 +1,6 @@
 import { Logger } from './logger.service';
 
 export async function myFetch(
-  mainRequest: Request,
   logger: Logger,
   input: Request | string,
   init?: RequestInit,
@@ -17,6 +16,6 @@ export async function myFetch(
     return response;
   } finally {
     const duration = (new Date().getTime() - start.getTime()) * 1000;
-    logger.trackDependency(mainRequest, url, method, duration, response);
+    logger.trackDependency(url, method, duration, response);
   }
 }

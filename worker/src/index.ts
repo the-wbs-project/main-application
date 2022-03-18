@@ -7,12 +7,13 @@ import { Logger } from './services/logger.service';
 
 let services: ServiceFactory | undefined;
 const config = new EnvironmentConfig();
-const logger = new Logger(config.appInsightsKey);
 
 addEventListener('fetch', (event) => {
   if (!services) services = new ServiceFactory(config);
+
+  const logger = new Logger(config.appInsightsKey, event.request);
   const edge = new CloudflareEdgeService(config, event);
-  const cosmos = new CosmosFactory(config, logger, event.request);
+  const cosmos = new CosmosFactory(config, logger);
   const request = new WorkerRequest(event, cosmos, edge, logger);
 
   event.respondWith(services.router.matchAsync(request));

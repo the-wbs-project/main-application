@@ -58,10 +58,10 @@ export class WorkerRequest {
     console.log(message);
     console.log(location);
     console.log(err);
-    this.logger.trackException(this.request, message, location, err);
+    this.logger.trackException(message, location, err);
   }
 
   myFetch(input: string | Request, init?: RequestInit): Promise<Response> {
-    return myFetch(this.request, this.logger, input, init);
+    return myFetch(this.logger, input, init);
   }
 }

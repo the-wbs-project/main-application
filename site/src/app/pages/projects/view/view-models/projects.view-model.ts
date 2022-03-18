@@ -1,7 +1,7 @@
-import { Project } from '@app/models';
+import { Project, ProjectLite } from '@app/models';
 
 export interface ProjectsViewModel {
   title: string;
-  projects: Project[];
+  projects: ProjectLite[];
   filters: string[];
 }
