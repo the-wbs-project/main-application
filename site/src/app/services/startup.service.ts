@@ -1,10 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ProjectLite, User } from '@app/models';
+import { Category, ProjectLite, User } from '@app/models';
 
 @Injectable({ providedIn: 'root' })
 export class StartupService {
-  private _myProjects: ProjectLite[] | undefined;
-  private _watchedProjects: ProjectLite[] | undefined;
+  private _categoriesDiscipline: Category[] | undefined;
+  private _categoriesPhase: Category[] | undefined;
+  private _projectsMy: ProjectLite[] | undefined;
+  private _projectsWatched: ProjectLite[] | undefined;
   private _resources: any | undefined;
   private _user: User | undefined;
 
@@ -12,8 +14,20 @@ export class StartupService {
     this.initiate();
   }
 
-  get myProjects(): ProjectLite[] | undefined {
-    return this._myProjects;
+  get categoriesDiscipline(): Category[] | undefined {
+    return this._categoriesDiscipline;
+  }
+
+  get categoriesPhase(): Category[] | undefined {
+    return this._categoriesPhase;
+  }
+
+  get projectsMy(): ProjectLite[] | undefined {
+    return this._projectsMy;
+  }
+
+  get projectsWatched(): ProjectLite[] | undefined {
+    return this._projectsWatched;
   }
 
   get resources(): any | undefined {
@@ -24,19 +38,16 @@ export class StartupService {
     return this._user;
   }
 
-  get watchedProjects(): ProjectLite[] | undefined {
-    return this._watchedProjects;
-  }
-
   private initiate(): void {
     const elem = document.getElementById('edge_state');
 
     if (elem?.innerHTML) {
       const data = JSON.parse(elem.innerHTML);
-      this._myProjects = data.myProjects;
+      this._categoriesDiscipline = data.categoriesDiscipline;
+      this._categoriesPhase = data.categoriesPhase;
+      this._projectsMy = data.projects;
       this._resources = data.resources;
       this._user = data.user;
-      this._watchedProjects = data.watchedProjects;
       console.log(data);
     }
   }

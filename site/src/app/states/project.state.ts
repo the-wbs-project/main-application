@@ -73,8 +73,8 @@ export class ProjectState implements NgxsOnInit {
 
   ngxsOnInit(ctx: StateContext<StateModel>) {
     ctx.patchState({
-      list: this.loader.myProjects ?? [],
-      watched: this.loader.watchedProjects ?? [],
+      list: this.loader.projectsMy ?? [],
+      watched: this.loader.projectsWatched ?? [],
     });
   }
 }

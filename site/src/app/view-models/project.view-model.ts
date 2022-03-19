@@ -1,11 +1,17 @@
-import { Activity, ProjectLite } from '@app/models';
-import { WbsNodeViewModel } from './wbs-node.view-model';
+import {
+  Activity,
+  Category,
+  ProjectLite,
+  PROJECT_VIEW_TYPE,
+  WbsNode,
+} from '@app/models';
 
 export interface ProjectViewModel extends ProjectLite {
-  nodes: WbsNodeViewModel[];
-  wbsId: string;
-  nodeChanges: any[];
-  roles: any[];
   activity: Activity[];
-  thread: any;
+  categories: Map<PROJECT_VIEW_TYPE, Category[]>;
+  nodeChanges?: any[];
+  nodes: WbsNode[];
+  roles?: any[];
+  thread?: any;
+  wbsId?: string | null;
 }

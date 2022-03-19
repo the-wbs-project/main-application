@@ -1,0 +1,16 @@
+<div *ngIf="nodes" appFillElement [paddingBottom]="20">
+  <kendo-treelist
+    kendoTreeListExpandable
+    [kendoTreeListHierarchyBinding]="nodes"
+    childrenField="children"
+    idField="level"
+  >
+    <kendo-treelist-column
+      field="level"
+      title="Level"
+      [width]="80"
+    ></kendo-treelist-column>
+    <kendo-treelist-column [expandable]="true" field="title" title="Name">
+    </kendo-treelist-column>
+  </kendo-treelist>
+</div>

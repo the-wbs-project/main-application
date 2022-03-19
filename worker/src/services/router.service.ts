@@ -4,6 +4,13 @@ import { HttpServiceFactory } from './http-services';
 import { MailGunService } from './mail-gun.service';
 import { WorkerRequest } from './worker-request.service';
 
+export const PRE_ROUTES: string[] = [
+  '/manifest.json',
+  '/assets/*',
+  '/*.js',
+  '/*.map',
+  '/*.css',
+];
 export class RouterService {
   private readonly router = Router<WorkerRequest>();
 
@@ -23,8 +30,15 @@ export class RouterService {
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
     );
-    this.router.get('*', (request: WorkerRequest) =>
-      this.http.site.getSiteResourceAsync(request),
+    for (const path of PRE_ROUTES) {
+      this.router.get(path, (request: WorkerRequest) =>
+        this.http.site.getSiteResourceAsync(request),
+      );
+    }
+    this.router.get(
+      '*',
+      (request: WorkerRequest) => this.http.site.getSiteResourceAsync(request),
+      //this.http.site.getSiteAsync(request),
     );
   }
 

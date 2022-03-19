@@ -15,7 +15,7 @@ bucket = "./public"
 entry-point = "workers-site"
 
 [env.dev]
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55 " }
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
 
 [env.prod]
 route = "https://www.thewbsproject.com/*"

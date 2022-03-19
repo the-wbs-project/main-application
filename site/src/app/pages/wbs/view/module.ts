@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PipeModule } from '@app/pipes';
+import { WbsTreeModule } from '@app/features';
+import { SharedModule } from '@app/shared';
 import { TranslateModule } from '@ngx-translate/core';
 import { HomeComponent } from './component';
 
@@ -15,9 +16,10 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
-    PipeModule,
     RouterModule.forChild(routes),
+    SharedModule,
     TranslateModule,
+    WbsTreeModule,
   ],
   providers: [],
   declarations: [HomeComponent],

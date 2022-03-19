@@ -11,10 +11,14 @@ export interface ProjectLite {
 }
 
 export interface Project extends ProjectLite {
-  nodes: WbsNode[];
-  wbsId: string;
-  nodeChanges: any[];
-  roles: any[];
   activity: Activity[];
-  thread: any;
+  categories: {
+    d: string[];
+    p: string[];
+  };
+  nodeChanges?: any[];
+  nodes: WbsNode[];
+  roles?: any[];
+  thread?: any;
+  wbsId?: string | null;
 }

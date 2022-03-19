@@ -18,5 +18,29 @@
   >
   </kendo-drawer>
 
-  <kendo-drawer-content> Hello </kendo-drawer-content>
+  <kendo-drawer-content>
+    Hello
+    <br />
+    <br />
+    <kendo-buttongroup selection="single">
+      <button
+        kendoButton
+        [toggleable]="true"
+        (click)="viewChanged('phase')"
+        [selected]="(view$ | async) === 'phase'"
+      >
+        {{ "General.Phase" | translate }}
+      </button>
+      <button
+        kendoButton
+        [toggleable]="true"
+        (click)="viewChanged('discipline')"
+        [selected]="(view$ | async) === 'discipline'"
+      >
+        {{ "General.Discipline" | translate }}
+      </button>
+    </kendo-buttongroup>
+    <br />
+    <wbs-tree [nodes]="nodes$ | async"></wbs-tree>
+  </kendo-drawer-content>
 </kendo-drawer-container>

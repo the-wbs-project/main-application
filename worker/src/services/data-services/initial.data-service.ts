@@ -19,11 +19,11 @@ export class InitialDataService {
       this.project.getAsync('acme_engineering', '123'),
     ]);
     return {
-      user,
-      phaseCats,
-      disciplineCats,
-      resources: resources?.values,
+      categoriesDiscipline: disciplineCats?.values,
+      categoriesPhase: phaseCats?.values,
       projects: [project],
+      resources: resources?.values,
+      user,
     };
   }
 }

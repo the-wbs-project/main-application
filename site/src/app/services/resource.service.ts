@@ -11,8 +11,7 @@ import { tap } from 'rxjs/operators';
 type MissingResource = {
   key: string;
   culture: string;
-  category: string;
-  name: string;
+  path: string;
 };
 
 @Injectable({ providedIn: 'root' })
@@ -46,30 +45,19 @@ export class Resources extends MissingTranslationHandler {
     }
   }
 
-  get(resource: string | string[], defaultValue?: string): string {
+  get(resource: string, defaultValue?: string): string {
     if (resource == null) return 'EMPTY';
 
-    let group: string | null = null;
-    let name: string | null = null;
-
-    if (typeof resource === 'string') {
-      const index = resource.indexOf('.');
-      group = resource.substring(0, index);
-      name = resource.substring(index + 1, resource.length);
-    } else if (Array.isArray(resource) && (<string[]>resource).length === 2) {
-      group = resource[0];
-      name = resource[1];
-    } else {
-      return 'INVALID';
-    }
+    const parts = resource.split('.');
 
     try {
       for (const resource of this.resources) {
         if (resource != null) {
-          const category = resource[group];
-          const value = category == null ? null : category[name];
-
-          if (value) return value;
+          let x = resource;
+          for (const part of parts) {
+            x = x[part];
+          }
+          if (x) return x;
         }
       }
       //
@@ -77,16 +65,16 @@ export class Resources extends MissingTranslationHandler {
       //
       let value: any;
 
-      if (value == null) this.recordMissing(group, name);
+      if (value == null) this.recordMissing(resource);
 
       return value != null
         ? value
         : defaultValue != null
         ? defaultValue
-        : `${group}.${name}`;
+        : resource;
     } catch (e) {
-      console.error(`Error trying to retrieve '${group}.${name}}' value.`);
-      return defaultValue == null ? `${group}.${name}` : defaultValue;
+      console.error(`Error trying to retrieve '${resource}' value.`);
+      return defaultValue == null ? 'resource' : defaultValue;
     }
   }
 
@@ -97,24 +85,12 @@ export class Resources extends MissingTranslationHandler {
     if (typeof key === 'string') {
       if (this.redeemed.indexOf(key) > -1) return key;
 
-      const parts = key.split('.');
-
-      if (parts.length === 1) {
-        console.log('Redeemed: ' + key);
-        this.redeemed.push(key);
-        return key;
-      }
-
-      this.recordMissing(parts[0], parts[1]);
+      this.recordMissing(key);
     }
     return params.key;
   }
 
-  private recordMissing(category: string, name: string): void {
-    if (category == null || category.trim() === '') category = 'none';
-    if (name == null || name.trim() === '') name = 'none';
-
-    const path = `${category}.${name}`;
+  private recordMissing(path: string): void {
     const key = `${this.culture}-${path}`;
 
     if (
@@ -126,8 +102,7 @@ export class Resources extends MissingTranslationHandler {
     try {
       this._missingQueue.push({
         key,
-        category,
-        name,
+        path,
         culture: this.culture,
       });
     } catch (e) {

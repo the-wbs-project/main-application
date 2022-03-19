@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
 
 @UntilDestroy()
 @Component({
-  selector: 'app-navbar',
+  selector: 'wbs-navbar',
   templateUrl: './component.html',
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,

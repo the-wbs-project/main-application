@@ -3,8 +3,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { CoreModule } from '@app/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
@@ -15,6 +15,11 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ToastrModule } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
 import {
+  LengthPipe,
+  ProjectListFilterLengthPipe,
+  ProjectListFilterPipe,
+} from './pipes';
+import {
   AnalyticsService,
   AppInitializerFactory,
   Messages,
@@ -22,13 +27,7 @@ import {
   Resources,
   StartupService,
 } from '../services';
-import {
-  LengthPipe,
-  ProjectListFilterLengthPipe,
-  ProjectListFilterPipe,
-} from './pipes';
-import { AuthState, ProjectState } from '../states';
-import { DirectivesModule } from './directives';
+import { FillElementDirective } from './directives';
 
 @NgModule({
   imports: [
@@ -36,12 +35,11 @@ import { DirectivesModule } from './directives';
     BrowserAnimationsModule,
     ButtonModule,
     CommonModule,
+    CoreModule,
     DialogModule,
-    DirectivesModule,
     DrawerModule,
     HttpClientModule,
     IconModule,
-    NgxsModule.forRoot([AuthState, ProjectState]),
     NgxsLoggerPluginModule.forRoot({
       disabled: environment.production,
     }),
@@ -65,10 +63,11 @@ import { DirectivesModule } from './directives';
     },
   ],
   declarations: [
+    FillElementDirective,
     LengthPipe,
     ProjectListFilterPipe,
     ProjectListFilterLengthPipe,
   ],
-  exports: [ButtonModule, DrawerModule, IconModule],
+  exports: [ButtonModule, DrawerModule, FillElementDirective, IconModule],
 })
-export class CoreModule {}
+export class SharedModule {}

@@ -7,6 +7,11 @@ const routes: Routes = [
     loadChildren: () =>
       import('./pages/projects/view/module').then((m) => m.ProjectsViewModule),
   },
+  {
+    path: 'wbs/view',
+    loadChildren: () =>
+      import('./pages/wbs/view/module').then((m) => m.HomeModule),
+  },
 ];
 
 @NgModule({
