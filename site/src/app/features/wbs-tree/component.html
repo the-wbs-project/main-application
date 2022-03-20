@@ -1,9 +1,14 @@
-<div *ngIf="nodes" appFillElement [paddingBottom]="20">
+<div *ngIf="tree$ | async; let tree" appFillElement [paddingBottom]="20">
   <kendo-treelist
-    kendoTreeListExpandable
-    [kendoTreeListHierarchyBinding]="nodes"
-    childrenField="children"
+    #treelist
+    [kendoTreeListFlatBinding]="tree"
+    parentIdField="parentLevel"
     idField="level"
+    kendoTreeListExpandable
+    [initiallyExpanded]="true"
+    [(expandedKeys)]="expandedKeys"
+    (expand)="onToggle()"
+    (close)="onToggle()"
   >
     <kendo-treelist-column
       field="level"

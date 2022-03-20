@@ -31,7 +31,6 @@ export class Transformer {
       PROJECT_VIEW.PHASE,
       this.catList(p.categories.p, PROJECT_VIEW.PHASE)
     );
-    console.log(vm);
     return vm;
   }
 
@@ -42,12 +41,11 @@ export class Transformer {
   ): WbsNodeViewModel[] {
     const nodes: WbsNodeViewModel[] = [];
 
-    console.log(categories);
-
     for (const node of list) {
       const levels =
-        (view === PROJECT_VIEW.DISCIPLINE ? node.levels.d : node.levels.p) ??
-        [];
+        (view === PROJECT_VIEW.DISCIPLINE
+          ? node.levels.d![0]
+          : node.levels.p) ?? [];
 
       nodes.push({
         activity: node.activity,
@@ -56,45 +54,35 @@ export class Transformer {
         level: levels.join('.'),
         levels,
         order: levels[levels.length - 1],
-        parentLevel:
-          levels.length === 1
-            ? null
-            : levels.slice(0, levels.length - 2).join('.'),
-        categoryId: node.categoryId,
+        parentId: null,
+        parentLevel: levels.length === 1 ? null : levels.slice(0, -1).join('.'),
+        phaseCategoryId: node.phaseCategoryId,
         referenceId: node.referenceId,
         thread: node.thread,
         title: node.title,
         trainingId: node.trainingId,
       });
     }
-    const toReturn: WbsNodeViewModel[] = [];
-    for (const cat of categories) {
-      const topLevel = nodes.find((x) => x.categoryId === cat.id);
+    //
+    //  Now set parent Ids
+    //
+    for (const node of nodes) {
+      if (node.parentLevel == null) continue;
+
+      node.parentId =
+        nodes.find((x) => x.level === node.parentLevel)?.id ?? null;
+    }
+
+    for (let i = 0; i < categories.length; i++) {
+      const cat = categories[i];
+      const topLevel = nodes.find((x) => x.phaseCategoryId === cat.id);
 
       if (!topLevel) continue;
 
       topLevel.title = this.resources.get(cat.label);
-
-      this.addWbsChildren(topLevel, nodes);
-      toReturn.push(topLevel);
+      topLevel.order = i;
     }
-    console.log(this.sortWbsNodes(toReturn));
-    return this.sortWbsNodes(toReturn);
-  }
-
-  addWbsChildren(node: WbsNodeViewModel, list: WbsNodeViewModel[]): void {
-    const children = list.filter(
-      (x) => x.depth === node.depth + 1 && x.level.startsWith(node.level + '.')
-    );
-
-    if (children.length > 0) {
-      for (const child of children) {
-        this.addWbsChildren(child, list);
-      }
-      node.children = this.sortWbsNodes(children);
-    } else {
-      node.children = null;
-    }
+    return nodes;
   }
 
   sortWbsNodes(list: WbsNodeViewModel[]): WbsNodeViewModel[] {
