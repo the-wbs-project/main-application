@@ -2,8 +2,8 @@
   <kendo-treelist
     #treelist
     [kendoTreeListFlatBinding]="tree"
-    parentIdField="parentLevel"
-    idField="level"
+    parentIdField="parentId"
+    idField="id"
     kendoTreeListExpandable
     [initiallyExpanded]="true"
     [(expandedKeys)]="expandedKeys"
@@ -11,7 +11,7 @@
     (close)="onToggle()"
   >
     <kendo-treelist-column
-      field="level"
+      field="levelText"
       title="Level"
       [width]="80"
     ></kendo-treelist-column>

@@ -8,10 +8,10 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { Messages } from '@app/services';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AnalyticsService } from './analytics.service';
-import { Messages } from './messages.service';
 
 const noErrorUrls = ['logger/activity', 'logger/activities'];
 

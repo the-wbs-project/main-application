@@ -38,8 +38,6 @@ export class SiteHttpService {
       const response = await this.getSiteResourceAsync(req);
       const isHtml = this.isHtml(response.headers);
 
-      console.log(req.url + ',' + isHtml + ',' + response.status);
-
       return isHtml && response.status === 200
         ? this.hydrateAsync(req, response)
         : response;
@@ -95,12 +93,10 @@ export class SiteHttpService {
       // %20 seems to have problems||?
       //
       if (path.indexOf('%20') > -1) {
-        console.log(path);
         let newPath = path;
         while (newPath.indexOf('%20') > -1) {
           newPath = newPath.replace('%20', ' ');
         }
-        console.log(newPath);
         return new Request(request.url.replace(path, newPath), newReq);
       }
       //

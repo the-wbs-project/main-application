@@ -37,16 +37,19 @@ export class MetadataState implements NgxsOnInit {
     const categoryList = state.categoryList;
     const categoryMap = state.categoryMap;
 
-    categoryList.set(PROJECT_VIEW.DISCIPLINE, environment.categoriesDiscipline);
-    categoryList.set(PROJECT_VIEW.PHASE, environment.categoriesPhase);
+    categoryList.set(
+      PROJECT_VIEW.DISCIPLINE,
+      this.loader.categoriesDiscipline ?? []
+    );
+    categoryList.set(PROJECT_VIEW.PHASE, this.loader.categoriesPhase ?? []);
 
     categoryMap.set(
       PROJECT_VIEW.DISCIPLINE,
-      this.createMap(environment.categoriesDiscipline)
+      this.createMap(this.loader.categoriesDiscipline ?? [])
     );
     categoryMap.set(
       PROJECT_VIEW.PHASE,
-      this.createMap(environment.categoriesPhase)
+      this.createMap(this.loader.categoriesPhase ?? [])
     );
     ctx.patchState({
       categoryList,

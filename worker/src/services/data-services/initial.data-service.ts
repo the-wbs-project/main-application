@@ -15,7 +15,7 @@ export class InitialDataService {
         PROJECT_VIEW.DISCIPLINE,
       ),
       this.metadata.getAsync(METADATA_TYPES.CATEGORIES, PROJECT_VIEW.PHASE),
-      this.metadata.getAsync(METADATA_TYPES.RESOURCES, 'en'),
+      this.metadata.getAsync(METADATA_TYPES.RESOURCES, 'en-US'),
       this.project.getAsync('acme_engineering', '123'),
     ]);
     return {

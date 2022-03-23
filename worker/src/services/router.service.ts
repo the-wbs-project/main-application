@@ -35,10 +35,8 @@ export class RouterService {
         this.http.site.getSiteResourceAsync(request),
       );
     }
-    this.router.get(
-      '*',
-      (request: WorkerRequest) => this.http.site.getSiteResourceAsync(request),
-      //this.http.site.getSiteAsync(request),
+    this.router.get('*', (request: WorkerRequest) =>
+      this.http.site.getSiteAsync(request),
     );
   }
 

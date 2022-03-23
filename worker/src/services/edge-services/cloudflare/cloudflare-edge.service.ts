@@ -1,8 +1,8 @@
-import { getAssetFromKV, Options } from "@cloudflare/kv-asset-handler";
-import { Config } from "../../../config";
-import { EdgeDataService } from "../edge-data.service";
-import { EdgeService } from "../edge.service";
-import { CloudflareEdgeDataService } from "./cloudflare-edge-data.service";
+import { getAssetFromKV, Options } from '@cloudflare/kv-asset-handler';
+import { Config } from '../../../config';
+import { EdgeDataService } from '../edge-data.service';
+import { EdgeService } from '../edge.service';
+import { CloudflareEdgeDataService } from './cloudflare-edge-data.service';
 
 const cache = caches.default;
 
@@ -54,16 +54,15 @@ export class CloudflareEdgeService implements EdgeService {
   }
 
   cachePut(response: Response): void {
-    console.log(this._request.url);
     this.event.waitUntil(cache.put(this._request, response.clone()));
   }
 
   private matchCheck(match: Response): Response {
-    const status = match.headers.get("cf-cache-status");
+    const status = match.headers.get('cf-cache-status');
     const hdrs = new Headers({
-      "content-type": "application/json;charset=utf-8",
+      'content-type': 'application/json;charset=utf-8',
     });
-    if (status) hdrs.set("cf-cache-status", status);
+    if (status) hdrs.set('cf-cache-status', status);
 
     return new Response(match.body, {
       status: 200,

@@ -1,9 +1,9 @@
 name = "wbs-app"
 type = "javascript"
-zone_id = "5491aca876a47684c4b5025af0d4aa32"
-account_id = "ce9999d7d59fce98a0bc0e7911cb6e1f"
+zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
+account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 webpack_config = "./workers-site/webpack.config.js"
-compatibility_date = "2021-10-24"
+compatibility_date = "2022-03-21"
 
 [build]
 command = "yarn && yarn run build"
@@ -15,7 +15,17 @@ bucket = "./public"
 entry-point = "workers-site"
 
 [env.dev]
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
+
+
+[env.d-d-demo]
+name = "demo-drag-and-drop"
+kv_namespaces = [
+  { binding = "KVDATA", id = "92a843cb6f674b29aa29089f31ad5054", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+  { binding = "KVAUTH", id = "92a843cb6f674b29aa29089f31ad5054", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+]
+route = "https://drag-and-drop-demo.thewbsproject.com/*"
+vars = { CORS_URLS = "https://drag-and-drop-demo.thewbsproject.com", APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "", MAILGUN_API_BASE_URL ="", MAILGUN_API_KEY = "", SNIPPET_APP_INSIGHTS = "" }
 
 [env.prod]
 route = "https://www.thewbsproject.com/*"

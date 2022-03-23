@@ -1,7 +1,7 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { StartupService } from '@app/services';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
-import { StartupService } from './startup.service';
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {

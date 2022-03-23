@@ -3,6 +3,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { Messages, Resources, StartupService } from '@app/services';
+import { AuthState, MetadataState, ProjectState } from '@app/states';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
@@ -12,20 +14,15 @@ import {
 } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { IconModule } from '@progress/kendo-angular-icons';
-import { DrawerModule } from '@progress/kendo-angular-layout';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ToastrModule } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
+import { NavbarComponent } from './components';
 import {
   AnalyticsService,
   AppInitializerFactory,
-  Messages,
   RequestInterceptor,
-  Resources,
-  StartupService,
-} from '../services';
-import { AuthState, MetadataState, ProjectState } from '../states';
-import { NavbarComponent } from './components';
+} from './services';
 
 @NgModule({
   imports: [
@@ -35,7 +32,6 @@ import { NavbarComponent } from './components';
     ButtonModule,
     CommonModule,
     DialogModule,
-    DrawerModule,
     HttpClientModule,
     IconModule,
     NgxsModule.forRoot([AuthState, MetadataState, ProjectState]),
@@ -65,7 +61,6 @@ import { NavbarComponent } from './components';
     ButtonGroupModule,
     ButtonModule,
     CommonModule,
-    DrawerModule,
     IconModule,
     NavbarComponent,
   ],

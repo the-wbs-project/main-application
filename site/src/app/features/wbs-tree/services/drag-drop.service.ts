@@ -1,11 +1,11 @@
-import { WbsNodeViewModel } from '@app/view-models';
+import { WbsNodePhaseViewModel } from '@app/view-models';
 
 export const tableRow = (node: HTMLElement) =>
   node.tagName.toLowerCase() === 'tr';
 
 export const isSameRow = (
-  draggedItem: WbsNodeViewModel,
-  targetedItem: WbsNodeViewModel
+  draggedItem: WbsNodePhaseViewModel,
+  targetedItem: WbsNodePhaseViewModel
 ) => {
   return draggedItem.id === targetedItem.id;
 };
@@ -68,11 +68,11 @@ export const getContentElement = (parent: HTMLElement): HTMLElement | null => {
 };
 
 export const findDataItem = (
-  data: WbsNodeViewModel[],
+  data: WbsNodePhaseViewModel[],
   row: HTMLTableRowElement
 ) => {
   const level = row.cells[0].textContent!.trim();
-  return data.find((item) => item.level === level);
+  return data.find((item) => item.levelText === level);
 };
 
 export const focusRow = (row: HTMLTableRowElement) => {
