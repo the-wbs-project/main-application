@@ -17,6 +17,7 @@ module.exports = {
         test: /\.tsx?$/,
         loader: 'ts-loader',
         options: {
+          configFile: 'tsconfig.app.json',
           // transpileOnly is useful to skip typescript checks occasionally:
           // transpileOnly: true,
         },

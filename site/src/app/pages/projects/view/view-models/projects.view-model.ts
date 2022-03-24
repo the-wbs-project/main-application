@@ -1,4 +1,4 @@
-import { Project, ProjectLite } from '@app/models';
+import { ProjectLite } from '@app/models';
 
 export interface ProjectsViewModel {
   title: string;

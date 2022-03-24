@@ -1,39 +1,10 @@
 import { Injectable } from '@angular/core';
-import { Category, WbsChangeRecord, WbsNode } from '@app/models';
+import { WbsNode } from '@app/models';
 import { WbsNodePhaseViewModel } from '@app/view-models';
-import { Store } from '@ngxs/store';
-import { Resources } from './resource.service';
 
 @Injectable({ providedIn: 'root' })
 export class WbsService {
-  constructor(
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
-
-  createPhaseTree(
-    categories: Category[],
-    list: WbsNode[]
-  ): WbsNodePhaseViewModel[] {
-    const nodes: WbsNodePhaseViewModel[] = [];
-
-    for (let i = 0; i < categories.length; i++) {
-      const cat = categories[i];
-      const parentlevel = [i + 1];
-      nodes.push({
-        id: cat.id,
-        parentId: null,
-        levels: [...parentlevel],
-        levelText: (i + 1).toString(),
-        title: this.resources.get(cat.label),
-        order: i + 1,
-      });
-      nodes.push(...this.getPhaseChildren(cat.id, parentlevel, list));
-    }
-    return nodes;
-  }
-
-  rebuildLevels(categories: Category[], list: WbsNodePhaseViewModel[]): void {
+  rebuildLevels(list: WbsNodePhaseViewModel[]): void {
     const rebuild = (parentId: string, parentLevel: number[]): void => {
       const children = this.getSortedVmChildren(parentId, list);
 
@@ -49,6 +20,8 @@ export class WbsService {
         rebuild(child.id, level);
       }
     };
+    const categories = list.filter((x) => x.parentId == null);
+
     for (let i = 0; i < categories.length; i++) {
       const cat = categories[i];
       const parentLevel = [i + 1];

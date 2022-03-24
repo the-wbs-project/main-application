@@ -13,8 +13,9 @@ export interface User {
 
 export interface UserMetadata {
   phone?: string | null | undefined;
+  culture?: string;
 }
 
 export interface UserAppMetadata {
-  role: string;
+  role?: string;
 }

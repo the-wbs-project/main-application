@@ -1,6 +1,5 @@
 import { DbObject } from './app-models';
 
-export interface Metadata extends DbObject {
-  values: any;
+export interface Metadata<T> extends DbObject {
+  values: T;
 }
-

@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
 import {
   Category,
-  Project,
+  ProjectLite,
   PROJECT_VIEW,
   PROJECT_VIEW_TYPE,
-  WbsNode,
 } from '@app/models';
 import { MetadataState } from '@app/states';
 import { ProjectViewModel } from '@app/view-models';
@@ -18,7 +17,8 @@ export class Transformer {
     private readonly store: Store
   ) {}
 
-  project(p: Project): ProjectViewModel {
+  /*
+  project(p: ProjectLite): ProjectViewModel {
     const vm: ProjectViewModel = {
       ...p,
       categories: new Map<PROJECT_VIEW_TYPE, Category[]>(),
@@ -46,5 +46,5 @@ export class Transformer {
       if (cat) list.push(cat);
     }
     return list;
-  }
+  }*/
 }

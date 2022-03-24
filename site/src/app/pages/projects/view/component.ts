@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Project, ProjectLite } from '@app/models';
+import { ActivatedRoute } from '@angular/router';
+import { ProjectLite } from '@app/models';
 import { TitleService } from '@app/services';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';

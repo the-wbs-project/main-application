@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Project, PROJECT_FILTER } from '@app/models';
+import { ProjectLite, PROJECT_FILTER } from '@app/models';
 import { AuthState, ProjectState } from '@app/states';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Navigate, RouterDataResolved } from '@ngxs/router-plugin';
@@ -18,8 +18,8 @@ export class NavbarComponent {
   @Select(ProjectState.navType) projectNavType$:
     | Observable<PROJECT_FILTER | null>
     | undefined;
-  @Select(ProjectState.list) projects$: Observable<Project[]> | undefined;
-  @Select(ProjectState.watched) watched$: Observable<Project[]> | undefined;
+  @Select(ProjectState.list) projects$: Observable<ProjectLite[]> | undefined;
+  @Select(ProjectState.watched) watched$: Observable<ProjectLite[]> | undefined;
 
   page: string | undefined;
   pagePrefix: string | undefined;

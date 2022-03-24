@@ -9,8 +9,7 @@ import {
   Renderer2,
   ViewChild,
 } from '@angular/core';
-import { Category, WbsNode } from '@app/models';
-import { WbsService } from '@app/services';
+import { WbsPhaseNode } from '@app/models';
 import { WbsNodePhaseViewModel } from '@app/view-models';
 import { TreeListComponent } from '@progress/kendo-angular-treelist';
 import {
@@ -30,6 +29,7 @@ import {
   removeDropHint,
   showDropHint,
   tableRow,
+  WbsService,
 } from './services';
 
 @Component({
@@ -41,8 +41,7 @@ import {
 })
 export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   @ViewChild('treelist') treelist!: TreeListComponent;
-  @Input() categories: Category[] | null | undefined;
-  @Input() nodes: WbsNode[] | null | undefined;
+  @Input() nodes: WbsPhaseNode[] | null | undefined;
 
   private dataReady = false;
   private newParentId!: any;
@@ -65,11 +64,9 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   ) {}
 
   ngOnChanges(): void {
-    if (!this.categories || !this.nodes) return;
+    if (!this.nodes) return;
 
-    this.tree$.next(
-      this.wbsService.createPhaseTree(this.categories, this.nodes)
-    );
+    this.tree$.next(this.nodes);
     this.dataReady = true;
     this.setDraggableRows();
   }
@@ -233,7 +230,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
           //
           //  Rebuild Level
           //
-          this.wbsService.rebuildLevels(this.categories!, tree);
+          this.wbsService.rebuildLevels(tree);
 
           this.zone.run(() => this.tree$.next([...tree]));
         }

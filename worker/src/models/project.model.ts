@@ -1,25 +1,25 @@
 import { Activity } from './activity.model';
-import { PROJECT_STATI } from './enums';
+import { TaggedObject } from './app-models';
+import { PROJECT_STATI_TYPE } from './enums';
 import { WbsNode } from './wbs-node.model';
 
-export interface ProjectLite {
+export interface ProjectLite extends TaggedObject {
   id: string;
   owner: string;
   title: string;
   lastModified: Date;
-  status: PROJECT_STATI;
+  status: PROJECT_STATI_TYPE;
 }
 
-export interface Project {
-  id: string;
-  owner: string;
-  title: string;
-  lastModified: Date;
-  status: PROJECT_STATI;
-  nodes: WbsNode[];
-  wbsId: string;
-  nodeChanges: any[];
-  roles: any[];
+export interface Project extends ProjectLite {
   activity: Activity[];
-  thread: any;
+  categories: {
+    d: string[];
+    p: string[];
+  };
+  nodeChanges?: any[];
+  nodes: WbsNode[];
+  roles?: any[];
+  thread?: any;
+  wbsId?: string | null;
 }

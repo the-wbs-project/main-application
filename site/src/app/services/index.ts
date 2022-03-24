@@ -5,4 +5,3 @@ export * from './messages.service';
 export * from './resource.service';
 export * from './startup.service';
 export * from './title.service';
-export * from './wbs.service';

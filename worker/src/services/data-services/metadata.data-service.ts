@@ -10,41 +10,45 @@ export class MetadataDataService {
     private readonly edge: EdgeDataService,
   ) {}
 
-  async getAllAsync(type: string): Promise<Metadata[]> {
+  async getAllAsync<T>(type: string): Promise<Metadata<T>[]> {
     if (this.edge.byPass(kvPrefix)) return await this.listFromDbAsync(type);
 
     const kvName = [kvPrefix, type].join('-');
-    const kvData = await this.edge.get<Metadata[]>(kvName, 'json');
+    const kvData = await this.edge.get<Metadata<T>[]>(kvName, 'json');
 
     if (kvData) return kvData;
 
-    const data = await this.listFromDbAsync(type);
+    const data = await this.listFromDbAsync<T>(type);
 
     if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
     return data;
   }
 
-  async getAsync(type: string, id: string): Promise<Metadata | null> {
-    if (this.edge.byPass(kvPrefix)) return await this.fromDbAsync(type, id);
+  async getAsync<T>(type: string, id: string): Promise<T | null | undefined> {
+    if (this.edge.byPass(kvPrefix))
+      return (await this.fromDbAsync<T>(type, id))?.values;
 
     const kvName = [kvPrefix, type, id].join('-');
-    const kvData = await this.edge.get<Metadata>(kvName, 'json');
+    const kvData = await this.edge.get<T>(kvName, 'json');
 
     if (kvData) return kvData;
 
-    const data = await this.fromDbAsync(type, id);
+    const data = (await this.fromDbAsync<T>(type, id))?.values;
 
     if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
     return data;
   }
 
-  private listFromDbAsync(type: string): Promise<Metadata[]> {
-    return this.db.getAllByPartitionAsync<Metadata>(type, true);
+  private listFromDbAsync<T>(type: string): Promise<Metadata<T>[]> {
+    return this.db.getAllByPartitionAsync<Metadata<T>>(type, true);
   }
 
-  private fromDbAsync(type: string, id: string): Promise<Metadata | null> {
-    return this.db.getDocumentAsync<Metadata>(type, id, true);
+  private fromDbAsync<T>(
+    type: string,
+    id: string,
+  ): Promise<Metadata<T> | null> {
+    return this.db.getDocumentAsync<Metadata<T>>(type, id, true);
   }
 }

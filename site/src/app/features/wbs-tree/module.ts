@@ -9,6 +9,7 @@ import {
 import { IconsModule } from '@progress/kendo-angular-icons';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { WbsTreeComponent } from './component';
+import { WbsService } from './services';
 
 @NgModule({
   imports: [
@@ -20,6 +21,7 @@ import { WbsTreeComponent } from './component';
     TranslateModule,
     TreeListModule,
   ],
+  providers: [WbsService],
   declarations: [WbsTreeComponent],
   exports: [WbsTreeComponent],
 })

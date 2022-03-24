@@ -8,7 +8,7 @@ export class InitialDataService {
     private readonly project: ProjectDataService,
   ) {}
 
-  async getHydrateDataAsync(user: User | undefined): Promise<any> {
+  async getHydrateDataAsync(user: User | undefined): Promise<unknown> {
     const [disciplineCats, phaseCats, resources, project] = await Promise.all([
       this.metadata.getAsync(
         METADATA_TYPES.CATEGORIES,
@@ -19,10 +19,10 @@ export class InitialDataService {
       this.project.getAsync('acme_engineering', '123'),
     ]);
     return {
-      categoriesDiscipline: disciplineCats?.values,
-      categoriesPhase: phaseCats?.values,
+      categoriesDiscipline: disciplineCats,
+      categoriesPhase: phaseCats,
       projects: [project],
-      resources: resources?.values,
+      resources: resources,
       user,
     };
   }

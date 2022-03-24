@@ -1,7 +1,8 @@
-export interface WbsNode {
+import { TaggedObject } from './app-models';
+import { WbsNodeRelationship } from './wbs-node-relationship.model';
+
+export interface WbsNode extends TaggedObject {
   id: string;
   title: string;
-  parentWbsId?: string | null;
-  parentNodeId?: string | null;
-  levels: { p: number[]; d: number[] };
+  phase: WbsNodeRelationship;
 }

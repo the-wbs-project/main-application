@@ -1,5 +1,6 @@
-import { Request, Router } from 'itty-router';
+import { Router } from 'itty-router';
 import { Config } from '../config';
+import { PROJECT_VIEW } from '../models';
 import { HttpServiceFactory } from './http-services';
 import { MailGunService } from './mail-gun.service';
 import { WorkerRequest } from './worker-request.service';
@@ -27,6 +28,11 @@ export class RouterService {
       '/api/projects/:ownerId/:projectId',
       (request: WorkerRequest) => this.http.project.getByIdAsync(request),
     );
+    this.router.get(
+      `/api/projects/:ownerId/:projectId/wbs/${PROJECT_VIEW.PHASE}`,
+      (request: WorkerRequest) => this.authenticate(request),
+      (request: WorkerRequest) => this.http.wbs.getPhaseListAsync(request),
+    );
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
     );
@@ -47,5 +53,16 @@ export class RouterService {
       return new Response('', { status: responseOrCode });
 
     return responseOrCode;
+  }
+
+  authenticate(req: WorkerRequest): void {
+    req.setUser(
+      {
+        userInfo: {
+          culture: 'en-US',
+        },
+      },
+      '1234',
+    );
   }
 }
