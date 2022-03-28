@@ -9,7 +9,7 @@ export class WbsNodePhaseTransformer {
   ): WbsPhaseNode[] {
     const nodes: WbsPhaseNode[] = [];
     const categories = <Category[]>(
-      project.categories.p
+      project.categories.phase
         .map((x) => categoryList.find((c) => c.id === x))
         .filter((x) => x)
     );
@@ -32,8 +32,8 @@ export class WbsNodePhaseTransformer {
 
   private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
     return list
-      .filter((x) => x.phase.parentId === parentId)
-      .sort((a, b) => (a.phase.order < b.phase.order ? -1 : 1));
+      .filter((x) => x.phase?.parentId === parentId)
+      .sort((a, b) => ((a.phase?.order ?? 0) < (b.phase?.order ?? 0) ? -1 : 1));
   }
 
   private getPhaseChildren(
@@ -44,11 +44,11 @@ export class WbsNodePhaseTransformer {
     const results: WbsPhaseNode[] = [];
 
     for (const child of this.getSortedChildren(parentId, list)) {
-      const childLevel = [...parentLevel, child.phase.order];
+      const childLevel = [...parentLevel, child.phase?.order ?? 0];
       results.push({
         id: child.id,
         parentId: parentId,
-        order: child.phase.order,
+        order: child.phase?.order ?? 0,
         levels: childLevel,
         title: child.title,
         levelText: childLevel.join('.'),

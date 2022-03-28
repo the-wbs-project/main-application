@@ -18,8 +18,8 @@ const project: Project = {
   activity: [],
   lastModified: new Date(),
   categories: {
-    d: ['mechanical', 'electrical', 'structural', 'survey'],
-    p: ['initial', 'planning', 'execution', 'contract'],
+    discipline: ['mechanical', 'electrical', 'structural', 'survey'],
+    phase: ['initial', 'planning', 'execution', 'contract'],
   },
   nodes: [],
 };
@@ -140,8 +140,8 @@ describe('WbsNodePhaseTransformer - 1 Level Phase', () => {
     expect(results).not.toBeNull();
     expect(results.length).toEqual(4);
   });
-  for (let i = 0; i < project.categories.p.length; i++) {
-    const catId = project.categories.p[i];
+  for (let i = 0; i < project.categories.phase.length; i++) {
+    const catId = project.categories.phase[i];
 
     it('check cat ' + i, () => {
       expect(results[i].id).toEqual(catId);
@@ -152,7 +152,7 @@ describe('WbsNodePhaseTransformer - 2 Level Phase', () => {
   project.nodes = oneDeep;
 
   const results = service.run(project, cats, resources);
-  const length = project.categories.p.length + project.nodes.length;
+  const length = project.categories.phase.length + project.nodes.length;
 
   it('should not be null and length of ' + length, () => {
     expect(results).not.toBeNull();
@@ -168,43 +168,43 @@ describe('WbsNodePhaseTransformer - 2 Level Phase', () => {
     const ex2 = oneDeep[1];
 
     expect(cat1Children[0].id).toEqual(ex1.id);
-    expect(cat1Children[0].levelText).toEqual(ex1.phase.levels.join('.'));
-    expect(cat1Children[0].levels).toEqual(ex1.phase.levels);
-    expect(cat1Children[0].order).toEqual(ex1.phase.order);
-    expect(cat1Children[0].parentId).toEqual(ex1.phase.parentId);
+    expect(cat1Children[0].levelText).toEqual(ex1.phase?.levels.join('.'));
+    expect(cat1Children[0].levels).toEqual(ex1.phase?.levels);
+    expect(cat1Children[0].order).toEqual(ex1.phase?.order);
+    expect(cat1Children[0].parentId).toEqual(ex1.phase?.parentId);
     expect(cat1Children[0].title).toEqual(ex1.title);
 
     expect(cat1Children[1].id).toEqual(ex2.id);
-    expect(cat1Children[1].levelText).toEqual(ex2.phase.levels.join('.'));
-    expect(cat1Children[1].levels).toEqual(ex2.phase.levels);
-    expect(cat1Children[1].order).toEqual(ex2.phase.order);
-    expect(cat1Children[1].parentId).toEqual(ex2.phase.parentId);
+    expect(cat1Children[1].levelText).toEqual(ex2.phase?.levels.join('.'));
+    expect(cat1Children[1].levels).toEqual(ex2.phase?.levels);
+    expect(cat1Children[1].order).toEqual(ex2.phase?.order);
+    expect(cat1Children[1].parentId).toEqual(ex2.phase?.parentId);
     expect(cat1Children[1].title).toEqual(ex2.title);
   });
 
   it('cat 2 should have 1 children', () => {
-    const cat2Id = project.categories.p[1];
+    const cat2Id = project.categories.phase[1];
     const cat2Children = results.filter((x) => x.parentId === cat2Id);
     expect(cat2Children.length).toEqual(1);
 
     const ex1 = oneDeep[2];
 
     expect(cat2Children[0].id).toEqual(ex1.id);
-    expect(cat2Children[0].levelText).toEqual(ex1.phase.levels.join('.'));
-    expect(cat2Children[0].levels).toEqual(ex1.phase.levels);
-    expect(cat2Children[0].order).toEqual(ex1.phase.order);
-    expect(cat2Children[0].parentId).toEqual(ex1.phase.parentId);
+    expect(cat2Children[0].levelText).toEqual(ex1.phase?.levels.join('.'));
+    expect(cat2Children[0].levels).toEqual(ex1.phase?.levels);
+    expect(cat2Children[0].order).toEqual(ex1.phase?.order);
+    expect(cat2Children[0].parentId).toEqual(ex1.phase?.parentId);
     expect(cat2Children[0].title).toEqual(ex1.title);
   });
 
   it('cat 3 should have no children', () => {
-    const cat3Id = project.categories.p[2];
+    const cat3Id = project.categories.phase[2];
     const cat3Children = results.filter((x) => x.parentId === cat3Id);
     expect(cat3Children.length).toEqual(0);
   });
 
   it('cat 4 should have no children', () => {
-    const cat4Id = project.categories.p[3];
+    const cat4Id = project.categories.phase[3];
     const cat4Children = results.filter((x) => x.parentId === cat4Id);
     expect(cat4Children.length).toEqual(0);
   });

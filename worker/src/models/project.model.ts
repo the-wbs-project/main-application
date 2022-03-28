@@ -14,8 +14,8 @@ export interface ProjectLite extends TaggedObject {
 export interface Project extends ProjectLite {
   activity: Activity[];
   categories: {
-    d: string[];
-    p: string[];
+    discipline: string[];
+    phase: string[];
   };
   nodeChanges?: any[];
   nodes: WbsNode[];

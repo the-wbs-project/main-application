@@ -1,6 +1,4 @@
-import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
-import { CoreModule } from '@app/core';
 import { FillElementDirective } from './directives';
 import {
   LengthPipe,

@@ -1,27 +1,36 @@
 import { Injectable } from '@angular/core';
-import { TranslateService } from '@ngx-translate/core';
-import { ToastrService } from 'ngx-toastr';
-import { environment } from 'src/environments/environment';
+import {
+  NotificationService,
+  Position,
+} from '@progress/kendo-angular-notification';
+import { Device } from './device.service';
+import { Resources } from './resource.service';
+
+const prefixOfPrefix = 'notification';
 
 @Injectable({ providedIn: 'root' })
 export class Messages {
+  private cssClassPrefix = prefixOfPrefix;
+  private starterCss: string[];
+  private readonly position: Position;
+
   constructor(
-    private readonly toastr: ToastrService,
-    private readonly translate: TranslateService
-  ) {}
-
-  saved() {
-    this.success('General.InformationSaved');
+    device: Device,
+    private readonly notificationService: NotificationService,
+    private readonly resources: Resources
+  ) {
+    this.starterCss = [
+      'notification',
+      'notification-' + device.type.toLowerCase(),
+    ];
+    this.position =
+      device.type === 'Desktop'
+        ? { horizontal: 'right', vertical: 'top' }
+        : { horizontal: 'center', vertical: 'bottom' };
   }
 
-  debug(message: any) {
-    if (environment.production) return;
-    console.log(message);
-  }
-
-  info(resource: string, isResource = true): void {
-    if (isResource) this.show(resource, 'info');
-    else this.show2(resource, 'info');
+  changeColorClass(altColors: boolean): void {
+    this.cssClassPrefix = prefixOfPrefix + (altColors ? '-alt' : '');
   }
 
   error(resource: string, isResource = true): void {
@@ -34,16 +43,22 @@ export class Messages {
     else this.show2(resource, 'success');
   }
 
-  private show(resource: string, toastr: 'success' | 'error' | 'info') {
-    this.translate.get(resource).subscribe((label) => {
-      if (!label) return;
-      this.show2(label, toastr);
-    });
+  private show(resource: string, toastr: 'success' | 'error') {
+    const label = this.resources.get(resource);
+    if (!label) return;
+    this.show2(label, toastr);
   }
 
-  private show2(label: string, toastr: 'success' | 'error' | 'info') {
-    if (toastr === 'error') this.toastr.error(label);
-    else if (toastr === 'info') this.toastr.info(label);
-    else if (toastr === 'success') this.toastr.success(label);
+  private show2(label: string, toastr: 'success' | 'error') {
+    this.notificationService.show({
+      content: label,
+      hideAfter: 2400,
+      type: { style: 'none', icon: true },
+      animation: { type: 'fade', duration: 400 },
+      position: this.position,
+      cssClass: [...this.starterCss, `${this.cssClassPrefix}-${toastr}`].join(
+        ' '
+      ),
+    });
   }
 }

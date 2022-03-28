@@ -1,5 +1,6 @@
 import { EnvironmentConfig } from './config';
 import { WorkerRequest } from './services';
+import { DataServiceFactory } from './services/data-services';
 import { CosmosFactory } from './services/database-services/cosmos';
 import { CloudflareEdgeService } from './services/edge-services/cloudflare';
 import { ServiceFactory } from './services/factory.service';
@@ -14,7 +15,8 @@ addEventListener('fetch', (event) => {
   const logger = new Logger(config.appInsightsKey, event.request);
   const edge = new CloudflareEdgeService(config, event);
   const cosmos = new CosmosFactory(config, logger);
-  const request = new WorkerRequest(event, cosmos, edge, logger);
+  const dbFactory = new DataServiceFactory(cosmos, edge);
+  const request = new WorkerRequest(event, dbFactory, edge, logger);
 
   event.respondWith(services.router.matchAsync(request));
 });

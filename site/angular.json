@@ -38,7 +38,10 @@
               "src/styles.theme-kendo.scss",
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "is_js"
+            ]
           },
           "configurations": {
             "production": {

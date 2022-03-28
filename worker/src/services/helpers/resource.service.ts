@@ -10,7 +10,13 @@ export class ResourceService implements IResourceService {
     const parts = resource.split('.');
 
     try {
-      const x = this.resources[parts[0]][parts[1]];
+      if (!this.resources) return resource;
+
+      const part1 = this.resources[parts[0]];
+
+      if (!part1) return resource;
+
+      const x = part1[parts[1]];
 
       if (x) return x;
       //

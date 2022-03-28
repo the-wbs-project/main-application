@@ -1,13 +1,11 @@
 import { Obj } from 'itty-router';
 import { User } from '../models';
 import { DataServiceFactory } from './data-services';
-import { DbFactory } from './database-services';
 import { EdgeService } from './edge-services';
 import { myFetch } from './fetcher.service';
 import { Logger } from './logger.service';
 
 export class WorkerRequest {
-  private readonly _data: DataServiceFactory;
   private _request: Request;
   private _user: User | undefined;
   private _sessionId: string | undefined;
@@ -17,16 +15,11 @@ export class WorkerRequest {
 
   constructor(
     event: FetchEvent,
-    dbFactory: DbFactory,
+    readonly data: DataServiceFactory,
     readonly edge: EdgeService,
     private readonly logger: Logger,
   ) {
     this._request = event.request;
-    this._data = new DataServiceFactory(dbFactory, edge);
-  }
-
-  get data(): DataServiceFactory {
-    return this._data;
   }
 
   get request(): Request {

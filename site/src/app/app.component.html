@@ -45,4 +45,29 @@
   </kendo-drawer-content>
 </kendo-drawer-container>
 -->
-<router-outlet></router-outlet>
+<div style="height: 100%">
+  {{ device.type }}
+  <br />
+  <br />
+  <button (click)="hello()">Hello</button>
+  <!--<router-outlet></router-outlet>
+-->
+  <kendo-bottomnavigation
+    *ngIf="device.type === 'Mobile'"
+    [items]="bItems"
+    positionMode="fixed"
+    [border]="true"
+    (select)="navigate($event)"
+  >
+    <ng-template kendoBottomNavigationItemTemplate let-item>
+      <!--<kendo-badge-container>
+      <kendo-icon [name]="item.icon" size="medium"></kendo-icon>
+      <kendo-badge *ngIf="item.notifications">
+        {{ item.notifications }}
+      </kendo-badge>
+    </kendo-badge-container>-->
+      <fa-icon [icon]="item.icon" size="lg"></fa-icon>
+      {{ item.text }}
+    </ng-template>
+  </kendo-bottomnavigation>
+</div>
