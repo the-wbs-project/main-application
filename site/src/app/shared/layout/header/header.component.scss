@@ -1,0 +1,83 @@
+
+@import "../../../../assets/scss/variables";
+li::marker {
+  color: transparent;
+}
+
+.main-header-notification.show>a::after,
+.main-header-message.show>a::after,
+.drop-flag.show>a::after {
+  display: none;
+}
+
+::ng-deep {
+  .sidenav-toggled .open-toggle {
+    display: none;
+  }
+
+  .sidenav-toggled .close-toggle {
+    display: block;
+    color: #000;
+  }
+
+  .dark-theme {
+
+    .btn-check:checked+.btn-country,
+    .btn-country.active,
+    .btn-country:active {
+      color: #eee;
+      background-color: $dark-theme;
+    }
+  }
+
+  .rtl {
+    .modal-header .close {
+      margin: -1rem auto -1rem 1rem !important;
+    }
+  }
+
+  form[role=search].active {
+    left: initial;
+    border-right: 0px solid #e3e3f7;
+    right: 0px;
+  }
+
+  .rtl {
+    form[role=search].active {
+      left: 0;
+      border-right: 0px solid #e3e3f7;
+      right: 0px;
+
+      input {
+        right: 0 !important;
+      }
+    }
+  }
+
+  .transparent-theme {
+    .btn-country.active {
+      color: #000 !important;
+    }
+
+    form[role=search].active input {
+      color: #fff !important;
+    }
+
+    form[role=search].active input::placeholder {
+      color: #eee !important;
+    }
+  }
+
+  .rtl {
+    app-header {
+
+      .input-group:not(.has-validation)>.dropdown-toggle:nth-last-child(n+3),
+      .input-group:not(.has-validation)> :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
+        border-top-right-radius: 5px !important;
+        border-bottom-right-radius: 5px !important;
+        border-top-left-radius: 5px !important;
+        border-bottom-left-radius: 5px !important;
+      }
+    }
+  }
+}

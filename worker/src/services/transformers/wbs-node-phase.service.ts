@@ -50,7 +50,7 @@ export class WbsNodePhaseTransformer {
         parentId: parentId,
         order: child.phase?.order ?? 0,
         levels: childLevel,
-        title: child.title,
+        title: child.title ?? '',
         levelText: childLevel.join('.'),
       });
       results.push(...this.getPhaseChildren(child.id, childLevel, list));

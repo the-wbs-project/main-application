@@ -18,15 +18,15 @@ entry-point = "workers-site"
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
 
 
-[env.d-d-demo]
-name = "demo-drag-and-drop"
+[env.demo]
+name = "demo"
 kv_namespaces = [
   { binding = "KVDATA", id = "92a843cb6f674b29aa29089f31ad5054", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
   { binding = "KVAUTH", id = "92a843cb6f674b29aa29089f31ad5054", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
 ]
-route = "https://drag-and-drop-demo.thewbsproject.com/*"
-vars = { CORS_URLS = "https://drag-and-drop-demo.thewbsproject.com", APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "", MAILGUN_API_BASE_URL ="", MAILGUN_API_KEY = "", SNIPPET_APP_INSIGHTS = "" }
+route = "https://demo.thewbsproject.com/*"
+vars = { CORS_URLS = "https://demo.thewbsproject.com", APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "", MAILGUN_API_BASE_URL ="", MAILGUN_API_KEY = "", SNIPPET_APP_INSIGHTS = "" }
 
 [env.prod]
-route = "https://www.thewbsproject.com/*"
-vars = { CORS_URLS = "https://www.thewbsproject.com" }
+route = "https://app.thewbsproject.com/*"
+vars = { CORS_URLS = "https://app.thewbsproject.com" }

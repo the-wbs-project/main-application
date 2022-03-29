@@ -1,21 +1,19 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { ContentLayoutComponent } from '@wbs/layout';
+import { content } from '@wbs/routes';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/home', pathMatch: 'full' },
+  { path: '', redirectTo: '/demos/drag-and-drop', pathMatch: 'full' },
   {
-    path: 'home',
-    loadChildren: () => import('./pages/home/module').then((m) => m.HomeModule),
+    path: '',
+    loadChildren: () => import('./shared/module').then((m) => m.SharedModule),
   },
   {
-    path: 'projects/view',
-    loadChildren: () =>
-      import('./pages/projects/view/module').then((m) => m.ProjectsViewModule),
-  },
-  {
-    path: 'wbs/view',
-    loadChildren: () =>
-      import('./pages/wbs/view/module').then((m) => m.HomeModule),
+    path: '',
+    component: ContentLayoutComponent,
+    //canActivate: [AdminGuard],
+    children: content,
   },
 ];
 

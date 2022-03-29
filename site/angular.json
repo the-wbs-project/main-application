@@ -34,9 +34,17 @@
               "src/assets"
             ],
             "styles": [
-              "src/variables.scss",
-              "src/styles.theme-kendo.scss",
-              "src/styles.scss"
+              "src/styles/styles.scss",
+              {
+                "inject": false,
+                "input": "src/styles/kendoui-theme-dark.scss",
+                "bundleName": "kendoui-dark"
+              },
+              {
+                "inject": false,
+                "input": "src/styles/kendoui-theme-light.scss",
+                "bundleName": "kendoui-light"
+              }
             ],
             "scripts": [],
             "allowedCommonJsDependencies": [

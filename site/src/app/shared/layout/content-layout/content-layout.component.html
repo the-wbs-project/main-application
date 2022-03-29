@@ -1,0 +1,26 @@
+<div class="horizontalMenucontainer">
+  <div class="page">
+    <div class="">
+      <!-- // header -->
+      <app-header></app-header>
+      <!-- //sidebar -->
+      <app-sidebar appHoverEffectSidebar></app-sidebar>
+    </div>
+    <div class="main-content app-content">
+      <div
+        class="main-container container-fluid"
+        (click)="toggleSwitcherBody()"
+      >
+        <!-- // contetnt  -->
+        <router-outlet>
+          <app-loader></app-loader>
+        </router-outlet>
+      </div>
+    </div>
+    <!-- right sidebar -->
+    <app-right-sidebar></app-right-sidebar>
+    <!-- footer  -->
+    <app-footer></app-footer>
+  </div>
+</div>
+<app-tab-to-top></app-tab-to-top>

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ProjectLite, PROJECT_STATI_TYPE } from '@app/models';
+import { ProjectLite, PROJECT_STATI_TYPE } from '@wbs/models';
 import { ProjectListFilterPipe } from './project-list-filter.pipe';
 
 declare type PipeType = ProjectLite[] | undefined | null;

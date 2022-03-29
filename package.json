@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "data": "npm run --prefix data/tool run:w",
-    "site": "yarn --cwd site run s:app",
+    "site": "yarn --cwd site run serve",
     "worker": "yarn --cwd worker run go"
   },
   "repository": {

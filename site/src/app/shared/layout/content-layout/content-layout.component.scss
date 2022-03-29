@@ -1,0 +1,8 @@
+::ng-deep{
+    body:not(.horizontal) .main-content {
+        margin-top: 64px;
+    }
+    .main-content{
+        min-height: 100vh;
+    }
+}

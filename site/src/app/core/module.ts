@@ -3,8 +3,8 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Messages, Resources, StartupService } from '@app/services';
-import { AuthState, MetadataState, ProjectState } from '@app/states';
+import { Messages, Resources, StartupService } from '@wbs/services';
+import { AuthState, MetadataState, ProjectState } from '@wbs/states';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsModule } from '@ngxs/store';
@@ -19,18 +19,10 @@ import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { ToastrModule } from 'ngx-toastr';
 import { environment } from '../../environments/environment';
-import { NavbarComponent } from './components';
-import {
-  AnalyticsService,
-  AppInitializerFactory,
-  RequestInterceptor,
-} from './services';
 
 @NgModule({
   imports: [
     BottomNavigationModule,
-    BrowserModule,
-    BrowserAnimationsModule,
     ButtonGroupModule,
     ButtonModule,
     CommonModule,
@@ -46,21 +38,8 @@ import {
     NotificationModule,
     ToastrModule.forRoot(),
   ],
-  providers: [
-    {
-      provide: HTTP_INTERCEPTORS,
-      useClass: RequestInterceptor,
-      deps: [AnalyticsService, Messages],
-      multi: true,
-    },
-    {
-      provide: APP_INITIALIZER,
-      useFactory: AppInitializerFactory.run,
-      deps: [Resources, StartupService],
-      multi: true,
-    },
-  ],
-  declarations: [NavbarComponent],
+  providers: [],
+  declarations: [],
   exports: [
     BottomNavigationModule,
     ButtonGroupModule,
@@ -68,7 +47,6 @@ import {
     CommonModule,
     FontAwesomeModule,
     IconModule,
-    NavbarComponent,
   ],
 })
 export class CoreModule {}

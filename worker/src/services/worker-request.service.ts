@@ -51,6 +51,7 @@ export class WorkerRequest {
     console.log(message);
     console.log(location);
     console.log(err);
+    console.log(err?.stack?.toString());
     this.logger.trackException(message, location, err);
   }
 

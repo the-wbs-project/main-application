@@ -1,0 +1,10 @@
+@import "src/styles/variables";
+
+.k-grid-drag-hint {
+  background-color: #c2bebe;
+}
+.dark-theme {
+  .k-grid-drag-hint {
+    background-color: #216259 !important;
+  }
+}
