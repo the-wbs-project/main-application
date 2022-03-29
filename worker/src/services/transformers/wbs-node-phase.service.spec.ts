@@ -130,11 +130,11 @@ const threeDeep: WbsNode[] = [
   },
 ];*/
 
-const service = new WbsNodePhaseTransformer();
+const service = new WbsNodePhaseTransformer(cats, [], resources);
 describe('WbsNodePhaseTransformer - 1 Level Phase', () => {
   project.nodes = [];
 
-  const results = service.run(project, cats, resources);
+  const results = service.run(project);
 
   it('should not be null and length of 4', () => {
     expect(results).not.toBeNull();
@@ -151,7 +151,7 @@ describe('WbsNodePhaseTransformer - 1 Level Phase', () => {
 describe('WbsNodePhaseTransformer - 2 Level Phase', () => {
   project.nodes = oneDeep;
 
-  const results = service.run(project, cats, resources);
+  const results = service.run(project);
   const length = project.categories.phase.length + project.nodes.length;
 
   it('should not be null and length of ' + length, () => {

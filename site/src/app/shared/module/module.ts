@@ -4,8 +4,9 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule } from '@ngxs/store';
-import { NotificationModule } from '@progress/kendo-angular-notification';
+import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
@@ -38,6 +39,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   imports: [
+    BottomNavigationModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
@@ -45,6 +47,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgxsLoggerPluginModule.forRoot({
       disabled: environment.production,
     }),
+    NgxsRouterPluginModule.forRoot(),
     PerfectScrollbarModule,
     RouterModule,
   ],

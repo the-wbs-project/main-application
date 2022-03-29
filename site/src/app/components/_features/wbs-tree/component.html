@@ -1,4 +1,12 @@
-<div *ngIf="tree$ | async; let tree" appFillElement [paddingBottom]="20">
+<div
+  *ngIf="tree$ | async; let tree"
+  appFillElement
+  [paddingBottom]="20"
+  kendoPopoverContainer
+  showOn="hover"
+  filter=".node-level"
+  [popover]="popup"
+>
   <kendo-treelist
     #treelist
     [kendoTreeListFlatBinding]="tree"
@@ -13,9 +21,42 @@
     <kendo-treelist-column
       field="levelText"
       title="Level"
-      [width]="80"
-    ></kendo-treelist-column>
+      class="level-column"
+      headerClass="level-header-column"
+    >
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <span [id]="dataItem.id" class="node-level">
+          {{dataItem.levelText}}
+        </span>
+      </ng-template>
+    </kendo-treelist-column>
     <kendo-treelist-column [expandable]="true" field="title" title="Name">
     </kendo-treelist-column>
   </kendo-treelist>
 </div>
+
+<kendo-popover
+  #popup
+  position="right"
+  [callout]="true"
+  [title]="'Node Level Stats'"
+  [templateData]="getContextData"
+  [height]="150"
+  [animation]="{ duration: 100, type: 'slide', direction: 'right' }"
+>
+  <ng-template kendoPopoverBodyTemplate let-anchor let-data="data">
+    <p class="stat-line">
+      <span class="stat-header"> Level: </span>
+      {{data.levelText}}
+    </p>
+    <p class="stat-line">
+      <span class="stat-header"> Depth: </span>
+      {{data.levels.length}}
+    </p>
+    <p class="stat-line">
+      <span class="stat-header"> # Children: </span>
+      {{data.children}}
+    </p>
+    &nbsp;
+  </ng-template>
+</kendo-popover>

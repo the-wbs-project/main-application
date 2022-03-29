@@ -11,8 +11,6 @@ import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
 
 export class WbsHttpService extends BaseHttpService {
-  private readonly phaseTransformer = new WbsNodePhaseTransformer();
-
   constructor(private readonly config: Config) {
     super();
   }
@@ -33,11 +31,15 @@ export class WbsHttpService extends BaseHttpService {
       //
       //  Get the necessary data, it's a bit
       //
-      const [project, categories, resources] = await Promise.all([
+      const [project, phases, disciplines, resources] = await Promise.all([
         d.projects.getAsync(params.ownerId, params.projectId, false),
         d.metadata.getAsync<Category[]>(
           METADATA_TYPES.CATEGORIES,
           PROJECT_VIEW.PHASE,
+        ),
+        d.metadata.getAsync<Category[]>(
+          METADATA_TYPES.CATEGORIES,
+          PROJECT_VIEW.DISCIPLINE,
         ),
         d.metadata.getAsync<Resources>(
           METADATA_TYPES.RESOURCES,
@@ -45,15 +47,16 @@ export class WbsHttpService extends BaseHttpService {
         ),
       ]);
       if (!project) return 404;
-      if (!resources || !categories) return 500;
+      if (!resources || !phases || !disciplines) return 500;
 
       const resourceService = new ResourceService(resources);
-      const list = this.phaseTransformer.run(
-        project,
-        categories,
+      const transformer = new WbsNodePhaseTransformer(
+        phases,
+        disciplines,
         resourceService,
       );
 
+      const list = transformer.run(project);
       const response = await super.buildJson(list);
 
       return response;

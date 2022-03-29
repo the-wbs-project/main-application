@@ -6,6 +6,7 @@ import {
   DropDownButtonModule,
 } from '@progress/kendo-angular-buttons';
 import { IconsModule } from '@progress/kendo-angular-icons';
+import { PopoverModule } from '@progress/kendo-angular-tooltip';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { SharedModule } from '@wbs/module';
 import { WbsTreeComponent } from './component';
@@ -17,6 +18,7 @@ import { WbsService } from './services';
     CommonModule,
     DropDownButtonModule,
     IconsModule,
+    PopoverModule,
     SharedModule,
     TranslateModule,
     TreeListModule,

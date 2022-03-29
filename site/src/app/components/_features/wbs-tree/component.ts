@@ -11,7 +11,6 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { WbsPhaseNode } from '@wbs/models';
-import { WbsNodePhaseViewModel } from '@wbs/view-models';
 import { TreeListComponent } from '@progress/kendo-angular-treelist';
 import {
   BehaviorSubject,
@@ -33,6 +32,12 @@ import {
   WbsService,
 } from './services';
 
+declare type Position = {
+  isBefore: boolean;
+  isAfter: boolean;
+  isOverTheSame: boolean;
+};
+
 @Component({
   selector: 'wbs-tree',
   templateUrl: './component.html',
@@ -51,13 +56,11 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   private currentSubscription!: Subscription;
 
   draggedRowEl!: HTMLTableRowElement;
-  draggedItem!: WbsNodePhaseViewModel;
-  targetedItem!: WbsNodePhaseViewModel;
+  draggedItem!: WbsPhaseNode;
+  targetedItem!: WbsPhaseNode;
   expandedKeys: number[] = [];
 
-  readonly tree$ = new BehaviorSubject<WbsNodePhaseViewModel[] | undefined>(
-    undefined
-  );
+  readonly tree$ = new BehaviorSubject<WbsPhaseNode[] | undefined>(undefined);
 
   constructor(
     private readonly renderer: Renderer2,
@@ -80,6 +83,10 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   ngAfterViewInit(): void {
     this.setDraggableRows();
   }
+
+  getContextData = (anchor: any): WbsPhaseNode => {
+    return this.tree$.getValue()!.find((x) => x.id === anchor.id)!;
+  };
 
   onToggle(): void {
     this.zone.onStable.pipe(take(1)).subscribe(() => {
@@ -128,7 +135,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
       dragStart.subscribe((e: DragEvent) => {
         this.draggedRowEl = <HTMLTableRowElement>e.target;
         if (this.draggedRowEl.tagName === 'TR') {
-          this.draggedItem = <WbsNodePhaseViewModel>(
+          this.draggedItem = <WbsPhaseNode>(
             findDataItem(this.tree$.getValue()!, this.draggedRowEl)
           );
         }
@@ -141,53 +148,95 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
         removeDropHint(this.draggedRowEl);
 
         const element = <HTMLElement>e.target;
+        let newParentsAllowed = true;
 
         if (element.tagName === 'TD' || element.tagName === 'SPAN') {
           const currentRow = <HTMLTableRowElement>closest(element, tableRow);
           const list = this.tree$.getValue()!;
 
-          this.targetedItem = <WbsNodePhaseViewModel>(
-            findDataItem(list, currentRow)
-          );
+          this.targetedItem = <WbsPhaseNode>findDataItem(list, currentRow);
 
           // Prevent dragging parent row in its children
-          let row: WbsNodePhaseViewModel | undefined = this.targetedItem;
+          let row: WbsPhaseNode | undefined = this.targetedItem;
           this.isParentDragged = false;
 
-          if (this.targetedItem.parentId == null) {
+          //
+          //  If we are trying to drag an item with no parent it's a root node, do not allow.
+          //
+          if (this.draggedItem.parentId == null) {
+            console.log('cant drag items without parents');
             this.isParentDragged = true;
-          } else {
-            while (row!.parentId != null) {
-              //while (row!.parentLevel! >= 1) {
-              const parentRow: WbsNodePhaseViewModel | undefined = list.find(
-                (item) => item.id === row!.parentId
-              );
-
-              if (parentRow!.id === this.draggedItem.id) {
-                this.isParentDragged = true;
-                e.dataTransfer!.dropEffect = 'none';
-                break;
-              }
-              row = parentRow;
-            }
-
-            if (isSameRow(this.draggedItem, this.targetedItem)) {
-              e.dataTransfer!.dropEffect = 'none';
-            }
-
+            e.dataTransfer!.dropEffect = 'none';
+            return;
+          }
+          //
+          //  If the we are trying to drag a node that is locked to a parent, make sure that's not happening
+          //
+          if (this.draggedItem.isLockedToParent) {
+            newParentsAllowed = false;
+            console.log('no new parents');
             if (
-              !this.isParentDragged &&
-              !isSameRow(this.draggedItem, this.targetedItem)
+              this.draggedItem.isDisciplineNode &&
+              this.draggedItem.parentId !== this.targetedItem.parentId
             ) {
-              const containerOffest = { top: 0, left: 0 };
-              this.getDropPosition(
-                list,
-                currentRow,
-                e.clientY,
-                containerOffest
-              );
-              this.draggedRowEl = currentRow;
+              console.log('cant drag disicpline nodes to new parents');
+              e.dataTransfer!.dropEffect = 'none';
+              return;
             }
+          }
+          while (row!.parentId != null) {
+            const parentRow = list.find((item) => item.id === row!.parentId);
+
+            if (parentRow!.id === this.draggedItem.id) {
+              this.isParentDragged = true;
+              e.dataTransfer!.dropEffect = 'none';
+              break;
+            }
+            row = parentRow;
+          }
+
+          if (isSameRow(this.draggedItem, this.targetedItem)) {
+            e.dataTransfer!.dropEffect = 'none';
+          }
+
+          if (
+            !this.isParentDragged &&
+            !isSameRow(this.draggedItem, this.targetedItem)
+          ) {
+            const containerOffest = { top: 0, left: 0 };
+            const position = this.getDropPosition(
+              currentRow,
+              e.clientY,
+              containerOffest
+            );
+            //
+            //  If you're trying to drop this INTO a discipline sync node, STOP IT!
+            //
+            if (
+              this.targetedItem.syncWithDisciplines &&
+              !position.isAfter &&
+              !position.isBefore
+            ) {
+              e.dataTransfer!.dropEffect = 'none';
+              return;
+            }
+            //
+            //  If you're trying to drop this before or after a a sync'ed child, STOP IT
+            //
+            console.log(position);
+            if (
+              !this.draggedItem.isLockedToParent &&
+              this.targetedItem.isLockedToParent &&
+              (position.isAfter || position.isBefore)
+            ) {
+              console.log(
+                'youre trying to drop this before or after a a synced child'
+              );
+              e.dataTransfer!.dropEffect = 'none';
+              return;
+            }
+            this.reposition(list, currentRow, position, newParentsAllowed);
+            this.draggedRowEl = currentRow;
           }
         }
       })
@@ -232,9 +281,9 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
           //
           //  Rebuild Level
           //
-          this.wbsService.rebuildLevels(tree);
+          const newTree = this.wbsService.rebuildLevels(tree);
 
-          this.zone.run(() => this.tree$.next([...tree]));
+          this.zone.run(() => this.tree$.next(newTree));
         }
       })
     );
@@ -243,11 +292,10 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private getDropPosition(
-    list: WbsNodePhaseViewModel[],
     target: HTMLTableRowElement,
     clientY: number,
     containerOffset: { top: number; left: number }
-  ): void {
+  ): Position {
     const item: HTMLElement | null = closestWithMatch(
       target,
       '.k-grid-table-wrap tbody tr'
@@ -259,13 +307,21 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
     const pointerPosition: number = clientY - containerOffset.top;
     const itemTop: number = itemViewPortCoords.top - containerOffset.top;
 
-    const isBefore: boolean = pointerPosition < itemTop + itemDivisionHeight;
-    const isAfter: boolean =
-      pointerPosition >=
-      itemTop + itemViewPortCoords.height - itemDivisionHeight;
-    const isOverTheSame: boolean =
-      this.draggedItem.title === this.targetedItem.title;
+    return {
+      isAfter:
+        pointerPosition >=
+        itemTop + itemViewPortCoords.height - itemDivisionHeight,
+      isBefore: pointerPosition < itemTop + itemDivisionHeight,
+      isOverTheSame: this.draggedItem.title === this.targetedItem.title,
+    };
+  }
 
+  private reposition(
+    list: WbsPhaseNode[],
+    target: HTMLTableRowElement,
+    position: Position,
+    newParentsAllowed: boolean
+  ): void {
     removeDropHint(this.draggedRowEl);
     focusRow(target);
 
@@ -274,31 +330,46 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
 
     if (currentRowParentId == null) return;
 
-    if (isBefore) {
-      showDropHint(target, 'before');
-      this.reorderRows(list, 0);
-      if (draggedRowParentId !== currentRowParentId) {
-        this.newParentId = currentRowParentId;
+    if (newParentsAllowed) {
+      if (position.isBefore) {
+        showDropHint(target, 'before');
+        this.reorderRows(list, 0);
+        if (draggedRowParentId !== currentRowParentId) {
+          this.newParentId = currentRowParentId;
+        }
       }
-    }
 
-    if (isAfter) {
-      showDropHint(target, 'after');
-      this.reorderRows(list, 1);
-      if (draggedRowParentId !== currentRowParentId) {
-        this.newParentId = currentRowParentId;
+      if (position.isAfter) {
+        showDropHint(target, 'after');
+        this.reorderRows(list, 1);
+        if (draggedRowParentId !== currentRowParentId) {
+          this.newParentId = currentRowParentId;
+        }
       }
-    }
 
-    if (!isOverTheSame && !isBefore && !isAfter) {
-      this.newParentId = this.targetedItem.id;
+      if (!position.isOverTheSame && !position.isBefore && !position.isAfter) {
+        this.newParentId = this.targetedItem.id;
+      }
+    } else {
+      if (position.isBefore) {
+        console.log('before!');
+        showDropHint(target, 'before');
+        this.reorderRows(list, 0);
+      }
+
+      if (position.isAfter) {
+        showDropHint(target, 'after');
+        this.reorderRows(list, 1);
+      }
+      console.log(list);
+      this.newParentId = currentRowParentId;
     }
   }
 
   //
   //  This moves the item which was dragged to just behind the target (dropped on) item.
   //
-  private reorderRows(list: WbsNodePhaseViewModel[], index: number): void {
+  private reorderRows(list: WbsPhaseNode[], index: number): void {
     const draggedIndex = list.findIndex((x) => x.id === this.draggedItem.id);
     list.splice(draggedIndex, 1);
 

@@ -1,9 +1,13 @@
 export interface WbsPhaseNode {
   id: string;
   parentId: string | null;
-  disciplineIds?: string[];
+  disciplines?: string[] | null;
   order: number;
   levels: number[];
   levelText: string;
   title: string;
+  children: number;
+  isDisciplineNode: boolean;
+  syncWithDisciplines?: boolean;
+  isLockedToParent: boolean;
 }

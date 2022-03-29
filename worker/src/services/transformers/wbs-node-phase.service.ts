@@ -2,30 +2,45 @@ import { Category, Project, WbsNode, WbsPhaseNode } from '../../models';
 import { ResourceService } from '../helpers';
 
 export class WbsNodePhaseTransformer {
-  run(
-    project: Project,
-    categoryList: Category[],
-    resources: ResourceService,
-  ): WbsPhaseNode[] {
+  constructor(
+    private readonly phaseList: Category[],
+    private readonly disciplineList: Category[],
+    private readonly resources: ResourceService,
+  ) {}
+
+  run(project: Project): WbsPhaseNode[] {
     const nodes: WbsPhaseNode[] = [];
     const categories = <Category[]>(
       project.categories.phase
-        .map((x) => categoryList.find((c) => c.id === x))
+        .map((x) => this.phaseList.find((c) => c.id === x))
         .filter((x) => x)
     );
 
     for (let i = 0; i < categories.length; i++) {
       const cat = categories[i];
       const parentlevel = [i + 1];
-      nodes.push({
+      const parent: WbsPhaseNode = {
         id: cat.id,
         parentId: null,
         levels: [...parentlevel],
         levelText: (i + 1).toString(),
-        title: resources.get(cat.label),
+        title: this.resources.get(cat.label),
         order: i + 1,
-      });
-      nodes.push(...this.getPhaseChildren(cat.id, parentlevel, project.nodes));
+        children: 0,
+        isDisciplineNode: false,
+        disciplines: null,
+        syncWithDisciplines: false,
+        isLockedToParent: false,
+      };
+      const children = this.getPhaseChildren(
+        cat.id,
+        parentlevel,
+        project.nodes,
+        false,
+      );
+      parent.children = this.getChildCount(children);
+
+      nodes.push(parent, ...children);
     }
     return nodes;
   }
@@ -40,21 +55,49 @@ export class WbsNodePhaseTransformer {
     parentId: string,
     parentLevel: number[],
     list: WbsNode[],
+    isLockedToParent: boolean,
   ): WbsPhaseNode[] {
     const results: WbsPhaseNode[] = [];
 
     for (const child of this.getSortedChildren(parentId, list)) {
       const childLevel = [...parentLevel, child.phase?.order ?? 0];
-      results.push({
+      const node: WbsPhaseNode = {
         id: child.id,
         parentId: parentId,
+        disciplines: child.disciplines,
+        isDisciplineNode: child.phase?.isDisciplineNode ?? false,
         order: child.phase?.order ?? 0,
         levels: childLevel,
         title: child.title ?? '',
         levelText: childLevel.join('.'),
-      });
-      results.push(...this.getPhaseChildren(child.id, childLevel, list));
+        children: 0,
+        syncWithDisciplines: child.phase?.syncWithDisciplines,
+        isLockedToParent,
+      };
+      if (node.isDisciplineNode) {
+        const dCat = this.disciplineList.find(
+          (x) => x.id === (node.disciplines ?? [])[0],
+        );
+
+        if (dCat) node.title = this.resources.get(dCat.label);
+      }
+      const children = this.getPhaseChildren(
+        child.id,
+        childLevel,
+        list,
+        child.phase?.syncWithDisciplines ?? false,
+      );
+
+      node.children = this.getChildCount(children);
+
+      results.push(node, ...children);
     }
     return results;
+  }
+
+  private getChildCount(children: WbsPhaseNode[]): number {
+    return children
+      .map((x) => x.children + 1)
+      .reduce((partialSum, a) => partialSum + a, 0);
   }
 }
