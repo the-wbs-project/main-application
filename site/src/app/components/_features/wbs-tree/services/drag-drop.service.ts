@@ -1,11 +1,11 @@
-import { WbsPhaseNode } from '@wbs/models';
+import { Position } from '../models';
 
 export const tableRow = (node: HTMLElement) =>
   node.tagName.toLowerCase() === 'tr';
 
 export const isSameRow = (
-  draggedItem: WbsPhaseNode,
-  targetedItem: WbsPhaseNode
+  draggedItem: { id: string },
+  targetedItem: { id: string }
 ) => {
   return draggedItem.id === targetedItem.id;
 };
@@ -68,7 +68,7 @@ export const getContentElement = (parent: HTMLElement): HTMLElement | null => {
 };
 
 export const findDataItem = (
-  data: WbsPhaseNode[],
+  data: { levelText: string }[],
   row: HTMLTableRowElement
 ) => {
   const level = row.cells[0].textContent!.trim();

@@ -6,11 +6,21 @@ import {
   DropDownButtonModule,
 } from '@progress/kendo-angular-buttons';
 import { IconsModule } from '@progress/kendo-angular-icons';
-import { PopoverModule } from '@progress/kendo-angular-tooltip';
+import { TooltipsModule } from '@progress/kendo-angular-tooltip';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { SharedModule } from '@wbs/module';
-import { WbsTreeComponent } from './component';
-import { WbsService } from './services';
+import {
+  DisciplineIconComponent,
+  DisciplineIconListComponent,
+  LegendDisciplineComponent,
+  LegendPhaseComponent,
+  WbsDisciplineTreeComponent,
+  WbsLevelPopoverComponent,
+  WbsPhaseTreeComponent,
+} from './components';
+import { WbsPhaseService } from './services';
+import { WbsTreeToolbarDirective } from './directives';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -18,13 +28,27 @@ import { WbsService } from './services';
     CommonModule,
     DropDownButtonModule,
     IconsModule,
-    PopoverModule,
+    NgbModule,
     SharedModule,
+    TooltipsModule,
     TranslateModule,
     TreeListModule,
   ],
-  providers: [WbsService],
-  declarations: [WbsTreeComponent],
-  exports: [WbsTreeComponent],
+  providers: [WbsPhaseService],
+  declarations: [
+    DisciplineIconComponent,
+    DisciplineIconListComponent,
+    LegendDisciplineComponent,
+    LegendPhaseComponent,
+    WbsDisciplineTreeComponent,
+    WbsLevelPopoverComponent,
+    WbsPhaseTreeComponent,
+    WbsTreeToolbarDirective,
+  ],
+  exports: [
+    WbsDisciplineTreeComponent,
+    WbsPhaseTreeComponent,
+    WbsTreeToolbarDirective,
+  ],
 })
 export class WbsTreeModule {}

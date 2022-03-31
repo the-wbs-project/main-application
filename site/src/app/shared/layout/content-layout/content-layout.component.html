@@ -1,12 +1,12 @@
 <div class="horizontalMenucontainer">
   <div class="page">
-    <div class="">
+    <div>
       <!-- // header -->
       <app-header></app-header>
       <!-- //sidebar -->
       <app-sidebar appHoverEffectSidebar></app-sidebar>
     </div>
-    <div class="main-content app-content">
+    <div class="main-content app-content" #body>
       <div
         class="main-container container-fluid"
         (click)="toggleSwitcherBody()"

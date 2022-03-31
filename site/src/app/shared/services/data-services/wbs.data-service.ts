@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { PROJECT_VIEW, WbsPhaseNode } from '@wbs/models';
+import { PROJECT_VIEW, WbsDisciplineNode, WbsPhaseNode } from '@wbs/models';
 import { Observable } from 'rxjs';
 
 export class WbsDataService {
@@ -8,6 +8,15 @@ export class WbsDataService {
   getPhaseList(ownerId: string, projectId: string): Observable<WbsPhaseNode[]> {
     return this.http.get<WbsPhaseNode[]>(
       `projects/${ownerId}/${projectId}/wbs/${PROJECT_VIEW.PHASE}`
+    );
+  }
+
+  getDisciplineList(
+    ownerId: string,
+    projectId: string
+  ): Observable<WbsDisciplineNode[]> {
+    return this.http.get<WbsPhaseNode[]>(
+      `projects/${ownerId}/${projectId}/wbs/${PROJECT_VIEW.DISCIPLINE}`
     );
   }
 }

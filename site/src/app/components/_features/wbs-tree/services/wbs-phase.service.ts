@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
-import { WbsPhaseNode } from '@wbs/models';
+import { WbsNodeView } from '@wbs/models';
 
-@Injectable({ providedIn: 'root' })
-export class WbsService {
-  rebuildLevels(list: WbsPhaseNode[]): WbsPhaseNode[] {
-    const results: WbsPhaseNode[] = [];
+@Injectable()
+export class WbsPhaseService {
+  rebuildLevels(list: WbsNodeView[]): WbsNodeView[] {
+    const results: WbsNodeView[] = [];
 
     const rebuild = (parentId: string, parentLevel: number[]): number => {
       const children = this.getSortedVmChildren(parentId, list);
@@ -42,8 +42,8 @@ export class WbsService {
 
   private getSortedVmChildren(
     parentId: string,
-    list: WbsPhaseNode[]
-  ): WbsPhaseNode[] {
+    list: WbsNodeView[]
+  ): WbsNodeView[] {
     return list
       .filter((x) => x.parentId === parentId)
       .sort((a, b) => (a.order < b.order ? -1 : 1));

@@ -2,11 +2,13 @@ import { Injectable } from '@angular/core';
 import { Category, PROJECT_VIEW, PROJECT_VIEW_TYPE } from '@wbs/models';
 import { StartupService } from '@wbs/services';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { environment } from 'src/environments/environment';
 
 interface StateModel {
   categoryList: Map<PROJECT_VIEW_TYPE, Category[]>;
   categoryMap: Map<PROJECT_VIEW_TYPE, Map<string, Category>>;
+  categoryNames: Map<string, string>;
+  disciplineCategories: Category[];
+  phaseCategories: Category[];
 }
 
 @Injectable()
@@ -15,6 +17,9 @@ interface StateModel {
   defaults: {
     categoryList: new Map<PROJECT_VIEW_TYPE, Category[]>(),
     categoryMap: new Map<PROJECT_VIEW_TYPE, Map<string, Category>>(),
+    categoryNames: new Map<string, string>(),
+    disciplineCategories: [],
+    phaseCategories: [],
   },
 })
 export class MetadataState implements NgxsOnInit {
@@ -32,28 +37,43 @@ export class MetadataState implements NgxsOnInit {
     return state.categoryMap;
   }
 
+  @Selector()
+  static categoryNames(state: StateModel): Map<string, string> {
+    return state.categoryNames;
+  }
+
+  @Selector()
+  static disciplineCategories(state: StateModel): Category[] {
+    return state.disciplineCategories;
+  }
+
+  @Selector()
+  static phaseCategories(state: StateModel): Category[] {
+    return state.phaseCategories;
+  }
+
   ngxsOnInit(ctx: StateContext<StateModel>) {
     const state = ctx.getState();
     const categoryList = state.categoryList;
     const categoryMap = state.categoryMap;
+    const discipline = this.loader.categoriesDiscipline ?? [];
+    const phase = this.loader.categoriesPhase ?? [];
 
-    categoryList.set(
-      PROJECT_VIEW.DISCIPLINE,
-      this.loader.categoriesDiscipline ?? []
-    );
-    categoryList.set(PROJECT_VIEW.PHASE, this.loader.categoriesPhase ?? []);
+    categoryList.set(PROJECT_VIEW.DISCIPLINE, discipline);
+    categoryList.set(PROJECT_VIEW.PHASE, phase);
 
-    categoryMap.set(
-      PROJECT_VIEW.DISCIPLINE,
-      this.createMap(this.loader.categoriesDiscipline ?? [])
-    );
-    categoryMap.set(
-      PROJECT_VIEW.PHASE,
-      this.createMap(this.loader.categoriesPhase ?? [])
-    );
+    categoryMap.set(PROJECT_VIEW.DISCIPLINE, this.createMap(discipline));
+    categoryMap.set(PROJECT_VIEW.PHASE, this.createMap(phase));
+
+    for (const cat of [...discipline, ...phase]) {
+      state.categoryNames.set(cat.id, cat.label);
+    }
     ctx.patchState({
       categoryList,
       categoryMap,
+      categoryNames: state.categoryNames,
+      disciplineCategories: discipline,
+      phaseCategories: phase,
     });
   }
 

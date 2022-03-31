@@ -1,2 +1,2 @@
 export * from './drag-drop.service';
-export * from './wbs.service';
+export * from './wbs-phase.service';

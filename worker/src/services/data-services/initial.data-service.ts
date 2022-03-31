@@ -1,4 +1,4 @@
-import { METADATA_TYPES, PROJECT_VIEW, User } from '../../models';
+import { PROJECT_VIEW, User } from '../../models';
 import { MetadataDataService } from './metadata.data-service';
 import { ProjectDataService } from './project.data-service';
 
@@ -9,18 +9,15 @@ export class InitialDataService {
   ) {}
 
   async getHydrateDataAsync(user: User | undefined): Promise<unknown> {
-    const [disciplineCats, phaseCats, resources, project] = await Promise.all([
-      this.metadata.getAsync(
-        METADATA_TYPES.CATEGORIES,
-        PROJECT_VIEW.DISCIPLINE,
-      ),
-      this.metadata.getAsync(METADATA_TYPES.CATEGORIES, PROJECT_VIEW.PHASE),
-      this.metadata.getAsync(METADATA_TYPES.RESOURCES, 'en-US'),
+    const [phase, discipline, resources, project] = await Promise.all([
+      this.metadata.getCategoriesAsync(PROJECT_VIEW.PHASE),
+      this.metadata.getCategoriesAsync(PROJECT_VIEW.DISCIPLINE),
+      this.metadata.getResourcesAsync(user?.userInfo?.culture ?? '', 'General'),
       this.project.getAsync('acme_engineering', '123'),
     ]);
     return {
-      categoriesDiscipline: disciplineCats,
-      categoriesPhase: phaseCats,
+      categoriesDiscipline: discipline,
+      categoriesPhase: phase,
       projects: [project],
       resources: resources,
       user,

@@ -23,40 +23,40 @@
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 .notification {
-  font-size: 14px;
+  font-size: 14px !important;
 }
 
 .notification-desktop {
-  margin: 20px;
-  padding: 15px;
-  min-width: 300px;
+  margin: 20px !important;
+  padding: 15px !important;
+  min-width: 300px !important;
 }
 
 .notification-mobile {
-  padding: 10px;
-  width: 300px;
-  bottom: 50px;
-  margin: 0;
+  padding: 10px !important;
+  width: 300px !important;
+  bottom: 50px !important;
+  margin: 0 !important;
 }
 
 .notification-success {
-  color: $light-grey;
-  background-color: $pass;
+  color: $light-grey !important;
+  background-color: $pass !important;
 }
 
 .notification-alt-success {
-  color: $light-grey;
-  background-color: $alt-pass;
+  color: $light-grey !important;
+  background-color: $alt-pass !important;
 }
 
 .notification-error {
-  color: $light-grey;
-  background-color: $fail;
+  color: $light-grey !important;
+  background-color: $fail !important;
 }
 
 .notification-alt-error {
-  color: $light-grey;
-  background-color: $alt-fail;
+  color: $light-grey !important;
+  background-color: $alt-fail !important;
 }
 
 .fc .fc-button-primary {

@@ -3,10 +3,47 @@
   <div class="col-lg-12">
     <div class="card custom-card">
       <div class="card-body">
-        <div class="table-responsive deleted-table">
-          <wbs-tree [nodes]="nodes$ | async"></wbs-tree>
+        <div
+          class="table-responsive deleted-table"
+          *ngIf="view$ | async; let view"
+        >
+          <wbs-phase-tree
+            *ngIf="view === 'phase'"
+            [nodes]="nodes$ | async"
+            [project]="project$ | async"
+            [toolbar]="toolbar"
+          >
+          </wbs-phase-tree>
+          <wbs-discipline-tree
+            *ngIf="view === 'discipline'"
+            [nodes]="nodes$ | async"
+            [project]="project$ | async"
+            [toolbar]="toolbar"
+          >
+          </wbs-discipline-tree>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<ng-template #toolbar>
+  <kendo-buttongroup selection="single" *ngIf="view$ | async; let view">
+    <button
+      kendoButton
+      [toggleable]="true"
+      [selected]="view === 'phase'"
+      (click)="viewChanged('phase')"
+    >
+      {{ 'Wbs.Phase' | translate }}
+    </button>
+    <button
+      kendoButton
+      [toggleable]="true"
+      [selected]="view === 'discipline'"
+      (click)="viewChanged('discipline')"
+    >
+      {{ 'Wbs.Discipline' | translate }}
+    </button>
+  </kendo-buttongroup>
+</ng-template>

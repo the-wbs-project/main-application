@@ -6,5 +6,7 @@ export * from './organization.model';
 export * from './project.model';
 export * from './threaded-discussion.model';
 export * from './training-material.model';
+export * from './wbs-node-discipline.model';
 export * from './wbs-node-phase.model';
+export * from './wbs-node-view.model';
 export * from './wbs.model';

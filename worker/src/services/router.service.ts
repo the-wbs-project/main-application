@@ -1,7 +1,6 @@
 import { Router } from 'itty-router';
 import { Config } from '../config';
-import { PROJECT_VIEW } from '../models';
-import { HttpServiceFactory } from './http-services';
+import { Http } from './http-services';
 import { MailGunService } from './mail-gun.service';
 import { WorkerRequest } from './worker-request.service';
 
@@ -18,32 +17,38 @@ export class RouterService {
   constructor(
     private readonly config: Config,
     private readonly email: MailGunService,
-    private readonly http: HttpServiceFactory,
   ) {
     this.router.options('*', () => new Response(''));
     this.router.get('/logout', () =>
       Response.redirect(this.config.auth.logoutCallbackUrl),
     );
     this.router.get(
-      '/api/projects/:ownerId/:projectId',
-      (request: WorkerRequest) => this.http.project.getByIdAsync(request),
+      '/api/resources/:category',
+      this.authenticate,
+      Http.resources.getAsync,
     );
     this.router.get(
-      `/api/projects/:ownerId/:projectId/wbs/${PROJECT_VIEW.PHASE}`,
-      (request: WorkerRequest) => this.authenticate(request),
-      (request: WorkerRequest) => this.http.wbs.getPhaseListAsync(request),
+      '/api/projects/:ownerId/:projectId/lite',
+      this.authenticate,
+      Http.project.getLiteByIdAsync,
+    );
+    this.router.get(
+      '/api/projects/:ownerId/:projectId/full',
+      this.authenticate,
+      Http.project.getByIdAsync,
+    );
+    this.router.get(
+      `/api/projects/:ownerId/:projectId/wbs/:view`,
+      this.authenticate,
+      Http.wbs.getListAsync,
     );
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
     );
     for (const path of PRE_ROUTES) {
-      this.router.get(path, (request: WorkerRequest) =>
-        this.http.site.getSiteResourceAsync(request),
-      );
+      this.router.get(path, Http.site.getSiteResourceAsync);
     }
-    this.router.get('*', (request: WorkerRequest) =>
-      this.http.site.getSiteAsync(request),
-    );
+    this.router.get('*', this.authenticate, Http.site.getSiteAsync);
   }
 
   async matchAsync(req: WorkerRequest): Promise<Response> {

@@ -1,12 +1,6 @@
-export interface WbsPhaseNode {
-  id: string;
-  parentId: string | null;
-  disciplines?: string[] | null;
-  order: number;
-  levels: number[];
-  levelText: string;
-  title: string;
-  children: number;
+import { WbsNodeView } from './wbs-node-view.model';
+
+export interface WbsPhaseNode extends WbsNodeView {
   isDisciplineNode: boolean;
   syncWithDisciplines?: boolean;
   isLockedToParent: boolean;

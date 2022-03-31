@@ -3,6 +3,7 @@ import {
   NotificationService,
   Position,
 } from '@progress/kendo-angular-notification';
+import { ContainerService } from './container.service';
 import { Device } from './device.service';
 import { Resources } from './resource.service';
 
@@ -16,6 +17,7 @@ export class Messages {
 
   constructor(
     device: Device,
+    private readonly containers: ContainerService,
     private readonly notificationService: NotificationService,
     private readonly resources: Resources
   ) {
@@ -52,7 +54,8 @@ export class Messages {
   private show2(label: string, toastr: 'success' | 'error') {
     this.notificationService.show({
       content: label,
-      hideAfter: 2400,
+      appendTo: this.containers.body,
+      hideAfter: 240000,
       type: { style: 'none', icon: true },
       animation: { type: 'fade', duration: 400 },
       position: this.position,

@@ -18,6 +18,9 @@
     (expand)="onToggle()"
     (close)="onToggle()"
   >
+    <ng-template *ngIf="toolbar" kendoTreeListToolbarTemplate>
+      <ng-container *ngTemplateOutlet="toolbar;"></ng-container>
+    </ng-template>
     <kendo-treelist-column
       field="levelText"
       title="Level"
@@ -45,18 +48,6 @@
   [animation]="{ duration: 100, type: 'slide', direction: 'right' }"
 >
   <ng-template kendoPopoverBodyTemplate let-anchor let-data="data">
-    <p class="stat-line">
-      <span class="stat-header"> Level: </span>
-      {{data.levelText}}
-    </p>
-    <p class="stat-line">
-      <span class="stat-header"> Depth: </span>
-      {{data.levels.length}}
-    </p>
-    <p class="stat-line">
-      <span class="stat-header"> # Children: </span>
-      {{data.children}}
-    </p>
-    &nbsp;
+    <wbs-level-popover [data]="data"></wbs-level-popover>
   </ng-template>
 </kendo-popover>

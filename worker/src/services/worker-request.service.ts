@@ -1,4 +1,5 @@
 import { Obj } from 'itty-router';
+import { Config } from '../config';
 import { User } from '../models';
 import { DataServiceFactory } from './data-services';
 import { EdgeService } from './edge-services';
@@ -15,6 +16,7 @@ export class WorkerRequest {
 
   constructor(
     event: FetchEvent,
+    readonly config: Config,
     readonly data: DataServiceFactory,
     readonly edge: EdgeService,
     private readonly logger: Logger,

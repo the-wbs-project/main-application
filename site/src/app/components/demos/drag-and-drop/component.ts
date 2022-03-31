@@ -1,7 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { WbsPhaseNode } from '@wbs/models';
-import { DataServiceFactory, TitleService } from '@wbs/services';
-import { Observable } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
+import { Project, ProjectLite, WbsPhaseNode } from '@wbs/models';
+import { TitleService } from '@wbs/services';
+import { map, Observable } from 'rxjs';
 
 @Component({
   templateUrl: './component.html',
@@ -9,18 +12,35 @@ import { Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DragAndDropComponent {
-  nodes$: Observable<WbsPhaseNode[] | null> | undefined;
+  readonly nodes$: Observable<WbsPhaseNode[] | null>;
+  readonly project$: Observable<Project>;
+  readonly view$: Observable<string | null>;
 
   constructor(
     title: TitleService,
-    private readonly dataServices: DataServiceFactory
+    private readonly route: ActivatedRoute,
+    private readonly store: Store
   ) {
     title.setTitle('Drag and Drop Demo', false);
+
+    this.view$ = this.route.params.pipe(map((p) => p['view']));
+    this.nodes$ = this.route.data.pipe(map((d) => d['pageData']!['nodes']));
+    this.project$ = this.route.data.pipe(map((d) => d['pageData']!['project']));
   }
 
-  ngOnInit(): void {
-    this.nodes$ = this.dataServices.wbs.getPhaseList('acme_engineering', '123');
-  }
+  ngOnInit(): void {}
 
-  viewChanged(view: string): void {}
+  viewChanged(view: string): void {
+    const params = this.route.snapshot.params;
+
+    this.store.dispatch(
+      new Navigate([
+        'demos',
+        'drag-and-drop',
+        params['owner'],
+        params['projectId'],
+        view,
+      ])
+    );
+  }
 }

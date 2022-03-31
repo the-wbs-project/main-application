@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule } from '@ngxs/store';
@@ -27,6 +29,8 @@ import {
   TabToTopComponent,
 } from '../layout';
 import {
+  CategoryLabelPipe,
+  DisciplineIconPipe,
   LengthPipe,
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
@@ -58,7 +62,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
   ],
   declarations: [
+    CategoryLabelPipe,
     ContentLayoutComponent,
+    DisciplineIconPipe,
     FillElementDirective,
     FooterComponent,
     FullscreenDirective,
@@ -73,6 +79,15 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     TabToTopComponent,
     ToggleThemeDirective,
   ],
-  exports: [FillElementDirective, PageHeaderComponent],
+  exports: [
+    CategoryLabelPipe,
+    CommonModule,
+    DisciplineIconPipe,
+    FillElementDirective,
+    FontAwesomeModule,
+    NgbModule,
+    PageHeaderComponent,
+    TranslateModule,
+  ],
 })
 export class SharedModule {}

@@ -1,9 +1,11 @@
 import { TaggedObject } from './app-models';
-import { WbsNodeRelationship } from './wbs-node-relationship.model';
+import { WbsNodeDisciplineRelationship } from './wbs-node-discipline-relationship.model';
+import { WbsNodePhaseRelationship } from './wbs-node-phase-relationship.model';
 
 export interface WbsNode extends TaggedObject {
   id: string;
   title?: string;
-  disciplines?: string[] | null;
-  phase?: WbsNodeRelationship;
+  disciplineIds?: string[] | null;
+  phase?: WbsNodePhaseRelationship;
+  discipline?: WbsNodeDisciplineRelationship[];
 }

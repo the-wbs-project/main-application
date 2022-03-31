@@ -1,17 +1,5 @@
-import {
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  NgZone,
-  OnChanges,
-  OnDestroy,
-  Renderer2,
-  ViewChild,
-  ViewEncapsulation,
-} from '@angular/core';
-import { WbsPhaseNode } from '@wbs/models';
-import { TreeListComponent } from '@progress/kendo-angular-treelist';
+import { Injectable, NgZone, Renderer2 } from '@angular/core';
+import { WbsNodeView } from '@wbs/models';
 import {
   BehaviorSubject,
   fromEvent,
@@ -29,73 +17,45 @@ import {
   removeDropHint,
   showDropHint,
   tableRow,
-  WbsService,
-} from './services';
+  WbsPhaseService,
+} from '../services';
+import { NodeCheck, Position } from '../models';
 
-declare type Position = {
-  isBefore: boolean;
-  isAfter: boolean;
-  isOverTheSame: boolean;
-};
-
-@Component({
-  selector: 'wbs-tree',
-  templateUrl: './component.html',
-  styleUrls: ['./component.scss'],
-  preserveWhitespaces: false,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-})
-export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
-  @ViewChild('treelist') treelist!: TreeListComponent;
-  @Input() nodes: WbsPhaseNode[] | null | undefined;
-
-  private dataReady = false;
+@Injectable()
+export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
+  protected dataReady = false;
   private newParentId!: any;
   private isParentDragged: boolean = false;
-  private currentSubscription!: Subscription;
+  protected abstract currentSubscription: Subscription | undefined;
 
   draggedRowEl!: HTMLTableRowElement;
-  draggedItem!: WbsPhaseNode;
-  targetedItem!: WbsPhaseNode;
+  draggedItem!: T;
+  targetedItem!: T;
   expandedKeys: number[] = [];
 
-  readonly tree$ = new BehaviorSubject<WbsPhaseNode[] | undefined>(undefined);
+  readonly tree$ = new BehaviorSubject<T[] | undefined>(undefined);
 
   constructor(
     private readonly renderer: Renderer2,
-    private readonly wbsService: WbsService,
+    private readonly wbsService: WbsPhaseService,
     private readonly zone: NgZone
   ) {}
 
-  ngOnChanges(): void {
-    if (!this.nodes) return;
-
-    this.tree$.next(this.nodes);
-    this.dataReady = true;
-    this.setDraggableRows();
-  }
-
-  ngOnDestroy(): void {
-    this.currentSubscription.unsubscribe();
-  }
-
-  ngAfterViewInit(): void {
-    this.setDraggableRows();
-  }
-
-  getContextData = (anchor: any): WbsPhaseNode => {
+  getContextData = (anchor: any): T => {
     return this.tree$.getValue()!.find((x) => x.id === anchor.id)!;
   };
 
   onToggle(): void {
     this.zone.onStable.pipe(take(1)).subscribe(() => {
-      this.currentSubscription.unsubscribe();
+      this.currentSubscription?.unsubscribe();
       this.setDraggableRows();
     });
   }
 
-  private setDraggableRows(): void {
+  abstract prePositionCheck(): NodeCheck;
+  abstract postPositionCheck(position: Position): boolean;
+
+  protected setDraggableRows(): void {
     if (!this.dataReady) return;
 
     const tableRows: HTMLTableRowElement[] = Array.from(
@@ -135,7 +95,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
       dragStart.subscribe((e: DragEvent) => {
         this.draggedRowEl = <HTMLTableRowElement>e.target;
         if (this.draggedRowEl.tagName === 'TR') {
-          this.draggedItem = <WbsPhaseNode>(
+          this.draggedItem = <T>(
             findDataItem(this.tree$.getValue()!, this.draggedRowEl)
           );
         }
@@ -154,45 +114,31 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
           const currentRow = <HTMLTableRowElement>closest(element, tableRow);
           const list = this.tree$.getValue()!;
 
-          this.targetedItem = <WbsPhaseNode>findDataItem(list, currentRow);
+          this.targetedItem = <T>findDataItem(list, currentRow);
 
           // Prevent dragging parent row in its children
-          let row: WbsPhaseNode | undefined = this.targetedItem;
+          let row: T | undefined = this.targetedItem;
           this.isParentDragged = false;
 
           //
           //  If we are trying to drag an item with no parent it's a root node, do not allow.
           //
           if (this.draggedItem.parentId == null) {
-            console.log('cant drag items without parents');
             this.isParentDragged = true;
             e.dataTransfer!.dropEffect = 'none';
             return;
           }
-          //
-          //  If the we are trying to drag a node that is locked to a parent, make sure that's not happening
-          //
-          if (this.draggedItem.isLockedToParent) {
-            newParentsAllowed = false;
-            console.log('no new parents');
-            if (
-              this.draggedItem.isDisciplineNode &&
-              this.draggedItem.parentId !== this.targetedItem.parentId
-            ) {
-              console.log('cant drag disicpline nodes to new parents');
-              e.dataTransfer!.dropEffect = 'none';
-              return;
-            }
-          }
-          while (row!.parentId != null) {
-            const parentRow = list.find((item) => item.id === row!.parentId);
 
-            if (parentRow!.id === this.draggedItem.id) {
-              this.isParentDragged = true;
-              e.dataTransfer!.dropEffect = 'none';
-              break;
-            }
-            row = parentRow;
+          const check = this.prePositionCheck();
+
+          newParentsAllowed = check.newParentsAllowed;
+
+          if (check.isParentDragged)
+            this.isParentDragged = check.isParentDragged;
+
+          if (check.cancelEffect) {
+            e.dataTransfer!.dropEffect = 'none';
+            return;
           }
 
           if (isSameRow(this.draggedItem, this.targetedItem)) {
@@ -209,29 +155,10 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
               e.clientY,
               containerOffest
             );
-            //
-            //  If you're trying to drop this INTO a discipline sync node, STOP IT!
-            //
-            if (
-              this.targetedItem.syncWithDisciplines &&
-              !position.isAfter &&
-              !position.isBefore
-            ) {
-              e.dataTransfer!.dropEffect = 'none';
-              return;
-            }
-            //
-            //  If you're trying to drop this before or after a a sync'ed child, STOP IT
-            //
-            console.log(position);
-            if (
-              !this.draggedItem.isLockedToParent &&
-              this.targetedItem.isLockedToParent &&
-              (position.isAfter || position.isBefore)
-            ) {
-              console.log(
-                'youre trying to drop this before or after a a synced child'
-              );
+
+            const postCheck = this.postPositionCheck(position);
+
+            if (!postCheck) {
               e.dataTransfer!.dropEffect = 'none';
               return;
             }
@@ -283,7 +210,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
           //
           const newTree = this.wbsService.rebuildLevels(tree);
 
-          this.zone.run(() => this.tree$.next(newTree));
+          this.zone.run(() => this.tree$.next(<T[]>newTree));
         }
       })
     );
@@ -317,7 +244,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   }
 
   private reposition(
-    list: WbsPhaseNode[],
+    list: T[],
     target: HTMLTableRowElement,
     position: Position,
     newParentsAllowed: boolean
@@ -369,7 +296,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   //
   //  This moves the item which was dragged to just behind the target (dropped on) item.
   //
-  private reorderRows(list: WbsPhaseNode[], index: number): void {
+  private reorderRows(list: T[], index: number): void {
     const draggedIndex = list.findIndex((x) => x.id === this.draggedItem.id);
     list.splice(draggedIndex, 1);
 

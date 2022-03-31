@@ -1,4 +1,4 @@
-import { Metadata } from '../../models';
+import { Category, Metadata, METADATA_TYPES, Resources } from '../../models';
 import { DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
@@ -9,6 +9,20 @@ export class MetadataDataService {
     private readonly db: DbService,
     private readonly edge: EdgeDataService,
   ) {}
+
+  getResourcesAsync(
+    culture: string,
+    category: string,
+  ): Promise<Resources | null | undefined> {
+    return this.getAsync<Resources>(
+      METADATA_TYPES.RESOURCES,
+      `${culture}.${category}`,
+    );
+  }
+
+  getCategoriesAsync(type: string): Promise<Category[] | null | undefined> {
+    return this.getAsync<Category[]>(METADATA_TYPES.CATEGORIES, type);
+  }
 
   async getAllAsync<T>(type: string): Promise<Metadata<T>[]> {
     if (this.edge.byPass(kvPrefix)) return await this.listFromDbAsync(type);

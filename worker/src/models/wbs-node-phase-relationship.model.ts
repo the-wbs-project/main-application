@@ -1,4 +1,4 @@
-export interface WbsNodeRelationship {
+export interface WbsNodePhaseRelationship {
   parentId: string;
   isDisciplineNode?: boolean;
   order: number;

@@ -1,18 +1,31 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  AfterContentInit,
+  Component,
+  ViewChild,
+  ViewContainerRef,
+} from '@angular/core';
 import { Subscription } from 'rxjs';
-import { SwitcherService } from '@wbs/services';
+import { ContainerService, SwitcherService } from '@wbs/services';
 
 @Component({
   selector: 'app-content-layout',
   templateUrl: './content-layout.component.html',
   styleUrls: ['./content-layout.component.scss'],
 })
-export class ContentLayoutComponent implements OnInit {
+export class ContentLayoutComponent implements AfterContentInit {
+  @ViewChild('body', { static: true, read: ViewContainerRef })
+  body: ViewContainerRef | undefined;
   layoutSub!: Subscription;
   sidenavtoggled1: any;
 
-  constructor(public SwitcherService: SwitcherService) {}
-  ngOnInit() {}
+  constructor(
+    private readonly container: ContainerService,
+    public SwitcherService: SwitcherService
+  ) {}
+
+  ngAfterContentInit() {
+    this.container.register(undefined, this.body);
+  }
 
   toggleSwitcherBody() {
     this.SwitcherService.emitChange(false);

@@ -4,4 +4,9 @@
 @import "~@progress/kendo-theme-bootstrap/scss/icons/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/notification/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/popover/_index.scss";
+@import "~@progress/kendo-theme-bootstrap/scss/tooltip/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/treelist/_index.scss";
+
+.k-popover-body {
+  padding: 0;
+}

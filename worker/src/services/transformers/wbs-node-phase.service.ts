@@ -45,8 +45,11 @@ export class WbsNodePhaseTransformer {
     return nodes;
   }
 
-  private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
-    return list
+  private getSortedChildren(
+    parentId: string,
+    list: WbsNode[] | undefined,
+  ): WbsNode[] {
+    return (list ?? [])
       .filter((x) => x.phase?.parentId === parentId)
       .sort((a, b) => ((a.phase?.order ?? 0) < (b.phase?.order ?? 0) ? -1 : 1));
   }
@@ -54,7 +57,7 @@ export class WbsNodePhaseTransformer {
   private getPhaseChildren(
     parentId: string,
     parentLevel: number[],
-    list: WbsNode[],
+    list: WbsNode[] | undefined,
     isLockedToParent: boolean,
   ): WbsPhaseNode[] {
     const results: WbsPhaseNode[] = [];
@@ -64,7 +67,7 @@ export class WbsNodePhaseTransformer {
       const node: WbsPhaseNode = {
         id: child.id,
         parentId: parentId,
-        disciplines: child.disciplines,
+        disciplines: child.disciplineIds,
         isDisciplineNode: child.phase?.isDisciplineNode ?? false,
         order: child.phase?.order ?? 0,
         levels: childLevel,
@@ -96,7 +99,7 @@ export class WbsNodePhaseTransformer {
   }
 
   private getChildCount(children: WbsPhaseNode[]): number {
-    return children
+    return (children ?? [])
       .map((x) => x.children + 1)
       .reduce((partialSum, a) => partialSum + a, 0);
   }

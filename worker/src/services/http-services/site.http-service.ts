@@ -1,27 +1,25 @@
 import { mapRequestToAsset } from '@cloudflare/kv-asset-handler';
-import { Config } from '../../config';
+import { TtlConfig } from '../../config';
 import { WorkerRequest } from '../worker-request.service';
 
 const ROBOT = `User-agent: *
 Disallow: /`;
 
 export class SiteHttpService {
-  constructor(private readonly config: Config) {}
-
-  php(): Response {
+  static php(): Response {
     return new Response('Not Found', {
       status: 404,
       statusText: 'Not Found',
     });
   }
 
-  robot(): Response {
+  static robot(): Response {
     return new Response(ROBOT);
   }
 
-  async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
+  static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
-      return await this.getFromKvAsync(req);
+      return await SiteHttpService.getFromKvAsync(req);
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
       req.logException(
@@ -33,13 +31,13 @@ export class SiteHttpService {
     }
   }
 
-  async getSiteAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getSiteAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      const response = await this.getSiteResourceAsync(req);
-      const isHtml = this.isHtml(response.headers);
+      const response = await SiteHttpService.getSiteResourceAsync(req);
+      const isHtml = SiteHttpService.isHtml(response.headers);
 
       return isHtml && response.status === 200
-        ? this.hydrateAsync(req, response)
+        ? SiteHttpService.hydrateAsync(req, response)
         : response;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
@@ -52,13 +50,13 @@ export class SiteHttpService {
     }
   }
 
-  private async getFromKvAsync(req: WorkerRequest): Promise<Response> {
+  private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
     const options: any = {};
-    options.mapRequestToAsset = this.handlePrefix();
+    options.mapRequestToAsset = SiteHttpService.handlePrefix();
     options.cacheControl = {
-      mapRequestToAsset: this.handlePrefix(),
+      mapRequestToAsset: SiteHttpService.handlePrefix(),
       bypassCache: DEBUG,
-      browserTTL: this.getTtl(req.url),
+      browserTTL: SiteHttpService.getTtl(req.url, req.config.ttl),
     };
 
     try {
@@ -69,7 +67,7 @@ export class SiteHttpService {
         'SiteService.getFromKvAsync',
         <Error>e,
       );
-      if (this.config.debug && e instanceof Error)
+      if (req.config.debug && e instanceof Error)
         return new Response(e.message || e.toString(), { status: 500 });
 
       return new Response('Not Found', { status: 404 });
@@ -83,7 +81,7 @@ export class SiteHttpService {
    * route on a zone, or if you only want your static content
    * to exist at a specific path.
    */
-  private handlePrefix() {
+  private static handlePrefix() {
     return (request: Request) => {
       // compute the default (e.g. / -> in
       // compute the default (e.g. / -> index.html)
@@ -113,7 +111,10 @@ export class SiteHttpService {
     };
   }
 
-  private getTtl(url: string): number | null | undefined {
+  private static getTtl(
+    url: string,
+    ttl: TtlConfig,
+  ): number | null | undefined {
     const path = new URL(url).pathname.toLowerCase();
 
     if (
@@ -121,17 +122,16 @@ export class SiteHttpService {
       path.indexOf('.png') > -1 ||
       path.indexOf('.svg') > -1
     )
-      return this.config.ttl.images;
+      return ttl.images;
     if (path.indexOf('.ttf') > -1 || path.indexOf('.woff') > -1)
-      return this.config.ttl.fonts;
-    if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1)
-      return this.config.ttl.jscss;
-    if (path.indexOf('.ico') > -1) return this.config.ttl.icons;
+      return ttl.fonts;
+    if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1) return ttl.jscss;
+    if (path.indexOf('.ico') > -1) return ttl.icons;
 
     return null;
   }
 
-  private async hydrateAsync(
+  private static async hydrateAsync(
     req: WorkerRequest,
     response: Response,
   ): Promise<Response> {
@@ -139,7 +139,7 @@ export class SiteHttpService {
       await req.data.initial.getHydrateDataAsync(req.user),
     );
     return new HTMLRewriter()
-      .on('head', new ElementHandler(this.config.appInsightsSnippet))
+      .on('head', new ElementHandler(req.config.appInsightsSnippet))
       .on(
         'head',
         new ElementHandler(
@@ -149,7 +149,7 @@ export class SiteHttpService {
       .transform(response);
   }
 
-  private isHtml(hdrs: Headers): boolean {
+  private static isHtml(hdrs: Headers): boolean {
     return (
       hdrs.has('Content-Type') &&
       (hdrs.get('Content-Type')?.includes('text/html') || false)

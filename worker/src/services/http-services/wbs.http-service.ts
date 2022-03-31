@@ -1,21 +1,15 @@
 import { Config } from '../../config';
-import {
-  Category,
-  METADATA_TYPES,
-  PROJECT_VIEW,
-  Resources,
-} from '../../models';
+import { PROJECT_VIEW } from '../../models';
 import { ResourceService } from '../helpers';
-import { WbsNodePhaseTransformer } from '../transformers';
+import {
+  WbsDisciplineNodeTransformer,
+  WbsNodePhaseTransformer,
+} from '../transformers';
 import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
 
 export class WbsHttpService extends BaseHttpService {
-  constructor(private readonly config: Config) {
-    super();
-  }
-
-  async getPhaseListAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getListAsync(req: WorkerRequest): Promise<Response | number> {
     try {
       const d = req.data;
       const params = req.params;
@@ -23,6 +17,7 @@ export class WbsHttpService extends BaseHttpService {
       if (
         !params?.ownerId ||
         !params?.projectId ||
+        !params?.view ||
         !req.user?.userInfo?.culture
       )
         return 500;
@@ -33,37 +28,36 @@ export class WbsHttpService extends BaseHttpService {
       //
       const [project, phases, disciplines, resources] = await Promise.all([
         d.projects.getAsync(params.ownerId, params.projectId, false),
-        d.metadata.getAsync<Category[]>(
-          METADATA_TYPES.CATEGORIES,
-          PROJECT_VIEW.PHASE,
-        ),
-        d.metadata.getAsync<Category[]>(
-          METADATA_TYPES.CATEGORIES,
-          PROJECT_VIEW.DISCIPLINE,
-        ),
-        d.metadata.getAsync<Resources>(
-          METADATA_TYPES.RESOURCES,
-          req.user.userInfo.culture,
-        ),
+        d.metadata.getCategoriesAsync(PROJECT_VIEW.PHASE),
+        d.metadata.getCategoriesAsync(PROJECT_VIEW.DISCIPLINE),
+        d.metadata.getResourcesAsync(req.user.userInfo.culture, 'General'),
       ]);
       if (!project) return 404;
       if (!resources || !phases || !disciplines) return 500;
 
       const resourceService = new ResourceService(resources);
-      const transformer = new WbsNodePhaseTransformer(
+
+      if (params.view === PROJECT_VIEW.PHASE) {
+        const transformer = new WbsNodePhaseTransformer(
+          phases,
+          disciplines,
+          resourceService,
+        );
+
+        return super.buildJson(transformer.run(project));
+      }
+
+      const transformer = new WbsDisciplineNodeTransformer(
         phases,
         disciplines,
         resourceService,
       );
 
-      const list = transformer.run(project);
-      const response = await super.buildJson(list);
-
-      return response;
+      return super.buildJson(transformer.run(project));
     } catch (e) {
       req.logException(
         'An error occured trying to get the phase WBS list for a project.',
-        'WbsHttpService.getPhaseListAsync',
+        'WbsHttpService.getListAsync',
         <Error>e,
       );
       return 500;

@@ -18,7 +18,7 @@ export interface Project extends ProjectLite {
     phase: string[];
   };
   nodeChanges?: any[];
-  nodes: WbsNode[];
+  nodes?: WbsNode[];
   roles?: any[];
   thread?: any;
   wbsId?: string | null;
