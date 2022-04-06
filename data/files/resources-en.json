@@ -1,16 +1,65 @@
-[{
-    "id": "en",
+[
+  {
+    "id": "en-US.General",
     "pk": "Resources",
+    "category": "General",
+    "language": "en-Us",
     "values": {
-        "General": {},
-        "Pages": {},
-        "Identity": {},
-        "Emails": {},
-        "Landing": {}
-    },
-    "_rid": "cQYYAPHJG8RyAAAAAAAAAA==",
-    "_self": "dbs/cQYYAA==/colls/cQYYAPHJG8Q=/docs/cQYYAPHJG8RyAAAAAAAAAA==/",
-    "_etag": "\"030029b4-0000-0b00-0000-61475a380000\"",
-    "_attachments": "attachments/",
-    "_ts": 1632066104
-  }]
+      "General": {
+        "Name": "Name",
+        "Description": "Description",
+        "LoginExpired": "Login Expired",
+        "UnexpectedServerError": "An unexpected server error occured."
+      },
+      "Category_Phase": {
+        "Initial": "Initial Phase",
+        "Planning": "Planning Phase",
+        "Execution": "Execution Phase",
+        "Contract": "Contract Phase"
+      },
+      "Category_Discipline": {
+        "Mechanical": "Mechanical",
+        "Electrical": "Electrical",
+        "Structural": "Structural",
+        "Survey": "Survey",
+        "Civil": "Civil",
+        "Plumbing": "Plumbing",
+        "Scientist": "Scientist"
+      },
+      "WbsTree": {
+        "Level": "Level",
+        "Depth": "Depth",
+        "Phase": "Phase",
+        "Discipline": "Discipline",
+        "Disciplines": "Disciplines",
+        "#Children": "# Children",
+        "DisciplineLegend": "Discipline Legend",
+        "PhaseLegend": "Phase Legend",
+        "NodeLevelStats": "Node Level Stats"
+      },
+      "WbsEditor": {
+        "General": "General",
+        "InsertDescription": "Insert Description Here"
+      }
+    }
+  },
+  {
+    "id": "en-US.Wbs",
+    "pk": "Resources",
+    "category": "Wbs",
+    "language": "en-Us",
+    "values": {
+      "Wbs": {
+        "Level": "Level",
+        "Depth": "Depth",
+        "Phase": "Phase",
+        "Discipline": "Discipline",
+        "Disciplines": "Disciplines",
+        "#Children": "# Children",
+        "DisciplineLegend": "Discipline Legend",
+        "PhaseLegend": "Phase Legend",
+        "NodeLevelStats": "Node Level Stats"
+      }
+    }
+  }
+]

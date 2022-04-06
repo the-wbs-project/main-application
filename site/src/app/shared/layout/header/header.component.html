@@ -17,12 +17,12 @@
         </a>
       </div>
       <div class="app-sidebar__toggle" data-bs-toggle="sidebar">
-        <a appSidemenuToggle class="open-toggle" href="javascript:void(0);"
-          ><i class="header-icon fe fe-align-left"></i
-        ></a>
-        <a appSidemenuToggle class="close-toggle" href="javascript:void(0);"
-          ><i class="header-icon fe fe-x"></i
-        ></a>
+        <a appSidemenuToggle class="open-toggle" href="javascript:void(0);">
+          <fa-icon [icon]="faAlignLeft" class="header-icon"></fa-icon>
+        </a>
+        <a appSidemenuToggle class="close-toggle" href="javascript:void(0);">
+          <fa-icon [icon]="faX" class="header-icon"></fa-icon>
+        </a>
       </div>
       <div class="logo-horizontal">
         <a routerLink="/dashboard/dashboard01" class="header-logo">

@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
 
-namespace table_copy
-{
+namespace table_copy {
     class Program {
         private static readonly List<HttpStatusCode> codes = new List<HttpStatusCode> { HttpStatusCode.OK, HttpStatusCode.Created };
 
@@ -19,26 +18,38 @@ namespace table_copy
 
             var configFile = await File.ReadAllTextAsync(Path.Combine(fileDir, "config.json"));
             var indexFile = await File.ReadAllTextAsync(Path.Combine(fileDir, "index.json"));
-            
+
             var config = JsonConvert.DeserializeObject<Dictionary<string, string>>(configFile);
-            var files = JsonConvert.DeserializeObject<List<string>>(indexFile);
+            dynamic containers = JsonConvert.DeserializeObject(indexFile);
 
             var client = new CosmosClient(config["cs"]);
-            var container = client.GetContainer(config["db"], config["coll"]);
 
-            foreach (var file in files) {
-                Console.WriteLine(file);
+            foreach (var containerInfo in containers) {
+                string name = containerInfo.name;
+                string pk = containerInfo.pk;
+                var container = client.GetContainer(config["db"], name);
 
-                var rawFile = await File.ReadAllTextAsync(Path.Combine(fileDir, file));
-                dynamic json = JsonConvert.DeserializeObject(rawFile);
+                foreach (var file in containerInfo.files) {
+                    Console.WriteLine($"Container: {name}, File: {file}");
 
-                foreach (var obj in json)
-                  await UpsertAsync(container, obj);
-            }     
+                    var rawFile = (await File.ReadAllTextAsync(Path.Combine(fileDir, (string) file)))?.Trim();
+                    dynamic json = JsonConvert.DeserializeObject(rawFile);
+
+                    if (rawFile[0] == '[') {
+                        foreach (var obj in json)
+                            await UpsertAsync(container, obj, (string) obj[pk]);
+                    } else {
+                        await UpsertAsync(container, json, (string) json[pk]);
+                    }
+                }
+            }
+
+            foreach (var file in Directory.GetFiles("../../worker/kv/KVDATA"))
+                File.Delete(file);
         }
 
-        public static async Task UpsertAsync(Container c, dynamic document) {
-            var response = await c.UpsertItemAsync(document, new PartitionKey((string)document.pk));
+        public static async Task UpsertAsync(Container c, dynamic document, string pk) {
+            var response = await c.UpsertItemAsync(document, new PartitionKey(pk));
 
             if (!codes.Contains(response.StatusCode)) throw new Exception($"An error occured upserting a db object: {response.StatusCode}.");
         }

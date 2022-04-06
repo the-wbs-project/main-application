@@ -33,8 +33,9 @@ export class WbsDisciplineNodeTransformer {
         title: this.resources.get(cat.label),
         order: i + 1,
         children: 0,
-        disciplines: null,
         isPhaseNode: false,
+        description: null,
+        disciplines: null,
       };
       const children = this.getChildren(cat.id, parentlevel, project.nodes);
       parent.children = this.getChildCount(children);
@@ -79,6 +80,7 @@ export class WbsDisciplineNodeTransformer {
         order: childDisc.order,
         levels: childLevel,
         title: child.title ?? '',
+        description: child.description,
         levelText: childLevel.join('.'),
         children: 0,
         isPhaseNode: childDisc.isPhaseNode,

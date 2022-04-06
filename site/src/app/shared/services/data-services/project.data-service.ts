@@ -3,13 +3,21 @@ import { Project, ProjectLite } from '@wbs/models';
 import { Observable } from 'rxjs';
 
 export class ProjectDataService {
+  private ownerId: string | undefined;
+
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(ownerId: string, projectId: string): Observable<Project> {
-    return this.http.get<Project>(`projects/${ownerId}/${projectId}/full`);
+  setOwner(ownerId: string | undefined) {
+    this.ownerId = ownerId;
   }
 
-  getLiteAsync(ownerId: string, projectId: string): Observable<ProjectLite> {
-    return this.http.get<ProjectLite>(`projects/${ownerId}/${projectId}/lite`);
+  getAsync(projectId: string): Observable<Project> {
+    return this.http.get<Project>(`projects/${this.ownerId}/${projectId}/full`);
+  }
+
+  getLiteAsync(projectId: string): Observable<ProjectLite> {
+    return this.http.get<ProjectLite>(
+      `projects/${this.ownerId}/${projectId}/lite`
+    );
   }
 }

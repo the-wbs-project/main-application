@@ -1,0 +1,58 @@
+@import "src/styles/variables";
+
+$action-panel-height: 40px;
+$action-panel-padding: 8px;
+
+$header-panel-height: 42px;
+
+$border-dark: solid 1px white;
+
+.editor-body {
+  display: flex;
+  flex-direction: column;
+
+  > .action-panel {
+    height: $action-panel-height + ($action-panel-padding * 2);
+    border-bottom: $border-dark;
+
+    > div {
+      padding: $action-panel-padding 0;
+      line-height: $action-panel-height;
+      text-align: center;
+    }
+  }
+  > .header-panel {
+    height: $header-panel-height;
+    background-color: #216259;
+    border-bottom: $border-dark;
+
+    > div {
+      > kendo-dropdownbutton {
+        height: $header-panel-height;
+        margin-left: 20px;
+        width: 200px;
+        color: white;
+      }
+    }
+  }
+}
+
+.editor-fields {
+  padding: 8px;
+  .field {
+    font-size: 12px;
+
+    > .field-header {
+      font-size: 10px;
+      font-style: italic;
+      display: block;
+    }
+  }
+}
+
+.dark-theme {
+  .editor-body {
+    color: white;
+    background-color: $dark-background;
+  }
+}

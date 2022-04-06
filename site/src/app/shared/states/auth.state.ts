@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export interface AuthBucket {
   isAuthenticated?: boolean;
   profile?: User | null | undefined;
+  organization?: string | undefined;
 }
 
 @Injectable()
@@ -26,12 +27,17 @@ export class AuthState implements NgxsOnInit {
 
   @Selector()
   static isAuthenticated(state: AuthBucket): boolean {
-    return state?.isAuthenticated ?? false;
+    return state.isAuthenticated ?? false;
+  }
+
+  @Selector()
+  static organization(state: AuthBucket): string | undefined {
+    return state.organization;
   }
 
   @Selector()
   static profile(state: AuthBucket): User | null | undefined {
-    return state?.profile;
+    return state.profile;
   }
 
   @Selector()
@@ -44,6 +50,7 @@ export class AuthState implements NgxsOnInit {
 
     ctx.setState({
       profile: this.loader.user,
+      organization: 'acme_engineering',
       isAuthenticated: data ? JSON.parse(data) : false,
     });
   }

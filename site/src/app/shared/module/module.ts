@@ -7,7 +7,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { NgxsModule } from '@ngxs/store';
 import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
@@ -16,6 +15,7 @@ import { environment } from 'src/environments/environment';
 import {
   FillElementDirective,
   FullscreenDirective,
+  SidemenuToggleDirective,
   ToggleThemeDirective,
 } from '../directives';
 import {
@@ -35,7 +35,6 @@ import {
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
 } from '../pipes';
-import { AuthState, MetadataState, ProjectState } from '../states';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -47,7 +46,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FontAwesomeModule,
     FormsModule,
     NgbModule,
-    NgxsModule.forRoot([AuthState, MetadataState, ProjectState]),
     NgxsLoggerPluginModule.forRoot({
       disabled: environment.production,
     }),
@@ -76,6 +74,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProjectListFilterLengthPipe,
     RightSidebarComponent,
     SidebarComponent,
+    SidemenuToggleDirective,
     TabToTopComponent,
     ToggleThemeDirective,
   ],

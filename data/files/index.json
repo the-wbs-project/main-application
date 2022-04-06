@@ -1,3 +1,17 @@
 [
-  "resources-en.json"
+  {
+    "name": "Metadata",
+    "pk": "pk",
+    "files": [
+      "categories.json",
+      "resources-en.json"
+    ]
+  },
+  {
+    "name": "Projects",
+    "pk": "owner",
+    "files": [
+      "project.market-research.json"
+    ]
+  }
 ]

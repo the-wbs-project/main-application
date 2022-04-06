@@ -11,15 +11,7 @@ export class DragGuard implements CanActivate {
 
   canActivate(): Observable<boolean> | boolean {
     return this.store
-      .dispatch(
-        new Navigate([
-          'demos',
-          'drag-and-drop',
-          'acme_engineering',
-          '123',
-          'phase',
-        ])
-      )
+      .dispatch(new Navigate(['demos', 'drag-and-drop', '123', 'phase']))
       .pipe(map(() => false));
   }
 }

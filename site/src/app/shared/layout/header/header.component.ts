@@ -1,7 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
-import { LayoutService, NavService, SwitcherService } from '@wbs/services';
+import { faAlignLeft, faX } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { LayoutService, NavService, SwitcherService } from '@wbs/services';
 
 @Component({
   selector: 'app-header',
@@ -10,7 +11,10 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 })
 export class HeaderComponent implements OnInit {
   private body: HTMLBodyElement | any = document.querySelector('body');
-  public isCollapsed = true;
+
+  readonly faAlignLeft = faAlignLeft;
+  readonly faX = faX;
+  isCollapsed = true;
   activated: boolean = false;
 
   constructor(

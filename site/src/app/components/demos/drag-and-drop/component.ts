@@ -1,10 +1,18 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
-import { Project, ProjectLite, WbsPhaseNode } from '@wbs/models';
+import { Select, Store } from '@ngxs/store';
+import {
+  Project,
+  ProjectLite,
+  PROJECT_VIEW,
+  PROJECT_VIEW_TYPE,
+  WbsNodeView,
+  WbsPhaseNode,
+} from '@wbs/models';
 import { TitleService } from '@wbs/services';
 import { map, Observable } from 'rxjs';
+import { ClearEditor, NodeEditorState, NodeSelected } from '../../_features';
 
 @Component({
   templateUrl: './component.html',
@@ -12,9 +20,12 @@ import { map, Observable } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class DragAndDropComponent {
+  @Select(NodeEditorState.show) show$: Observable<boolean> | undefined;
+
   readonly nodes$: Observable<WbsPhaseNode[] | null>;
   readonly project$: Observable<Project>;
   readonly view$: Observable<string | null>;
+  node: string | undefined;
 
   constructor(
     title: TitleService,
@@ -33,14 +44,15 @@ export class DragAndDropComponent {
   viewChanged(view: string): void {
     const params = this.route.snapshot.params;
 
-    this.store.dispatch(
-      new Navigate([
-        'demos',
-        'drag-and-drop',
-        params['owner'],
-        params['projectId'],
-        view,
-      ])
-    );
+    this.store.dispatch([
+      new ClearEditor(),
+      new Navigate(['demos', 'drag-and-drop', params['projectId'], view]),
+    ]);
+  }
+
+  nodeSelected(node: WbsNodeView) {
+    const params = this.route.snapshot.params;
+
+    this.store.dispatch(new NodeSelected(node, params['view']));
   }
 }

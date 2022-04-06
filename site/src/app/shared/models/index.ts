@@ -4,6 +4,7 @@ export * from './category.model';
 export * from './enums';
 export * from './organization.model';
 export * from './project.model';
+export * from './resource-sections.model';
 export * from './threaded-discussion.model';
 export * from './training-material.model';
 export * from './wbs-node-discipline.model';

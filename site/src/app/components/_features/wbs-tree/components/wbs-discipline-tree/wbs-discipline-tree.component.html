@@ -1,7 +1,7 @@
 <div
   *ngIf="tree$ | async; let tree"
   appFillElement
-  [paddingBottom]="20"
+  [paddingBottom]="10"
   kendoPopoverContainer
   showOn="hover"
   filter=".node-level"
@@ -15,8 +15,10 @@
     kendoTreeListExpandable
     [initiallyExpanded]="true"
     [(expandedKeys)]="expandedKeys"
+    [selectable]="settings"
     (expand)="onToggle()"
     (close)="onToggle()"
+    (selectionChange)="rowSelected($event)"
   >
     <ng-template *ngIf="toolbar" kendoTreeListToolbarTemplate>
       <ng-container *ngTemplateOutlet="toolbar"></ng-container>

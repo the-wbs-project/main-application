@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DragAndDropComponent } from './drag-and-drop/component';
-import { DragGuard } from './services/drag-guard.service';
-import { DragResolver } from './services/drag-resolver.service';
+import { DragGuard, DragProjectResolver } from './services';
 
 const routes: Routes = [
   {
@@ -14,10 +13,10 @@ const routes: Routes = [
         canActivate: [DragGuard],
       },
       {
-        path: 'drag-and-drop/:owner/:projectId/:view',
+        path: 'drag-and-drop/:projectId/:view',
         component: DragAndDropComponent,
         resolve: {
-          pageData: DragResolver,
+          pageData: DragProjectResolver,
         },
       },
     ],
@@ -27,6 +26,6 @@ const routes: Routes = [
 @NgModule({
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule],
-  providers: [DragGuard, DragResolver],
+  providers: [DragGuard, DragProjectResolver],
 })
 export class DemosRoutingModule {}

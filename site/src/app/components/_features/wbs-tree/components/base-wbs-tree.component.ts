@@ -1,4 +1,4 @@
-import { Injectable, NgZone, Renderer2 } from '@angular/core';
+import { EventEmitter, Injectable, NgZone, Renderer2 } from '@angular/core';
 import { WbsNodeView } from '@wbs/models';
 import {
   BehaviorSubject,
@@ -20,6 +20,10 @@ import {
   WbsPhaseService,
 } from '../services';
 import { NodeCheck, Position } from '../models';
+import {
+  SelectableSettings,
+  SelectionChangeEvent,
+} from '@progress/kendo-angular-treelist';
 
 @Injectable()
 export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
@@ -32,6 +36,15 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
   draggedItem!: T;
   targetedItem!: T;
   expandedKeys: number[] = [];
+  settings: SelectableSettings = {
+    enabled: true,
+    mode: 'row',
+    multiple: false,
+    drag: false,
+    readonly: false,
+  };
+  selectedItems: any[] = [];
+  abstract readonly selectedChanged: EventEmitter<WbsNodeView>;
 
   readonly tree$ = new BehaviorSubject<T[] | undefined>(undefined);
 
@@ -50,6 +63,10 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
       this.currentSubscription?.unsubscribe();
       this.setDraggableRows();
     });
+  }
+
+  rowSelected(e: SelectionChangeEvent): void {
+    this.selectedChanged.emit(e.items[0].dataItem);
   }
 
   abstract prePositionCheck(): NodeCheck;

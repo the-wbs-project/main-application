@@ -10,6 +10,14 @@ $discipline-width: 120px;
   .k-grid-drag-hint {
     background-color: #216259 !important;
   }
+  .k-grid th.k-state-selected,
+  .k-grid td.k-state-selected,
+  .k-grid tr.k-state-selected > td {
+    color: white;
+  }
+  .k-toolbar {
+    background-color: $dark-background;
+  }
 }
 
 .node-level {

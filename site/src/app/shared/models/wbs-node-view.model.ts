@@ -6,5 +6,6 @@ export interface WbsNodeView {
   levels: number[];
   levelText: string;
   title: string;
+  description?: string | null;
   children: number;
 }

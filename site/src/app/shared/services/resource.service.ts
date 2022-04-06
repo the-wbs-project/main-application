@@ -7,6 +7,7 @@ import {
 } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { ResourceSections } from '@wbs/models';
 
 type MissingResource = {
   key: string;
@@ -38,7 +39,7 @@ export class Resources extends MissingTranslationHandler {
     this.translate.missingTranslationHandler = this;
   }
 
-  append(resources: any | null | undefined) {
+  append(resources: ResourceSections | null | undefined) {
     if (resources) {
       this.translate.setTranslation(this.culture, resources, true);
       this.resources.push(resources);

@@ -3,8 +3,9 @@ import {
   ButtonGroupModule,
   ButtonModule,
 } from '@progress/kendo-angular-buttons';
+import { SplitterModule } from '@progress/kendo-angular-layout';
 import { SharedModule } from '@wbs/module';
-import { WbsTreeModule } from '../_features';
+import { WbsNodeEditorModule, WbsTreeModule } from '../_features';
 import { DemosRoutingModule } from './demos-routing.module';
 import { DragAndDropComponent } from './drag-and-drop/component';
 
@@ -15,6 +16,8 @@ import { DragAndDropComponent } from './drag-and-drop/component';
     ButtonModule,
     DemosRoutingModule,
     SharedModule,
+    SplitterModule,
+    WbsNodeEditorModule,
     WbsTreeModule,
   ],
 })

@@ -4,13 +4,13 @@
 
 body.dark-theme {
   color: #eaecf3;
-  background: #383d52;
+  background: $dark-background;
 }
 
 .dark-theme {
   .k-grid {
     color: #eaecf3 !important;
-    background: #383d52 !important;
+    background: $dark-background !important;
   }
   .k-grid-header {
     color: #eaecf3 !important;
@@ -3709,7 +3709,7 @@ body.dark-theme {
 
   #external-events {
     border: 1px solid $dark-theme;
-    background: #383d52;
+    background: $dark-background;
   }
 
   .fc .fc-list-empty {
@@ -5206,7 +5206,7 @@ body.dark-theme {
 }
 
 .dark-theme .SumoSelect.disabled > .CaptionCont {
-  background-color: #383d52;
+  background-color: $dark-background;
 }
 
 .dark-theme .fc-theme-standard .fc-popover {

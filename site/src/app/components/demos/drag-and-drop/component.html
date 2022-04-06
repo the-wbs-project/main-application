@@ -7,20 +7,32 @@
           class="table-responsive deleted-table"
           *ngIf="view$ | async; let view"
         >
-          <wbs-phase-tree
-            *ngIf="view === 'phase'"
-            [nodes]="nodes$ | async"
-            [project]="project$ | async"
-            [toolbar]="toolbar"
-          >
-          </wbs-phase-tree>
-          <wbs-discipline-tree
-            *ngIf="view === 'discipline'"
-            [nodes]="nodes$ | async"
-            [project]="project$ | async"
-            [toolbar]="toolbar"
-          >
-          </wbs-discipline-tree>
+          <kendo-splitter orientation="horizontal">
+            <kendo-splitter-pane [collapsible]="false">
+              <div class="pane-content">
+                <wbs-phase-tree
+                  *ngIf="view === 'phase'"
+                  [nodes]="nodes$ | async"
+                  [project]="project$ | async"
+                  [toolbar]="toolbar"
+                  (selectedChanged)="nodeSelected($event)"
+                >
+                </wbs-phase-tree>
+                <wbs-discipline-tree
+                  *ngIf="view === 'discipline'"
+                  [nodes]="nodes$ | async"
+                  [project]="project$ | async"
+                  [toolbar]="toolbar"
+                  (selectedChanged)="nodeSelected($event)"
+                >
+                </wbs-discipline-tree>
+              </div>
+            </kendo-splitter-pane>
+
+            <kendo-splitter-pane *ngIf="show$ | async" size="300px">
+              <wbs-node-editor></wbs-node-editor>
+            </kendo-splitter-pane>
+          </kendo-splitter>
         </div>
       </div>
     </div>

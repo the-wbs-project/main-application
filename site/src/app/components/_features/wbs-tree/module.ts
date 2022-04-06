@@ -20,7 +20,6 @@ import {
 } from './components';
 import { WbsPhaseService } from './services';
 import { WbsTreeToolbarDirective } from './directives';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   imports: [
@@ -28,7 +27,6 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     CommonModule,
     DropDownButtonModule,
     IconsModule,
-    NgbModule,
     SharedModule,
     TooltipsModule,
     TranslateModule,
