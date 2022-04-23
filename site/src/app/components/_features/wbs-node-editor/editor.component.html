@@ -1,0 +1,21 @@
+<ng-template [ngIf]="node$ | async" let-node>
+  <ng-template [ngIf]="(view$ | async) === 'General'">
+    <div class="editor-fields">
+      <p class="field">
+        <span class="field-header">{{ "General.Name" | translate }} </span>
+        {{ node.title }}
+      </p>
+    </div>
+    <div class="editor-fields">
+      <p class="field">
+        <span class="field-header"
+          >{{ "General.Description" | translate }}
+        </span>
+        {{ node.description ?? ("Wbs.InsertDescription" | translate) }}
+      </p>
+    </div>
+  </ng-template>
+  <ng-template [ngIf]="(view$ | async) === 'History'">
+    {{ history$ | async | json }}
+  </ng-template>
+</ng-template>

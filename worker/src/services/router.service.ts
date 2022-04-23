@@ -25,7 +25,12 @@ export class RouterService {
     this.router.get(
       '/api/resources/:category',
       this.authenticate,
-      Http.resources.getAsync,
+      Http.metadata.getResourcesAsync,
+    );
+    this.router.get(
+      '/api/lists/:name',
+      this.authenticate,
+      Http.metadata.getListAsync,
     );
     this.router.get(
       '/api/projects/:ownerId/:projectId/lite',
@@ -41,6 +46,11 @@ export class RouterService {
       `/api/projects/:ownerId/:projectId/wbs/:view`,
       this.authenticate,
       Http.wbs.getListAsync,
+    );
+    this.router.delete(
+      `/api/projects/:ownerId/:projectId/wbs/node/:nodeId`,
+      this.authenticate,
+      Http.wbs.markNodeAsRemovedAsync,
     );
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),

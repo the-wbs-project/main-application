@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { Select } from '@ngxs/store';
-import { Category } from '@wbs/models';
+import { ListItem } from '@wbs/models';
 import { MetadataState } from '@wbs/states';
 import { Observable } from 'rxjs';
 
@@ -16,6 +16,6 @@ import { Observable } from 'rxjs';
 export class LegendDisciplineComponent {
   @Input() ids: string[] | undefined;
   @Select(MetadataState.disciplineCategories) categories$:
-    | Observable<Category[]>
+    | Observable<ListItem[]>
     | undefined;
 }

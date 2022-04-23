@@ -3,6 +3,6 @@ export interface AuthState {
   code?: string;
   identity?: any;
   verified: boolean;
-  updatedValues?: { [key: string]: string | null | undefined };
+  updatedValues?: Record<string, string | null | undefined>;
   sessionId?: string;
 }

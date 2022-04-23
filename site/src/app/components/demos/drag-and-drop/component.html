@@ -4,33 +4,49 @@
     <div class="card custom-card">
       <div class="card-body">
         <div
-          class="table-responsive deleted-table"
           *ngIf="view$ | async; let view"
+          class="table-responsive deleted-table"
         >
           <kendo-splitter orientation="horizontal">
             <kendo-splitter-pane [collapsible]="false">
-              <div class="pane-content">
+              <div class="pane-content" *ngIf="project$ | async; let project">
                 <wbs-phase-tree
                   *ngIf="view === 'phase'"
                   [nodes]="nodes$ | async"
-                  [project]="project$ | async"
+                  [project]="project"
                   [toolbar]="toolbar"
-                  (selectedChanged)="nodeSelected($event)"
+                  (selectedChanged)="nodeSelected(project, $event)"
                 >
                 </wbs-phase-tree>
                 <wbs-discipline-tree
                   *ngIf="view === 'discipline'"
                   [nodes]="nodes$ | async"
-                  [project]="project$ | async"
+                  [project]="project"
                   [toolbar]="toolbar"
-                  (selectedChanged)="nodeSelected($event)"
+                  (selectedChanged)="nodeSelected(project, $event)"
                 >
                 </wbs-discipline-tree>
               </div>
             </kendo-splitter-pane>
 
-            <kendo-splitter-pane *ngIf="show$ | async" size="300px">
-              <wbs-node-editor></wbs-node-editor>
+            <kendo-splitter-pane *ngIf="show$ | async" min="300px" size="40%">
+              <div class="editor-body" appFillElement>
+                <ng-template [ngIf]="node$ | async" let-node>
+                  <div class="header-panel">
+                    <div class="header-label">
+                      <wbs-node-editor-categories></wbs-node-editor-categories>
+                    </div>
+                    <div class="header-actions">
+                      <wbs-node-actions-menu
+                        (menuClicked)="menuClicked($event)"
+                      ></wbs-node-actions-menu>
+                    </div>
+                  </div>
+                  <div appFillElement class="main-panel">
+                    <wbs-node-editor></wbs-node-editor>
+                  </div>
+                </ng-template>
+              </div>
             </kendo-splitter-pane>
           </kendo-splitter>
         </div>
@@ -38,7 +54,10 @@
     </div>
   </div>
 </div>
-
+<wbs-node-delete-dialog
+  [open]="showDeleteDialog"
+  (nodeDeleted)="nodeDeleted($event)"
+></wbs-node-delete-dialog>
 <ng-template #toolbar>
   <kendo-buttongroup selection="single" *ngIf="view$ | async; let view">
     <button

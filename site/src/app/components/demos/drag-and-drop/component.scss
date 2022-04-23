@@ -1,0 +1,55 @@
+@import "src/styles/variables";
+
+$header-panel-height: 56px;
+
+$border-dark: solid 1px white;
+
+.editor-body {
+  display: flex;
+  flex-direction: column;
+
+  > .header-panel {
+    height: $header-panel-height;
+    background-color: #216259;
+    border-bottom: $border-dark;
+    display: flex;
+
+    .header-label {
+      display: inline-block;
+      flex-grow: 1;
+    }
+    .header-actions {
+      display: inline-block;
+      width: 50px;
+    }
+  }
+}
+
+.editor-fields {
+  padding: 8px;
+  .field {
+    font-size: 14px;
+
+    > .field-header {
+      font-size: 12px;
+      font-weight: bold;
+      display: block;
+    }
+  }
+}
+
+.other-panel {
+  margin-top: 10px;
+
+  > label {
+    font-size: 10px;
+    font-style: italic;
+  }
+}
+
+.dark-theme {
+  .editor-body {
+    color: white;
+    background-color: $dark-background;
+  }
+}

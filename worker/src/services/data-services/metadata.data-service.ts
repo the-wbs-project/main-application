@@ -1,4 +1,4 @@
-import { Category, Metadata, METADATA_TYPES, Resources } from '../../models';
+import { ListItem, Metadata, METADATA_TYPES, Resources } from '../../models';
 import { DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
@@ -20,8 +20,15 @@ export class MetadataDataService {
     );
   }
 
-  getCategoriesAsync(type: string): Promise<Category[] | null | undefined> {
-    return this.getAsync<Category[]>(METADATA_TYPES.CATEGORIES, type);
+  getListAsync(type: string): Promise<ListItem[] | null | undefined> {
+    return this.getAsync<ListItem[]>(METADATA_TYPES.LISTS, type);
+  }
+
+  getCategoryAsync(type: string): Promise<ListItem[] | null | undefined> {
+    return this.getAsync<ListItem[]>(
+      METADATA_TYPES.LISTS,
+      `categories_${type}`,
+    );
   }
 
   async getAllAsync<T>(type: string): Promise<Metadata<T>[]> {

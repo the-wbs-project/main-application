@@ -4,8 +4,11 @@ import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
+import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule } from '@ngxs/store';
 import { NotificationModule } from '@progress/kendo-angular-notification';
+import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import {
   AnalyticsService,
   AppInitializerFactory,
@@ -29,8 +32,13 @@ import { AppComponent } from './app.component';
     BrowserAnimationsModule,
     HttpClientModule,
     NgbModule,
+    NgxsLoggerPluginModule.forRoot({
+      disabled: false, // environment.production,
+    }),
     NgxsModule.forRoot([AuthState, MetadataState, ProjectState]),
+    NgxsRouterPluginModule.forRoot(),
     NotificationModule,
+    SweetAlert2Module.forRoot(),
     ToastrModule.forRoot(),
     TranslateModule.forRoot(),
   ],

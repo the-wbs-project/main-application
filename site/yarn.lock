@@ -2051,6 +2051,13 @@
   resolved "https://registry.yarnpkg.com/@socket.io/component-emitter/-/component-emitter-3.0.0.tgz#8863915676f837d9dad7b76f50cb500c1e9422e9"
   integrity sha512-2pTGuibAXJswAPJjaKisthqS/NOK5ypG4LYT6tEAV0S/mxW0zOIvYvGK0V8w8+SHxAm6vRMSjqSalFXeBAqs+Q==
 
+"@sweetalert2/ngx-sweetalert2@^11.0.0":
+  version "11.0.0"
+  resolved "https://registry.yarnpkg.com/@sweetalert2/ngx-sweetalert2/-/ngx-sweetalert2-11.0.0.tgz#7fe051bde0a147347f2cfde446b77a50ccf4e87a"
+  integrity sha512-xbote4s9dkwzyXb+ymhbh0FnT5GtUtk5poEWJzkaRVt+4Nuwyv+E3OgthdcH79l1QwWYWkob8cxMbL31ub5Wcw==
+  dependencies:
+    tslib "^2.0.0"
+
 "@telerik/kendo-draggable@^2.0.0", "@telerik/kendo-draggable@^2.2.0":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@telerik/kendo-draggable/-/kendo-draggable-2.2.1.tgz#27d86fd5b3273676b744bd82dbcebfffd911ad5c"
@@ -9229,6 +9236,11 @@ sver-compat@^1.5.0:
   dependencies:
     es6-iterator "^2.0.1"
     es6-symbol "^3.1.1"
+
+sweetalert2@^11.4.8:
+  version "11.4.8"
+  resolved "https://registry.yarnpkg.com/sweetalert2/-/sweetalert2-11.4.8.tgz#f436eb34107c5637a0278fa7330edc722090ebbb"
+  integrity sha512-BDS/+E8RwaekGSxCPUbPnsRAyQ439gtXkTF/s98vY2l9DaVEOMjGj1FaQSorfGREKsbbxGSP7UXboibL5vgTMA==
 
 symbol-observable@1.0.1:
   version "1.0.1"

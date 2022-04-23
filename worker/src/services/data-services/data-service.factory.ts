@@ -32,7 +32,10 @@ export class DataServiceFactory {
 
   get projects(): ProjectDataService {
     if (this._project == null)
-      this._project = new ProjectDataService(this.dbFactory.projects);
+      this._project = new ProjectDataService(
+        this.dbFactory.projects,
+        this.edge.data,
+      );
 
     return this._project;
   }

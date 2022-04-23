@@ -51,6 +51,8 @@ namespace table_copy {
         public static async Task UpsertAsync(Container c, dynamic document, string pk) {
             var response = await c.UpsertItemAsync(document, new PartitionKey(pk));
 
+            Console.WriteLine(response.StatusCode);
+
             if (!codes.Contains(response.StatusCode)) throw new Exception($"An error occured upserting a db object: {response.StatusCode}.");
         }
     }

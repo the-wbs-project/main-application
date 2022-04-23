@@ -1,16 +1,16 @@
-import { Category, Project, WbsNode, WbsPhaseNode } from '../../models';
+import { ListItem, Project, WbsNode, WbsPhaseNode } from '../../models';
 import { ResourceService } from '../helpers';
 
 export class WbsNodePhaseTransformer {
   constructor(
-    private readonly phaseList: Category[],
-    private readonly disciplineList: Category[],
+    private readonly phaseList: ListItem[],
+    private readonly disciplineList: ListItem[],
     private readonly resources: ResourceService,
   ) {}
 
   run(project: Project): WbsPhaseNode[] {
     const nodes: WbsPhaseNode[] = [];
-    const categories = <Category[]>(
+    const categories = <ListItem[]>(
       project.categories.phase
         .map((x) => this.phaseList.find((c) => c.id === x))
         .filter((x) => x)
@@ -51,7 +51,7 @@ export class WbsNodePhaseTransformer {
     list: WbsNode[] | undefined,
   ): WbsNode[] {
     return (list ?? [])
-      .filter((x) => x.phase?.parentId === parentId)
+      .filter((x) => !x.removed && x.phase?.parentId === parentId)
       .sort((a, b) => ((a.phase?.order ?? 0) < (b.phase?.order ?? 0) ? -1 : 1));
   }
 
@@ -65,6 +65,7 @@ export class WbsNodePhaseTransformer {
 
     for (const child of this.getSortedChildren(parentId, list)) {
       const childLevel = [...parentLevel, child.phase?.order ?? 0];
+      console.log(child.disciplineIds);
       const node: WbsPhaseNode = {
         id: child.id,
         parentId: parentId,

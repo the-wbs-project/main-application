@@ -55,9 +55,12 @@ export class Resources extends MissingTranslationHandler {
       for (const resource of this.resources) {
         if (resource != null) {
           let x = resource;
-          for (const part of parts) {
-            x = x[part];
-          }
+          if (x)
+            for (const part of parts) {
+              x = x[part];
+
+              if (!x) break;
+            }
           if (x) return x;
         }
       }
@@ -74,8 +77,9 @@ export class Resources extends MissingTranslationHandler {
         ? defaultValue
         : resource;
     } catch (e) {
+      console.log(e);
       console.error(`Error trying to retrieve '${resource}' value.`);
-      return defaultValue == null ? 'resource' : defaultValue;
+      return defaultValue == null ? resource : defaultValue;
     }
   }
 

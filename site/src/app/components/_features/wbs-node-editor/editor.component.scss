@@ -1,9 +1,6 @@
 @import "src/styles/variables";
 
-$action-panel-height: 40px;
-$action-panel-padding: 8px;
-
-$header-panel-height: 42px;
+$header-panel-height: 56px;
 
 $border-dark: solid 1px white;
 
@@ -11,28 +8,26 @@ $border-dark: solid 1px white;
   display: flex;
   flex-direction: column;
 
-  > .action-panel {
-    height: $action-panel-height + ($action-panel-padding * 2);
-    border-bottom: $border-dark;
-
-    > div {
-      padding: $action-panel-padding 0;
-      line-height: $action-panel-height;
-      text-align: center;
-    }
-  }
   > .header-panel {
     height: $header-panel-height;
     background-color: #216259;
     border-bottom: $border-dark;
+    display: flex;
 
     > div {
+      display: inline-block;
+
       > kendo-dropdownbutton {
         height: $header-panel-height;
         margin-left: 20px;
-        width: 200px;
         color: white;
       }
+    }
+    .header-label {
+      flex-grow: 1;
+    }
+    .header-actions {
+      width: 50px;
     }
   }
 }
@@ -40,13 +35,22 @@ $border-dark: solid 1px white;
 .editor-fields {
   padding: 8px;
   .field {
-    font-size: 12px;
+    font-size: 14px;
 
     > .field-header {
-      font-size: 10px;
-      font-style: italic;
+      font-size: 12px;
+      font-weight: bold;
       display: block;
     }
+  }
+}
+
+.other-panel {
+  margin-top: 10px;
+
+  > label {
+    font-size: 10px;
+    font-style: italic;
   }
 }
 

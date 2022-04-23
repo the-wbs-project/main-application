@@ -130,9 +130,9 @@ export class Logger {
     });
   }
 
-  private getTags(request: Request): { [key: string]: string } {
+  private getTags(request: Request): Record<string, string> {
     const cookieValue = request.headers.get('Cookie');
-    const tags: { [key: string]: string } = {
+    const tags: Record<string, string> = {
       'ai.location.ip': <string>request.headers.get('CF-Connecting-IP'),
     };
 

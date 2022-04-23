@@ -1,7 +1,7 @@
 [
   {
-    "id": "phase",
-    "pk": "Categories",
+    "id": "categories_phase",
+    "pk": "Lists",
     "values": [
       {
         "id": "initial",
@@ -92,8 +92,8 @@
     ]
   },
   {
-    "id": "discipline",
-    "pk": "Categories",
+    "id": "categories_discipline",
+    "pk": "Lists",
     "values": [
       {
         "id": "mechanical",
@@ -114,6 +114,26 @@
       { "id": "civil", "label": "Category_Discipline.Civil", "tags": ["Civil"] },
       { "id": "plumbing", "label": "Category_Discipline.Plumbing", "tags": ["Plumbing"] },
       { "id": "scientist", "label": "Category_Discipline.Scientist", "tags": ["Scientist"] }
+    ]
+  },
+  {
+    "id": "delete_reasons",
+    "pk": "Lists",
+    "values": [
+      {
+        "id": "delete-scope",
+        "label": "Wbs.DeleteList_Scope"
+      },
+      {
+        "id": "delete-sub",
+        "label": "Wbs.DeleteList_Sub"
+      },
+      {
+        "id": "delete-prime",
+        "label": "Wbs.DeleteList_Prime"
+      },
+      { "id": "delete-client", "label": "Wbs.DeleteList_Client" },
+      { "id": "delete-other", "label": "General.Other" }
     ]
   }
 ]

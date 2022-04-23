@@ -92,7 +92,7 @@ export class RequestInterceptor implements HttpInterceptor {
 
   private stringifyError(err: Error) {
     if (!err) return null;
-    var plainObject: { [prop: string]: string } = {};
+    var plainObject: Record<string, string> = {};
 
     for (const key of Object.getOwnPropertyNames(err)) {
       //@ts-ignore
@@ -103,7 +103,7 @@ export class RequestInterceptor implements HttpInterceptor {
 
   private headersToString(headers: HttpHeaders): string | null {
     if (headers == null) return null;
-    const results: { [prop: string]: string } = {};
+    const results: Record<string, string> = {};
 
     for (const key of headers.keys()) {
       const val = headers.get(key);

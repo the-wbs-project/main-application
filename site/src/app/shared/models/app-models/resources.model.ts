@@ -1,5 +1,5 @@
-import { DbObject } from "./db-object.model";
+import { DbObject } from './db-object.model';
 
 export interface Resources extends DbObject {
-  values?: { [category: string]: { [key: string]: string } };
+  values?: Record<string, Record<string, string>>;
 }

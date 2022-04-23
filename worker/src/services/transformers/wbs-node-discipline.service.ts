@@ -1,5 +1,5 @@
 import {
-  Category,
+  ListItem,
   Project,
   WbsDisciplineNode,
   WbsNode,
@@ -9,14 +9,14 @@ import { ResourceService } from '../helpers';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
-    private readonly phaseList: Category[],
-    private readonly disciplineList: Category[],
+    private readonly phaseList: ListItem[],
+    private readonly disciplineList: ListItem[],
     private readonly resources: ResourceService,
   ) {}
 
   run(project: Project): WbsDisciplineNode[] {
     const nodes: WbsDisciplineNode[] = [];
-    const categories = <Category[]>(
+    const categories = <ListItem[]>(
       project.categories.discipline
         .map((x) => this.disciplineList.find((c) => c.id === x))
         .filter((x) => x)
@@ -52,7 +52,7 @@ export class WbsDisciplineNodeTransformer {
     const results: [WbsNode, WbsNodeDisciplineRelationship][] = [];
 
     for (const node of list ?? []) {
-      if (node.discipline == null) continue;
+      if (node.discipline == null || node.removed) continue;
 
       const r = node.discipline.find((x) => x.parentId === parentId);
 

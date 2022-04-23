@@ -1,6 +1,10 @@
-export type VIEW_TYPES = 'General';
+export type EDITOR_VIEW_TYPES =
+  | 'General'
+  | 'History'
+  | 'TrainingMaterial'
+  | 'Attachments';
 
 export interface EditorView {
-  id: VIEW_TYPES;
+  id: EDITOR_VIEW_TYPES;
   label: string;
 }

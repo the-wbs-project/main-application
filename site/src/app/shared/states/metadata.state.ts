@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
-import { Category, PROJECT_VIEW, PROJECT_VIEW_TYPE } from '@wbs/models';
+import { ListItem, PROJECT_VIEW, PROJECT_VIEW_TYPE } from '@wbs/models';
 import { StartupService } from '@wbs/services';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 
 interface StateModel {
-  categoryList: Map<PROJECT_VIEW_TYPE, Category[]>;
-  categoryMap: Map<PROJECT_VIEW_TYPE, Map<string, Category>>;
+  categoryList: Map<PROJECT_VIEW_TYPE, ListItem[]>;
+  categoryMap: Map<PROJECT_VIEW_TYPE, Map<string, ListItem>>;
   categoryNames: Map<string, string>;
-  disciplineCategories: Category[];
-  phaseCategories: Category[];
+  disciplineCategories: ListItem[];
+  phaseCategories: ListItem[];
 }
 
 @Injectable()
 @State<StateModel>({
   name: 'metadata',
   defaults: {
-    categoryList: new Map<PROJECT_VIEW_TYPE, Category[]>(),
-    categoryMap: new Map<PROJECT_VIEW_TYPE, Map<string, Category>>(),
+    categoryList: new Map<PROJECT_VIEW_TYPE, ListItem[]>(),
+    categoryMap: new Map<PROJECT_VIEW_TYPE, Map<string, ListItem>>(),
     categoryNames: new Map<string, string>(),
     disciplineCategories: [],
     phaseCategories: [],
@@ -26,14 +26,14 @@ export class MetadataState implements NgxsOnInit {
   constructor(private readonly loader: StartupService) {}
 
   @Selector()
-  static categoryList(state: StateModel): Map<PROJECT_VIEW_TYPE, Category[]> {
+  static categoryList(state: StateModel): Map<PROJECT_VIEW_TYPE, ListItem[]> {
     return state.categoryList;
   }
 
   @Selector()
   static categoryMap(
     state: StateModel
-  ): Map<PROJECT_VIEW_TYPE, Map<string, Category>> {
+  ): Map<PROJECT_VIEW_TYPE, Map<string, ListItem>> {
     return state.categoryMap;
   }
 
@@ -43,12 +43,12 @@ export class MetadataState implements NgxsOnInit {
   }
 
   @Selector()
-  static disciplineCategories(state: StateModel): Category[] {
+  static disciplineCategories(state: StateModel): ListItem[] {
     return state.disciplineCategories;
   }
 
   @Selector()
-  static phaseCategories(state: StateModel): Category[] {
+  static phaseCategories(state: StateModel): ListItem[] {
     return state.phaseCategories;
   }
 
@@ -77,8 +77,8 @@ export class MetadataState implements NgxsOnInit {
     });
   }
 
-  private createMap(list: Category[]): Map<string, Category> {
-    var map = new Map<string, Category>();
+  private createMap(list: ListItem[]): Map<string, ListItem> {
+    var map = new Map<string, ListItem>();
 
     for (const x of list) map.set(x.id, x);
 

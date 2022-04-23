@@ -43,7 +43,7 @@ export class CloudflareEdgeService implements EdgeService {
     return getAssetFromKV(this.event, options);
   }
 
-  getEdgeProperties(): { [key: string]: any } {
+  getEdgeProperties(): Record<string, any> {
     return this._request.cf;
   }
 

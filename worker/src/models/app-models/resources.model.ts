@@ -1,1 +1,1 @@
-export type Resources = { [key: string]: { [key: string]: string } };
+export type Resources = Record<string, Record<string, string>>;

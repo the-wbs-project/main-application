@@ -1,3 +1,1 @@
-export interface ResourceSections {
-  [cat: string]: { [key: string]: string };
-}
+export type ResourceSections = Record<string, Record<string, string>>;

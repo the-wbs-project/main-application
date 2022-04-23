@@ -1,5 +1,5 @@
 export enum METADATA_TYPES {
-  CATEGORIES = 'Categories',
+  LISTS = 'Lists',
   RESOURCES = 'Resources',
 }
 

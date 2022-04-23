@@ -5,6 +5,7 @@ import { WbsNodePhaseRelationship } from './wbs-node-phase-relationship.model';
 export interface WbsNode extends TaggedObject {
   id: string;
   title?: string;
+  removed?: boolean;
   description: string | null;
   disciplineIds?: string[] | null;
   phase?: WbsNodePhaseRelationship;

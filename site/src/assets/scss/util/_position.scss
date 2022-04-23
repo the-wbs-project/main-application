@@ -1,5 +1,9 @@
 /* ###### 9.7 Position   ###### */
 
+.display-ib {
+  display: inline-block;
+}
+
 .pos-absolute {
   position: absolute;
 }
@@ -17,19 +21,19 @@
 }
 
 .pos-absolute-f {
-  position: absolute;
+  position: absolute !important;
 }
 
 .pos-relative-f {
-  position: relative;
+  position: relative !important;
 }
 
 .pos-fixed-f {
-  position: fixed;
+  position: fixed !important;
 }
 
 .pos-static-f {
-  position: static;
+  position: static !important;
 }
 
 .t-0 {
@@ -71,7 +75,8 @@
   left: 0px;
 }
 
-.x-0, .y-0 {
+.x-0,
+.y-0 {
   left: 0px;
   right: 0px;
 }
@@ -115,7 +120,8 @@
   left: 5px;
 }
 
-.x-5, .y-5 {
+.x-5,
+.y-5 {
   left: 5px;
   right: 5px;
 }
@@ -159,7 +165,8 @@
   left: 10px;
 }
 
-.x-10, .y-10 {
+.x-10,
+.y-10 {
   left: 10px;
   right: 10px;
 }
@@ -203,7 +210,8 @@
   left: 15px;
 }
 
-.x-15, .y-15 {
+.x-15,
+.y-15 {
   left: 15px;
   right: 15px;
 }
@@ -247,7 +255,8 @@
   left: 20px;
 }
 
-.x-20, .y-20 {
+.x-20,
+.y-20 {
   left: 20px;
   right: 20px;
 }
@@ -291,7 +300,8 @@
   left: 25px;
 }
 
-.x-25, .y-25 {
+.x-25,
+.y-25 {
   left: 25px;
   right: 25px;
 }
@@ -335,7 +345,8 @@
   left: 30px;
 }
 
-.x-30, .y-30 {
+.x-30,
+.y-30 {
   left: 30px;
   right: 30px;
 }
@@ -379,7 +390,8 @@
   left: 35px;
 }
 
-.x-35, .y-35 {
+.x-35,
+.y-35 {
   left: 35px;
   right: 35px;
 }
@@ -423,7 +435,8 @@
   left: 40px;
 }
 
-.x-40, .y-40 {
+.x-40,
+.y-40 {
   left: 40px;
   right: 40px;
 }
@@ -467,7 +480,8 @@
   left: 45px;
 }
 
-.x-45, .y-45 {
+.x-45,
+.y-45 {
   left: 45px;
   right: 45px;
 }
@@ -511,7 +525,8 @@
   left: 50px;
 }
 
-.x-50, .y-50 {
+.x-50,
+.y-50 {
   left: 50px;
   right: 50px;
 }
@@ -555,7 +570,8 @@
   left: 55px;
 }
 
-.x-55, .y-55 {
+.x-55,
+.y-55 {
   left: 55px;
   right: 55px;
 }
@@ -599,7 +615,8 @@
   left: 60px;
 }
 
-.x-60, .y-60 {
+.x-60,
+.y-60 {
   left: 60px;
   right: 60px;
 }
@@ -643,7 +660,8 @@
   left: 65px;
 }
 
-.x-65, .y-65 {
+.x-65,
+.y-65 {
   left: 65px;
   right: 65px;
 }
@@ -687,7 +705,8 @@
   left: 70px;
 }
 
-.x-70, .y-70 {
+.x-70,
+.y-70 {
   left: 70px;
   right: 70px;
 }
@@ -731,7 +750,8 @@
   left: 75px;
 }
 
-.x-75, .y-75 {
+.x-75,
+.y-75 {
   left: 75px;
   right: 75px;
 }
@@ -775,7 +795,8 @@
   left: 80px;
 }
 
-.x-80, .y-80 {
+.x-80,
+.y-80 {
   left: 80px;
   right: 80px;
 }
@@ -819,7 +840,8 @@
   left: 85px;
 }
 
-.x-85, .y-85 {
+.x-85,
+.y-85 {
   left: 85px;
   right: 85px;
 }
@@ -863,7 +885,8 @@
   left: 90px;
 }
 
-.x-90, .y-90 {
+.x-90,
+.y-90 {
   left: 90px;
   right: 90px;
 }
@@ -907,7 +930,8 @@
   left: 95px;
 }
 
-.x-95, .y-95 {
+.x-95,
+.y-95 {
   left: 95px;
   right: 95px;
 }
@@ -951,7 +975,8 @@
   left: 100px;
 }
 
-.x-100, .y-100 {
+.x-100,
+.y-100 {
   left: 100px;
   right: 100px;
 }

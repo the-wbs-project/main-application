@@ -1,8 +1,14 @@
 import { Project, ProjectLite } from '../../models';
 import { DbService } from '../database-services';
+import { EdgeDataService } from '../edge-services';
+
+const kvPrefix = 'PROJECTS';
 
 export class ProjectDataService {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    private readonly edge: EdgeDataService,
+  ) {}
 
   async getAllAsync(ownerId: string): Promise<Project[]> {
     const list = await this.db.getAllByPartitionAsync<Project>(ownerId, true);
@@ -17,13 +23,13 @@ export class ProjectDataService {
     projectId: string,
     deleteNodes = true,
   ): Promise<Project | null> {
-    const p = await this.getFromDbAsync(ownerId, projectId, true);
+    const data = await this.getObjectAsync(ownerId, projectId);
 
-    if (p == null) return null;
+    if (data == null) return null;
 
-    if (deleteNodes) delete p.nodes;
+    if (deleteNodes) delete data.nodes;
 
-    return p;
+    return data;
   }
 
   async getLiteAsync(
@@ -43,6 +49,35 @@ export class ProjectDataService {
       title: p.title,
       tags: p.tags,
     };
+  }
+
+  async putAsync(project: Project): Promise<void> {
+    const kvName = [kvPrefix, project.owner, project.id].join('-');
+
+    await this.db.upsertDocument(project, project.owner);
+
+    this.edge.putLater(kvName, JSON.stringify(project));
+  }
+
+  private async getObjectAsync(
+    ownerId: string,
+    projectId: string,
+  ): Promise<Project | null> {
+    if (this.edge.byPass(kvPrefix))
+      return await this.getFromDbAsync(ownerId, projectId);
+
+    const kvName = [kvPrefix, ownerId, projectId].join('-');
+    const kvData = await this.edge.get<Project>(kvName, 'json');
+
+    if (kvData) return kvData;
+
+    const data = await this.getFromDbAsync(ownerId, projectId);
+
+    console.log(kvName);
+    console.log(JSON.stringify(data));
+    if (data) this.edge.putLater(kvName, JSON.stringify(data));
+
+    return data;
   }
 
   private getFromDbAsync(

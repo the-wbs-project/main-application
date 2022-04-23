@@ -10,8 +10,8 @@ export class InitialDataService {
 
   async getHydrateDataAsync(user: User | undefined): Promise<unknown> {
     const [phase, discipline, resources, project] = await Promise.all([
-      this.metadata.getCategoriesAsync(PROJECT_VIEW.PHASE),
-      this.metadata.getCategoriesAsync(PROJECT_VIEW.DISCIPLINE),
+      this.metadata.getCategoryAsync(PROJECT_VIEW.PHASE),
+      this.metadata.getCategoryAsync(PROJECT_VIEW.DISCIPLINE),
       this.metadata.getResourcesAsync(user?.userInfo?.culture ?? '', 'General'),
       this.project.getAsync('acme_engineering', '123'),
     ]);

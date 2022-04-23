@@ -1,6 +1,6 @@
 export * from './activity.model';
 export * from './app-models';
-export * from './category.model';
+export * from './list-item.model';
 export * from './enums';
 export * from './organization.model';
 export * from './project.model';

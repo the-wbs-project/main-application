@@ -6,7 +6,12 @@
     "language": "en-Us",
     "values": {
       "General": {
+        "Cancel": "Cancel",
+        "Confirm": "Confirm",
+        "Other": "Other",
         "Name": "Name",
+        "Delete": "Delete",
+        "General": "General",
         "Description": "Description",
         "LoginExpired": "Login Expired",
         "UnexpectedServerError": "An unexpected server error occured."
@@ -25,21 +30,6 @@
         "Civil": "Civil",
         "Plumbing": "Plumbing",
         "Scientist": "Scientist"
-      },
-      "WbsTree": {
-        "Level": "Level",
-        "Depth": "Depth",
-        "Phase": "Phase",
-        "Discipline": "Discipline",
-        "Disciplines": "Disciplines",
-        "#Children": "# Children",
-        "DisciplineLegend": "Discipline Legend",
-        "PhaseLegend": "Phase Legend",
-        "NodeLevelStats": "Node Level Stats"
-      },
-      "WbsEditor": {
-        "General": "General",
-        "InsertDescription": "Insert Description Here"
       }
     }
   },
@@ -50,6 +40,11 @@
     "language": "en-Us",
     "values": {
       "Wbs": {
+        "History": "History",
+        "Clone": "Clone",
+        "CloneWith": "Clone (With Children)",
+        "TrainingMaterial": "Training Material",
+        "Attachments": "Attachments",
         "Level": "Level",
         "Depth": "Depth",
         "Phase": "Phase",
@@ -58,7 +53,15 @@
         "#Children": "# Children",
         "DisciplineLegend": "Discipline Legend",
         "PhaseLegend": "Phase Legend",
-        "NodeLevelStats": "Node Level Stats"
+        "NodeLevelStats": "Node Level Stats",
+        "InsertDescription": "Insert Description Here",
+        "DeleteNode": "Delete Node",
+        "DeleteList_Scope": "Not In Scope",
+        "DeleteList_Sub": "Subcontractor Will Perform",
+        "DeleteList_Prime": "Prime Will Perform",
+        "DeleteList_Client": "Client Will Perform",
+        "PleaseSpecify": "Please Specify",
+        "AddNode": "Add Node"        
       }
     }
   }

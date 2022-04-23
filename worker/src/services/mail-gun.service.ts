@@ -7,7 +7,7 @@ interface EmailRequestBlob {
   subject: string;
   message: string;
 }
-declare type EmailData = { [s: string]: string };
+declare type EmailData = Record<string, string>;
 
 export class MailGunService {
   constructor(private readonly service: MailgunConfig) {}

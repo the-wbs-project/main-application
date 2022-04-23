@@ -1,17 +1,41 @@
 import { Injectable } from '@angular/core';
-import { PROJECT_VIEW_TYPE, WbsNodeView } from '@wbs/models';
+import {
+  Activity,
+  ListItem,
+  PROJECT_VIEW_TYPE,
+  WbsNodeView,
+} from '@wbs/models';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { ClearEditor, NodeSelected } from '../actions';
-import { EditorView } from '../models';
+import {
+  ClearEditor,
+  EditorViewChanged,
+  LoadDeleteReasons,
+  NodeSelected,
+} from './actions';
+import { EditorView } from './models';
 
 export const VIEWS: EditorView[] = [
   {
     id: 'General',
-    label: 'WbsEditor.General',
+    label: 'General.General',
+  },
+  {
+    id: 'History',
+    label: 'Wbs.History',
+  },
+  {
+    id: 'TrainingMaterial',
+    label: 'Wbs.TrainingMaterial',
+  },
+  {
+    id: 'Attachments',
+    label: 'Wbs.Attachments',
   },
 ];
 
 interface StateModel {
+  history?: Activity[];
+  deleteList?: ListItem[];
   node?: WbsNodeView;
   projectView?: PROJECT_VIEW_TYPE;
   view: EditorView;
@@ -27,6 +51,16 @@ interface StateModel {
   },
 })
 export class NodeEditorState {
+  @Selector()
+  static deleteList(state: StateModel): ListItem[] | undefined {
+    return state.deleteList;
+  }
+
+  @Selector()
+  static history(state: StateModel): Activity[] | undefined {
+    return state.history;
+  }
+
   @Selector()
   static node(state: StateModel): WbsNodeView | undefined {
     return state.node;
@@ -52,11 +86,32 @@ export class NodeEditorState {
     return state.views;
   }
 
+  @Action(LoadDeleteReasons)
+  loadDeleteReasons(
+    ctx: StateContext<StateModel>,
+    action: LoadDeleteReasons
+  ): void {
+    ctx.patchState({
+      deleteList: action.reasons,
+    });
+  }
+
   @Action(NodeSelected)
   nodeSelected(ctx: StateContext<StateModel>, action: NodeSelected): void {
     ctx.patchState({
+      history: action.history,
       node: action.node,
       projectView: action.view,
+    });
+  }
+
+  @Action(EditorViewChanged)
+  editorViewChanged(
+    ctx: StateContext<StateModel>,
+    action: EditorViewChanged
+  ): void {
+    ctx.patchState({
+      view: action.view,
     });
   }
 

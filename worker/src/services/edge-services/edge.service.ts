@@ -1,11 +1,11 @@
-import { Options } from "@cloudflare/kv-asset-handler";
-import { EdgeDataService } from "./edge-data.service";
+import { Options } from '@cloudflare/kv-asset-handler';
+import { EdgeDataService } from './edge-data.service';
 
 export interface EdgeService {
   data: EdgeDataService;
   authData: EdgeDataService;
 
-  getEdgeProperties(): { [key: string]: string | null | any };
+  getEdgeProperties(): Record<string, any>;
 
   waitUntil(func: Promise<void>): void;
 

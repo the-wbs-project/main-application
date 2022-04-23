@@ -3,7 +3,6 @@
   "owner": "acme_engineering",
   "title": "Market Research Project",
   "status": "planning",
-  "activity": [],
   "lastModified": "01/01/2022",
   "categories": {
     "discipline": [
@@ -25,44 +24,70 @@
       "phase": {
         "parentId": "initial",
         "order": 1,
-        "levels": [1, 1]
+        "levels": [
+          1,
+          1
+        ]
       },
-      "discipline": [{
-        "id": "mechanical",
-        "parentId": "wjs965w6dvxraaxr",
-        "order": 1,
-        "levels": [1, 1, 1]
-      }],
+      "discipline": [
+        {
+          "id": "mechanical",
+          "parentId": "wjs965w6dvxraaxr",
+          "order": 1,
+          "levels": [
+            1,
+            1,
+            1
+          ]
+        }
+      ],
       "disciplineIds": [
         "mechanical",
         "electrical"
       ],
-      "title": "Requirements Gathering & Analysis"
+      "title": "Requirements Gathering & Analysis",
+      "removed": false
     },
     {
       "id": "wjs965w6dvxraaxr",
-      "discipline": [{
-        "id": "mechanical",
-        "parentId": "mechanical",
-        "isPhaseNode": true,
-        "phaseId": "initial",
-        "order": 1,
-        "levels": [1, 1]
-      }]
+      "discipline": [
+        {
+          "id": "mechanical",
+          "parentId": "mechanical",
+          "isPhaseNode": true,
+          "phaseId": "initial",
+          "order": 1,
+          "levels": [
+            1,
+            1
+          ]
+        }
+      ]
     },
     {
       "id": "8502bdf1a18a4c36",
       "phase": {
         "parentId": "4caf7ae37651492c",
         "order": 1,
-        "levels": [1, 1, 1]
+        "levels": [
+          1,
+          1,
+          1
+        ]
       },
-      "discipline": [{
-        "id": "mechanical",
-        "parentId": "4caf7ae37651492c",
-        "order": 1,
-        "levels": [1, 1, 1, 1]
-      }],
+      "discipline": [
+        {
+          "id": "mechanical",
+          "parentId": "4caf7ae37651492c",
+          "order": 1,
+          "levels": [
+            1,
+            1,
+            1,
+            1
+          ]
+        }
+      ],
       "disciplineIds": [
         "mechanical"
       ],
@@ -73,14 +98,25 @@
       "phase": {
         "parentId": "4caf7ae37651492c",
         "order": 3,
-        "levels": [1, 1, 3]
+        "levels": [
+          1,
+          1,
+          3
+        ]
       },
-      "discipline": [{
-        "id": "mechanical",
-        "parentId": "4caf7ae37651492c",
-        "order": 2,
-        "levels": [1, 1, 1, 2]
-      }],
+      "discipline": [
+        {
+          "id": "mechanical",
+          "parentId": "4caf7ae37651492c",
+          "order": 2,
+          "levels": [
+            1,
+            1,
+            1,
+            2
+          ]
+        }
+      ],
       "disciplineIds": [
         "mechanical"
       ],
@@ -110,12 +146,19 @@
           4
         ]
       },
-      "discipline": [{
-        "id": "mechanical",
-        "parentId": "4caf7ae37651492c",
-        "order": 3,
-        "levels": [1, 1, 1, 3]
-      }],
+      "discipline": [
+        {
+          "id": "mechanical",
+          "parentId": "4caf7ae37651492c",
+          "order": 3,
+          "levels": [
+            1,
+            1,
+            1,
+            3
+          ]
+        }
+      ],
       "disciplineIds": [
         "mechanical"
       ],
@@ -583,6 +626,21 @@
         "electrical"
       ],
       "title": "Some Electrical Task"
+    }
+  ],
+  "activity": [
+    {
+      "action": "Activity.NodeEdited",
+      "wbsId": "771b809a861e45fd",
+      "userId": "auth0|123",
+      "orgId": "acme_engineering",
+      "timestamp": "04/08/2022 01:34:22",
+      "wbsParentId": "123",
+      "data": {
+        "changes": [
+          "Name Changed From 'Project Charter Developments' to 'Project Charter Development'"
+        ]
+      }
     }
   ]
 }
