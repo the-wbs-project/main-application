@@ -33,24 +33,22 @@ export class RouterService {
       Http.metadata.getListAsync,
     );
     this.router.get(
-      '/api/projects/:ownerId/:projectId/lite',
+      '/api/projects/:ownerId/:projectId',
       this.authenticate,
-      Http.project.getLiteByIdAsync,
-    );
-    this.router.get(
-      '/api/projects/:ownerId/:projectId/full',
-      this.authenticate,
+      this.checkClaimAsync,
       Http.project.getByIdAsync,
     );
     this.router.get(
-      `/api/projects/:ownerId/:projectId/wbs/:view`,
+      `/api/projects/:ownerId/:projectId/nodes`,
       this.authenticate,
-      Http.wbs.getListAsync,
+      this.checkClaimDeeperAsync,
+      Http.projectNodes.getAsync,
     );
-    this.router.delete(
-      `/api/projects/:ownerId/:projectId/wbs/node/:nodeId`,
+    this.router.put(
+      `/api/projects/:ownerId/:projectId/nodes/:nodeId`,
       this.authenticate,
-      Http.wbs.markNodeAsRemovedAsync,
+      this.checkClaimDeeperAsync,
+      Http.projectNodes.putAsync,
     );
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
@@ -76,8 +74,55 @@ export class RouterService {
         userInfo: {
           culture: 'en-US',
         },
+        appInfo: {
+          organizations: ['acme_engineering'],
+        },
       },
       '1234',
     );
+  }
+
+  async checkClaimAsync(req: WorkerRequest): Promise<number | void> {
+    //
+    //  If any of the necessary information is missing, BAIL!
+    //
+    if (
+      !req.params?.ownerId ||
+      !req.params?.projectId ||
+      !req.user?.appInfo?.organizations
+    )
+      return 500;
+    //
+    //  Next check that the owner ID is in the claims
+    //
+    if (req.user.appInfo.organizations.indexOf(req.params.ownerId) === -1)
+      return 401;
+  }
+
+  async checkClaimDeeperAsync(req: WorkerRequest): Promise<number | void> {
+    //
+    //  If any of the necessary information is missing, BAIL!
+    //
+    if (
+      !req.params?.ownerId ||
+      !req.params?.projectId ||
+      !req.user?.appInfo?.organizations
+    )
+      return 500;
+    //
+    //  Next check that the owner ID is in the claims
+    //
+    if (req.user.appInfo.organizations.indexOf(req.params.ownerId) === -1)
+      return 401;
+    //
+    //  Now just to be sure we need to make sure the project ID sent is ACTUALLY associated to the project id,
+    //    or else it could be a spoof if retrieving nodes
+    //
+    const project = await req.data.projects.getAsync(
+      req.params.ownerId,
+      req.params.projectId,
+    );
+
+    if (project == null) return 401;
   }
 }

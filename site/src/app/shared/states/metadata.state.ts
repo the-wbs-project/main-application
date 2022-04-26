@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { ListItem, PROJECT_VIEW, PROJECT_VIEW_TYPE } from '@wbs/models';
-import { StartupService } from '@wbs/services';
-import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import { Resources, StartupService } from '@wbs/services';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { SetupCategories } from '@wbs/actions';
 
 interface StateModel {
   categoryList: Map<PROJECT_VIEW_TYPE, ListItem[]>;
@@ -22,8 +23,11 @@ interface StateModel {
     phaseCategories: [],
   },
 })
-export class MetadataState implements NgxsOnInit {
-  constructor(private readonly loader: StartupService) {}
+export class MetadataState {
+  constructor(
+    private readonly loader: StartupService,
+    private readonly resources: Resources
+  ) {}
 
   @Selector()
   static categoryList(state: StateModel): Map<PROJECT_VIEW_TYPE, ListItem[]> {
@@ -52,12 +56,19 @@ export class MetadataState implements NgxsOnInit {
     return state.phaseCategories;
   }
 
-  ngxsOnInit(ctx: StateContext<StateModel>) {
+  @Action(SetupCategories)
+  setupCategories(ctx: StateContext<StateModel>) {
     const state = ctx.getState();
     const categoryList = state.categoryList;
     const categoryMap = state.categoryMap;
     const discipline = this.loader.categoriesDiscipline ?? [];
     const phase = this.loader.categoriesPhase ?? [];
+
+    console.log('working on labels');
+
+    for (const cat of [...discipline, ...phase]) {
+      cat.label = this.resources.get(cat.label);
+    }
 
     categoryList.set(PROJECT_VIEW.DISCIPLINE, discipline);
     categoryList.set(PROJECT_VIEW.PHASE, phase);

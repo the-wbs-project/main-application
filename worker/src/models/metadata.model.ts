@@ -1,5 +1,5 @@
-import { DbObject } from './app-models';
+import { IdObject } from './app-models';
 
-export interface Metadata<T> extends DbObject {
+export interface Metadata<T> extends IdObject {
   values: T;
 }

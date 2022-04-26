@@ -1,0 +1,29 @@
+<div class="tx-center">
+  <p class="w-100">You are creating a child node for:</p>
+  <p class="w-100 tx-bold">{{ parentTitle$ | async }}</p>
+  <p class="w-100">How do you want to create this node?</p>
+
+  <div class="w-100">
+    <button
+      kendoButton
+      class="pos-absolute-f l-100 wd-250 p-4"
+      (click)="starterSelected('scratch')"
+    >
+      <span class="tx-16"> From Scratch </span>
+
+      <br />
+      <br />
+      <span class="tx-12"> Define the node yourself </span>
+    </button>
+    <button
+      kendoButton
+      class="pos-absolute-f r-100 wd-250 p-4"
+      (click)="comingSoon()"
+    >
+      <span class="tx-16"> From Library </span>
+      <br />
+      <br />
+      <span class="tx-12"> Search for the perfect node! </span>
+    </button>
+  </div>
+</div>

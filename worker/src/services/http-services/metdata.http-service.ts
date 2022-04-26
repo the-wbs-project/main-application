@@ -1,4 +1,3 @@
-import { METADATA_TYPES } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
 
@@ -12,13 +11,13 @@ export class MetadataHttpService extends BaseHttpService {
 
         if (match) return match;
       }
-      if (!req.params?.category) return 500;
+      if (!req.params?.category || !req.user?.userInfo?.culture) return 500;
       //
       //  Get the data from the KV
       //
-      const data = await req.data.metadata.getAsync(
-        METADATA_TYPES.RESOURCES,
-        `${req.user?.userInfo?.culture}.${req.params.category}`,
+      const data = await req.data.metadata.getResourcesAsync(
+        req.user.userInfo.culture,
+        req.params.category,
       );
       const response = await super.buildJson(data);
 
@@ -46,7 +45,7 @@ export class MetadataHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.data.metadata.getListAsync(req.params.name);
+      const data = await req.data.metadata.getAsync(req.params.name);
       const response = await super.buildJson(data);
 
       if (data && !req.config.debug) req.edge.cachePut(response);

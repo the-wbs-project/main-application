@@ -5,24 +5,30 @@ import {
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { PROJECT_VIEW_TYPE, WbsNodeView } from '@wbs/models';
+import { PROJECT_VIEW, PROJECT_VIEW_TYPE, WbsNodeView } from '@wbs/models';
 import { ContainerService, Resources } from '@wbs/services';
 import {
   CloseNodeCreationDialog,
   DialogViewSelected,
-  NameDescriptionNext,
-  NameDescriptionPrevious,
+  DisciplineNext,
+  DisciplinePrevious,
   OpenNodeCreationDialog,
+  PhaseNext,
+  PhasePrevious,
+  TitleDescriptionNext,
+  TitleDescriptionPrevious,
 } from './actions';
 import { WbsCreateComponent } from './components';
 import { NODE_CREATION_PAGES, NODE_CREATION_PAGES_TYPE } from './models';
 
 interface StateModel {
-  nodeDescription: string;
-  nodeName: string;
+  description: string;
+  disciplines: string[];
   open: boolean;
   page: NODE_CREATION_PAGES_TYPE;
   parent?: WbsNodeView;
+  phase?: string;
+  title: string;
   view?: PROJECT_VIEW_TYPE;
 }
 
@@ -30,10 +36,11 @@ interface StateModel {
 @State<StateModel>({
   name: 'nodeCreate',
   defaults: {
-    nodeDescription: '',
-    nodeName: '',
+    disciplines: [],
+    description: '',
     open: false,
     page: NODE_CREATION_PAGES.STARTER,
+    title: '',
   },
 })
 export class NodeCreationState implements NgxsOnInit {
@@ -47,18 +54,23 @@ export class NodeCreationState implements NgxsOnInit {
   ) {}
 
   @Selector()
-  static nodeDescription(state: StateModel): string {
-    return state.nodeDescription;
+  static description(state: StateModel): string {
+    return state.description;
   }
 
   @Selector()
-  static nodeName(state: StateModel): string {
-    return state.nodeName;
+  static disciplines(state: StateModel): string[] {
+    return state.disciplines;
   }
 
   @Selector()
   static open(state: StateModel): boolean {
     return state.open;
+  }
+
+  @Selector()
+  static phase(state: StateModel): string | undefined {
+    return state.phase;
   }
 
   @Selector()
@@ -69,6 +81,16 @@ export class NodeCreationState implements NgxsOnInit {
   @Selector()
   static parentTitle(state: StateModel): string {
     return state.parent?.title ?? '';
+  }
+
+  @Selector()
+  static parent(state: StateModel): WbsNodeView {
+    return state.parent!;
+  }
+
+  @Selector()
+  static title(state: StateModel): string {
+    return state.title;
   }
 
   @Selector()
@@ -95,10 +117,10 @@ export class NodeCreationState implements NgxsOnInit {
     });
     this.setPage(ctx);
 
-    this.dialog.result.subscribe((x: DialogCloseResult) => {
+    this.dialog.result.subscribe((x: DialogCloseResult | 'save') => {
       if (x instanceof DialogCloseResult)
         ctx.dispatch(new CloseNodeCreationDialog());
-      else {
+      else if (x === 'save') {
         //
       }
     });
@@ -118,26 +140,82 @@ export class NodeCreationState implements NgxsOnInit {
     action: DialogViewSelected
   ): void {
     ctx.patchState({
-      page: NODE_CREATION_PAGES.NAME_DESCRIPTION,
+      page: NODE_CREATION_PAGES.TITLE_DESCRIPTION,
     });
     this.setPage(ctx);
   }
 
-  @Action(NameDescriptionPrevious)
-  ndPrev(ctx: StateContext<StateModel>, action: NameDescriptionPrevious): void {
+  @Action(TitleDescriptionPrevious)
+  tdPrev(ctx: StateContext<StateModel>): void {
     ctx.patchState({
       page: NODE_CREATION_PAGES.STARTER,
     });
     this.setPage(ctx);
   }
 
-  @Action(NameDescriptionNext)
-  ndNext(ctx: StateContext<StateModel>, action: NameDescriptionNext): void {
+  @Action(TitleDescriptionNext)
+  tdNext(ctx: StateContext<StateModel>, action: TitleDescriptionNext): void {
+    const state = ctx.getState();
+
     ctx.patchState({
-      page: NODE_CREATION_PAGES.STARTER,
-      nodeDescription: action.description,
-      nodeName: action.name,
+      description: action.description,
+      title: action.title,
     });
+
+    if (state.view === PROJECT_VIEW.DISCIPLINE) {
+      ctx.patchState({
+        page: NODE_CREATION_PAGES.PHASE,
+      });
+    } else {
+      ctx.patchState({
+        page: NODE_CREATION_PAGES.DISCIPLINES,
+        phase: state.parent?.phaseId,
+      });
+    }
+    this.setPage(ctx);
+  }
+
+  @Action(PhasePrevious)
+  phasePrevious(ctx: StateContext<StateModel>): void {
+    ctx.patchState({
+      page: NODE_CREATION_PAGES.TITLE_DESCRIPTION,
+    });
+    this.setPage(ctx);
+  }
+
+  @Action(PhaseNext)
+  phaseNext(ctx: StateContext<StateModel>, action: PhaseNext): void {
+    ctx.patchState({
+      page: NODE_CREATION_PAGES.DISCIPLINES,
+      phase: action.phase,
+    });
+    this.setPage(ctx);
+  }
+
+  @Action(DisciplinePrevious)
+  disciplinePrevious(ctx: StateContext<StateModel>): void {
+    const state = ctx.getState();
+
+    if (state.view === PROJECT_VIEW.DISCIPLINE) {
+      ctx.patchState({
+        page: NODE_CREATION_PAGES.PHASE,
+      });
+    } else {
+      ctx.patchState({
+        page: NODE_CREATION_PAGES.TITLE_DESCRIPTION,
+      });
+    }
+    this.setPage(ctx);
+  }
+
+  @Action(DisciplineNext)
+  disciplineNext(ctx: StateContext<StateModel>, action: DisciplineNext): void {
+    ctx.patchState({
+      disciplines: action.disciplines,
+      page: NODE_CREATION_PAGES.TAGS,
+    });
+
+    if (this.dialog) this.dialog.close();
     this.setPage(ctx);
   }
 
@@ -146,8 +224,12 @@ export class NodeCreationState implements NgxsOnInit {
     const pageResource =
       page === NODE_CREATION_PAGES.STARTER
         ? 'Wbs.LetsGetStarted'
-        : page === NODE_CREATION_PAGES.NAME_DESCRIPTION
-        ? 'Wbs.NameAndDescription'
+        : page === NODE_CREATION_PAGES.TITLE_DESCRIPTION
+        ? 'Wbs.TitleAndDescription'
+        : page === NODE_CREATION_PAGES.PHASE
+        ? 'Wbs.SelectPhase'
+        : page === NODE_CREATION_PAGES.DISCIPLINES
+        ? 'Wbs.SelectDisciplines'
         : '';
 
     const pageTitle = this.resources.get(pageResource);

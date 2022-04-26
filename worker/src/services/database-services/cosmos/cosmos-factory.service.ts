@@ -8,10 +8,17 @@ export class CosmosFactory implements DbFactory {
   readonly activities: DbService;
   readonly metadata: DbService;
   readonly projects: DbService;
+  readonly projectNodes: DbService;
 
   constructor(config: Config, logger: Logger) {
     this.activities = new CosmosDbService(config, 'Activities', logger);
     this.metadata = new CosmosDbService(config, 'Metadata', logger);
-    this.projects = new CosmosDbService(config, 'Projects', logger);
+    this.projects = new CosmosDbService(config, 'Projects', logger, 'owner');
+    this.projectNodes = new CosmosDbService(
+      config,
+      'ProjectNodes',
+      logger,
+      'projectId',
+    );
   }
 }

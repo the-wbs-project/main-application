@@ -1,0 +1,46 @@
+<div class="pd-x-100">
+  What disciplines use this node?
+  <br />
+  <br />
+  <kendo-floatinglabel text="Disciplines" class="w-100">
+    <kendo-multiselect
+      [data]="data"
+      [(ngModel)]="disciplineIds"
+      textField="label"
+      valueField="id"
+      [filterable]="true"
+      [valuePrimitive]="true"
+      [kendoDropDownFilter]="filterSettings"
+    >
+    </kendo-multiselect>
+  </kendo-floatinglabel>
+  <div class="w-100 text-center pd-t-100">
+    <button kendoButton (click)="import()">
+      Add Disciplines from Parent Node
+    </button>
+  </div>
+</div>
+
+<div class="w-100 pos-absolute b-100 pd-x-100">
+  <div class="display-ib w-50">
+    <button kendoButton class="wd-100 p-2" (click)="back()">Previous</button>
+  </div>
+  <div class="display-ib w-50 text-right">
+    <button kendoButton themeColor="primary" class="wd-100 p-2" (click)="go()">
+      Next
+    </button>
+  </div>
+</div>
+
+<!--
+  If Phase View:
+      * Find Phase category of parent,
+      * Display
+      * Mark as read-only and explain why
+      * Show multiple list disciplines
+  If Discipline View:
+      * Show single select phase list
+      * Show multiple list disciplines
+      * Find discipline of parent
+      * Automatically add the discpline list
+-->

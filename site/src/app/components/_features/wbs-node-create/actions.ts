@@ -14,11 +14,29 @@ export class CloseNodeCreationDialog {
   static readonly type = '[Node Creation] Close Dialog';
 }
 
-export class NameDescriptionPrevious {
-  static readonly type = '[Node Creation] Name/Description Previous';
+export class TitleDescriptionPrevious {
+  static readonly type = '[Node Creation] Title/Description Previous';
 }
 
-export class NameDescriptionNext {
-  static readonly type = '[Node Creation] Name/Description Next';
-  constructor(readonly name: string, readonly description: string) {}
+export class TitleDescriptionNext {
+  static readonly type = '[Node Creation] Title/Description Next';
+  constructor(readonly title: string, readonly description: string) {}
+}
+
+export class PhasePrevious {
+  static readonly type = '[Node Creation] Phase Previous';
+}
+
+export class PhaseNext {
+  static readonly type = '[Node Creation] Phase Next';
+  constructor(readonly phase: string) {}
+}
+
+export class DisciplinePrevious {
+  static readonly type = '[Node Creation] Discipline Previous';
+}
+
+export class DisciplineNext {
+  static readonly type = '[Node Creation] Discipline Next';
+  constructor(readonly disciplines: string[]) {}
 }

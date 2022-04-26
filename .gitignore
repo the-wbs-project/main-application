@@ -5,4 +5,5 @@ _theme/Nowa
 **/bin
 **/obj
 **/config*.*
+.vs/
 .vscode/

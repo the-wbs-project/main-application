@@ -54,8 +54,6 @@ export class DragAndDropComponent {
     return this.route.snapshot.params['projectId'];
   }
 
-  ngOnInit(): void {}
-
   viewChanged(view: string): void {
     this.node = undefined;
 

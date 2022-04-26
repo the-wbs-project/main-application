@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ListItem, ProjectLite, User } from '@wbs/models';
+import { ListItem, Project, User } from '@wbs/models';
 
 @Injectable({ providedIn: 'root' })
 export class StartupService {
   private _categoriesDiscipline: ListItem[] | undefined;
   private _categoriesPhase: ListItem[] | undefined;
-  private _projectsMy: ProjectLite[] | undefined;
-  private _projectsWatched: ProjectLite[] | undefined;
+  private _projectsMy: Project[] | undefined;
+  private _projectsWatched: Project[] | undefined;
   private _resources: any | undefined;
   private _user: User | undefined;
 
@@ -22,11 +22,11 @@ export class StartupService {
     return this._categoriesPhase;
   }
 
-  get projectsMy(): ProjectLite[] | undefined {
+  get projectsMy(): Project[] | undefined {
     return this._projectsMy;
   }
 
-  get projectsWatched(): ProjectLite[] | undefined {
+  get projectsWatched(): Project[] | undefined {
     return this._projectsWatched;
   }
 

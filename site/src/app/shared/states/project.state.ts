@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { ProjectLite, PROJECT_FILTER, PROJECT_STATI } from '@wbs/models';
+import { Project, PROJECT_FILTER, PROJECT_STATI } from '@wbs/models';
 import { StartupService } from '@wbs/services';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 
 interface StateModel {
-  list: ProjectLite[];
-  watched: ProjectLite[];
+  list: Project[];
+  watched: Project[];
   navType: PROJECT_FILTER | null;
 }
 
@@ -22,12 +22,12 @@ export class ProjectState implements NgxsOnInit {
   constructor(private readonly loader: StartupService) {}
 
   @Selector()
-  static list(state: StateModel): ProjectLite[] {
+  static list(state: StateModel): Project[] {
     return state.list;
   }
 
   @Selector()
-  static watched(state: StateModel): ProjectLite[] {
+  static watched(state: StateModel): Project[] {
     return state.watched;
   }
 
@@ -37,7 +37,7 @@ export class ProjectState implements NgxsOnInit {
   }
 
   @Selector()
-  static planningList(state: StateModel): ProjectLite[] {
+  static planningList(state: StateModel): Project[] {
     return state?.list.filter((x) => x.status === PROJECT_STATI.PLANNING);
   }
 
@@ -47,7 +47,7 @@ export class ProjectState implements NgxsOnInit {
   }
 
   @Selector()
-  static executionList(state: StateModel): ProjectLite[] {
+  static executionList(state: StateModel): Project[] {
     return state?.list.filter((x) => x.status === PROJECT_STATI.EXECUTION);
   }
 
@@ -57,7 +57,7 @@ export class ProjectState implements NgxsOnInit {
   }
 
   @Selector()
-  static followupList(state: StateModel): ProjectLite[] {
+  static followupList(state: StateModel): Project[] {
     return state?.list.filter((x) => x.status === PROJECT_STATI.FOLLOW_UP);
   }
 

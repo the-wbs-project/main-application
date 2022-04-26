@@ -6,7 +6,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { NgxsModule } from '@ngxs/store';
+import { NgxsModule, Store } from '@ngxs/store';
 import { NotificationModule } from '@progress/kendo-angular-notification';
 import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import {
@@ -53,7 +53,13 @@ import { AppComponent } from './app.component';
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [DataServiceFactory, Resources, StartupService, ThemeService],
+      deps: [
+        Store,
+        DataServiceFactory,
+        Resources,
+        StartupService,
+        ThemeService,
+      ],
       multi: true,
     },
   ],

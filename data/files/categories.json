@@ -1,7 +1,6 @@
 [
   {
     "id": "categories_phase",
-    "pk": "Lists",
     "values": [
       {
         "id": "initial",
@@ -80,11 +79,6 @@
         "tags": ["CA Meetings"]
       },
       {
-        "id": "postContruction",
-        "label": "Category_Phase.PostContruction",
-        "tags": ["Post Contruction"]
-      },
-      {
         "id": "contract",
         "label": "Category_Phase.Contract",
         "tags": ["Contract", "Contract Phase"]
@@ -93,7 +87,6 @@
   },
   {
     "id": "categories_discipline",
-    "pk": "Lists",
     "values": [
       {
         "id": "mechanical",
@@ -118,7 +111,6 @@
   },
   {
     "id": "delete_reasons",
-    "pk": "Lists",
     "values": [
       {
         "id": "delete-scope",

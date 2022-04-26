@@ -1,9 +1,11 @@
-import { CosmosClient, Resource } from '@cfworker/cosmos';
+import { CosmosClient } from '@cfworker/cosmos';
 import { Config } from '../../../config';
-import { DbObject, IdObject } from '../../../models';
+import { IdObject } from '../../../models';
 import { myFetch } from '../../fetcher.service';
 import { Logger } from '../../logger.service';
 import { DbService } from '../db.service';
+
+declare type Rec = Record<string, unknown>;
 
 export class CosmosDbService implements DbService {
   private readonly db: CosmosClient;
@@ -25,10 +27,10 @@ export class CosmosDbService implements DbService {
     });
   }
 
-  private clean(objOrArray: any | any[]): void {
+  private clean(objOrArray: Rec | Rec[]): void {
     if (Array.isArray(objOrArray)) {
       for (const obj of objOrArray) this.clean(obj);
-    } else {
+    } else if (objOrArray) {
       delete objOrArray['_rid'];
       delete objOrArray['_self'];
       delete objOrArray['_etag'];
@@ -52,7 +54,7 @@ export class CosmosDbService implements DbService {
 
     if (res.status !== 200) throw new Error(JSON.stringify(result));
 
-    if (clean) this.clean(result);
+    if (clean && result) this.clean(<any>result);
 
     return result;
   }
@@ -91,7 +93,7 @@ export class CosmosDbService implements DbService {
     });
     const results = await res.json();
 
-    if (clean) this.clean(results);
+    if (clean) this.clean(<Rec[]>results);
 
     return results;
   }
@@ -112,7 +114,7 @@ export class CosmosDbService implements DbService {
 
     const result = (await response.json()) || [];
 
-    if (clean) this.clean(result);
+    if (clean) this.clean(<Rec[]>result);
 
     return result.length === 0 ? null : result[0];
   }

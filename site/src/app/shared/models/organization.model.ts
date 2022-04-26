@@ -1,4 +1,4 @@
-import { ProjectLite } from './project.model';
+import { Project } from './project.model';
 import { Wbs } from './wbs.model';
 
 export interface Organization {
@@ -8,6 +8,6 @@ export interface Organization {
   seatsPurchased: number;
   administrators: string[];
   seatedUsers: string[];
-  projects: ProjectLite[];
+  projects: Project[];
   wbsLibrary: Wbs[];
 }

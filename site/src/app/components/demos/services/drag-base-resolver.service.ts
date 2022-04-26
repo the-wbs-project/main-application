@@ -8,8 +8,8 @@ import {
   ResourceSections,
   WbsNodeView,
 } from '@wbs/models';
-import { DataServiceFactory, Resources } from '@wbs/services';
-import { Observable, of, tap } from 'rxjs';
+import { DataServiceFactory, Resources, Transformers } from '@wbs/services';
+import { map, Observable, of, tap } from 'rxjs';
 import { LoadDeleteReasons } from '../../_features';
 
 @Injectable()
@@ -17,7 +17,8 @@ export class DragBaseResolver {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly resources: Resources,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly transformers: Transformers
   ) {}
 
   getDeleteListAsync(existing?: ListItem[]): Observable<ListItem[]> {
@@ -39,18 +40,25 @@ export class DragBaseResolver {
   getProjectAsync(projectId: string, existing?: Project): Observable<Project> {
     if (existing) return of(existing);
 
-    return this.data.project.getAsync(projectId);
+    return this.data.projects.getAsync(projectId);
   }
 
   getNodesAsync(
-    projectId: string,
+    project: Project,
     view: PROJECT_VIEW_TYPE,
     existing?: WbsNodeView[]
   ): Observable<WbsNodeView[]> {
     if (existing) return of(existing);
 
-    return view === PROJECT_VIEW.DISCIPLINE
-      ? this.data.wbs.getDisciplineList(projectId)
-      : this.data.wbs.getPhaseList(projectId);
+    return this.data.projectNodes.getAsync(project.id).pipe(
+      map((nodes) => {
+        if (view === PROJECT_VIEW.DISCIPLINE) {
+          return this.transformers.wbsNodeDiscipline.run(project, nodes);
+        } else {
+          return this.transformers.wbsNodePhase.run(project, nodes);
+        }
+      })
+    );
   }
 }
+ 

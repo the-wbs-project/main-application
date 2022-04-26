@@ -1,4 +1,4 @@
-import { ListItem, Metadata, METADATA_TYPES, Resources } from '../../models';
+import { ListItem, Metadata, Resources } from '../../models';
 import { DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
@@ -14,62 +14,30 @@ export class MetadataDataService {
     culture: string,
     category: string,
   ): Promise<Resources | null | undefined> {
-    return this.getAsync<Resources>(
-      METADATA_TYPES.RESOURCES,
-      `${culture}.${category}`,
-    );
-  }
-
-  getListAsync(type: string): Promise<ListItem[] | null | undefined> {
-    return this.getAsync<ListItem[]>(METADATA_TYPES.LISTS, type);
+    return this.getAsync<Resources>(`${culture}.${category}`);
   }
 
   getCategoryAsync(type: string): Promise<ListItem[] | null | undefined> {
-    return this.getAsync<ListItem[]>(
-      METADATA_TYPES.LISTS,
-      `categories_${type}`,
-    );
+    return this.getAsync<ListItem[]>(`categories_${type}`);
   }
 
-  async getAllAsync<T>(type: string): Promise<Metadata<T>[]> {
-    if (this.edge.byPass(kvPrefix)) return await this.listFromDbAsync(type);
-
-    const kvName = [kvPrefix, type].join('-');
-    const kvData = await this.edge.get<Metadata<T>[]>(kvName, 'json');
-
-    if (kvData) return kvData;
-
-    const data = await this.listFromDbAsync<T>(type);
-
-    if (data) this.edge.putLater(kvName, JSON.stringify(data));
-
-    return data;
-  }
-
-  async getAsync<T>(type: string, id: string): Promise<T | null | undefined> {
+  async getAsync<T>(id: string): Promise<T | null | undefined> {
     if (this.edge.byPass(kvPrefix))
-      return (await this.fromDbAsync<T>(type, id))?.values;
+      return (await this.fromDbAsync<T>(id))?.values;
 
-    const kvName = [kvPrefix, type, id].join('-');
+    const kvName = [kvPrefix, id].join('-');
     const kvData = await this.edge.get<T>(kvName, 'json');
 
     if (kvData) return kvData;
 
-    const data = (await this.fromDbAsync<T>(type, id))?.values;
+    const data = (await this.fromDbAsync<T>(id))?.values;
 
     if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
     return data;
   }
 
-  private listFromDbAsync<T>(type: string): Promise<Metadata<T>[]> {
-    return this.db.getAllByPartitionAsync<Metadata<T>>(type, true);
-  }
-
-  private fromDbAsync<T>(
-    type: string,
-    id: string,
-  ): Promise<Metadata<T> | null> {
-    return this.db.getDocumentAsync<Metadata<T>>(type, id, true);
+  private fromDbAsync<T>(id: string): Promise<Metadata<T> | null> {
+    return this.db.getDocumentAsync<Metadata<T>>(id, id, true);
   }
 }

@@ -1,0 +1,38 @@
+[
+  {
+    "id": "123",
+    "owner": "acme_engineering",
+    "title": "Market Research Project",
+    "status": "planning",
+    "lastModified": "01/01/2022",
+    "categories": {
+      "discipline": [
+        "mechanical",
+        "electrical",
+        "structural",
+        "survey"
+      ],
+      "phase": [
+        "initial",
+        "planning",
+        "execution",
+        "contract"
+      ]
+    },
+    "activity": [
+      {
+        "action": "Activity.NodeEdited",
+        "wbsId": "771b809a861e45fd",
+        "userId": "auth0|123",
+        "orgId": "acme_engineering",
+        "timestamp": "04/08/2022 01:34:22",
+        "wbsParentId": "123",
+        "data": {
+          "changes": [
+            "Name Changed From 'Project Charter Developments' to 'Project Charter Development'"
+          ]
+        }
+      }
+    ]
+  }
+]

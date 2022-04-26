@@ -6,7 +6,7 @@ import { Component, Input } from '@angular/core';
     class="discipline-icon"
     kendoTooltip
     filter="span"
-    [title]="id | categoryLabel | translate"
+    [title]="id | categoryLabel"
   >
     <fa-icon [icon]="id | disciplineIcon"></fa-icon>
   </span>`,

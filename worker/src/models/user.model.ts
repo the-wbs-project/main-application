@@ -18,4 +18,5 @@ export interface UserMetadata {
 
 export interface UserAppMetadata {
   role?: string;
+  organizations: string[];
 }

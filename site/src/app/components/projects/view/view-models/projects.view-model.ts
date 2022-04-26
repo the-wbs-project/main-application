@@ -1,7 +1,7 @@
-import { ProjectLite } from '@wbs/models';
+import { Project } from '@wbs/models';
 
 export interface ProjectsViewModel {
   title: string;
-  projects: ProjectLite[];
+  projects: Project[];
   filters: string[];
 }

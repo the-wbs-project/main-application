@@ -1,9 +1,9 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ProjectLite } from '@wbs/models';
+import { Project } from '@wbs/models';
 
 @Pipe({ name: 'projectSort', pure: false })
 export class ProjectSortPipe implements PipeTransform {
-  transform(list: ProjectLite[], sort: 'modified' | 'name'): ProjectLite[] {
+  transform(list: Project[], sort: 'modified' | 'name'): Project[] {
     if (list == null || list.length === 0) return list;
 
     if (sort === 'modified')

@@ -1,4 +1,5 @@
 export * from './data-services';
+export * from './transformers';
 export * from './analytics.service';
 export * from './app-initializer.service';
 export * from './container.service';

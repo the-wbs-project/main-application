@@ -1,7 +1,6 @@
 [
   {
     "id": "en-US.General",
-    "pk": "Resources",
     "category": "General",
     "language": "en-Us",
     "values": {
@@ -20,7 +19,20 @@
         "Initial": "Initial Phase",
         "Planning": "Planning Phase",
         "Execution": "Execution Phase",
-        "Contract": "Contract Phase"
+        "Contract": "Contract Phase",
+        "MasterPlan": "Master Plan",
+        "PreDesign": "Pre-Design",
+        "Schematic": "Schematic Design",
+        "DesignDev": "Design Development",
+        "DesignMeetings": "Design Meetings",
+        "ContractDocs": "Contract Documents",
+        "Bidding": "Bidding",
+        "ProjectMangement": "Project Mangement",
+        "ConstructionAdmin": "Construction Administration",
+        "ProjectReporting": "Project Reporting",
+        "AssetCostImpact": "Asset Cost Impact",
+        "PostContruction": "Post Contruction",
+        "CaMeetings": "CA Meetings"
       },
       "Category_Discipline": {
         "Mechanical": "Mechanical",
@@ -35,7 +47,6 @@
   },
   {
     "id": "en-US.Wbs",
-    "pk": "Resources",
     "category": "Wbs",
     "language": "en-Us",
     "values": {
@@ -61,7 +72,11 @@
         "DeleteList_Prime": "Prime Will Perform",
         "DeleteList_Client": "Client Will Perform",
         "PleaseSpecify": "Please Specify",
-        "AddNode": "Add Node"        
+        "AddNode": "Add Node",
+        "LetsGetStarted": "Lets Get Started",
+        "TitleAndDescription": "Title And Description",
+        "SelectPhase": "Select Phase",
+        "SelectDisciplines": "Select Disciplines"
       }
     }
   }

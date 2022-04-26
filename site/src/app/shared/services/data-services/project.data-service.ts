@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Project, ProjectLite } from '@wbs/models';
+import { Project } from '@wbs/models';
 import { Observable } from 'rxjs';
 
 export class ProjectDataService {
@@ -12,12 +12,6 @@ export class ProjectDataService {
   }
 
   getAsync(projectId: string): Observable<Project> {
-    return this.http.get<Project>(`projects/${this.ownerId}/${projectId}/full`);
-  }
-
-  getLiteAsync(projectId: string): Observable<ProjectLite> {
-    return this.http.get<ProjectLite>(
-      `projects/${this.ownerId}/${projectId}/lite`
-    );
+    return this.http.get<Project>(`projects/${this.ownerId}/${projectId}`);
   }
 }
