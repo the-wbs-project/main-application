@@ -3,7 +3,7 @@ import { EdgeDataService } from './edge-data.service';
 
 export interface EdgeService {
   data: EdgeDataService;
-  authData: EdgeDataService;
+  //authData: EdgeDataService;
 
   getEdgeProperties(): Record<string, any>;
 

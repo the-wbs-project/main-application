@@ -1,7 +1,7 @@
 export {};
 
 declare global {
-  const KVAUTH: KVNamespace;
+  //const KVAUTH: KVNamespace;
   const KVDATA: KVNamespace;
 
   const APP_INSIGHTS_KEY: string;

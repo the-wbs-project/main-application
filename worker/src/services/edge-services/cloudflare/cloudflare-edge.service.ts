@@ -7,22 +7,14 @@ import { CloudflareEdgeDataService } from './cloudflare-edge-data.service';
 const cache = caches.default;
 
 export class CloudflareEdgeService implements EdgeService {
-  private readonly _data: EdgeDataService;
-  private readonly _authData: EdgeDataService;
+  //readonly authData: EdgeDataService;
+  readonly data: EdgeDataService;
   private _request: Request;
 
   constructor(config: Config, private readonly event: FetchEvent) {
-    this._authData = new CloudflareEdgeDataService(config, event, KVAUTH);
-    this._data = new CloudflareEdgeDataService(config, event, KVDATA);
+    //this.authData = new CloudflareEdgeDataService(config, event, KVAUTH);
+    this.data = new CloudflareEdgeDataService(config, event, KVDATA);
     this._request = event.request;
-  }
-
-  get authData(): EdgeDataService {
-    return this._authData;
-  }
-
-  get data(): EdgeDataService {
-    return this._data;
   }
 
   private get match(): Request {
