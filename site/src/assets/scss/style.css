@@ -28512,18 +28512,6 @@ div.dt-button-info h2 {
   border: 0px solid #ededf5;
 }
 
-.background-image-blog {
-  background-image: url(../../assets/img/photos/error.jpg) !important;
-  background-position: center !important;
-  background-size: cover !important;
-  background-repeat: no-repeat !important;
-  height: 320px;
-  position: relative;
-  border-top-left-radius: calc(.25rem - 1px);
-  border-top-right-radius: calc(.25rem - 1px);
-  border-radius: 0px;
-}
-
 .custom-blog-content {
   position: absolute;
   font-weight: 600;
