@@ -22,6 +22,9 @@ export class RouterService {
     this.router.get('/logout', () =>
       Response.redirect(this.config.auth.logoutCallbackUrl),
     );
+    this.router.get('/api/edge-data/clear', (req: WorkerRequest) =>
+      req.edge.data.clear(),
+    );
     this.router.get(
       '/api/resources/:category',
       this.authenticate,

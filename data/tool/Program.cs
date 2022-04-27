@@ -44,8 +44,9 @@ namespace table_copy {
                 }
             }
 
-            foreach (var file in Directory.GetFiles("../../worker/kv/KVDATA"))
-                File.Delete(file);
+            if (Directory.Exists("../../worker/kv/KVDATA"))
+                foreach (var file in Directory.GetFiles("../../worker/kv/KVDATA"))
+                    File.Delete(file);
         }
 
         public static async Task UpsertAsync(Container c, dynamic document, string pk) {
