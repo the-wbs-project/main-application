@@ -1,0 +1,41 @@
+<section class="pd-x-50">
+  <div class="wizard-body">
+    <div class="container overflow-hidden">
+      <div class="row">
+        <div class="col-10 rounded">
+          <kendo-label class="k-checkbox-label" text="Phase View Flags">
+          </kendo-label>
+          <div class="p-3 border bg-light">
+            <p>
+              <input
+                type="checkbox"
+                #sync
+                kendoCheckBox
+                [(ngModel)]="syncWithDisciplines"
+              />
+              &nbsp;&nbsp;
+              <kendo-label
+                class="k-checkbox-label"
+                [for]="sync"
+                text="Make each discipline a child node"
+              ></kendo-label>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <br />
+    <br />
+    <!--<div class="container overflow-hidden">
+      <div class="row gy-5">
+        <div class="col-10">
+          <div class="p-3 border bg-light">Custom column padding</div>
+        </div>
+      </div>
+    </div>-->
+  </div>
+  <div class="wizard-footer">
+    <wbs-node-bottom-buttons (nextClicked)="go()" (previousClicked)="back()">
+    </wbs-node-bottom-buttons>
+  </div>
+</section>

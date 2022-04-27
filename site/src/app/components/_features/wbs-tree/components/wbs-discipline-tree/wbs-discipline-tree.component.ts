@@ -15,7 +15,7 @@ import {
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import {
   Project,
-  PROJECT_VIEW,
+  PROJECT_NODE_VIEW,
   WbsDisciplineNode,
   WbsNodeView,
 } from '@wbs/models';
@@ -44,7 +44,7 @@ export class WbsDisciplineTreeComponent
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
 
   readonly faCircleQuestion = faCircleQuestion;
-  view = PROJECT_VIEW.DISCIPLINE;
+  view = PROJECT_NODE_VIEW.DISCIPLINE;
 
   constructor(renderer: Renderer2, wbsService: WbsPhaseService, zone: NgZone) {
     super(renderer, wbsService, zone);

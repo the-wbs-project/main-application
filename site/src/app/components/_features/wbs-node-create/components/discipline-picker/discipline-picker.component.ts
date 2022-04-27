@@ -1,9 +1,7 @@
 import {
   AfterViewInit,
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
@@ -17,7 +15,7 @@ import { NodeCreationState } from '../../state';
 @Component({
   selector: 'wbs-node-discipline-picker',
   templateUrl: './discipline-picker.component.html',
-  styleUrls: ['./discipline-picker.component.scss'],
+  styleUrls: ['../flexing.scss'],
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
@@ -35,10 +33,7 @@ export class DisciplinePickerComponent implements AfterViewInit {
     fields: ['label'],
   };
 
-  constructor(
-    private readonly cd: ChangeDetectorRef,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly store: Store) {}
 
   ngAfterViewInit() {
     this.disciplines = this.store.selectSnapshot(
@@ -46,9 +41,9 @@ export class DisciplinePickerComponent implements AfterViewInit {
     );
     this.data = [...this.disciplines];
 
-    this.store.selectOnce(NodeCreationState.disciplines).subscribe((ids) => {
-      this.disciplineIds.push(...ids);
-    });
+    this.disciplineIds.push(
+      ...this.store.selectSnapshot(NodeCreationState.disciplines)
+    );
   }
 
   back() {
@@ -68,7 +63,6 @@ export class DisciplinePickerComponent implements AfterViewInit {
 
         this.disciplineIds.push(id);
       }
-      this.cd.detectChanges();
     });
   }
 }

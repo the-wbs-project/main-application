@@ -1,6 +1,6 @@
 export enum PROJECT_VIEW {
-  PHASE = 'phase',
-  DISCIPLINE = 'discipline',
+  GENERAL = 'general',
+  WBS = 'wbs',
 }
 
-export type PROJECT_VIEW_TYPE = PROJECT_VIEW.DISCIPLINE | PROJECT_VIEW.PHASE;
+export type PROJECT_VIEW_TYPE = PROJECT_VIEW.GENERAL | PROJECT_VIEW.WBS;

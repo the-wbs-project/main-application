@@ -1,24 +1,45 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
+import {
+  ButtonGroupModule,
+  ButtonModule,
+} from '@progress/kendo-angular-buttons';
+import { SplitterModule } from '@progress/kendo-angular-layout';
+import { ProjectGuard } from '@wbs/guards';
+import { SharedModule } from '@wbs/module';
+import {
+  WbsNodeCreateModule,
+  WbsNodeEditorModule,
+  WbsTreeModule,
+} from '../../_features';
 import { ProjectsViewComponent } from './component';
-import { ProjectSortPipe } from './pipes';
-import { ViewDataResolver } from './services';
+import { VerifyNodeDataGuard } from './guards';
 
 const routes: Routes = [
   {
-    path: ':listType/:filter',
+    path: ':projectId/:view',
     component: ProjectsViewComponent,
-    data: {
-      vm: ViewDataResolver,
-    },
+    canActivate: [ProjectGuard],
+  },
+  {
+    path: ':projectId/:view/:nodeView',
+    component: ProjectsViewComponent,
+    canActivate: [ProjectGuard, VerifyNodeDataGuard],
   },
 ];
 
 @NgModule({
-  imports: [CommonModule, RouterModule.forChild(routes), TranslateModule],
-  providers: [],
-  declarations: [ProjectSortPipe, ProjectsViewComponent],
+  imports: [
+    ButtonGroupModule,
+    ButtonModule,
+    RouterModule.forChild(routes),
+    SharedModule,
+    SplitterModule,
+    WbsNodeCreateModule,
+    WbsNodeEditorModule,
+    WbsTreeModule,
+  ],
+  providers: [ProjectGuard, VerifyNodeDataGuard],
+  declarations: [ProjectsViewComponent],
 })
 export class ProjectsViewModule {}

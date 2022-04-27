@@ -11,7 +11,7 @@ import { NodeCreationState } from '../../state';
 @Component({
   selector: 'wbs-node-create-title',
   templateUrl: './title-view.component.html',
-  styleUrls: ['./title-view.component.scss'],
+  styleUrls: ['../flexing.scss'],
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

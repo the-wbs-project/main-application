@@ -2879,15 +2879,6 @@ body.dark-theme {
     border-bottom: 1px solid rgba(189, 198, 214, 0.2);
   }
 
-  .iti__country.iti__highlight {
-    background-color: $dark-theme;
-  }
-
-  .iti__country-list {
-    background-color: $dark-theme;
-    box-shadow: 0 8px 16px 0 rgb(44, 50, 82);
-  }
-
   .iti--allow-dropdown .iti__flag-container:hover .iti__selected-flag {
     background-color: #414565;
   }
@@ -4205,7 +4196,8 @@ body.dark-theme {
   }
 
   .bg-light {
-    background-color: $dark-theme !important;
+    color: $gray-100 !important;
+    background-color: $gray-900 !important;
   }
 
   .page-item.active .page-link-outline {
@@ -4584,26 +4576,6 @@ body.dark-theme {
     border: 1px solid #404353 !important;
   }
 
-  #country-selector .modal-header {
-    border-color: #404353 !important;
-  }
-
-  .btn-country {
-    color: #eaecf3;
-  }
-
-  #country-selector .modal-body {
-    background-image: url(../../assets/img/png/countrymap1.png) !important;
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
-    position: relative;
-  }
-
-  .btn-check:checked + .btn-country {
-    color: #000;
-  }
-
   .sidebar .tabs-menu ul li .active {
     .side-menu__icon {
       color: $white;
@@ -4798,18 +4770,6 @@ body.dark-theme {
 
   #user-datatable thead th {
     background-color: $dark-theme !important;
-  }
-
-  .background-image-blog {
-    background-image: url(../../assets/img/photos/error.jpg) !important;
-    background-position: center !important;
-    background-size: cover !important;
-    background-repeat: no-repeat !important;
-    height: 320px;
-    position: relative;
-    border-top-left-radius: calc(0.25rem - 1px);
-    border-top-right-radius: calc(0.25rem - 1px);
-    border-radius: 0px;
   }
 
   .mail-option .dropdown-menu > li > a {
@@ -5247,9 +5207,6 @@ body.dark-theme {
   border-right-width: 0px !important;
 }
 .dark-theme .primary-custom-card1:before {
-  background-color: $dark-theme;
-}
-.dark-theme .btn-country.active {
   background-color: $dark-theme;
 }
 

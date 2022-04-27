@@ -1,0 +1,14 @@
+section {
+  display: flex;
+  flex-flow: column;
+  height: 500px;
+}
+
+.wizard-body {
+  flex: 1;
+  overflow: auto;
+}
+
+.wizard-footer {
+  height: 60px;
+}

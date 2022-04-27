@@ -13,7 +13,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
-import { Project, PROJECT_VIEW, WbsNodeView, WbsPhaseNode } from '@wbs/models';
+import {
+  Project,
+  PROJECT_NODE_VIEW,
+  WbsNodeView,
+  WbsPhaseNode,
+} from '@wbs/models';
 import { Subscription } from 'rxjs';
 import { NodeCheck, Position } from '../../models';
 import { WbsPhaseService } from '../../services';
@@ -39,7 +44,7 @@ export class WbsPhaseTreeComponent
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
 
   readonly faCircleQuestion = faCircleQuestion;
-  view = PROJECT_VIEW.DISCIPLINE;
+  view = PROJECT_NODE_VIEW.DISCIPLINE;
 
   constructor(renderer: Renderer2, wbsService: WbsPhaseService, zone: NgZone) {
     super(renderer, wbsService, zone);

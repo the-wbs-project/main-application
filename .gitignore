@@ -7,3 +7,5 @@ _theme/Nowa
 **/config*.*
 .vs/
 .vscode/
+
+site/src/assets/img_temp/

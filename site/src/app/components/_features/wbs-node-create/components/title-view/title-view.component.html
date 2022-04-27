@@ -1,33 +1,27 @@
-<div class="pd-x-100">
-  What is the name and description of this node?
-  <br />
-  <br />
-  <kendo-floatinglabel text="Name" class="w-100">
-    <kendo-textbox #name [ngModel]="title$ | async"> </kendo-textbox>
-  </kendo-floatinglabel>
-  <br />
-  <kendo-floatinglabel text="Description" class="w-100 pd-t-20">
-    <kendo-textarea
-      #description
-      resizable="auto"
-      [ngModel]="description$ | async"
-    >
-    </kendo-textarea>
-  </kendo-floatinglabel>
-</div>
-
-<div class="w-100 pos-absolute b-100 pd-x-100">
-  <div class="display-ib w-50">
-    <button kendoButton class="wd-100 p-2" (click)="back()">Previous</button>
+<section class="pd-x-50">
+  <div class="wizard-body">
+    What is the name and description of this node?
+    <br />
+    <br />
+    <kendo-floatinglabel text="Name" class="w-100">
+      <kendo-textbox #name [ngModel]="title$ | async"> </kendo-textbox>
+    </kendo-floatinglabel>
+    <br />
+    <br />
+    <kendo-floatinglabel text="Description" class="w-100 pd-t-20">
+      <kendo-textarea
+        #description
+        resizable="auto"
+        [ngModel]="description$ | async"
+      >
+      </kendo-textarea>
+    </kendo-floatinglabel>
   </div>
-  <div class="display-ib w-50 text-right">
-    <button
-      kendoButton
-      themeColor="primary"
-      class="wd-100 p-2"
-      (click)="go(name.value, description.value)"
+  <div class="wizard-footer">
+    <wbs-node-bottom-buttons
+      (nextClicked)="go(name.value, description.value)"
+      (previousClicked)="back()"
     >
-      Next
-    </button>
+    </wbs-node-bottom-buttons>
   </div>
-</div>
+</section>

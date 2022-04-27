@@ -1,11 +1,13 @@
-<div class="pd-x-100">
-  What disciplines use this node?
-  <br />
-  <br />
-  <kendo-floatinglabel text="Disciplines" class="w-100">
+<section class="pd-x-50">
+  <div class="wizard-body">
+    What disciplines use this node?
+    <br />
+    <br />
+    <kendo-label text="Disciplines"> </kendo-label>
     <kendo-multiselect
       [data]="data"
       [(ngModel)]="disciplineIds"
+      class="w-100"
       textField="label"
       valueField="id"
       [filterable]="true"
@@ -13,24 +15,17 @@
       [kendoDropDownFilter]="filterSettings"
     >
     </kendo-multiselect>
-  </kendo-floatinglabel>
-  <div class="w-100 text-center pd-t-100">
-    <button kendoButton (click)="import()">
-      Add Disciplines from Parent Node
-    </button>
+    <div class="w-100 text-center pd-t-50">
+      <button kendoButton (click)="import()">
+        Add Disciplines from Parent Node
+      </button>
+    </div>
   </div>
-</div>
-
-<div class="w-100 pos-absolute b-100 pd-x-100">
-  <div class="display-ib w-50">
-    <button kendoButton class="wd-100 p-2" (click)="back()">Previous</button>
+  <div class="wizard-footer">
+    <wbs-node-bottom-buttons (nextClicked)="go()" (previousClicked)="back()">
+    </wbs-node-bottom-buttons>
   </div>
-  <div class="display-ib w-50 text-right">
-    <button kendoButton themeColor="primary" class="wd-100 p-2" (click)="go()">
-      Next
-    </button>
-  </div>
-</div>
+</section>
 
 <!--
   If Phase View:

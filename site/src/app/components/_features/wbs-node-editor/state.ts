@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  Activity,
-  ListItem,
-  PROJECT_VIEW_TYPE,
-  WbsNodeView,
-} from '@wbs/models';
+import { Activity, PROJECT_NODE_VIEW_TYPE, WbsNodeView } from '@wbs/models';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import {
-  ClearEditor,
-  EditorViewChanged,
-  LoadDeleteReasons,
-  NodeSelected,
-} from './actions';
+import { ClearEditor, EditorViewChanged, NodeSelected } from './actions';
 import { EditorView } from './models';
 
 export const VIEWS: EditorView[] = [
@@ -35,9 +25,8 @@ export const VIEWS: EditorView[] = [
 
 interface StateModel {
   history?: Activity[];
-  deleteList?: ListItem[];
   node?: WbsNodeView;
-  projectView?: PROJECT_VIEW_TYPE;
+  projectView?: PROJECT_NODE_VIEW_TYPE;
   view: EditorView;
   views: EditorView[];
 }
@@ -51,11 +40,6 @@ interface StateModel {
   },
 })
 export class NodeEditorState {
-  @Selector()
-  static deleteList(state: StateModel): ListItem[] | undefined {
-    return state.deleteList;
-  }
-
   @Selector()
   static history(state: StateModel): Activity[] | undefined {
     return state.history;
@@ -86,16 +70,6 @@ export class NodeEditorState {
     return state.views;
   }
 
-  @Action(LoadDeleteReasons)
-  loadDeleteReasons(
-    ctx: StateContext<StateModel>,
-    action: LoadDeleteReasons
-  ): void {
-    ctx.patchState({
-      deleteList: action.reasons,
-    });
-  }
-
   @Action(NodeSelected)
   nodeSelected(ctx: StateContext<StateModel>, action: NodeSelected): void {
     ctx.patchState({
@@ -119,7 +93,7 @@ export class NodeEditorState {
   clearEditor(ctx: StateContext<StateModel>, action: ClearEditor): void {
     ctx.patchState({
       node: undefined,
-      view: undefined,
+      view: VIEWS[0],
     });
   }
 }

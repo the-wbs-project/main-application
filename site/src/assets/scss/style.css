@@ -17489,14 +17489,6 @@ body {
   position: relative;
 }
 
-.header-img {
-  background: -webkit-gradient(linear, left top, left bottom, from(rgba(109, 110, 243, 0.7)), to(rgba(109, 110, 243, 0.7))), url(../img/20.jpg);
-  background: linear-gradient(rgba(109, 110, 243, 0.7), rgba(109, 110, 243, 0.7)), url(../img/20.jpg);
-  background-size: cover;
-  border-top-left-radius: 5px;
-  border-top-right-radius: 5px;
-  padding: 20px 0 20px 0;
-}
 
 #dropdownMenuButton2 .badge-pill {
   padding: 5px 7px;
@@ -41129,12 +41121,6 @@ slide is-expanded side-menu__item {
   right: auto;
   left: -10px;
   padding: 10px 10px 10px;
-}
-
-.rtl .header-img {
-  border-top-right-radius: 5px;
-  border-top-left-radius: 5px;
-  padding: 20px 0 20px 0;
 }
 
 .rtl .dropdown-item .content {

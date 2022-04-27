@@ -77,7 +77,6 @@ export class WbsNodePhaseTransformer {
 
     for (const child of this.getSortedChildren(parentId, list)) {
       const childLevel = [...parentLevel, child.phase?.order ?? 0];
-      console.log(child.disciplineIds);
       const node: WbsPhaseNode = {
         children: 0,
         description: child.description,

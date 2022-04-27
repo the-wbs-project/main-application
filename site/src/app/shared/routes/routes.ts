@@ -2,8 +2,10 @@ import { Routes } from '@angular/router';
 
 export const content: Routes = [
   {
-    path: 'demos',
+    path: 'projects/view',
     loadChildren: () =>
-      import('../../components/demos/demos.module').then((m) => m.DemosModule),
+      import('../../components/projects/view/module').then(
+        (m) => m.ProjectsViewModule
+      ),
   },
 ];

@@ -59,6 +59,11 @@
   background-color: $alt-fail !important;
 }
 
+.header-panel {
+  background-color: #216259;
+  border-bottom: solid 1px white;
+}
+
 .fc .fc-button-primary {
   background-color: var(--primary-bg-color) !important;
   border-color: var(--primary-bg-border) !important;
@@ -284,20 +289,6 @@ ngb-alert .btn-close {
 
 // ng-mat-int-tel-input
 
-.country-selector {
-  opacity: 1 !important;
-  bottom: 8px !important;
-}
-
-input:not(.country-search) {
-  bottom: 3px;
-  left: 10px;
-}
-
-.country-list-button {
-  font-size: 0.8rem !important;
-}
-
 .mat-menu-content:not(:empty) {
   max-height: 250px;
 }
@@ -320,17 +311,6 @@ input:not(.country-search) {
     color: #fff;
   }
 
-  input.country-search {
-    border-bottom: 1px solid #404353 !important;
-    color: #fff;
-    background-color: #2a2e3f;
-  }
-
-  .mat-hint,
-  .country-selector-code {
-    color: #eee !important;
-  }
-
   .label-wrapper {
     color: #fff;
   }
@@ -344,17 +324,6 @@ input:not(.country-search) {
   .mat-menu-panel {
     background-color: var(--transparent-body);
     color: #fff;
-  }
-
-  input.country-search {
-    border-bottom: 1px solid #4cb0a0 !important;
-    color: #fff;
-    background-color: rgba(0, 0, 0, 0.2) !important;
-  }
-
-  .mat-hint,
-  .country-selector-code {
-    color: #eee !important;
   }
 
   .label-wrapper {

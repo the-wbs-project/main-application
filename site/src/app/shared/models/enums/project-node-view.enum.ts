@@ -1,0 +1,8 @@
+export enum PROJECT_NODE_VIEW {
+  PHASE = 'phase',
+  DISCIPLINE = 'discipline',
+}
+
+export type PROJECT_NODE_VIEW_TYPE =
+  | PROJECT_NODE_VIEW.DISCIPLINE
+  | PROJECT_NODE_VIEW.PHASE;

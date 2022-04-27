@@ -13,7 +13,9 @@
         "General": "General",
         "Description": "Description",
         "LoginExpired": "Login Expired",
-        "UnexpectedServerError": "An unexpected server error occured."
+        "UnexpectedServerError": "An unexpected server error occured.",
+        "Previous": "Previous",
+        "Next": "Next"
       },
       "Category_Phase": {
         "Initial": "Initial Phase",
@@ -51,6 +53,7 @@
     "language": "en-Us",
     "values": {
       "Wbs": {
+        "WBS": "WBS",
         "History": "History",
         "Clone": "Clone",
         "CloneWith": "Clone (With Children)",
@@ -76,7 +79,8 @@
         "LetsGetStarted": "Lets Get Started",
         "TitleAndDescription": "Title And Description",
         "SelectPhase": "Select Phase",
-        "SelectDisciplines": "Select Disciplines"
+        "SelectDisciplines": "Select Disciplines",
+        "OtherFlags": "Other Flags"
       }
     }
   }

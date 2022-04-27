@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
-import { ListItem, PROJECT_VIEW, PROJECT_VIEW_TYPE } from '@wbs/models';
+import {
+  ListItem,
+  PROJECT_NODE_VIEW,
+  PROJECT_NODE_VIEW_TYPE,
+} from '@wbs/models';
 import { Resources, StartupService } from '@wbs/services';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { SetupCategories } from '@wbs/actions';
 
 interface StateModel {
-  categoryList: Map<PROJECT_VIEW_TYPE, ListItem[]>;
-  categoryMap: Map<PROJECT_VIEW_TYPE, Map<string, ListItem>>;
+  categoryList: Map<PROJECT_NODE_VIEW_TYPE, ListItem[]>;
+  categoryMap: Map<PROJECT_NODE_VIEW_TYPE, Map<string, ListItem>>;
   categoryNames: Map<string, string>;
   disciplineCategories: ListItem[];
   phaseCategories: ListItem[];
@@ -16,8 +20,8 @@ interface StateModel {
 @State<StateModel>({
   name: 'metadata',
   defaults: {
-    categoryList: new Map<PROJECT_VIEW_TYPE, ListItem[]>(),
-    categoryMap: new Map<PROJECT_VIEW_TYPE, Map<string, ListItem>>(),
+    categoryList: new Map<PROJECT_NODE_VIEW_TYPE, ListItem[]>(),
+    categoryMap: new Map<PROJECT_NODE_VIEW_TYPE, Map<string, ListItem>>(),
     categoryNames: new Map<string, string>(),
     disciplineCategories: [],
     phaseCategories: [],
@@ -30,14 +34,16 @@ export class MetadataState {
   ) {}
 
   @Selector()
-  static categoryList(state: StateModel): Map<PROJECT_VIEW_TYPE, ListItem[]> {
+  static categoryList(
+    state: StateModel
+  ): Map<PROJECT_NODE_VIEW_TYPE, ListItem[]> {
     return state.categoryList;
   }
 
   @Selector()
   static categoryMap(
     state: StateModel
-  ): Map<PROJECT_VIEW_TYPE, Map<string, ListItem>> {
+  ): Map<PROJECT_NODE_VIEW_TYPE, Map<string, ListItem>> {
     return state.categoryMap;
   }
 
@@ -70,11 +76,11 @@ export class MetadataState {
       cat.label = this.resources.get(cat.label);
     }
 
-    categoryList.set(PROJECT_VIEW.DISCIPLINE, discipline);
-    categoryList.set(PROJECT_VIEW.PHASE, phase);
+    categoryList.set(PROJECT_NODE_VIEW.DISCIPLINE, discipline);
+    categoryList.set(PROJECT_NODE_VIEW.PHASE, phase);
 
-    categoryMap.set(PROJECT_VIEW.DISCIPLINE, this.createMap(discipline));
-    categoryMap.set(PROJECT_VIEW.PHASE, this.createMap(phase));
+    categoryMap.set(PROJECT_NODE_VIEW.DISCIPLINE, this.createMap(discipline));
+    categoryMap.set(PROJECT_NODE_VIEW.PHASE, this.createMap(phase));
 
     for (const cat of [...discipline, ...phase]) {
       state.categoryNames.set(cat.id, cat.label);

@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { ListItem } from '@wbs/models';
+import { ProjectState } from '@wbs/states';
 import { Observable } from 'rxjs';
-import { NodeEditorState } from '../state';
 
 @Component({
   selector: 'wbs-node-delete-reasons',
@@ -33,7 +33,7 @@ import { NodeEditorState } from '../state';
   encapsulation: ViewEncapsulation.None,
 })
 export class DeleteNodeReasonsComponent {
-  @Select(NodeEditorState.deleteList) deleteList$!: Observable<ListItem[]>;
+  @Select(ProjectState.deleteReasons) deleteList$!: Observable<ListItem[]>;
   @Input() value: ListItem | undefined;
   @Output() readonly valueChange = new EventEmitter<ListItem>();
 

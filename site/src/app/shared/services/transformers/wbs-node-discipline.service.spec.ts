@@ -212,7 +212,7 @@ describe('WbsNodePhaseTransformer - 2 Level Phase', () => {
 
 /*
 describe('Transformer - 3 Level Phase', () => {
-  const results = Transformer.wbsNodeTree(PROJECT_VIEW.PHASE, threeDeep);
+  const results = Transformer.wbsNodeTree(PROJECT_NODE_VIEW.PHASE, threeDeep);
 
   it('should not be null and length of 3', () => {
     expect(results).not.toBeNull();
@@ -257,7 +257,7 @@ describe('Transformer - 3 Level Phase', () => {
   });
 });
 describe('Transformer - 3 Level Discipline', () => {
-  const results = Transformer.wbsNodeTree(PROJECT_VIEW.DISCIPLINE, threeDeep);
+  const results = Transformer.wbsNodeTree(PROJECT_NODE_VIEW.DISCIPLINE, threeDeep);
 
   it('should not be null and length of 3', () => {
     expect(results).not.toBeNull();

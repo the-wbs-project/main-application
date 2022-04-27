@@ -6,7 +6,7 @@ import {
   MissingTranslationHandler,
 } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { ResourceSections } from '@wbs/models';
 
 type MissingResource = {
@@ -18,6 +18,7 @@ type MissingResource = {
 @Injectable({ providedIn: 'root' })
 export class Resources extends MissingTranslationHandler {
   private readonly culture = 'en';
+  private readonly pulled: string[] = [];
   private readonly redeemed: string[] = [];
   private _timer$: Observable<void | null> | null = null;
   private resources: any[] = [];
@@ -39,11 +40,12 @@ export class Resources extends MissingTranslationHandler {
     this.translate.missingTranslationHandler = this;
   }
 
-  append(resources: ResourceSections | null | undefined) {
-    if (resources) {
-      this.translate.setTranslation(this.culture, resources, true);
-      this.resources.push(resources);
-    }
+  verifyAsync(key: string): Observable<any> {
+    if (this.pulled.indexOf(key) > -1) return of('nothing');
+
+    return this.http
+      .get<ResourceSections>(`resources/${key}`)
+      .pipe(map((resources) => this.append(key, resources)));
   }
 
   get(resource: string, defaultValue?: string): string {
@@ -93,6 +95,14 @@ export class Resources extends MissingTranslationHandler {
       this.recordMissing(key);
     }
     return params.key;
+  }
+
+  private append(key: string, resources: ResourceSections | null | undefined) {
+    if (resources) {
+      this.translate.setTranslation(this.culture, resources, true);
+      this.resources.push(resources);
+      this.pulled.push(key);
+    }
   }
 
   private recordMissing(path: string): void {

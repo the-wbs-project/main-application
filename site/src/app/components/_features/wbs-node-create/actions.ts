@@ -1,8 +1,8 @@
-import { PROJECT_VIEW_TYPE, WbsNodeView } from '@wbs/models';
+import { PROJECT_NODE_VIEW_TYPE, WbsNodeView } from '@wbs/models';
 
 export class OpenNodeCreationDialog {
   static readonly type = '[Node Creation] Open Dialog';
-  constructor(readonly parent: WbsNodeView, readonly view: PROJECT_VIEW_TYPE) {}
+  constructor(readonly parent: WbsNodeView, readonly view: PROJECT_NODE_VIEW_TYPE) {}
 }
 
 export class DialogViewSelected {
@@ -39,4 +39,17 @@ export class DisciplinePrevious {
 export class DisciplineNext {
   static readonly type = '[Node Creation] Discipline Next';
   constructor(readonly disciplines: string[]) {}
+}
+
+export class OtherFlagsPrevious {
+  static readonly type = '[Node Creation] Other Flags Previous';
+}
+
+export class OtherFlagsNext {
+  static readonly type = '[Node Creation] Other Flags Next';
+  constructor(readonly flags: Record<string, boolean>) {}
+}
+
+export class SaveNode {
+  static readonly type = '[Node Creation] Save';
 }

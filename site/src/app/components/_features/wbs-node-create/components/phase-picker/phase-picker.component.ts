@@ -11,7 +11,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'wbs-node-phase-picker',
   templateUrl: './phase-picker.component.html',
-  styleUrls: ['./phase-picker.component.scss'],
+  styleUrls: ['../flexing.scss'],
   preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
