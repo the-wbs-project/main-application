@@ -56,7 +56,7 @@ export class CloudflareEdgeDataService implements EdgeDataService {
         tasks = [];
       }
     }
-    if (tasks.length > 10) {
+    if (tasks.length > 0) {
       await Promise.all(tasks);
     }
   }
