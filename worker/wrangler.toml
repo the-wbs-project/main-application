@@ -28,6 +28,6 @@ vars = { CORS_URLS = "https://demo.thewbsproject.com", APP_INSIGHTS_KEY = "1a9b6
 [env.prod]
 route = "https://app.thewbsproject.com/*"
 kv_namespaces = [
-  { binding = "KVDATA", id = "92a843cb6f674b29aa29089f31ad5054", preview_id = "9020ff7ce374481285c71d9519942ccd" },
+  { binding = "KVDATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
 ]
 vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "", SNIPPET_APP_INSIGHTS = "" }
