@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, NgZone, Renderer2 } from '@angular/core';
-import { WbsNodeView } from '@wbs/models';
+import { WbsNodeView } from '@wbs/shared/models';
 import {
   BehaviorSubject,
   fromEvent,

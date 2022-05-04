@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { ListItem } from '@wbs/models';
+import { ListItem } from '@wbs/shared/models';
 import { Observable } from 'rxjs';
 
 export class MetdataDataService {

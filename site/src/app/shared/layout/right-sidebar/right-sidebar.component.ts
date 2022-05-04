@@ -6,7 +6,7 @@ import {
   ViewChild,
 } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LayoutService } from '@wbs/services';
+import { LayoutService } from '@wbs/shared/services';
 import { Subscription } from 'rxjs';
 
 @Component({

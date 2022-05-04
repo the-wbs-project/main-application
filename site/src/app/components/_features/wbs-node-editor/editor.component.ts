@@ -13,8 +13,8 @@ import {
   faTrashCan,
 } from '@fortawesome/pro-solid-svg-icons';
 import { Select, Store } from '@ngxs/store';
-import { Activity, ListItem, WbsNodeView } from '@wbs/models';
-import { Resources } from '@wbs/services';
+import { Activity, ListItem, WbsNodeView } from '@wbs/shared/models';
+import { Resources } from '@wbs/shared/services';
 import { Observable } from 'rxjs';
 import { EditorViewChanged } from './actions';
 import { EditorView } from './models';
@@ -24,7 +24,6 @@ import { NodeEditorState } from './state';
   selector: 'wbs-node-editor',
   templateUrl: './editor.component.html',
   styleUrls: ['./editor.component.scss'],
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

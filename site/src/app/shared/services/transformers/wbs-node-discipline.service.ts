@@ -5,9 +5,10 @@ import {
   WbsDisciplineNode,
   WbsNode,
   WbsNodeDisciplineRelationship,
-} from '@wbs/models';
-import { MetadataState } from '@wbs/states';
+} from '@wbs/shared/models';
+import { MetadataState } from '@wbs/shared/states';
 import { Resources } from '../resource.service';
+import { WbsNodeService } from '../wbs-node.service';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
@@ -47,7 +48,12 @@ export class WbsDisciplineNodeTransformer {
         phaseId: undefined,
         title: this.resources.get(cat.label),
       };
-      const children = this.getChildren(cat.id, parentlevel, projectNodes);
+      const children = this.getChildren(
+        cat.id,
+        cat.id,
+        parentlevel,
+        projectNodes
+      );
       parent.children = this.getChildCount(children);
 
       nodes.push(parent, ...children);
@@ -56,30 +62,38 @@ export class WbsDisciplineNodeTransformer {
   }
 
   private getSortedChildren(
+    disciplineId: string,
     parentId: string,
-    list: WbsNode[] | undefined
+    list: WbsNode[]
   ): [WbsNode, WbsNodeDisciplineRelationship][] {
     const results: [WbsNode, WbsNodeDisciplineRelationship][] = [];
 
-    for (const node of list ?? []) {
+    for (const node of list) {
       if (node.discipline == null || node.removed) continue;
 
-      const r = node.discipline.find((x) => x.parentId === parentId);
+      const r = node.discipline.find(
+        (x) => x.disciplineId === disciplineId && x.parentId === parentId
+      );
 
       if (r) results.push([node, r]);
     }
 
-    return results.sort((a, b) => (a[1].order < b[1].order ? -1 : 1));
+    return results.sort(WbsNodeService.disciplineSort);
   }
 
   private getChildren(
+    disciplineId: string,
     parentId: string,
     parentLevel: number[],
-    list: WbsNode[] | undefined
+    list: WbsNode[]
   ): WbsDisciplineNode[] {
     const results: WbsDisciplineNode[] = [];
 
-    for (const childParts of this.getSortedChildren(parentId, list)) {
+    for (const childParts of this.getSortedChildren(
+      disciplineId,
+      parentId,
+      list
+    )) {
       const child = childParts[0];
       const childDisc = childParts[1];
       const childLevel = [...parentLevel, childDisc.order];
@@ -101,7 +115,12 @@ export class WbsDisciplineNodeTransformer {
 
         if (pCat) node.title = this.resources.get(pCat.label);
       }
-      const children = this.getChildren(child.id, childLevel, list);
+      const children = this.getChildren(
+        disciplineId,
+        child.id,
+        childLevel,
+        list
+      );
 
       node.children = this.getChildCount(children);
 

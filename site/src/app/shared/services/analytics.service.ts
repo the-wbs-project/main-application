@@ -1,6 +1,6 @@
 import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { StartupService } from '@wbs/services';
+import { StartupService } from '@wbs/shared/services';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 
 @Injectable({ providedIn: 'root' })

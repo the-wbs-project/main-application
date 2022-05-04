@@ -1,7 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ContentLayoutComponent } from '@wbs/layout';
-import { content } from '@wbs/routes';
+import { ContentLayoutComponent } from '@wbs/shared/layout';
+import { content } from '@wbs/shared/routes';
 
 const routes: Routes = [
   { path: '', redirectTo: '/projects/view/123/wbs/phase', pathMatch: 'full' },

@@ -1,13 +1,13 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { Router } from '@angular/router';
-import { TitleService } from '@wbs/services';
-import { AuthState } from '@wbs/states';
+import { TitleService } from '@wbs/shared/services';
+import { AuthState } from '@wbs/shared/states';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
 
 @Component({
   templateUrl: './component.html',
-  preserveWhitespaces: false,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {

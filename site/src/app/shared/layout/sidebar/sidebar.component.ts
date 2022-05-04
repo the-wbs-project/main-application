@@ -1,6 +1,6 @@
 import { Component, ViewEncapsulation, HostListener } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Menu, NavService } from '@wbs/services';
+import { Menu, NavService } from '@wbs/shared/services';
 import { faGenderless } from '@fortawesome/pro-solid-svg-icons';
 import { switcherArrowFn } from './sidebar';
 import { fromEvent } from 'rxjs';

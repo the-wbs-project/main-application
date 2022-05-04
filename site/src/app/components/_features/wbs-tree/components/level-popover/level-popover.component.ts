@@ -4,13 +4,12 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { WbsNodeView } from '@wbs/models';
+import { WbsNodeView } from '@wbs/shared/models';
 
 @Component({
   selector: 'wbs-level-popover',
   templateUrl: './level-popover.component.html',
   styleUrls: ['./level-popover.component.scss'],
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

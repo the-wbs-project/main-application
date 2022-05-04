@@ -1,6 +1,6 @@
 import { Store } from '@ngxs/store';
-import { SetupCategories } from '@wbs/actions';
-import { Resources, StartupService } from '@wbs/services';
+import { SetupCategories } from '@wbs/shared/actions';
+import { Resources, StartupService } from '@wbs/shared/services';
 import { DataServiceFactory } from './data-services';
 import { ThemeService } from './theme.service';
 

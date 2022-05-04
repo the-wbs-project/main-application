@@ -1,5 +1,6 @@
 export * from './activity.model';
 export * from './app-models';
+export * from './extract-node-view.model';
 export * from './list-item.model';
 export * from './enums';
 export * from './organization.model';

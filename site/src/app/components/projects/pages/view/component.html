@@ -1,0 +1,97 @@
+<div class="pd-y-20 page-header">
+  <span class="main-content-title mg-b-0 mg-b-lg-1">
+    {{ (project$ | async)?.title }}
+  </span>
+  <div class="page-header-actions">
+    <div class="btn-group">
+      <button
+        type="button"
+        class="btn"
+        *ngFor="let info of [['general', 'General.General'], ['wbs', 'Wbs.WBS']]"
+        [class.btn-white]="(view$ | async) !== info[0]"
+        [class.btn-outline-primary]="(view$ | async) !== info[0]"
+        [class.btn-success]="(view$ | async) === info[0]"
+        (click)="viewChanged(info[0])"
+      >
+        {{ info[1] | translate }}
+      </button>
+    </div>
+    &nbsp;&nbsp;&nbsp;
+    <wbs-project-view-actions></wbs-project-view-actions>
+  </div>
+</div>
+<div class="row row-sm">
+  <div class="col-lg-12">
+    <div class="card custom-card">
+      <div class="card-body">
+        <div
+          *ngIf="(view$ | async) === 'general'"
+          class="general-body tx-center"
+        >
+          Coming Soon...
+        </div>
+        <div
+          *ngIf="(view$ | async) === 'wbs'"
+          class="table-responsive deleted-table"
+        >
+          <kendo-splitter orientation="horizontal">
+            <kendo-splitter-pane [collapsible]="false">
+              <div class="pane-content" *ngIf="project$ | async; let project">
+                <wbs-phase-tree
+                  *ngIf="phaseNodes$ | async; let nodes"
+                  [nodes]="nodes"
+                  [project]="project"
+                  [toolbar]="toolbar"
+                  (selectedChanged)="nodeSelected(project, $event)"
+                >
+                </wbs-phase-tree>
+                <wbs-discipline-tree
+                  *ngIf="disciplineNodes$ | async; let nodes"
+                  [nodes]="nodes"
+                  [project]="project"
+                  [toolbar]="toolbar"
+                  (selectedChanged)="nodeSelected(project, $event)"
+                >
+                </wbs-discipline-tree>
+              </div>
+            </kendo-splitter-pane>
+            <kendo-splitter-pane *ngIf="show$ | async" min="300px" size="40%">
+              <div class="editor-body" appFillElement>
+                <ng-template [ngIf]="node$ | async" let-node>
+                  <div class="header-panel">
+                    <div class="header-label">
+                      <wbs-node-editor-categories></wbs-node-editor-categories>
+                    </div>
+                    <div class="header-actions">
+                      <wbs-node-actions-menu
+                        (menuClicked)="nodeMenuClicked($event)"
+                      ></wbs-node-actions-menu>
+                    </div>
+                  </div>
+                  <div appFillElement class="main-panel">
+                    <wbs-node-editor></wbs-node-editor>
+                  </div>
+                </ng-template>
+              </div>
+            </kendo-splitter-pane>
+          </kendo-splitter>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #toolbar>
+  <div class="btn-group">
+    <button
+      type="button"
+      class="btn"
+      *ngFor="let info of [['phase', 'Wbs.Phase'], ['discipline', 'Wbs.Discipline']]"
+      [class.btn-white]="(nodeView$ | async) !== info[0]"
+      [class.btn-outline-primary]="(nodeView$ | async) !== info[0]"
+      [class.btn-success]="(nodeView$ | async) === info[0]"
+      (click)="nodeViewChanged(info[0])"
+    >
+      {{ info[1] | translate }}
+    </button>
+  </div>
+</ng-template>

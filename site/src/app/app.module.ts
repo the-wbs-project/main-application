@@ -8,7 +8,6 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { NotificationModule } from '@progress/kendo-angular-notification';
-import { SweetAlert2Module } from '@sweetalert2/ngx-sweetalert2';
 import {
   AnalyticsService,
   AppInitializerFactory,
@@ -18,8 +17,8 @@ import {
   Resources,
   StartupService,
   ThemeService,
-} from '@wbs/services';
-import { AuthState, MetadataState, ProjectState } from '@wbs/states';
+} from '@wbs/shared/services';
+import { AuthState, MetadataState } from '@wbs/shared/states';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,10 +34,9 @@ import { AppComponent } from './app.component';
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
     }),
-    NgxsModule.forRoot([AuthState, MetadataState, ProjectState]),
+    NgxsModule.forRoot([AuthState, MetadataState]),
     NgxsRouterPluginModule.forRoot(),
     NotificationModule,
-    SweetAlert2Module.forRoot(),
     ToastrModule.forRoot(),
     TranslateModule.forRoot(),
   ],

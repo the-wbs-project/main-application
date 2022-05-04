@@ -3,7 +3,7 @@ import {
   ListItem,
   PROJECT_NODE_VIEW_TYPE,
   WbsNodeView,
-} from '@wbs/models';
+} from '@wbs/shared/models';
 import { EditorView } from './models';
 
 export class NodeSelected {

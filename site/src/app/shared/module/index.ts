@@ -9,6 +9,7 @@ import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import { ComponentsModule } from '../components';
 import {
   FillElementDirective,
   FullscreenDirective,
@@ -40,6 +41,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
   imports: [
     BottomNavigationModule,
+    ComponentsModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,

@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChangeAuthenticationFlag, ProfileUpdated } from '@wbs/actions';
-import { User } from '@wbs/models';
-import { StartupService } from '@wbs/services';
+import { ChangeAuthenticationFlag, ProfileUpdated } from '@wbs/shared/actions';
+import { User } from '@wbs/shared/models';
+import { StartupService } from '@wbs/shared/services';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { Observable } from 'rxjs';
 

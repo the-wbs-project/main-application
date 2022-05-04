@@ -1,4 +1,4 @@
-import { RouteLink } from '@wbs/models';
+import { RouteLink } from '@wbs/shared/models';
 
 export const routeLinks: RouteLink[] = [
   {

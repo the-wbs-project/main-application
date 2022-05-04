@@ -10,8 +10,8 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   WbsNode,
   WbsNodeView,
-} from '@wbs/models';
-import { ContainerService, Resources } from '@wbs/services';
+} from '@wbs/shared/models';
+import { ContainerService, Resources } from '@wbs/shared/services';
 import {
   CloseNodeCreationDialog,
   DialogViewSelected,
@@ -250,13 +250,23 @@ export class NodeCreationState {
       disciplineIds: state.disciplines,
       title: state.title,
       phase: {
-        levels: [],
         parentId: state.parent!.id,
         isDisciplineNode: false,
         syncWithDisciplines: state.syncWithDisciplines,
         order: -1,
       },
+      discipline: [],
     };
+
+    for (const discipline of state.disciplines) {
+      model.discipline!.push({
+        disciplineId: discipline,
+        order: -1,
+        parentId: '??',
+        isPhaseNode: false,
+        phaseId: undefined,
+      });
+    }
   }
 
   private setPage(ctx: StateContext<StateModel>): void {

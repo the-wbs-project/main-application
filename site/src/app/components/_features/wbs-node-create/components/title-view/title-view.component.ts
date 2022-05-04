@@ -12,7 +12,7 @@ import { NodeCreationState } from '../../state';
   selector: 'wbs-node-create-title',
   templateUrl: './title-view.component.html',
   styleUrls: ['../flexing.scss'],
-  preserveWhitespaces: false,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

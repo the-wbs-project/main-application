@@ -1,15 +1,13 @@
 <div class="display-ib w-50">
-  <button kendoButton class="wd-100 p-2" (click)="previousClicked.emit()">
+  <button
+    class="btn btn-outline-dark wd-100 p-2"
+    (click)="previousClicked.emit()"
+  >
     {{ labelPrevious | translate }}
   </button>
 </div>
 <div class="display-ib w-50 tx-right">
-  <button
-    kendoButton
-    themeColor="primary"
-    class="wd-100 p-2"
-    (click)="nextClicked.emit()"
-  >
+  <button class="btn btn-primary wd-100 p-2" (click)="nextClicked.emit()">
     {{ labelNext | translate }}
   </button>
 </div>

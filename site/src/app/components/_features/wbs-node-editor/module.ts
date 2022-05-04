@@ -6,18 +6,12 @@ import {
 } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import {
   ExpansionPanelModule,
   PanelBarModule,
 } from '@progress/kendo-angular-layout';
-import { SharedModule } from '@wbs/module';
-import {
-  ActionsMenuComponent,
-  DeleteDialogComponent,
-  DeleteNodeReasonsComponent,
-  EditorCategoriesComponent,
-} from './components';
+import { SharedModule } from '@wbs/shared/module';
+import { ActionsMenuComponent, EditorCategoriesComponent } from './components';
 import { WbsNodeEditorComponent } from './editor.component';
 import { NodeEditorState } from './state';
 
@@ -31,19 +25,15 @@ import { NodeEditorState } from './state';
     PanelBarModule,
     NgxsModule.forFeature([NodeEditorState]),
     SharedModule,
-    TextAreaModule,
   ],
   providers: [],
   declarations: [
     ActionsMenuComponent,
-    DeleteDialogComponent,
-    DeleteNodeReasonsComponent,
     EditorCategoriesComponent,
     WbsNodeEditorComponent,
   ],
   exports: [
     ActionsMenuComponent,
-    DeleteDialogComponent,
     EditorCategoriesComponent,
     WbsNodeEditorComponent,
   ],

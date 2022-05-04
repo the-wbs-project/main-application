@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { DeviceType } from '@wbs/models';
+import { DeviceType } from '@wbs/shared/models';
 import * as is from 'is_js';
 
 @Injectable({ providedIn: 'root' })

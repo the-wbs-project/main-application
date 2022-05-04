@@ -28,7 +28,6 @@ import { NodeEditorState } from '../state';
     </ng-template>
   </kendo-dropdownbutton>`,
   styleUrls: ['./editor-header-items.scss'],
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

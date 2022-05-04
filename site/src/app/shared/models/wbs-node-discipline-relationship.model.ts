@@ -1,8 +1,8 @@
 export interface WbsNodeDisciplineRelationship {
-  id: string;
+  disciplineId: string;
   parentId: string;
   isPhaseNode?: boolean;
   phaseId?: string;
   order: number;
-  levels: number[];
+  //levels: number[];
 }

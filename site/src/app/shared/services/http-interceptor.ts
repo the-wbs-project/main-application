@@ -8,7 +8,7 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Messages } from '@wbs/services';
+import { Messages } from '@wbs/shared/services';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { AnalyticsService } from './analytics.service';
@@ -29,9 +29,10 @@ export class RequestInterceptor implements HttpInterceptor {
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 
-    request = request.clone({
-      url: `api/${request.url}`,
-    });
+    if (request.url.indexOf('assets') === -1)
+      request = request.clone({
+        url: `api/${request.url}`,
+      });
 
     //@ts-ignore
     return next

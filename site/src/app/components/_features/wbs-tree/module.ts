@@ -8,7 +8,7 @@ import {
 import { IconsModule } from '@progress/kendo-angular-icons';
 import { TooltipsModule } from '@progress/kendo-angular-tooltip';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
-import { SharedModule } from '@wbs/module';
+import { SharedModule } from '@wbs/shared/module';
 import {
   DisciplineIconComponent,
   DisciplineIconListComponent,

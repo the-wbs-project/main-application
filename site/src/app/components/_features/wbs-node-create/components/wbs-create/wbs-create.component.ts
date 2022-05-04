@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Messages } from '@wbs/services';
+import { Messages } from '@wbs/shared/services';
 import { Observable } from 'rxjs';
 import { DialogViewSelected } from '../../actions';
 import { NODE_CREATION_PAGES_TYPE } from '../../models';
@@ -14,7 +14,6 @@ import { NodeCreationState } from '../../state';
   selector: 'wbs-node-create',
   templateUrl: './wbs-create.component.html',
   styleUrls: ['./wbs-create.component.scss'],
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

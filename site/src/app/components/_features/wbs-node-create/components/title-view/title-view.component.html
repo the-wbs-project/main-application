@@ -9,12 +9,8 @@
     <br />
     <br />
     <kendo-floatinglabel text="Description" class="w-100 pd-t-20">
-      <kendo-textarea
-        #description
-        resizable="auto"
-        [ngModel]="description$ | async"
-      >
-      </kendo-textarea>
+      <textarea #description resizable="auto" [ngModel]="description$ | async">
+      </textarea>
     </kendo-floatinglabel>
   </div>
   <div class="wizard-footer">

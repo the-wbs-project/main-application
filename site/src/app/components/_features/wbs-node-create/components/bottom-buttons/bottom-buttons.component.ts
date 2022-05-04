@@ -10,7 +10,6 @@ import {
 @Component({
   selector: 'wbs-node-bottom-buttons',
   templateUrl: './bottom-buttons.component.html',
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

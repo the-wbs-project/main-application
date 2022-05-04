@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Project, PROJECT_STATI_TYPE } from '@wbs/models';
+import { Project, PROJECT_STATI_TYPE } from '@wbs/shared/models';
 
 declare type PipeType = Project[] | undefined | null;
 

@@ -1,5 +1,5 @@
 import { Directive, HostListener } from '@angular/core';
-import { ThemeService } from '@wbs/services';
+import { ThemeService } from '@wbs/shared/services';
 
 @Directive({
   selector: '[appToggleTheme]',

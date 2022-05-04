@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Project } from '@wbs/models';
+import { Project } from '@wbs/shared/models';
 import { Observable } from 'rxjs';
 
 export class ProjectDataService {

@@ -11,7 +11,6 @@ import { Component, Input } from '@angular/core';
     <fa-icon [icon]="id | disciplineIcon"></fa-icon>
   </span>`,
   styles: ['.discipline-icon { margin-right: 10px; }'],
-  preserveWhitespaces: false,
 })
 export class DisciplineIconComponent {
   @Input() id: string | undefined;

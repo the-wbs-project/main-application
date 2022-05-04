@@ -18,7 +18,7 @@ import {
   PROJECT_NODE_VIEW,
   WbsNodeView,
   WbsPhaseNode,
-} from '@wbs/models';
+} from '@wbs/shared/models';
 import { Subscription } from 'rxjs';
 import { NodeCheck, Position } from '../../models';
 import { WbsPhaseService } from '../../services';
@@ -28,7 +28,7 @@ import { BaseWbsTreeComponent } from '../base-wbs-tree.component';
   selector: 'wbs-phase-tree',
   templateUrl: './wbs-phase-tree.component.html',
   styleUrls: ['../base-wbs-tree.component.scss'],
-  preserveWhitespaces: false,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

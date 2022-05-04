@@ -7,7 +7,7 @@ import {
 } from '@ngx-translate/core';
 import { Observable, of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { ResourceSections } from '@wbs/models';
+import { ResourceSections } from '@wbs/shared/models';
 
 type MissingResource = {
   key: string;

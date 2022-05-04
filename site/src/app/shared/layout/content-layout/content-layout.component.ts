@@ -5,7 +5,7 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
-import { ContainerService, SwitcherService } from '@wbs/services';
+import { ContainerService, SwitcherService } from '@wbs/shared/services';
 
 @Component({
   selector: 'app-content-layout',

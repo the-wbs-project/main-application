@@ -8,7 +8,6 @@ import { faCircle } from '@fortawesome/pro-duotone-svg-icons';
     '.icon-wrapper { display: inline-block; width: 50px; }',
     '.legend-header { text-align: center; }',
   ],
-  preserveWhitespaces: false,
 })
 export class LegendPhaseComponent {
   @Input() ids: string[] | undefined;

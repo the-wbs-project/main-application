@@ -3,10 +3,10 @@ import {
   ListItem,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-} from '@wbs/models';
-import { Resources, StartupService } from '@wbs/services';
+} from '@wbs/shared/models';
+import { Resources, StartupService } from '@wbs/shared/services';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { SetupCategories } from '@wbs/actions';
+import { SetupCategories } from '@wbs/shared/actions';
 
 interface StateModel {
   categoryList: Map<PROJECT_NODE_VIEW_TYPE, ListItem[]>;

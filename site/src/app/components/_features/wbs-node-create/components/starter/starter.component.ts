@@ -4,7 +4,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Select, Store } from '@ngxs/store';
-import { Messages } from '@wbs/services';
+import { Messages } from '@wbs/shared/services';
 import { Observable } from 'rxjs';
 import { DialogViewSelected } from '../../actions';
 import { NodeCreationState } from '../../state';
@@ -12,7 +12,6 @@ import { NodeCreationState } from '../../state';
 @Component({
   selector: 'wbs-node-starter',
   templateUrl: './starter.component.html',
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

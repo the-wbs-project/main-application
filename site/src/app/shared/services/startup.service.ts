@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ListItem, Project, User } from '@wbs/models';
+import { ListItem, Project, User } from '@wbs/shared/models';
 
 @Injectable({ providedIn: 'root' })
 export class StartupService {

@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { WbsNode } from '@wbs/models';
+import { ProjectNode, WbsNode } from '@wbs/shared/models';
 import { Observable } from 'rxjs';
 
 export class ProjectNodeDataService {
@@ -14,6 +14,17 @@ export class ProjectNodeDataService {
   getAsync(projectId: string): Observable<WbsNode[]> {
     return this.http.get<WbsNode[]>(
       `projects/${this.ownerId}/${projectId}/nodes`
+    );
+  }
+
+  putAsync(projectId: string, node: WbsNode): Observable<void> {
+    const model: ProjectNode = {
+      ...node,
+      projectId,
+    };
+    return this.http.put<void>(
+      `projects/${this.ownerId}/${projectId}/nodes/${model.id}`,
+      model
     );
   }
 }

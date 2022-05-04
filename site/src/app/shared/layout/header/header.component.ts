@@ -2,7 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAlignLeft, faX } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { LayoutService, NavService, SwitcherService } from '@wbs/services';
+import {
+  LayoutService,
+  NavService,
+  SwitcherService,
+} from '@wbs/shared/services';
 
 @Component({
   selector: 'app-header',

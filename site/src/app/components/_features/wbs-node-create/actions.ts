@@ -1,8 +1,11 @@
-import { PROJECT_NODE_VIEW_TYPE, WbsNodeView } from '@wbs/models';
+import { PROJECT_NODE_VIEW_TYPE, WbsNodeView } from '@wbs/shared/models';
 
 export class OpenNodeCreationDialog {
   static readonly type = '[Node Creation] Open Dialog';
-  constructor(readonly parent: WbsNodeView, readonly view: PROJECT_NODE_VIEW_TYPE) {}
+  constructor(
+    readonly parent: WbsNodeView,
+    readonly view: PROJECT_NODE_VIEW_TYPE
+  ) {}
 }
 
 export class DialogViewSelected {

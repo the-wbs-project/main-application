@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { TitleService } from '@wbs/services';
+import { TitleService } from '@wbs/shared/services';
 
 @Component({
   templateUrl: './component.html',
-  preserveWhitespaces: false,
+
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent {

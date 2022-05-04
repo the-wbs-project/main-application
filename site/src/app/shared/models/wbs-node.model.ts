@@ -11,3 +11,7 @@ export interface WbsNode extends TaggedObject {
   phase?: WbsNodePhaseRelationship;
   discipline?: WbsNodeDisciplineRelationship[];
 }
+
+export interface ProjectNode extends WbsNode {
+  projectId: string;
+}

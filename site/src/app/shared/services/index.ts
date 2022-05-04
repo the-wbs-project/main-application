@@ -10,6 +10,7 @@ export * from './layout.service';
 export * from './messages.service';
 export * from './nav.service';
 export * from './resource.service';
+export * from './script.service';
 export * from './startup.service';
 export * from './storage.service';
 export * from './switcher.service';

@@ -5,16 +5,15 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW } from '@wbs/models';
+import { PROJECT_NODE_VIEW } from '@wbs/shared/models';
 import { map, Observable } from 'rxjs';
-import { OtherFlagsNext, OtherFlagsPrevious } from '../../actions';
+import { OtherFlagsPrevious } from '../../actions';
 import { NodeCreationState } from '../../state';
 
 @Component({
   selector: 'wbs-node-other-flags',
   templateUrl: './other-flags.component.html',
   styleUrls: ['../flexing.scss'],
-  preserveWhitespaces: false,
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
