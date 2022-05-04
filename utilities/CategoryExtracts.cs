@@ -24,11 +24,11 @@ namespace Wbs.Utilities
         [FunctionName("CategoryExtracts-Output")]
         public async Task RunOutput([QueueTrigger("cats-output")] string nothing, ILogger log)
         {
-            var resourcesObj = await metadataDataService.GetAsync<Dictionary<string, Dictionary<string, string>>>("Resources", "en-US.General");
-            var resourcesObj2 = await metadataDataService.GetAsync<Dictionary<string, Dictionary<string, string>>>("Resources", "en-US.Wbs");
-            var phaseList = await metadataDataService.GetAsync<List<ListItem>>("Lists", "categories_phase");
-            var disciplineList = await metadataDataService.GetAsync<List<ListItem>>("Lists", "categories_discipline");
-            var delete_reasonList = await metadataDataService.GetAsync<List<ListItem>>("Lists", "delete_reasons");
+            var resourcesObj = await metadataDataService.GetAsync<Dictionary<string, Dictionary<string, string>>>("en-US.General");
+            var resourcesObj2 = await metadataDataService.GetAsync<Dictionary<string, Dictionary<string, string>>>("en-US.Wbs");
+            var phaseList = await metadataDataService.GetAsync<List<ListItem>>("categories_phase");
+            var disciplineList = await metadataDataService.GetAsync<List<ListItem>>("categories_discipline");
+            var delete_reasonList = await metadataDataService.GetAsync<List<ListItem>>("delete_reasons");
             var resources = new Resources();
             var phases = new Dictionary<string, ListItem>();
             var disciplines = new Dictionary<string, ListItem>();

@@ -57,6 +57,7 @@ namespace Wbs.Utilities
 
         private void SetupServices(IFunctionsHostBuilder builder)
         {
+            builder.Services.AddSingleton<PhaseExtractService, PhaseExtractService>();
         }
 
         private void ConfigureTelemetry(IFunctionsHostBuilder builder)

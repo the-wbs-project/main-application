@@ -1,4 +1,5 @@
 export * from './auth.config';
+export * from './azure.config';
 export * from './config';
 export * from './db.config';
 export * from './environment.config';

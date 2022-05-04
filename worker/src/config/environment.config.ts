@@ -1,4 +1,5 @@
 import { AuthConfig } from './auth.config';
+import { AzureConfig } from './azure.config';
 import { Config } from './config';
 import { DbConfig } from './db.config';
 import { MailgunConfig } from './mailgun.config';
@@ -7,6 +8,7 @@ import { TwilioConfig } from './twilio.config';
 
 export class EnvironmentConfig implements Config {
   private _auth: AuthConfig | undefined;
+  private _azure: AzureConfig | undefined;
   private _db: DbConfig | undefined;
   private _kvBypass: string[] | undefined;
   private _mailgun: MailgunConfig | undefined;
@@ -24,6 +26,11 @@ export class EnvironmentConfig implements Config {
   get auth(): AuthConfig {
     if (!this._auth) this._auth = this.json(AUTH);
     return <AuthConfig>this._auth;
+  }
+
+  get azure(): AzureConfig {
+    if (!this._azure) this._azure = this.json(AZURE);
+    return <AzureConfig>this._azure;
   }
 
   get db(): DbConfig {

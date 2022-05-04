@@ -11,6 +11,12 @@ export const PRE_ROUTES: string[] = [
   '/*.map',
   '/*.css',
 ];
+export const AZURE_ROUTES_POST: string[] = [
+  '/api/projects/:ownerId/:projectId/extracts/phase/download',
+  '/api/projects/:ownerId/:projectId/extracts/phase/upload',
+  '/api/projects/:ownerId/:projectId/extracts/discipline/download',
+  '/api/projects/:ownerId/:projectId/extracts/discipline/upload',
+];
 export class RouterService {
   private readonly router = Router<WorkerRequest>();
 
@@ -57,6 +63,14 @@ export class RouterService {
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
     );
+    for (const path of AZURE_ROUTES_POST) {
+      this.router.post(
+        path,
+        this.authenticate,
+        this.checkClaimAsync,
+        Http.azure.handleAsync,
+      );
+    }
     for (const path of PRE_ROUTES) {
       this.router.get(path, Http.site.getSiteResourceAsync);
     }

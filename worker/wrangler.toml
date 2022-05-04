@@ -17,15 +17,9 @@ entry-point = "workers-site"
 [env.dev]
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
 
-[env.demo]
-name = "demo"
-kv_namespaces = [
-  { binding = "KVDATA", id = "92a843cb6f674b29aa29089f31ad5054", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
-]
-route = "https://demo.thewbsproject.com/*"
-vars = { CORS_URLS = "https://demo.thewbsproject.com", APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "", MAILGUN_API_BASE_URL ="", MAILGUN_API_KEY = "", SNIPPET_APP_INSIGHTS = "" }
-
 [env.prod]
+name = "wbs-app-prod"
+workers_dev = false
 route = "https://app.thewbsproject.com/*"
 kv_namespaces = [
   { binding = "KVDATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },

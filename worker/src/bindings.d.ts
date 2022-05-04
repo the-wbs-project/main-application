@@ -6,6 +6,7 @@ declare global {
 
   const APP_INSIGHTS_KEY: string;
   const AUTH: string;
+  const AZURE: string;
   const COSMOS: string;
   const DEBUG: string;
   const KV_BYPASS: string;

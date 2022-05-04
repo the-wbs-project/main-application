@@ -14,8 +14,8 @@ namespace Wbs.Utilities.DataServices
             db = new DbService(database.GetContainer(CONTAINERS.METADATA));
         }
 
-        public Task<Metadata<T>> GetAsync<T>(string pk, string id) => db.GetByIdAsync<Metadata<T>>(pk, id);
+        public Task<Metadata<T>> GetAsync<T>(string id) => db.GetByIdAsync<Metadata<T>>(id, id);
 
-        public Task UpsertAsync<T>(Metadata<T> document, string pk) => db.UpsertAsync(document, pk);
+        public Task UpsertAsync<T>(Metadata<T> document, string id) => db.UpsertAsync(document, id);
     }
 }

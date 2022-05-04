@@ -48,6 +48,17 @@
     }
   },
   {
+    "id": "en-US.Projects",
+    "category": "Projects",
+    "language": "en-Us",
+    "values": {
+      "Projects": {
+        "DownloadNodes": "Download Nodes",
+        "UploadNodes": "Upload Nodes"
+      }
+    }
+  },
+  {
     "id": "en-US.Wbs",
     "category": "Wbs",
     "language": "en-Us",
