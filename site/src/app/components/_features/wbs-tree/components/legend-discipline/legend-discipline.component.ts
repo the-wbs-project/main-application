@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
   ],
 })
 export class LegendDisciplineComponent {
-  @Input() ids: string[] | undefined;
+  @Input() idsOrCats: (string | ListItem)[] | null | undefined;
   @Select(MetadataState.disciplineCategories) categories$:
     | Observable<ListItem[]>
     | undefined;

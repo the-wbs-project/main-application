@@ -1,7 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { CheckBoxModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import {
@@ -24,7 +23,6 @@ import { NodeCreationState } from './state';
   imports: [
     ButtonModule,
     CheckBoxModule,
-    DialogModule,
     MultiSelectModule,
     FloatingLabelModule,
     LabelModule,

@@ -88,7 +88,7 @@
   [animation]="{ duration: 100, type: 'slide', direction: 'left' }"
 >
   <ng-template kendoPopoverBodyTemplate let-anchor>
-    <wbs-legend-phase [ids]="project?.categories?.phase ?? []">
+    <wbs-legend-phase [idsOrCats]="project?.categories?.phase ?? []">
     </wbs-legend-phase>
   </ng-template>
 </kendo-popover>

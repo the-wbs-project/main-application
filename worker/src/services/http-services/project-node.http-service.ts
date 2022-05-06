@@ -68,8 +68,34 @@ export class ProjectNodeHttpService extends BaseHttpService {
       return super.buildJson(activity);*/
     } catch (e) {
       req.logException(
-        'An error occured trying to mark a node as removed.',
-        'WbsHttpService.markNodeAsDeletedAsync',
+        'An error occured trying to put a node.',
+        'ProjectNodeHttpService.putAsync',
+        <Error>e,
+      );
+      return 500;
+    }
+  }
+
+  static async batchAsync(req: WorkerRequest): Promise<Response | number> {
+    try {
+      const params = req.params;
+      const projectId = params?.projectId;
+
+      if (!projectId) return 500;
+
+      const data = await req.request.json();
+
+      await req.data.projectNodes.batchAsync(
+        projectId,
+        data.upserts,
+        data.removeIds,
+      );
+
+      return 204;
+    } catch (e) {
+      req.logException(
+        'An error occured trying upload a batch of node changes.',
+        'ProjectNodeHttpService.batchAsync',
         <Error>e,
       );
       return 500;

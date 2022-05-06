@@ -7,6 +7,7 @@ export * from './device.service';
 export * from './http-interceptor';
 export * from './id.service';
 export * from './layout.service';
+export * from './loading.service';
 export * from './messages.service';
 export * from './nav.service';
 export * from './resource.service';

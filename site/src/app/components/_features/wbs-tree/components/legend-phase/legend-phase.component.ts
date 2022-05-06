@@ -1,5 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { faCircle } from '@fortawesome/pro-duotone-svg-icons';
+import { ListItem } from '@wbs/shared/models';
 
 @Component({
   selector: 'wbs-legend-phase',
@@ -10,6 +11,6 @@ import { faCircle } from '@fortawesome/pro-duotone-svg-icons';
   ],
 })
 export class LegendPhaseComponent {
-  @Input() ids: string[] | undefined;
+  @Input() idsOrCats: (string | ListItem)[] | null | undefined;
   readonly faCircle = faCircle;
 }

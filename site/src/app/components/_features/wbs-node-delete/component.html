@@ -4,8 +4,11 @@
   [width]="450"
   (close)="closeDelete()"
 >
-  <wbs-node-delete-reasons #reasons [(value)]="dReason">
-  </wbs-node-delete-reasons>
+  <wbs-node-delete-reasons
+    #reasons
+    [reasons]="reasons$ | async"
+    [(value)]="dReason"
+  ></wbs-node-delete-reasons>
 
   <div *ngIf="dReason?.id === 'delete-other'" class="other-panel">
     <label>{{ "Wbs.PleaseSpecify" | translate }}:</label>

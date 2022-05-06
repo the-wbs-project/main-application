@@ -27,4 +27,25 @@ export class ProjectNodeDataService {
       model
     );
   }
+
+  batchAsync(
+    projectId: string,
+    models: WbsNode[],
+    removeIds: string[]
+  ): Observable<void> {
+    const upserts: ProjectNode[] = [];
+
+    for (const node of models)
+      upserts.push({
+        ...node,
+        projectId,
+      });
+    return this.http.put<void>(
+      `projects/${this.ownerId}/${projectId}/nodes/batch`,
+      {
+        upserts,
+        removeIds,
+      }
+    );
+  }
 }

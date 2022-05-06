@@ -27,4 +27,24 @@ export class ProjectHttpService extends BaseHttpService {
       return 500;
     }
   }
+
+  static async putAsync(req: WorkerRequest): Promise<Response | number> {
+    try {
+      const params = req.params;
+      const projectId = params?.projectId;
+
+      if (!projectId) return 500;
+
+      await req.data.projects.putAsync(await req.request.json());
+
+      return 204;
+    } catch (e) {
+      req.logException(
+        'An error occured trying to update a project.',
+        'ProjectHttpService.putAsync',
+        <Error>e,
+      );
+      return 500;
+    }
+  }
 }

@@ -59,6 +59,12 @@
   background-color: $alt-fail !important;
 }
 
+.notification-info,
+.notification-alt-info {
+  color: $dark-grey !important;
+  background-color: $info !important;
+}
+
 .header-panel {
   background-color: #216259;
   border-bottom: solid 1px white;

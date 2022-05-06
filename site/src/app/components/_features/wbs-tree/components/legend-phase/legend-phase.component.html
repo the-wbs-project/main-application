@@ -1,8 +1,8 @@
-<ul class="list-group" *ngIf="ids">
+<ul class="list-group" *ngIf="idsOrCats">
   <li class="list-group-item legend-header">
     {{ "Wbs.PhaseLegend" | translate }}
   </li>
-  <li class="list-group-item" *ngFor="let catId of ids; let i = index">
-    {{ i + 1 }}. &nbsp; {{ catId | categoryLabel }}
+  <li class="list-group-item" *ngFor="let idsOrCat of idsOrCats; let i = index">
+    {{ i + 1 }}. &nbsp; {{ idsOrCat | categoryLabel }}
   </li>
 </ul>

@@ -1,14 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { MetadataState } from '@wbs/shared/states';
+import { ListItem } from '../models';
 
 @Pipe({ name: 'categoryLabel', pure: false })
 export class CategoryLabelPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
-  transform(id: string | null | undefined): string {
-    if (!id) return '';
+  transform(idsOrCat: (string | ListItem) | null | undefined): string {
+    if (!idsOrCat) return '';
+    if (typeof idsOrCat === 'string')
+      return (
+        this.store.selectSnapshot(MetadataState.categoryNames).get(idsOrCat) ??
+        ''
+      );
 
-    return this.store.selectSnapshot(MetadataState.categoryNames).get(id) ?? '';
+    return idsOrCat.label;
   }
 }

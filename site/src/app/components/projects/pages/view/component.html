@@ -3,21 +3,19 @@
     {{ (project$ | async)?.title }}
   </span>
   <div class="page-header-actions">
-    <div class="btn-group">
+    <div class="btn-group" *ngIf="viewProject$ | async; let pView">
       <button
         type="button"
         class="btn"
         *ngFor="let info of [['general', 'General.General'], ['wbs', 'Wbs.WBS']]"
-        [class.btn-white]="(view$ | async) !== info[0]"
-        [class.btn-outline-primary]="(view$ | async) !== info[0]"
-        [class.btn-success]="(view$ | async) === info[0]"
+        [class.btn-white]="pView !== info[0]"
+        [class.btn-outline-primary]="pView !== info[0]"
+        [class.btn-success]="pView === info[0]"
         (click)="viewChanged(info[0])"
       >
         {{ info[1] | translate }}
       </button>
     </div>
-    &nbsp;&nbsp;&nbsp;
-    <wbs-project-view-actions></wbs-project-view-actions>
   </div>
 </div>
 <div class="row row-sm">
@@ -25,13 +23,13 @@
     <div class="card custom-card">
       <div class="card-body">
         <div
-          *ngIf="(view$ | async) === 'general'"
+          *ngIf="(viewProject$ | async) === 'general'"
           class="general-body tx-center"
         >
           Coming Soon...
         </div>
         <div
-          *ngIf="(view$ | async) === 'wbs'"
+          *ngIf="(viewProject$ | async) === 'wbs'"
           class="table-responsive deleted-table"
         >
           <kendo-splitter orientation="horizontal">
@@ -58,13 +56,13 @@
             <kendo-splitter-pane *ngIf="show$ | async" min="300px" size="40%">
               <div class="editor-body" appFillElement>
                 <ng-template [ngIf]="node$ | async" let-node>
-                  <div class="header-panel">
+                  <div class="header-panel pd-t-10">
                     <div class="header-label">
                       <wbs-node-editor-categories></wbs-node-editor-categories>
                     </div>
                     <div class="header-actions">
                       <wbs-node-actions-menu
-                        (menuClicked)="nodeMenuClicked($event)"
+                        (menuClicked)="nodeMenuClicked($event, node)"
                       ></wbs-node-actions-menu>
                     </div>
                   </div>
@@ -81,17 +79,36 @@
   </div>
 </div>
 <ng-template #toolbar>
-  <div class="btn-group">
+  <div class="btn-group" *ngIf="viewNode$ | async; let nView">
     <button
       type="button"
       class="btn"
       *ngFor="let info of [['phase', 'Wbs.Phase'], ['discipline', 'Wbs.Discipline']]"
-      [class.btn-white]="(nodeView$ | async) !== info[0]"
-      [class.btn-outline-primary]="(nodeView$ | async) !== info[0]"
-      [class.btn-success]="(nodeView$ | async) === info[0]"
+      [class.btn-white]="nView !== info[0]"
+      [class.btn-outline-primary]="nView !== info[0]"
+      [class.btn-success]="nView === info[0]"
       (click)="nodeViewChanged(info[0])"
     >
       {{ info[1] | translate }}
+    </button>
+  </div>
+  &nbsp;&nbsp;&nbsp;
+  <div class="btn-group" *ngIf="(viewNode$ | async) === 'phase'">
+    <button
+      type="button"
+      class="btn btn-white btn-outline-primary"
+      (click)="action('download')"
+    >
+      <fa-icon [icon]="faDownload"></fa-icon>
+      {{ 'Projects.DownloadNodes' | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-white btn-outline-primary"
+      (click)="action('upload')"
+    >
+      <fa-icon [icon]="faUpload"></fa-icon>
+      {{ 'Projects.UploadNodes' | translate }}
     </button>
   </div>
 </ng-template>

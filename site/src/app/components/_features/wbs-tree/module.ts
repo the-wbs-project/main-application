@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import {
   ButtonModule,
   DropDownButtonModule,
@@ -29,7 +28,6 @@ import { WbsTreeToolbarDirective } from './directives';
     IconsModule,
     SharedModule,
     TooltipsModule,
-    TranslateModule,
     TreeListModule,
   ],
   providers: [WbsPhaseService],

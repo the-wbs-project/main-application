@@ -35,27 +35,29 @@ export class Messages {
     this.cssClassPrefix = prefixOfPrefix + (altColors ? '-alt' : '');
   }
 
+  info(resource: string, isResource = true): void {
+    this.show(resource, isResource, 'info');
+  }
+
   error(resource: string, isResource = true): void {
-    if (isResource) this.show(resource, 'error');
-    else this.show2(resource, 'error');
+    this.show(resource, isResource, 'error');
   }
 
   success(resource: string, isResource = true): void {
-    if (isResource) this.show(resource, 'success');
-    else this.show2(resource, 'success');
+    this.show(resource, isResource, 'success');
   }
 
-  private show(resource: string, toastr: 'success' | 'error') {
-    const label = this.resources.get(resource);
-    if (!label) return;
-    this.show2(label, toastr);
-  }
+  show(
+    label: string,
+    isResource: boolean,
+    toastr: 'success' | 'error' | 'info'
+  ) {
+    if (isResource) label = this.resources.get(label);
 
-  private show2(label: string, toastr: 'success' | 'error') {
     this.notificationService.show({
       content: label,
       appendTo: this.containers.body,
-      hideAfter: 240000,
+      hideAfter: 2400,
       type: { style: 'none', icon: true },
       animation: { type: 'fade', duration: 400 },
       position: this.position,

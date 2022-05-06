@@ -5,17 +5,18 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
 import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
 import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
-import { ComponentsModule } from '../components';
+import { LoadingComponent } from './components';
 import {
   FillElementDirective,
   FullscreenDirective,
   SidemenuToggleDirective,
   ToggleThemeDirective,
-} from '../directives';
+} from './directives';
 import {
   ContentLayoutComponent,
   FooterComponent,
@@ -25,14 +26,16 @@ import {
   RightSidebarComponent,
   SidebarComponent,
   TabToTopComponent,
-} from '../layout';
+} from './layout';
 import {
+  CategoryIdConverterPipe,
   CategoryLabelPipe,
   DisciplineIconPipe,
   LengthPipe,
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
-} from '../pipes';
+} from './pipes';
+import { LoadingService } from './services';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -41,20 +44,23 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 @NgModule({
   imports: [
     BottomNavigationModule,
-    ComponentsModule,
+    DialogModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
     PerfectScrollbarModule,
     RouterModule,
+    TranslateModule.forChild(),
   ],
   providers: [
+    LoadingService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
     },
   ],
   declarations: [
+    CategoryIdConverterPipe,
     CategoryLabelPipe,
     ContentLayoutComponent,
     DisciplineIconPipe,
@@ -64,6 +70,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     HeaderComponent,
     LengthPipe,
     LoaderComponent,
+    LoadingComponent,
     PageHeaderComponent,
     ProjectListFilterPipe,
     ProjectListFilterLengthPipe,
@@ -74,8 +81,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ToggleThemeDirective,
   ],
   exports: [
+    CategoryIdConverterPipe,
     CategoryLabelPipe,
     CommonModule,
+    DialogModule,
     DisciplineIconPipe,
     FillElementDirective,
     FontAwesomeModule,

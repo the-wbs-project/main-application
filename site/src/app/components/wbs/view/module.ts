@@ -2,8 +2,6 @@ import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { WbsTreeModule } from '../../_features';
-import { TranslateModule } from '@ngx-translate/core';
-import { SharedModule } from '@wbs/module';
 import { HomeComponent } from './component';
 
 const routes: Routes = [
@@ -14,13 +12,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [
-    CommonModule,
-    RouterModule.forChild(routes),
-    SharedModule,
-    TranslateModule,
-    WbsTreeModule,
-  ],
+  imports: [CommonModule, RouterModule.forChild(routes), WbsTreeModule],
   providers: [],
   declarations: [HomeComponent],
 })

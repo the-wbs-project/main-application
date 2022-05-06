@@ -6,15 +6,12 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { Select } from '@ngxs/store';
 import { ListItem } from '@wbs/shared/models';
-import { Observable } from 'rxjs';
-import { ProjectState } from '../../projects/states';
 
 @Component({
   selector: 'wbs-node-delete-reasons',
   template: `<kendo-dropdownlist
-    [data]="deleteList$ | async"
+    [data]="reasons ?? []"
     textField="label"
     valueField="id"
     [value]="value"
@@ -32,9 +29,8 @@ import { ProjectState } from '../../projects/states';
   encapsulation: ViewEncapsulation.None,
 })
 export class DeleteNodeReasonsComponent {
-  //TODO should not be calling project state from feature
-  @Select(ProjectState.deleteReasons) deleteList$!: Observable<ListItem[]>;
   @Input() value: ListItem | undefined;
+  @Input() reasons: ListItem[] | null | undefined;
   @Output() readonly valueChange = new EventEmitter<ListItem>();
 
   set(value: ListItem) {

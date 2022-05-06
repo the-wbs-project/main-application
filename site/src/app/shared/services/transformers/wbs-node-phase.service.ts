@@ -87,7 +87,7 @@ export class WbsNodePhaseTransformer {
         order: child.phase?.order ?? 0,
         parentId: parentId,
         phaseId,
-        syncWithDisciplines: child.phase?.syncWithDisciplines,
+        syncWithDisciplines: child.phase?.syncWithDisciplines ?? false,
         title: child.title ?? '',
       };
       if (node.isDisciplineNode) {

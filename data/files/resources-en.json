@@ -15,7 +15,9 @@
         "LoginExpired": "Login Expired",
         "UnexpectedServerError": "An unexpected server error occured.",
         "Previous": "Previous",
-        "Next": "Next"
+        "Next": "Next",
+        "RetrievingData": "Retrieving Data...",
+        "ReviewingData": "Reviewing Data..."
       },
       "Category_Phase": {
         "Initial": "Initial Phase",

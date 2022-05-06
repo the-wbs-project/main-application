@@ -4,7 +4,9 @@ export interface ExtractNodeView {
   order: number;
   title: string;
   description: string | null;
-  disciplineIds?: string[] | null;
+  disciplines?: string[] | null;
+  parentId: string | null;
+  phaseId: string | undefined;
 }
 export interface ExtractPhaseNodeView extends ExtractNodeView {
   syncWithDisciplines?: boolean;

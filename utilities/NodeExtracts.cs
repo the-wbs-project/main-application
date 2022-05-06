@@ -8,6 +8,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Threading.Tasks;
 using Utf8Json;
 using Wbs.Utilities.Models;
@@ -31,7 +32,8 @@ namespace Wbs.Utilities
         {
             try
             {
-                var nodes = JsonSerializer.Deserialize<List<WbsPhaseView>>(await req.ReadAsStringAsync());
+                var text = await req.ReadAsStringAsync();
+                var nodes = JsonSerializer.Deserialize<List<WbsPhaseView>>(text);
                 var bytes = await phaseExtractService.DownloadAsync(nodes);
 
                 return new FileContentResult(bytes, "application/vnd.ms-excel");
@@ -53,7 +55,10 @@ namespace Wbs.Utilities
                 {
                     await req.Body.CopyToAsync(stream);
 
-                    return new JsonResult(await phaseExtractService.UploadAsync(stream));
+                    var data = await phaseExtractService.UploadAsync(stream);
+
+                    log.LogInformation(data.Where(x => x.id != null).Count().ToString());
+                    return new JsonResult(data);
                 }
             }
             catch (Exception ex)

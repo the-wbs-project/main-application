@@ -39,10 +39,7 @@ export class ImportProjectManageComponent {
               data.nodes!
             ),
           };
-        }),
-        switchMap((data) =>
-          this.data.extracts.downloadPhaseAsync('123', data.vmNodes)
-        )
+        })
       )
       .subscribe();
   }

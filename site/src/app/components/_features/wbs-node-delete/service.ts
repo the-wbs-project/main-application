@@ -1,38 +1,33 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
 import {
   DialogCloseResult,
   DialogService,
 } from '@progress/kendo-angular-dialog';
+import { ListItem } from '@wbs/shared/models';
 import { ContainerService } from '@wbs/shared/services';
-import { map, Observable, of } from 'rxjs';
-import { ProjectState } from '../../projects/states';
+import { map, Observable } from 'rxjs';
 import { WbsNodeDeleteComponent } from './component';
 
 @Injectable()
 export class WbsNodeDeleteService {
   constructor(
     private readonly containers: ContainerService,
-    private readonly dialogs: DialogService,
-    private readonly store: Store
+    private readonly dialogs: DialogService
   ) {}
 
-  launchAsync(nodeId: string): Observable<string | null> {
-    //TODO should not be calling project state from feature
-    const nodes = this.store.selectSnapshot(ProjectState.nodes)!;
-    const node = nodes.find((x) => x.id === nodeId);
+  launchAsync(deleteReasons: ListItem[]): Observable<string | null> {
+    const dialog = this.dialogs.open({
+      content: WbsNodeDeleteComponent,
+      appendTo: this.containers.body,
+    });
+    const component = <WbsNodeDeleteComponent>dialog.content.instance;
 
-    if (!node) return of(null);
+    component.reasons$.next(deleteReasons);
 
-    return this.dialogs
-      .open({
-        content: WbsNodeDeleteComponent,
-        appendTo: this.containers.body,
-      })
-      .result.pipe(
-        map((x: DialogCloseResult | 'save') =>
-          x instanceof DialogCloseResult ? null : x
-        )
-      );
+    return dialog.result.pipe(
+      map((x: DialogCloseResult | 'save') =>
+        x instanceof DialogCloseResult ? null : x
+      )
+    );
   }
 }

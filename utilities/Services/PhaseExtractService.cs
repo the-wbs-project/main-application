@@ -105,7 +105,7 @@ namespace Wbs.Utilities.Services
                     }
                     for (var i = 1; i <= 5; i++)
                     {
-                        var text = sheet.GetValue<string>(row, i + 11)?.Trim();
+                        var text = sheet.GetValue<string>(row, i + 11)?.Trim()?.ToLower();
 
                         if (string.IsNullOrEmpty(text)) break;
 

@@ -48,11 +48,23 @@ export class RouterService {
       this.checkClaimAsync,
       Http.project.getByIdAsync,
     );
+    this.router.put(
+      '/api/projects/:ownerId/:projectId',
+      this.authenticate,
+      this.checkClaimAsync,
+      Http.project.putAsync,
+    );
     this.router.get(
       `/api/projects/:ownerId/:projectId/nodes`,
       this.authenticate,
       this.checkClaimDeeperAsync,
       Http.projectNodes.getAsync,
+    );
+    this.router.put(
+      `/api/projects/:ownerId/:projectId/nodes/batch`,
+      this.authenticate,
+      this.checkClaimDeeperAsync,
+      Http.projectNodes.batchAsync,
     );
     this.router.put(
       `/api/projects/:ownerId/:projectId/nodes/:nodeId`,

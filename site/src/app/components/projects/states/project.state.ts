@@ -2,8 +2,14 @@ import { Injectable } from '@angular/core';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import {
   AddNodeToProject,
+  DownloadNodes,
+  ProcessUploadedNodes,
+  ProjectNodeViewChanged,
+  ProjectViewChanged,
+  RebuildNodeViews,
   RemoveNodeToProject,
   SetProject,
+  UploadNodes,
   VerifyDeleteReasons,
   VerifyProject,
 } from '../actions';
@@ -11,24 +17,42 @@ import {
   ListItem,
   Project,
   PROJECT_FILTER,
+  PROJECT_NODE_VIEW,
+  PROJECT_NODE_VIEW_TYPE,
   PROJECT_STATI,
+  PROJECT_VIEW_TYPE,
+  WbsDisciplineNode,
   WbsNode,
+  WbsPhaseNode,
 } from '@wbs/shared/models';
 import {
+  ContainerService,
   DataServiceFactory,
   IdService,
+  Messages,
   StartupService,
   Transformers,
 } from '@wbs/shared/services';
-import { forkJoin, map, Observable, of, tap } from 'rxjs';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { ClearEditor } from '@wbs/components/_features';
+import { PhaseExtractProcessor } from '../services';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
+import { ProjectNodeUploadDialogComponent } from '../components';
 
 interface StateModel {
+  current?: Project;
+  deleteReasons: ListItem[];
+  disciplineNodes?: WbsDisciplineNode[];
   list: Project[];
   watched: Project[];
-  current?: Project;
   nodes?: WbsNode[];
   navType: PROJECT_FILTER | null;
-  deleteReasons: ListItem[];
+  phaseNodes?: WbsPhaseNode[];
+  viewProject?: PROJECT_VIEW_TYPE;
+  viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
 
 @Injectable()
@@ -43,14 +67,23 @@ interface StateModel {
 })
 export class ProjectState implements NgxsOnInit {
   constructor(
+    private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
+    private readonly dialog: DialogService,
     private readonly loader: StartupService,
-    private readonly transformer: Transformers
+    private readonly messages: Messages,
+    private readonly processors: PhaseExtractProcessor,
+    private readonly transformers: Transformers
   ) {}
 
   @Selector()
   static deleteReasons(state: StateModel): ListItem[] {
     return state.deleteReasons;
+  }
+
+  @Selector()
+  static disciplineNodes(state: StateModel): WbsDisciplineNode[] | undefined {
+    return state.disciplineNodes;
   }
 
   @Selector()
@@ -66,6 +99,11 @@ export class ProjectState implements NgxsOnInit {
   @Selector()
   static count(state: StateModel): number {
     return ProjectState.list(state).length;
+  }
+
+  @Selector()
+  static phaseNodes(state: StateModel): WbsPhaseNode[] | undefined {
+    return state.phaseNodes;
   }
 
   @Selector()
@@ -113,6 +151,16 @@ export class ProjectState implements NgxsOnInit {
     return state.nodes;
   }
 
+  @Selector()
+  static viewNode(state: StateModel): PROJECT_NODE_VIEW_TYPE | undefined {
+    return state.viewNode;
+  }
+
+  @Selector()
+  static viewProject(state: StateModel): PROJECT_VIEW_TYPE | undefined {
+    return state.viewProject;
+  }
+
   ngxsOnInit(ctx: StateContext<StateModel>) {
     ctx.patchState({
       list: this.loader.projectsMy ?? [],
@@ -141,15 +189,62 @@ export class ProjectState implements NgxsOnInit {
       project: this.data.projects.getAsync(action.projectId),
       nodes: this.data.projectNodes.getAsync(action.projectId),
     }).pipe(
-      map((data) => {
-        if (data.project == null) return;
-
+      tap((data) =>
         ctx.patchState({
           current: data.project,
           nodes: data.nodes,
-        });
-      })
+          viewNode: data.project.mainNodeView,
+        })
+      ),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews()))
     );
+  }
+
+  @Action(ProjectViewChanged)
+  projectViewChanged(
+    ctx: StateContext<StateModel>,
+    action: ProjectViewChanged
+  ): void {
+    ctx.patchState({
+      viewProject: action.view,
+    });
+  }
+
+  @Action(ProjectNodeViewChanged)
+  projectNodeViewChanged(
+    ctx: StateContext<StateModel>,
+    action: ProjectNodeViewChanged
+  ): Observable<void> {
+    ctx.patchState({
+      viewNode: action.view,
+    });
+    return ctx.dispatch(new RebuildNodeViews());
+  }
+
+  @Action(RebuildNodeViews)
+  rebuildNodeViews(ctx: StateContext<StateModel>): Observable<void> | void {
+    const state = ctx.getState();
+
+    if (!state.viewNode || !state.current || !state.nodes) return;
+
+    if (state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE) {
+      ctx.patchState({
+        disciplineNodes: this.transformers.wbsNodeDiscipline.run(
+          state.current,
+          state.nodes
+        ),
+        phaseNodes: undefined,
+      });
+    } else {
+      ctx.patchState({
+        disciplineNodes: undefined,
+        phaseNodes: this.transformers.wbsNodePhase.run(
+          state.current,
+          state.nodes
+        ),
+      });
+    }
+    return ctx.dispatch(new ClearEditor());
   }
 
   @Action(VerifyDeleteReasons)
@@ -173,7 +268,6 @@ export class ProjectState implements NgxsOnInit {
     action: AddNodeToProject
   ): Observable<any> {
     const state = ctx.getState();
-    const nodes = state.nodes!;
     const node = action.node;
 
     node.id = IdService.generate();
@@ -207,10 +301,10 @@ export class ProjectState implements NgxsOnInit {
     let changedIds: string[] = [action.nodeId];
 
     changedIds.push(
-      ...this.transformer.wbsNodePhaseReorderer.run(state.current!, nodes)
+      ...this.transformers.wbsNodePhaseReorderer.run(state.current!, nodes)
     );
     changedIds.push(
-      ...this.transformer.wbsNodeDisciplineReorderer.run(state.current!, nodes)
+      ...this.transformers.wbsNodeDisciplineReorderer.run(state.current!, nodes)
     );
     const changed: Observable<void>[] = [];
     const parentId = state.current!.id;
@@ -238,5 +332,124 @@ export class ProjectState implements NgxsOnInit {
         });
       })
     );*/
+  }
+
+  @Action(DownloadNodes)
+  downloadNodes(ctx: StateContext<StateModel>): Observable<void> {
+    const state = ctx.getState();
+    const rows =
+      state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE
+        ? state.disciplineNodes
+        : state.phaseNodes;
+
+    this.messages.info('General.RetrievingData');
+
+    return this.data.extracts.downloadNodesAsync(
+      state.current!,
+      rows!,
+      state.viewNode!
+    );
+  }
+
+  @Action(UploadNodes)
+  uploadNodes(ctx: StateContext<StateModel>): Observable<any> {
+    return this.dialog
+      .open({
+        content: ProjectNodeUploadDialogComponent,
+        appendTo: this.containers.body,
+      })
+      .result.pipe(
+        switchMap((result: DialogCloseResult | ArrayBuffer) => {
+          if (result instanceof ArrayBuffer) {
+            return ctx.dispatch(new ProcessUploadedNodes(result));
+          } else {
+            return of(null);
+          }
+        })
+      );
+  }
+
+  @Action(ProcessUploadedNodes)
+  processUploadedNodes(
+    ctx: StateContext<StateModel>,
+    action: ProcessUploadedNodes
+  ): Observable<any> | void {
+    const state = ctx.getState();
+    const project = state.current!;
+
+    if (state.viewNode === PROJECT_NODE_VIEW.PHASE)
+      return this.uploadPhaseFile(ctx, project.id, action.buffer);
+  }
+
+  private uploadPhaseFile(
+    ctx: StateContext<StateModel>,
+    projectId: string,
+    buffer: ArrayBuffer
+  ): Observable<any> {
+    return this.data.extracts.updatePhaseAsync(projectId, buffer).pipe(
+      switchMap((rows) => {
+        const state = ctx.getState();
+        const project = state.current!;
+
+        const results = this.processors.run(
+          project.categories.phase,
+          this.copy(state.nodes!),
+          this.copy(state.phaseNodes!),
+          rows
+        );
+
+        var saves: Observable<any>[] = [];
+
+        if (results.cats !== project.categories.phase) {
+          project.categories.phase = results.cats;
+
+          saves.push(
+            this.data.projects.putAsync(project).pipe(
+              tap(() =>
+                ctx.patchState({
+                  current: project,
+                })
+              )
+            )
+          );
+        }
+        if (results.removeIds.length > 0 || results.upserts.length > 0) {
+          //
+          saves.push(
+            this.data.projectNodes
+              .batchAsync(project.id, results.upserts, results.removeIds)
+              .pipe(
+                tap(() => {
+                  const nodes = ctx.getState().nodes!;
+
+                  for (const id of results.removeIds) {
+                    const index = nodes.findIndex((x) => x.id === id);
+
+                    if (index > -1) nodes.splice(index, 1);
+                  }
+                  for (const node of results.upserts) {
+                    const index = nodes.findIndex((x) => x.id === node.id);
+
+                    if (index > -1) nodes[index] = node;
+                  }
+                  ctx.patchState({
+                    nodes,
+                  });
+                })
+              )
+          );
+        }
+
+        return saves.length === 0
+          ? of()
+          : forkJoin(saves).pipe(
+              tap(() => ctx.dispatch(new RebuildNodeViews()))
+            );
+      })
+    );
+  }
+
+  private copy<T>(x: T): T {
+    return <T>JSON.parse(JSON.stringify(x));
   }
 }

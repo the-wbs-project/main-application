@@ -4,7 +4,7 @@ import { ContentLayoutComponent } from '@wbs/shared/layout';
 import { content } from '@wbs/shared/routes';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/projects/view/123/wbs/phase', pathMatch: 'full' },
+  { path: '', redirectTo: '/projects/view/123/general', pathMatch: 'full' },
   {
     path: '',
     loadChildren: () => import('./shared/module').then((m) => m.SharedModule),

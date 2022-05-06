@@ -90,7 +90,7 @@
   [animation]="{ duration: 100, type: 'slide', direction: 'left' }"
 >
   <ng-template kendoPopoverBodyTemplate let-anchor>
-    <wbs-legend-discipline [ids]="project?.categories?.discipline ?? []">
+    <wbs-legend-discipline [idsOrCats]="project?.categories?.discipline ?? []">
     </wbs-legend-discipline>
   </ng-template>
 </kendo-popover>

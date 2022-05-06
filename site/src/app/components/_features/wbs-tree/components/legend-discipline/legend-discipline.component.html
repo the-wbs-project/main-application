@@ -1,11 +1,11 @@
-<ul class="list-group" *ngIf="ids">
+<ul class="list-group" *ngIf="idsOrCats">
   <li class="list-group-item legend-header">
     {{ "Wbs.DisciplineLegend" | translate }}
   </li>
-  <li class="list-group-item" *ngFor="let id of ids">
+  <li class="list-group-item" *ngFor="let idsOrCat of idsOrCats">
     <span class="icon-wrapper">
-      <fa-icon [icon]="id | disciplineIcon"></fa-icon>
+      <fa-icon [icon]="idsOrCat | disciplineIcon"></fa-icon>
     </span>
-    {{ id | categoryLabel }}
+    {{ idsOrCat | categoryLabel }}
   </li>
 </ul>

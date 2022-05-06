@@ -4,34 +4,6 @@ $header-panel-height: 56px;
 
 $border-dark: solid 1px white;
 
-.editor-body {
-  display: flex;
-  flex-direction: column;
-
-  > .header-panel {
-    height: $header-panel-height;
-    background-color: #216259;
-    border-bottom: $border-dark;
-    display: flex;
-
-    > div {
-      display: inline-block;
-
-      > kendo-dropdownbutton {
-        height: $header-panel-height;
-        margin-left: 20px;
-        color: white;
-      }
-    }
-    .header-label {
-      flex-grow: 1;
-    }
-    .header-actions {
-      width: 50px;
-    }
-  }
-}
-
 .editor-fields {
   padding: 8px;
   .field {

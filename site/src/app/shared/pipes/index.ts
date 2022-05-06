@@ -1,3 +1,4 @@
+export * from './category-id-converter.pipe';
 export * from './category-label.pipe';
 export * from './discipline-icon.pipe';
 export * from './length.pipe';

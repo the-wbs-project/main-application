@@ -12,20 +12,20 @@ import {
   WbsNodeEditorModule,
   WbsTreeModule,
 } from '../../../_features';
+import { ProjectViewGuard } from '../../guards';
 import { ProjectsViewComponent } from './component';
-import { ProjectViewActionsComponent } from './components';
-import { VerifyNodeDataGuard } from './guards';
+import { ProjectViewActionsComponent } from '../../components';
 
 const routes: Routes = [
   {
-    path: ':projectId/:view',
+    path: ':projectId',
     component: ProjectsViewComponent,
-    canActivate: [ProjectGuard],
+    canActivate: [ProjectGuard, ProjectViewGuard],
   },
   {
-    path: ':projectId/:view/:nodeView',
+    path: ':projectId/:view',
     component: ProjectsViewComponent,
-    canActivate: [ProjectGuard, VerifyNodeDataGuard],
+    canActivate: [ProjectGuard, ProjectViewGuard],
   },
 ];
 
@@ -42,7 +42,7 @@ const routes: Routes = [
     WbsNodeEditorModule,
     WbsTreeModule,
   ],
-  providers: [ProjectGuard, VerifyNodeDataGuard],
+  providers: [ProjectGuard, ProjectViewGuard],
   declarations: [ProjectsViewComponent, ProjectViewActionsComponent],
 })
 export class ProjectsViewModule {}

@@ -1,4 +1,4 @@
-import { Project, WbsNode } from '@wbs/shared/models';
+import { ListItem, Project, WbsNode } from '@wbs/shared/models';
 import { WbsNodeService } from '../wbs-node.service';
 
 export class WbsNodePhaseReorderer {
@@ -14,7 +14,11 @@ export class WbsNodePhaseReorderer {
     const changed: string[] = [];
     for (let i = 0; i < project.categories.phase.length; i++) {
       changed.push(
-        ...this.reorder([i + 1], project.categories.phase[i], nodes)
+        ...this.reorder(
+          [i + 1],
+          this.getCatId(project.categories.phase[i]),
+          nodes
+        )
       );
     }
     return changed;
@@ -45,5 +49,9 @@ export class WbsNodePhaseReorderer {
     return (list ?? [])
       .filter((x) => !x.removed && x.phase?.parentId === parentId)
       .sort(WbsNodeService.phaseSort);
+  }
+
+  private getCatId(cat: string | ListItem): string {
+    return typeof cat === 'string' ? cat : cat.id;
   }
 }

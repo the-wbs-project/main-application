@@ -1,4 +1,5 @@
 import {
+  ListItem,
   Project,
   WbsNode,
   WbsNodeDisciplineRelationship,
@@ -27,7 +28,7 @@ export class WbsDisciplineReorderer {
   run(project: Project, nodes: WbsNode[]): string[] {
     const changed: string[] = [];
     for (let i = 0; i < project.categories.discipline.length; i++) {
-      const cat = project.categories.discipline[i];
+      const cat = this.getCatId(project.categories.discipline[i]);
 
       changed.push(...this.reorder(cat, cat, nodes));
     }
@@ -73,5 +74,9 @@ export class WbsDisciplineReorderer {
     }
 
     return results.sort(WbsNodeService.disciplineSort);
+  }
+
+  private getCatId(cat: string | ListItem): string {
+    return typeof cat === 'string' ? cat : cat.id;
   }
 }

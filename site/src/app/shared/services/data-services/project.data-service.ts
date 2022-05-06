@@ -14,4 +14,11 @@ export class ProjectDataService {
   getAsync(projectId: string): Observable<Project> {
     return this.http.get<Project>(`projects/${this.ownerId}/${projectId}`);
   }
+
+  putAsync(project: Project): Observable<void> {
+    return this.http.put<void>(
+      `projects/${this.ownerId}/${project.id}`,
+      project
+    );
+  }
 }

@@ -1,4 +1,8 @@
-import { WbsNode } from '@wbs/shared/models';
+import {
+  PROJECT_NODE_VIEW_TYPE,
+  PROJECT_VIEW_TYPE,
+  WbsNode,
+} from '@wbs/shared/models';
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';
@@ -24,10 +28,29 @@ export class RemoveNodeToProject {
   constructor(readonly nodeId: string, readonly reason: string) {}
 }
 
+export class ProjectViewChanged {
+  static readonly type = '[Project] View Changed';
+  constructor(readonly view: PROJECT_VIEW_TYPE) {}
+}
+
+export class ProjectNodeViewChanged {
+  static readonly type = '[Project] Node View Changed';
+  constructor(readonly view: PROJECT_NODE_VIEW_TYPE) {}
+}
+
+export class RebuildNodeViews {
+  static readonly type = '[Project] Rebuild Node Views';
+}
+
 export class DownloadNodes {
   static readonly type = '[Project] Download Nodes';
 }
 
 export class UploadNodes {
   static readonly type = '[Project] Upload Nodes';
+}
+
+export class ProcessUploadedNodes {
+  static readonly type = '[Project] Process Uploaded Nodes';
+  constructor(readonly buffer: ArrayBuffer) {}
 }

@@ -1,56 +1,60 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { faDownload, faUpload } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import {
   Project,
-  PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-  PROJECT_VIEW,
+  PROJECT_VIEW_TYPE,
   WbsDisciplineNode,
   WbsNodeView,
   WbsPhaseNode,
 } from '@wbs/shared/models';
-import { Messages, TitleService, Transformers } from '@wbs/shared/services';
-import { BehaviorSubject, Observable, of, tap } from 'rxjs';
+import { TitleService } from '@wbs/shared/services';
+import { Observable, of, tap } from 'rxjs';
 import {
-  ClearEditor,
   NodeEditorState,
   NodeSelected,
   OpenNodeCreationDialog,
   WbsNodeDeleteService,
 } from '../../../_features';
-import { RemoveNodeToProject } from '../../actions';
+import {
+  DownloadNodes,
+  ProjectNodeViewChanged,
+  RemoveNodeToProject,
+  UploadNodes,
+} from '../../actions';
 import { ProjectState } from '../../states';
 
-@UntilDestroy()
 @Component({
   templateUrl: './component.html',
   styleUrls: ['./component.scss'],
 
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectsViewComponent implements OnInit {
-  @Select(ProjectState.current) project$!: Observable<Project>;
+export class ProjectsViewComponent {
   @Select(NodeEditorState.node) node$!: Observable<WbsNodeView>;
   @Select(NodeEditorState.show) show$: Observable<boolean> | undefined;
+  @Select(ProjectState.current) project$!: Observable<Project>;
+  @Select(ProjectState.viewNode) viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;
+  @Select(ProjectState.viewProject)
+  viewProject$!: Observable<PROJECT_VIEW_TYPE>;
 
-  private node: string | undefined;
-  readonly disciplineNodes$ = new BehaviorSubject<WbsDisciplineNode[] | null>(
-    null
-  );
-  readonly phaseNodes$ = new BehaviorSubject<WbsPhaseNode[] | null>(null);
-  readonly view$ = new BehaviorSubject<string | null>(null);
-  readonly nodeView$ = new BehaviorSubject<string | null>(null);
+  @Select(ProjectState.disciplineNodes)
+  disciplineNodes$!: Observable<WbsDisciplineNode[]>;
+
+  @Select(ProjectState.phaseNodes)
+  phaseNodes$!: Observable<WbsPhaseNode[]>;
+
+  readonly faDownload = faDownload;
+  readonly faUpload = faUpload;
 
   constructor(
     title: TitleService,
     private readonly deleteService: WbsNodeDeleteService,
-    private readonly messages: Messages,
     private readonly route: ActivatedRoute,
-    private readonly store: Store,
-    private readonly transformers: Transformers
+    private readonly store: Store
   ) {
     title.setTitle('Project', false);
   }
@@ -67,55 +71,19 @@ export class ProjectsViewComponent implements OnInit {
     return this.route.snapshot.params['projectId'];
   }
 
-  ngOnInit(): void {
-    this.route.params.pipe(untilDestroyed(this)).subscribe((params) => {
-      this.view$.next(params['view']);
-      this.nodeView$.next(params['nodeView']);
-      this.updateNodeViews();
-    });
-    this.store
-      .select(ProjectState.current)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => this.updateNodeViews());
-
-    this.store
-      .select(ProjectState.nodes)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => this.updateNodeViews());
-  }
-
   viewChanged(view: string): void {
-    this.node = undefined;
-    const path = ['projects', 'view', this.projectId, view];
-
-    if (view === PROJECT_VIEW.WBS) {
-      //const project = this.store.selectSnapshot(ProjectState.current);
-      const view = 'phase'; //project.mainView;
-
-      path.push(view);
-    }
-
-    this.store.dispatch(new Navigate(path));
+    this.store.dispatch(
+      new Navigate(['projects', 'view', this.projectId, view])
+    );
   }
 
   nodeViewChanged(nodeView: string): void {
-    this.node = undefined;
-
-    this.store.dispatch([
-      new ClearEditor(),
-      new Navigate([
-        'projects',
-        'view',
-        this.projectId,
-        this.currentView,
-        nodeView,
-      ]),
-    ]);
+    this.store.dispatch(
+      new ProjectNodeViewChanged(<PROJECT_NODE_VIEW_TYPE>nodeView)
+    );
   }
 
   nodeSelected(project: Project, node: WbsNodeView) {
-    this.node = node.id;
-
     this.store.dispatch(
       new NodeSelected(
         node,
@@ -125,20 +93,18 @@ export class ProjectsViewComponent implements OnInit {
     );
   }
 
-  nodeMenuClicked(action: string) {
-    const node = this.store.selectSnapshot(NodeEditorState.node)!;
-
+  nodeMenuClicked(action: string, node: WbsNodeView) {
     if (action === 'delete') {
+      const reasons = this.store.selectSnapshot(ProjectState.deleteReasons)!;
+
       this.deleteService
-        .launchAsync(node.id)
+        .launchAsync(reasons)
         .pipe(
-          tap((reason) => {
-            if (reason)
-              return this.store.dispatch(
-                new RemoveNodeToProject(node.id, reason)
-              );
-            return of();
-          })
+          tap((reason) =>
+            reason
+              ? this.store.dispatch(new RemoveNodeToProject(node.id, reason))
+              : of()
+          )
         )
         .subscribe();
     } else if (action === 'add') {
@@ -146,21 +112,11 @@ export class ProjectsViewComponent implements OnInit {
     }
   }
 
-  private updateNodeViews() {
-    const view = this.nodeView$.getValue();
-    const nodes = this.store.selectSnapshot(ProjectState.nodes);
-    const project = this.store.selectSnapshot(ProjectState.current);
-
-    if (!view || !project || !nodes) return;
-
-    if (view === PROJECT_NODE_VIEW.DISCIPLINE) {
-      this.disciplineNodes$.next(
-        this.transformers.wbsNodeDiscipline.run(project, nodes)
-      );
-      this.phaseNodes$.next(null);
-    } else {
-      this.phaseNodes$.next(this.transformers.wbsNodePhase.run(project, nodes));
-      this.disciplineNodes$.next(null);
+  action(action: string) {
+    if (action === 'download') {
+      this.store.dispatch(new DownloadNodes());
+    } else if (action === 'upload') {
+      this.store.dispatch(new UploadNodes());
     }
   }
 }
