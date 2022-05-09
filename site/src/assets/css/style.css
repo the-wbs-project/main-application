@@ -33991,6 +33991,10 @@ slide is-expanded side-menu__item {
     margin-right: 5px;
 }
 
+.slide-item>span {
+    margin-left: 4px;
+}
+
 .angle {
     -webkit-transform-origin: center;
     -ms-transform-origin: center;

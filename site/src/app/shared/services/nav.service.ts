@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faProjector } from '@fortawesome/pro-solid-svg-icons';
+import { faSpaceStationMoonConstruction } from '@fortawesome/pro-solid-svg-icons';
 import { Subject, BehaviorSubject, fromEvent } from 'rxjs';
 import { takeUntil, debounceTime } from 'rxjs/operators';
 
@@ -68,15 +68,19 @@ export class NavService implements OnDestroy {
 
   MENUITEMS: Menu[] = [
     {
-      headTitle: 'MAIN',
+      headTitle: 'General.Projects',
     },
     {
-      title: 'Demos',
-      icon: faProjector,
+      title: 'My Projects',
+      icon: faSpaceStationMoonConstruction,
       type: 'sub',
       active: true,
       children: [
-        { path: '/demos/drag-and-drop', title: 'Drag & Drop', type: 'link' },
+        {
+          path: '/projects/view/123',
+          title: 'Market Research Project',
+          type: 'link',
+        },
       ],
     },
   ];

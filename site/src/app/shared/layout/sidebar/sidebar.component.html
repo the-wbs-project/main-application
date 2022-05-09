@@ -69,7 +69,7 @@
           >
             <!-- has-Link -->
             <div *ngIf="menuItem.headTitle">
-              {{ menuItem.headTitle }}
+              {{ menuItem.headTitle | translate }}
             </div>
             <a
               class="side-menu__item"
@@ -135,7 +135,7 @@
                 >
                   <fa-icon [icon]="faGenderless" size="xs"> </fa-icon>
                   &nbsp;
-                  {{ childrenItem.title }}
+                  <span>{{ childrenItem.title }}</span>
                 </a>
 
                 <!-- sub -->
@@ -173,7 +173,7 @@
                       *ngIf="childrenSubItem.type === 'link'"
                       (click)="toggleNavActive(childrenSubItem)"
                     >
-                      {{ childrenSubItem.title }}
+                      <span>{{ childrenSubItem.title }}</span>
                     </a>
                     <!-- sub -->
                     <a
@@ -213,8 +213,8 @@
                           "
                           *ngIf="childrenSubItem1.type === 'link'"
                         >
-                          {{ childrenSubItem1.title }}</a
-                        >
+                          {{ childrenSubItem1.title }}
+                        </a>
                       </li>
                     </ul>
                   </li>

@@ -1,0 +1,24 @@
+[
+  {
+    "name": "Metadata",
+    "pk": "id",
+    "files": [
+      "categories.json",
+      "resources-en.json"
+    ]
+  },
+  {
+    "name": "Projects",
+    "pk": "owner",
+    "files": [
+      "projects.json"
+    ]
+  },
+  {
+    "name": "ProjectNodes",
+    "pk": "projectId",
+    "files": [
+      "wbs.market-research.json"
+    ]
+  }
+]

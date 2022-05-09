@@ -18,7 +18,7 @@ import {
   StartupService,
   ThemeService,
 } from '@wbs/shared/services';
-import { AuthState, MetadataState } from '@wbs/shared/states';
+import { AuthState, MetadataState, ProjectListState } from '@wbs/shared/states';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,7 +34,7 @@ import { AppComponent } from './app.component';
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
     }),
-    NgxsModule.forRoot([AuthState, MetadataState]),
+    NgxsModule.forRoot([AuthState, MetadataState, ProjectListState]),
     NgxsRouterPluginModule.forRoot(),
     NotificationModule,
     ToastrModule.forRoot(),

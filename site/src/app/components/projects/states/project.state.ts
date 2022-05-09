@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   AddNodeToProject,
   DownloadNodes,
@@ -19,7 +19,6 @@ import {
   PROJECT_FILTER,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-  PROJECT_STATI,
   PROJECT_VIEW_TYPE,
   WbsDisciplineNode,
   WbsNode,
@@ -30,7 +29,6 @@ import {
   DataServiceFactory,
   IdService,
   Messages,
-  StartupService,
   Transformers,
 } from '@wbs/shared/services';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -46,8 +44,6 @@ interface StateModel {
   current?: Project;
   deleteReasons: ListItem[];
   disciplineNodes?: WbsDisciplineNode[];
-  list: Project[];
-  watched: Project[];
   nodes?: WbsNode[];
   navType: PROJECT_FILTER | null;
   phaseNodes?: WbsPhaseNode[];
@@ -60,17 +56,14 @@ interface StateModel {
   name: 'projects',
   defaults: {
     deleteReasons: [],
-    list: [],
-    watched: [],
     navType: null,
   },
 })
-export class ProjectState implements NgxsOnInit {
+export class ProjectState {
   constructor(
     private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
     private readonly dialog: DialogService,
-    private readonly loader: StartupService,
     private readonly messages: Messages,
     private readonly processors: PhaseExtractProcessor,
     private readonly transformers: Transformers
@@ -87,53 +80,8 @@ export class ProjectState implements NgxsOnInit {
   }
 
   @Selector()
-  static list(state: StateModel): Project[] {
-    return state.list;
-  }
-
-  @Selector()
-  static watched(state: StateModel): Project[] {
-    return state.watched;
-  }
-
-  @Selector()
-  static count(state: StateModel): number {
-    return ProjectState.list(state).length;
-  }
-
-  @Selector()
   static phaseNodes(state: StateModel): WbsPhaseNode[] | undefined {
     return state.phaseNodes;
-  }
-
-  @Selector()
-  static planningList(state: StateModel): Project[] {
-    return state?.list.filter((x) => x.status === PROJECT_STATI.PLANNING);
-  }
-
-  @Selector()
-  static planningCount(state: StateModel): number {
-    return ProjectState.planningList(state).length;
-  }
-
-  @Selector()
-  static executionList(state: StateModel): Project[] {
-    return state?.list.filter((x) => x.status === PROJECT_STATI.EXECUTION);
-  }
-
-  @Selector()
-  static executionCount(state: StateModel): number {
-    return ProjectState.executionList(state).length;
-  }
-
-  @Selector()
-  static followupList(state: StateModel): Project[] {
-    return state?.list.filter((x) => x.status === PROJECT_STATI.FOLLOW_UP);
-  }
-
-  @Selector()
-  static followupCount(state: StateModel): number {
-    return ProjectState.followupList(state).length;
   }
 
   @Selector()
@@ -159,13 +107,6 @@ export class ProjectState implements NgxsOnInit {
   @Selector()
   static viewProject(state: StateModel): PROJECT_VIEW_TYPE | undefined {
     return state.viewProject;
-  }
-
-  ngxsOnInit(ctx: StateContext<StateModel>) {
-    ctx.patchState({
-      list: this.loader.projectsMy ?? [],
-      watched: this.loader.projectsWatched ?? [],
-    });
   }
 
   @Action(VerifyProject)

@@ -16,6 +16,7 @@
         "UnexpectedServerError": "An unexpected server error occured.",
         "Previous": "Previous",
         "Next": "Next",
+        "Projects": "Projects",
         "RetrievingData": "Retrieving Data...",
         "ReviewingData": "Reviewing Data..."
       },
