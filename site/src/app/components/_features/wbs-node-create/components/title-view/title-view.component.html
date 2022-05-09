@@ -1,6 +1,6 @@
 <section class="pd-x-50">
   <div class="wizard-body">
-    What is the name and description of this node?
+    What is the name and detailed description of this task?
     <br />
     <br />
     <kendo-floatinglabel text="Name" class="w-100">
@@ -8,7 +8,10 @@
     </kendo-floatinglabel>
     <br />
     <br />
-    <kendo-floatinglabel text="Description" class="w-100 pd-t-20">
+    <kendo-floatinglabel
+      text="Detailed Description"
+      class="w-100 ht-150 pd-t-20"
+    >
       <textarea #description resizable="auto" [ngModel]="description$ | async">
       </textarea>
     </kendo-floatinglabel>

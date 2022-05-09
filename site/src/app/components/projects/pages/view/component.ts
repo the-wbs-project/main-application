@@ -22,7 +22,7 @@ import {
 import {
   DownloadNodes,
   ProjectNodeViewChanged,
-  RemoveNodeToProject,
+  RemoveTask,
   UploadNodes,
 } from '../../actions';
 import { ProjectState } from '../../states';
@@ -101,9 +101,7 @@ export class ProjectsViewComponent {
         .launchAsync(reasons)
         .pipe(
           tap((reason) =>
-            reason
-              ? this.store.dispatch(new RemoveNodeToProject(node.id, reason))
-              : of()
+            reason ? this.store.dispatch(new RemoveTask(node.id, reason)) : of()
           )
         )
         .subscribe();

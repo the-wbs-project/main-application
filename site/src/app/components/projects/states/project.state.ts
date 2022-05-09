@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
-  AddNodeToProject,
   DownloadNodes,
   ProcessUploadedNodes,
   ProjectNodeViewChanged,
   ProjectViewChanged,
   RebuildNodeViews,
-  RemoveNodeToProject,
+  RemoveTask,
   SetProject,
   UploadNodes,
   VerifyDeleteReasons,
@@ -203,13 +202,13 @@ export class ProjectState {
     );
   }
 
-  @Action(AddNodeToProject)
+  /*@Action(AddSubTask)
   addNodeToProject(
     ctx: StateContext<StateModel>,
-    action: AddNodeToProject
+    action: AddSubTask
   ): Observable<any> {
     const state = ctx.getState();
-    const node = action.node;
+    const node = action.parent;
 
     node.id = IdService.generate();
 
@@ -224,12 +223,12 @@ export class ProjectState {
         });
       })
     );
-  }
+  }*/
 
-  @Action(RemoveNodeToProject)
+  @Action(RemoveTask)
   removeNodeToProject(
     ctx: StateContext<StateModel>,
-    action: RemoveNodeToProject
+    action: RemoveTask
   ): Observable<any> | void {
     const state = ctx.getState();
     const nodes: WbsNode[] = JSON.parse(JSON.stringify(state.nodes));
@@ -355,7 +354,7 @@ export class ProjectState {
           );
         }
         if (results.removeIds.length > 0 || results.upserts.length > 0) {
-          //
+          console.log(results);
           saves.push(
             this.data.projectNodes
               .batchAsync(project.id, results.upserts, results.removeIds)
@@ -372,6 +371,7 @@ export class ProjectState {
                     const index = nodes.findIndex((x) => x.id === node.id);
 
                     if (index > -1) nodes[index] = node;
+                    else nodes.push(node);
                   }
                   ctx.patchState({
                     nodes,

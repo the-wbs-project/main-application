@@ -47,12 +47,12 @@ export class ActionsMenuComponent {
     {
       action: 'add',
       icon: faPlus,
-      label: 'Wbs.AddNode',
+      label: 'Wbs.AddSubTask',
     },
     {
       action: 'delete',
       icon: faTrashCan,
-      label: 'Wbs.DeleteNode',
+      label: 'Wbs.DeleteTask',
     },
   ];
 }

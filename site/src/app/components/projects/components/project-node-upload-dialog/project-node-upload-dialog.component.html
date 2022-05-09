@@ -1,6 +1,12 @@
-<kendo-fileselect
-  [multiple]="false"
-  [showFileList]="false"
-  (select)="selected($event)"
->
-</kendo-fileselect>
+<kendo-dialog
+  actionsLayout="normal"
+  [title]="'Wbs.DeleteNode' | translate"
+  [width]="450"
+  (close)="close()"
+  ><kendo-fileselect
+    [multiple]="false"
+    [showFileList]="false"
+    (select)="selected($event)"
+  >
+  </kendo-fileselect>
+</kendo-dialog>

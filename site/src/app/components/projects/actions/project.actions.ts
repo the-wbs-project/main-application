@@ -18,13 +18,8 @@ export class VerifyDeleteReasons {
   static readonly type = '[Project] Delete Reasons';
 }
 
-export class AddNodeToProject {
-  static readonly type = '[Project] Add Node';
-  constructor(readonly node: WbsNode) {}
-}
-
-export class RemoveNodeToProject {
-  static readonly type = '[Project] Remove Node';
+export class RemoveTask {
+  static readonly type = '[Project] Remove Task';
   constructor(readonly nodeId: string, readonly reason: string) {}
 }
 

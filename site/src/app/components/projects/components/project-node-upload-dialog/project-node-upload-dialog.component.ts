@@ -24,4 +24,8 @@ export class ProjectNodeUploadDialogComponent extends DialogContentBase {
       .pipe(tap((buffer) => this.dialog.close(buffer)))
       .subscribe();
   }
+
+  close() {
+    this.dialog.close();
+  }
 }

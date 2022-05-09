@@ -275,7 +275,7 @@ export class NodeCreationState {
       page === NODE_CREATION_PAGES.STARTER
         ? 'Wbs.LetsGetStarted'
         : page === NODE_CREATION_PAGES.TITLE_DESCRIPTION
-        ? 'Wbs.TitleAndDescription'
+        ? 'Wbs.NameAndDescription'
         : page === NODE_CREATION_PAGES.PHASE
         ? 'Wbs.SelectPhase'
         : page === NODE_CREATION_PAGES.DISCIPLINES
@@ -284,7 +284,7 @@ export class NodeCreationState {
         ? 'Wbs.OtherFlags'
         : '';
 
-    const part1 = this.resources.get('Wbs.AddNode');
+    const part1 = this.resources.get('Wbs.CreateTask');
     const part2 = this.resources.get(pageResource);
 
     this.dialog!.dialog.instance.title = `${part1} - ${part2}`;

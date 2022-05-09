@@ -17,6 +17,8 @@
         "Previous": "Previous",
         "Next": "Next",
         "Projects": "Projects",
+        "Download": "Download",
+        "Upload": "Upload",
         "RetrievingData": "Retrieving Data...",
         "ReviewingData": "Reviewing Data..."
       },
@@ -68,6 +70,7 @@
     "values": {
       "Wbs": {
         "WBS": "WBS",
+        "Task": "Task",
         "History": "History",
         "Clone": "Clone",
         "CloneWith": "Clone (With Children)",
@@ -83,17 +86,18 @@
         "PhaseLegend": "Phase Legend",
         "NodeLevelStats": "Node Level Stats",
         "InsertDescription": "Insert Description Here",
-        "DeleteNode": "Delete Node",
+        "DeleteTask": "Delete Task",
         "DeleteList_Scope": "Not In Scope",
         "DeleteList_Sub": "Subcontractor Will Perform",
         "DeleteList_Prime": "Prime Will Perform",
         "DeleteList_Client": "Client Will Perform",
         "PleaseSpecify": "Please Specify",
-        "AddNode": "Add Node",
+        "AddSubTask": "Add Sub Task",
         "LetsGetStarted": "Lets Get Started",
-        "TitleAndDescription": "Title And Description",
+        "NameAndDescription": "Name And Description",
         "SelectPhase": "Select Phase",
         "SelectDisciplines": "Select Disciplines",
+        "CreateTask": "Create Task",
         "OtherFlags": "Other Flags"
       }
     }
