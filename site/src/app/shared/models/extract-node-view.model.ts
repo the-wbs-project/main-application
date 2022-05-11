@@ -1,6 +1,7 @@
 export interface ExtractNodeView {
   id: string;
   levelText: string;
+  depth: number;
   order: number;
   title: string;
   description: string | null;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using OfficeOpenXml;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -7,7 +8,7 @@ using Wbs.Utilities.Models;
 
 namespace Wbs.Utilities.Services
 {
-    public class PhaseExtractService
+    public class PhaseExtractService : BaseExtractService
     {
         private readonly MetadataDataService metadata;
         private readonly Storage storage;
@@ -70,18 +71,24 @@ namespace Wbs.Utilities.Services
             }
         }
 
-        public async Task<List<WbsPhaseView>> UploadAsync(Stream stream)
+        public async Task<UploadResults> UploadAsync(Stream stream)
         {
             var disciplines = await GetDisciplinesAsync();
 
-            using (var package = new OfficeOpenXml.ExcelPackage())
+            using (var package = new ExcelPackage())
             {
                 package.Load(stream);
                 //
                 //  Add nodes
                 //
                 var sheet = package.Workbook.Worksheets["WBS"];
-                var results = new List<WbsPhaseView>();
+                var results = new UploadResults
+                {
+                    errors = TestSheet(sheet),
+                    results = new List<WbsNodeView>()
+                };
+
+                if (results.errors.Count > 0) return results;
                 var row = 2;
 
                 while (sheet.GetValue(row, 1) != null)
@@ -89,8 +96,8 @@ namespace Wbs.Utilities.Services
                     var obj = new WbsPhaseView();
                     var sync = sheet.GetValue<string>(row, 17)?.ToLower();
 
-                    obj.levelText = sheet.GetValue<string>(row, 1);
-                    obj.description = sheet.GetValue<string>(row, 18);
+                    obj.levelText = sheet.GetValue<string>(row, 1)?.Trim();
+                    obj.description = sheet.GetValue<string>(row, 18)?.Trim();
                     obj.syncWithDisciplines = sync == "y" || sync == "yes";
 
                     for (var i = 1; i <= 10; i++)
@@ -119,14 +126,55 @@ namespace Wbs.Utilities.Services
                                 obj.disciplines.Add(discipline);
                         }
                     }
-                    results.Add(obj);
+                    results.results.Add(obj);
                     row++;
                 }
 
                 return results;
             }
         }
-        public async Task<Dictionary<string, string>> GetDisciplinesAsync()
+        
+        private List<string> TestSheet(ExcelWorksheet sheet)
+        {
+            var errors = new List<string>();
+            var row = 2;
+            string prev = null;
+
+            while (sheet.GetValue(row, 1) != null)
+            {
+                var levelText = sheet.GetValue<string>(row, 1)?.Trim();
+                var foundTitle = false;
+
+                for (var i = 1; i <= 10; i++)
+                {
+                    var text = sheet.GetValue<string>(row, i + 1)?.Trim();
+
+                    if (!string.IsNullOrEmpty(text))
+                    {
+                        foundTitle = true;
+                        break;
+                    }
+                }
+                if (!TestFormat(levelText))
+                {
+                    errors.Add($"Row {row}: The level was not in a proper format of digits and periods.");
+                }
+                else if (prev != null && !TestLevels(prev, levelText))
+                {
+                    errors.Add($"Row {row}: The level was not in a proper sequence.");
+                }
+                if (!foundTitle)
+                {
+                    errors.Add($"Row {row}: The title for the task was not included.");
+                }
+                prev = levelText;
+                row++;
+            }
+
+            return errors;
+        }
+        
+        private async Task<Dictionary<string, string>> GetDisciplinesAsync()
         {
             var resourcesObj = await metadata.GetAsync<Dictionary<string, Dictionary<string, string>>>("en-US.General");
             var disciplineList = await metadata.GetAsync<List<ListItem>>("categories_discipline");

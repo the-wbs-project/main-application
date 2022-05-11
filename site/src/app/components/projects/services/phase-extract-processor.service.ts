@@ -24,10 +24,11 @@ export class PhaseExtractProcessor {
     projectPhases: (string | ListItem)[],
     originals: WbsNode[],
     viewModels: WbsPhaseNode[],
-    fromExtract: ExtractPhaseNodeView[]
+    fromExtract: ExtractPhaseNodeView[],
+    inheritDisciplines: boolean
   ): ExtractResults {
     const fromExtractMap = new Map<string, ExtractPhaseNodeView>();
-    const upsertVms: ExtractPhaseNodeView[] = [];
+    const upsertVms: (ExtractPhaseNodeView | WbsPhaseNode)[] = [];
     const phases: (string | ListItem)[] = [];
     const phaseIds: string[] = [];
     const cats = this.store.selectSnapshot(MetadataState.phaseCategories);
@@ -100,6 +101,8 @@ export class PhaseExtractProcessor {
       cat++;
     }
 
+    if (inheritDisciplines) this.inheritDisciplines(fromExtract);
+
     for (var node of fromExtract) {
       if (phaseIds.indexOf(node.id) > -1) continue;
 
@@ -116,7 +119,7 @@ export class PhaseExtractProcessor {
           match.description = node.description;
           changed = true;
         }
-        if (match.disciplines != node.disciplines) {
+        if (!this.areArraysEqual(match.disciplines, node.disciplines)) {
           match.disciplines = node.disciplines;
           changed = true;
         }
@@ -216,7 +219,56 @@ export class PhaseExtractProcessor {
     }
   }
 
+  private inheritDisciplines(rows: ExtractPhaseNodeView[]) {
+    var byId = new Map<string, ExtractPhaseNodeView>();
+
+    for (const row of rows) {
+      row.depth = row.levelText.split('.').length;
+
+      byId.set(row.id, row);
+    }
+    var level = Math.max(...rows.map((x) => x.depth));
+
+    for (let i = level; i >= 0; i--) {
+      for (const row of rows) {
+        if (row.depth !== i || row.parentId == null || row.disciplines == null)
+          continue;
+
+        const parent = byId.get(row.parentId)!;
+
+        if (parent.disciplines == null) parent.disciplines = [];
+
+        for (const id of row.disciplines) {
+          if (parent.disciplines.indexOf(id) > -1) continue;
+
+          parent.disciplines.push(id);
+        }
+      }
+    }
+  }
+
   private compare(s1: string, s2: string): boolean {
     return this.textComparer.similarity(s1, s2) >= this.tolerance;
+  }
+
+  private areArraysEqual(
+    a: string[] | null | undefined,
+    b: string[] | null | undefined
+  ): boolean {
+    if (a == null && b == null) return true;
+    if (a != null && b == null) return false;
+    if (a == null && b != null) return false;
+    if (a!.length !== b!.length) return false;
+
+    const b2 = [...b!];
+    for (const x of a!) {
+      const i = b2.indexOf(x);
+
+      if (i === -1) return false;
+
+      b2.splice(i, 1);
+    }
+
+    return b2.length === 0;
   }
 }

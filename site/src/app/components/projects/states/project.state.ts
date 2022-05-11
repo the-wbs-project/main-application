@@ -13,6 +13,7 @@ import {
   VerifyProject,
 } from '../actions';
 import {
+  ExtractPhaseNodeView,
   ListItem,
   Project,
   PROJECT_FILTER,
@@ -293,101 +294,109 @@ export class ProjectState {
 
   @Action(UploadNodes)
   uploadNodes(ctx: StateContext<StateModel>): Observable<any> {
-    return this.dialog
-      .open({
-        content: ProjectNodeUploadDialogComponent,
-        appendTo: this.containers.body,
+    const state = ctx.getState();
+    const project = state.current!;
+
+    const ref = this.dialog.open({
+      content: ProjectNodeUploadDialogComponent,
+      appendTo: this.containers.body,
+    });
+    const comp = <ProjectNodeUploadDialogComponent>ref.content.instance;
+
+    comp.viewNode = state.viewNode;
+
+    return ref.result.pipe(
+      switchMap((result: DialogCloseResult | any[]) => {
+        if (result instanceof DialogCloseResult) {
+          return of(null);
+        } else if (state.viewNode === PROJECT_NODE_VIEW.PHASE) {
+          return ctx.dispatch(
+            new ProcessUploadedNodes(<ExtractPhaseNodeView[]>result)
+          );
+          //return this.uploadPhaseFile(ctx, <ExtractPhaseNodeView[]>result);
+        } else {
+          return of(null);
+        }
       })
-      .result.pipe(
-        switchMap((result: DialogCloseResult | ArrayBuffer) => {
-          if (result instanceof ArrayBuffer) {
-            return ctx.dispatch(new ProcessUploadedNodes(result));
-          } else {
-            return of(null);
-          }
-        })
-      );
+    );
   }
 
   @Action(ProcessUploadedNodes)
   processUploadedNodes(
     ctx: StateContext<StateModel>,
     action: ProcessUploadedNodes
-  ): Observable<any> | void {
+  ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
 
-    if (state.viewNode === PROJECT_NODE_VIEW.PHASE)
-      return this.uploadPhaseFile(ctx, project.id, action.buffer);
+    if (state.viewNode === PROJECT_NODE_VIEW.PHASE) {
+      return this.uploadPhaseFile(ctx, <ExtractPhaseNodeView[]>action.rows);
+    } else {
+      return of(null);
+    }
   }
 
   private uploadPhaseFile(
     ctx: StateContext<StateModel>,
-    projectId: string,
-    buffer: ArrayBuffer
+    rows: ExtractPhaseNodeView[]
   ): Observable<any> {
-    return this.data.extracts.updatePhaseAsync(projectId, buffer).pipe(
-      switchMap((rows) => {
-        const state = ctx.getState();
-        const project = state.current!;
+    const state = ctx.getState();
+    const project = state.current!;
 
-        const results = this.processors.run(
-          project.categories.phase,
-          this.copy(state.nodes!),
-          this.copy(state.phaseNodes!),
-          rows
-        );
-
-        var saves: Observable<any>[] = [];
-
-        if (results.cats !== project.categories.phase) {
-          project.categories.phase = results.cats;
-
-          saves.push(
-            this.data.projects.putAsync(project).pipe(
-              tap(() =>
-                ctx.patchState({
-                  current: project,
-                })
-              )
-            )
-          );
-        }
-        if (results.removeIds.length > 0 || results.upserts.length > 0) {
-          console.log(results);
-          saves.push(
-            this.data.projectNodes
-              .batchAsync(project.id, results.upserts, results.removeIds)
-              .pipe(
-                tap(() => {
-                  const nodes = ctx.getState().nodes!;
-
-                  for (const id of results.removeIds) {
-                    const index = nodes.findIndex((x) => x.id === id);
-
-                    if (index > -1) nodes.splice(index, 1);
-                  }
-                  for (const node of results.upserts) {
-                    const index = nodes.findIndex((x) => x.id === node.id);
-
-                    if (index > -1) nodes[index] = node;
-                    else nodes.push(node);
-                  }
-                  ctx.patchState({
-                    nodes,
-                  });
-                })
-              )
-          );
-        }
-
-        return saves.length === 0
-          ? of()
-          : forkJoin(saves).pipe(
-              tap(() => ctx.dispatch(new RebuildNodeViews()))
-            );
-      })
+    const results = this.processors.run(
+      project.categories.phase,
+      this.copy(state.nodes!),
+      this.copy(state.phaseNodes!),
+      rows,
+      true
     );
+
+    var saves: Observable<any>[] = [];
+
+    if (results.cats !== project.categories.phase) {
+      project.categories.phase = results.cats;
+
+      saves.push(
+        this.data.projects.putAsync(project).pipe(
+          tap(() =>
+            ctx.patchState({
+              current: project,
+            })
+          )
+        )
+      );
+    }
+    if (results.removeIds.length > 0 || results.upserts.length > 0) {
+      console.log(results);
+      saves.push(
+        this.data.projectNodes
+          .batchAsync(project.id, results.upserts, results.removeIds)
+          .pipe(
+            tap(() => {
+              const nodes = ctx.getState().nodes!;
+
+              for (const id of results.removeIds) {
+                const index = nodes.findIndex((x) => x.id === id);
+
+                if (index > -1) nodes.splice(index, 1);
+              }
+              for (const node of results.upserts) {
+                const index = nodes.findIndex((x) => x.id === node.id);
+
+                if (index > -1) nodes[index] = node;
+                else nodes.push(node);
+              }
+              ctx.patchState({
+                nodes,
+              });
+            })
+          )
+      );
+    }
+
+    return saves.length === 0
+      ? of()
+      : forkJoin(saves).pipe(tap(() => ctx.dispatch(new RebuildNodeViews())));
   }
 
   private copy<T>(x: T): T {

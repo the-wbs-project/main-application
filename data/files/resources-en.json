@@ -59,7 +59,10 @@
     "values": {
       "Projects": {
         "DownloadNodes": "Download Nodes",
-        "UploadNodes": "Upload Nodes"
+        "UploadTasks": "Upload Tasks",
+        "UploadTaskIntro": "Select the file you want to upload...",
+        "UploadTaskErrors": "The following errors found",
+        "UploadTaskErrorPrefix": "Please fix and try again."
       }
     }
   },

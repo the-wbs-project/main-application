@@ -4,6 +4,7 @@ import {
   ExtractPhaseNodeView,
   Project,
   PROJECT_NODE_VIEW_TYPE,
+  UploadResults,
   WbsPhaseNode,
 } from '@wbs/shared/models';
 import { map, Observable } from 'rxjs';
@@ -39,8 +40,8 @@ export class ExtractDataService {
   updatePhaseAsync(
     projectId: string,
     file: ArrayBuffer
-  ): Observable<ExtractPhaseNodeView[]> {
-    return this.http.post<ExtractPhaseNodeView[]>(
+  ): Observable<UploadResults<ExtractPhaseNodeView>> {
+    return this.http.post<UploadResults<ExtractPhaseNodeView>>(
       `projects/${this.ownerId}/${projectId}/extracts/phase/upload`,
       file
     );
@@ -60,6 +61,7 @@ export class ExtractDataService {
         title: row.title,
         phaseId: row.phaseId,
         parentId: row.parentId,
+        depth: 0,
       });
     }
 

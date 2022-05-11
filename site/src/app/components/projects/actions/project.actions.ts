@@ -1,4 +1,5 @@
 import {
+  ExtractPhaseNodeView,
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_VIEW_TYPE,
   WbsNode,
@@ -47,5 +48,5 @@ export class UploadNodes {
 
 export class ProcessUploadedNodes {
   static readonly type = '[Project] Process Uploaded Nodes';
-  constructor(readonly buffer: ArrayBuffer) {}
+  constructor(readonly rows: ExtractPhaseNodeView[]) {}
 }

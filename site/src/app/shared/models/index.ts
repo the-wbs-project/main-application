@@ -8,6 +8,7 @@ export * from './project.model';
 export * from './resource-sections.model';
 export * from './threaded-discussion.model';
 export * from './training-material.model';
+export * from './upload-results.model';
 export * from './wbs-node-discipline.model';
 export * from './wbs-node-discipline-relationship.model';
 export * from './wbs-node-phase.model';

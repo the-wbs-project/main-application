@@ -11,26 +11,26 @@ export class ProjectNodeDataService {
   ) {}
 
   async getAllAsync(projectId: string): Promise<ProjectNode[]> {
-    if (this.edge.byPass(kvPrefix)) return await this.getFromDbAsync(projectId);
+    //if (this.edge.byPass(kvPrefix)) return await this.getFromDbAsync(projectId);
 
-    const kvName = [kvPrefix, projectId].join('-');
-    const kvData = await this.edge.get<ProjectNode[]>(kvName, 'json');
+    //const kvName = [kvPrefix, projectId].join('-');
+    //const kvData = await this.edge.get<ProjectNode[]>(kvName, 'json');
 
-    if (kvData) return kvData;
+    //if (kvData) return kvData;
 
     const data = await this.getFromDbAsync(projectId);
 
-    if (data) this.edge.putLater(kvName, JSON.stringify(data));
+    //if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
     return data;
   }
 
   async putAsync(node: ProjectNode): Promise<void> {
-    const kvName = [kvPrefix, node.projectId].join('-');
+    //const kvName = [kvPrefix, node.projectId].join('-');
 
     await this.db.upsertDocument(node, node.projectId);
 
-    this.edge.delete(kvName);
+    //this.edge.delete(kvName);
   }
 
   async batchAsync(
@@ -73,7 +73,7 @@ export class ProjectNodeDataService {
     //
     //  Delete the KV values
     //
-    this.edge.delete([kvPrefix, projectId].join('-'));
+    //this.edge.delete([kvPrefix, projectId].join('-'));
   }
 
   private getFromDbAsync(projectId: string): Promise<ProjectNode[]> {

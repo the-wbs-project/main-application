@@ -57,7 +57,6 @@ namespace Wbs.Utilities
 
                     var data = await phaseExtractService.UploadAsync(stream);
 
-                    log.LogInformation(data.Where(x => x.id != null).Count().ToString());
                     return new JsonResult(data);
                 }
             }
