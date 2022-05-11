@@ -22,6 +22,7 @@ export class PhaseExtractProcessor {
 
   run(
     projectPhases: (string | ListItem)[],
+    projectDisciplines: (string | ListItem)[],
     originals: WbsNode[],
     viewModels: WbsPhaseNode[],
     fromExtract: ExtractPhaseNodeView[],
@@ -102,7 +103,9 @@ export class PhaseExtractProcessor {
     }
 
     if (inheritDisciplines) this.inheritDisciplines(fromExtract);
-
+    //
+    //  Now let's look through the rows and find out what tasks has been changed
+    // 
     for (var node of fromExtract) {
       if (phaseIds.indexOf(node.id) > -1) continue;
 

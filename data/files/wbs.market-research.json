@@ -1,5 +1,18 @@
 [
   {
+    "id": "wjs965w6dvxraaxr",
+    "projectId": "123",
+    "discipline": [
+      {
+        "id": "mechanical",
+        "parentId": "mechanical",
+        "isPhaseNode": true,
+        "phaseId": "initial",
+        "order": 1
+      }
+    ]
+  },
+  {
     "id": "4caf7ae37651492c",
     "projectId": "123",
     "phase": {
@@ -19,19 +32,6 @@
     ],
     "title": "Requirements Gathering & Analysis",
     "removed": false
-  },
-  {
-    "id": "wjs965w6dvxraaxr",
-    "projectId": "123",
-    "discipline": [
-      {
-        "id": "mechanical",
-        "parentId": "mechanical",
-        "isPhaseNode": true,
-        "phaseId": "initial",
-        "order": 1
-      }
-    ]
   },
   {
     "id": "8502bdf1a18a4c36",

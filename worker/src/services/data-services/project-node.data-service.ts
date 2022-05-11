@@ -52,6 +52,8 @@ export class ProjectNodeDataService {
       const node = all.find((x) => x.id === nodeId);
       if (!node || node.projectId !== projectId)
         throw new Error('Invalid_Project_Id');
+
+      node.removed = true;
       //
       //  Now add node to the list to upsert
       //

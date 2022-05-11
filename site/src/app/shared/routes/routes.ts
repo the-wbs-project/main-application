@@ -8,11 +8,4 @@ export const content: Routes = [
         (m) => m.ProjectsLayoutModule
       ),
   },
-  {
-    path: 'import',
-    loadChildren: () =>
-      import('../../components/importers/importers.module').then(
-        (m) => m.ImportersModule
-      ),
-  },
 ];

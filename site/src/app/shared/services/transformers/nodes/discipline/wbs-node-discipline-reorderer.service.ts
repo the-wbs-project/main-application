@@ -4,7 +4,7 @@ import {
   WbsNode,
   WbsNodeDisciplineRelationship,
 } from '@wbs/shared/models';
-import { WbsNodeService } from '../wbs-node.service';
+import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsDisciplineReorderer {
   getMaxOrder(

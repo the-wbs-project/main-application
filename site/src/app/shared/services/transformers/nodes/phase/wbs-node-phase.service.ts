@@ -1,8 +1,8 @@
 import { Store } from '@ngxs/store';
 import { ListItem, Project, WbsNode, WbsPhaseNode } from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
-import { Resources } from '../resource.service';
-import { WbsNodeService } from '../wbs-node.service';
+import { Resources } from '../../../resource.service';
+import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {
   constructor(
@@ -32,7 +32,7 @@ export class WbsNodePhaseTransformer {
       const parent: WbsPhaseNode = {
         children: 0,
         description: null,
-        disciplines: null,
+        disciplines: [],
         id: cat.id,
         isDisciplineNode: false,
         isLockedToParent: false,
@@ -53,6 +53,13 @@ export class WbsNodePhaseTransformer {
       );
       parent.children = this.getChildCount(children);
 
+      for (const child of children)
+        for (const dId of child.disciplines ?? [])
+          if (parent.disciplines!.indexOf(dId) === -1)
+            parent.disciplines!.push(dId);
+
+      console.log(parent.title);
+      console.log(parent.disciplines);
       nodes.push(parent, ...children);
     }
     return nodes;

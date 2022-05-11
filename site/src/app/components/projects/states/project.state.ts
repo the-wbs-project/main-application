@@ -27,9 +27,8 @@ import {
 import {
   ContainerService,
   DataServiceFactory,
-  IdService,
   Messages,
-  Transformers,
+  WbsTransformers,
 } from '@wbs/shared/services';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ClearEditor } from '@wbs/components/_features';
@@ -66,7 +65,7 @@ export class ProjectState {
     private readonly dialog: DialogService,
     private readonly messages: Messages,
     private readonly processors: PhaseExtractProcessor,
-    private readonly transformers: Transformers
+    private readonly transformers: WbsTransformers
   ) {}
 
   @Selector()
@@ -170,7 +169,7 @@ export class ProjectState {
 
     if (state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE) {
       ctx.patchState({
-        disciplineNodes: this.transformers.wbsNodeDiscipline.run(
+        disciplineNodes: this.transformers.nodes.discipline.view.run(
           state.current,
           state.nodes
         ),
@@ -179,7 +178,7 @@ export class ProjectState {
     } else {
       ctx.patchState({
         disciplineNodes: undefined,
-        phaseNodes: this.transformers.wbsNodePhase.run(
+        phaseNodes: this.transformers.nodes.phase.view.run(
           state.current,
           state.nodes
         ),
@@ -242,10 +241,10 @@ export class ProjectState {
     let changedIds: string[] = [action.nodeId];
 
     changedIds.push(
-      ...this.transformers.wbsNodePhaseReorderer.run(state.current!, nodes)
+      ...this.transformers.nodes.phase.reorderer.run(state.current!, nodes)
     );
     changedIds.push(
-      ...this.transformers.wbsNodeDisciplineReorderer.run(state.current!, nodes)
+      ...this.transformers.nodes.discipline.reorderer.run(state.current!, nodes)
     );
     const changed: Observable<void>[] = [];
     const parentId = state.current!.id;
@@ -345,6 +344,7 @@ export class ProjectState {
 
     const results = this.processors.run(
       project.categories.phase,
+      project.categories.discipline,
       this.copy(state.nodes!),
       this.copy(state.phaseNodes!),
       rows,

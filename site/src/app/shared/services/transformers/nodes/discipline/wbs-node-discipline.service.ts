@@ -7,8 +7,8 @@ import {
   WbsNodeDisciplineRelationship,
 } from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
-import { Resources } from '../resource.service';
-import { WbsNodeService } from '../wbs-node.service';
+import { Resources } from '../../../resource.service';
+import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
