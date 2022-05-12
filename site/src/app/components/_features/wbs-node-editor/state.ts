@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
-import {
-  Activity,
-  PROJECT_NODE_VIEW_TYPE,
-  WbsNodeView,
-} from '@wbs/shared/models';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Activity, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { ClearEditor, EditorViewChanged, NodeSelected } from './actions';
 import { EditorView } from './models';
 

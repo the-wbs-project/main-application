@@ -1,6 +1,7 @@
 import { Store } from '@ngxs/store';
-import { ListItem, Project, WbsNode, WbsPhaseNode } from '@wbs/shared/models';
+import { ListItem, Project, WbsNode } from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
+import { WbsPhaseNodeView } from '@wbs/shared/view-models';
 import { Resources } from '../../../resource.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 
@@ -18,8 +19,8 @@ export class WbsNodePhaseTransformer {
     return this.store.selectSnapshot(MetadataState.phaseCategories);
   }
 
-  run(project: Project, projectNodes: WbsNode[]): WbsPhaseNode[] {
-    const nodes: WbsPhaseNode[] = [];
+  run(project: Project, projectNodes: WbsNode[]): WbsPhaseNodeView[] {
+    const nodes: WbsPhaseNodeView[] = [];
     const categories = <ListItem[]>(
       project.categories.phase
         .map((x) => this.phaseList.find((c) => c.id === x))
@@ -29,10 +30,11 @@ export class WbsNodePhaseTransformer {
     for (let i = 0; i < categories.length; i++) {
       const cat = categories[i];
       const parentlevel = [i + 1];
-      const parent: WbsPhaseNode = {
+      const node = projectNodes.find((x) => x.id === cat.id);
+      const parent: WbsPhaseNodeView = {
         children: 0,
-        description: null,
-        disciplines: [],
+        description: node?.description ?? null,
+        disciplines: node?.disciplineIds ?? [],
         id: cat.id,
         isDisciplineNode: false,
         isLockedToParent: false,
@@ -53,13 +55,11 @@ export class WbsNodePhaseTransformer {
       );
       parent.children = this.getChildCount(children);
 
-      for (const child of children)
+      /*for (const child of children)
         for (const dId of child.disciplines ?? [])
           if (parent.disciplines!.indexOf(dId) === -1)
-            parent.disciplines!.push(dId);
+            parent.disciplines!.push(dId);*/
 
-      console.log(parent.title);
-      console.log(parent.disciplines);
       nodes.push(parent, ...children);
     }
     return nodes;
@@ -67,7 +67,7 @@ export class WbsNodePhaseTransformer {
 
   private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
     return (list ?? [])
-      .filter((x) => !x.removed && x.phase?.parentId === parentId)
+      .filter((x) => !x.removed && x.parentId === parentId)
       .sort(WbsNodeService.phaseSort);
   }
 
@@ -77,12 +77,12 @@ export class WbsNodePhaseTransformer {
     parentLevel: number[],
     list: WbsNode[],
     isLockedToParent: boolean
-  ): WbsPhaseNode[] {
-    const results: WbsPhaseNode[] = [];
+  ): WbsPhaseNodeView[] {
+    const results: WbsPhaseNodeView[] = [];
 
     for (const child of this.getSortedChildren(parentId, list)) {
       const childLevel = [...parentLevel, child.phase!.order];
-      const node: WbsPhaseNode = {
+      const node: WbsPhaseNodeView = {
         children: 0,
         description: child.description,
         disciplines: child.disciplineIds,
@@ -119,7 +119,7 @@ export class WbsNodePhaseTransformer {
     return results;
   }
 
-  private getChildCount(children: WbsPhaseNode[]): number {
+  private getChildCount(children: WbsPhaseNodeView[]): number {
     return children
       .map((x) => x.children + 1)
       .reduce((partialSum, a) => partialSum + a, 0);

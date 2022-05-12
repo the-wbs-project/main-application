@@ -1,9 +1,5 @@
-import {
-  Activity,
-  ListItem,
-  PROJECT_NODE_VIEW_TYPE,
-  WbsNodeView,
-} from '@wbs/shared/models';
+import { Activity, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { EditorView } from './models';
 
 export class NodeSelected {

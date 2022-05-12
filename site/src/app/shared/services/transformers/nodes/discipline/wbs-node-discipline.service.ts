@@ -2,11 +2,11 @@ import { Store } from '@ngxs/store';
 import {
   ListItem,
   Project,
-  WbsDisciplineNode,
   WbsNode,
   WbsNodeDisciplineRelationship,
 } from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
+import { WbsDisciplineNodeView } from '@wbs/shared/view-models';
 import { Resources } from '../../../resource.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 
@@ -24,8 +24,8 @@ export class WbsDisciplineNodeTransformer {
     return this.store.selectSnapshot(MetadataState.phaseCategories);
   }
 
-  run(project: Project, projectNodes: WbsNode[]): WbsDisciplineNode[] {
-    const nodes: WbsDisciplineNode[] = [];
+  run(project: Project, projectNodes: WbsNode[]): WbsDisciplineNodeView[] {
+    const nodes: WbsDisciplineNodeView[] = [];
     const categories = <ListItem[]>(
       project.categories.discipline
         .map((x) => this.disciplineList.find((c) => c.id === x))
@@ -35,7 +35,7 @@ export class WbsDisciplineNodeTransformer {
     for (let i = 0; i < categories.length; i++) {
       const cat = categories[i];
       const parentlevel = [i + 1];
-      const parent: WbsDisciplineNode = {
+      const parent: WbsDisciplineNodeView = {
         children: 0,
         description: null,
         disciplines: null,
@@ -71,11 +71,11 @@ export class WbsDisciplineNodeTransformer {
     for (const node of list) {
       if (node.discipline == null || node.removed) continue;
 
-      const r = node.discipline.find(
+      /*const r = node.discipline.find(
         (x) => x.disciplineId === disciplineId && x.parentId === parentId
       );
 
-      if (r) results.push([node, r]);
+      if (r) results.push([node, r]);*/
     }
 
     return results.sort(WbsNodeService.disciplineSort);
@@ -86,8 +86,8 @@ export class WbsDisciplineNodeTransformer {
     parentId: string,
     parentLevel: number[],
     list: WbsNode[]
-  ): WbsDisciplineNode[] {
-    const results: WbsDisciplineNode[] = [];
+  ): WbsDisciplineNodeView[] {
+    const results: WbsDisciplineNodeView[] = [];
 
     for (const childParts of this.getSortedChildren(
       disciplineId,
@@ -97,7 +97,7 @@ export class WbsDisciplineNodeTransformer {
       const child = childParts[0];
       const childDisc = childParts[1];
       const childLevel = [...parentLevel, childDisc.order];
-      const node: WbsDisciplineNode = {
+      /*const node: WbsDisciplineNode = {
         id: child.id,
         parentId: parentId,
         disciplines: child.disciplineIds,
@@ -124,12 +124,12 @@ export class WbsDisciplineNodeTransformer {
 
       node.children = this.getChildCount(children);
 
-      results.push(node, ...children);
+      results.push(node, ...children);*/
     }
     return results;
   }
 
-  private getChildCount(children: WbsDisciplineNode[]): number {
+  private getChildCount(children: WbsDisciplineNodeView[]): number {
     return children
       .map((x) => x.children + 1)
       .reduce((partialSum, a) => partialSum + a, 0);

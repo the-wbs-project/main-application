@@ -2,7 +2,7 @@ import { ProjectNode } from '../../models';
 import { DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
-const kvPrefix = 'PROJECTNODES';
+//const kvPrefix = 'PROJECTNODES';
 
 export class ProjectNodeDataService {
   constructor(
@@ -19,6 +19,27 @@ export class ProjectNodeDataService {
     //if (kvData) return kvData;
 
     const data = await this.getFromDbAsync(projectId);
+
+    for (const d of data) {
+      //
+      if (!d.parentId) {
+        if (d.phase && d.phase.parentId) {
+          d.parentId = d.phase.parentId;
+
+          delete d.phase.parentId;
+          await this.putAsync(d);
+        }
+      }
+      if (d.discipline)
+        for (const dd of d.discipline) {
+          if (dd.parentId) {
+            delete dd.parentId;
+            delete dd.isPhaseNode;
+            delete dd.phaseId;
+            await this.putAsync(d);
+          }
+        }
+    }
 
     //if (data) this.edge.putLater(kvName, JSON.stringify(data));
 

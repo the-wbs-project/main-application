@@ -1,6 +1,32 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
+import { ClearEditor } from '@wbs/components/_features';
+import {
+  ExtractPhaseNodeView,
+  ListItem,
+  Project,
+  PROJECT_FILTER,
+  PROJECT_NODE_VIEW,
+  PROJECT_NODE_VIEW_TYPE,
+  PROJECT_VIEW_TYPE,
+  WbsNode,
+} from '@wbs/shared/models';
+import {
+  ContainerService,
+  DataServiceFactory,
+  Messages,
+  WbsTransformers,
+} from '@wbs/shared/services';
+import {
+  WbsDisciplineNodeView,
+  WbsPhaseNodeView,
+} from '@wbs/shared/view-models';
+import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
   DownloadNodes,
   ProcessUploadedNodes,
   ProjectNodeViewChanged,
@@ -12,40 +38,16 @@ import {
   VerifyDeleteReasons,
   VerifyProject,
 } from '../actions';
-import {
-  ExtractPhaseNodeView,
-  ListItem,
-  Project,
-  PROJECT_FILTER,
-  PROJECT_NODE_VIEW,
-  PROJECT_NODE_VIEW_TYPE,
-  PROJECT_VIEW_TYPE,
-  WbsDisciplineNode,
-  WbsNode,
-  WbsPhaseNode,
-} from '@wbs/shared/models';
-import {
-  ContainerService,
-  DataServiceFactory,
-  Messages,
-  WbsTransformers,
-} from '@wbs/shared/services';
-import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
-import { ClearEditor } from '@wbs/components/_features';
-import { PhaseExtractProcessor } from '../services';
-import {
-  DialogCloseResult,
-  DialogService,
-} from '@progress/kendo-angular-dialog';
 import { ProjectNodeUploadDialogComponent } from '../components';
+import { PhaseExtractProcessor } from '../services';
 
 interface StateModel {
   current?: Project;
   deleteReasons: ListItem[];
-  disciplineNodes?: WbsDisciplineNode[];
+  disciplineNodes?: WbsDisciplineNodeView[];
   nodes?: WbsNode[];
   navType: PROJECT_FILTER | null;
-  phaseNodes?: WbsPhaseNode[];
+  phaseNodes?: WbsPhaseNodeView[];
   viewProject?: PROJECT_VIEW_TYPE;
   viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
@@ -74,12 +76,14 @@ export class ProjectState {
   }
 
   @Selector()
-  static disciplineNodes(state: StateModel): WbsDisciplineNode[] | undefined {
+  static disciplineNodes(
+    state: StateModel
+  ): WbsDisciplineNodeView[] | undefined {
     return state.disciplineNodes;
   }
 
   @Selector()
-  static phaseNodes(state: StateModel): WbsPhaseNode[] | undefined {
+  static phaseNodes(state: StateModel): WbsPhaseNodeView[] | undefined {
     return state.phaseNodes;
   }
 
@@ -294,7 +298,6 @@ export class ProjectState {
   @Action(UploadNodes)
   uploadNodes(ctx: StateContext<StateModel>): Observable<any> {
     const state = ctx.getState();
-    const project = state.current!;
 
     const ref = this.dialog.open({
       content: ProjectNodeUploadDialogComponent,
@@ -326,7 +329,6 @@ export class ProjectState {
     action: ProcessUploadedNodes
   ): Observable<any> {
     const state = ctx.getState();
-    const project = state.current!;
 
     if (state.viewNode === PROJECT_NODE_VIEW.PHASE) {
       return this.uploadPhaseFile(ctx, <ExtractPhaseNodeView[]>action.rows);
@@ -341,16 +343,15 @@ export class ProjectState {
   ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
-
     const results = this.processors.run(
       project.categories.phase,
-      project.categories.discipline,
       this.copy(state.nodes!),
       this.copy(state.phaseNodes!),
       rows,
       true
     );
 
+    console.log(results);
     var saves: Observable<any>[] = [];
 
     if (results.cats !== project.categories.phase) {

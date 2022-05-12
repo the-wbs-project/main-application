@@ -13,7 +13,8 @@ import {
   faTrashCan,
 } from '@fortawesome/pro-solid-svg-icons';
 import { Select, Store } from '@ngxs/store';
-import { Activity, ListItem, WbsNodeView } from '@wbs/shared/models';
+import { Activity, ListItem } from '@wbs/shared/models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { Resources } from '@wbs/shared/services';
 import { Observable } from 'rxjs';
 import { EditorViewChanged } from './actions';

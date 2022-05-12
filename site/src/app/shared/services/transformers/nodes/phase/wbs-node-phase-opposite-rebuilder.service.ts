@@ -1,11 +1,12 @@
 import { Store } from '@ngxs/store';
-import { ListItem, Project, WbsNode, WbsPhaseNode } from '@wbs/shared/models';
+import { ListItem, Project, WbsNode } from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
+import { WbsPhaseNodeView } from '@wbs/shared/view-models';
 import { Resources } from '../../../resource.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 import { WbsNodePhaseTransformer } from './wbs-node-phase.service';
 
-export class WbsNodePhaseOppositeRebuilderTransformer {
+export class WbsNodePhaseOppositeRebuilder {
   private readonly viewTransformer: WbsNodePhaseTransformer;
 
   constructor(
@@ -38,13 +39,20 @@ export class WbsNodePhaseOppositeRebuilderTransformer {
 
     const views = this.viewTransformer.run(project, projectNodes);
 
-    for (let i = 0; i < disciplines.length; i++) {
-      const cat = disciplines[i];
+    for (let i = 0; i < project.categories.discipline.length; i++) {
+      const d = project.categories.discipline[i];
+      const dId = typeof d === 'string' ? d : d.id;
       const parentlevel = [i + 1];
+      let phaseCounter = 1;
 
       for (const phaseId of project.categories.phase) {
-        const viewId = views.find((x) => x.id === phaseId);
-        //const node
+        const view = views.find((x) => x.id === phaseId)!;
+
+        if (view.disciplines?.indexOf(dId) === -1) continue;
+
+        const phaseLevel = [...parentlevel, phaseCounter];
+
+        phaseCounter++;
       }
     }
     return changedIds;
@@ -52,7 +60,7 @@ export class WbsNodePhaseOppositeRebuilderTransformer {
 
   private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
     return (list ?? [])
-      .filter((x) => !x.removed && x.phase?.parentId === parentId)
+      .filter((x) => !x.removed && x.parentId === parentId)
       .sort(WbsNodeService.phaseSort);
   }
 
@@ -62,12 +70,12 @@ export class WbsNodePhaseOppositeRebuilderTransformer {
     parentLevel: number[],
     list: WbsNode[],
     isLockedToParent: boolean
-  ): WbsPhaseNode[] {
-    const results: WbsPhaseNode[] = [];
+  ): WbsPhaseNodeView[] {
+    const results: WbsPhaseNodeView[] = [];
 
     for (const child of this.getSortedChildren(parentId, list)) {
       const childLevel = [...parentLevel, child.phase!.order];
-      const node: WbsPhaseNode = {
+      const node: WbsPhaseNodeView = {
         children: 0,
         description: child.description,
         disciplines: child.disciplineIds,
@@ -104,7 +112,7 @@ export class WbsNodePhaseOppositeRebuilderTransformer {
     return results;
   }
 
-  private getChildCount(children: WbsPhaseNode[]): number {
+  private getChildCount(children: WbsPhaseNodeView[]): number {
     return children
       .map((x) => x.children + 1)
       .reduce((partialSum, a) => partialSum + a, 0);

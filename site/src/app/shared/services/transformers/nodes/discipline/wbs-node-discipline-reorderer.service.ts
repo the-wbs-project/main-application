@@ -12,6 +12,7 @@ export class WbsDisciplineReorderer {
     parentId: string,
     nodes: WbsNode[]
   ): number {
+    return 0; /*
     const levels = <WbsNodeDisciplineRelationship[]>(
       nodes
         .map((x) =>
@@ -22,7 +23,7 @@ export class WbsDisciplineReorderer {
         .filter((x) => x != null && x != undefined)
     );
 
-    return Math.max(...levels.map((x) => x.order));
+    return Math.max(...levels.map((x) => x.order));*/
   }
 
   run(project: Project, nodes: WbsNode[]): string[] {
@@ -66,11 +67,11 @@ export class WbsDisciplineReorderer {
     for (const node of list ?? []) {
       if (node.discipline == null || node.removed) continue;
 
-      const r = node.discipline.find(
+      /*const r = node.discipline.find(
         (x) => x.disciplineId === disciplineId && x.parentId === parentId
       );
 
-      if (r) results.push([node, r]);
+      if (r) results.push([node, r]);*/
     }
 
     return results.sort(WbsNodeService.disciplineSort);

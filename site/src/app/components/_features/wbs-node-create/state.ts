@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import {
   DialogCloseResult,
   DialogRef,
@@ -9,9 +9,9 @@ import {
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
   WbsNode,
-  WbsNodeView,
 } from '@wbs/shared/models';
 import { ContainerService, Resources } from '@wbs/shared/services';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import {
   CloseNodeCreationDialog,
   DialogViewSelected,
@@ -246,11 +246,11 @@ export class NodeCreationState {
     const state = ctx.getState();
     const model: WbsNode = {
       id: '',
+      parentId: state.parent!.id,
       description: state.description,
       disciplineIds: state.disciplines,
       title: state.title,
       phase: {
-        parentId: state.parent!.id,
         isDisciplineNode: false,
         syncWithDisciplines: state.syncWithDisciplines,
         order: -1,
@@ -262,9 +262,6 @@ export class NodeCreationState {
       model.discipline!.push({
         disciplineId: discipline,
         order: -1,
-        parentId: '??',
-        isPhaseNode: false,
-        phaseId: undefined,
       });
     }
   }

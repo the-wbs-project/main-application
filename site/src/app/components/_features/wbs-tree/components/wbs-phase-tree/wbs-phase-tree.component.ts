@@ -13,12 +13,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
-import {
-  Project,
-  PROJECT_NODE_VIEW,
-  WbsNodeView,
-  WbsPhaseNode,
-} from '@wbs/shared/models';
+import { Project, PROJECT_NODE_VIEW } from '@wbs/shared/models';
+import { WbsNodeView, WbsPhaseNodeView } from '@wbs/shared/view-models';
 import { Subscription } from 'rxjs';
 import { NodeCheck, Position } from '../../models';
 import { WbsPhaseService } from '../../services';
@@ -33,12 +29,12 @@ import { BaseWbsTreeComponent } from '../base-wbs-tree.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class WbsPhaseTreeComponent
-  extends BaseWbsTreeComponent<WbsPhaseNode>
+  extends BaseWbsTreeComponent<WbsPhaseNodeView>
   implements AfterViewInit, OnChanges, OnDestroy
 {
   protected currentSubscription: Subscription | undefined;
 
-  @Input() nodes: WbsPhaseNode[] | null | undefined;
+  @Input() nodes: WbsPhaseNodeView[] | null | undefined;
   @Input() project: Project | null | undefined;
   @Input() toolbar: TemplateRef<any> | undefined;
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
@@ -73,7 +69,7 @@ export class WbsPhaseTreeComponent
       newParentsAllowed: true,
     };
     let row: WbsNodeView | undefined = this.targetedItem;
-    const list = <WbsPhaseNode[]>this.tree$.getValue()!;
+    const list = <WbsPhaseNodeView[]>this.tree$.getValue()!;
     //
     //  If the we are trying to drag a node that is locked to a parent, make sure that's not happening
     //

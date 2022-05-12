@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { WbsNodeView } from '@wbs/shared/models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 
 @Injectable()
 export class WbsPhaseService {

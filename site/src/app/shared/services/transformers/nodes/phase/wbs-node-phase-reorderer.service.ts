@@ -4,9 +4,7 @@ import { WbsNodeService } from '../../../wbs-node.service';
 export class WbsNodePhaseReorderer {
   getMaxOrder(parentId: string, nodes: WbsNode[]): number {
     return Math.max(
-      ...nodes
-        .filter((x) => x.phase?.parentId === parentId)
-        .map((x) => x.phase!.order)
+      ...nodes.filter((x) => x.parentId === parentId).map((x) => x.phase!.order)
     );
   }
 
@@ -47,7 +45,7 @@ export class WbsNodePhaseReorderer {
     list: WbsNode[] | undefined
   ): WbsNode[] {
     return (list ?? [])
-      .filter((x) => !x.removed && x.phase?.parentId === parentId)
+      .filter((x) => !x.removed && x.parentId === parentId)
       .sort(WbsNodeService.phaseSort);
   }
 

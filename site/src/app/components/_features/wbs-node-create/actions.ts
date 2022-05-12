@@ -1,4 +1,5 @@
-import { PROJECT_NODE_VIEW_TYPE, WbsNodeView } from '@wbs/shared/models';
+import { PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 
 export class OpenNodeCreationDialog {
   static readonly type = '[Node Creation] Open Dialog';

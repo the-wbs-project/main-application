@@ -1,13 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import {
-  ExtractPhaseNodeView,
-  ListItem,
-  WbsNode,
-  WbsPhaseNode,
-} from '@wbs/shared/models';
+import { ExtractPhaseNodeView, ListItem, WbsNode } from '@wbs/shared/models';
 import { IdService } from '@wbs/shared/services';
 import { MetadataState } from '@wbs/shared/states';
+import { WbsPhaseNodeView } from '@wbs/shared/view-models';
 import { ExtractResults } from '../models';
 import { TextCompareService } from './text-compare.service';
 
@@ -22,14 +18,13 @@ export class PhaseExtractProcessor {
 
   run(
     projectPhases: (string | ListItem)[],
-    projectDisciplines: (string | ListItem)[],
     originals: WbsNode[],
-    viewModels: WbsPhaseNode[],
+    viewModels: WbsPhaseNodeView[],
     fromExtract: ExtractPhaseNodeView[],
     inheritDisciplines: boolean
   ): ExtractResults {
     const fromExtractMap = new Map<string, ExtractPhaseNodeView>();
-    const upsertVms: (ExtractPhaseNodeView | WbsPhaseNode)[] = [];
+    const upsertVms: (ExtractPhaseNodeView | WbsPhaseNodeView)[] = [];
     const phases: (string | ListItem)[] = [];
     const phaseIds: string[] = [];
     const cats = this.store.selectSnapshot(MetadataState.phaseCategories);
@@ -105,10 +100,8 @@ export class PhaseExtractProcessor {
     if (inheritDisciplines) this.inheritDisciplines(fromExtract);
     //
     //  Now let's look through the rows and find out what tasks has been changed
-    // 
+    //
     for (var node of fromExtract) {
-      if (phaseIds.indexOf(node.id) > -1) continue;
-
       var match = viewModels.find((x) => x.id === node.id);
 
       if (match) {
@@ -147,7 +140,7 @@ export class PhaseExtractProcessor {
     //  Convert the upserts
     //
     var upserts: WbsNode[] = [];
-    const syncIds = upsertVms
+    const syncIds: (string | null)[] = upsertVms
       .filter((x) => x.syncWithDisciplines)
       .map((x) => x.id);
 
@@ -159,9 +152,9 @@ export class PhaseExtractProcessor {
         model.title = vm.title;
         model.description = vm.description;
         model.disciplineIds = vm.disciplines;
+        model.parentId = vm.parentId;
         model.phase = {
           order: vm.order,
-          parentId: vm.parentId!,
           isDisciplineNode: false,
           syncWithDisciplines: vm.syncWithDisciplines,
         };
@@ -171,15 +164,15 @@ export class PhaseExtractProcessor {
           title: vm.title,
           description: vm.description,
           disciplineIds: vm.disciplines,
+          parentId: vm.parentId,
           phase: {
             order: vm.order,
-            parentId: vm.parentId!,
             isDisciplineNode: false,
             syncWithDisciplines: vm.syncWithDisciplines,
           },
         };
       }
-      const parentId = model.phase!.parentId;
+      const parentId = model.parentId;
       //
       //  Now let's check if parent is a sync and if disciplines match
       //

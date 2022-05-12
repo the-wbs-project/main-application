@@ -5,8 +5,8 @@ import {
   Project,
   PROJECT_NODE_VIEW_TYPE,
   UploadResults,
-  WbsPhaseNode,
 } from '@wbs/shared/models';
+import { WbsPhaseNodeView } from '@wbs/shared/view-models';
 import { map, Observable } from 'rxjs';
 
 export class ExtractDataService {
@@ -47,7 +47,7 @@ export class ExtractDataService {
     );
   }
 
-  private convertPhaseRows(rows: WbsPhaseNode[]): ExtractPhaseNodeView[] {
+  private convertPhaseRows(rows: WbsPhaseNodeView[]): ExtractPhaseNodeView[] {
     const results: ExtractPhaseNodeView[] = [];
 
     for (const row of rows) {
