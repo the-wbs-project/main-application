@@ -9,11 +9,7 @@ import {
   PROJECT_VIEW_TYPE,
 } from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
-import {
-  WbsDisciplineNodeView,
-  WbsNodeView,
-  WbsPhaseNodeView,
-} from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { Observable, of, tap } from 'rxjs';
 import {
   NodeEditorState,
@@ -40,14 +36,9 @@ export class ProjectsViewComponent {
   @Select(NodeEditorState.show) show$: Observable<boolean> | undefined;
   @Select(ProjectState.current) project$!: Observable<Project>;
   @Select(ProjectState.viewNode) viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;
+  @Select(ProjectState.nodeViews) nodeViews$!: Observable<WbsNodeView[]>;
   @Select(ProjectState.viewProject)
   viewProject$!: Observable<PROJECT_VIEW_TYPE>;
-
-  @Select(ProjectState.disciplineNodes)
-  disciplineNodes$!: Observable<WbsDisciplineNodeView[]>;
-
-  @Select(ProjectState.phaseNodes)
-  phaseNodes$!: Observable<WbsPhaseNodeView[]>;
 
   readonly faDownload = faDownload;
   readonly faUpload = faUpload;

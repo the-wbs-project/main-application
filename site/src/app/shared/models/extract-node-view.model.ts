@@ -1,4 +1,4 @@
-export interface ExtractNodeView {
+export interface ExtractNodeViewOld {
   id: string;
   levelText: string;
   depth: number;
@@ -9,6 +9,6 @@ export interface ExtractNodeView {
   parentId: string | null;
   phaseId: string | undefined;
 }
-export interface ExtractPhaseNodeView extends ExtractNodeView {
+export interface ExtractPhaseNodeViewOld extends ExtractNodeViewOld {
   syncWithDisciplines?: boolean;
 }

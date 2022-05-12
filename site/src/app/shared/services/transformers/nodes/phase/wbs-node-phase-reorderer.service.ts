@@ -4,7 +4,7 @@ import { WbsNodeService } from '../../../wbs-node.service';
 export class WbsNodePhaseReorderer {
   getMaxOrder(parentId: string, nodes: WbsNode[]): number {
     return Math.max(
-      ...nodes.filter((x) => x.parentId === parentId).map((x) => x.phase!.order)
+      ...nodes.filter((x) => x.parentId === parentId).map((x) => x.order)
     );
   }
 
@@ -28,25 +28,16 @@ export class WbsNodePhaseReorderer {
     nodes: WbsNode[]
   ): string[] {
     const changed: string[] = [];
-    const children = this.getSortedChildren(parentId, nodes);
+    const children = WbsNodeService.getSortedChildrenForPhase(parentId, nodes);
 
     for (var i = 0; i < children.length; i++) {
       const levels = [...parentLevels, i + 1];
 
-      children[i].phase!.order = i;
+      children[i].order = i;
 
       changed.push(...this.reorder(levels, children[i].id, nodes));
     }
     return changed;
-  }
-
-  private getSortedChildren(
-    parentId: string,
-    list: WbsNode[] | undefined
-  ): WbsNode[] {
-    return (list ?? [])
-      .filter((x) => !x.removed && x.parentId === parentId)
-      .sort(WbsNodeService.phaseSort);
   }
 
   private getCatId(cat: string | ListItem): string {

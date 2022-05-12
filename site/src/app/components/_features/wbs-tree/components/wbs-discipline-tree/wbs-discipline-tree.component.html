@@ -10,8 +10,8 @@
   <kendo-treelist
     #treelist
     [kendoTreeListFlatBinding]="tree"
-    parentIdField="parentId"
-    idField="id"
+    parentIdField="treeParentId"
+    idField="treeId"
     kendoTreeListExpandable
     [initiallyExpanded]="true"
     [(expandedKeys)]="expandedKeys"
@@ -41,26 +41,6 @@
       field="title"
       [title]="'Wbs.Task' | translate"
     >
-    </kendo-treelist-column>
-    <kendo-treelist-column
-      field="phases"
-      [width]="100"
-      class="phase-column"
-      headerClass="phase-column"
-    >
-      <ng-template
-        kendoTreeListHeaderTemplate
-        kendoPopoverContainer
-        showOn="hover"
-        filter="fa-duotone-icon"
-        [popover]="legendPopup"
-      >
-        {{ "Wbs.Phase" | translate }} &nbsp;
-        <fa-duotone-icon [icon]="faCircleQuestion"></fa-duotone-icon>
-      </ng-template>
-      <ng-template kendoTreeListCellTemplate let-dataItem>
-        <span style="font-size: 8px">Coming soon...</span>
-      </ng-template>
     </kendo-treelist-column>
   </kendo-treelist>
 </div>

@@ -30,6 +30,14 @@ export class ProjectNodeDataService {
           await this.putAsync(d);
         }
       }
+      if (!d.order) {
+        if (d.phase && d.phase.order) {
+          d.order = d.phase.order;
+
+          delete d.phase.order;
+          await this.putAsync(d);
+        }
+      }
       if (d.discipline)
         for (const dd of d.discipline) {
           if (dd.parentId) {

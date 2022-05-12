@@ -26,15 +26,15 @@ import {
 } from '@progress/kendo-angular-treelist';
 
 @Injectable()
-export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
+export abstract class BaseWbsTreeComponent {
   protected dataReady = false;
   private newParentId!: any;
   private isParentDragged: boolean = false;
   protected abstract currentSubscription: Subscription | undefined;
 
   draggedRowEl!: HTMLTableRowElement;
-  draggedItem!: T;
-  targetedItem!: T;
+  draggedItem!: WbsNodeView;
+  targetedItem!: WbsNodeView;
   expandedKeys: number[] = [];
   settings: SelectableSettings = {
     enabled: true,
@@ -46,7 +46,7 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
   selectedItems: any[] = [];
   abstract readonly selectedChanged: EventEmitter<WbsNodeView>;
 
-  readonly tree$ = new BehaviorSubject<T[] | undefined>(undefined);
+  readonly tree$ = new BehaviorSubject<WbsNodeView[] | undefined>(undefined);
 
   constructor(
     private readonly renderer: Renderer2,
@@ -54,7 +54,7 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
     private readonly zone: NgZone
   ) {}
 
-  getContextData = (anchor: any): T => {
+  getContextData = (anchor: any): WbsNodeView => {
     return this.tree$.getValue()!.find((x) => x.id === anchor.id)!;
   };
 
@@ -112,7 +112,7 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
       dragStart.subscribe((e: DragEvent) => {
         this.draggedRowEl = <HTMLTableRowElement>e.target;
         if (this.draggedRowEl.tagName === 'TR') {
-          this.draggedItem = <T>(
+          this.draggedItem = <WbsNodeView>(
             findDataItem(this.tree$.getValue()!, this.draggedRowEl)
           );
         }
@@ -131,10 +131,10 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
           const currentRow = <HTMLTableRowElement>closest(element, tableRow);
           const list = this.tree$.getValue()!;
 
-          this.targetedItem = <T>findDataItem(list, currentRow);
+          this.targetedItem = <WbsNodeView>findDataItem(list, currentRow);
 
           // Prevent dragging parent row in its children
-          let row: T | undefined = this.targetedItem;
+          let row: WbsNodeView | undefined = this.targetedItem;
           this.isParentDragged = false;
 
           //
@@ -227,7 +227,7 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
           //
           const newTree = this.wbsService.rebuildLevels(tree);
 
-          this.zone.run(() => this.tree$.next(<T[]>newTree));
+          this.zone.run(() => this.tree$.next(<WbsNodeView[]>newTree));
         }
       })
     );
@@ -261,7 +261,7 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
   }
 
   private reposition(
-    list: T[],
+    list: WbsNodeView[],
     target: HTMLTableRowElement,
     position: Position,
     newParentsAllowed: boolean
@@ -313,7 +313,7 @@ export abstract class BaseWbsTreeComponent<T extends WbsNodeView> {
   //
   //  This moves the item which was dragged to just behind the target (dropped on) item.
   //
-  private reorderRows(list: T[], index: number): void {
+  private reorderRows(list: WbsNodeView[], index: number): void {
     const draggedIndex = list.findIndex((x) => x.id === this.draggedItem.id);
     list.splice(draggedIndex, 1);
 

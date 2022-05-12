@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { Project, PROJECT_NODE_VIEW } from '@wbs/shared/models';
-import { WbsDisciplineNodeView, WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { Subscription } from 'rxjs';
 import { NodeCheck } from '../../models';
 import { WbsPhaseService } from '../../services';
@@ -29,12 +29,12 @@ import { BaseWbsTreeComponent } from '../base-wbs-tree.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class WbsDisciplineTreeComponent
-  extends BaseWbsTreeComponent<WbsDisciplineNodeView>
+  extends BaseWbsTreeComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   protected currentSubscription: Subscription | undefined;
 
-  @Input() nodes: WbsDisciplineNodeView[] | null | undefined;
+  @Input() nodes: WbsNodeView[] | null | undefined;
   @Input() project: Project | null | undefined;
   @Input() toolbar: TemplateRef<any> | undefined;
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();

@@ -1,12 +1,27 @@
+import {
+  WbsNodeDisciplineRelationship,
+  WbsNodePhaseRelationship,
+} from '../models';
+
+export interface WbsNodePhaseView extends WbsNodePhaseRelationship {
+  isLockedToParent?: boolean;
+}
+
 export interface WbsNodeView {
-  children: number;
-  description: string | null;
-  disciplines?: string[] | null;
   id: string;
+  treeId: string;
+
+  parentId: string | null;
+  treeParentId: string | null;
+
+  children: number;
+  description?: string | null;
+  disciplines?: string[] | null;
   levels: number[];
   levelText: string;
   order: number;
-  parentId: string | null;
   phaseId: string | undefined;
   title: string;
+  phaseInfo?: WbsNodePhaseView;
+  disciplineInfo?: WbsNodeDisciplineRelationship;
 }

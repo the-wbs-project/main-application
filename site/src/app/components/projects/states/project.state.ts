@@ -6,7 +6,6 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { ClearEditor } from '@wbs/components/_features';
 import {
-  ExtractPhaseNodeView,
   ListItem,
   Project,
   PROJECT_FILTER,
@@ -21,10 +20,7 @@ import {
   Messages,
   WbsTransformers,
 } from '@wbs/shared/services';
-import {
-  WbsDisciplineNodeView,
-  WbsPhaseNodeView,
-} from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   DownloadNodes,
@@ -44,10 +40,9 @@ import { PhaseExtractProcessor } from '../services';
 interface StateModel {
   current?: Project;
   deleteReasons: ListItem[];
-  disciplineNodes?: WbsDisciplineNodeView[];
   nodes?: WbsNode[];
+  nodeViews?: WbsNodeView[];
   navType: PROJECT_FILTER | null;
-  phaseNodes?: WbsPhaseNodeView[];
   viewProject?: PROJECT_VIEW_TYPE;
   viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
@@ -76,15 +71,8 @@ export class ProjectState {
   }
 
   @Selector()
-  static disciplineNodes(
-    state: StateModel
-  ): WbsDisciplineNodeView[] | undefined {
-    return state.disciplineNodes;
-  }
-
-  @Selector()
-  static phaseNodes(state: StateModel): WbsPhaseNodeView[] | undefined {
-    return state.phaseNodes;
+  static nodeViews(state: StateModel): WbsNodeView[] | undefined {
+    return state.nodeViews;
   }
 
   @Selector()
@@ -173,16 +161,14 @@ export class ProjectState {
 
     if (state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE) {
       ctx.patchState({
-        disciplineNodes: this.transformers.nodes.discipline.view.run(
+        nodeViews: this.transformers.nodes.discipline.view.run(
           state.current,
           state.nodes
         ),
-        phaseNodes: undefined,
       });
     } else {
       ctx.patchState({
-        disciplineNodes: undefined,
-        phaseNodes: this.transformers.nodes.phase.view.run(
+        nodeViews: this.transformers.nodes.phase.view.run(
           state.current,
           state.nodes
         ),
@@ -247,9 +233,9 @@ export class ProjectState {
     changedIds.push(
       ...this.transformers.nodes.phase.reorderer.run(state.current!, nodes)
     );
-    changedIds.push(
+    /*changedIds.push(
       ...this.transformers.nodes.discipline.reorderer.run(state.current!, nodes)
-    );
+    );*/
     const changed: Observable<void>[] = [];
     const parentId = state.current!.id;
 
@@ -281,16 +267,12 @@ export class ProjectState {
   @Action(DownloadNodes)
   downloadNodes(ctx: StateContext<StateModel>): Observable<void> {
     const state = ctx.getState();
-    const rows =
-      state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE
-        ? state.disciplineNodes
-        : state.phaseNodes;
 
     this.messages.info('General.RetrievingData');
 
     return this.data.extracts.downloadNodesAsync(
       state.current!,
-      rows!,
+      state.nodeViews!,
       state.viewNode!
     );
   }
@@ -308,14 +290,11 @@ export class ProjectState {
     comp.viewNode = state.viewNode;
 
     return ref.result.pipe(
-      switchMap((result: DialogCloseResult | any[]) => {
+      switchMap((result: DialogCloseResult | WbsNodeView[]) => {
         if (result instanceof DialogCloseResult) {
           return of(null);
         } else if (state.viewNode === PROJECT_NODE_VIEW.PHASE) {
-          return ctx.dispatch(
-            new ProcessUploadedNodes(<ExtractPhaseNodeView[]>result)
-          );
-          //return this.uploadPhaseFile(ctx, <ExtractPhaseNodeView[]>result);
+          return ctx.dispatch(new ProcessUploadedNodes(result));
         } else {
           return of(null);
         }
@@ -331,7 +310,7 @@ export class ProjectState {
     const state = ctx.getState();
 
     if (state.viewNode === PROJECT_NODE_VIEW.PHASE) {
-      return this.uploadPhaseFile(ctx, <ExtractPhaseNodeView[]>action.rows);
+      return this.uploadPhaseFile(ctx, action.rows);
     } else {
       return of(null);
     }
@@ -339,14 +318,14 @@ export class ProjectState {
 
   private uploadPhaseFile(
     ctx: StateContext<StateModel>,
-    rows: ExtractPhaseNodeView[]
+    rows: WbsNodeView[]
   ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
     const results = this.processors.run(
       project.categories.phase,
       this.copy(state.nodes!),
-      this.copy(state.phaseNodes!),
+      this.copy(state.nodeViews!),
       rows,
       true
     );

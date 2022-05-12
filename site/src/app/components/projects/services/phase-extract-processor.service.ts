@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ExtractPhaseNodeView, ListItem, WbsNode } from '@wbs/shared/models';
-import { IdService } from '@wbs/shared/services';
+import { ListItem, WbsNode } from '@wbs/shared/models';
+import { IdService, Utils } from '@wbs/shared/services';
 import { MetadataState } from '@wbs/shared/states';
-import { WbsPhaseNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { ExtractResults } from '../models';
 import { TextCompareService } from './text-compare.service';
 
@@ -19,12 +19,12 @@ export class PhaseExtractProcessor {
   run(
     projectPhases: (string | ListItem)[],
     originals: WbsNode[],
-    viewModels: WbsPhaseNodeView[],
-    fromExtract: ExtractPhaseNodeView[],
+    viewModels: WbsNodeView[],
+    fromExtract: WbsNodeView[],
     inheritDisciplines: boolean
   ): ExtractResults {
-    const fromExtractMap = new Map<string, ExtractPhaseNodeView>();
-    const upsertVms: (ExtractPhaseNodeView | WbsPhaseNodeView)[] = [];
+    const fromExtractMap = new Map<string, WbsNodeView>();
+    const upsertVms: (WbsNodeView | WbsNodeView)[] = [];
     const phases: (string | ListItem)[] = [];
     const phaseIds: string[] = [];
     const cats = this.store.selectSnapshot(MetadataState.phaseCategories);
@@ -107,6 +107,9 @@ export class PhaseExtractProcessor {
       if (match) {
         var changed = false;
 
+        if (!match.phaseInfo) match.phaseInfo = {};
+        if (!node.phaseInfo) node.phaseInfo = {};
+
         if (match.title != node.title) {
           match.title = node.title;
           changed = true;
@@ -115,12 +118,16 @@ export class PhaseExtractProcessor {
           match.description = node.description;
           changed = true;
         }
-        if (!this.areArraysEqual(match.disciplines, node.disciplines)) {
+        if (!Utils.areArraysEqual(match.disciplines, node.disciplines)) {
           match.disciplines = node.disciplines;
           changed = true;
         }
-        if (match.syncWithDisciplines != node.syncWithDisciplines) {
-          match.syncWithDisciplines = node.syncWithDisciplines;
+        if (
+          match.phaseInfo.syncWithDisciplines !=
+          node.phaseInfo.syncWithDisciplines
+        ) {
+          match.phaseInfo.syncWithDisciplines =
+            node.phaseInfo.syncWithDisciplines;
           changed = true;
         }
         if (match.parentId != node.parentId) {
@@ -141,7 +148,7 @@ export class PhaseExtractProcessor {
     //
     var upserts: WbsNode[] = [];
     const syncIds: (string | null)[] = upsertVms
-      .filter((x) => x.syncWithDisciplines)
+      .filter((x) => x.phaseInfo?.syncWithDisciplines)
       .map((x) => x.id);
 
     for (const vm of upsertVms) {
@@ -153,10 +160,10 @@ export class PhaseExtractProcessor {
         model.description = vm.description;
         model.disciplineIds = vm.disciplines;
         model.parentId = vm.parentId;
+        model.order = vm.order;
         model.phase = {
-          order: vm.order,
           isDisciplineNode: false,
-          syncWithDisciplines: vm.syncWithDisciplines,
+          syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
         };
       } else {
         model = {
@@ -165,10 +172,10 @@ export class PhaseExtractProcessor {
           description: vm.description,
           disciplineIds: vm.disciplines,
           parentId: vm.parentId,
+          order: vm.order,
           phase: {
-            order: vm.order,
             isDisciplineNode: false,
-            syncWithDisciplines: vm.syncWithDisciplines,
+            syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
           },
         };
       }
@@ -193,7 +200,7 @@ export class PhaseExtractProcessor {
   }
 
   private updateParentIds(
-    fromExtractMap: Map<string, ExtractPhaseNodeView>,
+    fromExtractMap: Map<string, WbsNodeView>,
     phaseId: string,
     parentId: string,
     parentLevel: string
@@ -215,20 +222,23 @@ export class PhaseExtractProcessor {
     }
   }
 
-  private inheritDisciplines(rows: ExtractPhaseNodeView[]) {
-    var byId = new Map<string, ExtractPhaseNodeView>();
+  private inheritDisciplines(rows: WbsNodeView[]) {
+    var byId = new Map<string, WbsNodeView>();
+    var depths = new Map<number, WbsNodeView[]>();
 
     for (const row of rows) {
-      row.depth = row.levelText.split('.').length;
+      const depth = row.levelText.split('.').length;
 
       byId.set(row.id, row);
+
+      if (depths.has(depth)) depths.get(depth)?.push(row);
+      else depths.set(depth, [row]);
     }
-    var level = Math.max(...rows.map((x) => x.depth));
+    var level = Math.max(...depths.keys());
 
     for (let i = level; i >= 0; i--) {
-      for (const row of rows) {
-        if (row.depth !== i || row.parentId == null || row.disciplines == null)
-          continue;
+      for (const row of depths.get(i)!) {
+        if (row.parentId == null || row.disciplines == null) continue;
 
         const parent = byId.get(row.parentId)!;
 
@@ -245,26 +255,5 @@ export class PhaseExtractProcessor {
 
   private compare(s1: string, s2: string): boolean {
     return this.textComparer.similarity(s1, s2) >= this.tolerance;
-  }
-
-  private areArraysEqual(
-    a: string[] | null | undefined,
-    b: string[] | null | undefined
-  ): boolean {
-    if (a == null && b == null) return true;
-    if (a != null && b == null) return false;
-    if (a == null && b != null) return false;
-    if (a!.length !== b!.length) return false;
-
-    const b2 = [...b!];
-    for (const x of a!) {
-      const i = b2.indexOf(x);
-
-      if (i === -1) return false;
-
-      b2.splice(i, 1);
-    }
-
-    return b2.length === 0;
   }
 }

@@ -10,8 +10,8 @@
   <kendo-treelist
     #treelist
     [kendoTreeListFlatBinding]="tree"
-    parentIdField="parentId"
-    idField="id"
+    parentIdField="treeParentId"
+    idField="treeId"
     kendoTreeListExpandable
     [initiallyExpanded]="true"
     [(expandedKeys)]="expandedKeys"
@@ -90,6 +90,7 @@
   [animation]="{ duration: 100, type: 'slide', direction: 'left' }"
 >
   <ng-template kendoPopoverBodyTemplate let-anchor>
+    Hi
     <wbs-legend-discipline [idsOrCats]="project?.categories?.discipline ?? []">
     </wbs-legend-discipline>
   </ng-template>

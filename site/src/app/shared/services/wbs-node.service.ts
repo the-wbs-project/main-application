@@ -1,13 +1,9 @@
-import { WbsNode, WbsNodeDisciplineRelationship } from '@wbs/shared/models';
+import { WbsNode } from '@wbs/shared/models';
+import { WbsNodeView } from '../view-models';
 
 export class WbsNodeService {
-  static phaseSort = (a: WbsNode, b: WbsNode) =>
-    (a.phase?.order ?? 0) < (b.phase?.order ?? 0) ? -1 : 1;
-
-  static disciplineSort = (
-    a: [WbsNode, WbsNodeDisciplineRelationship],
-    b: [WbsNode, WbsNodeDisciplineRelationship]
-  ) => (a[1].order < b[1].order ? -1 : 1);
+  static sort = (a: WbsNode | WbsNodeView, b: WbsNode | WbsNodeView) =>
+    (a.order ?? 0) < (b.order ?? 0) ? -1 : 1;
 
   static markAsRemoved(nodes: WbsNode[], id: string): WbsNode[] {
     const edited: WbsNode[] = [];
@@ -22,7 +18,12 @@ export class WbsNodeService {
     return edited;
   }
 
-  static rebuildPhaseSort(nodes: WbsNode[]): void {
-    //
+  static getSortedChildrenForPhase(
+    parentId: string,
+    list: WbsNode[] | undefined
+  ): WbsNode[] {
+    return (list ?? [])
+      .filter((x) => !x.removed && x.parentId === parentId)
+      .sort(WbsNodeService.sort);
   }
 }

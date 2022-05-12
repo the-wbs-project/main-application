@@ -14,7 +14,7 @@ import {
 } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { Project, PROJECT_NODE_VIEW } from '@wbs/shared/models';
-import { WbsNodeView, WbsPhaseNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { Subscription } from 'rxjs';
 import { NodeCheck, Position } from '../../models';
 import { WbsPhaseService } from '../../services';
@@ -29,12 +29,12 @@ import { BaseWbsTreeComponent } from '../base-wbs-tree.component';
   encapsulation: ViewEncapsulation.None,
 })
 export class WbsPhaseTreeComponent
-  extends BaseWbsTreeComponent<WbsPhaseNodeView>
+  extends BaseWbsTreeComponent
   implements AfterViewInit, OnChanges, OnDestroy
 {
   protected currentSubscription: Subscription | undefined;
 
-  @Input() nodes: WbsPhaseNodeView[] | null | undefined;
+  @Input() nodes: WbsNodeView[] | null | undefined;
   @Input() project: Project | null | undefined;
   @Input() toolbar: TemplateRef<any> | undefined;
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
@@ -69,15 +69,15 @@ export class WbsPhaseTreeComponent
       newParentsAllowed: true,
     };
     let row: WbsNodeView | undefined = this.targetedItem;
-    const list = <WbsPhaseNodeView[]>this.tree$.getValue()!;
+    const list = this.tree$.getValue()!;
     //
     //  If the we are trying to drag a node that is locked to a parent, make sure that's not happening
     //
-    if (this.draggedItem.isLockedToParent) {
+    if (this.draggedItem.phaseInfo?.isLockedToParent) {
       results.newParentsAllowed = false;
       console.log('no new parents');
       if (
-        this.draggedItem.isDisciplineNode &&
+        this.draggedItem.phaseInfo?.isDisciplineNode &&
         this.draggedItem.parentId !== this.targetedItem.parentId
       ) {
         console.log('cant drag disicpline nodes to new parents');
@@ -105,7 +105,7 @@ export class WbsPhaseTreeComponent
     //  If you're trying to drop this INTO a discipline sync node, STOP IT!
     //
     if (
-      this.targetedItem.syncWithDisciplines &&
+      this.targetedItem.phaseInfo?.syncWithDisciplines &&
       !position.isAfter &&
       !position.isBefore
     ) {
@@ -115,8 +115,8 @@ export class WbsPhaseTreeComponent
     //  If you're trying to drop this before or after a a sync'ed child, STOP IT
     //
     if (
-      !this.draggedItem.isLockedToParent &&
-      this.targetedItem.isLockedToParent &&
+      !this.draggedItem.phaseInfo?.isLockedToParent &&
+      this.targetedItem.phaseInfo?.isLockedToParent &&
       (position.isAfter || position.isBefore)
     ) {
       console.log('youre trying to drop this before or after a a synced child');

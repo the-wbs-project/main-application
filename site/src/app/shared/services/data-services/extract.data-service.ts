@@ -1,12 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from '@progress/kendo-file-saver';
 import {
-  ExtractPhaseNodeView,
   Project,
   PROJECT_NODE_VIEW_TYPE,
   UploadResults,
 } from '@wbs/shared/models';
-import { WbsPhaseNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { map, Observable } from 'rxjs';
 
 export class ExtractDataService {
@@ -20,7 +19,7 @@ export class ExtractDataService {
 
   downloadNodesAsync(
     project: Project,
-    rows: any[],
+    rows: WbsNodeView[],
     view: PROJECT_NODE_VIEW_TYPE
   ): Observable<void> {
     let view2: string = view[0].toUpperCase() + view.substring(1);
@@ -29,7 +28,7 @@ export class ExtractDataService {
     return this.http
       .post(
         `projects/${this.ownerId}/${project.id}/extracts/${view}/download`,
-        this.convertPhaseRows(rows),
+        rows,
         {
           responseType: 'blob' as 'json',
         }
@@ -40,31 +39,10 @@ export class ExtractDataService {
   updatePhaseAsync(
     projectId: string,
     file: ArrayBuffer
-  ): Observable<UploadResults<ExtractPhaseNodeView>> {
-    return this.http.post<UploadResults<ExtractPhaseNodeView>>(
+  ): Observable<UploadResults<WbsNodeView>> {
+    return this.http.post<UploadResults<WbsNodeView>>(
       `projects/${this.ownerId}/${projectId}/extracts/phase/upload`,
       file
     );
-  }
-
-  private convertPhaseRows(rows: WbsPhaseNodeView[]): ExtractPhaseNodeView[] {
-    const results: ExtractPhaseNodeView[] = [];
-
-    for (const row of rows) {
-      results.push({
-        description: row.description,
-        disciplines: row.disciplines,
-        id: row.id,
-        levelText: row.levelText,
-        order: row.order,
-        syncWithDisciplines: row.syncWithDisciplines,
-        title: row.title,
-        phaseId: row.phaseId,
-        parentId: row.parentId,
-        depth: 0,
-      });
-    }
-
-    return results;
   }
 }

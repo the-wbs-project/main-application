@@ -36,16 +36,16 @@
             <kendo-splitter-pane [collapsible]="false">
               <div class="pane-content" *ngIf="project$ | async; let project">
                 <wbs-phase-tree
-                  *ngIf="phaseNodes$ | async; let nodes"
-                  [nodes]="nodes"
+                  *ngIf="(viewNode$ | async) === 'phase'"
+                  [nodes]="nodeViews$ | async"
                   [project]="project"
                   [toolbar]="toolbar"
                   (selectedChanged)="nodeSelected(project, $event)"
                 >
                 </wbs-phase-tree>
                 <wbs-discipline-tree
-                  *ngIf="disciplineNodes$ | async; let nodes"
-                  [nodes]="nodes"
+                  *ngIf="(viewNode$ | async) === 'discipline'"
+                  [nodes]="nodeViews$ | async"
                   [project]="project"
                   [toolbar]="toolbar"
                   (selectedChanged)="nodeSelected(project, $event)"

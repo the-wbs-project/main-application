@@ -250,10 +250,10 @@ export class NodeCreationState {
       description: state.description,
       disciplineIds: state.disciplines,
       title: state.title,
+      order: -1,
       phase: {
         isDisciplineNode: false,
         syncWithDisciplines: state.syncWithDisciplines,
-        order: -1,
       },
       discipline: [],
     };
@@ -261,7 +261,6 @@ export class NodeCreationState {
     for (const discipline of state.disciplines) {
       model.discipline!.push({
         disciplineId: discipline,
-        order: -1,
       });
     }
   }

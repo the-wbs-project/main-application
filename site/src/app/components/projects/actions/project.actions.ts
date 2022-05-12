@@ -1,9 +1,5 @@
-import {
-  ExtractPhaseNodeView,
-  PROJECT_NODE_VIEW_TYPE,
-  PROJECT_VIEW_TYPE,
-  WbsNode,
-} from '@wbs/shared/models';
+import { PROJECT_NODE_VIEW_TYPE, PROJECT_VIEW_TYPE } from '@wbs/shared/models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';
@@ -48,5 +44,5 @@ export class UploadNodes {
 
 export class ProcessUploadedNodes {
   static readonly type = '[Project] Process Uploaded Nodes';
-  constructor(readonly rows: ExtractPhaseNodeView[]) {}
+  constructor(readonly rows: WbsNodeView[]) {}
 }

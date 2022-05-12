@@ -2,11 +2,12 @@ import { Store } from '@ngxs/store';
 import {
   ListItem,
   Project,
+  PROJECT_NODE_VIEW,
   WbsNode,
   WbsNodeDisciplineRelationship,
 } from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
-import { WbsDisciplineNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/shared/view-models';
 import { Resources } from '../../../resource.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 
@@ -24,31 +25,136 @@ export class WbsDisciplineNodeTransformer {
     return this.store.selectSnapshot(MetadataState.phaseCategories);
   }
 
-  run(project: Project, projectNodes: WbsNode[]): WbsDisciplineNodeView[] {
-    const nodes: WbsDisciplineNodeView[] = [];
-    const categories = <ListItem[]>(
-      project.categories.discipline
-        .map((x) => this.disciplineList.find((c) => c.id === x))
-        .filter((x) => x)
-    );
+  run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
+    const dList = this.disciplineList;
+    const pList = this.phaseList;
+    const disciplines: ListItem[] = [];
+    const phases: ListItem[] = [];
 
-    for (let i = 0; i < categories.length; i++) {
-      const cat = categories[i];
+    for (const d of project.categories.discipline) {
+      if (typeof d === 'string') {
+        const d2 = dList.find((c) => c.id === d);
+
+        if (d2) disciplines.push(d2);
+      } else disciplines.push(d);
+    }
+
+    for (const p of project.categories.phase) {
+      if (typeof p === 'string') {
+        const p2 = pList.find((c) => c.id === p);
+
+        if (p2) phases.push(p2);
+      } else phases.push(p);
+    }
+
+    return project.mainNodeView === PROJECT_NODE_VIEW.DISCIPLINE
+      ? this.fromDisciplineFirst(project, projectNodes, disciplines, phases)
+      : this.fromPhaseFirst(projectNodes, disciplines, phases);
+  }
+
+  private fromPhaseFirst(
+    projectNodes: WbsNode[],
+    disciplines: ListItem[],
+    phases: ListItem[]
+  ): WbsNodeView[] {
+    const nodes: WbsNodeView[] = [];
+
+    for (let i = 0; i < disciplines.length; i++) {
+      const d = disciplines[i];
+
+      const dNode = projectNodes.find((x) => x.id === d.id);
+      const dView: WbsNodeView = {
+        children: 0,
+        description: dNode?.description,
+        disciplines: [d.id],
+        id: d.id,
+        treeId: d.id,
+        levels: [i + 1],
+        levelText: (i + 1).toString(),
+        order: i + 1,
+        parentId: null,
+        treeParentId: null,
+        phaseId: undefined,
+        title: this.resources.get(d.label),
+      };
+      nodes.push(dView);
+
+      let phaseCounter = 1;
+
+      for (const p of phases) {
+        const pNode = projectNodes.find((x) => x.id === p.id);
+        const pLevel = [i + 1, phaseCounter];
+
+        if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
+
+        const pView: WbsNodeView = {
+          children: 0,
+          description: pNode?.description,
+          disciplines: [d.id],
+          id: p.id,
+          treeId: `${d.id}-${p.id}`,
+          levels: pLevel,
+          levelText: pLevel.join('.'),
+          order: phaseCounter,
+          parentId: d.id,
+          treeParentId: d.id,
+          phaseId: p.id,
+          title: this.resources.get(p.label),
+        };
+
+        const children = this.getPhaseChildren(
+          d.id,
+          p.id,
+          p.id,
+          pLevel,
+          projectNodes
+        );
+        pView.children = this.getChildCount(children);
+
+        nodes.push(pView, ...children);
+        phaseCounter++;
+        /*
+        const view = views.find((x) => x.id === phaseId)!;
+
+        if (view.disciplines?.indexOf(dId) === -1) continue;
+
+        results.set(phaseId, dId, phaseCounter);
+
+        this.setChildren(views, results, dId, phaseId);
+
+        phaseCounter++;*/
+      }
+      dView.children = phaseCounter;
+    }
+    return nodes;
+  }
+
+  private fromDisciplineFirst(
+    project: Project,
+    projectNodes: WbsNode[],
+    disciplines: ListItem[],
+    phases: ListItem[]
+  ): WbsNodeView[] {
+    const nodes: WbsNodeView[] = [];
+
+    for (let i = 0; i < disciplines.length; i++) {
+      const cat = disciplines[i];
       const parentlevel = [i + 1];
-      const parent: WbsDisciplineNodeView = {
+      const parent: WbsNodeView = {
         children: 0,
         description: null,
         disciplines: null,
         id: cat.id,
-        isPhaseNode: false,
+        treeId: cat.id,
         levels: [...parentlevel],
         levelText: (i + 1).toString(),
         order: i + 1,
         parentId: null,
+        treeParentId: null,
         phaseId: undefined,
         title: this.resources.get(cat.label),
       };
-      const children = this.getChildren(
+      /*const children = this.getChildren(
         cat.id,
         cat.id,
         parentlevel,
@@ -56,7 +162,7 @@ export class WbsDisciplineNodeTransformer {
       );
       parent.children = this.getChildCount(children);
 
-      nodes.push(parent, ...children);
+      nodes.push(parent, ...children);*/
     }
     return nodes;
   }
@@ -65,39 +171,74 @@ export class WbsDisciplineNodeTransformer {
     disciplineId: string,
     parentId: string,
     list: WbsNode[]
-  ): [WbsNode, WbsNodeDisciplineRelationship][] {
-    const results: [WbsNode, WbsNodeDisciplineRelationship][] = [];
-
-    for (const node of list) {
-      if (node.discipline == null || node.removed) continue;
-
-      /*const r = node.discipline.find(
-        (x) => x.disciplineId === disciplineId && x.parentId === parentId
-      );
-
-      if (r) results.push([node, r]);*/
-    }
-
-    return results.sort(WbsNodeService.disciplineSort);
+  ): WbsNode[] {
+    return list
+      .filter(
+        (x) =>
+          !x.removed &&
+          x.parentId === parentId &&
+          (x.disciplineIds ?? []).indexOf(disciplineId) > -1
+      )
+      .sort(WbsNodeService.sort);
   }
 
-  private getChildren(
+  private getPhaseChildren(
+    disciplineId: string,
+    phaseId: string,
+    parentId: string,
+    parentLevel: number[],
+    list: WbsNode[]
+  ): WbsNodeView[] {
+    const results: WbsNodeView[] = [];
+    const children = this.getSortedChildren(disciplineId, parentId, list);
+
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
+      const childLevel = [...parentLevel, i + 1];
+      const node: WbsNodeView = {
+        id: child.id,
+        parentId: parentId,
+        treeId: `${disciplineId}-${child.id}`,
+        treeParentId: `${disciplineId}-${parentId}`,
+        disciplines: child.disciplineIds,
+        phaseId: phaseId,
+        order: i + 1,
+        levels: childLevel,
+        title: child.title ?? '',
+        description: child.description,
+        levelText: childLevel.join('.'),
+        children: 0,
+      };
+      const myChildren = this.getPhaseChildren(
+        disciplineId,
+        phaseId,
+        child.id,
+        childLevel,
+        list
+      );
+
+      node.children = this.getChildCount(myChildren);
+
+      results.push(node, ...myChildren);
+    }
+    return results;
+  }
+
+  private getDisciplineChildren(
     disciplineId: string,
     parentId: string,
     parentLevel: number[],
     list: WbsNode[]
-  ): WbsDisciplineNodeView[] {
-    const results: WbsDisciplineNodeView[] = [];
+  ): WbsNodeView[] {
+    const results: WbsNodeView[] = [];
 
     for (const childParts of this.getSortedChildren(
       disciplineId,
       parentId,
       list
     )) {
-      const child = childParts[0];
-      const childDisc = childParts[1];
-      const childLevel = [...parentLevel, childDisc.order];
-      /*const node: WbsDisciplineNode = {
+      /*const childLevel = [...parentLevel, childDisc.order];
+      const node: WbsDisciplineNode = {
         id: child.id,
         parentId: parentId,
         disciplines: child.disciplineIds,
@@ -129,7 +270,7 @@ export class WbsDisciplineNodeTransformer {
     return results;
   }
 
-  private getChildCount(children: WbsDisciplineNodeView[]): number {
+  private getChildCount(children: WbsNodeView[]): number {
     return children
       .map((x) => x.children + 1)
       .reduce((partialSum, a) => partialSum + a, 0);
