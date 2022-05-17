@@ -7,7 +7,8 @@ namespace Wbs.Utilities.DataServices
 {
     public class DbService2<T> : DbService where T : class, IIdObject
     {
-        public DbService2(Container container, string globalPartitionKey = null) : base(container, globalPartitionKey)
+        public DbService2(CosmosClient client, string database, string container, string globalPartitionKey = null) 
+            : base(client, database, container, globalPartitionKey)
         {
         }
 

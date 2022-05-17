@@ -1,2 +1,2 @@
-export * from "./cosmos-db.service";
-export * from "./cosmos-factory.service";
+export * from './cosmos-db.service';
+export * from './cosmos-factory.service';

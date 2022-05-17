@@ -1,14 +1,23 @@
 import { ProjectNode } from '../../models';
-import { DbService } from '../database-services';
+import { DbFactory, DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
 //const kvPrefix = 'PROJECTNODES';
 
 export class ProjectNodeDataService {
+  private readonly db: DbService;
+
   constructor(
-    private readonly db: DbService,
+    private readonly organization: string,
+    dbFactory: DbFactory,
     private readonly edge: EdgeDataService,
-  ) {}
+  ) {
+    this.db = dbFactory.createDbService(
+      this.organization,
+      'ProjectNodes',
+      'projectId',
+    );
+  }
 
   async getAllAsync(projectId: string): Promise<ProjectNode[]> {
     //if (this.edge.byPass(kvPrefix)) return await this.getFromDbAsync(projectId);
@@ -21,7 +30,6 @@ export class ProjectNodeDataService {
     const data = await this.getFromDbAsync(projectId);
 
     for (const d of data) {
-      //
       if (!d.parentId) {
         if (d.phase && d.phase.parentId) {
           d.parentId = d.phase.parentId;

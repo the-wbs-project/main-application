@@ -12,10 +12,8 @@ import {
   DisciplineIconComponent,
   DisciplineIconListComponent,
   LegendDisciplineComponent,
-  LegendPhaseComponent,
-  WbsDisciplineTreeComponent,
   WbsLevelPopoverComponent,
-  WbsPhaseTreeComponent,
+  WbsTreeComponent,
 } from './components';
 import { WbsPhaseService } from './services';
 import { WbsTreeToolbarDirective } from './directives';
@@ -35,16 +33,10 @@ import { WbsTreeToolbarDirective } from './directives';
     DisciplineIconComponent,
     DisciplineIconListComponent,
     LegendDisciplineComponent,
-    LegendPhaseComponent,
-    WbsDisciplineTreeComponent,
     WbsLevelPopoverComponent,
-    WbsPhaseTreeComponent,
+    WbsTreeComponent,
     WbsTreeToolbarDirective,
   ],
-  exports: [
-    WbsDisciplineTreeComponent,
-    WbsPhaseTreeComponent,
-    WbsTreeToolbarDirective,
-  ],
+  exports: [WbsTreeComponent, WbsTreeToolbarDirective],
 })
 export class WbsTreeModule {}

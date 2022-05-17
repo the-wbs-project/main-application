@@ -12,10 +12,10 @@ export const PRE_ROUTES: string[] = [
   '/*.css',
 ];
 export const AZURE_ROUTES_POST: string[] = [
-  '/api/projects/:ownerId/:projectId/extracts/phase/download',
-  '/api/projects/:ownerId/:projectId/extracts/phase/upload',
-  '/api/projects/:ownerId/:projectId/extracts/discipline/download',
-  '/api/projects/:ownerId/:projectId/extracts/discipline/upload',
+  '/api/projects/:projectId/extracts/phase/download',
+  '/api/projects/:projectId/extracts/phase/upload',
+  '/api/projects/:projectId/extracts/discipline/download',
+  '/api/projects/:projectId/extracts/discipline/upload',
 ];
 export class RouterService {
   private readonly router = Router<WorkerRequest>();
@@ -32,6 +32,9 @@ export class RouterService {
       await req.edge.data.clear();
       return 204;
     });
+    this.router.get('/api/current', this.authenticate, (req: WorkerRequest) =>
+      Http.json(req.user),
+    );
     this.router.get(
       '/api/resources/:category',
       this.authenticate,
@@ -43,33 +46,45 @@ export class RouterService {
       Http.metadata.getListAsync,
     );
     this.router.get(
-      '/api/projects/:ownerId/:projectId',
+      '/api/projects/my',
+      this.authenticate,
+      this.checkClaimAsync,
+      Http.project.getAllAsync,
+    );
+    this.router.get(
+      '/api/projects/watched',
+      this.authenticate,
+      this.checkClaimAsync,
+      Http.project.getAllWatchedAsync,
+    );
+    this.router.get(
+      '/api/projects/byId/:projectId',
       this.authenticate,
       this.checkClaimAsync,
       Http.project.getByIdAsync,
     );
     this.router.put(
-      '/api/projects/:ownerId/:projectId',
+      '/api/projects/byId/:projectId',
       this.authenticate,
       this.checkClaimAsync,
       Http.project.putAsync,
     );
     this.router.get(
-      `/api/projects/:ownerId/:projectId/nodes`,
+      `/api/projects/byId/:projectId/nodes`,
       this.authenticate,
-      this.checkClaimDeeperAsync,
+      this.checkClaimAsync,
       Http.projectNodes.getAsync,
     );
     this.router.put(
-      `/api/projects/:ownerId/:projectId/nodes/batch`,
+      `/api/projects/byId/:projectId/nodes/batch`,
       this.authenticate,
-      this.checkClaimDeeperAsync,
+      this.checkClaimAsync,
       Http.projectNodes.batchAsync,
     );
     this.router.put(
-      `/api/projects/:ownerId/:projectId/nodes/:nodeId`,
+      `/api/projects/byId/:projectId/nodes/:nodeId`,
       this.authenticate,
-      this.checkClaimDeeperAsync,
+      this.checkClaimAsync,
       Http.projectNodes.putAsync,
     );
     this.router.post('/api/send', (request: WorkerRequest) =>
@@ -106,10 +121,12 @@ export class RouterService {
         },
         appInfo: {
           organizations: ['acme_engineering'],
+          lastOrg: 'acme_engineering',
         },
       },
       '1234',
     );
+    req.data.setOrganization('acme_engineering');
   }
 
   async checkClaimAsync(req: WorkerRequest): Promise<number | void> {
@@ -117,42 +134,15 @@ export class RouterService {
     //  If any of the necessary information is missing, BAIL!
     //
     if (
-      !req.params?.ownerId ||
       !req.params?.projectId ||
+      !req.user?.appInfo?.lastOrg ||
       !req.user?.appInfo?.organizations
     )
       return 500;
     //
     //  Next check that the owner ID is in the claims
     //
-    if (req.user.appInfo.organizations.indexOf(req.params.ownerId) === -1)
+    if (req.user.appInfo.organizations.indexOf(req.user.appInfo.lastOrg) === -1)
       return 401;
-  }
-
-  async checkClaimDeeperAsync(req: WorkerRequest): Promise<number | void> {
-    //
-    //  If any of the necessary information is missing, BAIL!
-    //
-    if (
-      !req.params?.ownerId ||
-      !req.params?.projectId ||
-      !req.user?.appInfo?.organizations
-    )
-      return 500;
-    //
-    //  Next check that the owner ID is in the claims
-    //
-    if (req.user.appInfo.organizations.indexOf(req.params.ownerId) === -1)
-      return 401;
-    //
-    //  Now just to be sure we need to make sure the project ID sent is ACTUALLY associated to the project id,
-    //    or else it could be a spoof if retrieving nodes
-    //
-    const project = await req.data.projects.getAsync(
-      req.params.ownerId,
-      req.params.projectId,
-    );
-
-    if (project == null) return 401;
   }
 }

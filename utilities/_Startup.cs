@@ -43,7 +43,6 @@ namespace Wbs.Utilities
             builder.Services.AddLogging();
             //builder.Services.AddHttpClient();
             builder.Services.AddSingleton(config);
-            builder.Services.AddSingleton(cosmos.GetDatabase(config.cosmos.databaseId));
 
             SetupDataServices(builder);
             SetupServices(builder);

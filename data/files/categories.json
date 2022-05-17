@@ -1,131 +1,230 @@
 [
   {
-    "id": "categories_phase",
-    "values": [
-      {
-        "id": "initial",
-        "label": "Category_Phase.Initial",
-        "tags": ["Initial", "Initial Phase"]
-      },
-      {
-        "id": "planning",
-        "label": "Category_Phase.Planning",
-        "tags": ["Planning", "Planning Phase"]
-      },
-      {
-        "id": "master_plan",
-        "label": "Category_Phase.MasterPlan",
-        "tags": ["Master", "Master Plan"]
-      },
-      {
-        "id": "preDesign",
-        "label": "Category_Phase.PreDesign",
-        "tags": ["Pre Design", "Pre-Design"]
-      },
-      {
-        "id": "schematicDesign",
-        "label": "Category_Phase.Schematic",
-        "tags": ["Schematic", "Schematic Design"]
-      },
-      {
-        "id": "designDev",
-        "label": "Category_Phase.DesignDev",
-        "tags": ["Design", "Design Development"]
-      },
-      {
-        "id": "designMeetings",
-        "label": "Category_Phase.DesignMeetings",
-        "tags": ["Design", "Meetings", "Design Meetings"]
-      },
-      {
-        "id": "contractDocs",
-        "label": "Category_Phase.ContractDocs",
-        "tags": ["Contract", "Contract Documents"]
-      },
-      { "id": "bidding", "label": "Category_Phase.Bidding", "tags": ["Bidding"] },
-      {
-        "id": "execution",
-        "label": "Category_Phase.Execution",
-        "tags": ["Execution", "Execution Phase"]
-      },
-      {
-        "id": "projectManagement",
-        "label": "Category_Phase.ProjectMangement",
-        "tags": ["Project Management"]
-      },
-      {
-        "id": "constAdmin",
-        "label": "Category_Phase.ConstructionAdmin",
-        "tags": ["Construction Administration"]
-      },
-      {
-        "id": "projectReporting",
-        "label": "Category_Phase.ProjectReporting",
-        "tags": ["Project Reporting"]
-      },
-      {
-        "id": "assetCostImpact",
-        "label": "Category_Phase.AssetCostImpact",
-        "tags": ["Asset Cost Impact"]
-      },
-      {
-        "id": "postContruction",
-        "label": "Category_Phase.PostContruction",
-        "tags": ["Post Contruction"]
-      },
-      {
-        "id": "caMeetings",
-        "label": "Category_Phase.CaMeetings",
-        "tags": ["CA Meetings"]
-      },
-      {
-        "id": "contract",
-        "label": "Category_Phase.Contract",
-        "tags": ["Contract", "Contract Phase"]
-      }
+    "id": "initial",
+    "type": "categories_phase",
+    "label": "Category_Phase.Initial",
+    "tags": [
+      "Initial",
+      "Initial Phase"
     ]
   },
   {
-    "id": "categories_discipline",
-    "values": [
-      {
-        "id": "mechanical",
-        "label": "Category_Discipline.Mechanical",
-        "tags": ["Mechanical"]
-      },
-      {
-        "id": "electrical",
-        "label": "Category_Discipline.Electrical",
-        "tags": ["Electrical"]
-      },
-      {
-        "id": "structural",
-        "label": "Category_Discipline.Structural",
-        "tags": ["Structural"]
-      },
-      { "id": "survey", "label": "Category_Discipline.Survey", "tags": ["Survey"] },
-      { "id": "civil", "label": "Category_Discipline.Civil", "tags": ["Civil"] },
-      { "id": "plumbing", "label": "Category_Discipline.Plumbing", "tags": ["Plumbing"] },
-      { "id": "scientist", "label": "Category_Discipline.Scientist", "tags": ["Scientist"] }
+    "id": "planning",
+    "type": "categories_phase",
+    "label": "Category_Phase.Planning",
+    "tags": [
+      "Planning",
+      "Planning Phase"
     ]
   },
   {
-    "id": "delete_reasons",
-    "values": [
-      {
-        "id": "delete-scope",
-        "label": "Wbs.DeleteList_Scope"
-      },
-      {
-        "id": "delete-sub",
-        "label": "Wbs.DeleteList_Sub"
-      },
-      {
-        "id": "delete-prime",
-        "label": "Wbs.DeleteList_Prime"
-      },
-      { "id": "delete-client", "label": "Wbs.DeleteList_Client" },
-      { "id": "delete-other", "label": "General.Other" }
+    "id": "master_plan",
+    "type": "categories_phase",
+    "label": "Category_Phase.MasterPlan",
+    "tags": [
+      "Master",
+      "Master Plan"
     ]
+  },
+  {
+    "id": "pre_design",
+    "type": "categories_phase",
+    "label": "Category_Phase.PreDesign",
+    "tags": [
+      "Pre Design",
+      "Pre-Design"
+    ]
+  },
+  {
+    "id": "schematic_design",
+    "type": "categories_phase",
+    "label": "Category_Phase.Schematic",
+    "tags": [
+      "Schematic",
+      "Schematic Design"
+    ]
+  },
+  {
+    "id": "design_dev",
+    "type": "categories_phase",
+    "label": "Category_Phase.DesignDev",
+    "tags": [
+      "Design",
+      "Design Development"
+    ]
+  },
+  {
+    "id": "design_meetings",
+    "type": "categories_phase",
+    "label": "Category_Phase.DesignMeetings",
+    "tags": [
+      "Design",
+      "Meetings",
+      "Design Meetings"
+    ]
+  },
+  {
+    "id": "contract_docs",
+    "type": "categories_phase",
+    "label": "Category_Phase.ContractDocs",
+    "tags": [
+      "Contract",
+      "Contract Documents"
+    ]
+  },
+  {
+    "id": "bidding",
+    "type": "categories_phase",
+    "label": "Category_Phase.Bidding",
+    "tags": [
+      "Bidding"
+    ]
+  },
+  {
+    "id": "execution",
+    "type": "categories_phase",
+    "label": "Category_Phase.Execution",
+    "tags": [
+      "Execution",
+      "Execution Phase"
+    ]
+  },
+  {
+    "id": "project_management",
+    "type": "categories_phase",
+    "label": "Category_Phase.ProjectMangement",
+    "tags": [
+      "Project Management"
+    ]
+  },
+  {
+    "id": "const_admin",
+    "type": "categories_phase",
+    "label": "Category_Phase.ConstructionAdmin",
+    "tags": [
+      "Construction Administration"
+    ]
+  },
+  {
+    "id": "project_reporting",
+    "type": "categories_phase",
+    "label": "Category_Phase.ProjectReporting",
+    "tags": [
+      "Project Reporting"
+    ]
+  },
+  {
+    "id": "asset_cost_impact",
+    "type": "categories_phase",
+    "label": "Category_Phase.AssetCostImpact",
+    "tags": [
+      "Asset Cost Impact"
+    ]
+  },
+  {
+    "id": "post_contruction",
+    "type": "categories_phase",
+    "label": "Category_Phase.PostContruction",
+    "tags": [
+      "Post Contruction"
+    ]
+  },
+  {
+    "id": "ca_meetings",
+    "type": "categories_phase",
+    "label": "Category_Phase.CaMeetings",
+    "tags": [
+      "CA Meetings"
+    ]
+  },
+  {
+    "id": "contract",
+    "type": "categories_phase",
+    "label": "Category_Phase.Contract",
+    "tags": [
+      "Contract",
+      "Contract Phase"
+    ]
+  },
+  {
+    "id": "mechanical",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Mechanical",
+    "tags": [
+      "Mechanical"
+    ]
+  },
+  {
+    "id": "electrical",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Electrical",
+    "tags": [
+      "Electrical"
+    ]
+  },
+  {
+    "id": "structural",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Structural",
+    "tags": [
+      "Structural"
+    ]
+  },
+  {
+    "id": "survey",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Survey",
+    "tags": [
+      "Survey"
+    ]
+  },
+  {
+    "id": "civil",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Civil",
+    "tags": [
+      "Civil"
+    ]
+  },
+  {
+    "id": "plumbing",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Plumbing",
+    "tags": [
+      "Plumbing"
+    ]
+  },
+  {
+    "id": "scientist",
+    "type": "categories_discipline",
+    "label": "Category_Discipline.Scientist",
+    "tags": [
+      "Scientist"
+    ]
+  },
+  {
+    "id": "delete_scope",
+    "type": "delete_reasons",
+    "label": "Wbs.DeleteList_Scope"
+  },
+  {
+    "id": "delete_sub",
+    "type": "delete_reasons",
+    "label": "Wbs.DeleteList_Sub"
+  },
+  {
+    "id": "delete_prime",
+    "type": "delete_reasons",
+    "label": "Wbs.DeleteList_Prime"
+  },
+  {
+    "id": "delete_client",
+    "type": "delete_reasons",
+    "label": "Wbs.DeleteList_Client"
+  },
+  {
+    "id": "delete_other",
+    "type": "delete_reasons",
+    "label": "General.Other"
   }
 ]

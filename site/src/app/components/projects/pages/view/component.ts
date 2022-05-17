@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faDownload, faUpload } from '@fortawesome/pro-solid-svg-icons';
+import { faDownload, faUpload, faX } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -12,6 +12,7 @@ import { TitleService } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { Observable, of, tap } from 'rxjs';
 import {
+  ClosedEditor,
   NodeEditorState,
   NodeSelected,
   OpenNodeCreationDialog,
@@ -42,6 +43,7 @@ export class ProjectsViewComponent {
 
   readonly faDownload = faDownload;
   readonly faUpload = faUpload;
+  readonly faX = faX;
 
   constructor(
     title: TitleService,
@@ -109,5 +111,9 @@ export class ProjectsViewComponent {
     } else if (action === 'upload') {
       this.store.dispatch(new UploadNodes());
     }
+  }
+
+  close() {
+    this.store.dispatch(new ClosedEditor());
   }
 }

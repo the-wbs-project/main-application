@@ -2,9 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ChangeAuthenticationFlag, ProfileUpdated } from '@wbs/shared/actions';
 import { User } from '@wbs/shared/models';
-import { StartupService } from '@wbs/shared/services';
+import { DataServiceFactory } from '@wbs/shared/services';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 
 export interface AuthBucket {
   isAuthenticated?: boolean;
@@ -20,19 +20,11 @@ export interface AuthBucket {
 export class AuthState implements NgxsOnInit {
   private readonly authFlag = 'isLoggedIn';
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly loader: StartupService
-  ) {}
+  constructor(private readonly data: DataServiceFactory) {}
 
   @Selector()
   static isAuthenticated(state: AuthBucket): boolean {
     return state.isAuthenticated ?? false;
-  }
-
-  @Selector()
-  static organization(state: AuthBucket): string | undefined {
-    return state.organization;
   }
 
   @Selector()
@@ -45,14 +37,18 @@ export class AuthState implements NgxsOnInit {
     return state?.profile?.fullName;
   }
 
-  ngxsOnInit(ctx: StateContext<AuthBucket>) {
+  ngxsOnInit(ctx: StateContext<AuthBucket>): Observable<void> {
     const data = localStorage.getItem(this.authFlag);
 
-    ctx.setState({
-      profile: this.loader.user,
-      organization: 'acme_engineering',
-      isAuthenticated: data ? JSON.parse(data) : false,
-    });
+    return this.data.auth.getCurrentAsync().pipe(
+      map((profile) => {
+        ctx.patchState({
+          profile,
+          organization: profile.appInfo.lastOrg,
+          isAuthenticated: data ? JSON.parse(data) : false,
+        });
+      })
+    );
   }
 
   @Action(ChangeAuthenticationFlag)

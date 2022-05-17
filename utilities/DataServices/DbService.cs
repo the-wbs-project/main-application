@@ -16,9 +16,9 @@ namespace Wbs.Utilities.DataServices
         private readonly Container container;
         private readonly string globalPartitionKey;
 
-        public DbService(Container container, string globalPartitionKey = null)
+        public DbService(CosmosClient client, string database, string container, string globalPartitionKey = null)
         {
-            this.container = container;
+            this.container = client.GetContainer(database, container);
             this.globalPartitionKey = globalPartitionKey;
         }
 

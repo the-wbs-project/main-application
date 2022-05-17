@@ -25,23 +25,32 @@ namespace table_copy {
             var client = new CosmosClient(config["cs"]);
 
             foreach (var containerInfo in containers) {
-                string name = containerInfo.name;
-                string pk = containerInfo.pk;
-                var container = client.GetContainer(config["db"], name);
+                var db = (string) containerInfo.db;
+                string coll = (string) containerInfo.col;
+                string pk = (string) containerInfo.pk;
 
-                foreach (var file in containerInfo.files) {
-                    Console.WriteLine($"Container: {name}, File: {file}");
+                await client.CreateDatabaseIfNotExistsAsync(db);
+                await client.GetDatabase(db).CreateContainerIfNotExistsAsync(new ContainerProperties {
+                    Id = coll,
+                        PartitionKeyPath = $"/{pk}"
+                });
 
-                    var rawFile = (await File.ReadAllTextAsync(Path.Combine(fileDir, (string) file)))?.Trim();
-                    dynamic json = JsonConvert.DeserializeObject(rawFile);
+                var container = client.GetContainer(db, coll);
 
-                    if (rawFile[0] == '[') {
-                        foreach (var obj in json)
-                            await UpsertAsync(container, obj, (string) obj[pk]);
-                    } else {
-                        await UpsertAsync(container, json, (string) json[pk]);
+                if (containerInfo.files != null)
+                    foreach (var file in containerInfo.files) {
+                        Console.WriteLine($"Container: {coll}, File: {file}");
+
+                        var rawFile = (await File.ReadAllTextAsync(Path.Combine(fileDir, (string) file)))?.Trim();
+                        dynamic json = JsonConvert.DeserializeObject(rawFile);
+
+                        if (rawFile[0] == '[') {
+                            foreach (var obj in json)
+                                await UpsertAsync(container, obj, (string) obj[pk]);
+                        } else {
+                            await UpsertAsync(container, json, (string) json[pk]);
+                        }
                     }
-                }
             }
 
             if (Directory.Exists("../../worker/kv/KVDATA"))

@@ -32,9 +32,10 @@ namespace Wbs.Utilities
         {
             try
             {
+                var culture = req.Headers["app-culture"];
                 var text = await req.ReadAsStringAsync();
                 var nodes = JsonSerializer.Deserialize<List<WbsPhaseView>>(text);
-                var bytes = await phaseExtractService.DownloadAsync(nodes);
+                var bytes = await phaseExtractService.DownloadAsync(nodes, culture);
 
                 return new FileContentResult(bytes, "application/vnd.ms-excel");
             }
@@ -55,7 +56,8 @@ namespace Wbs.Utilities
                 {
                     await req.Body.CopyToAsync(stream);
 
-                    var data = await phaseExtractService.UploadAsync(stream);
+                    var culture = req.Headers["app-culture"];
+                    var data = await phaseExtractService.UploadAsync(stream, culture);
 
                     return new JsonResult(data);
                 }

@@ -14,6 +14,7 @@ import { LoadingComponent } from './components';
 import {
   FillElementDirective,
   FullscreenDirective,
+  MainContentDirective,
   SidemenuToggleDirective,
   ToggleThemeDirective,
 } from './directives';
@@ -71,6 +72,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LengthPipe,
     LoaderComponent,
     LoadingComponent,
+    MainContentDirective,
     PageHeaderComponent,
     ProjectListFilterPipe,
     ProjectListFilterLengthPipe,
@@ -89,6 +91,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FillElementDirective,
     FontAwesomeModule,
     FormsModule,
+    MainContentDirective,
     NgbModule,
     PageHeaderComponent,
     TranslateModule,

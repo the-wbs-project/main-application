@@ -24,11 +24,11 @@ namespace Wbs.Utilities
         [FunctionName("CategoryExtracts-Output")]
         public async Task RunOutput([QueueTrigger("cats-output")] string nothing, ILogger log)
         {
-            var resourcesObj = await metadataDataService.GetAsync<Dictionary<string, Dictionary<string, string>>>("en-US.General");
-            var resourcesObj2 = await metadataDataService.GetAsync<Dictionary<string, Dictionary<string, string>>>("en-US.Wbs");
-            var phaseList = await metadataDataService.GetAsync<List<ListItem>>("categories_phase");
-            var disciplineList = await metadataDataService.GetAsync<List<ListItem>>("categories_discipline");
-            var delete_reasonList = await metadataDataService.GetAsync<List<ListItem>>("delete_reasons");
+            var resourcesObj = await metadataDataService.GetResourceAsync("en-US", "General");
+            var resourcesObj2 = await metadataDataService.GetResourceAsync("en-US", "Wbs");
+            var phaseList = await metadataDataService.GetListAsync("categories_phase");
+            var disciplineList = await metadataDataService.GetListAsync("categories_discipline");
+            var delete_reasonList = await metadataDataService.GetListAsync("delete_reasons");
             var resources = new Resources();
             var phases = new Dictionary<string, ListItem>();
             var disciplines = new Dictionary<string, ListItem>();
@@ -37,13 +37,13 @@ namespace Wbs.Utilities
             resources.Add(resourcesObj.values);
             resources.Add(resourcesObj2.values);
 
-            foreach (var x in phaseList.values)
+            foreach (var x in phaseList)
                 phases.Add(resources.Get(x.label), x);
             
-            foreach (var x in disciplineList.values)
+            foreach (var x in disciplineList)
                 disciplines.Add(resources.Get(x.label), x);
 
-            foreach (var x in delete_reasonList.values)
+            foreach (var x in delete_reasonList)
                 delete_reasons.Add(resources.Get(x.label), x);
 
 

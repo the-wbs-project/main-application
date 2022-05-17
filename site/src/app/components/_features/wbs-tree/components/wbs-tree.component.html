@@ -5,7 +5,7 @@
   kendoPopoverContainer
   showOn="hover"
   filter=".node-level"
-  [popover]="levelPopup"
+  [popover]="popup"
 >
   <kendo-treelist
     #treelist
@@ -32,8 +32,22 @@
       headerClass="level-header-column"
     >
       <ng-template kendoTreeListCellTemplate let-dataItem>
-        <span [id]="dataItem.id" class="node-level">
+        <a [id]="dataItem.id" class="node-level">
           {{ dataItem.levelText }}
+        </a>
+      </ng-template>
+    </kendo-treelist-column>
+    <kendo-treelist-column
+      *ngIf="view === 'discipline'"
+      field="sameAsLevelText"
+      [title]="'Same As'"
+      [width]="100"
+      class="level-column"
+      headerClass="level-header-column"
+    >
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <span *ngIf="dataItem.sameAsIndex" class="same-level">
+          {{ dataItem.sameAsLevelText }}
         </span>
       </ng-template>
     </kendo-treelist-column>
@@ -44,6 +58,7 @@
     >
     </kendo-treelist-column>
     <kendo-treelist-column
+      *ngIf="view === 'phase'"
       field="disciplines"
       [width]="150"
       class="discipline-column"
@@ -52,7 +67,7 @@
       <ng-template
         kendoTreeListHeaderTemplate
         kendoPopoverContainer
-        showOn="hover"
+        showOn="click"
         filter="fa-duotone-icon"
         [popover]="legendPopup"
       >
@@ -68,7 +83,7 @@
 </div>
 
 <kendo-popover
-  #levelPopup
+  #popup
   position="right"
   [callout]="true"
   [title]="'Wbs.NodeLevelStats' | translate"
@@ -85,12 +100,10 @@
   #legendPopup
   position="left"
   [callout]="true"
-  [height]="150"
   [ngClass]="'legend-popup'"
   [animation]="{ duration: 100, type: 'slide', direction: 'left' }"
 >
   <ng-template kendoPopoverBodyTemplate let-anchor>
-    Hi
     <wbs-legend-discipline [idsOrCats]="project?.categories?.discipline ?? []">
     </wbs-legend-discipline>
   </ng-template>

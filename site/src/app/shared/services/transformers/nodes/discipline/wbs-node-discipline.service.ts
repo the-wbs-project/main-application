@@ -113,19 +113,12 @@ export class WbsDisciplineNodeTransformer {
 
         nodes.push(pView, ...children);
         phaseCounter++;
-        /*
-        const view = views.find((x) => x.id === phaseId)!;
-
-        if (view.disciplines?.indexOf(dId) === -1) continue;
-
-        results.set(phaseId, dId, phaseCounter);
-
-        this.setChildren(views, results, dId, phaseId);
-
-        phaseCounter++;*/
       }
       dView.children = phaseCounter;
     }
+
+    this.setSameAs(nodes);
+
     return nodes;
   }
 
@@ -268,6 +261,24 @@ export class WbsDisciplineNodeTransformer {
       results.push(node, ...children);*/
     }
     return results;
+  }
+
+  private setSameAs(rows: WbsNodeView[]): void {
+    const vals = new Map<string, [string, string, number]>();
+
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+
+      if (vals.has(row.id)) {
+        const parts = vals.get(row.id)!;
+
+        row.sameAsId = parts[0];
+        row.sameAsIndex = parts[2];
+        row.sameAsLevelText = parts[1];
+      } else {
+        vals.set(row.id, [row.treeId, row.levelText, i]);
+      }
+    }
   }
 
   private getChildCount(children: WbsNodeView[]): number {

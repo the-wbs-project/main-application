@@ -45,7 +45,7 @@ export class MetadataHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.data.metadata.getAsync(req.params.name);
+      const data = await req.data.metadata.getListAsync(req.params.name);
       const response = await super.buildJson(data);
 
       if (data && !req.config.debug) req.edge.cachePut(response);

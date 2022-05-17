@@ -38,7 +38,7 @@ export class ProjectNodeHttpService extends BaseHttpService {
       //  get project
       //
       const reason = await req.request.text();
-      const project = await d.projects.getAsync(ownerId, projectId, false);
+      const project = await d.projects.getAsync(projectId, false);
 
       if (!project) return 404;
 

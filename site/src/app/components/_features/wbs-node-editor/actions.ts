@@ -11,8 +11,8 @@ export class NodeSelected {
   ) {}
 }
 
-export class ClearEditor {
-  static readonly type = '[Node Editor] Clear';
+export class ClosedEditor {
+  static readonly type = '[Node Editor] Closed';
 }
 
 export class EditorViewChanged {

@@ -1,21 +1,20 @@
 import { Store } from '@ngxs/store';
 import { SetupCategories } from '@wbs/shared/actions';
-import { Resources, StartupService } from '@wbs/shared/services';
-import { DataServiceFactory } from './data-services';
+import { Resources } from '@wbs/shared/services';
 import { ThemeService } from './theme.service';
 
 export class AppInitializerFactory {
-  static run(
-    store: Store,
-    data: DataServiceFactory,
-    resources: Resources,
-    startup: StartupService,
-    theme: ThemeService
-  ) {
+  static run(store: Store, resources: Resources, theme: ThemeService) {
     return () => {
       console.log('resources setup');
-      resources.setup(startup.resources);
-      data.initialize();
+      const elem = document.getElementById('edge_state');
+
+      if (elem?.innerHTML) {
+        const data = JSON.parse(elem.innerHTML);
+
+        resources.setup(data.resources);
+        console.log(data);
+      }
       theme.apply();
 
       return store.dispatch(new SetupCategories());

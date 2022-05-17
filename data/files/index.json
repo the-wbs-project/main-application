@@ -1,10 +1,33 @@
 [
   {
-    "name": "Metadata",
-    "pk": "id",
+    "db": "_common",
+    "col": "Resources",
+    "pk": "language",
     "files": [
-      "categories.json",
       "resources-en.json"
     ]
+  },
+  {
+    "db": "_common",
+    "col": "Lists",
+    "pk": "type",
+    "files": [
+      "categories.json"
+    ]
+  },
+  {
+    "db": "acme_engineering",
+    "col": "Activities",
+    "pk": "pk"
+  },
+  {
+    "db": "acme_engineering",
+    "col": "Projects",
+    "pk": "id"
+  },
+  {
+    "db": "acme_engineering",
+    "col": "ProjectNodes",
+    "pk": "projectId"
   }
 ]

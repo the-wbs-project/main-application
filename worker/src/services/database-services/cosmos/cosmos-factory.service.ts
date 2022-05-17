@@ -5,20 +5,18 @@ import { DbFactory } from '../db-factory.service';
 import { CosmosDbService } from './cosmos-db.service';
 
 export class CosmosFactory implements DbFactory {
-  readonly activities: DbService;
-  readonly metadata: DbService;
-  readonly projects: DbService;
-  readonly projectNodes: DbService;
+  constructor(
+    private readonly config: Config,
+    private readonly logger: Logger,
+  ) {}
 
-  constructor(config: Config, logger: Logger) {
-    this.activities = new CosmosDbService(config, 'Activities', logger);
-    this.metadata = new CosmosDbService(config, 'Metadata', logger);
-    this.projects = new CosmosDbService(config, 'Projects', logger, 'owner');
-    this.projectNodes = new CosmosDbService(
-      config,
-      'ProjectNodes',
-      logger,
-      'projectId',
+  createDbService(dbId: string, collId: string, pkVariable = 'pk'): DbService {
+    return new CosmosDbService(
+      dbId,
+      collId,
+      this.config,
+      this.logger,
+      pkVariable,
     );
   }
 }

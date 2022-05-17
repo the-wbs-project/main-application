@@ -51,16 +51,14 @@ export class SiteHttpService {
   }
 
   private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
-    const options: any = {};
-    options.mapRequestToAsset = SiteHttpService.handlePrefix();
-    options.cacheControl = {
-      mapRequestToAsset: SiteHttpService.handlePrefix(),
-      bypassCache: DEBUG,
-      browserTTL: SiteHttpService.getTtl(req.url, req.config.ttl),
-    };
-
     try {
-      return await req.edge.getAssetFromKV(options);
+      return await req.edge.getAssetFromKV({
+        mapRequestToAsset: SiteHttpService.handlePrefix(),
+        cacheControl: {
+          bypassCache: DEBUG === 'true',
+          browserTTL: SiteHttpService.getTtl(req.url, req.config.ttl),
+        },
+      });
     } catch (e) {
       req.logException(
         'An error occured trying to get a static file from KV.',
@@ -111,10 +109,7 @@ export class SiteHttpService {
     };
   }
 
-  private static getTtl(
-    url: string,
-    ttl: TtlConfig,
-  ): number | null | undefined {
+  private static getTtl(url: string, ttl: TtlConfig): number | undefined {
     const path = new URL(url).pathname.toLowerCase();
 
     if (
@@ -128,16 +123,23 @@ export class SiteHttpService {
     if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1) return ttl.jscss;
     if (path.indexOf('.ico') > -1) return ttl.icons;
 
-    return null;
+    return undefined;
   }
 
   private static async hydrateAsync(
     req: WorkerRequest,
     response: Response,
   ): Promise<Response> {
-    const data = JSON.stringify(
-      await req.data.initial.getHydrateDataAsync(req.user),
-    );
+    const resources = req.user?.userInfo?.culture
+      ? await req.data.metadata.getResourcesAsync(
+          req.user.userInfo.culture,
+          'General',
+        )
+      : null;
+
+    const data = JSON.stringify({
+      resources,
+    });
     return new HTMLRewriter()
       .on('head', new ElementHandler(req.config.appInsightsSnippet))
       .on(

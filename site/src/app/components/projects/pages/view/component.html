@@ -35,22 +35,14 @@
           <kendo-splitter orientation="horizontal">
             <kendo-splitter-pane [collapsible]="false">
               <div class="pane-content" *ngIf="project$ | async; let project">
-                <wbs-phase-tree
-                  *ngIf="(viewNode$ | async) === 'phase'"
+                <wbs-tree
+                  [view]="viewNode$ | async"
                   [nodes]="nodeViews$ | async"
                   [project]="project"
                   [toolbar]="toolbar"
                   (selectedChanged)="nodeSelected(project, $event)"
                 >
-                </wbs-phase-tree>
-                <wbs-discipline-tree
-                  *ngIf="(viewNode$ | async) === 'discipline'"
-                  [nodes]="nodeViews$ | async"
-                  [project]="project"
-                  [toolbar]="toolbar"
-                  (selectedChanged)="nodeSelected(project, $event)"
-                >
-                </wbs-discipline-tree>
+                </wbs-tree>
               </div>
             </kendo-splitter-pane>
             <kendo-splitter-pane *ngIf="show$ | async" min="300px" size="40%">
@@ -60,10 +52,13 @@
                     <div class="header-label">
                       <wbs-node-editor-categories></wbs-node-editor-categories>
                     </div>
-                    <div class="header-actions">
-                      <wbs-node-actions-menu
+                    <div
+                      class="display-ib wd-50 tx-right pointer pd-t-5 pd-r-15"
+                    >
+                      <fa-icon [icon]="faX" (click)="close()"></fa-icon>
+                      <!--<wbs-node-actions-menu
                         (menuClicked)="nodeMenuClicked($event, node)"
-                      ></wbs-node-actions-menu>
+                      ></wbs-node-actions-menu>-->
                     </div>
                   </div>
                   <div appFillElement class="main-panel">

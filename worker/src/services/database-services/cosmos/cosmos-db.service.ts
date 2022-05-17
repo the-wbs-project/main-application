@@ -1,33 +1,35 @@
-import { CosmosClient } from '@cfworker/cosmos';
+import { CosmosClient, Document } from '@cfworker/cosmos';
 import { Config } from '../../../config';
 import { IdObject } from '../../../models';
 import { myFetch } from '../../fetcher.service';
 import { Logger } from '../../logger.service';
 import { DbService } from '../db.service';
 
-declare type Rec = Record<string, unknown>;
-
 export class CosmosDbService implements DbService {
-  private readonly db: CosmosClient;
+  private db?: CosmosClient;
+  orgId?: string;
 
   constructor(
-    config: Config,
-    container: string,
-    logger: Logger,
+    private readonly dbId: string,
+    private readonly collId: string,
+    private readonly config: Config,
+    private readonly logger: Logger,
     private readonly pkVariable = 'pk',
   ) {
     this.db = new CosmosClient({
-      endpoint: config.db.endpoint,
-      masterKey: config.db.key,
-      dbId: config.db.database,
-      collId: container,
+      endpoint: this.config.db.endpoint,
+      masterKey: this.config.db.key,
+      dbId,
+      collId,
       fetch: (info: RequestInfo, init?: RequestInit) => {
-        return myFetch(logger, info, init);
+        return myFetch(this.logger, info, init);
       },
     });
   }
 
-  private clean(objOrArray: Rec | Rec[]): void {
+  private clean<T>(
+    objOrArray: (T & Partial<Document>) | (T & Partial<Document>)[],
+  ): void {
     if (Array.isArray(objOrArray)) {
       for (const obj of objOrArray) this.clean(obj);
     } else if (objOrArray) {
@@ -39,22 +41,38 @@ export class CosmosDbService implements DbService {
     }
   }
 
+  getAllAsync<T extends IdObject>(
+    clean: boolean,
+    skip?: number,
+    take?: number,
+  ): Promise<T[]> {
+    return this.getListByQueryAsync<T>(
+      `SELECT * FROM c`,
+      clean,
+      [],
+      skip,
+      take,
+    );
+  }
+
   async getDocumentAsync<T extends IdObject>(
     pk: string,
     id: string,
     clean: boolean,
-  ): Promise<T | null> {
+  ): Promise<T | undefined> {
+    if (!this.db) throw new Error('The database has not been initiated.');
+
     const res = await this.db.getDocument<T>({
       partitionKey: pk,
       docId: id,
     });
-    if (res.status === 404) return null;
+    if (res.status === 404) return undefined;
 
     const result = await res.json();
 
     if (res.status !== 200) throw new Error(JSON.stringify(result));
 
-    if (clean && result) this.clean(<any>result);
+    if (clean && result) this.clean(result);
 
     return result;
   }
@@ -84,6 +102,8 @@ export class CosmosDbService implements DbService {
     skip?: number,
     take?: number,
   ): Promise<T[]> {
+    if (!this.db) throw new Error('The database has not been initiated.');
+
     if (skip != null && take != null) {
       query += ` OFFSET ${skip} LIMIT ${take}`;
     }
@@ -93,7 +113,7 @@ export class CosmosDbService implements DbService {
     });
     const results = await res.json();
 
-    if (clean) this.clean(<Rec[]>results);
+    if (clean) this.clean(results);
 
     return results;
   }
@@ -105,7 +125,9 @@ export class CosmosDbService implements DbService {
       name: string;
       value: string | number | boolean | null | undefined;
     }[],
-  ): Promise<T | null> {
+  ): Promise<T | undefined> {
+    if (!this.db) throw new Error('The database has not been initiated.');
+
     const response = await this.db.queryDocuments<T>({
       query,
       parameters,
@@ -114,15 +136,17 @@ export class CosmosDbService implements DbService {
 
     const result = (await response.json()) || [];
 
-    if (clean) this.clean(<Rec[]>result);
+    if (clean) this.clean(result);
 
-    return result.length === 0 ? null : result[0];
+    return result.length === 0 ? undefined : result[0];
   }
 
   async upsertDocument<T extends IdObject>(
     document: T,
     pk: string,
   ): Promise<boolean> {
+    if (!this.db) throw new Error('The database has not been initiated.');
+
     const res = await this.db.createDocument({
       document,
       partitionKey: pk,

@@ -1,43 +1,83 @@
-import { ListItem, Metadata, Resources } from '../../models';
-import { DbService } from '../database-services';
+import {
+  IdObject,
+  ListItem,
+  Metadata,
+  ResourceObj,
+  Resources,
+} from '../../models';
+import { DbFactory, DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
-const kvPrefix = 'META';
-
 export class MetadataDataService {
-  constructor(
-    private readonly db: DbService,
-    private readonly edge: EdgeDataService,
-  ) {}
+  private readonly resourceDb: DbService;
+  private readonly listDb: DbService;
 
-  getResourcesAsync(
+  constructor(dbFactory: DbFactory, private readonly edge: EdgeDataService) {
+    this.resourceDb = dbFactory.createDbService(
+      '_common',
+      'Resources',
+      'language',
+    );
+    this.listDb = dbFactory.createDbService('_common', 'Lists', 'type');
+  }
+
+  async getResourcesAsync(
     culture: string,
     category: string,
-  ): Promise<Resources | null | undefined> {
-    return this.getAsync<Resources>(`${culture}.${category}`);
+  ): Promise<Resources | undefined> {
+    return (
+      await this.getAsync<ResourceObj>(
+        'RESOURCES',
+        this.resourceDb,
+        culture,
+        category,
+      )
+    )?.values;
   }
 
-  getCategoryAsync(type: string): Promise<ListItem[] | null | undefined> {
-    return this.getAsync<ListItem[]>(`categories_${type}`);
+  getListAsync(type: string): Promise<ListItem[]> {
+    return this.getAllAsync<ListItem>('LISTS', this.listDb, type);
   }
 
-  async getAsync<T>(id: string): Promise<T | null | undefined> {
+  private async getAsync<T extends IdObject>(
+    kvPrefix: string,
+    db: DbService,
+    pk: string,
+    id: string,
+  ): Promise<T | undefined> {
     if (this.edge.byPass(kvPrefix))
-      return (await this.fromDbAsync<T>(id))?.values;
+      return await db.getDocumentAsync<T>(pk, id, true);
 
-    const kvName = [kvPrefix, id].join('-');
+    const kvName = [kvPrefix, pk, id].join('-');
     const kvData = await this.edge.get<T>(kvName, 'json');
 
     if (kvData) return kvData;
 
-    const data = (await this.fromDbAsync<T>(id))?.values;
+    const data = await db.getDocumentAsync<T>(pk, id, true);
 
     if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
     return data;
   }
 
-  private fromDbAsync<T>(id: string): Promise<Metadata<T> | null> {
-    return this.db.getDocumentAsync<Metadata<T>>(id, id, true);
+  private async getAllAsync<T extends IdObject>(
+    kvPrefix: string,
+    db: DbService,
+    pk: string,
+  ): Promise<T[]> {
+    if (this.edge.byPass(kvPrefix))
+      return await db.getAllByPartitionAsync<T>(pk, true);
+
+    const kvName = [kvPrefix, pk].join('-');
+    const kvData = await this.edge.get<T[]>(kvName, 'json');
+
+    if (kvData) return kvData;
+
+    const data = await db.getAllByPartitionAsync<T>(pk, true);
+
+    if (data && data.length > 0)
+      this.edge.putLater(kvName, JSON.stringify(data));
+
+    return data;
   }
 }

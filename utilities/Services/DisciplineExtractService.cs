@@ -18,10 +18,10 @@ namespace Wbs.Utilities.Services
             this.storage = storage;
         }
 
-        public async Task<byte[]> DownloadAsync(List<WbsDisciplineView> nodes)
+        public async Task<byte[]> DownloadAsync(List<WbsDisciplineView> nodes, string culture)
         {
             var wbFile = await storage.GetFileAsBytesAsync("templates", "discipline-extract.xlsx");
-            var disciplines = await GetDisciplinesAsync();
+            var disciplines = await GetDisciplinesAsync(culture);
 
             using (var package = new OfficeOpenXml.ExcelPackage())
             {
@@ -70,9 +70,9 @@ namespace Wbs.Utilities.Services
             }
         }
 
-        public async Task<List<WbsPhaseView>> UploadAsync(Stream stream)
+        public async Task<List<WbsPhaseView>> UploadAsync(Stream stream, string culture)
         {
-            var disciplines = await GetDisciplinesAsync();
+            var disciplines = await GetDisciplinesAsync(culture);
 
             using (var package = new OfficeOpenXml.ExcelPackage())
             {
@@ -126,17 +126,17 @@ namespace Wbs.Utilities.Services
                 return results;
             }
         }
-        public async Task<Dictionary<string, string>> GetDisciplinesAsync()
+        public async Task<Dictionary<string, string>> GetDisciplinesAsync(string culture)
         {
-            var resourcesObj = await metadata.GetAsync<Dictionary<string, Dictionary<string, string>>>("en-US.General");
-            var disciplineList = await metadata.GetAsync<List<ListItem>>("categories_discipline");
+            var resourcesObj = await metadata.GetResourceAsync(culture, "General");
+            var disciplineList = await metadata.GetListAsync("categories_discipline");
             var resources = new Resources();
 
             resources.Add(resourcesObj.values);
 
             var disciplines = new Dictionary<string, string>();
 
-            foreach (var cat in disciplineList.values) disciplines.Add(cat.id, resources.Get(cat.label));
+            foreach (var cat in disciplineList) disciplines.Add(cat.id, resources.Get(cat.label));
 
             return disciplines;
         }

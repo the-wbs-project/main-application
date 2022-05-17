@@ -1,29 +1,41 @@
 import { Project } from '../../models';
-import { DbService } from '../database-services';
+import { DbFactory, DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
 const kvPrefix = 'PROJECTS';
 
 export class ProjectDataService {
-  constructor(
-    private readonly db: DbService,
-    private readonly edge: EdgeDataService,
-  ) {}
+  private readonly db: DbService;
 
-  getAllAsync(ownerId: string): Promise<Project[]> {
-    return this.db.getAllByPartitionAsync<Project>(ownerId, true);
+  constructor(
+    private readonly organization: string,
+    dbFactory: DbFactory,
+    private readonly edge: EdgeDataService,
+  ) {
+    this.db = dbFactory.createDbService(this.organization, 'Projects', 'id');
   }
 
-  async getAsync(ownerId: string, projectId: string): Promise<Project | null> {
-    if (this.edge.byPass(kvPrefix))
-      return await this.getFromDbAsync(ownerId, projectId);
+  getAllAsync(): Promise<Project[]> {
+    return this.db.getAllAsync<Project>(true);
+  }
 
-    const kvName = [kvPrefix, ownerId, projectId].join('-');
+  getAllWatchedAsync(userId: string): Promise<Project[]> {
+    return this.db.getListByQueryAsync<Project>(
+      `SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`,
+      true,
+      [{ name: '@userId', value: userId }],
+    );
+  }
+
+  async getAsync(projectId: string): Promise<Project | undefined> {
+    if (this.edge.byPass(kvPrefix)) return await this.getFromDbAsync(projectId);
+
+    const kvName = [kvPrefix, this.organization, projectId].join('-');
     const kvData = await this.edge.get<Project>(kvName, 'json');
 
     if (kvData) return kvData;
 
-    const data = await this.getFromDbAsync(ownerId, projectId);
+    const data = await this.getFromDbAsync(projectId);
 
     if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
@@ -31,18 +43,17 @@ export class ProjectDataService {
   }
 
   async putAsync(project: Project): Promise<void> {
-    const kvName = [kvPrefix, project.owner, project.id].join('-');
+    const kvName = [kvPrefix, this.organization, project.id].join('-');
 
-    await this.db.upsertDocument(project, project.owner);
+    await this.db.upsertDocument(project, project.id);
 
     this.edge.putLater(kvName, JSON.stringify(project));
   }
 
   private getFromDbAsync(
-    ownerId: string,
     projectId: string,
     clean = true,
-  ): Promise<Project | null> {
-    return this.db.getDocumentAsync<Project>(ownerId, projectId, clean);
+  ): Promise<Project | undefined> {
+    return this.db.getDocumentAsync<Project>(projectId, projectId, clean);
   }
 }

@@ -7,8 +7,8 @@ export interface User {
   createdAt?: Date;
   lastLogin?: Date;
   loginsCount?: number;
-  userInfo?: UserMetadata;
-  appInfo?: UserAppMetadata;
+  userInfo: UserMetadata;
+  appInfo: UserAppMetadata;
 }
 
 export interface UserMetadata {
@@ -19,4 +19,5 @@ export interface UserMetadata {
 export interface UserAppMetadata {
   role?: string;
   organizations: string[];
+  lastOrg: string;
 }

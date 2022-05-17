@@ -4,7 +4,7 @@ import {
   DialogCloseResult,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { ClearEditor } from '@wbs/components/_features';
+import { ClosedEditor } from '@wbs/components/_features';
 import {
   ListItem,
   Project,
@@ -174,7 +174,7 @@ export class ProjectState {
         ),
       });
     }
-    return ctx.dispatch(new ClearEditor());
+    return ctx.dispatch(new ClosedEditor());
   }
 
   @Action(VerifyDeleteReasons)

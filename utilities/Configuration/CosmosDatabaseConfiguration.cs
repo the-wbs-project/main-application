@@ -9,11 +9,11 @@ namespace Wbs.Utilities.Configuration
         public CosmosDatabaseConfiguration(IConfiguration config)
         {
             connectionString = config["ConnectionString"];
-            databaseId = config["DatabaseId"];
+            metadataDb = config["MetadataDb"];
         }
 
         public string connectionString { get; set; }
 
-        public string databaseId { get; set; }
+        public string metadataDb { get; set; }
     }
 }

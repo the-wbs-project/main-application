@@ -9,13 +9,7 @@ import { WbsNodeView } from '@wbs/shared/view-models';
 import { map, Observable } from 'rxjs';
 
 export class ExtractDataService {
-  private ownerId: string | undefined;
-
   constructor(private readonly http: HttpClient) {}
-
-  setOwner(ownerId: string | undefined) {
-    this.ownerId = ownerId;
-  }
 
   downloadNodesAsync(
     project: Project,
@@ -26,13 +20,9 @@ export class ExtractDataService {
 
     const fileName = `${project.title} - ${view2}.xlsx`;
     return this.http
-      .post(
-        `projects/${this.ownerId}/${project.id}/extracts/${view}/download`,
-        rows,
-        {
-          responseType: 'blob' as 'json',
-        }
-      )
+      .post(`projects/${project.id}/extracts/${view}/download`, rows, {
+        responseType: 'blob' as 'json',
+      })
       .pipe(map((response: any) => saveAs(response, fileName)));
   }
 
@@ -41,7 +31,7 @@ export class ExtractDataService {
     file: ArrayBuffer
   ): Observable<UploadResults<WbsNodeView>> {
     return this.http.post<UploadResults<WbsNodeView>>(
-      `projects/${this.ownerId}/${projectId}/extracts/phase/upload`,
+      `projects/${projectId}/extracts/phase/upload`,
       file
     );
   }

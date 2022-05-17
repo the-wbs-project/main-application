@@ -26,7 +26,6 @@ export class WbsNodePhaseTransformer {
         .map((x) => this.phaseList.find((c) => c.id === x))
         .filter((x) => x)
     );
-
     for (let i = 0; i < categories.length; i++) {
       const cat = categories[i];
       const parentlevel = [i + 1];

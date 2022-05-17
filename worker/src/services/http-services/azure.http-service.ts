@@ -11,6 +11,9 @@ export class AzureHttpService extends BaseHttpService {
     const url = `${protocol}://${config.domain}${originalUrl.pathname}`;
     const headers = new Headers(call.request.headers);
 
+    headers.set('app-organization', call.user?.appInfo.lastOrg ?? '');
+    headers.set('app-culture', call.user?.userInfo.culture ?? '');
+
     if (config.key) headers.set('x-functions-key', config.key);
 
     return await call.myFetch(url, {

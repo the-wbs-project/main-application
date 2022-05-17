@@ -5,7 +5,13 @@ export interface DbService {
     pk: string,
     id: string,
     clean: boolean,
-  ): Promise<T | null>;
+  ): Promise<T | undefined>;
+
+  getAllAsync<T extends IdObject>(
+    clean: boolean,
+    skip?: number,
+    take?: number,
+  ): Promise<T[]>;
 
   getAllByPartitionAsync<T extends IdObject>(
     pk: string,
@@ -32,7 +38,7 @@ export interface DbService {
       name: string;
       value: string | number | boolean | null | undefined;
     }[],
-  ): Promise<T | null>;
+  ): Promise<T | undefined>;
 
   upsertDocument<T extends IdObject>(document: T, pk: string): Promise<boolean>;
 }

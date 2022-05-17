@@ -4,7 +4,6 @@ import { ListItem } from './list-item.model';
 
 export interface Project {
   id: string;
-  owner: string;
   title: string;
   lastModified: Date;
   status: PROJECT_STATI_TYPE;

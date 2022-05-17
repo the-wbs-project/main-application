@@ -3,22 +3,21 @@ import { Project } from '@wbs/shared/models';
 import { Observable } from 'rxjs';
 
 export class ProjectDataService {
-  private ownerId: string | undefined;
-
   constructor(private readonly http: HttpClient) {}
 
-  setOwner(ownerId: string | undefined) {
-    this.ownerId = ownerId;
+  getMyAsync(): Observable<Project[]> {
+    return this.http.get<Project[]>(`projects/my`);
+  }
+
+  getWatchedAsync(): Observable<Project[]> {
+    return this.http.get<Project[]>(`projects/watch`);
   }
 
   getAsync(projectId: string): Observable<Project> {
-    return this.http.get<Project>(`projects/${this.ownerId}/${projectId}`);
+    return this.http.get<Project>(`projects/byId/${projectId}`);
   }
 
   putAsync(project: Project): Observable<void> {
-    return this.http.put<void>(
-      `projects/${this.ownerId}/${project.id}`,
-      project
-    );
+    return this.http.put<void>(`projects/byId/${project.id}`, project);
   }
 }

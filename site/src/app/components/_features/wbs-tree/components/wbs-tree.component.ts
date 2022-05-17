@@ -1,4 +1,18 @@
-import { EventEmitter, Injectable, NgZone, Renderer2 } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  NgZone,
+  OnChanges,
+  OnDestroy,
+  Output,
+  Renderer2,
+  TemplateRef,
+  ViewChild,
+  ViewEncapsulation,
+} from '@angular/core';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import {
   BehaviorSubject,
@@ -23,14 +37,30 @@ import { NodeCheck, Position } from '../models';
 import {
   SelectableSettings,
   SelectionChangeEvent,
+  TreeListComponent,
 } from '@progress/kendo-angular-treelist';
+import { Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 
-@Injectable()
-export abstract class BaseWbsTreeComponent {
+@Component({
+  selector: 'wbs-tree',
+  templateUrl: './wbs-tree.component.html',
+  styleUrls: ['./wbs-tree.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
+})
+export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   protected dataReady = false;
   private newParentId!: any;
   private isParentDragged: boolean = false;
-  protected abstract currentSubscription: Subscription | undefined;
+  private currentSubscription: Subscription | undefined;
+
+  @Input() view: PROJECT_NODE_VIEW_TYPE | null | undefined;
+  @Input() nodes: WbsNodeView[] | null | undefined;
+  @Input() project: Project | null | undefined;
+  @Input() toolbar: TemplateRef<any> | undefined;
+  @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
+  @ViewChild(TreeListComponent) treelist!: TreeListComponent;
 
   draggedRowEl!: HTMLTableRowElement;
   draggedItem!: WbsNodeView;
@@ -44,8 +74,8 @@ export abstract class BaseWbsTreeComponent {
     readonly: false,
   };
   selectedItems: any[] = [];
-  abstract readonly selectedChanged: EventEmitter<WbsNodeView>;
 
+  readonly faCircleQuestion = faCircleQuestion;
   readonly tree$ = new BehaviorSubject<WbsNodeView[] | undefined>(undefined);
 
   constructor(
@@ -54,7 +84,24 @@ export abstract class BaseWbsTreeComponent {
     private readonly zone: NgZone
   ) {}
 
+  ngOnChanges(): void {
+    if (!this.nodes) return;
+
+    this.tree$.next(this.nodes);
+    this.dataReady = true;
+    this.setDraggableRows();
+  }
+
+  ngOnDestroy(): void {
+    this.currentSubscription?.unsubscribe();
+  }
+
+  ngAfterViewInit(): void {
+    this.setDraggableRows();
+  }
+
   getContextData = (anchor: any): WbsNodeView => {
+    console.log(this.tree$.getValue());
     return this.tree$.getValue()!.find((x) => x.id === anchor.id)!;
   };
 
@@ -69,8 +116,69 @@ export abstract class BaseWbsTreeComponent {
     this.selectedChanged.emit(e.items[0].dataItem);
   }
 
-  abstract prePositionCheck(): NodeCheck;
-  abstract postPositionCheck(position: Position): boolean;
+  prePositionCheck(): NodeCheck {
+    const results: NodeCheck = {
+      cancelEffect: false,
+      isParentDragged: false,
+      newParentsAllowed: true,
+    };
+    let row: WbsNodeView | undefined = this.targetedItem;
+    const list = this.tree$.getValue()!;
+    //
+    //  If the we are trying to drag a node that is locked to a parent, make sure that's not happening
+    //
+    if (this.draggedItem.phaseInfo?.isLockedToParent) {
+      results.newParentsAllowed = false;
+      console.log('no new parents');
+      if (
+        this.draggedItem.phaseInfo?.isDisciplineNode &&
+        this.draggedItem.parentId !== this.targetedItem.parentId
+      ) {
+        console.log('cant drag disicpline nodes to new parents');
+        results.cancelEffect = true;
+
+        return results;
+      }
+    }
+    while (row!.parentId != null) {
+      const parentRow = list.find((item) => item.id === row!.parentId);
+
+      if (parentRow!.id === this.draggedItem.id) {
+        results.isParentDragged = true;
+        results.cancelEffect = true;
+        break;
+      }
+      row = parentRow;
+    }
+
+    return results;
+  }
+
+  postPositionCheck(position: Position): boolean {
+    //
+    //  If you're trying to drop this INTO a discipline sync node, STOP IT!
+    //
+    if (
+      this.targetedItem.phaseInfo?.syncWithDisciplines &&
+      !position.isAfter &&
+      !position.isBefore
+    ) {
+      return false;
+    }
+    //
+    //  If you're trying to drop this before or after a a sync'ed child, STOP IT
+    //
+    if (
+      !this.draggedItem.phaseInfo?.isLockedToParent &&
+      this.targetedItem.phaseInfo?.isLockedToParent &&
+      (position.isAfter || position.isBefore)
+    ) {
+      console.log('youre trying to drop this before or after a a synced child');
+      return false;
+    }
+
+    return true;
+  }
 
   protected setDraggableRows(): void {
     if (!this.dataReady) return;

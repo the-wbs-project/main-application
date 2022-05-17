@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { Activity, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
 import { WbsNodeView } from '@wbs/shared/view-models';
-import { ClearEditor, EditorViewChanged, NodeSelected } from './actions';
+import { ClosedEditor, EditorViewChanged, NodeSelected } from './actions';
 import { EditorView } from './models';
 
 export const VIEWS: EditorView[] = [
@@ -90,8 +90,8 @@ export class NodeEditorState {
     });
   }
 
-  @Action(ClearEditor)
-  clearEditor(ctx: StateContext<StateModel>, action: ClearEditor): void {
+  @Action(ClosedEditor)
+  clearEditor(ctx: StateContext<StateModel>, action: ClosedEditor): void {
     ctx.patchState({
       node: undefined,
       view: VIEWS[0],

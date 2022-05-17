@@ -20,14 +20,21 @@ $discipline-width: 120px;
   }
 }
 
-.node-level {
+.node-level,
+.same-level {
   display: inline-block;
   width: 60px;
 }
 
+.same-level {
+  cursor: pointer;
+}
+
 .level-header-column {
 }
+
 .discipline-column {
+  display: table-cell;
 }
 
 .level-column {
@@ -41,4 +48,10 @@ $discipline-width: 120px;
 
 .calendar-text {
   margin-top: 0.3em;
+}
+
+@media (max-width: 992px) {
+  .discipline-column {
+    display: none;
+  }
 }

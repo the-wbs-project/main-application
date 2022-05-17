@@ -1,8 +1,7 @@
 [
   {
-    "id": "en-US.General",
-    "category": "General",
-    "language": "en-Us",
+    "id": "General",
+    "language": "en-US",
     "values": {
       "General": {
         "Cancel": "Cancel",
@@ -53,9 +52,8 @@
     }
   },
   {
-    "id": "en-US.Projects",
-    "category": "Projects",
-    "language": "en-Us",
+    "id": "Projects",
+    "language": "en-US",
     "values": {
       "Projects": {
         "DownloadNodes": "Download Nodes",
@@ -67,9 +65,8 @@
     }
   },
   {
-    "id": "en-US.Wbs",
-    "category": "Wbs",
-    "language": "en-Us",
+    "id": "Wbs",
+    "language": "en-US",
     "values": {
       "Wbs": {
         "WBS": "WBS",

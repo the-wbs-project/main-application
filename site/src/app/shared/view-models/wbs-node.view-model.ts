@@ -14,6 +14,10 @@ export interface WbsNodeView {
   parentId: string | null;
   treeParentId: string | null;
 
+  sameAsId?: string | null;
+  sameAsIndex?: number | null;
+  sameAsLevelText?: string | null;
+
   children: number;
   description?: string | null;
   disciplines?: string[] | null;

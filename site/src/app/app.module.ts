@@ -11,14 +11,17 @@ import { NotificationModule } from '@progress/kendo-angular-notification';
 import {
   AnalyticsService,
   AppInitializerFactory,
-  DataServiceFactory,
   Messages,
   RequestInterceptor,
   Resources,
-  StartupService,
   ThemeService,
 } from '@wbs/shared/services';
-import { AuthState, MetadataState, ProjectListState } from '@wbs/shared/states';
+import {
+  AuthState,
+  MetadataState,
+  ProjectListState,
+  UiState,
+} from '@wbs/shared/states';
 import { ToastrModule } from 'ngx-toastr';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -34,7 +37,7 @@ import { AppComponent } from './app.component';
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
     }),
-    NgxsModule.forRoot([AuthState, MetadataState, ProjectListState]),
+    NgxsModule.forRoot([AuthState, MetadataState, ProjectListState, UiState]),
     NgxsRouterPluginModule.forRoot(),
     NotificationModule,
     ToastrModule.forRoot(),
@@ -51,13 +54,7 @@ import { AppComponent } from './app.component';
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [
-        Store,
-        DataServiceFactory,
-        Resources,
-        StartupService,
-        ThemeService,
-      ],
+      deps: [Store, Resources, ThemeService],
       multi: true,
     },
   ],
