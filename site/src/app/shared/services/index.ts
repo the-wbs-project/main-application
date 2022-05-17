@@ -1,5 +1,6 @@
 export * from './data-services';
 export * from './transformers';
+export * from './activity.service';
 export * from './analytics.service';
 export * from './app-initializer.service';
 export * from './container.service';
@@ -17,3 +18,4 @@ export * from './switcher.service';
 export * from './theme.service';
 export * from './title.service';
 export * from './utils.service';
+export * from './wbs-node.service';

@@ -51,6 +51,18 @@ export class Resources extends MissingTranslationHandler {
   get(resource: string, defaultValue?: string): string {
     if (resource == null) return 'EMPTY';
 
+    let value = this.getExact(resource);
+
+    return value != null
+      ? value
+      : defaultValue != null
+      ? defaultValue
+      : resource;
+  }
+
+  getExact(resource: string): string | null {
+    if (resource == null) return 'EMPTY';
+
     const parts = resource.split('.');
 
     try {
@@ -73,15 +85,11 @@ export class Resources extends MissingTranslationHandler {
 
       if (value == null) this.recordMissing(resource);
 
-      return value != null
-        ? value
-        : defaultValue != null
-        ? defaultValue
-        : resource;
+      return value;
     } catch (e) {
       console.log(e);
       console.error(`Error trying to retrieve '${resource}' value.`);
-      return defaultValue == null ? resource : defaultValue;
+      return null;
     }
   }
 

@@ -7,7 +7,7 @@ export interface EdgeService {
 
   getEdgeProperties(): Record<string, any>;
 
-  waitUntil(func: Promise<void>): void;
+  waitUntil(func: Promise<unknown>): void;
 
   getAssetFromKV(options?: Partial<Options>): Promise<Response>;
 

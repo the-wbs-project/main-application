@@ -37,6 +37,11 @@ export class AuthState implements NgxsOnInit {
     return state?.profile?.fullName;
   }
 
+  @Selector()
+  static userId(state: AuthBucket): string | null | undefined {
+    return state?.profile?.id;
+  }
+
   ngxsOnInit(ctx: StateContext<AuthBucket>): Observable<void> {
     const data = localStorage.getItem(this.authFlag);
 

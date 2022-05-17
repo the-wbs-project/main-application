@@ -57,6 +57,14 @@
       [title]="'Wbs.Task' | translate"
     >
     </kendo-treelist-column>
+    <!--<kendo-treelist-column [width]="200" field="title" title="Test">
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <span style="font-size: 8pt">
+          {{ dataItem.id }} &nbsp;/&nbsp; {{ dataItem.parentId }} &nbsp;/&nbsp;
+          {{ dataItem.order }}
+        </span>
+      </ng-template>
+    </kendo-treelist-column>-->
     <kendo-treelist-column
       *ngIf="view === 'phase'"
       field="disciplines"

@@ -40,5 +40,5 @@ export interface DbService {
     }[],
   ): Promise<T | undefined>;
 
-  upsertDocument<T extends IdObject>(document: T, pk: string): Promise<boolean>;
+  upsertDocument<T extends IdObject>(document: T, pk: string): Promise<number>;
 }

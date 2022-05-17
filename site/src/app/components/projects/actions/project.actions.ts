@@ -46,3 +46,8 @@ export class ProcessUploadedNodes {
   static readonly type = '[Project] Process Uploaded Nodes';
   constructor(readonly rows: WbsNodeView[]) {}
 }
+
+export class TreeReordered {
+  static readonly type = '[Project] Tree Reordered';
+  constructor(readonly draggedId: string, readonly rows: WbsNodeView[]) {}
+}

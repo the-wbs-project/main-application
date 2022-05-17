@@ -41,6 +41,12 @@ export class RouterService {
       Http.metadata.getResourcesAsync,
     );
     this.router.get(
+      '/api/activity/:topLevelId',
+      this.authenticate,
+      Http.activity.getByIdAsync,
+    );
+    this.router.put('/api/activity', this.authenticate, Http.activity.putAsync);
+    this.router.get(
       '/api/lists/:name',
       this.authenticate,
       Http.metadata.getListAsync,
@@ -116,6 +122,8 @@ export class RouterService {
   authenticate(req: WorkerRequest): void {
     req.setUser(
       {
+        id: '561',
+        fullName: 'John Doe',
         userInfo: {
           culture: 'en-US',
         },

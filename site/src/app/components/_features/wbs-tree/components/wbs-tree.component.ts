@@ -49,7 +49,7 @@ import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
+export class WbsTreeComponent implements OnChanges, OnDestroy {
   protected dataReady = false;
   private newParentId!: any;
   private isParentDragged: boolean = false;
@@ -60,6 +60,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   @Input() project: Project | null | undefined;
   @Input() toolbar: TemplateRef<any> | undefined;
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
+  @Output() readonly reordered = new EventEmitter<[string, WbsNodeView[]]>();
   @ViewChild(TreeListComponent) treelist!: TreeListComponent;
 
   draggedRowEl!: HTMLTableRowElement;
@@ -87,7 +88,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
   ngOnChanges(): void {
     if (!this.nodes) return;
 
-    this.tree$.next(this.nodes);
+    this.tree$.next(JSON.parse(JSON.stringify(this.nodes)));
     this.dataReady = true;
     this.setDraggableRows();
   }
@@ -96,12 +97,7 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
     this.currentSubscription?.unsubscribe();
   }
 
-  ngAfterViewInit(): void {
-    this.setDraggableRows();
-  }
-
   getContextData = (anchor: any): WbsNodeView => {
-    console.log(this.tree$.getValue());
     return this.tree$.getValue()!.find((x) => x.id === anchor.id)!;
   };
 
@@ -191,6 +187,10 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
       setTimeout(() => {
         this.setDraggableRows();
       }, 100);
+      return;
+    }
+    if (this.currentSubscription) {
+      this.currentSubscription.unsubscribe();
     }
     this.currentSubscription = this.handleDragAndDrop();
     tableRows.forEach((row) => {
@@ -242,7 +242,6 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
           this.targetedItem = <WbsNodeView>findDataItem(list, currentRow);
 
           // Prevent dragging parent row in its children
-          let row: WbsNodeView | undefined = this.targetedItem;
           this.isParentDragged = false;
 
           //
@@ -333,9 +332,12 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
           //
           //  Rebuild Level
           //
-          const newTree = this.wbsService.rebuildLevels(tree);
+          const results = this.wbsService.rebuildLevels(tree);
 
-          this.zone.run(() => this.tree$.next(<WbsNodeView[]>newTree));
+          console.log(results.changedIds);
+
+          this.zone.run(() => this.tree$.next(results.rows));
+          this.reordered.emit([this.draggedItem.id, results.rows]);
         }
       })
     );
@@ -413,7 +415,6 @@ export class WbsTreeComponent implements AfterViewInit, OnChanges, OnDestroy {
         showDropHint(target, 'after');
         this.reorderRows(list, 1);
       }
-      console.log(list);
       this.newParentId = currentRowParentId;
     }
   }

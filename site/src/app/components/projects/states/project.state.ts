@@ -6,6 +6,8 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { ClosedEditor } from '@wbs/components/_features';
 import {
+  ACTIONS,
+  Activity,
   ListItem,
   Project,
   PROJECT_FILTER,
@@ -30,6 +32,7 @@ import {
   RebuildNodeViews,
   RemoveTask,
   SetProject,
+  TreeReordered,
   UploadNodes,
   VerifyDeleteReasons,
   VerifyProject,
@@ -38,6 +41,7 @@ import { ProjectNodeUploadDialogComponent } from '../components';
 import { PhaseExtractProcessor } from '../services';
 
 interface StateModel {
+  activity?: Activity[];
   current?: Project;
   deleteReasons: ListItem[];
   nodes?: WbsNode[];
@@ -64,6 +68,11 @@ export class ProjectState {
     private readonly processors: PhaseExtractProcessor,
     private readonly transformers: WbsTransformers
   ) {}
+
+  @Selector()
+  static activity(state: StateModel): Activity[] | undefined {
+    return state.activity;
+  }
 
   @Selector()
   static deleteReasons(state: StateModel): ListItem[] {
@@ -120,9 +129,11 @@ export class ProjectState {
     return forkJoin({
       project: this.data.projects.getAsync(action.projectId),
       nodes: this.data.projectNodes.getAsync(action.projectId),
+      activity: this.data.activities.getAsync(action.projectId),
     }).pipe(
       tap((data) =>
         ctx.patchState({
+          activity: data.activity.sort(this.sortActivity),
           current: data.project,
           nodes: data.nodes,
           viewNode: data.project.mainNodeView,
@@ -264,6 +275,63 @@ export class ProjectState {
     );*/
   }
 
+  @Action(TreeReordered)
+  treeReordered(
+    ctx: StateContext<StateModel>,
+    action: TreeReordered
+  ): Observable<any> {
+    const state = ctx.getState();
+    const project = state.current!;
+    const models = state.nodes!;
+    const upserts: WbsNode[] = [];
+    const nodeViews = state.nodeViews!;
+    const originalNode = nodeViews.find((x) => x.id === action.draggedId)!;
+    const newNode = action.rows.find((x) => x.id === action.draggedId)!;
+
+    for (const vm of nodeViews) {
+      const vm2 = action.rows.find((x) => x.id === vm.id);
+
+      if (!vm2) continue;
+      if (vm.order === vm2.order && vm.parentId === vm2.parentId) continue;
+
+      const orig = models.find((x) => x.id === vm.id)!;
+      const model = this.copy(orig);
+
+      model.order = vm2.order;
+      model.parentId = vm2.parentId;
+
+      upserts.push(model);
+    }
+
+    if (upserts.length === 0) return of();
+
+    return this.data.projectNodes.batchAsync(project.id, upserts, []).pipe(
+      tap(() => {
+        const nodes = ctx.getState().nodes!;
+
+        for (const node of upserts) {
+          const index = nodes.findIndex((x) => x.id === node.id);
+
+          if (index > -1) nodes[index] = node;
+          else nodes.push(node);
+        }
+        ctx.patchState({
+          nodes,
+        });
+      }),
+      tap(() =>
+        this.data.activities.putAsync({
+          action: ACTIONS.NODE_REORDERED,
+          data: [originalNode.title, originalNode.levelText, newNode.levelText],
+          labelTitle: 'Actions.NodeRecordered',
+          objectId: action.draggedId,
+          topLevelId: project.id,
+        })
+      ),
+      tap(() => ctx.dispatch(new RebuildNodeViews()))
+    );
+  }
+
   @Action(DownloadNodes)
   downloadNodes(ctx: StateContext<StateModel>): Observable<void> {
     const state = ctx.getState();
@@ -381,5 +449,9 @@ export class ProjectState {
 
   private copy<T>(x: T): T {
     return <T>JSON.parse(JSON.stringify(x));
+  }
+
+  private sortActivity(a: Activity, b: Activity): number {
+    return a.timestamp - b.timestamp;
   }
 }

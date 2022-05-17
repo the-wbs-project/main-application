@@ -1,4 +1,3 @@
-import { Activity } from './activity.model';
 import { PROJECT_NODE_VIEW_TYPE, PROJECT_STATI_TYPE } from './enums';
 import { ListItem } from './list-item.model';
 
@@ -8,7 +7,6 @@ export interface Project {
   lastModified: Date;
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
-  activity: Activity[];
   categories: {
     discipline: (string | ListItem)[];
     phase: (string | ListItem)[];

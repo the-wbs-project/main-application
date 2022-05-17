@@ -22,6 +22,7 @@ import {
   DownloadNodes,
   ProjectNodeViewChanged,
   RemoveTask,
+  TreeReordered,
   UploadNodes,
 } from '../../actions';
 import { ProjectState } from '../../states';
@@ -78,12 +79,13 @@ export class ProjectsViewComponent {
     );
   }
 
-  nodeSelected(project: Project, node: WbsNodeView) {
+  nodeSelected(node: WbsNodeView) {
+    const activity = this.store.selectSnapshot(ProjectState.activity) ?? [];
     this.store.dispatch(
       new NodeSelected(
         node,
         this.currentNodeView,
-        project.activity?.filter((x) => x.wbsId === node.id)
+        activity.filter((x) => x.objectId === node.id)
       )
     );
   }
@@ -115,5 +117,9 @@ export class ProjectsViewComponent {
 
   close() {
     this.store.dispatch(new ClosedEditor());
+  }
+
+  reordered([draggedId, rows]: [string, WbsNodeView[]]): void {
+    this.store.dispatch(new TreeReordered(draggedId, rows));
   }
 }

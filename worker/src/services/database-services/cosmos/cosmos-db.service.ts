@@ -111,6 +111,8 @@ export class CosmosDbService implements DbService {
       query,
       parameters,
     });
+    if (res.status === 404) return [];
+
     const results = await res.json();
 
     if (clean) this.clean(results);
@@ -144,7 +146,7 @@ export class CosmosDbService implements DbService {
   async upsertDocument<T extends IdObject>(
     document: T,
     pk: string,
-  ): Promise<boolean> {
+  ): Promise<number> {
     if (!this.db) throw new Error('The database has not been initiated.');
 
     const res = await this.db.createDocument({
@@ -152,6 +154,14 @@ export class CosmosDbService implements DbService {
       partitionKey: pk,
       isUpsert: true,
     });
-    return res.status === 201;
+    if (res.status >= 300) {
+      console.log(res.status);
+      console.log('The error message');
+      console.log(this.dbId);
+      console.log(this.dbId);
+      console.log(document);
+      console.log(await res.json());
+    }
+    return res.status;
   }
 }

@@ -4,9 +4,6 @@ import { BaseHttpService } from './base.http-service';
 export class ProjectHttpService extends BaseHttpService {
   static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      //
-      //  Get the data from the KV
-      //
       const data = await req.data.projects.getAllAsync();
       return await super.buildJson(data);
     } catch (e) {
@@ -24,9 +21,7 @@ export class ProjectHttpService extends BaseHttpService {
   ): Promise<Response | number> {
     try {
       if (!req.user?.id) return 500;
-      //
-      //  Get the data from the KV
-      //
+
       const data = await req.data.projects.getAllWatchedAsync(req.user.id);
       return await super.buildJson(data);
     } catch (e) {
@@ -47,10 +42,9 @@ export class ProjectHttpService extends BaseHttpService {
         if (match) return match;
       }
       if (!req.params?.projectId) return 500;
-      //
-      //  Get the data from the KV
-      //
+
       const data = await req.data.projects.getAsync(req.params.projectId);
+
       return await super.buildJson(data);
     } catch (e) {
       req.logException(

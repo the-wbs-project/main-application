@@ -1,29 +1,53 @@
 import { Injectable } from '@angular/core';
+import { WbsNodeService } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
+import { RebuildResults } from '../models';
 
 @Injectable()
 export class WbsPhaseService {
-  rebuildLevels(list: WbsNodeView[]): WbsNodeView[] {
-    const results: WbsNodeView[] = [];
+  rebuildLevels(list: WbsNodeView[]): RebuildResults {
+    const results: RebuildResults = {
+      rows: [],
+      changedIds: [],
+    };
 
     const rebuild = (parentId: string, parentLevel: number[]): number => {
       const children = this.getSortedVmChildren(parentId, list);
       let count = 0;
 
       for (var i = 0; i < children.length; i++) {
+        let changed = false;
         const child = children[i];
 
-        child.order = i + 1;
+        if (child.order !== i + 1) {
+          child.order = i + 1;
+          changed = true;
+        }
         const level = [...parentLevel, child.order];
+        const levelText = level.join('.');
 
-        child.levels = level;
-        child.levelText = level.join('.');
+        if (child.levelText !== levelText) {
+          child.levels = level;
+          child.levelText = levelText;
+          changed = true;
+        }
+        results.rows.push(child);
+        const childrenCount = rebuild(child.id, level);
 
-        results.push(child);
-
-        child.children = rebuild(child.id, level);
+        if (child.children !== childrenCount) {
+          child.children = childrenCount;
+          changed = true;
+        }
+        if (child.treeParentId !== parentId) {
+          child.treeParentId = parentId;
+          changed = true;
+        }
 
         count += child.children + 1;
+
+        if (changed) {
+          results.changedIds.push(child.id);
+        }
       }
       return count;
     };
@@ -33,7 +57,7 @@ export class WbsPhaseService {
       const cat = categories[i];
       const parentLevel = [i + 1];
 
-      results.push(list.find((x) => x.id === cat.id)!);
+      results.rows.push(list.find((x) => x.id === cat.id)!);
 
       rebuild(cat.id, parentLevel);
     }
@@ -46,6 +70,6 @@ export class WbsPhaseService {
   ): WbsNodeView[] {
     return list
       .filter((x) => x.parentId === parentId)
-      .sort((a, b) => (a.order < b.order ? -1 : 1));
+      .sort(WbsNodeService.sort);
   }
 }

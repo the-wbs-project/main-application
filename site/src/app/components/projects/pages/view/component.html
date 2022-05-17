@@ -40,7 +40,8 @@
                   [nodes]="nodeViews$ | async"
                   [project]="project"
                   [toolbar]="toolbar"
-                  (selectedChanged)="nodeSelected(project, $event)"
+                  (reordered)="reordered($event)"
+                  (selectedChanged)="nodeSelected($event)"
                 >
                 </wbs-tree>
               </div>

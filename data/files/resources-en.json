@@ -99,6 +99,9 @@
         "SelectDisciplines": "Select Disciplines",
         "CreateTask": "Create Task",
         "OtherFlags": "Other Flags"
+      },
+      "Actions": {
+        "NodeRecordered": "{0} was reordered from {1} to {2}."
       }
     }
   }

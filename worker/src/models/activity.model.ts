@@ -1,11 +1,11 @@
 export interface Activity {
-  id?: string;
-  timestamp: Date;
-  orgId: string;
+  label: string;
+  timestamp: number;
   userId: string;
-  wbsParentId?: string;
+  objectId: string;
+  topLevelId: string;
   versionId?: string;
-  wbsId?: string;
   action: string;
-  data: Record<string, string | number>;
+  labelTitle: string;
+  data: (string | number | null | undefined)[];
 }
