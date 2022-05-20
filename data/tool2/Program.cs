@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Azure.Cosmos;
 using Newtonsoft.Json;
@@ -12,9 +13,11 @@ namespace table_copy {
         private static readonly List<HttpStatusCode> codes = new List<HttpStatusCode> { HttpStatusCode.OK, HttpStatusCode.Created };
 
         static async Task Main(string[] args) {
-            Console.WriteLine(args[0]);
-            var fileDir = args[0];
-            var env = args[1];
+            //Console.WriteLine(args[0]);
+            //var fileDir = args[0];
+            //var env = args[1];
+            var fileDir = "..\\..\\..\\..\\files";
+            var env = "qa";
 
             var srcConfigFile = await File.ReadAllTextAsync(Path.Combine(fileDir, "config.json"));
             var destConfigFile = await File.ReadAllTextAsync(Path.Combine(fileDir, $"config-{env}.json"));
@@ -22,30 +25,68 @@ namespace table_copy {
             var srcConfig = JsonConvert.DeserializeObject<Dictionary<string, string>>(srcConfigFile);
             var destConfig = JsonConvert.DeserializeObject<Dictionary<string, string>>(destConfigFile);
 
-            var source = CreateContainer(srcConfig);
-            var destination = CreateContainer(destConfig);
+            var source = new CosmosClient(srcConfig["cs"]);
+            var destination = new CosmosClient(destConfig["cs"]);
+            //
+            //  First lets clear out the existing databases
+            //
+            Console.WriteLine("Clearing out databases");
 
-            await CopyAllAsync(source, destination);
+            foreach (var db in await GetDatabaseNamesAsync(destination))
+            {
+                Console.WriteLine("Deleting " + db);
+                await destination.GetDatabase(db).DeleteAsync();
+            }
+            //
+            //  Create and populate DBs and Containers
+            //
+            Console.WriteLine();
+            Console.WriteLine("Start creation...");
+            Console.WriteLine();
+
+            foreach (var db in await GetDatabaseNamesAsync(source))
+            {
+                Console.WriteLine();
+                Console.WriteLine("Creating " + db);
+
+                await destination.CreateDatabaseIfNotExistsAsync(db);
+
+                var destDb = destination.GetDatabase(db);
+
+                foreach (var container in await GetContainerNamesAsync(source.GetDatabase(db)))
+                {
+                    var sourceContainer = source.GetContainer(db, container.Id);
+
+                    var destContainer = (await destDb.CreateContainerAsync(new ContainerProperties
+                    {
+                        Id = container.Id,
+                        PartitionKeyPath = container.PartitionKeyPath,
+                        IndexingPolicy = container.IndexingPolicy,
+                        UniqueKeyPolicy = container.UniqueKeyPolicy
+                    })).Container;
+
+                    await CopyAllAsync(sourceContainer, destContainer, container.PartitionKeyPath.Replace("/", ""));
+                }
+            }
         }
 
-        public static async Task CopyAllAsync(Container srcContainer, Container destContainer) {
-            var query = new QueryDefinition("SELECT DISTINCT value c.pk FROM c");
+        public static async Task CopyAllAsync(Container srcContainer, Container destContainer, string pk)
+        {
+            Console.WriteLine("   Copying " + srcContainer.Id);
+
+            var query = new QueryDefinition($"SELECT DISTINCT value c.{pk} FROM c");
 
             var list = (await GetListAsync<string>(srcContainer, query)).OrderBy(x => x).ToList();
 
-            Console.Write("Skip? ");
-            var skip = Console.ReadLine();
-            var skip2 = string.IsNullOrWhiteSpace(skip) ? 0 : int.Parse(skip);
-
-            for (var i = skip2; i < list.Count; i++) {
-                Console.Write($"{i}. {list[i]}");
+            for (var i = 0; i < list.Count; i++) {
+                Console.Write($"      {i}. {list[i]}");
 
                 if (list[i] == "Sessions") {
                     Console.WriteLine(" Skipping");
                     continue;
                 }
 
-                var all = await GetAllByPartitionyAsync<dynamic>(srcContainer, list[i]);
+                var all = await GetAllByPartitionyAsync<dynamic>(srcContainer, pk, list[i]);
                 var count = 0;
 
                 Console.Write($" {all.Count} -> ");
@@ -58,7 +99,7 @@ namespace table_copy {
                     x.Remove("_etag");
                     x.Remove("_attachments");
                     x.Remove("_ts");
-                    tasks.Add(UpsertAsync(destContainer, x, (string) x["pk"]));
+                    tasks.Add(UpsertAsync(destContainer, x, (string) x[pk]));
                     count++;
 
                     if (tasks.Count == 10) {
@@ -75,9 +116,9 @@ namespace table_copy {
             }
         }
 
-        public static Task<List<T>> GetAllByPartitionyAsync<T>(Container container, string partitionKey = null) {
-            var query = new QueryDefinition("SELECT * FROM c WHERE c.pk = @pk");
-            query.WithParameter("@pk", partitionKey);
+        public static Task<List<T>> GetAllByPartitionyAsync<T>(Container container, string pk, string pkValue) {
+            var query = new QueryDefinition($"SELECT * FROM c WHERE c.{pk} = @pk");
+            query.WithParameter("@pk", pkValue);
 
             return GetListAsync<T>(container, query);
         }
@@ -101,6 +142,30 @@ namespace table_copy {
             var response = await container.UpsertItemAsync(document, new PartitionKey(pk));
 
             if (!codes.Contains(response.StatusCode)) throw new Exception($"An error occured upserting a db object: {response.StatusCode}.");
+        }
+
+        private static async Task<List<ContainerProperties>> GetContainerNamesAsync(Database db)
+        {
+            var list = new List<ContainerProperties>();
+
+            using (var iterator = db.GetContainerQueryIterator<ContainerProperties>())
+                while (iterator.HasMoreResults)
+                    foreach (var x in await iterator.ReadNextAsync())
+                        list.Add(x);
+
+            return list;
+        }
+
+        private static async Task<List<string>> GetDatabaseNamesAsync(CosmosClient client)
+        {
+            var list = new List<string>();
+
+            using (var iterator = client.GetDatabaseQueryIterator<DatabaseProperties>())
+                while (iterator.HasMoreResults)
+                    foreach (var x in await iterator.ReadNextAsync())
+                        list.Add(x.Id);
+
+            return list;
         }
 
         private static Container CreateContainer(Dictionary<string, string> config) {

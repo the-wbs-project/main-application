@@ -8,6 +8,7 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
 import { NotificationModule } from '@progress/kendo-angular-notification';
+import { PopupModule } from '@progress/kendo-angular-popup';
 import {
   AnalyticsService,
   AppInitializerFactory,
@@ -40,6 +41,7 @@ import { AppComponent } from './app.component';
     NgxsModule.forRoot([AuthState, MetadataState, ProjectListState, UiState]),
     NgxsRouterPluginModule.forRoot(),
     NotificationModule,
+    PopupModule,
     ToastrModule.forRoot(),
     TranslateModule.forRoot(),
   ],

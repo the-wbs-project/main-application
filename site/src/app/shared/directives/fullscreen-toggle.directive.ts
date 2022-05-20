@@ -1,29 +1,21 @@
 import { Directive, HostListener, Inject } from '@angular/core';
-import { DOCUMENT } from "@angular/common";
+import { DOCUMENT } from '@angular/common';
 
 @Directive({
-  selector: '[appFullscreen]'
+  selector: '[appFullscreen]',
 })
 export class FullscreenDirective {
+  fullScreen: boolean = false;
+  elem: any;
 
+  constructor(@Inject(DOCUMENT) private document: any) {}
 
- 
-
-  // For simple code use below code
- public fullScreen: boolean = false;
-  public elem: any;
-
-  constructor(
-    @Inject(DOCUMENT) private document: any
-  ) { }
-
-  ngOnInit(){
+  ngOnInit() {
     this.elem = document.documentElement;
   }
 
   @HostListener('click')
-
-  onClick(){
+  onClick() {
     this.fullScreen = !this.fullScreen;
     if (this.fullScreen) {
       if (this.elem.requestFullscreen) {
@@ -53,5 +45,4 @@ export class FullscreenDirective {
       }
     }
   }
-
 }

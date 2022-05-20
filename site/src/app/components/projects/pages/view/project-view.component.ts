@@ -24,22 +24,22 @@ import {
   RemoveTask,
   TreeReordered,
   UploadNodes,
-} from '../../actions';
-import { ProjectState } from '../../states';
+} from './project-view.actions';
+import { ProjectViewState } from './project-view.state';
 
 @Component({
-  templateUrl: './component.html',
-  styleUrls: ['./component.scss'],
-
+  templateUrl: './project-view.component.html',
+  styleUrls: ['./project-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectsViewComponent {
   @Select(NodeEditorState.node) node$!: Observable<WbsNodeView>;
   @Select(NodeEditorState.show) show$: Observable<boolean> | undefined;
-  @Select(ProjectState.current) project$!: Observable<Project>;
-  @Select(ProjectState.viewNode) viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;
-  @Select(ProjectState.nodeViews) nodeViews$!: Observable<WbsNodeView[]>;
-  @Select(ProjectState.viewProject)
+  @Select(ProjectViewState.current) project$!: Observable<Project>;
+  @Select(ProjectViewState.viewNode)
+  viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;
+  @Select(ProjectViewState.nodeViews) nodeViews$!: Observable<WbsNodeView[]>;
+  @Select(ProjectViewState.viewProject)
   viewProject$!: Observable<PROJECT_VIEW_TYPE>;
 
   readonly faDownload = faDownload;
@@ -80,7 +80,7 @@ export class ProjectsViewComponent {
   }
 
   nodeSelected(node: WbsNodeView) {
-    const activity = this.store.selectSnapshot(ProjectState.activity) ?? [];
+    const activity = this.store.selectSnapshot(ProjectViewState.activity) ?? [];
     this.store.dispatch(
       new NodeSelected(
         node,
@@ -92,7 +92,9 @@ export class ProjectsViewComponent {
 
   nodeMenuClicked(action: string, node: WbsNodeView) {
     if (action === 'delete') {
-      const reasons = this.store.selectSnapshot(ProjectState.deleteReasons)!;
+      const reasons = this.store.selectSnapshot(
+        ProjectViewState.deleteReasons
+      )!;
 
       this.deleteService
         .launchAsync(reasons)

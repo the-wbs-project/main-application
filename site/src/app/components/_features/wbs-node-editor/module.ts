@@ -1,9 +1,6 @@
 import { NgModule } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
-import {
-  ButtonModule,
-  DropDownButtonModule,
-} from '@progress/kendo-angular-buttons';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import {
   ExpansionPanelModule,
@@ -17,7 +14,6 @@ import { NodeEditorState } from './state';
 @NgModule({
   imports: [
     ButtonModule,
-    DropDownButtonModule,
     DropDownListModule,
     ExpansionPanelModule,
     PanelBarModule,

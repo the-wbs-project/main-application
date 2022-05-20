@@ -1,0 +1,30 @@
+<div class="container-fluid">
+  <div class="row row-sm">
+    <div class="offset-xl-2 col-xl-3 offset-lg-1 col-lg-4 col-md-6 col-sm-6">
+      <div class="card bg-primary-05">
+        <div class="card-body ht-200 text-center">
+          <fa-duotone-icon [icon]="faBooks" size="5x"></fa-duotone-icon>
+          <h6 class="text-drak text-uppercase mt-2">From Library</h6>
+          <span class="text-muted">
+            Search through our amazing library of project template.
+          </span>
+        </div>
+        <button class="btn btn-success">Coming Soon...</button>
+      </div>
+    </div>
+    <div class="offset-xl-2 col-xl-3 offset-lg-2 col-lg-4 col-md-6 col-sm-6">
+      <div class="card bg-primary-05">
+        <div class="card-body ht-200 text-center">
+          <fa-duotone-icon [icon]="faChalkboardUser" size="5x">
+          </fa-duotone-icon>
+          <h6 class="text-drak text-uppercase mt-2">By Hand</h6>
+          <span class="text-muted">
+            Create your project plan by hand to match exactly what your team is
+            looking for.
+          </span>
+        </div>
+        <button class="btn btn-success" (click)="scratch()">Select</button>
+      </div>
+    </div>
+  </div>
+</div>

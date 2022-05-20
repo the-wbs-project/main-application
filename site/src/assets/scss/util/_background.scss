@@ -3,7 +3,6 @@
 }
 
 a.bg-primary {
-
   &:hover,
   &:focus {
     background-color: $primary !important;
@@ -15,7 +14,6 @@ a.bg-primary {
 }
 
 button.bg-primary {
-
   &:hover,
   &:focus {
     background-color: $primary !important;
@@ -27,7 +25,6 @@ button.bg-primary {
 }
 
 a.bg-secondary {
-
   &:hover,
   &:focus {
     background-color: $secondary !important;
@@ -35,7 +32,6 @@ a.bg-secondary {
 }
 
 button.bg-secondary {
-
   &:hover,
   &:focus {
     background-color: $secondary !important;
@@ -47,7 +43,6 @@ button.bg-secondary {
 }
 
 a.bg-success {
-
   &:hover,
   &:focus {
     background-color: #05957d !important;
@@ -55,7 +50,6 @@ a.bg-success {
 }
 
 button.bg-success {
-
   &:hover,
   &:focus {
     background-color: #00927a !important;
@@ -67,7 +61,6 @@ button.bg-success {
 }
 
 a.bg-info {
-
   &:hover,
   &:focus {
     background-color: $info !important;
@@ -75,7 +68,6 @@ a.bg-info {
 }
 
 button.bg-info {
-
   &:hover,
   &:focus {
     background-color: $info !important;
@@ -87,7 +79,6 @@ button.bg-info {
 }
 
 a.bg-warning {
-
   &:hover,
   &:focus {
     background-color: #f3a024 !important;
@@ -95,7 +86,6 @@ a.bg-warning {
 }
 
 button.bg-warning {
-
   &:hover,
   &:focus {
     background-color: #f3a024 !important;
@@ -107,7 +97,6 @@ button.bg-warning {
 }
 
 a.bg-danger {
-
   &:hover,
   &:focus {
     background-color: #ee1f1f !important;
@@ -115,7 +104,6 @@ a.bg-danger {
 }
 
 button.bg-danger {
-
   &:hover,
   &:focus {
     background-color: #ee1f1f !important;
@@ -127,7 +115,6 @@ button.bg-danger {
 }
 
 a.bg-purple {
-
   &:hover,
   &:focus {
     background-color: #5930a2 !important;
@@ -135,7 +122,6 @@ a.bg-purple {
 }
 
 button.bg-purple {
-
   &:hover,
   &:focus {
     background-color: #5930a2 !important;
@@ -147,7 +133,6 @@ button.bg-purple {
 }
 
 a.bg-light {
-
   &:hover,
   &:focus {
     background-color: #d5d9e4 !important;
@@ -155,7 +140,6 @@ a.bg-light {
 }
 
 button.bg-light {
-
   &:hover,
   &:focus {
     background-color: #d5d9e4 !important;
@@ -167,7 +151,6 @@ button.bg-light {
 }
 
 a.bg-dark {
-
   &:hover,
   &:focus {
     background-color: #283143 !important;
@@ -175,7 +158,6 @@ a.bg-dark {
 }
 
 button.bg-dark {
-
   &:hover,
   &:focus {
     background-color: #283143 !important;
@@ -190,7 +172,7 @@ button.bg-dark {
   background-color: transparent !important;
 }
 
-.bg-gray+.select2-container--default .select2-selection--single {
+.bg-gray + .select2-container--default .select2-selection--single {
   background-color: #455473;
 
   .select2-selection__rendered {
@@ -393,8 +375,12 @@ button.bg-dark {
   background-color: $primary !important;
 }
 
+.bg-primary-05 {
+  background-color: $primary-05 !important;
+}
+
 .bg-primary-gradient {
-  background-image: $primary-gradient !important
+  background-image: $primary-gradient !important;
 }
 
 .bg-danger-gradient {
@@ -410,15 +396,27 @@ button.bg-dark {
 }
 
 .bg-primary-gradient1 {
-  background-image: linear-gradient(to top, #64c5eb 0%, $primary 100%) !important;
+  background-image: linear-gradient(
+    to top,
+    #64c5eb 0%,
+    $primary 100%
+  ) !important;
 }
 
 .bg-info-gradient1 {
-  background-image: linear-gradient(to top, #4ec2f0 0%, #31eccd 100%) !important;
+  background-image: linear-gradient(
+    to top,
+    #4ec2f0 0%,
+    #31eccd 100%
+  ) !important;
 }
 
 .bg-purple-gradient {
-  background-image: linear-gradient(to right, #673AB7 0%, #ba7bfb 100%) !important;
+  background-image: linear-gradient(
+    to right,
+    #673ab7 0%,
+    #ba7bfb 100%
+  ) !important;
 }
 
 .bg-info-gradient {
@@ -430,15 +428,27 @@ button.bg-dark {
 }
 
 .bg-pink-gradient {
-  background-image: linear-gradient(to right, $pink 0%, #f36eae 100%) !important;
+  background-image: linear-gradient(
+    to right,
+    $pink 0%,
+    #f36eae 100%
+  ) !important;
 }
 
 .bg-purple-gradient {
-  background-image: linear-gradient(to right, $purple 0%, #884af1 100%) !important;
+  background-image: linear-gradient(
+    to right,
+    $purple 0%,
+    #884af1 100%
+  ) !important;
 }
 
 .bg-teal-gradient {
-  background-image: linear-gradient(to right, $teal 0%, #96e8e8 100%) !important;
+  background-image: linear-gradient(
+    to right,
+    $teal 0%,
+    #96e8e8 100%
+  ) !important;
 }
 
 .bg-azure {
@@ -464,8 +474,8 @@ button.bg-dark {
   color: $white !important;
 }
 
-.gutters-xs>.col,
-.gutters-xs>[class*="col-"] {
+.gutters-xs > .col,
+.gutters-xs > [class*="col-"] {
   padding-right: 0.25rem;
   padding-left: 0.25rem;
 }
@@ -473,7 +483,6 @@ button.bg-dark {
 .gutters-xs {
   margin-top: -25px;
 }
-
 
 .tag-outline-primary {
   color: $primary !important;

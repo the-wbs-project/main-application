@@ -1,0 +1,13 @@
+<div class="display-ib wd-400">
+  <kendo-textbox #title [ngModel]="title$ | async" placeholder="Project Title">
+  </kendo-textbox>
+</div>
+<br />
+<br />
+<button
+  class="btn btn-primary"
+  [disabled]="title.value === ''"
+  (click)="nav(title.value)"
+>
+  Continue
+</button>

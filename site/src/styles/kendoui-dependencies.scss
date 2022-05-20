@@ -1,4 +1,10 @@
 @import "./variables.scss";
+
+@import "~@progress/kendo-theme-bootstrap/scss/core/_index.scss";
+@import "~@progress/kendo-theme-bootstrap/scss/common/_index.scss";
+@import "~@progress/kendo-theme-bootstrap/scss/utils/_index.scss";
+@import "~@progress/kendo-theme-bootstrap/scss/styling/_index.scss";
+
 @import "~@progress/kendo-theme-bootstrap/scss/bottom-navigation/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/button/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/dialog/_index.scss";
@@ -11,6 +17,7 @@
 @import "~@progress/kendo-theme-bootstrap/scss/panelbar/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/popover/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/splitter/_index.scss";
+@import "~@progress/kendo-theme-bootstrap/scss/switch/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/textbox/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/tooltip/_index.scss";
 @import "~@progress/kendo-theme-bootstrap/scss/treelist/_index.scss";

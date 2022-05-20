@@ -17,7 +17,7 @@
   },
   {
     "db": "acme_engineering",
-    "col": "Activities",
+    "col": "Activity",
     "pk": "topLevelId"
   },
   {

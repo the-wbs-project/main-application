@@ -4,7 +4,6 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { IconModule } from '@progress/kendo-angular-icons';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { SplitterModule } from '@progress/kendo-angular-layout';
-import { ProjectGuard } from 'src/app/components/projects/guards';
 import { SharedModule } from '@wbs/shared/module';
 import {
   WbsNodeCreateModule,
@@ -12,9 +11,20 @@ import {
   WbsNodeEditorModule,
   WbsTreeModule,
 } from '../../../_features';
-import { ProjectViewGuard } from '../../guards';
-import { ProjectsViewComponent } from './component';
-import { ProjectViewActionsComponent } from '../../components';
+import { ProjectGuard, ProjectViewGuard } from './guards';
+import { ProjectsViewComponent } from './project-view.component';
+import {
+  ProjectNodeUploadDialogComponent,
+  ProjectViewActionsComponent,
+} from './components';
+import {
+  PhaseExtractProcessor,
+  TextCompareService,
+  UploadFileService,
+} from './services';
+import { FileSelectModule, UploadModule } from '@progress/kendo-angular-upload';
+import { NgxsModule } from '@ngxs/store';
+import { ProjectViewState } from './project-view.state';
 
 const routes: Routes = [
   {
@@ -33,16 +43,29 @@ const routes: Routes = [
   imports: [
     ButtonModule,
     ContextMenuModule,
+    FileSelectModule,
     IconModule,
+    NgxsModule.forFeature([ProjectViewState]),
     RouterModule.forChild(routes),
     SharedModule,
     SplitterModule,
+    UploadModule,
     WbsNodeCreateModule,
     WbsNodeDeleteModule,
     WbsNodeEditorModule,
     WbsTreeModule,
   ],
-  providers: [ProjectGuard, ProjectViewGuard],
-  declarations: [ProjectsViewComponent, ProjectViewActionsComponent],
+  providers: [
+    PhaseExtractProcessor,
+    ProjectGuard,
+    ProjectViewGuard,
+    TextCompareService,
+    UploadFileService,
+  ],
+  declarations: [
+    ProjectNodeUploadDialogComponent,
+    ProjectsViewComponent,
+    ProjectViewActionsComponent,
+  ],
 })
-export class ProjectsViewModule {}
+export class ProjectViewModule {}

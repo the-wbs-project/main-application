@@ -1,0 +1,54 @@
+<div
+  id="phases-container"
+  class="phases-container"
+  appFillElement
+  [paddingBottom]="20"
+>
+  <div class="phases-body">
+    <ul
+      class="list-group display-ib text-start wd-600"
+      appMatchSize
+      idToMatch="phases-container"
+      [paddingBottom]="50"
+      style="overflow-y: scroll"
+    >
+      <li
+        *ngFor="let cat of cats$ | async"
+        class="list-group-item d-flex flex-row"
+      >
+        <div style="width: 60px; height: 40px">
+          <fa-layers [fixedWidth]="true">
+            <fa-icon size="3x" [icon]="faCircle"></fa-icon>
+            <fa-layers-text
+              *ngIf="cat.selected"
+              [content]="cat.number!.toString()"
+              transform="right-15"
+            ></fa-layers-text>
+          </fa-layers>
+        </div>
+        <div class="flex-grow-1">
+          <div style="font-size: 16px">
+            {{ cat.label }}
+          </div>
+          <div style="font-size: 12px; font-style: italic">
+            {{ cat.description }}
+          </div>
+        </div>
+        <div>
+          <kendo-switch [(ngModel)]="cat.selected" (ngModelChange)="changed()">
+          </kendo-switch>
+        </div>
+      </li>
+    </ul>
+  </div>
+  <div class="phases-footer w-100 text-center">
+    <div class="display-ib wd-600">
+      <div class="display-ib wd-300 text-start">
+        <button class="btn btn-warning" (click)="nav()">Back</button>
+      </div>
+      <div class="display-ib wd-300 text-end">
+        <button class="btn btn-primary" (click)="nav()">Continue</button>
+      </div>
+    </div>
+  </div>
+</div>

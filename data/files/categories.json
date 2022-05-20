@@ -2,7 +2,8 @@
   {
     "id": "initial",
     "type": "categories_phase",
-    "label": "Category_Phase.Initial",
+    "label": "Category_Phase.Initial_Name",
+    "description": "Category_Phase.Initial_Description",
     "tags": [
       "Initial",
       "Initial Phase"
@@ -11,7 +12,8 @@
   {
     "id": "planning",
     "type": "categories_phase",
-    "label": "Category_Phase.Planning",
+    "label": "Category_Phase.Planning_Name",
+    "description": "Category_Phase.Planning_Description",
     "tags": [
       "Planning",
       "Planning Phase"
@@ -20,7 +22,8 @@
   {
     "id": "master_plan",
     "type": "categories_phase",
-    "label": "Category_Phase.MasterPlan",
+    "label": "Category_Phase.MasterPlan_Name",
+    "description": "Category_Phase.MasterPlan_Description",
     "tags": [
       "Master",
       "Master Plan"
@@ -29,7 +32,8 @@
   {
     "id": "pre_design",
     "type": "categories_phase",
-    "label": "Category_Phase.PreDesign",
+    "label": "Category_Phase.PreDesign_Name",
+    "description": "Category_Phase.PreDesign_Description",
     "tags": [
       "Pre Design",
       "Pre-Design"
@@ -38,7 +42,8 @@
   {
     "id": "schematic_design",
     "type": "categories_phase",
-    "label": "Category_Phase.Schematic",
+    "label": "Category_Phase.Schematic_Name",
+    "description": "Category_Phase.Schematic_Description",
     "tags": [
       "Schematic",
       "Schematic Design"
@@ -47,7 +52,8 @@
   {
     "id": "design_dev",
     "type": "categories_phase",
-    "label": "Category_Phase.DesignDev",
+    "label": "Category_Phase.DesignDev_Name",
+    "description": "Category_Phase.DesignDev_Description",
     "tags": [
       "Design",
       "Design Development"
@@ -56,7 +62,8 @@
   {
     "id": "design_meetings",
     "type": "categories_phase",
-    "label": "Category_Phase.DesignMeetings",
+    "label": "Category_Phase.DesignMeetings_Name",
+    "description": "Category_Phase.DesignMeetings_Description",
     "tags": [
       "Design",
       "Meetings",
@@ -66,7 +73,8 @@
   {
     "id": "contract_docs",
     "type": "categories_phase",
-    "label": "Category_Phase.ContractDocs",
+    "label": "Category_Phase.ContractDocs_Name",
+    "description": "Category_Phase.ContractDocs_Description",
     "tags": [
       "Contract",
       "Contract Documents"
@@ -75,7 +83,8 @@
   {
     "id": "bidding",
     "type": "categories_phase",
-    "label": "Category_Phase.Bidding",
+    "label": "Category_Phase.Bidding_Name",
+    "description": "Category_Phase.Bidding_Description",
     "tags": [
       "Bidding"
     ]
@@ -83,7 +92,8 @@
   {
     "id": "execution",
     "type": "categories_phase",
-    "label": "Category_Phase.Execution",
+    "label": "Category_Phase.Execution_Name",
+    "description": "Category_Phase.Execution_Description",
     "tags": [
       "Execution",
       "Execution Phase"
@@ -92,7 +102,8 @@
   {
     "id": "project_management",
     "type": "categories_phase",
-    "label": "Category_Phase.ProjectMangement",
+    "label": "Category_Phase.ProjectMangement_Name",
+    "description": "Category_Phase.ProjectMangement_Description",
     "tags": [
       "Project Management"
     ]
@@ -100,7 +111,8 @@
   {
     "id": "const_admin",
     "type": "categories_phase",
-    "label": "Category_Phase.ConstructionAdmin",
+    "label": "Category_Phase.ConstructionAdmin_Name",
+    "description": "Category_Phase.ConstructionAdmin_Description",
     "tags": [
       "Construction Administration"
     ]
@@ -108,7 +120,8 @@
   {
     "id": "project_reporting",
     "type": "categories_phase",
-    "label": "Category_Phase.ProjectReporting",
+    "label": "Category_Phase.ProjectReporting_Name",
+    "description": "Category_Phase.ProjectReporting_Description",
     "tags": [
       "Project Reporting"
     ]
@@ -116,7 +129,8 @@
   {
     "id": "asset_cost_impact",
     "type": "categories_phase",
-    "label": "Category_Phase.AssetCostImpact",
+    "label": "Category_Phase.AssetCostImpact_Name",
+    "description": "Category_Phase.AssetCostImpact_Description",
     "tags": [
       "Asset Cost Impact"
     ]
@@ -124,7 +138,8 @@
   {
     "id": "post_contruction",
     "type": "categories_phase",
-    "label": "Category_Phase.PostContruction",
+    "label": "Category_Phase.PostContruction_Name",
+    "description": "Category_Phase.PostContruction_Description",
     "tags": [
       "Post Contruction"
     ]
@@ -132,7 +147,8 @@
   {
     "id": "ca_meetings",
     "type": "categories_phase",
-    "label": "Category_Phase.CaMeetings",
+    "label": "Category_Phase.CaMeetings_Name",
+    "description": "Category_Phase.CaMeetings_Description",
     "tags": [
       "CA Meetings"
     ]
@@ -140,7 +156,8 @@
   {
     "id": "contract",
     "type": "categories_phase",
-    "label": "Category_Phase.Contract",
+    "label": "Category_Phase.Contract_Name",
+    "description": "Category_Phase.Contract_Description",
     "tags": [
       "Contract",
       "Contract Phase"
@@ -149,7 +166,8 @@
   {
     "id": "mechanical",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Mechanical",
+    "label": "Category_Discipline.Mechanical_Name",
+    "description": "Category_Discipline.Mechanical_Description",
     "tags": [
       "Mechanical"
     ]
@@ -157,7 +175,8 @@
   {
     "id": "electrical",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Electrical",
+    "label": "Category_Discipline.Electrical_Name",
+    "description": "Category_Discipline.Electrical_Description",
     "tags": [
       "Electrical"
     ]
@@ -165,7 +184,8 @@
   {
     "id": "structural",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Structural",
+    "label": "Category_Discipline.Structural_Name",
+    "description": "Category_Discipline.Structural_Description",
     "tags": [
       "Structural"
     ]
@@ -173,7 +193,8 @@
   {
     "id": "survey",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Survey",
+    "label": "Category_Discipline.Survey_Name",
+    "description": "Category_Discipline.Survey_Description",
     "tags": [
       "Survey"
     ]
@@ -181,7 +202,8 @@
   {
     "id": "civil",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Civil",
+    "label": "Category_Discipline.Civil_Name",
+    "description": "Category_Discipline.Civil_Description",
     "tags": [
       "Civil"
     ]
@@ -189,7 +211,8 @@
   {
     "id": "plumbing",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Plumbing",
+    "label": "Category_Discipline.Plumbing_Name",
+    "description": "Category_Discipline.Plumbing_Description",
     "tags": [
       "Plumbing"
     ]
@@ -197,7 +220,8 @@
   {
     "id": "scientist",
     "type": "categories_discipline",
-    "label": "Category_Discipline.Scientist",
+    "label": "Category_Discipline.Scientist_Name",
+    "description": "Category_Discipline.Scientist_Description",
     "tags": [
       "Scientist"
     ]

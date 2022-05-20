@@ -5,16 +5,21 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
-import { PerfectScrollbarModule } from 'ngx-perfect-scrollbar';
-import { PERFECT_SCROLLBAR_CONFIG } from 'ngx-perfect-scrollbar';
-import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
+import {
+  PerfectScrollbarConfigInterface,
+  PerfectScrollbarModule,
+  PERFECT_SCROLLBAR_CONFIG,
+} from 'ngx-perfect-scrollbar';
 import { LoadingComponent } from './components';
 import {
   FillElementDirective,
   FullscreenDirective,
   MainContentDirective,
+  MatchSizeDirective,
+  ProgressBarDirective,
   SidemenuToggleDirective,
   ToggleThemeDirective,
 } from './directives';
@@ -46,6 +51,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   imports: [
     BottomNavigationModule,
     DialogModule,
+    DropDownButtonModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
@@ -73,7 +79,9 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoaderComponent,
     LoadingComponent,
     MainContentDirective,
+    MatchSizeDirective,
     PageHeaderComponent,
+    ProgressBarDirective,
     ProjectListFilterPipe,
     ProjectListFilterLengthPipe,
     RightSidebarComponent,
@@ -88,12 +96,15 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CommonModule,
     DialogModule,
     DisciplineIconPipe,
+    DropDownButtonModule,
     FillElementDirective,
     FontAwesomeModule,
     FormsModule,
     MainContentDirective,
+    MatchSizeDirective,
     NgbModule,
     PageHeaderComponent,
+    ProgressBarDirective,
     TranslateModule,
   ],
 })

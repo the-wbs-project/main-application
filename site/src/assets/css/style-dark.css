@@ -2527,6 +2527,10 @@ body.dark-theme {
     background-color: var(--primary-bg-color) !important;
 }
 
+.dark-theme .bg-primary-05 {
+    background-color: var(--primary05) !important;
+}
+
 .dark-theme .bg-secondary {
     background-color: #f74f75 !important;
 }

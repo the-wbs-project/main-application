@@ -3,7 +3,7 @@ import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { VerifyProject } from '../actions';
+import { VerifyProject } from '../project-view.actions';
 
 @Injectable()
 export class ProjectGuard implements CanActivate {

@@ -47,6 +47,19 @@
       -->
     </div>
     <div class="main-header-right">
+      <kendo-dropdownbutton
+        [data]="settings"
+        fillMode="outline"
+        size="small"
+        rounded="full"
+        icon="plus"
+        themeColor="success"
+        (itemClick)="navigate($event.url)"
+      >
+        <ng-template kendoDropDownButtonItemTemplate let-dataItem>
+          <span>{{ dataItem.text | translate }}</span>
+        </ng-template>
+      </kendo-dropdownbutton>
       <button
         class="navbar-toggler navresponsive-toggler d-md-none ms-auto"
         type="button"

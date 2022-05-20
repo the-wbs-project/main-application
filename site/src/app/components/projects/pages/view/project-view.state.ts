@@ -36,9 +36,9 @@ import {
   UploadNodes,
   VerifyDeleteReasons,
   VerifyProject,
-} from '../actions';
-import { ProjectNodeUploadDialogComponent } from '../components';
-import { PhaseExtractProcessor } from '../services';
+} from './project-view.actions';
+import { ProjectNodeUploadDialogComponent } from './components';
+import { PhaseExtractProcessor } from './services';
 
 interface StateModel {
   activity?: Activity[];
@@ -53,13 +53,13 @@ interface StateModel {
 
 @Injectable()
 @State<StateModel>({
-  name: 'projects',
+  name: 'projectView',
   defaults: {
     deleteReasons: [],
     navType: null,
   },
 })
-export class ProjectState {
+export class ProjectViewState {
   constructor(
     private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,

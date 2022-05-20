@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { faAlignLeft, faX } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import {
   LayoutService,
   NavService,
@@ -18,15 +20,21 @@ export class HeaderComponent implements OnInit {
 
   readonly faAlignLeft = faAlignLeft;
   readonly faX = faX;
+  readonly settings = [
+    {
+      text: 'General.Project',
+      url: ['/projects', 'create'],
+    },
+  ];
   isCollapsed = true;
   activated: boolean = false;
 
   constructor(
-    private layoutService: LayoutService,
-    public SwitcherService: SwitcherService,
-    public navServices: NavService,
-    private router: Router,
-    private modalService: NgbModal
+    readonly SwitcherService: SwitcherService,
+    readonly navServices: NavService,
+    private readonly layoutService: LayoutService,
+    private readonly modalService: NgbModal,
+    private readonly store: Store
   ) {}
 
   ngOnInit(): void {}
@@ -62,5 +70,9 @@ export class HeaderComponent implements OnInit {
   closeToggle() {
     this.activated = false;
     this.body.classList.remove('search-open');
+  }
+
+  navigate(url: string[]): void {
+    this.store.dispatch(new Navigate(url));
   }
 }

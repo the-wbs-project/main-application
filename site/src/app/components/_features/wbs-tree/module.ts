@@ -1,9 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
-import {
-  ButtonModule,
-  DropDownButtonModule,
-} from '@progress/kendo-angular-buttons';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { IconsModule } from '@progress/kendo-angular-icons';
 import { TooltipsModule } from '@progress/kendo-angular-tooltip';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
@@ -22,7 +19,6 @@ import { WbsTreeToolbarDirective } from './directives';
   imports: [
     ButtonModule,
     CommonModule,
-    DropDownButtonModule,
     IconsModule,
     SharedModule,
     TooltipsModule,

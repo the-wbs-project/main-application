@@ -5,7 +5,6 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ContextMenuSelectEvent } from '@progress/kendo-angular-menu';
-import { DownloadNodes, UploadNodes } from '@wbs/components/projects/actions';
 
 @Component({
   selector: 'wbs-project-view-actions',
@@ -34,11 +33,5 @@ import { DownloadNodes, UploadNodes } from '@wbs/components/projects/actions';
 export class ProjectViewActionsComponent {
   constructor(private readonly store: Store) {}
 
-  selected(e: ContextMenuSelectEvent) {
-    if (e.item.icon === 'download') {
-      this.store.dispatch(new DownloadNodes());
-    } else if (e.item.icon === 'upload') {
-      this.store.dispatch(new UploadNodes());
-    }
-  }
+  selected(e: ContextMenuSelectEvent) {}
 }

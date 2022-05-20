@@ -81,6 +81,9 @@ export class MetadataState {
 
         for (const cat of [...discipline, ...phase]) {
           cat.label = this.resources.get(cat.label);
+
+          if (cat.description)
+            cat.description = this.resources.get(cat.description);
         }
 
         categoryList.set(PROJECT_NODE_VIEW.DISCIPLINE, discipline);

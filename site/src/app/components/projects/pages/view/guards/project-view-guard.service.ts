@@ -6,7 +6,10 @@ import { PROJECT_VIEW } from '@wbs/shared/models';
 import { Resources } from '@wbs/shared/services';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProjectViewChanged, VerifyDeleteReasons } from '../actions';
+import {
+  ProjectViewChanged,
+  VerifyDeleteReasons,
+} from '../project-view.actions';
 
 @Injectable()
 export class ProjectViewGuard implements CanActivate {

@@ -9,7 +9,7 @@ export class ActivityDataService {
   constructor(private readonly organization: string, dbFactory: DbFactory) {
     this.db = dbFactory.createDbService(
       this.organization,
-      'Activities',
+      'Activity',
       'topLevelId',
     );
   }

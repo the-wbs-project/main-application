@@ -1,5 +1,6 @@
 export * from './actions.enum';
 export * from './project-filter.enum';
+export * from './project-scope.enum';
 export * from './project-status.enum';
 export * from './project-node-view.enum';
 export * from './project-view.enum';
