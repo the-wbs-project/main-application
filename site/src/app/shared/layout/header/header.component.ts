@@ -22,7 +22,7 @@ export class HeaderComponent implements OnInit {
   readonly faX = faX;
   readonly settings = [
     {
-      text: 'General.Project',
+      text: 'General.CreateProject',
       url: ['/projects', 'create'],
     },
   ];

@@ -43,7 +43,7 @@
     "webpack-cli": "^4.7.0"
   },
   "dependencies": {
-    "@cfworker/cosmos": "1.6.10",
+    "@cfworker/cosmos": "^1.13.3",
     "@cfworker/uuid": "^1.9.1",
     "@cloudflare/kv-asset-handler": "^0.1.0",
     "@types/cookie": "^0.4.1",

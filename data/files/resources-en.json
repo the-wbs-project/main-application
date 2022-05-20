@@ -19,7 +19,8 @@
         "Download": "Download",
         "Upload": "Upload",
         "RetrievingData": "Retrieving Data...",
-        "ReviewingData": "Reviewing Data..."
+        "ReviewingData": "Reviewing Data...",
+        "CreateProject": "Create Project"
       },
       "Category_Phase": {
         "Initial_Name": "Initial Phase",

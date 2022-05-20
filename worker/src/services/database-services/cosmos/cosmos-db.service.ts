@@ -52,6 +52,7 @@ export class CosmosDbService implements DbService {
       [],
       skip,
       take,
+      true,
     );
   }
 
@@ -101,6 +102,7 @@ export class CosmosDbService implements DbService {
     }[],
     skip?: number,
     take?: number,
+    enableCrossPartition = false,
   ): Promise<T[]> {
     if (!this.db) throw new Error('The database has not been initiated.');
 
@@ -110,6 +112,7 @@ export class CosmosDbService implements DbService {
     const res = await this.db.queryDocuments<T>({
       query,
       parameters,
+      enableCrossPartition: enableCrossPartition,
     });
     if (res.status === 404) return [];
 

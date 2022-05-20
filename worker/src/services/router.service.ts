@@ -141,11 +141,7 @@ export class RouterService {
     //
     //  If any of the necessary information is missing, BAIL!
     //
-    if (
-      !req.params?.projectId ||
-      !req.user?.appInfo?.lastOrg ||
-      !req.user?.appInfo?.organizations
-    )
+    if (!req.user?.appInfo?.lastOrg || !req.user?.appInfo?.organizations)
       return 500;
     //
     //  Next check that the owner ID is in the claims

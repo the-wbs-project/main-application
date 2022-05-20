@@ -10,7 +10,7 @@ export class ProjectDataService {
   }
 
   getWatchedAsync(): Observable<Project[]> {
-    return this.http.get<Project[]>(`projects/watch`);
+    return this.http.get<Project[]>(`projects/watched`);
   }
 
   getAsync(projectId: string): Observable<Project> {

@@ -309,24 +309,24 @@
   resolved "https://registry.yarnpkg.com/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz#75a2e8b51cb758a7553d6804a5932d7aace75c39"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cfworker/cosmos@1.6.10":
-  version "1.6.10"
-  resolved "https://registry.yarnpkg.com/@cfworker/cosmos/-/cosmos-1.6.10.tgz#da1e02767084afe66f96776ac26c17f5751221dd"
-  integrity sha512-l6ZBDZDMqlQhRGiJqTZk/sMSvxm3/FzRRJSMtUQJOfrVey66yUOAWvUOFIaiUqwLtv8q9XlOQF78yxLVgFwj4Q==
+"@cfworker/cosmos@^1.13.3":
+  version "1.13.3"
+  resolved "https://registry.yarnpkg.com/@cfworker/cosmos/-/cosmos-1.13.3.tgz#a7e7727aeaba19723dbad73fdc2dbb8fc8b7d2a7"
+  integrity sha512-Ud9bJRkqL2pIBjyjbKGS0ojKnFz29oYPy8tUp/FFUMFrk72WG6A+6lXMpmx45RMXjaGqM1k9EQqqzXdAfW7qGg==
   dependencies:
-    "@cfworker/worker-types" "^1.6.8"
-    "@cloudflare/workers-types" "^2.1.0"
-    base64-arraybuffer "^0.2.0"
+    "@cfworker/worker-types" "^1.12.1"
+    "@cloudflare/workers-types" "^2.2.2"
+    rfc4648 "^1.5.1"
 
 "@cfworker/uuid@^1.9.1":
   version "1.12.0"
   resolved "https://registry.yarnpkg.com/@cfworker/uuid/-/uuid-1.12.0.tgz#9845cf592e1f4af52a1486ab60641d9731477d8c"
   integrity sha512-IgT5lbJ2CbFmDRgo4pTpB+Bn0eORTIkq3soblPG98KDcGEHw+hQl68NeeC99L/WZ9o37EP5raqxHdXxwKLxkcA==
 
-"@cfworker/worker-types@^1.6.8":
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.0.tgz#6ccaaaf4d37df6737ccfcae1cbc0458157e8031e"
-  integrity sha512-RejonzXzGHBkNNE8vLppN6PRnN+SsjfH1II44ZeYp2lJVu+7/h+L1jt6vrdi2enl4grhfFO5LC6z1/2QjfG3yg==
+"@cfworker/worker-types@^1.12.1":
+  version "1.12.1"
+  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.1.tgz#c1e651d5a71d6da5a1e34c64b427612d8472a3e0"
+  integrity sha512-DDZpu6FhT1MXH3USZ1+S1mscnYUZAZrtfFIwtSwuVSEp+vOSxZ3Bsm9eTbSDUffoXs3ZPhKFcUNa1++p/2l6cA==
 
 "@cloudflare/kv-asset-handler@^0.1.0":
   version "0.1.3"
@@ -335,7 +335,7 @@
   dependencies:
     mime "^2.5.2"
 
-"@cloudflare/workers-types@^2.1.0", "@cloudflare/workers-types@^2.2.2":
+"@cloudflare/workers-types@^2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@cloudflare/workers-types/-/workers-types-2.2.2.tgz#1bced16bba801d7af987da835467545bb5cc7ac6"
   integrity sha512-kaMn2rueJ0PL1TYVGknTCh0X0x0d9G+FNXAFep7/4uqecEZoQb/63o6rOmMuiqI09zLuHV6xhKRXinokV/MY9A==
@@ -1153,11 +1153,6 @@ balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
   integrity sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==
-
-base64-arraybuffer@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/base64-arraybuffer/-/base64-arraybuffer-0.2.0.tgz#4b944fac0191aa5907afe2d8c999ccc57ce80f45"
-  integrity sha512-7emyCsu1/xiBXgQZrscw/8KPRT44I4Yq9Pe6EGs3aPRTsWuggML1/1DTuZUuIaJPIm1FTDUVXl4x/yW8s0kQDQ==
 
 brace-expansion@^1.1.7:
   version "1.1.11"
@@ -3104,6 +3099,11 @@ reusify@^1.0.4:
   version "1.0.4"
   resolved "https://registry.yarnpkg.com/reusify/-/reusify-1.0.4.tgz#90da382b1e126efc02146e90845a88db12925d76"
   integrity sha512-U9nH88a3fc/ekCF1l0/UP1IosiuIjyTh7hBvXVMHYgVcfGvt897Xguj2UOLDeI5BG2m7/uwyaLVT6fbtCwTyzw==
+
+rfc4648@^1.5.1:
+  version "1.5.1"
+  resolved "https://registry.yarnpkg.com/rfc4648/-/rfc4648-1.5.1.tgz#b0b16756e33d9de8c0c7833e94b28e627ec372a4"
+  integrity sha512-60e/YWs2/D3MV1ErdjhJHcmlgnyLUiG4X/14dgsfm9/zmCWLN16xI6YqJYSCd/OANM7bUNzJqPY5B8/02S9Ibw==
 
 rimraf@^3.0.0, rimraf@^3.0.2:
   version "3.0.2"
