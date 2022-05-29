@@ -22,12 +22,11 @@ export class ActivityHttpService extends BaseHttpService {
 
   static async putAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      console.log(req.user);
-      if (!req.user?.id) return 500;
+      if (!req.state?.userId) return 500;
 
       const activity: Activity = await req.request.json();
 
-      activity.userId = req.user.id;
+      activity.userId = req.state.userId;
 
       return await req.data.activities.putAsync(activity);
     } catch (e) {

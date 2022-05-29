@@ -2,7 +2,6 @@ export interface AuthConfig {
   audience: string;
   authClientId: string;
   authClientSecret: string;
-  callbackUrl: string;
   connection: string;
   cookieKey: string;
   excludeSecureCookie: boolean;

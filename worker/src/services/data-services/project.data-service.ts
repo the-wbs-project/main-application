@@ -30,7 +30,7 @@ export class ProjectDataService {
   async getAsync(projectId: string): Promise<Project | undefined> {
     if (this.edge.byPass(kvPrefix)) return await this.getFromDbAsync(projectId);
 
-    const kvName = [kvPrefix, this.organization, projectId].join('-');
+    const kvName = [kvPrefix, this.organization, projectId].join('|');
     const kvData = await this.edge.get<Project>(kvName, 'json');
 
     if (kvData) return kvData;
@@ -43,7 +43,7 @@ export class ProjectDataService {
   }
 
   async putAsync(project: Project): Promise<void> {
-    const kvName = [kvPrefix, this.organization, project.id].join('-');
+    const kvName = [kvPrefix, this.organization, project.id].join('|');
 
     await this.db.upsertDocument(project, project.id);
 

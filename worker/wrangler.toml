@@ -4,18 +4,20 @@ zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 webpack_config = "./workers-site/webpack.config.js"
 compatibility_date = "2022-03-21"
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
+
+[text_blobs]
+INVITE_EMAIL = "./blobs/invite.html"
 
 [build]
 command = "yarn && yarn run build"
+
 [build.upload]
 format = "service-worker"
 
 [site]
 bucket = "./public"
 entry-point = "workers-site"
-
-[env.dev]
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
 
 [env.prod]
 name = "wbs-app-prod"
@@ -25,3 +27,13 @@ kv_namespaces = [
   { binding = "KVDATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
 ]
 vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "", SNIPPET_APP_INSIGHTS = "" }
+
+[miniflare]
+#host = "127.0.0.1"                 # --host
+port = 88                        # --port
+watch = true                       # --watch
+#env_path = ".env"
+kv_persist = true                  # --kv-persist
+cache_persist = true
+cache = false
+https = true

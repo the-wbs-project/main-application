@@ -130,11 +130,9 @@ export class SiteHttpService {
     req: WorkerRequest,
     response: Response,
   ): Promise<Response> {
-    const resources = req.user?.userInfo?.culture
-      ? await req.data.metadata.getResourcesAsync(
-          req.user.userInfo.culture,
-          'General',
-        )
+    const culture = req.state?.culture;
+    const resources = culture
+      ? await req.data.metadata.getResourcesAsync(culture, 'General')
       : null;
 
     const data = JSON.stringify({

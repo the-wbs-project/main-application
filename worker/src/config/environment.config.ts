@@ -42,6 +42,10 @@ export class EnvironmentConfig implements Config {
     return DEBUG === 'true';
   }
 
+  get inviteEmail(): string {
+    return INVITE_EMAIL;
+  }
+
   get kvBypass(): string[] {
     if (this._kvBypass == null) this._kvBypass = KV_BYPASS.split(',');
     return this._kvBypass;

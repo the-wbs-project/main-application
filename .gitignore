@@ -10,3 +10,5 @@ _theme/Nowa
 worker-test/
 
 site/src/assets/img_temp/
+
+worker/.mf/

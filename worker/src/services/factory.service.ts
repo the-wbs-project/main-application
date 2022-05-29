@@ -7,7 +7,7 @@ export class ServiceFactory {
   readonly router: RouterService;
 
   constructor(readonly config: Config) {
-    this.mailgun = new MailGunService(config.mailgun);
+    this.mailgun = new MailGunService(config);
     this.router = new RouterService(config, this.mailgun);
   }
 }

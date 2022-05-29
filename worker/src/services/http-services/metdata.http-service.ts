@@ -11,12 +11,12 @@ export class MetadataHttpService extends BaseHttpService {
 
         if (match) return match;
       }
-      if (!req.params?.category || !req.user?.userInfo?.culture) return 500;
+      if (!req.params?.category || !req.state?.culture) return 500;
       //
       //  Get the data from the KV
       //
       const data = await req.data.metadata.getResourcesAsync(
-        req.user.userInfo.culture,
+        req.state.culture,
         req.params.category,
       );
       const response = await super.buildJson(data);

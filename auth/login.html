@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <title>Sign In with Auth0</title>
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0"
+    />
+  </head>
+  <body>
+    <!--[if IE 8]>
+      <script src="//cdnjs.cloudflare.com/ajax/libs/ie8/0.2.5/ie8.js"></script>
+    <![endif]-->
+
+    <!--[if lte IE 9]>
+      <script src="https://cdn.auth0.com/js/base64.js"></script>
+      <script src="https://cdn.auth0.com/js/es5-shim.min.js"></script>
+    <![endif]-->
+
+    <script src="https://cdn.auth0.com/js/lock/11.32/lock.min.js"></script>
+    <script>
+      function addStyle(config) {
+        var colors = config.colors || {};
+        if (colors.page_background) {
+          var css =
+            ".auth0-lock.auth0-lock .auth0-lock-overlay { background: " +
+            colors.page_background +
+            " }";
+          var style = document.createElement("style");
+
+          style.appendChild(document.createTextNode(css));
+
+          document.body.appendChild(style);
+        }
+      }
+
+      function startSignin(
+        config,
+        language,
+        languageDictionary,
+        email,
+        claims,
+        culture,
+        inviteCode,
+        origin
+      ) {
+        var colors = config.colors || {};
+        // Available Lock configuration option: https://auth0.com/docs/libraries/lock/v11/configuration
+        var lock = new Auth0Lock(config.clientID, config.auth0Domain, {
+          auth: {
+            redirectUrl: config.callbackURL,
+            responseType:
+              (config.internalOptions || {}).response_type ||
+              (config.callbackOnLocationHash ? "token" : "code"),
+            params: config.internalOptions,
+          },
+          configurationBaseUrl: config.clientConfigurationBaseUrl,
+          overrides: {
+            __tenant: config.auth0Tenant,
+            __token_issuer: config.authorizationServer.issuer,
+          },
+          allowLogin: false,
+          allowForgotPassword: false,
+          allowSignUp: true,
+          showTerms: false,
+          mustAcceptTerms: false,
+          initialScreen: "signUp",
+          assetsUrl: config.assetsUrl,
+          allowedConnections: config.connection ? [config.connection] : null,
+          rememberLastLogin: !config.prompt,
+          language: language,
+          languageBaseUrl: config.languageBaseUrl,
+          languageDictionary: languageDictionary,
+          theme: {
+            //logo:            'YOUR LOGO HERE',
+            primaryColor: colors.primary ? colors.primary : "green",
+          },
+          closable: false,
+          defaultADUsernameFromEmailPrefix: false,
+          prefill: {
+            email: email,
+          },
+          additionalSignUpFields: [
+            {
+              name: "name",
+              storage: "root",
+              placeholder: "enter your name",
+              icon: origin + "/assets/img/person-thin.svg",
+            },
+            {
+              name: "email_verified",
+              type: "hidden",
+              storage: "root",
+              value: "true",
+            },
+            {
+              name: "claims",
+              storage: "app_metadata",
+              type: "hidden",
+              value: claims.join(),
+            },
+            {
+              name: "culture",
+              type: "hidden",
+              value: culture,
+            },
+            {
+              name: "inviteCode",
+              storage: "app_metadata",
+              type: "hidden",
+              value: inviteCode,
+            },
+          ],
+        });
+        addStyle(config);
+        lock.show();
+      }
+
+      function startLogin(config, language, languageDictionary) {
+        var colors = config.colors || {};
+        var loginHint = config.extraParams.login_hint;
+
+        var lock = new Auth0Lock(config.clientID, config.auth0Domain, {
+          auth: {
+            redirectUrl: config.callbackURL,
+            responseType:
+              (config.internalOptions || {}).response_type ||
+              (config.callbackOnLocationHash ? "token" : "code"),
+            params: config.internalOptions,
+          },
+          configurationBaseUrl: config.clientConfigurationBaseUrl,
+          overrides: {
+            __tenant: config.auth0Tenant,
+            __token_issuer: config.authorizationServer.issuer,
+          },
+          assetsUrl: config.assetsUrl,
+          allowedConnections: config.connection ? [config.connection] : null,
+          rememberLastLogin: !config.prompt,
+          language: language,
+          allowSignUp: false,
+          languageBaseUrl: config.languageBaseUrl,
+          languageDictionary: languageDictionary,
+          theme: {
+            //logo:            'YOUR LOGO HERE',
+            primaryColor: colors.primary ? colors.primary : "green",
+          },
+          prefill: loginHint ? { email: loginHint, username: loginHint } : null,
+          closable: false,
+          defaultADUsernameFromEmailPrefix: false,
+        });
+
+        addStyle(config);
+
+        lock.show();
+      }
+
+      // Decode utf8 characters properly
+      var config = JSON.parse(
+        decodeURIComponent(escape(window.atob("@@config@@")))
+      );
+      config.extraParams = config.extraParams || {};
+      var languageDictionary;
+      var language;
+
+      if (config.dict && config.dict.signin && config.dict.signin.title) {
+        languageDictionary = { title: config.dict.signin.title };
+      } else if (typeof config.dict === "string") {
+        language = config.dict;
+      }
+      const queryString = window.location.search;
+      const urlParams = new URLSearchParams(queryString);
+      const inviteCode = urlParams.get("inviteCode");
+
+      if (inviteCode) {
+        const redirect_uri = decodeURI(urlParams.get("redirect_uri"));
+        const rUrl = new URL(redirect_uri);
+        const organization = rUrl.host.split(".")[0];
+        const url = `${rUrl.origin}/api/invites/${organization}/${inviteCode}`;
+
+        fetch(url)
+          .then((response) => response.json())
+          .then(
+            (data) =>
+              startSignin(
+                config,
+                language,
+                languageDictionary,
+                data.email,
+                data.claims,
+                data.culture,
+                inviteCode,
+                rUrl.origin
+              ),
+            (error) => console.log(error)
+          );
+      } else {
+        startLogin(config, language, languageDictionary);
+      }
+    </script>
+  </body>
+</html>

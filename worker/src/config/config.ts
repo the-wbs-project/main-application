@@ -12,6 +12,7 @@ export interface Config {
   azure: AzureConfig;
   db: DbConfig;
   debug: boolean;
+  inviteEmail: string;
   kvBypass: string[];
   mailgun: MailgunConfig;
   ttl: TtlConfig;

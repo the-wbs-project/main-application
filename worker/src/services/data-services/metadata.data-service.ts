@@ -1,10 +1,4 @@
-import {
-  IdObject,
-  ListItem,
-  Metadata,
-  ResourceObj,
-  Resources,
-} from '../../models';
+import { IdObject, ListItem, ResourceObj, Resources } from '../../models';
 import { DbFactory, DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
 
@@ -48,7 +42,7 @@ export class MetadataDataService {
     if (this.edge.byPass(kvPrefix))
       return await db.getDocumentAsync<T>(pk, id, true);
 
-    const kvName = [kvPrefix, pk, id].join('-');
+    const kvName = [kvPrefix, pk, id].join('|');
     const kvData = await this.edge.get<T>(kvName, 'json');
 
     if (kvData) return kvData;
@@ -68,7 +62,7 @@ export class MetadataDataService {
     if (this.edge.byPass(kvPrefix))
       return await db.getAllByPartitionAsync<T>(pk, true);
 
-    const kvName = [kvPrefix, pk].join('-');
+    const kvName = [kvPrefix, pk].join('|');
     const kvData = await this.edge.get<T[]>(kvName, 'json');
 
     if (kvData) return kvData;

@@ -1,6 +1,7 @@
 import { Router } from 'itty-router';
 import { Config } from '../config';
 import { Http } from './http-services';
+import { BaseHttpService } from './http-services/base.http-service';
 import { MailGunService } from './mail-gun.service';
 import { WorkerRequest } from './worker-request.service';
 
@@ -17,6 +18,11 @@ export const AZURE_ROUTES_POST: string[] = [
   '/api/projects/:projectId/extracts/discipline/download',
   '/api/projects/:projectId/extracts/discipline/upload',
 ];
+
+function auth(req: WorkerRequest): Promise<Response | number | void> {
+  return req.auth.authorizeAsync(req);
+}
+
 export class RouterService {
   private readonly router = Router<WorkerRequest>();
 
@@ -28,86 +34,71 @@ export class RouterService {
     this.router.get('/logout', () =>
       Response.redirect(this.config.auth.logoutCallbackUrl),
     );
+    this.router.get('/callback', Http.auth.callbackAsync);
     this.router.get('/api/edge-data/clear', async (req: WorkerRequest) => {
       await req.edge.data.clear();
       return 204;
     });
-    this.router.get('/api/current', this.authenticate, (req: WorkerRequest) =>
-      Http.json(req.user),
-    );
+    this.router.get('/api/current', auth, Http.auth.currentUserAsync);
     this.router.get(
       '/api/resources/:category',
-      this.authenticate,
+      auth,
       Http.metadata.getResourcesAsync,
     );
     this.router.get(
       '/api/activity/:topLevelId',
-      this.authenticate,
+      auth,
       Http.activity.getByIdAsync,
     );
-    this.router.put('/api/activity', this.authenticate, Http.activity.putAsync);
-    this.router.get(
-      '/api/lists/:name',
-      this.authenticate,
-      Http.metadata.getListAsync,
-    );
-    this.router.get(
-      '/api/projects/my',
-      this.authenticate,
-      this.checkClaimAsync,
-      Http.project.getAllAsync,
-    );
+    this.router.put('/api/activity', auth, Http.activity.putAsync);
+    this.router.get('/api/lists/:name', auth, Http.metadata.getListAsync);
+    this.router.get('/api/projects/my', auth, Http.project.getAllAsync);
     this.router.get(
       '/api/projects/watched',
-      this.authenticate,
-      this.checkClaimAsync,
+      auth,
       Http.project.getAllWatchedAsync,
     );
     this.router.get(
       '/api/projects/byId/:projectId',
-      this.authenticate,
-      this.checkClaimAsync,
+      auth,
       Http.project.getByIdAsync,
     );
     this.router.put(
       '/api/projects/byId/:projectId',
-      this.authenticate,
-      this.checkClaimAsync,
+      auth,
       Http.project.putAsync,
     );
     this.router.get(
       `/api/projects/byId/:projectId/nodes`,
-      this.authenticate,
-      this.checkClaimAsync,
+      auth,
       Http.projectNodes.getAsync,
     );
     this.router.put(
       `/api/projects/byId/:projectId/nodes/batch`,
-      this.authenticate,
-      this.checkClaimAsync,
+      auth,
       Http.projectNodes.batchAsync,
     );
     this.router.put(
       `/api/projects/byId/:projectId/nodes/:nodeId`,
-      this.authenticate,
-      this.checkClaimAsync,
+      auth,
       Http.projectNodes.putAsync,
     );
+    this.router.option(
+      `/api/invites/:organization/:code`,
+      this.authOptionsAsync,
+    );
+    this.router.get(`/api/invites/:organization/:code`, Http.invites.getAsync);
+    this.router.get(`/setup/:inviteCode`, Http.auth.setupAsync);
     this.router.post('/api/send', (request: WorkerRequest) =>
       this.email.handleRequestAsync(request),
     );
     for (const path of AZURE_ROUTES_POST) {
-      this.router.post(
-        path,
-        this.authenticate,
-        this.checkClaimAsync,
-        Http.azure.handleAsync,
-      );
+      this.router.post(path, auth, Http.azure.handleAsync);
     }
     for (const path of PRE_ROUTES) {
       this.router.get(path, Http.site.getSiteResourceAsync);
     }
-    this.router.get('*', this.authenticate, Http.site.getSiteAsync);
+    this.router.get('*', auth, Http.site.getSiteAsync);
   }
 
   async matchAsync(req: WorkerRequest): Promise<Response> {
@@ -119,34 +110,19 @@ export class RouterService {
     return responseOrCode;
   }
 
-  authenticate(req: WorkerRequest): void {
-    req.setUser(
-      {
-        id: '561',
-        fullName: 'John Doe',
-        userInfo: {
-          culture: 'en-US',
-        },
-        appInfo: {
-          organizations: ['acme_engineering'],
-          lastOrg: 'acme_engineering',
-        },
-      },
-      '1234',
-    );
-    req.data.setOrganization('acme_engineering');
-  }
+  async authOptionsAsync(req: WorkerRequest): Promise<Response | number> {
+    const match = await req.edge.cacheMatch();
 
-  async checkClaimAsync(req: WorkerRequest): Promise<number | void> {
-    //
-    //  If any of the necessary information is missing, BAIL!
-    //
-    if (!req.user?.appInfo?.lastOrg || !req.user?.appInfo?.organizations)
-      return 500;
-    //
-    //  Next check that the owner ID is in the claims
-    //
-    if (req.user.appInfo.organizations.indexOf(req.user.appInfo.lastOrg) === -1)
-      return 401;
+    if (match) return match;
+
+    const hdrs = new Headers();
+
+    BaseHttpService.getAuthHeaders(req, hdrs);
+
+    const response = new Response('', { headers: hdrs });
+
+    req.edge.cachePut(response);
+
+    return response;
   }
 }

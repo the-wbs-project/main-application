@@ -20,9 +20,9 @@ export class ProjectHttpService extends BaseHttpService {
     req: WorkerRequest,
   ): Promise<Response | number> {
     try {
-      if (!req.user?.id) return 500;
+      if (!req.state?.userId) return 500;
 
-      const data = await req.data.projects.getAllWatchedAsync(req.user.id);
+      const data = await req.data.projects.getAllWatchedAsync(req.state.userId);
       return await super.buildJson(data);
     } catch (e) {
       req.logException(

@@ -7,7 +7,7 @@
     "build": "webpack",
     "build:watch": "webpack --watch",
     "publish": "wrangler publish --env prod",
-    "dev": "miniflare ./workers-site/worker.js -p 88 --wrangler-env dev --kv KVDATA --kv KVAUTH --env local.env --kv-persist kv --watch",
+    "dev": "miniflare ./workers-site/worker.js --kv KVDATA --kv KVAUTH --env local.env",
     "go": "npm run build && concurrently \"npm run dev\" \"npm run build:watch\"",
     "test": "jest --config jestconfig.json --verbose"
   },

@@ -1,7 +1,7 @@
 export {};
 
 declare global {
-  //const KVAUTH: KVNamespace;
+  const KVAUTH: KVNamespace;
   const KVDATA: KVNamespace;
 
   const APP_INSIGHTS_KEY: string;
@@ -9,6 +9,7 @@ declare global {
   const AZURE: string;
   const COSMOS: string;
   const DEBUG: string;
+  const INVITE_EMAIL: string;
   const KV_BYPASS: string;
   const MAILGUN_API_BASE_URL: string;
   const MAILGUN_API_KEY: string;
