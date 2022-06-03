@@ -18,6 +18,7 @@ import { NodeEditorState } from '../state';
     valueField="id"
     size="small"
     fillMode="flat"
+    [ngClass]="'editor-header-dd-button'"
     (itemClick)="sectionChanged($event)"
   >
     {{ (viewLabel$ | async) ?? '' | translate }}&nbsp;

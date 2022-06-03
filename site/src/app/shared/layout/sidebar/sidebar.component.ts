@@ -1,10 +1,15 @@
 import { Component, ViewEncapsulation, HostListener } from '@angular/core';
 import { NavigationEnd, Router } from '@angular/router';
-import { Menu, NavService } from '@wbs/shared/services';
 import { faGenderless } from '@fortawesome/pro-solid-svg-icons';
-import { switcherArrowFn } from './sidebar';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngxs/store';
+import { MenuItem } from '@wbs/shared/models';
+import { NavService } from '@wbs/shared/services';
+import { UiState } from '@wbs/shared/states';
 import { fromEvent } from 'rxjs';
+import { switcherArrowFn } from './sidebar';
 
+@UntilDestroy()
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -13,43 +18,47 @@ import { fromEvent } from 'rxjs';
 })
 export class SidebarComponent {
   readonly faGenderless = faGenderless;
-  menuItems!: Menu[];
+  menuItems!: MenuItem[];
   url: any;
 
   constructor(
     private readonly router: Router,
-    private readonly navServices: NavService
+    private readonly navServices: NavService,
+    private readonly store: Store
   ) {
-    this.navServices.items.subscribe((menuItems: any) => {
-      this.menuItems = menuItems;
-      this.router.events.subscribe((event: any) => {
-        if (event instanceof NavigationEnd) {
-          menuItems.filter((items: any) => {
-            if (items.path === event.url) {
-              this.setNavActive(items);
-            }
-            if (!items.children) {
-              return false;
-            }
-            items.children.filter((subItems: any) => {
-              if (subItems.path === event.url) {
-                this.setNavActive(subItems);
+    this.store
+      .select(UiState.menuItems)
+      .pipe(untilDestroyed(this))
+      .subscribe((menuItems: any) => {
+        this.menuItems = menuItems;
+        this.router.events.subscribe((event: any) => {
+          if (event instanceof NavigationEnd) {
+            menuItems.filter((items: any) => {
+              if (items.path === event.url) {
+                this.setNavActive(items);
               }
-              if (!subItems.children) {
+              if (!items.children) {
                 return false;
               }
-              subItems.children.filter((subSubItems: any) => {
-                if (subSubItems.path === event.url) {
-                  this.setNavActive(subSubItems);
+              items.children.filter((subItems: any) => {
+                if (subItems.path === event.url) {
+                  this.setNavActive(subItems);
                 }
+                if (!subItems.children) {
+                  return false;
+                }
+                subItems.children.filter((subSubItems: any) => {
+                  if (subSubItems.path === event.url) {
+                    this.setNavActive(subSubItems);
+                  }
+                });
+                return;
               });
               return;
             });
-            return;
-          });
-        }
+          }
+        });
       });
-    });
   }
 
   //Active NavBar State

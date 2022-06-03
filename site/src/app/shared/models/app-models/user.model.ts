@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   emailVerified?: boolean;
-  fullName: string | null | undefined;
+  name: string | null | undefined;
   blocked?: boolean;
   createdAt?: Date;
   lastLogin?: Date;
@@ -12,12 +12,19 @@ export interface User {
 }
 
 export interface UserMetadata {
-  phone?: string | null | undefined;
   culture?: string;
 }
 
 export interface UserAppMetadata {
-  role?: string;
-  organizations: string[];
-  lastOrg: string;
+  inviteCode?: string;
+  organizations: UserAllOrganizationSettings;
+}
+
+export type UserAllOrganizationSettings = {
+  [orgName: string]: UserOrganizationSettings;
+};
+
+export interface UserOrganizationSettings {
+  roles: string[];
+  isActive: boolean;
 }

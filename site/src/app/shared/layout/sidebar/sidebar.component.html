@@ -1,6 +1,4 @@
-<!--APP-SIDEBAR-->
-<div class="app-sidebar__overlay" (click)="sidebarClose()"></div>
-<!-- Sidemenu -->
+<div class="app-sidebar_overlay" (click)="sidebarClose()"></div>
 <div class="sticky" [ngClass]="{ 'sticky-pin': scrolled }">
   <aside class="app-sidebar">
     <div class="main-sidebar-header active">
@@ -84,8 +82,13 @@
                 <fa-icon *ngIf="menuItem.icon" [icon]="menuItem.icon">
                 </fa-icon>
               </span>
-              {{ menuItem.icon == null }}
-              <span class="side-menu__label">{{ menuItem.title }}</span>
+              <span class="side-menu__label">
+                {{
+                  menuItem.titleNotResource
+                    ? menuItem.title
+                    : (menuItem.title ?? "" | translate)
+                }}
+              </span>
             </a>
             <!-- has-Sub -->
             <a
@@ -101,7 +104,13 @@
                 <fa-icon *ngIf="menuItem.icon" [icon]="menuItem.icon">
                 </fa-icon>
               </span>
-              <span class="side-menu__label">{{ menuItem.title }}</span>
+              <span class="side-menu__label">
+                {{
+                  menuItem.titleNotResource
+                    ? menuItem.title
+                    : (menuItem.title ?? "" | translate)
+                }}
+              </span>
               <span
                 class="badge bg-{{ menuItem.badgeClass }} side-badge"
                 *ngIf="menuItem.badgeClass && menuItem.badgeValue"
@@ -135,7 +144,13 @@
                 >
                   <fa-icon [icon]="faGenderless" size="xs"> </fa-icon>
                   &nbsp;
-                  <span>{{ childrenItem.title }}</span>
+                  <span>
+                    {{
+                      childrenItem.titleNotResource
+                        ? childrenItem.title
+                        : (childrenItem.title ?? "" | translate)
+                    }}
+                  </span>
                 </a>
 
                 <!-- sub -->
@@ -146,8 +161,12 @@
                   (click)="toggleNavActive(childrenItem)"
                 >
                   <span class="sub-side-menu__label">
-                    {{ childrenItem.title }}</span
-                  >
+                    {{
+                      childrenItem.titleNotResource
+                        ? childrenItem.title
+                        : (childrenItem.title ?? "" | translate)
+                    }}
+                  </span>
                   <i class="sub-angle fe fe-chevron-right"></i>
                 </a>
 
@@ -173,7 +192,13 @@
                       *ngIf="childrenSubItem.type === 'link'"
                       (click)="toggleNavActive(childrenSubItem)"
                     >
-                      <span>{{ childrenSubItem.title }}</span>
+                      <span>
+                        {{
+                          childrenSubItem.titleNotResource
+                            ? childrenSubItem.title
+                            : (childrenSubItem.title ?? "" | translate)
+                        }}
+                      </span>
                     </a>
                     <!-- sub -->
                     <a
@@ -185,7 +210,11 @@
                       (click)="toggleNavActive(childrenSubItem)"
                     >
                       <span class="sub-side-menu__label2">
-                        {{ childrenSubItem.title }}
+                        {{
+                          childrenSubItem.titleNotResource
+                            ? childrenSubItem.title
+                            : (childrenSubItem.title ?? "" | translate)
+                        }}
                       </span>
                       <i class="sub-angle2 fe fe-chevron-right"></i>
                     </a>
@@ -213,7 +242,11 @@
                           "
                           *ngIf="childrenSubItem1.type === 'link'"
                         >
-                          {{ childrenSubItem1.title }}
+                          {{
+                            childrenSubItem1.titleNotResource
+                              ? childrenSubItem1.title
+                              : (childrenSubItem1.title ?? "" | translate)
+                          }}
                         </a>
                       </li>
                     </ul>
@@ -254,4 +287,3 @@
     </perfect-scrollbar>
   </aside>
 </div>
-<!-- End Sidemenu -->

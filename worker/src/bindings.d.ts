@@ -11,6 +11,7 @@ declare global {
   const DEBUG: string;
   const INVITE_EMAIL: string;
   const KV_BYPASS: string;
+  const LOGOUT_HTML: string;
   const MAILGUN_API_BASE_URL: string;
   const MAILGUN_API_KEY: string;
   const SNIPPET_APP_INSIGHTS: string;

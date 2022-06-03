@@ -30,17 +30,19 @@ export class ProjectListState implements NgxsOnInit {
     return state.watched;
   }
 
-  ngxsOnInit(ctx: StateContext<StateModel>): Observable<void> {
-    return forkJoin([
+  ngxsOnInit(ctx: StateContext<StateModel>): void {
+    forkJoin([
       this.data.projects.getMyAsync(),
       this.data.projects.getWatchedAsync(),
-    ]).pipe(
-      map(([list, watched]) => {
-        ctx.patchState({
-          list,
-          watched,
-        });
-      })
-    );
+    ])
+      .pipe(
+        map(([list, watched]) => {
+          ctx.patchState({
+            list,
+            watched,
+          });
+        })
+      )
+      .subscribe();
   }
 }

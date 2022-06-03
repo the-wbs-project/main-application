@@ -38,6 +38,7 @@ import {
   CategoryLabelPipe,
   DisciplineIconPipe,
   LengthPipe,
+  MenuItemTitlePipe,
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
 } from './pipes';
@@ -80,6 +81,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     LoadingComponent,
     MainContentDirective,
     MatchSizeDirective,
+    MenuItemTitlePipe,
     PageHeaderComponent,
     ProgressBarDirective,
     ProjectListFilterPipe,
@@ -102,6 +104,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FormsModule,
     MainContentDirective,
     MatchSizeDirective,
+    MenuItemTitlePipe,
     NgbModule,
     PageHeaderComponent,
     ProgressBarDirective,

@@ -13168,17 +13168,6 @@ table.dataTable.dtr-inline.collapsed > tbody > tr > th.dtr-control:before {
     top: 20px;
     right: 0;
   }
-
-  .rtl .cardbody {
-    padding-left: inherit;
-    padding-right: 0;
-  }
-
-  .rtl .item-card .product-grid6 .cardprice {
-    top: 20px;
-    left: 0;
-    right: inherit;
-  }
 }
 
 @media (orientation: landscape) and (max-width: 767px) {

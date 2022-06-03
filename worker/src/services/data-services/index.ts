@@ -6,9 +6,6 @@ import { ProjectNodeDataService } from './project-node.data-service';
 import { ActivityDataService } from './activity.data-service';
 import { AuthDataService } from './auth.data-service';
 import { InviteDataService } from './invite.data-service';
-import { IdentityService } from './identity.data-service';
-import { Config } from '../../config';
-import { Auth0Service } from '../auth-services';
 
 export class DataServiceFactory {
   private _activities?: ActivityDataService;
@@ -17,12 +14,9 @@ export class DataServiceFactory {
   private _projectNodes?: ProjectNodeDataService;
 
   readonly auth = new AuthDataService(this.edge.authData);
-  readonly identity = new IdentityService(this.auth0, this.config.auth);
   readonly metadata = new MetadataDataService(this.dbFactory, this.edge.data);
 
   constructor(
-    private readonly auth0: Auth0Service,
-    private readonly config: Config,
     private readonly dbFactory: DbFactory,
     private readonly edge: EdgeService,
   ) {}

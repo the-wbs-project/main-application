@@ -70,24 +70,33 @@ export class IdentityService {
     pageNumber: number,
     pageSize: number,
   ): Promise<User[]> {
-    const url = `users?page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${this.config.connection}&search_engine=v3`;
+    const conn = this.config.connection;
+    const q = this.getQuery(req);
+    const url = `users?page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3&q=${q}`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
     const results: User[] = [];
 
     if (response.status !== 200) throw new Error(await response.text());
 
     for (const user of await response.json()) {
+      console.log(user);
       results.push(this.auth0.toUser(user));
     }
     return results;
   }
 
   private async getUserCountAsync(req: WorkerRequest): Promise<number> {
-    const url = `users?include_totals=true&connection=${this.config.connection}&search_engine=v3`;
+    const conn = this.config.connection;
+    const q = this.getQuery(req);
+    const url = `users?include_totals=true&connection=${conn}&search_engine=v3&q=${q}`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
 
     if (response.status !== 200) throw new Error(await response.text());
 
     return (await response.json()).total;
+  }
+
+  private getQuery(req: WorkerRequest): string {
+    return `app_metadata.claims%3A${req.organization}%5C%3Auser`;
   }
 }

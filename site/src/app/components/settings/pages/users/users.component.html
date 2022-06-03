@@ -1,0 +1,41 @@
+<div *ngIf="view$ | async; let view">
+  <div
+    class="btn-group"
+    role="group"
+    aria-label="Basic radio toggle button group"
+  >
+    <input
+      type="radio"
+      class="btn-check"
+      name="btnUsersActive"
+      id="btnUsersActive"
+      autocomplete="off"
+      [checked]="view === 'active'"
+      [routerLink]="'/settings/users/active'"
+    />
+    <label class="btn btn-outline-primary" for="btnUsersActive">
+      {{ "Settings.ActiveUsers" | translate }}
+    </label>
+
+    <input
+      type="radio"
+      class="btn-check"
+      name="btnUsersInactive"
+      id="btnUsersInactive"
+      autocomplete="off"
+      [checked]="view === 'inactive'"
+      [routerLink]="'/settings/users/inactive'"
+    />
+    <label class="btn btn-outline-primary" for="btnUsersInactive">
+      {{ "Settings.InactiveUsers" | translate }}
+    </label>
+  </div>
+  <app-settings-user-grid
+    *ngIf="view === 'active'"
+    [users]="users$ | async | userFilter: false"
+  ></app-settings-user-grid>
+  <app-settings-user-grid
+    *ngIf="view === 'inactive'"
+    [users]="users$ | async | userFilter: true"
+  ></app-settings-user-grid>
+</div>

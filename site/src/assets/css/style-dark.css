@@ -51,39 +51,6 @@ body.dark-theme {
     }
 }
 
-@media (max-width: 480px) {
-    .dark-theme.rtl .border-end.bd-xs-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-    }
-
-    .dark-theme.rtl .border-end.bd-xs-s-0 {
-        border-right: 0 !important;
-        border-left: inherit !important;
-    }
-}
-
-@media (max-width: 991px) {
-    .dark-theme.rtl .border-end.bd-md-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-    }
-}
-
-@media (max-width: 1024px) {
-    .dark-theme.rtl .border-end.bd-lg-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-    }
-}
-
-@media (max-width: 1366px) {
-    .dark-theme.rtl .border-end.bd-xl-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-    }
-}
-
 .dark-theme .tree li i {
     color: var(--primary-bg-color);
 }
@@ -2176,6 +2143,7 @@ body.dark-theme {
 .dark-theme .main-header-message .nav-link i,
 .dark-theme .main-header-notification .nav-link i,
 .dark-theme .nav-item.full-screen .nav-link i,
+.dark-theme .main-profile-menu .profile-user .profile-icon,
 .dark-theme .sales-flot .flot-chart .flot-x-axis>div span:last-child,
 .dark-theme .p-text .p-name {
     color: #a9abbd;
@@ -4710,18 +4678,6 @@ body.dark-theme {
     border-right-width: 0px !important;
 }
 
-.rtl.dark-theme table.table-bordered.dataTable th:last-child,
-.rtl.dark-theme table.table-bordered.dataTable th:last-child,
-.rtl.dark-theme table.table-bordered.dataTable td:last-child,
-.rtl.dark-theme table.table-bordered.dataTable td:last-child {
-    border-right-width: 1px !important;
-    border-left-width: inherit !important;
-}
-
-.dark-theme.rtl .sidebar {
-    border-right: 1px solid #3d4152;
-}
-
 .dark-theme .note-editor .btn-default:not(:disabled):not(.disabled):active {
     background-color: #2a2e3f;
 }
@@ -4750,21 +4706,6 @@ body.dark-theme {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-.rtl.dark-theme .vtimeline .timeline-wrapper.timeline-inverted .timeline-panel:after {
-    border-right: 0px solid transparent;
-    border-left: 14px solid #1d1d2a;
-}
-
-.rtl.dark-theme .vtimeline .timeline-wrapper .timeline-panel:after {
-    border-left: 0 solid transparent;
-    border-right: 14px solid #1d1d2a;
-}
-
-.rtl.dark-theme .notification .notification-body:before {
-    border-left-color: #2a2e3f;
-    border-right-color: transparent !important;
-}
-
 .dark-theme table.table-bordered.dataTable th:last-child,
 .dark-theme table.table-bordered.dataTable th:last-child,
 .dark-theme table.table-bordered.dataTable td:last-child,
@@ -4774,9 +4715,5 @@ body.dark-theme {
 
 .dark-theme .primary-custom-card1:before {
     background-color: #2a2e3f;
-}
-
-.rtl.dark-theme .border-start {
-    border-right: 1px solid #3c3c60 !important;
 }
 /*# sourceMappingURL=style-dark.css.map */

@@ -4,7 +4,7 @@ import { BaseHttpService } from './base.http-service';
 export class ProjectHttpService extends BaseHttpService {
   static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      const data = await req.data.projects.getAllAsync();
+      const data = await req.services.data.projects.getAllAsync();
       return await super.buildJson(data);
     } catch (e) {
       req.logException(
@@ -22,7 +22,9 @@ export class ProjectHttpService extends BaseHttpService {
     try {
       if (!req.state?.userId) return 500;
 
-      const data = await req.data.projects.getAllWatchedAsync(req.state.userId);
+      const data = await req.services.data.projects.getAllWatchedAsync(
+        req.state.userId,
+      );
       return await super.buildJson(data);
     } catch (e) {
       req.logException(
@@ -37,13 +39,15 @@ export class ProjectHttpService extends BaseHttpService {
   static async getByIdAsync(req: WorkerRequest): Promise<Response | number> {
     try {
       if (!req.config.debug) {
-        const match = await req.edge.cacheMatch();
+        const match = await req.services.edge.cacheMatch();
 
         if (match) return match;
       }
       if (!req.params?.projectId) return 500;
 
-      const data = await req.data.projects.getAsync(req.params.projectId);
+      const data = await req.services.data.projects.getAsync(
+        req.params.projectId,
+      );
 
       return await super.buildJson(data);
     } catch (e) {
@@ -63,7 +67,7 @@ export class ProjectHttpService extends BaseHttpService {
 
       if (!projectId) return 500;
 
-      await req.data.projects.putAsync(await req.request.json());
+      await req.services.data.projects.putAsync(await req.request.json());
 
       return 204;
     } catch (e) {

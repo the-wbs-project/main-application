@@ -7,26 +7,17 @@ import { CloudflareEdgeService } from './services/edge-services/cloudflare';
 import { ServiceFactory } from './services/factory.service';
 import { Logger } from './services/logger.service';
 
-let services: ServiceFactory | undefined;
 const config = new EnvironmentConfig();
 
 addEventListener('fetch', (event) => {
-  if (!services) services = new ServiceFactory(config);
-
   const logger = new Logger(config.appInsightsKey, event.request);
   const edge = new CloudflareEdgeService(config, event);
-  const cosmos = new CosmosFactory(config, logger);
-  const auth0 = new Auth0Service(config.auth);
-  const dbFactory = new DataServiceFactory(auth0, config, cosmos, edge);
-  const auth = new AuthenticationService(auth0, config.auth);
-  const request = new WorkerRequest(
-    event,
-    auth,
+  const services = new ServiceFactory(
     config,
-    dbFactory,
+    new DataServiceFactory(new CosmosFactory(config, logger), edge),
     edge,
-    logger,
   );
+  const request = new WorkerRequest(event, config, services, logger);
 
   event.respondWith(services.router.matchAsync(request));
 });

@@ -1,5 +1,4 @@
 import { Router } from 'itty-router';
-import { Config } from '../config';
 import { Http } from './http-services';
 import { BaseHttpService } from './http-services/base.http-service';
 import { MailGunService } from './mail-gun.service';
@@ -20,25 +19,37 @@ export const AZURE_ROUTES_POST: string[] = [
 ];
 
 function auth(req: WorkerRequest): Promise<Response | number | void> {
-  return req.auth.authorizeAsync(req);
+  return req.services.auth.authorizeAsync(req);
 }
 
 export class RouterService {
   private readonly router = Router<WorkerRequest>();
 
-  constructor(
-    private readonly config: Config,
-    private readonly email: MailGunService,
-  ) {
-    this.router.options('*', () => new Response(''));
-    this.router.get('/logout', () =>
-      Response.redirect(this.config.auth.logoutCallbackUrl),
+  constructor(private readonly email: MailGunService) {
+    this.router.option(
+      `/api/invites/:organization/:code`,
+      this.authOptionsAsync,
     );
+    this.router.options('*', () => new Response(''));
+    //
+    //  Non auth
+    //
+    this.router.get(`/setup/:inviteCode`, Http.auth.setupAsync);
+    this.router.get(`/api/invites/:organization/:code`, Http.invites.getAsync);
+    this.router.post('/api/send', this.email.handleHomepageInquiryAsync);
+    this.router.get('/logout', Http.auth.logoutAsync);
     this.router.get('/callback', Http.auth.callbackAsync);
+    this.router.get('/loggedout', Http.auth.loggedoutAsync);
     this.router.get('/api/edge-data/clear', async (req: WorkerRequest) => {
-      await req.edge.data.clear();
+      await req.services.edge.data.clear();
       return 204;
     });
+    for (const path of PRE_ROUTES) {
+      this.router.get(path, Http.site.getSiteResourceAsync);
+    }
+    //
+    //  Auth calls
+    //
     this.router.get('/api/current', auth, Http.auth.currentUserAsync);
     this.router.get(
       '/api/resources/:category',
@@ -83,20 +94,11 @@ export class RouterService {
       auth,
       Http.projectNodes.putAsync,
     );
-    this.router.option(
-      `/api/invites/:organization/:code`,
-      this.authOptionsAsync,
-    );
-    this.router.get(`/api/invites/:organization/:code`, Http.invites.getAsync);
-    this.router.get(`/setup/:inviteCode`, Http.auth.setupAsync);
-    this.router.post('/api/send', (request: WorkerRequest) =>
-      this.email.handleRequestAsync(request),
-    );
+    this.router.get(`/api/users`, auth, Http.users.getAllAsync);
+    this.router.get(`/api/invites`, auth, Http.invites.getAllAsync);
+
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, auth, Http.azure.handleAsync);
-    }
-    for (const path of PRE_ROUTES) {
-      this.router.get(path, Http.site.getSiteResourceAsync);
     }
     this.router.get('*', auth, Http.site.getSiteAsync);
   }
@@ -111,7 +113,7 @@ export class RouterService {
   }
 
   async authOptionsAsync(req: WorkerRequest): Promise<Response | number> {
-    const match = await req.edge.cacheMatch();
+    const match = await req.services.edge.cacheMatch();
 
     if (match) return match;
 
@@ -121,7 +123,7 @@ export class RouterService {
 
     const response = new Response('', { headers: hdrs });
 
-    req.edge.cachePut(response);
+    req.services.edge.cachePut(response);
 
     return response;
   }

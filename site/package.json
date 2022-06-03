@@ -42,6 +42,7 @@
     "@progress/kendo-angular-dialog": "^7.0.0",
     "@progress/kendo-angular-dropdowns": "^7.0.0",
     "@progress/kendo-angular-excel-export": "^5.0.0",
+    "@progress/kendo-angular-grid": "^7.0.1",
     "@progress/kendo-angular-icons": "^2.0.0",
     "@progress/kendo-angular-inputs": "^9.0.0",
     "@progress/kendo-angular-intl": "^4.0.0",

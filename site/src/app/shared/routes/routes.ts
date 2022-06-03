@@ -8,4 +8,11 @@ export const content: Routes = [
         (m) => m.ProjectsLayoutModule
       ),
   },
+  {
+    path: 'settings',
+    loadChildren: () =>
+      import('../../components/settings/settings.module').then(
+        (m) => m.SettingsModule
+      ),
+  },
 ];

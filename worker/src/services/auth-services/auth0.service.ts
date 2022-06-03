@@ -7,7 +7,7 @@ export class Auth0Service {
 
   toUser(payload: Record<string, any>): User {
     const user: User = {
-      blocked: payload.blocked,
+      blocked: payload.blocked ?? false,
       appInfo: payload.app_metadata || {},
       createdAt: payload.created_at,
       email: payload.email,
@@ -32,7 +32,7 @@ export class Auth0Service {
       grant_type: 'authorization_code',
       client_id: this.config.authClientId,
       client_secret: this.config.authClientSecret,
-      redirect_uri: this.getCallbackUrl(url.origin, 'login'),
+      redirect_uri: this.getCallbackUrl(url.origin),
     });
     const tokenResponse = await req.myFetch(
       `https://${this.config.domain}/oauth/token`,
@@ -50,14 +50,14 @@ export class Auth0Service {
     return tokenBody;
   }
 
-  private getCallbackUrl(origin: string, type: 'login' | 'setup'): string {
-    return origin + '/callback?type=' + type;
+  private getCallbackUrl(origin: string): string {
+    return origin + '/callback';
   }
 
   getLoginRedirectUrl(origin: string, state: string): string {
     const c = this.config;
     const state2 = encodeURIComponent(state);
-    const callback = this.getCallbackUrl(origin, 'login');
+    const callback = this.getCallbackUrl(origin);
 
     return `https://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}`;
   }
@@ -69,9 +69,15 @@ export class Auth0Service {
   ): string {
     const c = this.config;
     const state2 = encodeURIComponent(state);
-    const callback = this.getCallbackUrl(origin, 'setup');
+    const callback = this.getCallbackUrl(origin);
 
     return `https://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}&inviteCode=${inviteCode}`;
+  }
+
+  getLogoutUrl(origin: string): string {
+    const c = this.config;
+
+    return `https://${c.domain}/v2/logout?returnTo=${origin}%2Floggedout&client_id=${c.authClientId}`;
   }
 
   async generateStateParamAsync(req: WorkerRequest): Promise<string> {

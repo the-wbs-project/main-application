@@ -8,6 +8,7 @@ vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_
 
 [text_blobs]
 INVITE_EMAIL = "./blobs/invite.html"
+LOGOUT_HTML = "./blobs/logout-redirect.html"
 
 [build]
 command = "yarn && yarn run build"

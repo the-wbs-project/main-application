@@ -8,6 +8,7 @@
         "Confirm": "Confirm",
         "Other": "Other",
         "Name": "Name",
+        "Email": "Email",
         "Delete": "Delete",
         "General": "General",
         "Description": "Description",
@@ -20,7 +21,10 @@
         "Upload": "Upload",
         "RetrievingData": "Retrieving Data...",
         "ReviewingData": "Reviewing Data...",
-        "CreateProject": "Create Project"
+        "CreateProject": "Create Project",
+        "Settings": "Settings",
+        "SiteAdministration": "Site Administration",
+        "LogOut": "Log Out"
       },
       "Category_Phase": {
         "Initial_Name": "Initial Phase",
@@ -73,6 +77,13 @@
         "Plumbing_Description": "A brief description of the discipline.",
         "Scientist_Name": "Scientist",
         "Scientist_Description": "A brief description of the discipline."
+      },
+      "Settings": {
+        "General": "General",
+        "GeneralDescription": "Name, contact info, and more",
+        "Users": "Users",
+        "UsersDescription": "Invite and manage existing users",
+        "Roles": "Roles"
       }
     }
   },

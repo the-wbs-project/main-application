@@ -107,36 +107,6 @@ body.transparent-theme.bg-img4 {
       border-right: 0 !important;
     }
   }
-  &.rtl {
-    @media (max-width: 480px) {
-      .border-end.bd-xs-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-      }
-      .border-end.bd-xs-s-0 {
-        border-right: 0 !important;
-        border-left: inherit !important;
-      }
-    }
-    @media (max-width: 991px) {
-      .border-end.bd-md-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-      }
-    }
-    @media (max-width: 1024px) {
-      .border-end.bd-lg-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-      }
-    }
-    @media (max-width: 1366px) {
-      .border-end.bd-xl-e-0 {
-        border-left: 0 !important;
-        border-right: inherit !important;
-      }
-    }
-  }
 
   @media (min-width: 768px) {
     &.hover-submenu.app.sidenav-toggled-open .slide-menu,
@@ -233,62 +203,6 @@ body.transparent-theme.bg-img4 {
 
   .sweet-alert p {
     color: $white;
-  }
-
-  &.rtl {
-    @media (min-width: 768px) {
-      &.hover-submenu.app.sidenav-toggled-open .slide-menu,
-      &.hover-submenu1.app.sidenav-toggled-open .slide-menu {
-        border-radius: 5px 0px 0px 5px !important;
-      }
-    }
-
-    .border-end {
-      border-left: 1px solid $transparent-border !important;
-    }
-
-    .border-start {
-      border-right: 1px solid $transparent-border !important;
-    }
-
-    @media (min-width: 576px) {
-      .wizard.vertical > .content,
-      .wizard.vertical > .actions {
-        border-right: 1px solid $transparent-border !important;
-        border-left: inherit;
-      }
-    }
-
-    .select2-container--default .select2-selection--single {
-      .select2-selection__rendered {
-        float: right;
-      }
-    }
-
-    .select2-container--default
-      .select2-selection--single
-      .select2-selection__arrow
-      b {
-      border-color: transparent transparent $white transparent;
-      border-width: 0px 4px 5px 4px !important;
-    }
-
-    .notification .notification-body:before {
-      border-left-color: $transparent-theme;
-      right: -20px;
-      left: inherit;
-      border-right-color: transparent !important;
-    }
-
-    .vtimeline .timeline-wrapper.timeline-inverted .timeline-panel:after {
-      border-left: 14px solid rgba(0, 0, 0, 0.2);
-      border-right: 0 solid rgba(0, 0, 0, 0.2);
-    }
-
-    .vtimeline .timeline-wrapper .timeline-panel:after {
-      border-right: 14px solid rgba(0, 0, 0, 0.2);
-      border-left: 0 solid rgba(0, 0, 0, 0.2);
-    }
   }
 
   .card-header:first-child {
@@ -5818,18 +5732,6 @@ body.transparent-theme.bg-img4 {
   border-right-width: 0px !important;
 }
 
-.rtl.transparent-theme table.table-bordered.dataTable th:last-child,
-.rtl.transparent-theme table.table-bordered.dataTable th:last-child,
-.rtl.transparent-theme table.table-bordered.dataTable td:last-child,
-.rtl.transparent-theme table.table-bordered.dataTable td:last-child {
-  border-right-width: 1px !important;
-  border-left-width: inherit !important;
-}
-
-.transparent-theme.rtl .sidebar {
-  border-right: 1px solid $transparent-border;
-}
-
 .transparent-theme
   .note-editor
   .btn-default:not(:disabled):not(.disabled):active {
@@ -6053,14 +5955,6 @@ body.transparent-theme.bg-img4 {
   color: $white;
 }
 
-@media screen and (min-width: 768px) {
-  .transparent-theme.main-body.app.sidebar-mini.sideicon-menu.sidenav-toggled.rtl.sidenav-toggled-open {
-    .main-logo.mobile-dark {
-      display: none !important;
-    }
-  }
-}
-
 .transparent-theme .fc-theme-standard .fc-popover-header {
   background: $transparent-body;
 }
@@ -6087,14 +5981,6 @@ body.transparent-theme.bg-img4 {
 .transparent-theme .note-btn.btn-default:not(:disabled):not(.disabled).active {
   background-color: transparent;
   border-color: $white-2;
-}
-.rtl.transparent-theme .border-end {
-  border-left: 1px solid $transparent-border !important;
-  border-right: inherit !important;
-}
-.rtl.transparent-theme .main-sidebar-header {
-  border-left: 0px solid rgba(255, 255, 255, 0.15);
-  border-right: 0px solid rgba(255, 255, 255, 0.15);
 }
 .transparent-theme {
   .tab_wrapper .content_wrapper .accordian_header.active {

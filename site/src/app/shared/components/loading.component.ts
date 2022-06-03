@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
 import { BehaviorSubject } from 'rxjs';
 @Component({
-  selector: 'app-content-layout',
   template: ` <div>
     <img src="assets/img/loader.svg" class="loader-img" alt="loader" />
     <span *ngIf="message$ | async; let message">

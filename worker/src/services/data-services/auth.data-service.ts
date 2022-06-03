@@ -14,4 +14,8 @@ export class AuthDataService {
       expiration: state.exp,
     });
   }
+
+  deleteStateAsync(code: string): Promise<void> {
+    return this.edge.delete(`STATE|${code}`);
+  }
 }

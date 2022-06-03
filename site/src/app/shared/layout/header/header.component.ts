@@ -1,14 +1,20 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { faAlignLeft, faX } from '@fortawesome/pro-solid-svg-icons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  faAlignLeft,
+  faArrowAltCircleLeft,
+  faCog,
+  faUserCircle,
+  faX,
+} from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import {
   LayoutService,
   NavService,
   SwitcherService,
 } from '@wbs/shared/services';
+import { AuthState } from '@wbs/shared/states';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-header',
@@ -16,9 +22,13 @@ import {
   styleUrls: ['./header.component.scss'],
 })
 export class HeaderComponent implements OnInit {
-  private body: HTMLBodyElement | any = document.querySelector('body');
+  @Select(AuthState.fullName) fullName$!: Observable<string>;
+  @Select(AuthState.isAdmin) isAdmin$!: Observable<boolean>;
 
   readonly faAlignLeft = faAlignLeft;
+  readonly faArrowAltCircleLeft = faArrowAltCircleLeft;
+  readonly faCog = faCog;
+  readonly faUserCircle = faUserCircle;
   readonly faX = faX;
   readonly settings = [
     {
@@ -33,7 +43,6 @@ export class HeaderComponent implements OnInit {
     readonly SwitcherService: SwitcherService,
     readonly navServices: NavService,
     private readonly layoutService: LayoutService,
-    private readonly modalService: NgbModal,
     private readonly store: Store
   ) {}
 
@@ -44,32 +53,6 @@ export class HeaderComponent implements OnInit {
 
   toggleSidebarNotification() {
     this.layoutService.emitSidebarNotifyChange(true);
-  }
-
-  signout() {
-    //this.auth.SignOut();
-    //this.router.navigate(['/auth/login']);
-  }
-
-  open(content: any) {
-    this.modalService.open(content, {
-      backdrop: 'static',
-      windowClass: 'modalCusSty',
-    });
-  }
-
-  searchToggle() {
-    if (this.body.classList.contains('search-open')) {
-      this.activated = false;
-      this.body.classList.remove('search-open');
-    } else {
-      this.activated = true;
-      this.body.classList.add('search-open');
-    }
-  }
-  closeToggle() {
-    this.activated = false;
-    this.body.classList.remove('search-open');
   }
 
   navigate(url: string[]): void {

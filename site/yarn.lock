@@ -1845,6 +1845,16 @@
     "@telerik/kendo-intl" "^2.1.1"
     tslib "^2.3.1"
 
+"@progress/kendo-angular-grid@^7.0.1":
+  version "7.0.1"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-grid/-/kendo-angular-grid-7.0.1.tgz#63971db77618ad67202ac2d959b7f82c5584912d"
+  integrity sha512-S6sOFvwse8+uVSaVbLwHfYeAmenvt6io1FpheM/r42MkLbNvvMaHFJXr/o6bh3hFkswtfRAAhgXcXTMJwUSnxw==
+  dependencies:
+    "@progress/kendo-common" "^0.2.0"
+    "@progress/kendo-file-saver" "^1.0.0"
+    "@progress/kendo-schematics" "^3.0.0"
+    tslib "^2.3.1"
+
 "@progress/kendo-angular-icons@^2.0.0":
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-angular-icons/-/kendo-angular-icons-2.0.0.tgz#ef4a971e17ab201b96d97a3a5138e317996de89a"

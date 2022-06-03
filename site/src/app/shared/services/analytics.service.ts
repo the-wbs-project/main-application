@@ -35,7 +35,7 @@ export class AnalyticsService {
 
     var telemetryInitializer = (envelope: any) => {
       envelope.tags['user.id'] = user.id;
-      envelope.tags['user.fullName'] = user.fullName;
+      envelope.tags['user.fullName'] = user.name;
       envelope.tags['user.email'] = user.email;
       //envelope.tags['user.role'] = startup?.user?.appInfo?.role;
       envelope.tags['url'] = window.location.href;

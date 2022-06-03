@@ -1,16 +1,32 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { UiState } from './shared/states';
 
 @Component({
   selector: 'wbs-app',
   templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
   encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-  ngOnInit() {
-    fromEvent(window, 'load').subscribe(() =>
-      document.querySelector('#glb-loader')?.classList.remove('loaderShow')
-    );
+  constructor(private readonly store: Store) {}
+
+  ngOnInit(): void {
+    const close = () => {
+      const elem = document.getElementById('glb-loader');
+
+      if (elem) {
+        elem.style.display = 'none';
+      } else {
+        setTimeout(() => {
+          close();
+        }, 250);
+      }
+    };
+
+    this.store.select(UiState.isLoading).subscribe((isLoading) => {
+      if (isLoading) return;
+
+      close();
+    });
   }
 }

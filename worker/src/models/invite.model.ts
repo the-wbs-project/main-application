@@ -3,7 +3,7 @@ export interface Invite {
   type: string;
   email: string;
   culture: string;
-  claims: string[];
+  roles: string[];
   cancelled: boolean;
   accepted: boolean;
   dateSent: Date | null;

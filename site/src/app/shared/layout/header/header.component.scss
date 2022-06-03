@@ -19,28 +19,10 @@ li::marker {
     color: #000;
   }
 
-  .rtl {
-    .modal-header .close {
-      margin: -1rem auto -1rem 1rem !important;
-    }
-  }
-
   form[role="search"].active {
     left: initial;
     border-right: 0px solid #e3e3f7;
     right: 0px;
-  }
-
-  .rtl {
-    form[role="search"].active {
-      left: 0;
-      border-right: 0px solid #e3e3f7;
-      right: 0px;
-
-      input {
-        right: 0 !important;
-      }
-    }
   }
 
   .transparent-theme {
@@ -52,18 +34,7 @@ li::marker {
       color: #eee !important;
     }
   }
-
-  .rtl {
-    app-header {
-      .input-group:not(.has-validation)
-        > .dropdown-toggle:nth-last-child(n + 3),
-      .input-group:not(.has-validation)
-        > :not(:last-child):not(.dropdown-toggle):not(.dropdown-menu) {
-        border-top-right-radius: 5px !important;
-        border-bottom-right-radius: 5px !important;
-        border-top-left-radius: 5px !important;
-        border-bottom-left-radius: 5px !important;
-      }
-    }
-  }
+}
+.dd-icon {
+  margin-right: 10px;
 }

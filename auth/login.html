@@ -41,9 +41,10 @@
         language,
         languageDictionary,
         email,
-        claims,
         culture,
+        organization,
         inviteCode,
+        roles,
         origin
       ) {
         var colors = config.colors || {};
@@ -74,8 +75,8 @@
           languageBaseUrl: config.languageBaseUrl,
           languageDictionary: languageDictionary,
           theme: {
-            //logo:            'YOUR LOGO HERE',
             primaryColor: colors.primary ? colors.primary : "green",
+            logo: "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/8d5823b3-0be9-458a-8f39-70da2c37b400/test",
           },
           closable: false,
           defaultADUsernameFromEmailPrefix: false,
@@ -96,21 +97,24 @@
               value: "true",
             },
             {
-              name: "claims",
-              storage: "app_metadata",
-              type: "hidden",
-              value: claims.join(),
-            },
-            {
               name: "culture",
               type: "hidden",
               value: culture,
             },
             {
+              name: "organization",
+              type: "hidden",
+              value: organization,
+            },
+            {
               name: "inviteCode",
-              storage: "app_metadata",
               type: "hidden",
               value: inviteCode,
+            },
+            {
+              name: "roles",
+              type: "hidden",
+              value: roles,
             },
           ],
         });
@@ -143,8 +147,8 @@
           languageBaseUrl: config.languageBaseUrl,
           languageDictionary: languageDictionary,
           theme: {
-            //logo:            'YOUR LOGO HERE',
             primaryColor: colors.primary ? colors.primary : "green",
+            logo: "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/8d5823b3-0be9-458a-8f39-70da2c37b400/test",
           },
           prefill: loginHint ? { email: loginHint, username: loginHint } : null,
           closable: false,
@@ -188,9 +192,10 @@
                 language,
                 languageDictionary,
                 data.email,
-                data.claims,
                 data.culture,
+                organization,
                 inviteCode,
+                data.roles.join(","),
                 rUrl.origin
               ),
             (error) => console.log(error)

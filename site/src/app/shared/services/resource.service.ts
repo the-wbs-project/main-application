@@ -32,20 +32,24 @@ export class Resources extends MissingTranslationHandler {
     super();
   }
 
-  setup(resource: any) {
-    this.resources.push(resource);
+  initiate(): Observable<void> {
+    return this.getFromServerAsync('General').pipe(
+      map((resource) => {
+        this.resources.push(resource);
 
-    this.translate.setTranslation(this.culture, resource);
-    this.translate.setDefaultLang(this.culture);
-    this.translate.missingTranslationHandler = this;
+        this.translate.setTranslation(this.culture, resource);
+        this.translate.setDefaultLang(this.culture);
+        this.translate.missingTranslationHandler = this;
+      })
+    );
   }
 
   verifyAsync(key: string): Observable<any> {
     if (this.pulled.indexOf(key) > -1) return of('nothing');
 
-    return this.http
-      .get<ResourceSections>(`resources/${key}`)
-      .pipe(map((resources) => this.append(key, resources)));
+    return this.getFromServerAsync(key).pipe(
+      map((resources) => this.append(key, resources))
+    );
   }
 
   get(resource: string, defaultValue?: string): string {
@@ -144,5 +148,9 @@ export class Resources extends MissingTranslationHandler {
         this._missingQueue = [];
       })
     );
+  }
+
+  private getFromServerAsync(key: string): Observable<any> {
+    return this.http.get<ResourceSections>(`resources/${key}`);
   }
 }

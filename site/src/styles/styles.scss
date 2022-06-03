@@ -177,19 +177,6 @@ ngb-alert .btn-close {
   transform: translateY(-50%);
 }
 
-.rtl {
-  ngb-alert .btn-close {
-    right: inherit !important;
-    left: 10px !important;
-  }
-}
-
-@media (max-width: 767px) {
-  .rtl.app.sidenav-toggled .app-sidebar {
-    right: 0px !important;
-  }
-}
-
 .transparent-theme .main-header {
   backdrop-filter: blur(0.25rem);
 }
@@ -344,10 +331,6 @@ ngb-alert .btn-close {
 .transparent-theme .btn-light:not(:disabled):not(.disabled):active:focus,
 .transparent-theme .btn-light:not(:disabled):not(.disabled).active:focus {
   box-shadow: none !important;
-}
-
-.rtl.dark-theme .main-nav .nav-link + .nav-link {
-  border-left-width: 0px !important;
 }
 
 .dark-theme .btn-close {

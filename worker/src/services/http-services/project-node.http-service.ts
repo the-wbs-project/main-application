@@ -8,7 +8,7 @@ export class ProjectNodeHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.data.projectNodes.getAllAsync(
+      const data = await req.services.data.projectNodes.getAllAsync(
         req.params.projectId,
       );
       return await super.buildJson(data);
@@ -30,7 +30,7 @@ export class ProjectNodeHttpService extends BaseHttpService {
 
       if (!projectId || !nodeId) return 500;
 
-      await req.data.projectNodes.putAsync(await req.request.json());
+      await req.services.data.projectNodes.putAsync(await req.request.json());
 
       return 204;
       /*
@@ -85,7 +85,7 @@ export class ProjectNodeHttpService extends BaseHttpService {
 
       const data = await req.request.json();
 
-      await req.data.projectNodes.batchAsync(
+      await req.services.data.projectNodes.batchAsync(
         projectId,
         data.upserts,
         data.removeIds,

@@ -1,9 +1,7 @@
 import { Obj } from 'itty-router';
 import { Config } from '../config';
 import { AuthState } from '../models';
-import { AuthenticationService } from './auth-services';
-import { DataServiceFactory } from './data-services';
-import { EdgeService } from './edge-services';
+import { ServiceFactory } from './factory.service';
 import { myFetch } from './fetcher.service';
 import { Logger } from './logger.service';
 
@@ -18,13 +16,15 @@ export class WorkerRequest {
 
   constructor(
     event: FetchEvent,
-    readonly auth: AuthenticationService,
     readonly config: Config,
-    readonly data: DataServiceFactory,
-    readonly edge: EdgeService,
+    readonly services: ServiceFactory,
     private readonly logger: Logger,
   ) {
     this._request = event.request;
+  }
+
+  get headers(): Headers {
+    return this._request.headers;
   }
 
   get method(): string {

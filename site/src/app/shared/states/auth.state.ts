@@ -1,21 +1,31 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { ChangeAuthenticationFlag, ProfileUpdated } from '@wbs/shared/actions';
+import {
+  ChangeAuthenticationFlag,
+  LoadProfile,
+  ProfileUpdated,
+} from '@wbs/shared/actions';
 import { User } from '@wbs/shared/models';
 import { DataServiceFactory } from '@wbs/shared/services';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { map, Observable } from 'rxjs';
 
 export interface AuthBucket {
-  isAuthenticated?: boolean;
-  profile?: User | null | undefined;
-  organization?: string | undefined;
+  roles?: string[];
+  isAdmin: boolean;
+  isAuthenticated: boolean;
+  profile?: User | null;
+  organization: string;
+  organizations?: string[];
 }
 
 @Injectable()
 @State<AuthBucket>({
   name: 'auth',
-  defaults: {},
+  defaults: {
+    isAdmin: false,
+    isAuthenticated: false,
+    organization: window.location.hostname.split('.')[0],
+  },
 })
 export class AuthState implements NgxsOnInit {
   private readonly authFlag = 'isLoggedIn';
@@ -23,8 +33,13 @@ export class AuthState implements NgxsOnInit {
   constructor(private readonly data: DataServiceFactory) {}
 
   @Selector()
+  static isAdmin(state: AuthBucket): boolean {
+    return state.isAdmin;
+  }
+
+  @Selector()
   static isAuthenticated(state: AuthBucket): boolean {
-    return state.isAuthenticated ?? false;
+    return state.isAuthenticated;
   }
 
   @Selector()
@@ -34,7 +49,21 @@ export class AuthState implements NgxsOnInit {
 
   @Selector()
   static fullName(state: AuthBucket): string | null | undefined {
-    return state?.profile?.fullName;
+    return state?.profile?.name;
+  }
+
+  @Selector()
+  static organization(state: AuthBucket): string {
+    return state.organization;
+  }
+
+  @Selector()
+  static organizations(state: AuthBucket): string[] {
+    return state.organizations ?? [];
+  }
+  @Selector()
+  static roles(state: AuthBucket): string[] {
+    return state.roles ?? [];
   }
 
   @Selector()
@@ -42,15 +71,27 @@ export class AuthState implements NgxsOnInit {
     return state?.profile?.id;
   }
 
-  ngxsOnInit(ctx: StateContext<AuthBucket>): Observable<void> {
-    const data = localStorage.getItem(this.authFlag);
+  ngxsOnInit(ctx: StateContext<AuthBucket>): void {
+    const authFlag = localStorage.getItem(this.authFlag);
 
+    ctx.patchState({
+      isAuthenticated: authFlag ? JSON.parse(authFlag) : false,
+    });
+  }
+
+  @Action(LoadProfile)
+  loadProfile(ctx: StateContext<AuthBucket>): Observable<void> {
     return this.data.auth.getCurrentAsync().pipe(
       map((profile) => {
+        const org = ctx.getState().organization;
+        const allSettings = profile.appInfo.organizations;
+        const roles = allSettings[org].roles;
+
         ctx.patchState({
+          isAdmin: roles.indexOf('admin') > -1,
+          organizations: Object.keys(allSettings),
           profile,
-          organization: profile.appInfo.lastOrg,
-          isAuthenticated: data ? JSON.parse(data) : false,
+          roles,
         });
       })
     );

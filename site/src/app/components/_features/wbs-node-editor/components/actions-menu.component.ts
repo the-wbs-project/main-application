@@ -23,6 +23,7 @@ import { NodeEditorState } from '../state';
     valueField="action"
     size="small"
     fillMode="flat"
+    [ngClass]="'editor-header-dd-button'"
     [popupSettings]="{ align: 'right' }"
     (itemClick)="menuClicked.emit($event.action)"
   >

@@ -7,7 +7,7 @@ export class MetadataHttpService extends BaseHttpService {
   ): Promise<Response | number> {
     try {
       if (!req.config.debug) {
-        const match = await req.edge.cacheMatch();
+        const match = await req.services.edge.cacheMatch();
 
         if (match) return match;
       }
@@ -15,13 +15,13 @@ export class MetadataHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.data.metadata.getResourcesAsync(
+      const data = await req.services.data.metadata.getResourcesAsync(
         req.state.culture,
         req.params.category,
       );
       const response = await super.buildJson(data);
 
-      if (data && !req.config.debug) req.edge.cachePut(response);
+      if (data && !req.config.debug) req.services.edge.cachePut(response);
 
       return response;
     } catch (e) {
@@ -37,7 +37,7 @@ export class MetadataHttpService extends BaseHttpService {
   static async getListAsync(req: WorkerRequest): Promise<Response | number> {
     try {
       if (!req.config.debug) {
-        const match = await req.edge.cacheMatch();
+        const match = await req.services.edge.cacheMatch();
 
         if (match) return match;
       }
@@ -45,10 +45,12 @@ export class MetadataHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.data.metadata.getListAsync(req.params.name);
+      const data = await req.services.data.metadata.getListAsync(
+        req.params.name,
+      );
       const response = await super.buildJson(data);
 
-      if (data && !req.config.debug) req.edge.cachePut(response);
+      if (data && !req.config.debug) req.services.edge.cachePut(response);
 
       return response;
     } catch (e) {

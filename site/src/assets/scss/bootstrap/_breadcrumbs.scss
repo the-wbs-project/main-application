@@ -68,7 +68,7 @@
 }
 
 .breadcrumb-item {
-  a{
+  a {
     color: #7987a1;
   }
   + .breadcrumb-item {
@@ -92,51 +92,63 @@
   }
 }
 
-.breadcrumb-style1, .breadcrumb-style2, .breadcrumb-style3 {
-    border-radius: 7px;
+.breadcrumb-style1,
+.breadcrumb-style2,
+.breadcrumb-style3 {
+  border-radius: 7px;
 }
-.breadcrumb-style1 .breadcrumb-item a, .breadcrumb-style2 .breadcrumb-item a, .breadcrumb-style3 .breadcrumb-item a {
-  color:#6c7b9a;
+.breadcrumb-style1 .breadcrumb-item a,
+.breadcrumb-style2 .breadcrumb-item a,
+.breadcrumb-style3 .breadcrumb-item a {
+  color: #6c7b9a;
 }
 
 .breadcrumb-style1 .breadcrumb-item a {
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $primary;
   }
 }
 
 .breadcrumb-style2 .breadcrumb-item a {
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $primary;
   }
 }
 
 .breadcrumb-style3 .breadcrumb-item a {
-  &:hover, &:focus {
+  &:hover,
+  &:focus {
     color: $primary;
   }
 }
 
-.breadcrumb-style1 .breadcrumb-item.active, .breadcrumb-style2 .breadcrumb-item.active, .breadcrumb-style3 .breadcrumb-item.active {
+.breadcrumb-style1 .breadcrumb-item.active,
+.breadcrumb-style2 .breadcrumb-item.active,
+.breadcrumb-style3 .breadcrumb-item.active {
   color: $primary;
 }
 
-.breadcrumb-style1 .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-style2 .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-style3 .breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-style1 .breadcrumb-item + .breadcrumb-item::before,
+.breadcrumb-style2 .breadcrumb-item + .breadcrumb-item::before,
+.breadcrumb-style3 .breadcrumb-item + .breadcrumb-item::before {
   color: #cfd4e1;
 }
 
-.breadcrumb-style2 .breadcrumb-item + .breadcrumb-item::before, .breadcrumb-style3 .breadcrumb-item + .breadcrumb-item::before {
+.breadcrumb-style2 .breadcrumb-item + .breadcrumb-item::before,
+.breadcrumb-style3 .breadcrumb-item + .breadcrumb-item::before {
   width: 16px;
   text-align: center;
-  font-family: 'Ionicons' !important;
+  font-family: "Ionicons" !important;
 }
 
 .breadcrumb-style2 .breadcrumb-item + .breadcrumb-item::before {
-  content: '\f3d1';
+  content: "\f3d1";
 }
 
 .breadcrumb-style3 .breadcrumb-item + .breadcrumb-item::before {
-  content: '\f287';
+  content: "\f287";
 }
 
 .main-content-breadcrumb {
@@ -154,13 +166,13 @@
     position: relative;
 
     + span::before {
-      content: '\f3d1';
-      font-family: 'Ionicons';
+      content: "\f3d1";
+      font-family: "Ionicons";
       font-size: 12px;
       font-weight: 300;
       display: inline;
       margin: 0 5px;
-      color:$gray-400;
+      color: $gray-400;
       line-height: 0;
       position: relative;
       top: 1px;
@@ -180,7 +192,7 @@
   .breadcrumb-item {
     font-size: 10px;
     text-transform: uppercase;
-    letter-spacing: .5px;
+    letter-spacing: 0.5px;
     font-weight: 700;
 
     a {
@@ -214,10 +226,10 @@
   }
 }
 
-.breadcrumb-item+.breadcrumb-item::before {
-float:none;
-  padding-right: .5rem;
-    color: #d6dfe7;
-    content: var(--bs-breadcrumb-divider, "\e933");
-    font-family: 'feather' !important;
+.breadcrumb-item + .breadcrumb-item::before {
+  float: none;
+  padding-right: 0.5rem;
+  color: #d6dfe7;
+  content: var(--bs-breadcrumb-divider, ">");
+  font-family: "feather" !important;
 }

@@ -1,0 +1,64 @@
+<kendo-grid
+  [data]="data$ | async"
+  [sortable]="true"
+  [filterable]="true"
+  [sort]="sort$ | async"
+  [filter]="filter$ | async"
+  [style.height.%]="95"
+  class="user-mgmt-grid"
+  (dataStateChange)="dataStateChange($event)"
+>
+  <!--
+    User
+  -->
+  <kendo-grid-column
+    field="name"
+    [title]="'General.Name' | translate"
+    [width]="300"
+    filter="text"
+    class="name-cell"
+  >
+    <ng-template kendoGridCellTemplate let-item>
+      <div>
+        <div class="name-item">{{ item.name }}</div>
+        <div class="tx-right">x</div>
+      </div>
+    </ng-template>
+  </kendo-grid-column>
+  <!--
+    Company
+  -->
+  <kendo-grid-column
+    field="email"
+    [title]="'General.Email' | translate"
+    [width]="150"
+    filter="text"
+  >
+  </kendo-grid-column>
+  <!--
+    Last Login
+  <kendo-grid-column
+    field="lastLogin"
+    [width]="100"
+    class="center"
+    filter="date"
+    [title]="'Settings.LastLogin' | translate"
+  >
+    <ng-template kendoGridCellTemplate let-item>
+      {{ item.lastLogin | date: "short" }}
+    </ng-template>
+  </kendo-grid-column>
+  -->
+  <!--
+    Permissions
+  -->
+  <kendo-grid-column
+    field="claims"
+    class="center"
+    filter="text"
+    [width]="200"
+    [title]="'Settings.Roles' | translate"
+  >
+    <ng-template kendoGridCellTemplate let-item> </ng-template>
+  </kendo-grid-column>
+</kendo-grid>

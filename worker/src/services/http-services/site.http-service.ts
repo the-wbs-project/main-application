@@ -52,7 +52,7 @@ export class SiteHttpService {
 
   private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
     try {
-      return await req.edge.getAssetFromKV({
+      return await req.services.edge.getAssetFromKV({
         mapRequestToAsset: SiteHttpService.handlePrefix(),
         cacheControl: {
           bypassCache: DEBUG === 'true',
@@ -132,7 +132,7 @@ export class SiteHttpService {
   ): Promise<Response> {
     const culture = req.state?.culture;
     const resources = culture
-      ? await req.data.metadata.getResourcesAsync(culture, 'General')
+      ? await req.services.data.metadata.getResourcesAsync(culture, 'General')
       : null;
 
     const data = JSON.stringify({

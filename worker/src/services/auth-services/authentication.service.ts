@@ -1,14 +1,11 @@
-import { parseJwt, JwtParseResult } from '@cfworker/jwt';
 import * as cookie from 'cookie';
 import { AuthConfig } from '../../config';
+import { UserAllOrganizationSettings } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 import { Auth0Service } from './auth0.service';
 
 export class AuthenticationService {
-  constructor(
-    private readonly auth0: Auth0Service,
-    private readonly config: AuthConfig,
-  ) {}
+  constructor(private readonly auth0: Auth0Service) {}
 
   async handleCallbackAsync(req: WorkerRequest): Promise<Headers | null> {
     //
@@ -20,14 +17,14 @@ export class AuthenticationService {
 
     if (!auth0Code || !stateCode) return null;
 
-    const state = await req.data.auth.getStateAsync(stateCode);
+    const state = await req.services.data.auth.getStateAsync(stateCode);
     const token = await this.auth0.getAuthTokenAsync(req);
 
     if (!token || !state) {
       return null;
     }
     const payload = JSON.parse(this.decodeJWT(token.id_token));
-    const validToken = this.validateToken(payload);
+    const validToken = this.validateToken(req.config.auth, payload);
 
     if (!validToken) {
       console.log('token invalid');
@@ -36,71 +33,35 @@ export class AuthenticationService {
     //
     //  Set the email and claims and save.
     //
-    const orgs: string[] = [];
-
     state.userId = <string>payload['http://thewbsproject.com/user_id'];
     state.culture = <string>payload['http://thewbsproject.com/culture'];
-    state.claims = (<string>payload['http://thewbsproject.com/claims']).split(
-      ',',
+
+    const orgSettings = <UserAllOrganizationSettings>(
+      payload['http://thewbsproject.com/orgSettings']
     );
+    const org = this.getOrganization(req);
+    const orgs = Object.keys(orgSettings);
+    const settings = orgSettings[org];
 
-    for (const claim of state.claims) {
-      if (claim.endsWith(':user')) {
-        const org = claim.split(':')[0];
-
-        if (orgs.indexOf(org) === -1) orgs.push(org);
-      }
-    }
     state.organizations = orgs;
+    state.roles = settings.roles;
+    state.organization = org;
 
-    await req.data.auth.putStateAsync(stateCode, state);
+    await req.services.data.auth.putStateAsync(stateCode, state);
 
-    const secure = this.config.excludeSecureCookie ? '' : ' Secure;';
+    const secure = req.config.auth.excludeSecureCookie ? '' : ' Secure;';
 
     return new Headers({
       Location: '/',
-      'Set-cookie': `${this.config.cookieKey}=${stateCode};${secure} HttpOnly; SameSite=Lax;`,
+      'Set-cookie': `${req.config.auth.cookieKey}=${stateCode};${secure} HttpOnly; SameSite=Lax;`,
     });
   }
 
-  async fixPostSetupAsync(req: WorkerRequest): Promise<void> {
-    const url = new URL(req.url);
-    const stateCode = <string>url.searchParams.get('state');
-
-    if (!stateCode) return;
-
-    const state = await req.data.auth.getStateAsync(stateCode);
-
-    if (!state?.userId) return;
-
-    const user = await req.data.identity.getUserAsync(req, state.userId);
-
-    if (!user) return;
-
-    if (user.userInfo == null) user.userInfo = {};
-    if (user.appInfo == null) user.appInfo = {};
-
-    const info = <any>user.userInfo;
-
-    if (info.claims) {
-      user.appInfo.claims = info.claims;
-      user.appInfo.inviteCode = info.inviteCode;
-
-      info.claims = null;
-      info.inviteCode = null;
-      //
-      //  You need to save both app_metadatga and user_metadata
-      //
-      await req.data.identity.updateUserAsync(req, user);
-      await req.data.identity.updateProfileAsync(req, user);
-    }
-  }
-
   async authorizeAsync(req: WorkerRequest): Promise<Response | number | void> {
-    const stateCode = this.getStateCode(req.request);
+    const stateCode = this.getStateCode(req);
 
     if (stateCode) {
-      const state = await req.data.auth.getStateAsync(stateCode);
+      const state = await req.services.data.auth.getStateAsync(stateCode);
 
       if (state) {
         //
@@ -114,16 +75,25 @@ export class AuthenticationService {
         //  Looks good, let's go!
         //
         req.setState(state, organization);
-        req.data.setOrganization(organization);
+        req.services.data.setOrganization(organization);
         return;
       }
     }
     const state = await this.auth0.generateStateParamAsync(req);
     const url = new URL(req.url);
 
-    await req.data.auth.putStateAsync(state, {});
+    await req.services.data.auth.putStateAsync(state, {});
 
     return Response.redirect(this.auth0.getLoginRedirectUrl(url.origin, state));
+  }
+
+  async getLogoutRedirectAsync(req: WorkerRequest): Promise<Response> {
+    const url = new URL(req.url);
+    const state = this.getStateCode(req);
+
+    if (state) await req.services.data.auth.deleteStateAsync(state);
+
+    return Response.redirect(this.auth0.getLogoutUrl(url.origin));
   }
 
   async setupAsync(
@@ -133,33 +103,32 @@ export class AuthenticationService {
     const state = await this.auth0.generateStateParamAsync(req);
     const url = new URL(req.url);
 
-    await req.data.auth.putStateAsync(state, {});
+    await req.services.data.auth.putStateAsync(state, {});
 
     return Response.redirect(
       this.auth0.getSetupRedirectUrl(url.origin, state, inviteCode),
     );
   }
 
-  logout(info: WorkerRequest, siteResponse: Response): Response | null {
-    const cookieHeader = info.request.headers.get('Cookie');
-    if (cookieHeader && cookieHeader.includes(this.config.cookieKey)) {
-      const secure = this.config.excludeSecureCookie ? '' : ' Secure;';
-      const headers = new Headers(siteResponse.headers);
-      headers.set(
-        'Set-cookie',
-        `${this.config.cookieKey}="";auth0=""; HttpOnly;${secure} SameSite=Lax`,
-      );
+  finishLogout(req: WorkerRequest): Response | null {
+    const config = req.config.auth;
+    const cookieHeader = req.request.headers.get('Cookie');
+    if (cookieHeader && cookieHeader.includes(config.cookieKey)) {
+      const secure = config.excludeSecureCookie ? '' : ' Secure;';
 
-      return new Response(siteResponse.body, {
-        ...siteResponse,
-        headers: headers,
+      return new Response(LOGOUT_HTML, {
+        status: 200,
+        headers: {
+          'Set-cookie': `${config.cookieKey}="";auth0=""; HttpOnly;${secure} SameSite=Lax`,
+          'content-type': 'text/html; charset=utf-8',
+        },
       });
     }
     return null;
   }
 
-  getStateCode(req: Request): string | null {
-    const key = this.config.cookieKey || '';
+  getStateCode(req: WorkerRequest): string | null {
+    const key = req.config.auth.cookieKey || '';
 
     const header = req.headers.get('Cookie');
 
@@ -169,7 +138,7 @@ export class AuthenticationService {
 
     if (cookieValue) return cookieValue;
 
-    return req.headers.get(this.config.cookieKey || '');
+    return req.headers.get(req.config.auth.cookieKey || '');
   }
 
   private getOrganization(req: WorkerRequest): string {
@@ -202,7 +171,10 @@ export class AuthenticationService {
     }
   }
 
-  private validateToken(token: any) {
+  private validateToken(
+    config: AuthConfig,
+    token: { iss: string; aud: string; exp: number; iat: number },
+  ) {
     try {
       const dateInSecs = (d: Date) => Math.ceil(Number(d) / 1000);
       const date = new Date();
@@ -213,7 +185,7 @@ export class AuthenticationService {
       // the AUTH0_DOMAIN, so we should remove the trailing slash if it exists
       iss = iss.endsWith('/') ? iss.slice(0, -1) : iss;
 
-      const domain = `https://${this.config.domain}`;
+      const domain = `https://${config.domain}`;
 
       if (iss !== domain) {
         throw new Error(
@@ -221,9 +193,9 @@ export class AuthenticationService {
         );
       }
 
-      if (token.aud !== this.config.authClientId) {
+      if (token.aud !== config.authClientId) {
         throw new Error(
-          `Token aud value (${token.aud}) doesn't match AUTH0_CLIENT_ID (${this.config.authClientId})`,
+          `Token aud value (${token.aud}) doesn't match AUTH0_CLIENT_ID (${config.authClientId})`,
         );
       }
 
