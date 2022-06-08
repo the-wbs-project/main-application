@@ -67,8 +67,7 @@ export class IdentityService {
     pageSize: number,
   ): Promise<User[]> {
     const conn = this.getConnection(req);
-    const q = this.getQuery(req);
-    const url = `users?page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3&q=${q}`;
+    const url = `users?page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
     const results: User[] = [];
 
@@ -82,17 +81,12 @@ export class IdentityService {
 
   private async getUserCountAsync(req: WorkerRequest): Promise<number> {
     const conn = this.getConnection(req);
-    const q = this.getQuery(req);
-    const url = `users?include_totals=true&connection=${conn}&search_engine=v3&q=${q}`;
+    const url = `users?include_totals=true&connection=${conn}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
 
     if (response.status !== 200) throw new Error(await response.text());
 
     return (await response.json()).total;
-  }
-
-  private getQuery(req: WorkerRequest): string {
-    return `app_metadata.organizations.${req.organization}:true`;
   }
 
   private getConnection(req: WorkerRequest): string {
