@@ -37,11 +37,14 @@ export class MailGunService {
   }
 
   inviteAsync(req: WorkerRequest, invite: Invite): Promise<Response> {
+    const origin = new URL(req.url).origin;
+    const html = INVITE_EMAIL.replace('{url}', `${origin}/setup/${invite.id}`);
+
     return this.sendMail(req, {
       from: 'The WBS Project Support <support@thewbsproject.com>',
       to: invite.email,
       subject: `You have been invited to join The WBS Project Beta`,
-      html: INVITE_EMAIL,
+      html,
     });
   }
 

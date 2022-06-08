@@ -22,6 +22,14 @@ function auth(req: WorkerRequest): Promise<Response | number | void> {
   return req.services.auth.authorizeAsync(req);
 }
 
+function setOrg(req: WorkerRequest): void {
+  req.services.auth.setOrganization(req);
+}
+
+function isAdmin(req: WorkerRequest): number | void {
+  if ((req.state?.roles?.indexOf('admin') ?? -1) === -1) return 401;
+}
+
 export class RouterService {
   private readonly router = Router<WorkerRequest>();
 
@@ -34,12 +42,25 @@ export class RouterService {
     //
     //  Non auth
     //
-    this.router.get(`/setup/:inviteCode`, Http.auth.setupAsync);
-    this.router.get(`/api/invites/:organization/:code`, Http.invites.getAsync);
+    this.router.get('/info/:message', Http.site.getSiteAsync);
+    this.router.get(`/setup/:inviteCode`, setOrg, Http.auth.setupAsync);
+    this.router.get(
+      `/api/invites/preReg/:organization/:code`,
+      Http.invites.getEmailAsync,
+    );
+    this.router.get(
+      `/api/invites/postReg/:organization/:code`,
+      Http.invites.getAndAcceptAsync,
+    );
     this.router.post('/api/send', this.email.handleHomepageInquiryAsync);
     this.router.get('/logout', Http.auth.logoutAsync);
     this.router.get('/callback', Http.auth.callbackAsync);
     this.router.get('/loggedout', Http.auth.loggedoutAsync);
+    this.router.get(
+      '/api/resources/Info',
+      Http.metadata.setInfo,
+      Http.metadata.getResourcesAsync,
+    );
     this.router.get('/api/edge-data/clear', async (req: WorkerRequest) => {
       await req.services.edge.data.clear();
       return 204;
@@ -95,7 +116,9 @@ export class RouterService {
       Http.projectNodes.putAsync,
     );
     this.router.get(`/api/users`, auth, Http.users.getAllAsync);
+    this.router.post('/api/user', auth, isAdmin, Http.users.updateUserAsync);
     this.router.get(`/api/invites`, auth, Http.invites.getAllAsync);
+    this.router.put(`/api/invites/:send`, auth, Http.invites.putAsync);
 
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, auth, Http.azure.handleAsync);

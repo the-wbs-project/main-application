@@ -152,7 +152,7 @@ export class UiState implements NgxsOnInit {
 
     projectItems[1].children = [];
 
-    for (const project of action.projects) {
+    for (const project of action.projects ?? []) {
       projectItems[1].children.push({
         path: `/projects/view/${project.id}`,
         titleNotResource: true,

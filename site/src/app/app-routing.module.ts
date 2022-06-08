@@ -6,6 +6,11 @@ import { content } from '@wbs/shared/routes';
 const routes: Routes = [
   { path: '', redirectTo: '/projects/view/123/general', pathMatch: 'full' },
   {
+    path: 'info',
+    loadChildren: () =>
+      import('./components/info/info.module').then((m) => m.InfoModule),
+  },
+  {
     path: '',
     loadChildren: () => import('./shared/module').then((m) => m.SharedModule),
   },

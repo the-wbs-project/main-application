@@ -19,7 +19,7 @@ export class ContentLayoutComponent implements AfterContentInit {
 
   constructor(
     private readonly container: ContainerService,
-    public SwitcherService: SwitcherService
+    private readonly switcher: SwitcherService
   ) {}
 
   ngAfterContentInit() {
@@ -27,6 +27,6 @@ export class ContentLayoutComponent implements AfterContentInit {
   }
 
   toggleSwitcherBody() {
-    this.SwitcherService.emitChange(false);
+    this.switcher.emitChange(false);
   }
 }

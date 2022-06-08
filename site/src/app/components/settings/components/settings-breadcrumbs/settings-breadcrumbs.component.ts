@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { UiState } from '@wbs/shared/states';
 import { Observable } from 'rxjs';
+import { Breadcrumb } from '../../models';
+import { SettingsState } from '../../states';
 
 @Component({
   selector: 'app-settings-bread-crumbs',
@@ -10,4 +12,5 @@ import { Observable } from 'rxjs';
 export class BreadcrumbsComponent {
   readonly root = '/settings';
   @Select(UiState.path) path$!: Observable<string | undefined>;
+  @Select(SettingsState.crumbs) crumbs$!: Observable<Breadcrumb[]>;
 }

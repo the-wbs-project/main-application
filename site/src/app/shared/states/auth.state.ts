@@ -15,7 +15,6 @@ export interface AuthBucket {
   isAuthenticated: boolean;
   profile?: User | null;
   organization: string;
-  organizations?: string[];
 }
 
 @Injectable()
@@ -58,10 +57,6 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static organizations(state: AuthBucket): string[] {
-    return state.organizations ?? [];
-  }
-  @Selector()
   static roles(state: AuthBucket): string[] {
     return state.roles ?? [];
   }
@@ -84,12 +79,10 @@ export class AuthState implements NgxsOnInit {
     return this.data.auth.getCurrentAsync().pipe(
       map((profile) => {
         const org = ctx.getState().organization;
-        const allSettings = profile.appInfo.organizations;
-        const roles = allSettings[org].roles;
+        const roles = profile.appInfo.roles;
 
         ctx.patchState({
           isAdmin: roles.indexOf('admin') > -1,
-          organizations: Object.keys(allSettings),
           profile,
           roles,
         });

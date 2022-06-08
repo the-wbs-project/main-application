@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
-import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { Project } from '@wbs/shared/models';
 import { forkJoin, map, Observable } from 'rxjs';
+import { LoadProjects } from '../actions';
 import { DataServiceFactory } from '../services';
 
 interface StateModel {
@@ -30,7 +31,10 @@ export class ProjectListState implements NgxsOnInit {
     return state.watched;
   }
 
-  ngxsOnInit(ctx: StateContext<StateModel>): void {
+  ngxsOnInit(ctx: StateContext<StateModel>): void {}
+
+  @Action(LoadProjects)
+  loadProjects(ctx: StateContext<StateModel>): void {
     forkJoin([
       this.data.projects.getMyAsync(),
       this.data.projects.getWatchedAsync(),

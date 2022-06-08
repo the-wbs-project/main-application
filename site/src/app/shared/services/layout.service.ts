@@ -3,15 +3,17 @@ import { Subject } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class LayoutService {
-  //Sidebar Notification
-  private emitSidebarNofitSource = new Subject<any>();
-  SidebarNotifyChangeEmitted = this.emitSidebarNofitSource.asObservable();
+  private readonly emitSidebarNofitSource = new Subject<any>();
+  private readonly emitSwitcherSource = new Subject<any>();
+
+  readonly SidebarNotifyChangeEmitted =
+    this.emitSidebarNofitSource.asObservable();
+  readonly SwitcherChangeEmitted = this.emitSwitcherSource.asObservable();
+
   emitSidebarNotifyChange(change: any) {
     this.emitSidebarNofitSource.next(change);
   }
-  //Sidebar
-  private emitSwitcherSource = new Subject<any>();
-  SwitcherChangeEmitted = this.emitSwitcherSource.asObservable();
+
   emitSwitcherChange(change: any) {
     this.emitSwitcherSource.next(change);
   }

@@ -6,6 +6,20 @@ export class AuthorizationHttpService extends BaseHttpService {
     try {
       if (!req.params?.inviteCode) return 500;
 
+      const invite = await req.services.data.invites.getAsync(
+        req.params.inviteCode,
+      );
+      if (!invite) {
+        return Response.redirect(
+          new URL(req.url).origin + '/info/invite-not-found',
+        );
+      }
+      if (invite.cancelled) {
+        return Response.redirect(
+          new URL(req.url).origin + '/info/invite-cancelled',
+        );
+      }
+
       return await req.services.auth.setupAsync(req, req.params.inviteCode);
     } catch (e) {
       req.logException(

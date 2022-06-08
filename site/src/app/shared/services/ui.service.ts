@@ -5,7 +5,7 @@ import {
 } from 'src/environments/menu-items.const';
 import { MenuItem } from '../models';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UiService {
   getMenuItemTitle(path: string, exact: boolean): string | undefined {
     const items = [...PROJECT_MENU_ITEMS, ...ORG_SETTINGS_MENU_ITEMS];

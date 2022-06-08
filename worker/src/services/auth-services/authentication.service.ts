@@ -1,6 +1,5 @@
 import * as cookie from 'cookie';
 import { AuthConfig } from '../../config';
-import { UserAllOrganizationSettings } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 import { Auth0Service } from './auth0.service';
 
@@ -30,22 +29,16 @@ export class AuthenticationService {
       console.log('token invalid');
       return null;
     }
+    const org = this.getOrganization(req);
     //
     //  Set the email and claims and save.
     //
+    state.organization = org;
     state.userId = <string>payload['http://thewbsproject.com/user_id'];
     state.culture = <string>payload['http://thewbsproject.com/culture'];
+    state.roles = <string[]>payload['http://thewbsproject.com/roles'];
 
-    const orgSettings = <UserAllOrganizationSettings>(
-      payload['http://thewbsproject.com/orgSettings']
-    );
-    const org = this.getOrganization(req);
-    const orgs = Object.keys(orgSettings);
-    const settings = orgSettings[org];
-
-    state.organizations = orgs;
-    state.roles = settings.roles;
-    state.organization = org;
+    req.setOrganization(org);
 
     await req.services.data.auth.putStateAsync(stateCode, state);
 
@@ -55,6 +48,12 @@ export class AuthenticationService {
       Location: '/',
       'Set-cookie': `${req.config.auth.cookieKey}=${stateCode};${secure} HttpOnly; SameSite=Lax;`,
     });
+  }
+
+  setOrganization(req: WorkerRequest): void {
+    const organization = this.getOrganization(req);
+
+    req.setOrganization(organization);
   }
 
   async authorizeAsync(req: WorkerRequest): Promise<Response | number | void> {
@@ -69,13 +68,11 @@ export class AuthenticationService {
         //
         const organization = this.getOrganization(req);
 
-        if ((state.organizations?.indexOf(organization) ?? -1) === -1)
-          return 401;
+        if (state.organization !== organization) return 401;
         //
         //  Looks good, let's go!
         //
         req.setState(state, organization);
-        req.services.data.setOrganization(organization);
         return;
       }
     }

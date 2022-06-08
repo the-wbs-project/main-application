@@ -48,15 +48,15 @@ import { AppComponent } from './app.component';
   bootstrap: [AppComponent],
   providers: [
     {
-      provide: HTTP_INTERCEPTORS,
-      useClass: RequestInterceptor,
-      deps: [AnalyticsService, Messages],
-      multi: true,
-    },
-    {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
       deps: [Store, Resources, ThemeService],
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: RequestInterceptor,
+      deps: [AnalyticsService, Messages],
       multi: true,
     },
   ],

@@ -4,6 +4,8 @@
     "language": "en-US",
     "values": {
       "General": {
+        "No": "No",
+        "Yes": "Yes",
         "Cancel": "Cancel",
         "Confirm": "Confirm",
         "Other": "Other",
@@ -19,12 +21,22 @@
         "Projects": "Projects",
         "Download": "Download",
         "Upload": "Upload",
+        "Submit": "Submit",
         "RetrievingData": "Retrieving Data...",
         "ReviewingData": "Reviewing Data...",
         "CreateProject": "Create Project",
         "Settings": "Settings",
         "SiteAdministration": "Site Administration",
-        "LogOut": "Log Out"
+        "LogOut": "Log Out",
+        "Roles": "Roles",
+        "PM": "PM",
+        "PM-Full": "Project Manager",
+        "SME": "SME",
+        "SME-Full": "Subject Matter Export",
+        "Approver": "Approver",
+        "Admin": "Admin",
+        "Admin-Full": "Administrator",
+        "Admin-Explain": "Can administrate the organization settings (users, etc.)"
       },
       "Category_Phase": {
         "Initial_Name": "Initial Phase",
@@ -82,8 +94,30 @@
         "General": "General",
         "GeneralDescription": "Name, contact info, and more",
         "Users": "Users",
-        "UsersDescription": "Invite and manage existing users",
-        "Roles": "Roles"
+        "UsersDescription": "Manage existing users",
+        "Invites": "Invites",
+        "InvitesDescription": "Send, change, and cancel invites",
+        "Roles": "Roles",
+        "ActiveUsers": "Active Users",
+        "InactiveUsers": "Inactive Users",
+        "InviteSent": "Invite Sent",
+        "InviteResent": "Invite Resent",
+        "InviteUpdated": "Invite Updated",
+        "InviteCancelled": "Invite Cancelled",
+        "ViewUserDetails": "View User Details",
+        "SendInvite": "Send Invite",
+        "EditInvite": "Edit Invite",
+        "ResendInvite": "Resend Invite",
+        "CancelInvite": "Cancel Invite",
+        "DateSent": "Date Sent",
+        
+        "ActivateUser": "Activate User",
+        "ActivateUserConfirm": "Are you sure you want to activate this user?",
+        "ActivateUserPost": "User Activated",
+
+        "DeactivateUser": "Deactivate User",
+        "DeactivateUserConfirm": "Are you sure you want to deactivate this user?",
+        "DeactivateUserPost": "User Deactivated"
       }
     }
   },
@@ -140,5 +174,19 @@
         "NodeRecordered": "{0} was reordered from {1} to {2}."
       }
     }
-  }
+  },
+  {
+    "id": "Info",
+    "language": "en-US",
+    "values": {
+      "Info": {
+        "PageNotFound": "Page Not Found",
+        "PageNotFoundDescription": "We are not sure how you got here, but there's nothing to see.",
+        "InviteNotFound": "Invite Not Found",
+        "InviteNotFoundDescription": "No invite was found for the code provided.",
+        "InviteCancelled": "Invite Cancelled",
+        "InviteCancelledDescription": "The invite has been cancelled.  Please contact whoever manages your organization to understand why."
+      }
+    }
+  },
 ]

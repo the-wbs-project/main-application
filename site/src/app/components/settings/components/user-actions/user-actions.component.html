@@ -1,0 +1,14 @@
+<div #target class="target pointer">
+  <fa-icon [icon]="faEllipsisVertical"></fa-icon>
+</div>
+<kendo-contextmenu
+  [target]="target"
+  showOn="click"
+  *ngIf="user"
+  [items]="user | userMgmtItems"
+  (select)="selected($event)"
+>
+  <ng-template kendoMenuItemTemplate let-item="item">
+    <fa-icon [icon]="item.icon"></fa-icon> {{ item.title | translate }}
+  </ng-template>
+</kendo-contextmenu>

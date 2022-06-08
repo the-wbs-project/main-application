@@ -1,1 +1,1 @@
-export * from './user-filter.pipe';
+export * from './user-mgmt-items.pipe';

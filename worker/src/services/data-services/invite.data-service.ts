@@ -9,7 +9,7 @@ export class InviteDataService {
   }
 
   getAllAsync(): Promise<Invite[]> {
-    return this.db.getAllAsync<Invite>(true);
+    return this.db.getAllByPartitionAsync<Invite>('Invites', true);
   }
 
   getAsync(inviteCode: string): Promise<Invite | undefined> {
@@ -17,6 +17,7 @@ export class InviteDataService {
   }
 
   putAsync(invite: Invite): Promise<number> {
-    return this.db.upsertDocument(invite, 'Invites');
+    invite.type = 'Invites';
+    return this.db.upsertDocument(invite, invite.type);
   }
 }

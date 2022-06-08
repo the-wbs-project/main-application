@@ -1,2 +1,11 @@
 $theme-type: dark;
-@import './kendoui-dependencies.scss'
+@import "./kendoui-dependencies";
+@import "../assets/scss/_variables";
+
+.dark-theme {
+  .k-dialog {
+    .k-content {
+      background-color: $light-grey;
+    }
+  }
+}

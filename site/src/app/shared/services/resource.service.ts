@@ -32,8 +32,8 @@ export class Resources extends MissingTranslationHandler {
     super();
   }
 
-  initiate(): Observable<void> {
-    return this.getFromServerAsync('General').pipe(
+  initiate(starter: string): Observable<void> {
+    return this.getFromServerAsync(starter).pipe(
       map((resource) => {
         this.resources.push(resource);
 

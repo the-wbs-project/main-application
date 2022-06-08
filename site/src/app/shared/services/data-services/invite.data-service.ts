@@ -8,4 +8,8 @@ export class InviteDataService {
   getAllAsync(): Observable<Invite[]> {
     return this.http.get<Invite[]>('invites');
   }
+
+  putAsync(invite: Invite, send: boolean): Observable<Invite> {
+    return this.http.put<Invite>(`invites/${send}`, invite);
+  }
 }

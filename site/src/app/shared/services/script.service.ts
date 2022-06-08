@@ -5,9 +5,7 @@ import {
 } from '@wbs/shared/models';
 import { Observable } from 'rxjs';
 
-@Injectable({
-  providedIn: 'root',
-})
+@Injectable()
 export class ScriptService {
   private loadedScripts: string[] = [];
 

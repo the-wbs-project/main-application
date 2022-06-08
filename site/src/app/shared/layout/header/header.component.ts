@@ -24,6 +24,7 @@ import { Observable } from 'rxjs';
 export class HeaderComponent implements OnInit {
   @Select(AuthState.fullName) fullName$!: Observable<string>;
   @Select(AuthState.isAdmin) isAdmin$!: Observable<boolean>;
+  @Select(AuthState.roles) roles$!: Observable<string[]>;
 
   readonly faAlignLeft = faAlignLeft;
   readonly faArrowAltCircleLeft = faArrowAltCircleLeft;
@@ -40,15 +41,15 @@ export class HeaderComponent implements OnInit {
   activated: boolean = false;
 
   constructor(
-    readonly SwitcherService: SwitcherService,
     readonly navServices: NavService,
     private readonly layoutService: LayoutService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly switcher: SwitcherService
   ) {}
 
   ngOnInit(): void {}
   toggleSwitcher() {
-    this.SwitcherService.emitChange(true);
+    this.switcher.emitChange(true);
   }
 
   toggleSidebarNotification() {

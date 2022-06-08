@@ -1,6 +1,7 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 
 export interface MenuItem {
+  id?: string;
   headTitle?: string;
   headTitle2?: string;
   path?: string;

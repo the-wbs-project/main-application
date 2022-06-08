@@ -5,7 +5,7 @@ import { Resources } from '../resource.service';
 import { WbsNodeTransformers } from './nodes';
 
 @UntilDestroy()
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class WbsTransformers {
   readonly nodes = new WbsNodeTransformers(this.resources, this.store);
 

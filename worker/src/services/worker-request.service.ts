@@ -49,7 +49,12 @@ export class WorkerRequest {
 
   setState(state: AuthState, organization: string): void {
     this._state = state;
+    this.setOrganization(organization);
+  }
+
+  setOrganization(organization: string): void {
     this._organization = organization;
+    this.services.data.setOrganization(organization);
   }
 
   logException(message: string, location: string, err: Error): void {

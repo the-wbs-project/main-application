@@ -5,7 +5,6 @@ export interface Invite {
   culture: string;
   roles: string[];
   cancelled: boolean;
-  accepted: boolean;
   dateSent: Date | null;
   dateAccepted: Date | null;
 }

@@ -1,5 +1,6 @@
 import {
   faCogs,
+  faEnvelope,
   faSpaceStationMoonConstruction,
   faUsers,
 } from '@fortawesome/pro-solid-svg-icons';
@@ -41,8 +42,16 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
     title: 'Settings.Users',
     description: 'Settings.UsersDescription',
-    path: '/settings/users',
+    path: '/settings/users/active',
     icon: faUsers,
+    type: 'link',
+    active: true,
+  },
+  {
+    title: 'Settings.Invites',
+    description: 'Settings.InvitesDescription',
+    path: '/settings/invites',
+    icon: faEnvelope,
     type: 'link',
     active: true,
   },

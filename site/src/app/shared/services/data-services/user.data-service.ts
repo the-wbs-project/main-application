@@ -8,4 +8,8 @@ export class UserDataService {
   getAllAsync(): Observable<User[]> {
     return this.http.get<User[]>('users');
   }
+
+  postAsync(user: User): Observable<void> {
+    return this.http.post<void>('user', user);
+  }
 }

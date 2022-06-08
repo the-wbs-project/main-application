@@ -4,7 +4,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { environment } from '../../../environments/environment';
 import { Resources } from './resource.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class TitleService {
   private readonly _title$ = new BehaviorSubject<string | null>(null);
   private readonly _subTitle$ = new BehaviorSubject<string | null>(null);

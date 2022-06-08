@@ -10,19 +10,19 @@ export class CosmosDbService implements DbService {
   orgId?: string;
 
   constructor(
-    private readonly dbId: string,
-    private readonly collId: string,
-    private readonly config: Config,
-    private readonly logger: Logger,
+    dbId: string,
+    collId: string,
+    config: Config,
+    logger: Logger,
     private readonly pkVariable = 'pk',
   ) {
     this.db = new CosmosClient({
-      endpoint: this.config.db.endpoint,
-      masterKey: this.config.db.key,
+      endpoint: config.db.endpoint,
+      masterKey: config.db.key,
       dbId,
       collId,
       fetch: (info: RequestInfo, init?: RequestInit) => {
-        return myFetch(this.logger, info, init);
+        return myFetch(logger, info, init);
       },
     });
   }
@@ -160,9 +160,6 @@ export class CosmosDbService implements DbService {
     if (res.status >= 300) {
       console.log(res.status);
       console.log('The error message');
-      console.log(this.dbId);
-      console.log(this.dbId);
-      console.log(document);
       console.log(await res.json());
     }
     return res.status;

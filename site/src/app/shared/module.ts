@@ -41,8 +41,9 @@ import {
   MenuItemTitlePipe,
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
+  RolesTextPipe,
 } from './pipes';
-import { LoadingService } from './services';
+import { ServiceModule } from './services';
 
 const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   suppressScrollX: true,
@@ -58,10 +59,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     PerfectScrollbarModule,
     RouterModule,
+    ServiceModule,
     TranslateModule.forChild(),
   ],
   providers: [
-    LoadingService,
     {
       provide: PERFECT_SCROLLBAR_CONFIG,
       useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
@@ -87,6 +88,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProjectListFilterPipe,
     ProjectListFilterLengthPipe,
     RightSidebarComponent,
+    RolesTextPipe,
     SidebarComponent,
     SidemenuToggleDirective,
     TabToTopComponent,
@@ -108,6 +110,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     PageHeaderComponent,
     ProgressBarDirective,
+    RolesTextPipe,
+    ServiceModule,
     TranslateModule,
   ],
 })

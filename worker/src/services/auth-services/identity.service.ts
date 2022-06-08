@@ -1,13 +1,9 @@
-import { AuthConfig } from '../../config';
 import { User } from '../../models';
 import { Auth0Service } from '../auth-services';
 import { WorkerRequest } from '../worker-request.service';
 
 export class IdentityService {
-  constructor(
-    private readonly auth0: Auth0Service,
-    private readonly config: AuthConfig,
-  ) {}
+  constructor(private readonly auth0: Auth0Service) {}
 
   async updateProfileAsync(req: WorkerRequest, user: User): Promise<void> {
     const response = await this.auth0.makeAuth0CallAsync(
@@ -70,7 +66,7 @@ export class IdentityService {
     pageNumber: number,
     pageSize: number,
   ): Promise<User[]> {
-    const conn = this.config.connection;
+    const conn = this.getConnection(req);
     const q = this.getQuery(req);
     const url = `users?page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3&q=${q}`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
@@ -79,14 +75,13 @@ export class IdentityService {
     if (response.status !== 200) throw new Error(await response.text());
 
     for (const user of await response.json()) {
-      console.log(user);
       results.push(this.auth0.toUser(user));
     }
     return results;
   }
 
   private async getUserCountAsync(req: WorkerRequest): Promise<number> {
-    const conn = this.config.connection;
+    const conn = this.getConnection(req);
     const q = this.getQuery(req);
     const url = `users?include_totals=true&connection=${conn}&search_engine=v3&q=${q}`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
@@ -97,6 +92,14 @@ export class IdentityService {
   }
 
   private getQuery(req: WorkerRequest): string {
-    return `app_metadata.claims%3A${req.organization}%5C%3Auser`;
+    return `app_metadata.organizations.${req.organization}:true`;
+  }
+
+  private getConnection(req: WorkerRequest): string {
+    let org = req.organization ?? '';
+
+    while (org.indexOf('_') > -1) org = org.replace('_', '-');
+
+    return org;
   }
 }

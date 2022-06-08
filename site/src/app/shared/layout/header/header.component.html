@@ -155,7 +155,7 @@
                         {{ fullName$ | async }}
                       </h6>
                       <span class="dropdown-title-text subtext op-6 tx-12">
-                        Valued Member
+                        {{ roles$ | async | rolesText: true }}
                       </span>
                     </div>
                   </div>

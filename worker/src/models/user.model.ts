@@ -17,14 +17,5 @@ export interface UserMetadata {
 
 export interface UserAppMetadata {
   inviteCode?: string;
-  organizations: UserAllOrganizationSettings;
-}
-
-export type UserAllOrganizationSettings = {
-  [orgName: string]: UserOrganizationSettings;
-};
-
-export interface UserOrganizationSettings {
   roles: string[];
-  isActive: boolean;
 }

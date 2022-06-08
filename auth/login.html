@@ -41,10 +41,7 @@
         language,
         languageDictionary,
         email,
-        culture,
-        organization,
-        inviteCode,
-        roles,
+        inviteUrl,
         origin
       ) {
         var colors = config.colors || {};
@@ -97,24 +94,9 @@
               value: "true",
             },
             {
-              name: "culture",
+              name: "inviteUrl",
               type: "hidden",
-              value: culture,
-            },
-            {
-              name: "organization",
-              type: "hidden",
-              value: organization,
-            },
-            {
-              name: "inviteCode",
-              type: "hidden",
-              value: inviteCode,
-            },
-            {
-              name: "roles",
-              type: "hidden",
-              value: roles,
+              value: inviteUrl,
             },
           ],
         });
@@ -176,26 +158,31 @@
       const queryString = window.location.search;
       const urlParams = new URLSearchParams(queryString);
       const inviteCode = urlParams.get("inviteCode");
+      const redirect_uri = decodeURI(urlParams.get("redirect_uri"));
+      const rUrl = new URL(redirect_uri);
+      const organization = rUrl.host.split(".")[0];
+      //
+      //  Set the connection to the domain
+      //
+      config.connection = organization;
+
+      while (config.connection.indexOf("_") > -1)
+        config.connection = config.connection.replace("_", "-");
 
       if (inviteCode) {
-        const redirect_uri = decodeURI(urlParams.get("redirect_uri"));
-        const rUrl = new URL(redirect_uri);
-        const organization = rUrl.host.split(".")[0];
-        const url = `${rUrl.origin}/api/invites/${organization}/${inviteCode}`;
+        const preRegUrl = `${rUrl.origin}/api/invites/preReg/${organization}/${inviteCode}`;
+        const postRegUrl = `${rUrl.origin}/api/invites/postReg/${organization}/${inviteCode}`;
 
-        fetch(url)
+        fetch(preRegUrl)
           .then((response) => response.json())
           .then(
-            (data) =>
+            (email) =>
               startSignin(
                 config,
                 language,
                 languageDictionary,
-                data.email,
-                data.culture,
-                organization,
-                inviteCode,
-                data.roles.join(","),
+                email,
+                postRegUrl,
                 rUrl.origin
               ),
             (error) => console.log(error)
