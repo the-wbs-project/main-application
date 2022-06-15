@@ -5,7 +5,7 @@ import {
 } from '@fortawesome/pro-duotone-svg-icons';
 import { Store } from '@ngxs/store';
 import { PROJECT_SCOPE } from '@wbs/shared/models';
-import { SubmitScope } from '../../../project-create.actions';
+import { NavBack, SubmitScope } from '../../../project-create.actions';
 
 @Component({
   selector: 'app-project-create-scope',
@@ -25,5 +25,9 @@ export class ScopeComponent {
 
   multi(): void {
     this.store.dispatch(new SubmitScope(PROJECT_SCOPE.MULTI));
+  }
+
+  back(): void {
+    this.store.dispatch(new NavBack());
   }
 }

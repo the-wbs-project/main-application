@@ -6,6 +6,8 @@ import { SwitchModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SharedModule } from '@wbs/shared/module';
 import {
   BasicsComponent,
+  DisciplinesComponent,
+  FooterComponent,
   GettingStartedComponent,
   HeaderComponent,
   LibOrScratchComponent,
@@ -38,6 +40,8 @@ const routes: Routes = [
   providers: [StartCreationGuard],
   declarations: [
     BasicsComponent,
+    DisciplinesComponent,
+    FooterComponent,
     GettingStartedComponent,
     HeaderComponent,
     LibOrScratchComponent,

@@ -88,17 +88,30 @@ export class ProjectCreateState {
 
   @Action(NavBack)
   navBack(ctx: StateContext<StateModel>): void {
-    const current = ctx.getState().page!;
-    ctx.patchState({
-      page:
-        current == 2
-          ? PAGES.GETTING_STARTED
-          : current == 3
-          ? PAGES.BASICS
-          : current == 4
-          ? PAGES.SCOPE
-          : PAGES.LIB_OR_SCRATCH,
-    });
+    const state = ctx.getState();
+    const current = state.page!;
+
+    if (current === PAGES.BASICS) {
+      ctx.patchState({
+        page: PAGES.GETTING_STARTED,
+      });
+    } else if (current === PAGES.SCOPE) {
+      ctx.patchState({
+        page: PAGES.BASICS,
+      });
+    } else if (current === PAGES.LIB_OR_SCRATCH) {
+      ctx.patchState({
+        page: PAGES.SCOPE,
+      });
+    } else if (current === PAGES.NODE_VIEW) {
+      ctx.patchState({
+        page: state.useLibrary ? PAGES.DESCIPLINES : PAGES.LIB_OR_SCRATCH,
+      });
+    } else if (current === PAGES.PHASES || current === PAGES.DESCIPLINES) {
+      ctx.patchState({
+        page: PAGES.NODE_VIEW,
+      });
+    }
   }
 
   @Action(GoToBasics)

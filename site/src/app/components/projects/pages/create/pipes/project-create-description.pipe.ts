@@ -18,7 +18,7 @@ export class ProjectCreateDescriptionPipe implements PipeTransform {
     if (page === PAGES.NODE_VIEW)
       return 'Would you like the first significant digit of your project to be Phases or Disciplines?';
     if (page === PAGES.PHASES)
-      return 'Choose which phases you would like in your WBS';
+      return 'Choose which phases which apply to your WBS.  You will be able to reorder them later.';
 
     return '';
   }
