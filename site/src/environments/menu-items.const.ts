@@ -18,10 +18,35 @@ export const PROJECT_MENU_ITEMS: MenuItem[] = [
     active: true,
     children: [
       {
-        path: '/projects/view/123',
+        title: 'Planning',
         titleNotResource: true,
-        title: 'Market Research Project',
-        type: 'link',
+        type: 'sub',
+        children: [
+          {
+            path: '/projects/view/123',
+            titleNotResource: true,
+            title: 'Market Research Project',
+            type: 'link',
+          },
+        ],
+      },
+      {
+        title: 'Execution',
+        titleNotResource: true,
+        type: 'sub',
+        children: [],
+      },
+      {
+        title: 'Follow-Up',
+        titleNotResource: true,
+        type: 'sub',
+        children: [],
+      },
+      {
+        title: 'Closed',
+        titleNotResource: true,
+        type: 'sub',
+        children: [],
       },
     ],
   },

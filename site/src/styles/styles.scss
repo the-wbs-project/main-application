@@ -306,7 +306,6 @@ ngb-alert .btn-close {
   }
 }
 
-
 .dark-theme {
   .mat-menu-panel {
     background-color: #383d52;
@@ -363,3 +362,8 @@ button:focus:not(:focus-visible) {
     color: #fff;
   }
 }
+
+.scroll {
+  overflow: scroll;
+}
+

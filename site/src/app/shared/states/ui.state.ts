@@ -22,7 +22,8 @@ import {
   TurnOffIsLoading,
   UpdateProjectMenu,
 } from '../actions';
-import { MenuItem } from '../models';
+import { MenuItem, PROJECT_STATI, PROJECT_STATI_TYPE } from '../models';
+import { Resources } from '../services';
 import { ProjectListState } from './project-list.state';
 
 interface StateModel {
@@ -48,6 +49,7 @@ interface StateModel {
 export class UiState implements NgxsOnInit {
   constructor(
     private readonly actions$: Actions,
+    private readonly resources: Resources,
     private readonly store: Store
   ) {}
 
@@ -90,8 +92,8 @@ export class UiState implements NgxsOnInit {
     this.store
       .select(ProjectListState.list)
       .pipe(
-        untilDestroyed(this),
-        switchMap((list) => ctx.dispatch(new UpdateProjectMenu(list)))
+        switchMap((list) => ctx.dispatch(new UpdateProjectMenu(list))),
+        untilDestroyed(this)
       )
       .subscribe();
   }
@@ -149,21 +151,52 @@ export class UiState implements NgxsOnInit {
   ): void {
     const state = ctx.getState();
     const projectItems = state.projectItems!;
+    const parent = projectItems[0];
+    const stati = [
+      PROJECT_STATI.PLANNING,
+      PROJECT_STATI.EXECUTION,
+      PROJECT_STATI.FOLLOW_UP,
+      PROJECT_STATI.CLOSED,
+    ];
 
-    projectItems[1].children = [];
+    for (let i = 0; i < stati.length; i++) {
+      const current = parent.children![i]!;
+      const status = stati[i];
+      const list = action.projects
+        .filter((x) => x.status === status)
+        .sort((a, b) => (a.title > b.title ? 1 : -1));
 
-    for (const project of action.projects ?? []) {
-      projectItems[1].children.push({
-        path: `/projects/view/${project.id}`,
-        titleNotResource: true,
-        title: project.title,
-        type: 'link',
-      });
+      current.title = `${this.getTitle(status)} (${list.length})}`;
+      current.titleNotResource = true;
+      current.children = [];
+
+      for (const project of list) {
+        current.children.push({
+          path: `/projects/view/${project.id}`,
+          titleNotResource: true,
+          title: project.title,
+          type: 'link',
+        });
+      }
     }
     ctx.patchState({ projectItems });
 
     if (state.menuType === 'projects') {
       ctx.patchState({ menuItems: projectItems });
     }
+  }
+
+  private getTitle(status: PROJECT_STATI_TYPE): string {
+    return this.resources.get(
+      status === PROJECT_STATI.CLOSED
+        ? 'General.Closed'
+        : status === PROJECT_STATI.EXECUTION
+        ? 'General.Execution'
+        : status === PROJECT_STATI.FOLLOW_UP
+        ? 'General.FollowUp'
+        : status === PROJECT_STATI.PLANNING
+        ? 'General.Planning'
+        : ''
+    );
   }
 }

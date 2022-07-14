@@ -1,52 +1,119 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { faCircle } from '@fortawesome/pro-thin-svg-icons';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
+import {
+  faCircle,
+  faEye,
+  faEyeSlash,
+  faPlus,
+} from '@fortawesome/pro-thin-svg-icons';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
+import { ListItem } from '@wbs/shared/models';
+import { ContainerService, IdService } from '@wbs/shared/services';
 import { MetadataState } from '@wbs/shared/states';
 import { BehaviorSubject } from 'rxjs';
+import { PhasesChosen } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 import { CategorySelection } from '../../../view-models';
+import { CustomDialogComponent } from '../../custom-dialog/custom-dialog.component';
 
+@UntilDestroy()
 @Component({
   selector: 'app-project-create-phases',
   templateUrl: './phases.component.html',
   styleUrls: ['./phases.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
+  encapsulation: ViewEncapsulation.None,
 })
 export class PhaseComponent implements OnInit {
-  readonly cats$ = new BehaviorSubject<CategorySelection[] | null>([]);
+  private cats: CategorySelection[] | undefined;
+  readonly hideUnselected$ = new BehaviorSubject<boolean>(false);
+  readonly cats$ = new BehaviorSubject<CategorySelection[]>([]);
   readonly faCircle = faCircle;
+  readonly faEye = faEye;
+  readonly faEyeSlash = faEyeSlash;
+  readonly faPlus = faPlus;
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly containers: ContainerService,
+    private readonly dialog: DialogService,
+    private readonly store: Store
+  ) {}
 
   ngOnInit(): void {
-    this.store.selectOnce(MetadataState.phaseCategories).subscribe((cats) => {
-      const items: CategorySelection[] = [];
+    const cats = this.store.selectSnapshot(MetadataState.phaseCategories);
+    const items: CategorySelection[] = [];
 
-      for (const cat of cats) {
-        items.push({
-          id: cat.id,
-          label: cat.label,
-          description: cat.description ?? '',
-          number: null,
-          selected: false,
-        });
-      }
+    for (const cat of cats) {
+      items.push({
+        id: cat.id,
+        label: cat.label,
+        description: cat.description ?? '',
+        number: null,
+        selected: false,
+        isCustom: false,
+      });
+    }
+    this.cats = items;
 
-      this.cats$.next(items);
-    });
+    this.store
+      .select(ProjectCreateState.phases)
+      .pipe(untilDestroyed(this))
+      .subscribe((existing) => {
+        const usedIds: string[] = [];
+        const items: CategorySelection[] = [];
 
-    this.store.select(ProjectCreateState.phaseIds).subscribe((ids) => {
-      const items = this.cats$.getValue();
+        for (const x of existing ?? []) {
+          if (typeof x === 'string') {
+            const cat = this.cats!.find((c) => c.id === x);
 
-      if (!items) return;
-      if (!ids) ids = [];
+            if (cat) {
+              items.push({
+                id: cat.id,
+                label: cat.label,
+                description: cat.description ?? '',
+                number: null,
+                selected: true,
+                isCustom: false,
+              });
+              usedIds.push(x);
+            }
+          } else {
+            items.push({
+              id: x.id,
+              label: x.label,
+              description: x.description ?? '',
+              number: null,
+              selected: true,
+              isCustom: true,
+            });
+            usedIds.push(x.id);
+          }
+        }
 
-      for (const item of items) {
-        item.selected = ids.indexOf(item.id) > -1;
-      }
-      this.updateSelected(items);
-      this.cats$.next(items);
-    });
+        for (const cat of this.cats!) {
+          if (usedIds.indexOf(cat.id) > -1) continue;
+
+          items.push({
+            id: cat.id,
+            label: cat.label,
+            description: cat.description ?? '',
+            number: null,
+            selected: false,
+            isCustom: false,
+          });
+        }
+
+        this.cats$.next(items);
+      });
   }
 
   changed(): void {
@@ -58,7 +125,50 @@ export class PhaseComponent implements OnInit {
   }
 
   nav(): void {
-    //this.store.dispatch(new SubmitBasics(title.trim()));
+    const ids: (string | ListItem)[] = [];
+
+    for (const x of this.cats$.getValue()!) {
+      if (!x.selected) continue;
+      if (!x.isCustom) ids.push(x.id);
+      else
+        ids.push({
+          id: x.id,
+          label: x.label,
+          type: 'Custom',
+          description: x.description,
+          tags: [],
+        });
+    }
+    this.store.dispatch(new PhasesChosen(ids));
+  }
+
+  showCreate() {
+    const dialog = this.dialog.open({
+      content: CustomDialogComponent,
+      appendTo: this.containers.body,
+    });
+
+    (<CustomDialogComponent>dialog.content.instance).dialogTitle$.next(
+      'Something.Something'
+    );
+
+    dialog.result.subscribe((result: [string, string] | DialogCloseResult) => {
+      if (result instanceof DialogCloseResult) return;
+
+      const item: CategorySelection = {
+        id: IdService.generate(),
+        description: result[1],
+        isCustom: true,
+        label: result[0],
+        number: null,
+        selected: true,
+      };
+      const items = [item, ...this.cats$.getValue()];
+
+      this.updateSelected(items);
+
+      this.cats$.next(items);
+    });
   }
 
   private updateSelected(items: CategorySelection[]): void {

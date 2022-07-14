@@ -2213,6 +2213,15 @@
     "@progress/kendo-schematics" "^3.0.0"
     tslib "^2.3.1"
 
+"@progress/kendo-angular-sortable@^5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-sortable/-/kendo-angular-sortable-5.0.0.tgz#d753a34e4fdea766a122d05dc04cf6207490e38e"
+  integrity sha512-JJWI6DqePmVSAnFJJVO1lcLsrOG4JHX593Jvmb0Y0XwsQhp4nBox6i4mM0Ar5Jgqmo6rg1rdsdOvbEuQc9pf5A==
+  dependencies:
+    "@progress/kendo-schematics" "^3.0.0"
+    "@telerik/kendo-draggable" "^2.0.0"
+    tslib "^2.3.1"
+
 "@progress/kendo-angular-tooltip@^4.0.0":
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-angular-tooltip/-/kendo-angular-tooltip-4.0.0.tgz#97a8e3ce47856f3a73eb812cc598198f78295bf4"

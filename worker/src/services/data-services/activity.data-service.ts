@@ -21,7 +21,8 @@ export class ActivityDataService {
     );
     const models: Activity[] = [];
 
-    for (const dbModel of dbModels) models.push(this.fromDb(dbModel));
+    if (dbModels)
+      for (const dbModel of dbModels) models.push(this.fromDb(dbModel));
 
     return models;
   }

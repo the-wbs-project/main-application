@@ -4,4 +4,5 @@ export interface CategorySelection {
   description: string;
   selected: boolean;
   number: number | null;
+  isCustom: boolean;
 }

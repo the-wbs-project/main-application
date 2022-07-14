@@ -75666,6 +75666,22 @@ radius-1 {
     display: inline-block;
 }
 
+.display-flex {
+    display: flex;
+}
+
+.flex-flow-col {
+    flex-flow: column;
+}
+
+.flex-flow-row {
+    flex-flow: row;
+}
+
+.flex-align-stretch {
+    align-items: stretch;
+}
+
 .pos-absolute {
     position: absolute;
 }

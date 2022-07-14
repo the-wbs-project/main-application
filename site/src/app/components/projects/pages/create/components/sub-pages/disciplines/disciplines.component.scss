@@ -1,15 +1,2 @@
 @import "src/styles/variables";
-
-.phases-container {
-  display: flex;
-  flex-flow: column;
-  align-items: stretch;
-}
-
-.phases-body {
-  flex: 1 1 auto;
-}
-
-.phases-footer {
-  flex: 0 1 20px;
-}
+@import "src/assets/scss/variables";

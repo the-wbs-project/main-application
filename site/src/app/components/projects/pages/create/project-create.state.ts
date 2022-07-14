@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
+  ListItem,
   Project,
+  ProjectNode,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_SCOPE_TYPE,
+  PROJECT_STATI,
 } from '@wbs/shared/models';
-import { DataServiceFactory, Messages } from '@wbs/shared/services';
+import { DataServiceFactory, IdService, Messages } from '@wbs/shared/services';
 import {
   DisciplinesChosen,
   GoToBasics,
@@ -17,19 +20,21 @@ import {
   SaveProject,
   StartWizard,
   SubmitBasics,
-  SubmitScope,
 } from './project-create.actions';
 import {
   PROJECT_CREATION_PAGES as PAGES,
   PROJECT_CREATION_PAGES_TYPE,
 } from './models';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
+import { MetadataState } from '@wbs/shared/states';
+import { Navigate } from '@ngxs/router-plugin';
 
 interface StateModel {
-  disciplineIds?: string[];
+  disciplines?: (string | ListItem)[];
+  isSaving: boolean;
   nodeView?: PROJECT_NODE_VIEW_TYPE;
   page?: PROJECT_CREATION_PAGES_TYPE;
-  phaseIds?: string[];
+  phases?: (string | ListItem)[];
   scope?: PROJECT_SCOPE_TYPE;
   title: string;
   useLibrary?: boolean;
@@ -39,18 +44,25 @@ interface StateModel {
 @State<StateModel>({
   name: 'projectCreate',
   defaults: {
+    isSaving: false,
     title: '',
   },
 })
 export class ProjectCreateState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly messages: Messages
+    private readonly messages: Messages,
+    private readonly store: Store
   ) {}
 
   @Selector()
-  static disciplineIds(state: StateModel): string[] | undefined {
-    return state.disciplineIds;
+  static disciplines(state: StateModel): (string | ListItem)[] | undefined {
+    return state.disciplines;
+  }
+
+  @Selector()
+  static isSaving(state: StateModel): boolean {
+    return state.isSaving;
   }
 
   @Selector()
@@ -64,8 +76,8 @@ export class ProjectCreateState {
   }
 
   @Selector()
-  static phaseIds(state: StateModel): string[] | undefined {
-    return state.phaseIds;
+  static phases(state: StateModel): (string | ListItem)[] | undefined {
+    return state.phases;
   }
 
   @Selector()
@@ -95,21 +107,27 @@ export class ProjectCreateState {
       ctx.patchState({
         page: PAGES.GETTING_STARTED,
       });
-    } else if (current === PAGES.SCOPE) {
-      ctx.patchState({
-        page: PAGES.BASICS,
-      });
     } else if (current === PAGES.LIB_OR_SCRATCH) {
       ctx.patchState({
-        page: PAGES.SCOPE,
+        page: PAGES.BASICS,
       });
     } else if (current === PAGES.NODE_VIEW) {
       ctx.patchState({
         page: state.useLibrary ? PAGES.DESCIPLINES : PAGES.LIB_OR_SCRATCH,
       });
-    } else if (current === PAGES.PHASES || current === PAGES.DESCIPLINES) {
+    } else if (current === PAGES.PHASES) {
       ctx.patchState({
-        page: PAGES.NODE_VIEW,
+        page:
+          state.nodeView === PROJECT_NODE_VIEW.PHASE
+            ? PAGES.NODE_VIEW
+            : PAGES.DESCIPLINES,
+      });
+    } else if (current === PAGES.DESCIPLINES) {
+      ctx.patchState({
+        page:
+          state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE
+            ? PAGES.NODE_VIEW
+            : PAGES.PHASES,
       });
     }
   }
@@ -124,16 +142,8 @@ export class ProjectCreateState {
   @Action(SubmitBasics)
   submitBasics(ctx: StateContext<StateModel>, action: SubmitBasics): void {
     ctx.patchState({
-      page: PAGES.SCOPE,
-      title: action.title,
-    });
-  }
-
-  @Action(SubmitScope)
-  submitScope(ctx: StateContext<StateModel>, action: SubmitScope): void {
-    ctx.patchState({
       page: PAGES.LIB_OR_SCRATCH,
-      scope: action.scope,
+      title: action.title,
     });
   }
 
@@ -143,7 +153,7 @@ export class ProjectCreateState {
     action: LibOrScratchChosen
   ): void {
     ctx.patchState({
-      page: action.useLibrary ? PAGES.DESCIPLINES : PAGES.NODE_VIEW,
+      page: PAGES.NODE_VIEW,
       useLibrary: action.useLibrary,
     });
   }
@@ -169,7 +179,7 @@ export class ProjectCreateState {
 
     ctx.patchState({
       page: save ? PAGES.SAVING : PAGES.DESCIPLINES,
-      phaseIds: action.phaseIds,
+      phases: action.phases,
     });
 
     if (save) return ctx.dispatch(new SaveProject());
@@ -185,16 +195,107 @@ export class ProjectCreateState {
 
     ctx.patchState({
       page: save ? PAGES.SAVING : PAGES.PHASES,
-      disciplineIds: action.disciplineIds,
+      disciplines: action.disciplines,
     });
 
     if (save) return ctx.dispatch(new SaveProject());
   }
 
   @Action(SaveProject)
-  saveProject(ctx: StateContext<StateModel>): Observable<void> {
-    const state = ctx.getState();
+  saveProject(ctx: StateContext<StateModel>): Observable<void> | void {
+    ctx.patchState({
+      isSaving: true,
+    });
 
-    return ctx.dispatch(new SaveProject());
+    const catsPhases = this.store.selectSnapshot(MetadataState.phaseCategories);
+    const catsDiscipline = this.store.selectSnapshot(
+      MetadataState.disciplineCategories
+    );
+    const state = ctx.getState();
+    const phases = state.phases!;
+    const disciplines = state.disciplines!;
+
+    const project: Project = {
+      id: IdService.generate(),
+      categories: {
+        discipline: disciplines,
+        phase: phases,
+      },
+      mainNodeView: state.nodeView!,
+      status: PROJECT_STATI.PLANNING,
+      title: state.title!,
+      lastModified: new Date(),
+    };
+    const nodes: ProjectNode[] = [];
+
+    for (let i = 0; i < phases.length; i++) {
+      const phase = phases[i];
+
+      if (typeof phase === 'string') {
+        const cat = catsPhases.find((x) => x.id === phase)!;
+
+        nodes.push({
+          description: cat.description,
+          discipline: [],
+          disciplineIds: [],
+          id: cat.id,
+          order: i + 1,
+          parentId: null,
+          phase: {
+            isDisciplineNode: false,
+            syncWithDisciplines: false,
+          },
+          projectId: project.id,
+          title: cat.label,
+        });
+      } else {
+        nodes.push({
+          description: phase.description,
+          discipline: [],
+          disciplineIds: [],
+          id: phase.id,
+          order: i + 1,
+          parentId: null,
+          phase: {
+            isDisciplineNode: false,
+            syncWithDisciplines: false,
+          },
+          projectId: project.id,
+          title: phase.label,
+        });
+      }
+    }
+
+    for (let i = 0; i < disciplines.length; i++) {
+      const discipline = disciplines[i];
+
+      if (typeof discipline === 'string') {
+        const cat = catsDiscipline.find((x) => x.id === discipline)!;
+
+        nodes.push({
+          description: cat.description,
+          id: cat.id,
+          order: i + 1,
+          parentId: null,
+          projectId: project.id,
+          title: cat.label,
+        });
+      } else {
+        nodes.push({
+          description: discipline.description,
+          id: discipline.id,
+          order: i + 1,
+          parentId: null,
+          projectId: project.id,
+          title: discipline.label,
+        });
+      }
+    }
+    const url = ['/projects', 'view', project.id, 'general'];
+
+    return this.data.projects.putAsync(project).pipe(
+      switchMap(() => this.data.projectNodes.batchAsync(project.id, nodes, [])),
+      switchMap(() => ctx.dispatch(new Navigate(url)))
+    );
   }
 }

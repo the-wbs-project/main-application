@@ -1,4 +1,8 @@
-import { PROJECT_NODE_VIEW_TYPE, PROJECT_SCOPE_TYPE } from '@wbs/shared/models';
+import {
+  ListItem,
+  PROJECT_NODE_VIEW_TYPE,
+  PROJECT_SCOPE_TYPE,
+} from '@wbs/shared/models';
 
 export class StartWizard {
   static readonly type = '[Project Creation] Start Wizard';
@@ -17,11 +21,6 @@ export class SubmitBasics {
   constructor(readonly title: string) {}
 }
 
-export class SubmitScope {
-  static readonly type = '[Project Creation] Submit Scope';
-  constructor(readonly scope: PROJECT_SCOPE_TYPE) {}
-}
-
 export class LibOrScratchChosen {
   static readonly type = '[Project Creation] Library Or Scratch Chosen';
   constructor(readonly useLibrary: boolean) {}
@@ -34,12 +33,12 @@ export class NodeViewChosen {
 
 export class DisciplinesChosen {
   static readonly type = '[Project Creation] Disciplines Chosen';
-  constructor(readonly disciplineIds: string[]) {}
+  constructor(readonly disciplines: (string | ListItem)[]) {}
 }
 
 export class PhasesChosen {
   static readonly type = '[Project Creation] Phases Chosen';
-  constructor(readonly phaseIds: string[]) {}
+  constructor(readonly phases: (string | ListItem)[]) {}
 }
 
 export class SaveProject {

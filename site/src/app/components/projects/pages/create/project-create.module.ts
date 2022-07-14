@@ -1,11 +1,19 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { SwitchModule, TextBoxModule } from '@progress/kendo-angular-inputs';
+import {
+  FormFieldModule,
+  SwitchModule,
+  TextBoxModule,
+} from '@progress/kendo-angular-inputs';
+import { LabelModule } from '@progress/kendo-angular-label';
+import { SortableModule } from '@progress/kendo-angular-sortable';
 import { SharedModule } from '@wbs/shared/module';
 import {
   BasicsComponent,
+  CustomDialogComponent,
   DisciplinesComponent,
   FooterComponent,
   GettingStartedComponent,
@@ -13,7 +21,7 @@ import {
   LibOrScratchComponent,
   NodeViewComponent,
   PhaseComponent,
-  ScopeComponent,
+  SavingComponent,
 } from './components';
 import { StartCreationGuard } from './guards';
 import { ProjectCreateDescriptionPipe, ProjectCreateTitlePipe } from './pipes';
@@ -31,15 +39,21 @@ const routes: Routes = [
 @NgModule({
   imports: [
     CommonModule,
+    FormFieldModule,
+    FormsModule,
+    LabelModule,
     NgxsModule.forFeature([ProjectCreateState]),
+    ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
+    SortableModule,
     SwitchModule,
     TextBoxModule,
   ],
   providers: [StartCreationGuard],
   declarations: [
     BasicsComponent,
+    CustomDialogComponent,
     DisciplinesComponent,
     FooterComponent,
     GettingStartedComponent,
@@ -50,7 +64,7 @@ const routes: Routes = [
     ProjectCreateComponent,
     ProjectCreateDescriptionPipe,
     ProjectCreateTitlePipe,
-    ScopeComponent,
+    SavingComponent,
   ],
 })
 export class ProjectCreateModule {}
