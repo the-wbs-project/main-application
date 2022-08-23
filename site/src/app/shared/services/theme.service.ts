@@ -143,17 +143,17 @@ export class ThemeService implements OnDestroy {
    * @param darkMode True for dark mode. False for light mode.
    */
   private setMode(darkMode: boolean): void {
-    if (this.body != !this.body) {
-      this.body.classList.toggle('dark-theme');
-    }
+    console.log('mode: ' + darkMode);
 
     if (darkMode) {
+      this.renderer.removeClass(this.document.body, 'dark-theme');
       this.renderer.removeClass(
         this.document.body,
         ThemeService.LIGHT_MODE_CSS_CLASS_NAME
       );
       this.setKendoUiControlsMode('kendoui-dark.css');
     } else {
+      this.renderer.addClass(this.document.body, 'dark-theme');
       this.renderer.addClass(
         this.document.body,
         ThemeService.LIGHT_MODE_CSS_CLASS_NAME
@@ -230,6 +230,6 @@ export class ThemeService implements OnDestroy {
   }
 
   toggleMode() {
-    this.setUserDefinedMode(!this.isSystemDark());
+    this.setUserDefinedMode(!this.settings.darkMode);
   }
 }
