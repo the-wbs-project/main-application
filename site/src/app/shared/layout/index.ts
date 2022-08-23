@@ -5,4 +5,4 @@ export * from './loader/loader.component';
 export * from './page-header/page-header.component';
 export * from './right-sidebar/right-sidebar.component';
 export * from './sidebar/sidebar.component';
-export * from './tab-to-top/tab-to-top.component';
+export * from './tab-to-top.component';
