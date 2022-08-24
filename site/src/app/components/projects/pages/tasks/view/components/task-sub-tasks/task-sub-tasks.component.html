@@ -1,0 +1,10 @@
+<div class="pane-content" style="padding: 15px">
+  <wbs-tree
+    [width]="width"
+    [view]="phaseView"
+    [nodes]="tasks$ | async"
+    [project]="project"
+    [isDraggable]="false"
+  >
+  </wbs-tree>
+</div>

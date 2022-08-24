@@ -13,8 +13,8 @@ namespace Wbs.Utilities.DataServices
 
         public MetadataDataService(CosmosClient client, AppConfig config)
         {
-            listDb = new DbService2<ListItem>(client, config.cosmos.metadataDb, "");
-            resourceDb = new DbService2<ResourceObject>(client, config.cosmos.metadataDb, "");
+            listDb = new DbService2<ListItem>(client, config.cosmos.metadataDb, "Lists", "type");
+            resourceDb = new DbService2<ResourceObject>(client, config.cosmos.metadataDb, "Resources", "language");
         }
 
         public Task<ResourceObject> GetResourceAsync(string culture, string id) => resourceDb.GetByIdAsync(culture, id);

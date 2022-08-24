@@ -19386,12 +19386,6 @@ pre {
     border-radius: 5px;
 }
 
-#back-to-top i {
-    padding-top: 0;
-    font-size: 20px;
-    line-height: 2.4;
-}
-
 #compositeline,
 #compositeline2 {
     position: relative;
@@ -75664,6 +75658,10 @@ radius-1 {
 /* ###### 9.7 Position   ###### */
 .display-ib {
     display: inline-block;
+}
+
+.display-b {
+    display: block;
 }
 
 .display-flex {

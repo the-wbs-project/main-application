@@ -6,7 +6,10 @@ import { ListItem } from '../models';
 
 @Pipe({ name: 'disciplineIcon', pure: false })
 export class DisciplineIconPipe implements PipeTransform {
-  transform(idsOrCat: (string | ListItem) | null | undefined): IconDefinition {
-    return DISCIPLINE_ICONS.find((x) => x.id === idsOrCat)?.icon ?? faQuestion;
+  transform(
+    idsOrCat: (string | ListItem) | null | undefined,
+    defaultIcon = faQuestion
+  ): IconDefinition {
+    return DISCIPLINE_ICONS.find((x) => x.id === idsOrCat)?.icon ?? defaultIcon;
   }
 }

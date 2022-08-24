@@ -12,10 +12,10 @@ export const PRE_ROUTES: string[] = [
   '/*.css',
 ];
 export const AZURE_ROUTES_POST: string[] = [
-  '/api/projects/:projectId/extracts/phase/download',
-  '/api/projects/:projectId/extracts/phase/upload',
-  '/api/projects/:projectId/extracts/discipline/download',
-  '/api/projects/:projectId/extracts/discipline/upload',
+  '/api/projects/extracts/phase/download',
+  '/api/projects/extracts/phase/upload',
+  '/api/projects/extracts/discipline/download',
+  '/api/projects/extracts/discipline/upload',
 ];
 
 function auth(req: WorkerRequest): Promise<Response | number | void> {

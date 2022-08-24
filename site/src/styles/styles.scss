@@ -367,3 +367,6 @@ button:focus:not(:focus-visible) {
   overflow: scroll;
 }
 
+.my-custom-class {
+  z-index: max;
+}

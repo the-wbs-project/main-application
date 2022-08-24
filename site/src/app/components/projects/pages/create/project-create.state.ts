@@ -291,7 +291,7 @@ export class ProjectCreateState {
         });
       }
     }
-    const url = ['/projects', 'view', project.id, 'general'];
+    const url = ['/projects', 'view', project.id];
 
     return this.data.projects.putAsync(project).pipe(
       switchMap(() => this.data.projectNodes.batchAsync(project.id, nodes, [])),

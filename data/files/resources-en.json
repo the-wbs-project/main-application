@@ -32,11 +32,15 @@
         "PM": "PM",
         "PM-Full": "Project Manager",
         "SME": "SME",
-        "SME-Full": "Subject Matter Export",
+        "SME-Full": "Subject Matter Expert",
         "Approver": "Approver",
         "Admin": "Admin",
         "Admin-Full": "Administrator",
-        "Admin-Explain": "Can administrate the organization settings (users, etc.)"
+        "Admin-Explain": "Can administrate the organization settings (users, etc.)",
+        "Closed": "Closed",
+        "Execution": "Execution",
+        "FollowUp": "Follow Up",
+        "Planning": "Planning"
       },
       "Category_Phase": {
         "Initial_Name": "Initial Phase",
@@ -188,5 +192,5 @@
         "InviteCancelledDescription": "The invite has been cancelled.  Please contact whoever manages your organization to understand why."
       }
     }
-  },
+  }
 ]

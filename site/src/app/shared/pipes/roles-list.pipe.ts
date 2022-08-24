@@ -2,8 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { ROLES } from '@wbs/shared/models';
 import { Resources } from '@wbs/shared/services';
 
-@Pipe({ name: 'rolesText', pure: true })
-export class RolesTextPipe implements PipeTransform {
+@Pipe({ name: 'rolesList', pure: true })
+export class RolesListPipe implements PipeTransform {
   constructor(private readonly resources: Resources) {}
 
   transform(

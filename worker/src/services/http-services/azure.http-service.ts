@@ -11,7 +11,6 @@ export class AzureHttpService extends BaseHttpService {
     const url = `${protocol}://${config.domain}${originalUrl.pathname}`;
     const headers = new Headers(call.request.headers);
 
-    headers.set('app-organization', call.organization ?? '');
     headers.set('app-culture', call.state?.culture ?? '');
 
     if (config.key) headers.set('x-functions-key', config.key);

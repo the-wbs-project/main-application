@@ -4,6 +4,7 @@ zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 webpack_config = "./workers-site/webpack.config.js"
 compatibility_date = "2022-03-21"
+usage_model = "unbound"
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 33, TTL_ICONS = 33, TTL_IMAGES = 33, TTL_FONTS = 33, KV_BYPASS = "" }
 
 [text_blobs]

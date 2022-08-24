@@ -27,7 +27,7 @@ export class ProjectNodeDataService {
 
     //if (kvData) return kvData;
 
-    const data = await this.getFromDbAsync(projectId);
+    const data = (await this.getFromDbAsync(projectId)) ?? [];
 
     for (const d of data) {
       if (!d.parentId) {

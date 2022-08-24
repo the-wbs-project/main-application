@@ -8,10 +8,17 @@ export const routes: Routes = [
     component: ProjectLayoutComponent,
     children: [
       {
-        path: 'view',
+        path: ':projectId/view-old',
         loadChildren: () =>
           import('./pages/view/project-view.module').then(
             (m) => m.ProjectViewModule
+          ),
+      },
+      {
+        path: ':projectId/view',
+        loadChildren: () =>
+          import('./pages/view2/project-view.module').then(
+            (m) => m.ProjectView2Module
           ),
       },
       {
@@ -19,6 +26,13 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/create/project-create.module').then(
             (m) => m.ProjectCreateModule
+          ),
+      },
+      {
+        path: ':projectId/task/:taskId',
+        loadChildren: () =>
+          import('./pages/tasks/view/task-view.module').then(
+            (m) => m.TaskViewModule
           ),
       },
     ],

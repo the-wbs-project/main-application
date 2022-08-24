@@ -13,7 +13,6 @@ import {
   PROJECT_FILTER,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-  PROJECT_VIEW_TYPE,
   WbsNode,
 } from '@wbs/shared/models';
 import {
@@ -39,16 +38,17 @@ import {
 } from './project-view.actions';
 import { ProjectNodeUploadDialogComponent } from './components';
 import { PhaseExtractProcessor } from './services';
+import { PROJECT_VIEW_TYPE } from './models/project-view.enum';
 
 interface StateModel {
   activity?: Activity[];
   current?: Project;
   deleteReasons: ListItem[];
+  navType: PROJECT_FILTER | null;
   nodes?: WbsNode[];
   nodeViews?: WbsNodeView[];
-  navType: PROJECT_FILTER | null;
-  viewProject?: PROJECT_VIEW_TYPE;
   viewNode?: PROJECT_NODE_VIEW_TYPE;
+  viewProject?: PROJECT_VIEW_TYPE;
 }
 
 @Injectable()
@@ -128,7 +128,7 @@ export class ProjectViewState {
   ): Observable<void> {
     return forkJoin({
       project: this.data.projects.getAsync(action.projectId),
-      nodes: this.data.projectNodes.getAsync(action.projectId),
+      nodes: this.data.projectNodes.getAllAsync(action.projectId),
       activity: this.data.activities.getAsync(action.projectId),
     }).pipe(
       tap((data) =>

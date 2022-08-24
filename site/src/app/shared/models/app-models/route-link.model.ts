@@ -1,5 +1,5 @@
 export interface RouteLink {
-  segment: string;
+  route: string | string[];
   label: string;
   icon?: string;
 }

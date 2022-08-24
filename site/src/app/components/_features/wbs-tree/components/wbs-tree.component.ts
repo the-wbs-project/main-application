@@ -1,5 +1,4 @@
 import {
-  AfterViewInit,
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
@@ -13,6 +12,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
+import { faEllipsisV } from '@fortawesome/pro-solid-svg-icons';
+import {
+  SelectableSettings,
+  SelectionChangeEvent,
+  TreeListComponent,
+} from '@progress/kendo-angular-treelist';
+import { MenuItem, Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import { IdService } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import {
   BehaviorSubject,
@@ -21,6 +29,7 @@ import {
   Subscription,
   take,
 } from 'rxjs';
+import { NodeCheck, Position } from '../models';
 import {
   closest,
   closestWithMatch,
@@ -33,14 +42,6 @@ import {
   tableRow,
   WbsPhaseService,
 } from '../services';
-import { NodeCheck, Position } from '../models';
-import {
-  SelectableSettings,
-  SelectionChangeEvent,
-  TreeListComponent,
-} from '@progress/kendo-angular-treelist';
-import { Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
-import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 
 @Component({
   selector: 'wbs-tree',
@@ -55,14 +56,19 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   private isParentDragged: boolean = false;
   private currentSubscription: Subscription | undefined;
 
+  @Input() menuItems: MenuItem[] | undefined;
   @Input() view: PROJECT_NODE_VIEW_TYPE | null | undefined;
   @Input() nodes: WbsNodeView[] | null | undefined;
   @Input() project: Project | null | undefined;
   @Input() toolbar: TemplateRef<any> | undefined;
+  @Input() width: number | null | undefined;
+  @Input() detailsUrlPrefix?: string[];
+  @Input() isDraggable = true;
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
   @Output() readonly reordered = new EventEmitter<[string, WbsNodeView[]]>();
   @ViewChild(TreeListComponent) treelist!: TreeListComponent;
 
+  readonly id = IdService.generate();
   draggedRowEl!: HTMLTableRowElement;
   draggedItem!: WbsNodeView;
   targetedItem!: WbsNodeView;
@@ -76,6 +82,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   };
   selectedItems: any[] = [];
 
+  readonly faEllipsisV = faEllipsisV;
   readonly faCircleQuestion = faCircleQuestion;
   readonly tree$ = new BehaviorSubject<WbsNodeView[] | undefined>(undefined);
 
@@ -100,6 +107,10 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   getContextData = (anchor: any): WbsNodeView => {
     return this.tree$.getValue()!.find((x) => x.id === anchor.id)!;
   };
+
+  buildUrl(taskId: string): string[] {
+    return [...(this.detailsUrlPrefix ?? []), taskId];
+  }
 
   onToggle(): void {
     this.zone.onStable.pipe(take(1)).subscribe(() => {
@@ -180,7 +191,9 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
     if (!this.dataReady) return;
 
     const tableRows: HTMLTableRowElement[] = Array.from(
-      document.querySelectorAll('.k-grid-content .k-grid-table-wrap tbody tr')
+      document.querySelectorAll(
+        `.${this.id} .k-grid-content .k-grid-table-wrap tbody tr`
+      )
     );
 
     if (tableRows.length === 0) {
@@ -194,7 +207,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
     }
     this.currentSubscription = this.handleDragAndDrop();
     tableRows.forEach((row) => {
-      this.renderer.setAttribute(row, 'draggable', 'true');
+      this.renderer.setAttribute(row, 'draggable', this.isDraggable.toString());
     });
   }
 

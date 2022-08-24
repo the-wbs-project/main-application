@@ -4,8 +4,8 @@
   </div>
   <div class="justify-content-center mt-2">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item tx-15" *ngFor="let item of items">
-        <a href="javascript:;">{{ item }}</a>
+      <li class="breadcrumb-item" *ngFor="let item of items">
+        <a [routerLink]="item.route">{{ item.label | translate }}</a>
       </li>
       <li class="breadcrumb-item active" aria-current="page">
         {{ active_item }}

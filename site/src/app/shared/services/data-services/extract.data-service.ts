@@ -20,18 +20,15 @@ export class ExtractDataService {
 
     const fileName = `${project.title} - ${view2}.xlsx`;
     return this.http
-      .post(`projects/${project.id}/extracts/${view}/download`, rows, {
+      .post(`projects/extracts/${view}/download`, rows, {
         responseType: 'blob' as 'json',
       })
       .pipe(map((response: any) => saveAs(response, fileName)));
   }
 
-  updatePhaseAsync(
-    projectId: string,
-    file: ArrayBuffer
-  ): Observable<UploadResults<WbsNodeView>> {
+  updatePhaseAsync(file: ArrayBuffer): Observable<UploadResults<WbsNodeView>> {
     return this.http.post<UploadResults<WbsNodeView>>(
-      `projects/${projectId}/extracts/phase/upload`,
+      'projects/extracts/phase/upload',
       file
     );
   }

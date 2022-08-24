@@ -20,6 +20,7 @@ import {
 import {
   AuthState,
   MetadataState,
+  OrganizationState,
   ProjectListState,
   UiState,
 } from '@wbs/shared/states';
@@ -38,7 +39,13 @@ import { AppComponent } from './app.component';
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
     }),
-    NgxsModule.forRoot([AuthState, MetadataState, ProjectListState, UiState]),
+    NgxsModule.forRoot([
+      AuthState,
+      MetadataState,
+      OrganizationState,
+      ProjectListState,
+      UiState,
+    ]),
     NgxsRouterPluginModule.forRoot(),
     NotificationModule,
     PopupModule,

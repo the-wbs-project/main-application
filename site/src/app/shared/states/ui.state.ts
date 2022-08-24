@@ -150,6 +150,7 @@ export class UiState implements NgxsOnInit {
     action: UpdateProjectMenu
   ): void {
     const state = ctx.getState();
+    console.log(state);
     const projectItems = state.projectItems!;
     const parent = projectItems[0];
     const stati = [
@@ -158,6 +159,7 @@ export class UiState implements NgxsOnInit {
       PROJECT_STATI.FOLLOW_UP,
       PROJECT_STATI.CLOSED,
     ];
+    if (parent.children == null) parent.children = [];
 
     for (let i = 0; i < stati.length; i++) {
       const current = parent.children![i]!;

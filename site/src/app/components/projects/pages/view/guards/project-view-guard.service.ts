@@ -2,10 +2,10 @@ import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { PROJECT_VIEW } from '@wbs/shared/models';
 import { Resources } from '@wbs/shared/services';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { PROJECT_VIEW } from '../models/project-view.enum';
 import {
   ProjectViewChanged,
   VerifyDeleteReasons,

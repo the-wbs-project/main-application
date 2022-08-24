@@ -5,7 +5,10 @@ import {
   faDroneAlt,
   faFlask,
   faGears,
+  faHeadSideBrain,
+  faListCheck,
   faPipeValve,
+  faStamp,
 } from '@fortawesome/pro-solid-svg-icons';
 
 export const DISCIPLINE_ICONS = [
@@ -17,3 +20,9 @@ export const DISCIPLINE_ICONS = [
   { id: 'plumbing', icon: faPipeValve },
   { id: 'scientist', icon: faFlask },
 ];
+
+export const ROLE_ICONS = {
+  pm: faListCheck,
+  approver: faStamp,
+  sme: faHeadSideBrain,
+};

@@ -27,7 +27,7 @@ namespace Wbs.Utilities
         }
 
         [FunctionName("NodeExtracts-PhaseDownload")]
-        public async Task<IActionResult> RunPhaseDownload([HttpTrigger(AuthorizationLevel.Function, "post", Route = "projects/{ownerId}/{projectId}/extracts/phase/download")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> RunPhaseDownload([HttpTrigger(AuthorizationLevel.Function, "post", Route = "projects/extracts/phase/download")] HttpRequest req, ILogger log)
         {
             try
             {
@@ -47,7 +47,7 @@ namespace Wbs.Utilities
         }
 
         [FunctionName("NodeExtracts-PhaseUpload")]
-        public async Task<IActionResult> RunPhaseUpload([HttpTrigger(AuthorizationLevel.Function, "post", Route = "projects/{ownerId}/{projectId}/extracts/phase/upload")] HttpRequest req, ILogger log)
+        public async Task<IActionResult> RunPhaseUpload([HttpTrigger(AuthorizationLevel.Function, "post", Route = "projects/extracts/phase/upload")] HttpRequest req, ILogger log)
         {
             try
             {

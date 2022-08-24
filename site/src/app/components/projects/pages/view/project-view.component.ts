@@ -3,11 +3,7 @@ import { ActivatedRoute } from '@angular/router';
 import { faDownload, faUpload, faX } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import {
-  Project,
-  PROJECT_NODE_VIEW_TYPE,
-  PROJECT_VIEW_TYPE,
-} from '@wbs/shared/models';
+import { Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { Observable, of, tap } from 'rxjs';
@@ -18,6 +14,7 @@ import {
   OpenNodeCreationDialog,
   WbsNodeDeleteService,
 } from '../../../_features';
+import { PROJECT_VIEW_TYPE } from './models/project-view.enum';
 import {
   DownloadNodes,
   ProjectNodeViewChanged,

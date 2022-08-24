@@ -24,7 +24,7 @@ namespace Wbs.Utilities.Services
             var wbFile = await storage.GetFileAsBytesAsync("templates", "phase-extract.xlsx");
             var disciplines = await GetDisciplinesAsync(culture);
 
-            using (var package = new OfficeOpenXml.ExcelPackage())
+            using (var package = new ExcelPackage())
             {
                 using (var stream = new MemoryStream(wbFile))
                     package.Load(stream);

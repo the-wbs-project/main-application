@@ -1,18 +1,13 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
+import { RouteLink } from '@wbs/shared/models';
 
 @Component({
   selector: 'app-page-header',
   templateUrl: './page-header.component.html',
-  styleUrls: ['./page-header.component.scss']
+  styleUrls: ['./page-header.component.scss'],
 })
-export class PageHeaderComponent implements OnInit {
-
+export class PageHeaderComponent {
   @Input() title!: string;
-  @Input() items!: any[];
+  @Input() items!: RouteLink[];
   @Input() active_item!: string;
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }

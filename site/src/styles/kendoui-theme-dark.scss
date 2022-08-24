@@ -1,6 +1,8 @@
-$theme-type: dark;
-@import "./kendoui-dependencies";
 @import "../assets/scss/_variables";
+
+$theme-type: dark;
+$grid-border: $white-6;
+@import "./kendoui-dependencies";
 
 .dark-theme {
   .k-dialog {

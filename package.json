@@ -5,6 +5,7 @@
   "scripts": {
     "data": "npm run --prefix data/tool run:w",
     "site": "yarn --cwd site run serve",
+    "styles": "yarn --cwd site run styles",
     "worker": "yarn --cwd worker run go"
   },
   "repository": {

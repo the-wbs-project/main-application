@@ -1,0 +1,23 @@
+<div class="display-flex" *ngIf="role && userId">
+  <div class="text-primary pd-t-6">
+    <fa-stack size="2x">
+      <fa-icon [icon]="faCircle" stackItemSize="2x"></fa-icon>
+      <fa-icon
+        [icon]="role | roleIcon"
+        [inverse]="true"
+        stackItemSize="1x"
+      ></fa-icon>
+    </fa-stack>
+  </div>
+  <div>
+    <div class="tx-16">{{ userId | userName }}</div>
+    <div class="tx-12 tx-italic">
+      {{ role | roleTitle }}
+    </div>
+    <div *ngIf="userId | userEmail; let email">
+      <a [href]="'mailto:' + email">
+        {{ email }}
+      </a>
+    </div>
+  </div>
+</div>

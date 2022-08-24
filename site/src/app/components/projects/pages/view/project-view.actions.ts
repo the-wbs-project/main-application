@@ -1,5 +1,6 @@
-import { PROJECT_NODE_VIEW_TYPE, PROJECT_VIEW_TYPE } from '@wbs/shared/models';
+import { PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
 import { WbsNodeView } from '@wbs/shared/view-models';
+import { PROJECT_VIEW_TYPE } from './models/project-view.enum';
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';

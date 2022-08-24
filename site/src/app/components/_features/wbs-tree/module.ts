@@ -14,15 +14,23 @@ import {
 } from './components';
 import { WbsPhaseService } from './services';
 import { WbsTreeToolbarDirective } from './directives';
+import { ContextMenuModule } from '@progress/kendo-angular-menu';
+import { WbsNodeGeneralModule } from '../wbs-node-general';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
+import { RouterModule } from '@angular/router';
 
 @NgModule({
   imports: [
     ButtonModule,
     CommonModule,
+    ContextMenuModule,
     IconsModule,
+    NgbPopoverModule,
+    RouterModule,
     SharedModule,
     TooltipsModule,
     TreeListModule,
+    WbsNodeGeneralModule,
   ],
   providers: [WbsPhaseService],
   declarations: [

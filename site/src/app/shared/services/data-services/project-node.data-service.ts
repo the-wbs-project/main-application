@@ -5,8 +5,12 @@ import { Observable } from 'rxjs';
 export class ProjectNodeDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(projectId: string): Observable<WbsNode[]> {
+  getAllAsync(projectId: string): Observable<WbsNode[]> {
     return this.http.get<WbsNode[]>(`projects/byId/${projectId}/nodes`);
+  }
+
+  getAsync(projectId: string, taskId: string): Observable<WbsNode> {
+    return this.http.get<WbsNode>(`projects/byId/${projectId}/nodes/${taskId}`);
   }
 
   putAsync(projectId: string, node: WbsNode): Observable<void> {

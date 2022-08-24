@@ -1,6 +1,5 @@
 import { EnvironmentConfig } from './config';
 import { WorkerRequest } from './services';
-import { Auth0Service, AuthenticationService } from './services/auth-services';
 import { DataServiceFactory } from './services/data-services';
 import { CosmosFactory } from './services/database-services/cosmos';
 import { CloudflareEdgeService } from './services/edge-services/cloudflare';

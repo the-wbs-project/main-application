@@ -14,27 +14,22 @@ namespace Wbs.Utilities.DataServices
         private readonly List<HttpStatusCode> codes = new List<HttpStatusCode> { HttpStatusCode.OK, HttpStatusCode.Created };
         private readonly List<HttpStatusCode> deleteCodes = new List<HttpStatusCode> { HttpStatusCode.OK, HttpStatusCode.NotFound, HttpStatusCode.NoContent };
         private readonly Container container;
-        private readonly string globalPartitionKey;
+        private readonly string pkField;
 
-        public DbService(CosmosClient client, string database, string container, string globalPartitionKey = null)
+        public DbService(CosmosClient client, string database, string container, string pkField = "pk")
         {
             this.container = client.GetContainer(database, container);
-            this.globalPartitionKey = globalPartitionKey;
+            this.pkField = pkField;
         }
 
         public Task<List<T>> GetAllByPartitionAsync<T>(string partitionKey = null) where T : class, IIdObject
         {
-            if (string.IsNullOrWhiteSpace(partitionKey) && string.IsNullOrWhiteSpace(globalPartitionKey)) throw new ArgumentNullException(nameof(partitionKey));
+            if (string.IsNullOrWhiteSpace(partitionKey)) throw new ArgumentNullException(nameof(partitionKey));
 
-            var query = new QueryDefinition("SELECT * FROM c WHERE c.pk = @pk");
-            query.WithParameter("@pk", partitionKey ?? globalPartitionKey);
+            var query = new QueryDefinition($"SELECT * FROM c WHERE c.{pkField} = @pk");
+            query.WithParameter("@pk", partitionKey);
 
             return GetListAsync<T>(query);
-        }
-
-        public async Task<T> GetByIdAsync<T>(string id) where T : class, IIdObject
-        {
-            return await GetByIdAsync<T>(globalPartitionKey, id);
         }
 
         public async Task<T> GetByIdAsync<T>(string partitionKey, string id) where T : class, IIdObject

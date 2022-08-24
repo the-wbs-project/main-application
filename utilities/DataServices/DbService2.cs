@@ -17,8 +17,6 @@ namespace Wbs.Utilities.DataServices
             return base.GetAllByPartitionAsync<T>(partitionKey);
         }
 
-        public Task<T> GetByIdAsync(string id) => base.GetByIdAsync<T>(id);
-
         public Task<T> GetByIdAsync(string partitionKey, string id) => GetByIdAsync<T>(partitionKey, id);
 
         public Task<List<T>> GetListAsync(string query) => GetListAsync<T>(new QueryDefinition(query));
