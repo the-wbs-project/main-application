@@ -1,28 +1,18 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { Activity, ListItem, Project, WbsNode } from '@wbs/shared/models';
-import {
-  ContainerService,
-  DataServiceFactory,
-  Messages,
-  WbsTransformers,
-} from '@wbs/shared/services';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { ProjectState } from '@wbs/components/projects/states';
+import { WbsNode } from '@wbs/shared/models';
 import { WbsNodeView } from '@wbs/shared/view-models';
-import { forkJoin, map, Observable, of, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import { PAGE_VIEW_TYPE } from './models';
-import { RemoveTask, TaskPageChanged, VerifyTask } from './task-view.actions';
+import { TaskPageChanged, VerifyTask } from './task-view.actions';
 
 interface StateModel {
-  activity?: Activity[];
   current?: WbsNode;
-  deleteReasons?: ListItem[];
-  discipline?: WbsNodeView;
   pageView?: PAGE_VIEW_TYPE;
-  phase?: WbsNodeView;
-  project?: Project;
-  projectNodes?: WbsNode[];
   subTasks?: WbsNodeView[];
+  viewDiscipline?: WbsNodeView;
+  viewPhase?: WbsNodeView;
 }
 
 @Injectable()
@@ -31,27 +21,11 @@ interface StateModel {
   defaults: {},
 })
 export class TaskViewState {
-  constructor(
-    private readonly containers: ContainerService,
-    private readonly data: DataServiceFactory,
-    private readonly dialog: DialogService,
-    private readonly messages: Messages,
-    private readonly transformers: WbsTransformers
-  ) {}
-
-  @Selector()
-  static activity(state: StateModel): Activity[] | undefined {
-    return state.activity;
-  }
+  constructor(private readonly store: Store) {}
 
   @Selector()
   static current(state: StateModel): WbsNode | undefined {
     return state.current;
-  }
-
-  @Selector()
-  static discipline(state: StateModel): WbsNodeView | undefined {
-    return state.discipline;
   }
 
   @Selector()
@@ -60,18 +34,18 @@ export class TaskViewState {
   }
 
   @Selector()
-  static phase(state: StateModel): WbsNodeView | undefined {
-    return state.phase;
-  }
-
-  @Selector()
-  static project(state: StateModel): Project | undefined {
-    return state.project;
-  }
-
-  @Selector()
   static subTasks(state: StateModel): WbsNodeView[] | undefined {
     return state.subTasks;
+  }
+
+  @Selector()
+  static viewDiscipline(state: StateModel): WbsNodeView | undefined {
+    return state.viewDiscipline;
+  }
+
+  @Selector()
+  static viewPhase(state: StateModel): WbsNodeView | undefined {
+    return state.viewPhase;
   }
 
   @Action(VerifyTask)
@@ -83,29 +57,17 @@ export class TaskViewState {
 
     if (state.current?.id === action.taskId) return;
 
-    return forkJoin({
-      project: this.data.projects.getAsync(action.projectId),
-      tasks: this.data.projectNodes.getAllAsync(action.projectId),
-      activity: this.data.activities.getAsync(action.projectId),
-    }).pipe(
-      map((data) => {
-        const views = this.rebuildNodeViews(
-          data.project,
-          data.tasks,
-          action.taskId
-        );
+    const disciplines = this.store.selectSnapshot(ProjectState.disciplines)!;
+    const phases = this.store.selectSnapshot(ProjectState.phases)!;
+    const tasks = this.store.selectSnapshot(ProjectState.nodes)!;
 
-        ctx.patchState({
-          activity: data.activity.sort(this.sortActivity),
-          current: data.tasks.find((x) => x.id === action.taskId),
-          discipline: views[0],
-          phase: views[1],
-          project: data.project,
-          projectNodes: data.tasks,
-          subTasks: views[2],
-        });
-      })
-    );
+    ctx.patchState({
+      //activity: activity.sort(this.sortActivity),
+      current: tasks.find((x) => x.id === action.taskId),
+      subTasks: this.getSubTasks(phases, action.taskId),
+      viewDiscipline: disciplines.find((x) => x.id === action.taskId),
+      viewPhase: phases.find((x) => x.id === action.taskId),
+    });
   }
 
   @Action(TaskPageChanged)
@@ -118,85 +80,35 @@ export class TaskViewState {
     });
   }
 
-  /*@Action(AddSubTask)
-  addNodeToProject(
-    ctx: StateContext<StateModel>,
-    action: AddSubTask
-  ): Observable<any> {
-    const state = ctx.getState();
-    const node = action.parent;
-
-    node.id = IdService.generate();
-
-    return this.data.projectNodes.putAsync(state.current!.id, node).pipe(
-      // TO DO SEND ACTIVITY
-      tap(() => {
-        const nodes = [...ctx.getState().nodes!];
-        nodes.push(node);
-
-        ctx.patchState({
-          nodes,
-        });
-      })
-    );
-  }*/
-
-  @Action(RemoveTask)
-  removeNodeToProject(
-    ctx: StateContext<StateModel>,
-    action: RemoveTask
-  ): Observable<any> | void {
-    const state = ctx.getState();
-    const listObs = state.deleteReasons
-      ? of(state.deleteReasons)
-      : this.data.metdata.getListAsync('delete_reasons').pipe(
-          tap((list) =>
-            ctx.patchState({
-              deleteReasons: list,
-            })
-          )
-        );
-
-    return listObs.pipe(
-      map((list) => {
-        //CONTINUE WORK
-      })
-    );
-  }
-
-  private copy<T>(x: T): T {
-    return <T>JSON.parse(JSON.stringify(x));
-  }
-
-  private sortActivity(a: Activity, b: Activity): number {
-    return a.timestamp - b.timestamp;
-  }
-
-  private rebuildNodeViews(
-    project: Project,
-    tasks: WbsNode[],
+  private getSubTasks(
+    phaseViews: WbsNodeView[],
     taskId: string
-  ): [WbsNodeView | undefined, WbsNodeView | undefined, WbsNodeView[]] {
-    const discipline = this.transformers.nodes.discipline.view
-      .run(project, tasks)
-      .find((x) => x.id === taskId);
-    const phases = this.transformers.nodes.phase.view.run(project, tasks);
-    const childrenIds = this.getChildrenIds(taskId, tasks);
+  ): WbsNodeView[] {
+    const list: WbsNodeView[] = [];
+    const subTaskIds = this.getSubTaskIds(taskId, phaseViews);
 
-    return [
-      discipline,
-      phases.find((x) => x.id === taskId),
-      phases.filter((x) => childrenIds.indexOf(x.id) > -1),
-    ];
+    for (const x of phaseViews) {
+      if (subTaskIds.indexOf(x.id) === -1) continue;
+
+      const item: WbsNodeView = JSON.parse(JSON.stringify(x));
+
+      if (item.parentId === taskId) {
+        item.parentId = null;
+        item.treeParentId = null;
+      }
+      list.push(item);
+    }
+
+    return list;
   }
 
-  private getChildrenIds(taskId: string, tasks: WbsNode[]): string[] {
+  private getSubTaskIds(taskId: string, tasks: WbsNodeView[]): string[] {
     const ids: string[] = tasks
       .filter((x) => x.parentId === taskId)
       .map((x) => x.id);
 
     for (const id of ids) {
-      ids.push(...this.getChildrenIds(id, tasks));
+      ids.push(...this.getSubTaskIds(id, tasks));
     }
 
     return ids;

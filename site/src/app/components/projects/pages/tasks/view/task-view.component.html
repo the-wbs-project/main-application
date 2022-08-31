@@ -73,14 +73,13 @@
               <wbs-task-about
                 *ngIf="pageView === 'about'"
                 [current]="current$ | async"
-                [discipline]="discipline$ | async"
-                [phase]="phase$ | async"
+                [discipline]="viewDiscipline$ | async"
+                [phase]="viewPhase$ | async"
                 [subTasks]="subTasks$ | async"
               >
               </wbs-task-about>
               <wbs-task-sub-tasks
                 *ngIf="pageView === 'sub-tasks'"
-                [phase]="phase$ | async"
                 [subTasks]="subTasks$ | async"
                 [project]="project$ | async"
                 [width]="width$ | async"

@@ -4,7 +4,7 @@ import { ListItem, WbsNode } from '@wbs/shared/models';
 import { IdService, Utils } from '@wbs/shared/services';
 import { MetadataState } from '@wbs/shared/states';
 import { WbsNodeView } from '@wbs/shared/view-models';
-import { ExtractResults } from '../models';
+import { ExtractResults } from '../../../models';
 import { TextCompareService } from './text-compare.service';
 
 @Injectable()

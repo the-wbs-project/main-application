@@ -3,10 +3,10 @@ import { CanActivate, ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { VerifyProject } from '../project-view.actions';
+import { VerifyProject } from '../project.actions';
 
 @Injectable()
-export class ProjectGuard implements CanActivate {
+export class ProjectVerifyGuard implements CanActivate {
   constructor(private readonly store: Store) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {

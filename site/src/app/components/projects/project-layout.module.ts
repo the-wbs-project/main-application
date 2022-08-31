@@ -1,19 +1,17 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
+import { SharedModule } from '@wbs/shared/module';
+import { WbsNodeDeleteModule } from '../_features';
+import { ProjectResourceGuard, ProjectVerifyGuard } from './guards';
 import { ProjectLayoutComponent } from './project-layout.component';
+import { ProjectState } from './states';
 
 export const routes: Routes = [
   {
     path: '',
     component: ProjectLayoutComponent,
     children: [
-      {
-        path: ':projectId/view-old',
-        loadChildren: () =>
-          import('./pages/view/project-view.module').then(
-            (m) => m.ProjectViewModule
-          ),
-      },
       {
         path: ':projectId/view',
         loadChildren: () =>
@@ -40,7 +38,13 @@ export const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [RouterModule.forChild(routes)],
+  imports: [
+    NgxsModule.forFeature([ProjectState]),
+    RouterModule.forChild(routes),
+    SharedModule,
+    WbsNodeDeleteModule,
+  ],
+  providers: [ProjectResourceGuard, ProjectVerifyGuard],
   declarations: [ProjectLayoutComponent],
 })
 export class ProjectsLayoutModule {}

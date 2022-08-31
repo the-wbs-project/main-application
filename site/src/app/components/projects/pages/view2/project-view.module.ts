@@ -8,11 +8,11 @@ import { FileSelectModule } from '@progress/kendo-angular-upload';
 import { SharedModule } from '@wbs/shared/module';
 import {
   WbsNodeCreateModule,
-  WbsNodeDeleteModule,
   WbsNodeEditorModule,
   WbsNodeGeneralModule,
   WbsTreeModule,
 } from '../../../_features';
+import { ProjectResourceGuard, ProjectVerifyGuard } from '../../guards';
 import {
   ProjectAboutComponent,
   ProjectNodeUploadDialogComponent,
@@ -20,11 +20,7 @@ import {
   ProjectRoleComponent,
   ProjectViewActionsComponent,
 } from './components';
-import {
-  ProjectRedirectGuard,
-  ProjectVerifyGuard,
-  ProjectViewGuard,
-} from './guards';
+import { ProjectRedirectGuard, ProjectViewGuard } from './guards';
 import {
   ProjectStatusPipe,
   RoleIconPipe,
@@ -49,7 +45,7 @@ const routes: Routes = [
   {
     path: ':view',
     component: ProjectView2Component,
-    canActivate: [ProjectVerifyGuard, ProjectViewGuard],
+    canActivate: [ProjectResourceGuard, ProjectVerifyGuard, ProjectViewGuard],
   },
 ];
 
@@ -63,7 +59,6 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     WbsNodeCreateModule,
-    WbsNodeDeleteModule,
     WbsNodeGeneralModule,
     WbsNodeEditorModule,
     WbsTreeModule,
@@ -71,7 +66,6 @@ const routes: Routes = [
   providers: [
     PhaseExtractProcessor,
     ProjectRedirectGuard,
-    ProjectVerifyGuard,
     ProjectViewGuard,
     TextCompareService,
     UploadFileService,

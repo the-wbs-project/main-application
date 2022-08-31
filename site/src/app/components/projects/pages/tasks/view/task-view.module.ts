@@ -3,6 +3,10 @@ import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { IconModule } from '@progress/kendo-angular-icons';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
+import {
+  ProjectResourceGuard,
+  ProjectVerifyGuard,
+} from '@wbs/components/projects/guards';
 import { WbsTreeModule } from '@wbs/components/_features';
 import { SharedModule } from '@wbs/shared/module';
 import { TaskSubTasksComponent } from './components';
@@ -20,7 +24,7 @@ const routes: Routes = [
   {
     path: ':view',
     component: TaskViewComponent,
-    canActivate: [TaskVerifyGuard, TaskViewGuard],
+    canActivate: [ProjectResourceGuard, TaskVerifyGuard, TaskViewGuard],
   },
 ];
 

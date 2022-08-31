@@ -1,16 +1,17 @@
 <kendo-dialog
   actionsLayout="normal"
-  [title]="'Wbs.DeleteNode' | translate"
+  title="Delete Task"
   [width]="450"
   (close)="closeDelete()"
 >
+  Why are you deleting this task?
   <wbs-node-delete-reasons
     #reasons
     [reasons]="reasons$ | async"
     [(value)]="dReason"
   ></wbs-node-delete-reasons>
 
-  <div *ngIf="dReason?.id === 'delete-other'" class="other-panel">
+  <div *ngIf="dReason?.id === dOtherId" class="other-panel">
     <label>{{ "Wbs.PleaseSpecify" | translate }}:</label>
     <textarea [style.width.%]="100" resizable="auto" [(ngModel)]="dOther">
     </textarea>
@@ -21,7 +22,7 @@
     </button>
     <button
       class="btn btn-primary"
-      [disabled]="!dReason || (dReason?.id === 'delete-other' && !dOther)"
+      [disabled]="!dReason || (dReason?.id === dOtherId && !dOther)"
       (click)="finishDelete()"
     >
       {{ "General.Confirm" | translate }}

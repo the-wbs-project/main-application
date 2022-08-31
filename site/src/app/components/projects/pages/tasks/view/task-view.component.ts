@@ -9,11 +9,13 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import { Project, PROJECT_NODE_VIEW, WbsNode } from '@wbs/shared/models';
+import { Project, WbsNode } from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
 import { UiState } from '@wbs/shared/states';
 import { WbsNodeView } from '@wbs/shared/view-models';
-import { Observable } from 'rxjs';
+import { Observable, switchMap } from 'rxjs';
+import { RemoveTask } from '../../../project.actions';
+import { ProjectState } from '../../../states';
 import { PAGE_VIEW, PAGE_VIEW_TYPE } from './models';
 import { TaskViewState } from './task-view.state';
 
@@ -25,11 +27,12 @@ import { TaskViewState } from './task-view.state';
 export class TaskViewComponent {
   @Select(UiState.mainContentWidth) width$!: Observable<number>;
   @Select(TaskViewState.current) current$!: Observable<WbsNode>;
-  @Select(TaskViewState.discipline) discipline$!: Observable<WbsNodeView>;
-  @Select(TaskViewState.phase) phase$!: Observable<WbsNodeView>;
   @Select(TaskViewState.pageView) pageView$!: Observable<PAGE_VIEW_TYPE>;
-  @Select(TaskViewState.project) project$!: Observable<Project>;
+  @Select(ProjectState.current) project$!: Observable<Project>;
   @Select(TaskViewState.subTasks) subTasks$!: Observable<WbsNodeView[]>;
+  @Select(TaskViewState.viewDiscipline)
+  viewDiscipline$!: Observable<WbsNodeView>;
+  @Select(TaskViewState.viewPhase) viewPhase$!: Observable<WbsNodeView>;
 
   readonly faCogs = faCogs;
   readonly links = [
@@ -89,6 +92,10 @@ export class TaskViewComponent {
     return this.route.snapshot.params['projectId'];
   }
 
+  private get taskId(): string {
+    return this.route.snapshot.params['taskId'];
+  }
+
   viewChanged(view: string): void {
     this.store.dispatch(
       new Navigate(['projects', 'view', this.projectId, view])
@@ -96,7 +103,14 @@ export class TaskViewComponent {
   }
 
   actionClicked(action: string): void {
-    //
+    if (action === 'delete') {
+      this.store.dispatch(
+        new RemoveTask(
+          this.taskId,
+          new Navigate(['/projects', this.projectId, 'view', 'phases'])
+        )
+      );
+    }
   }
 
   combine(

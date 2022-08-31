@@ -33,7 +33,7 @@ export class WbsNodePhaseReorderer {
     for (var i = 0; i < children.length; i++) {
       const levels = [...parentLevels, i + 1];
 
-      children[i].order = i;
+      children[i].order = i + 1;
 
       changed.push(...this.reorder(levels, children[i].id, nodes));
     }

@@ -1,8 +1,8 @@
-<div class="pane-content" style="padding: 15px">
+<div class="pane-content" style="padding: 15px" *ngIf="subTasks">
   <wbs-tree
     [width]="width"
     [view]="phaseView"
-    [nodes]="tasks$ | async"
+    [nodes]="subTasks"
     [project]="project"
     [isDraggable]="false"
   >
