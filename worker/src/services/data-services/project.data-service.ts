@@ -10,9 +10,10 @@ export class ProjectDataService {
   constructor(
     private readonly organization: string,
     dbFactory: DbFactory,
+    mainRequest: Request,
     private readonly edge: EdgeDataService,
   ) {
-    this.db = dbFactory.createDbService(this.organization, 'Projects', 'id');
+    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Projects', 'id');
   }
 
   getAllAsync(): Promise<Project[]> {

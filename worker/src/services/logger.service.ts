@@ -87,12 +87,13 @@ export class Logger {
     url: string,
     method: string | undefined,
     duration: number,
-    response: Response | null,
+    request?: Request,
+    response?: Response | null,
   ): void {
     const url2 = new URL(url);
-    const tags = this.getTags(this.request);
+    const tags = request ? this.getTags(request) : null;
     const name = `${method} ${url2.pathname}`;
-    const cf: any = this.request.cf || {};
+    const cf: any = (request ? request.cf : null) || {};
 
     // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
     this.logs.push({

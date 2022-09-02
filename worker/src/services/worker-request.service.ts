@@ -66,6 +66,6 @@ export class WorkerRequest {
   }
 
   myFetch(input: string | Request, init?: RequestInit): Promise<Response> {
-    return myFetch(this.logger, input, init);
+    return myFetch(this.request, this.logger, input, init);
   }
 }

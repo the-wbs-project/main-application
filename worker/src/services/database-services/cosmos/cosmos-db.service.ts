@@ -14,6 +14,7 @@ export class CosmosDbService implements DbService {
     collId: string,
     config: Config,
     logger: Logger,
+    mainRequest: Request,
     private readonly pkVariable = 'pk',
   ) {
     this.db = new CosmosClient({
@@ -21,8 +22,8 @@ export class CosmosDbService implements DbService {
       masterKey: config.db.key,
       dbId,
       collId,
-      fetch: (info: RequestInfo, init?: RequestInit) => {
-        return myFetch(logger, info, init);
+      fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+        return myFetch(mainRequest, logger, input, init);
       },
     });
   }
@@ -109,7 +110,7 @@ export class CosmosDbService implements DbService {
     if (skip != null && take != null) {
       query += ` OFFSET ${skip} LIMIT ${take}`;
     }
-    const res = await this.db.queryDocuments<T>({
+    const res = await this.db.queryDocuments<T & Partial<Document>>({
       query,
       parameters,
       enableCrossPartition: enableCrossPartition,
@@ -137,7 +138,7 @@ export class CosmosDbService implements DbService {
   ): Promise<T | undefined> {
     if (!this.db) throw new Error('The database has not been initiated.');
 
-    const response = await this.db.queryDocuments<T>({
+    const response = await this.db.queryDocuments<T & Partial<Document>>({
       query,
       parameters,
     });

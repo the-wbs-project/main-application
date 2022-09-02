@@ -5,7 +5,7 @@ export interface EdgeService {
   data: EdgeDataService;
   authData: EdgeDataService;
 
-  getEdgeProperties(): Record<string, any>;
+  getEdgeProperties(): Record<string, any> | undefined;
 
   waitUntil(func: Promise<unknown>): void;
 

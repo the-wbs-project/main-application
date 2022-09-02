@@ -13,7 +13,11 @@ addEventListener('fetch', (event) => {
   const edge = new CloudflareEdgeService(config, event);
   const services = new ServiceFactory(
     config,
-    new DataServiceFactory(new CosmosFactory(config, logger), edge),
+    new DataServiceFactory(
+      new CosmosFactory(config, logger),
+      edge,
+      event.request,
+    ),
     edge,
   );
   const request = new WorkerRequest(event, config, services, logger);

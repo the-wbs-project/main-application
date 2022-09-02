@@ -27,29 +27,29 @@
     "@cloudflare/workers-types": "^2.2.2",
     "@types/jest": "^27.0.2",
     "@types/service-worker-mock": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
+    "@typescript-eslint/eslint-plugin": "^5.36.1",
+    "@typescript-eslint/parser": "^5.36.1",
     "concurrently": "^6.3.0",
-    "eslint": "^7.21.0",
-    "eslint-config-prettier": "^8.1.0",
+    "eslint": "^8.23.0",
+    "eslint-config-prettier": "^8.5.0",
     "eslint-config-typescript": "^3.0.0",
     "jest": "^27.3.1",
-    "prettier": "^2.3.0",
+    "prettier": "^2.7.1",
     "service-worker-mock": "^2.0.5",
-    "ts-jest": "^27.0.7",
+    "ts-jest": "^28.0.8",
     "ts-loader": "^9.2.2",
-    "typescript": "^3.9.7",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.0"
+    "typescript": "^4.8.2",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0"
   },
   "dependencies": {
-    "@cfworker/cosmos": "^1.13.3",
-    "@cfworker/uuid": "^1.9.1",
-    "@cloudflare/kv-asset-handler": "^0.1.0",
+    "@cfworker/cosmos": "^1.13.4",
+    "@cfworker/uuid": "^1.12.3",
+    "@cloudflare/kv-asset-handler": "^0.2.0",
     "@types/cookie": "^0.4.1",
     "@types/crypto-js": "^4.0.2",
     "cookie": "^0.4.2",
     "crypto-js": "^4.1.1",
-    "itty-router": "^2.5.2"
+    "itty-router": "^2.6.1"
   }
 }

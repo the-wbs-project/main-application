@@ -14,24 +14,39 @@ export class DataServiceFactory {
   private _projectNodes?: ProjectNodeDataService;
 
   readonly auth = new AuthDataService(this.edge.authData);
-  readonly metadata = new MetadataDataService(this.dbFactory, this.edge.data);
+  readonly metadata = new MetadataDataService(
+    this.mainRequest,
+    this.dbFactory,
+    this.edge.data,
+  );
 
   constructor(
     private readonly dbFactory: DbFactory,
     private readonly edge: EdgeService,
+    private readonly mainRequest: Request,
   ) {}
 
   setOrganization(organization: string): void {
-    this._activities = new ActivityDataService(organization, this.dbFactory);
-    this._invites = new InviteDataService(organization, this.dbFactory);
+    this._activities = new ActivityDataService(
+      organization,
+      this.mainRequest,
+      this.dbFactory,
+    );
+    this._invites = new InviteDataService(
+      organization,
+      this.mainRequest,
+      this.dbFactory,
+    );
     this._projects = new ProjectDataService(
       organization,
       this.dbFactory,
+      this.mainRequest,
       this.edge.data,
     );
     this._projectNodes = new ProjectNodeDataService(
       organization,
       this.dbFactory,
+      this.mainRequest,
       this.edge.data,
     );
   }

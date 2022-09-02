@@ -6,13 +6,23 @@ export class MetadataDataService {
   private readonly resourceDb: DbService;
   private readonly listDb: DbService;
 
-  constructor(dbFactory: DbFactory, private readonly edge: EdgeDataService) {
+  constructor(
+    mainRequest: Request,
+    dbFactory: DbFactory,
+    private readonly edge: EdgeDataService,
+  ) {
     this.resourceDb = dbFactory.createDbService(
+      mainRequest,
       '_common',
       'Resources',
       'language',
     );
-    this.listDb = dbFactory.createDbService('_common', 'Lists', 'type');
+    this.listDb = dbFactory.createDbService(
+      mainRequest,
+      '_common',
+      'Lists',
+      'type',
+    );
   }
 
   async getResourcesAsync(

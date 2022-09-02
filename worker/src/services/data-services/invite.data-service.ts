@@ -4,8 +4,17 @@ import { DbFactory, DbService } from '../database-services';
 export class InviteDataService {
   private readonly db: DbService;
 
-  constructor(private readonly organization: string, dbFactory: DbFactory) {
-    this.db = dbFactory.createDbService(this.organization, 'Metadata', 'type');
+  constructor(
+    private readonly organization: string,
+    mainRequest: Request,
+    dbFactory: DbFactory,
+  ) {
+    this.db = dbFactory.createDbService(
+      mainRequest,
+      this.organization,
+      'Metadata',
+      'type',
+    );
   }
 
   getAllAsync(): Promise<Invite[]> {

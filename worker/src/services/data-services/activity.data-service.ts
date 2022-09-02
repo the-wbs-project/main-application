@@ -6,8 +6,13 @@ declare type ActivityDbObject = Activity & IdObject;
 export class ActivityDataService {
   private readonly db: DbService;
 
-  constructor(private readonly organization: string, dbFactory: DbFactory) {
+  constructor(
+    private readonly organization: string,
+    mainRequest: Request,
+    dbFactory: DbFactory,
+  ) {
     this.db = dbFactory.createDbService(
+      mainRequest,
       this.organization,
       'Activity',
       'topLevelId',

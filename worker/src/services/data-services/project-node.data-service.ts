@@ -10,9 +10,11 @@ export class ProjectNodeDataService {
   constructor(
     private readonly organization: string,
     dbFactory: DbFactory,
+    mainRequest: Request,
     private readonly edge: EdgeDataService,
   ) {
     this.db = dbFactory.createDbService(
+      mainRequest,
       this.organization,
       'ProjectNodes',
       'projectId',
