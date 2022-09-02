@@ -1,0 +1,23 @@
+<div class="display-ib wd-400">
+  <kendo-textbox
+    #title
+    [ngModel]="title$ | async"
+    [placeholder]="'Projects.ProjectTitle' | translate"
+  >
+  </kendo-textbox>
+  <br />
+  <br />
+  <kendo-textarea
+    #description
+    [ngModel]="description$ | async"
+    [placeholder]="'Projects.ProjectDescription' | translate"
+  >
+  </kendo-textarea>
+  <br />
+  <br />
+  <app-project-create-footer
+    view="bc"
+    [disableContinue]="title.value === ''"
+    (continueClicked)="nav(title.value, description.value)"
+  ></app-project-create-footer>
+</div>

@@ -1,0 +1,50 @@
+<ng-template [ngIf]="title">
+  <h5
+    *ngIf="!(edit$ | async)"
+    kendoTooltip
+    filter="a"
+    class="task-title edit-pencil-parent font-weight-semibold ms-md-4 ms-0 mb-1 pb-0"
+  >
+    {{ title }}
+    <wbs-edit-pencil placeholder="Projects.EditTaskTitle" (click)="edit()">
+    </wbs-edit-pencil>
+  </h5>
+  <div
+    *ngIf="edit$ | async"
+    class="ms-md-4 ms-0 mb-1 pb-0"
+    kendoTooltip
+    filter="button"
+  >
+    <kendo-textbox
+      required
+      [(ngModel)]="editValue"
+      [placeholder]="'Projects.TaskTitle' | translate"
+    >
+      <ng-template kendoTextBoxSuffixTemplate>
+        <kendo-textbox-separator></kendo-textbox-separator>
+        <button
+          kendoButton
+          [title]="'General.Clear' | translate"
+          (click)="editValue = ''"
+        >
+          <fa-icon [icon]="faEraser" size="xs"></fa-icon>
+        </button>
+        <button
+          kendoButton
+          [title]="'General.Cancel' | translate"
+          (click)="edit$.next(false)"
+        >
+          <fa-icon [icon]="faCancel" size="xs"></fa-icon>
+        </button>
+        <button
+          kendoButton
+          [title]="'General.Save' | translate"
+          [disabled]="editValue === ''"
+          (click)="saveTitle()"
+        >
+          <fa-icon [icon]="faFloppyDisk" size="xs"></fa-icon>
+        </button>
+      </ng-template>
+    </kendo-textbox>
+  </div>
+</ng-template>

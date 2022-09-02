@@ -16,7 +16,7 @@ export class Messages {
   private readonly position: Position;
 
   constructor(
-    device: Device,
+    private readonly device: Device,
     private readonly containers: ContainerService,
     private readonly notificationService: NotificationService,
     private readonly resources: Resources
@@ -44,6 +44,7 @@ export class Messages {
   }
 
   success(resource: string, isResource = true): void {
+    console.log(resource);
     this.show(resource, isResource, 'success');
   }
 
@@ -56,7 +57,10 @@ export class Messages {
 
     this.notificationService.show({
       content: label,
-      appendTo: this.containers.body,
+      appendTo:
+        this.device.type === 'Desktop'
+          ? this.containers.body
+          : this.containers.template,
       hideAfter: 2400,
       type: { style: 'none', icon: true },
       animation: { type: 'fade', duration: 400 },

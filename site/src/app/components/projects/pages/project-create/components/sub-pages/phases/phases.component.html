@@ -1,0 +1,17 @@
+<div
+  class="display-flex flex-flow-col flex-align-stretch"
+  appFillElement
+  [paddingBottom]="20"
+>
+  <div class="scroll mg-b-10 wd-600" style="flex: 1 1 auto">
+    <app-category-list-editor [(categories)]="categories" categoryType="phase">
+    </app-category-list-editor>
+  </div>
+
+  <div class="w-100 text-center" style="flex: 0 1 20px">
+    <div class="display-ib wd-600">
+      <app-project-create-footer view="bc" (continueClicked)="nav()">
+      </app-project-create-footer>
+    </div>
+  </div>
+</div>

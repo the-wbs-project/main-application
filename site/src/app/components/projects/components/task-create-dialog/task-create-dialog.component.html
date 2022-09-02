@@ -1,0 +1,34 @@
+<kendo-dialog
+  actionsLayout="normal"
+  [title]="'Projects.CreateTask' | translate"
+  minWidth="500px"
+  maxWidth="80%"
+  maxHeight="80%"
+  (close)="dialog.close(null)"
+>
+  <kendo-textbox
+    [(ngModel)]="title"
+    [placeholder]="'Projects.TaskTitle' | translate"
+  >
+  </kendo-textbox>
+  <br />
+  <br />
+  <kendo-textarea
+    [(ngModel)]="description"
+    [placeholder]="'Projects.TaskDescription' | translate"
+  >
+  </kendo-textarea>
+  <br />
+  <br />
+  {{ "Projects.TaskDisciplines" | translate }}
+  <app-category-list-editor
+    [showButtons]="false"
+    [(categories)]="disciplines"
+    categoryType="discipline"
+  ></app-category-list-editor>
+  <kendo-dialog-actions layout="stretched">
+    <button class="btn btn-primary" [disabled]="title !== ''" (click)="save()">
+      {{ "General.Save" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

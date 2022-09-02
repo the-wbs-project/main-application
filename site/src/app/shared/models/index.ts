@@ -5,6 +5,7 @@ export * from './invite.model';
 export * from './list-item.model';
 export * from './enums';
 export * from './organization.model';
+export * from './project-category.type';
 export * from './project.model';
 export * from './resource-sections.model';
 export * from './threaded-discussion.model';

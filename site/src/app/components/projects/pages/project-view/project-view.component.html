@@ -1,0 +1,138 @@
+<ng-template [ngIf]="project$ | async" let-project>
+  <app-page-header
+    title="PROJECT DETAILS"
+    [items]="[{ route: '', label: 'General.Projects' }]"
+    [active_item]="project.title"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="card custom-card">
+        <div class="card-body d-md-flex">
+          <div class="pos-relative w-fitcont">
+            <span class="profile-image">
+              <app-project-title-icon [icon]="faProject">
+              </app-project-title-icon>
+            </span>
+          </div>
+          <div class="display-flex flex-row my-md-auto mt-4 w-100">
+            <div style="flex-grow: 1">
+              <wbs-project-title [title]="project.title"></wbs-project-title>
+              <p
+                class="edit-pencil-parent tx-13 text-muted ms-md-4 ms-0 mb-2 pb-2"
+              >
+                <label
+                  class="me-3"
+                  *ngFor="let disc of project.categories.discipline"
+                >
+                  <fa-icon [icon]="disc | disciplineIcon"></fa-icon>
+                  {{ disc | categoryLabel }}
+                </label>
+              </p>
+              <p class="text-muted ms-md-4 ms-0 mb-2">
+                <span class="font-weight-semibold me-2">
+                  {{ "General.Status" | translate }} :
+                </span>
+                <span> {{ project.status | projectStatus }} </span>
+              </p>
+            </div>
+            <div>
+              <app-project-action-menu
+                [menu]="actions"
+                (itemClicked)="action($event)"
+              ></app-project-action-menu>
+            </div>
+          </div>
+          <div class="my-md-auto mt-4 prof-details"></div>
+        </div>
+        <div class="card-footer py-0">
+          <div class="profile-tab tab-menu-heading border-bottom-0">
+            <ul
+              ngbNav
+              class="main-nav-line p-0 tabs-menu profile-nav-line border-0 br-5 mb-0"
+              [activeId]="pageView$ | async"
+            >
+              <li [ngbNavItem]="link.fragment" *ngFor="let link of links">
+                <a ngbNavLink [routerLink]="['../', link.fragment]">
+                  {{ link.title | translate }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Row -->
+  <div *ngIf="pageView$ | async; let pageView" class="row row-sm">
+    <div class="col-lg-12 col-md-12">
+      <div class="custom-card main-content-body-profile">
+        <div class="main-content-body tab-pane">
+          <div class="card">
+            <div class="card-body p-0 border-0 p-0 rounded-10">
+              <wbs-project-about
+                *ngIf="pageView === 'about'"
+                [roles]="roles$ | async"
+              >
+              </wbs-project-about>
+
+              <div
+                *ngIf="pageView === 'phases'"
+                class="pane-content"
+                style="padding: 15px"
+              >
+                <wbs-tree
+                  [width]="width$ | async"
+                  [view]="viewNode$ | async"
+                  [nodes]="phases$ | async"
+                  [project]="project"
+                  [toolbar]="toolbar"
+                  [isDraggable]="true"
+                  [detailsUrlPrefix]="['../../', 'task']"
+                  (reordered)="reordered($event)"
+                  (selectedChanged)="nodeSelected($event)"
+                >
+                </wbs-tree>
+              </div>
+              <div *ngIf="pageView === 'disciplines'" class="pane-content">
+                <wbs-tree
+                  [view]="viewNode$ | async"
+                  [nodes]="disciplines$ | async"
+                  [project]="project"
+                  [toolbar]="toolbar"
+                  [isDraggable]="false"
+                  [detailsUrlPrefix]="['../../', 'task']"
+                  (reordered)="reordered($event)"
+                  (selectedChanged)="nodeSelected($event)"
+                >
+                </wbs-tree>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- row closed -->
+
+  <ng-template #toolbar>
+    <div class="btn-group" *ngIf="(viewNode$ | async) === 'phase'">
+      <button
+        type="button"
+        class="btn btn-white btn-outline-primary"
+        (click)="action('download')"
+      >
+        <fa-icon [icon]="faDownload"></fa-icon>
+        {{ "General.Download" | translate }}
+      </button>
+      <button
+        type="button"
+        class="btn btn-white btn-outline-primary"
+        (click)="action('upload')"
+      >
+        <fa-icon [icon]="faUpload"></fa-icon>
+        {{ "General.Upload" | translate }}
+      </button>
+    </div>
+  </ng-template>
+</ng-template>

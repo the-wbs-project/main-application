@@ -1,10 +1,10 @@
 <kendo-dialog
   actionsLayout="normal"
-  title="Delete Task"
+  [title]="'Projects.DeleteTask' | translate"
   [width]="450"
   (close)="closeDelete()"
 >
-  Why are you deleting this task?
+  {{ 'Projects.DeleteTaskQuestion' | translate }}
   <wbs-node-delete-reasons
     #reasons
     [reasons]="reasons$ | async"

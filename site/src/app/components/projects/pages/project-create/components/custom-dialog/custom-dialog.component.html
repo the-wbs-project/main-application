@@ -1,0 +1,57 @@
+<kendo-dialog
+  [title]="(dialogTitle$ | async) ?? '' | translate"
+  [ngClass]="'create-dialog'"
+  (close)="cancel()"
+>
+  <form #createForm [formGroup]="form" (submit)="close()">
+    <kendo-formfield>
+      <kendo-label [for]="title" [text]="'General.Title' | translate">
+      </kendo-label>
+      <input
+        #title
+        type="text"
+        kendoTextBox
+        formControlName="title"
+        class="form-control"
+        required
+      />
+      <kendo-formerror *ngIf="controls.title?.errors?.['required']">
+        Error: Title is required
+      </kendo-formerror>
+    </kendo-formfield>
+    <br />
+    <kendo-formfield>
+      <kendo-label
+        [for]="description"
+        [text]="'General.Description' | translate"
+      >
+      </kendo-label>
+      <input
+        #description
+        type="text"
+        kendoTextBox
+        formControlName="description"
+        class="form-control"
+        required
+      />
+      <kendo-formerror *ngIf="controls.description?.errors?.['required']">
+        Error: Description is required
+      </kendo-formerror>
+    </kendo-formfield>
+
+    <kendo-dialog-actions>
+      <button kendoButton class="btn btn-warning" (click)="cancel()">
+        {{ "General.Cancel" | translate }}
+      </button>
+      <button
+        kendoButton
+        type="submit"
+        class="btn btn-success"
+        [disabled]="!form.valid"
+        themeColor="primary"
+      >
+        Add
+      </button>
+    </kendo-dialog-actions>
+  </form>
+</kendo-dialog>

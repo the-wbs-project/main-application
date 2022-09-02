@@ -1,18 +1,27 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { ClosedEditor, WbsNodeDeleteService } from '@wbs/components/_features';
+import { WbsNodeDeleteService } from '@wbs/components/_features';
 import {
   ACTIONS,
   Activity,
+  ActivityData,
   Project,
   PROJECT_NODE_VIEW,
   ROLES,
   WbsNode,
 } from '@wbs/shared/models';
-import { DataServiceFactory, WbsTransformers } from '@wbs/shared/services';
+import {
+  DataServiceFactory,
+  Messages,
+  WbsTransformers,
+} from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
+  ChangeProjectDisciplines,
+  ChangeProjectPhases,
+  ChangeProjectTitle,
+  ChangeTaskTitle,
   RebuildNodeViews,
   RemoveTask,
   SaveUpload,
@@ -20,7 +29,7 @@ import {
   TreeReordered,
   VerifyProject,
 } from '../project.actions';
-import { UserRole } from '../models';
+import { PROJECT_ACTIONS, TASK_ACTIONS, UserRole } from '../models';
 
 interface StateModel {
   activity?: Activity[];
@@ -51,6 +60,7 @@ export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly deleteService: WbsNodeDeleteService,
+    private readonly messages: Messages,
     private readonly transformers: WbsTransformers
   ) {}
 
@@ -118,7 +128,7 @@ export class ProjectState {
   }
 
   @Action(RebuildNodeViews)
-  rebuildNodeViews(ctx: StateContext<StateModel>): Observable<void> | void {
+  rebuildNodeViews(ctx: StateContext<StateModel>): void {
     const state = ctx.getState();
 
     if (!state.current || !state.nodes) return;
@@ -133,7 +143,6 @@ export class ProjectState {
         state.nodes
       ),
     });
-    return ctx.dispatch(new ClosedEditor());
   }
 
   /*@Action(AddSubTask)
@@ -219,6 +228,111 @@ export class ProjectState {
     );
   }
 
+  @Action(ChangeProjectTitle)
+  changeProjectTitle(
+    ctx: StateContext<StateModel>,
+    action: ChangeProjectTitle
+  ): Observable<any> {
+    const state = ctx.getState();
+    const project = state.current!;
+
+    project.title = action.title;
+
+    return this.saveProject(ctx, project).pipe(
+      tap(() => this.messages.success('Projects.ProjectTitleUpdated')),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          action: PROJECT_ACTIONS.TITLE_CHANGED,
+          data: [action.title],
+          labelTitle: 'Actions.ProjectTitleChanged',
+        })
+      )
+    );
+  }
+
+  @Action(ChangeProjectPhases)
+  changeProjectPhases(
+    ctx: StateContext<StateModel>,
+    action: ChangeProjectPhases
+  ): Observable<any> {
+    const state = ctx.getState();
+    const project = state.current!;
+
+    project.categories.phase = action.phases;
+
+    return this.saveProject(ctx, project).pipe(
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          action: PROJECT_ACTIONS.PHASES_CHANGED,
+          data: [],
+          labelTitle: 'Actions.ProjectPhasesChanged',
+        })
+      ),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      tap(() => this.messages.success('Projects.ProjectPhasesUpdated'))
+    );
+  }
+
+  @Action(ChangeProjectDisciplines)
+  changeProjectDisciplines(
+    ctx: StateContext<StateModel>,
+    action: ChangeProjectDisciplines
+  ): Observable<any> {
+    const state = ctx.getState();
+    const project = state.current!;
+
+    project.categories.discipline = action.disciplines;
+
+    return this.saveProject(ctx, project).pipe(
+      tap(() => this.messages.success('Projects.ProjectDisciplinesUpdated')),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          action: PROJECT_ACTIONS.DISCIPLINES_CHANGED,
+          data: [],
+          labelTitle: 'Actions.ProjectDisciplinesChanged',
+        })
+      ),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews()))
+    );
+  }
+
+  @Action(ChangeTaskTitle)
+  changeTaskTitle(
+    ctx: StateContext<StateModel>,
+    action: ChangeTaskTitle
+  ): Observable<void> | void {
+    const nodes = ctx.getState().nodes;
+
+    if (!nodes) return;
+
+    const index = nodes.findIndex((x) => x.id === action.taskId);
+
+    if (index === -1) return;
+
+    let node = this.copy(nodes[index]);
+
+    node.title = action.title;
+
+    return this.saveTask(ctx, node).pipe(
+      map(() => {
+        nodes[index] = node;
+
+        ctx.patchState({
+          nodes,
+        });
+      }),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          data: [action.title],
+          objectId: action.taskId,
+          action: TASK_ACTIONS.TITLE_CHANGED,
+          labelTitle: 'Actions.TaskTitleChanged',
+        })
+      )
+    );
+  }
+
   @Action(TreeReordered)
   treeReordered(
     ctx: StateContext<StateModel>,
@@ -268,12 +382,11 @@ export class ProjectState {
         });
       }),
       tap(() =>
-        this.data.activities.putAsync({
+        this.saveActivity(ctx, {
           action: ACTIONS.NODE_REORDERED,
           data: [originalNode.title, originalNode.levelText, newNode.levelText],
           labelTitle: 'Actions.NodeRecordered',
           objectId: action.draggedId,
-          topLevelId: project.id,
         })
       ),
       tap(() => ctx.dispatch(new RebuildNodeViews()))
@@ -292,15 +405,7 @@ export class ProjectState {
     if (action.results.cats !== project.categories.phase) {
       project.categories.phase = action.results.cats;
 
-      saves.push(
-        this.data.projects.putAsync(project).pipe(
-          tap(() =>
-            ctx.patchState({
-              current: project,
-            })
-          )
-        )
-      );
+      saves.push(this.saveProject(ctx, project));
     }
     if (
       action.results.removeIds.length > 0 ||
@@ -347,5 +452,42 @@ export class ProjectState {
 
   private sortActivity(a: Activity, b: Activity): number {
     return a.timestamp - b.timestamp;
+  }
+
+  private saveActivity(
+    ctx: StateContext<StateModel>,
+    data: ActivityData
+  ): Observable<void> {
+    const state = ctx.getState();
+    const project = state.current!;
+    return this.data.activities.putAsync(project.id, data).pipe(
+      map((activity) => {
+        ctx.patchState({
+          activity: [activity, ...(state.activity ?? [])],
+        });
+      })
+    );
+  }
+
+  private saveProject(
+    ctx: StateContext<StateModel>,
+    project: Project
+  ): Observable<void> {
+    return this.data.projects.putAsync(project).pipe(
+      tap(() =>
+        ctx.patchState({
+          current: project,
+        })
+      )
+    );
+  }
+
+  private saveTask(
+    ctx: StateContext<StateModel>,
+    node: WbsNode
+  ): Observable<void> {
+    const project = ctx.getState().current!;
+
+    return this.data.projectNodes.putAsync(project.id, node);
   }
 }

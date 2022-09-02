@@ -13,7 +13,7 @@ import {
   PerfectScrollbarModule,
   PERFECT_SCROLLBAR_CONFIG,
 } from 'ngx-perfect-scrollbar';
-import { LoadingComponent } from './components';
+import { EditPencilComponent, LoadingComponent } from './components';
 import {
   FillElementDirective,
   FullscreenDirective,
@@ -73,6 +73,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CategoryLabelPipe,
     ContentLayoutComponent,
     DisciplineIconPipe,
+    EditPencilComponent,
     FillElementDirective,
     FooterComponent,
     FullscreenDirective,
@@ -101,6 +102,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DialogModule,
     DisciplineIconPipe,
     DropDownButtonModule,
+    EditPencilComponent,
     FillElementDirective,
     FontAwesomeModule,
     FormsModule,

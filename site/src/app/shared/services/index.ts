@@ -3,6 +3,7 @@ export * from './transformers';
 export * from './activity.service';
 export * from './analytics.service';
 export * from './app-initializer.service';
+export * from './category-selection.service';
 export * from './confirmation.service';
 export * from './container.service';
 export * from './device.service';

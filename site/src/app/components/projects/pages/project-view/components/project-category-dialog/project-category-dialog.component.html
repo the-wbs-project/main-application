@@ -1,0 +1,18 @@
+<kendo-dialog
+  actionsLayout="normal"
+  [title]="title ?? '' | translate"
+  minWidth="500px"
+  maxWidth="80%"
+  maxHeight="80%"
+  (close)="dialog.close(null)"
+>
+  <app-category-list-editor
+    [(categories)]="categories"
+    [categoryType]="categoryType"
+  ></app-category-list-editor>
+  <kendo-dialog-actions layout="stretched">
+    <button class="btn btn-primary" (click)="save()">
+      {{ "General.Save" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

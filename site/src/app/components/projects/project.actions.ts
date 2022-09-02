@@ -1,4 +1,8 @@
-import { PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import {
+  Activity,
+  ProjectCategory,
+  PROJECT_NODE_VIEW_TYPE,
+} from '@wbs/shared/models';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { ExtractResults } from './models';
 
@@ -33,4 +37,24 @@ export class TreeReordered {
 export class SaveUpload {
   static readonly type = '[Project] Save Upload';
   constructor(readonly results: ExtractResults) {}
+}
+
+export class ChangeProjectTitle {
+  static readonly type = '[Project] Change Project Title';
+  constructor(readonly title: string) {}
+}
+
+export class ChangeProjectPhases {
+  static readonly type = '[Project] Change Project Phases';
+  constructor(readonly phases: ProjectCategory[]) {}
+}
+
+export class ChangeProjectDisciplines {
+  static readonly type = '[Project] Change Project Disciplines';
+  constructor(readonly disciplines: ProjectCategory[]) {}
+}
+
+export class ChangeTaskTitle {
+  static readonly type = '[Project] Change Task Title';
+  constructor(readonly taskId: string, readonly title: string) {}
 }

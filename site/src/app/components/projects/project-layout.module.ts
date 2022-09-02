@@ -15,21 +15,21 @@ export const routes: Routes = [
       {
         path: ':projectId/view',
         loadChildren: () =>
-          import('./pages/view2/project-view.module').then(
+          import('./pages/project-view/project-view.module').then(
             (m) => m.ProjectView2Module
           ),
       },
       {
         path: 'create',
         loadChildren: () =>
-          import('./pages/create/project-create.module').then(
+          import('./pages/project-create/project-create.module').then(
             (m) => m.ProjectCreateModule
           ),
       },
       {
         path: ':projectId/task/:taskId',
         loadChildren: () =>
-          import('./pages/tasks/view/task-view.module').then(
+          import('./pages/task-view/task-view.module').then(
             (m) => m.TaskViewModule
           ),
       },

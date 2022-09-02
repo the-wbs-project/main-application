@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { CategorySelectionService } from './category-selection.service';
 import { ConfirmationService } from './confirmation.service';
 import { LoadingService } from './loading.service';
 import { ScriptService } from './script.service';
@@ -10,6 +11,7 @@ import { UiService } from './ui.service';
 @NgModule({
   imports: [DialogModule],
   providers: [
+    CategorySelectionService,
     ConfirmationService,
     LoadingService,
     ScriptService,
