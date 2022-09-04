@@ -55,7 +55,7 @@ export class SiteHttpService {
 
   private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
     try {
-      const ttl = SiteHttpService.getTtl(req.url, req.config.ttl);
+      const ttl = SiteHttpService.getTtl(req, req.config.ttl);
 
       return await req.services.edge.getAssetFromKV({
         mapRequestToAsset: serveSinglePageApp,
