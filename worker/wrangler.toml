@@ -3,7 +3,7 @@ type = "javascript"
 zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 webpack_config = "./workers-site/webpack.config.js"
-compatibility_date = "2022-03-21"
+compatibility_date = "2022-04-05"
 usage_model = "unbound"
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "false", TTL_MANIFEST = 33, TTL_JSSCSS = 26000, TTL_ICONS = 26000, TTL_IMAGES = 26000, TTL_FONTS = 26000, KV_BYPASS = "" }
 
@@ -29,7 +29,7 @@ kv_namespaces = [
   { binding = "KVAUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
   { binding = "KVDATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
 ]
-vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730", DEBUG = "false", TTL_MANIFEST = 3600, TTL_JSSCSS = 3600, TTL_ICONS = 3600, TTL_IMAGES = 3600, TTL_FONTS = 3600, KV_BYPASS = "", SNIPPET_APP_INSIGHTS = "" }
+vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730", DEBUG = "false", TTL_MANIFEST = 3600, TTL_JSSCSS = 3600, TTL_ICONS = 3600, TTL_IMAGES = 3600, TTL_FONTS = 3600, TTL_HTML = 3600, KV_BYPASS = "", SNIPPET_APP_INSIGHTS = "" }
 
 [miniflare]
 #host = "127.0.0.1"                 # --host

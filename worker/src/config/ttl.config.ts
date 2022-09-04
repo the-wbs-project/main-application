@@ -4,4 +4,5 @@ export interface TtlConfig {
   icons: number;
   images: number;
   fonts: number;
+  html: number;
 }

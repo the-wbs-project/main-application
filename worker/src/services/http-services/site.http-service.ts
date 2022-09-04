@@ -78,7 +78,11 @@ export class SiteHttpService {
     }
   }
 
-  private static getTtl(url: string, ttl: TtlConfig): number | undefined {
+  private static getTtl(
+    req: WorkerRequest,
+    ttl: TtlConfig,
+  ): number | undefined {
+    const url = req.url;
     const path = new URL(url).pathname.toLowerCase();
 
     if (
@@ -91,6 +95,7 @@ export class SiteHttpService {
       return ttl.fonts;
     if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1) return ttl.jscss;
     if (path.indexOf('.ico') > -1) return ttl.icons;
+    if (this.isHtml(req.headers)) return ttl.html;
 
     return undefined;
   }

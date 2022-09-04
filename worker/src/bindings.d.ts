@@ -21,4 +21,5 @@ declare global {
   const TTL_ICONS: string;
   const TTL_IMAGES: string;
   const TTL_FONTS: string;
+  const TTL_HTML: string;
 }
