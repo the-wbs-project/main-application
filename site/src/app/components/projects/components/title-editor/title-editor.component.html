@@ -1,0 +1,31 @@
+<kendo-textbox
+  required
+  [(ngModel)]="value"
+  [placeholder]="'Projects.ProjectTitle' | translate"
+>
+  <ng-template kendoTextBoxSuffixTemplate>
+    <kendo-textbox-separator></kendo-textbox-separator>
+    <button
+      kendoButton
+      [title]="'General.Clear' | translate"
+      (click)="value = ''"
+    >
+      <fa-icon [icon]="faEraser" size="xs"></fa-icon>
+    </button>
+    <button
+      kendoButton
+      [title]="'General.Cancel' | translate"
+      (click)="cancel.emit()"
+    >
+      <fa-icon [icon]="faCancel" size="xs"></fa-icon>
+    </button>
+    <button
+      kendoButton
+      [title]="'General.Save' | translate"
+      [disabled]="value === ''"
+      (click)="save.emit()"
+    >
+      <fa-icon [icon]="faCheck" size="xs"></fa-icon>
+    </button>
+  </ng-template>
+</kendo-textbox>

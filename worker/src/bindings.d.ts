@@ -16,9 +16,9 @@ declare global {
   const MAILGUN_API_KEY: string;
   const SNIPPET_APP_INSIGHTS: string;
   const TWILIO: string;
-  const TTL_JSSCSS: number;
-  const TTL_MANIFEST: number;
-  const TTL_ICONS: number;
-  const TTL_IMAGES: number;
-  const TTL_FONTS: number;
+  const TTL_JSSCSS: string;
+  const TTL_MANIFEST: string;
+  const TTL_ICONS: string;
+  const TTL_IMAGES: string;
+  const TTL_FONTS: string;
 }

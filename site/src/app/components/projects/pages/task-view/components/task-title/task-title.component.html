@@ -15,36 +15,10 @@
     kendoTooltip
     filter="button"
   >
-    <kendo-textbox
-      required
-      [(ngModel)]="editValue"
-      [placeholder]="'Projects.TaskTitle' | translate"
-    >
-      <ng-template kendoTextBoxSuffixTemplate>
-        <kendo-textbox-separator></kendo-textbox-separator>
-        <button
-          kendoButton
-          [title]="'General.Clear' | translate"
-          (click)="editValue = ''"
-        >
-          <fa-icon [icon]="faEraser" size="xs"></fa-icon>
-        </button>
-        <button
-          kendoButton
-          [title]="'General.Cancel' | translate"
-          (click)="edit$.next(false)"
-        >
-          <fa-icon [icon]="faCancel" size="xs"></fa-icon>
-        </button>
-        <button
-          kendoButton
-          [title]="'General.Save' | translate"
-          [disabled]="editValue === ''"
-          (click)="saveTitle()"
-        >
-          <fa-icon [icon]="faFloppyDisk" size="xs"></fa-icon>
-        </button>
-      </ng-template>
-    </kendo-textbox>
+    <wbs-title-editor
+      [(value)]="editValue"
+      (cancel)="edit$.next(false)"
+      (save)="saveTitle()"
+    ></wbs-title-editor>
   </div>
 </ng-template>

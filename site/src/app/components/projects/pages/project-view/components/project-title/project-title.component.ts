@@ -4,12 +4,6 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import {
-  faCancel,
-  faEraser,
-  faFloppyDisk,
-  faPencil,
-} from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { ChangeProjectTitle } from '../../../../project.actions';
@@ -24,10 +18,6 @@ import { ChangeProjectTitle } from '../../../../project.actions';
 export class ProjectTitleComponent {
   @Input() title: string | undefined;
 
-  readonly faCancel = faCancel;
-  readonly faFloppyDisk = faFloppyDisk;
-  readonly faEraser = faEraser;
-  readonly faPencil = faPencil;
   readonly edit$ = new BehaviorSubject<boolean>(false);
 
   editValue = '';

@@ -63,11 +63,11 @@ export class EnvironmentConfig implements Config {
   get ttl(): TtlConfig {
     if (!this._ttl)
       this._ttl = {
-        fonts: TTL_FONTS,
-        icons: TTL_ICONS,
-        images: TTL_IMAGES,
-        jscss: TTL_JSSCSS,
-        manifest: TTL_MANIFEST,
+        fonts: parseInt(TTL_FONTS),
+        icons: parseInt(TTL_ICONS),
+        images: parseInt(TTL_IMAGES),
+        jscss: parseInt(TTL_JSSCSS),
+        manifest: parseInt(TTL_MANIFEST),
       };
     return this._ttl;
   }

@@ -1,4 +1,4 @@
-import { mapRequestToAsset } from '@cloudflare/kv-asset-handler';
+import { serveSinglePageApp } from '@cloudflare/kv-asset-handler';
 import { TtlConfig } from '../../config';
 import { WorkerRequest } from '../worker-request.service';
 
@@ -20,6 +20,8 @@ export class SiteHttpService {
   static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
       return await SiteHttpService.getFromKvAsync(req);
+
+      //return resp;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
       req.logException(
@@ -33,12 +35,13 @@ export class SiteHttpService {
 
   static async getSiteAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      const response = await SiteHttpService.getSiteResourceAsync(req);
+      return await SiteHttpService.getSiteResourceAsync(req);
+      /*const response = await SiteHttpService.getSiteResourceAsync(req);
       const isHtml = SiteHttpService.isHtml(response.headers);
 
       return isHtml && response.status === 200
         ? SiteHttpService.hydrateAsync(req, response)
-        : response;
+        : response;*/
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
       req.logException(
@@ -52,11 +55,14 @@ export class SiteHttpService {
 
   private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
     try {
+      const ttl = SiteHttpService.getTtl(req.url, req.config.ttl);
+
       return await req.services.edge.getAssetFromKV({
-        mapRequestToAsset: SiteHttpService.handlePrefix(),
+        mapRequestToAsset: serveSinglePageApp,
         cacheControl: {
-          bypassCache: DEBUG === 'true',
-          browserTTL: SiteHttpService.getTtl(req.url, req.config.ttl),
+          bypassCache: req.config.debug,
+          browserTTL: ttl,
+          edgeTTL: ttl,
         },
       });
     } catch (e) {
@@ -70,43 +76,6 @@ export class SiteHttpService {
 
       return new Response('Not Found', { status: 404 });
     }
-  }
-
-  /**
-   * Here's one example of how to modify a request to
-   * remove a specific prefix, in this case `/docs` from
-   * the url. This can be useful if you are deploying to a
-   * route on a zone, or if you only want your static content
-   * to exist at a specific path.
-   */
-  private static handlePrefix() {
-    return (request: Request) => {
-      // compute the default (e.g. / -> in
-      // compute the default (e.g. / -> index.html)
-      const path = new URL(request.url).pathname;
-      const newReq = mapRequestToAsset(request);
-      //
-      // %20 seems to have problems||?
-      //
-      if (path.indexOf('%20') > -1) {
-        let newPath = path;
-        while (newPath.indexOf('%20') > -1) {
-          newPath = newPath.replace('%20', ' ');
-        }
-        return new Request(request.url.replace(path, newPath), newReq);
-      }
-      //
-      //  If this is the actual entry point or not an html file at all, send it away
-      //
-      if (
-        path === '/' ||
-        path === '/index.html' ||
-        !newReq.url.endsWith('index.html')
-      )
-        return newReq;
-
-      return new Request(request.url.replace(path, '/index.html'), newReq);
-    };
   }
 
   private static getTtl(url: string, ttl: TtlConfig): number | undefined {
@@ -126,41 +95,10 @@ export class SiteHttpService {
     return undefined;
   }
 
-  private static async hydrateAsync(
-    req: WorkerRequest,
-    response: Response,
-  ): Promise<Response> {
-    const culture = req.state?.culture;
-    const resources = culture
-      ? await req.services.data.metadata.getResourcesAsync(culture, 'General')
-      : null;
-
-    const data = JSON.stringify({
-      resources,
-    });
-    return new HTMLRewriter()
-      .on('head', new ElementHandler(req.config.appInsightsSnippet))
-      .on(
-        'head',
-        new ElementHandler(
-          `<script id="edge_state" type="application/json">${data}</script>`,
-        ),
-      )
-      .transform(response);
-  }
-
   private static isHtml(hdrs: Headers): boolean {
     return (
       hdrs.has('Content-Type') &&
       (hdrs.get('Content-Type')?.includes('text/html') || false)
     );
-  }
-}
-
-class ElementHandler {
-  constructor(private readonly body: string) {}
-
-  element(element: any) {
-    element.append(this.body, { html: true });
   }
 }

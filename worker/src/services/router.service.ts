@@ -42,7 +42,7 @@ export class RouterService {
     //
     //  Non auth
     //
-    this.router.get('/info/:message', Http.site.getSiteAsync);
+    this.router.get('/info/:message', Http.site.getSiteResourceAsync);
     this.router.get(`/setup/:inviteCode`, setOrg, Http.auth.setupAsync);
     this.router.get(
       `/api/invites/preReg/:organization/:code`,
@@ -123,7 +123,7 @@ export class RouterService {
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, auth, Http.azure.handleAsync);
     }
-    this.router.get('*', auth, Http.site.getSiteAsync);
+    this.router.get('*', auth, Http.site.getSiteResourceAsync);
   }
 
   async matchAsync(req: WorkerRequest): Promise<Response> {
