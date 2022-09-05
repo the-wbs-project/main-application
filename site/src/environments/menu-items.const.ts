@@ -16,39 +16,7 @@ export const PROJECT_MENU_ITEMS: MenuItem[] = [
     icon: faSpaceStationMoonConstruction,
     type: 'sub',
     active: true,
-    children: [
-      {
-        title: 'Planning',
-        titleNotResource: true,
-        type: 'sub',
-        children: [
-          {
-            path: '/projects/view/123',
-            titleNotResource: true,
-            title: 'Market Research Project',
-            type: 'link',
-          },
-        ],
-      },
-      {
-        title: 'Execution',
-        titleNotResource: true,
-        type: 'sub',
-        children: [],
-      },
-      {
-        title: 'Follow-Up',
-        titleNotResource: true,
-        type: 'sub',
-        children: [],
-      },
-      {
-        title: 'Closed',
-        titleNotResource: true,
-        type: 'sub',
-        children: [],
-      },
-    ],
+    children: [],
   },
 ];
 
@@ -59,7 +27,7 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
     title: 'Settings.General',
     description: 'Settings.GeneralDescription',
-    path: '/settings/general',
+    path: ['/settings', 'general'],
     icon: faCogs,
     type: 'link',
     active: true,
@@ -67,7 +35,7 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
     title: 'Settings.Users',
     description: 'Settings.UsersDescription',
-    path: '/settings/users/active',
+    path: ['/settings', 'users', 'active'],
     icon: faUsers,
     type: 'link',
     active: true,
@@ -75,7 +43,7 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
     title: 'Settings.Invites',
     description: 'Settings.InvitesDescription',
-    path: '/settings/invites',
+    path: ['/settings', 'invites'],
     icon: faEnvelope,
     type: 'link',
     active: true,

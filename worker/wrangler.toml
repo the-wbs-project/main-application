@@ -5,7 +5,7 @@ account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 webpack_config = "./workers-site/webpack.config.js"
 compatibility_date = "2022-04-05"
 usage_model = "unbound"
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "false", TTL_MANIFEST = 33, TTL_JSSCSS = 26000, TTL_ICONS = 26000, TTL_IMAGES = 26000, TTL_FONTS = 26000, KV_BYPASS = "" }
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 26000, TTL_ICONS = 26000, TTL_IMAGES = 26000, TTL_FONTS = 26000, TTL_HTML = 3600, KV_BYPASS = "" }
 
 [text_blobs]
 INVITE_EMAIL = "./blobs/invite.html"

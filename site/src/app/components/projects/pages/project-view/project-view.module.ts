@@ -28,7 +28,6 @@ import {
 } from './components';
 import { ProjectRedirectGuard, ProjectViewGuard } from './guards';
 import {
-  ProjectStatusPipe,
   RoleIconPipe,
   RoleTitlePipe,
   UserEmailPipe,
@@ -87,7 +86,6 @@ const routes: Routes = [
     ProjectNodeUploadDialogComponent,
     ProjectPhasesComponent,
     ProjectRoleComponent,
-    ProjectStatusPipe,
     ProjectTitleComponent,
     ProjectView2Component,
     RoleIconPipe,

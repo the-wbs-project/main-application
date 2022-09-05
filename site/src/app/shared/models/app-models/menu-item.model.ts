@@ -4,7 +4,7 @@ export interface MenuItem {
   id?: string;
   headTitle?: string;
   headTitle2?: string;
-  path?: string;
+  path?: string[];
   title?: string;
   titleNotResource?: boolean;
   description?: string;

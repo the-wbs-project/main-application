@@ -16,9 +16,9 @@
     filter="button"
   >
     <wbs-title-editor
-      [(value)]="editValue"
+      [value]="editValue"
       (cancel)="edit$.next(false)"
-      (save)="saveTitle()"
+      (save)="saveTitle($event)"
     ></wbs-title-editor>
   </div>
 </ng-template>

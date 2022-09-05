@@ -22,9 +22,8 @@ import {
 })
 export class TitleEditorComponent {
   @Input() value = '';
-  @Output() readonly valueChange = new EventEmitter<string>();
   @Output() readonly cancel = new EventEmitter<void>();
-  @Output() readonly save = new EventEmitter<void>();
+  @Output() readonly save = new EventEmitter<string>();
 
   readonly faCancel = faCancel;
   readonly faCheck = faCheck;

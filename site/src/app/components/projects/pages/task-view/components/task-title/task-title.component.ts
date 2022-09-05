@@ -30,9 +30,9 @@ export class TaskTitleComponent {
     this.edit$.next(true);
   }
 
-  saveTitle(): void {
+  saveTitle(newTitle: string): void {
     this.store
-      .dispatch(new ChangeTaskTitle(this.taskId!, this.editValue))
+      .dispatch(new ChangeTaskTitle(this.taskId!, newTitle))
       .subscribe(() => this.edit$.next(false));
   }
 }

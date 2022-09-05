@@ -37,7 +37,7 @@ export class CosmosDbService implements DbService {
       delete objOrArray['_rid'];
       delete objOrArray['_self'];
       delete objOrArray['_etag'];
-      delete objOrArray['_ts'];
+      //delete objOrArray['_ts'];
       delete objOrArray['_attachments'];
     }
   }

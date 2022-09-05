@@ -29,9 +29,9 @@ export class ProjectTitleComponent {
     this.edit$.next(true);
   }
 
-  saveTitle(): void {
+  saveTitle(newTitle: string): void {
     this.store
-      .dispatch(new ChangeProjectTitle(this.editValue))
+      .dispatch(new ChangeProjectTitle(newTitle))
       .subscribe(() => this.edit$.next(false));
   }
 }

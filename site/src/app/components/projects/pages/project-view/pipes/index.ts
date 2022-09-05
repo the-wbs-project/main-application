@@ -1,4 +1,3 @@
-export * from './project-status.pipe';
 export * from './role-icon.pipe';
 export * from './role-title.pipe';
 export * from './user-email.pipe';

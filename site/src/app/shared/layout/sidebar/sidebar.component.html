@@ -71,7 +71,7 @@
             </div>
             <a
               class="side-menu__item"
-              [routerLink]="!menuItem.type ? null : [menuItem.path]"
+              [routerLink]="!menuItem.type ? null : menuItem.path"
               *ngIf="menuItem.type === 'link'"
               routerLinkActive="active"
               (click)="toggleNavActive(menuItem)"
@@ -93,7 +93,7 @@
             <!-- has-Sub -->
             <a
               class="side-menu__item"
-              [routerLink]="menuItem.type ? null : [menuItem.path]"
+              [routerLink]="menuItem.type ? null : menuItem.path"
               *ngIf="menuItem.type === 'sub'"
               (click)="toggleNavActive(menuItem)"
               [ngClass]="{ active: menuItem.active }"
@@ -138,7 +138,7 @@
                 <a
                   class="slide-item"
                   routerLinkActive="active"
-                  [routerLink]="!childrenItem.type ? null : [childrenItem.path]"
+                  [routerLink]="!childrenItem.type ? null : childrenItem.path"
                   *ngIf="childrenItem.type === 'link'"
                   (click)="toggleNavActive(childrenItem)"
                 >
@@ -156,7 +156,7 @@
                 <!-- sub -->
                 <a
                   class="sub-side-menu__item"
-                  [routerLink]="childrenItem.type ? null : [childrenItem.path]"
+                  [routerLink]="childrenItem.type ? null : childrenItem.path"
                   *ngIf="childrenItem.type === 'sub'"
                   (click)="toggleNavActive(childrenItem)"
                 >
@@ -175,7 +175,6 @@
                   class="sub-slide-menu"
                   *ngIf="childrenItem.children"
                   [ngClass]="{ open: childrenItem.active }"
-                  [ngClass]="{ open: childrenItem.active }"
                 >
                   <li
                     class=""
@@ -187,7 +186,7 @@
                       class="sub-side-menu__item"
                       routerLinkActive="active"
                       [routerLink]="
-                        !childrenSubItem.type ? null : [childrenSubItem.path]
+                        !childrenSubItem.type ? null : childrenSubItem.path
                       "
                       *ngIf="childrenSubItem.type === 'link'"
                       (click)="toggleNavActive(childrenSubItem)"
@@ -204,7 +203,7 @@
                     <a
                       class="sub-side-menu__item"
                       [routerLink]="
-                        childrenSubItem.type ? null : [childrenSubItem.path]
+                        childrenSubItem.type ? null : childrenSubItem.path
                       "
                       *ngIf="childrenSubItem.type === 'sub'"
                       (click)="toggleNavActive(childrenSubItem)"
@@ -238,7 +237,7 @@
                           [routerLink]="
                             !childrenSubItem1.type
                               ? null
-                              : [childrenSubItem1.path]
+                              : childrenSubItem1.path
                           "
                           *ngIf="childrenSubItem1.type === 'link'"
                         >

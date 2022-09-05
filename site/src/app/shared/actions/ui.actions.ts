@@ -17,3 +17,8 @@ export class UpdateProjectMenu {
   static readonly type = '[UI] Update Project Menu';
   constructor(readonly projects: Project[]) {}
 }
+
+export class SetProject {
+  static readonly type = '[UI] Set Project';
+  constructor(readonly id: string) {}
+}

@@ -4,8 +4,9 @@ import { BaseHttpService } from './base.http-service';
 export class ProjectHttpService extends BaseHttpService {
   static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      const data = await req.services.data.projects.getAllAsync();
-      return await super.buildJson(data);
+      return await super.buildJson(
+        await req.services.data.projects.getAllAsync(),
+      );
     } catch (e) {
       req.logException(
         'An error occured trying to get all projects for the organization.',

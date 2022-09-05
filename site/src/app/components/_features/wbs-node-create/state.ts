@@ -256,6 +256,7 @@ export class NodeCreationState {
         syncWithDisciplines: state.syncWithDisciplines,
       },
       discipline: [],
+      _ts: new Date().getTime(),
     };
 
     for (const discipline of state.disciplines) {

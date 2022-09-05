@@ -13,4 +13,5 @@ export interface Wbs extends TaggedObject {
   contributors: string[];
   language: string;
   thread: any;
+  _ts: number;
 }

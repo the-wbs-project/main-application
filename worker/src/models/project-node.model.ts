@@ -17,5 +17,6 @@ export interface ProjectNode {
       parentId?: boolean;
     },
   ];
+  _ts: number;
   removed?: boolean;
 }

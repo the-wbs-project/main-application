@@ -32,7 +32,10 @@
                 <span class="font-weight-semibold me-2">
                   {{ "General.Status" | translate }} :
                 </span>
-                <span> {{ project.status | projectStatus }} </span>
+                <span>
+                  {{ project.status | projectStatus }},
+                  {{ project._ts | dateText }}
+                </span>
               </p>
             </div>
             <div>

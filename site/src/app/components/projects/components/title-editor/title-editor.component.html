@@ -23,7 +23,7 @@
       kendoButton
       [title]="'General.Save' | translate"
       [disabled]="value === ''"
-      (click)="save.emit()"
+      (click)="save.emit(value)"
     >
       <fa-icon [icon]="faCheck" size="xs"></fa-icon>
     </button>

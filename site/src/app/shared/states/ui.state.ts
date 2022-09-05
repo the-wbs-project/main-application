@@ -19,6 +19,7 @@ import {
 import {
   MainContentSizeChanged,
   ParseNavigation,
+  SetProject,
   TurnOffIsLoading,
   UpdateProjectMenu,
 } from '../actions';
@@ -28,6 +29,7 @@ import { ProjectListState } from './project-list.state';
 
 interface StateModel {
   path?: string;
+  projectId?: string;
   isLoading: boolean;
   mainContentWidth: number;
   menuItems: MenuItem[];
@@ -150,38 +152,68 @@ export class UiState implements NgxsOnInit {
     action: UpdateProjectMenu
   ): void {
     const state = ctx.getState();
-    console.log(state);
     const projectItems = state.projectItems!;
-    const parent = projectItems[0];
+    const parent = projectItems[1];
     const stati = [
       PROJECT_STATI.PLANNING,
       PROJECT_STATI.EXECUTION,
       PROJECT_STATI.FOLLOW_UP,
       PROJECT_STATI.CLOSED,
     ];
-    if (parent.children == null) parent.children = [];
+    parent.children = [];
 
-    for (let i = 0; i < stati.length; i++) {
-      const current = parent.children![i]!;
-      const status = stati[i];
+    for (const status of stati) {
       const list = action.projects
         .filter((x) => x.status === status)
         .sort((a, b) => (a.title > b.title ? 1 : -1));
 
-      current.title = `${this.getTitle(status)} (${list.length})}`;
-      current.titleNotResource = true;
-      current.children = [];
+      const current: MenuItem = {
+        title: `${this.getTitle(status)} (${list.length})`,
+        titleNotResource: true,
+        type: 'sub',
+        children: [],
+      };
 
       for (const project of list) {
-        current.children.push({
-          path: `/projects/view/${project.id}`,
+        const active = project.id === state.projectId;
+
+        current.children!.push({
+          id: project.id,
+          path: ['/projects', project.id, 'view'],
           titleNotResource: true,
           title: project.title,
           type: 'link',
+          active,
         });
+        if (active) current.active = true;
       }
+      parent.children.push(current);
     }
     ctx.patchState({ projectItems });
+
+    if (state.menuType === 'projects') {
+      ctx.patchState({ menuItems: projectItems });
+    }
+  }
+
+  @Action(SetProject)
+  SetProject(ctx: StateContext<StateModel>, action: SetProject) {
+    const state = ctx.getState();
+    const projectItems = [...state.projectItems];
+    const mainItem = projectItems[1];
+
+    mainItem.active = true;
+
+    for (const section of mainItem.children!) {
+      const child = section.children?.find((x) => x.id === action.id);
+
+      section.active = child != null;
+
+      if (child) {
+        child.active = true;
+      }
+    }
+    ctx.patchState({ projectItems, projectId: action.id });
 
     if (state.menuType === 'projects') {
       ctx.patchState({ menuItems: projectItems });

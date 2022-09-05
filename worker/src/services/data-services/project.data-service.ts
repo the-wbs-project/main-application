@@ -13,19 +13,31 @@ export class ProjectDataService {
     mainRequest: Request,
     private readonly edge: EdgeDataService,
   ) {
-    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Projects', 'id');
+    this.db = dbFactory.createDbService(
+      mainRequest,
+      this.organization,
+      'Projects',
+      'id',
+    );
   }
 
-  getAllAsync(): Promise<Project[]> {
-    return this.db.getAllAsync<Project>(true);
+  async getAllAsync(): Promise<Project[]> {
+    const list = await this.db.getAllAsync<Project>(true);
+
+    this.fixTs(list);
+
+    return list;
   }
 
-  getAllWatchedAsync(userId: string): Promise<Project[]> {
-    return this.db.getListByQueryAsync<Project>(
+  async getAllWatchedAsync(userId: string): Promise<Project[]> {
+    const list = await this.db.getListByQueryAsync<Project>(
       `SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`,
       true,
       [{ name: '@userId', value: userId }],
     );
+    this.fixTs(list);
+
+    return list;
   }
 
   async getAsync(projectId: string): Promise<Project | undefined> {
@@ -38,9 +50,18 @@ export class ProjectDataService {
 
     const data = await this.getFromDbAsync(projectId);
 
-    if (data) this.edge.putLater(kvName, JSON.stringify(data));
+    if (data) {
+      this.fixTs(data);
+      this.edge.putLater(kvName, JSON.stringify(data));
+    }
 
     return data;
+  }
+
+  async updateModifiedDateAsync(projectId: string): Promise<void> {
+    const project = await this.getAsync(projectId);
+
+    if (project) await this.putAsync(project);
   }
 
   async putAsync(project: Project): Promise<void> {
@@ -48,7 +69,7 @@ export class ProjectDataService {
 
     await this.db.upsertDocument(project, project.id);
 
-    this.edge.putLater(kvName, JSON.stringify(project));
+    this.edge.delete(kvName);
   }
 
   private getFromDbAsync(
@@ -56,5 +77,13 @@ export class ProjectDataService {
     clean = true,
   ): Promise<Project | undefined> {
     return this.db.getDocumentAsync<Project>(projectId, projectId, clean);
+  }
+
+  private fixTs(objOrArray: Project | Project[]): void {
+    if (Array.isArray(objOrArray)) {
+      for (const obj of objOrArray) this.fixTs(obj);
+    } else if (objOrArray) {
+      objOrArray._ts *= 1000;
+    }
   }
 }

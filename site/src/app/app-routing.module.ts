@@ -4,7 +4,7 @@ import { ContentLayoutComponent } from '@wbs/shared/layout';
 import { content } from '@wbs/shared/routes';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/projects/123/view', pathMatch: 'full' },
+  { path: '', redirectTo: '/projects/list/my', pathMatch: 'full' },
   {
     path: 'info',
     loadChildren: () =>

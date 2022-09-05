@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { WbsNodeDeleteService } from '@wbs/components/_features';
+import { ProjectUpdated } from '@wbs/shared/actions';
 import {
   ACTIONS,
   Activity,
@@ -17,6 +18,7 @@ import {
 } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { PROJECT_ACTIONS, TASK_ACTIONS, UserRole } from '../models';
 import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
@@ -29,7 +31,6 @@ import {
   TreeReordered,
   VerifyProject,
 } from '../project.actions';
-import { PROJECT_ACTIONS, TASK_ACTIONS, UserRole } from '../models';
 
 interface StateModel {
   activity?: Activity[];
@@ -474,11 +475,8 @@ export class ProjectState {
     project: Project
   ): Observable<void> {
     return this.data.projects.putAsync(project).pipe(
-      tap(() =>
-        ctx.patchState({
-          current: project,
-        })
-      )
+      tap(() => ctx.patchState({ current: project })),
+      switchMap(() => this.projectChanged(ctx))
     );
   }
 
@@ -488,6 +486,21 @@ export class ProjectState {
   ): Observable<void> {
     const project = ctx.getState().current!;
 
-    return this.data.projectNodes.putAsync(project.id, node);
+    return this.data.projectNodes.putAsync(project.id, node).pipe(
+      tap(() => (node._ts = new Date().getTime())),
+      switchMap(() => this.projectChanged(ctx))
+    );
+  }
+
+  private projectChanged(ctx: StateContext<StateModel>): Observable<void> {
+    const project = ctx.getState().current!;
+
+    project._ts = new Date().getTime();
+
+    ctx.patchState({
+      current: project,
+    });
+
+    return ctx.dispatch(new ProjectUpdated(project));
   }
 }

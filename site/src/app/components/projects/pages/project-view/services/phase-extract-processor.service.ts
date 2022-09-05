@@ -177,6 +177,7 @@ export class PhaseExtractProcessor {
             isDisciplineNode: false,
             syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
           },
+          _ts: new Date().getTime()
         };
       }
       const parentId = model.parentId;

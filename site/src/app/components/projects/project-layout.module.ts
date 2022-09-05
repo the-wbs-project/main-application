@@ -13,6 +13,13 @@ export const routes: Routes = [
     component: ProjectLayoutComponent,
     children: [
       {
+        path: 'list',
+        loadChildren: () =>
+          import('./pages/project-list/project-list.module').then(
+            (m) => m.ProjectListModule
+          ),
+      },
+      {
         path: ':projectId/view',
         loadChildren: () =>
           import('./pages/project-view/project-view.module').then(

@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { CategoryListEditorModule } from '@wbs/components/_features';
 import { SharedModule } from '@wbs/shared/module';
@@ -9,6 +10,7 @@ import { TitleIconComponent } from './title-icon.component';
 
 @NgModule({
   imports: [
+    ButtonModule,
     CategoryListEditorModule,
     SharedModule,
     TextAreaModule,
