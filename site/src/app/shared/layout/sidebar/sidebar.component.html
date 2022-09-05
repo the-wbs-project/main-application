@@ -55,204 +55,105 @@
           </svg>
         </div>
         <ul class="side-menu">
-          <!-- 1st Level Menu -->
-          <li
-            *ngFor="let menuItem of menuItems"
-            [ngClass]="{
-              'side-item side-item-category': menuItem.headTitle,
-              slide: menuItem.title,
-              active: menuItem.active,
-              'is-expanded': menuItem.active
-            }"
-          >
-            <!-- has-Link -->
-            <div *ngIf="menuItem.headTitle">
-              {{ menuItem.headTitle | translate }}
-            </div>
+          <li class="slide is-expanded">
             <a
               class="side-menu__item"
-              [routerLink]="!menuItem.type ? null : menuItem.path"
-              *ngIf="menuItem.type === 'link'"
               routerLinkActive="active"
-              (click)="toggleNavActive(menuItem)"
+              [routerLink]="['/projects', 'list', 'my', 'active']"
             >
-              <span class="shape1"></span>
-              <span class="shape2"></span>
               <span class="side-menu__icon">
-                <fa-icon *ngIf="menuItem.icon" [icon]="menuItem.icon">
-                </fa-icon>
+                <fa-icon [icon]="faSpaceStation"></fa-icon>
               </span>
               <span class="side-menu__label">
-                {{
-                  menuItem.titleNotResource
-                    ? menuItem.title
-                    : (menuItem.title ?? "" | translate)
-                }}
+                {{ "General.MyProjects" | translate }} ({{
+                  [projects, "active"] | projectStatusCount
+                }})
               </span>
             </a>
-            <!-- has-Sub -->
-            <a
-              class="side-menu__item"
-              [routerLink]="menuItem.type ? null : menuItem.path"
-              *ngIf="menuItem.type === 'sub'"
-              (click)="toggleNavActive(menuItem)"
-              [ngClass]="{ active: menuItem.active }"
-            >
-              <span class="shape1"></span>
-              <span class="shape2"></span>
-              <span class="side-menu__icon">
-                <fa-icon *ngIf="menuItem.icon" [icon]="menuItem.icon">
-                </fa-icon>
-              </span>
-              <span class="side-menu__label">
-                {{
-                  menuItem.titleNotResource
-                    ? menuItem.title
-                    : (menuItem.title ?? "" | translate)
-                }}
-              </span>
-              <span
-                class="badge bg-{{ menuItem.badgeClass }} side-badge"
-                *ngIf="menuItem.badgeClass && menuItem.badgeValue"
-              >
-                {{ menuItem.badgeValue }}
-              </span>
-              <i
-                class="angle fe fe-chevron-right"
-                [ngClass]="{ 'd-none': menuItem.badgeClass }"
-              ></i>
-            </a>
-
-            <!-- 2nd Level menu -->
-            <ul
-              class="slide-menu"
-              *ngIf="menuItem.children"
-              [ngClass]="{ open: menuItem.active }"
-            >
-              <li
-                class="sub-slide"
-                *ngFor="let childrenItem of menuItem.children"
-                [ngClass]="{ 'is-expanded': childrenItem.active }"
-              >
-                <!-- link -->
-                <a
-                  class="slide-item"
-                  routerLinkActive="active"
-                  [routerLink]="!childrenItem.type ? null : childrenItem.path"
-                  *ngIf="childrenItem.type === 'link'"
-                  (click)="toggleNavActive(childrenItem)"
-                >
-                  <fa-icon [icon]="faGenderless" size="xs"> </fa-icon>
-                  &nbsp;
-                  <span>
-                    {{
-                      childrenItem.titleNotResource
-                        ? childrenItem.title
-                        : (childrenItem.title ?? "" | translate)
-                    }}
-                  </span>
-                </a>
-
-                <!-- sub -->
+            <ul class="slide-menu">
+              <li class="sub-slide is-expanded">
                 <a
                   class="sub-side-menu__item"
-                  [routerLink]="childrenItem.type ? null : childrenItem.path"
-                  *ngIf="childrenItem.type === 'sub'"
-                  (click)="toggleNavActive(childrenItem)"
+                  routerLinkActive="active"
+                  [routerLink]="['/projects', 'list', 'my', 'planning']"
                 >
                   <span class="sub-side-menu__label">
-                    {{
-                      childrenItem.titleNotResource
-                        ? childrenItem.title
-                        : (childrenItem.title ?? "" | translate)
-                    }}
+                    {{ "General.Planning" | translate }} ({{
+                      [projects, "planning"] | projectStatusCount
+                    }})
                   </span>
-                  <i class="sub-angle fe fe-chevron-right"></i>
                 </a>
-
-                <!-- 3rd Level menu -->
-                <ul
-                  class="sub-slide-menu"
-                  *ngIf="childrenItem.children"
-                  [ngClass]="{ open: childrenItem.active }"
+                <a
+                  class="sub-side-menu__item"
+                  routerLinkActive="active"
+                  [routerLink]="['/projects', 'list', 'my', 'execution']"
                 >
-                  <li
-                    class=""
-                    *ngFor="let childrenSubItem of childrenItem.children"
-                    [ngClass]="{ 'is-expanded': childrenSubItem.active }"
-                  >
-                    <!-- link -->
-                    <a
-                      class="sub-side-menu__item"
-                      routerLinkActive="active"
-                      [routerLink]="
-                        !childrenSubItem.type ? null : childrenSubItem.path
-                      "
-                      *ngIf="childrenSubItem.type === 'link'"
-                      (click)="toggleNavActive(childrenSubItem)"
-                    >
-                      <span>
-                        {{
-                          childrenSubItem.titleNotResource
-                            ? childrenSubItem.title
-                            : (childrenSubItem.title ?? "" | translate)
-                        }}
-                      </span>
-                    </a>
-                    <!-- sub -->
-                    <a
-                      class="sub-side-menu__item"
-                      [routerLink]="
-                        childrenSubItem.type ? null : childrenSubItem.path
-                      "
-                      *ngIf="childrenSubItem.type === 'sub'"
-                      (click)="toggleNavActive(childrenSubItem)"
-                    >
-                      <span class="sub-side-menu__label2">
-                        {{
-                          childrenSubItem.titleNotResource
-                            ? childrenSubItem.title
-                            : (childrenSubItem.title ?? "" | translate)
-                        }}
-                      </span>
-                      <i class="sub-angle2 fe fe-chevron-right"></i>
-                    </a>
-
-                    <!--4th level -->
-                    <ul
-                      class="sub-slide-menu2"
-                      *ngIf="childrenSubItem.children"
-                      [ngClass]="{ open: childrenSubItem.active }"
-                    >
-                      <li
-                        class=" "
-                        *ngFor="
-                          let childrenSubItem1 of childrenSubItem.children
-                        "
-                        [ngClass]="{ 'is-expanded': childrenSubItem1.active }"
-                      >
-                        <a
-                          class="sub-slide-item2"
-                          routerLinkActive="active"
-                          [routerLink]="
-                            !childrenSubItem1.type
-                              ? null
-                              : childrenSubItem1.path
-                          "
-                          *ngIf="childrenSubItem1.type === 'link'"
-                        >
-                          {{
-                            childrenSubItem1.titleNotResource
-                              ? childrenSubItem1.title
-                              : (childrenSubItem1.title ?? "" | translate)
-                          }}
-                        </a>
-                      </li>
-                    </ul>
-                  </li>
-                </ul>
+                  <span class="sub-side-menu__label">
+                    {{ "General.Execution" | translate }} &nbsp; ({{
+                      [projects, "execution"] | projectStatusCount
+                    }})
+                  </span>
+                </a>
+                <a
+                  class="sub-side-menu__item"
+                  routerLinkActive="active"
+                  [routerLink]="['/projects', 'list', 'my', 'follow-up']"
+                >
+                  <span class="sub-side-menu__label">
+                    {{ "General.FollowUp" | translate }} &nbsp; ({{
+                      [projects, "followUp"] | projectStatusCount
+                    }})
+                  </span>
+                </a>
+                <a
+                  class="sub-side-menu__item"
+                  routerLinkActive="active"
+                  [routerLink]="['/projects', 'list', 'my', 'closed']"
+                >
+                  <span class="sub-side-menu__label">
+                    {{ "General.Closed" | translate }}
+                  </span>
+                </a>
               </li>
             </ul>
+          </li>
+          <li *ngIf="isAdmin" class="slide is-expanded">
+            <a
+              class="side-menu__item"
+              routerLinkActive="active"
+              [routerLink]="['/settings']"
+            >
+              <span class="side-menu__icon">
+                <fa-icon [icon]="faCogs"></fa-icon>
+              </span>
+              <span class="side-menu__label">
+                {{ "Settings.General" | translate }}
+              </span>
+            </a>
+            <ul class="slide-menu">
+              <li class="sub-slide is-expanded">
+                <a
+                  *ngFor="let item of settings"
+                  class="sub-side-menu__item"
+                  routerLinkActive="active"
+                  [routerLink]="item.path"
+                >
+                  <span class="sub-side-menu__label">
+                    {{ item.title! | translate }}
+                  </span>
+                </a>
+              </li>
+            </ul>
+          </li>
+          <li class="slide">
+            <a class="side-menu__item" href="/logout">
+              <span class="side-menu__icon">
+                <fa-icon [icon]="faArrowAltCircleLeft"></fa-icon>
+              </span>
+              <span class="side-menu__label">
+                {{ "General.LogOut" | translate }}
+              </span>
+            </a>
           </li>
         </ul>
         <!-- right-arrow  -->

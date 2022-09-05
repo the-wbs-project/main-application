@@ -58,9 +58,7 @@ export class Messages {
     this.notificationService.show({
       content: label,
       appendTo:
-        this.device.type === 'Desktop'
-          ? this.containers.body
-          : this.containers.template,
+        this.device.type === 'Desktop' ? this.containers.body : undefined, //this.containers.template,
       hideAfter: 2400,
       type: { style: 'none', icon: true },
       animation: { type: 'fade', duration: 400 },

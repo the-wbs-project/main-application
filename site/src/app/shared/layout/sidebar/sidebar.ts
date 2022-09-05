@@ -3,20 +3,11 @@ import { fromEvent } from 'rxjs';
 export function switcherArrowFn() {
   let slideLeft: any = document.querySelector('.slide-left');
   let slideRight: any = document.querySelector('.slide-right');
-  let RTLslideLeft: any = document.querySelector('.slide-leftRTL');
-  let RTLslideRight: any = document.querySelector('.slide-rightRTL');
 
   fromEvent(slideLeft, 'click').subscribe(() => {
     slideClick();
   });
   fromEvent(slideRight, 'click').subscribe(() => {
-    slideClick();
-  });
-
-  fromEvent(RTLslideLeft, 'click').subscribe(() => {
-    slideClick();
-  });
-  fromEvent(RTLslideRight, 'click').subscribe(() => {
     slideClick();
   });
 

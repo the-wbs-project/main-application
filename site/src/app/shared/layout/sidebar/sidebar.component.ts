@@ -1,12 +1,23 @@
-import { Component, ViewEncapsulation, HostListener } from '@angular/core';
-import { NavigationEnd, Router } from '@angular/router';
-import { faGenderless } from '@fortawesome/pro-solid-svg-icons';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  Component,
+  ViewEncapsulation,
+  HostListener,
+  Input,
+} from '@angular/core';
+import { Router } from '@angular/router';
+import {
+  faArrowAltCircleLeft,
+  faBoxArchive,
+  faCogs,
+  faGenderless,
+  faSpaceStationMoonConstruction,
+} from '@fortawesome/pro-solid-svg-icons';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
-import { MenuItem } from '@wbs/shared/models';
+import { MenuItem, Project } from '@wbs/shared/models';
 import { NavService } from '@wbs/shared/services';
-import { UiState } from '@wbs/shared/states';
 import { fromEvent } from 'rxjs';
+import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
 import { switcherArrowFn } from './sidebar';
 
 @UntilDestroy()
@@ -17,7 +28,15 @@ import { switcherArrowFn } from './sidebar';
   encapsulation: ViewEncapsulation.None,
 })
 export class SidebarComponent {
+  @Input() projects?: Project[] | null;
+  @Input() isAdmin?: boolean | null;
+
+  readonly settings = ORG_SETTINGS_MENU_ITEMS;
+  readonly faArrowAltCircleLeft = faArrowAltCircleLeft;
+  readonly faBoxArchive = faBoxArchive;
+  readonly faCogs = faCogs;
   readonly faGenderless = faGenderless;
+  readonly faSpaceStation = faSpaceStationMoonConstruction;
   menuItems!: MenuItem[];
   url: any;
 
@@ -25,41 +44,7 @@ export class SidebarComponent {
     private readonly router: Router,
     private readonly navServices: NavService,
     private readonly store: Store
-  ) {
-    this.store
-      .select(UiState.menuItems)
-      .pipe(untilDestroyed(this))
-      .subscribe((menuItems: any) => {
-        this.menuItems = menuItems;
-        this.router.events.subscribe((event: any) => {
-          if (event instanceof NavigationEnd) {
-            menuItems.filter((items: any) => {
-              if (items.path === event.url) {
-                this.setNavActive(items);
-              }
-              if (!items.children) {
-                return false;
-              }
-              items.children.filter((subItems: any) => {
-                if (subItems.path === event.url) {
-                  this.setNavActive(subItems);
-                }
-                if (!subItems.children) {
-                  return false;
-                }
-                subItems.children.filter((subSubItems: any) => {
-                  if (subSubItems.path === event.url) {
-                    this.setNavActive(subSubItems);
-                  }
-                });
-                return;
-              });
-              return;
-            });
-          }
-        });
-      });
-  }
+  ) {}
 
   //Active NavBar State
   setNavActive(item: any) {

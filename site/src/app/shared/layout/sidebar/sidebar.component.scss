@@ -112,3 +112,9 @@ perfect-scrollbar {
 .horizontal.tarnsparent-theme .sub-side-menu__item:hover {
   color: #fff !important;
 }
+
+.sub-side-menu__item.active {
+  > .sub-side-menu__label {
+    font-weight: bold !important;
+  }
+}

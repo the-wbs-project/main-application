@@ -29,7 +29,6 @@ import {
   HeaderComponent,
   LoaderComponent,
   PageHeaderComponent,
-  RightSidebarComponent,
   SidebarComponent,
   TabToTopComponent,
 } from './layout';
@@ -41,6 +40,7 @@ import {
   LengthPipe,
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
+  ProjectStatusCountPipe,
   ProjectStatusPipe,
   RolesListPipe,
 } from './pipes';
@@ -89,8 +89,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProgressBarDirective,
     ProjectListFilterPipe,
     ProjectListFilterLengthPipe,
+    ProjectStatusCountPipe,
     ProjectStatusPipe,
-    RightSidebarComponent,
     RolesListPipe,
     SidebarComponent,
     SidemenuToggleDirective,
@@ -114,6 +114,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     NgbModule,
     PageHeaderComponent,
     ProgressBarDirective,
+    ProjectStatusCountPipe,
     ProjectStatusPipe,
     RolesListPipe,
     ServiceModule,

@@ -4,7 +4,11 @@
       <!-- // header -->
       <app-header></app-header>
       <!-- //sidebar -->
-      <app-sidebar appHoverEffectSidebar></app-sidebar>
+      <app-sidebar
+        appHoverEffectSidebar
+        [isAdmin]="isAdmin$ | async"
+        [projects]="projects$ | async"
+      ></app-sidebar>
     </div>
     <div class="main-content app-content" #body appMainContent>
       <div

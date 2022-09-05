@@ -12,13 +12,3 @@ export class ParseNavigation {
   static readonly type = '[UI] Parse Navigation';
   constructor(readonly url: string) {}
 }
-
-export class UpdateProjectMenu {
-  static readonly type = '[UI] Update Project Menu';
-  constructor(readonly projects: Project[]) {}
-}
-
-export class SetProject {
-  static readonly type = '[UI] Set Project';
-  constructor(readonly id: string) {}
-}

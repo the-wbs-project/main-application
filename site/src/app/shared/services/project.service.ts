@@ -1,10 +1,17 @@
 import { Injectable } from '@angular/core';
-import { PROJECT_VIEW_STATI } from '../models';
+import { Project, PROJECT_STATI, PROJECT_VIEW_STATI } from '../models';
 import { Resources } from './resource.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
   constructor(private readonly resources: Resources) {}
+
+  filter(projects: Project[] | null | undefined, status: string): Project[] {
+    if (status === PROJECT_VIEW_STATI.ACTIVE)
+      return (projects ?? []).filter((x) => x.status !== PROJECT_STATI.CLOSED);
+
+    return (projects ?? []).filter((x) => x.status === status);
+  }
 
   getStatus(status: string): string {
     return this.resources.get(this.getStatusResource(status));
