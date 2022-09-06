@@ -13,7 +13,11 @@ import {
   PerfectScrollbarModule,
   PERFECT_SCROLLBAR_CONFIG,
 } from 'ngx-perfect-scrollbar';
-import { EditPencilComponent, LoadingComponent } from './components';
+import {
+  ActionButtonsComponent,
+  EditPencilComponent,
+  LoadingComponent,
+} from './components';
 import {
   FillElementDirective,
   FullscreenDirective,
@@ -70,6 +74,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     },
   ],
   declarations: [
+    ActionButtonsComponent,
     CategoryIdConverterPipe,
     CategoryLabelPipe,
     ContentLayoutComponent,
@@ -98,6 +103,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ToggleThemeDirective,
   ],
   exports: [
+    ActionButtonsComponent,
     CategoryIdConverterPipe,
     CategoryLabelPipe,
     CommonModule,

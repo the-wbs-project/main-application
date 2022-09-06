@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { WbsNodeDeleteService } from '@wbs/components/_features';
 import { ProjectUpdated } from '@wbs/shared/actions';
 import {
@@ -12,18 +16,22 @@ import {
   WbsNode,
 } from '@wbs/shared/models';
 import {
+  ContainerService,
   DataServiceFactory,
+  IdService,
   Messages,
   WbsTransformers,
 } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { TaskCreateDialogComponent } from '../components/task-create-dialog/task-create-dialog.component';
 import { PROJECT_ACTIONS, TASK_ACTIONS, UserRole } from '../models';
 import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
   ChangeProjectTitle,
   ChangeTaskTitle,
+  CreateTask,
   RebuildNodeViews,
   RemoveTask,
   SaveUpload,
@@ -59,8 +67,10 @@ interface StateModel {
 })
 export class ProjectState {
   constructor(
+    private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
     private readonly deleteService: WbsNodeDeleteService,
+    private readonly dialog: DialogService,
     private readonly messages: Messages,
     private readonly transformers: WbsTransformers
   ) {}
@@ -121,7 +131,7 @@ export class ProjectState {
         ctx.patchState({
           activity: data.activity.sort(this.sortActivity),
           current: data.project,
-          nodes: data.nodes,
+          nodes: data.nodes.filter((x) => !x.removed),
         })
       ),
       switchMap(() => ctx.dispatch(new RebuildNodeViews()))
@@ -330,7 +340,8 @@ export class ProjectState {
           action: TASK_ACTIONS.TITLE_CHANGED,
           labelTitle: 'Actions.TaskTitleChanged',
         })
-      )
+      ),
+      tap(() => this.messages.success('Projects.TaskTitleUpdated'))
     );
   }
 
@@ -445,6 +456,62 @@ export class ProjectState {
     return saves.length === 0
       ? of()
       : forkJoin(saves).pipe(tap(() => ctx.dispatch(new RebuildNodeViews())));
+  }
+
+  @Action(CreateTask)
+  createTask(
+    ctx: StateContext<StateModel>,
+    action: CreateTask
+  ): Observable<any> {
+    return this.dialog
+      .open({
+        content: TaskCreateDialogComponent,
+        appendTo: this.containers.body,
+      })
+      .result.pipe(
+        switchMap((result: DialogCloseResult | Partial<WbsNode>) => {
+          if (result instanceof DialogCloseResult) return of();
+
+          const nodes = ctx.getState().nodes!;
+          const siblings = nodes.filter((x) => x.parentId === action.parentId);
+          let order = 0;
+
+          for (const x of siblings) {
+            if (x.order > order) order = x.order;
+          }
+          order++;
+
+          const model: WbsNode = {
+            id: IdService.generate(),
+            parentId: action.parentId,
+            description: result.description,
+            disciplineIds: result.disciplineIds,
+            title: result.title,
+            _ts: 0,
+            order,
+          };
+
+          return this.saveTask(ctx, model).pipe(
+            map(() => {
+              nodes.push(model);
+
+              ctx.patchState({
+                nodes,
+              });
+            }),
+            switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+            switchMap(() =>
+              this.saveActivity(ctx, {
+                data: [model.title],
+                objectId: model.id,
+                action: TASK_ACTIONS.SUB_TASK_CREATED,
+                labelTitle: 'Actions.SubTaskCreated',
+              })
+            ),
+            tap(() => this.messages.success('Projects.TaskTitleUpdated'))
+          );
+        })
+      );
   }
 
   private copy<T>(x: T): T {

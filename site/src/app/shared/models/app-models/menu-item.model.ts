@@ -17,3 +17,10 @@ export interface MenuItem {
   bookmark?: boolean;
   children?: MenuItem[];
 }
+
+export interface ActionMenuItem {
+  title?: string;
+  tooltip?: string;
+  action: string;
+  icon?: IconDefinition;
+}

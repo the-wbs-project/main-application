@@ -1,4 +1,3 @@
-//project-create
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +6,7 @@ import {
   Output,
 } from '@angular/core';
 import { faCogs } from '@fortawesome/pro-solid-svg-icons';
-import { ActionMenuItem } from '../models';
+import { ActionMenuItem } from '@wbs/shared/models';
 
 @Component({
   selector: 'app-project-action-menu',
@@ -26,8 +25,8 @@ import { ActionMenuItem } from '../models';
         *ngFor="let item of menu"
         (click)="itemClicked.emit(item.action)"
       >
-        <fa-icon [icon]="item.icon"></fa-icon>
-        {{ item.text | translate }}
+        <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+        {{ item.title ?? '' | translate }}
       </button>
     </div>
   </div>`,

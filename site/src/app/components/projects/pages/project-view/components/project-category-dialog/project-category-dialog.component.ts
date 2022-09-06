@@ -29,12 +29,11 @@ export class ProjectCategoryDialogComponent extends DialogContentBase {
     categoryType: PROJECT_NODE_VIEW_TYPE,
     categories: ProjectCategory[]
   ): void {
+    console.log(categories);
     this.title = title;
     this.categoryType = categoryType;
-    this.categories = this.catService.build(
-      PROJECT_NODE_VIEW.DISCIPLINE,
-      categories
-    );
+    this.categories = this.catService.build(categoryType, categories);
+    console.log(this.categories);
   }
 
   save() {

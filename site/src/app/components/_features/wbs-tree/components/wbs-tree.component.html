@@ -20,8 +20,13 @@
     (selectionChange)="rowSelected($event)"
     [ngClass]="id"
   >
-    <ng-template *ngIf="toolbar" kendoTreeListToolbarTemplate>
-      <ng-container *ngTemplateOutlet="toolbar"></ng-container>
+    <ng-template *ngIf="menuItems" kendoTreeListToolbarTemplate>
+      <div class="display-ib pd-r-20" *ngFor="let menu of menuItems">
+        <wbs-action-buttons
+          [items]="menu"
+          (actionClicked)="actionClicked.emit($event)"
+        ></wbs-action-buttons>
+      </div>
     </ng-template>
     <kendo-treelist-column
       field="levelText"

@@ -34,7 +34,7 @@
                 </span>
                 <span>
                   {{ project.status | projectStatus }},
-                  {{ project._ts | dateText }}
+                  {{ project._ts | dateText | lowercase }}
                 </span>
               </p>
             </div>
@@ -89,11 +89,12 @@
                   [view]="viewNode$ | async"
                   [nodes]="phases$ | async"
                   [project]="project"
-                  [toolbar]="toolbar"
+                  [menuItems]="phaseMenuItems$ | async"
                   [isDraggable]="true"
                   [detailsUrlPrefix]="['../../', 'task']"
+                  (actionClicked)="action($event)"
                   (reordered)="reordered($event)"
-                  (selectedChanged)="nodeSelected($event)"
+                  (selectedChanged)="taskSelected($event)"
                 >
                 </wbs-tree>
               </div>
@@ -102,11 +103,10 @@
                   [view]="viewNode$ | async"
                   [nodes]="disciplines$ | async"
                   [project]="project"
-                  [toolbar]="toolbar"
                   [isDraggable]="false"
                   [detailsUrlPrefix]="['../../', 'task']"
                   (reordered)="reordered($event)"
-                  (selectedChanged)="nodeSelected($event)"
+                  (selectedChanged)="taskSelected($event)"
                 >
                 </wbs-tree>
               </div>
@@ -116,26 +116,4 @@
       </div>
     </div>
   </div>
-  <!-- row closed -->
-
-  <ng-template #toolbar>
-    <div class="btn-group" *ngIf="(viewNode$ | async) === 'phase'">
-      <button
-        type="button"
-        class="btn btn-white btn-outline-primary"
-        (click)="action('download')"
-      >
-        <fa-icon [icon]="faDownload"></fa-icon>
-        {{ "General.Download" | translate }}
-      </button>
-      <button
-        type="button"
-        class="btn btn-white btn-outline-primary"
-        (click)="action('upload')"
-      >
-        <fa-icon [icon]="faUpload"></fa-icon>
-        {{ "General.Upload" | translate }}
-      </button>
-    </div>
-  </ng-template>
 </ng-template>

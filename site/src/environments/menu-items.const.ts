@@ -7,8 +7,8 @@ import { MenuItem } from '@wbs/shared/models';
 
 export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
-    title: 'Settings.General',
-    description: 'Settings.GeneralDescription',
+    title: 'Settings.Organization',
+    description: 'Settings.OrganizationDescription',
     path: ['/settings', 'general'],
     icon: faBuilding,
   },

@@ -58,3 +58,8 @@ export class ChangeTaskTitle {
   static readonly type = '[Project] Change Task Title';
   constructor(readonly taskId: string, readonly title: string) {}
 }
+
+export class CreateTask {
+  static readonly type = '[Project] Create Task';
+  constructor(readonly parentId: string) {}
+}

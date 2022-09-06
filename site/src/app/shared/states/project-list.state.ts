@@ -32,20 +32,18 @@ export class ProjectListState {
   }
 
   @Action(LoadProjects)
-  loadProjects(ctx: StateContext<StateModel>): void {
-    forkJoin([
+  loadProjects(ctx: StateContext<StateModel>): Observable<void> {
+    return forkJoin([
       this.data.projects.getMyAsync(),
       this.data.projects.getWatchedAsync(),
-    ])
-      .pipe(
-        map(([list, watched]) => {
-          ctx.patchState({
-            list: this.sort(list),
-            watched: this.sort(watched),
-          });
-        })
-      )
-      .subscribe();
+    ]).pipe(
+      map(([list, watched]) => {
+        ctx.patchState({
+          list: this.sort(list),
+          watched: this.sort(watched),
+        });
+      })
+    );
   }
 
   @Action(ProjectUpdated)

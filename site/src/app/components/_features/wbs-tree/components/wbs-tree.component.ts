@@ -19,7 +19,12 @@ import {
   SelectionChangeEvent,
   TreeListComponent,
 } from '@progress/kendo-angular-treelist';
-import { MenuItem, Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import {
+  ActionMenuItem,
+  MenuItem,
+  Project,
+  PROJECT_NODE_VIEW_TYPE,
+} from '@wbs/shared/models';
 import { IdService } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import {
@@ -56,14 +61,14 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   private isParentDragged: boolean = false;
   private currentSubscription: Subscription | undefined;
 
-  @Input() menuItems: MenuItem[] | undefined;
-  @Input() view: PROJECT_NODE_VIEW_TYPE | null | undefined;
-  @Input() nodes: WbsNodeView[] | null | undefined;
-  @Input() project: Project | null | undefined;
-  @Input() toolbar: TemplateRef<any> | undefined;
-  @Input() width: number | null | undefined;
+  @Input() menuItems?: ActionMenuItem[][] | null;
+  @Input() view?: PROJECT_NODE_VIEW_TYPE | null;
+  @Input() nodes?: WbsNodeView[] | null;
+  @Input() project?: Project | null;
+  @Input() width?: number | null;
   @Input() detailsUrlPrefix?: string[];
   @Input() isDraggable = true;
+  @Output() readonly actionClicked = new EventEmitter<string>();
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
   @Output() readonly reordered = new EventEmitter<[string, WbsNodeView[]]>();
   @ViewChild(TreeListComponent) treelist!: TreeListComponent;

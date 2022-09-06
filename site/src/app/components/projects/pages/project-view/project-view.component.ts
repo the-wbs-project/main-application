@@ -1,32 +1,26 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  faCogs,
-  faDiagramProject,
-  faDownload,
-  faPencil,
-  faSquare,
-  faTrashAlt,
-  faUpload,
-  faX,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faDiagramProject } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import {
   ClosedEditor,
   NodeEditorState,
-  NodeSelected,
   OpenNodeCreationDialog,
 } from '@wbs/components/_features';
-import { Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import {
+  ActionMenuItem,
+  Project,
+  PROJECT_NODE_VIEW_TYPE,
+} from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
 import { UiState } from '@wbs/shared/states';
 import { WbsNodeView } from '@wbs/shared/view-models';
-import { Observable } from 'rxjs';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { UserRole } from '../../models';
-import { RemoveTask, TreeReordered } from '../../project.actions';
+import { CreateTask, RemoveTask, TreeReordered } from '../../project.actions';
 import { ProjectState } from '../../states';
-import { PAGE_VIEW, PAGE_VIEW_TYPE } from './models';
+import { MenuItems, PAGE_VIEW_TYPE } from './models';
 import {
   DownloadNodes,
   EditDisciplines,
@@ -46,54 +40,21 @@ export class ProjectView2Component {
   @Select(NodeEditorState.show) show$: Observable<boolean> | undefined;
   @Select(ProjectState.roles) roles$!: Observable<UserRole[]>;
   @Select(ProjectState.current) project$!: Observable<Project>;
-  @Select(ProjectViewState.viewNode)
-  viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;
   @Select(ProjectState.disciplines) disciplines$!: Observable<WbsNodeView[]>;
   @Select(ProjectState.phases) phases$!: Observable<WbsNodeView[]>;
-  @Select(ProjectViewState.pageView)
-  pageView$!: Observable<PAGE_VIEW_TYPE>;
+  @Select(ProjectViewState.pageView) pageView$!: Observable<PAGE_VIEW_TYPE>;
+  @Select(ProjectViewState.viewNode)
+  viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;
 
-  readonly faCogs = faCogs;
+  private task?: WbsNodeView;
+
+  readonly phaseMenuItems$ = new BehaviorSubject<ActionMenuItem[][]>([
+    MenuItems.phaseTreeActions,
+  ]);
+  readonly disciplineMenuItems$ = new BehaviorSubject<ActionMenuItem[][]>([]);
   readonly faProject = faDiagramProject;
-  readonly faDownload = faDownload;
-  readonly faSquare = faSquare;
-  readonly faUpload = faUpload;
-  readonly faX = faX;
-  readonly links = [
-    {
-      fragment: PAGE_VIEW.ABOUT,
-      title: 'General.About',
-    },
-    {
-      fragment: PAGE_VIEW.PHASES,
-      title: 'General.Phases',
-    },
-    {
-      fragment: PAGE_VIEW.DISCIPLINES,
-      title: 'General.Disciplines',
-    },
-    {
-      fragment: PAGE_VIEW.TIMELINE,
-      title: 'General.Timeline',
-    },
-  ];
-  readonly actions = [
-    {
-      action: 'editPhases',
-      icon: faPencil,
-      text: 'Projects.EditPhases',
-    },
-    {
-      action: 'editDisciplines',
-      icon: faPencil,
-      text: 'Projects.EditDisciplines',
-    },
-    {
-      action: 'cancel',
-      icon: faTrashAlt,
-      text: 'Projects.CancelProject',
-    },
-  ];
+  readonly links = MenuItems.projectLinks;
+  readonly actions = MenuItems.phaseActions;
 
   constructor(
     title: TitleService,
@@ -121,23 +82,16 @@ export class ProjectView2Component {
     );
   }
 
-  nodeSelected(node: WbsNodeView) {
-    const activity = this.store.selectSnapshot(ProjectState.activity) ?? [];
-    this.store.dispatch(
-      new NodeSelected(
-        node,
-        this.currentNodeView,
-        activity.filter((x) => x.objectId === node.id)
-      )
-    );
-  }
+  taskSelected(task: WbsNodeView) {
+    this.task = task;
 
-  nodeMenuClicked(action: string, node: WbsNodeView) {
-    if (action === 'delete') {
-      this.store.dispatch(new RemoveTask(node.id));
-    } else if (action === 'add') {
-      this.store.dispatch(new OpenNodeCreationDialog(node, this.currentView));
+    const menu: ActionMenuItem[] = [];
+
+    for (const item of MenuItems.phaseItemActions) {
+      if (item.action === 'addSub' || task.parentId != null) menu.push(item);
     }
+
+    this.phaseMenuItems$.next([MenuItems.phaseTreeActions, menu]);
   }
 
   action(action: string) {
@@ -149,6 +103,14 @@ export class ProjectView2Component {
       this.store.dispatch(new EditPhases());
     } else if (action === 'editDisciplines') {
       this.store.dispatch(new EditDisciplines());
+    } else if (action === 'addSub' && this.task) {
+      this.store.dispatch(new CreateTask(this.task.id));
+    } else if (action === 'editTask') {
+      //
+    } else if (action === 'cloneTask') {
+      //
+    } else if (action === 'deleteTask' && this.task) {
+      this.store.dispatch(new RemoveTask(this.task.id));
     }
   }
 
