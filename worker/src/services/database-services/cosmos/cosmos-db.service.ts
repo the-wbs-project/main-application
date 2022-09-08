@@ -9,28 +9,19 @@ export class CosmosDbService implements DbService {
   private db?: CosmosClient;
   orgId?: string;
 
-  constructor(
-    dbId: string,
-    collId: string,
-    config: Config,
-    logger: Logger,
-    mainRequest: Request,
-    private readonly pkVariable = 'pk',
-  ) {
+  constructor(dbId: string, collId: string, config: Config, logger: Logger, mainRequest: Request, private readonly pkVariable = 'pk') {
     this.db = new CosmosClient({
       endpoint: config.db.endpoint,
       masterKey: config.db.key,
       dbId,
       collId,
-      fetch: (input: RequestInfo | URL, init?: RequestInit) => {
+      fetch: (input: Request | string, init?: RequestInit) => {
         return myFetch(mainRequest, logger, input, init);
       },
     });
   }
 
-  private clean<T>(
-    objOrArray: (T & Partial<Document>) | (T & Partial<Document>)[],
-  ): void {
+  private clean<T>(objOrArray: (T & Partial<Document>) | (T & Partial<Document>)[]): void {
     if (Array.isArray(objOrArray)) {
       for (const obj of objOrArray) this.clean(obj);
     } else if (objOrArray) {
@@ -42,26 +33,11 @@ export class CosmosDbService implements DbService {
     }
   }
 
-  getAllAsync<T extends IdObject>(
-    clean: boolean,
-    skip?: number,
-    take?: number,
-  ): Promise<T[]> {
-    return this.getListByQueryAsync<T>(
-      `SELECT * FROM c`,
-      clean,
-      [],
-      skip,
-      take,
-      true,
-    );
+  getAllAsync<T extends IdObject>(clean: boolean, skip?: number, take?: number): Promise<T[]> {
+    return this.getListByQueryAsync<T>(`SELECT * FROM c`, clean, [], skip, take, true);
   }
 
-  async getDocumentAsync<T extends IdObject>(
-    pk: string,
-    id: string,
-    clean: boolean,
-  ): Promise<T | undefined> {
+  async getDocumentAsync<T extends IdObject>(pk: string, id: string, clean: boolean): Promise<T | undefined> {
     if (!this.db) throw new Error('The database has not been initiated.');
 
     const res = await this.db.getDocument<T>({
@@ -79,19 +55,8 @@ export class CosmosDbService implements DbService {
     return result;
   }
 
-  getAllByPartitionAsync<T extends IdObject>(
-    pk: string,
-    clean: boolean,
-    skip?: number,
-    take?: number,
-  ): Promise<T[]> {
-    return this.getListByQueryAsync<T>(
-      `SELECT * FROM c WHERE c.${this.pkVariable} = @pk`,
-      clean,
-      [{ name: '@pk', value: pk }],
-      skip,
-      take,
-    );
+  getAllByPartitionAsync<T extends IdObject>(pk: string, clean: boolean, skip?: number, take?: number): Promise<T[]> {
+    return this.getListByQueryAsync<T>(`SELECT * FROM c WHERE c.${this.pkVariable} = @pk`, clean, [{ name: '@pk', value: pk }], skip, take);
   }
 
   async getListByQueryAsync<T>(
@@ -151,10 +116,7 @@ export class CosmosDbService implements DbService {
     return result.length === 0 ? undefined : result[0];
   }
 
-  async upsertDocument<T extends IdObject>(
-    document: T,
-    pk: string,
-  ): Promise<number> {
+  async upsertDocument<T extends IdObject>(document: T, pk: string): Promise<number> {
     if (!this.db) throw new Error('The database has not been initiated.');
 
     const res = await this.db.createDocument({

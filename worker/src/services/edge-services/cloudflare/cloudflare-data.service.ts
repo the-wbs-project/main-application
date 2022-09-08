@@ -1,16 +1,12 @@
 import { Config } from '../../../config';
 import { EdgeDataService } from '../edge-data.service';
 
-export class CloudflareEdgeDataService implements EdgeDataService {
-  constructor(
-    private readonly config: Config,
-    private readonly event: FetchEvent,
-    private readonly kv: KVNamespace,
-  ) {}
+export class CloudflareDataService implements EdgeDataService {
+  constructor(private readonly config: Config, private readonly context: ExecutionContext, private readonly kv: KVNamespace) {}
 
-  get(key: string): KVValue<string>;
-  get<T>(key: string, type: 'json'): KVValue<T>;
-  get<T>(key: string, type?: 'json' | 'text'): KVValue<string> | KVValue<T> {
+  get(key: string): Promise<string | null>;
+  get<T>(key: string, type: 'json'): Promise<T | null>;
+  get<T>(key: string, type?: 'json' | 'text'): Promise<string | null> | Promise<T | null> {
     if (type == 'json') return this.kv.get<T>(key, type);
 
     return this.kv.get(key, type ?? 'text');
@@ -18,10 +14,10 @@ export class CloudflareEdgeDataService implements EdgeDataService {
 
   put(
     key: string,
-    value: string | ReadableStream<any> | ArrayBuffer | FormData,
+    value: string | ArrayBuffer | ArrayBufferView | ReadableStream,
     options?: {
-      expiration?: string | number;
-      expirationTtl?: string | number;
+      expiration?: number;
+      expirationTtl?: number;
       metadata?: any;
     },
   ): Promise<void> {
@@ -30,14 +26,14 @@ export class CloudflareEdgeDataService implements EdgeDataService {
 
   putLater(
     key: string,
-    value: string | ReadableStream<any> | ArrayBuffer | FormData,
+    value: string | ArrayBuffer | ArrayBufferView | ReadableStream,
     options?: {
-      expiration?: string | number;
-      expirationTtl?: string | number;
+      expiration?: number;
+      expirationTtl?: number;
       metadata?: any;
     },
   ): void {
-    this.event.waitUntil(this.kv.put(key, value, options));
+    this.context.waitUntil(this.kv.put(key, value, options));
   }
 
   delete(key: string): Promise<void> {

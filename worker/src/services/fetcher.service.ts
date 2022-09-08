@@ -3,7 +3,7 @@ import { Logger } from './logger.service';
 export async function myFetch(
   mainRequest: Request | undefined,
   logger: Logger,
-  input: RequestInfo | URL,
+  input: Request | string,
   init?: RequestInit,
 ): Promise<Response> {
   let method: string | undefined;

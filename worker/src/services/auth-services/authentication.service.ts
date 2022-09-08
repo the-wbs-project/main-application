@@ -93,18 +93,13 @@ export class AuthenticationService {
     return Response.redirect(this.auth0.getLogoutUrl(url.origin));
   }
 
-  async setupAsync(
-    req: WorkerRequest,
-    inviteCode: string,
-  ): Promise<Response | number> {
+  async setupAsync(req: WorkerRequest, inviteCode: string): Promise<Response | number> {
     const state = await this.auth0.generateStateParamAsync(req);
     const url = new URL(req.url);
 
     await req.services.data.auth.putStateAsync(state, {});
 
-    return Response.redirect(
-      this.auth0.getSetupRedirectUrl(url.origin, state, inviteCode),
-    );
+    return Response.redirect(this.auth0.getSetupRedirectUrl(url.origin, state, inviteCode));
   }
 
   finishLogout(req: WorkerRequest): Response | null {
@@ -168,10 +163,7 @@ export class AuthenticationService {
     }
   }
 
-  private validateToken(
-    config: AuthConfig,
-    token: { iss: string; aud: string; exp: number; iat: number },
-  ) {
+  private validateToken(config: AuthConfig, token: { iss: string; aud: string; exp: number; iat: number }) {
     try {
       const dateInSecs = (d: Date) => Math.ceil(Number(d) / 1000);
       const date = new Date();
@@ -185,15 +177,11 @@ export class AuthenticationService {
       const domain = `https://${config.domain}`;
 
       if (iss !== domain) {
-        throw new Error(
-          `Token iss value (${iss}) doesn't match AUTH0_DOMAIN (${domain})`,
-        );
+        throw new Error(`Token iss value (${iss}) doesn't match AUTH0_DOMAIN (${domain})`);
       }
 
       if (token.aud !== config.authClientId) {
-        throw new Error(
-          `Token aud value (${token.aud}) doesn't match AUTH0_CLIENT_ID (${config.authClientId})`,
-        );
+        throw new Error(`Token aud value (${token.aud}) doesn't match AUTH0_CLIENT_ID (${config.authClientId})`);
       }
 
       if (token.exp < dateInSecs(date)) {
@@ -203,9 +191,7 @@ export class AuthenticationService {
       // Token should have been issued within the last day
       date.setDate(date.getDate() - 1);
       if (token.iat < dateInSecs(date)) {
-        throw new Error(
-          `Token was issued before one day ago and is now invalid`,
-        );
+        throw new Error(`Token was issued before one day ago and is now invalid`);
       }
 
       return true;
@@ -215,3 +201,16 @@ export class AuthenticationService {
     }
   }
 }
+
+const LOGOUT_HTML = `<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <script>
+      let url = new URL(window.location);
+      url.pathname = '';
+      window.location = url;
+    </script>
+  </head>
+  <body></body>
+</html>
+`;

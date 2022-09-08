@@ -1,6 +1,7 @@
 import { Config } from '../config';
 import { Invite } from '../models';
 import { WorkerRequest } from './worker-request.service';
+import INVITE_EMAIL from '../blobs/invite.html';
 
 interface EmailRequestBlob {
   email: string;

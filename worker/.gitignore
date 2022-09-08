@@ -4,4 +4,4 @@ node_modules
 public
 transpiled
 /.idea/
-local.env
+.env

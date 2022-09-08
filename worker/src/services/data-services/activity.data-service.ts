@@ -6,37 +6,24 @@ declare type ActivityDbObject = Activity & IdObject;
 export class ActivityDataService {
   private readonly db: DbService;
 
-  constructor(
-    private readonly organization: string,
-    mainRequest: Request,
-    dbFactory: DbFactory,
-  ) {
-    this.db = dbFactory.createDbService(
-      mainRequest,
-      this.organization,
-      'Activity',
-      'topLevelId',
-    );
+  constructor(private readonly organization: string, mainRequest: Request, dbFactory: DbFactory) {
+    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Activity', 'topLevelId');
   }
 
   async getAllAsync(topLevelId: string): Promise<Activity[]> {
-    const dbModels = await this.db.getAllByPartitionAsync<ActivityDbObject>(
-      topLevelId,
-      false,
-    );
+    const dbModels = await this.db.getAllByPartitionAsync<ActivityDbObject>(topLevelId, false);
     const models: Activity[] = [];
 
-    if (dbModels)
-      for (const dbModel of dbModels) models.push(this.fromDb(dbModel));
+    if (dbModels) for (const dbModel of dbModels) models.push(this.fromDb(dbModel));
 
     return models;
   }
 
-  putAsync(activity: Activity): Promise<number> {
-    return this.db.upsertDocument(this.toDb(activity), activity.topLevelId);
+  putAsync(activity: ActivityDbObject): Promise<number> {
+    return this.db.upsertDocument(activity, activity.topLevelId);
   }
 
-  private toDb(model: Activity): ActivityDbObject {
+  toDb(model: Activity): ActivityDbObject {
     return {
       action: model.action,
       data: model.data,

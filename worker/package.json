@@ -1,46 +1,35 @@
 {
-  "name": "worker-typescript-template",
+  "name": "the-wbs-project",
   "version": "1.0.0",
-  "description": "Cloudflare worker TypeScript template",
   "main": "dist/worker.js",
   "scripts": {
-    "build": "webpack",
-    "build:watch": "webpack --watch",
+    "prepare": "npm run build",
+    "build": "esbuild src/index.ts --outfile=dist/index.js --bundle  --loader:.html=text --format=esm",
     "publish": "wrangler publish --env prod",
-    "dev": "miniflare ./workers-site/worker.js --kv KVDATA --kv KVAUTH --env local.env",
-    "go": "npm run build && concurrently \"npm run dev\" \"npm run build:watch\"",
-    "test": "jest --config jestconfig.json --verbose"
+    "dev": "miniflare ./dist/index.js --wrangler-env dev",
+    "format": "prettier --write '**/*.{js,ts,jsx,tsx,json,yml,yaml,md,html}' --ignore-path .gitignore",
+    "go": "npm run build && concurrently \"npm run dev\" \"npm run build\""
   },
   "author": "author",
-  "license": "MIT OR Apache-2.0",
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "typescript",
-      "prettier"
-    ],
-    "rules": {
-      "no-nested-ternary": "error"
-    }
-  },
+  "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^2.2.2",
-    "@types/jest": "^27.0.2",
+    "@cloudflare/workers-types": "^3.11.0",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.35",
     "@types/service-worker-mock": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^5.36.1",
-    "@typescript-eslint/parser": "^5.36.1",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "concurrently": "^6.3.0",
-    "eslint": "^8.23.0",
+    "esbuild": "^0.14.40",
+    "eslint": "^8.16.0",
     "eslint-config-prettier": "^8.5.0",
-    "eslint-config-typescript": "^3.0.0",
-    "jest": "^27.3.1",
-    "prettier": "^2.7.1",
+    "jest": "^27.5.1",
+    "prettier": "^2.6.2",
     "service-worker-mock": "^2.0.5",
-    "ts-jest": "^28.0.8",
-    "ts-loader": "^9.2.2",
-    "typescript": "^4.8.2",
-    "webpack": "^5.74.0",
-    "webpack-cli": "^4.10.0"
+    "ts-jest": "^27.1.5",
+    "tsup": "^5.12.9",
+    "typescript": "^4.7.2",
+    "wrangler": "^2.0.29"
   },
   "dependencies": {
     "@cfworker/cosmos": "^1.13.4",

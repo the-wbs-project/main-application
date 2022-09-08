@@ -3,11 +3,9 @@ import { Store } from '@ngxs/store';
 import { Activity, ActivityData } from '@wbs/shared/models';
 import { AuthState } from '@wbs/shared/states';
 import { map, Observable } from 'rxjs';
-import { ActivityService } from '../activity.service';
 
 export class ActivityDataService {
   constructor(
-    private readonly service: ActivityService,
     private readonly http: HttpClient,
     private readonly store: Store
   ) {}
@@ -16,7 +14,11 @@ export class ActivityDataService {
     return this.http.get<Activity[]>(`activity/${topLevelId}`);
   }
 
-  putAsync(topLevelId: string, data: ActivityData): Observable<Activity> {
+  putAsync(
+    topLevelId: string,
+    data: ActivityData,
+    dataType: 'project' = 'project'
+  ): Observable<Activity> {
     console.log(data);
     const userId = this.store.selectSnapshot(AuthState.userId)!;
     const timestamp = this.getUTC();
@@ -28,7 +30,9 @@ export class ActivityDataService {
       topLevelId,
       userId,
     };
-    return this.http.put<void>('activity', activity).pipe(map(() => activity));
+    return this.http
+      .put<void>(`activity/${dataType}`, activity)
+      .pipe(map(() => activity));
   }
 
   private getUTC(): number {

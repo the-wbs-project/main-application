@@ -1,42 +1,69 @@
 name = "wbs-app"
-type = "javascript"
 zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
-webpack_config = "./workers-site/webpack.config.js"
-compatibility_date = "2022-04-05"
+compatibility_date = "2022-05-27"
 usage_model = "unbound"
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", SNIPPET_APP_INSIGHTS = "", DEBUG = "true", TTL_MANIFEST = 33, TTL_JSSCSS = 26000, TTL_ICONS = 26000, TTL_IMAGES = 26000, TTL_FONTS = 26000, TTL_HTML = 3600, KV_BYPASS = "" }
-
-[text_blobs]
-INVITE_EMAIL = "./blobs/invite.html"
-LOGOUT_HTML = "./blobs/logout-redirect.html"
 
 [build]
-command = "yarn && yarn run build"
+command = "yarn run -s build"
 
 [build.upload]
-format = "service-worker"
+format = "modules"
+
+[[rules]]
+type = "ESModule"
+globs = ["**/*.js"]
 
 [site]
 bucket = "./public"
-entry-point = "workers-site"
+entry-point = "dist"
+
+[env.dev]
+name = "wbs-app-dev"
+kv_namespaces = [
+  { binding = "KV_AUTH" },
+  { binding = "KV_DATA" },
+]
+r2_buckets = [
+  { binding = "BUCKET_SNAPSHOTS" }
+]
+ 
+[env.dev.vars]
+APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55"
+DEBUG = "true"
+SNIPPET_APP_INSIGHTS = ""
+TTL_MANIFEST = 33
+TTL_JSSCSS = 26000
+TTL_ICONS = 26000
+TTL_IMAGES = 26000
+TTL_FONTS = 26000
+TTL_HTML = 3600
+KV_BYPASS = ""
 
 [env.prod]
 name = "wbs-app-prod"
 workers_dev = false
 route = "https://app.thewbsproject.com/*"
 kv_namespaces = [
-  { binding = "KVAUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
-  { binding = "KVDATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+  { binding = "KV_AUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+  { binding = "KV_DATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
 ]
-vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730", DEBUG = "false", TTL_MANIFEST = 3600, TTL_JSSCSS = 3600, TTL_ICONS = 3600, TTL_IMAGES = 3600, TTL_FONTS = 3600, TTL_HTML = 3600, KV_BYPASS = "", SNIPPET_APP_INSIGHTS = "" }
+r2_buckets = [
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
+]
+
+[[vars]]
+CORS_URLS = "https://app.thewbsproject.com"
+APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730"
+DEBUG = "false"
 
 [miniflare]
-#host = "127.0.0.1"                 # --host
-port = 88                        # --port
-watch = true                       # --watch
-#env_path = ".env"
-kv_persist = true                  # --kv-persist
-cache_persist = true
-cache = true
+port = 88
+watch = true
+kv_persist = true
+r2_persist = true
+cache_persist = false
+cache = false
 https = true
+actual_time = true
+inaccurate_cpu = true

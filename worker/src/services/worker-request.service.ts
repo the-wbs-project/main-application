@@ -14,13 +14,8 @@ export class WorkerRequest {
   query: Obj | undefined;
   //token: TokenInfo | undefined;
 
-  constructor(
-    event: FetchEvent,
-    readonly config: Config,
-    readonly services: ServiceFactory,
-    private readonly logger: Logger,
-  ) {
-    this._request = event.request;
+  constructor(request: Request, readonly config: Config, readonly services: ServiceFactory, private readonly logger: Logger) {
+    this._request = request;
   }
 
   get headers(): Headers {

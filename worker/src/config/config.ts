@@ -17,4 +17,8 @@ export interface Config {
   mailgun: MailgunConfig;
   ttl: TtlConfig;
   twilio: TwilioConfig;
+  bucketSnapshots: R2Bucket;
+  kvAuth: KVNamespace;
+  kvData: KVNamespace;
+  kvSite: KVNamespace;
 }

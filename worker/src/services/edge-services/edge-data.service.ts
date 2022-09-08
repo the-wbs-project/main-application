@@ -1,28 +1,28 @@
 export interface EdgeDataService {
   byPass(key: string): boolean;
 
-  get(key: string): KVValue<string>;
+  get(key: string): Promise<string | null>;
 
-  get<T>(key: string, type: "json"): KVValue<T>;
+  get<T>(key: string, type: 'json'): Promise<T | null>;
 
   put(
     key: string,
-    value: string | ReadableStream | ArrayBuffer | FormData,
+    value: string | ArrayBuffer | ArrayBufferView | ReadableStream,
     options?: {
-      expiration?: string | number;
-      expirationTtl?: string | number;
+      expiration?: number;
+      expirationTtl?: number;
       metadata?: any;
-    }
+    },
   ): Promise<void>;
 
   putLater(
     key: string,
-    value: string | ReadableStream | ArrayBuffer | FormData,
+    value: string | ArrayBuffer | ArrayBufferView | ReadableStream,
     options?: {
-      expiration?: string | number;
-      expirationTtl?: string | number;
+      expiration?: number;
+      expirationTtl?: number;
       metadata?: any;
-    }
+    },
   ): void;
 
   delete(key: string): Promise<void>;

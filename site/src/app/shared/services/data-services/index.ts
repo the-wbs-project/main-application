@@ -8,16 +8,11 @@ import { MetdataDataService } from './metdata.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectDataService } from './project.data-service';
 import { UserDataService } from './user.data-service';
-import { ActivityService } from '../activity.service';
 import { InviteDataService } from './invite.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
-  readonly activities = new ActivityDataService(
-    this.activityService,
-    this.http,
-    this.store
-  );
+  readonly activities = new ActivityDataService(this.http, this.store);
   readonly auth = new AuthDataService(this.http);
   readonly extracts = new ExtractDataService(this.http);
   readonly invites = new InviteDataService(this.http);
@@ -27,7 +22,6 @@ export class DataServiceFactory {
   readonly users = new UserDataService(this.http);
 
   public constructor(
-    private readonly activityService: ActivityService,
     private readonly http: HttpClient,
     private readonly store: Store
   ) {}

@@ -1,26 +1,31 @@
-import { EnvironmentConfig } from './config';
+import { Env, EnvironmentConfig } from './config';
 import { WorkerRequest } from './services';
 import { DataServiceFactory } from './services/data-services';
 import { CosmosFactory } from './services/database-services/cosmos';
-import { CloudflareEdgeService } from './services/edge-services/cloudflare';
+import { CloudflareService } from './services/edge-services/cloudflare';
 import { ServiceFactory } from './services/factory.service';
 import { Logger } from './services/logger.service';
+import { CloudflareStorageFactory } from './services/storage-services/cloudflare/cloudflare-storage-factory.service';
 
-const config = new EnvironmentConfig();
+export default {
+  async fetch(request: Request, environment: Env, context: ExecutionContext): Promise<Response> {
+    try {
+      const config = new EnvironmentConfig(environment);
+      const logger = new Logger(config.appInsightsKey, request);
+      const db = new CosmosFactory(config, logger);
+      const edge = new CloudflareService(config, request, context);
+      const storage = new CloudflareStorageFactory(config);
+      const data = new DataServiceFactory(db, edge, request, storage);
+      const services = new ServiceFactory(config, data, edge);
+      const workerRequest = new WorkerRequest(request, config, services, logger);
 
-addEventListener('fetch', (event) => {
-  const logger = new Logger(config.appInsightsKey, event.request);
-  const edge = new CloudflareEdgeService(config, event);
-  const services = new ServiceFactory(
-    config,
-    new DataServiceFactory(
-      new CosmosFactory(config, logger),
-      edge,
-      event.request,
-    ),
-    edge,
-  );
-  const request = new WorkerRequest(event, config, services, logger);
-
-  event.respondWith(services.router.matchAsync(request));
-});
+      return await services.router.matchAsync(workerRequest);
+    } catch (err) {
+      console.error(err);
+      return new Response((<Error>err).message, { status: 500, headers: { 'Content-Type': 'text/plain' } });
+    }
+  },
+  /*async scheduled(controller: ScheduledController, environment: unknown, context: ExecutionContext): Promise<void> {
+    // await dosomething();
+  },*/
+};

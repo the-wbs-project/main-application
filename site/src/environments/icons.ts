@@ -8,11 +8,12 @@ import {
   faHeadSideBrain,
   faListCheck,
   faPipeValve,
+  faScrewdriverWrench,
   faStamp,
 } from '@fortawesome/pro-solid-svg-icons';
 
 export const DISCIPLINE_ICONS = [
-  { id: 'mechanical', icon: faGears },
+  { id: 'mechanical', icon: faScrewdriverWrench },
   { id: 'electrical', icon: faBolt },
   { id: 'structural', icon: faBridgeSuspension },
   { id: 'survey', icon: faDroneAlt },
