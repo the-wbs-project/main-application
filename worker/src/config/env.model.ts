@@ -13,16 +13,10 @@ export interface Env {
   COSMOS: string;
   DEBUG: string;
   INVITE_EMAIL: string;
-  KV_BYPASS: string;
+  KV_BYPASS?: string;
   LOGOUT_HTML: string;
   MAILGUN_API_BASE_URL: string;
   MAILGUN_API_KEY: string;
-  SNIPPET_APP_INSIGHTS: string;
+  SNIPPET_APP_INSIGHTS?: string;
   TWILIO: string;
-  TTL_JSSCSS: string;
-  TTL_MANIFEST: string;
-  TTL_ICONS: string;
-  TTL_IMAGES: string;
-  TTL_FONTS: string;
-  TTL_HTML: string;
 }

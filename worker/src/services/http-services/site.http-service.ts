@@ -1,5 +1,5 @@
 import { serveSinglePageApp } from '@cloudflare/kv-asset-handler';
-import { TtlConfig } from '../../config';
+import { TTL } from '../../consts';
 import { WorkerRequest } from '../worker-request.service';
 
 const ROBOT = `User-agent: *
@@ -24,11 +24,7 @@ export class SiteHttpService {
       //return resp;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
-      req.logException(
-        'An error occured trying to get a static file.',
-        'SiteService.getSiteAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
       return new Response('Not Found', { status: 404 });
     }
   }
@@ -44,18 +40,14 @@ export class SiteHttpService {
         : response;*/
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
-      req.logException(
-        'An error occured trying to get a the site.',
-        'SiteService.getSiteAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get a the site.', 'SiteService.getSiteAsync', <Error>e);
       return new Response('Not Found', { status: 404 });
     }
   }
 
   private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
     try {
-      const ttl = SiteHttpService.getTtl(req, req.config.ttl);
+      const ttl = SiteHttpService.getTtl(req);
 
       return await req.services.edge.getAssetFromKV({
         mapRequestToAsset: serveSinglePageApp,
@@ -66,44 +58,27 @@ export class SiteHttpService {
         },
       });
     } catch (e) {
-      req.logException(
-        'An error occured trying to get a static file from KV.',
-        'SiteService.getFromKvAsync',
-        <Error>e,
-      );
-      if (req.config.debug && e instanceof Error)
-        return new Response(e.message || e.toString(), { status: 500 });
+      req.logException('An error occured trying to get a static file from KV.', 'SiteService.getFromKvAsync', <Error>e);
+      if (req.config.debug && e instanceof Error) return new Response(e.message || e.toString(), { status: 500 });
 
       return new Response('Not Found', { status: 404 });
     }
   }
 
-  private static getTtl(
-    req: WorkerRequest,
-    ttl: TtlConfig,
-  ): number | undefined {
+  private static getTtl(req: WorkerRequest): number | undefined {
     const url = req.url;
     const path = new URL(url).pathname.toLowerCase();
 
-    if (
-      path.indexOf('.jpg') > -1 ||
-      path.indexOf('.png') > -1 ||
-      path.indexOf('.svg') > -1
-    )
-      return ttl.images;
-    if (path.indexOf('.ttf') > -1 || path.indexOf('.woff') > -1)
-      return ttl.fonts;
-    if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1) return ttl.jscss;
-    if (path.indexOf('.ico') > -1) return ttl.icons;
-    if (this.isHtml(req.headers)) return ttl.html;
+    if (path.indexOf('.jpg') > -1 || path.indexOf('.png') > -1 || path.indexOf('.svg') > -1) return TTL.images;
+    if (path.indexOf('.ttf') > -1 || path.indexOf('.woff') > -1) return TTL.fonts;
+    if (path.indexOf('.js') > -1 || path.indexOf('.css') > -1) return TTL.jscss;
+    if (path.indexOf('.ico') > -1) return TTL.icons;
+    if (this.isHtml(req.headers)) return TTL.html;
 
     return undefined;
   }
 
   private static isHtml(hdrs: Headers): boolean {
-    return (
-      hdrs.has('Content-Type') &&
-      (hdrs.get('Content-Type')?.includes('text/html') || false)
-    );
+    return hdrs.has('Content-Type') && (hdrs.get('Content-Type')?.includes('text/html') || false);
   }
 }

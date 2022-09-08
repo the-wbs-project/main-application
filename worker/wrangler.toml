@@ -1,8 +1,8 @@
 name = "wbs-app"
-zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 compatibility_date = "2022-05-27"
 usage_model = "unbound"
+main = "dist/index.js"
 
 [build]
 command = "yarn run -s build"
@@ -16,7 +16,6 @@ globs = ["**/*.js"]
 
 [site]
 bucket = "./public"
-entry-point = "dist"
 
 [env.dev]
 name = "wbs-app-dev"
@@ -27,18 +26,7 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS" }
 ]
- 
-[env.dev.vars]
-APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55"
-DEBUG = "true"
-SNIPPET_APP_INSIGHTS = ""
-TTL_MANIFEST = 33
-TTL_JSSCSS = 26000
-TTL_ICONS = 26000
-TTL_IMAGES = 26000
-TTL_FONTS = 26000
-TTL_HTML = 3600
-KV_BYPASS = ""
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
 [env.prod]
 name = "wbs-app-prod"
@@ -51,11 +39,7 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
 ]
-
-[[vars]]
-CORS_URLS = "https://app.thewbsproject.com"
-APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730"
-DEBUG = "false"
+vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
 
 [miniflare]
 port = 88

@@ -5,5 +5,4 @@ export * from './db.config';
 export * from './env.model';
 export * from './environment.config';
 export * from './mailgun.config';
-export * from './ttl.config';
 export * from './twilio.config';

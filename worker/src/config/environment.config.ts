@@ -4,7 +4,6 @@ import { Config } from './config';
 import { DbConfig } from './db.config';
 import { Env } from './env.model';
 import { MailgunConfig } from './mailgun.config';
-import { TtlConfig } from './ttl.config';
 import { TwilioConfig } from './twilio.config';
 
 export class EnvironmentConfig implements Config {
@@ -12,7 +11,6 @@ export class EnvironmentConfig implements Config {
   private _azure: AzureConfig | undefined;
   private _db: DbConfig | undefined;
   private _mailgun: MailgunConfig | undefined;
-  private _ttl: TtlConfig | undefined;
   private _twilio: TwilioConfig | undefined;
 
   constructor(private readonly env: Env) {}
@@ -37,7 +35,7 @@ export class EnvironmentConfig implements Config {
     return this.env.APP_INSIGHTS_KEY;
   }
 
-  get appInsightsSnippet(): string {
+  get appInsightsSnippet(): string | undefined {
     return this.env.SNIPPET_APP_INSIGHTS;
   }
 
@@ -65,7 +63,7 @@ export class EnvironmentConfig implements Config {
   }
 
   get kvBypass(): string[] {
-    return this.env.KV_BYPASS.split(',');
+    return (this.env.KV_BYPASS ?? '').split(',');
   }
 
   get mailgun(): MailgunConfig {
@@ -75,19 +73,6 @@ export class EnvironmentConfig implements Config {
         key: this.env.MAILGUN_API_KEY,
       };
     return this._mailgun;
-  }
-
-  get ttl(): TtlConfig {
-    if (!this._ttl)
-      this._ttl = {
-        html: parseInt(this.env.TTL_HTML),
-        fonts: parseInt(this.env.TTL_FONTS),
-        icons: parseInt(this.env.TTL_ICONS),
-        jscss: parseInt(this.env.TTL_JSSCSS),
-        images: parseInt(this.env.TTL_IMAGES),
-        manifest: parseInt(this.env.TTL_MANIFEST),
-      };
-    return this._ttl;
   }
 
   get twilio(): TwilioConfig {
