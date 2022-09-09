@@ -1,3 +1,4 @@
+import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { AuthConfig } from './auth.config';
 import { AzureConfig } from './azure.config';
 import { Config } from './config';
@@ -73,6 +74,10 @@ export class EnvironmentConfig implements Config {
         key: this.env.MAILGUN_API_KEY,
       };
     return this._mailgun;
+  }
+
+  get manifestSite(): AssetManifestType {
+    return this.env.__STATIC_CONTENT_MANIFEST;
   }
 
   get twilio(): TwilioConfig {

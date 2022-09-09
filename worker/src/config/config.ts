@@ -1,3 +1,4 @@
+import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { AuthConfig } from './auth.config';
 import { AzureConfig } from './azure.config';
 import { DbConfig } from './db.config';
@@ -19,4 +20,5 @@ export interface Config {
   kvAuth: KVNamespace;
   kvData: KVNamespace;
   kvSite: KVNamespace;
+  manifestSite: AssetManifestType;
 }
