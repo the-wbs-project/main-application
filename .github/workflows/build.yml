@@ -45,7 +45,6 @@ jobs:
           branch: master
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-jobs:
   name: Cloudflare Worker Deployment
   build:
     runs-on: ubuntu-latest
