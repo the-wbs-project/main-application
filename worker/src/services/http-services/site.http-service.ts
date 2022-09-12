@@ -20,9 +20,11 @@ export class SiteHttpService {
   static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
       console.log('get from origin');
-      return await req.myFetch(req.request); // SiteHttpService.getFromKvAsync(req);
+      const resp = await req.myFetch(req.request); // SiteHttpService.getFromKvAsync(req);
 
-      //return resp;
+      console.log(resp.status);
+      console.log(resp.statusText);
+      return resp;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
       req.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
@@ -32,8 +34,7 @@ export class SiteHttpService {
 
   static async getSiteAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      console.log('get from origin');
-      return await req.myFetch(req.request); //return await SiteHttpService.getSiteResourceAsync(req);
+      return await SiteHttpService.getSiteResourceAsync(req);
       /*const response = await SiteHttpService.getSiteResourceAsync(req);
       const isHtml = SiteHttpService.isHtml(response.headers);
 
