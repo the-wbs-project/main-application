@@ -25,13 +25,10 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - name: Setup FA 1
-        run: npm config set @fortawesome:registry=https://npm.fontawesome.com/
-      - name: Setup FA 2
-        run: yarn run fa
+      - name: Setup Env
+        run: yarn --cwd site run setup
         env:
           FA_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-      - run: yarn --cwd site run setup
       - run: yarn --cwd site run publish
       - name: Publish
         uses: cloudflare/pages-action@1

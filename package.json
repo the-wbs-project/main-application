@@ -12,8 +12,7 @@
     "w:setup": "yarn --cwd worker run setup",
     "s:setup": "yarn --cwd site run setup",
     "w:publish": "yarn --cwd worker run publish",
-    "s:publish": "yarn --cwd site run publish",
-    "fa": "@fortawesome:registry=https://npm.fontawesome.com/ //npm.fontawesome.com/:_authToken=$FA_TOKEN"
+    "s:publish": "yarn --cwd site run publish"
   },
   "repository": {
     "type": "git"
