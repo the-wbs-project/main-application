@@ -2,7 +2,7 @@
   "name": "site",
   "version": "0.0.0",
   "scripts": {
-    "install": "yarn",
+    "setup": "yarn ",
     "preinstall": "npm config set @fortawesome:registry=https://npm.fontawesome.com/",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
