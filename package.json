@@ -3,10 +3,16 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
+    "postinstall": "yarn run s:setup && yarn run w:setup",
+    "publish": "yarn run s:publish && yarn run w:publish",
     "data": "npm run --prefix data/tool run:w",
     "site": "yarn --cwd site run serve",
     "styles": "yarn --cwd site run styles",
-    "worker": "yarn --cwd worker run go"
+    "worker": "yarn --cwd worker run go",
+    "w:setup": "yarn --cwd worker run install",
+    "s:setup": "yarn --cwd site run install",
+    "w:pubish": "yarn --cwd worker run pubish",
+    "s:pubish": "yarn --cwd site run pubish"
   },
   "repository": {
     "type": "git"
