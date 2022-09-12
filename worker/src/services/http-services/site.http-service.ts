@@ -20,7 +20,7 @@ export class SiteHttpService {
   static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
       console.log('get from origin');
-      const resp = await req.myFetch(req.request); // SiteHttpService.getFromKvAsync(req);
+      const resp = await req.myFetch(req.request.url); // SiteHttpService.getFromKvAsync(req);
 
       console.log(resp.status);
       console.log(resp.statusText);
