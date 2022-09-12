@@ -11,8 +11,8 @@
     "worker": "yarn --cwd worker run go",
     "w:setup": "yarn --cwd worker run setup",
     "s:setup": "yarn --cwd site run setup",
-    "w:pubish": "yarn --cwd worker run pubish",
-    "s:pubish": "yarn --cwd site run pubish"
+    "w:publish": "yarn --cwd worker run publish",
+    "s:publish": "yarn --cwd site run publish"
   },
   "repository": {
     "type": "git"
