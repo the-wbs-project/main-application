@@ -19,6 +19,7 @@ export class SiteHttpService {
 
   static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
+      console.log('get from origin');
       return await req.myFetch(req.request); // SiteHttpService.getFromKvAsync(req);
 
       //return resp;
@@ -31,6 +32,7 @@ export class SiteHttpService {
 
   static async getSiteAsync(req: WorkerRequest): Promise<Response | number> {
     try {
+      console.log('get from origin');
       return await req.myFetch(req.request); //return await SiteHttpService.getSiteResourceAsync(req);
       /*const response = await SiteHttpService.getSiteResourceAsync(req);
       const isHtml = SiteHttpService.isHtml(response.headers);

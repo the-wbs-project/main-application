@@ -22,7 +22,6 @@ export class SiteHttpService {
       console.log('get from origin');
       return req.myFetch(req.request);
       //return await SiteHttpService.getFromKvAsync(req);
-
       //return resp;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
