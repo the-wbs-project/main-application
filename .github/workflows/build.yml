@@ -10,6 +10,7 @@ on:
     branches: ["v0.1.1"]
 
 jobs:
+  name: Cloudflare Pages Deployment
   build:
     runs-on: ubuntu-latest
 
@@ -41,5 +42,29 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: "wbs-app-prod"
           directory: "dist"
-          branch: Production
+          branch: master
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+  name: Cloudflare Worker Deployment
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.13.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+      - name: Setup Env
+        run: yarn --cwd worker run setup
+      - name: Build And Publish Worker
+        run: yarn --cwd worker run publish
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
