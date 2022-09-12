@@ -26,7 +26,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
       - name: Setup Env
-        uses: actions/setup-node@v3
         run: yarn --cwd site run setup
         env:
           FA_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
