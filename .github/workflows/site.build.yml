@@ -41,4 +41,5 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: "wbs-app-prod"
           directory: "dist"
+          branch: Production
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
