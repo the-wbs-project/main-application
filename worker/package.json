@@ -4,7 +4,6 @@
   "main": "dist/worker.js",
   "scripts": {
     "setup": "yarn",
-    "prepare": "npm run build",
     "build": "esbuild src/index.ts --outfile=dist/index.js --bundle  --loader:.html=text --format=esm",
     "publish": "yarn run build && wrangler publish --env prod",
     "dev": "miniflare ./dist/index.js --wrangler-env dev",
