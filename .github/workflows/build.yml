@@ -42,7 +42,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: "wbs-app-prod"
           directory: "dist"
-          branch: app
+          branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
   worker_job:
     name: Cloudflare Worker Deployment
