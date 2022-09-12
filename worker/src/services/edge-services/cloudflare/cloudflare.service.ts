@@ -33,8 +33,8 @@ export class CloudflareService implements EdgeService {
       },
       {
         ...options,
-        ASSET_NAMESPACE: this.config.kvSite,
-        ASSET_MANIFEST: this.config.manifestSite,
+        //ASSET_NAMESPACE: this.config.kvSite,
+        //ASSET_MANIFEST: this.config.manifestSite,
       },
     );
   }

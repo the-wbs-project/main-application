@@ -14,9 +14,6 @@ format = "modules"
 type = "ESModule"
 globs = ["**/*.js"]
 
-[site]
-bucket = "./public"
-
 [env.dev]
 name = "wbs-app-dev"
 kv_namespaces = [
