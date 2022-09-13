@@ -1,15 +1,15 @@
 import { Obj } from 'itty-router';
 import { Config } from '../config';
-import { AuthState } from '../models';
+import { AuthState, OrganizationRoles } from '../models';
 import { ServiceFactory } from './factory.service';
 import { myFetch } from './fetcher.service';
 import { Logger } from './logger.service';
 
 export class WorkerRequest {
   private _request: Request;
-  private _state: AuthState | undefined;
-  private _organization: string | undefined;
-  isAuthenticated: boolean | undefined;
+  private _state?: AuthState;
+  private _organization?: OrganizationRoles;
+  isAuthenticated?: boolean;
   params: Obj | undefined;
   query: Obj | undefined;
   //token: TokenInfo | undefined;
@@ -26,7 +26,7 @@ export class WorkerRequest {
     return this.request.method;
   }
 
-  get organization(): string | undefined {
+  get organization(): OrganizationRoles | undefined {
     return this._organization;
   }
 
@@ -42,14 +42,14 @@ export class WorkerRequest {
     return this.request.url;
   }
 
-  setState(state: AuthState, organization: string): void {
+  setState(state: AuthState): void {
     this._state = state;
-    this.setOrganization(organization);
   }
 
-  setOrganization(organization: string): void {
+  setOrganization(organization: OrganizationRoles): void {
     this._organization = organization;
-    this.services.data.setOrganization(organization);
+
+    this.services.data.setOrganization(organization.organization);
   }
 
   logException(message: string, location: string, err: Error): void {

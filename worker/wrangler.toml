@@ -39,11 +39,12 @@ vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16dd
 
 [miniflare]
 port = 88
+upstream = "http://localhost:4200"
 watch = true
 kv_persist = true
 r2_persist = true
 cache_persist = false
 cache = false
-https = true
+https = false
 actual_time = true
 inaccurate_cpu = true

@@ -63,7 +63,7 @@ import { AppComponent } from './app.component';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
-      deps: [AnalyticsService, Messages],
+      deps: [AnalyticsService, Messages, Store],
       multi: true,
     },
   ],

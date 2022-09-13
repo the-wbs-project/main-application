@@ -5,15 +5,9 @@ import { BaseHttpService } from './base.http-service';
 export class InviteHttpService extends BaseHttpService {
   static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
     try {
-      return await super.buildJson(
-        await req.services.data.invites.getAllAsync(),
-      );
+      return await super.buildJson(await req.services.data.invites.getAllAsync());
     } catch (e) {
-      req.logException(
-        'An error occured trying to get all invites for an organization.',
-        'InviteHttpService.getAllAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get all invites for an organization.', 'InviteHttpService.getAllAsync', <Error>e);
       return 500;
     }
   }
@@ -40,11 +34,7 @@ export class InviteHttpService extends BaseHttpService {
 
       return await super.buildJson(invite.email, hdrs);
     } catch (e) {
-      req.logException(
-        'An error occured trying to get the invite.',
-        'InviteHttpService.getAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
       return new Response(null, {
         headers: hdrs,
         status: 500,
@@ -52,9 +42,7 @@ export class InviteHttpService extends BaseHttpService {
     }
   }
 
-  static async getAndAcceptAsync(
-    req: WorkerRequest,
-  ): Promise<Response | number> {
+  static async getAndAcceptAsync(req: WorkerRequest): Promise<Response | number> {
     const hdrs = new Headers();
 
     BaseHttpService.getAuthHeaders(req, hdrs);
@@ -80,11 +68,7 @@ export class InviteHttpService extends BaseHttpService {
 
       return await super.buildJson(invite, hdrs);
     } catch (e) {
-      req.logException(
-        'An error occured trying to get the invite.',
-        'InviteHttpService.getAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
       return new Response(null, {
         headers: hdrs,
         status: 500,
@@ -107,11 +91,7 @@ export class InviteHttpService extends BaseHttpService {
       }
       return await super.buildJson(invite);
     } catch (e) {
-      req.logException(
-        'An error occured trying to update an invite.',
-        'InviteHttpService.putAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to update an invite.', 'InviteHttpService.putAsync', <Error>e);
       return 500;
     }
   }

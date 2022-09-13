@@ -1,3 +1,5 @@
+import { OrganizationRoles } from './app-models';
+
 export interface User {
   id?: string;
   email?: string;
@@ -17,5 +19,5 @@ export interface UserMetadata {
 
 export interface UserAppMetadata {
   inviteCode?: string;
-  roles: string[];
+  organizationRoles?: OrganizationRoles[];
 }

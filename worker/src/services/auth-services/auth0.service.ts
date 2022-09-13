@@ -32,16 +32,13 @@ export class Auth0Service {
       grant_type: 'authorization_code',
       client_id: this.config.authClientId,
       client_secret: this.config.authClientSecret,
-      redirect_uri: this.getCallbackUrl(url.origin),
+      redirect_uri: this.config.callbackUrl,
     });
-    const tokenResponse = await req.myFetch(
-      `https://${this.config.domain}/oauth/token`,
-      {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body,
-      },
-    );
+    const tokenResponse = await req.myFetch(`https://${this.config.domain}/oauth/token`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body,
+    });
     const tokenBody: AuthToken = await tokenResponse.json();
 
     if (tokenBody.error) {
@@ -50,26 +47,19 @@ export class Auth0Service {
     return tokenBody;
   }
 
-  private getCallbackUrl(origin: string): string {
-    return origin + '/callback';
-  }
-
   getLoginRedirectUrl(origin: string, state: string): string {
     const c = this.config;
     const state2 = encodeURIComponent(state);
-    const callback = this.getCallbackUrl(origin);
+    const callback = encodeURIComponent(this.config.callbackUrl);
+    const protocol = origin.indexOf('localhost') === -1 ? 'https' : 'http';
 
-    return `https://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}`;
+    return `${protocol}://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}`;
   }
 
-  getSetupRedirectUrl(
-    origin: string,
-    state: string,
-    inviteCode: string,
-  ): string {
+  getSetupRedirectUrl(state: string, inviteCode: string): string {
     const c = this.config;
     const state2 = encodeURIComponent(state);
-    const callback = this.getCallbackUrl(origin);
+    const callback = encodeURIComponent(this.config.callbackUrl);
 
     return `https://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}&inviteCode=${inviteCode}`;
   }
@@ -81,10 +71,8 @@ export class Auth0Service {
   }
 
   async generateStateParamAsync(req: WorkerRequest): Promise<string> {
-    const resp = await req.myFetch(
-      new Request('https://csprng.xyz/v1/api', { method: 'get' }),
-    );
-    let { Data: state } = await resp.json();
+    const resp = await req.myFetch(new Request('https://csprng.xyz/v1/api', { method: 'get' }));
+    let { Data: state }: { Data: string } = await resp.json();
 
     while (state.indexOf('|') > -1) state = state.replace('|', '-');
 
@@ -117,12 +105,7 @@ export class Auth0Service {
     return respBody.access_token;
   }
 
-  async makeAuth0CallAsync(
-    req: WorkerRequest,
-    urlSuffix: string,
-    method: string,
-    body?: unknown,
-  ): Promise<Response> {
+  async makeAuth0CallAsync(req: WorkerRequest, urlSuffix: string, method: string, body?: unknown): Promise<Response> {
     const token = await this.getMgmtTokenAsync(req);
 
     return await req.myFetch(

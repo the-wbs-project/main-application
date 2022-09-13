@@ -1,6 +1,6 @@
-import { serveSinglePageApp } from '@cloudflare/kv-asset-handler';
 import { TTL } from '../../consts';
 import { WorkerRequest } from '../worker-request.service';
+import { BaseHttpService } from './base.http-service';
 
 const ROBOT = `User-agent: *
 Disallow: /`;
@@ -19,12 +19,29 @@ export class SiteHttpService {
 
   static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
-      console.log('get from origin');
-      const resp = await req.myFetch(req.request.url); // SiteHttpService.getFromKvAsync(req);
+      const cache = !req.config.debug;
+      if (cache) {
+        const matched = await req.services.edge.cacheMatch();
 
-      console.log(resp.status);
-      console.log(resp.statusText);
-      return resp;
+        if (matched) return matched;
+      }
+      const originResponse = await req.myFetch(req.request.url); // SiteHttpService.getFromKvAsync(req);
+      const ttl = SiteHttpService.getTtl(req);
+      const headers = new Headers(originResponse.headers);
+
+      BaseHttpService.getAuthHeaders(req, headers);
+
+      if (cache && ttl) headers.set('cache-control', 'public, max-age=' + ttl);
+
+      const fullResponse = new Response(originResponse.body, {
+        status: originResponse.status,
+        statusText: originResponse.statusText,
+        headers,
+      });
+
+      if (fullResponse.status === 200 && cache) req.services.edge.cachePut(fullResponse);
+
+      return fullResponse;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
       req.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
@@ -32,26 +49,8 @@ export class SiteHttpService {
     }
   }
 
-  static async getSiteAsync(req: WorkerRequest): Promise<Response | number> {
+  /*private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
     try {
-      return await SiteHttpService.getSiteResourceAsync(req);
-      /*const response = await SiteHttpService.getSiteResourceAsync(req);
-      const isHtml = SiteHttpService.isHtml(response.headers);
-
-      return isHtml && response.status === 200
-        ? SiteHttpService.hydrateAsync(req, response)
-        : response;*/
-    } catch (e) {
-      // if an error is thrown try to serve the asset at 404.html
-      req.logException('An error occured trying to get a the site.', 'SiteService.getSiteAsync', <Error>e);
-      return new Response('Not Found', { status: 404 });
-    }
-  }
-
-  private static async getFromKvAsync(req: WorkerRequest): Promise<Response> {
-    try {
-      const ttl = SiteHttpService.getTtl(req);
-
       return await req.services.edge.getAssetFromKV({
         mapRequestToAsset: serveSinglePageApp,
         cacheControl: {
@@ -66,7 +65,7 @@ export class SiteHttpService {
 
       return new Response('Not Found', { status: 404 });
     }
-  }
+  }*/
 
   private static getTtl(req: WorkerRequest): number | undefined {
     const url = req.url;

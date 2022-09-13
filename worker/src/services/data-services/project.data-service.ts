@@ -7,18 +7,8 @@ const kvPrefix = 'PROJECTS';
 export class ProjectDataService {
   private readonly db: DbService;
 
-  constructor(
-    private readonly organization: string,
-    dbFactory: DbFactory,
-    mainRequest: Request,
-    private readonly edge: EdgeDataService,
-  ) {
-    this.db = dbFactory.createDbService(
-      mainRequest,
-      this.organization,
-      'Projects',
-      'id',
-    );
+  constructor(private readonly organization: string, dbFactory: DbFactory, mainRequest: Request, private readonly edge: EdgeDataService) {
+    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Projects', 'id');
   }
 
   async getAllAsync(): Promise<Project[]> {
@@ -30,11 +20,9 @@ export class ProjectDataService {
   }
 
   async getAllWatchedAsync(userId: string): Promise<Project[]> {
-    const list = await this.db.getListByQueryAsync<Project>(
-      `SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`,
-      true,
-      [{ name: '@userId', value: userId }],
-    );
+    const list = await this.db.getListByQueryAsync<Project>(`SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`, true, [
+      { name: '@userId', value: userId },
+    ]);
     this.fixTs(list);
 
     return list;
@@ -72,10 +60,7 @@ export class ProjectDataService {
     this.edge.delete(kvName);
   }
 
-  private getFromDbAsync(
-    projectId: string,
-    clean = true,
-  ): Promise<Project | undefined> {
+  private getFromDbAsync(projectId: string, clean = true): Promise<Project | undefined> {
     return this.db.getDocumentAsync<Project>(projectId, projectId, clean);
   }
 

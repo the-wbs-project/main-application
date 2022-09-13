@@ -6,7 +6,7 @@
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
     "deploy": "ng build --configuration production --output-path ../dist",
-    "serve": "ng build --configuration development --output-path ../worker/public --watch",
+    "serve": "ng serve --configuration development --watch --no-live-reload",
     "styles": "gulp watch && gulp dark && gulp transparent && gulp skin",
     "kendo:auth": "yarn run kendo-ui-license activate",
     "publish": "yarn run deploy"

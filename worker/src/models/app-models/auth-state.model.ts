@@ -1,7 +1,8 @@
+import { OrganizationRoles } from './organizations.model';
+
 export interface AuthState {
   userId?: string;
   culture?: string;
-  organization?: string;
-  roles?: string[];
+  organizations?: OrganizationRoles[];
   exp?: number;
 }

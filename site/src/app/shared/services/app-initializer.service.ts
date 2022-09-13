@@ -24,12 +24,9 @@ export class AppInitializerFactory {
 
       return resources.initiate('General').pipe(
         switchMap(() =>
-          store.dispatch([
-            new LoadProjects(),
-            new SetupCategories(),
-            new LoadProfile(),
-          ])
+          store.dispatch([new SetupCategories(), new LoadProfile()])
         ),
+        switchMap(() => store.dispatch([new LoadProjects()])),
         switchMap(() => store.dispatch(new TurnOffIsLoading()))
       );
     };

@@ -160,16 +160,13 @@
       const inviteCode = urlParams.get("inviteCode");
       const redirect_uri = decodeURI(urlParams.get("redirect_uri"));
       const rUrl = new URL(redirect_uri);
-      const organization = rUrl.host.split(".")[0];
       //
       //  Set the connection to the domain
       //
-      config.connection = organization;
-
-      while (config.connection.indexOf("_") > -1)
-        config.connection = config.connection.replace("_", "-");
+      config.connection = "acme-engineering";
 
       if (inviteCode) {
+        const organization = urlParams.get("redirect_uri");
         const preRegUrl = `${rUrl.origin}/api/invites/preReg/${organization}/${inviteCode}`;
         const postRegUrl = `${rUrl.origin}/api/invites/postReg/${organization}/${inviteCode}`;
 
