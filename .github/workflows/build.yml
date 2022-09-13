@@ -10,8 +10,8 @@ on:
     branches: ["v0.1.1"]
 
 jobs:
-  site_job:
-    name: Cloudflare Pages Deployment
+  setup:
+    name: Setup
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,15 +26,46 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - name: Setup Env
+
+  site_job:
+    name: Site Build
+    runs-on: ubuntu-latest
+    needs: setup
+
+    strategy:
+      matrix:
+        node-version: [16.13.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - name: Setup Environment
         run: npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $FA_TOKEN
         env:
           FA_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-      - name: Setup Env 2
+      - name: Install Packages
         run: yarn --cwd site run setup
         env:
           FA_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
-      - run: yarn --cwd site run publish
+      - name: Build Site
+        run: yarn --cwd site run publish
+
+  site_deploy:
+    name: Site Deploy
+    runs-on: ubuntu-latest
+    needs: site_job
+
+    strategy:
+      matrix:
+        node-version: [16.13.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
       - name: Publish
         uses: cloudflare/pages-action@1
         with:
@@ -44,9 +75,11 @@ jobs:
           directory: "dist"
           branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
+
   worker_job:
     name: Cloudflare Worker Deployment
     runs-on: ubuntu-latest
+    needs: setup
 
     strategy:
       matrix:
@@ -54,12 +87,6 @@ jobs:
         # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "npm"
       - name: Setup Env
         run: yarn --cwd worker run setup
       - name: Build And Publish Worker
