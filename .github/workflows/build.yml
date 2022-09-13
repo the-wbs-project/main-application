@@ -10,8 +10,8 @@ on:
     branches: ["v0.1.1"]
 
 jobs:
-  setup:
-    name: Setup
+  site_job:
+    name: Site Deployment
     runs-on: ubuntu-latest
 
     strategy:
@@ -26,18 +26,6 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-
-  site_job:
-    name: Site Build
-    runs-on: ubuntu-latest
-    needs: setup
-
-    strategy:
-      matrix:
-        node-version: [16.13.0]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
       - name: Setup Environment
         run: npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $FA_TOKEN
         env:
@@ -48,11 +36,19 @@ jobs:
           FA_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
       - name: Build Site
         run: yarn --cwd site run publish
+      - name: Publish Site
+        uses: cloudflare/pages-action@1
+        with:
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          projectName: "wbs-app-prod"
+          directory: "dist"
+          branch: main
+          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-  site_deploy:
-    name: Site Deploy
+  worker_job:
+    name: Worker Deployment
     runs-on: ubuntu-latest
-    needs: site_job
 
     strategy:
       matrix:
@@ -66,30 +62,23 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           cache: "npm"
-      - name: Publish
-        uses: cloudflare/pages-action@1
+      - name: Install Packages
+        run: yarn --cwd worker run setup
+      - name: Build Worker
+        run: yarn --cwd worker run build
+      - name: Publish Worker
+        uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "wbs-app-prod"
-          directory: "dist"
-          branch: main
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
-
-  worker_job:
-    name: Cloudflare Worker Deployment
-    runs-on: ubuntu-latest
-    needs: setup
-
-    strategy:
-      matrix:
-        node-version: [16.13.0]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - name: Setup Env
-        run: yarn --cwd worker run setup
-      - name: Build And Publish Worker
-        run: yarn --cwd worker run publish
+          secrets: |
+            MAILGUN_API_KEY
+            MAILGUN_API_BASE_URL
+            COSMOS
+            AZURE
+            AUTH
         env:
-          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          MAILGUN_API_KEY: ${{ secrets.CFW_MAILGUN_API_KEY }}
+          MAILGUN_API_BASE_URL: ${{ secrets.CFW_MAILGUN_API_BASE_URL }}
+          COSMOS: ${{ secrets.CFW_PROD_COSMOS }}
+          AZURE: ${{ secrets.CFW_PROD_AZURE }}
+          AUTH: ${{ secrets.CFW_PROD_AUTH }}
