@@ -9,4 +9,5 @@ export interface AuthConfig {
   mgmtClientId: string;
   mgmtClientSecret: string;
   salt: string;
+  callbackUrl: string;
 }

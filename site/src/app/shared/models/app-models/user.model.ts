@@ -17,5 +17,10 @@ export interface UserMetadata {
 
 export interface UserAppMetadata {
   inviteCode?: string;
+  organizationRoles?: OrganizationRoles[];
+}
+
+export interface OrganizationRoles {
+  organization: string;
   roles: string[];
 }

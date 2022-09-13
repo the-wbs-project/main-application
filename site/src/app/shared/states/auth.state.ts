@@ -14,7 +14,7 @@ export interface AuthBucket {
   isAdmin: boolean;
   isAuthenticated: boolean;
   profile?: User | null;
-  organization: string;
+  organization?: string;
 }
 
 @Injectable()
@@ -23,13 +23,14 @@ export interface AuthBucket {
   defaults: {
     isAdmin: false,
     isAuthenticated: false,
-    organization: window.location.hostname.split('.')[0],
   },
 })
 export class AuthState implements NgxsOnInit {
   private readonly authFlag = 'isLoggedIn';
 
-  constructor(private readonly data: DataServiceFactory) {}
+  constructor(private readonly data: DataServiceFactory) {
+    console.log(window.location);
+  }
 
   @Selector()
   static isAdmin(state: AuthBucket): boolean {
@@ -52,7 +53,7 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static organization(state: AuthBucket): string {
+  static organization(state: AuthBucket): string | undefined {
     return state.organization;
   }
 
@@ -78,13 +79,13 @@ export class AuthState implements NgxsOnInit {
   loadProfile(ctx: StateContext<AuthBucket>): Observable<void> {
     return this.data.auth.getCurrentAsync().pipe(
       map((profile) => {
-        const org = ctx.getState().organization;
-        const roles = profile.appInfo.roles;
+        const org = profile.appInfo.organizationRoles![0];
 
         ctx.patchState({
-          isAdmin: roles.indexOf('admin') > -1,
+          isAdmin: org.roles.indexOf('admin') > -1,
+          organization: org.organization,
           profile,
-          roles,
+          roles: org.roles,
         });
       })
     );

@@ -14,9 +14,6 @@ format = "modules"
 type = "ESModule"
 globs = ["**/*.js"]
 
-[site]
-bucket = "./public"
-
 [env.dev]
 name = "wbs-app-dev"
 kv_namespaces = [
@@ -31,7 +28,7 @@ vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "tru
 [env.prod]
 name = "wbs-app-prod"
 workers_dev = false
-routes = ["https://app.thewbsproject.com/*", "https://acme_engineering.thewbsproject.com/"]
+routes = ["https://app.thewbsproject.com/*"]
 kv_namespaces = [
   { binding = "KV_AUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
   { binding = "KV_DATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
@@ -43,11 +40,12 @@ vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16dd
 
 [miniflare]
 port = 88
+upstream = "http://localhost:4200"
 watch = true
 kv_persist = true
 r2_persist = true
 cache_persist = false
 cache = false
-https = true
+https = false
 actual_time = true
 inaccurate_cpu = true

@@ -1,4 +1,3 @@
-import { Options } from '@cloudflare/kv-asset-handler';
 import { EdgeDataService } from './edge-data.service';
 
 export interface EdgeService {
@@ -8,8 +7,6 @@ export interface EdgeService {
   getEdgeProperties(): Record<string, any> | undefined;
 
   waitUntil(func: Promise<unknown>): void;
-
-  getAssetFromKV(options?: Partial<Options>): Promise<Response>;
 
   cacheMatch(): Promise<Response | null>;
 

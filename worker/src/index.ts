@@ -10,7 +10,6 @@ import { CloudflareStorageFactory } from './services/storage-services/cloudflare
 export default {
   async fetch(request: Request, environment: any, context: ExecutionContext): Promise<Response> {
     try {
-      console.log(environment);
       const config = new EnvironmentConfig(environment);
       const logger = new Logger(config.appInsightsKey, request);
       const db = new CosmosFactory(config, logger);

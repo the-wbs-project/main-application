@@ -19,6 +19,4 @@ export interface Config {
   bucketSnapshots: R2Bucket;
   kvAuth: KVNamespace;
   kvData: KVNamespace;
-  kvSite: KVNamespace;
-  manifestSite: AssetManifestType;
 }

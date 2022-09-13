@@ -1,5 +1,6 @@
 import * as cookie from 'cookie';
 import { AuthConfig } from '../../config';
+import { Organizations } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 import { Auth0Service } from './auth0.service';
 
@@ -29,17 +30,19 @@ export class AuthenticationService {
       console.log('token invalid');
       return null;
     }
-    const org = this.getOrganization(req);
-    //
-    //  Set the email and claims and save.
-    //
-    state.organization = org;
     state.userId = <string>payload['http://thewbsproject.com/user_id'];
     state.culture = <string>payload['http://thewbsproject.com/culture'];
-    state.roles = <string[]>payload['http://thewbsproject.com/roles'];
+    state.organizations = [];
 
-    req.setOrganization(org);
+    const organizations = <Organizations>payload['http://thewbsproject.com/organizations'];
+    const ids = Object.keys(organizations);
 
+    for (const orgId of ids) {
+      state.organizations.push({
+        organization: orgId,
+        roles: organizations[orgId],
+      });
+    }
     await req.services.data.auth.putStateAsync(stateCode, state);
 
     const secure = req.config.auth.excludeSecureCookie ? '' : ' Secure;';
@@ -50,30 +53,48 @@ export class AuthenticationService {
     });
   }
 
-  setOrganization(req: WorkerRequest): void {
-    const organization = this.getOrganization(req);
-
-    req.setOrganization(organization);
-  }
-
-  async authorizeAsync(req: WorkerRequest): Promise<Response | number | void> {
+  async authorizeSiteAsync(req: WorkerRequest): Promise<Response | number | void> {
     const stateCode = this.getStateCode(req);
 
     if (stateCode) {
       const state = await req.services.data.auth.getStateAsync(stateCode);
 
       if (state) {
-        //
-        //  Now let's verify the organization is one that should be there.
-        //
-        const organization = this.getOrganization(req);
-
-        if (state.organization !== organization) return 401;
-        //
-        //  Looks good, let's go!
-        //
-        req.setState(state, organization);
+        req.setState(state);
         return;
+      }
+    }
+    const state = await this.auth0.generateStateParamAsync(req);
+    const url = new URL(req.url);
+
+    await req.services.data.auth.putStateAsync(state, {});
+
+    return Response.redirect(this.auth0.getLoginRedirectUrl(url.origin, state));
+  }
+
+  async authorizeApiAsync(req: WorkerRequest): Promise<Response | number | void> {
+    const stateCode = this.getStateCode(req);
+
+    if (stateCode) {
+      const state = await req.services.data.auth.getStateAsync(stateCode);
+
+      if (state) {
+        req.setState(state);
+
+        const org = this.getOrganization(req);
+
+        if (!org) return;
+        if (org) {
+          const orgRoles = state.organizations?.find((x) => x.organization === org);
+
+          if (orgRoles) {
+            req.setOrganization(orgRoles);
+            return;
+          }
+          //
+          //  If orgRoles is not set, DO NOT DO AN EMPTY RETURN!!!
+          //
+        }
       }
     }
     const state = await this.auth0.generateStateParamAsync(req);
@@ -95,11 +116,10 @@ export class AuthenticationService {
 
   async setupAsync(req: WorkerRequest, inviteCode: string): Promise<Response | number> {
     const state = await this.auth0.generateStateParamAsync(req);
-    const url = new URL(req.url);
 
     await req.services.data.auth.putStateAsync(state, {});
 
-    return Response.redirect(this.auth0.getSetupRedirectUrl(url.origin, state, inviteCode));
+    return Response.redirect(this.auth0.getSetupRedirectUrl(state, inviteCode));
   }
 
   finishLogout(req: WorkerRequest): Response | null {
@@ -133,8 +153,8 @@ export class AuthenticationService {
     return req.headers.get(req.config.auth.cookieKey || '');
   }
 
-  private getOrganization(req: WorkerRequest): string {
-    return new URL(req.url).host.split('.')[0];
+  private getOrganization(req: WorkerRequest): string | null {
+    return req.headers.get('wbs-org-id');
   }
 
   // https://github.com/pose/webcrypto-jwt/blob/master/index.js

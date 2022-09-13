@@ -27,7 +27,9 @@ export class OrganizationState implements NgxsOnInit {
           email: 'chrisw@thewbsproject.com',
           name: 'Christopher Walton',
           appInfo: {
-            roles: ['pm'],
+            organizationRoles: [
+              { organization: 'acme_engineering', roles: ['pm'] },
+            ],
             inviteCode: '1234',
           },
           userInfo: {
@@ -39,7 +41,9 @@ export class OrganizationState implements NgxsOnInit {
           email: 'billh@thewbsproject.com',
           name: 'Bill Hinsley',
           appInfo: {
-            roles: ['sme'],
+            organizationRoles: [
+              { organization: 'acme_engineering', roles: ['sme'] },
+            ],
             inviteCode: '1234',
           },
           userInfo: {

@@ -12,3 +12,5 @@ worker-test/
 site/src/assets/img_temp/
 
 worker/.mf/
+
+dist/

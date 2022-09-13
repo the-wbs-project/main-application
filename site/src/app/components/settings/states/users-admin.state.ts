@@ -199,7 +199,7 @@ export class UserAdminState {
   }
 
   private getOrganization(): string {
-    return this.store.selectSnapshot(AuthState.organization);
+    return this.store.selectSnapshot(AuthState.organization)!;
   }
 
   private changeActivation(
@@ -242,7 +242,9 @@ export class UserAdminState {
           email: x.email,
           name: x.name,
           isActive: !x.blocked,
-          roles: x.appInfo.roles,
+          roles: x.appInfo.organizationRoles?.find(
+            (x) => x.organization === org
+          )?.roles,
         }
     );
   }

@@ -1,4 +1,3 @@
-import { getAssetFromKV, Options } from '@cloudflare/kv-asset-handler';
 import { Config } from '../../../config';
 import { EdgeDataService } from '../edge-data.service';
 import { EdgeService } from '../edge.service';
@@ -10,7 +9,7 @@ export class CloudflareService implements EdgeService {
   readonly authData: EdgeDataService;
   readonly data: EdgeDataService;
 
-  constructor(private readonly config: Config, private readonly request: Request, private readonly context: ExecutionContext) {
+  constructor(config: Config, private readonly request: Request, private readonly context: ExecutionContext) {
     this.authData = new CloudflareDataService(config, context, config.kvAuth);
     this.data = new CloudflareDataService(config, context, config.kvData);
   }
@@ -23,20 +22,6 @@ export class CloudflareService implements EdgeService {
 
   waitUntil(func: Promise<void>): void {
     this.context.waitUntil(func);
-  }
-
-  getAssetFromKV(options?: Partial<Options>): Promise<Response> {
-    return getAssetFromKV(
-      {
-        request: this.request,
-        waitUntil: this.context.waitUntil,
-      },
-      {
-        ...options,
-        ASSET_NAMESPACE: this.config.kvSite,
-        ASSET_MANIFEST: this.config.manifestSite,
-      },
-    );
   }
 
   getEdgeProperties(): Record<string, any> | undefined {
