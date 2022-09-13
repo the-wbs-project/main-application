@@ -26,6 +26,7 @@ r2_buckets = [
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
 [env.prod]
+name = "wbs-app-prod"
 workers_dev = false
 routes = ["https://app.thewbsproject.com/*"]
 kv_namespaces = [
