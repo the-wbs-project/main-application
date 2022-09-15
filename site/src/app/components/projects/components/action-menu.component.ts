@@ -13,8 +13,8 @@ import { ActionMenuItem } from '@wbs/shared/models';
   template: `<div ngbDropdown class="d-inline-block">
     <button
       type="button"
-      class="btn btn-primary p-2"
       id="actionMenu"
+      class="btn btn-primary p-2"
       ngbDropdownToggle
     >
       <fa-icon [icon]="faCogs" size="lg"></fa-icon>
@@ -25,7 +25,7 @@ import { ActionMenuItem } from '@wbs/shared/models';
         *ngFor="let item of menu"
         (click)="itemClicked.emit(item.action)"
       >
-        <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+        <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon> &nbsp;
         {{ item.title ?? '' | translate }}
       </button>
     </div>

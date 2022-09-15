@@ -16,6 +16,7 @@ import { SharedModule } from '@wbs/shared/module';
 import { ProjectResourceGuard } from '../../guards';
 import {
   BasicsComponent,
+  CategoriesComponent,
   CustomDialogComponent,
   DisciplinesComponent,
   FooterComponent,
@@ -26,7 +27,7 @@ import {
   PhaseComponent,
 } from './components';
 import { StartCreationGuard } from './guards';
-import { ProjectCreateDescriptionPipe, ProjectCreateTitlePipe } from './pipes';
+import { ProjectCategoryFilterPipe, ProjectCategorySortPipe } from './pipes';
 import { ProjectCreateComponent } from './project-create.component';
 import { ProjectCreateState } from './project-create.state';
 
@@ -57,6 +58,7 @@ const routes: Routes = [
   providers: [StartCreationGuard],
   declarations: [
     BasicsComponent,
+    CategoriesComponent,
     CustomDialogComponent,
     DisciplinesComponent,
     FooterComponent,
@@ -65,9 +67,9 @@ const routes: Routes = [
     LibOrScratchComponent,
     NodeViewComponent,
     PhaseComponent,
+    ProjectCategoryFilterPipe,
+    ProjectCategorySortPipe,
     ProjectCreateComponent,
-    ProjectCreateDescriptionPipe,
-    ProjectCreateTitlePipe,
   ],
 })
 export class ProjectCreateModule {}

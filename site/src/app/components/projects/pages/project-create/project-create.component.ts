@@ -5,7 +5,7 @@ import {
 } from '@angular/core';
 import { Select } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { PROJECT_CREATION_PAGES_TYPE } from './models';
+import { ProjectCreationPage } from './models';
 import { ProjectCreateState } from './project-create.state';
 
 @Component({
@@ -16,6 +16,6 @@ import { ProjectCreateState } from './project-create.state';
 })
 export class ProjectCreateComponent {
   @Select(ProjectCreateState.page) page$!: Observable<
-    PROJECT_CREATION_PAGES_TYPE | undefined
+    ProjectCreationPage | undefined
   >;
 }

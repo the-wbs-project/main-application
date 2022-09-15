@@ -5,4 +5,5 @@ export interface ListItem {
   description?: string;
   sameAs?: string[];
   tags: string[];
+  icon?: string;
 }

@@ -31,12 +31,9 @@
     </button>
   </div>
   <ng-template [ngIf]="more$ | async">
-    <kendo-floatinglabel
-      [ngClass]="'wd-100p'"
-      [text]="'Projects.TaskDescription' | translate"
-    >
-      <kendo-textarea [(ngModel)]="description"></kendo-textarea>
-    </kendo-floatinglabel>
+    {{ "Projects.TaskDescription" | translate }}
+
+    <kendo-editor [(value)]="description" style="height: 570px"></kendo-editor>
     <br />
     <br />
     {{ "Projects.TaskDisciplines" | translate }}

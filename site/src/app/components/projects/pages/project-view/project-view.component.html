@@ -30,6 +30,14 @@
               </p>
               <p class="text-muted ms-md-4 ms-0 mb-2">
                 <span class="font-weight-semibold me-2">
+                  {{ "General.Category" | translate }} :
+                </span>
+                <span>
+                  {{ project.category | categoryLabel }}
+                </span>
+              </p>
+              <p class="text-muted ms-md-4 ms-0 mb-2">
+                <span class="font-weight-semibold me-2">
                   {{ "General.Status" | translate }} :
                 </span>
                 <span>

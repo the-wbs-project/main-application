@@ -1,2 +1,2 @@
-export * from './project-create-description.pipe';
-export * from './project-create-title.pipe';
+export * from './project-category-filter.pipe';
+export * from './project-category-sort.pipe';

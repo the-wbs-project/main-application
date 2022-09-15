@@ -72,7 +72,7 @@ export class RouterService {
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, apiAuth, Http.azure.handleAsync);
     }
-    this.router.get('*', siteAuth, Http.site.getSiteResourceAsync);
+    this.router.get('*', siteAuth, Http.site.getSiteAsync);
   }
 
   async matchAsync(req: WorkerRequest): Promise<Response> {

@@ -9,8 +9,9 @@ import {
   PROJECT_SCOPE_TYPE,
   PROJECT_STATI,
 } from '@wbs/shared/models';
-import { DataServiceFactory, IdService, Messages } from '@wbs/shared/services';
+import { DataServiceFactory, IdService } from '@wbs/shared/services';
 import {
+  CategoryChosen,
   DisciplinesChosen,
   GoToBasics,
   LibOrScratchChosen,
@@ -21,20 +22,18 @@ import {
   StartWizard,
   SubmitBasics,
 } from './project-create.actions';
-import {
-  PROJECT_CREATION_PAGES as PAGES,
-  PROJECT_CREATION_PAGES_TYPE,
-} from './models';
+import { ProjectCreationPage, PROJECT_CREATION_PAGES as PAGES } from './models';
 import { Observable, switchMap } from 'rxjs';
 import { MetadataState } from '@wbs/shared/states';
 import { Navigate } from '@ngxs/router-plugin';
 
 interface StateModel {
+  category?: string;
   description: string;
   disciplines?: (string | ListItem)[];
   isSaving: boolean;
   nodeView?: PROJECT_NODE_VIEW_TYPE;
-  page?: PROJECT_CREATION_PAGES_TYPE;
+  page?: ProjectCreationPage;
   phases?: (string | ListItem)[];
   scope?: PROJECT_SCOPE_TYPE;
   title: string;
@@ -57,6 +56,11 @@ export class ProjectCreateState {
   ) {}
 
   @Selector()
+  static category(state: StateModel): string | undefined {
+    return state.category;
+  }
+
+  @Selector()
   static description(state: StateModel): string {
     return state.description;
   }
@@ -77,7 +81,7 @@ export class ProjectCreateState {
   }
 
   @Selector()
-  static page(state: StateModel): PROJECT_CREATION_PAGES_TYPE | undefined {
+  static page(state: StateModel): ProjectCreationPage | undefined {
     return state.page;
   }
 
@@ -114,9 +118,13 @@ export class ProjectCreateState {
       ctx.patchState({
         page: PAGES.GETTING_STARTED,
       });
-    } else if (current === PAGES.LIB_OR_SCRATCH) {
+    } else if (current === PAGES.CATEGORY) {
       ctx.patchState({
         page: PAGES.BASICS,
+      });
+    } else if (current === PAGES.LIB_OR_SCRATCH) {
+      ctx.patchState({
+        page: PAGES.CATEGORY,
       });
     } else if (current === PAGES.NODE_VIEW) {
       ctx.patchState({
@@ -149,9 +157,17 @@ export class ProjectCreateState {
   @Action(SubmitBasics)
   submitBasics(ctx: StateContext<StateModel>, action: SubmitBasics): void {
     ctx.patchState({
-      page: PAGES.LIB_OR_SCRATCH,
+      page: PAGES.CATEGORY,
       description: action.description,
       title: action.title,
+    });
+  }
+
+  @Action(CategoryChosen)
+  categoryChosen(ctx: StateContext<StateModel>, action: CategoryChosen): void {
+    ctx.patchState({
+      page: PAGES.LIB_OR_SCRATCH,
+      category: action.category,
     });
   }
 
@@ -186,7 +202,7 @@ export class ProjectCreateState {
     const save = state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE;
 
     ctx.patchState({
-      page: save ? PAGES.SAVING : PAGES.DESCIPLINES,
+      page: save ? undefined : PAGES.DESCIPLINES,
       phases: action.phases,
     });
 
@@ -202,7 +218,7 @@ export class ProjectCreateState {
     const save = state.nodeView === PROJECT_NODE_VIEW.PHASE;
 
     ctx.patchState({
-      page: save ? PAGES.SAVING : PAGES.PHASES,
+      page: save ? undefined : PAGES.PHASES,
       disciplines: action.disciplines,
     });
 
@@ -229,6 +245,7 @@ export class ProjectCreateState {
         discipline: disciplines,
         phase: phases,
       },
+      category: state.category!,
       description: state.description,
       mainNodeView: state.nodeView!,
       status: PROJECT_STATI.PLANNING,

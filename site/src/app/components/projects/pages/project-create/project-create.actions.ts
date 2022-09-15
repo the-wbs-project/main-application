@@ -17,6 +17,11 @@ export class SubmitBasics {
   constructor(readonly title: string, readonly description: string) {}
 }
 
+export class CategoryChosen {
+  static readonly type = '[Project Creation] Category Chosen';
+  constructor(readonly category: string) {}
+}
+
 export class LibOrScratchChosen {
   static readonly type = '[Project Creation] Library Or Scratch Chosen';
   constructor(readonly useLibrary: boolean) {}
