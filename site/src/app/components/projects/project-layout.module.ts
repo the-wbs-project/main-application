@@ -2,7 +2,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from '@wbs/shared/module';
-import { WbsNodeDeleteModule } from '../_features';
+import { CategoryListEditorModule, WbsNodeDeleteModule } from '../_features';
 import { ProjectResourceGuard, ProjectVerifyGuard } from './guards';
 import { ProjectLayoutComponent } from './project-layout.component';
 import { ProjectState } from './states';
@@ -46,6 +46,7 @@ export const routes: Routes = [
 
 @NgModule({
   imports: [
+    CategoryListEditorModule,
     NgxsModule.forFeature([ProjectState]),
     RouterModule.forChild(routes),
     SharedModule,

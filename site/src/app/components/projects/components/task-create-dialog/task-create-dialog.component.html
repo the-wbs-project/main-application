@@ -10,7 +10,8 @@
     [ngClass]="'wd-100p'"
     [text]="'Projects.TaskTitle' | translate"
   >
-    <kendo-textbox [(ngModel)]="title"></kendo-textbox>
+    <kendo-textbox #titleTextBox [(ngModel)]="title" (keydown.enter)="save()">
+    </kendo-textbox>
   </kendo-floatinglabel>
   <br />
   <br />
@@ -33,7 +34,7 @@
   <ng-template [ngIf]="more$ | async">
     {{ "Projects.TaskDescription" | translate }}
 
-    <kendo-editor [(value)]="description" style="height: 570px"></kendo-editor>
+    <kendo-editor [(value)]="description" class="ht-250"></kendo-editor>
     <br />
     <br />
     {{ "Projects.TaskDisciplines" | translate }}

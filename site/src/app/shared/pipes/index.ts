@@ -1,3 +1,4 @@
+export * from './category-icon.pipe';
 export * from './category-id-converter.pipe';
 export * from './category-label.pipe';
 export * from './date-text.pipe';
@@ -8,3 +9,4 @@ export * from './project-list-filter.pipe';
 export * from './project-status.pipe';
 export * from './project-status-count.pipe';
 export * from './roles-list.pipe';
+export * from './safe-html.pipe';

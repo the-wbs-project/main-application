@@ -6,6 +6,11 @@ import { FloatingLabelModule } from '@progress/kendo-angular-label';
 import { CategoryListEditorModule } from '@wbs/components/_features';
 import { SharedModule } from '@wbs/shared/module';
 import { ActionMenuComponent } from './action-menu.component';
+import { CategoryListComponent } from './category-list/category-list.component';
+import {
+  ProjectCategoryFilterPipe,
+  ProjectCategorySortPipe,
+} from './category-list/pipes';
 import { TaskCreateDialogComponent } from './task-create-dialog/task-create-dialog.component';
 import { TitleEditorComponent } from './title-editor/title-editor.component';
 import { TitleIconComponent } from './title-icon.component';
@@ -22,12 +27,16 @@ import { TitleIconComponent } from './title-icon.component';
   ],
   declarations: [
     ActionMenuComponent,
+    CategoryListComponent,
+    ProjectCategoryFilterPipe,
+    ProjectCategorySortPipe,
     TaskCreateDialogComponent,
     TitleEditorComponent,
     TitleIconComponent,
   ],
   exports: [
     ActionMenuComponent,
+    CategoryListComponent,
     TaskCreateDialogComponent,
     TitleEditorComponent,
     TitleIconComponent,

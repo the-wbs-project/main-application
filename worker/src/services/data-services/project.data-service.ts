@@ -11,21 +11,14 @@ export class ProjectDataService {
     this.db = dbFactory.createDbService(mainRequest, this.organization, 'Projects', 'id');
   }
 
-  async getAllAsync(): Promise<Project[]> {
-    const list = await this.db.getAllAsync<Project>(true);
-
-    this.fixTs(list);
-
-    return list;
+  getAllAsync(): Promise<Project[]> {
+    return this.db.getAllAsync<Project>(true);
   }
 
-  async getAllWatchedAsync(userId: string): Promise<Project[]> {
-    const list = await this.db.getListByQueryAsync<Project>(`SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`, true, [
+  getAllWatchedAsync(userId: string): Promise<Project[]> {
+    return this.db.getListByQueryAsync<Project>(`SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`, true, [
       { name: '@userId', value: userId },
     ]);
-    this.fixTs(list);
-
-    return list;
   }
 
   async getAsync(projectId: string): Promise<Project | undefined> {
@@ -39,7 +32,6 @@ export class ProjectDataService {
     const data = await this.getFromDbAsync(projectId);
 
     if (data) {
-      this.fixTs(data);
       this.edge.putLater(kvName, JSON.stringify(data));
     }
 
@@ -62,13 +54,5 @@ export class ProjectDataService {
 
   private getFromDbAsync(projectId: string, clean = true): Promise<Project | undefined> {
     return this.db.getDocumentAsync<Project>(projectId, projectId, clean);
-  }
-
-  private fixTs(objOrArray: Project | Project[]): void {
-    if (Array.isArray(objOrArray)) {
-      for (const obj of objOrArray) this.fixTs(obj);
-    } else if (objOrArray) {
-      objOrArray._ts *= 1000;
-    }
   }
 }

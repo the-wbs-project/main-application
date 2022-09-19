@@ -8,11 +8,17 @@
     <div class="col-lg-12 col-md-12">
       <div class="card custom-card">
         <div class="card-body d-md-flex">
-          <div class="pos-relative w-fitcont">
-            <span class="profile-image">
-              <app-project-title-icon [icon]="faProject">
-              </app-project-title-icon>
-            </span>
+          <div class="wd-100 tx-center pd-t-15 edit-pencil-parent">
+            <img
+              *ngIf="project.category | categoryIcon; let url"
+              [src]="url"
+              class="wd-70 h-auto"
+            />
+            <wbs-edit-pencil
+              class="pos-relative t--30"
+              placeholder="Projects.EditTaskTitle"
+            >
+            </wbs-edit-pencil>
           </div>
           <div class="display-flex flex-row my-md-auto mt-4 w-100">
             <div style="flex-grow: 1">
@@ -29,15 +35,20 @@
                 </label>
               </p>
               <p class="text-muted ms-md-4 ms-0 mb-2">
-                <span class="font-weight-semibold me-2">
+                <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
                   {{ "General.Category" | translate }} :
                 </span>
-                <span>
+                <span class="edit-pencil-parent">
                   {{ project.category | categoryLabel }}
+                  <wbs-edit-pencil
+                    class="pos-relative t--5"
+                    placeholder="Projects.EditTaskTitle"
+                  >
+                  </wbs-edit-pencil>
                 </span>
               </p>
               <p class="text-muted ms-md-4 ms-0 mb-2">
-                <span class="font-weight-semibold me-2">
+                <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
                   {{ "General.Status" | translate }} :
                 </span>
                 <span>
@@ -97,12 +108,12 @@
                   [view]="viewNode$ | async"
                   [nodes]="phases$ | async"
                   [project]="project"
-                  [menuItems]="phaseMenuItems$ | async"
+                  [menuItems]="phases$ | async | taskMenu: taskId"
                   [isDraggable]="true"
                   [detailsUrlPrefix]="['../../', 'task']"
                   (actionClicked)="action($event)"
                   (reordered)="reordered($event)"
-                  (selectedChanged)="taskSelected($event)"
+                  (selectedChanged)="taskId = $event.id"
                 >
                 </wbs-tree>
               </div>
@@ -114,7 +125,6 @@
                   [isDraggable]="false"
                   [detailsUrlPrefix]="['../../', 'task']"
                   (reordered)="reordered($event)"
-                  (selectedChanged)="taskSelected($event)"
                 >
                 </wbs-tree>
               </div>

@@ -39,14 +39,11 @@ export class RequestInterceptor implements HttpInterceptor {
     }
     const org = this.store.selectSnapshot(AuthState.organization);
 
-    console.log('org:' + org);
-
     if (org) {
       request = request.clone({
         setHeaders: { 'wbs-org-id': org },
       });
     }
-    console.log(request.headers.get('wbs-org-id'));
     //@ts-ignore
     return next
       .handle(request)

@@ -12,7 +12,7 @@
       <span class="tx-12 tx-bold display-b">
         {{ "General.Description" | translate }}
       </span>
-      {{ node.description }}
+      <span [innerHtml]="node.description | safeHtml"></span>
     </p>
   </div>
 </ng-template>

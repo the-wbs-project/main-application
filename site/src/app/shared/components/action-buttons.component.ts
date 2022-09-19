@@ -3,12 +3,13 @@ import { ActionMenuItem } from '../models';
 
 @Component({
   selector: 'wbs-action-buttons',
-  template: `<div class="btn-group">
+  template: `<div class="btn-group" kendoTooltip filter="button[title]">
     <button
       type="button"
       *ngFor="let item of items"
       class="btn btn-white btn-outline-primary"
       (click)="actionClicked.emit(item.action)"
+      [title]="item.tooltip ?? '' | translate"
     >
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
       <span *ngIf="showTitle && item.title">

@@ -1,42 +1,11 @@
-<div
-  class="display-flex flex-flow-col flex-align-stretch"
-  appFillElement
-  [paddingBottom]="20"
->
-  {{ selected }}
-  <div class="w-100 text-center" style="flex: 0 1 80px">
-    <kendo-textbox #search [placeholder]="'General.Search' | translate">
-    </kendo-textbox>
-  </div>
-  <div class="scroll mg-t-10 w-100" style="flex: 1 1 auto">
-    <div class="container-fluid">
-      <div class="row">
-        <div
-          class="col-md-4"
-          *ngFor="
-            let cat of categories
-              | projectCategoryFilter: search.value
-              | projectCategorySort
-          "
-        >
-          <div
-            class="card tx-center border-1 bd-primary"
-            [ngClass]="{ 'border-danger': cat.id === selected }"
-          >
-            <div class="card-body">
-              <img class="wd-40 hd-40" [src]="cat.icon" alt="Card image cap" />
-              <h5 class="mg-t-10">{{ cat.label }}</h5>
-              <p class="card-text ht-60">
-                {{ cat.description }}
-              </p>
-              <button class="btn btn-primary w-100" (click)="nav(cat.id)">
-                {{ "General.Select" | translate }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+<div class="display-flex flex-flow-col flex-align-stretch">
+  <div class="mg-t-10 w-100" style="flex: 1 1 auto">
+    <app-project-category-list
+      [paddingBottom]="40"
+      [categories]="categories"
+      [selected]="selected"
+      (categoryChosen)="nav($event)"
+    ></app-project-category-list>
   </div>
   <div class="mg-t-10 w-100" style="flex: 0 1 30px">
     <app-project-create-footer view="b-c"></app-project-create-footer>

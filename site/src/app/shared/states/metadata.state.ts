@@ -9,6 +9,7 @@ import { forkJoin, map, Observable } from 'rxjs';
 const projectCatKey = 'project_category';
 
 interface StateModel {
+  categoryIcons: Map<string, string>;
   categoryList: Map<string, ListItem[]>;
   categoryMap: Map<string, Map<string, ListItem>>;
   categoryNames: Map<string, string>;
@@ -19,6 +20,7 @@ interface StateModel {
 @State<StateModel>({
   name: 'metadata',
   defaults: {
+    categoryIcons: new Map<string, string>(),
     categoryList: new Map<string, ListItem[]>(),
     categoryMap: new Map<string, Map<string, ListItem>>(),
     categoryNames: new Map<string, string>(),
@@ -30,6 +32,11 @@ export class MetadataState {
     private readonly data: DataServiceFactory,
     private readonly resources: Resources
   ) {}
+
+  @Selector()
+  static categoryIcons(state: StateModel): Map<string, string> {
+    return state.categoryIcons;
+  }
 
   @Selector()
   static categoryList(state: StateModel): Map<string, ListItem[]> {
@@ -97,6 +104,8 @@ export class MetadataState {
 
         for (const cat of [...projectCats, ...discipline, ...phase]) {
           state.categoryNames.set(cat.id, cat.label);
+
+          if (cat.icon) state.categoryIcons.set(cat.id, cat.icon);
         }
         ctx.patchState({
           categoryList,

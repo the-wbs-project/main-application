@@ -1,14 +1,18 @@
 <ng-template [ngIf]="title">
-  <h5
+  <h4
     *ngIf="!(edit$ | async)"
     kendoTooltip
     filter="a"
-    class="task-title edit-pencil-parent font-weight-semibold ms-md-4 ms-0 mb-1 pb-0"
+    class="task-title edit-pencil-parent ms-md-4 ms-0 mb-1 pb-0"
   >
     {{ title }}
-    <wbs-edit-pencil placeholder="Projects.EditTaskTitle" (click)="edit()">
+    <wbs-edit-pencil
+      class="pos-relative t--15"
+      placeholder="Projects.EditTaskTitle"
+      (click)="edit()"
+    >
     </wbs-edit-pencil>
-  </h5>
+  </h4>
   <div
     *ngIf="edit$ | async"
     class="ms-md-4 ms-0 mb-1 pb-0"

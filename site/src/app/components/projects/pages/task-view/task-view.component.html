@@ -1,9 +1,10 @@
 <ng-template [ngIf]="current$ | async" let-current>
   <app-page-header
+    *ngIf="project$ | async; let project"
     title="TASK DETAILS"
     [items]="[
-      { route: [''], label: 'General.Projects' },
-      { route: '', label: (project$ | async)?.title ?? '' }
+      { route: ['/projects', 'list', 'my'], label: 'General.Projects' },
+      { route: ['/projects', project.id, 'view'], label: project.title }
     ]"
     [active_item]="current.title!"
   ></app-page-header>

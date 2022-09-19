@@ -23,4 +23,5 @@ export interface ActionMenuItem {
   tooltip?: string;
   action: string;
   icon?: IconDefinition;
+  disabled?: boolean;
 }

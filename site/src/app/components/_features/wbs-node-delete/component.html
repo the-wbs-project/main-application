@@ -22,7 +22,7 @@
     </button>
     <button
       class="btn btn-primary"
-      [disabled]="!dReason || (dReason?.id === dOtherId && !dOther)"
+      [disabled]="!dReason || (dReason.id === dOtherId && !dOther)"
       (click)="finishDelete()"
     >
       {{ "General.Confirm" | translate }}

@@ -37,6 +37,7 @@ import {
   TabToTopComponent,
 } from './layout';
 import {
+  CategoryIconPipe,
   CategoryIdConverterPipe,
   CategoryLabelPipe,
   DateTextPipe,
@@ -47,6 +48,7 @@ import {
   ProjectStatusCountPipe,
   ProjectStatusPipe,
   RolesListPipe,
+  SafeHtmlPipe,
 } from './pipes';
 import { ServiceModule } from './services';
 
@@ -75,6 +77,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   declarations: [
     ActionButtonsComponent,
+    CategoryIconPipe,
     CategoryIdConverterPipe,
     CategoryLabelPipe,
     ContentLayoutComponent,
@@ -97,6 +100,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProjectStatusCountPipe,
     ProjectStatusPipe,
     RolesListPipe,
+    SafeHtmlPipe,
     SidebarComponent,
     SidemenuToggleDirective,
     TabToTopComponent,
@@ -104,6 +108,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
   ],
   exports: [
     ActionButtonsComponent,
+    CategoryIconPipe,
     CategoryIdConverterPipe,
     CategoryLabelPipe,
     CommonModule,
@@ -123,6 +128,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ProjectStatusCountPipe,
     ProjectStatusPipe,
     RolesListPipe,
+    SafeHtmlPipe,
     ServiceModule,
     TranslateModule,
   ],

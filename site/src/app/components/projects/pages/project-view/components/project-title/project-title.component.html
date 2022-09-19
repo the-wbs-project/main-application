@@ -3,10 +3,14 @@
     *ngIf="!(edit$ | async)"
     kendoTooltip
     filter="a"
-    class="project-title edit-pencil-parent font-weight-semibold ms-md-4 ms-0 mb-1 pb-0"
+    class="edit-pencil-parent ms-md-4 ms-0 mb-1 pb-0"
   >
     {{ title }}
-    <wbs-edit-pencil placeholder="Projects.EditProjectTitle" (click)="edit()">
+    <wbs-edit-pencil
+      class="pos-relative t--15"
+      placeholder="Projects.EditProjectTitle"
+      (click)="edit()"
+    >
     </wbs-edit-pencil>
   </h4>
   <div

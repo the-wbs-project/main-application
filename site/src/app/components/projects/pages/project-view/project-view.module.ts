@@ -11,9 +11,6 @@ import { SharedModule } from '@wbs/shared/module';
 import {
   CategoryListEditorModule,
   LabelDialogModule,
-  WbsNodeCreateModule,
-  WbsNodeEditorModule,
-  WbsNodeGeneralModule,
   WbsTreeModule,
 } from '../../../_features';
 import { ProjectComponentModule } from '../../components';
@@ -30,6 +27,7 @@ import { ProjectRedirectGuard, ProjectViewGuard } from './guards';
 import {
   RoleIconPipe,
   RoleTitlePipe,
+  TaskMenuPipe,
   UserEmailPipe,
   UserNamePipe,
 } from './pipes';
@@ -68,9 +66,6 @@ const routes: Routes = [
     SharedModule,
     TextBoxModule,
     TooltipModule,
-    WbsNodeCreateModule,
-    WbsNodeGeneralModule,
-    WbsNodeEditorModule,
     WbsTreeModule,
   ],
   providers: [
@@ -90,6 +85,7 @@ const routes: Routes = [
     ProjectView2Component,
     RoleIconPipe,
     RoleTitlePipe,
+    TaskMenuPipe,
     UserEmailPipe,
     UserNamePipe,
   ],

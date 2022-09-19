@@ -21,8 +21,33 @@ export class RemoveTask {
   constructor(readonly nodeId: string, readonly completedAction?: any) {}
 }
 
+export class CloneTask {
+  static readonly type = '[Project] Clone Task';
+  constructor(readonly nodeId: string) {}
+}
+
 export class RebuildNodeViews {
   static readonly type = '[Project] Rebuild Node Views';
+}
+
+export class MoveTaskUp {
+  static readonly type = '[Project] Move Task Up';
+  constructor(readonly taskId: string) {}
+}
+
+export class MoveTaskDown {
+  static readonly type = '[Project] Move Task Down';
+  constructor(readonly taskId: string) {}
+}
+
+export class MoveTaskLeft {
+  static readonly type = '[Project] Move Task Left';
+  constructor(readonly taskId: string) {}
+}
+
+export class MoveTaskRight {
+  static readonly type = '[Project] Move Task Right';
+  constructor(readonly taskId: string) {}
 }
 
 export class TreeReordered {
