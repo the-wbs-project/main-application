@@ -9,6 +9,7 @@ import { WbsNodeView } from '@wbs/shared/view-models';
 import { Observable } from 'rxjs';
 import { UserRole } from '../../models';
 import {
+  ChangeProjectTitle,
   CloneTask,
   CreateTask,
   MoveTaskDown,
@@ -96,6 +97,10 @@ export class ProjectView2Component implements OnInit {
         this.store.dispatch(new MoveTaskDown(this.taskId));
       }
     }
+  }
+
+  saveTitle(newTitle: string): void {
+    this.store.dispatch(new ChangeProjectTitle(newTitle));
   }
 
   reordered([draggedId, rows]: [string, WbsNodeView[]]): void {

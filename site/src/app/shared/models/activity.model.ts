@@ -2,8 +2,7 @@ export interface ActivityData {
   objectId?: string;
   versionId?: string;
   action: string;
-  labelTitle: string;
-  data: (string | number | null | undefined)[];
+  data: Record<string, any>;
 }
 
 export interface Activity extends ActivityData {

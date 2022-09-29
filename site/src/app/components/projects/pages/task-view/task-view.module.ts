@@ -8,7 +8,7 @@ import { ProjectResourceGuard } from '@wbs/components/projects/guards';
 import { WbsTreeModule } from '@wbs/components/_features';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
-import { TaskSubTasksComponent, TaskTitleComponent } from './components';
+import { TaskSubTasksComponent } from './components';
 import { TaskAboutComponent } from './components/task-about/task-about.component';
 import { TaskRedirectGuard, TaskVerifyGuard, TaskViewGuard } from './guards';
 import { TaskViewComponent } from './task-view.component';
@@ -39,11 +39,6 @@ const routes: Routes = [
     WbsTreeModule,
   ],
   providers: [TaskRedirectGuard, TaskVerifyGuard, TaskViewGuard],
-  declarations: [
-    TaskAboutComponent,
-    TaskSubTasksComponent,
-    TaskTitleComponent,
-    TaskViewComponent,
-  ],
+  declarations: [TaskAboutComponent, TaskSubTasksComponent, TaskViewComponent],
 })
 export class TaskViewModule {}

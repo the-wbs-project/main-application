@@ -65,6 +65,7 @@ export class RouterService {
     this.router.put('/api/projects/byId/:projectId/nodes/batch', apiAuth, Http.projectNodes.batchAsync);
     this.router.put('/api/projects/byId/:projectId/nodes/:nodeId', apiAuth, Http.projectNodes.putAsync);
     this.router.get('/api/users', apiAuth, Http.users.getAllAsync);
+    this.router.get('/api/users/lite', apiAuth, Http.users.getAllLiteAsync);
     this.router.post('/api/user', apiAuth, isAdmin, Http.users.updateUserAsync);
     this.router.get('/api/invites', apiAuth, Http.invites.getAllAsync);
     this.router.put('/api/invites/:send', apiAuth, Http.invites.putAsync);

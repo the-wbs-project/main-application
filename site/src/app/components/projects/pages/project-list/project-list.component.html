@@ -30,7 +30,10 @@
           <div class="card-body tx-center pd-y-20">No Projects Found</div>
         </div>
       </div>
-      <div *ngFor="let project of projects" class="col-lg-3 col-md-4 col-sm-6">
+      <div
+        *ngFor="let project of projects | projectSort: 'name'"
+        class="col-lg-3 col-md-4 col-sm-6"
+      >
         <a [routerLink]="['/projects', project.id, 'view']">
           <div class="card">
             <div class="card-body">
@@ -41,7 +44,7 @@
                 </div>
               </div>
               <div class="tx-right tx-10 tx-gray-600">
-                {{ project._ts | dateText }}
+                {{ project._ts | editedDateText }}
               </div>
             </div>
           </div>

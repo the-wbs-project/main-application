@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
-import { ListItem, PROJECT_NODE_VIEW } from '@wbs/shared/models';
+import { ListItem, LISTS } from '@wbs/shared/models';
 import { Resources } from '@wbs/shared/services';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { SetupCategories } from '@wbs/shared/actions';
 import { DataServiceFactory } from '@wbs/shared/services';
 import { forkJoin, map, Observable } from 'rxjs';
-
-const projectCatKey = 'project_category';
 
 interface StateModel {
   categoryIcons: Map<string, string>;
@@ -55,34 +53,30 @@ export class MetadataState {
 
   @Selector()
   static disciplineCategories(state: StateModel): ListItem[] {
-    return state.categoryList.get(PROJECT_NODE_VIEW.DISCIPLINE)!;
+    return state.categoryList.get(LISTS.DISCIPLINE)!;
   }
 
   @Selector()
   static phaseCategories(state: StateModel): ListItem[] {
-    return state.categoryList.get(PROJECT_NODE_VIEW.PHASE)!;
+    return state.categoryList.get(LISTS.PHASE)!;
   }
 
   @Selector()
   static projectCategories(state: StateModel): ListItem[] {
-    return state.categoryList.get(projectCatKey)!;
+    return state.categoryList.get(LISTS.PROJECT_CATEGORIES)!;
   }
 
   @Action(SetupCategories)
   setupCategories(ctx: StateContext<StateModel>): Observable<void> {
     return forkJoin([
-      this.data.metdata.getListAsync(projectCatKey),
-      this.data.metdata.getListAsync(
-        'categories_' + PROJECT_NODE_VIEW.DISCIPLINE
-      ),
-      this.data.metdata.getListAsync('categories_' + PROJECT_NODE_VIEW.PHASE),
+      this.data.metdata.getListAsync<ListItem>(LISTS.PROJECT_CATEGORIES),
+      this.data.metdata.getListAsync<ListItem>(LISTS.DISCIPLINE),
+      this.data.metdata.getListAsync<ListItem>(LISTS.PHASE),
     ]).pipe(
       map(([projectCats, discipline, phase]) => {
         const state = ctx.getState();
         const categoryList = state.categoryList;
         const categoryMap = state.categoryMap;
-
-        console.log('working on labels');
 
         for (const cat of [...projectCats, ...discipline, ...phase]) {
           cat.label = this.resources.get(cat.label);
@@ -91,16 +85,13 @@ export class MetadataState {
             cat.description = this.resources.get(cat.description);
         }
 
-        categoryList.set(PROJECT_NODE_VIEW.DISCIPLINE, discipline);
-        categoryList.set(PROJECT_NODE_VIEW.PHASE, phase);
-        categoryList.set(projectCatKey, projectCats);
+        categoryList.set(LISTS.DISCIPLINE, discipline);
+        categoryList.set(LISTS.PHASE, phase);
+        categoryList.set(LISTS.PROJECT_CATEGORIES, projectCats);
 
-        categoryMap.set(
-          PROJECT_NODE_VIEW.DISCIPLINE,
-          this.createMap(discipline)
-        );
-        categoryMap.set(PROJECT_NODE_VIEW.PHASE, this.createMap(phase));
-        categoryMap.set(projectCatKey, this.createMap(projectCats));
+        categoryMap.set(LISTS.DISCIPLINE, this.createMap(discipline));
+        categoryMap.set(LISTS.PHASE, this.createMap(phase));
+        categoryMap.set(LISTS.PROJECT_CATEGORIES, this.createMap(projectCats));
 
         for (const cat of [...projectCats, ...discipline, ...phase]) {
           state.categoryNames.set(cat.id, cat.label);

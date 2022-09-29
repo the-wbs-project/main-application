@@ -1,8 +1,4 @@
-import {
-  Activity,
-  ProjectCategory,
-  PROJECT_NODE_VIEW_TYPE,
-} from '@wbs/shared/models';
+import { ProjectCategory, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { ExtractResults } from './models';
 
@@ -14,6 +10,11 @@ export class VerifyProject {
 export class SetProject {
   static readonly type = '[Project] Set';
   constructor(readonly projectId: string) {}
+}
+
+export class NavigateToView {
+  static readonly type = '[Project] Navigate';
+  constructor(readonly view: string) {}
 }
 
 export class RemoveTask {

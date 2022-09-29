@@ -1,31 +1,54 @@
-<kendo-textbox
-  required
-  [(ngModel)]="value"
-  [placeholder]="'Projects.ProjectTitle' | translate"
->
-  <ng-template kendoTextBoxSuffixTemplate>
-    <kendo-textbox-separator></kendo-textbox-separator>
-    <button
-      kendoButton
-      [title]="'General.Clear' | translate"
-      (click)="value = ''"
+<ng-template [ngIf]="title">
+  <h4
+    *ngIf="!(edit$ | async)"
+    kendoTooltip
+    filter="a"
+    class="edit-pencil-parent ms-md-4 ms-0 mb-1 pb-0"
+  >
+    {{ title }}
+    <wbs-edit-pencil
+      class="pos-relative t--15"
+      placeholder="Projects.EditProjectTitle"
+      (click)="edit()"
     >
-      <fa-icon [icon]="faEraser" size="xs"></fa-icon>
-    </button>
-    <button
-      kendoButton
-      [title]="'General.Cancel' | translate"
-      (click)="cancel.emit()"
+    </wbs-edit-pencil>
+  </h4>
+  <div
+    *ngIf="edit$ | async"
+    class="ms-md-4 ms-0 mb-1 pb-0"
+    kendoTooltip
+    filter="button"
+  >
+    <kendo-textbox
+      required
+      [(ngModel)]="editValue"
+      [placeholder]="'Projects.ProjectTitle' | translate"
     >
-      <fa-icon [icon]="faCancel" size="xs"></fa-icon>
-    </button>
-    <button
-      kendoButton
-      [title]="'General.Save' | translate"
-      [disabled]="value === ''"
-      (click)="save.emit(value)"
-    >
-      <fa-icon [icon]="faCheck" size="xs"></fa-icon>
-    </button>
-  </ng-template>
-</kendo-textbox>
+      <ng-template kendoTextBoxSuffixTemplate>
+        <kendo-textbox-separator></kendo-textbox-separator>
+        <button
+          kendoButton
+          [title]="'General.Clear' | translate"
+          (click)="editValue = ''"
+        >
+          <fa-icon [icon]="faEraser" size="xs"></fa-icon>
+        </button>
+        <button
+          kendoButton
+          [title]="'General.Cancel' | translate"
+          (click)="edit$.next(false)"
+        >
+          <fa-icon [icon]="faCancel" size="xs"></fa-icon>
+        </button>
+        <button
+          kendoButton
+          [title]="'General.Save' | translate"
+          [disabled]="editValue === ''"
+          (click)="saveTitle()"
+        >
+          <fa-icon [icon]="faCheck" size="xs"></fa-icon>
+        </button>
+      </ng-template>
+    </kendo-textbox>
+  </div>
+</ng-template>

@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
-import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { User } from '@wbs/shared/models';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { UserLite } from '@wbs/shared/models';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { LoadOrganization } from '../actions/organization.actions';
+import { DataServiceFactory } from '../services';
 
 interface StateModel {
-  users: User[];
+  users: UserLite[];
 }
 
 @Injectable()
@@ -13,44 +17,20 @@ interface StateModel {
     users: [],
   },
 })
-export class OrganizationState implements NgxsOnInit {
+export class OrganizationState {
+  constructor(private readonly data: DataServiceFactory) {}
+
   @Selector()
-  static users(state: StateModel): User[] {
+  static users(state: StateModel): UserLite[] {
     return state.users;
   }
 
-  ngxsOnInit(ctx: StateContext<StateModel>): void {
-    ctx.patchState({
-      users: [
-        {
-          id: 'auth0-cw',
-          email: 'chrisw@thewbsproject.com',
-          name: 'Christopher Walton',
-          appInfo: {
-            organizationRoles: [
-              { organization: 'acme_engineering', roles: ['pm'] },
-            ],
-            inviteCode: '1234',
-          },
-          userInfo: {
-            culture: 'en',
-          },
-        },
-        {
-          id: 'auth0-bh',
-          email: 'billh@thewbsproject.com',
-          name: 'Bill Hinsley',
-          appInfo: {
-            organizationRoles: [
-              { organization: 'acme_engineering', roles: ['sme'] },
-            ],
-            inviteCode: '1234',
-          },
-          userInfo: {
-            culture: 'en',
-          },
-        },
-      ],
-    });
+  @Action(LoadOrganization)
+  loadOrganization(ctx: StateContext<StateModel>): Observable<void> {
+    return this.data.users.getAllLiteAsync().pipe(
+      map((users) => {
+        ctx.patchState({ users });
+      })
+    );
   }
 }

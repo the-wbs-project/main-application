@@ -1,5 +1,5 @@
 import { AuthConfig } from '../../config';
-import { AuthToken, User } from '../../models';
+import { AuthToken, User, UserLite } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 
 export class Auth0Service {
@@ -17,6 +17,15 @@ export class Auth0Service {
       lastLogin: payload.last_login,
       loginsCount: payload.logins_count,
       userInfo: payload.user_metadata || {},
+    };
+    return user;
+  }
+
+  toLiteUser(payload: Record<string, any>): UserLite {
+    const user: UserLite = {
+      email: payload.email,
+      name: payload.name,
+      id: payload.user_id,
     };
     return user;
   }

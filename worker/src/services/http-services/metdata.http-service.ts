@@ -8,9 +8,7 @@ export class MetadataHttpService extends BaseHttpService {
     req.params.category = 'Info';
   }
 
-  static async getResourcesAsync(
-    req: WorkerRequest,
-  ): Promise<Response | number> {
+  static async getResourcesAsync(req: WorkerRequest): Promise<Response | number> {
     try {
       if (!req.config.debug) {
         const match = await req.services.edge.cacheMatch();
@@ -19,26 +17,18 @@ export class MetadataHttpService extends BaseHttpService {
       }
       const culture = req.state?.culture ?? 'en-US';
 
-      console.log(req.params?.category);
       if (!req.params?.category) return 500;
       //
       //  Get the data from the KV
       //
-      const data = await req.services.data.metadata.getResourcesAsync(
-        culture,
-        req.params.category,
-      );
+      const data = await req.services.data.metadata.getResourcesAsync(culture, req.params.category);
       const response = await super.buildJson(data);
 
       if (data && !req.config.debug) req.services.edge.cachePut(response);
 
       return response;
     } catch (e) {
-      req.logException(
-        'An error occured trying to get resources.',
-        'MetadataHttpService.getResourcesAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get resources.', 'MetadataHttpService.getResourcesAsync', <Error>e);
       return 500;
     }
   }
@@ -54,20 +44,14 @@ export class MetadataHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.services.data.metadata.getListAsync(
-        req.params.name,
-      );
+      const data = await req.services.data.metadata.getListAsync(req.params.name);
       const response = await super.buildJson(data);
 
       if (data && !req.config.debug) req.services.edge.cachePut(response);
 
       return response;
     } catch (e) {
-      req.logException(
-        'An error occured trying to get a list.',
-        'MetadataHttpService.getListAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get a list.', 'MetadataHttpService.getListAsync', <Error>e);
       return 500;
     }
   }

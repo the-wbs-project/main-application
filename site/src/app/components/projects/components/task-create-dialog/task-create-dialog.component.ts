@@ -54,7 +54,6 @@ export class TaskCreateDialogComponent
   }
 
   setup(disciplines: ProjectCategory[]): void {
-    console.log(disciplines);
     this.disciplines = this.catService.buildFromList(
       PROJECT_NODE_VIEW.DISCIPLINE,
       disciplines,
@@ -62,7 +61,9 @@ export class TaskCreateDialogComponent
     );
   }
 
-  save(): void {
+  save(nav: boolean): void {
+    if (!this.title) return;
+
     const model: Partial<WbsNode> = {
       title: this.title,
     };
@@ -77,6 +78,6 @@ export class TaskCreateDialogComponent
       }
       if (disciplines.length > 0) model.disciplineIds = disciplines;
     }
-    this.dialog.close(model);
+    this.dialog.close({ model, nav });
   }
 }

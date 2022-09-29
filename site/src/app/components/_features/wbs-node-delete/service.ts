@@ -43,7 +43,7 @@ export class WbsNodeDeleteService {
       return of(this.deleteReasons);
 
     return this.data.metdata
-      .getListAsync('delete_reasons')
+      .getListAsync<ListItem>('delete_reasons')
       .pipe(tap((list) => (this.deleteReasons = list)));
   }
 }

@@ -26,24 +26,23 @@ export class DateTextPipe implements PipeTransform {
     if (minutes === 0) minutes = 1;
 
     if (minutes < 60) {
-      resource =
-        minutes === 1 ? 'General.EditedMinuteAgo' : 'General.EditedMinutesAgo';
-      num = minutes; 
+      resource = minutes === 1 ? 'General.MinuteAgo' : 'General.MinutesAgo';
+      num = minutes;
     }
     //
     //  If today, show hours ago
     //
     else if (isSameDay(now, last)) {
       num = differenceInHours(now, last);
-      resource = num === 1 ? 'General.EditedHourAgo' : 'General.EditedHoursAgo';
+      resource = num === 1 ? 'General.HourAgo' : 'General.HoursAgo';
     } else {
       num = differenceInCalendarDays(now, last);
 
       if (num === 1) {
-        resource = 'General.EditedYesterday';
+        resource = 'General.Yesterday';
         num = 0;
       } else {
-        resource = 'General.EditedDaysAgo';
+        resource = 'General.DaysAgo';
       }
     }
     return resource

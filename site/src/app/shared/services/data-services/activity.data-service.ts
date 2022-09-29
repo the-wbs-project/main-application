@@ -17,13 +17,10 @@ export class ActivityDataService {
   putAsync(
     topLevelId: string,
     data: ActivityData,
-    dataType: 'project' = 'project'
+    dataType: 'project'
   ): Observable<Activity> {
-    console.log(data);
     const userId = this.store.selectSnapshot(AuthState.userId)!;
     const timestamp = this.getUTC();
-    //const label = this.service.getLabel(data);
-
     const activity: Activity = {
       ...data,
       timestamp,

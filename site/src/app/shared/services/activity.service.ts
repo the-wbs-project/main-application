@@ -1,12 +1,15 @@
 import { Injectable } from '@angular/core';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { ActivityData } from '../models';
 import { Resources } from './resource.service';
 
+@UntilDestroy()
 @Injectable({ providedIn: 'root' })
 export class ActivityService {
   constructor(private readonly resources: Resources) {}
 
   getLabel(activity: ActivityData): string {
+    return ''; /*
     let label = this.resources.getExact(activity.labelTitle);
     let i = 0;
 
@@ -16,6 +19,6 @@ export class ActivityService {
       label = label.replace(`{${i}}`, activity.data[i]!.toString());
       i++;
     }
-    return label;
+    return label; */
   }
 }

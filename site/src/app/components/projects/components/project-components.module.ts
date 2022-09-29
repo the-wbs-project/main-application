@@ -13,7 +13,6 @@ import {
 } from './category-list/pipes';
 import { TaskCreateDialogComponent } from './task-create-dialog/task-create-dialog.component';
 import { TitleEditorComponent } from './title-editor/title-editor.component';
-import { TitleIconComponent } from './title-icon.component';
 
 @NgModule({
   imports: [
@@ -32,14 +31,12 @@ import { TitleIconComponent } from './title-icon.component';
     ProjectCategorySortPipe,
     TaskCreateDialogComponent,
     TitleEditorComponent,
-    TitleIconComponent,
   ],
   exports: [
     ActionMenuComponent,
     CategoryListComponent,
     TaskCreateDialogComponent,
     TitleEditorComponent,
-    TitleIconComponent,
   ],
 })
 export class ProjectComponentModule {}

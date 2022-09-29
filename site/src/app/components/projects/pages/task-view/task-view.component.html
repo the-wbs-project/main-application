@@ -11,17 +11,23 @@
   <div class="row">
     <div class="col-lg-12 col-md-12">
       <div class="card custom-card">
-        <div class="card-body d-md-flex">
-          <div class="pos-relative w-fitcont">
-            <span class="profile-image">
-              <app-project-title-icon [icon]="faSubTask">
-              </app-project-title-icon>
-            </span>
+        <div class="card-body d-flex">
+          <div class="wd-100 tx-center pd-t-15 edit-pencil-parent">
+            <fa-stack size="3x">
+              <fa-icon [icon]="faSquare" stackItemSize="2x"></fa-icon>
+              <fa-icon
+                [icon]="faSubTask"
+                [inverse]="true"
+                stackItemSize="1x"
+              ></fa-icon>
+            </fa-stack>
           </div>
-          <div class="display-flex flex-row my-md-auto mt-4 w-100">
+          <div class="d-flex flex-row w-100">
             <div style="flex-grow: 1">
-              <wbs-task-title [taskId]="current.id" [title]="current.title">
-              </wbs-task-title>
+              <wbs-title-editor
+                [title]="current.title"
+                (titleChange)="saveTitle($event)"
+              ></wbs-title-editor>
               <p class="tx-13 text-muted ms-md-4 ms-0 mb-2 pb-2">
                 <label class="me-3" *ngFor="let disc of current.disciplineIds">
                   <fa-icon [icon]="disc | disciplineIcon"></fa-icon>
@@ -29,10 +35,10 @@
                 </label>
               </p>
             </div>
-            <div>
-              <app-project-action-menu [menu]="actions">
-              </app-project-action-menu>
-            </div>
+            <app-project-action-menu
+              [menu]="actions"
+              (itemClicked)="actionClicked($event)"
+            ></app-project-action-menu>
           </div>
         </div>
         <div class="card-footer py-0">

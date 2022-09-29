@@ -10,7 +10,11 @@
     [ngClass]="'wd-100p'"
     [text]="'Projects.TaskTitle' | translate"
   >
-    <kendo-textbox #titleTextBox [(ngModel)]="title" (keydown.enter)="save()">
+    <kendo-textbox
+      #titleTextBox
+      [(ngModel)]="title"
+      (keydown.enter)="save(false)"
+    >
     </kendo-textbox>
   </kendo-floatinglabel>
   <br />
@@ -45,7 +49,18 @@
     ></app-category-list-editor>
   </ng-template>
   <kendo-dialog-actions layout="stretched">
-    <button class="btn btn-primary" [disabled]="title === ''" (click)="save()">
+    <button
+      class="btn btn-secondary"
+      [disabled]="title === ''"
+      (click)="save(true)"
+    >
+      {{ "General.SaveAndView" | translate }}
+    </button>
+    <button
+      class="btn btn-primary"
+      [disabled]="title === ''"
+      (click)="save(false)"
+    >
       {{ "General.Save" | translate }}
     </button>
   </kendo-dialog-actions>

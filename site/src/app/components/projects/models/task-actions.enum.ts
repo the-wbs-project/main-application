@@ -1,6 +1,7 @@
 export enum TASK_ACTIONS {
+  CREATED = 'task-created',
   TITLE_CHANGED = 'task-title-changed',
   CLONED = 'task-cloned',
-  SUB_TASK_CREATED = 'sub-task-created',
   REORDERED = 'task-reordered',
+  REMOVED = 'task-removed',
 }

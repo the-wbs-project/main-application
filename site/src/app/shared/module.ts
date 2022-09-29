@@ -42,6 +42,7 @@ import {
   CategoryLabelPipe,
   DateTextPipe,
   DisciplineIconPipe,
+  EditedDateTextPipe,
   LengthPipe,
   ProjectListFilterLengthPipe,
   ProjectListFilterPipe,
@@ -49,6 +50,7 @@ import {
   ProjectStatusPipe,
   RolesListPipe,
   SafeHtmlPipe,
+  UserNamePipe,
 } from './pipes';
 import { ServiceModule } from './services';
 
@@ -83,6 +85,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ContentLayoutComponent,
     DateTextPipe,
     DisciplineIconPipe,
+    EditedDateTextPipe,
     EditPencilComponent,
     FillElementDirective,
     FooterComponent,
@@ -105,6 +108,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SidemenuToggleDirective,
     TabToTopComponent,
     ToggleThemeDirective,
+    UserNamePipe,
   ],
   exports: [
     ActionButtonsComponent,
@@ -116,6 +120,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     DialogModule,
     DisciplineIconPipe,
     DropDownButtonModule,
+    EditedDateTextPipe,
     EditPencilComponent,
     FillElementDirective,
     FontAwesomeModule,
@@ -131,6 +136,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SafeHtmlPipe,
     ServiceModule,
     TranslateModule,
+    UserNamePipe,
   ],
 })
 export class SharedModule {}

@@ -195,11 +195,19 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   protected setDraggableRows(): void {
     if (!this.dataReady) return;
 
-    const tableRows: HTMLTableRowElement[] = Array.from(
-      document.querySelectorAll(
-        `.${this.id} .k-grid-content .k-grid-table-wrap tbody tr`
-      )
-    );
+    let tableRows: HTMLTableRowElement[] = [];
+
+    try {
+      tableRows = Array.from(
+        document.querySelectorAll(
+          `.${this.id} .k-grid-content .k-grid-table-wrap tbody tr`
+        )
+      );
+    } catch {
+      setTimeout(() => {
+        this.setDraggableRows();
+      }, 100);
+    }
 
     if (tableRows.length === 0) {
       setTimeout(() => {
