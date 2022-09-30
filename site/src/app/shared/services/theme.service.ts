@@ -143,8 +143,6 @@ export class ThemeService implements OnDestroy {
    * @param darkMode True for dark mode. False for light mode.
    */
   private setMode(darkMode: boolean): void {
-    console.log('mode: ' + darkMode);
-
     if (darkMode) {
       this.renderer.removeClass(this.document.body, 'dark-theme');
       this.renderer.removeClass(
@@ -164,7 +162,6 @@ export class ThemeService implements OnDestroy {
 
   /** Apply the theme mode stored in the settings. */
   apply(): void {
-    console.log(this.settings.darkMode);
     this.setMode(this.settings.darkMode);
   }
 

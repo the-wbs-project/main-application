@@ -3,9 +3,13 @@
   <div class="m-t-30">
     <div class="p-t-10">
       <h5 class="text-primary m-b-5 tx-14">Description</h5>
-      <p class="text-muted tx-13 m-b-0">
-        <!--{{ current?.description ?? ("Projects.NoDescriptionFound" | translate) }}-->
-        {{ current?.description ?? "No Description Found" }}
+      <p
+        *ngIf="current?.description; let description"
+        [innerHtml]="description | safeHtml"
+        class="text-muted tx-13 m-b-0"
+      ></p>
+      <p *ngIf="!current?.description" class="text-muted tx-13 m-b-0">
+        {{ "No Description Found" }}
       </p>
     </div>
     <div class="p-t-10">

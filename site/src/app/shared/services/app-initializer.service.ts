@@ -1,12 +1,14 @@
 import { Store } from '@ngxs/store';
 import {
+  LoadOrganization,
   LoadProfile,
   LoadProjects,
+  LoadTimelineDefinitions,
   SetupCategories,
   TurnOffIsLoading,
 } from '@wbs/shared/actions';
 import { Resources } from '@wbs/shared/services';
-import { forkJoin, of, switchMap } from 'rxjs';
+import { forkJoin, switchMap } from 'rxjs';
 import { ThemeService } from './theme.service';
 
 export class AppInitializerFactory {
@@ -24,9 +26,15 @@ export class AppInitializerFactory {
 
       return resources.initiate('General').pipe(
         switchMap(() =>
-          store.dispatch([new SetupCategories(), new LoadProfile()])
+          store.dispatch([
+            new SetupCategories(),
+            new LoadTimelineDefinitions(),
+            new LoadProfile(),
+          ])
         ),
-        switchMap(() => store.dispatch([new LoadProjects()])),
+        switchMap(() =>
+          store.dispatch([new LoadProjects(), new LoadOrganization()])
+        ),
         switchMap(() => store.dispatch(new TurnOffIsLoading()))
       );
     };

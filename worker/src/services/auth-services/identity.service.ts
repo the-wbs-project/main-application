@@ -1,4 +1,4 @@
-import { User } from '../../models';
+import { User, UserLite } from '../../models';
 import { Auth0Service } from '../auth-services';
 import { WorkerRequest } from '../worker-request.service';
 
@@ -6,15 +6,10 @@ export class IdentityService {
   constructor(private readonly auth0: Auth0Service) {}
 
   async updateProfileAsync(req: WorkerRequest, user: User): Promise<void> {
-    const response = await this.auth0.makeAuth0CallAsync(
-      req,
-      `users/${user.id}`,
-      'PATCH',
-      {
-        name: user.name,
-        user_metadata: user.userInfo,
-      },
-    );
+    const response = await this.auth0.makeAuth0CallAsync(req, `users/${user.id}`, 'PATCH', {
+      name: user.name,
+      user_metadata: user.userInfo,
+    });
     if (response.status !== 200) {
       const message = await response.text();
 
@@ -23,15 +18,10 @@ export class IdentityService {
   }
 
   async updateUserAsync(req: WorkerRequest, user: User): Promise<void> {
-    const response = await this.auth0.makeAuth0CallAsync(
-      req,
-      `users/${user.id}`,
-      'PATCH',
-      {
-        blocked: user.blocked,
-        app_metadata: user.appInfo,
-      },
-    );
+    const response = await this.auth0.makeAuth0CallAsync(req, `users/${user.id}`, 'PATCH', {
+      blocked: user.blocked,
+      app_metadata: user.appInfo,
+    });
     if (response.status !== 200) {
       const message = await response.text();
 
@@ -61,39 +51,51 @@ export class IdentityService {
     return list;
   }
 
-  private async getUserPageAsync(
-    req: WorkerRequest,
-    pageNumber: number,
-    pageSize: number,
-  ): Promise<User[]> {
-    const conn = this.getConnection(req);
-    const url = `users?page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3`;
+  async getLiteUsersAsync(req: WorkerRequest): Promise<UserLite[]> {
+    const count = await this.getUserCountAsync(req);
+    const list: UserLite[] = [];
+    let page = 0;
+    const size = 50;
+
+    while (list.length < count) {
+      list.push(...(await this.getLiteUserPageAsync(req, page, size)));
+      page++;
+    }
+    return list;
+  }
+
+  private async getUserPageAsync(req: WorkerRequest, pageNumber: number, pageSize: number): Promise<User[]> {
+    const url = `users?q=_exists_:app_metadata.organizations.${req.organization?.organization}&page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${req.config.auth.connection}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
     const results: User[] = [];
 
     if (response.status !== 200) throw new Error(await response.text());
 
-    for (const user of await response.json()) {
+    for (const user of await response.json<any>()) {
       results.push(this.auth0.toUser(user));
     }
     return results;
   }
 
+  private async getLiteUserPageAsync(req: WorkerRequest, pageNumber: number, pageSize: number): Promise<UserLite[]> {
+    const url = `users?fields=email,name,user_id&q=_exists_:app_metadata.organizations.${req.organization?.organization}&page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${req.config.auth.connection}&search_engine=v3`;
+    const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
+    const results: UserLite[] = [];
+
+    if (response.status !== 200) throw new Error(await response.text());
+
+    for (const user of await response.json<any>()) {
+      results.push(this.auth0.toLiteUser(user));
+    }
+    return results;
+  }
+
   private async getUserCountAsync(req: WorkerRequest): Promise<number> {
-    const conn = this.getConnection(req);
-    const url = `users?include_totals=true&connection=${conn}&search_engine=v3`;
+    const url = `users?q=_exists_:app_metadata.organizations.${req.organization?.organization}&include_totals=true&connection=${req.config.auth.connection}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
 
     if (response.status !== 200) throw new Error(await response.text());
 
-    return (await response.json()).total;
-  }
-
-  private getConnection(req: WorkerRequest): string {
-    let org = req.organization ?? '';
-
-    while (org.indexOf('_') > -1) org = org.replace('_', '-');
-
-    return org;
+    return (await response.json<any>()).total;
   }
 }

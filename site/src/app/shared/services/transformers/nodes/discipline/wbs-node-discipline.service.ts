@@ -76,6 +76,10 @@ export class WbsDisciplineNodeTransformer {
         treeParentId: null,
         phaseId: undefined,
         title: this.resources.get(d.label),
+        canMoveDown: false,
+        canMoveUp: false,
+        canMoveLeft: false,
+        canMoveRight: false,
       };
       nodes.push(dView);
 
@@ -85,7 +89,7 @@ export class WbsDisciplineNodeTransformer {
         const pNode = projectNodes.find((x) => x.id === p.id);
         const pLevel = [i + 1, phaseCounter];
 
-        if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
+        //if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
 
         const pView: WbsNodeView = {
           children: 0,
@@ -100,6 +104,10 @@ export class WbsDisciplineNodeTransformer {
           treeParentId: d.id,
           phaseId: p.id,
           title: this.resources.get(p.label),
+          canMoveDown: false,
+          canMoveUp: false,
+          canMoveLeft: false,
+          canMoveRight: false,
         };
 
         const children = this.getPhaseChildren(
@@ -109,6 +117,8 @@ export class WbsDisciplineNodeTransformer {
           pLevel,
           projectNodes
         );
+        if (children.length === 0) continue;
+
         pView.children = this.getChildCount(children);
 
         nodes.push(pView, ...children);
@@ -146,6 +156,10 @@ export class WbsDisciplineNodeTransformer {
         treeParentId: null,
         phaseId: undefined,
         title: this.resources.get(cat.label),
+        canMoveDown: false,
+        canMoveUp: false,
+        canMoveLeft: false,
+        canMoveRight: false,
       };
       /*const children = this.getChildren(
         cat.id,
@@ -160,19 +174,11 @@ export class WbsDisciplineNodeTransformer {
     return nodes;
   }
 
-  private getSortedChildren(
-    disciplineId: string,
-    parentId: string,
-    list: WbsNode[]
-  ): WbsNode[] {
+  private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
     return list
-      .filter(
-        (x) =>
-          !x.removed &&
-          x.parentId === parentId &&
-          (x.disciplineIds ?? []).indexOf(disciplineId) > -1
-      )
+      .filter((x) => !x.removed && x.parentId === parentId)
       .sort(WbsNodeService.sort);
+    //&& (x.disciplineIds ?? []).indexOf(disciplineId) > -1
   }
 
   private getPhaseChildren(
@@ -183,7 +189,7 @@ export class WbsDisciplineNodeTransformer {
     list: WbsNode[]
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
-    const children = this.getSortedChildren(disciplineId, parentId, list);
+    const children = this.getSortedChildren(parentId, list);
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
@@ -201,6 +207,10 @@ export class WbsDisciplineNodeTransformer {
         description: child.description,
         levelText: childLevel.join('.'),
         children: 0,
+        canMoveDown: false,
+        canMoveUp: false,
+        canMoveLeft: false,
+        canMoveRight: false,
       };
       const myChildren = this.getPhaseChildren(
         disciplineId,
@@ -210,9 +220,14 @@ export class WbsDisciplineNodeTransformer {
         list
       );
 
-      node.children = this.getChildCount(myChildren);
+      const hasDiscipline =
+        (node.disciplines ?? [])?.indexOf(disciplineId) > -1;
 
-      results.push(node, ...myChildren);
+      if (hasDiscipline || myChildren.length > 0) {
+        node.children = this.getChildCount(myChildren);
+
+        results.push(node, ...myChildren);
+      }
     }
     return results;
   }
@@ -225,11 +240,7 @@ export class WbsDisciplineNodeTransformer {
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
 
-    for (const childParts of this.getSortedChildren(
-      disciplineId,
-      parentId,
-      list
-    )) {
+    for (const childParts of this.getSortedChildren(parentId, list)) {
       /*const childLevel = [...parentLevel, childDisc.order];
       const node: WbsDisciplineNode = {
         id: child.id,

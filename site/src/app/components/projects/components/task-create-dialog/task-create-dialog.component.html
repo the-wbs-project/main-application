@@ -10,7 +10,12 @@
     [ngClass]="'wd-100p'"
     [text]="'Projects.TaskTitle' | translate"
   >
-    <kendo-textbox [(ngModel)]="title"></kendo-textbox>
+    <kendo-textbox
+      #titleTextBox
+      [(ngModel)]="title"
+      (keydown.enter)="save(false)"
+    >
+    </kendo-textbox>
   </kendo-floatinglabel>
   <br />
   <br />
@@ -31,12 +36,9 @@
     </button>
   </div>
   <ng-template [ngIf]="more$ | async">
-    <kendo-floatinglabel
-      [ngClass]="'wd-100p'"
-      [text]="'Projects.TaskDescription' | translate"
-    >
-      <kendo-textarea [(ngModel)]="description"></kendo-textarea>
-    </kendo-floatinglabel>
+    {{ "Projects.TaskDescription" | translate }}
+
+    <kendo-editor [(value)]="description" class="ht-250"></kendo-editor>
     <br />
     <br />
     {{ "Projects.TaskDisciplines" | translate }}
@@ -47,7 +49,18 @@
     ></app-category-list-editor>
   </ng-template>
   <kendo-dialog-actions layout="stretched">
-    <button class="btn btn-primary" [disabled]="title === ''" (click)="save()">
+    <button
+      class="btn btn-secondary"
+      [disabled]="title === ''"
+      (click)="save(true)"
+    >
+      {{ "General.SaveAndView" | translate }}
+    </button>
+    <button
+      class="btn btn-primary"
+      [disabled]="title === ''"
+      (click)="save(false)"
+    >
       {{ "General.Save" | translate }}
     </button>
   </kendo-dialog-actions>

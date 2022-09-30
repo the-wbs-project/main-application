@@ -1,12 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import {
-  faClone,
-  faCogs,
-  faPencil,
-  faPlus,
-  faTrashAlt,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faCogs, faSquare } from '@fortawesome/pro-solid-svg-icons';
 import { faDiagramSubtask } from '@fortawesome/pro-regular-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
@@ -15,9 +9,9 @@ import { TitleService } from '@wbs/shared/services';
 import { UiState } from '@wbs/shared/states';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { Observable } from 'rxjs';
-import { RemoveTask } from '../../project.actions';
+import { ChangeTaskTitle, CreateTask, RemoveTask } from '../../project.actions';
 import { ProjectState } from '../../states';
-import { PAGE_VIEW, PAGE_VIEW_TYPE } from './models';
+import { MenuItems, PAGE_VIEW_TYPE } from './models';
 import { TaskViewState } from './task-view.state';
 
 @Component({
@@ -36,47 +30,10 @@ export class TaskViewComponent {
   @Select(TaskViewState.viewPhase) viewPhase$!: Observable<WbsNodeView>;
 
   readonly faCogs = faCogs;
+  readonly faSquare = faSquare;
   readonly faSubTask = faDiagramSubtask;
-  readonly links = [
-    {
-      fragment: PAGE_VIEW.ABOUT,
-      title: 'General.About',
-    },
-    {
-      fragment: PAGE_VIEW.SUB_TASKS,
-      title: 'General.SubTasks',
-    },
-    {
-      fragment: PAGE_VIEW.TIMELINE,
-      title: 'General.Timeline',
-    },
-    {
-      fragment: PAGE_VIEW.RESOURCES,
-      title: 'General.Resources',
-    },
-  ];
-  readonly actions = [
-    {
-      action: 'addSub',
-      icon: faPlus,
-      text: 'Projects.AddSubTask',
-    },
-    {
-      action: 'edit',
-      icon: faPencil,
-      text: 'Projects.EditTask',
-    },
-    {
-      action: 'clone',
-      icon: faClone,
-      text: 'Projects.CloneTask',
-    },
-    {
-      action: 'delete',
-      icon: faTrashAlt,
-      text: 'Projects.DeleteTask',
-    },
-  ];
+  readonly links = MenuItems.links;
+  readonly actions = MenuItems.actions;
 
   constructor(
     title: TitleService,
@@ -101,7 +58,9 @@ export class TaskViewComponent {
   }
 
   actionClicked(action: string): void {
-    if (action === 'delete') {
+    if (action === 'addSub') {
+      this.store.dispatch(new CreateTask(this.taskId));
+    } else if (action === 'delete') {
       this.store.dispatch(
         new RemoveTask(
           this.taskId,
@@ -109,6 +68,10 @@ export class TaskViewComponent {
         )
       );
     }
+  }
+
+  saveTitle(newTitle: string): void {
+    this.store.dispatch(new ChangeTaskTitle(this.taskId, newTitle));
   }
 
   combine(

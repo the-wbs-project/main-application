@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '@wbs/shared/module';
 import { RedirectGuard } from './guards';
+import { ProjectSortPipe } from './pipes';
 import { ProjectListComponent } from './project-list.component';
 import { ProjectListDataResolver } from './services';
 
@@ -24,6 +25,6 @@ const routes: Routes = [
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
   providers: [ProjectListDataResolver, RedirectGuard],
-  declarations: [ProjectListComponent],
+  declarations: [ProjectListComponent, ProjectSortPipe],
 })
 export class ProjectListModule {}

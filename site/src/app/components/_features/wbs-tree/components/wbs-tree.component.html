@@ -23,6 +23,7 @@
     <ng-template *ngIf="menuItems" kendoTreeListToolbarTemplate>
       <div class="display-ib pd-r-20" *ngFor="let menu of menuItems">
         <wbs-action-buttons
+          *ngIf="menu.length > 0"
           [items]="menu"
           (actionClicked)="actionClicked.emit($event)"
         ></wbs-action-buttons>
@@ -82,22 +83,8 @@
             More Details
           </a>
         </ng-template>
-        <!--
-       <a #target class="btn btn-link">
-          <fa-icon [icon]="faEllipsisV"></fa-icon>
-        </a>
-        <kendo-contextmenu showOn="click" [target]="target" [items]="['hello']">
-        </kendo-contextmenu>-->
       </ng-template>
     </kendo-treelist-column>
-    <!--<kendo-treelist-column [width]="200" field="title" title="Test">
-      <ng-template kendoTreeListCellTemplate let-dataItem>
-        <span style="font-size: 8pt">
-          {{ dataItem.id }} &nbsp;/&nbsp; {{ dataItem.parentId }} &nbsp;/&nbsp;
-          {{ dataItem.order }}
-        </span>
-      </ng-template>
-    </kendo-treelist-column>-->
     <kendo-treelist-column
       *ngIf="view === 'phase' && (width ?? 0) > 800"
       field="disciplines"

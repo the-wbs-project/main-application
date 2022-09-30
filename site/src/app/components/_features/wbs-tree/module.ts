@@ -1,10 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { IconsModule } from '@progress/kendo-angular-icons';
+import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { TooltipsModule } from '@progress/kendo-angular-tooltip';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { SharedModule } from '@wbs/shared/module';
+import { WbsNodeGeneralModule } from '../wbs-node-general';
 import {
   DisciplineIconComponent,
   DisciplineIconListComponent,
@@ -12,12 +16,8 @@ import {
   WbsLevelPopoverComponent,
   WbsTreeComponent,
 } from './components';
-import { WbsPhaseService } from './services';
 import { WbsTreeToolbarDirective } from './directives';
-import { ContextMenuModule } from '@progress/kendo-angular-menu';
-import { WbsNodeGeneralModule } from '../wbs-node-general';
-import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
-import { RouterModule } from '@angular/router';
+import { WbsPhaseService } from './services';
 
 @NgModule({
   imports: [

@@ -1,6 +1,12 @@
 //project-create
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
+import { TextBoxComponent } from '@progress/kendo-angular-inputs';
 import {
   ProjectCategory,
   PROJECT_NODE_VIEW,
@@ -14,7 +20,13 @@ import { BehaviorSubject } from 'rxjs';
   templateUrl: './task-create-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class TaskCreateDialogComponent extends DialogContentBase {
+export class TaskCreateDialogComponent
+  extends DialogContentBase
+  implements OnInit
+{
+  @ViewChild(TextBoxComponent, { static: false })
+  readonly titleTextBox!: TextBoxComponent;
+
   readonly more$ = new BehaviorSubject<boolean>(false);
   title = '';
   description = '';
@@ -27,6 +39,20 @@ export class TaskCreateDialogComponent extends DialogContentBase {
     super(dialog);
   }
 
+  ngOnInit(): void {
+    this.focus();
+  }
+
+  private focus() {
+    if (!this.titleTextBox) {
+      setTimeout(() => {
+        this.focus();
+      }, 50);
+      return;
+    }
+    this.titleTextBox.focus();
+  }
+
   setup(disciplines: ProjectCategory[]): void {
     this.disciplines = this.catService.buildFromList(
       PROJECT_NODE_VIEW.DISCIPLINE,
@@ -35,7 +61,9 @@ export class TaskCreateDialogComponent extends DialogContentBase {
     );
   }
 
-  save(): void {
+  save(nav: boolean): void {
+    if (!this.title) return;
+
     const model: Partial<WbsNode> = {
       title: this.title,
     };
@@ -50,6 +78,6 @@ export class TaskCreateDialogComponent extends DialogContentBase {
       }
       if (disciplines.length > 0) model.disciplineIds = disciplines;
     }
-    this.dialog.close(model);
+    this.dialog.close({ model, nav });
   }
 }

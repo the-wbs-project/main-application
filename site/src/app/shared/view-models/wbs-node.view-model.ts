@@ -28,4 +28,9 @@ export interface WbsNodeView {
   title: string;
   phaseInfo?: WbsNodePhaseView;
   disciplineInfo?: WbsNodeDisciplineRelationship;
+
+  canMoveUp: boolean;
+  canMoveDown: boolean;
+  canMoveLeft: boolean;
+  canMoveRight: boolean;
 }

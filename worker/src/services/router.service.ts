@@ -65,6 +65,7 @@ export class RouterService {
     this.router.put('/api/projects/byId/:projectId/nodes/batch', apiAuth, Http.projectNodes.batchAsync);
     this.router.put('/api/projects/byId/:projectId/nodes/:nodeId', apiAuth, Http.projectNodes.putAsync);
     this.router.get('/api/users', apiAuth, Http.users.getAllAsync);
+    this.router.get('/api/users/lite', apiAuth, Http.users.getAllLiteAsync);
     this.router.post('/api/user', apiAuth, isAdmin, Http.users.updateUserAsync);
     this.router.get('/api/invites', apiAuth, Http.invites.getAllAsync);
     this.router.put('/api/invites/:send', apiAuth, Http.invites.putAsync);
@@ -72,7 +73,7 @@ export class RouterService {
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, apiAuth, Http.azure.handleAsync);
     }
-    this.router.get('*', siteAuth, Http.site.getSiteResourceAsync);
+    this.router.get('*', siteAuth, Http.site.getSiteAsync);
   }
 
   async matchAsync(req: WorkerRequest): Promise<Response> {

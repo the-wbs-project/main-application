@@ -1,0 +1,46 @@
+<div
+  class="display-flex flex-flow-col flex-align-stretch"
+  appFillElement
+  [paddingBottom]="paddingBottom"
+>
+  <div class="w-100 text-center" style="flex: 0 1 80px">
+    <kendo-textbox #search [placeholder]="'General.Search' | translate">
+    </kendo-textbox>
+  </div>
+  <div class="scroll mg-t-10 w-100" style="flex: 1 1 auto">
+    <div class="container-fluid">
+      <div class="row">
+        <div
+          class="col-md-4"
+          *ngFor="
+            let cat of categories
+              | projectCategoryFilter: search.value
+              | projectCategorySort
+          "
+        >
+          <div
+            class="card tx-center border-1"
+            [ngClass]="{
+              'border-primary': cat.id !== selected,
+              'border-danger': cat.id === selected
+            }"
+          >
+            <div class="card-body">
+              <img class="wd-40 hd-40" [src]="cat.icon" alt="Card image cap" />
+              <h5 class="mg-t-10">{{ cat.label }}</h5>
+              <p class="card-text ht-60">
+                {{ cat.description }}
+              </p>
+              <button
+                class="btn btn-primary w-100"
+                (click)="categoryChosen.emit(cat.id)"
+              >
+                {{ "General.Select" | translate }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

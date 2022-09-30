@@ -12,7 +12,7 @@ export class ProjectDataService {
   }
 
   async getAllAsync(): Promise<Project[]> {
-    const list = await this.db.getAllAsync<Project>(true);
+    let list = await this.db.getAllAsync<Project>(true);
 
     this.fixTs(list);
 
@@ -20,9 +20,15 @@ export class ProjectDataService {
   }
 
   async getAllWatchedAsync(userId: string): Promise<Project[]> {
-    const list = await this.db.getListByQueryAsync<Project>(`SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`, true, [
-      { name: '@userId', value: userId },
-    ]);
+    let list = await this.db.getListByQueryAsync<Project>(
+      `SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`,
+      true,
+      [{ name: '@userId', value: userId }],
+      undefined,
+      undefined,
+      true,
+    );
+
     this.fixTs(list);
 
     return list;
@@ -40,6 +46,7 @@ export class ProjectDataService {
 
     if (data) {
       this.fixTs(data);
+
       this.edge.putLater(kvName, JSON.stringify(data));
     }
 

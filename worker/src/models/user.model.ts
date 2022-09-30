@@ -21,3 +21,9 @@ export interface UserAppMetadata {
   inviteCode?: string;
   organizationRoles?: OrganizationRoles[];
 }
+
+export interface UserLite {
+  id?: string;
+  email?: string;
+  name?: string | null | undefined;
+}

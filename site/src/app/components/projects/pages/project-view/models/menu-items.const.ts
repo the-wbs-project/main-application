@@ -1,4 +1,8 @@
 import {
+  faArrowDown,
+  faArrowLeft,
+  faArrowRight,
+  faArrowUp,
   faClone,
   faDownload,
   faPencil,
@@ -59,6 +63,28 @@ export const MenuItems = {
       action: 'deleteTask',
       icon: faTrashAlt,
       tooltip: 'Projects.DeleteTask',
+    },
+  ],
+  phaseItemNavActions: <ActionMenuItem[]>[
+    {
+      action: 'moveLeft',
+      icon: faArrowLeft,
+      tooltip: 'Projects.MoveLeft',
+    },
+    {
+      action: 'moveUp',
+      icon: faArrowUp,
+      tooltip: 'Projects.MoveUp',
+    },
+    {
+      action: 'moveDown',
+      icon: faArrowDown,
+      tooltip: 'Projects.MoveDown',
+    },
+    {
+      action: 'moveRight',
+      icon: faArrowRight,
+      tooltip: 'Projects.MoveRight',
     },
   ],
   projectLinks: [

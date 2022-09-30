@@ -8,6 +8,7 @@ export interface Project {
   _ts: number;
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
+  category: string;
   categories: {
     discipline: ProjectCategory[];
     phase: ProjectCategory[];

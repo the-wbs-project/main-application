@@ -1,11 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { ListItem } from '@wbs/shared/models';
+import { ListItemBase } from '@wbs/shared/models';
 import { Observable } from 'rxjs';
 
 export class MetdataDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getListAsync(name: string): Observable<ListItem[]> {
-    return this.http.get<ListItem[]>(`lists/${name}`);
+  getListAsync<T extends ListItemBase>(name: string): Observable<T[]> {
+    return this.http.get<T[]>(`lists/${name}`);
   }
 }

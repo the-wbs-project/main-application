@@ -1,13 +1,13 @@
 # This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
 # For more information see: https://help.github.com/actions/language-and-framework-guides/using-nodejs-with-github-actions
 
-name: Site Builder Tester
+name: Site Builder - v0.1
 
 on:
   push:
-    branches: ["v0.1.1"]
+    branches: ["v0.1"]
   pull_request:
-    branches: ["v0.1.1"]
+    branches: ["v0.1"]
 
 jobs:
   site_job:
@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: "yarn"
       - name: Setup Environment
         run: npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $FA_TOKEN
         env:
@@ -36,15 +36,6 @@ jobs:
           FA_TOKEN: ${{ secrets.FONTAWESOME_NPM_AUTH_TOKEN }}
       - name: Build Site
         run: yarn --cwd site run publish
-      - name: Publish Site
-        uses: cloudflare/pages-action@1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "wbs-app-prod"
-          directory: "dist"
-          branch: main
-          gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   worker_job:
     name: Worker Deployment
@@ -61,27 +52,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "npm"
+          cache: "yarn"
       - name: Install Packages
         run: yarn --cwd worker run setup
       - name: Build Worker
         run: yarn --cwd worker run build
-      - name: Publish Worker
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: worker
-          command: publish --env prod
-          postCommands: |
-            echo $MAILGUN_API_KEY | wrangler secret put MAILGUN_API_KEY --env prod
-            echo $MAILGUN_API_BASE_URL | wrangler secret put MAILGUN_API_BASE_URL --env prod
-            echo $COSMOS | wrangler secret put COSMOS --env prod
-            echo $AZURE | wrangler secret put AZURE --env prod
-            echo $AUTH | wrangler secret put AUTH --env prod
-
-        env:
-          MAILGUN_API_KEY: ${{ secrets.CFW_MAILGUN_API_KEY }}
-          MAILGUN_API_BASE_URL: ${{ secrets.CFW_MAILGUN_API_BASE_URL }}
-          COSMOS: ${{ secrets.CFW_PROD_COSMOS }}
-          AZURE: ${{ secrets.CFW_PROD_AZURE }}
-          AUTH: ${{ secrets.CFW_PROD_AUTH }}

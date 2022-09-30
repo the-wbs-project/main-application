@@ -12,6 +12,6 @@ export class ProjectSortPipe implements PipeTransform {
     if (sort === 'modified')
       return list.sort((a, b) => (a._ts > b._ts ? -1 : 1));
 
-    return list.sort((a, b) => (a.title > b.title ? -1 : 1));
+    return list.sort((a, b) => (a.title < b.title ? -1 : 1));
   }
 }

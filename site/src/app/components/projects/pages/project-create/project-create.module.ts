@@ -13,9 +13,11 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { SortableModule } from '@progress/kendo-angular-sortable';
 import { CategoryListEditorModule } from '@wbs/components/_features';
 import { SharedModule } from '@wbs/shared/module';
+import { ProjectComponentModule } from '../../components';
 import { ProjectResourceGuard } from '../../guards';
 import {
   BasicsComponent,
+  CategoriesComponent,
   CustomDialogComponent,
   DisciplinesComponent,
   FooterComponent,
@@ -26,7 +28,6 @@ import {
   PhaseComponent,
 } from './components';
 import { StartCreationGuard } from './guards';
-import { ProjectCreateDescriptionPipe, ProjectCreateTitlePipe } from './pipes';
 import { ProjectCreateComponent } from './project-create.component';
 import { ProjectCreateState } from './project-create.state';
 
@@ -46,6 +47,7 @@ const routes: Routes = [
     FormsModule,
     LabelModule,
     NgxsModule.forFeature([ProjectCreateState]),
+    ProjectComponentModule,
     ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
@@ -57,6 +59,7 @@ const routes: Routes = [
   providers: [StartCreationGuard],
   declarations: [
     BasicsComponent,
+    CategoriesComponent,
     CustomDialogComponent,
     DisciplinesComponent,
     FooterComponent,
@@ -66,8 +69,6 @@ const routes: Routes = [
     NodeViewComponent,
     PhaseComponent,
     ProjectCreateComponent,
-    ProjectCreateDescriptionPipe,
-    ProjectCreateTitlePipe,
   ],
 })
 export class ProjectCreateModule {}

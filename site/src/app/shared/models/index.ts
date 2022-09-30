@@ -1,3 +1,4 @@
+export * from './action-definition.model';
 export * from './activity.model';
 export * from './app-models';
 export * from './extract-node-view.model';

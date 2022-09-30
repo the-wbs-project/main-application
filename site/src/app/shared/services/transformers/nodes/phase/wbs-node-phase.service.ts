@@ -48,6 +48,10 @@ export class WbsNodePhaseTransformer {
           isLockedToParent: false,
           syncWithDisciplines: false,
         },
+        canMoveDown: false,
+        canMoveUp: false,
+        canMoveLeft: false,
+        canMoveRight: false,
       };
       const children = this.getPhaseChildren(
         cat.id,
@@ -73,7 +77,8 @@ export class WbsNodePhaseTransformer {
     const results: WbsNodeView[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parentId, list);
 
-    for (const child of children) {
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i];
       const childLevel = [...parentLevel, child.order];
       const node: WbsNodeView = {
         children: 0,
@@ -93,6 +98,10 @@ export class WbsNodePhaseTransformer {
           isLockedToParent,
           syncWithDisciplines: child.phase?.syncWithDisciplines ?? false,
         },
+        canMoveDown: i !== children.length - 1,
+        canMoveUp: i > 0,
+        canMoveRight: i > 0,
+        canMoveLeft: childLevel.length > 2,
       };
       if (node.phaseInfo?.isDisciplineNode) {
         const dCat = this.disciplineList.find(
@@ -101,7 +110,7 @@ export class WbsNodePhaseTransformer {
 
         if (dCat) node.title = this.resources.get(dCat.label);
       }
-      const children = this.getPhaseChildren(
+      const vmChildren = this.getPhaseChildren(
         phaseId,
         child.id,
         childLevel,
@@ -109,9 +118,9 @@ export class WbsNodePhaseTransformer {
         child.phase?.syncWithDisciplines ?? false
       );
 
-      node.children = this.getChildCount(children);
+      node.children = this.getChildCount(vmChildren);
 
-      results.push(node, ...children);
+      results.push(node, ...vmChildren);
     }
     return results;
   }

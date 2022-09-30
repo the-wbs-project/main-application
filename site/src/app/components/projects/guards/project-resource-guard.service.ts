@@ -12,6 +12,7 @@ export class ProjectResourceGuard implements CanActivate {
     return forkJoin([
       this.resources.verifyAsync('Wbs'),
       this.resources.verifyAsync('Projects'),
+      this.resources.verifyAsync('Actions'),
     ]).pipe(map(() => true));
   }
 }

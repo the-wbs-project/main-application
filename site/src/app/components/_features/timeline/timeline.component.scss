@@ -1,0 +1,24 @@
+@import "src/assets/scss/variables";
+
+::ng-deep {
+  .rtl.dark-theme .vtimeline .timeline-wrapper .timeline-panel:after {
+    border-right: 14px solid #353949 !important;
+  }
+  .rtl.dark-theme
+    .vtimeline
+    .timeline-wrapper.timeline-inverted
+    .timeline-panel:after {
+    border-left: 14px solid #353949 !important;
+  }
+  .dark-theme .vtimeline .timeline-wrapper .timeline-panel:after {
+    border-left: 14px solid #353949;
+    border-right: 0 solid #353949;
+  }
+  .dark-theme
+    .vtimeline
+    .timeline-wrapper.timeline-inverted
+    .timeline-panel:after {
+    border-right: 14px solid #353949;
+    border-left: 0 solid $dark-theme;
+  }
+}

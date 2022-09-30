@@ -22,6 +22,7 @@ import {
   MetadataState,
   OrganizationState,
   ProjectListState,
+  TimelineState,
   UiState,
 } from '@wbs/shared/states';
 import { ToastrModule } from 'ngx-toastr';
@@ -44,6 +45,7 @@ import { AppComponent } from './app.component';
       MetadataState,
       OrganizationState,
       ProjectListState,
+      TimelineState,
       UiState,
     ]),
     NgxsRouterPluginModule.forRoot(),
