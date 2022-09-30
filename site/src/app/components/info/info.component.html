@@ -1,0 +1,12 @@
+<div class="tx-center pd-t-100">
+  <img
+    src="https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/8d5823b3-0be9-458a-8f39-70da2c37b400/public"
+    height="50"
+  />
+  <br /><br />
+  <h1 *ngIf="name$ | async; let name">{{ name | translate }}</h1>
+  <br />
+  <p *ngIf="description$ | async; let description">
+    {{ description | translate }}
+  </p>
+</div>

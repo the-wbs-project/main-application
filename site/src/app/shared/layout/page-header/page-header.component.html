@@ -1,0 +1,15 @@
+<div class="breadcrumb-header justify-content-between">
+  <div class="left-content">
+    <span class="main-content-title mg-b-0 mg-b-lg-1">{{ title }}</span>
+  </div>
+  <div class="justify-content-center mt-2">
+    <ol class="breadcrumb">
+      <li class="breadcrumb-item" *ngFor="let item of items">
+        <a [routerLink]="item.route">{{ item.label | translate }}</a>
+      </li>
+      <li class="breadcrumb-item active" aria-current="page">
+        {{ active_item }}
+      </li>
+    </ol>
+  </div>
+</div>

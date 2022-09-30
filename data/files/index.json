@@ -1,0 +1,33 @@
+[
+  {
+    "db": "_common",
+    "col": "Resources",
+    "pk": "language",
+    "files": [
+      "resources-en.json"
+    ]
+  },
+  {
+    "db": "_common",
+    "col": "Lists",
+    "pk": "type",
+    "files": [
+      "categories.json"
+    ]
+  },
+  {
+    "db": "acme_engineering",
+    "col": "Activity",
+    "pk": "topLevelId"
+  },
+  {
+    "db": "acme_engineering",
+    "col": "Projects",
+    "pk": "id"
+  },
+  {
+    "db": "acme_engineering",
+    "col": "ProjectNodes",
+    "pk": "projectId"
+  }
+]

@@ -1,0 +1,31 @@
+<kendo-dialog
+  actionsLayout="normal"
+  [title]="'Projects.DeleteTask' | translate"
+  [width]="450"
+  (close)="closeDelete()"
+>
+  {{ 'Projects.DeleteTaskQuestion' | translate }}
+  <wbs-node-delete-reasons
+    #reasons
+    [reasons]="reasons$ | async"
+    [(value)]="dReason"
+  ></wbs-node-delete-reasons>
+
+  <div *ngIf="dReason?.id === dOtherId" class="other-panel">
+    <label>{{ "Wbs.PleaseSpecify" | translate }}:</label>
+    <textarea [style.width.%]="100" resizable="auto" [(ngModel)]="dOther">
+    </textarea>
+  </div>
+  <kendo-dialog-actions layout="stretched">
+    <button class="btn btn-outline-dark" (click)="closeDelete()">
+      {{ "General.Cancel" | translate }}
+    </button>
+    <button
+      class="btn btn-primary"
+      [disabled]="!dReason || (dReason.id === dOtherId && !dOther)"
+      (click)="finishDelete()"
+    >
+      {{ "General.Confirm" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

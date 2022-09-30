@@ -1,0 +1,27 @@
+export enum PROJECT_STATI {
+  PLANNING = 'planning',
+  EXECUTION = 'execution',
+  FOLLOW_UP = 'follow-up',
+  CLOSED = 'closed',
+}
+
+export type PROJECT_STATI_TYPE =
+  | PROJECT_STATI.CLOSED
+  | PROJECT_STATI.EXECUTION
+  | PROJECT_STATI.FOLLOW_UP
+  | PROJECT_STATI.PLANNING;
+
+export enum PROJECT_VIEW_STATI {
+  ACTIVE = 'active',
+  PLANNING = 'planning',
+  EXECUTION = 'execution',
+  FOLLOW_UP = 'follow-up',
+  CLOSED = 'closed',
+}
+
+export type PROJECT_VIEW_STATI_TYPE =
+  | PROJECT_VIEW_STATI.ACTIVE
+  | PROJECT_VIEW_STATI.CLOSED
+  | PROJECT_VIEW_STATI.EXECUTION
+  | PROJECT_VIEW_STATI.FOLLOW_UP
+  | PROJECT_VIEW_STATI.PLANNING;

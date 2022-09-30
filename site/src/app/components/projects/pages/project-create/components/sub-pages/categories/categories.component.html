@@ -1,0 +1,13 @@
+<div class="display-flex flex-flow-col flex-align-stretch">
+  <div class="mg-t-10 w-100" style="flex: 1 1 auto">
+    <app-project-category-list
+      [paddingBottom]="40"
+      [categories]="categories"
+      [selected]="selected"
+      (categoryChosen)="nav($event)"
+    ></app-project-category-list>
+  </div>
+  <div class="mg-t-10 w-100" style="flex: 0 1 30px">
+    <app-project-create-footer view="b-c"></app-project-create-footer>
+  </div>
+</div>

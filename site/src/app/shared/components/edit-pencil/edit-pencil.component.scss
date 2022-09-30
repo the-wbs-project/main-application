@@ -1,0 +1,11 @@
+.task-title {
+  font-size: 21px;
+}
+.edit-pencil {
+  margin-left: 10px;
+  font-size: 10px;
+  opacity: 0;
+}
+.edit-pencil-parent:hover .edit-pencil {
+  opacity: 1;
+}

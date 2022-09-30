@@ -1,49 +1,44 @@
 {
-  "name": "worker-typescript-template",
+  "name": "the-wbs-project",
   "version": "1.0.0",
-  "description": "Cloudflare worker TypeScript template",
   "main": "dist/worker.js",
   "scripts": {
-    "build": "webpack",
-    "build:watch": "webpack --watch",
+    "setup": "yarn",
+    "build": "esbuild src/index.ts --outfile=dist/index.js --bundle  --loader:.html=text --format=esm",
     "publish": "wrangler publish --env prod",
-    "dev": "miniflare ./workers-site/worker.js -p 88 --wrangler-env dev --kv KVDATA --kv KVAUTH --env local.env --kv-persist kv --watch",
-    "go": "npm run build && concurrently \"npm run dev\" \"npm run build:watch\"",
-    "test": "jest --config jestconfig.json --verbose"
+    "dev": "miniflare ./dist/index.js --wrangler-env dev",
+    "format": "prettier --write '**/*.{js,ts,jsx,tsx,json,yml,yaml,md,html}' --ignore-path .gitignore",
+    "go": "npm run build && concurrently \"npm run dev\" \"npm run build\""
   },
   "author": "author",
-  "license": "MIT OR Apache-2.0",
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "typescript",
-      "prettier"
-    ],
-    "rules": {
-      "no-nested-ternary": "error"
-    }
-  },
+  "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.0.0",
-    "@types/jest": "^27.0.2",
+    "@cloudflare/workers-types": "^3.11.0",
+    "@types/jest": "^27.5.1",
+    "@types/node": "^17.0.35",
     "@types/service-worker-mock": "^2.0.1",
-    "@typescript-eslint/eslint-plugin": "^4.16.1",
-    "@typescript-eslint/parser": "^4.16.1",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "concurrently": "^6.3.0",
-    "eslint": "^7.21.0",
-    "eslint-config-prettier": "^8.1.0",
-    "eslint-config-typescript": "^3.0.0",
-    "jest": "^27.3.1",
-    "prettier": "^2.3.0",
+    "esbuild": "^0.15.7",
+    "eslint": "^8.16.0",
+    "eslint-config-prettier": "^8.5.0",
+    "jest": "^27.5.1",
+    "miniflare": "^2.9.0",
+    "prettier": "^2.6.2",
     "service-worker-mock": "^2.0.5",
-    "ts-jest": "^27.0.7",
-    "ts-loader": "^9.2.2",
-    "typescript": "^4.3.2",
-    "webpack": "^5.38.1",
-    "webpack-cli": "^4.7.0"
+    "ts-jest": "^27.1.5",
+    "tsup": "^5.12.9",
+    "typescript": "^4.7.2",
+    "wrangler": "^2.0.29"
   },
   "dependencies": {
-    "@cloudflare/kv-asset-handler": "^0.1.3",
-    "itty-router": "^2.4.4"
+    "@cfworker/cosmos": "^1.13.4",
+    "@cfworker/uuid": "^1.12.3",
+    "@types/cookie": "^0.4.1",
+    "@types/crypto-js": "^4.0.2",
+    "cookie": "^0.4.2",
+    "crypto-js": "^4.1.1",
+    "itty-router": "^2.6.1"
   }
 }

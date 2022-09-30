@@ -1,0 +1,29 @@
+<div class="container">
+  <div class="row">
+    <div *ngFor="let item of items" class="col-4">
+      <a [routerLink]="item.path">
+        <div class="card bg-gray-200 bd-0">
+          <div class="card-body link-block">
+            <div class="link-icon">
+              <fa-layers [fixedWidth]="true" size="4x">
+                <fa-icon [icon]="faCircle"></fa-icon>
+                <fa-icon
+                  [ngClass]="'inside-button'"
+                  [icon]="item.icon!"
+                  transform="shrink-8"
+                >
+                </fa-icon>
+              </fa-layers>
+            </div>
+            <div>
+              <h3>
+                {{ item.title! | translate }}
+              </h3>
+              {{ item.description! | translate }}
+            </div>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,18 @@
+.inside-button {
+  color: white;
+}
+
+.link-block {
+  display: flex;
+  flex-direction: row;
+
+  > .link-icon {
+    width: 90px;
+  }
+}
+
+.dark-theme {
+  .inside-button {
+    color: #2a2e3f;
+  }
+}

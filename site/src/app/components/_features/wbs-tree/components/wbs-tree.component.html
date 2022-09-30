@@ -1,0 +1,138 @@
+<div
+  *ngIf="tree$ | async; let tree"
+  kendoPopoverContainer
+  showOn="hover"
+  filter=".node-level"
+  [popover]="popup"
+>
+  <kendo-treelist
+    #treelist
+    [kendoTreeListFlatBinding]="tree"
+    parentIdField="treeParentId"
+    idField="treeId"
+    kendoTreeListExpandable
+    [initiallyExpanded]="true"
+    [(expandedKeys)]="expandedKeys"
+    kendoTreeListSelectable
+    [selectable]="settings"
+    (expand)="onToggle()"
+    (close)="onToggle()"
+    (selectionChange)="rowSelected($event)"
+    [ngClass]="id"
+  >
+    <ng-template *ngIf="menuItems" kendoTreeListToolbarTemplate>
+      <div class="display-ib pd-r-20" *ngFor="let menu of menuItems">
+        <wbs-action-buttons
+          *ngIf="menu.length > 0"
+          [items]="menu"
+          (actionClicked)="actionClicked.emit($event)"
+        ></wbs-action-buttons>
+      </div>
+    </ng-template>
+    <kendo-treelist-column
+      field="levelText"
+      [title]="'Wbs.Level' | translate"
+      [width]="100"
+      class="level-column"
+      headerClass="level-header-column"
+    >
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <a [id]="dataItem.id" class="node-level">
+          {{ dataItem.levelText }}
+        </a>
+      </ng-template>
+    </kendo-treelist-column>
+    <kendo-treelist-column
+      *ngIf="view === 'discipline'"
+      field="sameAsLevelText"
+      [title]="'Same As'"
+      [width]="100"
+      class="level-column"
+      headerClass="level-header-column"
+    >
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <span *ngIf="dataItem.sameAsIndex" class="same-level">
+          {{ dataItem.sameAsLevelText }}
+        </span>
+      </ng-template>
+    </kendo-treelist-column>
+    <kendo-treelist-column
+      [expandable]="true"
+      field="title"
+      [title]="'Wbs.Task' | translate"
+    >
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <span
+          popoverClass="popover-default3"
+          placement="right"
+          popoverTitle="Details"
+          [ngbPopover]="popContent"
+          popoverClass="my-custom-class"
+          container="body"
+        >
+          {{ dataItem.title }}
+        </span>
+        <ng-template #popContent>
+          <wbs-node-general [node]="dataItem"></wbs-node-general>
+          <br />
+          <a
+            *ngIf="detailsUrlPrefix"
+            [routerLink]="buildUrl(dataItem.id)"
+            class="btn btn-info w-100"
+          >
+            More Details
+          </a>
+        </ng-template>
+      </ng-template>
+    </kendo-treelist-column>
+    <kendo-treelist-column
+      *ngIf="view === 'phase' && (width ?? 0) > 800"
+      field="disciplines"
+      [width]="150"
+      class="discipline-column"
+      headerClass="discipline-column"
+    >
+      <ng-template
+        kendoTreeListHeaderTemplate
+        kendoPopoverContainer
+        showOn="click"
+        filter="fa-duotone-icon"
+        [popover]="legendPopup"
+      >
+        {{ "Wbs.Disciplines" | translate }} &nbsp;
+        <fa-duotone-icon [icon]="faCircleQuestion"></fa-duotone-icon>
+      </ng-template>
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <wbs-discipline-icon-list [disciplines]="dataItem.disciplines">
+        </wbs-discipline-icon-list>
+      </ng-template>
+    </kendo-treelist-column>
+  </kendo-treelist>
+</div>
+
+<kendo-popover
+  #popup
+  position="right"
+  [callout]="true"
+  [title]="'Wbs.NodeLevelStats' | translate"
+  [templateData]="getContextData"
+  [height]="150"
+  [animation]="{ duration: 100, type: 'slide', direction: 'right' }"
+>
+  <ng-template kendoPopoverBodyTemplate let-anchor let-data="data">
+    <wbs-level-popover [data]="data"></wbs-level-popover>
+  </ng-template>
+</kendo-popover>
+
+<kendo-popover
+  #legendPopup
+  position="left"
+  [callout]="true"
+  [ngClass]="'legend-popup'"
+  [animation]="{ duration: 100, type: 'slide', direction: 'left' }"
+>
+  <ng-template kendoPopoverBodyTemplate let-anchor>
+    <wbs-legend-discipline [idsOrCats]="project?.categories?.discipline ?? []">
+    </wbs-legend-discipline>
+  </ng-template>
+</kendo-popover>

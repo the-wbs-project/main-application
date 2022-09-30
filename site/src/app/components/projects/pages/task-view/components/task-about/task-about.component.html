@@ -1,0 +1,47 @@
+<div class="p-4">
+  <h4 class="tx-15 text-uppercase mb-3">Basic Information</h4>
+  <div class="m-t-30">
+    <div class="p-t-10">
+      <h5 class="text-primary m-b-5 tx-14">Description</h5>
+      <p
+        *ngIf="current?.description; let description"
+        [innerHtml]="description | safeHtml"
+        class="text-muted tx-13 m-b-0"
+      ></p>
+      <p *ngIf="!current?.description" class="text-muted tx-13 m-b-0">
+        {{ "No Description Found" }}
+      </p>
+    </div>
+    <div class="p-t-10">
+      <h5 class="text-primary m-b-5 tx-14">Checklist</h5>
+      <p class="text-muted tx-13 m-b-0">CHECKLIST?????</p>
+    </div>
+  </div>
+</div>
+<div class="border-top"></div>
+<div class="p-4">
+  <h4 class="tx-15 text-uppercase mb-3">Workflow Information</h4>
+  <div class="profile-cover__info ms-4 ms-auto p-0">
+    <ul class="nav p-0 border-bottom-0 mb-0">
+      <li class="border p-2 br-5 bg-light wd-150 ht-70">
+        <span class="border-0 mb-0 pb-0"> {{ phase?.levelText }} </span>
+        Task Level
+      </li>
+      <li class="border p-2 br-5 bg-light wd-150 ht-70">
+        <span class="border-0 mb-0 pb-0"> {{ subTasks?.length ?? 0 }} </span>
+        Sub-Task Count
+      </li>
+    </ul>
+  </div>
+</div>
+<!--<div class="border-top"></div>
+<div class="p-4">
+  <label class="main-content-label tx-13 mg-b-20"> Contacts </label>
+  <div class="d-sm-flex">
+    <div *ngFor="let ur of roles" class="mg-sm-r-20 mg-b-10">
+      <wbs-project-role [role]="ur.role" [userId]="ur.userId">
+      </wbs-project-role>
+    </div>
+  </div>
+</div>
+-->

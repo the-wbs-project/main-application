@@ -1,5 +1,8 @@
 {
   "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "cli": {
+    "analytics": "b1db6448-ec03-4248-b835-0b7c49ee44f6"
+  },
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
@@ -15,7 +18,7 @@
       },
       "root": "",
       "sourceRoot": "src",
-      "prefix": "app",
+      "prefix": "wbs",
       "architect": {
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
@@ -31,17 +34,30 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.scss"
+              "src/styles/styles.scss",
+              {
+                "inject": false,
+                "input": "src/styles/kendoui-theme-dark.scss",
+                "bundleName": "kendoui-dark"
+              },
+              {
+                "inject": false,
+                "input": "src/styles/kendoui-theme-light.scss",
+                "bundleName": "kendoui-light"
+              }
             ],
-            "scripts": []
+            "scripts": [],
+            "allowedCommonJsDependencies": [
+              "is_js"
+            ]
           },
           "configurations": {
             "production": {
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kb",
-                  "maximumError": "1mb"
+                  "maximumWarning": "2mb",
+                  "maximumError": "3mb"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -106,6 +122,5 @@
         }
       }
     }
-  },
-  "defaultProject": "site"
+  }
 }

@@ -1,0 +1,10 @@
+<div class="pane-content" style="padding: 15px" *ngIf="subTasks">
+  <wbs-tree
+    [width]="width"
+    [view]="phaseView"
+    [nodes]="subTasks"
+    [project]="project"
+    [isDraggable]="false"
+  >
+  </wbs-tree>
+</div>

@@ -1,22 +1,51 @@
 name = "wbs-app"
-type = "javascript"
-zone_id = "5491aca876a47684c4b5025af0d4aa32"
-account_id = "ce9999d7d59fce98a0bc0e7911cb6e1f"
-webpack_config = "./workers-site/webpack.config.js"
-compatibility_date = "2021-10-24"
+account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
+compatibility_date = "2022-05-27"
+usage_model = "unbound"
+main = "dist/index.js"
 
 [build]
-command = "yarn && yarn run build"
-[build.upload]
-format = "service-worker"
+command = "yarn run -s build"
 
-[site]
-bucket = "./public"
-entry-point = "workers-site"
+[build.upload]
+format = "modules"
+
+[[rules]]
+type = "ESModule"
+globs = ["**/*.js"]
 
 [env.dev]
-vars = { CORS_URLS = "http://localhost:88" }
+name = "wbs-app-dev"
+kv_namespaces = [
+  { binding = "KV_AUTH" },
+  { binding = "KV_DATA" },
+]
+r2_buckets = [
+  { binding = "BUCKET_SNAPSHOTS" }
+]
+vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
 [env.prod]
-route = "https://www.thewbsproject.com/*"
-vars = { CORS_URLS = "https://www.thewbsproject.com" }
+name = "wbs-app-prod"
+workers_dev = false
+routes = ["https://app.thewbsproject.com/*"]
+kv_namespaces = [
+  { binding = "KV_AUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+  { binding = "KV_DATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+]
+r2_buckets = [
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
+]
+vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
+
+[miniflare]
+port = 88
+upstream = "http://localhost:4200"
+watch = true
+kv_persist = true
+r2_persist = true
+cache_persist = false
+cache = false
+https = false
+actual_time = true
+inaccurate_cpu = true

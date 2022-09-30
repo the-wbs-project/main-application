@@ -1,0 +1,18 @@
+<ng-template [ngIf]="node">
+  <div class="pd-8">
+    <p class="tx-14">
+      <span class="tx-12 tx-bold display-b">
+        {{ "General.Name" | translate }}
+      </span>
+      {{ node.title }}
+    </p>
+  </div>
+  <div class="pd-8" *ngIf="node.description">
+    <p class="tx-14">
+      <span class="tx-12 tx-bold display-b">
+        {{ "General.Description" | translate }}
+      </span>
+      <span [innerHtml]="node.description | safeHtml"></span>
+    </p>
+  </div>
+</ng-template>

@@ -1,0 +1,16 @@
+
+_playground/
+_theme/Documentation
+_theme/Nowa
+**/bin
+**/obj
+**/config*.*
+.vs/
+.vscode/
+worker-test/
+
+site/src/assets/img_temp/
+
+worker/.mf/
+
+dist/

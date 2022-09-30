@@ -1,0 +1,30 @@
+<div class="flex-col" appFillElement>
+  <div class="pd-y-20 page-header">
+    <span class="main-content-title mg-b-0 mg-b-lg-1"> New Project </span>
+  </div>
+
+  <div class="page-card" *ngIf="page$ | async; let page">
+    <div class="flex-col">
+      <div class="proj-create-form tx-center" [ngSwitch]="page.number">
+        <div>
+          <app-project-create-header [page]="page"></app-project-create-header>
+
+          <app-project-create-getting-started *ngSwitchCase="1">
+          </app-project-create-getting-started>
+          <app-project-create-basics *ngSwitchCase="2">
+          </app-project-create-basics>
+          <app-project-pick-category *ngSwitchCase="3">
+          </app-project-pick-category>
+          <app-project-create-lib-or-scratch *ngSwitchCase="4">
+          </app-project-create-lib-or-scratch>
+          <app-project-create-node-view *ngSwitchCase="6">
+          </app-project-create-node-view>
+          <app-project-create-phases *ngSwitchCase="7">
+          </app-project-create-phases>
+          <app-project-create-disciplines *ngSwitchCase="8">
+          </app-project-create-disciplines>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
