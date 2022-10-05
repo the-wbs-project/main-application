@@ -14,26 +14,21 @@ export class ActivityDataService {
     return this.http.get<Activity[]>(`activity/${topLevelId}`);
   }
 
+  getUserAsync(userId: string): Observable<Activity[]> {
+    return this.http.get<Activity[]>(`activity/user/${userId}`);
+  }
+
   putAsync(
     topLevelId: string,
     data: ActivityData,
     dataType: 'project'
   ): Observable<Activity> {
     const userId = this.store.selectSnapshot(AuthState.userId)!;
-    const timestamp = this.getUTC();
-    const activity: Activity = {
+
+    return this.http.put<Activity>(`activity/${dataType}`, {
       ...data,
-      timestamp,
       topLevelId,
       userId,
-    };
-    return this.http
-      .put<void>(`activity/${dataType}`, activity)
-      .pipe(map(() => activity));
-  }
-
-  private getUTC(): number {
-    var now = new Date();
-    return new Date(now.getTime() + now.getTimezoneOffset() * 60000).getTime();
+    });
   }
 }

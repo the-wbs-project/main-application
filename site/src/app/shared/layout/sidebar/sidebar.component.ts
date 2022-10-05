@@ -4,16 +4,7 @@ import {
   HostListener,
   Input,
 } from '@angular/core';
-import { Router } from '@angular/router';
-import {
-  faArrowAltCircleLeft,
-  faBoxArchive,
-  faCogs,
-  faGenderless,
-  faSpaceStationMoonConstruction,
-} from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { Store } from '@ngxs/store';
 import { MenuItem, Project } from '@wbs/shared/models';
 import { NavService } from '@wbs/shared/services';
 import { fromEvent } from 'rxjs';
@@ -32,21 +23,11 @@ export class SidebarComponent {
   @Input() isAdmin?: boolean | null;
 
   readonly settings = ORG_SETTINGS_MENU_ITEMS;
-  readonly faArrowAltCircleLeft = faArrowAltCircleLeft;
-  readonly faBoxArchive = faBoxArchive;
-  readonly faCogs = faCogs;
-  readonly faGenderless = faGenderless;
-  readonly faSpaceStation = faSpaceStationMoonConstruction;
   menuItems!: MenuItem[];
   url: any;
 
-  constructor(
-    private readonly router: Router,
-    private readonly navServices: NavService,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly navServices: NavService) {}
 
-  //Active NavBar State
   setNavActive(item: any) {
     this.menuItems.filter((menuItem) => {
       if (menuItem !== item) {

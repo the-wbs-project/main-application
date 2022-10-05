@@ -4,7 +4,7 @@
   </li>
   <li class="list-group-item" *ngFor="let idsOrCat of idsOrCats">
     <span class="icon-wrapper">
-      <fa-icon [icon]="idsOrCat | disciplineIcon"></fa-icon>
+      <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>
     </span>
     {{ idsOrCat | categoryLabel }}
   </li>

@@ -6,8 +6,6 @@ name: Site Builder - v0.1
 on:
   push:
     branches: ["v0.1"]
-  pull_request:
-    branches: ["v0.1"]
 
 jobs:
   site_job:

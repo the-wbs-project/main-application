@@ -1,16 +1,15 @@
 import { Document, Resource } from '@cfworker/cosmos';
-import { uuid } from '@cfworker/uuid';
 import { Activity } from '../../models';
 import { DbService } from '../database-services';
 import { DataServiceHelper } from './helper.data-service';
 
-declare type ActivityDbObject = Activity & Document & Resource;
+declare type UserActivityDbObject = Activity & Document & Resource;
 
-export class ActivityDataService {
+export class UserActivityDataService {
   constructor(private readonly db: DbService) {}
 
-  async getAllAsync(topLevelId: string): Promise<Activity[]> {
-    const dbModels = await this.db.getAllByPartitionAsync<ActivityDbObject>(topLevelId, false);
+  async getAllAsync(userId: string): Promise<Activity[]> {
+    const dbModels = await this.db.getAllByPartitionAsync<UserActivityDbObject>(userId, false);
     const models: Activity[] = [];
 
     if (dbModels) for (const dbModel of dbModels) models.push(this.fromDb(dbModel));
@@ -19,14 +18,14 @@ export class ActivityDataService {
   }
 
   async putAsync(activity: Activity): Promise<Activity> {
-    return this.fromDb(await this.db.upsertDocument<ActivityDbObject>(this.toDb(activity), activity.topLevelId));
+    return this.fromDb(await this.db.upsertDocument<UserActivityDbObject>(this.toDb(activity), activity.userId));
   }
 
-  private toDb(model: Activity): Partial<ActivityDbObject> {
+  private toDb(model: Activity): Partial<UserActivityDbObject> {
     return {
       action: model.action,
       data: model.data,
-      id: uuid(),
+      id: model.id,
       _ts: 0,
       objectId: model.objectId,
       topLevelId: model.topLevelId,
@@ -37,7 +36,7 @@ export class ActivityDataService {
     };
   }
 
-  private fromDb(modelDb: ActivityDbObject): Activity {
+  private fromDb(modelDb: UserActivityDbObject): Activity {
     return {
       id: modelDb.id,
       action: modelDb.action,

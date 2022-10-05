@@ -1,16 +1,14 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { faCogs, faSquare } from '@fortawesome/pro-solid-svg-icons';
-import { faDiagramSubtask } from '@fortawesome/pro-regular-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
 import { Project, WbsNode } from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
 import { UiState } from '@wbs/shared/states';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { TimelineViewModel, WbsNodeView } from '@wbs/shared/view-models';
 import { Observable } from 'rxjs';
-import { ChangeTaskTitle, CreateTask, RemoveTask } from '../../project.actions';
-import { ProjectState } from '../../states';
+import { ChangeTaskTitle, CreateTask, RemoveTask } from '../../actions';
+import { ProjectState, ProjectTimelineState } from '../../states';
 import { MenuItems, PAGE_VIEW_TYPE } from './models';
 import { TaskViewState } from './task-view.state';
 
@@ -28,10 +26,10 @@ export class TaskViewComponent {
   @Select(TaskViewState.viewDiscipline)
   viewDiscipline$!: Observable<WbsNodeView>;
   @Select(TaskViewState.viewPhase) viewPhase$!: Observable<WbsNodeView>;
+  @Select(ProjectTimelineState.task) timeline$!: Observable<
+    TimelineViewModel[]
+  >;
 
-  readonly faCogs = faCogs;
-  readonly faSquare = faSquare;
-  readonly faSubTask = faDiagramSubtask;
   readonly links = MenuItems.links;
   readonly actions = MenuItems.actions;
 

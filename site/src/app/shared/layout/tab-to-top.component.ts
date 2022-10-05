@@ -1,6 +1,5 @@
 import { ViewportScroller } from '@angular/common';
 import { Component, HostListener } from '@angular/core';
-import { faAngleUp } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
   selector: 'app-tab-to-top',
@@ -12,18 +11,10 @@ import { faAngleUp } from '@fortawesome/pro-solid-svg-icons';
       display: show ? 'block' : 'none'
     }"
   >
-    <fa-icon
-      [icon]="faAngleUp"
-      [ngStyle]="{
-        'padding-top': 0,
-        'font-size': '20px',
-        'line-height': 2.4
-      }"
-    ></fa-icon>
+    <i class="fa-solid fa-angle-up fa-3x pd-t-5"></i>
   </a> `,
 })
 export class TabToTopComponent {
-  readonly faAngleUp = faAngleUp;
   show = false;
 
   constructor(private viewScroller: ViewportScroller) {}

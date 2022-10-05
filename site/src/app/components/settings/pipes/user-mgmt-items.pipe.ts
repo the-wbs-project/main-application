@@ -1,5 +1,4 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { faCheck, faEye, faX } from '@fortawesome/pro-solid-svg-icons';
 import { MenuItem } from '@wbs/shared/models';
 import { UserViewModel } from '../models';
 
@@ -10,7 +9,7 @@ export class UserMgmtItemsPipe implements PipeTransform {
       {
         id: 'view',
         title: 'Settings.ViewUserDetails',
-        icon: faEye,
+        icon: 'fa-eye',
       },
     ];
 
@@ -18,13 +17,13 @@ export class UserMgmtItemsPipe implements PipeTransform {
       items.push({
         id: 'deactivate',
         title: 'Settings.DeactivateUser',
-        icon: faX,
+        icon: 'fa-x',
       });
     } else {
       items.push({
         id: 'activate',
         title: 'Settings.ActivateUser',
-        icon: faCheck,
+        icon: 'fa-check',
       });
     }
 

@@ -3,11 +3,15 @@ import { EdgeService } from '../edge-services';
 import { StorageFactory } from '../storage-services';
 import { ActivityDataService } from './activity.data-service';
 import { AuthDataService } from './auth.data-service';
+import { DATA_SERVICE_CONFIG } from './data-service.config';
 import { InviteDataService } from './invite.data-service';
 import { MetadataDataService } from './metadata.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectSnapshotDataService } from './project-snapshot.data-service';
 import { ProjectDataService } from './project.data-service';
+import { UserActivityDataService } from './user-activity.data-service';
+
+const config = DATA_SERVICE_CONFIG;
 
 export class DataServiceFactory {
   private _activities?: ActivityDataService;
@@ -15,9 +19,14 @@ export class DataServiceFactory {
   private _projects?: ProjectDataService;
   private _projectNodes?: ProjectNodeDataService;
   private _projectSnapshots?: ProjectSnapshotDataService;
+  private _userActivities?: UserActivityDataService;
 
   readonly auth = new AuthDataService(this.edge.authData);
-  readonly metadata = new MetadataDataService(this.mainRequest, this.dbFactory, this.edge.data);
+  readonly metadata = new MetadataDataService(
+    this.dbFactory.createDbService(this.mainRequest, config.resources),
+    this.dbFactory.createDbService(this.mainRequest, config.lists),
+    this.edge.data,
+  );
 
   constructor(
     private readonly dbFactory: DbFactory,
@@ -27,16 +36,44 @@ export class DataServiceFactory {
   ) {}
 
   setOrganization(organization: string): void {
-    this._activities = new ActivityDataService(organization, this.mainRequest, this.dbFactory);
-    this._invites = new InviteDataService(organization, this.mainRequest, this.dbFactory);
-    this._projects = new ProjectDataService(organization, this.dbFactory, this.mainRequest, this.edge.data);
-    this._projectNodes = new ProjectNodeDataService(organization, this.dbFactory, this.mainRequest, this.edge.data);
+    this._activities = new ActivityDataService(
+      this.dbFactory.createDbService(this.mainRequest, {
+        ...config.activities,
+        dbId: organization,
+      }),
+    );
+    this._invites = new InviteDataService(
+      this.dbFactory.createDbService(this.mainRequest, {
+        ...config.invites,
+        dbId: organization,
+      }),
+    );
+    this._projects = new ProjectDataService(
+      organization,
+      this.dbFactory.createDbService(this.mainRequest, {
+        ...config.projects,
+        dbId: organization,
+      }),
+      this.edge.data,
+    );
+    this._projectNodes = new ProjectNodeDataService(
+      this.dbFactory.createDbService(this.mainRequest, {
+        ...config.projectNodes,
+        dbId: organization,
+      }),
+    );
     this._projectSnapshots = new ProjectSnapshotDataService(
       this.storage.snapshots,
       this.edge,
       this.projects,
       this.projectNodes,
       organization,
+    );
+    this._userActivities = new UserActivityDataService(
+      this.dbFactory.createDbService(this.mainRequest, {
+        ...config.userActivities,
+        dbId: organization,
+      }),
     );
   }
 
@@ -63,5 +100,10 @@ export class DataServiceFactory {
   get projectSnapshots(): ProjectSnapshotDataService {
     if (!this._projectSnapshots) throw new Error('Organization Not Set');
     return this._projectSnapshots;
+  }
+
+  get userActivities(): UserActivityDataService {
+    if (!this._userActivities) throw new Error('Organization Not Set');
+    return this._userActivities;
   }
 }

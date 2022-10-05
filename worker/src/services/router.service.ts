@@ -55,6 +55,7 @@ export class RouterService {
     this.router.get('/api/current', apiAuth, Http.auth.currentUserAsync);
     this.router.get('/api/resources/:category', apiAuth, Http.metadata.getResourcesAsync);
     this.router.get('/api/activity/:topLevelId', apiAuth, Http.activity.getByIdAsync);
+    this.router.get('/api/activity/user/:userId', apiAuth, Http.activity.getByUserIdAsync);
     this.router.put('/api/activity/:dataType', apiAuth, Http.activity.putAsync);
     this.router.get('/api/lists/:name', apiAuth, Http.metadata.getListAsync);
     this.router.get('/api/projects/my', apiAuth, Http.project.getAllAsync);

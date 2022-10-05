@@ -1,5 +1,3 @@
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-
 export interface MenuItem {
   id?: string;
   headTitle?: string;
@@ -8,7 +6,7 @@ export interface MenuItem {
   title?: string;
   titleNotResource?: boolean;
   description?: string;
-  icon?: IconDefinition;
+  icon?: string;
   type?: 'link' | 'sub';
   badgeType?: string;
   badgeValue?: string;
@@ -19,9 +17,10 @@ export interface MenuItem {
 }
 
 export interface ActionMenuItem {
+  id?: string;
   title?: string;
   tooltip?: string;
   action: string;
-  icon?: IconDefinition;
+  icon?: string;
   disabled?: boolean;
 }

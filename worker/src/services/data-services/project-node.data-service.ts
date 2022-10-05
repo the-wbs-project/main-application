@@ -1,23 +1,8 @@
 import { ProjectNode } from '../../models';
-import { DbFactory, DbService } from '../database-services';
-import { EdgeDataService } from '../edge-services';
+import { DbService } from '../database-services';
 
 export class ProjectNodeDataService {
-  private readonly db: DbService;
-
-  constructor(
-    private readonly organization: string,
-    dbFactory: DbFactory,
-    mainRequest: Request,
-    private readonly edge: EdgeDataService,
-  ) {
-    this.db = dbFactory.createDbService(
-      mainRequest,
-      this.organization,
-      'ProjectNodes',
-      'projectId',
-    );
-  }
+  constructor(private readonly db: DbService) {}
 
   async getAllAsync(projectId: string): Promise<ProjectNode[]> {
     const data = (await this.getFromDbAsync(projectId)) ?? [];
@@ -56,11 +41,7 @@ export class ProjectNodeDataService {
     await this.db.upsertDocument(node, node.projectId);
   }
 
-  async batchAsync(
-    projectId: string,
-    upserts: ProjectNode[],
-    removeIds: string[],
-  ): Promise<void> {
+  async batchAsync(projectId: string, upserts: ProjectNode[], removeIds: string[]): Promise<void> {
     const all = await this.getAllAsync(projectId);
     //
     //  First we are going to validate that all upserts have the proper project ID.
@@ -73,8 +54,7 @@ export class ProjectNodeDataService {
     //
     for (const nodeId of removeIds) {
       const node = all.find((x) => x.id === nodeId);
-      if (!node || node.projectId !== projectId)
-        throw new Error('Invalid_Project_Id');
+      if (!node || node.projectId !== projectId) throw new Error('Invalid_Project_Id');
 
       node.removed = true;
       //

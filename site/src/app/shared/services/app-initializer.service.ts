@@ -3,7 +3,6 @@ import {
   LoadOrganization,
   LoadProfile,
   LoadProjects,
-  LoadTimelineDefinitions,
   SetupCategories,
   TurnOffIsLoading,
 } from '@wbs/shared/actions';
@@ -26,11 +25,7 @@ export class AppInitializerFactory {
 
       return resources.initiate('General').pipe(
         switchMap(() =>
-          store.dispatch([
-            new SetupCategories(),
-            new LoadTimelineDefinitions(),
-            new LoadProfile(),
-          ])
+          store.dispatch([new SetupCategories(), new LoadProfile()])
         ),
         switchMap(() =>
           store.dispatch([new LoadProjects(), new LoadOrganization()])

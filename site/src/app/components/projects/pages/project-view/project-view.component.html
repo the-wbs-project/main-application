@@ -31,7 +31,7 @@
                   class="me-3"
                   *ngFor="let disc of project.categories.discipline"
                 >
-                  <fa-icon [icon]="disc | disciplineIcon"></fa-icon>
+                  <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
                   {{ disc | categoryLabel }}
                 </label>
               </p>
@@ -131,7 +131,7 @@
                 </wbs-tree>
               </div>
               <div *ngIf="pageView === 'timeline'" class="pane-content">
-                <wbs-timeline id="123"></wbs-timeline>
+                <wbs-timeline [timeline]="timeline$ | async"></wbs-timeline>
               </div>
             </div>
           </div>

@@ -1,5 +1,4 @@
 import { Component, Input } from '@angular/core';
-import { SizeProp } from '@fortawesome/fontawesome-svg-core';
 
 @Component({
   selector: 'wbs-discipline-icon',
@@ -9,10 +8,9 @@ import { SizeProp } from '@fortawesome/fontawesome-svg-core';
     filter="span"
     [title]="id | categoryLabel"
   >
-    <fa-icon [size]="size" [icon]="id | disciplineIcon"></fa-icon>
+    <i class="fa-solid fa-1x" [ngClass]="[id | disciplineIcon]"></i>
   </span>`,
 })
 export class DisciplineIconComponent {
-  @Input() size: SizeProp = '1x';
   @Input() id: string | undefined;
 }

@@ -1,6 +1,6 @@
 import { ProjectCategory, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
 import { WbsNodeView } from '@wbs/shared/view-models';
-import { ExtractResults } from './models';
+import { ExtractResults } from '../models';
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';

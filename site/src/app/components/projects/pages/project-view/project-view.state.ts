@@ -22,7 +22,7 @@ import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
   SaveUpload,
-} from '../../project.actions';
+} from '../../actions';
 import { ProjectState } from '../../states';
 import {
   ProjectCategoryDialogComponent,

@@ -1,14 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { TimelineState } from '@wbs/shared/states';
+import { TimelineService } from '@wbs/shared/services';
 
 @Pipe({ name: 'actionIcon' })
 export class ActionIconPipe implements PipeTransform {
-  constructor(private readonly store: Store) {}
+  constructor(private readonly service: TimelineService) {}
 
   transform(actionId: string): string {
-    return this.store
-      .selectSnapshot(TimelineState.definitions)!
-      .find((x) => x.id === actionId)!.icon;
+    return this.service.getIcon(actionId) ?? '';
   }
 }

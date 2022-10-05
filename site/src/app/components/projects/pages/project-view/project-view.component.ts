@@ -5,7 +5,7 @@ import { Select, Store } from '@ngxs/store';
 import { Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
 import { UiState } from '@wbs/shared/states';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { TimelineViewModel, WbsNodeView } from '@wbs/shared/view-models';
 import { Observable } from 'rxjs';
 import { UserRole } from '../../models';
 import {
@@ -18,7 +18,7 @@ import {
   MoveTaskUp,
   RemoveTask,
   TreeReordered,
-} from '../../project.actions';
+} from '../../actions';
 import { ProjectState } from '../../states';
 import { MenuItems, PAGE_VIEW_TYPE } from './models';
 import {
@@ -28,6 +28,7 @@ import {
   UploadNodes,
 } from './project-view.actions';
 import { ProjectViewState } from './project-view.state';
+import { ProjectTimelineState } from '../../states/project-timeline.state';
 
 @Component({
   templateUrl: './project-view.component.html',
@@ -40,6 +41,9 @@ export class ProjectView2Component implements OnInit {
   @Select(ProjectState.current) project$!: Observable<Project>;
   @Select(ProjectState.disciplines) disciplines$!: Observable<WbsNodeView[]>;
   @Select(ProjectState.phases) phases$!: Observable<WbsNodeView[]>;
+  @Select(ProjectTimelineState.project) timeline$!: Observable<
+    TimelineViewModel[]
+  >;
   @Select(ProjectViewState.pageView) pageView$!: Observable<PAGE_VIEW_TYPE>;
   @Select(ProjectViewState.viewNode)
   viewNode$!: Observable<PROJECT_NODE_VIEW_TYPE>;

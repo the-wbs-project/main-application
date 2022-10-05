@@ -1,3 +1,4 @@
+import { ProjectNode } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
 
@@ -8,16 +9,10 @@ export class ProjectNodeHttpService extends BaseHttpService {
       //
       //  Get the data from the KV
       //
-      const data = await req.services.data.projectNodes.getAllAsync(
-        req.params.projectId,
-      );
+      const data = await req.services.data.projectNodes.getAllAsync(req.params.projectId);
       return await super.buildJson(data);
     } catch (e) {
-      req.logException(
-        'An error occured trying to get the phase WBS list for a project.',
-        'ProjectNodeHttpService.getAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to get the phase WBS list for a project.', 'ProjectNodeHttpService.getAsync', <Error>e);
       return 500;
     }
   }
@@ -35,11 +30,7 @@ export class ProjectNodeHttpService extends BaseHttpService {
 
       return 204;
     } catch (e) {
-      req.logException(
-        'An error occured trying to put a node.',
-        'ProjectNodeHttpService.putAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying to put a node.', 'ProjectNodeHttpService.putAsync', <Error>e);
       return 500;
     }
   }
@@ -51,22 +42,14 @@ export class ProjectNodeHttpService extends BaseHttpService {
 
       if (!projectId) return 500;
 
-      const data = await req.request.json();
+      const data: { upserts: ProjectNode[]; removeIds: string[] } = await req.request.json();
 
-      await req.services.data.projectNodes.batchAsync(
-        projectId,
-        data.upserts,
-        data.removeIds,
-      );
+      await req.services.data.projectNodes.batchAsync(projectId, data.upserts, data.removeIds);
       await req.services.data.projects.updateModifiedDateAsync(projectId);
 
       return 204;
     } catch (e) {
-      req.logException(
-        'An error occured trying upload a batch of node changes.',
-        'ProjectNodeHttpService.batchAsync',
-        <Error>e,
-      );
+      req.logException('An error occured trying upload a batch of node changes.', 'ProjectNodeHttpService.batchAsync', <Error>e);
       return 500;
     }
   }

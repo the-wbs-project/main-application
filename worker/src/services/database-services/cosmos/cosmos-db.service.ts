@@ -1,4 +1,4 @@
-import { CosmosClient, Document } from '@cfworker/cosmos';
+import { CosmosClient, Document, Resource } from '@cfworker/cosmos';
 import { Config } from '../../../config';
 import { IdObject } from '../../../models';
 import { myFetch } from '../../fetcher.service';
@@ -116,7 +116,7 @@ export class CosmosDbService implements DbService {
     return result.length === 0 ? undefined : result[0];
   }
 
-  async upsertDocument<T extends IdObject>(document: T, pk: string): Promise<number> {
+  async upsertDocument<T extends Document & Resource>(document: Partial<T>, pk: string): Promise<T> {
     if (!this.db) throw new Error('The database has not been initiated.');
 
     const res = await this.db.createDocument({
@@ -129,6 +129,6 @@ export class CosmosDbService implements DbService {
       console.log('The error message');
       console.log(await res.json());
     }
-    return res.status;
+    return <T>await res.json();
   }
 }

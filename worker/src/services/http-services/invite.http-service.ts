@@ -20,7 +20,10 @@ export class InviteHttpService extends BaseHttpService {
     try {
       if (!req.params?.organization || !req.params?.code) return 500;
 
-      req.setOrganization(req.params.organization);
+      req.setOrganization({
+        organization: req.params.organization,
+        roles: [],
+      });
       //
       //  Get the data from the KV
       //
@@ -50,7 +53,10 @@ export class InviteHttpService extends BaseHttpService {
     try {
       if (!req.params?.organization || !req.params?.code) return 500;
 
-      req.setOrganization(req.params.organization);
+      req.setOrganization({
+        organization: req.params.organization,
+        roles: [],
+      });
       //
       //  Get the data from the KV
       //

@@ -6,7 +6,7 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { WbsNodeDeleteService } from '@wbs/components/_features';
-import { ProjectUpdated, SaveTimelineAction } from '@wbs/shared/actions';
+import { ProjectUpdated } from '@wbs/shared/actions';
 import {
   ActivityData,
   Project,
@@ -39,11 +39,12 @@ import {
   NavigateToView,
   RebuildNodeViews,
   RemoveTask,
+  SaveTimelineAction,
   SaveUpload,
   SetProject,
   TreeReordered,
   VerifyProject,
-} from '../project.actions';
+} from '../actions';
 
 interface StateModel {
   current?: Project;

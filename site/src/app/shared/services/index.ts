@@ -1,6 +1,5 @@
 export * from './data-services';
 export * from './transformers';
-export * from './activity.service';
 export * from './analytics.service';
 export * from './app-initializer.service';
 export * from './category-selection.service';
@@ -20,6 +19,7 @@ export * from './service.module';
 export * from './storage.service';
 export * from './switcher.service';
 export * from './theme.service';
+export * from './timeline.service';
 export * from './title.service';
 export * from './ui.service';
 export * from './utils.service';

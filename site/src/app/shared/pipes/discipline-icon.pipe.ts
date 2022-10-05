@@ -1,15 +1,20 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { faQuestion } from '@fortawesome/pro-solid-svg-icons';
-import { DISCIPLINE_ICONS } from 'src/environments/icons';
+import { Store } from '@ngxs/store';
 import { ListItem } from '../models';
+import { MetadataState } from '../states';
 
-@Pipe({ name: 'disciplineIcon', pure: false })
+@Pipe({ name: 'disciplineIcon' })
 export class DisciplineIconPipe implements PipeTransform {
+  constructor(private readonly store: Store) {}
+
   transform(
     idsOrCat: (string | ListItem) | null | undefined,
-    defaultIcon = faQuestion
-  ): IconDefinition {
-    return DISCIPLINE_ICONS.find((x) => x.id === idsOrCat)?.icon ?? defaultIcon;
+    defaultIcon = 'fa-question'
+  ): string {
+    return (
+      (typeof idsOrCat === 'string'
+        ? this.store.selectSnapshot(MetadataState.categoryIcons)!.get(idsOrCat)
+        : null) ?? defaultIcon
+    );
   }
 }

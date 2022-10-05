@@ -4,8 +4,11 @@ import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { IconModule } from '@progress/kendo-angular-icons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { ProjectResourceGuard } from '@wbs/components/projects/guards';
-import { WbsTreeModule } from '@wbs/components/_features';
+import {
+  ProjectResourceGuard,
+  ProjectVerifyGuard,
+} from '@wbs/components/projects/guards';
+import { TimelineModule, WbsTreeModule } from '@wbs/components/_features';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import { TaskSubTasksComponent } from './components';
@@ -23,7 +26,12 @@ const routes: Routes = [
   {
     path: ':view',
     component: TaskViewComponent,
-    canActivate: [ProjectResourceGuard, TaskVerifyGuard, TaskViewGuard],
+    canActivate: [
+      ProjectResourceGuard,
+      ProjectVerifyGuard,
+      TaskVerifyGuard,
+      TaskViewGuard,
+    ],
   },
 ];
 
@@ -36,6 +44,7 @@ const routes: Routes = [
     RouterModule.forChild(routes),
     SharedModule,
     TextBoxModule,
+    TimelineModule,
     WbsTreeModule,
   ],
   providers: [TaskRedirectGuard, TaskVerifyGuard, TaskViewGuard],

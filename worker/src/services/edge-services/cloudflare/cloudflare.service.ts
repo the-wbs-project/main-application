@@ -28,26 +28,11 @@ export class CloudflareService implements EdgeService {
     return this.request.cf;
   }
 
-  async cacheMatch(): Promise<Response | null> {
-    const response = await cache.match(this.match);
-
-    return response ? this.matchCheck(response) : null;
+  cacheMatch(): Promise<Response | undefined> {
+    return cache.match(this.match);
   }
 
   cachePut(response: Response): void {
     this.context.waitUntil(cache.put(this.request, response.clone()));
-  }
-
-  private matchCheck(match: Response): Response {
-    const status = match.headers.get('cf-cache-status');
-    const hdrs = new Headers({
-      'content-type': 'application/json;charset=utf-8',
-    });
-    if (status) hdrs.set('cf-cache-status', status);
-
-    return new Response(match.body, {
-      status: 200,
-      headers: hdrs,
-    });
   }
 }
