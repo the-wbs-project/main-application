@@ -7,13 +7,12 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { FileSelectModule } from '@progress/kendo-angular-upload';
-import { SharedModule } from '@wbs/shared/module';
 import {
   CategoryListEditorModule,
-  LabelDialogModule,
   TimelineModule,
   WbsTreeModule,
-} from '../../../_features';
+} from '@wbs/components/_features';
+import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import { ProjectResourceGuard, ProjectVerifyGuard } from '../../guards';
 import {
@@ -60,7 +59,6 @@ const routes: Routes = [
     ContextMenuModule,
     DialogModule,
     FileSelectModule,
-    LabelDialogModule,
     NgxsModule.forFeature([ProjectViewState]),
     ProjectComponentModule,
     RouterModule.forChild(routes),

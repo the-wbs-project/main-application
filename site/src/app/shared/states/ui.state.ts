@@ -11,11 +11,7 @@ import {
   StateContext,
   Store,
 } from '@ngxs/store';
-import {
-  MainContentSizeChanged,
-  ParseNavigation,
-  TurnOffIsLoading,
-} from '../actions';
+import { MainContentSizeChanged, ParseNavigation } from '../actions';
 import { Resources } from '../services';
 
 interface StateModel {
@@ -39,11 +35,6 @@ export class UiState implements NgxsOnInit {
     private readonly resources: Resources,
     private readonly store: Store
   ) {}
-
-  @Selector()
-  static isLoading(state: StateModel): boolean {
-    return state.isLoading;
-  }
 
   @Selector()
   static mainContentWidth(state: StateModel): number {
@@ -80,13 +71,6 @@ export class UiState implements NgxsOnInit {
   ): void {
     ctx.patchState({
       mainContentWidth: action.width,
-    });
-  }
-
-  @Action(TurnOffIsLoading)
-  TurnOffIsLoading(ctx: StateContext<StateModel>): void {
-    ctx.patchState({
-      isLoading: false,
     });
   }
 

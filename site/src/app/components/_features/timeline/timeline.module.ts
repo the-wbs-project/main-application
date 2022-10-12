@@ -10,7 +10,6 @@ import { TimelineComponent } from './timeline.component';
 
 @NgModule({
   imports: [SharedModule],
-  providers: [],
   declarations: [
     ActionDescriptionPipe,
     ActionDescriptionTransformPipe,

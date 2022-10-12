@@ -1,6 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ProjectCategory, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import {
+  CAT_LISTS_TYPE,
+  LISTS,
+  LISTS_TYPE,
+  ProjectCategory,
+  PROJECT_NODE_VIEW,
+  PROJECT_NODE_VIEW_TYPE,
+} from '@wbs/shared/models';
 import { MetadataState } from '@wbs/shared/states';
 import { CategorySelection } from '@wbs/shared/view-models';
 
@@ -12,9 +19,18 @@ export class CategorySelectionService {
     categoryType: PROJECT_NODE_VIEW_TYPE,
     selected: ProjectCategory[] | undefined
   ): CategorySelection[] {
+    const cat =
+      categoryType === PROJECT_NODE_VIEW.DISCIPLINE
+        ? LISTS.DISCIPLINE
+        : categoryType === PROJECT_NODE_VIEW.PHASE
+        ? LISTS.PHASE
+        : null;
+
+    if (cat == null) return [];
+
     const categories = this.store
       .selectSnapshot(MetadataState.categoryList)
-      .get(categoryType)!;
+      .get(cat)!;
 
     const cats: CategorySelection[] = [];
 
@@ -83,9 +99,18 @@ export class CategorySelectionService {
     list: ProjectCategory[],
     selected: string[]
   ): CategorySelection[] {
+    const cat =
+      categoryType === PROJECT_NODE_VIEW.DISCIPLINE
+        ? LISTS.DISCIPLINE
+        : categoryType === PROJECT_NODE_VIEW.PHASE
+        ? LISTS.PHASE
+        : null;
+
+    if (cat == null) return [];
+
     const categories = this.store
       .selectSnapshot(MetadataState.categoryList)
-      .get(categoryType)!;
+      .get(cat)!;
 
     const cats: CategorySelection[] = [];
 

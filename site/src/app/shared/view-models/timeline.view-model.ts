@@ -1,4 +1,4 @@
-import { ActionMenuItem } from '../models';
+import { TimelineMenuItem } from '../models';
 
 export interface TimelineViewModel {
   id: string;
@@ -7,5 +7,5 @@ export interface TimelineViewModel {
   data: Record<string, any>;
   timestamp: number;
   userId: string;
-  menu: ActionMenuItem[];
+  menu: TimelineMenuItem[];
 }

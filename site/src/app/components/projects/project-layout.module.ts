@@ -2,7 +2,10 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { SharedModule } from '@wbs/shared/module';
-import { CategoryListEditorModule, WbsNodeDeleteModule } from '../_features';
+import {
+  CategoryListEditorModule,
+  TaskDeleteDialogModule,
+} from '@wbs/components/_features';
 import { ProjectResourceGuard, ProjectVerifyGuard } from './guards';
 import { ProjectLayoutComponent } from './project-layout.component';
 import { ProjectState, ProjectTimelineState } from './states';
@@ -50,7 +53,7 @@ export const routes: Routes = [
     NgxsModule.forFeature([ProjectState, ProjectTimelineState]),
     RouterModule.forChild(routes),
     SharedModule,
-    WbsNodeDeleteModule,
+    TaskDeleteDialogModule,
   ],
   providers: [ProjectResourceGuard, ProjectVerifyGuard],
   declarations: [ProjectLayoutComponent],

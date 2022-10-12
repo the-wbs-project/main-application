@@ -5,13 +5,12 @@ import {
   DialogCloseResult,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { WbsNodeDeleteService } from '@wbs/components/_features';
+import { TaskDeleteDialogComponent } from '@wbs/components/_features/task-delete-dialog/task-delete-dialog.component';
 import { ProjectUpdated } from '@wbs/shared/actions';
 import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
-  ROLES,
   WbsNode,
 } from '@wbs/shared/models';
 import {
@@ -23,8 +22,6 @@ import {
 } from '@wbs/shared/services';
 import { WbsNodeView } from '@wbs/shared/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
-import { TaskCreateDialogComponent } from '../components';
-import { PROJECT_ACTIONS, TASK_ACTIONS, UserRole } from '../models';
 import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
@@ -45,38 +42,27 @@ import {
   TreeReordered,
   VerifyProject,
 } from '../actions';
+import { TaskCreateDialogComponent } from '../components';
+import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
 
 interface StateModel {
   current?: Project;
   disciplines?: WbsNodeView[];
   nodes?: WbsNode[];
   phases?: WbsNodeView[];
-  roles: UserRole[];
 }
 
 @Injectable()
 @State<StateModel>({
   name: 'project',
-  defaults: {
-    roles: [
-      {
-        role: ROLES.PM,
-        userId: 'auth0-cw',
-      },
-      {
-        role: ROLES.SME,
-        userId: 'auth0-bh',
-      },
-    ],
-  },
+  defaults: {},
 })
 export class ProjectState {
   constructor(
     private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
-    private readonly deleteService: WbsNodeDeleteService,
     private readonly dialog: DialogService,
-    private readonly messages: Messages,
+    private readonly messaging: Messages,
     private readonly transformers: WbsTransformers
   ) {}
 
@@ -98,11 +84,6 @@ export class ProjectState {
   @Selector()
   static phases(state: StateModel): WbsNodeView[] | undefined {
     return state.phases;
-  }
-
-  @Selector()
-  static roles(state: StateModel): UserRole[] {
-    return state.roles;
   }
 
   @Action(VerifyProject)
@@ -166,39 +147,18 @@ export class ProjectState {
     });
   }
 
-  /*@Action(AddSubTask)
-  addNodeToProject(
-    ctx: StateContext<StateModel>,
-    action: AddSubTask
-  ): Observable<any> {
-    const state = ctx.getState();
-    const node = action.parent;
-
-    node.id = IdService.generate();
-
-    return this.data.projectNodes.putAsync(state.current!.id, node).pipe(
-      // TO DO SEND ACTIVITY
-      tap(() => {
-        const nodes = [...ctx.getState().nodes!];
-        nodes.push(node);
-
-        ctx.patchState({
-          nodes,
-        });
-      })
-    );
-  }*/
-
   @Action(RemoveTask)
   removeNodeToProject(
     ctx: StateContext<StateModel>,
     action: RemoveTask
   ): Observable<any> | void {
-    return this.deleteService.launchAsync().pipe(
+    return this.messaging.openDialog<string>(TaskDeleteDialogComponent).pipe(
       switchMap((reason) => {
         if (!reason) return of();
 
         const state = ctx.getState();
+        const parentId = state.current!.id;
+        const changed: Observable<void>[] = [];
         const nodes = this.copy(state.nodes)!;
         const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
 
@@ -206,16 +166,10 @@ export class ProjectState {
 
         nodes[nodeIndex].removed = true;
 
-        let changedIds: string[] = [action.nodeId];
-
-        changedIds.push(
-          ...this.transformers.nodes.phase.reorderer.run(state.current!, nodes)
-        );
-        /*changedIds.push(
-          ...this.transformers.nodes.discipline.reorderer.run(state.current!, nodes)
-        );*/
-        const changed: Observable<void>[] = [];
-        const parentId = state.current!.id;
+        let changedIds: string[] = [
+          action.nodeId,
+          ...this.transformers.nodes.phase.reorderer.run(state.current!, nodes),
+        ];
 
         for (const node of nodes) {
           if (changedIds.indexOf(node.id) === -1) continue;
@@ -230,21 +184,18 @@ export class ProjectState {
           ),
           switchMap(() => ctx.dispatch(new RebuildNodeViews())),
           switchMap(() =>
+            this.saveActivity(ctx, {
+              action: TASK_ACTIONS.REMOVED,
+              data: {
+                reason,
+              },
+              objectId: action.nodeId,
+            })
+          ),
+          switchMap(() =>
             action.completedAction ? ctx.dispatch(action.completedAction) : of()
           )
         );
-        /*
-          return this.data.projectNodes.putAsync(state.current!.id, node).pipe(
-            // TO DO SEND REASON
-            // TO DO SEND ACTIVITY
-            map(() => {
-              nodes[nodeIndex] = node;
-              ctx.patchState({
-                nodes: [...nodes],
-              });
-            })
-          );
-        */
       })
     );
   }
@@ -261,7 +212,7 @@ export class ProjectState {
     project.title = action.title;
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messages.success('Projects.ProjectTitleUpdated')),
+      tap(() => this.messaging.success('Projects.ProjectTitleUpdated')),
       switchMap(() =>
         this.saveActivity(ctx, {
           action: PROJECT_ACTIONS.TITLE_CHANGED,
@@ -296,7 +247,7 @@ export class ProjectState {
         })
       ),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() => this.messages.success('Projects.ProjectPhasesUpdated'))
+      tap(() => this.messaging.success('Projects.ProjectPhasesUpdated'))
     );
   }
 
@@ -352,7 +303,7 @@ export class ProjectState {
           action: TASK_ACTIONS.CLONED,
         })
       ),
-      tap(() => this.messages.success('Projects.TaskCloned'))
+      tap(() => this.messaging.success('Projects.TaskCloned'))
     );
   }
 
@@ -503,7 +454,7 @@ export class ProjectState {
     project.categories.discipline = action.disciplines;
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messages.success('Projects.ProjectDisciplinesUpdated')),
+      tap(() => this.messaging.success('Projects.ProjectDisciplinesUpdated')),
       switchMap(() =>
         this.saveActivity(ctx, {
           action: PROJECT_ACTIONS.DISCIPLINES_CHANGED,
@@ -554,7 +505,7 @@ export class ProjectState {
           action: TASK_ACTIONS.TITLE_CHANGED,
         })
       ),
-      tap(() => this.messages.success('Projects.TaskTitleUpdated'))
+      tap(() => this.messaging.success('Projects.TaskTitleUpdated'))
     );
   }
 
@@ -671,6 +622,7 @@ export class ProjectState {
         (
           result: DialogCloseResult | { model: Partial<WbsNode>; nav: boolean }
         ) => {
+          console.log(result);
           if (result instanceof DialogCloseResult) return of();
 
           const nodes = ctx.getState().nodes!;
@@ -710,7 +662,7 @@ export class ProjectState {
                 action: TASK_ACTIONS.CREATED,
               })
             ),
-            tap(() => this.messages.success('Projects.TaskCreated')),
+            tap(() => this.messaging.success('Projects.TaskCreated')),
             switchMap(() =>
               result.nav
                 ? ctx.dispatch(
@@ -796,7 +748,7 @@ export class ProjectState {
             action: TASK_ACTIONS.REORDERED,
           });
         }),
-        tap(() => this.messages.success('Projects.TaskReordered'))
+        tap(() => this.messaging.success('Projects.TaskReordered'))
       );
   }
 
@@ -812,3 +764,4 @@ export class ProjectState {
     return ctx.dispatch(new ProjectUpdated(project));
   }
 }
+/**/

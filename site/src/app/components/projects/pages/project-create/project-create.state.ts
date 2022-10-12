@@ -248,6 +248,7 @@ export class ProjectCreateState {
       category: state.category!,
       description: state.description,
       mainNodeView: state.nodeView!,
+      roles: [],
       status: PROJECT_STATI.PLANNING,
       title: state.title,
       _ts: new Date().getTime(),

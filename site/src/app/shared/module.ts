@@ -5,9 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
-import { DialogModule } from '@progress/kendo-angular-dialog';
-import { BottomNavigationModule } from '@progress/kendo-angular-navigation';
 import {
   PerfectScrollbarConfigInterface,
   PerfectScrollbarModule,
@@ -17,6 +14,7 @@ import {
   ActionButtonsComponent,
   EditPencilComponent,
   LoadingComponent,
+  SwitchComponent,
 } from './components';
 import {
   FillElementDirective,
@@ -31,7 +29,6 @@ import {
   ContentLayoutComponent,
   FooterComponent,
   HeaderComponent,
-  LoaderComponent,
   PageHeaderComponent,
   SidebarComponent,
   TabToTopComponent,
@@ -60,9 +57,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
 
 @NgModule({
   imports: [
-    BottomNavigationModule,
-    DialogModule,
-    DropDownButtonModule,
     FontAwesomeModule,
     FormsModule,
     NgbModule,
@@ -92,7 +86,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     FullscreenDirective,
     HeaderComponent,
     LengthPipe,
-    LoaderComponent,
     LoadingComponent,
     MainContentDirective,
     MatchSizeDirective,
@@ -106,6 +99,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     SafeHtmlPipe,
     SidebarComponent,
     SidemenuToggleDirective,
+    SwitchComponent,
     TabToTopComponent,
     ToggleThemeDirective,
     UserNamePipe,
@@ -117,9 +111,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     CategoryLabelPipe,
     CommonModule,
     DateTextPipe,
-    DialogModule,
     DisciplineIconPipe,
-    DropDownButtonModule,
     EditedDateTextPipe,
     EditPencilComponent,
     FillElementDirective,
@@ -135,6 +127,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     RolesListPipe,
     SafeHtmlPipe,
     ServiceModule,
+    SwitchComponent,
     TranslateModule,
     UserNamePipe,
   ],

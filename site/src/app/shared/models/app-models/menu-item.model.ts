@@ -24,3 +24,11 @@ export interface ActionMenuItem {
   icon?: string;
   disabled?: boolean;
 }
+
+export interface TimelineMenuItem {
+  activityId: string;
+  objectId: string;
+  action: string;
+  title: string;
+  icon: string;
+}

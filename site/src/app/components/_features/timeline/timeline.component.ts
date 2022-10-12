@@ -1,4 +1,6 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
+import { TimelineMenuItem } from '@wbs/shared/models';
 import { Messages } from '@wbs/shared/services';
 import { TimelineViewModel } from '@wbs/shared/view-models';
 
@@ -9,6 +11,11 @@ import { TimelineViewModel } from '@wbs/shared/view-models';
 })
 export class TimelineComponent {
   @Input() timeline?: TimelineViewModel[] | null;
+  @Output() loadMoreClicked = new EventEmitter<void>();
+  @Output() menuItemClicked = new EventEmitter<TimelineMenuItem>();
+
+  readonly faCircleInfo = faCircleInfo;
+  readonly faComment = faComment;
 
   constructor(private readonly messages: Messages) {}
 

@@ -1,8 +1,8 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
 import {
+  CAT_LISTS_TYPE,
   ProjectCategory,
-  PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
 } from '@wbs/shared/models';
 import { CategorySelectionService } from '@wbs/shared/services';
@@ -29,7 +29,6 @@ export class ProjectCategoryDialogComponent extends DialogContentBase {
     categoryType: PROJECT_NODE_VIEW_TYPE,
     categories: ProjectCategory[]
   ): void {
-    console.log(categories);
     this.title = title;
     this.categoryType = categoryType;
     this.categories = this.catService.build(categoryType, categories);

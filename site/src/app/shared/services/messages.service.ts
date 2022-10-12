@@ -1,67 +1,85 @@
 import { Injectable } from '@angular/core';
-import {
-  NotificationService,
-  Position,
-} from '@progress/kendo-angular-notification';
-import { Device } from './device.service';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { from, Observable } from 'rxjs';
+import { DialogComponent } from '../models';
 import { Resources } from './resource.service';
-
-const prefixOfPrefix = 'notification';
 
 @Injectable({ providedIn: 'root' })
 export class Messages {
-  private cssClassPrefix = prefixOfPrefix;
-  private starterCss: string[];
-  private readonly position: Position;
-
   constructor(
-    device: Device,
-    private readonly notificationService: NotificationService,
+    private readonly modalService: NgbModal,
     private readonly resources: Resources
-  ) {
-    this.starterCss = [
-      'notification',
-      'notification-' + device.type.toLowerCase(),
-    ];
-    this.position =
-      device.type === 'Desktop'
-        ? { horizontal: 'right', vertical: 'top' }
-        : { horizontal: 'center', vertical: 'bottom' };
+  ) {}
+
+  info(label: string, isResource = true): void {
+    const x = isResource ? this.resources.get(label) : label;
+
+    //@ts-ignore
+    Notiflix.Notify.info(x);
   }
 
-  changeColorClass(altColors: boolean): void {
-    this.cssClassPrefix = prefixOfPrefix + (altColors ? '-alt' : '');
+  error(label: string, isResource = true): void {
+    const x = isResource ? this.resources.get(label) : label;
+
+    //@ts-ignore
+    Notiflix.Notify.failure(x);
   }
 
-  info(resource: string, isResource = true): void {
-    this.show(resource, isResource, 'info');
+  success(label: string, isResource = true): void {
+    const x = isResource ? this.resources.get(label) : label;
+
+    //@ts-ignore
+    Notiflix.Notify.success(x);
   }
 
-  error(resource: string, isResource = true): void {
-    this.show(resource, isResource, 'error');
+  block(className: string): void {
+    //@ts-ignore
+    Notiflix.Block.hourglass(className);
   }
 
-  success(resource: string, isResource = true): void {
-    console.log(resource);
-    this.show(resource, isResource, 'success');
+  unblock(className: string): void {
+    //@ts-ignore
+    Notiflix.Block.remove(className);
   }
 
-  show(
-    label: string,
-    isResource: boolean,
-    toastr: 'success' | 'error' | 'info'
-  ) {
-    if (isResource) label = this.resources.get(label);
+  confirm(
+    titleLabel: string,
+    messageLabel: string,
+    yesLabel = 'General.Yes',
+    noLabel = 'General.No'
+  ): Observable<boolean> {
+    return new Observable<boolean>((subscriber) => {
+      const title = this.resources.get(titleLabel);
+      const message = this.resources.get(messageLabel);
+      const yes = this.resources.get(yesLabel);
+      const no = this.resources.get(noLabel);
 
-    this.notificationService.show({
-      content: label,
-      hideAfter: 2400,
-      type: { style: 'none', icon: true },
-      animation: { type: 'fade', duration: 400 },
-      position: this.position,
-      cssClass: [...this.starterCss, `${this.cssClassPrefix}-${toastr}`].join(
-        ' '
-      ),
+      //@ts-ignore
+      Notiflix.Confirm.show(
+        title,
+        message,
+        yes,
+        no,
+        () => {
+          subscriber.next(true);
+          subscriber.complete();
+        },
+        () => {
+          subscriber.next(false);
+          subscriber.complete();
+        },
+        {}
+      );
     });
+  }
+
+  openDialog<T>(component: any, data?: any): Observable<T> {
+    const dialog = this.modalService.open(component, {
+      ariaLabelledBy: 'modal-title',
+    });
+
+    if (data) dialog.componentInstance.setup(data);
+
+    return from(dialog.result);
   }
 }

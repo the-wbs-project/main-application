@@ -2,21 +2,26 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import { Project, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import {
+  Project,
+  PROJECT_NODE_VIEW_TYPE,
+  TimelineMenuItem,
+} from '@wbs/shared/models';
 import { TitleService } from '@wbs/shared/services';
 import { UiState } from '@wbs/shared/states';
 import { TimelineViewModel, WbsNodeView } from '@wbs/shared/view-models';
 import { Observable } from 'rxjs';
-import { UserRole } from '../../models';
 import {
   ChangeProjectTitle,
   CloneTask,
   CreateTask,
+  LoadNextProjectTimelinePage,
   MoveTaskDown,
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
   RemoveTask,
+  RestoreProject,
   TreeReordered,
 } from '../../actions';
 import { ProjectState } from '../../states';
@@ -37,7 +42,6 @@ import { ProjectTimelineState } from '../../states/project-timeline.state';
 })
 export class ProjectView2Component implements OnInit {
   @Select(UiState.mainContentWidth) width$!: Observable<number>;
-  @Select(ProjectState.roles) roles$!: Observable<UserRole[]>;
   @Select(ProjectState.current) project$!: Observable<Project>;
   @Select(ProjectState.disciplines) disciplines$!: Observable<WbsNodeView[]>;
   @Select(ProjectState.phases) phases$!: Observable<WbsNodeView[]>;
@@ -100,6 +104,21 @@ export class ProjectView2Component implements OnInit {
       } else if (action === 'moveDown') {
         this.store.dispatch(new MoveTaskDown(this.taskId));
       }
+    }
+  }
+
+  loadMoreTimeline() {
+    this.store.dispatch(new LoadNextProjectTimelinePage());
+  }
+
+  timelineAction(item: TimelineMenuItem) {
+    console.log(item.action);
+    if (item.action === 'navigate') {
+      this.store.dispatch(
+        new Navigate(['projects', this.projectId, 'task', item.objectId])
+      );
+    } else if (item.action === 'restore') {
+      this.store.dispatch(new RestoreProject(item.activityId));
     }
   }
 

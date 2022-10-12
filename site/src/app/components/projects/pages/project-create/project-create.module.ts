@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   FormFieldModule,
   SwitchModule,
@@ -43,6 +44,7 @@ const routes: Routes = [
   imports: [
     CategoryListEditorModule,
     CommonModule,
+    DialogModule,
     FormFieldModule,
     FormsModule,
     LabelModule,

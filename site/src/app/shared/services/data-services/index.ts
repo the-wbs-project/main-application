@@ -4,11 +4,12 @@ import { Store } from '@ngxs/store';
 import { ActivityDataService } from './activity.data-service';
 import { AuthDataService } from './auth.data-service';
 import { ExtractDataService } from './extract.data-service';
+import { InviteDataService } from './invite.data-service';
 import { MetdataDataService } from './metdata.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
+import { ProjectSnapshotDataService } from './project-snapshot.data-service';
 import { ProjectDataService } from './project.data-service';
 import { UserDataService } from './user.data-service';
-import { InviteDataService } from './invite.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -19,6 +20,7 @@ export class DataServiceFactory {
   readonly metdata = new MetdataDataService(this.http);
   readonly projects = new ProjectDataService(this.http);
   readonly projectNodes = new ProjectNodeDataService(this.http);
+  readonly projectSnapshots = new ProjectSnapshotDataService(this.http);
   readonly users = new UserDataService(this.http);
 
   public constructor(

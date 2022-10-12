@@ -4,7 +4,6 @@ import {
   LoadProfile,
   LoadProjects,
   SetupCategories,
-  TurnOffIsLoading,
 } from '@wbs/shared/actions';
 import { Resources } from '@wbs/shared/services';
 import { forkJoin, switchMap } from 'rxjs';
@@ -17,11 +16,7 @@ export class AppInitializerFactory {
 
       const isInfo = window.location.pathname.indexOf('info/') > -1;
 
-      if (isInfo)
-        return forkJoin([
-          resources.initiate('Info'),
-          store.dispatch(new TurnOffIsLoading()),
-        ]);
+      if (isInfo) return forkJoin([resources.initiate('Info')]);
 
       return resources.initiate('General').pipe(
         switchMap(() =>
@@ -29,8 +24,7 @@ export class AppInitializerFactory {
         ),
         switchMap(() =>
           store.dispatch([new LoadProjects(), new LoadOrganization()])
-        ),
-        switchMap(() => store.dispatch(new TurnOffIsLoading()))
+        )
       );
     };
   }

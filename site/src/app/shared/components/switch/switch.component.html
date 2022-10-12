@@ -1,0 +1,9 @@
+<label class="switch">
+  <input
+    #cb
+    type="checkbox"
+    [checked]="value"
+    (change)="valueChange.emit(cb.checked)"
+  />
+  <span class="slider round"></span>
+</label>

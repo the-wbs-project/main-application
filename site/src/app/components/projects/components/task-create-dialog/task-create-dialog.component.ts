@@ -1,4 +1,3 @@
-//project-create
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,8 +7,10 @@ import {
 import { DialogContentBase, DialogRef } from '@progress/kendo-angular-dialog';
 import { TextBoxComponent } from '@progress/kendo-angular-inputs';
 import {
+  CAT_LISTS_TYPE,
   ProjectCategory,
   PROJECT_NODE_VIEW,
+  PROJECT_NODE_VIEW_TYPE,
   WbsNode,
 } from '@wbs/shared/models';
 import { CategorySelectionService } from '@wbs/shared/services';
@@ -27,6 +28,7 @@ export class TaskCreateDialogComponent
   @ViewChild(TextBoxComponent, { static: false })
   readonly titleTextBox!: TextBoxComponent;
 
+  readonly discipline: PROJECT_NODE_VIEW_TYPE = PROJECT_NODE_VIEW.DISCIPLINE;
   readonly more$ = new BehaviorSubject<boolean>(false);
   title = '';
   description = '';

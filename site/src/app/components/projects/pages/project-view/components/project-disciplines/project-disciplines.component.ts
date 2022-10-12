@@ -13,7 +13,6 @@ import {
 import { Store } from '@ngxs/store';
 import { ListItem } from '@wbs/shared/models';
 import { BehaviorSubject } from 'rxjs';
-import { ChangeProjectTitle } from '../../../../project.actions';
 
 @Component({
   selector: 'wbs-project-disciplines',

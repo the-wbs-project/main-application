@@ -1,18 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { ActionMenuItem, Activity } from '@wbs/shared/models';
-import { DataServiceFactory, TimelineService } from '@wbs/shared/services';
+import { Activity, TimelineMenuItem } from '@wbs/shared/models';
+import {
+  DataServiceFactory,
+  Messages,
+  TimelineService,
+} from '@wbs/shared/services';
 import { TimelineViewModel } from '@wbs/shared/view-models';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import {
+  LoadNextProjectTimelinePage,
   LoadProjectTimeline,
   LoadTaskTimeline,
+  RestoreProject,
   SaveTimelineAction,
 } from '../actions';
 
+const pageSize = 10;
+
 interface StateModel {
   project: TimelineViewModel[];
+  projectFull: TimelineViewModel[];
+  projectPage: number;
   projectId?: string;
   task: TimelineViewModel[];
   taskId?: string;
@@ -23,12 +33,15 @@ interface StateModel {
   name: 'projectTimeline',
   defaults: {
     project: [],
+    projectFull: [],
+    projectPage: 0,
     task: [],
   },
 })
 export class ProjectTimelineState {
   constructor(
     private readonly data: DataServiceFactory,
+    private readonly messaging: Messages,
     private readonly service: TimelineService
   ) {}
 
@@ -50,18 +63,33 @@ export class ProjectTimelineState {
     if (ctx.getState().projectId === action.projectId) return;
 
     return this.data.activities.getAsync(action.projectId).pipe(
-      map((activities) => {
-        const project: TimelineViewModel[] = [];
+      switchMap((activities) => {
+        const projectFull: TimelineViewModel[] = [];
 
         for (const act of activities.sort(this.service.sort)) {
-          project.push(this.transform(act));
+          projectFull.push(this.transform(act));
         }
         ctx.patchState({
-          project,
+          projectFull,
           projectId: action.projectId,
+          projectPage: 0,
         });
+
+        return ctx.dispatch(new LoadNextProjectTimelinePage());
       })
     );
+  }
+
+  @Action(LoadNextProjectTimelinePage)
+  loadNextProjectTimelinePage(ctx: StateContext<StateModel>): void {
+    const state = ctx.getState();
+
+    state.projectPage++;
+
+    ctx.patchState({
+      project: state.projectFull.slice(0, pageSize * state.projectPage),
+      projectPage: state.projectPage,
+    });
   }
 
   @Action(LoadTaskTimeline)
@@ -100,13 +128,43 @@ export class ProjectTimelineState {
       );
   }
 
+  @Action(RestoreProject)
+  RestoreProject(
+    ctx: StateContext<StateModel>,
+    action: RestoreProject
+  ): Observable<void> {
+    return this.messaging
+      .confirm('Projects.RestoreConfirmTitle', 'Projects.RestoreConfirmMessage')
+      .pipe(
+        filter((answer) => answer),
+        switchMap(() => {
+          const state = ctx.getState();
+
+          return this.data.projectSnapshots
+            .getAsync(state.projectId!, action.activityId)
+            .pipe(
+              map((snapshot) => {
+                //
+              })
+            );
+        })
+      );
+  }
   private transform(act: Activity): TimelineViewModel {
-    const menu: ActionMenuItem[] = [];
+    const menu: TimelineMenuItem[] = [];
 
     if (act.objectId) {
-      menu.push({ id: act.objectId, ...NAVIGATE_ITEM });
+      menu.push({
+        activityId: act.id,
+        objectId: act.objectId,
+        ...NAVIGATE_ITEM,
+      });
     }
-    menu.push({ id: act.topLevelId, ...RESTORE_ITEM });
+    menu.push({
+      activityId: act.id,
+      objectId: act.topLevelId,
+      ...RESTORE_ITEM,
+    });
 
     return {
       action: act.action,

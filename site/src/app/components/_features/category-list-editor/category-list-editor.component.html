@@ -61,11 +61,8 @@
             </div>
           </div>
           <div class="pd-t-5">
-            <kendo-switch
-              [(ngModel)]="cat.selected"
-              (ngModelChange)="changed()"
-            >
-            </kendo-switch>
+            <wbs-switch [(value)]="cat.selected" (valueChange)="changed()">
+            </wbs-switch>
           </div>
         </div>
       </ng-template>

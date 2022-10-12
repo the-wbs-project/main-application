@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { FloatingLabelModule } from '@progress/kendo-angular-label';
@@ -18,6 +19,7 @@ import { TitleEditorComponent } from './title-editor/title-editor.component';
   imports: [
     ButtonModule,
     CategoryListEditorModule,
+    DialogModule,
     EditorModule,
     FloatingLabelModule,
     SharedModule,

@@ -1,5 +1,6 @@
 export * from './db-object.model';
 export * from './device.type';
+export * from './dialog.component';
 export * from './menu-item.model';
 export * from './resources.model';
 export * from './route-link.model';

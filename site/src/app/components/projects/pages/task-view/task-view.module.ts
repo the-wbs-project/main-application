@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { IconModule } from '@progress/kendo-angular-icons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import {
   ProjectResourceGuard,
@@ -38,7 +37,6 @@ const routes: Routes = [
 @NgModule({
   imports: [
     ButtonModule,
-    IconModule,
     NgxsModule.forFeature([TaskViewState]),
     ProjectComponentModule,
     RouterModule.forChild(routes),

@@ -2,13 +2,10 @@ import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
-import { NotificationModule } from '@progress/kendo-angular-notification';
-import { PopupModule } from '@progress/kendo-angular-popup';
 import {
   AnalyticsService,
   AppInitializerFactory,
@@ -35,7 +32,6 @@ import { AppComponent } from './app.component';
     BrowserModule,
     BrowserAnimationsModule,
     HttpClientModule,
-    NgbModule,
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
     }),
@@ -47,8 +43,6 @@ import { AppComponent } from './app.component';
       UiState,
     ]),
     NgxsRouterPluginModule.forRoot(),
-    NotificationModule,
-    PopupModule,
     ToastrModule.forRoot(),
     TranslateModule.forRoot(),
   ],

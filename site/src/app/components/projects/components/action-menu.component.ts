@@ -13,7 +13,7 @@ import { ActionMenuItem } from '@wbs/shared/models';
     <button
       type="button"
       id="actionMenu"
-      class="btn btn-primary p-2"
+      class="btn btn-primary pd-xs-5"
       ngbDropdownToggle
     >
       <i class="fa-solid fa-cogs"></i>

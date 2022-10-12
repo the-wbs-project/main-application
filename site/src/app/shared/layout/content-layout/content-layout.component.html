@@ -10,15 +10,17 @@
         [projects]="projects$ | async"
       ></app-sidebar>
     </div>
-    <div class="main-content app-content" #body appMainContent>
+    <div
+      id="main-content"
+      class="main-content app-content"
+      #body
+      appMainContent
+    >
       <div
         class="main-container container-fluid"
         (click)="toggleSwitcherBody()"
       >
-        <!-- // contetnt  -->
-        <router-outlet>
-          <app-loader></app-loader>
-        </router-outlet>
+        <router-outlet> </router-outlet>
       </div>
     </div>
     <app-footer></app-footer>
