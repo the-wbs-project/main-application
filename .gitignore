@@ -6,7 +6,7 @@ _theme/Nowa
 **/obj
 **/config*.*
 .vs/
-.vscode/
+
 worker-test/
 
 site/src/assets/img_temp/
@@ -14,3 +14,4 @@ site/src/assets/img_temp/
 worker/.mf/
 
 dist/
+ 

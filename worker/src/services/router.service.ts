@@ -5,12 +5,7 @@ import { MailGunService } from './mail-gun.service';
 import { WorkerRequest } from './worker-request.service';
 
 export const NO_AUTH_ROUTES: string[] = ['/manifest.json', '/assets/*', '/*.js', '/*.map', '/*.css'];
-export const AZURE_ROUTES_POST: string[] = [
-  '/api/projects/extracts/phase/download',
-  '/api/projects/extracts/phase/upload',
-  '/api/projects/extracts/discipline/download',
-  '/api/projects/extracts/discipline/upload',
-];
+export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/*', '/api/projects/import/*'];
 
 function apiAuth(req: WorkerRequest): Promise<Response | number | void> {
   return req.services.auth.authorizeApiAsync(req);

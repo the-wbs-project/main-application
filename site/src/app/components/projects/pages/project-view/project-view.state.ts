@@ -103,10 +103,10 @@ export class ProjectViewState {
 
     this.messages.info('General.RetrievingData');
 
-    return this.data.extracts.downloadNodesAsync(
+    return this.data.projectExport.runAsync(
       this.project,
-      this.currentNodeViews(state),
-      state.viewNode!
+      'xlsx',
+      this.currentNodeViews(state)
     );
   }
 

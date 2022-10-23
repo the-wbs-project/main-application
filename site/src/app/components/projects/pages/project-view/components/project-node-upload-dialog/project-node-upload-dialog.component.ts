@@ -34,7 +34,7 @@ export class ProjectNodeUploadDialogComponent extends DialogContentBase {
           if (!buffer) return of(null);
 
           if (this.viewNode === PROJECT_NODE_VIEW.PHASE) {
-            return this.data.extracts.updatePhaseAsync(buffer);
+            return this.data.projectImport.runAsync(buffer, 'xlsx');
           }
           return of(null);
         })
