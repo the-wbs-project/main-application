@@ -1,4 +1,4 @@
-import { Env, EnvironmentConfig } from './config';
+import { EnvironmentConfig } from './config';
 import { WorkerRequest } from './services';
 import { DataServiceFactory } from './services/data-services';
 import { CosmosFactory } from './services/database-services/cosmos';
@@ -16,7 +16,7 @@ export default {
       const edge = new CloudflareService(config, request, context);
       const storage = new CloudflareStorageFactory(config);
       const data = new DataServiceFactory(db, edge, request, storage);
-      const services = new ServiceFactory(config, data, edge);
+      const services = new ServiceFactory(config, data, edge, storage);
       const workerRequest = new WorkerRequest(request, config, services, logger);
 
       return await services.router.matchAsync(workerRequest);

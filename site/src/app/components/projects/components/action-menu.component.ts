@@ -5,11 +5,11 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { ActionMenuItem } from '@wbs/shared/models';
+import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
   selector: 'app-project-action-menu',
-  template: `<div ngbDropdown class="d-inline-block">
+  template: `<div ngbDropdown class="display-ib">
     <button
       type="button"
       id="actionMenu"

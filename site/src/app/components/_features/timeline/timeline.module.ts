@@ -1,4 +1,5 @@
 import { NgModule } from '@angular/core';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@wbs/shared/module';
 import {
   ActionDescriptionPipe,
@@ -9,7 +10,7 @@ import {
 import { TimelineComponent } from './timeline.component';
 
 @NgModule({
-  imports: [SharedModule],
+  imports: [NgbDropdownModule, SharedModule],
   declarations: [
     ActionDescriptionPipe,
     ActionDescriptionTransformPipe,

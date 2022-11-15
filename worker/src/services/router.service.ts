@@ -66,6 +66,7 @@ export class RouterService {
     this.router.post('/api/user', apiAuth, isAdmin, Http.users.updateUserAsync);
     this.router.get('/api/invites', apiAuth, Http.invites.getAllAsync);
     this.router.put('/api/invites/:send', apiAuth, Http.invites.putAsync);
+    this.router.get('/api/files/:file', apiAuth, (req) => req.services.storage.statics.getAsResponse(req.params!.file));
 
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, apiAuth, Http.azure.handleAsync);

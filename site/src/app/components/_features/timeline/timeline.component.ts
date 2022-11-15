@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
-import { TimelineMenuItem } from '@wbs/shared/models';
-import { Messages } from '@wbs/shared/services';
-import { TimelineViewModel } from '@wbs/shared/view-models';
+import { TimelineMenuItem } from '@wbs/core/models';
+import { Messages } from '@wbs/core/services';
+import { TimelineViewModel } from '@wbs/core/view-models';
 
 @Component({
   selector: 'wbs-timeline',

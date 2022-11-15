@@ -1,4 +1,4 @@
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { PAGE_VIEW_TYPE } from './models';
 
 export class ProjectPageChanged {
@@ -12,11 +12,6 @@ export class DownloadNodes {
 
 export class UploadNodes {
   static readonly type = '[Project] Upload Nodes';
-}
-
-export class ProcessUploadedNodes {
-  static readonly type = '[Project] Process Uploaded Nodes';
-  constructor(readonly rows: WbsNodeView[]) {}
 }
 
 export class EditPhases {

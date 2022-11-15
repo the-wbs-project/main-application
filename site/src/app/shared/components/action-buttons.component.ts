@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActionMenuItem } from '../models';
+import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
   selector: 'wbs-action-buttons',

@@ -5,9 +5,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW, PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
-import { CategorySelectionService } from '@wbs/shared/services';
-import { CategorySelection } from '@wbs/shared/view-models';
+import { PROJECT_NODE_VIEW, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
+import { CategorySelectionService } from '@wbs/core/services';
+import { CategorySelection } from '@wbs/core/view-models';
 import { PhasesChosen } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 

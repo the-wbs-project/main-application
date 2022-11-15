@@ -1,7 +1,6 @@
 name = "wbs-app"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 compatibility_date = "2022-05-27"
-usage_model = "unbound"
 main = "dist/index.js"
 
 [build]
@@ -16,17 +15,20 @@ globs = ["**/*.js"]
 
 [env.dev]
 name = "wbs-app-dev"
+usage_model = "unbound"
 kv_namespaces = [
   { binding = "KV_AUTH" },
   { binding = "KV_DATA" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS" }
+  { binding = "BUCKET_SNAPSHOTS" },
+  { binding = "BUCKET_STATICS" },
 ]
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
 [env.prod]
 name = "wbs-app-prod"
+usage_model = "unbound"
 workers_dev = false
 routes = ["https://app.thewbsproject.com/*"]
 kv_namespaces = [

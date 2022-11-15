@@ -20,6 +20,10 @@ export class EnvironmentConfig implements Config {
     return this.env.BUCKET_SNAPSHOTS;
   }
 
+  get bucketStatics(): R2Bucket {
+    return this.env.BUCKET_STATICS;
+  }
+
   get kvAuth(): KVNamespace {
     return this.env.KV_AUTH;
   }

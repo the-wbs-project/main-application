@@ -9,8 +9,8 @@ import {
   Store,
 } from '@ngxs/store';
 import { ProjectState } from '@wbs/components/projects/states';
-import { WbsNode } from '@wbs/shared/models';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNode } from '@wbs/core/models';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable, Subscription, tap } from 'rxjs';
 import { PAGE_VIEW_TYPE } from './models';
 import { TaskPageChanged, VerifyTask } from './task-view.actions';

@@ -1,12 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { Activity, TimelineMenuItem } from '@wbs/shared/models';
-import {
-  DataServiceFactory,
-  Messages,
-  TimelineService,
-} from '@wbs/shared/services';
-import { TimelineViewModel } from '@wbs/shared/view-models';
+import { TimelineService } from '@wbs/components/_features/timeline';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { Activity, TimelineMenuItem } from '@wbs/core/models';
+import { DialogService } from '@wbs/core/services';
+import { TimelineViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
@@ -41,7 +39,7 @@ interface StateModel {
 export class ProjectTimelineState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly messaging: Messages,
+    private readonly dialogs: DialogService,
     private readonly service: TimelineService
   ) {}
 
@@ -133,7 +131,7 @@ export class ProjectTimelineState {
     ctx: StateContext<StateModel>,
     action: RestoreProject
   ): Observable<void> {
-    return this.messaging
+    return this.dialogs
       .confirm('Projects.RestoreConfirmTitle', 'Projects.RestoreConfirmMessage')
       .pipe(
         filter((answer) => answer),

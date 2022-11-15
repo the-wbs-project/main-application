@@ -6,7 +6,6 @@ import { LibOrScratchChosen } from '../../../project-create.actions';
 @Component({
   selector: 'app-project-create-lib-or-scratch',
   templateUrl: './lib-or-scratch.component.html',
-  styleUrls: ['./lib-or-scratch.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LibOrScratchComponent {

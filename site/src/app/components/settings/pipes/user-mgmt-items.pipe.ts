@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { MenuItem } from '@wbs/shared/models';
+import { MenuItem } from '@wbs/core/models';
 import { UserViewModel } from '../models';
 
 @Pipe({ name: 'userMgmtItems', pure: false })

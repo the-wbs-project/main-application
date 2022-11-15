@@ -1,26 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import {
-  DialogCloseResult,
-  DialogService,
-} from '@progress/kendo-angular-dialog';
-import { TaskDeleteDialogComponent } from '@wbs/components/_features/task-delete-dialog/task-delete-dialog.component';
-import { ProjectUpdated } from '@wbs/shared/actions';
+import { ProjectUpdated } from '@wbs/core/actions';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
   WbsNode,
-} from '@wbs/shared/models';
-import {
-  ContainerService,
-  DataServiceFactory,
-  IdService,
-  Messages,
-  WbsTransformers,
-} from '@wbs/shared/services';
-import { WbsNodeView } from '@wbs/shared/view-models';
+} from '@wbs/core/models';
+import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ChangeProjectDisciplines,
@@ -42,7 +32,6 @@ import {
   TreeReordered,
   VerifyProject,
 } from '../actions';
-import { TaskCreateDialogComponent } from '../components';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
 
 interface StateModel {
@@ -59,9 +48,9 @@ interface StateModel {
 })
 export class ProjectState {
   constructor(
-    private readonly containers: ContainerService,
+    //private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
-    private readonly dialog: DialogService,
+    //private readonly dialog: DialogService,
     private readonly messaging: Messages,
     private readonly transformers: WbsTransformers
   ) {}
@@ -91,6 +80,7 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     { projectId }: VerifyProject
   ): Observable<void> {
+    console.log('verifying');
     const state = ctx.getState();
 
     return state.current?.id !== projectId
@@ -152,51 +142,45 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     action: RemoveTask
   ): Observable<any> | void {
-    return this.messaging.openDialog<string>(TaskDeleteDialogComponent).pipe(
-      switchMap((reason) => {
-        if (!reason) return of();
+    const state = ctx.getState();
+    const parentId = state.current!.id;
+    const changed: Observable<void>[] = [];
+    const nodes = this.copy(state.nodes)!;
+    const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
 
-        const state = ctx.getState();
-        const parentId = state.current!.id;
-        const changed: Observable<void>[] = [];
-        const nodes = this.copy(state.nodes)!;
-        const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
+    if (nodeIndex === -1) return of();
 
-        if (nodeIndex === -1) return of();
+    nodes[nodeIndex].removed = true;
 
-        nodes[nodeIndex].removed = true;
+    let changedIds: string[] = [
+      action.nodeId,
+      ...this.transformers.nodes.phase.reorderer.run(state.current!, nodes),
+    ];
 
-        let changedIds: string[] = [
-          action.nodeId,
-          ...this.transformers.nodes.phase.reorderer.run(state.current!, nodes),
-        ];
+    for (const node of nodes) {
+      if (changedIds.indexOf(node.id) === -1) continue;
 
-        for (const node of nodes) {
-          if (changedIds.indexOf(node.id) === -1) continue;
-
-          changed.push(this.data.projectNodes.putAsync(parentId, node));
-        }
-        return forkJoin(changed).pipe(
-          map(() =>
-            ctx.patchState({
-              nodes,
-            })
-          ),
-          switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-          switchMap(() =>
-            this.saveActivity(ctx, {
-              action: TASK_ACTIONS.REMOVED,
-              data: {
-                reason,
-              },
-              objectId: action.nodeId,
-            })
-          ),
-          switchMap(() =>
-            action.completedAction ? ctx.dispatch(action.completedAction) : of()
-          )
-        );
-      })
+      changed.push(this.data.projectNodes.putAsync(parentId, node));
+    }
+    return forkJoin(changed).pipe(
+      map(() =>
+        ctx.patchState({
+          nodes,
+        })
+      ),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          action: TASK_ACTIONS.REMOVED,
+          data: {
+            reason: action.reason,
+          },
+          objectId: action.nodeId,
+        })
+      ),
+      switchMap(() =>
+        action.completedAction ? ctx.dispatch(action.completedAction) : of()
+      )
     );
   }
 
@@ -553,38 +537,38 @@ export class ProjectState {
   @Action(SaveUpload)
   saveUpload(
     ctx: StateContext<StateModel>,
-    action: SaveUpload
-  ): Observable<any> {
+    { results }: SaveUpload
+  ): void | Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
-    var saves: Observable<any>[] = [];
 
-    if (action.results.cats !== project.categories.phase) {
-      project.categories.phase = action.results.cats;
+    project.categories.phase = results.phases;
+    project.categories.discipline = results.disciplines;
 
-      saves.push(this.saveProject(ctx, project));
-    }
-    if (
-      action.results.removeIds.length > 0 ||
-      action.results.upserts.length > 0
-    ) {
+    const saves: Observable<any>[] = [
+      this.saveProject(ctx, project).pipe(
+        tap(() =>
+          ctx.patchState({
+            current: project,
+          })
+        )
+      ),
+    ];
+
+    if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
         this.data.projectNodes
-          .batchAsync(
-            project.id,
-            action.results.upserts,
-            action.results.removeIds
-          )
+          .batchAsync(project.id, results.upserts, results.removeIds)
           .pipe(
             tap(() => {
               const nodes = ctx.getState().nodes!;
 
-              for (const id of action.results.removeIds) {
+              for (const id of results.removeIds) {
                 const index = nodes.findIndex((x) => x.id === id);
 
                 if (index > -1) nodes.splice(index, 1);
               }
-              for (const node of action.results.upserts) {
+              for (const node of results.upserts) {
                 const index = nodes.findIndex((x) => x.id === node.id);
 
                 if (index > -1) nodes[index] = node;
@@ -598,80 +582,63 @@ export class ProjectState {
       );
     }
 
-    return saves.length === 0
-      ? of()
-      : forkJoin(saves).pipe(tap(() => ctx.dispatch(new RebuildNodeViews())));
+    if (saves.length === 0) return;
+
+    return forkJoin(saves).pipe(
+      tap(() => ctx.dispatch(new RebuildNodeViews()))
+    );
   }
 
   @Action(CreateTask)
   createTask(
     ctx: StateContext<StateModel>,
     action: CreateTask
-  ): Observable<any> {
+  ): Observable<any> | void {
     const project = ctx.getState().current!;
-    const dialogRef = this.dialog.open({
-      content: TaskCreateDialogComponent,
-      appendTo: this.containers.body,
-    });
-    const comp = <TaskCreateDialogComponent>dialogRef.content.instance;
+    const nodes = ctx.getState().nodes!;
+    const siblings = nodes.filter((x) => x.parentId === action.parentId);
+    let order = 0;
 
-    comp.setup(project.categories.discipline);
+    for (const x of siblings) {
+      if (x.order > order) order = x.order;
+    }
+    order++;
 
-    return dialogRef.result.pipe(
-      switchMap(
-        (
-          result: DialogCloseResult | { model: Partial<WbsNode>; nav: boolean }
-        ) => {
-          console.log(result);
-          if (result instanceof DialogCloseResult) return of();
+    const model: WbsNode = {
+      id: IdService.generate(),
+      parentId: action.parentId,
+      description: action.model.description,
+      disciplineIds: action.model.disciplineIds,
+      title: action.model.title,
+      _ts: 0,
+      order,
+    };
 
-          const nodes = ctx.getState().nodes!;
-          const siblings = nodes.filter((x) => x.parentId === action.parentId);
-          let order = 0;
+    return this.saveTask(ctx, model).pipe(
+      map(() => {
+        nodes.push(model);
 
-          for (const x of siblings) {
-            if (x.order > order) order = x.order;
-          }
-          order++;
-
-          const model: WbsNode = {
-            id: IdService.generate(),
-            parentId: action.parentId,
-            description: result.model.description,
-            disciplineIds: result.model.disciplineIds,
-            title: result.model.title,
-            _ts: 0,
-            order,
-          };
-
-          return this.saveTask(ctx, model).pipe(
-            map(() => {
-              nodes.push(model);
-
-              ctx.patchState({
-                nodes,
-              });
-            }),
-            switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-            switchMap(() =>
-              this.saveActivity(ctx, {
-                data: {
-                  title: model.title,
-                },
-                objectId: model.id,
-                action: TASK_ACTIONS.CREATED,
-              })
-            ),
-            tap(() => this.messaging.success('Projects.TaskCreated')),
-            switchMap(() =>
-              result.nav
-                ? ctx.dispatch(
-                    new Navigate(['/projects', project.id, 'task', model.id])
-                  )
-                : of()
+        ctx.patchState({
+          nodes,
+        });
+      }),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          data: {
+            title: model.title,
+          },
+          objectId: model.id,
+          action: TASK_ACTIONS.CREATED,
+        })
+      ),
+      tap(() => this.messaging.success('Projects.TaskCreated')),
+      switchMap(() =>
+        action.nav
+          ? ctx.dispatch(
+              new Navigate(['/projects', project.id, 'task', model.id])
             )
-          );
-        }
+          : of()
       )
     );
   }

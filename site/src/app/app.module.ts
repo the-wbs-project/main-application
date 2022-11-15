@@ -13,15 +13,14 @@ import {
   RequestInterceptor,
   Resources,
   ThemeService,
-} from '@wbs/shared/services';
+} from '@wbs/core/services';
 import {
   AuthState,
   MetadataState,
   OrganizationState,
   ProjectListState,
   UiState,
-} from '@wbs/shared/states';
-import { ToastrModule } from 'ngx-toastr';
+} from '@wbs/core/states';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 
@@ -43,7 +42,6 @@ import { AppComponent } from './app.component';
       UiState,
     ]),
     NgxsRouterPluginModule.forRoot(),
-    ToastrModule.forRoot(),
     TranslateModule.forRoot(),
   ],
   bootstrap: [AppComponent],

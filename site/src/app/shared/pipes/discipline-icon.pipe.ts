@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ListItem } from '../models';
-import { MetadataState } from '../states';
+import { ListItem } from '@wbs/core/models';
+import { MetadataState } from '@wbs/core/states';
 
 @Pipe({ name: 'disciplineIcon' })
 export class DisciplineIconPipe implements PipeTransform {

@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import {
-  DialogCloseResult,
-  DialogService,
-} from '@progress/kendo-angular-dialog';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Project,
   ProjectCategory,
   PROJECT_FILTER,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-} from '@wbs/shared/models';
-import {
-  ContainerService,
-  DataServiceFactory,
-  Messages,
-} from '@wbs/shared/services';
-import { WbsNodeView } from '@wbs/shared/view-models';
+} from '@wbs/core/models';
+import { DialogService, Messages } from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable, of, switchMap } from 'rxjs';
 import {
   ChangeProjectDisciplines,
@@ -24,16 +17,12 @@ import {
   SaveUpload,
 } from '../../actions';
 import { ProjectState } from '../../states';
-import {
-  ProjectCategoryDialogComponent,
-  ProjectNodeUploadDialogComponent,
-} from './components';
+import { ProjectCategoryDialogComponent } from './components';
 import { PAGE_VIEW, PAGE_VIEW_TYPE } from './models';
 import {
   DownloadNodes,
   EditDisciplines,
   EditPhases,
-  ProcessUploadedNodes,
   ProjectPageChanged,
   UploadNodes,
 } from './project-view.actions';
@@ -54,7 +43,6 @@ interface StateModel {
 })
 export class ProjectViewState {
   constructor(
-    private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
     private readonly dialog: DialogService,
     private readonly messages: Messages,
@@ -111,9 +99,10 @@ export class ProjectViewState {
   }
 
   @Action(UploadNodes)
-  uploadNodes(ctx: StateContext<StateModel>): Observable<any> {
+  uploadNodes(ctx: StateContext<StateModel>): void | Observable<any> {
     const state = ctx.getState();
 
+    /*
     const ref = this.dialog.open({
       content: ProjectNodeUploadDialogComponent,
       appendTo: this.containers.body,
@@ -132,84 +121,47 @@ export class ProjectViewState {
           return of(null);
         }
       })
-    );
-  }
-
-  @Action(ProcessUploadedNodes)
-  processUploadedNodes(
-    ctx: StateContext<StateModel>,
-    action: ProcessUploadedNodes
-  ): Observable<any> {
-    const state = ctx.getState();
-
-    if (state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE) return of(null);
-
-    const project = this.project;
-    const nodes = this.store.selectSnapshot(ProjectState.nodes)!;
-    const nodeViews = this.currentNodeViews(state);
-    const results = this.processors.run(
-      project.categories.phase,
-      this.copy(nodes),
-      this.copy(nodeViews!),
-      action.rows,
-      true
-    );
-
-    return ctx.dispatch(new SaveUpload(results));
+    );*/
   }
 
   @Action(EditPhases)
   editPhases(ctx: StateContext<StateModel>): Observable<any> {
     const project = this.store.selectSnapshot(ProjectState.current)!;
 
-    const ref = this.dialog.open({
-      content: ProjectCategoryDialogComponent,
-      appendTo: this.containers.body,
-    });
-    const comp = <ProjectCategoryDialogComponent>ref.content.instance;
-
-    comp.setup(
-      'General.Phases',
-      PROJECT_NODE_VIEW.PHASE,
-      project.categories.phase
-    );
-
-    return ref.result.pipe(
-      switchMap((result: DialogCloseResult | ProjectCategory[]) => {
-        if (result instanceof DialogCloseResult) {
-          return of(null);
-        } else {
-          return ctx.dispatch(new ChangeProjectPhases(result));
+    return this.dialog
+      .openDialog<ProjectCategory[] | undefined>(
+        ProjectCategoryDialogComponent,
+        {
+          title: 'General.Phases',
+          categoryType: PROJECT_NODE_VIEW.PHASE,
+          categories: project.categories.phase,
         }
-      })
-    );
+      )
+      .pipe(
+        switchMap((result) =>
+          result ? ctx.dispatch(new ChangeProjectPhases(result)) : of(null)
+        )
+      );
   }
 
   @Action(EditDisciplines)
   editDisciplines(ctx: StateContext<StateModel>): Observable<any> {
     const project = this.store.selectSnapshot(ProjectState.current)!;
 
-    const ref = this.dialog.open({
-      content: ProjectCategoryDialogComponent,
-      appendTo: this.containers.body,
-    });
-    const comp = <ProjectCategoryDialogComponent>ref.content.instance;
-
-    comp.setup(
-      'General.Disciplines',
-      PROJECT_NODE_VIEW.DISCIPLINE,
-      project.categories.discipline
-    );
-
-    return ref.result.pipe(
-      switchMap((result: DialogCloseResult | ProjectCategory[]) => {
-        if (result instanceof DialogCloseResult) {
-          return of(null);
-        } else {
-          return ctx.dispatch(new ChangeProjectDisciplines(result));
+    return this.dialog
+      .openDialog<ProjectCategory[] | undefined>(
+        ProjectCategoryDialogComponent,
+        {
+          title: 'General.Phases',
+          categoryType: PROJECT_NODE_VIEW.DISCIPLINE,
+          categories: project.categories.discipline,
         }
-      })
-    );
+      )
+      .pipe(
+        switchMap((result) =>
+          result ? ctx.dispatch(new ChangeProjectDisciplines(result)) : of(null)
+        )
+      );
   }
 
   private copy<T>(x: T): T {

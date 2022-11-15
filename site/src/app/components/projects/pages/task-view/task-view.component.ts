@@ -2,10 +2,11 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
-import { Project, WbsNode } from '@wbs/shared/models';
-import { TitleService } from '@wbs/shared/services';
-import { UiState } from '@wbs/shared/states';
-import { TimelineViewModel, WbsNodeView } from '@wbs/shared/view-models';
+import { TaskDeleteService } from '@wbs/components/_features/task-delete';
+import { Project, WbsNode } from '@wbs/core/models';
+import { TitleService } from '@wbs/core/services';
+import { UiState } from '@wbs/core/states';
+import { TimelineViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { ChangeTaskTitle, CreateTask, RemoveTask } from '../../actions';
 import { ProjectState, ProjectTimelineState } from '../../states';
@@ -36,7 +37,8 @@ export class TaskViewComponent {
   constructor(
     title: TitleService,
     private readonly route: ActivatedRoute,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly taskDelete: TaskDeleteService
   ) {
     title.setTitle('Project', false);
   }
@@ -57,14 +59,18 @@ export class TaskViewComponent {
 
   actionClicked(action: string): void {
     if (action === 'addSub') {
-      this.store.dispatch(new CreateTask(this.taskId));
+      //this.store.dispatch(new CreateTask(this.taskId));
     } else if (action === 'delete') {
-      this.store.dispatch(
-        new RemoveTask(
-          this.taskId,
-          new Navigate(['/projects', this.projectId, 'view', 'phases'])
-        )
-      );
+      this.taskDelete.open().subscribe((reason) => {
+        if (this.taskId && reason)
+          this.store.dispatch(
+            new RemoveTask(
+              this.taskId,
+              reason,
+              new Navigate(['/projects', this.projectId, 'view', 'phases'])
+            )
+          );
+      });
     }
   }
 

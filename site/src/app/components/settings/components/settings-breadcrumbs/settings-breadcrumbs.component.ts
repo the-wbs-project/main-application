@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Select } from '@ngxs/store';
-import { UiState } from '@wbs/shared/states';
+import { UiState } from '@wbs/core/states';
 import { Observable } from 'rxjs';
 import { Breadcrumb } from '../../models';
 import { SettingsState } from '../../states';

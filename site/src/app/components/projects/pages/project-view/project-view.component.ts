@@ -1,15 +1,17 @@
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Select, Store } from '@ngxs/store';
+import { TaskDeleteService } from '@wbs/components/_features/task-delete';
+import { TaskCreateService } from '@wbs/components/_features/task-create';
 import {
   Project,
   PROJECT_NODE_VIEW_TYPE,
   TimelineMenuItem,
-} from '@wbs/shared/models';
-import { TitleService } from '@wbs/shared/services';
-import { UiState } from '@wbs/shared/states';
-import { TimelineViewModel, WbsNodeView } from '@wbs/shared/view-models';
+} from '@wbs/core/models';
+import { TitleService } from '@wbs/core/services';
+import { UiState } from '@wbs/core/states';
+import { TimelineViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import {
   ChangeProjectTitle,
@@ -24,23 +26,21 @@ import {
   RestoreProject,
   TreeReordered,
 } from '../../actions';
-import { ProjectState } from '../../states';
+import { ProjectState, ProjectTimelineState } from '../../states';
 import { MenuItems, PAGE_VIEW_TYPE } from './models';
 import {
   DownloadNodes,
   EditDisciplines,
   EditPhases,
-  UploadNodes,
 } from './project-view.actions';
 import { ProjectViewState } from './project-view.state';
-import { ProjectTimelineState } from '../../states/project-timeline.state';
 
 @Component({
   templateUrl: './project-view.component.html',
   styleUrls: ['./project-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ProjectView2Component implements OnInit {
+export class ProjectViewComponent {
   @Select(UiState.mainContentWidth) width$!: Observable<number>;
   @Select(ProjectState.current) project$!: Observable<Project>;
   @Select(ProjectState.disciplines) disciplines$!: Observable<WbsNodeView[]>;
@@ -58,7 +58,9 @@ export class ProjectView2Component implements OnInit {
   constructor(
     title: TitleService,
     private readonly route: ActivatedRoute,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly taskCreate: TaskCreateService,
+    private readonly taskDelete: TaskDeleteService
   ) {
     title.setTitle('Project', false);
   }
@@ -67,21 +69,11 @@ export class ProjectView2Component implements OnInit {
     return this.route.snapshot.params['projectId'];
   }
 
-  ngOnInit(): void {
-    //
-  }
-
-  viewChanged(view: string): void {
-    this.store.dispatch(
-      new Navigate(['projects', 'view', this.projectId, view])
-    );
-  }
-
   action(action: string) {
     if (action === 'download') {
       this.store.dispatch(new DownloadNodes());
     } else if (action === 'upload') {
-      this.store.dispatch(new UploadNodes());
+      this.store.dispatch(new Navigate(['projects', this.projectId, 'upload']));
     } else if (action === 'editPhases') {
       this.store.dispatch(new EditPhases());
     } else if (action === 'editDisciplines') {
@@ -90,11 +82,18 @@ export class ProjectView2Component implements OnInit {
       //
     } else if (this.taskId) {
       if (action === 'addSub') {
-        this.store.dispatch(new CreateTask(this.taskId));
+        this.taskCreate.open().subscribe((results) => {
+          if (results?.model)
+            this.store.dispatch(
+              new CreateTask(this.taskId!, results.model, results.nav)
+            );
+        });
       } else if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(this.taskId));
       } else if (action === 'deleteTask') {
-        this.store.dispatch(new RemoveTask(this.taskId));
+        this.taskDelete.open().subscribe((reason) => {
+          if (reason) this.store.dispatch(new RemoveTask(this.taskId!, reason));
+        });
       } else if (action === 'moveLeft') {
         this.store.dispatch(new MoveTaskLeft(this.taskId));
       } else if (action === 'moveRight') {

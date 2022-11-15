@@ -1,4 +1,4 @@
-import { ActionMenuItem } from '@wbs/shared/models';
+import { ActionMenuItem } from '@wbs/core/models';
 import { PAGE_VIEW } from './page-view.const';
 
 export const MenuItems = {

@@ -4,7 +4,7 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   selector: 'wbs-level-popover',

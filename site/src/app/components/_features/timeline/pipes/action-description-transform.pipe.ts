@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TimelineService } from '@wbs/shared/services';
+import { TimelineService } from '../services';
 
 @Pipe({ name: 'actionDescriptionTransform' })
 export class ActionDescriptionTransformPipe implements PipeTransform {

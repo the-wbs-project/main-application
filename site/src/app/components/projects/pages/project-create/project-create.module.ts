@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   FormFieldModule,
   SwitchModule,
@@ -12,14 +11,14 @@ import {
 } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SortableModule } from '@progress/kendo-angular-sortable';
-import { CategoryListEditorModule } from '@wbs/components/_features';
+import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
+import { SharedBasicModule } from '@wbs/shared/basic-module';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import { ProjectResourceGuard } from '../../guards';
 import {
   BasicsComponent,
   CategoriesComponent,
-  CustomDialogComponent,
   DisciplinesComponent,
   FooterComponent,
   GettingStartedComponent,
@@ -44,7 +43,6 @@ const routes: Routes = [
   imports: [
     CategoryListEditorModule,
     CommonModule,
-    DialogModule,
     FormFieldModule,
     FormsModule,
     LabelModule,
@@ -58,11 +56,10 @@ const routes: Routes = [
     TextAreaModule,
     TextBoxModule,
   ],
-  providers: [StartCreationGuard],
+  providers: [ProjectResourceGuard, StartCreationGuard],
   declarations: [
     BasicsComponent,
     CategoriesComponent,
-    CustomDialogComponent,
     DisciplinesComponent,
     FooterComponent,
     GettingStartedComponent,

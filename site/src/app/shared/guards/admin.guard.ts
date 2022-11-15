@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AuthState } from '../states';
+import { AuthState } from '@wbs/core/states';
 
 @Injectable()
 export class AdminGuard implements CanActivate {

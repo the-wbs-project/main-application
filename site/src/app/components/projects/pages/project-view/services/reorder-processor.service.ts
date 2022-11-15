@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { ListItem, WbsNode } from '@wbs/shared/models';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { ListItem, WbsNode } from '@wbs/core/models';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Injectable()
 export class ReorderProcessor {

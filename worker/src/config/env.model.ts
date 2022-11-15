@@ -6,6 +6,7 @@ export interface Env {
   __STATIC_CONTENT: KVNamespace;
   __STATIC_CONTENT_MANIFEST: AssetManifestType;
   BUCKET_SNAPSHOTS: R2Bucket;
+  BUCKET_STATICS: R2Bucket;
 
   APP_INSIGHTS_KEY: string;
   AUTH: string;

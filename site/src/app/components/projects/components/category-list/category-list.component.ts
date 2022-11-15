@@ -5,7 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { ListItem } from '@wbs/shared/models';
+import { ListItem } from '@wbs/core/models';
 
 @Component({
   selector: 'app-project-category-list',

@@ -6,7 +6,7 @@ namespace Wbs.Utilities.Services.Importers
 {
     public class ProjectFileImporter
     {
-        public IEnumerable<WbsNodeView> Run(byte[] file)
+        public UploadResults Run(byte[] file)
         {
             var reader = new UniversalProjectReader();
             var results = new List<WbsNodeView>();
@@ -34,7 +34,10 @@ namespace Wbs.Utilities.Services.Importers
                         resources = folks
                     });
                 }
-                return results;
+                return new UploadResults
+                {
+                    results = results
+                };
             }
         }
     }

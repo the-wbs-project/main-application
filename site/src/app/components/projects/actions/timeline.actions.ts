@@ -1,4 +1,4 @@
-import { ActivityData } from '@wbs/shared/models';
+import { ActivityData } from '@wbs/core/models';
 
 export class LoadProjectTimeline {
   static readonly type = '[Timeline] Load Project';

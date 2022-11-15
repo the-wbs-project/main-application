@@ -1,4 +1,4 @@
-import { MenuItem } from '@wbs/shared/models';
+import { MenuItem } from '@wbs/core/models';
 
 export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {

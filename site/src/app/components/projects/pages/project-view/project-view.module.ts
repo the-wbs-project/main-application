@@ -1,24 +1,26 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
-import { FileSelectModule } from '@progress/kendo-angular-upload';
-import {
-  CategoryListEditorModule,
-  TimelineModule,
-  WbsTreeModule,
-} from '@wbs/components/_features';
+import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
+import { TaskCreateModule } from '@wbs/components/_features/task-create';
+import { TaskDeleteModule } from '@wbs/components/_features/task-delete';
+import { TimelineModule } from '@wbs/components/_features/timeline';
+import { WbsTreeModule } from '@wbs/components/_features/wbs-tree';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
-import { ProjectResourceGuard, ProjectVerifyGuard } from '../../guards';
+import {
+  ProjectResourceGuard,
+  ProjectTimelineVerifyGuard,
+  ProjectVerifyGuard,
+} from '../../guards';
 import {
   ProjectAboutComponent,
   ProjectCategoryDialogComponent,
-  ProjectNodeUploadDialogComponent,
   ProjectPhasesComponent,
   ProjectRoleComponent,
   Timeline1Component,
@@ -31,7 +33,7 @@ import {
   UserEmailPipe,
   UserNamePipe,
 } from './pipes';
-import { ProjectView2Component } from './project-view.component';
+import { ProjectViewComponent } from './project-view.component';
 import { ProjectViewState } from './project-view.state';
 import {
   PhaseExtractProcessor,
@@ -42,13 +44,18 @@ import {
 const routes: Routes = [
   {
     path: '',
-    component: ProjectView2Component,
+    component: ProjectViewComponent,
     canActivate: [ProjectRedirectGuard],
   },
   {
     path: ':view',
-    component: ProjectView2Component,
-    canActivate: [ProjectResourceGuard, ProjectVerifyGuard, ProjectViewGuard],
+    component: ProjectViewComponent,
+    canActivate: [
+      ProjectResourceGuard,
+      ProjectVerifyGuard,
+      ProjectTimelineVerifyGuard,
+      ProjectViewGuard,
+    ],
   },
 ];
 
@@ -57,12 +64,13 @@ const routes: Routes = [
     ButtonModule,
     CategoryListEditorModule,
     ContextMenuModule,
-    DialogModule,
-    FileSelectModule,
+    NgbNavModule,
     NgxsModule.forFeature([ProjectViewState]),
     ProjectComponentModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TaskCreateModule,
+    TaskDeleteModule,
     TextBoxModule,
     TimelineModule,
     TooltipModule,
@@ -71,6 +79,9 @@ const routes: Routes = [
   providers: [
     PhaseExtractProcessor,
     ProjectRedirectGuard,
+    ProjectResourceGuard,
+    ProjectTimelineVerifyGuard,
+    ProjectVerifyGuard,
     ProjectViewGuard,
     TextCompareService,
     UploadFileService,
@@ -78,10 +89,9 @@ const routes: Routes = [
   declarations: [
     ProjectAboutComponent,
     ProjectCategoryDialogComponent,
-    ProjectNodeUploadDialogComponent,
     ProjectPhasesComponent,
     ProjectRoleComponent,
-    ProjectView2Component,
+    ProjectViewComponent,
     RoleIconPipe,
     RoleTitlePipe,
     TaskMenuPipe,
@@ -90,4 +100,4 @@ const routes: Routes = [
     UserNamePipe,
   ],
 })
-export class ProjectView2Module {}
+export class ProjectViewModule {}

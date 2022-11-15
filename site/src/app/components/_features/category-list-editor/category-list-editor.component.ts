@@ -8,20 +8,19 @@ import {
 } from '@angular/core';
 import { faEye, faEyeSlash, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
-import { PROJECT_NODE_VIEW_TYPE } from '@wbs/shared/models';
+import { PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
 import {
   CategorySelectionService,
+  DialogService,
   IdService,
-  Messages,
-} from '@wbs/shared/services';
-import { CategorySelection } from '@wbs/shared/view-models';
+} from '@wbs/core/services';
+import { CategorySelection } from '@wbs/core/view-models';
 import { BehaviorSubject } from 'rxjs';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 @Component({
   selector: 'app-category-list-editor',
   templateUrl: './category-list-editor.component.html',
-  styleUrls: ['./category-list-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
@@ -41,7 +40,7 @@ export class CategoryListEditorComponent {
 
   constructor(
     private readonly catService: CategorySelectionService,
-    private readonly messaging: Messages
+    private readonly dialogService: DialogService
   ) {}
 
   changed(): void {
@@ -50,7 +49,7 @@ export class CategoryListEditorComponent {
   }
 
   showCreate() {
-    this.messaging
+    this.dialogService
       .openDialog<[string, string] | null>(CustomDialogComponent)
       .subscribe((result) => {
         console.log(result);
