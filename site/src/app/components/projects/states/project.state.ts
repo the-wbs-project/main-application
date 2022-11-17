@@ -66,6 +66,15 @@ export class ProjectState {
   }
 
   @Selector()
+  static disciplineIds(state: StateModel): string[] {
+    return (
+      state.current?.categories?.discipline?.map((x) =>
+        typeof x === 'string' ? x : x.id
+      ) ?? []
+    );
+  }
+
+  @Selector()
   static nodes(state: StateModel): WbsNode[] | undefined {
     return state.nodes;
   }
@@ -73,6 +82,15 @@ export class ProjectState {
   @Selector()
   static phases(state: StateModel): WbsNodeView[] | undefined {
     return state.phases;
+  }
+
+  @Selector()
+  static phaseIds(state: StateModel): string[] {
+    return (
+      state.current?.categories?.phase?.map((x) =>
+        typeof x === 'string' ? x : x.id
+      ) ?? []
+    );
   }
 
   @Action(VerifyProject)

@@ -11,7 +11,7 @@
     parentIdField="treeParentId"
     idField="treeId"
     kendoTreeListExpandable
-    [initiallyExpanded]="true"
+    [initiallyExpanded]="false"
     [(expandedKeys)]="expandedKeys"
     kendoTreeListSelectable
     [selectable]="settings"
@@ -62,7 +62,7 @@
       [title]="'Wbs.Task' | translate"
     >
       <ng-template kendoTreeListCellTemplate let-dataItem>
-        <span
+        <a
           placement="right"
           popoverTitle="Details"
           [ngbPopover]="popContent"
@@ -70,9 +70,11 @@
           container="body"
           [autoClose]="false"
           triggers="manual"
+          #p="ngbPopover"
+          (click)="p.toggle()"
         >
           {{ dataItem.title }}
-        </span>
+        </a>
         <ng-template #popContent>
           <wbs-node-general [node]="dataItem"></wbs-node-general>
           <br />
@@ -117,7 +119,7 @@
   [callout]="true"
   [title]="'Wbs.NodeLevelStats' | translate"
   [templateData]="getContextData"
-  [height]="150"
+  [height]="200"
   [animation]="{ duration: 100, type: 'slide', direction: 'right' }"
 >
   <ng-template kendoPopoverBodyTemplate let-anchor let-data="data">

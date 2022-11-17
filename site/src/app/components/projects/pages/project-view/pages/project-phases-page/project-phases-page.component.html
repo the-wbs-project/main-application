@@ -10,6 +10,7 @@
                 [width]="width$ | async"
                 [nodes]="phases$ | async"
                 [project]="project$ | async"
+                [expandedKeys]="(phaseIds$ | async) ?? []"
                 [menuItems]="phases$ | async | taskMenu: taskId"
                 [isDraggable]="true"
                 [detailsUrlPrefix]="['../../', 'task']"

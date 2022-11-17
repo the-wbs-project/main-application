@@ -61,6 +61,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   @Input() project?: Project | null;
   @Input() width?: number | null;
   @Input() detailsUrlPrefix?: string[];
+  @Input() expandedKeys: string[] = [];
   @Input() isDraggable = true;
   @Output() readonly actionClicked = new EventEmitter<string>();
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
@@ -71,7 +72,6 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   draggedRowEl!: HTMLTableRowElement;
   draggedItem!: WbsNodeView;
   targetedItem!: WbsNodeView;
-  expandedKeys: number[] = [];
   settings: SelectableSettings = {
     enabled: true,
     mode: 'row',

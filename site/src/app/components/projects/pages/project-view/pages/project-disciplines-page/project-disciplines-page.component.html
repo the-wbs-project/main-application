@@ -9,6 +9,7 @@
                 view="discipline"
                 [nodes]="disciplines$ | async"
                 [project]="project$ | async"
+                [expandedKeys]="(disciplineIds$ | async) ?? []"
                 [isDraggable]="false"
                 [detailsUrlPrefix]="['../../', 'task']"
                 (reordered)="service.reordered($event)"

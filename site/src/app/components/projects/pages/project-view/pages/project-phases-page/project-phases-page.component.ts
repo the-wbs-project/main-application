@@ -14,8 +14,8 @@ import { ProjectViewService } from '../../services';
 export class ProjectPhasesPageComponent {
   @Select(UiState.mainContentWidth) width$!: Observable<number>;
   @Select(ProjectState.current) project$!: Observable<Project>;
-  @Select(ProjectState.disciplines) disciplines$!: Observable<WbsNodeView[]>;
   @Select(ProjectState.phases) phases$!: Observable<WbsNodeView[]>;
+  @Select(ProjectState.phaseIds) phaseIds$!: Observable<string[]>;
   taskId?: string;
 
   constructor(readonly service: ProjectViewService) {}
