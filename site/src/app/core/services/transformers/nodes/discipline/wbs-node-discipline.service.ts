@@ -1,11 +1,5 @@
 import { Store } from '@ngxs/store';
-import {
-  ListItem,
-  Project,
-  PROJECT_NODE_VIEW,
-  WbsNode,
-  WbsNodeDisciplineRelationship,
-} from '@wbs/core/models';
+import { ListItem, Project, WbsNode } from '@wbs/core/models';
 import { MetadataState } from '@wbs/core/states';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Resources } from '../../../resource.service';
@@ -47,9 +41,7 @@ export class WbsDisciplineNodeTransformer {
       } else phases.push(p);
     }
 
-    return project.mainNodeView === PROJECT_NODE_VIEW.DISCIPLINE
-      ? this.fromDisciplineFirst(project, projectNodes, disciplines, phases)
-      : this.fromPhaseFirst(projectNodes, disciplines, phases);
+    return this.fromPhaseFirst(projectNodes, disciplines, phases);
   }
 
   private fromPhaseFirst(
@@ -132,48 +124,6 @@ export class WbsDisciplineNodeTransformer {
     return nodes;
   }
 
-  private fromDisciplineFirst(
-    project: Project,
-    projectNodes: WbsNode[],
-    disciplines: ListItem[],
-    phases: ListItem[]
-  ): WbsNodeView[] {
-    const nodes: WbsNodeView[] = [];
-
-    for (let i = 0; i < disciplines.length; i++) {
-      const cat = disciplines[i];
-      const parentlevel = [i + 1];
-      const parent: WbsNodeView = {
-        children: 0,
-        description: null,
-        disciplines: null,
-        id: cat.id,
-        treeId: cat.id,
-        levels: [...parentlevel],
-        levelText: (i + 1).toString(),
-        order: i + 1,
-        parentId: null,
-        treeParentId: null,
-        phaseId: undefined,
-        title: this.resources.get(cat.label),
-        canMoveDown: false,
-        canMoveUp: false,
-        canMoveLeft: false,
-        canMoveRight: false,
-      };
-      /*const children = this.getChildren(
-        cat.id,
-        cat.id,
-        parentlevel,
-        projectNodes
-      );
-      parent.children = this.getChildCount(children);
-
-      nodes.push(parent, ...children);*/
-    }
-    return nodes;
-  }
-
   private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
     return list
       .filter((x) => !x.removed && x.parentId === parentId)
@@ -190,10 +140,11 @@ export class WbsDisciplineNodeTransformer {
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
     const children = this.getSortedChildren(parentId, list);
+    let counter = 1;
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      const childLevel = [...parentLevel, i + 1];
+      const childLevel = [...parentLevel, counter];
       const node: WbsNodeView = {
         id: child.id,
         parentId: parentId,
@@ -201,7 +152,7 @@ export class WbsDisciplineNodeTransformer {
         treeParentId: `${disciplineId}-${parentId}`,
         disciplines: child.disciplineIds,
         phaseId: phaseId,
-        order: i + 1,
+        order: counter,
         levels: childLevel,
         title: child.title ?? '',
         description: child.description,
@@ -225,51 +176,10 @@ export class WbsDisciplineNodeTransformer {
 
       if (hasDiscipline || myChildren.length > 0) {
         node.children = this.getChildCount(myChildren);
+        counter++;
 
         results.push(node, ...myChildren);
       }
-    }
-    return results;
-  }
-
-  private getDisciplineChildren(
-    disciplineId: string,
-    parentId: string,
-    parentLevel: number[],
-    list: WbsNode[]
-  ): WbsNodeView[] {
-    const results: WbsNodeView[] = [];
-
-    for (const childParts of this.getSortedChildren(parentId, list)) {
-      /*const childLevel = [...parentLevel, childDisc.order];
-      const node: WbsDisciplineNode = {
-        id: child.id,
-        parentId: parentId,
-        disciplines: child.disciplineIds,
-        phaseId: childDisc.phaseId,
-        order: childDisc.order,
-        levels: childLevel,
-        title: child.title ?? '',
-        description: child.description,
-        levelText: childLevel.join('.'),
-        children: 0,
-        isPhaseNode: childDisc.isPhaseNode,
-      };
-      if (node.isPhaseNode) {
-        const pCat = this.phaseList.find((x) => x.id === childDisc.phaseId);
-
-        if (pCat) node.title = this.resources.get(pCat.label);
-      }
-      const children = this.getChildren(
-        disciplineId,
-        child.id,
-        childLevel,
-        list
-      );
-
-      node.children = this.getChildCount(children);
-
-      results.push(node, ...children);*/
     }
     return results;
   }
