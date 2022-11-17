@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { Routes, RouterModule } from '@angular/router';
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
@@ -27,37 +26,27 @@ import {
 } from './components';
 import { ProjectRedirectGuard, ProjectViewGuard } from './guards';
 import {
+  ProjectAboutPageComponent,
+  ProjectDisciplinesPageComponent,
+  ProjectPhasesPageComponent,
+  ProjectTimelinePageComponent,
+} from './pages';
+import {
   RoleIconPipe,
   RoleTitlePipe,
   TaskMenuPipe,
   UserEmailPipe,
   UserNamePipe,
 } from './pipes';
-import { ProjectViewComponent } from './project-view.component';
-import { ProjectViewState } from './project-view.state';
+import { ProjectViewLayoutComponent } from './project-view-layout.component';
+import { ProjectViewRoutingModule } from './project-view-routing.module';
 import {
   PhaseExtractProcessor,
+  ProjectViewService,
   TextCompareService,
   UploadFileService,
 } from './services';
-
-const routes: Routes = [
-  {
-    path: '',
-    component: ProjectViewComponent,
-    canActivate: [ProjectRedirectGuard],
-  },
-  {
-    path: ':view',
-    component: ProjectViewComponent,
-    canActivate: [
-      ProjectResourceGuard,
-      ProjectVerifyGuard,
-      ProjectTimelineVerifyGuard,
-      ProjectViewGuard,
-    ],
-  },
-];
+import { ProjectViewState } from './states';
 
 @NgModule({
   imports: [
@@ -67,7 +56,7 @@ const routes: Routes = [
     NgbNavModule,
     NgxsModule.forFeature([ProjectViewState]),
     ProjectComponentModule,
-    RouterModule.forChild(routes),
+    ProjectViewRoutingModule,
     SharedModule,
     TaskCreateModule,
     TaskDeleteModule,
@@ -81,6 +70,7 @@ const routes: Routes = [
     ProjectRedirectGuard,
     ProjectResourceGuard,
     ProjectTimelineVerifyGuard,
+    ProjectViewService,
     ProjectVerifyGuard,
     ProjectViewGuard,
     TextCompareService,
@@ -88,10 +78,14 @@ const routes: Routes = [
   ],
   declarations: [
     ProjectAboutComponent,
+    ProjectAboutPageComponent,
     ProjectCategoryDialogComponent,
+    ProjectDisciplinesPageComponent,
     ProjectPhasesComponent,
+    ProjectPhasesPageComponent,
     ProjectRoleComponent,
-    ProjectViewComponent,
+    ProjectTimelinePageComponent,
+    ProjectViewLayoutComponent,
     RoleIconPipe,
     RoleTitlePipe,
     TaskMenuPipe,

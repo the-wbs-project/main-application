@@ -14,19 +14,16 @@ import { Observable, of, switchMap } from 'rxjs';
 import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
-  SaveUpload,
-} from '../../actions';
-import { ProjectState } from '../../states';
-import { ProjectCategoryDialogComponent } from './components';
-import { PAGE_VIEW, PAGE_VIEW_TYPE } from './models';
+} from '../../../actions';
+import { ProjectState } from '../../../states';
 import {
   DownloadNodes,
   EditDisciplines,
   EditPhases,
   ProjectPageChanged,
-  UploadNodes,
-} from './project-view.actions';
-import { PhaseExtractProcessor } from './services';
+} from '../actions';
+import { ProjectCategoryDialogComponent } from '../components';
+import { PAGE_VIEW, PAGE_VIEW_TYPE } from '../models';
 
 interface StateModel {
   navType: PROJECT_FILTER | null;
@@ -46,7 +43,6 @@ export class ProjectViewState {
     private readonly data: DataServiceFactory,
     private readonly dialog: DialogService,
     private readonly messages: Messages,
-    private readonly processors: PhaseExtractProcessor,
     private readonly store: Store
   ) {}
 
@@ -96,32 +92,6 @@ export class ProjectViewState {
       'xlsx',
       this.currentNodeViews(state)
     );
-  }
-
-  @Action(UploadNodes)
-  uploadNodes(ctx: StateContext<StateModel>): void | Observable<any> {
-    const state = ctx.getState();
-
-    /*
-    const ref = this.dialog.open({
-      content: ProjectNodeUploadDialogComponent,
-      appendTo: this.containers.body,
-    });
-    const comp = <ProjectNodeUploadDialogComponent>ref.content.instance;
-
-    comp.viewNode = state.viewNode;
-
-    return ref.result.pipe(
-      switchMap((result: DialogCloseResult | WbsNodeView[]) => {
-        if (result instanceof DialogCloseResult) {
-          return of(null);
-        } else if (state.viewNode === PROJECT_NODE_VIEW.PHASE) {
-          return ctx.dispatch(new ProcessUploadedNodes(result));
-        } else {
-          return of(null);
-        }
-      })
-    );*/
   }
 
   @Action(EditPhases)

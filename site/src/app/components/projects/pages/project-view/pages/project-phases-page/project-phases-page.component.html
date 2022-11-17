@@ -1,0 +1,27 @@
+<div class="row row-sm">
+  <div class="col-lg-12 col-md-12">
+    <div class="custom-card main-content-body-profile">
+      <div class="main-content-body tab-pane">
+        <div class="card">
+          <div class="card-body p-0 border-0 p-0 rounded-10">
+            <div class="pane-content" style="padding: 15px">
+              <wbs-tree
+                view="phase"
+                [width]="width$ | async"
+                [nodes]="phases$ | async"
+                [project]="project$ | async"
+                [menuItems]="phases$ | async | taskMenu: taskId"
+                [isDraggable]="true"
+                [detailsUrlPrefix]="['../../', 'task']"
+                (actionClicked)="service.taskAction($event, taskId!)"
+                (reordered)="service.reordered($event)"
+                (selectedChanged)="taskId = $event.id"
+              >
+              </wbs-tree>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

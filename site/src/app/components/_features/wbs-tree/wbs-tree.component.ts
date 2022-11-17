@@ -18,11 +18,7 @@ import {
   SelectionChangeEvent,
   TreeListComponent,
 } from '@progress/kendo-angular-treelist';
-import {
-  ActionMenuItem,
-  Project,
-  PROJECT_NODE_VIEW_TYPE,
-} from '@wbs/core/models';
+import { ActionMenuItem, Project } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
@@ -60,7 +56,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   private currentSubscription: Subscription | undefined;
 
   @Input() menuItems?: ActionMenuItem[][] | null;
-  @Input() view?: PROJECT_NODE_VIEW_TYPE | null;
+  @Input() view?: 'phase' | 'discipline' | null;
   @Input() nodes?: WbsNodeView[] | null;
   @Input() project?: Project | null;
   @Input() width?: number | null;
