@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faQuestion } from '@fortawesome/pro-solid-svg-icons';
-import { ROLES, ROLES_TYPE } from '@wbs/shared/models';
+import { ROLES, ROLES_TYPE } from '@wbs/core/models';
 import { ROLE_ICONS } from 'src/environments/icons';
 
 @Pipe({ name: 'roleIcon' })

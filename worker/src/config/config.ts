@@ -1,4 +1,3 @@
-import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { AuthConfig } from './auth.config';
 import { AzureConfig } from './azure.config';
 import { DbConfig } from './db.config';
@@ -17,6 +16,7 @@ export interface Config {
   mailgun: MailgunConfig;
   twilio: TwilioConfig;
   bucketSnapshots: R2Bucket;
+  bucketStatics: R2Bucket;
   kvAuth: KVNamespace;
   kvData: KVNamespace;
 }

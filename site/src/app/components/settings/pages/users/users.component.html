@@ -1,4 +1,4 @@
-<div class="d-flex">
+<div class="display-flex">
   <div class="flex-grow-1">
     <div
       class="btn-group"
@@ -88,7 +88,7 @@
     [title]="'Settings.Roles' | translate"
   >
     <ng-template kendoGridCellTemplate let-item>
-      {{ item.roles | rolesList }}
+      {{ item.roles | roleList }}
     </ng-template>
   </kendo-grid-column>
 </kendo-grid>

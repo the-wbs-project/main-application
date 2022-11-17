@@ -8,7 +8,7 @@ export interface EdgeService {
 
   waitUntil(func: Promise<unknown>): void;
 
-  cacheMatch(): Promise<Response | null>;
+  cacheMatch(): Promise<Response | undefined>;
 
   cachePut(response: Response): void;
 }

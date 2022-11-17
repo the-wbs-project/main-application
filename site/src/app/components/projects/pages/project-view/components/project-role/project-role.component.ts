@@ -5,8 +5,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { faCircle } from '@fortawesome/pro-solid-svg-icons';
-import { Store } from '@ngxs/store';
-import { ROLES_TYPE } from '@wbs/shared/models';
+import { ROLES_TYPE } from '@wbs/core/models';
 
 @Component({
   selector: 'wbs-project-role',
@@ -19,6 +18,4 @@ export class ProjectRoleComponent {
   @Input() userId: string | undefined;
 
   readonly faCircle = faCircle;
-
-  constructor(private readonly store: Store) {}
 }

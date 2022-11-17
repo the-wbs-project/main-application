@@ -4,7 +4,6 @@ import { WbsNodeGeneralComponent } from './wbs-node-general.component';
 
 @NgModule({
   imports: [SharedModule],
-  providers: [],
   declarations: [WbsNodeGeneralComponent],
   exports: [WbsNodeGeneralComponent],
 })

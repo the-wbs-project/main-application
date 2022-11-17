@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Project } from '@wbs/shared/models';
+import { Project } from '@wbs/core/models';
 
 @Pipe({ name: 'projectSort', pure: false })
 export class ProjectSortPipe implements PipeTransform {

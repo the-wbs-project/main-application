@@ -1,0 +1,91 @@
+<ng-template [ngIf]="project$ | async" let-project>
+  <app-page-header
+    title="PROJECT DETAILS"
+    [items]="[{ route: '', label: 'General.Projects' }]"
+    [active_item]="project.title"
+  ></app-page-header>
+  <div class="row">
+    <div class="col-lg-12 col-md-12">
+      <div class="card custom-card">
+        <div class="card-body display-flex">
+          <div class="wd-100 tx-center pd-t-15 edit-pencil-parent">
+            <img
+              *ngIf="project.category | categoryIcon; let url"
+              [src]="url"
+              class="wd-70 h-auto"
+            />
+            <wbs-edit-pencil
+              class="pos-absolute l-80 t-20"
+              placeholder="Projects.EditTaskTitle"
+            >
+            </wbs-edit-pencil>
+          </div>
+          <div class="display-flex flex-row w-100">
+            <div style="flex-grow: 1">
+              <wbs-title-editor
+                [title]="project.title"
+                (titleChange)="service.saveTitle($event)"
+              ></wbs-title-editor>
+              <p class="tx-13 text-muted ms-md-4 ms-0 mb-2 pb-2">
+                <label
+                  class="me-3"
+                  *ngFor="let disc of project.categories.discipline"
+                >
+                  <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
+                  {{ disc | categoryLabel }}
+                </label>
+              </p>
+
+              <p class="text-muted ms-md-4 ms-0 mb-2">
+                <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+                  {{ "General.Category" | translate }} :
+                </span>
+                <span class="edit-pencil-parent">
+                  {{ project.category | categoryLabel }}
+                  <wbs-edit-pencil
+                    class="pos-relative t--5"
+                    placeholder="Projects.EditProjectCategory"
+                  >
+                  </wbs-edit-pencil>
+                </span>
+              </p>
+              <p class="text-muted ms-md-4 ms-0 mb-2">
+                <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+                  {{ "General.Status" | translate }} :
+                </span>
+                <span>
+                  {{ project.status | projectStatus }},
+                  {{ project._ts | editedDateText | lowercase }}
+                </span>
+              </p>
+            </div>
+            <div>
+              <app-project-action-menu
+                [menu]="actions"
+                (itemClicked)="service.projectAction($event)"
+              ></app-project-action-menu>
+            </div>
+          </div>
+          <div class="my-md-auto mt-4 prof-details"></div>
+        </div>
+        <div class="card-footer py-0">
+          <div class="profile-tab tab-menu-heading border-bottom-0">
+            <ul
+              ngbNav
+              class="main-nav-line p-0 tabs-menu profile-nav-line border-0 br-5 mb-0"
+              [activeId]="pageView$ | async"
+            >
+              <li [ngbNavItem]="link.fragment" *ngFor="let link of links">
+                <a ngbNavLink [routerLink]="['./', link.fragment]">
+                  {{ link.title | translate }}
+                </a>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <router-outlet></router-outlet>
+</ng-template>

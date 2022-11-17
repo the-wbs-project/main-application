@@ -1,32 +1,26 @@
-import {
-  faClone,
-  faPencil,
-  faPlus,
-  faTrashAlt,
-} from '@fortawesome/pro-solid-svg-icons';
-import { ActionMenuItem } from '@wbs/shared/models';
+import { ActionMenuItem } from '@wbs/core/models';
 import { PAGE_VIEW } from './page-view.const';
 
 export const MenuItems = {
   actions: <ActionMenuItem[]>[
     {
       action: 'addSub',
-      icon: faPlus,
+      icon: 'fa-plus',
       title: 'Projects.AddSubTask',
     },
     {
       action: 'edit',
-      icon: faPencil,
+      icon: 'fa-pencil',
       title: 'Projects.EditTask',
     },
     {
       action: 'clone',
-      icon: faClone,
+      icon: 'fa-clone',
       title: 'Projects.CloneTask',
     },
     {
       action: 'delete',
-      icon: faTrashAlt,
+      icon: 'fa-trash-alt',
       title: 'Projects.DeleteTask',
     },
   ],

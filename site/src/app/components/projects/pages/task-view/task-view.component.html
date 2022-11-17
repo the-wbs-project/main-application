@@ -11,18 +11,17 @@
   <div class="row">
     <div class="col-lg-12 col-md-12">
       <div class="card custom-card">
-        <div class="card-body d-flex">
-          <div class="wd-100 tx-center pd-t-15 edit-pencil-parent">
-            <fa-stack size="3x">
-              <fa-icon [icon]="faSquare" stackItemSize="2x"></fa-icon>
-              <fa-icon
-                [icon]="faSubTask"
-                [inverse]="true"
-                stackItemSize="1x"
-              ></fa-icon>
-            </fa-stack>
+        <div class="card-body display-flex">
+          <div class="wd-100 tx-center edit-pencil-parent">
+            <span class="fa-layers fa-6x">
+              <i class="fa-solid fa-square"></i>
+              <i
+                class="fa-solid fa-diagram-subtask fa-inverse"
+                data-fa-transform="shrink-7"
+              ></i>
+            </span>
           </div>
-          <div class="d-flex flex-row w-100">
+          <div class="display-flex flex-row w-100">
             <div style="flex-grow: 1">
               <wbs-title-editor
                 [title]="current.title"
@@ -30,7 +29,7 @@
               ></wbs-title-editor>
               <p class="tx-13 text-muted ms-md-4 ms-0 mb-2 pb-2">
                 <label class="me-3" *ngFor="let disc of current.disciplineIds">
-                  <fa-icon [icon]="disc | disciplineIcon"></fa-icon>
+                  <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
                   {{ disc | categoryLabel }}
                 </label>
               </p>
@@ -80,6 +79,9 @@
                 [project]="project$ | async"
                 [width]="width$ | async"
               ></wbs-task-sub-tasks>
+            </div>
+            <div *ngIf="pageView === 'timeline'" class="pane-content">
+              <wbs-timeline [timeline]="timeline$ | async"></wbs-timeline>
             </div>
           </div>
         </div>

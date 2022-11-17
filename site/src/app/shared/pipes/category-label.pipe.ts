@@ -1,13 +1,13 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { MetadataState } from '@wbs/shared/states';
-import { ListItem } from '../models';
+import { ProjectCategory } from '@wbs/core/models';
+import { MetadataState } from '@wbs/core/states';
 
 @Pipe({ name: 'categoryLabel', pure: false })
 export class CategoryLabelPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
-  transform(idsOrCat: (string | ListItem) | null | undefined): string {
+  transform(idsOrCat: ProjectCategory | null | undefined): string {
     if (!idsOrCat) return '';
     if (typeof idsOrCat === 'string')
       return (

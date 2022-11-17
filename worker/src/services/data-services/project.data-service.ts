@@ -1,20 +1,17 @@
 import { Project } from '../../models';
-import { DbFactory, DbService } from '../database-services';
+import { DbService } from '../database-services';
 import { EdgeDataService } from '../edge-services';
+import { DataServiceHelper } from './helper.data-service';
 
 const kvPrefix = 'PROJECTS';
 
 export class ProjectDataService {
-  private readonly db: DbService;
-
-  constructor(private readonly organization: string, dbFactory: DbFactory, mainRequest: Request, private readonly edge: EdgeDataService) {
-    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Projects', 'id');
-  }
+  constructor(private readonly organization: string, private readonly db: DbService, private readonly edge: EdgeDataService) {}
 
   async getAllAsync(): Promise<Project[]> {
     let list = await this.db.getAllAsync<Project>(true);
 
-    this.fixTs(list);
+    DataServiceHelper.fixTs(list);
 
     return list;
   }
@@ -29,7 +26,7 @@ export class ProjectDataService {
       true,
     );
 
-    this.fixTs(list);
+    DataServiceHelper.fixTs(list);
 
     return list;
   }
@@ -45,7 +42,7 @@ export class ProjectDataService {
     const data = await this.getFromDbAsync(projectId);
 
     if (data) {
-      this.fixTs(data);
+      DataServiceHelper.fixTs(data);
 
       this.edge.putLater(kvName, JSON.stringify(data));
     }
@@ -69,13 +66,5 @@ export class ProjectDataService {
 
   private getFromDbAsync(projectId: string, clean = true): Promise<Project | undefined> {
     return this.db.getDocumentAsync<Project>(projectId, projectId, clean);
-  }
-
-  private fixTs(objOrArray: Project | Project[]): void {
-    if (Array.isArray(objOrArray)) {
-      for (const obj of objOrArray) this.fixTs(obj);
-    } else if (objOrArray) {
-      objOrArray._ts *= 1000;
-    }
   }
 }

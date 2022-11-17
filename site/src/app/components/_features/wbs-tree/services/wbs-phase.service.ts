@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { WbsNodeService } from '@wbs/shared/services';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNodeService } from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { RebuildResults } from '../models';
 
 @Injectable()

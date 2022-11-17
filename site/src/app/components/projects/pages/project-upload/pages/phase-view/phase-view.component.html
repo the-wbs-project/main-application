@@ -1,0 +1,62 @@
+<div *ngIf="phaseList$ | async; let phaseList" class="w-100 text-center">
+  <fa-icon [icon]="faList" size="5x"></fa-icon>
+  <h3 class="pd-t-20">Phase Mapping</h3>
+  <ngb-alert type="info">
+    <h4 class="alert-heading">Why?</h4>
+    <p>
+      The main purpose of this tool is to help you build better work breakdown
+      structures. To achieve this we need to understand more about the project
+      plan as it currently stands. Also this will help us provide learning
+      opportunities within your plan.
+    </p>
+  </ngb-alert>
+  <div class="list-group text-start w-100 pd-t-20">
+    <div
+      *ngFor="let cat of phaseList; let i = index"
+      class="list-group-item display-flex flex-row"
+      [class.bg-gray-200]="!cat.isEditable"
+    >
+      <div class="pd-t-1 wd-60 display-ib">
+        <fa-layers [fixedWidth]="true">
+          <fa-icon size="2x" [icon]="faCircle"></fa-icon>
+          <fa-layers-text [content]="(i + 1).toString()" transform="right-6">
+          </fa-layers-text>
+        </fa-layers>
+      </div>
+      <ng-template [ngIf]="!cat.isEditable">
+        <div style="font-size: 12px">
+          {{ cat.idOrCat | categoryLabel }}
+        </div>
+        <div class="flex-grow-1 text-end tx-10">
+          {{ cat.idOrCat | categoryLabelList }}
+        </div>
+      </ng-template>
+      <ng-template [ngIf]="cat.isEditable">
+        <div style="font-size: 12px; padding-right: 30px">
+          {{ cat.text }}
+        </div>
+        <div class="flex-grow-1 text-end tx-10">
+          <kendo-multiselect
+            [data]="(categories$ | async) ?? []"
+            textField="label"
+            valueField="id"
+            [ngStyle]="{ 'max-width': '300px' }"
+            [valuePrimitive]="true"
+            [(ngModel)]="cat.sameAs"
+            size="small"
+            kendoMultiSelectSummaryTag
+          >
+            <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+              <span class="k-icon k-i-caret-alt-down"></span>
+              {{ dataItems | join: "label" }}
+            </ng-template>
+          </kendo-multiselect>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+  <br />
+  <a class="btn btn-primary mg-y-20" (click)="nav(phaseList)">
+    {{ "General.Continue" | translate }}
+  </a>
+</div>

@@ -4,9 +4,8 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy } from '@ngneat/until-destroy';
-import { DialogRef } from '@progress/kendo-angular-dialog';
-import { BehaviorSubject } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -14,30 +13,23 @@ import { BehaviorSubject } from 'rxjs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
-export class CustomDialog2Component {
-  readonly dialogTitle$ = new BehaviorSubject<string>('');
+export class CustomDialogComponent {
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>('', [Validators.required]),
   });
 
-  constructor(private readonly dialog: DialogRef) {
-    //  this.dialog.
-  }
+  constructor(public readonly modal: NgbActiveModal) {}
 
   get controls() {
     return this.form.controls;
   }
 
-  setTitle(title: string) {
-    this.dialogTitle$.next(title);
-  }
-
   close() {
-    this.dialog.close([this.form.value.title, this.form.value.description]);
+    //this.dialog.close([this.form.value.title, this.form.value.description]);
   }
 
   cancel() {
-    this.dialog.close();
+    //this.dialog.close();
   }
 }

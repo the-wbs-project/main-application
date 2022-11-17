@@ -1,17 +1,18 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ProjectService, Resources, TitleService } from '@wbs/shared/services';
-import { map, Observable } from 'rxjs';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   Project,
   PROJECT_VIEW_STATI,
   PROJECT_VIEW_STATI_TYPE,
-} from '@wbs/shared/models';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+} from '@wbs/core/models';
+import { ProjectService, Resources, TitleService } from '@wbs/core/services';
+import { map, Observable } from 'rxjs';
 
 @UntilDestroy()
 @Component({
   templateUrl: './project-list.component.html',
+  styleUrls: ['./project-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectListComponent implements OnInit {

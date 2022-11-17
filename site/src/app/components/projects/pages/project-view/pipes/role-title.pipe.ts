@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ROLES } from '@wbs/shared/models';
-import { Resources } from '@wbs/shared/services';
+import { ROLES } from '@wbs/core/models';
+import { Resources } from '@wbs/core/services';
 
 @Pipe({ name: 'roleTitle' })
 export class RoleTitlePipe implements PipeTransform {

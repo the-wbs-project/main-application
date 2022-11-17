@@ -1,5 +1,9 @@
 @import "src/assets/scss/variables";
 
+.comment-count {
+  color: $white;
+}
+
 ::ng-deep {
   .rtl.dark-theme .vtimeline .timeline-wrapper .timeline-panel:after {
     border-right: 14px solid #353949 !important;

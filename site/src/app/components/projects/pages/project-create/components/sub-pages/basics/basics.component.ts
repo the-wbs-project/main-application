@@ -7,7 +7,6 @@ import { ProjectCreateState } from '../../../project-create.state';
 @Component({
   selector: 'app-project-create-basics',
   templateUrl: './basics.component.html',
-  styleUrls: ['./basics.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BasicsComponent {

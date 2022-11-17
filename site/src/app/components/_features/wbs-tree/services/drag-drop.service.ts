@@ -1,5 +1,3 @@
-import { Position } from '../models';
-
 export const tableRow = (node: HTMLElement) =>
   node.tagName.toLowerCase() === 'tr';
 

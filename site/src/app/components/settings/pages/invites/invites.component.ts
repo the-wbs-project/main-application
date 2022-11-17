@@ -12,7 +12,7 @@ import {
   GridDataResult,
 } from '@progress/kendo-angular-grid';
 import { process, State as kendoState } from '@progress/kendo-data-query';
-import { Invite } from '@wbs/shared/models';
+import { Invite } from '@wbs/core/models';
 import { BehaviorSubject, map } from 'rxjs';
 import { ChangeBreadcrumbs, LoadInviteData } from '../../actions';
 import { Breadcrumb } from '../../models';
@@ -21,7 +21,6 @@ import { UserAdminState } from '../../states';
 @UntilDestroy()
 @Component({
   templateUrl: './invites.component.html',
-  styleUrls: ['./invites.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })

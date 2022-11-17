@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ListItem, WbsNode } from '@wbs/shared/models';
-import { IdService, Utils } from '@wbs/shared/services';
-import { MetadataState } from '@wbs/shared/states';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { ListItem, WbsNode } from '@wbs/core/models';
+import { IdService, Utils } from '@wbs/core/services';
+import { MetadataState } from '@wbs/core/states';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { ExtractResults } from '../../../models';
 import { TextCompareService } from './text-compare.service';
 
@@ -177,7 +177,7 @@ export class PhaseExtractProcessor {
             isDisciplineNode: false,
             syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
           },
-          _ts: new Date().getTime()
+          _ts: new Date().getTime(),
         };
       }
       const parentId = model.parentId;

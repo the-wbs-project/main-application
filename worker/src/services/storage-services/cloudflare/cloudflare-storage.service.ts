@@ -2,14 +2,31 @@ export class CloudflareStorageService {
   constructor(private readonly bucket: R2Bucket) {}
 
   async get<T>(fileName: string, folders: string[]): Promise<T | null> {
-    const key = `${folders.join("/")}/${fileName}`;
+    const key = `${folders.join('/')}/${fileName}`;
     const object = await this.bucket.get(key);
 
     return object == null ? null : <T>object.json();
   }
 
+  async getAsResponse(fileName: string, folders?: string[]): Promise<Response | null> {
+    fileName = decodeURIComponent(fileName);
+
+    const key = folders ? `${folders.join('/')}/${fileName}` : fileName;
+    const object = await this.bucket.get(key);
+
+    if (!object) return new Response('', { status: 404 });
+
+    const headers = new Headers();
+    object.writeHttpMetadata(headers);
+    headers.set('etag', object.httpEtag);
+
+    return new Response(object.body, {
+      headers,
+    });
+  }
+
   async put<T>(fileName: string, folders: string[], body: T): Promise<void> {
-    const key = `${folders.join("/")}/${fileName}`;
+    const key = `${folders.join('/')}/${fileName}`;
 
     await this.bucket.put(key, JSON.stringify(body));
   }

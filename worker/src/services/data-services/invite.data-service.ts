@@ -1,12 +1,8 @@
 import { Invite } from '../../models';
-import { DbFactory, DbService } from '../database-services';
+import { DbService } from '../database-services';
 
 export class InviteDataService {
-  private readonly db: DbService;
-
-  constructor(private readonly organization: string, mainRequest: Request, dbFactory: DbFactory) {
-    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Metadata', 'type');
-  }
+  constructor(private readonly db: DbService) {}
 
   getAllAsync(): Promise<Invite[]> {
     return this.db.getAllByPartitionAsync<Invite>('Invites', true);
@@ -16,8 +12,8 @@ export class InviteDataService {
     return this.db.getDocumentAsync<Invite>('Invites', inviteCode, true);
   }
 
-  putAsync(invite: Invite): Promise<number> {
+  async putAsync(invite: Invite): Promise<boolean> {
     invite.type = 'Invites';
-    return this.db.upsertDocument(invite, invite.type);
+    return (await this.db.upsertDocument(invite, invite.type)) != null;
   }
 }

@@ -1,3 +1,4 @@
+import { Document, Resource } from '@cfworker/cosmos';
 import { IdObject } from '../../models';
 
 export interface DbService {
@@ -28,5 +29,5 @@ export interface DbService {
     }[],
   ): Promise<T | undefined>;
 
-  upsertDocument<T extends IdObject>(document: T, pk: string): Promise<number>;
+  upsertDocument<T extends Document & Resource>(document: Partial<T>, pk: string): Promise<T>;
 }

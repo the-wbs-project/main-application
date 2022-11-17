@@ -5,12 +5,7 @@ import { MailGunService } from './mail-gun.service';
 import { WorkerRequest } from './worker-request.service';
 
 export const NO_AUTH_ROUTES: string[] = ['/manifest.json', '/assets/*', '/*.js', '/*.map', '/*.css'];
-export const AZURE_ROUTES_POST: string[] = [
-  '/api/projects/extracts/phase/download',
-  '/api/projects/extracts/phase/upload',
-  '/api/projects/extracts/discipline/download',
-  '/api/projects/extracts/discipline/upload',
-];
+export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/*', '/api/projects/import/*'];
 
 function apiAuth(req: WorkerRequest): Promise<Response | number | void> {
   return req.services.auth.authorizeApiAsync(req);
@@ -55,6 +50,7 @@ export class RouterService {
     this.router.get('/api/current', apiAuth, Http.auth.currentUserAsync);
     this.router.get('/api/resources/:category', apiAuth, Http.metadata.getResourcesAsync);
     this.router.get('/api/activity/:topLevelId', apiAuth, Http.activity.getByIdAsync);
+    this.router.get('/api/activity/user/:userId', apiAuth, Http.activity.getByUserIdAsync);
     this.router.put('/api/activity/:dataType', apiAuth, Http.activity.putAsync);
     this.router.get('/api/lists/:name', apiAuth, Http.metadata.getListAsync);
     this.router.get('/api/projects/my', apiAuth, Http.project.getAllAsync);
@@ -64,11 +60,13 @@ export class RouterService {
     this.router.get('/api/projects/byId/:projectId/nodes', apiAuth, Http.projectNodes.getAsync);
     this.router.put('/api/projects/byId/:projectId/nodes/batch', apiAuth, Http.projectNodes.batchAsync);
     this.router.put('/api/projects/byId/:projectId/nodes/:nodeId', apiAuth, Http.projectNodes.putAsync);
+    this.router.get('/api/projects/snapshot/:projectId/:activityId', apiAuth, Http.projectSnapshots.getByActivityIdAsync);
     this.router.get('/api/users', apiAuth, Http.users.getAllAsync);
     this.router.get('/api/users/lite', apiAuth, Http.users.getAllLiteAsync);
     this.router.post('/api/user', apiAuth, isAdmin, Http.users.updateUserAsync);
     this.router.get('/api/invites', apiAuth, Http.invites.getAllAsync);
     this.router.put('/api/invites/:send', apiAuth, Http.invites.putAsync);
+    this.router.get('/api/files/:file', apiAuth, (req) => req.services.storage.statics.getAsResponse(req.params!.file));
 
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, apiAuth, Http.azure.handleAsync);

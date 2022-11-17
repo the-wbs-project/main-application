@@ -2,47 +2,25 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <title>Site</title>
+    <title>The WBS Project</title>
     <base href="/" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="author" content="CW Software LLC" />
     <meta name="keywords" content="" />
 
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
-    <link
-      id="style"
-      rel="stylesheet"
-      href="../assets/bootstrap/bootstrap.css"
-    />
 
     <link rel="preconnect" href="https://fonts.gstatic.com" />
-    <style>
-      #glb-loader.loaderShow {
-        display: block;
-      }
+    <link rel="preconnect" href="https://kit.fontawesome.com" />
+    <link rel="stylesheet" href="/assets/notiflix-3.2.5.min.css" />
 
-      #glb-loader {
-        position: fixed;
-        z-index: 50000;
-        left: 0;
-        top: 0;
-        right: 0;
-        bottom: 0;
-        height: 100%;
-        width: 100%;
-        margin: 0 auto;
-        text-align: center;
-      }
-    </style>
+    <script src="/assets/notiflix-3.2.5.min.js"></script>
     <script
       src="https://kit.fontawesome.com/c1cae0062a.js"
       crossorigin="anonymous"
     ></script>
   </head>
   <body class="ltr main-body app sidebar-mini">
-    <div style="height: 100vh" id="glb-loader" class="loaderShow">
-      <img src="../assets/img/loader.svg" class="loader-img" alt="loader" />
-    </div>
     <wbs-app></wbs-app>
   </body>
 </html>

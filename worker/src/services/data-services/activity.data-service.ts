@@ -1,14 +1,13 @@
-import { Activity, IdObject } from '../../models';
-import { DbFactory, DbService } from '../database-services';
+import { Document, Resource } from '@cfworker/cosmos';
+import { uuid } from '@cfworker/uuid';
+import { Activity } from '../../models';
+import { DbService } from '../database-services';
+import { DataServiceHelper } from './helper.data-service';
 
-declare type ActivityDbObject = Activity & IdObject;
+declare type ActivityDbObject = Activity & Document & Resource;
 
 export class ActivityDataService {
-  private readonly db: DbService;
-
-  constructor(private readonly organization: string, mainRequest: Request, dbFactory: DbFactory) {
-    this.db = dbFactory.createDbService(mainRequest, this.organization, 'Activity', 'topLevelId');
-  }
+  constructor(private readonly db: DbService) {}
 
   async getAllAsync(topLevelId: string): Promise<Activity[]> {
     const dbModels = await this.db.getAllByPartitionAsync<ActivityDbObject>(topLevelId, false);
@@ -19,20 +18,20 @@ export class ActivityDataService {
     return models;
   }
 
-  putAsync(activity: ActivityDbObject): Promise<number> {
-    return this.db.upsertDocument(activity, activity.topLevelId);
+  async putAsync(activity: Activity): Promise<Activity> {
+    return this.fromDb(await this.db.upsertDocument<ActivityDbObject>(this.toDb(activity), activity.topLevelId));
   }
 
-  toDb(model: Activity): ActivityDbObject {
+  private toDb(model: Activity): Partial<ActivityDbObject> {
     return {
       action: model.action,
       data: model.data,
-      id: model.timestamp.toString(),
+      id: uuid(),
+      _ts: 0,
       objectId: model.objectId,
       topLevelId: model.topLevelId,
       userId: model.userId,
       versionId: model.versionId,
-      timestamp: model.timestamp,
       label: model.label,
       labelTitle: model.labelTitle,
     };
@@ -40,15 +39,16 @@ export class ActivityDataService {
 
   private fromDb(modelDb: ActivityDbObject): Activity {
     return {
+      id: modelDb.id,
       action: modelDb.action,
       data: modelDb.data,
-      timestamp: parseInt(modelDb.id),
       objectId: modelDb.objectId,
       topLevelId: modelDb.topLevelId,
       userId: modelDb.userId,
       versionId: modelDb.versionId,
       label: modelDb.label,
       labelTitle: modelDb.labelTitle,
+      _ts: DataServiceHelper.fixTsValue(modelDb._ts),
     };
   }
 }

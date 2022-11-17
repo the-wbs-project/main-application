@@ -1,4 +1,4 @@
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 export interface RebuildResults {
   changedIds: string[];

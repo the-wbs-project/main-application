@@ -6,8 +6,6 @@ name: Site Builder - QA
 on:
   push:
     branches: ["qa"]
-  pull_request:
-    branches: ["qa"]
 
 jobs:
   site_job:

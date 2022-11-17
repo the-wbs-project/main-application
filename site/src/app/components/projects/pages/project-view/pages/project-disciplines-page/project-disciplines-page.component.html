@@ -1,0 +1,24 @@
+<div class="row row-sm">
+  <div class="col-lg-12 col-md-12">
+    <div class="custom-card main-content-body-profile">
+      <div class="main-content-body tab-pane">
+        <div class="card">
+          <div class="card-body p-0 border-0 p-0 rounded-10">
+            <div class="pane-content" style="padding: 15px">
+              <wbs-tree
+                view="discipline"
+                [nodes]="disciplines$ | async"
+                [project]="project$ | async"
+                [expandedKeys]="(disciplineIds$ | async) ?? []"
+                [isDraggable]="false"
+                [detailsUrlPrefix]="['../../', 'task']"
+                (reordered)="service.reordered($event)"
+              >
+              </wbs-tree>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

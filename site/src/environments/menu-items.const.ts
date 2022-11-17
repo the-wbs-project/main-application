@@ -1,27 +1,22 @@
-import {
-  faBuilding,
-  faEnvelope,
-  faUsers,
-} from '@fortawesome/pro-solid-svg-icons';
-import { MenuItem } from '@wbs/shared/models';
+import { MenuItem } from '@wbs/core/models';
 
 export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
     title: 'Settings.Organization',
     description: 'Settings.OrganizationDescription',
     path: ['/settings', 'general'],
-    icon: faBuilding,
+    icon: 'fa-building',
   },
   {
     title: 'Settings.Users',
     description: 'Settings.UsersDescription',
     path: ['/settings', 'users', 'active'],
-    icon: faUsers,
+    icon: 'fa-users',
   },
   {
     title: 'Settings.Invites',
     description: 'Settings.InvitesDescription',
     path: ['/settings', 'invites'],
-    icon: faEnvelope,
+    icon: 'fa-envelope',
   },
 ];

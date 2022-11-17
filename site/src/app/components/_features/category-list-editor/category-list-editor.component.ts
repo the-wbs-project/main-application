@@ -8,30 +8,26 @@ import {
 } from '@angular/core';
 import { faEye, faEyeSlash, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
-import {
-  DialogCloseResult,
-  DialogService,
-} from '@progress/kendo-angular-dialog';
+import { PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
 import {
   CategorySelectionService,
-  ContainerService,
+  DialogService,
   IdService,
-} from '@wbs/shared/services';
-import { CategorySelection } from '@wbs/shared/view-models';
+} from '@wbs/core/services';
+import { CategorySelection } from '@wbs/core/view-models';
 import { BehaviorSubject } from 'rxjs';
-import { CustomDialog2Component } from './custom-dialog/custom-dialog.component';
+import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 @Component({
   selector: 'app-category-list-editor',
   templateUrl: './category-list-editor.component.html',
-  styleUrls: ['./category-list-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
 })
 export class CategoryListEditorComponent {
   @Input() showButtons = true;
   @Input() categories?: CategorySelection[];
-  @Input() categoryType?: 'phase' | 'discipline';
+  @Input() categoryType?: PROJECT_NODE_VIEW_TYPE;
   @Output() categoriesChange = new EventEmitter<CategorySelection[]>();
 
   readonly hideUnselected$ = new BehaviorSubject<boolean>(false);
@@ -40,10 +36,11 @@ export class CategoryListEditorComponent {
   readonly faEyeSlash = faEyeSlash;
   readonly faPlus = faPlus;
 
+  flip = false;
+
   constructor(
     private readonly catService: CategorySelectionService,
-    private readonly containers: ContainerService,
-    private readonly dialog: DialogService
+    private readonly dialogService: DialogService
   ) {}
 
   changed(): void {
@@ -52,29 +49,23 @@ export class CategoryListEditorComponent {
   }
 
   showCreate() {
-    const dialog = this.dialog.open({
-      content: CustomDialog2Component,
-      appendTo: this.containers.body,
-    });
+    this.dialogService
+      .openDialog<[string, string] | null>(CustomDialogComponent)
+      .subscribe((result) => {
+        console.log(result);
+        if (result == null) return;
 
-    (<CustomDialog2Component>dialog.content.instance).dialogTitle$.next(
-      'Something.Something'
-    );
+        const item: CategorySelection = {
+          id: IdService.generate(),
+          description: result[1],
+          isCustom: true,
+          label: result[0],
+          number: null,
+          selected: true,
+        };
+        this.categories = [item, ...this.categories!];
 
-    dialog.result.subscribe((result: [string, string] | DialogCloseResult) => {
-      if (result instanceof DialogCloseResult) return;
-
-      const item: CategorySelection = {
-        id: IdService.generate(),
-        description: result[1],
-        isCustom: true,
-        label: result[0],
-        number: null,
-        selected: true,
-      };
-      this.categories = [item, ...this.categories!];
-
-      this.changed();
-    });
+        this.changed();
+      });
   }
 }

@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ListItem,
   Project,
@@ -8,8 +9,8 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_SCOPE_TYPE,
   PROJECT_STATI,
-} from '@wbs/shared/models';
-import { DataServiceFactory, IdService } from '@wbs/shared/services';
+} from '@wbs/core/models';
+import { IdService } from '@wbs/core/services';
 import {
   CategoryChosen,
   DisciplinesChosen,
@@ -24,7 +25,7 @@ import {
 } from './project-create.actions';
 import { ProjectCreationPage, PROJECT_CREATION_PAGES as PAGES } from './models';
 import { Observable, switchMap } from 'rxjs';
-import { MetadataState } from '@wbs/shared/states';
+import { MetadataState } from '@wbs/core/states';
 import { Navigate } from '@ngxs/router-plugin';
 
 interface StateModel {
@@ -248,6 +249,7 @@ export class ProjectCreateState {
       category: state.category!,
       description: state.description,
       mainNodeView: state.nodeView!,
+      roles: [],
       status: PROJECT_STATI.PLANNING,
       title: state.title,
       _ts: new Date().getTime(),

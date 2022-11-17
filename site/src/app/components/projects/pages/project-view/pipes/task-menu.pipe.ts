@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ActionMenuItem } from '@wbs/shared/models';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { ActionMenuItem } from '@wbs/core/models';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { MenuItems } from '../models';
 
 @Pipe({ name: 'taskMenu' })
@@ -12,7 +12,7 @@ export class TaskMenuPipe implements PipeTransform {
     const nav: ActionMenuItem[] = [];
     const task = tasks?.find((x) => x.id === taskId);
 
-    if (!task) return [];
+    if (!task) return [MenuItems.phaseTreeActions];
 
     for (const item of MenuItems.phaseItemNavActions) {
       if (item.action === 'moveLeft') {

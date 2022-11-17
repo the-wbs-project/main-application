@@ -11,14 +11,14 @@ import {
 } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SortableModule } from '@progress/kendo-angular-sortable';
-import { CategoryListEditorModule } from '@wbs/components/_features';
+import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
+import { SharedBasicModule } from '@wbs/shared/basic-module';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import { ProjectResourceGuard } from '../../guards';
 import {
   BasicsComponent,
   CategoriesComponent,
-  CustomDialogComponent,
   DisciplinesComponent,
   FooterComponent,
   GettingStartedComponent,
@@ -56,11 +56,10 @@ const routes: Routes = [
     TextAreaModule,
     TextBoxModule,
   ],
-  providers: [StartCreationGuard],
+  providers: [ProjectResourceGuard, StartCreationGuard],
   declarations: [
     BasicsComponent,
     CategoriesComponent,
-    CustomDialogComponent,
     DisciplinesComponent,
     FooterComponent,
     GettingStartedComponent,

@@ -1,18 +1,27 @@
-<kendo-dialog
-  actionsLayout="normal"
-  [title]="title ?? '' | translate"
+<!--
   minWidth="500px"
-  maxWidth="80%"
-  maxHeight="80%"
-  (close)="dialog.close(null)"
->
+    maxWidth="80%"
+    maxHeight="80%"
+-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">
+    {{ title ?? "" | translate }}
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body">
   <app-category-list-editor
     [(categories)]="categories"
     [categoryType]="categoryType"
   ></app-category-list-editor>
-  <kendo-dialog-actions layout="stretched">
-    <button class="btn btn-primary" (click)="save()">
-      {{ "General.Save" | translate }}
-    </button>
-  </kendo-dialog-actions>
-</kendo-dialog>
+</div>
+<div class="modal-footer">
+  <button class="btn btn-primary" (click)="save()">
+    {{ "General.Save" | translate }}
+  </button>
+</div>

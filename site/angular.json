@@ -34,6 +34,7 @@
               "src/assets"
             ],
             "styles": [
+              "src/styles/bootstrap.scss",
               "src/styles/styles.scss",
               {
                 "inject": false,
@@ -47,9 +48,7 @@
               }
             ],
             "scripts": [],
-            "allowedCommonJsDependencies": [
-              "is_js"
-            ]
+            "allowedCommonJsDependencies": []
           },
           "configurations": {
             "production": {
@@ -76,7 +75,7 @@
             "development": {
               "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": true,
+              "vendorChunk": false,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -114,9 +113,7 @@
               "src/favicon.ico",
               "src/assets"
             ],
-            "styles": [
-              "src/styles.scss"
-            ],
+            "styles": [],
             "scripts": []
           }
         }
