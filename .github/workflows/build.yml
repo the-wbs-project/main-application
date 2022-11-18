@@ -40,8 +40,8 @@ jobs:
       - name: Build Site
         run: yarn --cwd site run publish
 
-  worker_job:
-    name: Worker Deployment
+  worker_auth_job:
+    name: Auth Worker Deployment
     runs-on: ubuntu-latest
 
     strategy:
@@ -57,9 +57,31 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd worker run setup
+        run: yarn --cwd workers/api run setup
       - name: Build Worker
-        run: yarn --cwd worker run build
+        run: yarn --cwd workers/api run build
+
+  worker_api_job:
+    name: API Worker Deployment
+    needs: worker_auth_job
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16.13.0]
+        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "yarn"
+      - name: Install Packages
+        run: yarn --cwd workers/api run setup
+      - name: Build Worker
+        run: yarn --cwd workers/api run build
 
   azure_job:
     runs-on: windows-latest
