@@ -57,9 +57,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd workers/api run setup
+        run: yarn --cwd workers/auth run setup
       - name: Build Worker
-        run: yarn --cwd workers/api run build
+        run: yarn --cwd workers/auth run build
 
   worker_api_job:
     name: API Worker Deployment

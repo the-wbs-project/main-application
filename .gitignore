@@ -6,7 +6,7 @@ _theme/Nowa
 **/obj
 **/dist
 **/.mf/
-**/config*.*
+**/data/**/config*.*
 
 .vs/
  
