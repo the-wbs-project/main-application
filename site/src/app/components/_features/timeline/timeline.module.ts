@@ -1,17 +1,19 @@
 import { NgModule } from '@angular/core';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { SharedModule } from '@wbs/shared/module';
 import {
   ActionDescriptionPipe,
+  ActionDescriptionTransformPipe,
   ActionIconPipe,
   ActionTitlePipe,
 } from './pipes';
 import { TimelineComponent } from './timeline.component';
 
 @NgModule({
-  imports: [SharedModule],
-  providers: [],
+  imports: [NgbDropdownModule, SharedModule],
   declarations: [
     ActionDescriptionPipe,
+    ActionDescriptionTransformPipe,
     ActionIconPipe,
     ActionTitlePipe,
     TimelineComponent,

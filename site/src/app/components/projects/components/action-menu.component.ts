@@ -5,19 +5,18 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { faCogs } from '@fortawesome/pro-solid-svg-icons';
-import { ActionMenuItem } from '@wbs/shared/models';
+import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
   selector: 'app-project-action-menu',
-  template: `<div ngbDropdown class="d-inline-block">
+  template: `<div ngbDropdown class="display-ib">
     <button
       type="button"
       id="actionMenu"
-      class="btn btn-primary p-2"
+      class="btn btn-primary pd-xs-5"
       ngbDropdownToggle
     >
-      <fa-icon [icon]="faCogs" size="lg"></fa-icon>
+      <i class="fa-solid fa-cogs"></i>
     </button>
     <div ngbDropdownMenu aria-labelledby="actionMenu">
       <button
@@ -25,7 +24,7 @@ import { ActionMenuItem } from '@wbs/shared/models';
         *ngFor="let item of menu"
         (click)="itemClicked.emit(item.action)"
       >
-        <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon> &nbsp;
+        <i *ngIf="item.icon" class="fa-solid" [ngClass]="item.icon"></i> &nbsp;
         {{ item.title ?? '' | translate }}
       </button>
     </div>
@@ -35,6 +34,4 @@ import { ActionMenuItem } from '@wbs/shared/models';
 export class ActionMenuComponent {
   @Input() menu: ActionMenuItem[] = [];
   @Output() itemClicked = new EventEmitter<string>();
-
-  readonly faCogs = faCogs;
 }

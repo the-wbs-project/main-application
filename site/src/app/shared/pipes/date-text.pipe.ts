@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Resources } from '@wbs/shared/services';
+import { Resources } from '@wbs/core/services';
 import {
   differenceInCalendarDays,
   differenceInHours,

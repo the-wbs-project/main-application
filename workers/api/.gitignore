@@ -1,0 +1,6 @@
+dist
+kv
+node_modules
+public
+transpiled
+.env

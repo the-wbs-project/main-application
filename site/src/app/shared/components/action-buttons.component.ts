@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { ActionMenuItem } from '../models';
+import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
   selector: 'wbs-action-buttons',
@@ -11,7 +11,7 @@ import { ActionMenuItem } from '../models';
       (click)="actionClicked.emit(item.action)"
       [title]="item.tooltip ?? '' | translate"
     >
-      <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
+      <i class="fa-solid" *ngIf="item.icon" [ngClass]="item.icon"></i>
       <span *ngIf="showTitle && item.title">
         {{ item.title | translate }}
       </span>

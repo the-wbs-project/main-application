@@ -1,6 +1,6 @@
-@import "./variables.scss";
+@import "./variables";
+@import "../assets/scss/variables";
 
-@import "ngx-toastr/toastr.css";
 @import "../assets/css/style.css";
 @import "../assets/css/style-dark.css";
 @import "../assets/css/style-transparent.css";
@@ -24,6 +24,7 @@
 
 .notification {
   font-size: 14px !important;
+  z-index: 10000000 !important;
 }
 
 .notification-desktop {
@@ -158,23 +159,6 @@
     border-radius: 0.25rem;
     padding-inline: 1.1rem;
   }
-}
-
-.btn-close {
-  background-image: url(../assets/close.svg) !important;
-  height: 0.1rem;
-  width: 0.1rem;
-}
-
-ngb-alert .btn-close {
-  background-image: url(../assets/close.svg) !important;
-  height: 0.1rem;
-  position: absolute;
-  width: 0.1rem;
-  background-repeat: no-repeat;
-  top: 50% !important;
-  right: 10px !important;
-  transform: translateY(-50%);
 }
 
 .transparent-theme .main-header {
@@ -370,3 +354,15 @@ button:focus:not(:focus-visible) {
 .my-custom-class {
   z-index: max;
 }
+
+
+/* ######## UTILITIES-STYLES ######## */
+@import "util/background";
+@import "util/border";
+@import "util/height";
+@import "util/margin";
+@import "util/opacity";
+@import "util/padding";
+@import "util/position";
+@import "util/typography";
+@import "util/width";

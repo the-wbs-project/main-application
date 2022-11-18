@@ -4,7 +4,6 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { faPencil } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
   selector: 'wbs-edit-pencil',
@@ -15,6 +14,4 @@ import { faPencil } from '@fortawesome/pro-solid-svg-icons';
 })
 export class EditPencilComponent {
   @Input() placeholder = 'General.Edit';
-
-  readonly faPencil = faPencil;
 }

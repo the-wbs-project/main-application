@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, Resolve } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { Project } from '@wbs/shared/models';
-import { ProjectService } from '@wbs/shared/services';
-import { ProjectListState } from '@wbs/shared/states';
+import { Project } from '@wbs/core/models';
+import { ProjectService } from '@wbs/core/services';
+import { ProjectListState } from '@wbs/core/states';
 import { map, Observable } from 'rxjs';
 
 @Injectable()

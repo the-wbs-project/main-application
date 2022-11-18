@@ -9,6 +9,7 @@
   (select)="selected($event)"
 >
   <ng-template kendoMenuItemTemplate let-item="item">
-    <fa-icon [icon]="item.icon"></fa-icon> {{ item.title | translate }}
+    <i class="fa-solid" [ngClass]="item.icon"></i>
+    {{ item.title | translate }}
   </ng-template>
 </kendo-contextmenu>

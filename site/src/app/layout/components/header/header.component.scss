@@ -1,0 +1,55 @@
+@import "../../../../assets/scss/variables";
+li::marker {
+  color: transparent;
+}
+
+.main-header-notification.show > a::after,
+.main-header-message.show > a::after,
+.drop-flag.show > a::after {
+  display: none;
+}
+
+::ng-deep {
+  .sidenav-toggled .open-toggle {
+    display: none;
+  }
+
+  .sidenav-toggled .close-toggle {
+    display: block;
+    color: #000;
+  }
+
+  form[role="search"].active {
+    left: initial;
+    border-right: 0px solid #e3e3f7;
+    right: 0px;
+  }
+
+  .transparent-theme {
+    form[role="search"].active input {
+      color: #fff !important;
+    }
+
+    form[role="search"].active input::placeholder {
+      color: #eee !important;
+    }
+  }
+}
+.dd-icon {
+  margin-right: 10px;
+}
+
+.responsive-logo {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .responsive-logo {
+    display: block;
+    margin: 0 auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+    position: absolute;
+  }
+}

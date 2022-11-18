@@ -13,7 +13,7 @@ import {
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ContextMenuSelectEvent } from '@progress/kendo-angular-menu';
-import { Invite } from '@wbs/shared/models';
+import { Invite } from '@wbs/core/models';
 import { CancelInvite, ResendInvite } from '../../actions';
 
 @Component({

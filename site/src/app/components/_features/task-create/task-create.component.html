@@ -1,0 +1,77 @@
+<!--
+    minWidth="500px"
+    maxWidth="80%"
+    maxHeight="80%"
+-->
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">
+    {{ "Projects.CreateTask" | translate }}
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body">
+  <kendo-floatinglabel
+    [ngClass]="'wd-100p'"
+    [text]="'Projects.TaskTitle' | translate"
+  >
+    <kendo-textbox
+      #titleTextBox
+      [(ngModel)]="title"
+      (keydown.enter)="save(false)"
+    >
+    </kendo-textbox>
+  </kendo-floatinglabel>
+  <br />
+  <br />
+  <div class="wd-100p tx-right">
+    <button
+      *ngIf="!(more$ | async)"
+      class="btn btn-sm btn-primary"
+      (click)="more$.next(true)"
+    >
+      {{ "General.More" | translate }}
+    </button>
+    <button
+      *ngIf="more$ | async"
+      class="btn btn-sm btn-primary"
+      (click)="more$.next(false)"
+    >
+      {{ "General.Less" | translate }}
+    </button>
+  </div>
+  <ng-template [ngIf]="more$ | async">
+    {{ "Projects.TaskDescription" | translate }}
+
+    <kendo-editor [(value)]="description" class="ht-250"></kendo-editor>
+    <br />
+    <br />
+    {{ "Projects.TaskDisciplines" | translate }}
+    <app-category-list-editor
+      [showButtons]="false"
+      [(categories)]="disciplines"
+      [categoryType]="discipline"
+    ></app-category-list-editor>
+  </ng-template>
+</div>
+
+<div class="modal-footer">
+  <button
+    class="btn btn-primary"
+    [disabled]="title === ''"
+    (click)="save(true)"
+  >
+    {{ "General.SaveAndView" | translate }}
+  </button>
+  <button
+    class="btn btn-primary"
+    [disabled]="title === ''"
+    (click)="save(false)"
+  >
+    {{ "General.Save" | translate }}
+  </button>
+</div>

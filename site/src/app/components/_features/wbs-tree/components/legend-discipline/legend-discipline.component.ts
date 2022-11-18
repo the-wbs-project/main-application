@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { Select } from '@ngxs/store';
-import { ListItem } from '@wbs/shared/models';
-import { MetadataState } from '@wbs/shared/states';
+import { ListItem } from '@wbs/core/models';
+import { MetadataState } from '@wbs/core/states';
 import { Observable } from 'rxjs';
 
 @Component({

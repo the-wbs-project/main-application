@@ -1,12 +1,7 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  ViewEncapsulation,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ListItem } from '@wbs/shared/models';
-import { MetadataState } from '@wbs/shared/states';
+import { ListItem } from '@wbs/core/models';
+import { MetadataState } from '@wbs/core/states';
 import { CategoryChosen } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 

@@ -5,7 +5,7 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { faCircle } from '@fortawesome/pro-solid-svg-icons';
-import { UserRole } from '../../../../models';
+import { UserRole } from '@wbs/core/models';
 
 @Component({
   selector: 'wbs-project-phases',

@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ListItem } from '../models';
+import { ListItem } from '@wbs/core/models';
 
 @Pipe({ name: 'categoryIdConverter', pure: false })
 export class CategoryIdConverterPipe implements PipeTransform {

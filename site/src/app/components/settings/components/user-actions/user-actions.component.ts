@@ -7,7 +7,7 @@ import {
 import { faEllipsisVertical } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
 import { ContextMenuSelectEvent } from '@progress/kendo-angular-menu';
-import { Messages } from '@wbs/shared/services';
+import { Messages } from '@wbs/core/services';
 import { ActivateUser, DeactivateUser } from '../../actions';
 import { UserViewModel } from '../../models';
 

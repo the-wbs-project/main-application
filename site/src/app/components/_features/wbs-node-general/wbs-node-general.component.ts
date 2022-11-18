@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   selector: 'wbs-node-general',

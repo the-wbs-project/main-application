@@ -85,29 +85,6 @@ License        :   Licensed under ThemeForest License
 /* ######## FONT ######## */
 @import "custom/fonts/font";
 
-/* ######## BOOTSTRAP ######## */
-@import "bootstrap/accordion";
-@import "bootstrap/alerts";
-@import "bootstrap/badge";
-@import "bootstrap/breadcrumbs";
-@import "bootstrap/buttons";
-@import "bootstrap/cards";
-@import "bootstrap/carousel";
-@import "bootstrap/custom";
-@import "bootstrap/dropdown";
-@import "bootstrap/forms";
-@import "bootstrap/grid";
-@import "bootstrap/input-group";
-@import "bootstrap/modals";
-@import "bootstrap/nav";
-@import "bootstrap/paginations";
-@import "bootstrap/popover";
-@import "bootstrap/progress";
-@import "bootstrap/tables";
-@import "bootstrap/toast";
-@import "bootstrap/tooltip";
-@import "bootstrap/tabs";
-
 /*  ######## CUSTOM-STYLES ########  */
 @import "custom/checkbox";
 @import "custom/countdown";
@@ -137,7 +114,7 @@ License        :   Licensed under ThemeForest License
 @import "layout/sidebar";
 @import "layout/sidemenu";
 
-/* ######## LIB-STYLES ######## */
+/* ######## LIB-STYLES ######## 
 @import "lib/chart";
 @import "lib/datatable";
 @import "lib/datepicker";
@@ -149,22 +126,11 @@ License        :   Licensed under ThemeForest License
 @import "lib/select2";
 @import "lib/spectrum";
 @import "lib/calendar";
-@import "lib/notifications";
+@import "lib/notifications"; */
 
-/* ######## TEMP-STYLES ########  */
+/* ######## TEMP-STYLES ######## 
 @import "temp/calendar";
 @import "temp/chat";
 @import "temp/contact";
 @import "temp/invoice";
-@import "temp/mail";
-
-/* ######## UTILITIES-STYLES ######## */
-@import "util/background";
-@import "util/border";
-@import "util/height";
-@import "util/margin";
-@import "util/opacity";
-@import "util/padding";
-@import "util/position";
-@import "util/typography";
-@import "util/width";
+@import "temp/mail";  */

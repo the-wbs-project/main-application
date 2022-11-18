@@ -1,4 +1,4 @@
-import { ListItem, WbsNode } from '@wbs/shared/models';
+import { ListItem, WbsNode } from '@wbs/core/models';
 
 export interface ExtractResults {
   cats: (string | ListItem)[];

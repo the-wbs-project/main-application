@@ -5,7 +5,7 @@ import { faEnvelope, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { ROLES } from '@wbs/shared/models';
+import { ROLES } from '@wbs/core/models';
 import { BehaviorSubject, map } from 'rxjs';
 import { ChangeBreadcrumbs, SendInvite } from '../../actions';
 import { Breadcrumb } from '../../models';

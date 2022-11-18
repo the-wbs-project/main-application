@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
 using Wbs.Utilities.Services;
+using Wbs.Utilities.Services.Importers;
+using Wbs.Utilities.Services.Exporters;
 
 [assembly: FunctionsStartup(typeof(Wbs.Utilities.Startup))]
 namespace Wbs.Utilities
@@ -57,7 +59,11 @@ namespace Wbs.Utilities
 
         private void SetupServices(IFunctionsHostBuilder builder)
         {
-            builder.Services.AddSingleton<PhaseExtractService, PhaseExtractService>();
+            builder.Services.AddSingleton<ExcelFileImporter, ExcelFileImporter>();
+            builder.Services.AddSingleton<ProjectFileImporter, ProjectFileImporter>();
+            builder.Services.AddSingleton<ExcelFileExporter, ExcelFileExporter>();
+
+            
         }
 
         private void ConfigureTelemetry(IFunctionsHostBuilder builder)

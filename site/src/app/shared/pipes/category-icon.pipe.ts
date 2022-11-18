@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { MetadataState } from '@wbs/shared/states';
+import { MetadataState } from '@wbs/core/states';
 
 @Pipe({ name: 'categoryIcon', pure: false })
 export class CategoryIconPipe implements PipeTransform {

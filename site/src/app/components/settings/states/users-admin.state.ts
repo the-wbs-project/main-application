@@ -1,14 +1,10 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { Invite, User } from '@wbs/shared/models';
-import {
-  ConfirmationService,
-  DataServiceFactory,
-  IdService,
-  Messages,
-} from '@wbs/shared/services';
-import { AuthState } from '@wbs/shared/states';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { Invite, User } from '@wbs/core/models';
+import { DialogService, IdService, Messages } from '@wbs/core/services';
+import { AuthState } from '@wbs/core/states';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ActivateUser,
@@ -37,8 +33,8 @@ interface StateModel {
 })
 export class UserAdminState {
   constructor(
-    private readonly confirm: ConfirmationService,
     private readonly data: DataServiceFactory,
+    private readonly dialogService: DialogService,
     private readonly messages: Messages,
     private readonly store: Store
   ) {}
@@ -209,7 +205,7 @@ export class UserAdminState {
     confirmMessage: string,
     postSaveMessage: string
   ): Observable<void> {
-    return this.confirm.runWithResources(confirmMessage).pipe(
+    return this.dialogService.confirm('General.Confirm', confirmMessage).pipe(
       switchMap((answer) => {
         if (!answer) return of();
 

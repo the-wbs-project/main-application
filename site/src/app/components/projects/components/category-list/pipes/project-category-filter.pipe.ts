@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ListItem } from '@wbs/shared/models';
+import { ListItem } from '@wbs/core/models';
 
 @Pipe({ name: 'projectCategoryFilter' })
 export class ProjectCategoryFilterPipe implements PipeTransform {

@@ -4,8 +4,8 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { Project, PROJECT_NODE_VIEW } from '@wbs/shared/models';
-import { WbsNodeView } from '@wbs/shared/view-models';
+import { Project, PROJECT_NODE_VIEW } from '@wbs/core/models';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   selector: 'wbs-task-sub-tasks',

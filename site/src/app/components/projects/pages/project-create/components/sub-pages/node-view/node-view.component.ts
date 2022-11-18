@@ -1,13 +1,12 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faListTree, faPeopleGroup } from '@fortawesome/pro-duotone-svg-icons';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW } from '@wbs/shared/models';
+import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { NodeViewChosen } from '../../../project-create.actions';
 
 @Component({
   selector: 'app-project-create-node-view',
   templateUrl: './node-view.component.html',
-  styleUrls: ['./node-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NodeViewComponent {

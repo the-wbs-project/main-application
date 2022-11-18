@@ -1,11 +1,17 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { IconModule } from '@progress/kendo-angular-icons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { ProjectResourceGuard } from '@wbs/components/projects/guards';
-import { WbsTreeModule } from '@wbs/components/_features';
+import {
+  ProjectResourceGuard,
+  ProjectTimelineVerifyGuard,
+  ProjectVerifyGuard,
+} from '@wbs/components/projects/guards';
+import { TaskDeleteModule } from '@wbs/components/_features/task-delete';
+import { TimelineModule } from '@wbs/components/_features/timeline';
+import { WbsTreeModule } from '@wbs/components/_features/wbs-tree';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import { TaskSubTasksComponent } from './components';
@@ -23,22 +29,37 @@ const routes: Routes = [
   {
     path: ':view',
     component: TaskViewComponent,
-    canActivate: [ProjectResourceGuard, TaskVerifyGuard, TaskViewGuard],
+    canActivate: [
+      ProjectResourceGuard,
+      ProjectVerifyGuard,
+      ProjectTimelineVerifyGuard,
+      TaskVerifyGuard,
+      TaskViewGuard,
+    ],
   },
 ];
 
 @NgModule({
   imports: [
     ButtonModule,
-    IconModule,
+    NgbNavModule,
     NgxsModule.forFeature([TaskViewState]),
     ProjectComponentModule,
     RouterModule.forChild(routes),
     SharedModule,
+    TaskDeleteModule,
     TextBoxModule,
+    TimelineModule,
     WbsTreeModule,
   ],
-  providers: [TaskRedirectGuard, TaskVerifyGuard, TaskViewGuard],
+  providers: [
+    ProjectResourceGuard,
+    ProjectTimelineVerifyGuard,
+    ProjectVerifyGuard,
+    TaskRedirectGuard,
+    TaskVerifyGuard,
+    TaskViewGuard,
+  ],
   declarations: [TaskAboutComponent, TaskSubTasksComponent, TaskViewComponent],
 })
 export class TaskViewModule {}

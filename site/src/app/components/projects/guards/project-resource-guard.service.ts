@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CanActivate } from '@angular/router';
-import { Resources } from '@wbs/shared/services';
+import { Resources } from '@wbs/core/services';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

@@ -6,8 +6,6 @@ name: Site Builder - Production
 on:
   push:
     branches: ["main"]
-  pull_request:
-    branches: ["main"]
 
 jobs:
   site_job:
