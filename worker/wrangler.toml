@@ -1,5 +1,6 @@
 name = "wbs-app"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
+zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 compatibility_date = "2022-05-27"
 main = "dist/index.js"
 
