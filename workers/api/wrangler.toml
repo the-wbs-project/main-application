@@ -1,6 +1,5 @@
 name = "wbs-app"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
-zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
 compatibility_date = "2022-05-27"
 main = "dist/index.js"
 
@@ -34,8 +33,9 @@ vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "tru
 name = "wbs-app-prod"
 usage_model = "unbound"
 workers_dev = false
-zone_id = "5c2549bae0a35fb59176d4a54e5a717a"
-routes = ["https://app.thewbsproject.com/*"]
+routes = [
+  { pattern = "app.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
+]
 kv_namespaces = [
   { binding = "KV_AUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
   { binding = "KV_DATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
