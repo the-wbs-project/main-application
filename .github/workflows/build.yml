@@ -14,7 +14,7 @@ env:
 
 jobs:
   site_job:
-    name: Site Deployment
+    name: Site Build
     runs-on: ubuntu-latest
 
     strategy:
@@ -41,7 +41,7 @@ jobs:
         run: yarn --cwd site run publish
 
   worker_auth_job:
-    name: Auth Worker Deployment
+    name: Auth Worker Build
     runs-on: ubuntu-latest
 
     strategy:
@@ -62,7 +62,7 @@ jobs:
         run: yarn --cwd workers/auth run build
 
   worker_api_job:
-    name: API Worker Deployment
+    name: API Worker Build
     needs: worker_auth_job
     runs-on: ubuntu-latest
 
@@ -84,6 +84,7 @@ jobs:
         run: yarn --cwd workers/api run build
 
   azure_job:
+    name: Azure Functions Build
     runs-on: windows-latest
     environment: dev
     steps:
