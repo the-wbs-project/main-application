@@ -65,9 +65,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd worker run setup
+        run: yarn --cwd workers/auth run setup
       - name: Build Worker
-        run: yarn --cwd worker run build
+        run: yarn --cwd workers/auth run build
       - name: Publish Worker
         uses: cloudflare/wrangler-action@2.0.0
         with:
@@ -98,9 +98,9 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd worker run setup
+        run: yarn --cwd workers/api run setup
       - name: Build Worker
-        run: yarn --cwd worker run build
+        run: yarn --cwd workers/api run build
       - name: Publish Worker
         uses: cloudflare/wrangler-action@2.0.0
         with:

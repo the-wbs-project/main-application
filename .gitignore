@@ -7,6 +7,6 @@ _theme/Nowa
 **/dist
 **/.mf/
 **/data/**/config*.*
-
 .vs/
+.vscode/
  
