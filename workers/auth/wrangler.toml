@@ -1,0 +1,31 @@
+name = "wbs-auth"
+account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
+compatibility_date = "2022-05-27"
+main = "dist/index.js"
+
+[build]
+command = "yarn run -s build"
+
+[build.upload]
+format = "modules"
+
+[[rules]]
+type = "ESModule"
+globs = ["**/*.js"]
+
+[env.dev]
+name = "auth"
+kv_namespaces = [
+  { binding = "KV_AUTH" },
+]
+
+[env.prod]
+name = "wbs-auth-prod"
+workers_dev = false
+kv_namespaces = [
+  { binding = "KV_AUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+]
+
+[miniflare]
+port = 88
+watch = true
