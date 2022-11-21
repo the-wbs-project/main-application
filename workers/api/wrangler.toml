@@ -40,9 +40,6 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
 ]
-services = [
-  { binding = "AUTH_WORKER", service = "app-v0-1-auth-qa" }
-]
 vars = { CORS_URLS = "https://app-test.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
 
 [env.prod]
@@ -58,9 +55,6 @@ kv_namespaces = [
 ]
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
-]
-services = [
-  { binding = "AUTH_WORKER", service = "app-v0-1-auth-prod" }
 ]
 vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
 
