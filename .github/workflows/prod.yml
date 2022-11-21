@@ -90,7 +90,7 @@ jobs:
 
   azure_job:
     name: Azure Functions Deployment
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     steps:
       - name: "Checkout GitHub Action"
         uses: actions/checkout@v2
@@ -111,6 +111,5 @@ jobs:
         id: fa
         with:
           app-name: "wbs-v0-1-prod"
-          slot-name: "Production"
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_32A51C7A717A47D7BD9CB683567BB441 }}
