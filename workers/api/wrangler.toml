@@ -29,16 +29,32 @@ services = [
 ]
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
+[env.qa]
+name = "app-v0.1-api-qa"
+usage_model = "unbound"
+workers_dev = false
+routes = [
+  { pattern = "app-test.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
+]
+kv_namespaces = [
+  { binding = "KV_AUTH", id = "6eb87b9b5d9f4261907b80164cbc0947", preview_id = "6eb87b9b5d9f4261907b80164cbc0947" },
+  { binding = "KV_DATA", id = "6a8e3a3a07014e228d56aa7f28059ed2", preview_id = "6a8e3a3a07014e228d56aa7f28059ed2" },
+]
+r2_buckets = [
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
+]
+vars = { CORS_URLS = "https://app-test.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
+
 [env.prod]
-name = "wbs-app-prod"
+name = "app-v0.1-api-prod"
 usage_model = "unbound"
 workers_dev = false
 routes = [
   { pattern = "app.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
 ]
 kv_namespaces = [
-  { binding = "KV_AUTH", id = "d59c9e5d23ed4a1783787b1b4e9aa213", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
-  { binding = "KV_DATA", id = "9020ff7ce374481285c71d9519942ccd", preview_id = "92a843cb6f674b29aa29089f31ad5054" },
+  { binding = "KV_AUTH", id = "10409096739e4b648c2af52e2d16065c", preview_id = "10409096739e4b648c2af52e2d16065c" },
+  { binding = "KV_DATA", id = "408389bba37f437da346442f36b25a45", preview_id = "408389bba37f437da346442f36b25a45" },
 ]
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
