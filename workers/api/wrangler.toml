@@ -30,7 +30,7 @@ services = [
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
 [env.qa]
-name = "app-v0.1-api-qa"
+name = "app-v0-1-api-qa"
 usage_model = "unbound"
 workers_dev = false
 routes = [
@@ -46,7 +46,7 @@ r2_buckets = [
 vars = { CORS_URLS = "https://app-test.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
 
 [env.prod]
-name = "app-v0.1-api-prod"
+name = "app-v0-1-api-prod"
 usage_model = "unbound"
 workers_dev = false
 routes = [
