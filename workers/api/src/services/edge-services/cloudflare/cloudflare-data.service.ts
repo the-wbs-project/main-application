@@ -21,6 +21,7 @@ export class CloudflareDataService implements EdgeDataService {
       metadata?: any;
     },
   ): Promise<void> {
+    console.log(this.kv);
     return this.kv.put(key, value, options);
   }
 

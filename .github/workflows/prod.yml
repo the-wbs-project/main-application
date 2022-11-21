@@ -48,41 +48,8 @@ jobs:
           branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-  worker_auth_job:
-    name: Auth Worker Deployment
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.13.0]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - name: Install Packages
-        run: yarn --cwd workers/auth run setup
-      - name: Build Worker
-        run: yarn --cwd workers/auth run build
-      - name: Publish Worker
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: workers/auth
-          command: publish --env prod
-          postCommands: |
-            echo $AUTH | wrangler secret put AUTH --env prod
-
-        env:
-          AUTH: ${{ secrets.CFW_PROD_AUTH }}
-
   worker_api_job:
     name: API Worker Deployment
-    needs: worker_auth_job
     runs-on: ubuntu-latest
 
     strategy:
@@ -144,5 +111,6 @@ jobs:
         id: fa
         with:
           app-name: "wbs-v0-1"
+          slot-name: "Production"
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_75266876CFB4454C9D62894AB94F4BE8 }}

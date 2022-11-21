@@ -24,9 +24,6 @@ r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS" },
   { binding = "BUCKET_STATICS" },
 ]
-services = [
-  { binding = "AUTH_WORKER", service = "auth" }
-]
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
 [env.qa]
@@ -78,6 +75,3 @@ cache = false
 https = false
 actual_time = true
 inaccurate_cpu = true
-
-[miniflare.mounts]
-auth = "../auth@dev"

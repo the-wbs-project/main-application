@@ -36,3 +36,4 @@ kv_namespaces = [
 [miniflare]
 port = 88
 watch = true
+kv_persist = "../.mf/kv/"
