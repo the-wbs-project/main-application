@@ -8,7 +8,6 @@ export interface Config {
   appInsightsKey: string;
   appInsightsSnippet?: string;
   auth: AuthConfig;
-  authWorker: Fetcher;
   azure: AzureConfig;
   db: DbConfig;
   debug: boolean;
@@ -18,5 +17,6 @@ export interface Config {
   twilio: TwilioConfig;
   bucketSnapshots: R2Bucket;
   bucketStatics: R2Bucket;
+  kvAuth: KVNamespace;
   kvData: KVNamespace;
 }

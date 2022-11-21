@@ -1,9 +1,13 @@
+import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
+
 export interface Env {
+  KV_AUTH: KVNamespace;
   KV_DATA: KVNamespace;
+  __STATIC_CONTENT: KVNamespace;
+  __STATIC_CONTENT_MANIFEST: AssetManifestType;
   BUCKET_SNAPSHOTS: R2Bucket;
   BUCKET_STATICS: R2Bucket;
-  AUTH_WORKER: Fetcher;
-  
+
   APP_INSIGHTS_KEY: string;
   AUTH: string;
   AZURE: string;
