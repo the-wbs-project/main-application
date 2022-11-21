@@ -104,7 +104,7 @@ jobs:
         shell: pwsh
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build --configuration Release --output ./output -v
+          dotnet build --configuration Release --output ./output -v d
           popd
       - name: "Run Azure Functions Action"
         uses: Azure/functions-action@v1
