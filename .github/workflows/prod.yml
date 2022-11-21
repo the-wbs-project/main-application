@@ -45,7 +45,7 @@ jobs:
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
           projectName: "wbs-app-v0-1"
           directory: "dist"
-          branch: app
+          branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   worker_auth_job:
