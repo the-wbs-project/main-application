@@ -144,7 +144,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: "wbs-v0-1"
-          slot-name: "QA"
+          app-name: "wbs-v0-1-qa"
+          slot-name: "Production"
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_75266876CFB4454C9D62894AB94F4BE8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_0A6CE6AFF1B24E43AD957FD150DA9CEE }}

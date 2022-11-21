@@ -110,7 +110,7 @@ jobs:
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: "wbs-v0-1"
+          app-name: "wbs-v0-1-prod"
           slot-name: "Production"
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_75266876CFB4454C9D62894AB94F4BE8 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_32A51C7A717A47D7BD9CB683567BB441 }}
