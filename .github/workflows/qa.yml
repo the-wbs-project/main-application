@@ -43,9 +43,9 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "wbs-app-qa"
+          projectName: "wbs-app-v0-1"
           directory: "dist"
-          branch: main
+          branch: app-test
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   worker_auth_job:
@@ -73,7 +73,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: workers/auth
-          command: publish --env prod
+          command: publish --env qa
           postCommands: |
             echo $AUTH | wrangler secret put AUTH --env prod
 
@@ -84,6 +84,7 @@ jobs:
     name: API Worker Deployment
     needs: worker_auth_job
     runs-on: ubuntu-latest
+    environment: qa
 
     strategy:
       matrix:
@@ -106,7 +107,7 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           workingDirectory: workers/api
-          command: publish --env prod
+          command: publish --env qa
           postCommands: |
             echo $MAILGUN_API_KEY | wrangler secret put MAILGUN_API_KEY --env prod
             echo $MAILGUN_API_BASE_URL | wrangler secret put MAILGUN_API_BASE_URL --env prod
@@ -118,7 +119,7 @@ jobs:
           MAILGUN_API_KEY: ${{ secrets.CFW_MAILGUN_API_KEY }}
           MAILGUN_API_BASE_URL: ${{ secrets.CFW_MAILGUN_API_BASE_URL }}
           COSMOS: ${{ secrets.CFW_PROD_COSMOS }}
-          AZURE: ${{ secrets.CFW_PROD_AZURE }}
+          AZURE: ${{ secrets.CFW_AZURE }}
           AUTH: ${{ secrets.CFW_PROD_AUTH }}
 
   azure_job:
