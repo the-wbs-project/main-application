@@ -144,6 +144,5 @@ jobs:
         id: fa
         with:
           app-name: "wbs-v0-1"
-          slot-name: "QA"
           package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_75266876CFB4454C9D62894AB94F4BE8 }}
