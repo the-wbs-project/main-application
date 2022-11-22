@@ -51,6 +51,7 @@ jobs:
   worker_api_job:
     name: Worker Deployment
     runs-on: ubuntu-latest
+    environment: production
 
     strategy:
       matrix:
