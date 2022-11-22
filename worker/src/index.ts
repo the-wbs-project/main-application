@@ -9,20 +9,35 @@ import { CloudflareStorageFactory } from './services/storage-services/cloudflare
 
 export default {
   async fetch(request: Request, environment: any, context: ExecutionContext): Promise<Response> {
+    const start = new Date();
+    const config = new EnvironmentConfig(environment);
+    const logger = new Logger(config.appInsightsKey, request);
+    let workerRequest: WorkerRequest | null = null;
+    let response: Response | null = null;
+
     try {
-      const config = new EnvironmentConfig(environment);
-      const logger = new Logger(config.appInsightsKey, request);
       const db = new CosmosFactory(config, logger);
       const edge = new CloudflareService(config, request, context);
       const storage = new CloudflareStorageFactory(config);
       const data = new DataServiceFactory(db, edge, request, storage);
       const services = new ServiceFactory(config, data, edge, storage);
-      const workerRequest = new WorkerRequest(request, config, services, logger);
 
-      return await services.router.matchAsync(workerRequest);
+      workerRequest = new WorkerRequest(request, config, services, logger);
+
+      response = await services.router.matchAsync(workerRequest);
     } catch (err) {
-      console.error(err);
-      return new Response((<Error>err).message, { status: 500, headers: { 'Content-Type': 'text/plain' } });
+      if (workerRequest) {
+        //@ts-ignore
+        workerRequest.logException('An uncaught error occured.', 'WorkerService.handleRequest', err);
+      }
+      response = new Response((<Error>err).message, { status: 500, headers: { 'Content-Type': 'text/plain' } });
     }
+    const duration = Math.abs(new Date().getTime() - start.getTime());
+
+    logger.trackRequest(request, response, duration * 1000);
+
+    context.waitUntil(logger.flush());
+
+    return response;
   },
 };
