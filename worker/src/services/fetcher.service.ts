@@ -10,10 +10,10 @@ export async function myFetch(
   let url: string | undefined;
 
   if (typeof input === 'string') {
-    method = init?.method;
+    method = init?.method ?? 'GET';
     url = input;
   } else if (input instanceof URL) {
-    method = init?.method;
+    method = init?.method ?? 'GET';
     url = input.toString();
   } else {
     method = input.method;

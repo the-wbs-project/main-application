@@ -40,7 +40,7 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
 ]
-vars = { CORS_URLS = "https://app-test.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
+vars = { CORS_URLS = "https://app-test.thewbsproject.com", APP_INSIGHTS_KEY = "1f200dd0-488f-4e6d-900b-19c87a45d0b2" }
 
 [env.prod]
 name = "app-v0-1-api-prod"

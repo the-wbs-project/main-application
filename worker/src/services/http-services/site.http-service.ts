@@ -1,3 +1,4 @@
+import APP_INSIGHTS from '../../blobs/app-insights.min.html';
 import { TTL } from '../../consts';
 import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
@@ -31,14 +32,19 @@ export class SiteHttpService {
       console.log(url.toString());
       const originResponse = await req.myFetch(url.toString());
 
-      const fullResponse = new Response(originResponse.body, {
+      let fullResponse = new Response(originResponse.body, {
         status: originResponse.status,
         statusText: originResponse.statusText,
         headers: getHeaders(req, originResponse.headers),
       });
 
-      if (fullResponse.status === 200 && cache) req.services.edge.cachePut(fullResponse);
+      if (fullResponse.status === 200) {
+        fullResponse = await hydrateAsync(req, fullResponse);
 
+        if (cache) {
+          req.services.edge.cachePut(fullResponse);
+        }
+      }
       return fullResponse;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
@@ -56,7 +62,6 @@ export class SiteHttpService {
         if (matched) return matched;
       }
       const originResponse = await req.myFetch(req.url);
-
       const fullResponse = new Response(originResponse.body, {
         status: originResponse.status,
         statusText: originResponse.statusText,
@@ -74,6 +79,11 @@ export class SiteHttpService {
   }
 }
 
+async function hydrateAsync(req: WorkerRequest, response: Response): Promise<Response> {
+  const snippet = APP_INSIGHTS.replace('{{APP_INSIGHTS_KEY}}', req.config.appInsightsKey);
+
+  return new HTMLRewriter().on('head', new ElementHandler(snippet)).transform(response);
+}
 function getHeaders(req: WorkerRequest, initHeaders: Headers): Headers {
   const ttl = getTtl(req);
   const headers = new Headers(initHeaders);
@@ -100,4 +110,12 @@ function getTtl(req: WorkerRequest): number | undefined {
 
 function isHtml(hdrs: Headers): boolean {
   return hdrs.has('Content-Type') && (hdrs.get('Content-Type')?.includes('text/html') || false);
+}
+
+class ElementHandler {
+  constructor(private readonly body: string) {}
+
+  element(element: any) {
+    element.append(this.body, { html: true });
+  }
 }
