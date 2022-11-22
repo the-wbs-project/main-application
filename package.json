@@ -7,7 +7,7 @@
     "data": "npm run --prefix data/tool run:w",
     "site": "yarn --cwd site run serve",
     "styles": "yarn --cwd site run styles",
-    "worker": "yarn --cwd workers/api run go"
+    "worker": "yarn --cwd worker run go"
   },
   "repository": {
     "type": "git"

@@ -162,7 +162,11 @@ export class ThemeService implements OnDestroy {
 
   /** Apply the theme mode stored in the settings. */
   apply(): void {
-    this.setMode(this.settings.darkMode);
+    this.setMode(true);
+    //
+    //  For now we are turning off dark mode
+    //
+    //this.setMode(this.settings.darkMode);
   }
 
   /**

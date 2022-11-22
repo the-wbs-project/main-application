@@ -43,46 +43,13 @@ jobs:
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: "wbs-app-v0-1"
+          projectName: "wbs-app-v0-1-prod"
           directory: "dist"
-          branch: app
+          branch: main
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
-  worker_auth_job:
-    name: Auth Worker Deployment
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16.13.0]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
-    steps:
-      - uses: actions/checkout@v3
-      - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: "yarn"
-      - name: Install Packages
-        run: yarn --cwd workers/auth run setup
-      - name: Build Worker
-        run: yarn --cwd workers/auth run build
-      - name: Publish Worker
-        uses: cloudflare/wrangler-action@2.0.0
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: workers/auth
-          command: publish --env prod
-          postCommands: |
-            echo $AUTH | wrangler secret put AUTH --env prod
-
-        env:
-          AUTH: ${{ secrets.CFW_PROD_AUTH }}
-
   worker_api_job:
-    name: API Worker Deployment
-    needs: worker_auth_job
+    name: Worker Deployment
     runs-on: ubuntu-latest
 
     strategy:
@@ -98,14 +65,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd workers/api run setup
+        run: yarn --cwd worker run setup
       - name: Build Worker
-        run: yarn --cwd workers/api run build
+        run: yarn --cwd worker run build
       - name: Publish Worker
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: workers/api
+          workingDirectory: worker
           command: publish --env prod
           postCommands: |
             echo $MAILGUN_API_KEY | wrangler secret put MAILGUN_API_KEY --env prod
@@ -120,30 +87,3 @@ jobs:
           COSMOS: ${{ secrets.CFW_PROD_COSMOS }}
           AZURE: ${{ secrets.CFW_PROD_AZURE }}
           AUTH: ${{ secrets.CFW_PROD_AUTH }}
-
-  azure_job:
-    name: Azure Functions Deployment
-    runs-on: windows-latest
-    steps:
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@v2
-
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: "Resolve Project Dependencies Using Dotnet"
-        shell: pwsh
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build --configuration Release --output ./output
-          popd
-      - name: "Run Azure Functions Action"
-        uses: Azure/functions-action@v1
-        id: fa
-        with:
-          app-name: "wbs-v0-1"
-          slot-name: "QA"
-          package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_75266876CFB4454C9D62894AB94F4BE8 }}
