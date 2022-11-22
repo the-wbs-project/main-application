@@ -72,7 +72,7 @@
           <ul
             class="nav nav-item header-icons navbar-nav-right ms-md-auto ms-3 flex-nowrap"
           >
-            <li ngbDropdown class="nav-item">
+            <!--<li ngbDropdown class="nav-item">
               <a
                 class="new nav-link theme-layout nav-link-bg layout-setting"
                 appToggleTheme
@@ -104,7 +104,7 @@
                   </svg>
                 </span>
               </a>
-            </li>
+            </li>-->
 
             <li class="nav-item full-screen fullscreen-button">
               <a class="new nav-link full-screen-link" appFullscreen
@@ -121,7 +121,7 @@
                 </svg>
               </a>
             </li>
-            <li
+            <!--<li
               ngbDropdown
               class="main-profile-menu nav nav-item nav-link ps-lg-2"
             >
@@ -160,7 +160,6 @@
                     </div>
                   </div>
                 </div>
-                <!--
                 <a ngbDropdownItem routerLink="/pages/profile">
                   <i class="far fa-user-circle"></i>Profile
                 </a>
@@ -173,7 +172,7 @@
                 >
                 <a ngbDropdownItem routerLink="/mail/mail"
                   ><i class="far fa-comment-dots"></i>Messages</a
-                >-->
+                >
                 <a
                   *ngIf="isAdmin$ | async"
                   ngbDropdownItem
@@ -187,7 +186,7 @@
                   {{ "General.LogOut" | translate }}
                 </a>
               </div>
-            </li>
+            </li>-->
           </ul>
         </div>
       </div>
