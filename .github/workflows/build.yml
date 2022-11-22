@@ -41,8 +41,7 @@ jobs:
         run: yarn --cwd site run publish
 
   worker_job:
-    name: API Worker Build
-    needs: worker_auth_job
+    name: Worker Build
     runs-on: ubuntu-latest
 
     strategy:
@@ -58,26 +57,6 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd workers/api run setup
+        run: yarn --cwd worker run setup
       - name: Build Worker
-        run: yarn --cwd workers/api run build
-
-  azure_job:
-    name: Azure Functions Build
-    runs-on: windows-latest
-    environment: dev
-    steps:
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@v3
-
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v3
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: "Resolve Project Dependencies Using Dotnet"
-        shell: pwsh
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build --configuration Release --output ./output
-          popd
+        run: yarn --cwd worker run build

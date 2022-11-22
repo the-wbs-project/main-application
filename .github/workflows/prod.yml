@@ -49,7 +49,7 @@ jobs:
           gitHubToken: ${{ secrets.GITHUB_TOKEN }}
 
   worker_api_job:
-    name: API Worker Deployment
+    name: Worker Deployment
     runs-on: ubuntu-latest
 
     strategy:
@@ -65,14 +65,14 @@ jobs:
           node-version: ${{ matrix.node-version }}
           cache: "yarn"
       - name: Install Packages
-        run: yarn --cwd workers/api run setup
+        run: yarn --cwd worker run setup
       - name: Build Worker
-        run: yarn --cwd workers/api run build
+        run: yarn --cwd worker run build
       - name: Publish Worker
         uses: cloudflare/wrangler-action@2.0.0
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          workingDirectory: workers/api
+          workingDirectory: worker
           command: publish --env prod
           postCommands: |
             echo $MAILGUN_API_KEY | wrangler secret put MAILGUN_API_KEY --env prod
@@ -87,29 +87,3 @@ jobs:
           COSMOS: ${{ secrets.CFW_PROD_COSMOS }}
           AZURE: ${{ secrets.CFW_PROD_AZURE }}
           AUTH: ${{ secrets.CFW_PROD_AUTH }}
-
-  azure_job:
-    name: Azure Functions Deployment
-    runs-on: ubuntu-latest
-    steps:
-      - name: "Checkout GitHub Action"
-        uses: actions/checkout@v2
-
-      - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
-
-      - name: "Resolve Project Dependencies Using Dotnet"
-        shell: pwsh
-        run: |
-          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          dotnet build --configuration Release --output ./output -v d
-          popd
-      - name: "Run Azure Functions Action"
-        uses: Azure/functions-action@v1
-        id: fa
-        with:
-          app-name: "wbs-v0-1-prod"
-          package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output"
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_32A51C7A717A47D7BD9CB683567BB441 }}
