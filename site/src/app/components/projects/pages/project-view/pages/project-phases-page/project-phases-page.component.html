@@ -14,7 +14,7 @@
                 [menuItems]="phases$ | async | taskMenu: taskId"
                 [isDraggable]="true"
                 [detailsUrlPrefix]="['../../', 'task']"
-                (actionClicked)="service.taskAction($event, taskId!)"
+                (actionClicked)="service.action($event, taskId!)"
                 (reordered)="service.reordered($event)"
                 (selectedChanged)="taskId = $event.id"
               >

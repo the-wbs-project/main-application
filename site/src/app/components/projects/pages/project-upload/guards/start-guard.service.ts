@@ -4,7 +4,6 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PAGES } from '../models';
 
 @Injectable()
 export class StartGuard implements CanActivate {
@@ -17,7 +16,7 @@ export class StartGuard implements CanActivate {
           '/projects',
           route.params['projectId'],
           'upload',
-          PAGES.START,
+          'start',
         ])
       )
       .pipe(map(() => true));

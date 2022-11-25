@@ -9,7 +9,7 @@ import {
   DisciplinesViewComponent,
   OptionsViewComponent,
   PhaseViewComponent,
-  ProjectViewComponent,
+  ResultsViewComponent,
   SaveViewComponent,
   StartViewComponent,
 } from './pages';
@@ -36,7 +36,7 @@ import { ProjectUploadState } from './states';
     OptionsViewComponent,
     PhaseViewComponent,
     ProjectUploadLayoutComponent,
-    ProjectViewComponent,
+    ResultsViewComponent,
     SaveViewComponent,
     StartViewComponent,
   ],

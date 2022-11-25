@@ -8,7 +8,7 @@ import {
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 
-export class WbsNodePhaseImporter {
+export class WbsNodePhaseProjectImporter {
   run(
     project: Project,
     existingNodes: WbsNode[],

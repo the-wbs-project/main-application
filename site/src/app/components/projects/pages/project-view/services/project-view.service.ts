@@ -34,12 +34,12 @@ export class ProjectViewService {
     this.store.dispatch(new ChangeProjectTitle(newTitle));
   }
 
-  projectAction(action: string) {
-    const projectId = this.store.selectSnapshot(ProjectState.current)!.id;
-
+  action(action: string, taskId?: string) {
     if (action === 'download') {
       this.store.dispatch(new DownloadNodes());
     } else if (action === 'upload') {
+      const projectId = this.store.selectSnapshot(ProjectState.current)!.id;
+
       this.store.dispatch(new Navigate(['projects', projectId, 'upload']));
     } else if (action === 'editPhases') {
       this.store.dispatch(new EditPhases());
@@ -47,31 +47,29 @@ export class ProjectViewService {
       this.store.dispatch(new EditDisciplines());
     } else if (action === 'editTask') {
       //
-    }
-  }
-
-  taskAction(action: string, taskId: string) {
-    if (action === 'addSub') {
-      this.taskCreate.open().subscribe((results) => {
-        if (results?.model)
-          this.store.dispatch(
-            new CreateTask(taskId, results.model, results.nav)
-          );
-      });
-    } else if (action === 'cloneTask') {
-      this.store.dispatch(new CloneTask(taskId));
-    } else if (action === 'deleteTask') {
-      this.taskDelete.open().subscribe((reason) => {
-        if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));
-      });
-    } else if (action === 'moveLeft') {
-      this.store.dispatch(new MoveTaskLeft(taskId));
-    } else if (action === 'moveRight') {
-      this.store.dispatch(new MoveTaskRight(taskId));
-    } else if (action === 'moveUp') {
-      this.store.dispatch(new MoveTaskUp(taskId));
-    } else if (action === 'moveDown') {
-      this.store.dispatch(new MoveTaskDown(taskId));
+    } else if (taskId) {
+      if (action === 'addSub') {
+        this.taskCreate.open().subscribe((results) => {
+          if (results?.model)
+            this.store.dispatch(
+              new CreateTask(taskId, results.model, results.nav)
+            );
+        });
+      } else if (action === 'cloneTask') {
+        this.store.dispatch(new CloneTask(taskId));
+      } else if (action === 'deleteTask') {
+        this.taskDelete.open().subscribe((reason) => {
+          if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));
+        });
+      } else if (action === 'moveLeft') {
+        this.store.dispatch(new MoveTaskLeft(taskId));
+      } else if (action === 'moveRight') {
+        this.store.dispatch(new MoveTaskRight(taskId));
+      } else if (action === 'moveUp') {
+        this.store.dispatch(new MoveTaskUp(taskId));
+      } else if (action === 'moveDown') {
+        this.store.dispatch(new MoveTaskDown(taskId));
+      }
     }
   }
 

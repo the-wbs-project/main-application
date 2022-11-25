@@ -4,20 +4,14 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { SaveUpload } from '@wbs/components/projects/actions';
 import { ProjectState } from '@wbs/components/projects/states';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  Project,
-  ProjectCategory,
-  ProjectImportResult,
-  PROJECT_NODE_VIEW,
-  UploadResults,
-} from '@wbs/core/models';
-import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
+import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
+import { Messages, WbsTransformers } from '@wbs/core/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AppendOrOvewriteSelected,
   FileUploaded,
-  LoadMsProjectFile,
+  LoadProjectFile,
   PeopleCompleted,
   PhasesCompleted,
   PrepUploadToSave,
@@ -72,6 +66,11 @@ export class ProjectUploadState {
   @Selector()
   static errors(state: StateModel): string[] | undefined {
     return state.uploadResults?.errors;
+  }
+
+  @Selector()
+  static fileType(state: StateModel): string | undefined {
+    return state.fileType;
   }
 
   @Selector()
@@ -165,11 +164,11 @@ export class ProjectUploadState {
       rawFile: file,
     });
 
-    return ctx.dispatch(new Navigate([...this.urlPrefix, fileType]));
+    return ctx.dispatch(new Navigate([...this.urlPrefix, 'results']));
   }
 
-  @Action(LoadMsProjectFile)
-  loadMsProjectFile(ctx: StateContext<StateModel>): void | Observable<any> {
+  @Action(LoadProjectFile)
+  loadProjectFile(ctx: StateContext<StateModel>): void | Observable<any> {
     const state = ctx.getState();
 
     if (!state.rawFile || !state.extension) return;
@@ -195,20 +194,27 @@ export class ProjectUploadState {
   @Action(ProcessFile)
   processFile(ctx: StateContext<StateModel>): void {
     const state = ctx.getState();
+    const fileType = state.fileType!;
 
     if (!state.uploadResults?.results) return;
 
     let phases = 0;
+    const disciplines: string[] = [];
     const peopleList: PeopleListItem[] = [];
 
     for (const row of state.uploadResults.results) {
       if (row.resources) {
         for (const resource of row.resources) {
-          if (
-            resource &&
-            peopleList.findIndex((x) => x.name === resource) === -1
-          ) {
-            peopleList.push({ name: resource, disciplineIds: [] });
+          if (!resource) continue;
+
+          if (fileType === 'excel') {
+            if (disciplines.indexOf(resource.toLowerCase()) === -1) {
+              disciplines.push(resource.toLowerCase());
+            }
+          } else {
+            if (peopleList.findIndex((x) => x.name === resource) === -1) {
+              peopleList.push({ name: resource, disciplineIds: [] });
+            }
           }
         }
       }
@@ -217,8 +223,9 @@ export class ProjectUploadState {
 
     ctx.patchState({
       stats: {
-        phases,
+        disciplines: disciplines.length,
         people: peopleList.length,
+        phases,
         tasks: state.uploadResults.results.length,
       },
       peopleList,
@@ -257,10 +264,12 @@ export class ProjectUploadState {
     ctx: StateContext<StateModel>,
     { results }: PhasesCompleted
   ): Observable<void> {
+    const fileType = ctx.getState().fileType!;
+    const urlSuffix = fileType === 'excel' ? 'saving' : 'disciplines';
     ctx.patchState({
       phaseList: results,
     });
-    return ctx.dispatch(new Navigate([...this.urlPrefix, 'disciplines']));
+    return ctx.dispatch(new Navigate([...this.urlPrefix, urlSuffix]));
   }
 
   @Action(PeopleCompleted)
@@ -310,7 +319,7 @@ export class ProjectUploadState {
       existingNodes: this.data.projectNodes.getAllAsync(this.projectId),
     }).pipe(
       switchMap((data) => {
-        const results = this.transformer.nodes.phase.importer.run(
+        const results = this.transformer.nodes.phase.projectImporter.run(
           data.project,
           data.existingNodes,
           state.action!,

@@ -1,5 +1,6 @@
 export interface ResultStats {
-  tasks: number;
-  phases: number;
+  disciplines: number;
   people: number;
+  phases: number;
+  tasks: number;
 }
