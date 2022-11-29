@@ -1,12 +1,12 @@
 <div class="text-editor">
   <div
     *ngIf="!(edit$ | async)"
-    class="text-panel text-editor-text pd-t-5 pd-l-12"
+    class="text-panel text-editor-text pd-l-12 display-flex text-nowrap flex-align-center"
     [style.height]="height"
-    [style.font-size]="fontSize"
     (click)="edit()"
+    wbsTextOverflowHandler
   >
-    {{ value }}
+    <span>{{ value }}</span>
   </div>
   <div *ngIf="edit$ | async" class="text-panel">
     <kendo-textbox
