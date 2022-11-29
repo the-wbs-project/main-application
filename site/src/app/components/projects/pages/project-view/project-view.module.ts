@@ -1,13 +1,19 @@
 import { NgModule } from '@angular/core';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbModalModule,
+  NgbNavModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
 import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { SplitterModule } from '@progress/kendo-angular-layout';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
-import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
 import { TaskCreateModule } from '@wbs/components/_features/task-create';
 import { TaskDeleteModule } from '@wbs/components/_features/task-delete';
+import { TextEditorModule } from '@wbs/components/_features/text-editor/text-editor.module';
+import { TextareaEditorModule } from '@wbs/components/_features/textarea-editor/textarea-editor.module';
 import { TimelineModule } from '@wbs/components/_features/timeline';
 import { WbsTreeModule } from '@wbs/components/_features/wbs-tree';
 import { SharedModule } from '@wbs/shared/module';
@@ -18,18 +24,27 @@ import {
   ProjectVerifyGuard,
 } from '../../guards';
 import {
-  ProjectAboutComponent,
   ProjectCategoryDialogComponent,
   ProjectPhasesComponent,
   ProjectRoleComponent,
+  TaskModalComponent,
   Timeline1Component,
 } from './components';
-import { ProjectRedirectGuard, ProjectViewGuard } from './guards';
+import {
+  ProjectRedirectGuard,
+  ProjectViewGuard,
+  TaskVerifyGuard,
+  TaskViewGuard,
+} from './guards';
 import {
   ProjectAboutPageComponent,
   ProjectDisciplinesPageComponent,
   ProjectPhasesPageComponent,
   ProjectTimelinePageComponent,
+  TaskAboutComponent,
+  TaskSubTasksComponent,
+  TaskTestComponent,
+  TaskViewComponent,
 } from './pages';
 import {
   RoleIconPipe,
@@ -42,42 +57,49 @@ import { ProjectViewLayoutComponent } from './project-view-layout.component';
 import { ProjectViewRoutingModule } from './project-view-routing.module';
 import {
   PhaseExtractProcessor,
+  ProjectNavigationService,
   ProjectViewService,
   TextCompareService,
   UploadFileService,
 } from './services';
-import { ProjectViewState } from './states';
+import { ProjectViewState, TaskViewState } from './states';
 
 @NgModule({
   imports: [
     ButtonModule,
     CategoryListEditorModule,
     ContextMenuModule,
+    NgbModalModule,
     NgbNavModule,
-    NgxsModule.forFeature([ProjectViewState]),
+    NgbTooltipModule,
+    NgxsModule.forFeature([ProjectViewState, TaskViewState]),
     ProjectComponentModule,
     ProjectViewRoutingModule,
     SharedModule,
+    SplitterModule,
     TaskCreateModule,
     TaskDeleteModule,
+    TextareaEditorModule,
     TextBoxModule,
+    TextEditorModule,
     TimelineModule,
-    TooltipModule,
     WbsTreeModule,
   ],
   providers: [
     PhaseExtractProcessor,
+    ProjectNavigationService,
     ProjectRedirectGuard,
     ProjectResourceGuard,
     ProjectTimelineVerifyGuard,
     ProjectViewService,
     ProjectVerifyGuard,
     ProjectViewGuard,
+    TaskVerifyGuard,
+    TaskViewGuard,
     TextCompareService,
     UploadFileService,
   ],
   declarations: [
-    ProjectAboutComponent,
     ProjectAboutPageComponent,
     ProjectCategoryDialogComponent,
     ProjectDisciplinesPageComponent,
@@ -88,7 +110,12 @@ import { ProjectViewState } from './states';
     ProjectViewLayoutComponent,
     RoleIconPipe,
     RoleTitlePipe,
+    TaskAboutComponent,
     TaskMenuPipe,
+    TaskModalComponent,
+    TaskSubTasksComponent,
+    TaskTestComponent,
+    TaskViewComponent,
     Timeline1Component,
     UserEmailPipe,
     UserNamePipe,

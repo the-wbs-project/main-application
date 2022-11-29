@@ -1,5 +1,5 @@
 import { ActionMenuItem } from '@wbs/core/models';
-import { PAGE_VIEW } from './page-view.const';
+import { TASK_PAGE_VIEW } from '../../project-view/models';
 
 export const MenuItems = {
   actions: <ActionMenuItem[]>[
@@ -26,19 +26,19 @@ export const MenuItems = {
   ],
   links: [
     {
-      fragment: PAGE_VIEW.ABOUT,
+      fragment: TASK_PAGE_VIEW.ABOUT,
       title: 'General.About',
     },
     {
-      fragment: PAGE_VIEW.SUB_TASKS,
+      fragment: TASK_PAGE_VIEW.SUB_TASKS,
       title: 'General.SubTasks',
     },
     {
-      fragment: PAGE_VIEW.TIMELINE,
+      fragment: TASK_PAGE_VIEW.TIMELINE,
       title: 'General.Timeline',
     },
     {
-      fragment: PAGE_VIEW.RESOURCES,
+      fragment: TASK_PAGE_VIEW.RESOURCES,
       title: 'General.Resources',
     },
   ],

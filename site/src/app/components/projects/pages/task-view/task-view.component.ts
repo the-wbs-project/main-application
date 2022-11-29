@@ -8,10 +8,11 @@ import { TitleService } from '@wbs/core/services';
 import { UiState } from '@wbs/core/states';
 import { TimelineViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
-import { ChangeTaskTitle, CreateTask, RemoveTask } from '../../actions';
+import { ChangeTaskTitle, RemoveTask } from '../../actions';
+import { TASK_PAGE_VIEW_TYPE } from '../project-view/models';
 import { ProjectState, ProjectTimelineState } from '../../states';
-import { MenuItems, PAGE_VIEW_TYPE } from './models';
-import { TaskViewState } from './task-view.state';
+import { TaskViewState } from '../project-view/states';
+import { MenuItems } from './models';
 
 @Component({
   templateUrl: './task-view.component.html',
@@ -21,7 +22,7 @@ import { TaskViewState } from './task-view.state';
 export class TaskViewComponent {
   @Select(UiState.mainContentWidth) width$!: Observable<number>;
   @Select(TaskViewState.current) current$!: Observable<WbsNode>;
-  @Select(TaskViewState.pageView) pageView$!: Observable<PAGE_VIEW_TYPE>;
+  @Select(TaskViewState.pageView) pageView$!: Observable<TASK_PAGE_VIEW_TYPE>;
   @Select(ProjectState.current) project$!: Observable<Project>;
   @Select(TaskViewState.subTasks) subTasks$!: Observable<WbsNodeView[]>;
   @Select(TaskViewState.viewDiscipline)

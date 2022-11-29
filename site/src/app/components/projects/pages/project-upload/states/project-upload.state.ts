@@ -1,13 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { SaveUpload } from '@wbs/components/projects/actions';
-import { ProjectState } from '@wbs/components/projects/states';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, WbsTransformers } from '@wbs/core/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { SaveUpload } from '../../../actions';
+import { ProjectState } from '../../../states';
 import {
   AppendOrOvewriteSelected,
   FileUploaded,
@@ -241,8 +241,7 @@ export class ProjectUploadState {
     const state = ctx.getState();
 
     if (answer === 'append')
-      for (const idOrCat of this.store.selectSnapshot(ProjectState.current)
-        ?.categories.phase ?? []) {
+      for (const idOrCat of this.project.categories.phase ?? []) {
         phaseList.push({ idOrCat, isEditable: false });
       }
 

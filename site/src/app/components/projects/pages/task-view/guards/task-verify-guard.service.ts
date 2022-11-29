@@ -5,7 +5,7 @@ import { VerifyTimelineData } from '@wbs/core/actions';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoadTaskTimeline } from '../../../actions';
-import { VerifyTask } from '../task-view.actions';
+import { VerifyTask } from '../../project-view/actions';
 
 @Injectable()
 export class TaskVerifyGuard implements CanActivate {

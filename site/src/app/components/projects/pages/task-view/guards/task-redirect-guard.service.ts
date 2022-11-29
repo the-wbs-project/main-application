@@ -4,7 +4,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PAGE_VIEW } from '../models';
+import { TASK_PAGE_VIEW } from '../../project-view/models';
 
 @Injectable()
 export class TaskRedirectGuard implements CanActivate {
@@ -18,7 +18,7 @@ export class TaskRedirectGuard implements CanActivate {
           route.params['projectId'],
           'task',
           route.params['taskId'],
-          PAGE_VIEW.ABOUT,
+          TASK_PAGE_VIEW.ABOUT,
         ])
       )
       .pipe(map(() => true));

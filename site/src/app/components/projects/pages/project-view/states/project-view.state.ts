@@ -23,11 +23,11 @@ import {
   ProjectPageChanged,
 } from '../actions';
 import { ProjectCategoryDialogComponent } from '../components';
-import { PAGE_VIEW, PAGE_VIEW_TYPE } from '../models';
+import { PROJECT_PAGE_VIEW, PROJECT_PAGE_VIEW_TYPE } from '../models';
 
 interface StateModel {
   navType: PROJECT_FILTER | null;
-  pageView?: PAGE_VIEW_TYPE;
+  pageView?: PROJECT_PAGE_VIEW_TYPE;
   viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
 
@@ -52,7 +52,7 @@ export class ProjectViewState {
   }
 
   @Selector()
-  static pageView(state: StateModel): PAGE_VIEW_TYPE | undefined {
+  static pageView(state: StateModel): PROJECT_PAGE_VIEW_TYPE | undefined {
     return state.pageView;
   }
 
@@ -73,9 +73,9 @@ export class ProjectViewState {
     ctx.patchState({
       pageView: action.view,
       viewNode:
-        action.view === PAGE_VIEW.PHASES
+        action.view === PROJECT_PAGE_VIEW.PHASES
           ? PROJECT_NODE_VIEW.PHASE
-          : action.view === PAGE_VIEW.DISCIPLINES
+          : action.view === PROJECT_PAGE_VIEW.DISCIPLINES
           ? PROJECT_NODE_VIEW.DISCIPLINE
           : undefined,
     });
@@ -96,7 +96,7 @@ export class ProjectViewState {
 
   @Action(EditPhases)
   editPhases(ctx: StateContext<StateModel>): Observable<any> {
-    const project = this.store.selectSnapshot(ProjectState.current)!;
+    const project = this.project;
 
     return this.dialog
       .openDialog<ProjectCategory[] | undefined>(
@@ -116,7 +116,7 @@ export class ProjectViewState {
 
   @Action(EditDisciplines)
   editDisciplines(ctx: StateContext<StateModel>): Observable<any> {
-    const project = this.store.selectSnapshot(ProjectState.current)!;
+    const project = this.project;
 
     return this.dialog
       .openDialog<ProjectCategory[] | undefined>(
@@ -132,10 +132,6 @@ export class ProjectViewState {
           result ? ctx.dispatch(new ChangeProjectDisciplines(result)) : of(null)
         )
       );
-  }
-
-  private copy<T>(x: T): T {
-    return <T>JSON.parse(JSON.stringify(x));
   }
 
   private currentNodeViews(state: StateModel): WbsNodeView[] {

@@ -8,23 +8,29 @@ import {
   StateContext,
   Store,
 } from '@ngxs/store';
-import { ProjectState } from '@wbs/components/projects/states';
-import { WbsNode } from '@wbs/core/models';
+import {
+  PROJECT_NODE_VIEW,
+  PROJECT_NODE_VIEW_TYPE,
+  WbsNode,
+} from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable, Subscription, tap } from 'rxjs';
-import { PAGE_VIEW_TYPE } from './models';
-import { TaskPageChanged, VerifyTask } from './task-view.actions';
+import { ProjectState } from '../../../states';
+import { TASK_PAGE_VIEW_TYPE } from '../models';
+import { TaskPageChanged, VerifyTask } from '../actions';
 
 interface StateModel {
-  id?: string;
   current?: WbsNode;
-  pageView?: PAGE_VIEW_TYPE;
-  subTasks?: WbsNodeView[];
-  viewDiscipline?: WbsNodeView;
-  viewPhase?: WbsNodeView;
   disciplines?: WbsNodeView[];
+  id?: string;
+  nextTaskId?: string;
+  pageView?: TASK_PAGE_VIEW_TYPE;
   phases?: WbsNodeView[];
+  previousTaskId?: string;
+  subTasks?: WbsNodeView[];
   tasks?: WbsNode[];
+  view?: WbsNodeView;
+  viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
 
 @UntilDestroy()
@@ -34,8 +40,6 @@ interface StateModel {
   defaults: {},
 })
 export class TaskViewState implements NgxsOnInit {
-  private sub?: Subscription;
-
   constructor(private readonly store: Store) {}
 
   @Selector()
@@ -44,8 +48,18 @@ export class TaskViewState implements NgxsOnInit {
   }
 
   @Selector()
-  static pageView(state: StateModel): PAGE_VIEW_TYPE | undefined {
+  static nextTaskId(state: StateModel): string | undefined {
+    return state.nextTaskId;
+  }
+
+  @Selector()
+  static pageView(state: StateModel): TASK_PAGE_VIEW_TYPE | undefined {
     return state.pageView;
+  }
+
+  @Selector()
+  static previousTaskId(state: StateModel): string | undefined {
+    return state.previousTaskId;
   }
 
   @Selector()
@@ -54,13 +68,8 @@ export class TaskViewState implements NgxsOnInit {
   }
 
   @Selector()
-  static viewDiscipline(state: StateModel): WbsNodeView | undefined {
-    return state.viewDiscipline;
-  }
-
-  @Selector()
-  static viewPhase(state: StateModel): WbsNodeView | undefined {
-    return state.viewPhase;
+  static view(state: StateModel): WbsNodeView | undefined {
+    return state.view;
   }
 
   ngxsOnInit(ctx: StateContext<StateModel>) {
@@ -102,10 +111,12 @@ export class TaskViewState implements NgxsOnInit {
   verifyProject(ctx: StateContext<StateModel>, action: VerifyTask): void {
     const state = ctx.getState();
 
-    if (state.id === action.taskId) return;
+    if (state.id === action.taskId && state.viewNode === action.viewNode)
+      return;
 
     ctx.patchState({
       id: action.taskId,
+      viewNode: action.viewNode,
     });
 
     this.setup(ctx);
@@ -162,17 +173,25 @@ export class TaskViewState implements NgxsOnInit {
       ctx.patchState({
         current: undefined,
         subTasks: undefined,
-        viewDiscipline: undefined,
-        viewPhase: undefined,
+        view: undefined,
       });
       return;
     }
+    const nodes =
+      state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE
+        ? state.disciplines!
+        : state.phases!;
+
+    const nodeIndex = nodes.findIndex((x) => x.id === state.id);
+
     ctx.patchState({
       //activity: activity.sort(this.sortActivity),
       current: state.tasks.find((x) => x.id === state.id),
-      subTasks: this.getSubTasks(state.phases, state.id),
-      viewDiscipline: state.disciplines.find((x) => x.id === state.id),
-      viewPhase: state.phases.find((x) => x.id === state.id),
+      subTasks: this.getSubTasks(nodes, state.id),
+      view: nodes[nodeIndex],
+      previousTaskId: nodeIndex === 0 ? undefined : nodes[nodeIndex - 1].id,
+      nextTaskId:
+        nodeIndex + 1 === nodes.length ? undefined : nodes[nodeIndex + 1].id,
     });
   }
 }

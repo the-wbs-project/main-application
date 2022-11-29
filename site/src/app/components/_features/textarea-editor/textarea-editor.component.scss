@@ -1,0 +1,10 @@
+.text-editor {
+  > .text-editor-text:hover {
+    background-color: lightgray;
+  }
+}
+
+.text-editor-buttons {
+  position: absolute;
+  right: 10px;
+}

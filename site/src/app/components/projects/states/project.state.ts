@@ -16,6 +16,7 @@ import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
   ChangeProjectTitle,
+  ChangeTaskDescription,
   ChangeTaskTitle,
   CloneTask,
   CreateTask,
@@ -48,9 +49,7 @@ interface StateModel {
 })
 export class ProjectState {
   constructor(
-    //private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
-    //private readonly dialog: DialogService,
     private readonly messaging: Messages,
     private readonly transformers: WbsTransformers
   ) {}
@@ -511,6 +510,47 @@ export class ProjectState {
     );
   }
 
+  @Action(ChangeTaskDescription)
+  changeTaskDescription(
+    ctx: StateContext<StateModel>,
+    action: ChangeTaskDescription
+  ): Observable<void> | void {
+    const nodes = ctx.getState().nodes;
+
+    if (!nodes) return;
+
+    const index = nodes.findIndex((x) => x.id === action.taskId);
+
+    if (index === -1) return;
+
+    let node = this.copy(nodes[index]);
+
+    const original = node.description;
+    node.description  = action.description;
+
+    return this.saveTask(ctx, node).pipe(
+      map(() => {
+        nodes[index] = node;
+
+        ctx.patchState({
+          nodes,
+        });
+      }),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          data: {
+            from: original,
+            to: action.description,
+          },
+          objectId: action.taskId,
+          action: TASK_ACTIONS.DESCRIPTION_CHANGED,
+        })
+      ),
+      tap(() => this.messaging.success('Projects.TaskTitleUpdated'))
+    );
+  }
+
   @Action(TreeReordered)
   treeReordered(
     ctx: StateContext<StateModel>,
@@ -669,7 +709,14 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     data: ActivityData
   ): Observable<void> {
-    return ctx.dispatch(new SaveTimelineAction(data, 'project'));
+    return ctx.dispatch(
+      new SaveTimelineAction(
+        {
+          ...data,
+        },
+        'project'
+      )
+    );
   }
 
   private saveProject(

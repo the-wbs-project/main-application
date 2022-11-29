@@ -1,7 +1,4 @@
 <ul class="list-group" *ngIf="idsOrCats">
-  <li class="list-group-item legend-header">
-    {{ "Wbs.DisciplineLegend" | translate }}
-  </li>
   <li class="list-group-item" *ngFor="let idsOrCat of idsOrCats">
     <span class="icon-wrapper">
       <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>

@@ -13,13 +13,15 @@ import {
 } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { faEllipsisV } from '@fortawesome/pro-solid-svg-icons';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import {
+  CellClickEvent,
   SelectableSettings,
   SelectionChangeEvent,
   TreeListComponent,
 } from '@progress/kendo-angular-treelist';
 import { ActionMenuItem, Project } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
+import { IdService, Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
   BehaviorSubject,
@@ -52,6 +54,7 @@ import {
 export class WbsTreeComponent implements OnChanges, OnDestroy {
   protected dataReady = false;
   private newParentId!: any;
+  private currentPopover?: NgbPopover;
   private isParentDragged: boolean = false;
   private currentSubscription: Subscription | undefined;
 
@@ -66,6 +69,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   @Output() readonly actionClicked = new EventEmitter<string>();
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
   @Output() readonly reordered = new EventEmitter<[string, WbsNodeView[]]>();
+  @Output() readonly showDetails = new EventEmitter<string>();
   @ViewChild(TreeListComponent) treelist!: TreeListComponent;
 
   readonly id = IdService.generate();
@@ -86,10 +90,15 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   readonly tree$ = new BehaviorSubject<WbsNodeView[] | undefined>(undefined);
 
   constructor(
+    private readonly mess: Messages,
     private readonly renderer: Renderer2,
     private readonly wbsService: WbsPhaseService,
     private readonly zone: NgZone
   ) {}
+
+  dbc(v: string): void {
+    this.mess.success(v, false);
+  }
 
   ngOnChanges(): void {
     if (!this.nodes) return;
@@ -120,6 +129,18 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
 
   rowSelected(e: SelectionChangeEvent): void {
     this.selectedChanged.emit(e.items[0].dataItem);
+  }
+
+  togglePopup(popover: NgbPopover, data: WbsNodeView): void {
+    if (this.currentPopover) this.currentPopover.close();
+
+    popover.open({ data });
+
+    this.currentPopover = popover;
+  }
+
+  cellClicked(e: CellClickEvent) {
+    console.log(e);
   }
 
   prePositionCheck(): NodeCheck {

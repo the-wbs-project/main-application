@@ -18,7 +18,6 @@ import { TaskSubTasksComponent } from './components';
 import { TaskAboutComponent } from './components/task-about/task-about.component';
 import { TaskRedirectGuard, TaskVerifyGuard, TaskViewGuard } from './guards';
 import { TaskViewComponent } from './task-view.component';
-import { TaskViewState } from './task-view.state';
 
 const routes: Routes = [
   {
@@ -43,7 +42,6 @@ const routes: Routes = [
   imports: [
     ButtonModule,
     NgbNavModule,
-    NgxsModule.forFeature([TaskViewState]),
     ProjectComponentModule,
     RouterModule.forChild(routes),
     SharedModule,

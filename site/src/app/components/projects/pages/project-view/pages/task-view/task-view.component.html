@@ -1,0 +1,39 @@
+<kendo-splitter style="height: 100%">
+  <kendo-splitter-pane [scrollable]="true" class="panel-bg">
+    <div class="card custom-card">
+      <div class="card-body pd-0">
+        <div *ngIf="current$ | async; let task">
+          <div class="text-bold tx-24">
+            <wbs-text-editor
+              [value]="task.title"
+              (valueChange)="saveTitle($event)"
+            ></wbs-text-editor>
+          </div>
+        </div>
+      </div>
+      <div class="card-footer py-0">
+        <div class="profile-tab tab-menu-heading border-bottom-0">
+          <ul
+            ngbNav
+            class="main-nav-line p-0 tabs-menu profile-nav-line border-0 br-5 mb-0"
+            [activeId]="pageView$ | async"
+          >
+            <li [ngbNavItem]="link.fragment" *ngFor="let link of links">
+              <a ngbNavLink [routerLink]="['./', link.fragment]">
+                {{ link.title | translate }}
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pd-x-10">
+      <router-outlet></router-outlet>
+    </div>
+  </kendo-splitter-pane>
+
+  <kendo-splitter-pane [scrollable]="true" [collapsible]="true" size="200px">
+    <h3>Inner splitter / right pane</h3>
+    <p>Resizable and collapsible.</p>
+  </kendo-splitter-pane>
+</kendo-splitter>

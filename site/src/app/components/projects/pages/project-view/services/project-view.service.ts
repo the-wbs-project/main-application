@@ -30,6 +30,14 @@ export class ProjectViewService {
     private readonly taskDelete: TaskDeleteService
   ) {}
 
+  private get projectId(): string {
+    return this.store.selectSnapshot(ProjectState.current)!.id;
+  }
+
+  private get nodeView(): string {
+    return this.store.selectSnapshot(ProjectViewState.viewNode)!;
+  }
+
   saveTitle(newTitle: string): void {
     this.store.dispatch(new ChangeProjectTitle(newTitle));
   }
@@ -38,15 +46,11 @@ export class ProjectViewService {
     if (action === 'download') {
       this.store.dispatch(new DownloadNodes());
     } else if (action === 'upload') {
-      const projectId = this.store.selectSnapshot(ProjectState.current)!.id;
-
-      this.store.dispatch(new Navigate(['projects', projectId, 'upload']));
+      this.store.dispatch(new Navigate(['projects', this.projectId, 'upload']));
     } else if (action === 'editPhases') {
       this.store.dispatch(new EditPhases());
     } else if (action === 'editDisciplines') {
       this.store.dispatch(new EditDisciplines());
-    } else if (action === 'editTask') {
-      //
     } else if (taskId) {
       if (action === 'addSub') {
         this.taskCreate.open().subscribe((results) => {
@@ -57,6 +61,18 @@ export class ProjectViewService {
         });
       } else if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(taskId));
+      } else if (action === 'viewTask') {
+        this.store.dispatch(
+          new Navigate([
+            'projects',
+            this.projectId,
+            'view',
+            this.nodeView == 'phase' ? 'phases' : 'disciplines',
+            'task',
+            taskId,
+            'about',
+          ])
+        );
       } else if (action === 'deleteTask') {
         this.taskDelete.open().subscribe((reason) => {
           if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));

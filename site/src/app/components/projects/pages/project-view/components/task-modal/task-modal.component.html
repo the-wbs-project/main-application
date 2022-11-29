@@ -1,0 +1,34 @@
+<ng-template #taskContent let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Task Details</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      [routerLink]="['./']"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <router-outlet></router-outlet>
+  </div>
+  <div class="modal-footer">
+    <div style="flex-grow: 1" class="tx-left">
+      <a
+        class="btn btn-outline-dark"
+        *ngIf="previousTaskId$ | async; let taskId"
+        [routerLink]="['task', taskId, 'about']"
+      >
+        Previous
+      </a>
+    </div>
+    <div style="flex-grow: 1" class="tx-right">
+      <a
+        class="btn btn-outline-dark"
+        *ngIf="nextTaskId$ | async; let taskId"
+        [routerLink]="['task', taskId, 'about']"
+      >
+        Next
+      </a>
+    </div>
+  </div>
+</ng-template>

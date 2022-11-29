@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  ActionButtonsComponent,
   EditPencilComponent,
   PageHeaderComponent,
   SwitchComponent,
@@ -42,7 +41,6 @@ import {
     TranslateModule.forChild(),
   ],
   declarations: [
-    ActionButtonsComponent,
     CategoryIconPipe,
     CategoryIdConverterPipe,
     CategoryLabelListPipe,
@@ -66,7 +64,6 @@ import {
     UserNamePipe,
   ],
   exports: [
-    ActionButtonsComponent,
     CategoryIconPipe,
     CategoryIdConverterPipe,
     CategoryLabelListPipe,

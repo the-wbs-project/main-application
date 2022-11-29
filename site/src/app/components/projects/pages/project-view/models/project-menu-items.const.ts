@@ -1,95 +1,108 @@
+import {
+  faArrowDown,
+  faArrowLeft,
+  faArrowRight,
+  faArrowUp,
+  faClone,
+  faDownload,
+  faEye,
+  faPencil,
+  faPlus,
+  faTrashAlt,
+  faUpload,
+} from '@fortawesome/pro-solid-svg-icons';
 import { ActionMenuItem } from '@wbs/core/models';
-import { PAGE_VIEW } from './page-view.const';
+import { PROJECT_PAGE_VIEW } from './project-page-view.const';
 
-export const MenuItems = {
+export const PROJECT_MENU_ITEMS = {
   phaseActions: <ActionMenuItem[]>[
     {
       action: 'editPhases',
-      icon: 'fa-pencil',
+      icon: faPencil,
       title: 'Projects.EditPhases',
     },
     {
       action: 'editDisciplines',
-      icon: 'fa-pencil',
+      icon: faPencil,
       title: 'Projects.EditDisciplines',
     },
     {
       action: 'cancel',
-      icon: 'fa-trash-alt',
+      icon: faTrashAlt,
       title: 'Projects.CancelProject',
     },
   ],
   phaseTreeActions: <ActionMenuItem[]>[
     {
       action: 'download',
-      icon: 'fa-download',
+      icon: faDownload,
       title: 'General.Download',
     },
     {
       action: 'upload',
-      icon: 'fa-upload',
+      icon: faUpload,
       title: 'General.Upload',
     },
   ],
   phaseItemActions: <ActionMenuItem[]>[
     {
       action: 'addSub',
-      icon: 'fa-plus',
+      icon: faPlus,
       tooltip: 'Projects.AddSubTask',
     },
     {
-      action: 'editTask',
-      icon: 'fa-pencil',
-      tooltip: 'Projects.EditTask',
+      action: 'viewTask',
+      icon: faEye,
+      tooltip: 'Projects.ViewTask',
     },
     {
       action: 'cloneTask',
-      icon: 'fa-clone',
+      icon: faClone,
       tooltip: 'Projects.CloneTask',
     },
     {
       action: 'deleteTask',
-      icon: 'fa-trash-alt',
+      icon: faTrashAlt,
       tooltip: 'Projects.DeleteTask',
     },
   ],
   phaseItemNavActions: <ActionMenuItem[]>[
     {
       action: 'moveLeft',
-      icon: 'fa-arrow-left',
+      icon: faArrowLeft,
       tooltip: 'Projects.MoveLeft',
     },
     {
       action: 'moveUp',
-      icon: 'fa-arrow-up',
+      icon: faArrowUp,
       tooltip: 'Projects.MoveUp',
     },
     {
       action: 'moveDown',
-      icon: 'fa-arrow-down',
+      icon: faArrowDown,
       tooltip: 'Projects.MoveDown',
     },
     {
       action: 'moveRight',
-      icon: 'fa-arrow-right',
+      icon: faArrowRight,
       tooltip: 'Projects.MoveRight',
     },
   ],
   projectLinks: [
     {
-      fragment: PAGE_VIEW.ABOUT,
+      fragment: PROJECT_PAGE_VIEW.ABOUT,
       title: 'General.About',
     },
     {
-      fragment: PAGE_VIEW.PHASES,
+      fragment: PROJECT_PAGE_VIEW.PHASES,
       title: 'General.Phases',
     },
     {
-      fragment: PAGE_VIEW.DISCIPLINES,
+      fragment: PROJECT_PAGE_VIEW.DISCIPLINES,
       title: 'General.Disciplines',
     },
     {
-      fragment: PAGE_VIEW.TIMELINE,
+      fragment: PROJECT_PAGE_VIEW.TIMELINE,
       title: 'General.Timeline',
     },
   ],

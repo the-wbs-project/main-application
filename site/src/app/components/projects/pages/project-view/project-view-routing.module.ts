@@ -5,13 +5,22 @@ import {
   ProjectTimelineVerifyGuard,
   ProjectVerifyGuard,
 } from '../../guards';
-import { ProjectRedirectGuard, ProjectViewGuard } from './guards';
-import { PAGE_VIEW } from './models';
+import {
+  ProjectRedirectGuard,
+  ProjectViewGuard,
+  TaskVerifyGuard,
+  TaskViewGuard,
+} from './guards';
+import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from './models';
 import {
   ProjectAboutPageComponent,
   ProjectDisciplinesPageComponent,
   ProjectPhasesPageComponent,
   ProjectTimelinePageComponent,
+  TaskAboutComponent,
+  TaskSubTasksComponent,
+  TaskTestComponent,
+  TaskViewComponent,
 } from './pages';
 import { ProjectViewLayoutComponent } from './project-view-layout.component';
 
@@ -19,7 +28,11 @@ export const routes: Routes = [
   {
     path: '',
     component: ProjectViewLayoutComponent,
-    canActivate: [ProjectResourceGuard, ProjectVerifyGuard],
+    canActivate: [
+      ProjectResourceGuard,
+      ProjectVerifyGuard,
+      ProjectTimelineVerifyGuard,
+    ],
     children: [
       {
         path: '',
@@ -32,7 +45,7 @@ export const routes: Routes = [
         canActivate: [ProjectViewGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: PAGE_VIEW.ABOUT,
+          view: PROJECT_PAGE_VIEW.ABOUT,
         },
       },
       {
@@ -41,8 +54,38 @@ export const routes: Routes = [
         canActivate: [ProjectViewGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: PAGE_VIEW.PHASES,
+          view: PROJECT_PAGE_VIEW.PHASES,
         },
+        children: [
+          {
+            path: 'task/:taskId',
+            component: TaskViewComponent,
+            canActivate: [TaskVerifyGuard],
+            data: {
+              title: 'ProjectUpload.PagesUploadProjectPlan',
+            },
+            children: [
+              {
+                path: 'about',
+                component: TaskAboutComponent,
+                canActivate: [TaskViewGuard],
+                data: {
+                  title: 'ProjectUpload.PagesUploadProjectPlan',
+                  view: TASK_PAGE_VIEW.ABOUT,
+                },
+              },
+              {
+                path: 'sub-tasks',
+                component: TaskSubTasksComponent,
+                canActivate: [TaskViewGuard],
+                data: {
+                  title: 'ProjectUpload.PagesUploadProjectPlan',
+                  view: TASK_PAGE_VIEW.SUB_TASKS,
+                },
+              },
+            ],
+          },
+        ],
       },
       {
         path: 'disciplines',
@@ -50,16 +93,25 @@ export const routes: Routes = [
         canActivate: [ProjectViewGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: PAGE_VIEW.DISCIPLINES,
+          view: PROJECT_PAGE_VIEW.DISCIPLINES,
         },
       },
       {
         path: 'timeline',
         component: ProjectTimelinePageComponent,
-        canActivate: [ProjectViewGuard, ProjectTimelineVerifyGuard],
+        canActivate: [ProjectViewGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: PAGE_VIEW.TIMELINE,
+          view: PROJECT_PAGE_VIEW.TIMELINE,
+        },
+      },
+      {
+        path: 'task/:taskId/:view',
+        component: TaskViewComponent,
+        canActivate: [TaskVerifyGuard, TaskViewGuard],
+        data: {
+          title: 'ProjectUpload.PagesUploadProjectPlan',
+          view: PROJECT_PAGE_VIEW.TIMELINE,
         },
       },
     ],

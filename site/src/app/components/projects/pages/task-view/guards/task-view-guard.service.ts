@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TaskPageChanged } from '../task-view.actions';
+import { TaskPageChanged } from '../../project-view/actions';
 
 @Injectable()
 export class TaskViewGuard implements CanActivate {
