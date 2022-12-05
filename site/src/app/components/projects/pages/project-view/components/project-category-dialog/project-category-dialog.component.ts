@@ -26,7 +26,6 @@ export class ProjectCategoryDialogComponent {
     this.title = data.title;
     this.categoryType = data.categoryType;
     this.categories = this.catService.build(data.categoryType, data.categories);
-    console.log(this.categories);
   }
 
   save() {

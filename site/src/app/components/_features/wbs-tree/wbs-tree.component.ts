@@ -8,6 +8,7 @@ import {
   OnDestroy,
   Output,
   Renderer2,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -64,7 +65,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   @Input() project?: Project | null;
   @Input() width?: number | null;
   @Input() detailsUrlPrefix?: string[];
-  @Input() expandedKeys: string[] = [];
+  @Input() expandedKeys?: string[];
   @Input() isDraggable = true;
   @Output() readonly actionClicked = new EventEmitter<string>();
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
@@ -76,6 +77,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   draggedRowEl!: HTMLTableRowElement;
   draggedItem!: WbsNodeView;
   targetedItem!: WbsNodeView;
+  expandedKeys2: string[] = [];
   settings: SelectableSettings = {
     enabled: true,
     mode: 'row',
@@ -100,7 +102,11 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
     this.mess.success(v, false);
   }
 
-  ngOnChanges(): void {
+  ngOnChanges(changes: SimpleChanges): void {
+    if (Object.keys(changes).indexOf('expandedKeys') > -1) {
+      if (this.expandedKeys && this.expandedKeys2.length === 0)
+        this.expandedKeys2.push(...this.expandedKeys);
+    }
     if (!this.nodes) return;
 
     this.tree$.next(JSON.parse(JSON.stringify(this.nodes)));

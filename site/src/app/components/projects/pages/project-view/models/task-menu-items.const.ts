@@ -8,28 +8,20 @@ import { ActionMenuItem } from '@wbs/core/models';
 import { TASK_PAGE_VIEW } from './task-page-view.const';
 
 export const TASK_MENU_ITEMS = {
-  actions: <ActionMenuItem[]>[
-    {
+  actions: <{ [id: string]: ActionMenuItem }>{
+    addSubTask: {
       action: 'addSub',
       icon: faPlus,
       title: 'Projects.AddSubTask',
     },
-    {
-      action: 'view',
-      icon: faEye,
-      title: 'Projects.ViewTask',
-    },
-    {
-      action: 'clone',
-      icon: faClone,
-      title: 'Projects.CloneTask',
-    },
-    {
-      action: 'delete',
+    view: { action: 'viewTask', icon: faEye, title: 'Projects.ViewTask' },
+    clone: { action: 'cloneTask', icon: faClone, title: 'Projects.CloneTask' },
+    delete: {
+      action: 'deleteTask',
       icon: faTrashAlt,
       title: 'Projects.DeleteTask',
     },
-  ],
+  },
   links: [
     {
       fragment: TASK_PAGE_VIEW.ABOUT,

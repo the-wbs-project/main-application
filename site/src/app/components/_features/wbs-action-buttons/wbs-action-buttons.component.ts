@@ -1,5 +1,4 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
@@ -10,8 +9,8 @@ import { ActionMenuItem } from '@wbs/core/models';
       *ngFor="let item of items"
       class="btn btn-white btn-outline-primary"
       (click)="clicked.emit(item.action)"
-      [ngbTooltip]="item.tooltip ?? '' | translate"
-      container="body"
+      [ngbTooltip]="item.title ?? '' | translate"
+      placement="bottom"
     >
       <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon>
       <span *ngIf="showTitle && item.title">

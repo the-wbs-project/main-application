@@ -1,5 +1,7 @@
 <div *ngIf="tree$ | async; let tree">
-  <div class="tx-italic tx-10">Double-click to see more details.</div>
+  <div class="tx-italic tx-10">
+    {{ "Projects.TreeInstructions" | translate }}
+  </div>
   <kendo-treelist
     #treelist
     [kendoTreeListFlatBinding]="tree"
@@ -7,7 +9,7 @@
     idField="treeId"
     kendoTreeListExpandable
     [initiallyExpanded]="false"
-    [(expandedKeys)]="expandedKeys"
+    [(expandedKeys)]="expandedKeys2"
     kendoTreeListSelectable
     [selectable]="settings"
     (expand)="onToggle()"
@@ -42,7 +44,7 @@
     <kendo-treelist-column
       *ngIf="view === 'discipline'"
       field="sameAsLevelText"
-      [title]="'Same As'"
+      title="Same As"
       [width]="100"
       class="level-column"
       headerClass="level-header-column"

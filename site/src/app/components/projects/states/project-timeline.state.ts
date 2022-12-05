@@ -110,7 +110,6 @@ export class ProjectTimelineState {
   ): Observable<void> {
     const state = ctx.getState();
 
-    console.log(state.projectId);
     return this.data.activities
       .putAsync(state.projectId!, action.data, action.dataType)
       .pipe(

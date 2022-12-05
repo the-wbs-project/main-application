@@ -3,7 +3,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { TaskCreateService } from '@wbs/components/_features/task-create';
 import { TaskDeleteService } from '@wbs/components/_features/task-delete';
-import { TimelineMenuItem } from '@wbs/core/models';
+import { ProjectCategory, TimelineMenuItem } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
   ChangeProjectTitle,
@@ -20,11 +20,14 @@ import {
 } from '../../../actions';
 import { ProjectState } from '../../../states';
 import { DownloadNodes, EditDisciplines, EditPhases } from '../actions';
+import { PROJECT_PAGE_VIEW } from '../models';
 import { ProjectViewState } from '../states';
+import { ProjectNavigationService } from './project-navigation.service';
 
 @Injectable()
 export class ProjectViewService {
   constructor(
+    private readonly nav: ProjectNavigationService,
     private readonly store: Store,
     private readonly taskCreate: TaskCreateService,
     private readonly taskDelete: TaskDeleteService
@@ -34,8 +37,11 @@ export class ProjectViewService {
     return this.store.selectSnapshot(ProjectState.current)!.id;
   }
 
-  private get nodeView(): string {
-    return this.store.selectSnapshot(ProjectViewState.viewNode)!;
+  private get projectDisciplines(): ProjectCategory[] {
+    return (
+      this.store.selectSnapshot(ProjectState.current)!.categories.discipline ??
+      []
+    );
   }
 
   saveTitle(newTitle: string): void {
@@ -46,14 +52,14 @@ export class ProjectViewService {
     if (action === 'download') {
       this.store.dispatch(new DownloadNodes());
     } else if (action === 'upload') {
-      this.store.dispatch(new Navigate(['projects', this.projectId, 'upload']));
+      this.nav.toProject(this.projectId, PROJECT_PAGE_VIEW.UPLOAD);
     } else if (action === 'editPhases') {
       this.store.dispatch(new EditPhases());
     } else if (action === 'editDisciplines') {
       this.store.dispatch(new EditDisciplines());
     } else if (taskId) {
       if (action === 'addSub') {
-        this.taskCreate.open().subscribe((results) => {
+        this.taskCreate.open(this.projectDisciplines).subscribe((results) => {
           if (results?.model)
             this.store.dispatch(
               new CreateTask(taskId, results.model, results.nav)
@@ -62,17 +68,7 @@ export class ProjectViewService {
       } else if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(taskId));
       } else if (action === 'viewTask') {
-        this.store.dispatch(
-          new Navigate([
-            'projects',
-            this.projectId,
-            'view',
-            this.nodeView == 'phase' ? 'phases' : 'disciplines',
-            'task',
-            taskId,
-            'about',
-          ])
-        );
+        this.nav.toTask(taskId);
       } else if (action === 'deleteTask') {
         this.taskDelete.open().subscribe((reason) => {
           if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));

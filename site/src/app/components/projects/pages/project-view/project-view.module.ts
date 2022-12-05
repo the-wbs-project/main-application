@@ -15,6 +15,7 @@ import { TaskDeleteModule } from '@wbs/components/_features/task-delete';
 import { TextEditorModule } from '@wbs/components/_features/text-editor/text-editor.module';
 import { TextareaEditorModule } from '@wbs/components/_features/textarea-editor/textarea-editor.module';
 import { TimelineModule } from '@wbs/components/_features/timeline';
+import { WbsActionButtonsModule } from '@wbs/components/_features/wbs-action-buttons';
 import { WbsTreeModule } from '@wbs/components/_features/wbs-tree';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
@@ -27,6 +28,7 @@ import {
   ProjectCategoryDialogComponent,
   ProjectPhasesComponent,
   ProjectRoleComponent,
+  TaskDetailsComponent,
   TaskModalComponent,
   Timeline1Component,
 } from './components';
@@ -49,6 +51,7 @@ import {
 import {
   RoleIconPipe,
   RoleTitlePipe,
+  TaskDetailsActionsPipe,
   TaskMenuPipe,
   UserEmailPipe,
   UserNamePipe,
@@ -83,6 +86,7 @@ import { ProjectViewState, TaskViewState } from './states';
     TextBoxModule,
     TextEditorModule,
     TimelineModule,
+    WbsActionButtonsModule,
     WbsTreeModule,
   ],
   providers: [
@@ -111,6 +115,8 @@ import { ProjectViewState, TaskViewState } from './states';
     RoleIconPipe,
     RoleTitlePipe,
     TaskAboutComponent,
+    TaskDetailsActionsPipe,
+    TaskDetailsComponent,
     TaskMenuPipe,
     TaskModalComponent,
     TaskSubTasksComponent,

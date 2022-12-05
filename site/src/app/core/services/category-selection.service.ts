@@ -87,8 +87,6 @@ export class CategorySelectionService {
     }
     this.renumber(items);
 
-    console.log(categories);
-    console.log(items);
     return items;
   }
 

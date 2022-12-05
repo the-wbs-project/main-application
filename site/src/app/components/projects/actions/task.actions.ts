@@ -1,10 +1,4 @@
-import {
-  ProjectCategory,
-  ProjectUploadData,
-  PROJECT_NODE_VIEW_TYPE,
-  WbsNode,
-} from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { WbsNode } from '@wbs/core/models';
 
 export class RemoveTask {
   static readonly type = '[Project] Remove Task';
@@ -13,6 +7,11 @@ export class RemoveTask {
     readonly reason: string,
     readonly completedAction?: any
   ) {}
+}
+
+export class NavigateToTask {
+  static readonly type = '[Task] Navigate To';
+  constructor(readonly nodeId: string) {}
 }
 
 export class CloneTask {
@@ -55,6 +54,11 @@ export class CreateTask {
   constructor(
     readonly parentId: string,
     readonly model: Partial<WbsNode>,
-    readonly nav: boolean
+    readonly navigateTo: boolean
   ) {}
+}
+
+export class SaveTask {
+  static readonly type = '[Project] Save Task';
+  constructor(readonly task: WbsNode) {}
 }

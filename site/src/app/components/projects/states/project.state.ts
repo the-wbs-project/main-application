@@ -24,6 +24,7 @@ import {
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
+  NavigateToTask,
   NavigateToView,
   RebuildNodeViews,
   RemoveTask,
@@ -34,6 +35,7 @@ import {
   VerifyProject,
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
+import { ProjectManagementService } from '../services';
 
 interface StateModel {
   current?: Project;
@@ -51,6 +53,7 @@ export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
+    private readonly service: ProjectManagementService,
     private readonly transformers: WbsTransformers
   ) {}
 
@@ -97,7 +100,6 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     { projectId }: VerifyProject
   ): Observable<void> {
-    console.log('verifying');
     const state = ctx.getState();
 
     return state.current?.id !== projectId
@@ -526,7 +528,7 @@ export class ProjectState {
     let node = this.copy(nodes[index]);
 
     const original = node.description;
-    node.description  = action.description;
+    node.description = action.description;
 
     return this.saveTask(ctx, node).pipe(
       map(() => {
@@ -547,7 +549,7 @@ export class ProjectState {
           action: TASK_ACTIONS.DESCRIPTION_CHANGED,
         })
       ),
-      tap(() => this.messaging.success('Projects.TaskTitleUpdated'))
+      tap(() => this.messaging.success('Projects.TaskDescriptionUpdated'))
     );
   }
 
@@ -651,26 +653,10 @@ export class ProjectState {
   createTask(
     ctx: StateContext<StateModel>,
     action: CreateTask
-  ): Observable<any> | void {
-    const project = ctx.getState().current!;
-    const nodes = ctx.getState().nodes!;
-    const siblings = nodes.filter((x) => x.parentId === action.parentId);
-    let order = 0;
-
-    for (const x of siblings) {
-      if (x.order > order) order = x.order;
-    }
-    order++;
-
-    const model: WbsNode = {
-      id: IdService.generate(),
-      parentId: action.parentId,
-      description: action.model.description,
-      disciplineIds: action.model.disciplineIds,
-      title: action.model.title,
-      _ts: 0,
-      order,
-    };
+  ): Observable<any> {
+    const state = ctx.getState();
+    const nodes = state.nodes!;
+    const model = this.service.createTask(action.parentId, action.model, nodes);
 
     return this.saveTask(ctx, model).pipe(
       map(() => {
@@ -692,11 +678,7 @@ export class ProjectState {
       ),
       tap(() => this.messaging.success('Projects.TaskCreated')),
       switchMap(() =>
-        action.nav
-          ? ctx.dispatch(
-              new Navigate(['/projects', project.id, 'task', model.id])
-            )
-          : of()
+        action.navigateTo ? ctx.dispatch(new NavigateToTask(model.id)) : of()
       )
     );
   }

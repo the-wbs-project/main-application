@@ -102,6 +102,9 @@ export class ProjectViewState {
       .openDialog<ProjectCategory[] | undefined>(
         ProjectCategoryDialogComponent,
         {
+          scrollable: true,
+        },
+        {
           title: 'General.Phases',
           categoryType: PROJECT_NODE_VIEW.PHASE,
           categories: project.categories.phase,
@@ -121,6 +124,9 @@ export class ProjectViewState {
     return this.dialog
       .openDialog<ProjectCategory[] | undefined>(
         ProjectCategoryDialogComponent,
+        {
+          scrollable: true,
+        },
         {
           title: 'General.Phases',
           categoryType: PROJECT_NODE_VIEW.DISCIPLINE,

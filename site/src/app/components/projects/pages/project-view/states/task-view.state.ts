@@ -18,6 +18,8 @@ import { Observable, Subscription, tap } from 'rxjs';
 import { ProjectState } from '../../../states';
 import { TASK_PAGE_VIEW_TYPE } from '../models';
 import { TaskPageChanged, VerifyTask } from '../actions';
+import { ProjectNavigationService } from '../services';
+import { NavigateToTask } from '@wbs/components/projects/actions';
 
 interface StateModel {
   current?: WbsNode;
@@ -25,6 +27,7 @@ interface StateModel {
   id?: string;
   nextTaskId?: string;
   pageView?: TASK_PAGE_VIEW_TYPE;
+  parent?: WbsNodeView;
   phases?: WbsNodeView[];
   previousTaskId?: string;
   subTasks?: WbsNodeView[];
@@ -40,7 +43,10 @@ interface StateModel {
   defaults: {},
 })
 export class TaskViewState implements NgxsOnInit {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly nav: ProjectNavigationService,
+    private readonly store: Store
+  ) {}
 
   @Selector()
   static current(state: StateModel): WbsNode | undefined {
@@ -55,6 +61,11 @@ export class TaskViewState implements NgxsOnInit {
   @Selector()
   static pageView(state: StateModel): TASK_PAGE_VIEW_TYPE | undefined {
     return state.pageView;
+  }
+
+  @Selector()
+  static parent(state: StateModel): WbsNodeView | undefined {
+    return state.parent;
   }
 
   @Selector()
@@ -132,6 +143,11 @@ export class TaskViewState implements NgxsOnInit {
     });
   }
 
+  @Action(NavigateToTask)
+  navigateToTask({}: StateContext<StateModel>, action: NavigateToTask): void {
+    this.nav.toTask(action.nodeId);
+  }
+
   private getSubTasks(
     phaseViews: WbsNodeView[],
     taskId: string
@@ -183,12 +199,15 @@ export class TaskViewState implements NgxsOnInit {
         : state.phases!;
 
     const nodeIndex = nodes.findIndex((x) => x.id === state.id);
+    const view = nodes[nodeIndex];
+    const parent = nodes.find((x) => x.id === view.parentId);
 
     ctx.patchState({
+      view,
+      parent,
       //activity: activity.sort(this.sortActivity),
       current: state.tasks.find((x) => x.id === state.id),
       subTasks: this.getSubTasks(nodes, state.id),
-      view: nodes[nodeIndex],
       previousTaskId: nodeIndex === 0 ? undefined : nodes[nodeIndex - 1].id,
       nextTaskId:
         nodeIndex + 1 === nodes.length ? undefined : nodes[nodeIndex + 1].id,

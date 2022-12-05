@@ -3,6 +3,7 @@ export enum PROJECT_PAGE_VIEW {
   PHASES = 'phases',
   DISCIPLINES = 'disciplines',
   TIMELINE = 'timeline',
+  UPLOAD = 'upload',
 }
 
 export type PROJECT_PAGE_VIEW_TYPE =

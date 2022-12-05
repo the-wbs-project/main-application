@@ -1,5 +1,5 @@
 <kendo-splitter style="height: 100%">
-  <kendo-splitter-pane [scrollable]="true" class="panel-bg">
+  <kendo-splitter-pane [resizable]="true" [scrollable]="true" class="panel-bg">
     <div class="card custom-card">
       <div class="card-body pd-0">
         <div *ngIf="current$ | async; let task">
@@ -32,8 +32,16 @@
     </div>
   </kendo-splitter-pane>
 
-  <kendo-splitter-pane [scrollable]="true" [collapsible]="true" size="200px">
-    <h3>Inner splitter / right pane</h3>
-    <p>Resizable and collapsible.</p>
+  <kendo-splitter-pane
+    [resizable]="true"
+    [scrollable]="true"
+    [collapsible]="true"
+    size="200px"
+  >
+    <wbs-task-details
+      *ngIf="current$ | async; let task"
+      [task]="task"
+      [parent]="parent$ | async"
+    ></wbs-task-details>
   </kendo-splitter-pane>
 </kendo-splitter>
