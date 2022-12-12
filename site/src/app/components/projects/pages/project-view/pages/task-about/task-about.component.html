@@ -1,0 +1,10 @@
+<ng-template [ngIf]="current$ | async" let-task>
+  <p class="tx-12 tx-bold mg-b-10">Description</p>
+  <p>
+    <wbs-textarea-editor
+      [value]="task.description ?? ''"
+      noValueMessage="Add description here..."
+      (valueChange)="saveDescription($event)"
+    ></wbs-textarea-editor>
+  </p>
+</ng-template>

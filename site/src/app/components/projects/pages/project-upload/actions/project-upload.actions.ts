@@ -14,8 +14,8 @@ export class FileUploaded {
   constructor(readonly file: File) {}
 }
 
-export class LoadMsProjectFile {
-  static readonly type = '[Project Upload] Load MS Project File';
+export class LoadProjectFile {
+  static readonly type = '[Project Upload] Load Project File';
 }
 
 export class ProcessFile {

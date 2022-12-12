@@ -4,7 +4,7 @@ import { Project } from '@wbs/core/models';
 import { TitleService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { ProjectState } from '../../states';
-import { MenuItems, PAGE_VIEW_TYPE } from './models';
+import { PROJECT_MENU_ITEMS, PROJECT_PAGE_VIEW_TYPE } from './models';
 import { ProjectViewService } from './services';
 import { ProjectViewState } from './states';
 
@@ -14,10 +14,11 @@ import { ProjectViewState } from './states';
 })
 export class ProjectViewLayoutComponent {
   @Select(ProjectState.current) project$!: Observable<Project>;
-  @Select(ProjectViewState.pageView) pageView$!: Observable<PAGE_VIEW_TYPE>;
+  @Select(ProjectViewState.pageView)
+  pageView$!: Observable<PROJECT_PAGE_VIEW_TYPE>;
 
-  readonly links = MenuItems.projectLinks;
-  readonly actions = MenuItems.phaseActions;
+  readonly links = PROJECT_MENU_ITEMS.projectLinks;
+  readonly actions = PROJECT_MENU_ITEMS.phaseActions;
 
   constructor(title: TitleService, readonly service: ProjectViewService) {
     title.setTitle('Project', false);

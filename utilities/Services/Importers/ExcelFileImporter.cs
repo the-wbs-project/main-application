@@ -31,7 +31,7 @@ namespace Wbs.Utilities.Services.Importers
                 var results = new UploadResults
                 {
                     errors = TestSheet(sheet),
-                    results = new List<WbsNodeView>()
+                    results = new List<ProjectImportResults>()
                 };
 
                 if (results.errors.Count > 0) return results;
@@ -39,12 +39,12 @@ namespace Wbs.Utilities.Services.Importers
 
                 while (sheet.GetValue(row, 1) != null)
                 {
-                    var obj = new WbsPhaseView();
+                    var obj = new ProjectImportResults();
                     var sync = sheet.GetValue<string>(row, 17)?.ToLower();
 
                     obj.levelText = sheet.GetValue<string>(row, 1)?.Trim();
-                    obj.description = sheet.GetValue<string>(row, 18)?.Trim();
-                    obj.syncWithDisciplines = sync == "y" || sync == "yes";
+                    obj.title = sheet.GetValue<string>(row, 18)?.Trim();
+                    //obj.syncWithDisciplines = sync == "y" || sync == "yes";
 
                     for (var i = 1; i <= 10; i++)
                     {
@@ -62,15 +62,10 @@ namespace Wbs.Utilities.Services.Importers
 
                         if (string.IsNullOrEmpty(text)) break;
 
-                        var discipline = disciplines.FirstOrDefault(x => x.Value.ToLower() == text).Key;
-
-                        if (discipline != null)
-                        {
-                            if (obj.disciplines == null)
-                                obj.disciplines = new List<string> { discipline };
-                            else
-                                obj.disciplines.Add(discipline);
-                        }
+                        if (obj.resources == null)
+                            obj.resources = new List<string> { text };
+                        else
+                            obj.resources.Add(text);
                     }
                     results.results.Add(obj);
                     row++;

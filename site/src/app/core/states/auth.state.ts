@@ -28,9 +28,7 @@ export interface AuthBucket {
 export class AuthState implements NgxsOnInit {
   private readonly authFlag = 'isLoggedIn';
 
-  constructor(private readonly data: DataServiceFactory) {
-    console.log(window.location);
-  }
+  constructor(private readonly data: DataServiceFactory) {}
 
   @Selector()
   static isAdmin(state: AuthBucket): boolean {

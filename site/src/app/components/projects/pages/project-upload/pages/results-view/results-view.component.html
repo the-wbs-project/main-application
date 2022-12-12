@@ -1,0 +1,47 @@
+<div class="w-100 text-center">
+  <ng-template [ngIf]="loading$ | async">
+    <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true">
+    </fa-duotone-icon>
+    <h3 *ngIf="isXlsx$ | async" class="pd-t-20">Loading Excel File...</h3>
+    <h3 *ngIf="isMpp$ | async" class="pd-t-20">Loading MS Project File...</h3>
+  </ng-template>
+
+  <ng-template [ngIf]="!(loading$ | async)">
+    <fa-icon [icon]="faCheck" size="5x"></fa-icon>
+    <h3 *ngIf="isXlsx$ | async" class="pd-t-20">Loaded Excel File</h3>
+    <h3 *ngIf="isMpp$ | async" class="pd-t-20">Loaded MS Project File</h3>
+    <h5 *ngIf="errors$ | async" class="pd-t-20">
+      Unexpected errors occured uploading the file. More explanations of these
+      errors at a later time
+    </h5>
+    <ng-template [ngIf]="!(errors$ | async)">
+      <ul
+        *ngIf="stats$ | async; let stats"
+        class="list-group pd-t-20 wd-300 display-ib"
+      >
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          Tasks
+          <span>{{ stats.tasks }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          Phases
+          <span>{{ stats.phases }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center"
+        >
+          People
+          <span>{{ stats.people }}</span>
+        </li>
+      </ul>
+      <br />
+      <a class="btn btn-primary mg-t-20" [routerLink]="'../options'">
+        {{ "General.Continue" | translate }}
+      </a>
+    </ng-template>
+  </ng-template>
+</div>

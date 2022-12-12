@@ -4,7 +4,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { PAGE_VIEW } from '../models';
+import { PROJECT_PAGE_VIEW } from '../models';
 
 @Injectable()
 export class ProjectRedirectGuard implements CanActivate {
@@ -17,7 +17,7 @@ export class ProjectRedirectGuard implements CanActivate {
           'projects',
           route.params['projectId'],
           'view',
-          PAGE_VIEW.ABOUT,
+          PROJECT_PAGE_VIEW.ABOUT,
         ])
       )
       .pipe(map(() => true));

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
 import { from, Observable } from 'rxjs';
 import { Resources } from './resource.service';
 
@@ -41,8 +41,13 @@ export class DialogService {
     });
   }
 
-  openDialog<T>(component: any, data?: any): Observable<T> {
+  openDialog<T>(
+    component: any,
+    options?: NgbModalOptions,
+    data?: any
+  ): Observable<T> {
     const dialog = this.modalService.open(component, {
+      ...options,
       ariaLabelledBy: 'modal-title',
     });
 

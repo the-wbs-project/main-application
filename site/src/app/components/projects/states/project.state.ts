@@ -16,6 +16,7 @@ import {
   ChangeProjectDisciplines,
   ChangeProjectPhases,
   ChangeProjectTitle,
+  ChangeTaskDescription,
   ChangeTaskTitle,
   CloneTask,
   CreateTask,
@@ -23,6 +24,7 @@ import {
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
+  NavigateToTask,
   NavigateToView,
   RebuildNodeViews,
   RemoveTask,
@@ -33,6 +35,7 @@ import {
   VerifyProject,
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
+import { ProjectManagementService } from '../services';
 
 interface StateModel {
   current?: Project;
@@ -48,10 +51,9 @@ interface StateModel {
 })
 export class ProjectState {
   constructor(
-    //private readonly containers: ContainerService,
     private readonly data: DataServiceFactory,
-    //private readonly dialog: DialogService,
     private readonly messaging: Messages,
+    private readonly service: ProjectManagementService,
     private readonly transformers: WbsTransformers
   ) {}
 
@@ -98,7 +100,6 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     { projectId }: VerifyProject
   ): Observable<void> {
-    console.log('verifying');
     const state = ctx.getState();
 
     return state.current?.id !== projectId
@@ -511,6 +512,47 @@ export class ProjectState {
     );
   }
 
+  @Action(ChangeTaskDescription)
+  changeTaskDescription(
+    ctx: StateContext<StateModel>,
+    action: ChangeTaskDescription
+  ): Observable<void> | void {
+    const nodes = ctx.getState().nodes;
+
+    if (!nodes) return;
+
+    const index = nodes.findIndex((x) => x.id === action.taskId);
+
+    if (index === -1) return;
+
+    let node = this.copy(nodes[index]);
+
+    const original = node.description;
+    node.description = action.description;
+
+    return this.saveTask(ctx, node).pipe(
+      map(() => {
+        nodes[index] = node;
+
+        ctx.patchState({
+          nodes,
+        });
+      }),
+      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() =>
+        this.saveActivity(ctx, {
+          data: {
+            from: original,
+            to: action.description,
+          },
+          objectId: action.taskId,
+          action: TASK_ACTIONS.DESCRIPTION_CHANGED,
+        })
+      ),
+      tap(() => this.messaging.success('Projects.TaskDescriptionUpdated'))
+    );
+  }
+
   @Action(TreeReordered)
   treeReordered(
     ctx: StateContext<StateModel>,
@@ -611,26 +653,10 @@ export class ProjectState {
   createTask(
     ctx: StateContext<StateModel>,
     action: CreateTask
-  ): Observable<any> | void {
-    const project = ctx.getState().current!;
-    const nodes = ctx.getState().nodes!;
-    const siblings = nodes.filter((x) => x.parentId === action.parentId);
-    let order = 0;
-
-    for (const x of siblings) {
-      if (x.order > order) order = x.order;
-    }
-    order++;
-
-    const model: WbsNode = {
-      id: IdService.generate(),
-      parentId: action.parentId,
-      description: action.model.description,
-      disciplineIds: action.model.disciplineIds,
-      title: action.model.title,
-      _ts: 0,
-      order,
-    };
+  ): Observable<any> {
+    const state = ctx.getState();
+    const nodes = state.nodes!;
+    const model = this.service.createTask(action.parentId, action.model, nodes);
 
     return this.saveTask(ctx, model).pipe(
       map(() => {
@@ -652,11 +678,7 @@ export class ProjectState {
       ),
       tap(() => this.messaging.success('Projects.TaskCreated')),
       switchMap(() =>
-        action.nav
-          ? ctx.dispatch(
-              new Navigate(['/projects', project.id, 'task', model.id])
-            )
-          : of()
+        action.navigateTo ? ctx.dispatch(new NavigateToTask(model.id)) : of()
       )
     );
   }
@@ -669,7 +691,14 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     data: ActivityData
   ): Observable<void> {
-    return ctx.dispatch(new SaveTimelineAction(data, 'project'));
+    return ctx.dispatch(
+      new SaveTimelineAction(
+        {
+          ...data,
+        },
+        'project'
+      )
+    );
   }
 
   private saveProject(

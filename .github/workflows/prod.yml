@@ -85,5 +85,5 @@ jobs:
           MAILGUN_API_KEY: ${{ secrets.CFW_MAILGUN_API_KEY }}
           MAILGUN_API_BASE_URL: ${{ secrets.CFW_MAILGUN_API_BASE_URL }}
           COSMOS: ${{ secrets.CFW_PROD_COSMOS }}
-          AZURE: ${{ secrets.CFW_PROD_AZURE }}
+          AZURE: ${{ secrets.CFW_AZURE }}
           AUTH: ${{ secrets.CFW_PROD_AUTH }}

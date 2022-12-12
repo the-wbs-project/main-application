@@ -9,7 +9,7 @@ namespace Wbs.Utilities.Services.Importers
         public UploadResults Run(byte[] file)
         {
             var reader = new UniversalProjectReader();
-            var results = new List<WbsNodeView>();
+            var results = new List<ProjectImportResults>();
 
             using (var stream = new java.io.ByteArrayInputStream(file))
             {
@@ -27,7 +27,7 @@ namespace Wbs.Utilities.Services.Importers
                             folks.Add(((net.sf.mpxj.ResourceAssignment)assignments.get(i))?.getResource()?.getName());
                         }
                     }
-                    results.Add(new WbsNodeView
+                    results.Add(new ProjectImportResults
                     {
                         title = task.getName(),
                         levelText = task.getOutlineNumber(),

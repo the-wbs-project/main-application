@@ -10,8 +10,8 @@ export class ProjectVerifyGuard implements CanActivate {
   constructor(private readonly store: Store) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<true> {
-    const id = route.params['projectId'];
-    console.log(route.params);
-    return this.store.dispatch(new VerifyProject(id)).pipe(map(() => true));
+    return this.store
+      .dispatch(new VerifyProject(route.params['projectId']))
+      .pipe(map(() => true));
   }
 }

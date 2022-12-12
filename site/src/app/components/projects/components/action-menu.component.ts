@@ -5,6 +5,7 @@ import {
   Input,
   Output,
 } from '@angular/core';
+import { faCogs } from '@fortawesome/pro-solid-svg-icons';
 import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
@@ -16,7 +17,7 @@ import { ActionMenuItem } from '@wbs/core/models';
       class="btn btn-primary pd-xs-5"
       ngbDropdownToggle
     >
-      <i class="fa-solid fa-cogs"></i>
+      <fa-icon [icon]="faCogs"></fa-icon>
     </button>
     <div ngbDropdownMenu aria-labelledby="actionMenu">
       <button
@@ -24,7 +25,7 @@ import { ActionMenuItem } from '@wbs/core/models';
         *ngFor="let item of menu"
         (click)="itemClicked.emit(item.action)"
       >
-        <i *ngIf="item.icon" class="fa-solid" [ngClass]="item.icon"></i> &nbsp;
+        <fa-icon *ngIf="item.icon" [icon]="item.icon"></fa-icon> &nbsp;
         {{ item.title ?? '' | translate }}
       </button>
     </div>
@@ -34,4 +35,6 @@ import { ActionMenuItem } from '@wbs/core/models';
 export class ActionMenuComponent {
   @Input() menu: ActionMenuItem[] = [];
   @Output() itemClicked = new EventEmitter<string>();
+
+  readonly faCogs = faCogs;
 }
