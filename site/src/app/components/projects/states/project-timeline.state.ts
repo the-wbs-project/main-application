@@ -170,7 +170,7 @@ export class ProjectTimelineState {
       id: act.id,
       menu,
       objectId: act.objectId ?? act.topLevelId,
-      timestamp: act._ts,
+      timestamp: act.timestamp,
       userId: act.userId,
     };
   }

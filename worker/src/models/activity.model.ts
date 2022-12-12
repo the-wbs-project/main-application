@@ -1,7 +1,7 @@
 export interface Activity {
   id: string;
   label: string;
-  _ts: number;
+  timestamp: number;
   userId: string;
   objectId: string;
   topLevelId: string;

@@ -192,6 +192,7 @@ export class ProjectState {
         this.saveActivity(ctx, {
           action: TASK_ACTIONS.REMOVED,
           data: {
+            title: nodes[nodeIndex].title,
             reason: action.reason,
           },
           objectId: action.nodeId,

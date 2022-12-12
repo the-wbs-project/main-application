@@ -8,6 +8,6 @@ export interface ActivityData {
 export interface Activity extends ActivityData {
   id: string;
   topLevelId: string;
-  _ts: number;
+  timestamp: number;
   userId: string;
 }
