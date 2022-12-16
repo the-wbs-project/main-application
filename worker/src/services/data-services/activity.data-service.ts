@@ -9,29 +9,6 @@ declare type ActivityDbObject = Activity & Document;
 export class ActivityDataService {
   constructor(private readonly db: DbService) {}
 
-  async fixAsync(): Promise<void> {
-    const models = await this.db.getAllAsync<ActivityDbObject>(false);
-    let fixes: Promise<any>[] = [];
-
-    if (models)
-      for (const dbModel of models) {
-        if (dbModel.timestamp !== DataServiceHelper.fixTsValue(dbModel._ts)) {
-          dbModel.timestamp = DataServiceHelper.fixTsValue(dbModel._ts);
-
-          console.log(new Date(dbModel.timestamp));
-          fixes.push(this.putAsync(dbModel));
-
-          if (fixes.length === 15) {
-            await Promise.all(fixes);
-            fixes = [];
-          }
-        }
-      }
-    if (fixes.length > 0) {
-      await Promise.all(fixes);
-    }
-  }
-
   async getAllAsync(topLevelId: string): Promise<Activity[]> {
     const models = await this.db.getAllByPartitionAsync<ActivityDbObject>(topLevelId, false);
 
