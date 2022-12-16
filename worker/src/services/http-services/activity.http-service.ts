@@ -7,8 +7,6 @@ export class ActivityHttpService extends BaseHttpService {
     try {
       if (!req.params?.topLevelId) return 500;
 
-      await req.services.data.activities.fixAsync();
-
       const data = await req.services.data.activities.getAllAsync(req.params.topLevelId);
 
       return await super.buildJson(data);
