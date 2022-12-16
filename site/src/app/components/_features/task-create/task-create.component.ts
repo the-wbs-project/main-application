@@ -1,31 +1,27 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   OnInit,
   ViewChild,
 } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { TextBoxComponent } from '@progress/kendo-angular-inputs';
-import {
-  ProjectCategory,
-  PROJECT_NODE_VIEW,
-  PROJECT_NODE_VIEW_TYPE,
-  WbsNode,
-} from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
+import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
+import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { BehaviorSubject } from 'rxjs';
 
 @Component({
   templateUrl: './task-create.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  styleUrls: ['./task-create.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Default,
 })
 export class TaskCreateComponent implements OnInit {
-  @ViewChild(TextBoxComponent, { static: false })
-  readonly titleTextBox!: TextBoxComponent;
+  @ViewChild('titleTextBox', { static: true }) titleTextBox!: ElementRef;
 
-  readonly discipline: PROJECT_NODE_VIEW_TYPE = PROJECT_NODE_VIEW.DISCIPLINE;
+  readonly discipline = PROJECT_NODE_VIEW.DISCIPLINE;
   readonly more$ = new BehaviorSubject<boolean>(false);
+
   title = '';
   description = '';
   disciplines?: CategorySelection[];
@@ -36,17 +32,7 @@ export class TaskCreateComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.focus();
-  }
-
-  private focus() {
-    if (!this.titleTextBox) {
-      setTimeout(() => {
-        this.focus();
-      }, 50);
-      return;
-    }
-    this.titleTextBox.focus();
+    (<HTMLInputElement>this.titleTextBox.nativeElement).focus();
   }
 
   setup(disciplines: ProjectCategory[]): void {

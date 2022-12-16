@@ -6,6 +6,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { NgxsModule, Store } from '@ngxs/store';
+import { DialogModule } from '@progress/kendo-angular-dialog';
+import { PopupModule } from '@progress/kendo-angular-popup';
+import { SortableModule } from '@progress/kendo-angular-sortable';
 import {
   AnalyticsService,
   AppInitializerFactory,
@@ -30,6 +33,7 @@ import { AppComponent } from './app.component';
     AppRoutingModule,
     BrowserModule,
     BrowserAnimationsModule,
+    DialogModule,
     HttpClientModule,
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
@@ -42,6 +46,8 @@ import { AppComponent } from './app.component';
       UiState,
     ]),
     NgxsRouterPluginModule.forRoot(),
+    PopupModule,
+    SortableModule,
     TranslateModule.forRoot(),
   ],
   bootstrap: [AppComponent],

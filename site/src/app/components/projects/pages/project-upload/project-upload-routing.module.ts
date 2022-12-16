@@ -6,7 +6,7 @@ import {
   DisciplinesViewComponent,
   OptionsViewComponent,
   PhaseViewComponent,
-  ProjectViewComponent,
+  ResultsViewComponent,
   SaveViewComponent,
   StartViewComponent,
 } from './pages';
@@ -29,17 +29,14 @@ export const routes: Routes = [
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          validateStart: false,
-          setStart: true,
         },
       },
       {
-        path: 'project',
-        component: ProjectViewComponent,
+        path: 'results',
+        component: ResultsViewComponent,
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          validateStart: true,
         },
       },
       {
@@ -48,7 +45,6 @@ export const routes: Routes = [
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'ProjectUpload.PagesOptions',
-          validateStart: true,
         },
       },
       {
@@ -57,7 +53,6 @@ export const routes: Routes = [
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          validateStart: true,
         },
       },
       {
@@ -66,7 +61,6 @@ export const routes: Routes = [
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          validateStart: true,
         },
       },
       {
@@ -75,7 +69,6 @@ export const routes: Routes = [
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
-          validateStart: true,
         },
       },
       {
@@ -84,7 +77,6 @@ export const routes: Routes = [
         canActivate: [ProjectUploadGuard],
         data: {
           title: 'Projects.UploadProjectPlan',
-          validateStart: true,
         },
       },
     ],

@@ -1,8 +1,3 @@
-<!--
-    minWidth="500px"
-    maxWidth="80%"
-    maxHeight="80%"
--->
 <div class="modal-header">
   <h4 class="modal-title" id="modal-title">
     {{ "Projects.CreateTask" | translate }}
@@ -14,18 +9,19 @@
     (click)="modal.dismiss()"
   ></button>
 </div>
-<div class="modal-body">
-  <kendo-floatinglabel
-    [ngClass]="'wd-100p'"
-    [text]="'Projects.TaskTitle' | translate"
-  >
-    <kendo-textbox
+<div class="modal-body w-100">
+  <div>
+    <label class="form-label">
+      {{ "Projects.TaskTitle" | translate }}
+    </label>
+    <input
       #titleTextBox
+      type="text"
+      class="form-control"
       [(ngModel)]="title"
       (keydown.enter)="save(false)"
-    >
-    </kendo-textbox>
-  </kendo-floatinglabel>
+    />
+  </div>
   <br />
   <br />
   <div class="wd-100p tx-right">
@@ -45,12 +41,16 @@
     </button>
   </div>
   <ng-template [ngIf]="more$ | async">
-    {{ "Projects.TaskDescription" | translate }}
+    <label class="form-label">
+      {{ "Projects.TaskDescription" | translate }}
+    </label>
 
-    <kendo-editor [(value)]="description" class="ht-250"></kendo-editor>
+    <kendo-editor [(value)]="description" [resizable]="true"></kendo-editor>
     <br />
     <br />
-    {{ "Projects.TaskDisciplines" | translate }}
+    <label class="form-label">
+      {{ "Projects.TaskDisciplines" | translate }}
+    </label>
     <app-category-list-editor
       [showButtons]="false"
       [(categories)]="disciplines"

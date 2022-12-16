@@ -10,7 +10,7 @@ export class TimelineService {
   constructor(private readonly store: Store) {}
 
   sort(a: Activity, b: Activity): number {
-    return b._ts - a._ts;
+    return b.timestamp - a.timestamp;
   }
 
   getIcon(actionId: string): string | undefined {

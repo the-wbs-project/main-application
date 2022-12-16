@@ -8,18 +8,21 @@ import {
   OnDestroy,
   Output,
   Renderer2,
+  SimpleChanges,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { faEllipsisV } from '@fortawesome/pro-solid-svg-icons';
+import { NgbPopover } from '@ng-bootstrap/ng-bootstrap';
 import {
+  CellClickEvent,
   SelectableSettings,
   SelectionChangeEvent,
   TreeListComponent,
 } from '@progress/kendo-angular-treelist';
 import { ActionMenuItem, Project } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
+import { IdService, Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
   BehaviorSubject,
@@ -52,6 +55,7 @@ import {
 export class WbsTreeComponent implements OnChanges, OnDestroy {
   protected dataReady = false;
   private newParentId!: any;
+  private currentPopover?: NgbPopover;
   private isParentDragged: boolean = false;
   private currentSubscription: Subscription | undefined;
 
@@ -61,17 +65,19 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   @Input() project?: Project | null;
   @Input() width?: number | null;
   @Input() detailsUrlPrefix?: string[];
-  @Input() expandedKeys: string[] = [];
+  @Input() expandedKeys?: string[];
   @Input() isDraggable = true;
   @Output() readonly actionClicked = new EventEmitter<string>();
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
   @Output() readonly reordered = new EventEmitter<[string, WbsNodeView[]]>();
+  @Output() readonly showDetails = new EventEmitter<string>();
   @ViewChild(TreeListComponent) treelist!: TreeListComponent;
 
   readonly id = IdService.generate();
   draggedRowEl!: HTMLTableRowElement;
   draggedItem!: WbsNodeView;
   targetedItem!: WbsNodeView;
+  expandedKeys2: string[] = [];
   settings: SelectableSettings = {
     enabled: true,
     mode: 'row',
@@ -86,12 +92,21 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
   readonly tree$ = new BehaviorSubject<WbsNodeView[] | undefined>(undefined);
 
   constructor(
+    private readonly mess: Messages,
     private readonly renderer: Renderer2,
     private readonly wbsService: WbsPhaseService,
     private readonly zone: NgZone
   ) {}
 
-  ngOnChanges(): void {
+  dbc(v: string): void {
+    this.mess.success(v, false);
+  }
+
+  ngOnChanges(changes: SimpleChanges): void {
+    if (Object.keys(changes).indexOf('expandedKeys') > -1) {
+      if (this.expandedKeys && this.expandedKeys2.length === 0)
+        this.expandedKeys2.push(...this.expandedKeys);
+    }
     if (!this.nodes) return;
 
     this.tree$.next(JSON.parse(JSON.stringify(this.nodes)));
@@ -120,6 +135,18 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
 
   rowSelected(e: SelectionChangeEvent): void {
     this.selectedChanged.emit(e.items[0].dataItem);
+  }
+
+  togglePopup(popover: NgbPopover, data: WbsNodeView): void {
+    if (this.currentPopover) this.currentPopover.close();
+
+    popover.open({ data });
+
+    this.currentPopover = popover;
+  }
+
+  cellClicked(e: CellClickEvent) {
+    console.log(e);
   }
 
   prePositionCheck(): NodeCheck {

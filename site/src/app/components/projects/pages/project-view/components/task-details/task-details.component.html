@@ -1,0 +1,72 @@
+<div class="w-100 pd-5">
+  <div class="card w-100 border bd-gray-300">
+    <div
+      class="card-header bg-gray-300 tx-bold pd-y-10 pd-x-0 tx-center rounded-0"
+    >
+      {{ "General.Details" | translate }}
+    </div>
+    <ul class="list-group list-group-flush">
+      <li class="list-group-item pd-y-5 pd-x-10 tx-center">
+        <wbs-action-buttons
+          [showTitle]="false"
+          [items]="task | taskDetailsActions"
+          (clicked)="actionClicked($event)"
+        ></wbs-action-buttons>
+      </li>
+      <li class="list-group-item pd-y-5 pd-x-10">
+        <span class="tx-10 tx-bold tx-gray-700 display-b pd-b-5">
+          {{ "General.Level" | translate }}
+        </span>
+        <span class="tx-14 mg-l-10">{{ task.levelText }}</span>
+      </li>
+      <li class="list-group-item pd-y-5 pd-x-10">
+        <span class="tx-10 tx-bold tx-gray-700 display-b pd-b-5">
+          {{ "General.Disciplines" | translate }}
+        </span>
+        <div class="tx-14">
+          <div class="mg-l-10" *ngFor="let idsOrCat of task.disciplines">
+            <span class="display-ib wd-25">
+              <i class="fa-solid fa-sm" [ngClass]="idsOrCat | disciplineIcon">
+              </i>
+            </span>
+            {{ idsOrCat | categoryLabel }}
+          </div>
+        </div>
+      </li>
+      <li class="list-group-item pd-y-5 pd-x-10">
+        <span class="tx-10 tx-bold tx-gray-700 display-b pd-b-5">
+          {{ "General.Parent" | translate }}
+        </span>
+        <span *ngIf="!parent" class="tx-14 mg-l-10">
+          {{ "General.None" | translate }}
+        </span>
+        <div class="mg-l-10">
+          <a
+            *ngIf="parent"
+            class="tx-12 text-decoration-none"
+            [routerLink]="['../', parent.id, 'about']"
+          >
+            {{ parent.title }}
+          </a>
+        </div>
+      </li>
+      <li class="list-group-item pd-y-5 pd-x-10">
+        <span class="tx-10 tx-bold tx-gray-700 display-b pd-b-5">
+          {{ "General.Children" | translate }}
+        </span>
+        <span *ngIf="task.children === 0" class="tx-14 mg-l-10">
+          {{ "General.None" | translate }}
+        </span>
+        <div class="mg-l-10">
+          <a
+            *ngIf="task.children > 0"
+            class="tx-14 text-decoration-none"
+            [routerLink]="['./', 'sub-tasks']"
+          >
+            {{ task.children }}
+          </a>
+        </div>
+      </li>
+    </ul>
+  </div>
+</div>

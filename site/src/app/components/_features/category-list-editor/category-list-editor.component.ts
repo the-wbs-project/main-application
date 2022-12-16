@@ -50,7 +50,9 @@ export class CategoryListEditorComponent {
 
   showCreate() {
     this.dialogService
-      .openDialog<[string, string] | null>(CustomDialogComponent)
+      .openDialog<[string, string] | null>(CustomDialogComponent, {
+        scrollable: true,
+      })
       .subscribe((result) => {
         console.log(result);
         if (result == null) return;

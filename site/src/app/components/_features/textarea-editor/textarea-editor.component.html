@@ -1,0 +1,56 @@
+<div class="text-editor">
+  <div
+    *ngIf="!(edit$ | async)"
+    class="text-panel text-editor-text pd-t-5 pd-l-12"
+    [style.font-size]="fontSize"
+    (click)="edit()"
+  >
+    <span *ngIf="value" [innerHtml]="value | safeHtml"></span>
+    <span *ngIf="!value" class="tx-gray-800">{{ noValueMessage }}</span>
+  </div>
+  <div *ngIf="edit$ | async" class="text-panel">
+    <kendo-editor
+      #textbox
+      [(ngModel)]="editValue"
+      [style.font-size]="fontSize"
+    ></kendo-editor>
+    <div class="text-editor-buttons">
+      <button class="btn btn-sm btn-primary" (click)="edit$.next(false)">
+        <fa-icon [icon]="faCancel"></fa-icon>
+      </button>
+      <button
+        class="btn btn-sm btn-primary mg-l-10"
+        (click)="saveValue(textbox.value)"
+      >
+        <fa-icon [icon]="faCheck"></fa-icon>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!--
+      <ng-template kendoTextBoxSuffixTemplate>
+        <kendo-textbox-separator></kendo-textbox-separator>
+        <button
+          kendoButton
+          [value]="'General.Clear' | translate"
+          (click)="editValue = ''"
+        >
+          <fa-icon [icon]="faEraser" size="xs"></fa-icon>
+        </button>
+        <button
+          kendoButton
+          [value]="'General.Cancel' | translate"
+          (click)="edit$.next(false)"
+        >
+          <fa-icon [icon]="faCancel" size="xs"></fa-icon>
+        </button>
+        <button
+          kendoButton
+          [value]="'General.Save' | translate"
+          [disabled]="editValue === ''"
+          (click)="saveValue()"
+        >
+          <fa-icon [icon]="faCheck" size="xs"></fa-icon>
+        </button>
+      </ng-template>-->

@@ -24,13 +24,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: ':projectId/task/:taskId',
-    loadChildren: () =>
-      import('./pages/task-view/task-view.module').then(
-        (m) => m.TaskViewModule
-      ),
-  },
-  {
     path: ':projectId/upload',
     loadChildren: () =>
       import('./pages/project-upload/project-upload.module').then(
