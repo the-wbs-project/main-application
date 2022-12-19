@@ -10,8 +10,7 @@ export class AuthDataService {
 
   putStateAsync(code: string, state: AuthState): Promise<void> {
     return this.edge.put(`STATE|${code}`, JSON.stringify(state), {
-      expirationTtl: state.exp ? undefined : 2678400,
-      expiration: state.exp,
+      expirationTtl: 2678400,
     });
   }
 

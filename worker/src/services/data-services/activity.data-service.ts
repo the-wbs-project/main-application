@@ -2,7 +2,6 @@ import { Document } from '@cfworker/cosmos';
 import { uuid } from '@cfworker/uuid';
 import { Activity } from '../../models';
 import { DbService } from '../database-services';
-import { DataServiceHelper } from './helper.data-service';
 
 declare type ActivityDbObject = Activity & Document;
 

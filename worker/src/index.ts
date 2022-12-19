@@ -40,4 +40,28 @@ export default {
 
     return response;
   },
+  async scheduled(event: any, environment: any, context: ExecutionContext) {
+    const config = new EnvironmentConfig(environment);
+    const keys = await config.kvAuth.list();
+    const deleteAt = new Date(new Date().getTime() + 25 * 24 * 60 * 60 * 1000);
+
+    for (const key of keys.keys) {
+      if (!key.expiration) {
+        await config.kvAuth.delete(key.name);
+      } else {
+        const expires = new Date(key.expiration * 1000);
+
+        if (expires < deleteAt) {
+          //
+          //  ok time wise qualifies, check the value
+          //
+          const value = await config.kvAuth.get(key.name);
+
+          if (value === '{}') {
+            await config.kvAuth.delete(key.name);
+          }
+        }
+      }
+    }
+  },
 };

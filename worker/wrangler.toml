@@ -13,6 +13,9 @@ format = "modules"
 type = "ESModule"
 globs = ["**/*.js"]
 
+[triggers]
+crons = ["0 0 */1 * *"]
+
 [env.dev]
 name = "api"
 usage_model = "unbound"
