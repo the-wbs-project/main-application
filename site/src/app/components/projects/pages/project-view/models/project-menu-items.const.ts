@@ -105,5 +105,9 @@ export const PROJECT_MENU_ITEMS = {
       fragment: PROJECT_PAGE_VIEW.TIMELINE,
       title: 'General.Timeline',
     },
+    {
+      fragment: PROJECT_PAGE_VIEW.DISCUSSIONS,
+      title: 'General.Discussions',
+    },
   ],
 };

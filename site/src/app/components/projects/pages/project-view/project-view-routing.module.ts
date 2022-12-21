@@ -6,6 +6,7 @@ import {
   ProjectVerifyGuard,
 } from '../../guards';
 import {
+  ProjectDiscussionGuard,
   ProjectRedirectGuard,
   ProjectViewGuard,
   TaskVerifyGuard,
@@ -15,6 +16,9 @@ import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from './models';
 import {
   ProjectAboutPageComponent,
   ProjectDisciplinesPageComponent,
+  ProjectDiscussionLayoutComponent,
+  ProjectDiscussionListPageComponent,
+  ProjectDiscussionWritePageComponent,
   ProjectPhasesPageComponent,
   ProjectTimelinePageComponent,
   TaskAboutComponent,
@@ -104,6 +108,37 @@ export const routes: Routes = [
           title: 'ProjectUpload.PagesUploadProjectPlan',
           view: PROJECT_PAGE_VIEW.TIMELINE,
         },
+      },
+      {
+        path: 'discussions',
+        component: ProjectDiscussionLayoutComponent,
+        canActivate: [ProjectViewGuard, ProjectDiscussionGuard],
+        children: [
+          {
+            path: '',
+            component: ProjectDiscussionListPageComponent,
+            data: {
+              title: 'ProjectUpload.PagesUploadProjectPlan',
+              view: PROJECT_PAGE_VIEW.DISCUSSIONS,
+            },
+          },
+          {
+            path: 'write',
+            component: ProjectDiscussionWritePageComponent,
+            data: {
+              title: 'ProjectUpload.PagesUploadProjectPlan',
+              view: PROJECT_PAGE_VIEW.DISCUSSIONS,
+            },
+          },
+          {
+            path: 'write/:replyToId',
+            component: ProjectDiscussionWritePageComponent,
+            data: {
+              title: 'ProjectUpload.PagesUploadProjectPlan',
+              view: PROJECT_PAGE_VIEW.DISCUSSIONS,
+            },
+          },
+        ],
       },
       {
         path: 'task/:taskId/:view',

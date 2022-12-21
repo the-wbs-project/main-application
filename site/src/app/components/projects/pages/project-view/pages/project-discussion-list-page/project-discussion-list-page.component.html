@@ -1,0 +1,31 @@
+<div *ngIf="discussions$ | async; let discussions" class="row row-sm">
+  <div class="col-lg-12 col-md-12">
+    <div class="custom-card main-content-body-profile">
+      <div class="main-content-body tab-pane">
+        <div class="card">
+          <div
+            *ngIf="discussions.length === 0"
+            class="card-body p-0 border-0 p-0 rounded-10"
+          >
+            <div class="p-4 w-100 text-center">
+              <div>
+                <fa-icon [icon]="faTriangleExclamation" size="5x"></fa-icon>
+              </div>
+              <div class="tx-24 mg-t-20">It's Empty In here!</div>
+              <div class="tx-12 mg-t-20">
+                Do you have a question or conversation you want to start? Let's
+                get started!
+              </div>
+              <div class="mg-t-20">
+                <a class="btn btn-primary" [routerLink]="['write']">
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                  <span class="mg-l-10">Start Discussion</span>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,6 +1,7 @@
 export * from './action-definition.model';
 export * from './activity.model';
 export * from './app-models';
+export * from './discussion.model';
 export * from './invite.model';
 export * from './list-item.model';
 export * from './enums';

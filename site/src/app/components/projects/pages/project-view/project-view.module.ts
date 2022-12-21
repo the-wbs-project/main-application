@@ -33,6 +33,7 @@ import {
   Timeline1Component,
 } from './components';
 import {
+  ProjectDiscussionGuard,
   ProjectRedirectGuard,
   ProjectViewGuard,
   TaskVerifyGuard,
@@ -41,6 +42,9 @@ import {
 import {
   ProjectAboutPageComponent,
   ProjectDisciplinesPageComponent,
+  ProjectDiscussionLayoutComponent,
+  ProjectDiscussionListPageComponent,
+  ProjectDiscussionWritePageComponent,
   ProjectPhasesPageComponent,
   ProjectTimelinePageComponent,
   TaskAboutComponent,
@@ -65,7 +69,11 @@ import {
   TextCompareService,
   UploadFileService,
 } from './services';
-import { ProjectViewState, TaskViewState } from './states';
+import {
+  ProjectDiscussionState,
+  ProjectViewState,
+  TaskViewState,
+} from './states';
 
 @NgModule({
   imports: [
@@ -75,7 +83,11 @@ import { ProjectViewState, TaskViewState } from './states';
     NgbModalModule,
     NgbNavModule,
     NgbTooltipModule,
-    NgxsModule.forFeature([ProjectViewState, TaskViewState]),
+    NgxsModule.forFeature([
+      ProjectDiscussionState,
+      ProjectViewState,
+      TaskViewState,
+    ]),
     ProjectComponentModule,
     ProjectViewRoutingModule,
     SharedModule,
@@ -91,6 +103,7 @@ import { ProjectViewState, TaskViewState } from './states';
   ],
   providers: [
     PhaseExtractProcessor,
+    ProjectDiscussionGuard,
     ProjectNavigationService,
     ProjectRedirectGuard,
     ProjectResourceGuard,
@@ -107,6 +120,9 @@ import { ProjectViewState, TaskViewState } from './states';
     ProjectAboutPageComponent,
     ProjectCategoryDialogComponent,
     ProjectDisciplinesPageComponent,
+    ProjectDiscussionLayoutComponent,
+    ProjectDiscussionListPageComponent,
+    ProjectDiscussionWritePageComponent,
     ProjectPhasesComponent,
     ProjectPhasesPageComponent,
     ProjectRoleComponent,
