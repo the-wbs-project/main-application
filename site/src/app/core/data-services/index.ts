@@ -21,9 +21,12 @@ export class DataServiceFactory {
   readonly metdata = new MetdataDataService(this.http);
   readonly projectExport = new ProjectExportDataService(this.http);
   readonly projectImport = new ProjectImportDataService(this.http);
-  readonly projectNodes = new ProjectNodeDataService(this.http);
-  readonly projects = new ProjectDataService(this.http);
-  readonly projectSnapshots = new ProjectSnapshotDataService(this.http);
+  readonly projectNodes = new ProjectNodeDataService(this.http, this.store);
+  readonly projects = new ProjectDataService(this.http, this.store);
+  readonly projectSnapshots = new ProjectSnapshotDataService(
+    this.http,
+    this.store
+  );
   readonly staticFiles = new StaticFileDataService(this.http);
   readonly users = new UserDataService(this.http);
 

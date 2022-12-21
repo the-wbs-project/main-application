@@ -10,12 +10,20 @@ export class ActivityDataService {
     private readonly store: Store
   ) {}
 
+  private get organization(): string {
+    return this.store.selectSnapshot(AuthState.organization)!;
+  }
+
   getAsync(topLevelId: string): Observable<Activity[]> {
-    return this.http.get<Activity[]>(`activity/${topLevelId}`);
+    return this.http.get<Activity[]>(
+      `activity/${this.organization}/${topLevelId}`
+    );
   }
 
   getUserAsync(userId: string): Observable<Activity[]> {
-    return this.http.get<Activity[]>(`activity/user/${userId}`);
+    return this.http.get<Activity[]>(
+      `activity/${this.organization}/user/${userId}`
+    );
   }
 
   putAsync(
@@ -25,10 +33,13 @@ export class ActivityDataService {
   ): Observable<Activity> {
     const userId = this.store.selectSnapshot(AuthState.userId)!;
 
-    return this.http.put<Activity>(`activity/${dataType}`, {
-      ...data,
-      topLevelId,
-      userId,
-    });
+    return this.http.put<Activity>(
+      `activity/${this.organization}/${dataType}`,
+      {
+        ...data,
+        topLevelId,
+        userId,
+      }
+    );
   }
 }

@@ -81,7 +81,7 @@ export class AuthenticationService {
       if (state) {
         req.setState(state);
 
-        const org = this.getOrganization(req);
+        const org = req.params?.organization;
 
         if (!org) return;
         if (org) {
@@ -151,10 +151,6 @@ export class AuthenticationService {
     if (cookieValue) return cookieValue;
 
     return req.headers.get(req.config.auth.cookieKey || '');
-  }
-
-  private getOrganization(req: WorkerRequest): string | null {
-    return req.headers.get('wbs-org-id');
   }
 
   // https://github.com/pose/webcrypto-jwt/blob/master/index.js

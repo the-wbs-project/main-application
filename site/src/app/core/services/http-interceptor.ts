@@ -8,10 +8,8 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthState } from '../states';
 import { AnalyticsService } from './analytics.service';
 import { Messages } from './messages.service';
 
@@ -21,8 +19,7 @@ const noErrorUrls = ['logger/activity', 'logger/activities'];
 export class RequestInterceptor implements HttpInterceptor {
   constructor(
     private readonly analytics: AnalyticsService,
-    private readonly messages: Messages,
-    private readonly store: Store
+    private readonly messages: Messages
   ) {}
 
   intercept(
@@ -35,13 +32,6 @@ export class RequestInterceptor implements HttpInterceptor {
     if (request.url.indexOf('assets') === -1) {
       request = request.clone({
         url: `api/${request.url}`,
-      });
-    }
-    const org = this.store.selectSnapshot(AuthState.organization);
-
-    if (org) {
-      request = request.clone({
-        setHeaders: { 'wbs-org-id': org },
       });
     }
     //@ts-ignore
