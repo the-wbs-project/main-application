@@ -25,165 +25,165 @@
         />
       </a>
     </div>
-    <perfect-scrollbar>
-      <div class="main-sidemenu">
-        <!-- left-arrow -->
-        <div class="slide-left disabled" id="slide-left">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#7b8191"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-            />
-          </svg>
-        </div>
-        <div class="slide-leftRTL disabled" id="slide-leftRTL">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#7b8191"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-            />
-          </svg>
-        </div>
-        <ul class="side-menu">
-          <li class="slide is-expanded">
-            <a
-              class="side-menu__item"
-              routerLinkActive="active"
-              [routerLink]="['/projects', 'list', 'my', 'active']"
-            >
-              <span class="side-menu__icon">
-                <i class="fa-solid fa-space-station-moon-construction"></i>
-              </span>
-              <span class="side-menu__label">
-                {{ "General.MyProjects" | translate }} ({{
-                  [projects, "active"] | projectStatusCount
-                }})
-              </span>
-            </a>
-            <ul class="slide-menu">
-              <li class="sub-slide is-expanded">
-                <a
-                  class="sub-side-menu__item"
-                  routerLinkActive="active"
-                  [routerLink]="['/projects', 'list', 'my', 'planning']"
-                >
-                  <span class="sub-side-menu__label">
-                    {{ "General.Planning" | translate }} ({{
-                      [projects, "planning"] | projectStatusCount
-                    }})
-                  </span>
-                </a>
-                <a
-                  class="sub-side-menu__item"
-                  routerLinkActive="active"
-                  [routerLink]="['/projects', 'list', 'my', 'execution']"
-                >
-                  <span class="sub-side-menu__label">
-                    {{ "General.Execution" | translate }} &nbsp; ({{
-                      [projects, "execution"] | projectStatusCount
-                    }})
-                  </span>
-                </a>
-                <a
-                  class="sub-side-menu__item"
-                  routerLinkActive="active"
-                  [routerLink]="['/projects', 'list', 'my', 'follow-up']"
-                >
-                  <span class="sub-side-menu__label">
-                    {{ "General.FollowUp" | translate }} &nbsp; ({{
-                      [projects, "followUp"] | projectStatusCount
-                    }})
-                  </span>
-                </a>
-                <a
-                  class="sub-side-menu__item"
-                  routerLinkActive="active"
-                  [routerLink]="['/projects', 'list', 'my', 'closed']"
-                >
-                  <span class="sub-side-menu__label">
-                    {{ "General.Closed" | translate }}
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li *ngIf="isAdmin" class="slide is-expanded">
-            <a
-              class="side-menu__item"
-              routerLinkActive="active"
-              [routerLink]="['/settings']"
-            >
-              <span class="side-menu__icon">
-                <i class="fa-solid fa-cogs"></i>
-              </span>
-              <span class="side-menu__label">
-                {{ "General.General" | translate }}
-              </span>
-            </a>
-            <ul class="slide-menu">
-              <li class="sub-slide is-expanded">
-                <a
-                  *ngFor="let item of settings"
-                  class="sub-side-menu__item"
-                  routerLinkActive="active"
-                  [routerLink]="item.path"
-                >
-                  <span class="sub-side-menu__label">
-                    {{ item.title! | translate }}
-                  </span>
-                </a>
-              </li>
-            </ul>
-          </li>
-          <li class="slide">
-            <a class="side-menu__item" href="/logout">
-              <span class="side-menu__icon">
-                <i class="fa-solid fa-arrow-alt-circle-left"></i>
-              </span>
-              <span class="side-menu__label">
-                {{ "General.LogOut" | translate }}
-              </span>
-            </a>
-          </li>
-        </ul>
-        <!-- right-arrow  -->
-        <div class="slide-right" id="slide-right">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#7b8191"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
-            />
-          </svg>
-        </div>
-        <div class="slide-rightRTL" id="slide-rightRTL">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            fill="#7b8191"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-          >
-            <path
-              d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
-            />
-          </svg>
-        </div>
+    <!--<perfect-scrollbar>-->
+    <div class="main-sidemenu">
+      <!-- left-arrow -->
+      <div class="slide-left disabled" id="slide-left">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#7b8191"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
+          />
+        </svg>
       </div>
-    </perfect-scrollbar>
+      <div class="slide-leftRTL disabled" id="slide-leftRTL">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#7b8191"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
+          />
+        </svg>
+      </div>
+      <ul class="side-menu">
+        <li class="slide is-expanded">
+          <a
+            class="side-menu__item"
+            routerLinkActive="active"
+            [routerLink]="['/projects', 'list', 'my', 'active']"
+          >
+            <span class="side-menu__icon">
+              <i class="fa-solid fa-space-station-moon-construction"></i>
+            </span>
+            <span class="side-menu__label">
+              {{ "General.MyProjects" | translate }} ({{
+                [projects, "active"] | projectStatusCount
+              }})
+            </span>
+          </a>
+          <ul class="slide-menu">
+            <li class="sub-slide is-expanded">
+              <a
+                class="sub-side-menu__item"
+                routerLinkActive="active"
+                [routerLink]="['/projects', 'list', 'my', 'planning']"
+              >
+                <span class="sub-side-menu__label">
+                  {{ "General.Planning" | translate }} ({{
+                    [projects, "planning"] | projectStatusCount
+                  }})
+                </span>
+              </a>
+              <a
+                class="sub-side-menu__item"
+                routerLinkActive="active"
+                [routerLink]="['/projects', 'list', 'my', 'execution']"
+              >
+                <span class="sub-side-menu__label">
+                  {{ "General.Execution" | translate }} &nbsp; ({{
+                    [projects, "execution"] | projectStatusCount
+                  }})
+                </span>
+              </a>
+              <a
+                class="sub-side-menu__item"
+                routerLinkActive="active"
+                [routerLink]="['/projects', 'list', 'my', 'follow-up']"
+              >
+                <span class="sub-side-menu__label">
+                  {{ "General.FollowUp" | translate }} &nbsp; ({{
+                    [projects, "followUp"] | projectStatusCount
+                  }})
+                </span>
+              </a>
+              <a
+                class="sub-side-menu__item"
+                routerLinkActive="active"
+                [routerLink]="['/projects', 'list', 'my', 'closed']"
+              >
+                <span class="sub-side-menu__label">
+                  {{ "General.Closed" | translate }}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li *ngIf="isAdmin" class="slide is-expanded">
+          <a
+            class="side-menu__item"
+            routerLinkActive="active"
+            [routerLink]="['/settings']"
+          >
+            <span class="side-menu__icon">
+              <i class="fa-solid fa-cogs"></i>
+            </span>
+            <span class="side-menu__label">
+              {{ "General.General" | translate }}
+            </span>
+          </a>
+          <ul class="slide-menu">
+            <li class="sub-slide is-expanded">
+              <a
+                *ngFor="let item of settings"
+                class="sub-side-menu__item"
+                routerLinkActive="active"
+                [routerLink]="item.path"
+              >
+                <span class="sub-side-menu__label">
+                  {{ item.title! | translate }}
+                </span>
+              </a>
+            </li>
+          </ul>
+        </li>
+        <li class="slide">
+          <a class="side-menu__item" href="/logout">
+            <span class="side-menu__icon">
+              <i class="fa-solid fa-arrow-alt-circle-left"></i>
+            </span>
+            <span class="side-menu__label">
+              {{ "General.LogOut" | translate }}
+            </span>
+          </a>
+        </li>
+      </ul>
+      <!-- right-arrow  -->
+      <div class="slide-right" id="slide-right">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#7b8191"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
+          />
+        </svg>
+      </div>
+      <div class="slide-rightRTL" id="slide-rightRTL">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="#7b8191"
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+        >
+          <path
+            d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
+          />
+        </svg>
+      </div>
+    </div>
+    <!--</perfect-scrollbar>-->
   </aside>
 </div>

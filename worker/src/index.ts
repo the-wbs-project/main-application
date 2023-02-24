@@ -26,6 +26,7 @@ export default {
 
       response = await services.router.matchAsync(workerRequest);
     } catch (err) {
+      console.log(err);
       if (workerRequest) {
         //@ts-ignore
         workerRequest.logException('An uncaught error occured.', 'WorkerService.handleRequest', err);

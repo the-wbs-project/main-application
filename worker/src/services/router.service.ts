@@ -79,6 +79,7 @@ export class RouterService {
   async matchAsync(req: WorkerRequest): Promise<Response> {
     const responseOrCode = await this.router.handle(req);
 
+    if (responseOrCode == undefined) return new Response('Not Found', { status: 404 });
     if (typeof responseOrCode === 'number') return new Response('', { status: responseOrCode });
 
     return responseOrCode;

@@ -50,7 +50,7 @@ export class ProjectNodeDataService {
         projectId,
       });
     return this.http.put<void>(
-      `projects/byId/${this.organization}/${projectId}/nodes/batch`,
+      `projects/${this.organization}/byId/${projectId}/nodes/batch`,
       {
         upserts,
         removeIds,

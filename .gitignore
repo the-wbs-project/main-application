@@ -10,3 +10,4 @@ _theme/Nowa
 .vs/
 .vscode/
  
+worker/.wrangler/
