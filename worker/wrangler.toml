@@ -6,9 +6,6 @@ main = "dist/index.js"
 [build]
 command = "yarn run -s build"
 
-[build.upload]
-format = "modules"
-
 [[rules]]
 type = "ESModule"
 globs = ["**/*.js"]
@@ -20,12 +17,12 @@ crons = ["0 0 */1 * *"]
 name = "api"
 usage_model = "unbound"
 kv_namespaces = [
-  { binding = "KV_AUTH" },
-  { binding = "KV_DATA" },
+  { binding = "KV_AUTH", id = "123", preview_id = "10044f1ce15740fd8cc0b2eaf11ca660" },
+  { binding = "KV_DATA", id = "123", preview_id = "338c0ca3e3164ddf84b761218a121aa0" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS" },
-  { binding = "BUCKET_STATICS" },
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
+  { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
 ]
 vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
 
@@ -61,14 +58,6 @@ r2_buckets = [
 ]
 vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
 
-[miniflare]
+[dev]
 port = 88
-upstream = "http://localhost:4200"
-watch = true
-kv_persist = true
-r2_persist = true
-cache_persist = false
-cache = false
-https = false
-actual_time = true
-inaccurate_cpu = true
+host = "localhost:4200"

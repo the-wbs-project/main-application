@@ -23,7 +23,7 @@ export class RouterService {
   private readonly router = Router<WorkerRequest>();
 
   constructor(private readonly email: MailGunService) {
-    this.router.option('/api/invites/:organization/:code', this.authOptionsAsync);
+    this.router.options('/api/invites/:organization/:code', this.authOptionsAsync);
     this.router.options('*', () => new Response(''));
     //
     //  Non auth
