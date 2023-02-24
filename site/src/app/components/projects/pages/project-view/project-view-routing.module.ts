@@ -113,30 +113,18 @@ export const routes: Routes = [
         path: 'discussions',
         component: ProjectDiscussionLayoutComponent,
         canActivate: [ProjectViewGuard, ProjectDiscussionGuard],
+        data: {
+          title: 'ProjectUpload.PagesUploadProjectPlan',
+          view: PROJECT_PAGE_VIEW.DISCUSSIONS,
+        },
         children: [
           {
             path: '',
             component: ProjectDiscussionListPageComponent,
-            data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
-              view: PROJECT_PAGE_VIEW.DISCUSSIONS,
-            },
           },
           {
             path: 'write',
             component: ProjectDiscussionWritePageComponent,
-            data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
-              view: PROJECT_PAGE_VIEW.DISCUSSIONS,
-            },
-          },
-          {
-            path: 'write/:replyToId',
-            component: ProjectDiscussionWritePageComponent,
-            data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
-              view: PROJECT_PAGE_VIEW.DISCUSSIONS,
-            },
           },
         ],
       },

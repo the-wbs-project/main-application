@@ -12,6 +12,8 @@ export class ProjectViewGuard implements CanActivate {
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {
     const view = route.data['view'];
 
+    console.log(view);
+
     return forkJoin([this.store.dispatch(new ProjectPageChanged(view))]).pipe(
       map(() => true)
     );
