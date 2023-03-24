@@ -24,7 +24,7 @@ r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
   { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
 ]
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
+vars = { DEBUG = "true", INVITE_TEMPLATE = "invite-template-v1",  APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907" }
 
 [env.qa]
 name = "app-v0-1-api-qa"

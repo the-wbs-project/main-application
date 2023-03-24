@@ -42,8 +42,6 @@ import {
 import {
   ProjectAboutPageComponent,
   ProjectDisciplinesPageComponent,
-  ProjectDiscussionLayoutComponent,
-  ProjectDiscussionListPageComponent,
   ProjectPhasesPageComponent,
   ProjectTimelinePageComponent,
   TaskAboutComponent,
@@ -68,11 +66,7 @@ import {
   TextCompareService,
   UploadFileService,
 } from './services';
-import {
-  ProjectDiscussionState,
-  ProjectViewState,
-  TaskViewState,
-} from './states';
+import { ProjectViewState, TaskViewState } from './states';
 
 @NgModule({
   imports: [
@@ -82,11 +76,7 @@ import {
     NgbModalModule,
     NgbNavModule,
     NgbTooltipModule,
-    NgxsModule.forFeature([
-      ProjectDiscussionState,
-      ProjectViewState,
-      TaskViewState,
-    ]),
+    NgxsModule.forFeature([ProjectViewState, TaskViewState]),
     ProjectComponentModule,
     ProjectViewRoutingModule,
     SharedModule,
@@ -119,8 +109,6 @@ import {
     ProjectAboutPageComponent,
     ProjectCategoryDialogComponent,
     ProjectDisciplinesPageComponent,
-    ProjectDiscussionLayoutComponent,
-    ProjectDiscussionListPageComponent,
     ProjectPhasesComponent,
     ProjectPhasesPageComponent,
     ProjectRoleComponent,

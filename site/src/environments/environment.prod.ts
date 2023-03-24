@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  appTitle: 'WBS',
+  appTitle: 'PM Empower',
 };

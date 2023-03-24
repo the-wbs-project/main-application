@@ -3649,6 +3649,11 @@ v8-to-istanbul@^9.0.1:
     "@types/istanbul-lib-coverage" "^2.0.1"
     convert-source-map "^1.6.0"
 
+vite-esbuild-typescript-checker@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/vite-esbuild-typescript-checker/-/vite-esbuild-typescript-checker-1.0.0.tgz#1f56aaf776b3d98c29113f7f017091ca0bf8670e"
+  integrity sha512-i+bYGvgWOJIFmomVuScP8I78zTc9x4lm8F6xb81GJRpXggGpCA5Mtvj2Izy6nd49pjSUVCz0VjUsPjXopAFdoA==
+
 w3c-hr-time@^1.0.1:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/w3c-hr-time/-/w3c-hr-time-1.0.2.tgz#0a89cdf5cc15822df9c360543676963e0cc308cd"

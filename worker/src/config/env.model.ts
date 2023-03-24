@@ -1,10 +1,6 @@
-import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
-
 export interface Env {
   KV_AUTH: KVNamespace;
   KV_DATA: KVNamespace;
-  __STATIC_CONTENT: KVNamespace;
-  __STATIC_CONTENT_MANIFEST: AssetManifestType;
   BUCKET_SNAPSHOTS: R2Bucket;
   BUCKET_STATICS: R2Bucket;
 
@@ -13,7 +9,7 @@ export interface Env {
   AZURE: string;
   COSMOS: string;
   DEBUG: string;
-  INVITE_EMAIL: string;
+  INVITE_TEMPLATE_ID: string;
   KV_BYPASS?: string;
   LOGOUT_HTML: string;
   MAILGUN_API_BASE_URL: string;

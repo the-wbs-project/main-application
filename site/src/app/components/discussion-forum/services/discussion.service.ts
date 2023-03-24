@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+/*
 import { DataServiceFactory } from '../data-services';
 import { Discussion } from '../models';
 import { DiscussionViewModel } from '../view-models';
+
 
 @Injectable({ providedIn: 'root' })
 export class DiscussionService {
@@ -36,3 +38,4 @@ export class DiscussionService {
 }
 
 const sort = (a: Discussion, b: Discussion) => a.timestamp - b.timestamp;
+*/

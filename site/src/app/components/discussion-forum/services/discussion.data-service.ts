@@ -1,17 +1,22 @@
 import { HttpClient } from '@angular/common/http';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { Discussion } from '../models';
 
+@Injectable()
 export class DiscussionDataService {
   constructor(private readonly http: HttpClient) {}
 
   getAsync(
     organization: string,
-    associationId: string
+    associationId: string,
+    threadId?: string
   ): Observable<Discussion[]> {
-    return this.http.get<Discussion[]>(
-      `discussions/${organization}/${associationId}`
-    );
+    const parts = ['discussions', organization, associationId];
+
+    if (threadId) parts.push(threadId);
+
+    return this.http.get<Discussion[]>(parts.join('/'));
   }
 
   putAsync(organization: string, model: Discussion): Observable<void> {

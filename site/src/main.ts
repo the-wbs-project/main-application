@@ -10,9 +10,11 @@ import {
   faPipeValve,
   faScrewdriverWrench,
 } from '@fortawesome/pro-solid-svg-icons';
-
+import { AnalyticsService } from '@wbs/core/services';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
+
+AnalyticsService.setup();
 
 library.add(faBolt);
 library.add(faBridgeSuspension);

@@ -11,7 +11,7 @@ export interface Config {
   azure: AzureConfig;
   db: DbConfig;
   debug: boolean;
-  inviteEmail: string;
+  inviteTemplateId: string;
   kvBypass: string[];
   mailgun: MailgunConfig;
   twilio: TwilioConfig;

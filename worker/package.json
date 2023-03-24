@@ -5,11 +5,13 @@
   "module": "dist/index.js",
   "scripts": {
     "setup": "yarn",
-    "build": "esbuild src/index.ts --outfile=dist/index.js --bundle  --loader:.html=text --format=esm",
+    "build": "esbuild src/index.ts --outfile=dist/index.js --bundle --loader:.html=text --format=esm",
+    "typecheck": "tsc -noEmit --watch",
+    "build-test": "concurrently \"tsc -noEmit --watch\" \"yarn run esbuild\"",
     "publish": "wrangler publish --env prod",
     "dev": "wrangler dev --local true --env dev --persist true",
     "format": "prettier --write '**/*.{js,ts,jsx,tsx,json,yml,yaml,md,html}' --ignore-path .gitignore",
-    "go": "npm run build && concurrently \"npm run dev\" \"npm run build\""
+    "go": "npm run build && concurrently \"npm run dev\" \"npm run typecheck\""
   },
   "author": "author",
   "license": "MIT",
@@ -29,7 +31,8 @@
     "service-worker-mock": "^2.0.5",
     "ts-jest": "^29.0.5",
     "tsup": "^6.6.3",
-    "typescript": "^4.9.5"
+    "typescript": "^4.9.5",
+    "vite-esbuild-typescript-checker": "^1.0.0"
   },
   "dependencies": {
     "@cfworker/cosmos": "^1.13.4",

@@ -16,14 +16,10 @@ import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from './models';
 import {
   ProjectAboutPageComponent,
   ProjectDisciplinesPageComponent,
-  ProjectDiscussionLayoutComponent,
-  ProjectDiscussionListPageComponent,
-  ProjectDiscussionWritePageComponent,
   ProjectPhasesPageComponent,
   ProjectTimelinePageComponent,
   TaskAboutComponent,
   TaskSubTasksComponent,
-  TaskTestComponent,
   TaskViewComponent,
 } from './pages';
 import { ProjectViewLayoutComponent } from './project-view-layout.component';
@@ -111,22 +107,15 @@ export const routes: Routes = [
       },
       {
         path: 'discussions',
-        component: ProjectDiscussionLayoutComponent,
-        canActivate: [ProjectViewGuard, ProjectDiscussionGuard],
+        canActivate: [ProjectDiscussionGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
           view: PROJECT_PAGE_VIEW.DISCUSSIONS,
         },
-        children: [
-          {
-            path: '',
-            component: ProjectDiscussionListPageComponent,
-          },
-          {
-            path: 'write',
-            component: ProjectDiscussionWritePageComponent,
-          },
-        ],
+        loadChildren: () =>
+          import('../../../discussion-forum/discussion-forum.module').then(
+            (m) => m.DiscussionForumModule
+          ),
       },
       {
         path: 'task/:taskId/:view',

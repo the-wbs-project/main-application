@@ -1,4 +1,3 @@
-import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { AuthConfig } from './auth.config';
 import { AzureConfig } from './azure.config';
 import { Config } from './config';
@@ -32,10 +31,6 @@ export class EnvironmentConfig implements Config {
     return this.env.KV_DATA;
   }
 
-  get kvSite(): KVNamespace {
-    return this.env.__STATIC_CONTENT;
-  }
-
   get appInsightsKey(): string {
     return this.env.APP_INSIGHTS_KEY;
   }
@@ -63,8 +58,8 @@ export class EnvironmentConfig implements Config {
     return this.env.DEBUG === 'true';
   }
 
-  get inviteEmail(): string {
-    return this.env.INVITE_EMAIL;
+  get inviteTemplateId(): string {
+    return this.env.INVITE_TEMPLATE_ID;
   }
 
   get kvBypass(): string[] {
@@ -78,10 +73,6 @@ export class EnvironmentConfig implements Config {
         key: this.env.MAILGUN_API_KEY,
       };
     return this._mailgun;
-  }
-
-  get manifestSite(): AssetManifestType {
-    return this.env.__STATIC_CONTENT_MANIFEST;
   }
 
   get twilio(): TwilioConfig {

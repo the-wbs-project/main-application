@@ -1,4 +1,3 @@
-import APP_INSIGHTS from '../../blobs/app-insights.min.html';
 import { TTL } from '../../consts';
 import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
@@ -80,10 +79,9 @@ export class SiteHttpService {
 }
 
 async function hydrateAsync(req: WorkerRequest, response: Response): Promise<Response> {
-  const snippet = APP_INSIGHTS.replace('{{APP_INSIGHTS_KEY}}', req.config.appInsightsKey);
-
-  return new HTMLRewriter().on('head', new ElementHandler(snippet)).transform(response);
+  return new HTMLRewriter().on('script[id="app_insights"]', new ElementHandler(`"${req.config.appInsightsKey}"`)).transform(response);
 }
+
 function getHeaders(req: WorkerRequest, initHeaders: Headers): Headers {
   const ttl = getTtl(req);
   const headers = new Headers(initHeaders);
@@ -116,6 +114,6 @@ class ElementHandler {
   constructor(private readonly body: string) {}
 
   element(element: any) {
-    element.append(this.body, { html: true });
+    element.setInnerContent(this.body, { html: true });
   }
 }

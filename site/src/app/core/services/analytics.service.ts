@@ -6,13 +6,26 @@ import { AuthState } from '../states';
 
 @Injectable({ providedIn: 'root' })
 export class AnalyticsService {
+  private static appInsights?: ApplicationInsights;
   private isUserSet = false;
 
   constructor(private readonly store: Store) {}
 
   private get appInsights(): ApplicationInsights {
-    //@ts-ignore
-    return window.appInsights;
+    return AnalyticsService.appInsights!;
+  }
+
+  static setup(): void {
+    this.appInsights = new ApplicationInsights({
+      config: {
+        instrumentationKey: JSON.parse(
+          document.getElementById('app_insights')!.innerHTML
+        ),
+        samplingPercentage: 100,
+      },
+    });
+    this.appInsights.loadAppInsights();
+    this.appInsights.trackPageView();
   }
 
   trackErrorResponse(response: HttpErrorResponse, properties: any) {
@@ -38,11 +51,12 @@ export class AnalyticsService {
       envelope.tags['user.fullName'] = user.name;
       envelope.tags['user.email'] = user.email;
       //envelope.tags['user.role'] = startup?.user?.appInfo?.role;
-      envelope.tags['url'] = window.location.href;
+      //envelope.tags['url'] = window.location.href;
     };
 
-    this.appInsights.setAuthenticatedUserContext(user.id, undefined, true);
-    this.appInsights.addTelemetryInitializer(telemetryInitializer);
+    console.log(this.appInsights);
+    //this.appInsights.setAuthenticatedUserContext(user.id, undefined, true);
+    //this.appInsights.addTelemetryInitializer(telemetryInitializer);
     this.isUserSet = true;
   }
 }

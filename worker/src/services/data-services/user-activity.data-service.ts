@@ -47,7 +47,7 @@ export class UserActivityDataService {
       versionId: modelDb.versionId,
       label: modelDb.label,
       labelTitle: modelDb.labelTitle,
-      _ts: DataServiceHelper.fixTsValue(modelDb._ts),
+      timestamp: DataServiceHelper.fixTsValue(modelDb._ts),
     };
   }
 }

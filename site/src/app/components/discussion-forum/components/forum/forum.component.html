@@ -1,13 +1,10 @@
-<div *ngIf="discussions$ | async; let discussions" class="row row-sm">
+<div *ngIf="threads$ | async; let threads" class="row row-sm">
   <div class="col-lg-12 col-md-12">
     <div class="custom-card main-content-body-profile">
       <div class="main-content-body tab-pane">
         <div class="card">
-          <div
-            *ngIf="discussions.length === 0"
-            class="card-body p-0 border-0 p-0 rounded-10"
-          >
-            <div class="p-4 w-100 text-center">
+          <div class="card-body p-0 border-0 p-0 rounded-10">
+            <div *ngIf="threads.length === 0" class="p-4 w-100 text-center">
               <div>
                 <fa-icon [icon]="faTriangleExclamation" size="5x"></fa-icon>
               </div>
@@ -20,6 +17,20 @@
                   <fa-icon [icon]="faPlus"></fa-icon>
                   <span class="mg-l-10">Start Discussion</span>
                 </a>
+              </div>
+            </div>
+            <div *ngIf="threads.length > 0" class="row">
+              <div class="col-12">
+                <ul class="list-group">
+                  <li
+                    class="list-group-item"
+                    *ngFor="let thread of threads$ | async"
+                  >
+                    <a [routerLink]="['/thread', thread.id]">
+                      {{ thread.title }}
+                    </a>
+                  </li>
+                </ul>
               </div>
             </div>
           </div>
