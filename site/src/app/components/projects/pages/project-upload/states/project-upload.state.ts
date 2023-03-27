@@ -326,7 +326,6 @@ export class ProjectUploadState {
           phases,
           nodes
         );
-        console.log(results);
         return ctx.dispatch(new SaveUpload(results)).pipe(
           map(() => {
             ctx.patchState({

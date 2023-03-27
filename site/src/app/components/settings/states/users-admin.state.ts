@@ -69,8 +69,6 @@ export class UserAdminState {
     return state.users;
   }
 
-  ngxsOnInit(ctx: StateContext<StateModel>) {}
-
   @Action(LoadInviteData)
   loadInviteData(
     ctx: StateContext<StateModel>,
@@ -78,8 +76,6 @@ export class UserAdminState {
   ): Observable<void> | void {
     const state = ctx.getState();
 
-    console.log(state.invites != null);
-    console.log(action.force);
     if (state.invites != null && !action.force) return;
 
     return this.data.invites.getAllAsync().pipe(

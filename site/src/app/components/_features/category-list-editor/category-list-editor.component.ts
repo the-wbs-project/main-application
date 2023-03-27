@@ -54,7 +54,6 @@ export class CategoryListEditorComponent {
         scrollable: true,
       })
       .subscribe((result) => {
-        console.log(result);
         if (result == null) return;
 
         const item: CategorySelection = {

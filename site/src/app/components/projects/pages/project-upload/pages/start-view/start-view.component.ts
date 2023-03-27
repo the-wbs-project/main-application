@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { faUpload } from '@fortawesome/pro-light-svg-icons';
 import {
   faChartGantt,
@@ -24,12 +23,9 @@ export class StartViewComponent {
   readonly faUpload = faUpload;
 
   constructor(
-    route: ActivatedRoute,
     private readonly data: DataServiceFactory,
     private readonly store: Store
-  ) {
-    route.data.subscribe((x) => console.log(x));
-  }
+  ) {}
 
   dropHandler(ev: DragEvent) {
     ev.preventDefault();
@@ -77,7 +73,6 @@ export class StartViewComponent {
   }
 
   private processFile(file: File) {
-    console.log('process');
     this.store.dispatch(new FileUploaded(file));
   }
 }
