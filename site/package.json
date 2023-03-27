@@ -1,5 +1,5 @@
 {
-  "name": "site",
+  "name": "pm-empower",
   "version": "0.0.0",
   "scripts": {
     "setup": "yarn",
