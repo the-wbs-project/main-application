@@ -65,7 +65,9 @@ export class IdentityService {
   }
 
   private async getUserPageAsync(req: WorkerRequest, pageNumber: number, pageSize: number): Promise<User[]> {
-    const url = `users?q=_exists_:app_metadata.organizations.${req.organization?.organization}&page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${req.config.auth.connection}&search_engine=v3`;
+    const org = req.context.organization?.organization;
+    const conn = req.context.config.auth.connection;
+    const url = `users?q=_exists_:app_metadata.organizations.${org}&page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
     const results: User[] = [];
 
@@ -78,7 +80,9 @@ export class IdentityService {
   }
 
   private async getLiteUserPageAsync(req: WorkerRequest, pageNumber: number, pageSize: number): Promise<UserLite[]> {
-    const url = `users?fields=email,name,user_id&q=_exists_:app_metadata.organizations.${req.organization?.organization}&page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${req.config.auth.connection}&search_engine=v3`;
+    const org = req.context.organization?.organization;
+    const conn = req.context.config.auth.connection;
+    const url = `users?fields=email,name,user_id&q=_exists_:app_metadata.organizations.${org}&page=${pageNumber}&per_page=${pageSize}&sort=last_login:-1&connection=${conn}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
     const results: UserLite[] = [];
 
@@ -91,7 +95,9 @@ export class IdentityService {
   }
 
   private async getUserCountAsync(req: WorkerRequest): Promise<number> {
-    const url = `users?q=_exists_:app_metadata.organizations.${req.organization?.organization}&include_totals=true&connection=${req.config.auth.connection}&search_engine=v3`;
+    const org = req.context.organization?.organization;
+    const conn = req.context.config.auth.connection;
+    const url = `users?q=_exists_:app_metadata.organizations.${org}&include_totals=true&connection=${conn}&search_engine=v3`;
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
 
     if (response.status !== 200) throw new Error(await response.text());

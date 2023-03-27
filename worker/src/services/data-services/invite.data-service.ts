@@ -4,7 +4,7 @@ import { DbService } from '../database-services';
 export class InviteDataService {
   constructor(private readonly db: DbService) {}
 
-  getAllAsync(): Promise<Invite[]> {
+  getAllAsync(): Promise<Invite[] | undefined> {
     return this.db.getAllByPartitionAsync<Invite>('Invites', true);
   }
 

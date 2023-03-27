@@ -6,12 +6,14 @@ import { CloudflareService } from './services/edge-services/cloudflare';
 import { ServiceFactory } from './services/factory.service';
 import { Logger } from './services/logger.service';
 import { CloudflareStorageFactory } from './services/storage-services/cloudflare/cloudflare-storage-factory.service';
+import { WorkerContext } from './services/worker-context.service';
 
 export default {
   async fetch(request: Request, environment: any, context: ExecutionContext): Promise<Response> {
     const start = new Date();
     const config = new EnvironmentConfig(environment);
     const logger = new Logger(config.appInsightsKey, request);
+    let workerContext: WorkerContext | null = null;
     let workerRequest: WorkerRequest | null = null;
     let response: Response | null = null;
 
@@ -22,7 +24,8 @@ export default {
       const data = new DataServiceFactory(db, edge, request, storage);
       const services = new ServiceFactory(config, data, edge, storage);
 
-      workerRequest = new WorkerRequest(request, config, services, logger);
+      workerContext = new WorkerContext(config, services, logger);
+      workerRequest = new WorkerRequest(request, workerContext);
 
       response = await services.router.matchAsync(workerRequest);
     } catch (err) {

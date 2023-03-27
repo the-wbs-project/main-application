@@ -8,16 +8,12 @@ const kvPrefix = 'PROJECTS';
 export class ProjectDataService {
   constructor(private readonly organization: string, private readonly db: DbService, private readonly edge: EdgeDataService) {}
 
-  async getAllAsync(): Promise<Project[]> {
-    let list = await this.db.getAllAsync<Project>(true);
-
-    DataServiceHelper.fixTs(list);
-
-    return list;
+  getAllAsync(): Promise<Project[]> {
+    return this.db.getAllAsync<Project>(true);
   }
 
-  async getAllWatchedAsync(userId: string): Promise<Project[]> {
-    let list = await this.db.getListByQueryAsync<Project>(
+  getAllWatchedAsync(userId: string): Promise<Project[]> {
+    return this.db.getListByQueryAsync<Project>(
       `SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`,
       true,
       [{ name: '@userId', value: userId }],
@@ -25,10 +21,6 @@ export class ProjectDataService {
       undefined,
       true,
     );
-
-    DataServiceHelper.fixTs(list);
-
-    return list;
   }
 
   async getAsync(projectId: string): Promise<Project | undefined> {
@@ -41,11 +33,7 @@ export class ProjectDataService {
 
     const data = await this.getFromDbAsync(projectId);
 
-    if (data) {
-      DataServiceHelper.fixTs(data);
-
-      this.edge.putLater(kvName, JSON.stringify(data));
-    }
+    if (data) this.edge.putLater(kvName, JSON.stringify(data));
 
     return data;
   }

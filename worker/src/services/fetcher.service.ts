@@ -3,8 +3,8 @@ import { Logger } from './logger.service';
 export async function myFetch(
   mainRequest: Request | undefined,
   logger: Logger,
-  input: Request | string,
-  init?: RequestInit,
+  input: RequestInfo,
+  init?: RequestInit<RequestInitCfProperties>,
 ): Promise<Response> {
   let method: string | undefined;
   let url: string | undefined;

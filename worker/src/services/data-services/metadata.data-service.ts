@@ -9,7 +9,7 @@ export class MetadataDataService {
     return (await this.getAsync<ResourceObj>('RESOURCES', this.resourceDb, culture, category))?.values;
   }
 
-  getListAsync(type: string): Promise<ListItem[]> {
+  getListAsync(type: string): Promise<ListItem[] | undefined> {
     return this.getAllAsync<ListItem>('LISTS', this.listDb, type);
   }
 
@@ -28,7 +28,7 @@ export class MetadataDataService {
     return data;
   }
 
-  private async getAllAsync<T extends IdObject>(kvPrefix: string, db: DbService, pk: string): Promise<T[]> {
+  private async getAllAsync<T extends IdObject>(kvPrefix: string, db: DbService, pk: string): Promise<T[] | undefined> {
     if (this.edge.byPass(kvPrefix)) return await db.getAllByPartitionAsync<T>(pk, true);
 
     const kvName = [kvPrefix, pk].join('|');

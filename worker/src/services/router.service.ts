@@ -8,15 +8,15 @@ export const NO_AUTH_ROUTES: string[] = ['/manifest.json', '/assets/*', '/*.js',
 export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/*', '/api/projects/import/*'];
 
 function apiAuth(req: WorkerRequest): Promise<Response | number | void> {
-  return req.services.auth.authorizeApiAsync(req);
+  return req.context.services.auth.authorizeApiAsync(req);
 }
 
 function siteAuth(req: WorkerRequest): Promise<Response | number | void> {
-  return req.services.auth.authorizeSiteAsync(req);
+  return req.context.services.auth.authorizeSiteAsync(req);
 }
 
 function isAdmin(req: WorkerRequest): number | void {
-  if ((req.organization?.roles?.indexOf('admin') ?? -1) === -1) return 401;
+  if ((req.context.organization?.roles?.indexOf('admin') ?? -1) === -1) return 401;
 }
 
 export class RouterService {
@@ -38,7 +38,7 @@ export class RouterService {
     this.router.get('/loggedout', Http.auth.loggedoutAsync);
     this.router.get('/api/resources/Info', Http.metadata.setInfo, Http.metadata.getResourcesAsync);
     this.router.get('/api/edge-data/clear', async (req: WorkerRequest) => {
-      await req.services.edge.data.clear();
+      await req.context.services.edge.data.clear();
       return 204;
     });
     for (const path of NO_AUTH_ROUTES) {
@@ -69,7 +69,7 @@ export class RouterService {
     this.router.post('/api/user', apiAuth, isAdmin, Http.users.updateUserAsync);
     this.router.get('/api/invites', apiAuth, Http.invites.getAllAsync);
     this.router.put('/api/invites/:send', apiAuth, Http.invites.putAsync);
-    this.router.get('/api/files/:file', apiAuth, (req) => req.services.storage.statics.getAsResponse(req.params!.file));
+    this.router.get('/api/files/:file', apiAuth, (req) => req.context.services.storage.statics.getAsResponse(req.params!.file));
 
     for (const path of AZURE_ROUTES_POST) {
       this.router.post(path, apiAuth, Http.azure.handleAsync);
@@ -87,7 +87,7 @@ export class RouterService {
   }
 
   async authOptionsAsync(req: WorkerRequest): Promise<Response | number> {
-    const match = await req.services.edge.cacheMatch();
+    const match = await req.context.services.edge.cacheMatch();
 
     if (match) return match;
 
@@ -97,7 +97,7 @@ export class RouterService {
 
     const response = new Response('', { headers: hdrs });
 
-    req.services.edge.cachePut(response);
+    req.context.services.edge.cachePut(response);
 
     return response;
   }

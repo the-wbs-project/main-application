@@ -16,7 +16,7 @@
   "author": "author",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^3.11.0",
+    "@cloudflare/workers-types": "^4.20230321.0",
     "@types/jest": "^27.5.1",
     "@types/node": "^17.0.35",
     "@types/service-worker-mock": "^2.0.1",

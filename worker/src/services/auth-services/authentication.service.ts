@@ -17,14 +17,14 @@ export class AuthenticationService {
 
     if (!auth0Code || !stateCode) return null;
 
-    const state = await req.services.data.auth.getStateAsync(stateCode);
+    const state = await req.context.services.data.auth.getStateAsync(stateCode);
     const token = await this.auth0.getAuthTokenAsync(req);
 
     if (!token || !state) {
       return null;
     }
     const payload = JSON.parse(this.decodeJWT(token.id_token));
-    const validToken = this.validateToken(req.config.auth, payload);
+    const validToken = this.validateToken(req.context.config.auth, payload);
 
     if (!validToken) {
       console.log('token invalid');
@@ -43,13 +43,13 @@ export class AuthenticationService {
         roles: organizations[orgId],
       });
     }
-    await req.services.data.auth.putStateAsync(stateCode, state);
+    await req.context.services.data.auth.putStateAsync(stateCode, state);
 
-    const secure = req.config.auth.excludeSecureCookie ? '' : ' Secure;';
+    const secure = req.context.config.auth.excludeSecureCookie ? '' : ' Secure;';
 
     return new Headers({
       Location: '/',
-      'Set-cookie': `${req.config.auth.cookieKey}=${stateCode};${secure} HttpOnly; SameSite=Lax;`,
+      'Set-cookie': `${req.context.config.auth.cookieKey}=${stateCode};${secure} HttpOnly; SameSite=Lax;`,
     });
   }
 
@@ -57,17 +57,17 @@ export class AuthenticationService {
     const stateCode = this.getStateCode(req);
 
     if (stateCode) {
-      const state = await req.services.data.auth.getStateAsync(stateCode);
+      const state = await req.context.services.data.auth.getStateAsync(stateCode);
 
       if (state) {
-        req.setState(state);
+        req.context.setState(state);
         return;
       }
     }
     const state = await this.auth0.generateStateParamAsync(req);
     const url = new URL(req.url);
 
-    await req.services.data.auth.putStateAsync(state, {});
+    await req.context.services.data.auth.putStateAsync(state, {});
 
     return Response.redirect(this.auth0.getLoginRedirectUrl(url.origin, state));
   }
@@ -76,10 +76,10 @@ export class AuthenticationService {
     const stateCode = this.getStateCode(req);
 
     if (stateCode) {
-      const state = await req.services.data.auth.getStateAsync(stateCode);
+      const state = await req.context.services.data.auth.getStateAsync(stateCode);
 
       if (state) {
-        req.setState(state);
+        req.context.setState(state);
 
         const org = req.params?.organization;
 
@@ -88,7 +88,7 @@ export class AuthenticationService {
           const orgRoles = state.organizations?.find((x) => x.organization === org);
 
           if (orgRoles) {
-            req.setOrganization(orgRoles);
+            req.context.setOrganization(orgRoles);
             return;
           }
           //
@@ -100,7 +100,7 @@ export class AuthenticationService {
     const state = await this.auth0.generateStateParamAsync(req);
     const url = new URL(req.url);
 
-    await req.services.data.auth.putStateAsync(state, {});
+    await req.context.services.data.auth.putStateAsync(state, {});
 
     return Response.redirect(this.auth0.getLoginRedirectUrl(url.origin, state));
   }
@@ -109,7 +109,7 @@ export class AuthenticationService {
     const url = new URL(req.url);
     const state = this.getStateCode(req);
 
-    if (state) await req.services.data.auth.deleteStateAsync(state);
+    if (state) await req.context.services.data.auth.deleteStateAsync(state);
 
     return Response.redirect(this.auth0.getLogoutUrl(url.origin));
   }
@@ -117,13 +117,13 @@ export class AuthenticationService {
   async setupAsync(req: WorkerRequest, inviteCode: string): Promise<Response | number> {
     const state = await this.auth0.generateStateParamAsync(req);
 
-    await req.services.data.auth.putStateAsync(state, {});
+    await req.context.services.data.auth.putStateAsync(state, {});
 
     return Response.redirect(this.auth0.getSetupRedirectUrl(state, inviteCode));
   }
 
   finishLogout(req: WorkerRequest): Response | null {
-    const config = req.config.auth;
+    const config = req.context.config.auth;
     const cookieHeader = req.request.headers.get('Cookie');
     if (cookieHeader && cookieHeader.includes(config.cookieKey)) {
       const secure = config.excludeSecureCookie ? '' : ' Secure;';
@@ -140,7 +140,7 @@ export class AuthenticationService {
   }
 
   getStateCode(req: WorkerRequest): string | null {
-    const key = req.config.auth.cookieKey || '';
+    const key = req.context.config.auth.cookieKey || '';
 
     const header = req.headers.get('Cookie');
 
@@ -150,7 +150,7 @@ export class AuthenticationService {
 
     if (cookieValue) return cookieValue;
 
-    return req.headers.get(req.config.auth.cookieKey || '');
+    return req.headers.get(req.context.config.auth.cookieKey || '');
   }
 
   // https://github.com/pose/webcrypto-jwt/blob/master/index.js

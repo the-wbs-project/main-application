@@ -20,7 +20,7 @@ export class BaseHttpService {
   }
 
   static getAuthHeaders(req: WorkerRequest, hdrs: Headers): void {
-    hdrs.set('Access-Control-Allow-Origin', 'https://' + req.config.auth.domain);
+    hdrs.set('Access-Control-Allow-Origin', 'https://' + req.context.config.auth.domain);
     hdrs.set('Access-Control-Allow-Methods', 'GET');
   }
 }

@@ -4,37 +4,8 @@ import { DbService } from '../database-services';
 export class ProjectNodeDataService {
   constructor(private readonly db: DbService) {}
 
-  async getAllAsync(projectId: string): Promise<ProjectNode[]> {
-    const data = (await this.getFromDbAsync(projectId)) ?? [];
-
-    for (const d of data) {
-      if (!d.parentId) {
-        if (d.phase && d.phase.parentId) {
-          d.parentId = d.phase.parentId;
-
-          delete d.phase.parentId;
-          await this.putAsync(d);
-        }
-      }
-      if (!d.order) {
-        if (d.phase && d.phase.order) {
-          d.order = d.phase.order;
-
-          delete d.phase.order;
-          await this.putAsync(d);
-        }
-      }
-      if (d.discipline)
-        for (const dd of d.discipline) {
-          if (dd.parentId) {
-            delete dd.parentId;
-            delete dd.isPhaseNode;
-            delete dd.phaseId;
-            await this.putAsync(d);
-          }
-        }
-    }
-    return data;
+  getAllAsync(projectId: string): Promise<ProjectNode[] | undefined> {
+    return this.getFromDbAsync(projectId);
   }
 
   async putAsync(node: ProjectNode): Promise<void> {
@@ -42,7 +13,7 @@ export class ProjectNodeDataService {
   }
 
   async batchAsync(projectId: string, upserts: ProjectNode[], removeIds: string[]): Promise<void> {
-    const all = await this.getAllAsync(projectId);
+    const all = (await this.getAllAsync(projectId)) ?? [];
     //
     //  First we are going to validate that all upserts have the proper project ID.
     //
@@ -77,7 +48,7 @@ export class ProjectNodeDataService {
     }
   }
 
-  private getFromDbAsync(projectId: string): Promise<ProjectNode[]> {
+  private getFromDbAsync(projectId: string): Promise<ProjectNode[] | undefined> {
     return this.db.getAllByPartitionAsync<ProjectNode>(projectId, true);
   }
 }

@@ -12,7 +12,7 @@ export class DiscussionHttpService extends BaseHttpService {
 
       return await super.buildJson(await service.getAllAsync(req.params.associationId, req.params.threadId));
     } catch (e) {
-      req.logException(
+      req.context.logException(
         'An error occured trying to get all discussions based on an association.',
         'DiscussionHttpService.getAsync',
         <Error>e,
@@ -31,7 +31,7 @@ export class DiscussionHttpService extends BaseHttpService {
 
       return 204;
     } catch (e) {
-      req.logException('An error occured trying to save a discussion.', 'DiscussionHttpService.putAsync', <Error>e);
+      req.context.logException('An error occured trying to save a discussion.', 'DiscussionHttpService.putAsync', <Error>e);
       return 500;
     }
   }

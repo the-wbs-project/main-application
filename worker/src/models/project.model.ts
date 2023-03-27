@@ -3,10 +3,11 @@ import { ProjectNode } from './project-node.model';
 
 export interface Project extends TaggedObject {
   id: string;
-  _ts: number;
+  createdOn: number;
+  lastModified: number;
   watchers?: string[];
 }
 
 export interface ProjectSnapshot extends Project {
-  tasks: ProjectNode[];
+  tasks?: ProjectNode[];
 }

@@ -19,9 +19,9 @@ export class SiteHttpService {
 
   static async getSiteAsync(req: WorkerRequest): Promise<Response> {
     try {
-      const cache = !req.config.debug;
+      const cache = !req.context.config.debug;
       if (cache) {
-        const matched = await req.services.edge.cacheMatch();
+        const matched = await req.context.services.edge.cacheMatch();
 
         if (matched) return matched;
       }
@@ -41,22 +41,22 @@ export class SiteHttpService {
         fullResponse = await hydrateAsync(req, fullResponse);
 
         if (cache) {
-          req.services.edge.cachePut(fullResponse);
+          req.context.services.edge.cachePut(fullResponse);
         }
       }
       return fullResponse;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
-      req.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
+      req.context.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
       return new Response('Not Found', { status: 404 });
     }
   }
 
   static async getSiteResourceAsync(req: WorkerRequest): Promise<Response> {
     try {
-      const cache = !req.config.debug;
+      const cache = !req.context.config.debug;
       if (cache) {
-        const matched = await req.services.edge.cacheMatch();
+        const matched = await req.context.services.edge.cacheMatch();
 
         if (matched) return matched;
       }
@@ -67,19 +67,21 @@ export class SiteHttpService {
         headers: getHeaders(req, originResponse.headers),
       });
 
-      if (fullResponse.status === 200 && cache) req.services.edge.cachePut(fullResponse);
+      if (fullResponse.status === 200 && cache) req.context.services.edge.cachePut(fullResponse);
 
       return fullResponse;
     } catch (e) {
       // if an error is thrown try to serve the asset at 404.html
-      req.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
+      req.context.logException('An error occured trying to get a static file.', 'SiteService.getSiteAsync', <Error>e);
       return new Response('Not Found', { status: 404 });
     }
   }
 }
 
 async function hydrateAsync(req: WorkerRequest, response: Response): Promise<Response> {
-  return new HTMLRewriter().on('script[id="app_insights"]', new ElementHandler(`"${req.config.appInsightsKey}"`)).transform(response);
+  return new HTMLRewriter()
+    .on('script[id="app_insights"]', new ElementHandler(`"${req.context.config.appInsightsKey}"`))
+    .transform(response);
 }
 
 function getHeaders(req: WorkerRequest, initHeaders: Headers): Headers {
@@ -88,7 +90,7 @@ function getHeaders(req: WorkerRequest, initHeaders: Headers): Headers {
 
   BaseHttpService.getAuthHeaders(req, headers);
 
-  if (!req.config.debug && ttl) headers.set('cache-control', 'public, max-age=' + ttl);
+  if (!req.context.config.debug && ttl) headers.set('cache-control', 'public, max-age=' + ttl);
 
   return headers;
 }
