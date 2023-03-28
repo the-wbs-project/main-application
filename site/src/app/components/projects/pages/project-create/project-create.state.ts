@@ -239,7 +239,7 @@ export class ProjectCreateState {
     const state = ctx.getState();
     const phases = state.phases!;
     const disciplines = state.disciplines!;
-
+    const now = Date.now();
     const project: Project = {
       id: IdService.generate(),
       categories: {
@@ -252,7 +252,8 @@ export class ProjectCreateState {
       roles: [],
       status: PROJECT_STATI.PLANNING,
       title: state.title,
-      _ts: new Date().getTime(),
+      createdOn: now,
+      lastModifiedOn: now,
     };
     const nodes: ProjectNode[] = [];
 
@@ -275,7 +276,8 @@ export class ProjectCreateState {
           },
           projectId: project.id,
           title: cat.label,
-          _ts: new Date().getTime(),
+          createdOn: now,
+          lastModifiedOn: now,
         });
       } else {
         nodes.push({
@@ -291,7 +293,8 @@ export class ProjectCreateState {
           },
           projectId: project.id,
           title: phase.label,
-          _ts: new Date().getTime(),
+          createdOn: now,
+          lastModifiedOn: now,
         });
       }
     }
@@ -309,7 +312,8 @@ export class ProjectCreateState {
           parentId: null,
           projectId: project.id,
           title: cat.label,
-          _ts: new Date().getTime(),
+          createdOn: now,
+          lastModifiedOn: now,
         });
       } else {
         nodes.push({
@@ -319,7 +323,8 @@ export class ProjectCreateState {
           parentId: null,
           projectId: project.id,
           title: discipline.label,
-          _ts: new Date().getTime(),
+          createdOn: now,
+          lastModifiedOn: now,
         });
       }
     }

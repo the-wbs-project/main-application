@@ -31,7 +31,7 @@
         </div>
       </div>
       <div
-        *ngFor="let project of projects | projectSort: 'name'"
+        *ngFor="let project of projects | projectSort : 'name'"
         class="col-lg-3 col-md-4 col-sm-6"
       >
         <a [routerLink]="['/projects', project.id, 'view']">
@@ -44,7 +44,7 @@
                 </div>
               </div>
               <div class="tx-right tx-10 tx-gray-600">
-                {{ project._ts | editedDateText }}
+                {{ project.lastModifiedOn | editedDateText }}
               </div>
             </div>
           </div>

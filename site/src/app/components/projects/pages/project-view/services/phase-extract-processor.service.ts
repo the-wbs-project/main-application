@@ -151,8 +151,9 @@ export class PhaseExtractProcessor {
       .filter((x) => x.phaseInfo?.syncWithDisciplines)
       .map((x) => x.id);
 
+    const now = Date.now();
+
     for (const vm of upsertVms) {
-      //
       let model = originals.find((x) => x.id === vm.id);
 
       if (model) {
@@ -161,6 +162,7 @@ export class PhaseExtractProcessor {
         model.disciplineIds = vm.disciplines;
         model.parentId = vm.parentId;
         model.order = vm.order;
+        model.lastModifiedOn = now;
         model.phase = {
           isDisciplineNode: false,
           syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
@@ -177,7 +179,8 @@ export class PhaseExtractProcessor {
             isDisciplineNode: false,
             syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
           },
-          _ts: new Date().getTime(),
+          createdOn: now,
+          lastModifiedOn: now,
         };
       }
       const parentId = model.parentId;

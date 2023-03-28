@@ -3,7 +3,7 @@
     title="PROJECT DETAILS"
     [items]="[{ route: '', label: 'General.Projects' }]"
     [active_item]="project.title"
-  ></app-page-header>
+  />
   <div class="row">
     <div class="col-lg-12 col-md-12">
       <div class="card custom-card">
@@ -14,18 +14,11 @@
               [src]="url"
               class="wd-70 h-auto"
             />
-            <wbs-edit-pencil
-              class="pos-absolute l-80 t-20"
-              placeholder="Projects.EditTaskTitle"
-            >
-            </wbs-edit-pencil>
+            <wbs-edit-pencil class="pos-absolute l-80 t-20" placeholder="Projects.EditTaskTitle" />
           </div>
           <div class="display-flex flex-row w-100">
             <div style="flex-grow: 1">
-              <wbs-title-editor
-                [title]="project.title"
-                (titleChange)="service.saveTitle($event)"
-              ></wbs-title-editor>
+              <wbs-title-editor [title]="project.title" (titleChange)="service.saveTitle($event)" />
               <p class="tx-13 text-muted ms-md-4 ms-0 mb-2 pb-2">
                 <label
                   class="me-3"
@@ -42,11 +35,7 @@
                 </span>
                 <span class="edit-pencil-parent">
                   {{ project.category | categoryLabel }}
-                  <wbs-edit-pencil
-                    class="pos-relative t--5"
-                    placeholder="Projects.EditProjectCategory"
-                  >
-                  </wbs-edit-pencil>
+                  <wbs-edit-pencil class="pos-relative t--5" placeholder="Projects.EditProjectCategory" />
                 </span>
               </p>
               <p class="text-muted ms-md-4 ms-0 mb-2">
@@ -55,15 +44,12 @@
                 </span>
                 <span>
                   {{ project.status | projectStatus }},
-                  {{ project._ts | editedDateText | lowercase }}
+                  {{ project.lastModifiedOn | editedDateText | lowercase }}
                 </span>
               </p>
             </div>
             <div>
-              <app-project-action-menu
-                [menu]="actions"
-                (itemClicked)="service.action($event)"
-              ></app-project-action-menu>
+              <app-project-action-menu [menu]="actions" (itemClicked)="service.action($event)" />
             </div>
           </div>
           <div class="my-md-auto mt-4 prof-details"></div>

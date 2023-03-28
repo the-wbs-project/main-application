@@ -1,22 +1,17 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
-import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { CreateThread } from '@wbs/core/actions';
+import { CreateReply } from '@wbs/core/actions';
 
 @Component({
-  selector: 'app-forum-editor',
-  templateUrl: './editor.component.html',
-  //styleUrls: ['./editor.component.css'],
+  selector: 'app-forum-reply-editor',
+  templateUrl: './reply-editor.component.html',
 })
-export class EditorComponent {
+export class ReplyEditorComponent {
   @Input() header?: string;
+  @Input() replyToId?: string;
 
   readonly form = new FormGroup({
-    title: new FormControl<string>('', [
-      Validators.required,
-      noWhitespaceValidator,
-    ]),
     message: new FormControl<string>('', [
       Validators.required,
       noWhitespaceValidator,
@@ -28,10 +23,8 @@ export class EditorComponent {
   protected submit(): void {
     const values = this.form.getRawValue();
 
-    if (values.title && values.message) {
-      this.store
-        .dispatch(new CreateThread(values.title, values.message))
-        .subscribe(() => this.store.dispatch(new Navigate(['./'])));
+    if (this.replyToId && values.message) {
+      this.store.dispatch(new CreateReply(this.replyToId, values.message));
     }
   }
 }

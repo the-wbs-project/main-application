@@ -4,7 +4,11 @@ import { DbService } from '../database-services';
 export class DiscussionDataService {
   constructor(private readonly db: DbService) {}
 
-  getAllAsync(associationId: string, threadId: string | undefined): Promise<Discussion[]> {
+  getAsync(associationId: string, threadId: string): Promise<Discussion | undefined> {
+    return this.db.getDocumentAsync<Discussion>(associationId, threadId, true);
+  }
+
+  getAllAsync(associationId: string, threadId: string | undefined): Promise<Discussion[] | undefined> {
     if (!threadId) return this.db.getAllByPartitionAsync<Discussion>(associationId, true);
 
     return this.db.getListByQueryAsync<Discussion>(
@@ -17,7 +21,7 @@ export class DiscussionDataService {
     );
   }
 
-  async putAsync(model: Discussion): Promise<any> {
-    await this.db.upsertDocument(model, model.associationId);
+  putAsync(model: Discussion): Promise<any> {
+    return this.db.upsertDocument(model, model.associationId);
   }
 }

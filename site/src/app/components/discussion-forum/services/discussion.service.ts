@@ -37,5 +37,4 @@ export class DiscussionService {
   }
 }
 
-const sort = (a: Discussion, b: Discussion) => a.timestamp - b.timestamp;
 */

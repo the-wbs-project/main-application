@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { OrganizationState } from '@wbs/core/states';
 
-@Pipe({ name: 'userName', pure: false })
+@Pipe({ name: 'userName', pure: true })
 export class UserNamePipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 

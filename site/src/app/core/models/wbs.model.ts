@@ -12,6 +12,6 @@ export interface Wbs extends TaggedObject {
   author: string;
   contributors: string[];
   language: string;
-  thread: any;
-  _ts: number;
+  createdOn: number;
+  lastModifiedOn: number;
 }

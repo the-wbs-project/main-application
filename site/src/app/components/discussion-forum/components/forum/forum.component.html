@@ -13,24 +13,46 @@
                 Do you have a question or conversation you want to start?
               </div>
               <div class="mg-t-20">
-                <a class="btn btn-primary" [routerLink]="['write']">
+                <button class="btn btn-primary" (click)="createThread()">
                   <fa-icon [icon]="faPlus"></fa-icon>
                   <span class="mg-l-10">Start Discussion</span>
-                </a>
+                </button>
               </div>
             </div>
-            <div *ngIf="threads.length > 0" class="row">
-              <div class="col-12">
-                <ul class="list-group">
-                  <li
-                    class="list-group-item"
-                    *ngFor="let thread of threads$ | async"
-                  >
-                    <a [routerLink]="['/thread', thread.id]">
-                      {{ thread.title }}
-                    </a>
-                  </li>
-                </ul>
+            <div *ngIf="threads.length > 0">
+              <div class="mg-10">
+                <button class="btn btn-primary" (click)="createThread()">
+                  <fa-icon [icon]="faPlus"></fa-icon>
+                  <span class="mg-l-10">Start Discussion</span>
+                </button>
+              </div>
+              <div
+                *ngFor="let thread of threads$ | async; let index = index"
+                class="d-flex w-100 pd-y-5 pd-x-10 bd-gray-400 bd-l bd-r bd-b"
+                [ngClass]="{ 'bd-t': index === 0 }"
+                [routerLink]="[thread.id]"
+              >
+                <div class="flex-grow-1">
+                  {{ thread.title }}
+                </div>
+                <div class="wd-60">
+                  {{ thread.writtenBy | userName }}
+                </div>
+                <div class="wd-60">
+                  {{ thread.replies ?? 0 }}
+                </div>
+                <div class="wd-60">
+                  <div ngbDropdown class="d-inline-block">
+                    <button type="button" class="btn btn-outline-default btn-forum-actions border-0 color-black" id="dropdownBasic1" ngbDropdownToggle>
+                      <fa-icon [icon]="faEllipsisVertical" size="lg" />
+                    </button>
+                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+                      <button ngbDropdownItem>Action - 1</button>
+                      <button ngbDropdownItem>Another Action</button>
+                      <button ngbDropdownItem>Something else is here</button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -39,3 +61,50 @@
     </div>
   </div>
 </div>
+<ng-template #threadEditor let-modal>
+  <div class="modal-header" *ngIf="modalTitle">
+    <h4 class="modal-title" id="modal-basic-title">
+      {{ modalTitle | translate }}
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.close()"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form #forumForm [formGroup]="form">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          id="title"
+          type="email"
+          class="form-control"
+          formControlName="title"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <textarea
+          rows="3"
+          id="message"
+          class="form-control"
+          formControlName="message"
+        ></textarea>
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <div style="flex-grow: 1" class="tx-left">
+      <button
+        type="button"
+        class="btn btn-primary w-100"
+        [disabled]="!form.valid"
+        (click)="submit()"
+      >
+        Submit
+      </button>
+    </div>
+  </div>
+</ng-template>

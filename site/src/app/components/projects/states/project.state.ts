@@ -264,6 +264,7 @@ export class ProjectState {
     const nodes = state.nodes ?? [];
     const node = nodes.find((x) => x.id === action.nodeId);
     const nodeVm = state.phases!.find((x) => x.id === action.nodeId);
+    const now = Date.now();
 
     if (node == null) return;
 
@@ -275,7 +276,6 @@ export class ProjectState {
       ) + 1;
 
     const newNode: WbsNode = {
-      _ts: 0,
       id: IdService.generate(),
       order,
       parentId: node.parentId,
@@ -286,6 +286,8 @@ export class ProjectState {
       removed: false,
       tags: node.tags,
       title: node.title + ' Clone',
+      createdOn: now,
+      lastModifiedOn: now,
     };
 
     return this.saveTask(ctx, newNode).pipe(
@@ -718,10 +720,11 @@ export class ProjectState {
   ): Observable<void> {
     const project = ctx.getState().current!;
 
-    return this.data.projectNodes.putAsync(project.id, task).pipe(
-      tap(() => (task._ts = new Date().getTime())),
-      switchMap(() => this.projectChanged(ctx))
-    );
+    task.lastModifiedOn = Date.now();
+
+    return this.data.projectNodes
+      .putAsync(project.id, task)
+      .pipe(switchMap(() => this.projectChanged(ctx)));
   }
 
   saveReordered(
@@ -770,7 +773,7 @@ export class ProjectState {
   private projectChanged(ctx: StateContext<StateModel>): Observable<void> {
     const project = ctx.getState().current!;
 
-    project._ts = new Date().getTime();
+    project.lastModifiedOn = Date.now();
 
     ctx.patchState({
       current: project,
@@ -779,4 +782,3 @@ export class ProjectState {
     return ctx.dispatch(new ProjectUpdated(project));
   }
 }
-/**/

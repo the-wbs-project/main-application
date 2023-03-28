@@ -28,7 +28,6 @@ export class SiteHttpService {
       const url = new URL(req.url);
       url.pathname = '/index.html';
 
-      console.log(url.toString());
       const originResponse = await req.myFetch(url.toString());
 
       let fullResponse = new Response(originResponse.body, {

@@ -9,6 +9,7 @@ export interface Discussion {
   createdOn: number;
   lastUpdated: number;
   removed?: boolean;
+  replies: number;
   promotions: string[];
   demotions: string[];
 }

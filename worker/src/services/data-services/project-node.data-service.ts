@@ -4,8 +4,22 @@ import { DbService } from '../database-services';
 export class ProjectNodeDataService {
   constructor(private readonly db: DbService) {}
 
-  getAllAsync(projectId: string): Promise<ProjectNode[] | undefined> {
-    return this.getFromDbAsync(projectId);
+  async getAllAsync(projectId: string): Promise<ProjectNode[] | undefined> {
+    const nodes = await this.getFromDbAsync(projectId);
+
+    if (nodes)
+      for (const node of nodes) {
+        if (!node.createdOn) {
+          //@ts-ignore
+          const ts = node._ts;
+          node.createdOn = ts * 1000;
+          node.lastModified = ts * 1000;
+
+          await this.putAsync(node);
+        }
+      }
+
+    return nodes;
   }
 
   async putAsync(node: ProjectNode): Promise<void> {

@@ -6,8 +6,10 @@ export interface Discussion {
   threadId?: string;
   replyToId?: string;
   writtenBy: string;
-  timestamp: number;
+  createdOn: number;
+  lastUpdated: number;
   removed?: boolean;
+  replies: number;
   promotions: string[];
   demotions: string[];
 }

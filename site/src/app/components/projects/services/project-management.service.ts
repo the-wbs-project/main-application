@@ -21,7 +21,6 @@ export class ProjectManagementService {
       ...model,
       id: IdService.generate(),
       parentId: parentId,
-      _ts: 0,
       order,
     };
   }
