@@ -107,7 +107,7 @@ export const routes: Routes = [
       },
       {
         path: 'discussions',
-        canActivate: [ProjectDiscussionGuard],
+        canActivate: [ProjectViewGuard, ProjectDiscussionGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
           view: PROJECT_PAGE_VIEW.DISCUSSIONS,

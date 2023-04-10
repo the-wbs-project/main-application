@@ -62,7 +62,9 @@ export class RouterService {
     this.router.put('/api/projects/:organization/byId/:projectId/nodes/:nodeId', apiAuth, Http.projectNodes.putAsync);
     this.router.get('/api/projects/:organization/snapshot/:projectId/:activityId', apiAuth, Http.projectSnapshots.getByActivityIdAsync);
     this.router.get('/api/discussions/:organization/:associationId', apiAuth, Http.discussions.getAsync);
+    this.router.get('/api/discussions/:organization/:associationId/users', apiAuth, Http.discussions.getUsersAsync);
     this.router.get('/api/discussions/:organization/:associationId/:threadId', apiAuth, Http.discussions.getAsync);
+    this.router.get('/api/discussions/:organization/:associationId/:threadId/text', apiAuth, Http.discussions.getTextAsync);
     this.router.put('/api/discussions/:organization/:threadId', apiAuth, Http.discussions.putAsync);
     this.router.get('/api/users', apiAuth, Http.users.getAllAsync);
     this.router.get('/api/users/lite', apiAuth, Http.users.getAllLiteAsync);

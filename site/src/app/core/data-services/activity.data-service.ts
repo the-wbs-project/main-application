@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngxs/store';
+import { IdService } from '@wbs/core/services';
 import { AuthState } from '@wbs/core/states';
-import { Observable } from 'rxjs';
+import { Observable, map } from 'rxjs';
 import { Activity, ActivityData } from '../models';
 
 export class ActivityDataService {
@@ -32,14 +33,16 @@ export class ActivityDataService {
     dataType: 'project'
   ): Observable<Activity> {
     const userId = this.store.selectSnapshot(AuthState.userId)!;
+    const model: Activity = {
+      ...data,
+      id: IdService.generate(),
+      timestamp: Date.now(),
+      topLevelId,
+      userId,
+    };
 
-    return this.http.put<Activity>(
-      `activity/${this.organization}/${dataType}`,
-      {
-        ...data,
-        topLevelId,
-        userId,
-      }
-    );
+    return this.http
+      .put<void>(`activity/${this.organization}/${dataType}`, model)
+      .pipe(map(() => model));
   }
 }

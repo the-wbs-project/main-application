@@ -13,5 +13,5 @@ export interface Wbs extends TaggedObject {
   contributors: string[];
   language: string;
   createdOn: number;
-  lastModifiedOn: number;
+  lastModified: number;
 }

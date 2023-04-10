@@ -253,7 +253,7 @@ export class ProjectCreateState {
       status: PROJECT_STATI.PLANNING,
       title: state.title,
       createdOn: now,
-      lastModifiedOn: now,
+      lastModified: now,
     };
     const nodes: ProjectNode[] = [];
 
@@ -277,7 +277,7 @@ export class ProjectCreateState {
           projectId: project.id,
           title: cat.label,
           createdOn: now,
-          lastModifiedOn: now,
+          lastModified: now,
         });
       } else {
         nodes.push({
@@ -294,7 +294,7 @@ export class ProjectCreateState {
           projectId: project.id,
           title: phase.label,
           createdOn: now,
-          lastModifiedOn: now,
+          lastModified: now,
         });
       }
     }
@@ -313,7 +313,7 @@ export class ProjectCreateState {
           projectId: project.id,
           title: cat.label,
           createdOn: now,
-          lastModifiedOn: now,
+          lastModified: now,
         });
       } else {
         nodes.push({
@@ -324,7 +324,7 @@ export class ProjectCreateState {
           projectId: project.id,
           title: discipline.label,
           createdOn: now,
-          lastModifiedOn: now,
+          lastModified: now,
         });
       }
     }

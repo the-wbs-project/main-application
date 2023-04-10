@@ -14,7 +14,7 @@ import {
   WbsNode,
 } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Observable, Subscription, tap } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { ProjectState } from '../../../states';
 import { TASK_PAGE_VIEW_TYPE } from '../models';
 import { TaskPageChanged, VerifyTask } from '../actions';

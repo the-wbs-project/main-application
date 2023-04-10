@@ -17,7 +17,7 @@ export class ServiceFactory {
 
     this.mailgun = new MailGunService(config);
     this.router = new RouterService(this.mailgun);
-    this.identity = new IdentityService(auth0);
+    this.identity = new IdentityService(auth0, config);
     this.auth = new AuthenticationService(auth0);
   }
 }

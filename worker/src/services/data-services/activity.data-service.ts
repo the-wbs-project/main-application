@@ -8,7 +8,8 @@ export class ActivityDataService {
     return this.db.getAllByPartitionAsync<Activity>(topLevelId, false);
   }
 
-  async putAsync(activity: Activity): Promise<Activity> {
-    return await this.db.upsertDocument<Activity>(activity, activity.topLevelId);
+  async putAsync(activity: Activity): Promise<void> {
+    console.log(activity);
+    await this.db.upsertDocument<Activity>(activity, activity.topLevelId);
   }
 }

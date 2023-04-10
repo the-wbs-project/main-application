@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { OrganizationState } from '@wbs/core/states';
+import { UsersState } from '@wbs/core/states';
 
 @Pipe({ name: 'userEmail' })
 export class UserEmailPipe implements PipeTransform {
@@ -9,10 +9,8 @@ export class UserEmailPipe implements PipeTransform {
   transform(userId: string | undefined | null): string {
     if (!userId) return '';
 
-    const user = this.store
-      .selectSnapshot(OrganizationState.users)
-      .find((x) => x.id === userId);
-
-    return user?.email ?? '';
+    return (
+      this.store.selectSnapshot(UsersState.usersById).get(userId)?.email ?? ''
+    );
   }
 }

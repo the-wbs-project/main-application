@@ -22,6 +22,10 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
+.body {
+  font-family: "Poppins", sans-serif;
+}
+
 .notification {
   font-size: 14px !important;
   z-index: 10000000 !important;
@@ -354,7 +358,6 @@ button:focus:not(:focus-visible) {
 .my-custom-class {
   z-index: max;
 }
-
 
 /* ######## UTILITIES-STYLES ######## */
 @import "util/background";

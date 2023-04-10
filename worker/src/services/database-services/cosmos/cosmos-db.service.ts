@@ -105,7 +105,8 @@ export class CosmosDbService implements DbService {
     if (res.status === 404) return [];
     if (res.status === 400) {
       console.log(await res.raw.text());
-      return [];
+
+      throw new Error('Error retrieving data.');
     }
 
     const results = await res.json();

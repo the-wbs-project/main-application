@@ -15,7 +15,7 @@ export interface Project {
   title: string;
   description: string;
   createdOn: number;
-  lastModifiedOn: number;
+  lastModified: number;
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;

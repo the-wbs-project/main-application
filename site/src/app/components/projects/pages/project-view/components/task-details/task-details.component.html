@@ -67,6 +67,14 @@
           </a>
         </div>
       </li>
+      <li class="list-group-item pd-y-5 pd-x-10">
+        <span class="tx-10 tx-bold tx-gray-700 display-b pd-b-5">
+          {{ "General.LastModified" | translate }}
+        </span>
+        <span class="tx-14 mg-l-10">
+          {{ task.lastModified | dateText }}
+        </span>
+      </li>
     </ul>
   </div>
 </div>

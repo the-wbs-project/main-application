@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewEncapsulation } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import {
   faTriangleExclamation,
@@ -14,6 +14,7 @@ import { DiscussionForumState } from '../../states';
 @Component({
   templateUrl: './forum.component.html',
   styleUrls: ['./forum.component.scss'],
+  encapsulation: ViewEncapsulation.None,
 })
 export class ForumComponent implements OnInit {
   @ViewChild('threadEditor') threadEditor!: any;
@@ -53,8 +54,8 @@ export class ForumComponent implements OnInit {
       message: '',
     });
     this.modalRef = this.modalService.open(this.threadEditor, {
-      modalDialogClass: 'task-modal',
-      //size: 'fullscreen',
+      modalDialogClass: 'forum-modal',
+      size: 'fullscreen',
     });
   }
 
@@ -67,7 +68,7 @@ export class ForumComponent implements OnInit {
       message: model.text ?? '',
     });
     this.modalService.open(this.threadEditor, {
-      modalDialogClass: 'task-modal',
+      modalDialogClass: 'forum-modal',
       //size: 'fullscreen',
     });
   }

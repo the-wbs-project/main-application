@@ -10,9 +10,7 @@ export class ProjectSortPipe implements PipeTransform {
     if (list == null || list.length === 0) return list;
 
     if (sort === 'modified')
-      return list.sort((a, b) =>
-        a.lastModifiedOn > b.lastModifiedOn ? -1 : 1
-      );
+      return list.sort((a, b) => (a.lastModified > b.lastModified ? -1 : 1));
 
     return list.sort((a, b) => (a.title < b.title ? -1 : 1));
   }

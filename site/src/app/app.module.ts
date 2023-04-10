@@ -23,6 +23,7 @@ import {
   OrganizationState,
   ProjectListState,
   UiState,
+  UsersState,
 } from '@wbs/core/states';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -44,6 +45,7 @@ import { AppComponent } from './app.component';
       OrganizationState,
       ProjectListState,
       UiState,
+      UsersState,
     ]),
     NgxsRouterPluginModule.forRoot(),
     PopupModule,

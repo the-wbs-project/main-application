@@ -47,6 +47,8 @@ export class ProjectDataService {
   async putAsync(project: Project): Promise<void> {
     const kvName = [kvPrefix, this.organization, project.id].join('|');
 
+    project.lastModified = Date.now();
+
     await this.db.upsertDocument(project, project.id);
 
     this.edge.delete(kvName);

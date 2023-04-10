@@ -23,6 +23,8 @@ export class ProjectNodeDataService {
   }
 
   async putAsync(node: ProjectNode): Promise<void> {
+    node.lastModified = Date.now();
+
     await this.db.upsertDocument(node, node.projectId);
   }
 

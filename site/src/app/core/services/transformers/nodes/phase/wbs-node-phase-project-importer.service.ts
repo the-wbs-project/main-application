@@ -67,7 +67,7 @@ export class WbsNodePhaseProjectImporter {
         parentId: null,
         disciplineIds: this.getDisciplinesFromChildren(children),
         createdOn: now,
-        lastModifiedOn: now,
+        lastModified: now,
       };
 
       for (const person of info.resources) {
@@ -104,7 +104,7 @@ export class WbsNodePhaseProjectImporter {
         parentId,
         order: counter,
         createdOn: now,
-        lastModifiedOn: now,
+        lastModified: now,
         title: info.title,
         disciplineIds: this.getDisciplinesFromChildren(children),
       };

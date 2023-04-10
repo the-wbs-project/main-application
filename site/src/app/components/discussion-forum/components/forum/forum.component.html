@@ -27,31 +27,38 @@
                 </button>
               </div>
               <div
+                class="d-flex w-100 pd-y-5 pd-x-10 bd-gray-400 bd-l bd-r bd-b bg-gray-400"
+              >
+                <div class="pd-y-5 flex-grow-1">
+                  Title
+                </div>
+                <div class="pd-y-5 text-center wd-100">
+                  Created By
+                </div>
+                <div class="pd-y-5 text-center wd-100">
+                  Last Changed
+                </div>
+                <div class="pd-y-5 text-center wd-80">
+                  Replies
+                </div>
+              </div>
+              <div
                 *ngFor="let thread of threads$ | async; let index = index"
                 class="d-flex w-100 pd-y-5 pd-x-10 bd-gray-400 bd-l bd-r bd-b"
                 [ngClass]="{ 'bd-t': index === 0 }"
                 [routerLink]="[thread.id]"
               >
-                <div class="flex-grow-1">
+                <div class="pd-y-5 flex-grow-1">
                   {{ thread.title }}
                 </div>
-                <div class="wd-60">
+                <div class="pd-y-5 text-center wd-100 tx-9">
                   {{ thread.writtenBy | userName }}
                 </div>
-                <div class="wd-60">
-                  {{ thread.replies ?? 0 }}
+                <div class="pd-y-5 text-center wd-100 tx-9">
+                  {{ thread.lastUpdated | dateText }}
                 </div>
-                <div class="wd-60">
-                  <div ngbDropdown class="d-inline-block">
-                    <button type="button" class="btn btn-outline-default btn-forum-actions border-0 color-black" id="dropdownBasic1" ngbDropdownToggle>
-                      <fa-icon [icon]="faEllipsisVertical" size="lg" />
-                    </button>
-                    <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-                      <button ngbDropdownItem>Action - 1</button>
-                      <button ngbDropdownItem>Another Action</button>
-                      <button ngbDropdownItem>Something else is here</button>
-                    </div>
-                  </div>
+                <div class="pd-y-5 text-center wd-80">
+                  {{ thread.replies ?? 0 }}
                 </div>
               </div>
             </div>
@@ -73,9 +80,9 @@
       (click)="modal.close()"
     ></button>
   </div>
-  <div class="modal-body">
+  <div class="modal-body mg-x-10">
     <form #forumForm [formGroup]="form">
-      <div class="mb-3">
+      <div class="mb-3 mb-x-5">
         <label for="title" class="form-label">Title</label>
         <input
           id="title"
@@ -84,14 +91,9 @@
           formControlName="title"
         />
       </div>
-      <div class="mb-3">
+      <div class="mb-3 mb-x-5">
         <label for="message" class="form-label">Message</label>
-        <textarea
-          rows="3"
-          id="message"
-          class="form-control"
-          formControlName="message"
-        ></textarea>
+        <kendo-editor appEditorFixer formControlName="message" style="height: 300px;" />
       </div>
     </form>
   </div>

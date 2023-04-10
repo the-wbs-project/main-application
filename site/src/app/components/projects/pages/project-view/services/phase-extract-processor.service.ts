@@ -162,7 +162,7 @@ export class PhaseExtractProcessor {
         model.disciplineIds = vm.disciplines;
         model.parentId = vm.parentId;
         model.order = vm.order;
-        model.lastModifiedOn = now;
+        model.lastModified = now;
         model.phase = {
           isDisciplineNode: false,
           syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
@@ -180,7 +180,7 @@ export class PhaseExtractProcessor {
             syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
           },
           createdOn: now,
-          lastModifiedOn: now,
+          lastModified: now,
         };
       }
       const parentId = model.parentId;

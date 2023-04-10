@@ -18,7 +18,26 @@ export class DiscussionDataService {
         { name: '@associationId', value: associationId },
         { name: '@threadId', value: threadId },
       ],
+      undefined,
+      undefined,
+      true,
     );
+  }
+
+  async getAllUsersAsync(associationId: string): Promise<string[]> {
+    const allIds = await this.db.getListByQueryAsync<string>(
+      `SELECT VALUE c.writtenBy FROM c WHERE c.associationId = @associationId`,
+      false,
+      [{ name: '@associationId', value: associationId }],
+      undefined,
+      undefined,
+      true,
+    );
+    const ids: string[] = [];
+
+    for (const id of allIds) if (ids.indexOf(id) === -1) ids.push(id);
+
+    return ids;
   }
 
   putAsync(model: Discussion): Promise<any> {

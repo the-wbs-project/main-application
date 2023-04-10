@@ -1,13 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import {
+  AddUsers,
   CreateThread,
   EditThread,
   LoadDiscussionForum,
+  LoadPosts,
 } from '@wbs/core/actions';
 import { IdService, Messages } from '@wbs/core/services';
 import { AuthState } from '@wbs/core/states';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Discussion } from '../models';
 import { DiscussionDataService } from '../services';
@@ -39,6 +41,25 @@ export class DiscussionForumState {
   }
 
   @Selector()
+  static posts(state: StateModel): Discussion[] | undefined {
+    return state.posts;
+  }
+
+  @Selector()
+  static thread(state: StateModel): Discussion | undefined {
+    return state.threads.find((x) => x.id === state.threadId);
+  }
+
+  @Selector()
+  static threadTextUrl(state: StateModel): string | undefined {
+    return state.threadId
+      ? `/api/discussions/${state.organization}/${state.associationId}/${state.threadId}/text`
+      : undefined;
+  }
+
+  //
+
+  @Selector()
   static threads(state: StateModel): Discussion[] {
     return state.threads;
   }
@@ -56,8 +77,12 @@ export class DiscussionForumState {
     )
       return;
 
-    return this.data.getAsync(action.organization, action.associationId).pipe(
-      map((threads) => {
+    return forkJoin({
+      threads: this.data.getAsync(action.organization, action.associationId),
+      users: this.data.getUsersAsync(action.organization, action.associationId),
+    }).pipe(
+      tap(({ users }) => ctx.dispatch(new AddUsers(users))),
+      map(({ threads }) => {
         ctx.patchState({
           threads: sort(threads),
           organization: action.organization,
@@ -65,6 +90,32 @@ export class DiscussionForumState {
         });
       })
     );
+  }
+
+  @Action(LoadPosts)
+  loadPosts(
+    ctx: StateContext<StateModel>,
+    action: LoadPosts
+  ): Observable<void> | void {
+    const state = ctx.getState();
+
+    if (
+      !state.organization ||
+      !state.associationId ||
+      state.threadId === action.threadId
+    )
+      return;
+
+    return this.data
+      .getAsync(state.organization, state.associationId, action.threadId)
+      .pipe(
+        map((threads) => {
+          ctx.patchState({
+            posts: sort(threads),
+            threadId: action.threadId,
+          });
+        })
+      );
   }
 
   @Action(CreateThread)

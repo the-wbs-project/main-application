@@ -287,7 +287,7 @@ export class ProjectState {
       tags: node.tags,
       title: node.title + ' Clone',
       createdOn: now,
-      lastModifiedOn: now,
+      lastModified: now,
     };
 
     return this.saveTask(ctx, newNode).pipe(
@@ -720,7 +720,7 @@ export class ProjectState {
   ): Observable<void> {
     const project = ctx.getState().current!;
 
-    task.lastModifiedOn = Date.now();
+    task.lastModified = Date.now();
 
     return this.data.projectNodes
       .putAsync(project.id, task)
@@ -766,14 +766,15 @@ export class ProjectState {
             action: TASK_ACTIONS.REORDERED,
           });
         }),
-        tap(() => this.messaging.success('Projects.TaskReordered'))
+        tap(() => this.messaging.success('Projects.TaskReordered')),
+        switchMap(() => this.projectChanged(ctx))
       );
   }
 
   private projectChanged(ctx: StateContext<StateModel>): Observable<void> {
     const project = ctx.getState().current!;
 
-    project.lastModifiedOn = Date.now();
+    project.lastModified = Date.now();
 
     ctx.patchState({
       current: project,

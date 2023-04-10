@@ -1,9 +1,11 @@
+import { type } from 'os';
+import { Config } from '../../config';
 import { User, UserLite } from '../../models';
 import { Auth0Service } from '../auth-services';
 import { WorkerRequest } from '../worker-request.service';
 
 export class IdentityService {
-  constructor(private readonly auth0: Auth0Service) {}
+  constructor(private readonly auth0: Auth0Service, private readonly config: Config) {}
 
   async updateProfileAsync(req: WorkerRequest, user: User): Promise<void> {
     const response = await this.auth0.makeAuth0CallAsync(req, `users/${user.id}`, 'PATCH', {
@@ -29,13 +31,25 @@ export class IdentityService {
     }
   }
 
-  async getUserAsync(req: WorkerRequest, userId: string): Promise<User | null> {
+  async getUserAsync(req: WorkerRequest, userId: string): Promise<User> {
+    const kvName = `USERS|${userId}`;
+    let user = await this.config.kvAuth.get<User>(kvName, 'json');
+
+    if (user) return user;
+
     const url = `users/${userId}`;
+    console.log(url);
     const response = await this.auth0.makeAuth0CallAsync(req, url, 'GET');
 
     if (response.status !== 200) throw new Error(await response.text());
 
-    return this.auth0.toUser(await response.json());
+    user = this.auth0.toUser(await response.json());
+
+    await this.config.kvAuth.put(kvName, JSON.stringify(user), {
+      expirationTtl: 24 * 60 * 60,
+    });
+
+    return user;
   }
 
   async getUsersAsync(req: WorkerRequest): Promise<User[]> {

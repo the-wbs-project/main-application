@@ -33,17 +33,18 @@ export class ActivityHttpService extends BaseHttpService {
     try {
       if (!req.context.state?.userId) return 500;
 
-      let activity: Activity = await req.request.json();
+      const activity: Activity = await req.request.json();
       const dataType = req.params?.dataType!;
 
       activity.userId = req.context.state.userId;
-      activity = await req.context.services.data.activities.putAsync(activity);
+
+      await req.context.services.data.activities.putAsync(activity);
 
       if (dataType === 'project') await req.context.services.data.projectSnapshots.putAsync(activity.topLevelId, activity.id);
 
       await req.context.services.data.userActivities.putAsync(activity);
 
-      return super.buildJson(activity);
+      return 204;
     } catch (e) {
       req.context.logException('An error occured trying to insert an activity.', 'ActivityHttpService.putAsync', <Error>e);
       return 500;

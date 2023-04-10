@@ -12,7 +12,7 @@ export class EditedDateTextPipe implements PipeTransform {
   constructor(private readonly resources: Resources) {}
 
   transform(date: number | null | undefined): string {
-    if (date == null) return '';
+    if (date == null || typeof date !== 'number') return '';
 
     const last = new Date(0);
     const now = new Date();

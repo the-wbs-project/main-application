@@ -13,17 +13,25 @@ import {
 } from './components';
 import { DiscussionDataService } from './services';
 import { DiscussionForumState } from './states';
+import { EditorModule } from '@progress/kendo-angular-editor';
+import { ThreadLoadGuard } from './guards/thread-load-guard.service';
 
 export const routes: Routes = [
   {
     path: '',
     component: ForumComponent,
   },
+  {
+    path: ':postId',
+    component: ThreadComponent,
+    canActivate: [ThreadLoadGuard],
+  },
 ];
 
 @NgModule({
   imports: [
     LabelModule,
+    EditorModule,
     NgbDropdownModule,
     NgxsModule.forFeature([DiscussionForumState]),
     ReactiveFormsModule,
@@ -36,6 +44,6 @@ export const routes: Routes = [
     ReplyEditorComponent,
     ThreadComponent,
   ],
-  providers: [DiscussionDataService],
+  providers: [DiscussionDataService, ThreadLoadGuard],
 })
 export class DiscussionForumModule {}

@@ -10,6 +10,7 @@ import {
   SwitchComponent,
 } from './components';
 import {
+  EditorFixerDirective,
   FillElementDirective,
   MatchSizeDirective,
   ProgressBarDirective,
@@ -29,6 +30,7 @@ import {
   ProjectStatusPipe,
   RoleListPipe,
   SafeHtmlPipe,
+  SafeUrlPipe,
   UserNamePipe,
 } from './pipes';
 
@@ -48,6 +50,7 @@ import {
     DateTextPipe,
     DisciplineIconPipe,
     EditedDateTextPipe,
+    EditorFixerDirective,
     EditPencilComponent,
     FillElementDirective,
     JoinPipe,
@@ -60,6 +63,7 @@ import {
     ProjectStatusPipe,
     RoleListPipe,
     SafeHtmlPipe,
+    SafeUrlPipe,
     SwitchComponent,
     UserNamePipe,
   ],
@@ -72,6 +76,7 @@ import {
     DateTextPipe,
     DisciplineIconPipe,
     EditedDateTextPipe,
+    EditorFixerDirective,
     EditPencilComponent,
     FillElementDirective,
     FontAwesomeModule,
@@ -83,6 +88,7 @@ import {
     ProjectStatusPipe,
     RoleListPipe,
     SafeHtmlPipe,
+    SafeUrlPipe,
     SwitchComponent,
     TranslateModule,
     UserNamePipe,
