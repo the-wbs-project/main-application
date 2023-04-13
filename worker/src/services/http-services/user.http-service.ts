@@ -3,6 +3,21 @@ import { WorkerRequest } from '../worker-request.service';
 import { BaseHttpService } from './base.http-service';
 
 export class UserHttpService extends BaseHttpService {
+  static async currentUserAsync(req: WorkerRequest): Promise<Response | number> {
+    try {
+      if (!req.context.state?.userId) return 500;
+
+      const user = await req.context.services.identity.getUserAsync(req, req.context.state.userId);
+
+      user!.appInfo.organizationRoles = req.context.state.organizations;
+
+      return await super.buildJson(user);
+    } catch (e) {
+      req.context.logException('An error occured trying to handle the login callback.', 'CallbackHttpService.loginCallbackAsync', <Error>e);
+      return 500;
+    }
+  }
+
   static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
     try {
       return await super.buildJson(await req.context.services.identity.getUsersAsync(req));

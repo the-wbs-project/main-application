@@ -6,10 +6,10 @@ export class InviteDataService {
   constructor(private readonly http: HttpClient) {}
 
   getAllAsync(): Observable<Invite[]> {
-    return this.http.get<Invite[]>('invites');
+    return this.http.get<Invite[]>('api/invites');
   }
 
   putAsync(invite: Invite, send: boolean): Observable<Invite> {
-    return this.http.put<Invite>(`invites/${send}`, invite);
+    return this.http.put<Invite>(`api/invites/${send}`, invite);
   }
 }

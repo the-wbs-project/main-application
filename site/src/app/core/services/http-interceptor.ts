@@ -10,6 +10,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 import { AnalyticsService } from './analytics.service';
 import { Messages } from './messages.service';
 
@@ -29,9 +30,9 @@ export class RequestInterceptor implements HttpInterceptor {
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 
-    if (request.url.indexOf('assets') === -1) {
+    if (request.url.indexOf('api/') === 0) {
       request = request.clone({
-        url: `api/${request.url}`,
+        url: request.url.replace('api/', environment.apiPrefix),
       });
     }
     //@ts-ignore

@@ -1,13 +1,11 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  Project,
-  PROJECT_VIEW_STATI,
-  PROJECT_VIEW_STATI_TYPE,
-} from '@wbs/core/models';
+import { Store } from '@ngxs/store';
+import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
 import { ProjectService, Resources, TitleService } from '@wbs/core/services';
-import { map, Observable } from 'rxjs';
+import { ProjectListState } from '@wbs/core/states';
+import { map } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -18,8 +16,10 @@ import { map, Observable } from 'rxjs';
 export class ProjectListComponent implements OnInit {
   private readonly titlePrefix: string;
 
-  readonly status$: Observable<PROJECT_VIEW_STATI_TYPE>;
-  readonly projects$: Observable<Project[]>;
+  readonly status$ = this.route.params.pipe(
+    map((p) => <PROJECT_VIEW_STATI_TYPE>p['status'])
+  );
+  readonly projects$ = this.store.select(ProjectListState.list);
   readonly stati: PROJECT_VIEW_STATI_TYPE[] = [
     PROJECT_VIEW_STATI.ACTIVE,
     PROJECT_VIEW_STATI.PLANNING,
@@ -31,15 +31,13 @@ export class ProjectListComponent implements OnInit {
   constructor(
     resources: Resources,
     private readonly title: TitleService,
-    private readonly route: ActivatedRoute,
-    private readonly projectService: ProjectService
+    private readonly projectService: ProjectService,
+    private readonly store: Store,
+    private readonly route: ActivatedRoute
   ) {
     this.titlePrefix = resources.get('Pages.Projects');
 
     title.setTitle(this.titlePrefix, false);
-
-    this.status$ = this.route.params.pipe(map((p) => p['status']));
-    this.projects$ = this.route.data.pipe(map((d) => d['projects']));
   }
 
   ngOnInit(): void {

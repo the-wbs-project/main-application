@@ -17,10 +17,6 @@ export class InviteHttpService extends BaseHttpService {
   }
 
   static async getEmailAsync(req: WorkerRequest): Promise<Response | number> {
-    const hdrs = new Headers();
-
-    BaseHttpService.getAuthHeaders(req, hdrs);
-
     try {
       if (!req.params?.organization || !req.params?.code) return 500;
 
@@ -35,25 +31,19 @@ export class InviteHttpService extends BaseHttpService {
 
       if (!invite)
         return new Response(null, {
-          headers: hdrs,
           status: 404,
         });
 
-      return await super.buildJson(invite.email, hdrs);
+      return await super.buildJson(invite.email);
     } catch (e) {
       req.context.logException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
       return new Response(null, {
-        headers: hdrs,
         status: 500,
       });
     }
   }
 
   static async getAndAcceptAsync(req: WorkerRequest): Promise<Response | number> {
-    const hdrs = new Headers();
-
-    BaseHttpService.getAuthHeaders(req, hdrs);
-
     try {
       if (!req.params?.organization || !req.params?.code) return 500;
 
@@ -68,7 +58,6 @@ export class InviteHttpService extends BaseHttpService {
 
       if (!invite)
         return new Response(null, {
-          headers: hdrs,
           status: 404,
         });
 
@@ -76,11 +65,10 @@ export class InviteHttpService extends BaseHttpService {
 
       await req.context.services.data.invites.putAsync(invite);
 
-      return await super.buildJson(invite, hdrs);
+      return await super.buildJson(invite);
     } catch (e) {
       req.context.logException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
       return new Response(null, {
-        headers: hdrs,
         status: 500,
       });
     }

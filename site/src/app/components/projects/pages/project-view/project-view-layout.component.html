@@ -48,8 +48,8 @@
                 </span>
               </p>
             </div>
-            <div>
-              <app-project-action-menu [menu]="actions" (itemClicked)="service.action($event)" />
+            <div *ngIf="actions | actionRoleFilter; let actions2">
+              <app-project-action-menu *ngIf="actions2.length > 0" [menu]="actions2" (itemClicked)="service.action($event)" />
             </div>
           </div>
           <div class="my-md-auto mt-4 prof-details"></div>

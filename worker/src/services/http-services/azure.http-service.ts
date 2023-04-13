@@ -6,8 +6,7 @@ export class AzureHttpService extends BaseHttpService {
     const config = req.context.config.azure;
     const originalUrl = new URL(req.request.url);
     const body = await req.request.arrayBuffer();
-    const protocol = config.domain.indexOf('localhost') === -1 ? 'https' : 'http';
-    const url = `${protocol}://${config.domain}${originalUrl.pathname}`;
+    const url = `${config.endpoint}/${originalUrl.pathname}`;
     const headers = new Headers(req.request.headers);
 
     headers.set('app-culture', req.context.state?.culture ?? '');

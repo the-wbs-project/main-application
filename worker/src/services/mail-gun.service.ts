@@ -52,7 +52,7 @@ export class MailGunService {
   async sendMail(req: WorkerRequest, data: EmailData): Promise<Response> {
     const dataUrlEncoded = this.urlEncodeObject(data);
 
-    return req.myFetch(`${this.config.mailgun.url}/messages`, {
+    return req.myFetch(`${this.config.mailgun.endpoint}/messages`, {
       method: 'POST',
       headers: {
         Authorization: 'Basic ' + btoa('api:' + this.config.mailgun.key),

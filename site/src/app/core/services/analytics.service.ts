@@ -2,6 +2,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { Store } from '@ngxs/store';
+import { environment } from 'src/environments/environment';
 import { AuthState } from '../states';
 
 @Injectable({ providedIn: 'root' })
@@ -18,9 +19,7 @@ export class AnalyticsService {
   static setup(): void {
     this.appInsights = new ApplicationInsights({
       config: {
-        instrumentationKey: JSON.parse(
-          document.getElementById('app_insights')!.innerHTML
-        ),
+        instrumentationKey: environment.appInsightsKey,
         samplingPercentage: 100,
       },
     });

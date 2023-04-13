@@ -1,20 +1,17 @@
 import { AuthConfig } from './auth.config';
-import { AzureConfig } from './azure.config';
-import { DbConfig } from './db.config';
-import { MailgunConfig } from './mailgun.config';
-import { TwilioConfig } from './twilio.config';
+import { EndpointKeyConfig } from './endpoint-key.config';
 
 export interface Config {
   appInsightsKey: string;
   appInsightsSnippet?: string;
   auth: AuthConfig;
-  azure: AzureConfig;
-  db: DbConfig;
+  azure: EndpointKeyConfig;
+  corsOrigins: string;
+  db: EndpointKeyConfig;
   debug: boolean;
   inviteTemplateId: string;
   kvBypass: string[];
-  mailgun: MailgunConfig;
-  twilio: TwilioConfig;
+  mailgun: EndpointKeyConfig;
   bucketSnapshots: R2Bucket;
   bucketStatics: R2Bucket;
   kvAuth: KVNamespace;

@@ -16,7 +16,7 @@ export class ProjectSnapshotDataService {
 
   getAsync(projectId: string, activityId: string): Observable<Project> {
     return this.http.get<Project>(
-      `projects/snapshot/${this.organization}/${projectId}/${activityId}`
+      `api/projects/snapshot/${this.organization}/${projectId}/${activityId}`
     );
   }
 }

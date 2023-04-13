@@ -4,10 +4,7 @@
       <div class="card-body pd-0">
         <div *ngIf="current$ | async; let task">
           <div class="text-bold tx-24">
-            <wbs-text-editor
-              [value]="task.title"
-              (valueChange)="saveTitle($event)"
-            ></wbs-text-editor>
+            <wbs-text-editor [value]="task.title" (valueChange)="saveTitle($event)" />
           </div>
         </div>
       </div>
@@ -28,7 +25,7 @@
       </div>
     </div>
     <div class="pd-x-10">
-      <router-outlet></router-outlet>
+      <router-outlet />
     </div>
   </kendo-splitter-pane>
 
@@ -42,6 +39,6 @@
       *ngIf="current$ | async; let task"
       [task]="task"
       [parent]="parent$ | async"
-    ></wbs-task-details>
+    />
   </kendo-splitter-pane>
 </kendo-splitter>

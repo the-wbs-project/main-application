@@ -96,7 +96,7 @@ export class UserAdminState {
 
     if (state.users != null && !action.force) return;
 
-    return this.data.users.getAllAsync().pipe(
+    return this.data.users.getAllAsync(this.getOrganization()).pipe(
       map((users) => {
         ctx.patchState({
           users,

@@ -16,13 +16,13 @@ export class ProjectNodeDataService {
 
   getAllAsync(projectId: string): Observable<WbsNode[]> {
     return this.http.get<WbsNode[]>(
-      `projects/${this.organization}/byId/${projectId}/nodes`
+      `api/projects/${this.organization}/byId/${projectId}/nodes`
     );
   }
 
   getAsync(projectId: string, taskId: string): Observable<WbsNode> {
     return this.http.get<WbsNode>(
-      `projects/${this.organization}/byId/${projectId}/nodes/${taskId}`
+      `api/projects/${this.organization}/byId/${projectId}/nodes/${taskId}`
     );
   }
 
@@ -32,7 +32,7 @@ export class ProjectNodeDataService {
       projectId,
     };
     return this.http.put<void>(
-      `projects/${this.organization}/byId/${projectId}/nodes/${model.id}`,
+      `api/projects/${this.organization}/byId/${projectId}/nodes/${model.id}`,
       model
     );
   }
@@ -50,7 +50,7 @@ export class ProjectNodeDataService {
         projectId,
       });
     return this.http.put<void>(
-      `projects/${this.organization}/byId/${projectId}/nodes/batch`,
+      `api/projects/${this.organization}/byId/${projectId}/nodes/batch`,
       {
         upserts,
         removeIds,

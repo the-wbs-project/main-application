@@ -22,7 +22,13 @@
     </div>
   </div>
 </div>
-<div *ngIf="projects$ | async; let projects" class="wd-100p mg-t-20">
+<div
+  *ngIf="
+    projects$ | async | projectStatusFilter : (status$ | async);
+    let projects
+  "
+  class="wd-100p mg-t-20"
+>
   <div class="container-fluid">
     <div class="row">
       <div *ngIf="projects.length === 0" class="col-12">

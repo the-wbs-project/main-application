@@ -3,9 +3,8 @@ import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
 import { SharedModule } from '@wbs/shared/module';
 import { RedirectGuard } from './guards';
-import { ProjectSortPipe } from './pipes';
+import { ProjectSortPipe, ProjectStatusFilterPipe } from './pipes';
 import { ProjectListComponent } from './project-list.component';
-import { ProjectListDataResolver } from './services';
 
 const routes: Routes = [
   {
@@ -16,15 +15,16 @@ const routes: Routes = [
   {
     path: ':type/:status',
     component: ProjectListComponent,
-    resolve: {
-      projects: ProjectListDataResolver,
-    },
   },
 ];
 
 @NgModule({
   imports: [CommonModule, RouterModule.forChild(routes), SharedModule],
-  providers: [ProjectListDataResolver, RedirectGuard],
-  declarations: [ProjectListComponent, ProjectSortPipe],
+  providers: [RedirectGuard],
+  declarations: [
+    ProjectListComponent,
+    ProjectSortPipe,
+    ProjectStatusFilterPipe,
+  ],
 })
 export class ProjectListModule {}

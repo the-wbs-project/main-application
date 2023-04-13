@@ -11,7 +11,7 @@ import {
   faTrashAlt,
   faUpload,
 } from '@fortawesome/pro-solid-svg-icons';
-import { ActionMenuItem } from '@wbs/core/models';
+import { ActionMenuItem, ROLES } from '@wbs/core/models';
 import { PROJECT_PAGE_VIEW } from './project-page-view.const';
 
 export const PROJECT_MENU_ITEMS = {
@@ -20,16 +20,19 @@ export const PROJECT_MENU_ITEMS = {
       action: 'editPhases',
       icon: faPencil,
       title: 'Projects.EditPhases',
+      roles: [ROLES.PM],
     },
     {
       action: 'editDisciplines',
       icon: faPencil,
       title: 'Projects.EditDisciplines',
+      roles: [ROLES.PM],
     },
     {
       action: 'cancel',
       icon: faTrashAlt,
       title: 'Projects.CancelProject',
+      roles: [ROLES.PM],
     },
   ],
   phaseTreeActions: <ActionMenuItem[]>[
@@ -42,6 +45,7 @@ export const PROJECT_MENU_ITEMS = {
       action: 'upload',
       icon: faUpload,
       title: 'General.Upload',
+      roles: [ROLES.PM],
     },
   ],
   phaseItemActions: <ActionMenuItem[]>[
@@ -49,6 +53,7 @@ export const PROJECT_MENU_ITEMS = {
       action: 'addSub',
       icon: faPlus,
       tooltip: 'Projects.AddSubTask',
+      roles: [ROLES.PM],
     },
     {
       action: 'viewTask',
@@ -59,11 +64,13 @@ export const PROJECT_MENU_ITEMS = {
       action: 'cloneTask',
       icon: faClone,
       tooltip: 'Projects.CloneTask',
+      roles: [ROLES.PM],
     },
     {
       action: 'deleteTask',
       icon: faTrashAlt,
       tooltip: 'Projects.DeleteTask',
+      roles: [ROLES.PM],
     },
   ],
   phaseItemNavActions: <ActionMenuItem[]>[
@@ -71,21 +78,25 @@ export const PROJECT_MENU_ITEMS = {
       action: 'moveLeft',
       icon: faArrowLeft,
       tooltip: 'Projects.MoveLeft',
+      roles: [ROLES.PM],
     },
     {
       action: 'moveUp',
       icon: faArrowUp,
       tooltip: 'Projects.MoveUp',
+      roles: [ROLES.PM],
     },
     {
       action: 'moveDown',
       icon: faArrowDown,
       tooltip: 'Projects.MoveDown',
+      roles: [ROLES.PM],
     },
     {
       action: 'moveRight',
       icon: faArrowRight,
       tooltip: 'Projects.MoveRight',
+      roles: [ROLES.PM],
     },
   ],
   projectLinks: [
@@ -105,9 +116,9 @@ export const PROJECT_MENU_ITEMS = {
       fragment: PROJECT_PAGE_VIEW.TIMELINE,
       title: 'General.Timeline',
     },
-    {
+    /*{
       fragment: PROJECT_PAGE_VIEW.DISCUSSIONS,
       title: 'General.Discussions',
-    },
+    },*/
   ],
 };

@@ -4,16 +4,24 @@ export interface Env {
   BUCKET_SNAPSHOTS: R2Bucket;
   BUCKET_STATICS: R2Bucket;
 
+  AUTH_AUDIENCE: string;
+  AUTH_CLIENT_ID: string;
+  AUTH_CLIENT_SECRET: string;
+  AUTH_CONNECTION: string;
+  AUTH_DOMAIN: string;
+
+  AZURE_ENDPOINT: string;
+  AZURE_KEY: string;
+
+  COSMOS_ENDPOINT: string;
+  COSMOS_KEY: string;
+
+  MAILGUN_ENDPOINT: string;
+  MAILGUN_KEY: string;
+
   APP_INSIGHTS_KEY: string;
-  AUTH: string;
-  AZURE: string;
-  COSMOS: string;
+  CORS_ORIGINS: string;
   DEBUG: string;
   INVITE_TEMPLATE_ID: string;
   KV_BYPASS?: string;
-  LOGOUT_HTML: string;
-  MAILGUN_API_BASE_URL: string;
-  MAILGUN_API_KEY: string;
-  SNIPPET_APP_INSIGHTS?: string;
-  TWILIO: string;
 }

@@ -17,13 +17,13 @@ export class ActivityDataService {
 
   getAsync(topLevelId: string): Observable<Activity[]> {
     return this.http.get<Activity[]>(
-      `activity/${this.organization}/${topLevelId}`
+      `api/activity/${this.organization}/${topLevelId}`
     );
   }
 
   getUserAsync(userId: string): Observable<Activity[]> {
     return this.http.get<Activity[]>(
-      `activity/${this.organization}/user/${userId}`
+      `api/activity/${this.organization}/user/${userId}`
     );
   }
 
@@ -42,7 +42,7 @@ export class ActivityDataService {
     };
 
     return this.http
-      .put<void>(`activity/${this.organization}/${dataType}`, model)
+      .put<void>(`api/activity/${this.organization}/${dataType}`, model)
       .pipe(map(() => model));
   }
 }

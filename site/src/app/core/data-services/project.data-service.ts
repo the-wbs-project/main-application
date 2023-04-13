@@ -15,22 +15,24 @@ export class ProjectDataService {
   }
 
   getMyAsync(): Observable<Project[]> {
-    return this.http.get<Project[]>(`projects/${this.organization}/my`);
+    return this.http.get<Project[]>(`api/projects/${this.organization}/my`);
   }
 
   getWatchedAsync(): Observable<Project[]> {
-    return this.http.get<Project[]>(`projects/${this.organization}/watched`);
+    return this.http.get<Project[]>(
+      `api/projects/${this.organization}/watched`
+    );
   }
 
   getAsync(projectId: string): Observable<Project> {
     return this.http.get<Project>(
-      `projects/${this.organization}/byId/${projectId}`
+      `api/projects/${this.organization}/byId/${projectId}`
     );
   }
 
   putAsync(project: Project): Observable<void> {
     return this.http.put<void>(
-      `projects/${this.organization}/byId/${project.id}`,
+      `api/projects/${this.organization}/byId/${project.id}`,
       project
     );
   }

@@ -24,7 +24,20 @@ r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
   { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
 ]
-vars = { DEBUG = "true", INVITE_TEMPLATE = "invite-template-v1",  APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907" }
+[env.dev.vars]
+DEBUG = "true"
+APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+CORS_ORIGINS = "http://localhost:4200"
+INVITE_TEMPLATE = "invite-template-v1"
+
+AZURE_ENDPOINT = "http://localhost:7071"
+COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+
+AUTH_AUDIENCE = "https://dev-3lcexa83.us.auth0.com/api/v2/"
+AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
+AUTH_CONNECTION = "acme-engineering"
+AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [env.qa]
 name = "app-v0-1-api-qa"
@@ -50,6 +63,7 @@ routes = [
   { pattern = "app.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
 ]
 kv_namespaces = [
+
   { binding = "KV_AUTH", id = "10409096739e4b648c2af52e2d16065c", preview_id = "10409096739e4b648c2af52e2d16065c" },
   { binding = "KV_DATA", id = "408389bba37f437da346442f36b25a45", preview_id = "408389bba37f437da346442f36b25a45" },
 ]

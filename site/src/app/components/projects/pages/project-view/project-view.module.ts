@@ -50,6 +50,7 @@ import {
   TaskViewComponent,
 } from './pages';
 import {
+  ActionRoleFilterPipe,
   RoleIconPipe,
   RoleTitlePipe,
   TaskDetailsActionsPipe,
@@ -106,6 +107,7 @@ import { ProjectViewState, TaskViewState } from './states';
     UploadFileService,
   ],
   declarations: [
+    ActionRoleFilterPipe,
     ProjectAboutPageComponent,
     ProjectCategoryDialogComponent,
     ProjectDisciplinesPageComponent,

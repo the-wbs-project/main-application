@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ProjectUpdated } from '@wbs/core/actions';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
+  ROLES,
   WbsNode,
 } from '@wbs/core/models';
 import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
@@ -36,10 +37,12 @@ import {
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
 import { ProjectManagementService } from '../services';
+import { AuthState } from '@wbs/core/states';
 
 interface StateModel {
   current?: Project;
   disciplines?: WbsNodeView[];
+  roles?: string[];
   nodes?: WbsNode[];
   phases?: WbsNodeView[];
 }
@@ -54,6 +57,7 @@ export class ProjectState {
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
     private readonly service: ProjectManagementService,
+    private readonly store: Store,
     private readonly transformers: WbsTransformers
   ) {}
 
@@ -84,6 +88,11 @@ export class ProjectState {
   @Selector()
   static phases(state: StateModel): WbsNodeView[] | undefined {
     return state.phases;
+  }
+
+  @Selector()
+  static roles(state: StateModel): string[] | undefined {
+    return state.roles;
   }
 
   @Selector()
@@ -124,6 +133,8 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     { projectId }: SetProject
   ): Observable<void> {
+    const userId = this.store.selectSnapshot(AuthState.userId);
+
     return forkJoin({
       project: this.data.projects.getAsync(projectId),
       nodes: this.data.projectNodes.getAllAsync(projectId),
@@ -132,6 +143,9 @@ export class ProjectState {
         ctx.patchState({
           current: data.project,
           nodes: data.nodes.filter((x) => !x.removed),
+          roles: data.project.roles
+            .filter((x) => x.userId === userId)
+            .map((x) => x.role),
         })
       ),
       switchMap(() => ctx.dispatch(new RebuildNodeViews()))

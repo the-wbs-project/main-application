@@ -9,7 +9,7 @@ export class StaticFileDataService {
 
   downloadAsync(fileId: string, fileName: string): Observable<any> {
     return this.http
-      .get(`files/${fileId}`, {
+      .get(`api/files/${fileId}`, {
         responseType: 'blob' as 'json',
       })
       .pipe(map((response: any) => saveAs(response, fileName)));

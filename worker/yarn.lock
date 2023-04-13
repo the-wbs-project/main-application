@@ -531,6 +531,15 @@
     "@cloudflare/workers-types" "^2.2.2"
     rfc4648 "^1.5.2"
 
+"@cfworker/jwt@^4.0.4":
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/@cfworker/jwt/-/jwt-4.0.4.tgz#5097cf279a31f42a26c7b3b6b2bdfa3f57ba2d84"
+  integrity sha512-CG7iyUh7IaMzxEIaRluaHu03gYHATxhorBx1sl+8BLp2hxqTnFeECZIi2GSmLEVwEn6VjhpGuH+Q/bPiOb2gcA==
+  dependencies:
+    "@cfworker/worker-types" "^1.12.3"
+    "@cloudflare/workers-types" "^2.2.2"
+    rfc4648 "^1.5.2"
+
 "@cfworker/uuid@^1.12.4":
   version "1.12.4"
   resolved "https://registry.yarnpkg.com/@cfworker/uuid/-/uuid-1.12.4.tgz#178a2126ce91bfd2fb58c1a14c991502bb69e8ef"
@@ -540,6 +549,11 @@
   version "1.12.2"
   resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.2.tgz#1dff1ac276172a928934a1db568efd06a0760889"
   integrity sha512-jXjs3452L34qEe3H86NgEWfGX5ZdhViKUp5u2riWx5L5C+5TrLfFAbpiooAIisKf0wHL7M9ZzCTKF9Wa6oUk5Q==
+
+"@cfworker/worker-types@^1.12.3":
+  version "1.12.3"
+  resolved "https://registry.yarnpkg.com/@cfworker/worker-types/-/worker-types-1.12.3.tgz#869cc62f815fd81454f73440e4e09aad28874d06"
+  integrity sha512-p9wWxB1n+D0Mm9YFYcU80Ea9rUqYDAkuYvSPjKezCSjFKGDm12x9S/8md33h7a4IAzxtO9pfOVoVLvVI2hpR9g==
 
 "@cloudflare/workers-types@^2.2.2":
   version "2.2.2"
@@ -1001,6 +1015,11 @@
   integrity sha512-SwUDyjWnah1AaNl7kxsa7cfLhlTYoiyhDAIgyh+El30YvXs/o7OLXpYH88Zdhyx9JExKrmHDJ+10bwIcY80Jmw==
   dependencies:
     "@sinonjs/commons" "^2.0.0"
+
+"@tsndr/cloudflare-worker-jwt@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@tsndr/cloudflare-worker-jwt/-/cloudflare-worker-jwt-2.2.1.tgz#d52bd14a4dc42254e8b117d8f781ea965cf2490e"
+  integrity sha512-yYxjmag5AXXs7FDCUlse8cCTQlug3fbrqUb4/s4kvdauOg5wq2V6BayHD/OUWOGmgohefFRqu4vA5phU3+Cyng==
 
 "@types/babel__core@^7.1.14":
   version "7.1.16"
