@@ -18,19 +18,23 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: npx kendo-ui-license activate
+      - script: |
+          yarn global add @progress/kendo-licensing
+          npx kendo-ui-license activate
         workingDirectory: "site"
         env:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
-        displayName: "Activate Kendo UI License"
+        displayName: "Setup Kendo UI License"
 
-      - script: |
-          yarn global add @angular/cli
-          yarn
+      - script: yarn global add @angular/cli
+        workingDirectory: "site"
+        displayName: "Install Angular CLI"
+
+      - script: yarn
         workingDirectory: "site"
         displayName: "Install Site Packages"
 
-      - script: yarn run setup
+      - script: yarn
         workingDirectory: "worker"
         displayName: "Install Worker Packages"
 
