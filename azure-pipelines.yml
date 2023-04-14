@@ -29,6 +29,7 @@ jobs:
       - script: |
           yarn global add @angular/cli
           yarn global add esbuild
+          yarn global add esbuild-cli
         displayName: "Install Global Libraries"
 
       #- script: yarn
