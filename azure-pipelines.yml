@@ -32,8 +32,6 @@ jobs:
 
       - script: yarn
         workingDirectory: "site"
-        env:
-          FONTAWESOME_NPM_AUTH_TOKEN: $(FA_LICENSE)
         displayName: "Install Site Packages"
 
       - script: yarn
@@ -42,6 +40,8 @@ jobs:
 
       - script: npx kendo-ui-license activate
         workingDirectory: "site"
+        env:
+          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup Kendo UI License"
 
   - job: worker_job
