@@ -70,13 +70,6 @@ jobs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip'
           replaceExistingArchive: true
         displayName: "Zip QA"
-        
-      - task: PublishPipelineArtifact@1
-        inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip'
-          artifact: 'drop'
-          publishLocation: 'pipeline'
-        displayName: "Publish QA"
 
       - script: yarn run deploy:prod
         workingDirectory: "site"
@@ -91,9 +84,9 @@ jobs:
           replaceExistingArchive: true
         displayName: "Zip Production"
         
-      - task: PublishPipelineArtifact@1
+      - task: PublishBuildArtifacts@1
         inputs:
-          targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip'
-          artifact: 'drop'
-          publishLocation: 'pipeline'
-        displayName: "Publish Production"
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+        displayName: "Publish"
