@@ -9,7 +9,7 @@ env:
 
 on:
   push:
-    branches: ["main"]
+    branches: ["maintest"]
 
 jobs:
   site_job:

@@ -14,7 +14,7 @@ import {
   WbsNode,
 } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Observable, tap } from 'rxjs';
+import { tap } from 'rxjs';
 import { ProjectState } from '../../../states';
 import { TASK_PAGE_VIEW_TYPE } from '../models';
 import { TaskPageChanged, VerifyTask } from '../actions';
@@ -23,15 +23,12 @@ import { NavigateToTask } from '@wbs/components/projects/actions';
 
 interface StateModel {
   current?: WbsNode;
-  disciplines?: WbsNodeView[];
   id?: string;
   nextTaskId?: string;
   pageView?: TASK_PAGE_VIEW_TYPE;
   parent?: WbsNodeView;
-  phases?: WbsNodeView[];
   previousTaskId?: string;
   subTasks?: WbsNodeView[];
-  tasks?: WbsNode[];
   view?: WbsNodeView;
   viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
@@ -84,38 +81,24 @@ export class TaskViewState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: StateContext<StateModel>) {
-    const subs: Observable<any>[] = [];
+    console.log('ngxsOnInit');
 
-    subs.push(
-      this.store.select(ProjectState.disciplines).pipe(
-        tap((x) =>
-          ctx?.patchState({
-            disciplines: x,
-          })
-        )
-      )
-    );
-    subs.push(
-      this.store.select(ProjectState.phases).pipe(
-        tap((x) =>
-          ctx?.patchState({
-            phases: x,
-          })
-        )
-      )
-    );
-    subs.push(
-      this.store.select(ProjectState.nodes).pipe(
-        tap((x) =>
-          ctx?.patchState({
-            tasks: x,
-          })
-        )
-      )
-    );
+    this.store
+      .select(ProjectState.disciplines)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.setup(ctx));
 
-    for (const sub of subs)
-      sub.pipe(untilDestroyed(this)).subscribe(() => this.setup(ctx));
+    this.store
+      .select(ProjectState.phases)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.setup(ctx));
+
+    this.store
+      .select(ProjectState.nodes)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.setup(ctx));
+
+    this.setup(ctx);
   }
 
   @Action(VerifyTask)
@@ -184,8 +167,13 @@ export class TaskViewState implements NgxsOnInit {
 
   private setup(ctx: StateContext<StateModel>): void {
     const state = ctx.getState();
+    const tasks = this.store.selectSnapshot(ProjectState.nodes) ?? [];
+    const nodes =
+      state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE
+        ? this.store.selectSnapshot(ProjectState.disciplines) ?? []
+        : this.store.selectSnapshot(ProjectState.phases) ?? [];
 
-    if (!state.id || !state.disciplines || !state.phases || !state.tasks) {
+    if (!state.id || tasks.length === 0 || nodes.length === 0) {
       ctx.patchState({
         current: undefined,
         subTasks: undefined,
@@ -193,10 +181,6 @@ export class TaskViewState implements NgxsOnInit {
       });
       return;
     }
-    const nodes =
-      state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE
-        ? state.disciplines!
-        : state.phases!;
 
     const nodeIndex = nodes.findIndex((x) => x.id === state.id);
     const view = nodes[nodeIndex];
@@ -206,7 +190,7 @@ export class TaskViewState implements NgxsOnInit {
       view,
       parent,
       //activity: activity.sort(this.sortActivity),
-      current: state.tasks.find((x) => x.id === state.id),
+      current: tasks.find((x) => x.id === state.id),
       subTasks: this.getSubTasks(nodes, state.id),
       previousTaskId: nodeIndex === 0 ? undefined : nodes[nodeIndex - 1].id,
       nextTaskId:

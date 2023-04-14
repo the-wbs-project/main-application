@@ -9,10 +9,8 @@ import {
   Selector,
   State,
   StateContext,
-  Store,
 } from '@ngxs/store';
 import { MainContentSizeChanged, ParseNavigation } from '../actions';
-import { Resources } from '../services';
 
 interface StateModel {
   path?: string;
@@ -30,11 +28,7 @@ interface StateModel {
   },
 })
 export class UiState implements NgxsOnInit {
-  constructor(
-    private readonly actions$: Actions,
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly actions$: Actions) {}
 
   @Selector()
   static mainContentWidth(state: StateModel): number {
@@ -58,7 +52,7 @@ export class UiState implements NgxsOnInit {
 
   ngxsOnInit(ctx: StateContext<StateModel>) {
     this.actions$
-      .pipe(ofActionSuccessful(RouterDataResolved), untilDestroyed(this))
+      .pipe(ofActionSuccessful(RouterDataResolved<any>), untilDestroyed(this))
       .subscribe((action: RouterDataResolved) =>
         ctx.dispatch(new ParseNavigation(action.routerState.url))
       );
