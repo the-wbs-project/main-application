@@ -18,13 +18,11 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: |
-          yarn global add @progress/kendo-licensing
-          npx kendo-ui-license activate
+      - script: npm config set "@fortawesome:registry" https://npm.fontawesome.com/
         workingDirectory: "site"
         env:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
-        displayName: "Setup Kendo UI License"
+        displayName: "Setup Kendo UI Registry"
 
       - script: yarn global add @angular/cli
         workingDirectory: "site"
@@ -37,6 +35,12 @@ jobs:
       - script: yarn
         workingDirectory: "worker"
         displayName: "Install Worker Packages"
+
+      - script: npx kendo-ui-license activate
+        workingDirectory: "site"
+        env:
+          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
+        displayName: "Setup Kendo UI License"
 
   - job: worker_job
     displayName: Worker
