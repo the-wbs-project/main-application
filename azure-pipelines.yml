@@ -4,20 +4,43 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  - main
 
 pool:
   vmImage: ubuntu-latest
 
-steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '18.x'
-  displayName: 'Install Node.js'
+jobs:
+  setup_job:
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
 
-- script: |
-    cd site
-    yarn global add @angular/cli
-    yarn
-    yarn run deploy
-  displayName: 'Install Packages and Build'
+      - script: npx kendo-ui-license activate
+        workingDirectory: "site"
+        env:
+          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
+        displayName: "Activate Kendo UI License"
+
+      - script: |
+          yarn global add @angular/cli
+          yarn
+        workingDirectory: "site"
+        displayName: "Install Site Packages"
+
+      - script: yarn run setup
+        workingDirectory: "worker"
+        displayName: "Install Worker Packages"
+
+  worker_job:
+    steps:
+      - script: yarn run build
+        workingDirectory: "worker"
+        displayName: "Build Worker"
+
+  site_prod_job:
+    steps:
+      - script: yarn run deploy
+        workingDirectory: "site"
+        displayName: "Build Site"
