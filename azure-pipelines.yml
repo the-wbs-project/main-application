@@ -10,18 +10,14 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
-  - job: setup_job
-    displayName: Setup
+  - job: worker_job
+    displayName: Worker
     steps:
       - task: NodeTool@0
         inputs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-  - job: worker_job
-    displayName: Worker
-    dependsOn: setup_job
-    steps:
       - script: |
           yarn global add esbuild
         displayName: "Install ES Build"
@@ -34,8 +30,17 @@ jobs:
         workingDirectory: "worker"
         displayName: "Build Worker"
 
-  - job: site_job
-    displayName: Site
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: 'worker'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip'
+          replaceExistingArchive: true
+        displayName: "Zip Worker"
+
+  - job: site_setup_job
+    displayName: Site Setup
     dependsOn: worker_job
     steps:
       - script: |
@@ -58,31 +63,44 @@ jobs:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup Kendo UI License"
 
+  - job: site_qa_job
+    displayName: Site - QA
+    dependsOn: site_setup_job
+    steps:
       - script: yarn run deploy:qa
         workingDirectory: "site"
-        displayName: "Build QA"
+        displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: 'worker'
+          rootFolderOrFile: 'dist'
           includeRootFolder: false
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip'
           replaceExistingArchive: true
-        displayName: "Zip QA"
+        displayName: "Zip"
 
+  - job: site_prod_job
+    displayName: Site - Prod
+    dependsOn: site_qa_job
+    steps:
       - script: yarn run deploy:prod
         workingDirectory: "site"
-        displayName: "Build Prod"
+        displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: 'worker'
+          rootFolderOrFile: 'dist'
           includeRootFolder: false
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip'
           replaceExistingArchive: true
         displayName: "Zip Production"
+
+  - job: publish_job
+    displayName: Publish
+    dependsOn: site_prod_job
+    steps:
         
       - task: PublishBuildArtifacts@1
         inputs:
