@@ -26,19 +26,9 @@ jobs:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup Font Awesome Registry"
 
-      - script: |
-          yarn global add @angular/cli
-          yarn global add esbuild
-          yarn global add esbuild-cli
-        displayName: "Install Global Libraries"
-
       #- script: yarn
       #  workingDirectory: "site"
       #  displayName: "Install Site Packages"
-
-      - script: yarn
-        workingDirectory: "worker"
-        displayName: "Install Worker Packages"
 
       - script: npx kendo-ui-license activate
         workingDirectory: "site"
@@ -50,6 +40,14 @@ jobs:
     displayName: Worker
     dependsOn: setup_job
     steps:
+      - script: |
+          yarn global add esbuild
+        displayName: "Install ES Build"
+
+      - script: yarn
+        workingDirectory: "worker"
+        displayName: "Install Worker Packages"
+
       - script: yarn run build
         workingDirectory: "worker"
         displayName: "Build Worker"
@@ -58,6 +56,9 @@ jobs:
     displayName: Production Build
     dependsOn: worker_job
     steps:
+      - script: yarn global add @angular/cli
+        displayName: "Install Angular CLI"
+
       - script: yarn run deploy
         workingDirectory: "site"
         displayName: "Build Site"
