@@ -33,6 +33,7 @@ import {
   Timeline1Component,
 } from './components';
 import {
+  ProjectDiscussionGuard,
   ProjectRedirectGuard,
   ProjectViewGuard,
   TaskVerifyGuard,
@@ -49,6 +50,7 @@ import {
   TaskViewComponent,
 } from './pages';
 import {
+  ActionRoleFilterPipe,
   RoleIconPipe,
   RoleTitlePipe,
   TaskDetailsActionsPipe,
@@ -91,6 +93,7 @@ import { ProjectViewState, TaskViewState } from './states';
   ],
   providers: [
     PhaseExtractProcessor,
+    ProjectDiscussionGuard,
     ProjectNavigationService,
     ProjectRedirectGuard,
     ProjectResourceGuard,
@@ -104,6 +107,7 @@ import { ProjectViewState, TaskViewState } from './states';
     UploadFileService,
   ],
   declarations: [
+    ActionRoleFilterPipe,
     ProjectAboutPageComponent,
     ProjectCategoryDialogComponent,
     ProjectDisciplinesPageComponent,

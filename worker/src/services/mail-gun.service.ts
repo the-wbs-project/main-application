@@ -1,7 +1,6 @@
 import { Config } from '../config';
 import { Invite } from '../models';
 import { WorkerRequest } from './worker-request.service';
-import INVITE_EMAIL from '../blobs/invite.html';
 
 interface EmailRequestBlob {
   email: string;
@@ -9,7 +8,7 @@ interface EmailRequestBlob {
   subject: string;
   message: string;
 }
-declare type EmailData = Record<string, string>;
+declare type EmailData = Record<string, any>;
 
 export class MailGunService {
   constructor(private readonly config: Config) {}
@@ -39,20 +38,21 @@ export class MailGunService {
 
   inviteAsync(req: WorkerRequest, invite: Invite): Promise<Response> {
     const origin = new URL(req.url).origin;
-    const html = INVITE_EMAIL.replace('{url}', `${origin}/setup/${invite.id}`);
+    const url = `${origin}/setup/${invite.id}`;
 
     return this.sendMail(req, {
-      from: 'The WBS Project Support <support@thewbsproject.com>',
       to: invite.email,
+      from: 'The WBS Project Support <support@thewbsproject.com>',
       subject: `You have been invited to join The WBS Project Beta`,
-      html,
+      template: this.config.inviteTemplateId,
+      'h:X-Mailgun-Variables': JSON.stringify({ url }),
     });
   }
 
   async sendMail(req: WorkerRequest, data: EmailData): Promise<Response> {
     const dataUrlEncoded = this.urlEncodeObject(data);
 
-    return req.myFetch(`${this.config.mailgun.url}/messages`, {
+    return req.myFetch(`${this.config.mailgun.endpoint}/messages`, {
       method: 'POST',
       headers: {
         Authorization: 'Basic ' + btoa('api:' + this.config.mailgun.key),

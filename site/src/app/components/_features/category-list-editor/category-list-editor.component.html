@@ -31,7 +31,7 @@
       [ngClass]="'list-group display-ib text-start w-100'"
       [itemStyle]="{ cursor: 'move' }"
       [itemClass]="'opacity-1'"
-      [emptyItemStyle]="{ height: '30px', border: '2px dashed black' }"
+      emptyItemClass="h-30 bd-2 bd-dashed border-dark"
       [activeItemStyle]="{ border: '2px dashed black', opacity: '0.7' }"
       zone="innerZone"
       (dataMove)="changed()"
@@ -42,7 +42,7 @@
           *ngIf="!(hideUnselected$ | async) || cat.selected"
           class="list-group-item display-flex flex-row"
         >
-          <div class="pd-t-12 wd-60 ht-40">
+          <div class="pd-t-12 wd-50 mn-wd-50 ht-40">
             <fa-layers [fixedWidth]="true">
               <fa-icon size="3x" [icon]="faCircle"></fa-icon>
               <fa-layers-text
@@ -53,10 +53,14 @@
             </fa-layers>
           </div>
           <div class="flex-grow-1">
-            <div style="font-size: 16px">
+            <div class="tx-16">
               {{ cat.label }}
             </div>
-            <div style="font-size: 12px; font-style: italic">
+            <div class="tx-12 font-italic">
+              {{ cat.description }}
+              {{ cat.description }}
+              {{ cat.description }}
+              {{ cat.description }}
               {{ cat.description }}
             </div>
           </div>

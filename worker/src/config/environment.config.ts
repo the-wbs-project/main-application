@@ -1,95 +1,38 @@
-import { AssetManifestType } from '@cloudflare/kv-asset-handler/dist/types';
 import { AuthConfig } from './auth.config';
-import { AzureConfig } from './azure.config';
 import { Config } from './config';
-import { DbConfig } from './db.config';
+import { EndpointKeyConfig } from './endpoint-key.config';
 import { Env } from './env.model';
-import { MailgunConfig } from './mailgun.config';
-import { TwilioConfig } from './twilio.config';
 
 export class EnvironmentConfig implements Config {
-  private _auth: AuthConfig | undefined;
-  private _azure: AzureConfig | undefined;
-  private _db: DbConfig | undefined;
-  private _mailgun: MailgunConfig | undefined;
-  private _twilio: TwilioConfig | undefined;
+  readonly auth: AuthConfig = {
+    audience: this.env.AUTH_AUDIENCE,
+    clientId: this.env.AUTH_CLIENT_ID,
+    clientSecret: this.env.AUTH_CLIENT_SECRET,
+    connection: this.env.AUTH_CONNECTION,
+    domain: this.env.AUTH_DOMAIN,
+  };
+  readonly azure: EndpointKeyConfig = {
+    endpoint: this.env.AZURE_ENDPOINT,
+    key: this.env.AZURE_KEY,
+  };
+  readonly db: EndpointKeyConfig = {
+    endpoint: this.env.COSMOS_ENDPOINT,
+    key: this.env.COSMOS_KEY,
+  };
+  readonly mailgun: EndpointKeyConfig = {
+    endpoint: this.env.MAILGUN_ENDPOINT,
+    key: this.env.MAILGUN_KEY,
+  };
+
+  readonly appInsightsKey = this.env.APP_INSIGHTS_KEY;
+  readonly bucketSnapshots = this.env.BUCKET_SNAPSHOTS;
+  readonly bucketStatics = this.env.BUCKET_STATICS;
+  readonly corsOrigins = this.env.CORS_ORIGINS;
+  readonly debug = this.env.DEBUG === 'true';
+  readonly kvAuth = this.env.KV_AUTH;
+  readonly kvData = this.env.KV_DATA;
+  readonly kvBypass = (this.env.KV_BYPASS ?? '').split(',');
+  readonly inviteTemplateId = this.env.INVITE_TEMPLATE_ID;
 
   constructor(private readonly env: Env) {}
-
-  get bucketSnapshots(): R2Bucket {
-    return this.env.BUCKET_SNAPSHOTS;
-  }
-
-  get bucketStatics(): R2Bucket {
-    return this.env.BUCKET_STATICS;
-  }
-
-  get kvAuth(): KVNamespace {
-    return this.env.KV_AUTH;
-  }
-
-  get kvData(): KVNamespace {
-    return this.env.KV_DATA;
-  }
-
-  get kvSite(): KVNamespace {
-    return this.env.__STATIC_CONTENT;
-  }
-
-  get appInsightsKey(): string {
-    return this.env.APP_INSIGHTS_KEY;
-  }
-
-  get appInsightsSnippet(): string | undefined {
-    return this.env.SNIPPET_APP_INSIGHTS;
-  }
-
-  get auth(): AuthConfig {
-    if (!this._auth) this._auth = this.json(this.env.AUTH);
-    return <AuthConfig>this._auth;
-  }
-
-  get azure(): AzureConfig {
-    if (!this._azure) this._azure = this.json(this.env.AZURE);
-    return <AzureConfig>this._azure;
-  }
-
-  get db(): DbConfig {
-    if (!this._db) this._db = this.json(this.env.COSMOS);
-    return <DbConfig>this._db;
-  }
-
-  get debug(): boolean {
-    return this.env.DEBUG === 'true';
-  }
-
-  get inviteEmail(): string {
-    return this.env.INVITE_EMAIL;
-  }
-
-  get kvBypass(): string[] {
-    return (this.env.KV_BYPASS ?? '').split(',');
-  }
-
-  get mailgun(): MailgunConfig {
-    if (!this._mailgun)
-      this._mailgun = {
-        url: this.env.MAILGUN_API_BASE_URL,
-        key: this.env.MAILGUN_API_KEY,
-      };
-    return this._mailgun;
-  }
-
-  get manifestSite(): AssetManifestType {
-    return this.env.__STATIC_CONTENT_MANIFEST;
-  }
-
-  get twilio(): TwilioConfig {
-    if (!this._twilio) this._twilio = this.json(this.env.TWILIO);
-    return <TwilioConfig>this._twilio;
-  }
-
-  private json(value: string | null | undefined): any {
-    return typeof value === 'undefined' || value == null ? {} : JSON.parse(value);
-  }
 }

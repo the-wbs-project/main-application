@@ -8,10 +8,9 @@ import {
   HttpResponse,
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AuthState } from '../states';
+import { environment } from 'src/environments/environment';
 import { AnalyticsService } from './analytics.service';
 import { Messages } from './messages.service';
 
@@ -21,8 +20,7 @@ const noErrorUrls = ['logger/activity', 'logger/activities'];
 export class RequestInterceptor implements HttpInterceptor {
   constructor(
     private readonly analytics: AnalyticsService,
-    private readonly messages: Messages,
-    private readonly store: Store
+    private readonly messages: Messages
   ) {}
 
   intercept(
@@ -32,16 +30,9 @@ export class RequestInterceptor implements HttpInterceptor {
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 
-    if (request.url.indexOf('assets') === -1) {
+    if (request.url.indexOf('api/') === 0) {
       request = request.clone({
-        url: `api/${request.url}`,
-      });
-    }
-    const org = this.store.selectSnapshot(AuthState.organization);
-
-    if (org) {
-      request = request.clone({
-        setHeaders: { 'wbs-org-id': org },
+        url: request.url.replace('api/', environment.apiPrefix),
       });
     }
     //@ts-ignore

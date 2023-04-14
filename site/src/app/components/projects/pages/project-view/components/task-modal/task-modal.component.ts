@@ -51,7 +51,6 @@ export class TaskModalComponent implements AfterContentInit {
                 size: 'fullscreen',
               });
               this.modal.dismissed.pipe(untilDestroyed(this)).subscribe(() => {
-                console.log('closed');
                 this.modal = undefined;
               });
             }

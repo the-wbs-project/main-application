@@ -9,11 +9,6 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { ROUTES } from '@wbs/routes';
 import {
-  PerfectScrollbarConfigInterface,
-  PerfectScrollbarModule,
-  PERFECT_SCROLLBAR_CONFIG,
-} from 'ngx-perfect-scrollbar';
-import {
   ContentLayoutComponent,
   FooterComponent,
   HeaderComponent,
@@ -29,17 +24,12 @@ import {
 import { LayoutRoleListPipe, ProjectStatusCountPipe } from './pipes';
 import { LayoutService, NavService, ScriptService } from './services';
 
-const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
-  suppressScrollX: true,
-};
-
 @NgModule({
   imports: [
     CommonModule,
     FontAwesomeModule,
     NgbCollapseModule,
     NgbDropdownModule,
-    PerfectScrollbarModule,
     RouterModule.forChild([
       {
         path: '',
@@ -49,15 +39,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     ]),
     TranslateModule.forChild(),
   ],
-  providers: [
-    LayoutService,
-    NavService,
-    ScriptService,
-    {
-      provide: PERFECT_SCROLLBAR_CONFIG,
-      useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG,
-    },
-  ],
+  providers: [LayoutService, NavService, ScriptService],
   declarations: [
     ContentLayoutComponent,
     FooterComponent,

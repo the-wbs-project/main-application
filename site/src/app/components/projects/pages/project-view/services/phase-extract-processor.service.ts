@@ -151,8 +151,9 @@ export class PhaseExtractProcessor {
       .filter((x) => x.phaseInfo?.syncWithDisciplines)
       .map((x) => x.id);
 
+    const now = Date.now();
+
     for (const vm of upsertVms) {
-      //
       let model = originals.find((x) => x.id === vm.id);
 
       if (model) {
@@ -161,6 +162,7 @@ export class PhaseExtractProcessor {
         model.disciplineIds = vm.disciplines;
         model.parentId = vm.parentId;
         model.order = vm.order;
+        model.lastModified = now;
         model.phase = {
           isDisciplineNode: false,
           syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
@@ -177,7 +179,8 @@ export class PhaseExtractProcessor {
             isDisciplineNode: false,
             syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
           },
-          _ts: new Date().getTime(),
+          createdOn: now,
+          lastModified: now,
         };
       }
       const parentId = model.parentId;
@@ -227,8 +230,6 @@ export class PhaseExtractProcessor {
     var byId = new Map<string, WbsNodeView>();
     var depths = new Map<number, WbsNodeView[]>();
 
-    console.log(rows);
-
     for (const row of rows) {
       byId.set(row.id, row);
 
@@ -237,19 +238,14 @@ export class PhaseExtractProcessor {
       if (depths.has(depth)) depths.get(depth)!.push(row);
       else depths.set(depth, [row]);
     }
-    console.log(depths.keys());
-    console.log(byId.keys());
     var level = Math.max(...depths.keys());
 
     for (let i = level; i > 0; i--) {
-      console.log(i);
-      console.log(depths.get(i));
       for (const row of depths.get(i)!) {
         if (row.parentId == null || row.disciplines == null) continue;
 
         const parent = byId.get(row.parentId)!;
 
-        console.log(row.parentId + ' -> ' + (parent != null));
         if (parent.disciplines == null) parent.disciplines = [];
 
         for (const id of row.disciplines) {

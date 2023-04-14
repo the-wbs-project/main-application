@@ -16,6 +16,7 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
+    "pretty": true,
     "types": ["@cloudflare/workers-types", "@types/node", "@types/jest"]
   }
 }

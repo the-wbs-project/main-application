@@ -4,6 +4,7 @@ import { StorageFactory } from '../storage-services';
 import { ActivityDataService } from './activity.data-service';
 import { AuthDataService } from './auth.data-service';
 import { DATA_SERVICE_CONFIG } from './data-service.config';
+import { DiscussionDataService } from './discussion.data-service';
 import { InviteDataService } from './invite.data-service';
 import { MetadataDataService } from './metadata.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
@@ -15,6 +16,7 @@ const config = DATA_SERVICE_CONFIG;
 
 export class DataServiceFactory {
   private _activities?: ActivityDataService;
+  private _discussionsCorporate?: DiscussionDataService;
   private _invites?: InviteDataService;
   private _projects?: ProjectDataService;
   private _projectNodes?: ProjectNodeDataService;
@@ -26,6 +28,12 @@ export class DataServiceFactory {
     this.dbFactory.createDbService(this.mainRequest, config.resources),
     this.dbFactory.createDbService(this.mainRequest, config.lists),
     this.edge.data,
+  );
+  readonly discussionsGlobal = new DiscussionDataService(
+    this.dbFactory.createDbService(this.mainRequest, {
+      ...config.discussions,
+      dbId: '_common',
+    }),
   );
 
   constructor(
@@ -39,6 +47,12 @@ export class DataServiceFactory {
     this._activities = new ActivityDataService(
       this.dbFactory.createDbService(this.mainRequest, {
         ...config.activities,
+        dbId: organization,
+      }),
+    );
+    this._discussionsCorporate = new DiscussionDataService(
+      this.dbFactory.createDbService(this.mainRequest, {
+        ...config.discussions,
         dbId: organization,
       }),
     );
@@ -80,6 +94,11 @@ export class DataServiceFactory {
   get activities(): ActivityDataService {
     if (!this._activities) throw new Error('Organization Not Set');
     return this._activities;
+  }
+
+  get discussionsCorporate(): DiscussionDataService {
+    if (!this._discussionsCorporate) throw new Error('Organization Not Set');
+    return this._discussionsCorporate;
   }
 
   get invites(): InviteDataService {

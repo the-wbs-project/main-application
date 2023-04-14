@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ProjectUpdated } from '@wbs/core/actions';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
+  ROLES,
   WbsNode,
 } from '@wbs/core/models';
 import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
@@ -36,10 +37,12 @@ import {
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
 import { ProjectManagementService } from '../services';
+import { AuthState } from '@wbs/core/states';
 
 interface StateModel {
   current?: Project;
   disciplines?: WbsNodeView[];
+  roles?: string[];
   nodes?: WbsNode[];
   phases?: WbsNodeView[];
 }
@@ -54,6 +57,7 @@ export class ProjectState {
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
     private readonly service: ProjectManagementService,
+    private readonly store: Store,
     private readonly transformers: WbsTransformers
   ) {}
 
@@ -84,6 +88,11 @@ export class ProjectState {
   @Selector()
   static phases(state: StateModel): WbsNodeView[] | undefined {
     return state.phases;
+  }
+
+  @Selector()
+  static roles(state: StateModel): string[] | undefined {
+    return state.roles;
   }
 
   @Selector()
@@ -124,6 +133,8 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     { projectId }: SetProject
   ): Observable<void> {
+    const userId = this.store.selectSnapshot(AuthState.userId);
+
     return forkJoin({
       project: this.data.projects.getAsync(projectId),
       nodes: this.data.projectNodes.getAllAsync(projectId),
@@ -132,6 +143,9 @@ export class ProjectState {
         ctx.patchState({
           current: data.project,
           nodes: data.nodes.filter((x) => !x.removed),
+          roles: data.project.roles
+            .filter((x) => x.userId === userId)
+            .map((x) => x.role),
         })
       ),
       switchMap(() => ctx.dispatch(new RebuildNodeViews()))
@@ -264,6 +278,7 @@ export class ProjectState {
     const nodes = state.nodes ?? [];
     const node = nodes.find((x) => x.id === action.nodeId);
     const nodeVm = state.phases!.find((x) => x.id === action.nodeId);
+    const now = Date.now();
 
     if (node == null) return;
 
@@ -275,7 +290,6 @@ export class ProjectState {
       ) + 1;
 
     const newNode: WbsNode = {
-      _ts: 0,
       id: IdService.generate(),
       order,
       parentId: node.parentId,
@@ -286,6 +300,8 @@ export class ProjectState {
       removed: false,
       tags: node.tags,
       title: node.title + ' Clone',
+      createdOn: now,
+      lastModified: now,
     };
 
     return this.saveTask(ctx, newNode).pipe(
@@ -718,10 +734,11 @@ export class ProjectState {
   ): Observable<void> {
     const project = ctx.getState().current!;
 
-    return this.data.projectNodes.putAsync(project.id, task).pipe(
-      tap(() => (task._ts = new Date().getTime())),
-      switchMap(() => this.projectChanged(ctx))
-    );
+    task.lastModified = Date.now();
+
+    return this.data.projectNodes
+      .putAsync(project.id, task)
+      .pipe(switchMap(() => this.projectChanged(ctx)));
   }
 
   saveReordered(
@@ -763,14 +780,15 @@ export class ProjectState {
             action: TASK_ACTIONS.REORDERED,
           });
         }),
-        tap(() => this.messaging.success('Projects.TaskReordered'))
+        tap(() => this.messaging.success('Projects.TaskReordered')),
+        switchMap(() => this.projectChanged(ctx))
       );
   }
 
   private projectChanged(ctx: StateContext<StateModel>): Observable<void> {
     const project = ctx.getState().current!;
 
-    project._ts = new Date().getTime();
+    project.lastModified = Date.now();
 
     ctx.patchState({
       current: project,
@@ -779,4 +797,3 @@ export class ProjectState {
     return ctx.dispatch(new ProjectUpdated(project));
   }
 }
-/**/

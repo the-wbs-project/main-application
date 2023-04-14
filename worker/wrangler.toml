@@ -6,25 +6,38 @@ main = "dist/index.js"
 [build]
 command = "yarn run -s build"
 
-[build.upload]
-format = "modules"
-
 [[rules]]
 type = "ESModule"
 globs = ["**/*.js"]
+
+[triggers]
+crons = ["0 0 */1 * *"]
 
 [env.dev]
 name = "api"
 usage_model = "unbound"
 kv_namespaces = [
-  { binding = "KV_AUTH" },
-  { binding = "KV_DATA" },
+  { binding = "KV_AUTH", id = "123", preview_id = "10044f1ce15740fd8cc0b2eaf11ca660" },
+  { binding = "KV_DATA", id = "123", preview_id = "338c0ca3e3164ddf84b761218a121aa0" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS" },
-  { binding = "BUCKET_STATICS" },
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
+  { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
 ]
-vars = { APP_INSIGHTS_KEY = "1a9b6a54-3afc-4ee5-8e17-3d109b834c55", DEBUG = "true" }
+[env.dev.vars]
+DEBUG = "true"
+APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+CORS_ORIGINS = "http://localhost:4200"
+INVITE_TEMPLATE = "invite-template-v1"
+
+AZURE_ENDPOINT = "http://localhost:7071"
+COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+
+AUTH_AUDIENCE = "https://dev-3lcexa83.us.auth0.com/api/v2/"
+AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
+AUTH_CONNECTION = "acme-engineering"
+AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [env.qa]
 name = "app-v0-1-api-qa"
@@ -50,6 +63,7 @@ routes = [
   { pattern = "app.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
 ]
 kv_namespaces = [
+
   { binding = "KV_AUTH", id = "10409096739e4b648c2af52e2d16065c", preview_id = "10409096739e4b648c2af52e2d16065c" },
   { binding = "KV_DATA", id = "408389bba37f437da346442f36b25a45", preview_id = "408389bba37f437da346442f36b25a45" },
 ]
@@ -58,14 +72,6 @@ r2_buckets = [
 ]
 vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
 
-[miniflare]
+[dev]
 port = 88
-upstream = "http://localhost:4200"
-watch = true
-kv_persist = true
-r2_persist = true
-cache_persist = false
-cache = false
-https = false
-actual_time = true
-inaccurate_cpu = true
+host = "localhost:4200"

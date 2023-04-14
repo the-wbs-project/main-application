@@ -352,6 +352,14 @@
   width: 50%;
 }
 
+.mn-wd-50 {
+  min-width: 50px;
+}
+
+.mx-wd-50 {
+  max-width: 50px;
+}
+
 .mx-wd-50p {
   max-width: 50%;
 }
@@ -422,6 +430,10 @@
 
 .mn-wd-60p {
   min-width: 60%;
+}
+
+.mn-wd-60 {
+  min-width: 60px;
 }
 
 .wd-60-f {
@@ -6979,14 +6991,14 @@
   width: 100vw;
 }
 .btn-w-xs {
-    min-width: 90px;
+  min-width: 90px;
 }
 .btn-w-sm {
-    min-width: 110px;
+  min-width: 110px;
 }
 .btn-w-md {
-    min-width: 130px;
+  min-width: 130px;
 }
 .btn-w-lg {
-    min-width: 150px;
+  min-width: 150px;
 }

@@ -27,6 +27,7 @@ export interface WbsNodeView {
   phaseId: string | undefined;
   title: string;
   phaseInfo?: WbsNodePhaseView;
+  lastModified: number;
   disciplineInfo?: WbsNodeDisciplineRelationship;
 
   canMoveUp: boolean;

@@ -4,7 +4,6 @@ import { TASK_PAGE_VIEW_TYPE } from '../models';
 export class VerifyTask {
   static readonly type = '[Project Task] Verify';
   constructor(
-    readonly projectId: string,
     readonly viewNode: PROJECT_NODE_VIEW_TYPE,
     readonly taskId: string
   ) {}

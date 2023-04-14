@@ -151,6 +151,6 @@ export class Resources extends MissingTranslationHandler {
   }
 
   private getFromServerAsync(key: string): Observable<any> {
-    return this.http.get<ResourceSections>(`resources/${key}`);
+    return this.http.get<ResourceSections>(`api/resources/${key}`);
   }
 }

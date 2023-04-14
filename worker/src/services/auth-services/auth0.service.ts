@@ -1,9 +1,59 @@
+import { parseJwt } from '@cfworker/jwt';
 import { AuthConfig } from '../../config';
-import { AuthToken, User, UserLite } from '../../models';
+import { OrganizationRoles, User, UserLite } from '../../models';
 import { WorkerRequest } from '../worker-request.service';
 
 export class Auth0Service {
   constructor(private readonly config: AuthConfig) {}
+
+  static async verify(req: WorkerRequest): Promise<Response | number | void> {
+    let jwt = req.headers.get('Authorization');
+    const issuer = `https://${req.context.config.auth.domain}/`;
+    const audience = req.context.config.auth.audience;
+
+    if (!jwt) return 403;
+
+    jwt = jwt.replace('Bearer ', '');
+
+    const result = await parseJwt(jwt, issuer, audience);
+
+    if (!result.valid) {
+      console.log(result.reason); // Invalid issuer/audience, expired, etc
+
+      return new Response(result.reason, {
+        status: 403,
+      });
+    }
+    //
+    //  Get the state.  if it doesn't exist set it up.
+    //
+    let state = await req.context.services.data.auth.getStateAsync(result.payload.sub, jwt);
+
+    if (!state) {
+      const user = await req.context.services.identity.getUserAsync(req, result.payload.sub);
+
+      if (!user)
+        return new Response('Cannot find user', {
+          status: 500,
+        });
+
+      const organizations: OrganizationRoles[] = [];
+
+      for (const organization of Object.keys(user.appInfo.organizations)) {
+        organizations.push({ organization, roles: user.appInfo.organizations[organization] });
+      }
+
+      state = {
+        culture: user.userInfo.culture,
+        organizations,
+        userId: user.id,
+      };
+
+      await req.context.services.data.auth.putStateAsync(result.payload.sub, jwt, state, result.payload.exp);
+    }
+    req.context.setState(state);
+    req.context.setOrganization(state.organizations[0]);
+  }
 
   toUser(payload: Record<string, any>): User {
     const user: User = {
@@ -30,69 +80,24 @@ export class Auth0Service {
     return user;
   }
 
-  async getAuthTokenAsync(req: WorkerRequest): Promise<AuthToken | null> {
-    const url = new URL(req.url);
-    const auth0Code = url.searchParams.get('code');
-
-    if (!auth0Code) return null;
-
-    const body = JSON.stringify({
-      code: auth0Code,
-      grant_type: 'authorization_code',
-      client_id: this.config.authClientId,
-      client_secret: this.config.authClientSecret,
-      redirect_uri: this.config.callbackUrl,
-    });
-    const tokenResponse = await req.myFetch(`https://${this.config.domain}/oauth/token`, {
-      method: 'POST',
-      headers: { 'content-type': 'application/json' },
-      body,
-    });
-    const tokenBody: AuthToken = await tokenResponse.json();
-
-    if (tokenBody.error) {
-      throw new Error(tokenBody.error);
-    }
-    return tokenBody;
-  }
-
-  getLoginRedirectUrl(origin: string, state: string): string {
-    const c = this.config;
-    const state2 = encodeURIComponent(state);
-    const callback = encodeURIComponent(this.config.callbackUrl);
-    const protocol = origin.indexOf('localhost') === -1 ? 'https' : 'http';
-
-    return `${protocol}://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}`;
-  }
-
-  getSetupRedirectUrl(state: string, inviteCode: string): string {
-    const c = this.config;
-    const state2 = encodeURIComponent(state);
-    const callback = encodeURIComponent(this.config.callbackUrl);
-
-    return `https://${c.domain}/authorize?response_type=code&client_id=${c.authClientId}&redirect_uri=${callback}&scope=openid%20profile%20email&state=${state2}&inviteCode=${inviteCode}`;
-  }
-
-  getLogoutUrl(origin: string): string {
-    const c = this.config;
-
-    return `https://${c.domain}/v2/logout?returnTo=${origin}%2Floggedout&client_id=${c.authClientId}`;
-  }
-
-  async generateStateParamAsync(req: WorkerRequest): Promise<string> {
-    const resp = await req.myFetch(new Request('https://csprng.xyz/v1/api', { method: 'get' }));
-    let { Data: state }: { Data: string } = await resp.json();
-
-    while (state.indexOf('|') > -1) state = state.replace('|', '-');
-
-    return state;
+  async makeAuth0CallAsync(req: WorkerRequest, urlSuffix: string, method: string, token: string, body?: unknown): Promise<Response> {
+    return await req.myFetch(
+      new Request(`https://${this.config.domain}/api/v2/${urlSuffix}`, {
+        method,
+        headers: {
+          'content-type': 'application/json',
+          Authorization: `Bearer ${token}`,
+        },
+        body: body ? JSON.stringify(body) : undefined,
+      }),
+    );
   }
 
   async getMgmtTokenAsync(req: WorkerRequest): Promise<string> {
     const url = `https://${this.config.domain}/oauth/token`;
     const body = {
-      client_id: this.config.mgmtClientId,
-      client_secret: this.config.mgmtClientSecret,
+      client_id: this.config.clientId,
+      client_secret: this.config.clientSecret,
       audience: this.config.audience,
       grant_type: 'client_credentials',
     };
@@ -112,20 +117,5 @@ export class Auth0Service {
     const respBody: { access_token: string } = await response.json();
 
     return respBody.access_token;
-  }
-
-  async makeAuth0CallAsync(req: WorkerRequest, urlSuffix: string, method: string, body?: unknown): Promise<Response> {
-    const token = await this.getMgmtTokenAsync(req);
-
-    return await req.myFetch(
-      new Request(`https://${this.config.domain}/api/v2/${urlSuffix}`, {
-        method,
-        headers: {
-          'content-type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: body ? JSON.stringify(body) : undefined,
-      }),
-    );
   }
 }

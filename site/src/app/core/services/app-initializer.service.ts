@@ -1,10 +1,5 @@
 import { Store } from '@ngxs/store';
-import {
-  LoadOrganization,
-  LoadProfile,
-  LoadProjects,
-  SetupCategories,
-} from '../actions';
+import { SetupCategories } from '../actions';
 import { forkJoin, switchMap } from 'rxjs';
 import { Resources } from './resource.service';
 import { ThemeService } from './theme.service';
@@ -18,14 +13,9 @@ export class AppInitializerFactory {
 
       if (isInfo) return forkJoin([resources.initiate('Info')]);
 
-      return resources.initiate('General').pipe(
-        switchMap(() =>
-          store.dispatch([new SetupCategories(), new LoadProfile()])
-        ),
-        switchMap(() =>
-          store.dispatch([new LoadProjects(), new LoadOrganization()])
-        )
-      );
+      return resources
+        .initiate('General')
+        .pipe(switchMap(() => store.dispatch(new SetupCategories())));
     };
   }
 }

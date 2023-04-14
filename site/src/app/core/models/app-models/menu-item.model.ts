@@ -25,6 +25,7 @@ export interface ActionMenuItem {
   action: string;
   icon?: IconDefinition;
   disabled?: boolean;
+  roles?: string[];
 }
 
 export interface TimelineMenuItem {

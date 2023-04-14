@@ -22,7 +22,13 @@
     </div>
   </div>
 </div>
-<div *ngIf="projects$ | async; let projects" class="wd-100p mg-t-20">
+<div
+  *ngIf="
+    projects$ | async | projectStatusFilter : (status$ | async);
+    let projects
+  "
+  class="wd-100p mg-t-20"
+>
   <div class="container-fluid">
     <div class="row">
       <div *ngIf="projects.length === 0" class="col-12">
@@ -31,7 +37,7 @@
         </div>
       </div>
       <div
-        *ngFor="let project of projects | projectSort: 'name'"
+        *ngFor="let project of projects | projectSort : 'name'"
         class="col-lg-3 col-md-4 col-sm-6"
       >
         <a [routerLink]="['/projects', project.id, 'view']">
@@ -44,7 +50,7 @@
                 </div>
               </div>
               <div class="tx-right tx-10 tx-gray-600">
-                {{ project._ts | editedDateText }}
+                {{ project.lastModified | editedDateText }}
               </div>
             </div>
           </div>

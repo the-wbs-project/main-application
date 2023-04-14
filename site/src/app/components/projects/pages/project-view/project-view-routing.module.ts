@@ -6,6 +6,7 @@ import {
   ProjectVerifyGuard,
 } from '../../guards';
 import {
+  ProjectDiscussionGuard,
   ProjectRedirectGuard,
   ProjectViewGuard,
   TaskVerifyGuard,
@@ -19,7 +20,6 @@ import {
   ProjectTimelinePageComponent,
   TaskAboutComponent,
   TaskSubTasksComponent,
-  TaskTestComponent,
   TaskViewComponent,
 } from './pages';
 import { ProjectViewLayoutComponent } from './project-view-layout.component';
@@ -104,6 +104,18 @@ export const routes: Routes = [
           title: 'ProjectUpload.PagesUploadProjectPlan',
           view: PROJECT_PAGE_VIEW.TIMELINE,
         },
+      },
+      {
+        path: 'discussions',
+        canActivate: [ProjectViewGuard, ProjectDiscussionGuard],
+        data: {
+          title: 'ProjectUpload.PagesUploadProjectPlan',
+          view: PROJECT_PAGE_VIEW.DISCUSSIONS,
+        },
+        loadChildren: () =>
+          import('../../../discussion-forum/discussion-forum.module').then(
+            (m) => m.DiscussionForumModule
+          ),
       },
       {
         path: 'task/:taskId/:view',

@@ -1,3 +1,4 @@
+export * from './project-discussion-guard.service';
 export * from './project-redirect-guard.service';
 export * from './project-view-guard.service';
 export * from './task-verify-guard.service';

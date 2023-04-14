@@ -3,6 +3,10 @@ export const DATA_SERVICE_CONFIG = {
     collId: 'Activity',
     pkVariable: 'topLevelId',
   },
+  discussions: {
+    collId: 'Discussions',
+    pkVariable: 'associationId',
+  },
   invites: {
     collId: 'Metadata',
     pkVariable: 'type',

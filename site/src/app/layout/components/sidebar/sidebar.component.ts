@@ -10,6 +10,7 @@ import { fromEvent } from 'rxjs';
 import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
 import { NavService } from '../../services';
 import { switcherArrowFn } from './sidebar';
+import { AuthService } from '@auth0/auth0-angular';
 
 @UntilDestroy()
 @Component({
@@ -26,7 +27,10 @@ export class SidebarComponent {
   menuItems!: MenuItem[];
   url: any;
 
-  constructor(private readonly navServices: NavService) {}
+  constructor(
+    readonly auth: AuthService,
+    private readonly navServices: NavService
+  ) {}
 
   setNavActive(item: any) {
     this.menuItems.filter((menuItem) => {

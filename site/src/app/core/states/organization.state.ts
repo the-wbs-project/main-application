@@ -1,36 +1,42 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, State, StateContext } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { LoadOrganization } from '../actions';
+import { map, tap } from 'rxjs/operators';
+import { AddUsers, LoadOrganization, LoadProjects } from '../actions';
 import { DataServiceFactory } from '../data-services';
-import { UserLite } from '../models';
+import { User, UserLite } from '../models';
 
 interface StateModel {
-  users: UserLite[];
+  users?: User[];
 }
 
 @Injectable()
 @State<StateModel>({
   name: 'organization',
-  defaults: {
-    users: [],
-  },
+  defaults: {},
 })
 export class OrganizationState {
   constructor(private readonly data: DataServiceFactory) {}
 
-  @Selector()
-  static users(state: StateModel): UserLite[] {
-    return state.users;
-  }
-
   @Action(LoadOrganization)
-  loadOrganization(ctx: StateContext<StateModel>): Observable<void> {
-    return this.data.users.getAllLiteAsync().pipe(
+  loadOrganization(
+    ctx: StateContext<StateModel>,
+    action: LoadOrganization
+  ): Observable<void> {
+    return this.data.users.getAllAsync(action.organization).pipe(
+      tap((users) => ctx.patchState({ users })),
       map((users) => {
-        ctx.patchState({ users });
-      })
+        const lite: UserLite[] = [];
+
+        for (const x of users)
+          lite.push({
+            email: x.email,
+            id: x.id,
+            name: x.name,
+          });
+        ctx.dispatch(new AddUsers(lite));
+      }),
+      tap(() => ctx.dispatch(new LoadProjects()))
     );
   }
 }

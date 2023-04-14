@@ -10,7 +10,7 @@ export class ProjectImportDataService {
     type: string
   ): Observable<UploadResults<ProjectImportResult>> {
     return this.http.post<UploadResults<ProjectImportResult>>(
-      `projects/import/${type}`,
+      `api/projects/import/${type}`,
       file
     );
   }

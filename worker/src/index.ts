@@ -6,12 +6,14 @@ import { CloudflareService } from './services/edge-services/cloudflare';
 import { ServiceFactory } from './services/factory.service';
 import { Logger } from './services/logger.service';
 import { CloudflareStorageFactory } from './services/storage-services/cloudflare/cloudflare-storage-factory.service';
+import { WorkerContext } from './services/worker-context.service';
 
 export default {
   async fetch(request: Request, environment: any, context: ExecutionContext): Promise<Response> {
     const start = new Date();
     const config = new EnvironmentConfig(environment);
     const logger = new Logger(config.appInsightsKey, request);
+    let workerContext: WorkerContext | null = null;
     let workerRequest: WorkerRequest | null = null;
     let response: Response | null = null;
 
@@ -22,10 +24,12 @@ export default {
       const data = new DataServiceFactory(db, edge, request, storage);
       const services = new ServiceFactory(config, data, edge, storage);
 
-      workerRequest = new WorkerRequest(request, config, services, logger);
+      workerContext = new WorkerContext(config, services, logger);
+      workerRequest = new WorkerRequest(request, workerContext);
 
       response = await services.router.matchAsync(workerRequest);
     } catch (err) {
+      console.log(err);
       if (workerRequest) {
         //@ts-ignore
         workerRequest.logException('An uncaught error occured.', 'WorkerService.handleRequest', err);
@@ -39,5 +43,29 @@ export default {
     context.waitUntil(logger.flush());
 
     return response;
+  },
+  async scheduled(event: any, environment: any, context: ExecutionContext) {
+    const config = new EnvironmentConfig(environment);
+    const keys = await config.kvAuth.list();
+    const deleteAt = new Date(new Date().getTime() + 25 * 24 * 60 * 60 * 1000);
+
+    for (const key of keys.keys) {
+      if (!key.expiration) {
+        await config.kvAuth.delete(key.name);
+      } else {
+        const expires = new Date(key.expiration * 1000);
+
+        if (expires < deleteAt) {
+          //
+          //  ok time wise qualifies, check the value
+          //
+          const value = await config.kvAuth.get(key.name);
+
+          if (value === '{}') {
+            await config.kvAuth.delete(key.name);
+          }
+        }
+      }
+    }
   },
 };

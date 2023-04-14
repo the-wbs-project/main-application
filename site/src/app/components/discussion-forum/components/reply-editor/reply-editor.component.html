@@ -1,0 +1,31 @@
+<div class="card my-2">
+  <div class="card-body">
+    <form #forumForm [formGroup]="form" (ngSubmit)="submit()">
+      <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input
+          type="email"
+          class="form-control"
+          id="title"
+          formControlName="title"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="message" class="form-label">Message</label>
+        <textarea
+          id="message"
+          class="form-control"
+          rows="3"
+          formControlName="message"
+        ></textarea>
+      </div>
+      <button
+        type="submit"
+        class="btn btn-primary w-100"
+        [disabled]="!form.valid"
+      >
+        Submit
+      </button>
+    </form>
+  </div>
+</div>

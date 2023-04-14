@@ -9,6 +9,16 @@ body:not(.horizontal-hover) .slide-menu.open {
   display: block !important;
 }
 
+.header-label {
+  text-align: center;
+  text-decoration: none;
+  color: black;
+
+  > h2 {
+    margin-top: 5px;
+  }
+}
+
 @media screen and (max-width: 767.98px) {
   .slide-menu.open {
     display: block !important;
@@ -19,10 +29,6 @@ body:not(.horizontal-hover) .slide-menu.open {
   .horizontal.layout-boxed .sticky-pin {
     max-width: 100% !important;
   }
-}
-
-perfect-scrollbar {
-  overflow: inherit !important;
 }
 
 .main-sidemenu .side-menu {

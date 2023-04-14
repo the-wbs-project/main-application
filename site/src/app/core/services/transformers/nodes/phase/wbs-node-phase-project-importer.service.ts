@@ -59,13 +59,15 @@ export class WbsNodePhaseProjectImporter {
         people,
         nodes
       );
+      const now = Date.now();
       const node = {
         id: phaseId,
         order: counter + phaseDelta,
         title: info.title,
         parentId: null,
         disciplineIds: this.getDisciplinesFromChildren(children),
-        _ts: Date.now(),
+        createdOn: now,
+        lastModified: now,
       };
 
       for (const person of info.resources) {
@@ -96,11 +98,13 @@ export class WbsNodePhaseProjectImporter {
       const info = nodes.get(level)!;
       const id = IdService.generate();
       const children = this.getChildren(id, level, people, nodes);
+      const now = Date.now();
       const node: WbsNode = {
         id,
         parentId,
         order: counter,
-        _ts: Date.now(),
+        createdOn: now,
+        lastModified: now,
         title: info.title,
         disciplineIds: this.getDisciplinesFromChildren(children),
       };
