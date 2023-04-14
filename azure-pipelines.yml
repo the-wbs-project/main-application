@@ -18,24 +18,6 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: |
-          echo "$(FA_LICENSE)"
-          npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
-        workingDirectory: "site"
-        env:
-          FA_LICENSE: $(FA_LICENSE)
-        displayName: "Setup Font Awesome Registry"
-
-      #- script: yarn
-      #  workingDirectory: "site"
-      #  displayName: "Install Site Packages"
-
-      - script: npx kendo-ui-license activate
-        workingDirectory: "site"
-        env:
-          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
-        displayName: "Setup Kendo UI License"
-
   - job: worker_job
     displayName: Worker
     dependsOn: setup_job
@@ -52,13 +34,58 @@ jobs:
         workingDirectory: "worker"
         displayName: "Build Worker"
 
-  - job: prod_job
-    displayName: Production Build
+  - job: site_job
+    displayName: Site
     dependsOn: worker_job
     steps:
+      - script: |
+          echo "$(FA_LICENSE)"
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
+        workingDirectory: "site"
+        env:
+          FA_LICENSE: $(FA_LICENSE)
+        displayName: "Setup Font Awesome Registry"
       - script: yarn global add @angular/cli
         displayName: "Install Angular CLI"
 
-      - script: yarn run deploy
+      - script: yarn
         workingDirectory: "site"
-        displayName: "Build Site"
+        displayName: "Install Site Packages"
+
+      - script: npx kendo-ui-license activate
+        workingDirectory: "site"
+        env:
+          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
+        displayName: "Setup Kendo UI License"
+
+      - script: yarn run deploy:qa
+        workingDirectory: "site"
+        displayName: "Build QA"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: 'worker'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip'
+          replaceExistingArchive: true
+        displayName: "Zip QA"
+
+      - script: yarn run deploy:prod
+        workingDirectory: "site"
+        displayName: "Build Prod"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: 'worker'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip'
+          replaceExistingArchive: true
+        displayName: "Zip Prop"
+        
+      - task: PublishPipelineArtifact@1
+        inputs:
+          targetPath: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip'
+          artifact: 'drop'
+          publishLocation: 'pipeline'
