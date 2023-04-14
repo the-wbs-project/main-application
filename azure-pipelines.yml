@@ -39,8 +39,8 @@ jobs:
           replaceExistingArchive: true
         displayName: "Zip Worker"
 
-  - job: site_setup_job
-    displayName: Site Setup
+  - job: site_job
+    displayName: Site
     dependsOn: worker_job
     steps:
       - script: |
@@ -49,27 +49,23 @@ jobs:
         workingDirectory: "site"
         env:
           FA_LICENSE: $(FA_LICENSE)
-        displayName: "Setup Font Awesome Registry"
+        displayName: "Setup - Font Awesome Registry"
       - script: yarn global add @angular/cli
-        displayName: "Install Angular CLI"
+        displayName: "Setup - Angular CLI"
 
       - script: yarn
         workingDirectory: "site"
-        displayName: "Install Site Packages"
+        displayName: "Setup - Site Packages"
 
       - script: npx kendo-ui-license activate
         workingDirectory: "site"
         env:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
-        displayName: "Setup Kendo UI License"
+        displayName: "Setup - Kendo UI License"
 
-  - job: site_qa_job
-    displayName: Site - QA
-    dependsOn: site_setup_job
-    steps:
       - script: yarn run deploy:qa
         workingDirectory: "site"
-        displayName: "Build"
+        displayName: "QA - Build"
 
       - task: ArchiveFiles@2
         inputs:
@@ -78,15 +74,11 @@ jobs:
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip'
           replaceExistingArchive: true
-        displayName: "Zip"
+        displayName: "QA - Zip"
 
-  - job: site_prod_job
-    displayName: Site - Prod
-    dependsOn: site_qa_job
-    steps:
       - script: yarn run deploy:prod
         workingDirectory: "site"
-        displayName: "Build"
+        displayName: "Production - Build"
 
       - task: ArchiveFiles@2
         inputs:
@@ -95,12 +87,7 @@ jobs:
           archiveType: 'zip'
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip'
           replaceExistingArchive: true
-        displayName: "Zip Production"
-
-  - job: publish_job
-    displayName: Publish
-    dependsOn: site_prod_job
-    steps:
+        displayName: "Production - Zip"
         
       - task: PublishBuildArtifacts@1
         inputs:
