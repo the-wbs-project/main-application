@@ -26,13 +26,14 @@ jobs:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup Font Awesome Registry"
 
-      - script: yarn global add @angular/cli
-        workingDirectory: "site"
-        displayName: "Install Angular CLI"
+      - script: |
+          yarn global add @angular/cli
+          yarn global add esbuild
+        displayName: "Install Global Libraries"
 
-      - script: yarn
-        workingDirectory: "site"
-        displayName: "Install Site Packages"
+      #- script: yarn
+      #  workingDirectory: "site"
+      #  displayName: "Install Site Packages"
 
       - script: yarn
         workingDirectory: "worker"
