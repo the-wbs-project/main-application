@@ -10,7 +10,8 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
-  setup_job:
+  - job: setup_job
+    displayName: Setup
     steps:
       - task: NodeTool@0
         inputs:
@@ -33,13 +34,17 @@ jobs:
         workingDirectory: "worker"
         displayName: "Install Worker Packages"
 
-  worker_job:
+  - job: worker_job
+    displayName: Worker
+    dependsOn: setup_job
     steps:
       - script: yarn run build
         workingDirectory: "worker"
         displayName: "Build Worker"
 
-  site_prod_job:
+  - job: prod_job
+    displayName: Production Build
+    dependsOn: worker_job
     steps:
       - script: yarn run deploy
         workingDirectory: "site"
