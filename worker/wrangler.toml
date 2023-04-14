@@ -1,4 +1,4 @@
-name = "wbs-app"
+name = "pm-empower-app"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 compatibility_date = "2022-05-27"
 main = "dist/index.js"
@@ -14,7 +14,7 @@ globs = ["**/*.js"]
 crons = ["0 0 */1 * *"]
 
 [env.dev]
-name = "api"
+name = "pm-empower-app-dev"
 usage_model = "unbound"
 kv_namespaces = [
   { binding = "KV_AUTH", id = "123", preview_id = "10044f1ce15740fd8cc0b2eaf11ca660" },
@@ -40,11 +40,11 @@ AUTH_CONNECTION = "acme-engineering"
 AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [env.qa]
-name = "app-v0-1-api-qa"
+name = "pm-empower-app-qa"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-  { pattern = "app-test.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
+	{ pattern = "app-test.pm-empower.com", custom_domain = true, zone_name = "pm-empower" }
 ]
 kv_namespaces = [
   { binding = "KV_AUTH", id = "6eb87b9b5d9f4261907b80164cbc0947", preview_id = "6eb87b9b5d9f4261907b80164cbc0947" },
@@ -53,14 +53,27 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
 ]
-vars = { CORS_URLS = "https://app-test.thewbsproject.com", APP_INSIGHTS_KEY = "1f200dd0-488f-4e6d-900b-19c87a45d0b2" }
+[env.qa.vars]
+DEBUG = "false"
+APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+CORS_ORIGINS = "http://localhost:4200"
+INVITE_TEMPLATE = "invite-template-v1"
+
+AZURE_ENDPOINT = "https://wbs-v0-1-qa.azurewebsites.net"
+COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+
+AUTH_AUDIENCE = "https://dev-3lcexa83.us.auth0.com/api/v2/"
+AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
+AUTH_CONNECTION = "acme-engineering"
+AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [env.prod]
-name = "app-v0-1-api-prod"
+name = "pm-empower-app-prod"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-  { pattern = "app.thewbsproject.com/*", zone_id = "5c2549bae0a35fb59176d4a54e5a717a" }
+	{ pattern = "app.pm-empower.com", custom_domain = true, zone_name = "pm-empower" }
 ]
 kv_namespaces = [
 
@@ -70,7 +83,20 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
 ]
-vars = { CORS_URLS = "https://app.thewbsproject.com", APP_INSIGHTS_KEY = "5a16ddbc-8131-4627-8497-1c4977cb7730" }
+[env.prod.vars]
+DEBUG = "false"
+APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+CORS_ORIGINS = "http://localhost:4200"
+INVITE_TEMPLATE = "invite-template-v1"
+
+AZURE_ENDPOINT = "https://wbs-v0-1-prod.azurewebsites.net"
+COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+
+AUTH_AUDIENCE = "https://dev-3lcexa83.us.auth0.com/api/v2/"
+AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
+AUTH_CONNECTION = "acme-engineering"
+AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [dev]
 port = 88
