@@ -18,18 +18,14 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: |
-          yarn config set "@fortawesome:registry" https://npm.fontawesome.com/
-          yarn config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
-        workingDirectory: "site"
-        displayName: "Setup Font Awesome Registry/License"
-
       - script: yarn global add @angular/cli
         workingDirectory: "site"
         displayName: "Install Angular CLI"
 
       - script: yarn
         workingDirectory: "site"
+        env:
+          FONTAWESOME_NPM_AUTH_TOKEN: $(FA_LICENSE)
         displayName: "Install Site Packages"
 
       - script: yarn
