@@ -73,7 +73,7 @@ name = "pm-empower-app-prod"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-	{ pattern = "app.pm-empower.com", custom_domain = true, zone_name = "pm-empower" }
+	{ pattern = "app.pm-empower.com", custom_domain = true, zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
 
@@ -81,7 +81,7 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "408389bba37f437da346442f36b25a45", preview_id = "408389bba37f437da346442f36b25a45" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod.com" }
 ]
 [env.prod.vars]
 DEBUG = "false"
