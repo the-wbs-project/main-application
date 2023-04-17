@@ -1,61 +1,8 @@
-import { parseJwt } from '@cfworker/jwt';
-import { AuthConfig } from '../../config';
-import { OrganizationRoles, User, UserLite } from '../../models';
-import { WorkerRequest } from '../worker-request.service';
+import { User, UserLite } from '../../models';
+import { Context } from '../../config';
 
 export class Auth0Service {
-  constructor(private readonly config: AuthConfig) {}
-
-  static async verify(req: WorkerRequest): Promise<Response | number | void> {
-    let jwt = req.headers.get('Authorization');
-    const issuer = `https://${req.context.config.auth.domain}/`;
-    const audience = req.context.config.auth.audience;
-
-    if (!jwt) return 403;
-
-    jwt = jwt.replace('Bearer ', '');
-
-    const result = await parseJwt(jwt, issuer, audience);
-
-    if (!result.valid) {
-      console.log(result.reason); // Invalid issuer/audience, expired, etc
-
-      return new Response(result.reason, {
-        status: 403,
-      });
-    }
-    //
-    //  Get the state.  if it doesn't exist set it up.
-    //
-    let state = await req.context.services.data.auth.getStateAsync(result.payload.sub, jwt);
-
-    if (!state) {
-      const user = await req.context.services.identity.getUserAsync(req, result.payload.sub);
-
-      if (!user)
-        return new Response('Cannot find user', {
-          status: 500,
-        });
-
-      const organizations: OrganizationRoles[] = [];
-
-      for (const organization of Object.keys(user.appInfo.organizations)) {
-        organizations.push({ organization, roles: user.appInfo.organizations[organization] });
-      }
-
-      state = {
-        culture: user.userInfo.culture,
-        organizations,
-        userId: user.id,
-      };
-
-      await req.context.services.data.auth.putStateAsync(result.payload.sub, jwt, state, result.payload.exp);
-    }
-    req.context.setState(state);
-    req.context.setOrganization(state.organizations[0]);
-  }
-
-  toUser(payload: Record<string, any>): User {
+  static toUser(payload: Record<string, any>): User {
     const user: User = {
       blocked: payload.blocked ?? false,
       appInfo: payload.app_metadata || {},
@@ -71,7 +18,7 @@ export class Auth0Service {
     return user;
   }
 
-  toLiteUser(payload: Record<string, any>): UserLite {
+  static toLiteUser(payload: Record<string, any>): UserLite {
     const user: UserLite = {
       email: payload.email,
       name: payload.name,
@@ -80,9 +27,9 @@ export class Auth0Service {
     return user;
   }
 
-  async makeAuth0CallAsync(req: WorkerRequest, urlSuffix: string, method: string, token: string, body?: unknown): Promise<Response> {
-    return await req.myFetch(
-      new Request(`https://${this.config.domain}/api/v2/${urlSuffix}`, {
+  static async makeAuth0CallAsync(ctx: Context, urlSuffix: string, method: string, token: string, body?: unknown): Promise<Response> {
+    return await ctx.get('fetcher').fetch(
+      new Request(`https://${ctx.env.AUTH_DOMAIN}/api/v2/${urlSuffix}`, {
         method,
         headers: {
           'content-type': 'application/json',
@@ -93,15 +40,15 @@ export class Auth0Service {
     );
   }
 
-  async getMgmtTokenAsync(req: WorkerRequest): Promise<string> {
-    const url = `https://${this.config.domain}/oauth/token`;
+  static async getMgmtTokenAsync(ctx: Context): Promise<string> {
+    const url = `https://${ctx.env.AUTH_DOMAIN}/oauth/token`;
     const body = {
-      client_id: this.config.clientId,
-      client_secret: this.config.clientSecret,
-      audience: this.config.audience,
+      client_id: ctx.env.AUTH_CLIENT_ID,
+      client_secret: ctx.env.AUTH_CLIENT_SECRET,
+      audience: ctx.env.AUTH_AUDIENCE,
       grant_type: 'client_credentials',
     };
-    const response = await req.myFetch(
+    const response = await ctx.get('fetcher').fetch(
       new Request(url, {
         method: 'POST',
         headers: {

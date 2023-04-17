@@ -1,16 +1,16 @@
+import { Context } from '../../config';
 import { ProjectSnapshot } from '../../models';
-import { EdgeService } from '../edge-services';
-import { StorageService } from '../storage-services';
 import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectDataService } from './project.data-service';
+import { StorageService } from './storage.service';
 
 export class ProjectSnapshotDataService {
+  private _bucket?: StorageService;
+
   constructor(
-    private readonly bucket: StorageService,
-    private readonly edge: EdgeService,
+    private readonly ctx: Context,
     private readonly projectService: ProjectDataService,
     private readonly taskService: ProjectNodeDataService,
-    private readonly organization: string,
   ) {}
 
   getAsync(projectId: string, activityId: string): Promise<ProjectSnapshot | null> {
@@ -24,6 +24,17 @@ export class ProjectSnapshotDataService {
       tasks,
     };
 
-    this.edge.waitUntil(this.bucket.put(activityId, [this.organization, projectId], snapshot));
+    this.ctx.executionCtx.waitUntil(this.bucket.put(activityId, [this.organization, projectId], snapshot));
+  }
+
+  private get organization(): string {
+    return this.ctx.get('organization').organization;
+  }
+
+  private get bucket(): StorageService {
+    if (!this._bucket) {
+      this._bucket = new StorageService(this.ctx.env.BUCKET_SNAPSHOTS);
+    }
+    return this._bucket;
   }
 }

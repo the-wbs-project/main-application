@@ -1,60 +1,62 @@
+import { Context } from '../../config';
 import { ProjectNode } from '../../models';
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
 
-export class ProjectNodeHttpService extends BaseHttpService {
-  static async getAsync(req: WorkerRequest): Promise<Response | number> {
+export class ProjectNodeHttpService {
+  static async getAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.projectId) return 500;
+      const { projectId } = ctx.req.param();
+
+      if (!projectId) return ctx.text('Missing Parameters', 500);
       //
       //  Get the data from the KV
       //
-      const data = await req.context.services.data.projectNodes.getAllAsync(req.params.projectId);
-      return await super.buildJson(data);
+      return ctx.json(await ctx.get('data').projectNodes.getAllAsync(projectId));
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get the phase WBS list for a project.',
-        'ProjectNodeHttpService.getAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying to get the phase WBS list for a project.', 'ProjectNodeHttpService.getAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async putAsync(req: WorkerRequest): Promise<Response | number> {
+  static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const params = req.params;
-      const projectId = params?.projectId;
-      const nodeId = params?.nodeId;
+      const { projectId, nodeId } = ctx.req.param();
+      const data = ctx.get('data');
 
-      if (!projectId || !nodeId) return 500;
+      if (!projectId || !nodeId) return ctx.text('Missing Parameters', 500);
 
-      await req.context.services.data.projectNodes.putAsync(await req.request.json());
-      await req.context.services.data.projects.updateModifiedDateAsync(projectId);
+      await data.projectNodes.putAsync(await ctx.req.json());
+      await data.projects.updateModifiedDateAsync(projectId);
 
-      return 204;
+      return ctx.text('', 204);
     } catch (e) {
-      req.context.logException('An error occured trying to put a node.', 'ProjectNodeHttpService.putAsync', <Error>e);
-      return 500;
+      ctx.get('logger').trackException('An error occured trying to put a node.', 'ProjectNodeHttpService.putAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async batchAsync(req: WorkerRequest): Promise<Response | number> {
+  static async batchAsync(ctx: Context): Promise<Response> {
     try {
-      const params = req.params;
-      const projectId = params?.projectId;
+      const { projectId } = ctx.req.param();
+      const data = ctx.get('data');
 
-      if (!projectId) return 500;
+      if (!projectId) return ctx.text('Missing Parameters', 500);
 
-      const data: { upserts: ProjectNode[]; removeIds: string[] } = await req.request.json();
+      const { upserts, removeIds }: { upserts: ProjectNode[]; removeIds: string[] } = await ctx.req.json();
 
-      await req.context.services.data.projectNodes.batchAsync(projectId, data.upserts, data.removeIds);
-      await req.context.services.data.projects.updateModifiedDateAsync(projectId);
+      await data.projectNodes.batchAsync(projectId, upserts, removeIds);
+      await data.projects.updateModifiedDateAsync(projectId);
 
-      return 204;
+      return ctx.text('', 204);
     } catch (e) {
-      req.context.logException('An error occured trying upload a batch of node changes.', 'ProjectNodeHttpService.batchAsync', <Error>e);
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying upload a batch of node changes.', 'ProjectNodeHttpService.batchAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }

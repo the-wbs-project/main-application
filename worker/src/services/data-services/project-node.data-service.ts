@@ -1,8 +1,11 @@
+import { Context } from '../../config';
 import { ProjectNode } from '../../models';
-import { DbService } from '../database-services';
+import { CosmosDbService } from './cosmos-db.service';
 
 export class ProjectNodeDataService {
-  constructor(private readonly db: DbService) {}
+  private _db?: CosmosDbService;
+
+  constructor(private readonly ctx: Context) {}
 
   async getAllAsync(projectId: string): Promise<ProjectNode[] | undefined> {
     const nodes = await this.getFromDbAsync(projectId);
@@ -66,5 +69,13 @@ export class ProjectNodeDataService {
 
   private getFromDbAsync(projectId: string): Promise<ProjectNode[] | undefined> {
     return this.db.getAllByPartitionAsync<ProjectNode>(projectId, true);
+  }
+
+  private get db(): CosmosDbService {
+    if (!this._db) {
+      const db = this.ctx.get('organization').organization;
+      this._db = new CosmosDbService(this.ctx, db, 'ProjectNodes', 'projectId');
+    }
+    return this._db;
   }
 }

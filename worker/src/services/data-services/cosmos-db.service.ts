@@ -1,22 +1,19 @@
-import { CosmosClient, Document, DocumentInit, Resource } from '@cfworker/cosmos';
-import { Config } from '../../../config';
-import { IdObject } from '../../../models';
-import { myFetch } from '../../fetcher.service';
-import { Logger } from '../../logger.service';
-import { DbService } from '../db.service';
+import { CosmosClient, Document, DocumentInit } from '@cfworker/cosmos';
+import { IdObject } from '../../models';
+import { Context } from '../../config';
 
-export class CosmosDbService implements DbService {
+export class CosmosDbService {
   private readonly db: CosmosClient;
   orgId?: string;
 
-  constructor(dbId: string, collId: string, config: Config, logger: Logger, mainRequest: Request, private readonly pkVariable = 'pk') {
+  constructor(ctx: Context, dbId: string, collId: string, private readonly pkVariable = 'pk') {
     this.db = new CosmosClient({
-      endpoint: config.db.endpoint,
-      masterKey: config.db.key,
+      endpoint: ctx.env.COSMOS_ENDPOINT,
+      masterKey: ctx.env.COSMOS_KEY,
       dbId,
       collId,
       fetch: (input: RequestInfo, init?: RequestInit<RequestInitCfProperties>) => {
-        return myFetch(mainRequest, logger, input, init);
+        return ctx.get('fetcher').fetch(input, init);
       },
     });
   }

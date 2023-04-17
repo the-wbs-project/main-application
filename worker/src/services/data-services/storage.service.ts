@@ -1,4 +1,6 @@
-export class CloudflareStorageService {
+import { Context } from '../../config';
+
+export class StorageService {
   constructor(private readonly bucket: R2Bucket) {}
 
   async get<T>(fileName: string, folders: string[]): Promise<T | null> {
@@ -8,13 +10,13 @@ export class CloudflareStorageService {
     return object == null ? null : <T>object.json();
   }
 
-  async getAsResponse(fileName: string, folders?: string[]): Promise<Response | null> {
+  async getAsResponse(ctx: Context, fileName: string, folders?: string[]): Promise<Response> {
     fileName = decodeURIComponent(fileName);
 
     const key = folders ? `${folders.join('/')}/${fileName}` : fileName;
     const object = await this.bucket.get(key);
 
-    if (!object) return new Response('', { status: 404 });
+    if (!object) return ctx.text('Not Found', 404);
 
     const headers = new Headers();
     object.writeHttpMetadata(headers);

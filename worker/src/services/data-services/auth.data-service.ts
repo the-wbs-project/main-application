@@ -1,19 +1,19 @@
+import { Context } from '../../config';
 import { AuthState } from '../../models';
-import { EdgeDataService } from '../edge-services';
 
 export class AuthDataService {
-  constructor(private readonly edge: EdgeDataService) {}
+  constructor(private readonly ctx: Context) {}
 
   getStateAsync(userId: string, jwt: string): Promise<AuthState | null> {
     const key = this.getKey(userId, jwt);
 
-    return this.edge.get<AuthState>(key, 'json');
+    return this.ctx.env.KV_AUTH.get<AuthState>(key, 'json');
   }
 
   putStateAsync(userId: string, jwt: string, state: AuthState, expiration: number): Promise<void> {
     const key = this.getKey(userId, jwt);
 
-    return this.edge.put(key, JSON.stringify(state), {
+    return this.ctx.env.KV_AUTH.put(key, JSON.stringify(state), {
       expiration,
     });
   }

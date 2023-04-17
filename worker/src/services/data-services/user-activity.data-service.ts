@@ -1,10 +1,11 @@
-import { Document, Resource } from '@cfworker/cosmos';
 import { Activity } from '../../models';
-import { DbService } from '../database-services';
-import { DataServiceHelper } from './helper.data-service';
+import { CosmosDbService } from './cosmos-db.service';
+import { Context } from '../../config';
 
 export class UserActivityDataService {
-  constructor(private readonly db: DbService) {}
+  private _db?: CosmosDbService;
+
+  constructor(private readonly ctx: Context) {}
 
   getAllAsync(userId: string): Promise<Activity[] | undefined> {
     return this.db.getAllByPartitionAsync<Activity>(userId, false);
@@ -12,5 +13,13 @@ export class UserActivityDataService {
 
   async putAsync(activity: Activity): Promise<Activity> {
     return await this.db.upsertDocument<Activity>(activity, activity.userId);
+  }
+
+  private get db(): CosmosDbService {
+    if (!this._db) {
+      const db = this.ctx.get('organization').organization;
+      this._db = new CosmosDbService(this.ctx, db, 'ActivityUsers', 'userId');
+    }
+    return this._db;
   }
 }

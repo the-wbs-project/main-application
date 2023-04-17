@@ -1,5 +1,3 @@
-import { OrganizationRoles } from './app-models';
-
 export interface User {
   id: string;
   email: string;

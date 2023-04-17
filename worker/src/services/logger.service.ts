@@ -1,15 +1,20 @@
 import * as cookie from 'cookie';
+import { Context } from '../config';
 
 export class Logger {
   private readonly namePrefix: string;
   private readonly logs: any[] = [];
 
-  constructor(private readonly appInsightsKey: string, private readonly request: Request) {
+  constructor(private readonly ctx: Context) {
     this.namePrefix = `Microsoft.ApplicationInsights.${this.appInsightsKey.replace(/-/g, '')}`;
   }
 
+  private get appInsightsKey(): string {
+    return this.ctx.env.APP_INSIGHTS_KEY;
+  }
+
   trackRequest(request: Request, response: Response, duration: number): void {
-    const tags = this.getTags(request);
+    const tags = this.getTags(request.headers);
     const cf: any = request.cf || {};
 
     // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
@@ -40,8 +45,14 @@ export class Logger {
   }
 
   trackException(message: string, location: string, exception: Error): void {
-    const tags = this.getTags(this.request);
-    const cf: any = this.request.cf || {};
+    console.log(message);
+    console.log(location);
+    console.log(exception);
+    console.log(exception?.stack?.toString());
+
+    //@ts-ignore
+    const cf: any = this.ctx.req.cf || {};
+    const tags = this.getTags(this.ctx.req.headers);
 
     // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
     this.logs.push({
@@ -55,7 +66,7 @@ export class Logger {
           ver: 2,
           properties: {
             // You can add more properties if needed
-            HttpReferer: this.request.headers.get('Referer'),
+            HttpReferer: this.ctx.req.headers.get('Referer'),
             Message: message,
             location: location,
             error: JSON.stringify(exception),
@@ -77,7 +88,7 @@ export class Logger {
 
   trackDependency(url: string, method: string | undefined, duration: number, request?: Request, response?: Response | null): void {
     const url2 = new URL(url);
-    const tags = request ? this.getTags(request) : null;
+    const tags = request ? this.getTags(request.headers) : null;
     const name = `${method} ${url2.pathname}`;
     const cf: any = (request ? request.cf : null) || {};
 
@@ -115,10 +126,10 @@ export class Logger {
     });
   }
 
-  private getTags(request: Request): Record<string, string> {
-    const cookieValue = request.headers.get('Cookie');
+  private getTags(headers: Headers): Record<string, string> {
+    const cookieValue = headers.get('Cookie');
     const tags: Record<string, string> = {
-      'ai.location.ip': <string>request.headers.get('CF-Connecting-IP'),
+      'ai.location.ip': <string>headers.get('CF-Connecting-IP'),
     };
 
     if (cookieValue) {
