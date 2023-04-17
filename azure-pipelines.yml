@@ -38,6 +38,13 @@ jobs:
           archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip'
           replaceExistingArchive: true
         displayName: "Zip Worker"
+        
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+        displayName: "Publish Worker"
 
   - job: site_job
     displayName: Site
