@@ -1,21 +1,19 @@
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
+import { Context } from '../../config';
 
-export class ProjectSnapshotHttpService extends BaseHttpService {
-  static async getByActivityIdAsync(req: WorkerRequest): Promise<Response | number> {
+export class ProjectSnapshotHttpService {
+  static async getByActivityIdAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.projectId || !req.params?.activityId) return 500;
+      const { projectId, activityId } = ctx.req.param();
 
-      const data = await req.context.services.data.projectSnapshots.getAsync(req.params.projectId, req.params.activityId);
+      if (!projectId || !activityId) return ctx.text('Missing Parameters', 500);
 
-      return await super.buildJson(data);
+      return ctx.json(await ctx.get('data').projectSnapshots.getAsync(projectId, activityId));
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get a project snapshot.',
-        'ProjectSnapshotHttpService.getByActivityIdAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying to get a project snapshot.', 'ProjectSnapshotHttpService.getByActivityIdAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }

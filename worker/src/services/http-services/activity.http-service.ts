@@ -1,53 +1,60 @@
+import { Context } from '../../config';
 import { Activity } from '../../models';
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
 
-export class ActivityHttpService extends BaseHttpService {
-  static async getByIdAsync(req: WorkerRequest): Promise<Response | number> {
+export class ActivityHttpService {
+  static async getByIdAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.topLevelId) return 500;
+      const { topLevelId } = ctx.req.param();
 
-      const data = await req.context.services.data.activities.getAllAsync(req.params.topLevelId);
+      if (!topLevelId) return ctx.text('Missing Parameters', 500);
 
-      return await super.buildJson(data);
+      return ctx.json(await ctx.get('data').activities.getAllAsync(topLevelId));
     } catch (e) {
-      req.context.logException('An error occured trying to get all activity for an object.', 'ActivityHttpService.getByIdAsync', <Error>e);
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying to get all activity for an object.', 'ActivityHttpService.getByIdAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getByUserIdAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getByUserIdAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.userId) return 500;
+      const { userId } = ctx.req.param();
 
-      const data = await req.context.services.data.userActivities.getAllAsync(req.params.userId);
+      if (!userId) return ctx.text('Missing Parameters', 500);
 
-      return await super.buildJson(data);
+      return ctx.json(await ctx.get('data').userActivities.getAllAsync(userId));
     } catch (e) {
-      req.context.logException('An error occured trying to get all activity for a user.', 'ActivityHttpService.getByUserIdAsync', <Error>e);
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying to get all activity for a user.', 'ActivityHttpService.getByUserIdAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async putAsync(req: WorkerRequest): Promise<Response | number> {
+  static async putAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.context.state?.userId) return 500;
+      const { userId, dataType } = ctx.req.param();
 
-      const activity: Activity = await req.request.json();
-      const dataType = req.params?.dataType!;
+      if (!userId || !dataType) return ctx.text('Missing Parameters', 500);
 
-      activity.userId = req.context.state.userId;
+      const activity: Activity = await ctx.req.json();
 
-      await req.context.services.data.activities.putAsync(activity);
+      activity.userId = userId;
 
-      if (dataType === 'project') await req.context.services.data.projectSnapshots.putAsync(activity.topLevelId, activity.id);
+      await ctx.get('data').activities.putAsync(activity);
 
-      await req.context.services.data.userActivities.putAsync(activity);
+      if (dataType === 'project') await ctx.get('data').projectSnapshots.putAsync(activity.topLevelId, activity.id);
 
-      return 204;
+      await ctx.get('data').userActivities.putAsync(activity);
+
+      return ctx.text('', 204);
     } catch (e) {
-      req.context.logException('An error occured trying to insert an activity.', 'ActivityHttpService.putAsync', <Error>e);
-      return 500;
+      ctx.get('logger').trackException('An error occured trying to insert an activity.', 'ActivityHttpService.putAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }

@@ -1,4 +1,4 @@
-export interface Env {
+export type Env = {
   KV_AUTH: KVNamespace;
   KV_DATA: KVNamespace;
   BUCKET_SNAPSHOTS: R2Bucket;
@@ -24,4 +24,4 @@ export interface Env {
   DEBUG: string;
   INVITE_TEMPLATE_ID: string;
   KV_BYPASS?: string;
-}
+};

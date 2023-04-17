@@ -1,47 +1,47 @@
+import { Context } from '../../config';
 import { Discussion, User } from '../../models';
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
+import { IdentityService } from '../auth-services';
 
 const GLOBAL = 'global';
 
-export class DiscussionHttpService extends BaseHttpService {
-  static async getAsync(req: WorkerRequest): Promise<Response | number> {
+export class DiscussionHttpService {
+  static async getAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.organization || !req.params?.associationId) return 500;
+      const { organization, associationId, id } = ctx.req.param();
 
-      const service =
-        req.params.organization === GLOBAL ? req.context.services.data.discussionsGlobal : req.context.services.data.discussionsCorporate;
+      if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const discussions = await service.getAllAsync(req.params.associationId, req.params.threadId);
+      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
 
-      return await super.buildJson(discussions);
+      return ctx.json(await service.getAllAsync(associationId, id));
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get all discussions based on an association.',
-        'DiscussionHttpService.getAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to get all discussions based on an association.',
+          'DiscussionHttpService.getAsync',
+          <Error>e,
+        );
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getUsersAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getUsersAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.organization || !req.params?.associationId) return 500;
+      const { organization, associationId } = ctx.req.param();
 
-      const service =
-        req.params.organization === GLOBAL ? req.context.services.data.discussionsGlobal : req.context.services.data.discussionsCorporate;
+      if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const userIds = await service.getAllUsersAsync(req.params.associationId);
+      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
+
+      const userIds = await service.getAllUsersAsync(associationId);
       const userGets: Promise<User>[] = [];
 
       for (const id of userIds) {
-        userGets.push(req.context.services.identity.getUserAsync(req, id));
+        userGets.push(IdentityService.getUserAsync(ctx, id));
       }
-      return await super.buildJson(
-        (
-          await Promise.all(userGets)
-        ).map((user) => {
+      return ctx.json(
+        (await Promise.all(userGets)).map((user) => {
           return {
             id: user.id,
             email: user.email,
@@ -50,52 +50,53 @@ export class DiscussionHttpService extends BaseHttpService {
         }),
       );
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get all users who has responded to an association.',
-        'DiscussionHttpService.getUsersAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to get all users who has responded to an association.',
+          'DiscussionHttpService.getUsersAsync',
+          <Error>e,
+        );
+      return ctx.text('Internal Server Error', 500);
     }
   }
-  static async getTextAsync(req: WorkerRequest): Promise<Response | number> {
+
+  static async getTextAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.organization || !req.params?.associationId) return 500;
+      const { organization, associationId, id } = ctx.req.param();
 
-      const service =
-        req.params.organization === GLOBAL ? req.context.services.data.discussionsGlobal : req.context.services.data.discussionsCorporate;
+      if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const thread = await service.getAsync(req.params.associationId, req.params.threadId);
+      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
 
-      return thread
-        ? new Response(`<html><body class="body">${thread.text}</body></html>`, {
-            headers: {
-              'content-type': 'text/html',
-            },
-          })
-        : 404;
+      const thread = await service.getAsync(associationId, id);
+
+      return thread ? ctx.html(`<html><body class="body">${thread.text}</body></html>`) : ctx.text('', 404);
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get all discussions based on an association.',
-        'DiscussionHttpService.getAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to get all discussions based on an association.',
+          'DiscussionHttpService.getAsync',
+          <Error>e,
+        );
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async putAsync(req: WorkerRequest): Promise<Response | number> {
+  static async putAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.organization || !req.params?.threadId) return 500;
+      const { organization, associationId } = ctx.req.param();
 
-      const service =
-        req.params.organization === GLOBAL ? req.context.services.data.discussionsGlobal : req.context.services.data.discussionsCorporate;
-      const model: Discussion = await req.request.json();
+      if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
+
+      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
+      const model: Discussion = await ctx.req.json();
 
       await service.putAsync(model);
 
-      if (model.threadId) {
-        const thread = await service.getAsync(model.associationId, model.threadId);
+      if (model.id) {
+        const thread = await service.getAsync(model.associationId, model.id);
 
         if (thread) {
           thread.lastUpdated = model.createdOn;
@@ -104,10 +105,10 @@ export class DiscussionHttpService extends BaseHttpService {
         }
       }
 
-      return 204;
+      return ctx.text('', 204);
     } catch (e) {
-      req.context.logException('An error occured trying to save a discussion.', 'DiscussionHttpService.putAsync', <Error>e);
-      return 500;
+      ctx.get('logger').trackException('An error occured trying to save a discussion.', 'DiscussionHttpService.putAsync', <Error>e);
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }

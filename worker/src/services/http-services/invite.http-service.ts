@@ -1,96 +1,90 @@
+import { MailGunService } from '..';
+import { Context } from '../../config';
 import { Invite } from '../../models';
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
 
-export class InviteHttpService extends BaseHttpService {
-  static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
+export class InviteHttpService {
+  static async getAllAsync(ctx: Context): Promise<Response> {
     try {
-      return await super.buildJson(await req.context.services.data.invites.getAllAsync());
+      return ctx.json(await ctx.get('data').invites.getAllAsync());
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get all invites for an organization.',
-        'InviteHttpService.getAllAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying to get all invites for an organization.', 'InviteHttpService.getAllAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getEmailAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getEmailAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.organization || !req.params?.code) return 500;
+      const { organization, code } = ctx.req.param();
 
-      req.context.setOrganization({
-        organization: req.params.organization,
+      if (!organization || !code) return ctx.text('Missing Parameters', 500);
+
+      ctx.set('organization', {
+        organization,
         roles: [],
       });
       //
       //  Get the data from the KV
       //
-      const invite = await req.context.services.data.invites.getAsync(req.params.code);
+      const invite = await ctx.get('data').invites.getAsync(code);
 
-      if (!invite)
-        return new Response(null, {
-          status: 404,
-        });
-
-      return await super.buildJson(invite.email);
+      return invite ? ctx.json(invite) : ctx.text('', 404);
     } catch (e) {
-      req.context.logException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
-      return new Response(null, {
-        status: 500,
-      });
+      ctx.get('logger').trackException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getAndAcceptAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getAndAcceptAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.params?.organization || !req.params?.code) return 500;
+      const { organization, code } = ctx.req.param();
 
-      req.context.setOrganization({
-        organization: req.params.organization,
+      if (!organization || !code) return ctx.text('Missing Parameters', 500);
+
+      ctx.set('organization', {
+        organization,
         roles: [],
       });
       //
       //  Get the data from the KV
       //
-      const invite = await req.context.services.data.invites.getAsync(req.params.code);
+      const invite = await ctx.get('data').invites.getAsync(code);
 
-      if (!invite)
-        return new Response(null, {
-          status: 404,
-        });
+      if (!invite) return ctx.text('', 404);
 
       invite.dateAccepted = new Date();
 
-      await req.context.services.data.invites.putAsync(invite);
+      await ctx.get('data').invites.putAsync(invite);
 
-      return await super.buildJson(invite);
+      return ctx.json(invite);
     } catch (e) {
-      req.context.logException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
-      return new Response(null, {
-        status: 500,
-      });
+      ctx.get('logger').trackException('An error occured trying to get the invite.', 'InviteHttpService.getAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async putAsync(req: WorkerRequest): Promise<Response | number> {
+  static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const invite: Invite = await req.request.json();
+      const { send } = ctx.req.param();
+      const invite: Invite = await ctx.req.json();
 
-      await req.context.services.data.invites.putAsync(invite);
+      await ctx.get('data').invites.putAsync(invite);
 
-      if (req.params?.send ?? false) {
-        await req.context.services.mailgun.inviteAsync(req, invite);
+      if (send ?? false) {
+        await MailGunService.inviteAsync(ctx, invite);
 
         invite.dateSent = new Date();
 
-        await req.context.services.data.invites.putAsync(invite);
+        await ctx.get('data').invites.putAsync(invite);
       }
-      return await super.buildJson(invite);
+      return ctx.json(invite);
     } catch (e) {
-      req.context.logException('An error occured trying to update an invite.', 'InviteHttpService.putAsync', <Error>e);
-      return 500;
+      ctx.get('logger').trackException('An error occured trying to update an invite.', 'InviteHttpService.putAsync', <Error>e);
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }

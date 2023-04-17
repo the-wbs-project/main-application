@@ -1,58 +1,39 @@
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
+import { Context } from '../../config';
 
-export class MetadataHttpService extends BaseHttpService {
-  static setInfo(req: WorkerRequest): void {
-    if (!req.params) req.params = {};
-
-    req.params.category = 'Info';
-  }
-
-  static async getResourcesAsync(req: WorkerRequest): Promise<Response | number> {
+export class MetadataHttpService {
+  static async getResourcesAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.context.config.debug) {
-        const match = await req.context.services.edge.cacheMatch();
+      const { category } = ctx.req.param();
 
-        if (match) return match;
-      }
-      const culture = req.context.state?.culture ?? 'en-US';
-
-      if (!req.params?.category) return 500;
+      if (!category) return ctx.text('Missing Parameters', 500);
       //
       //  Get the data from the KV
       //
-      const data = await req.context.services.data.metadata.getResourcesAsync(culture, req.params.category);
-      const response = await super.buildJson(data);
+      const data = await ctx.get('data').resources.getAsync('en-US', category);
 
-      if (data && !req.context.config.debug) req.context.services.edge.cachePut(response);
-
-      return response;
+      return ctx.json(data);
     } catch (e) {
-      req.context.logException('An error occured trying to get resources.', 'MetadataHttpService.getResourcesAsync', <Error>e);
-      return 500;
+      ctx.get('logger').trackException('An error occured trying to get resources.', 'MetadataHttpService.getResourcesAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getListAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getListAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.context.config.debug) {
-        const match = await req.context.services.edge.cacheMatch();
+      const { name } = ctx.req.param();
 
-        if (match) return match;
-      }
-      if (!req.params?.name) return 500;
+      if (!name) return ctx.text('Missing Parameters', 500);
       //
       //  Get the data from the KV
       //
-      const data = await req.context.services.data.metadata.getListAsync(req.params.name);
-      const response = await super.buildJson(data);
+      const data = await ctx.get('data').lists.getAsync(name);
 
-      if (data && !req.context.config.debug) req.context.services.edge.cachePut(response);
-
-      return response;
+      return ctx.json(data);
     } catch (e) {
-      req.context.logException('An error occured trying to get a list.', 'MetadataHttpService.getListAsync', <Error>e);
-      return 500;
+      ctx.get('logger').trackException('An error occured trying to get a list.', 'MetadataHttpService.getListAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }

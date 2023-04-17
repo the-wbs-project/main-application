@@ -1016,11 +1016,6 @@
   dependencies:
     "@sinonjs/commons" "^2.0.0"
 
-"@tsndr/cloudflare-worker-jwt@^2.2.1":
-  version "2.2.1"
-  resolved "https://registry.yarnpkg.com/@tsndr/cloudflare-worker-jwt/-/cloudflare-worker-jwt-2.2.1.tgz#d52bd14a4dc42254e8b117d8f781ea965cf2490e"
-  integrity sha512-yYxjmag5AXXs7FDCUlse8cCTQlug3fbrqUb4/s4kvdauOg5wq2V6BayHD/OUWOGmgohefFRqu4vA5phU3+Cyng==
-
 "@types/babel__core@^7.1.14":
   version "7.1.16"
   resolved "https://registry.yarnpkg.com/@types/babel__core/-/babel__core-7.1.16.tgz#bc12c74b7d65e82d29876b5d0baf5c625ac58702"
@@ -2146,6 +2141,11 @@ has@^1.0.3:
   integrity sha512-f2dvO0VU6Oej7RkWJGrehjbzMAjFp5/VKPp5tTpWIV4JHHZK1/BxbFRtf/siA2SWTe09caDmVtYYzWEIbBS4zw==
   dependencies:
     function-bind "^1.1.1"
+
+hono@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/hono/-/hono-3.1.6.tgz#7a7ca700fff69553a8c2a7a97d544f49bb8b1bd3"
+  integrity sha512-ugC7YbuyATZChp+SxfstiavvTCqENjvSiTiDAkbAOP20pJ58N4kXcbDi93SwZrvMFA2VVx1veMYHrsvUY9hcVA==
 
 html-escaper@^2.0.0:
   version "2.0.2"

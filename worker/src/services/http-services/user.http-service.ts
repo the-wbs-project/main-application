@@ -1,72 +1,62 @@
+import { Context } from '../../config';
 import { User } from '../../models';
-import { WorkerRequest } from '../worker-request.service';
-import { BaseHttpService } from './base.http-service';
+import { IdentityService } from '../auth-services';
 
-export class UserHttpService extends BaseHttpService {
-  static async currentUserAsync(req: WorkerRequest): Promise<Response | number> {
+export class UserHttpService {
+  static async getAllAsync(ctx: Context): Promise<Response> {
     try {
-      if (!req.context.state?.userId) return 500;
-
-      const user = await req.context.services.identity.getUserAsync(req, req.context.state.userId);
-
-      user!.appInfo.organizationRoles = req.context.state.organizations;
-
-      return await super.buildJson(user);
+      return ctx.json(await IdentityService.getUsersAsync(ctx));
     } catch (e) {
-      req.context.logException('An error occured trying to handle the login callback.', 'CallbackHttpService.loginCallbackAsync', <Error>e);
-      return 500;
+      ctx
+        .get('logger')
+        .trackException('An error occured trying to get all users for the organization.', 'UserHttpService.getAllAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getAllAsync(req: WorkerRequest): Promise<Response | number> {
+  static async getAllLiteAsync(ctx: Context): Promise<Response> {
     try {
-      return await super.buildJson(await req.context.services.identity.getUsersAsync(req));
+      return ctx.json(await IdentityService.getLiteUsersAsync(ctx));
     } catch (e) {
-      req.context.logException('An error occured trying to get all users for the organization.', 'UserHttpService.getAllAsync', <Error>e);
-      return 500;
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to get all lite verions of users for the organization.',
+          'UserHttpService.getAllLiteAsync',
+          <Error>e,
+        );
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async getAllLiteAsync(req: WorkerRequest): Promise<Response | number> {
+  static async updateProfileAsync(ctx: Context): Promise<Response> {
     try {
-      return await super.buildJson(await req.context.services.identity.getLiteUsersAsync(req));
+      const user: User = await ctx.req.json();
+
+      await IdentityService.updateProfileAsync(ctx, user);
+
+      return ctx.text('', 204);
     } catch (e) {
-      req.context.logException(
-        'An error occured trying to get all lite verions of users for the organization.',
-        'UserHttpService.getAllLiteAsync',
-        <Error>e,
-      );
-      return 500;
+      ctx
+        .get('logger')
+        .trackException("An error occured trying to update the logged in user's profile.", 'UserHttpService.updateProfileAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
     }
   }
 
-  static async updateProfileAsync(req: WorkerRequest): Promise<Response | number> {
+  static async updateUserAsync(ctx: Context): Promise<Response> {
     try {
-      const user: User = await req.request.json();
+      const user: User = await ctx.req.json();
 
-      await req.context.services.identity.updateProfileAsync(req, user);
+      await IdentityService.updateUserAsync(ctx, user);
 
-      return 204;
+      return ctx.text('', 204);
     } catch (e) {
-      req.context.logException(
-        "An error occured trying to update the logged in user's profile.",
-        'UserHttpService.updateProfileAsync',
-        <Error>e,
-      );
-      return 500;
-    }
-  }
+      ctx.get('logger').trackException('An error occured trying to update the user.', 'UserHttpService.updateUserAsync', <Error>e);
 
-  static async updateUserAsync(req: WorkerRequest): Promise<Response | number> {
-    try {
-      const user: User = await req.request.json();
-
-      await req.context.services.identity.updateUserAsync(req, user);
-
-      return 204;
-    } catch (e) {
-      req.context.logException('An error occured trying to update the user.', 'UserHttpService.updateUserAsync', <Error>e);
-      return 500;
+      return ctx.text('Internal Server Error', 500);
     }
   }
 }
