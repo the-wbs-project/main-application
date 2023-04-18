@@ -1,4 +1,4 @@
-name = "pm-empower-app"
+name = "pm-empower-api"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 compatibility_date = "2022-05-27"
 main = "dist/index.js"
@@ -14,7 +14,7 @@ globs = ["**/*.js"]
 crons = ["0 0 */1 * *"]
 
 [env.dev]
-name = "pm-empower-app-dev"
+name = "pm-empower-api-dev"
 usage_model = "unbound"
 kv_namespaces = [
   { binding = "KV_AUTH", id = "123", preview_id = "10044f1ce15740fd8cc0b2eaf11ca660" },
@@ -40,7 +40,7 @@ AUTH_CONNECTION = "acme-engineering"
 AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [env.qa]
-name = "pm-empower-app-qa"
+name = "pm-empower-api-qa"
 usage_model = "unbound"
 workers_dev = false
 routes = [
@@ -69,7 +69,7 @@ AUTH_CONNECTION = "acme-engineering"
 AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [env.prod]
-name = "pm-empower-app-prod"
+name = "pm-empower-api-prod"
 usage_model = "unbound"
 workers_dev = false
 routes = [
