@@ -10,6 +10,30 @@ pool:
   vmImage: ubuntu-latest
 
 jobs:
+  - job: azurew_job
+    displayName: Worker
+    steps:
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'build'
+          projects: './_other/utilities'
+        displayName: "Build Azure Functions"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: '_other/utilities'
+          includeRootFolder: false
+          archiveType: 'zip'
+          archiveFile: '$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Azure.zip'
+          replaceExistingArchive: true
+        displayName: "Zip Azure"
+        
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+          ArtifactName: 'drop'
+          publishLocation: 'Container'
+        displayName: "Publish Worker"
   - job: worker_job
     displayName: Worker
     steps:
