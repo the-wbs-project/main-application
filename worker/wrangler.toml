@@ -44,7 +44,7 @@ name = "pm-empower-app-qa"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-	{ pattern = "app-test.pm-empower.com", custom_domain = true, zone_name = "pm-empower.com" }
+	{ pattern = "api-test.pm-empower.com", custom_domain = true, zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
   { binding = "KV_AUTH", id = "6eb87b9b5d9f4261907b80164cbc0947", preview_id = "6eb87b9b5d9f4261907b80164cbc0947" },
@@ -73,7 +73,7 @@ name = "pm-empower-app-prod"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-	{ pattern = "app.pm-empower.com", custom_domain = true, zone_name = "pm-empower.com" }
+	{ pattern = "api.pm-empower.com", custom_domain = true, zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
 
