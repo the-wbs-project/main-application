@@ -3,7 +3,7 @@ import { AuthConfig } from '@auth0/auth0-angular';
 export const environment = {
   production: true,
   appTitle: 'PM Empower',
-  apiPrefix: 'https://app-test.pm-empower.com/api/',
+  apiPrefix: 'https://api-test.pm-empower.com/api/',
   appInsightsKey: '44521f2e-90b6-4be0-8659-0c84bfde1907',
   auth: <AuthConfig>{
     domain: 'auth.dev.thewbsproject.com',
@@ -16,14 +16,14 @@ export const environment = {
     httpInterceptor: {
       allowedList: [
         {
-          uri: 'https://app-test.pm-empower.com/api/resources/*',
+          uri: 'https://api-test.pm-empower.com/api/resources/*',
           allowAnonymous: true,
         },
         {
-          uri: 'https://app-test.pm-empower.com/api/lists/*',
+          uri: 'https://api-test.pm-empower.com/api/lists/*',
           allowAnonymous: true,
         },
-        'https://app-test.pm-empower.com/api/*',
+        'https://api-test.pm-empower.com/api/*',
       ],
     },
   },

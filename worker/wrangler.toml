@@ -39,8 +39,8 @@ AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
 AUTH_CONNECTION = "acme-engineering"
 AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
-[env.qa]
-name = "pm-empower-api-qa"
+[env.test]
+name = "pm-empower-api-test"
 usage_model = "unbound"
 workers_dev = false
 routes = [
@@ -53,13 +53,13 @@ kv_namespaces = [
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
 ]
-[env.qa.vars]
+[env.test.vars]
 DEBUG = "false"
 APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
-CORS_ORIGINS = "http://localhost:4200"
+CORS_ORIGINS = "https://test.pm-empower.com"
 INVITE_TEMPLATE = "invite-template-v1"
 
-AZURE_ENDPOINT = "https://wbs-v0-1-qa.azurewebsites.net"
+AZURE_ENDPOINT = "https://pm-empower-test.azurewebsites.net"
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
