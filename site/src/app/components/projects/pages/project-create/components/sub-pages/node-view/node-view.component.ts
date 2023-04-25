@@ -5,7 +5,7 @@ import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { NodeViewChosen } from '../../../project-create.actions';
 
 @Component({
-  selector: 'app-project-create-node-view',
+  selector: 'wbs-project-create-node-view',
   templateUrl: './node-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

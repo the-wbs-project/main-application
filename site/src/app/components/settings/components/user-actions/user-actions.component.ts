@@ -12,7 +12,7 @@ import { ActivateUser, DeactivateUser } from '../../actions';
 import { UserViewModel } from '../../models';
 
 @Component({
-  selector: 'app-settings-user-actions',
+  selector: 'wbs-settings-user-actions',
   templateUrl: './user-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

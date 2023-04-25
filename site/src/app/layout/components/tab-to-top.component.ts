@@ -3,7 +3,7 @@ import { Component, HostListener } from '@angular/core';
 import { faAngleUp } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
-  selector: 'app-tab-to-top',
+  selector: 'wbs-tab-to-top',
   template: `<a
     href="javascript:void(0)"
     id="back-to-top"

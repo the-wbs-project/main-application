@@ -2,13 +2,9 @@
   <div class="page">
     <div>
       <!-- // header -->
-      <app-header></app-header>
+      <wbs-header />
       <!-- //sidebar -->
-      <app-sidebar
-        appHoverEffectSidebar
-        [isAdmin]="isAdmin$ | async"
-        [projects]="projects$ | async"
-      ></app-sidebar>
+      <wbs-sidebar appHoverEffectSidebar [isAdmin]="isAdmin$ | async" [projects]="projects$ | async" />
     </div>
     <div
       id="main-content"
@@ -23,7 +19,7 @@
         <router-outlet> </router-outlet>
       </div>
     </div>
-    <app-footer></app-footer>
+    <wbs-footer />
   </div>
 </div>
-<app-tab-to-top></app-tab-to-top>
+<wbs-tab-to-top />

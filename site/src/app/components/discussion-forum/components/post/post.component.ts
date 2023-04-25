@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 
 @Component({
-  selector: 'app-post',
+  selector: 'wbs-post',
   templateUrl: './post.component.html',
   //styleUrls: ['./post.component.css'],
 })

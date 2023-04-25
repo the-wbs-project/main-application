@@ -12,7 +12,7 @@ import { DisciplinesChosen } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 
 @Component({
-  selector: 'app-project-create-disciplines',
+  selector: 'wbs-project-create-disciplines',
   templateUrl: './disciplines.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

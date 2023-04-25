@@ -17,7 +17,7 @@ import { Invite } from '@wbs/core/models';
 import { CancelInvite, ResendInvite } from '../../actions';
 
 @Component({
-  selector: 'app-settings-invite-actions',
+  selector: 'wbs-settings-invite-actions',
   templateUrl: './invite-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

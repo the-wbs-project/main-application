@@ -19,7 +19,7 @@ import { BehaviorSubject } from 'rxjs';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 @Component({
-  selector: 'app-category-list-editor',
+  selector: 'wbs-category-list-editor',
   templateUrl: './category-list-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,

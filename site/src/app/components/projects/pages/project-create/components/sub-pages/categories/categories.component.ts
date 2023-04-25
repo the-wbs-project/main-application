@@ -6,7 +6,7 @@ import { CategoryChosen } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 
 @Component({
-  selector: 'app-project-pick-category',
+  selector: 'wbs-project-pick-category',
   templateUrl: './categories.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

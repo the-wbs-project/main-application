@@ -13,7 +13,7 @@ import { Observable } from 'rxjs';
 import { LayoutService, NavService, SwitcherService } from '../../services';
 
 @Component({
-  selector: 'app-header',
+  selector: 'wbs-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
 })

@@ -8,7 +8,7 @@ import {
 import { ListItem } from '@wbs/core/models';
 
 @Component({
-  selector: 'app-project-category-list',
+  selector: 'wbs-project-category-list',
   templateUrl: './category-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { ProjectCreationPage } from '../models';
 
 @Component({
-  selector: 'app-project-create-header',
+  selector: 'wbs-project-create-header',
   template: `<div class="pd-t-30">
     <p class="tx-24">{{ page?.title ?? '' | translate }}</p>
     <p>{{ page?.description ?? '' | translate }}</p>

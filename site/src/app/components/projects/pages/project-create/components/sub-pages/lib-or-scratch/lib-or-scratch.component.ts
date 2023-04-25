@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { LibOrScratchChosen } from '../../../project-create.actions';
 
 @Component({
-  selector: 'app-project-create-lib-or-scratch',
+  selector: 'wbs-project-create-lib-or-scratch',
   templateUrl: './lib-or-scratch.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

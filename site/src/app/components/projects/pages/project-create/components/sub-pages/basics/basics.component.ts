@@ -5,7 +5,7 @@ import { SubmitBasics } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 
 @Component({
-  selector: 'app-project-create-basics',
+  selector: 'wbs-project-create-basics',
   templateUrl: './basics.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

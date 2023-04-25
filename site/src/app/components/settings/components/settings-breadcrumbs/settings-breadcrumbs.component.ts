@@ -6,7 +6,7 @@ import { Breadcrumb } from '../../models';
 import { SettingsState } from '../../states';
 
 @Component({
-  selector: 'app-settings-bread-crumbs',
+  selector: 'wbs-settings-bread-crumbs',
   templateUrl: './settings-breadcrumbs.component.html',
 })
 export class BreadcrumbsComponent {

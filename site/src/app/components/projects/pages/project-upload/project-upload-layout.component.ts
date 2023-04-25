@@ -5,7 +5,7 @@ import { Observable } from 'rxjs';
 import { ProjectState } from '../../states';
 import { ProjectUploadState } from './states';
 @Component({
-  template: ` <app-page-header
+  template: ` <wbs-page-header
       *ngIf="project$ | async; let project"
       [title]="(pageTitle$ | async) ?? '' | translate"
       [items]="[
@@ -13,7 +13,7 @@ import { ProjectUploadState } from './states';
         { route: ['/projects', project.id, 'view'], label: project.title }
       ]"
       [active_item]="'General.Upload' | translate"
-    ></app-page-header>
+    />
 
     <div class="mg-t-40">
       <router-outlet></router-outlet>

@@ -9,7 +9,7 @@ import { faCogs } from '@fortawesome/pro-solid-svg-icons';
 import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
-  selector: 'app-project-action-menu',
+  selector: 'wbs-project-action-menu',
   template: `<div ngbDropdown class="display-ib">
     <button
       type="button"

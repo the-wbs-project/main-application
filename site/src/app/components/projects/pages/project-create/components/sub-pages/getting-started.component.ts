@@ -3,7 +3,7 @@ import { Store } from '@ngxs/store';
 import { GoToBasics } from '../../project-create.actions';
 
 @Component({
-  selector: 'app-project-create-getting-started',
+  selector: 'wbs-project-create-getting-started',
   template: `<p>
     <button class="btn btn-primary" (click)="nav()">
       {{ 'General.Continue' | translate }}

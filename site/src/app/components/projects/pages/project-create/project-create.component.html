@@ -7,22 +7,14 @@
     <div class="flex-col">
       <div class="proj-create-form tx-center" [ngSwitch]="page.number">
         <div>
-          <app-project-create-header [page]="page"></app-project-create-header>
-
-          <app-project-create-getting-started *ngSwitchCase="1">
-          </app-project-create-getting-started>
-          <app-project-create-basics *ngSwitchCase="2">
-          </app-project-create-basics>
-          <app-project-pick-category *ngSwitchCase="3">
-          </app-project-pick-category>
-          <app-project-create-lib-or-scratch *ngSwitchCase="4">
-          </app-project-create-lib-or-scratch>
-          <app-project-create-node-view *ngSwitchCase="6">
-          </app-project-create-node-view>
-          <app-project-create-phases *ngSwitchCase="7">
-          </app-project-create-phases>
-          <app-project-create-disciplines *ngSwitchCase="8">
-          </app-project-create-disciplines>
+          <wbs-project-create-header [page]="page" />
+          <wbs-project-create-getting-started *ngSwitchCase="1" />
+          <wbs-project-create-basics *ngSwitchCase="2" />
+          <wbs-project-pick-category *ngSwitchCase="3" />
+          <wbs-project-create-lib-or-scratch *ngSwitchCase="4" />
+          <wbs-project-create-node-view *ngSwitchCase="6" />
+          <wbs-project-create-phases *ngSwitchCase="7" />
+          <wbs-project-create-disciplines *ngSwitchCase="8" />
         </div>
       </div>
     </div>

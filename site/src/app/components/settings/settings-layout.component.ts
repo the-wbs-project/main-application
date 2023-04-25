@@ -1,6 +1,5 @@
 import { Component } from '@angular/core';
 @Component({
-  template: `<app-settings-bread-crumbs></app-settings-bread-crumbs><br />
-    <router-outlet></router-outlet>`,
+  template: `<wbs-settings-bread-crumbs /><br /><router-outlet />`,
 })
 export class SettingsLayoutComponent {}

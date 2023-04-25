@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { faArrowUpArrowDown, faPencil } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
-  selector: 'app-timeline',
+  selector: 'wbs-timeline',
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
 })

@@ -10,10 +10,7 @@
   ></button>
 </div>
 <div class="modal-body">
-  <app-category-list-editor
-    [(categories)]="categories"
-    [categoryType]="categoryType"
-  ></app-category-list-editor>
+  <wbs-category-list-editor [(categories)]="categories" [categoryType]="categoryType" />
 </div>
 <div class="modal-footer">
   <button class="btn btn-primary" (click)="save()">

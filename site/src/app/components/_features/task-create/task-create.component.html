@@ -51,11 +51,7 @@
     <label class="form-label">
       {{ "Projects.TaskDisciplines" | translate }}
     </label>
-    <app-category-list-editor
-      [showButtons]="false"
-      [(categories)]="disciplines"
-      [categoryType]="discipline"
-    ></app-category-list-editor>
+    <wbs-category-list-editor [showButtons]="false" [(categories)]="disciplines" [categoryType]="discipline" />
   </ng-template>
 </div>
 

@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { CreateReply } from '@wbs/core/actions';
 
 @Component({
-  selector: 'app-forum-reply-editor',
+  selector: 'wbs-forum-reply-editor',
   templateUrl: './reply-editor.component.html',
 })
 export class ReplyEditorComponent {

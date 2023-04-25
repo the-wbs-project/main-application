@@ -12,7 +12,7 @@ import { PhasesChosen } from '../../../project-create.actions';
 import { ProjectCreateState } from '../../../project-create.state';
 
 @Component({
-  selector: 'app-project-create-phases',
+  selector: 'wbs-project-create-phases',
   templateUrl: './phases.component.html',
   styleUrls: ['./phases.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

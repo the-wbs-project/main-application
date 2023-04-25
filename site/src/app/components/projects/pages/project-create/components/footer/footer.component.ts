@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { NavBack } from '../../project-create.actions';
 
 @Component({
-  selector: 'app-project-create-footer',
+  selector: 'wbs-project-create-footer',
   templateUrl: './footer.component.html',
 })
 export class FooterComponent {
