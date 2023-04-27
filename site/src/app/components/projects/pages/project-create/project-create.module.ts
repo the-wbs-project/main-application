@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { Routes, RouterModule } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
+import { EditorModule } from '@progress/kendo-angular-editor';
 import {
   FormFieldModule,
   SwitchModule,
@@ -12,7 +13,6 @@ import {
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SortableModule } from '@progress/kendo-angular-sortable';
 import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
-import { SharedBasicModule } from '@wbs/shared/basic-module';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import { ProjectResourceGuard } from '../../guards';
@@ -43,6 +43,7 @@ const routes: Routes = [
   imports: [
     CategoryListEditorModule,
     CommonModule,
+    EditorModule,
     FormFieldModule,
     FormsModule,
     LabelModule,

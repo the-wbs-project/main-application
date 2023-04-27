@@ -1,149 +1,143 @@
-import * as cookie from 'cookie';
 import { Context } from '../config';
 
 export class Logger {
-  private readonly namePrefix: string;
   private readonly logs: any[] = [];
 
-  constructor(private readonly ctx: Context) {
-    this.namePrefix = `Microsoft.ApplicationInsights.${this.appInsightsKey.replace(/-/g, '')}`;
-  }
+  constructor(private readonly ctx: Context) {}
 
-  private get appInsightsKey(): string {
-    return this.ctx.env.APP_INSIGHTS_KEY;
-  }
-
-  trackRequest(request: Request, response: Response, duration: number): void {
-    const tags = this.getTags(request.headers);
-    const cf: any = request.cf || {};
-
-    // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
+  trackRequest(duration: number): void {
     this.logs.push({
-      iKey: this.appInsightsKey,
-      name: `${this.namePrefix}.RequestData`,
-      time: new Date(),
-      tags,
-      data: {
-        baseType: 'RequestData',
-        baseData: {
-          ver: 2,
-          id: this.generateUniqueId(),
-          properties: {
-            // You can add more properties if needed
-            HttpReferer: request.headers.get('Referer'),
-            ...cf,
-          },
-          measurements: {},
-          responseCode: response.status,
-          success: response.status >= 200 && response.status < 400,
-          url: request.url,
-          source: request.headers.get('CF-Connecting-IP') || '',
-          duration, //: 1, // Cloudflare doesn't allow to measure duration. performance.now() is not implemented, and new Date() always return the same value
-        },
-      },
+      ...this.basics({ duration, resStatus: this.ctx.res.status }),
+      status: 'Info',
+      message: `Request, ${this.ctx.req.url} (${duration}ms)`,
     });
   }
 
-  trackException(message: string, location: string, exception: Error): void {
-    console.log(message);
-    console.log(location);
-    console.log(exception);
-    console.log(exception?.stack?.toString());
-
-    //@ts-ignore
-    const cf: any = this.ctx.req.cf || {};
-    const tags = this.getTags(this.ctx.req.headers);
-
-    // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
+  trackEvent(message: string, status: 'Error' | 'Info' | 'Warn' | 'Notice', data?: Record<string, any>): void {
     this.logs.push({
-      iKey: this.appInsightsKey,
-      name: `${this.namePrefix}.Exception`,
-      time: new Date(),
-      tags,
-      data: {
-        baseType: 'ExceptionData',
-        baseData: {
-          ver: 2,
-          properties: {
-            // You can add more properties if needed
-            HttpReferer: this.ctx.req.headers.get('Referer'),
-            Message: message,
-            location: location,
-            error: JSON.stringify(exception),
-            typeName: 'Error',
-            ...cf,
+      ...this.basics({ data }),
+      status,
+      message: message,
+    });
+  }
+
+  trackException(message: string, location: string, exception: Error, data?: Record<string, any>): void {
+    this.logs.push({
+      ...this.basics({
+        data: {
+          location,
+          data,
+          message: exception ? exception.message : 'No Exception Provided',
+          stack: exception ? exception.stack?.toString() : 'No Exception Provided',
+        },
+      }),
+      status: 'Error',
+      message: message,
+    });
+  }
+
+  trackDependency(url: string, method: string, duration: number, request: Request, response?: Response): void {
+    this.logs.push({
+      ...this.basics({
+        duration,
+        request,
+        resStatus: response?.status,
+        data: {
+          dependency: {
+            status: response ? response.status : null,
+            url,
+            method,
+            duration,
           },
-          exceptions: [
-            {
-              typeName: 'Error',
-              hasFullStack: false,
-              message: exception.message,
-              stack: exception?.stack?.toString(),
+        },
+      }),
+      status: 'Info',
+      message: `Dependency, ${url} (${method})`,
+    });
+  }
+
+  async flush(): Promise<Response | void> {
+    try {
+      const res = await fetch('https://http-intake.logs.datadoghq.com/api/v2/logs', {
+        method: 'POST',
+        body: JSON.stringify(this.logs),
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+          'DD-API-KEY': this.ctx.env.DATADOG_API_KEY,
+        },
+      });
+
+      return res;
+    } catch (e) {
+      //@ts-ignore
+      console.log(e.message);
+    }
+  }
+
+  private basics(info: {
+    resStatus?: number | undefined;
+    duration?: number | undefined;
+    request?: { url: string; method: string; headers: Headers };
+    data?: any | undefined;
+  }): any {
+    if (!info.request) info.request = this.ctx.req;
+
+    const url = new URL(this.ctx.req.url);
+    const cf: Record<string, any> = (<any>info.request).cf || {};
+    const usr = this.ctx.get('state')?.user;
+
+    console.log(url);
+    return {
+      ddsource: 'worker',
+      ddtags: `env:${this.ctx.env.DATADOG_ENV},app:pm-empower`,
+      hostname: url.host,
+      service: 'pm-empower-api',
+      session_id: info.request.headers.get('dd_session_id'),
+      http: {
+        url: info.request.url,
+        status_code: info.resStatus,
+        method: info.request.method,
+        userAgent: info.request.headers.get('User-Agent'),
+        version: cf['httpProtocol'],
+        url_details: {
+          host: url.host,
+          port: url.port,
+          path: url.pathname,
+        },
+      },
+      network: {
+        client: {
+          geoip: {
+            country: {
+              iso_code: cf['country'],
             },
-          ],
-        },
-      },
-    });
-  }
-
-  trackDependency(url: string, method: string | undefined, duration: number, request?: Request, response?: Response | null): void {
-    const url2 = new URL(url);
-    const tags = request ? this.getTags(request.headers) : null;
-    const name = `${method} ${url2.pathname}`;
-    const cf: any = (request ? request.cf : null) || {};
-
-    // Allowed Application Insights payload: https://github.com/microsoft/ApplicationInsights-JS/tree/61b49063eeacda7878a1fda0107bde766e83e59e/legacy/JavaScript/JavaScriptSDK.Interfaces/Contracts/Generated
-    this.logs.push({
-      iKey: this.appInsightsKey,
-      name: `${this.namePrefix}.RemoteDependency`,
-      time: new Date(),
-      tags,
-      data: {
-        baseType: 'RemoteDependencyData',
-        baseData: {
-          ver: 2,
-          data: name,
-          duration,
-          id: this.generateUniqueId(),
-          name,
-          properties: {
-            HttpMethod: method,
-            ...cf,
+            continent: {
+              code: cf['continent'],
+            },
+            city: {
+              name: cf['city'],
+            },
           },
-          resultCode: (response || {}).status,
-          success: response && (response.status === 200 || response.status === 204),
-          target: url2.hostname,
-          type: 'Worker',
         },
       },
-    });
-  }
-
-  flush(): Promise<Response> {
-    return fetch('https://dc.services.visualstudio.com/v2/track', {
-      method: 'POST',
-      body: JSON.stringify(this.logs),
-    });
-  }
-
-  private getTags(headers: Headers): Record<string, string> {
-    const cookieValue = headers.get('Cookie');
-    const tags: Record<string, string> = {
-      'ai.location.ip': <string>headers.get('CF-Connecting-IP'),
+      ...(info.duration
+        ? {
+            performance: {
+              duration: info.duration,
+            },
+          }
+        : {}),
+      ...(usr
+        ? {
+            usr,
+          }
+        : {}),
+      ...(info.data
+        ? {
+            data: info.data,
+          }
+        : {}),
     };
-
-    if (cookieValue) {
-      const cookies = cookie.parse(cookieValue);
-      if (cookies['ai_session']) tags['ai.session.id'] = cookies['ai_session'];
-      if (cookies['ai_user']) tags['ai.user.id'] = cookies['ai_user'];
-    }
-    return tags;
-  }
-
-  private generateUniqueId() {
-    function chr4() {
-      return Math.random().toString(16).slice(-4);
-    }
-    return chr4() + chr4() + '-' + chr4() + '-' + chr4() + '-' + chr4() + '-' + chr4() + chr4() + chr4();
   }
 }

@@ -11,8 +11,8 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import { PopupModule } from '@progress/kendo-angular-popup';
 import { SortableModule } from '@progress/kendo-angular-sortable';
 import {
-  AnalyticsService,
   AppInitializerFactory,
+  Logger,
   Messages,
   RequestInterceptor,
   Resources,
@@ -26,9 +26,9 @@ import {
   UiState,
   UsersState,
 } from '@wbs/core/states';
+import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { environment } from 'src/environments/environment';
 
 @NgModule({
   declarations: [AppComponent],
@@ -66,7 +66,7 @@ import { environment } from 'src/environments/environment';
     {
       provide: HTTP_INTERCEPTORS,
       useClass: RequestInterceptor,
-      deps: [AnalyticsService, Messages],
+      deps: [Logger, Messages],
       multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },

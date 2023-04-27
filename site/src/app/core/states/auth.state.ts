@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { DataServiceFactory } from '../data-services';
 import { LoadOrganization } from '../actions';
 import { User } from '../models';
-import { AuthService } from '@auth0/auth0-angular';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Logger } from '../services';
 
 export interface AuthBucket {
   roles?: string[];
@@ -28,7 +28,7 @@ export class AuthState implements NgxsOnInit {
 
   constructor(
     private readonly auth: AuthService,
-    private readonly data: DataServiceFactory
+    private readonly logger: Logger
   ) {}
 
   @Selector()
@@ -82,6 +82,12 @@ export class AuthState implements NgxsOnInit {
             organization: org.organization,
             profile,
             roles: org.roles,
+          });
+
+          this.logger.setGlobalContext({
+            'usr.id': profile.id,
+            'usr.name': profile.name,
+            'usr.email': profile.email,
           });
 
           return ctx.dispatch(new LoadOrganization(org.organization));

@@ -2,7 +2,7 @@ export interface User {
   id: string;
   email: string;
   emailVerified?: boolean;
-  name?: string | null | undefined;
+  name: string;
   blocked?: boolean;
   createdAt?: Date;
   lastLogin?: Date;

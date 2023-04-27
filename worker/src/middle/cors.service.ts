@@ -19,13 +19,4 @@ export async function cors(ctx: Context, next: any) {
     ctx.res.headers.set('Access-Control-Allow-Headers', 'authorization, content-type');
     ctx.res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
   }
-
-  /*return cors2({
-    origin: ctx.env.CORS_ORIGINS,
-    allowHeaders: ['Authorization'],
-    allowMethods: ['OPTIONS', 'GET', 'POST', 'PUT', 'DELETE'],
-    exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
-    maxAge: 600,
-    credentials: true,
-  })(ctx, next); */
 }

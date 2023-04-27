@@ -1,4 +1,4 @@
-<div class="display-ib wd-400">
+<div class="display-ib wd-800">
   <kendo-textbox
     #title
     [ngModel]="title$ | async"
@@ -7,17 +7,12 @@
   </kendo-textbox>
   <br />
   <br />
-  <kendo-textarea
-    #description
-    [ngModel]="description$ | async"
-    [placeholder]="'Projects.ProjectDescription' | translate"
-  >
-  </kendo-textarea>
+  <kendo-editor #description [value]="(description$ | async) ?? ''" [placeholder]="'Projects.ProjectDescription' | translate" />
   <br />
   <br />
-  <app-project-create-footer
+  <wbs-project-create-footer
     view="bc"
     [disableContinue]="title.value === ''"
     (continueClicked)="nav(title.value, description.value)"
-  ></app-project-create-footer>
+  />
 </div>

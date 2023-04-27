@@ -37,7 +37,11 @@ export async function verify(ctx: Context, next: any): Promise<Response | void> 
     state = {
       culture: user.userInfo.culture,
       organizations,
-      userId: user.id,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+      },
     };
 
     await ctx.get('data').auth.putStateAsync(result.payload.sub, jwt, state, result.payload.exp);

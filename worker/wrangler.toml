@@ -26,7 +26,7 @@ r2_buckets = [
 ]
 [env.dev.vars]
 DEBUG = "true"
-APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+DATADOG_ENV = "development"
 CORS_ORIGINS = "http://localhost:4200"
 INVITE_TEMPLATE = "invite-template-v1"
 
@@ -55,7 +55,7 @@ r2_buckets = [
 ]
 [env.test.vars]
 DEBUG = "false"
-APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
 INVITE_TEMPLATE = "invite-template-v1"
 
@@ -85,7 +85,7 @@ r2_buckets = [
 ]
 [env.prod.vars]
 DEBUG = "false"
-APP_INSIGHTS_KEY = "44521f2e-90b6-4be0-8659-0c84bfde1907"
+DATADOG_ENV = "production"
 CORS_ORIGINS = "http://localhost:4200"
 INVITE_TEMPLATE = "invite-template-v1"
 

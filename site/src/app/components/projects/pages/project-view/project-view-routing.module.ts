@@ -126,6 +126,18 @@ export const routes: Routes = [
           view: PROJECT_PAGE_VIEW.TIMELINE,
         },
       },
+      {
+        path: 'settings',
+        canActivate: [ProjectViewGuard],
+        data: {
+          title: 'ProjectUpload.PagesUploadProjectPlan',
+          view: PROJECT_PAGE_VIEW.SETTINGS,
+        },
+        loadChildren: () =>
+          import('./pages/project-settings-page/project-settings.module').then(
+            (m) => m.ProjectSettingsModule
+          ),
+      },
     ],
   },
 ];

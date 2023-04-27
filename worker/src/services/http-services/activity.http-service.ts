@@ -36,13 +36,13 @@ export class ActivityHttpService {
 
   static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const { userId, dataType } = ctx.req.param();
+      const { dataType } = ctx.req.param();
 
-      if (!userId || !dataType) return ctx.text('Missing Parameters', 500);
+      if (!dataType) return ctx.text('Missing Parameters', 500);
 
       const activity: Activity = await ctx.req.json();
 
-      activity.userId = userId;
+      activity.userId = ctx.get('state').user.id;
 
       await ctx.get('data').activities.putAsync(activity);
 

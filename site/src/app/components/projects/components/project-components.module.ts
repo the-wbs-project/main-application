@@ -1,8 +1,7 @@
 import { NgModule } from '@angular/core';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SharedModule } from '@wbs/shared/module';
-import { ActionMenuComponent } from './action-menu.component';
 import { CategoryListComponent } from './category-list/category-list.component';
 import {
   ProjectCategoryFilterPipe,
@@ -11,14 +10,13 @@ import {
 import { TitleEditorComponent } from './title-editor/title-editor.component';
 
 @NgModule({
-  imports: [NgbDropdownModule, SharedModule, TextBoxModule],
+  imports: [ButtonModule, SharedModule, TextBoxModule],
   declarations: [
-    ActionMenuComponent,
     CategoryListComponent,
     ProjectCategoryFilterPipe,
     ProjectCategorySortPipe,
     TitleEditorComponent,
   ],
-  exports: [ActionMenuComponent, CategoryListComponent, TitleEditorComponent],
+  exports: [CategoryListComponent, TitleEditorComponent],
 })
 export class ProjectComponentModule {}

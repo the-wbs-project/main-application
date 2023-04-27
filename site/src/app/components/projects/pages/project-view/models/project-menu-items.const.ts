@@ -13,28 +13,9 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { ActionMenuItem, ROLES } from '@wbs/core/models';
 import { PROJECT_PAGE_VIEW } from './project-page-view.const';
+import { SETTINGS_PAGE_LISTS } from './settings-pages.const';
 
 export const PROJECT_MENU_ITEMS = {
-  phaseActions: <ActionMenuItem[]>[
-    {
-      action: 'editPhases',
-      icon: faPencil,
-      title: 'Projects.EditPhases',
-      roles: [ROLES.PM],
-    },
-    {
-      action: 'editDisciplines',
-      icon: faPencil,
-      title: 'Projects.EditDisciplines',
-      roles: [ROLES.PM],
-    },
-    {
-      action: 'cancel',
-      icon: faTrashAlt,
-      title: 'Projects.CancelProject',
-      roles: [ROLES.PM],
-    },
-  ],
   phaseTreeActions: <ActionMenuItem[]>[
     {
       action: 'download',
@@ -115,6 +96,11 @@ export const PROJECT_MENU_ITEMS = {
     {
       fragment: PROJECT_PAGE_VIEW.TIMELINE,
       title: 'General.Timeline',
+    },
+    {
+      fragment: PROJECT_PAGE_VIEW.SETTINGS,
+      title: 'General.Settings',
+      children: SETTINGS_PAGE_LISTS,
     },
     /*{
       fragment: PROJECT_PAGE_VIEW.DISCUSSIONS,

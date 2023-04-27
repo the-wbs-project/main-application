@@ -10,8 +10,12 @@ import { ProjectState } from '../../../../states';
 })
 export class ProjectAboutPageComponent {
   readonly roles$: Observable<UserRole[] | undefined>;
+  readonly description$: Observable<string | undefined>;
 
   constructor(store: Store) {
     this.roles$ = store.select(ProjectState.current).pipe(map((p) => p?.roles));
+    this.description$ = store
+      .select(ProjectState.current)
+      .pipe(map((p) => p?.description));
   }
 }

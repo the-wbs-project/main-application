@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
-  NgbModalModule,
+  NgbDropdownModule,
   NgbNavModule,
   NgbTooltipModule,
 } from '@ng-bootstrap/ng-bootstrap';
@@ -8,8 +8,7 @@ import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SplitterModule } from '@progress/kendo-angular-layout';
-import { ContextMenuModule } from '@progress/kendo-angular-menu';
-import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
+import { MenuModule } from '@progress/kendo-angular-menu';
 import { TaskCreateModule } from '@wbs/components/_features/task-create';
 import { TaskDeleteModule } from '@wbs/components/_features/task-delete';
 import { TextEditorModule } from '@wbs/components/_features/text-editor/text-editor.module';
@@ -25,7 +24,7 @@ import {
   ProjectVerifyGuard,
 } from '../../guards';
 import {
-  ProjectCategoryDialogComponent,
+  ProjectChecklistComponent,
   ProjectPhasesComponent,
   ProjectRoleComponent,
   TaskDetailsComponent,
@@ -50,7 +49,6 @@ import {
   TaskViewComponent,
 } from './pages';
 import {
-  ActionRoleFilterPipe,
   RoleIconPipe,
   RoleTitlePipe,
   TaskDetailsActionsPipe,
@@ -72,9 +70,7 @@ import { ProjectViewState, TaskViewState } from './states';
 @NgModule({
   imports: [
     ButtonModule,
-    CategoryListEditorModule,
-    ContextMenuModule,
-    NgbModalModule,
+    NgbDropdownModule,
     NgbNavModule,
     NgbTooltipModule,
     NgxsModule.forFeature([ProjectViewState, TaskViewState]),
@@ -107,9 +103,8 @@ import { ProjectViewState, TaskViewState } from './states';
     UploadFileService,
   ],
   declarations: [
-    ActionRoleFilterPipe,
     ProjectAboutPageComponent,
-    ProjectCategoryDialogComponent,
+    ProjectChecklistComponent,
     ProjectDisciplinesPageComponent,
     ProjectPhasesComponent,
     ProjectPhasesPageComponent,

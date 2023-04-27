@@ -1,5 +1,6 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
@@ -16,6 +17,7 @@ import { map } from 'rxjs';
 export class ProjectListComponent implements OnInit {
   private readonly titlePrefix: string;
 
+  readonly faPlus = faPlus;
   readonly status$ = this.route.params.pipe(
     map((p) => <PROJECT_VIEW_STATI_TYPE>p['status'])
   );

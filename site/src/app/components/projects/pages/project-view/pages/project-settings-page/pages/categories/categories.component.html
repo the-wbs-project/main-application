@@ -1,0 +1,7 @@
+
+  <wbs-category-list-editor
+    [(categories)]="categories"
+    [categoryType]="cType$ | async"
+    [showSave]="true"
+    (saveClicked)="save()"
+  />

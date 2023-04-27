@@ -1,8 +1,7 @@
 import { Hono } from 'hono';
-import { Http } from './services/http-services';
 import { Env, Variables } from './config';
-import { DataServiceFactory, Fetcher, Logger, MailGunService } from './services';
-import { isAdmin, cache, cors, verify } from './middle';
+import { cache, cors, isAdmin, logger, verify } from './middle';
+import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
 
 export const AZURE_ROUTES_POST: string[] = ['api/projects/export/*', 'api/projects/import/*'];
 
@@ -20,6 +19,7 @@ app.use('*', async (ctx, next) => {
 //
 // CORS
 //
+app.use('*', logger);
 app.use('*', cors);
 
 app.options('*', (c) => c.text(''));

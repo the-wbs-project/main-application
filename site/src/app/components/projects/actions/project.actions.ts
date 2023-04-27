@@ -39,17 +39,19 @@ export class SaveUpload {
   constructor(readonly results: ProjectUploadData) {}
 }
 
-export class ChangeProjectTitle {
-  static readonly type = '[Project] Change Project Title';
-  constructor(readonly title: string) {}
+export class ChangeProjectCategories {
+  static readonly type = '[Project] Change Project Categories';
+  constructor(
+    readonly cType: PROJECT_NODE_VIEW_TYPE,
+    readonly categories: ProjectCategory[]
+  ) {}
 }
 
-export class ChangeProjectPhases {
-  static readonly type = '[Project] Change Project Phases';
-  constructor(readonly phases: ProjectCategory[]) {}
-}
-
-export class ChangeProjectDisciplines {
-  static readonly type = '[Project] Change Project Disciplines';
-  constructor(readonly disciplines: ProjectCategory[]) {}
+export class ChangeProjectBasics {
+  static readonly type = '[Project] Change Project Basics';
+  constructor(
+    readonly title: string,
+    readonly description: string,
+    readonly category: string
+  ) {}
 }

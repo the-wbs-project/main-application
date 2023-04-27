@@ -11,7 +11,7 @@ import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { environment } from 'src/environments/environment';
-import { AnalyticsService } from './analytics.service';
+import { Logger } from './logger.service';
 import { Messages } from './messages.service';
 
 const noErrorUrls = ['logger/activity', 'logger/activities'];
@@ -19,7 +19,7 @@ const noErrorUrls = ['logger/activity', 'logger/activities'];
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
   constructor(
-    private readonly analytics: AnalyticsService,
+    private readonly logger: Logger,
     private readonly messages: Messages
   ) {}
 
@@ -27,6 +27,8 @@ export class RequestInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    this.logger.error('url:' + request.url);
+
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 
@@ -80,15 +82,18 @@ export class RequestInterceptor implements HttpInterceptor {
   private logError(
     url: string,
     reqHeaders: HttpHeaders,
-    error: HttpErrorResponse
+    errorResponse: HttpErrorResponse
   ) {
     try {
-      const information = {
-        error: this.stringifyError(error),
-        requestUrl: url,
-        reqHeaders: this.headersToString(reqHeaders),
-      };
-      this.analytics.trackErrorResponse(error, information);
+      this.logger.error('Browser Error', {
+        name: 'Http Error Response',
+        exception: errorResponse,
+        properties: {
+          requestUrl: url,
+          reqHeaders: this.headersToString(reqHeaders),
+          errorResponse: this.stringifyError(errorResponse),
+        },
+      });
     } catch (e) {}
   }
 

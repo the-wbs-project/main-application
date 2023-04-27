@@ -6,7 +6,6 @@ import { TaskDeleteService } from '@wbs/components/_features/task-delete';
 import { ProjectCategory, TimelineMenuItem } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
-  ChangeProjectTitle,
   CloneTask,
   CreateTask,
   LoadNextProjectTimelinePage,
@@ -19,7 +18,7 @@ import {
   TreeReordered,
 } from '../../../actions';
 import { ProjectState } from '../../../states';
-import { DownloadNodes, EditDisciplines, EditPhases } from '../actions';
+import { DownloadNodes } from '../actions';
 import { PROJECT_PAGE_VIEW } from '../models';
 import { ProjectViewState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
@@ -44,19 +43,11 @@ export class ProjectViewService {
     );
   }
 
-  saveTitle(newTitle: string): void {
-    this.store.dispatch(new ChangeProjectTitle(newTitle));
-  }
-
   action(action: string, taskId?: string) {
     if (action === 'download') {
       this.store.dispatch(new DownloadNodes());
     } else if (action === 'upload') {
       this.nav.toProject(this.projectId, PROJECT_PAGE_VIEW.UPLOAD);
-    } else if (action === 'editPhases') {
-      this.store.dispatch(new EditPhases());
-    } else if (action === 'editDisciplines') {
-      this.store.dispatch(new EditDisciplines());
     } else if (taskId) {
       if (action === 'addSub') {
         this.taskCreate.open(this.projectDisciplines).subscribe((results) => {

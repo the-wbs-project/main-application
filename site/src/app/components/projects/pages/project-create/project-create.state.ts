@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -11,6 +12,9 @@ import {
   PROJECT_STATI,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
+import { MetadataState } from '@wbs/core/states';
+import { Observable, switchMap } from 'rxjs';
+import { ProjectCreationPage, PROJECT_CREATION_PAGES as PAGES } from './models';
 import {
   CategoryChosen,
   DisciplinesChosen,
@@ -23,10 +27,6 @@ import {
   StartWizard,
   SubmitBasics,
 } from './project-create.actions';
-import { ProjectCreationPage, PROJECT_CREATION_PAGES as PAGES } from './models';
-import { Observable, switchMap } from 'rxjs';
-import { MetadataState } from '@wbs/core/states';
-import { Navigate } from '@ngxs/router-plugin';
 
 interface StateModel {
   category?: string;

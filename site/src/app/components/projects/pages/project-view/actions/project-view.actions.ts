@@ -8,11 +8,3 @@ export class ProjectPageChanged {
 export class DownloadNodes {
   static readonly type = '[Project] Download Nodes';
 }
-
-export class EditPhases {
-  static readonly type = '[Project] Edit Phases';
-}
-
-export class EditDisciplines {
-  static readonly type = '[Project] Edit Disciplines';
-}

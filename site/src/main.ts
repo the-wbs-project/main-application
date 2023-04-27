@@ -10,11 +10,11 @@ import {
   faPipeValve,
   faScrewdriverWrench,
 } from '@fortawesome/pro-solid-svg-icons';
-import { AnalyticsService } from '@wbs/core/services';
+import { Logger } from '@wbs/core/services';
 import { AppModule } from './app/app.module';
 import { environment } from './environments/environment';
 
-AnalyticsService.setup();
+Logger.setup();
 
 library.add(faBolt);
 library.add(faBridgeSuspension);
@@ -30,6 +30,7 @@ Notiflix.Loading.standard();
 if (environment.production) {
   enableProdMode();
 }
+
 platformBrowserDynamic()
   .bootstrapModule(AppModule)
   .catch((err) => console.error(err));

@@ -15,7 +15,7 @@ export class ProjectHttpService {
 
   static async getAllWatchedAsync(ctx: Context): Promise<Response> {
     try {
-      const userId = ctx.get('state').userId;
+      const userId = ctx.get('state').user.id;
 
       return ctx.json(await ctx.get('data').projects.getAllWatchedAsync(userId));
     } catch (e) {

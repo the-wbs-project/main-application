@@ -1,29 +1,22 @@
 <div *ngIf="categories" class="display-flex flex-flow-col flex-align-stretch">
-  <div *ngIf="showButtons" class="pd-b-10" style="flex: 0 1 40px">
-    <div class="display-ib wd-50p text-end pd-r-20">
-      <button
-        *ngIf="hideUnselected$.getValue()"
-        class="btn btn-outline-primary"
-        (click)="hideUnselected$.next(false)"
-      >
-        <fa-icon [icon]="faEye"></fa-icon>
-        {{ "Projects.ShowUnselected" | translate }}
-      </button>
-      <button
-        *ngIf="!hideUnselected$.getValue()"
-        class="btn btn-outline-primary"
-        (click)="hideUnselected$.next(true)"
-      >
-        <fa-icon [icon]="faEyeSlash"></fa-icon>
-        {{ "Projects.HideUnselected" | translate }}
-      </button>
-    </div>
-    <div class="display-ib wd-50p text-start pd-l-20">
-      <button class="btn btn-outline-primary" (click)="showCreate()">
-        <fa-icon [icon]="faPlus"></fa-icon>
-        {{ "General.Add" | translate }}
-      </button>
-    </div>
+  <div *ngIf="showButtons" class="pd-b-10 text-center">
+    <button
+      class="btn btn-outline-primary mg-x-10"
+      (click)="hideUnselected$.next(!hideUnselected$.getValue())"
+    >
+      <fa-icon [icon]="hideUnselected$.getValue() ? faEye : faEyeSlash" />
+      {{ (hideUnselected$.getValue() ? "Projects.ShowUnselected" : "Projects.HideUnselected") | translate }}
+    </button>
+
+    <button class="btn btn-outline-primary mg-x-10" (click)="showCreate()">
+      <fa-icon [icon]="faPlus" />
+      {{ "General.Add" | translate }}
+    </button>
+
+    <button *ngIf="showSave" class="btn btn-outline-primary mg-x-10" (click)="saveClicked.emit()">
+      <fa-icon [icon]="faFloppyDisk" />
+      {{ "General.Save" | translate }}
+    </button>
   </div>
   <div class="scroll mg-b-10" style="flex: 1 1 auto">
     <kendo-sortable
@@ -44,12 +37,12 @@
         >
           <div class="pd-t-12 wd-50 mn-wd-50 ht-40">
             <fa-layers [fixedWidth]="true">
-              <fa-icon size="3x" [icon]="faCircle"></fa-icon>
+              <fa-icon size="3x" [icon]="faCircle" />
               <fa-layers-text
                 *ngIf="cat.selected"
                 [content]="cat.number!.toString()"
                 transform="right-14"
-              ></fa-layers-text>
+              />
             </fa-layers>
           </div>
           <div class="flex-grow-1">
@@ -58,15 +51,10 @@
             </div>
             <div class="tx-12 font-italic">
               {{ cat.description }}
-              {{ cat.description }}
-              {{ cat.description }}
-              {{ cat.description }}
-              {{ cat.description }}
             </div>
           </div>
           <div class="pd-t-5">
-            <wbs-switch [(value)]="cat.selected" (valueChange)="changed()">
-            </wbs-switch>
+            <wbs-switch [(value)]="cat.selected" (valueChange)="changed()" />
           </div>
         </div>
       </ng-template>

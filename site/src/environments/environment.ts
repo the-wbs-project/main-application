@@ -4,7 +4,6 @@ export const environment = {
   production: true,
   appTitle: 'PM Empower',
   apiPrefix: 'http://localhost:88/api/',
-  appInsightsKey: '44521f2e-90b6-4be0-8659-0c84bfde1907',
   auth: <AuthConfig>{
     domain: 'auth.dev.thewbsproject.com',
     clientId: '1nOKv3soErPVx2nJlfZFZdIqYkjUnMkX',
@@ -26,5 +25,17 @@ export const environment = {
         'http://localhost:88/api/*',
       ],
     },
+  },
+  datadog: {
+    clientToken: 'pub3cd763417a98f3cb71ee3ab8d19ddecb',
+    site: 'datadoghq.com',
+    service: 'pm-empower-site',
+    env: 'development',
+    forwardErrorsToLogs: true,
+    sessionSampleRate: 100,
+  },
+  datadogContext: {
+    app: 'pm-empower',
+    host: window.location.hostname,
   },
 };

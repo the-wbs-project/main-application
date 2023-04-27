@@ -1,4 +1,3 @@
-export * from './action-role-filter.pipe';
 export * from './role-icon.pipe';
 export * from './role-title.pipe';
 export * from './task-details-actions.pipe';

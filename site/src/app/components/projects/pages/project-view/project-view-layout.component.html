@@ -14,11 +14,16 @@
               [src]="url"
               class="wd-70 h-auto"
             />
-            <wbs-edit-pencil class="pos-absolute l-80 t-20" placeholder="Projects.EditTaskTitle" />
           </div>
           <div class="display-flex flex-row w-100">
             <div style="flex-grow: 1">
-              <wbs-title-editor [title]="project.title" (titleChange)="service.saveTitle($event)" />
+              <h4
+                kendoTooltip
+                filter="a"
+                class="edit-pencil-parent ms-md-4 ms-0 mb-1 pb-0"
+              >
+                {{ project.title }}
+              </h4>
               <p class="tx-13 text-muted ms-md-4 ms-0 mb-2 pb-2">
                 <label
                   class="me-3"
@@ -48,9 +53,6 @@
                 </span>
               </p>
             </div>
-            <div *ngIf="actions | actionRoleFilter; let actions2">
-              <wbs-project-action-menu *ngIf="actions2.length > 0" [menu]="actions2" (itemClicked)="service.action($event)" />
-            </div>
           </div>
           <div class="my-md-auto mt-4 prof-details"></div>
         </div>
@@ -61,11 +63,21 @@
               class="main-nav-line p-0 tabs-menu profile-nav-line border-0 br-5 mb-0"
               [activeId]="pageView$ | async"
             >
-              <li [ngbNavItem]="link.fragment" *ngFor="let link of links">
+            <ng-template ngFor [ngForOf]="links" let-link>
+              <li *ngIf="!link.children" [ngbNavItem]="link.fragment">
                 <a ngbNavLink [routerLink]="['./', link.fragment]">
                   {{ link.title | translate }}
                 </a>
               </li>
+              <li *ngIf="link.children" ngbDropdown class="nav-item" role="presentation">
+                <a class="nav-link" [class.active]="link.fragment === (pageView$ | async)" ngbDropdownToggle> {{ link.title | translate }} </a>
+                <div ngbDropdownMenu>
+                  <a ngbDropdownItem *ngFor="let child of link.children" [routerLink]="['./', link.fragment, child.fragment]">
+                    {{ child.title | translate }}
+                  </a>
+                </div>
+              </li>
+            </ng-template>
             </ul>
           </div>
         </div>

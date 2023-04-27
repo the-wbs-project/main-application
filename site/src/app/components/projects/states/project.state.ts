@@ -7,16 +7,15 @@ import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
-  ROLES,
+  ProjectCategory,
   WbsNode,
 } from '@wbs/core/models';
 import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
-  ChangeProjectDisciplines,
-  ChangeProjectPhases,
-  ChangeProjectTitle,
+  ChangeProjectBasics,
+  ChangeProjectCategories,
   ChangeTaskDescription,
   ChangeTaskTitle,
   CloneTask,
@@ -218,19 +217,21 @@ export class ProjectState {
     );
   }
 
-  @Action(ChangeProjectTitle)
-  changeProjectTitle(
+  @Action(ChangeProjectBasics)
+  changeProjectBasics(
     ctx: StateContext<StateModel>,
-    action: ChangeProjectTitle
+    action: ChangeProjectBasics
   ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
     const original = project.title;
 
     project.title = action.title;
+    project.description = action.description;
+    project.category = action.category;
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success('Projects.ProjectTitleUpdated')),
+      tap(() => this.messaging.success('Projects.UpdatedProject')),
       switchMap(() =>
         this.saveActivity(ctx, {
           action: PROJECT_ACTIONS.TITLE_CHANGED,
@@ -240,32 +241,6 @@ export class ProjectState {
           },
         })
       )
-    );
-  }
-
-  @Action(ChangeProjectPhases)
-  changeProjectPhases(
-    ctx: StateContext<StateModel>,
-    action: ChangeProjectPhases
-  ): Observable<any> {
-    const state = ctx.getState();
-    const project = state.current!;
-    const originalList = [...project.categories.phase];
-
-    project.categories.phase = action.phases;
-
-    return this.saveProject(ctx, project).pipe(
-      switchMap(() =>
-        this.saveActivity(ctx, {
-          action: PROJECT_ACTIONS.PHASES_CHANGED,
-          data: {
-            from: originalList,
-            to: action.phases,
-          },
-        })
-      ),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() => this.messaging.success('Projects.ProjectPhasesUpdated'))
     );
   }
 
@@ -462,25 +437,43 @@ export class ProjectState {
     ]);
   }
 
-  @Action(ChangeProjectDisciplines)
-  changeProjectDisciplines(
+  @Action(ChangeProjectCategories)
+  changeProjectCategories(
     ctx: StateContext<StateModel>,
-    action: ChangeProjectDisciplines
+    action: ChangeProjectCategories
   ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
-    const originalList = [...project.categories.discipline];
+    let originalList: ProjectCategory[];
+    let saveMessage: string;
+    let saveAction: string;
 
-    project.categories.discipline = action.disciplines;
+    const isPhases = action.cType === PROJECT_NODE_VIEW.PHASE;
+
+    if (action.cType === PROJECT_NODE_VIEW.PHASE) {
+      saveMessage = 'Projects.ProjectPhasesUpdated';
+      saveAction = PROJECT_ACTIONS.PHASES_CHANGED;
+
+      originalList = [...project.categories.phase];
+
+      project.categories.phase = action.categories;
+    } else {
+      saveMessage = 'Projects.ProjectDisciplinesUpdated';
+      saveAction = PROJECT_ACTIONS.DISCIPLINES_CHANGED;
+
+      originalList = [...project.categories.discipline];
+
+      project.categories.discipline = action.categories;
+    }
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success('Projects.ProjectDisciplinesUpdated')),
+      tap(() => this.messaging.success(saveMessage)),
       switchMap(() =>
         this.saveActivity(ctx, {
-          action: PROJECT_ACTIONS.DISCIPLINES_CHANGED,
+          action: saveAction,
           data: {
             from: originalList,
-            to: action.disciplines,
+            to: action.categories,
           },
         })
       ),

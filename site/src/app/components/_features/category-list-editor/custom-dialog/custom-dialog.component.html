@@ -16,7 +16,7 @@
     (submit)="modal.close([title.value, description.value])"
   >
     <div class="form-group">
-      <label for="title"> {{ "General.Title" | translate }} </label>
+      <label for="title"> {{ "General.Name" | translate }} </label>
       <input
         #title
         type="text"
@@ -29,7 +29,7 @@
         class="invalid-feedback"
         *ngIf="controls.title?.errors?.['required']"
       >
-        Error: Title is required
+        Error: Name is required
       </div>
     </div>
     <div class="form-group">

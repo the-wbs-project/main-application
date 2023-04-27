@@ -16,10 +16,12 @@ export type Env = {
   COSMOS_ENDPOINT: string;
   COSMOS_KEY: string;
 
+  DATADOG_API_KEY: string;
+  DATADOG_ENV: string;
+
   MAILGUN_ENDPOINT: string;
   MAILGUN_KEY: string;
 
-  APP_INSIGHTS_KEY: string;
   CORS_ORIGINS: string;
   DEBUG: string;
   INVITE_TEMPLATE_ID: string;
