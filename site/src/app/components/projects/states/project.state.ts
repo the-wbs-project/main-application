@@ -141,10 +141,11 @@ export class ProjectState {
       tap((data) =>
         ctx.patchState({
           current: data.project,
-          nodes: data.nodes.filter((x) => !x.removed),
-          roles: data.project.roles
-            .filter((x) => x.userId === userId)
-            .map((x) => x.role),
+          nodes: data.nodes?.filter((x) => !x.removed) ?? [],
+          roles:
+            data.project.roles
+              ?.filter((x) => x.userId === userId)
+              ?.map((x) => x.role) ?? [],
         })
       ),
       switchMap(() => ctx.dispatch(new RebuildNodeViews()))

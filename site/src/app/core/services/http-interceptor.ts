@@ -27,8 +27,6 @@ export class RequestInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    this.logger.error('url:' + request.url);
-
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 
