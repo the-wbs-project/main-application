@@ -42,6 +42,7 @@
         "Download": "Download",
         "Upload": "Upload",
         "Submit": "Submit",
+        "Users": "Users",
         "Back": "Back",
         "Continue": "Continue",
         "RetrievingData": "Retrieving Data...",
@@ -57,9 +58,14 @@
         "Roles": "Roles",
         "PM": "PM",
         "PM-Full": "Project Manager",
+        "PMs": "PMs",
+        "PMs-Full": "Project Managers",
         "SME": "SME",
-        "SME-Full": "Subject Matter Export",
+        "SME-Full": "Subject Matter Expert",
+        "SMEs": "SMEs",
+        "SMEs-Full": "Subject Matter Experts",
         "Approver": "Approver",
+        "Approvers": "Approvers",
         "Admin": "Admin",
         "Admin-Full": "Administrator",
         "Admin-Explain": "Can administrate the organization settings (users, etc.)",
@@ -81,7 +87,8 @@
         "Less": "Less",
         "Category": "Category",
         "Level": "Level",
-        "Discussions": "Discussions"
+        "Discussions": "Discussions",
+        "Loading": "Loading"
       },
       "Category_Phase": {
         "Initial_Name": "Initial Phase",
@@ -135,10 +142,29 @@
         "Scientist_Name": "Scientist",
         "Scientist_Description": "A brief description of the discipline."
       },
+      "Category_Project": {
+        "WaterTreatment_Name": "Water Treatment",
+        "WaterTreatment_Description": "A brief description of water treatment.",
+        "WasteWaterTreatment_Name": "Waste Water Treatment",
+        "WasteWaterTreatment_Description": "A brief description of waste water treatment.",
+        "LandDevelopment_Name": "Land Development",
+        "LandDevelopment_Description": "A brief description of land development.",
+        "PublicWorks_Name": "Public Works",
+        "PublicWorks_Description": "A brief description of public works.",
+        "EmergencyManagement_Name": "Emergency Management",
+        "EmergencyManagement_Description": "A brief description of emergency management.",
+        "Aquatics_Name": "Aquatics",
+        "Aquatics_Description": "A brief description of aquatics.",
+        "Environmental_Name": "Environmental",
+        "Environmental_Description": "A brief description of environmental.",
+        "Transportation_Name": "Transportation",
+        "Transportation_Description": "A brief description of transportation."
+      },
       "Settings": {
         "General": "General",
         "GeneralDescription": "Name, contact info, and more",
-        "Users": "Users",
+        "Organization": "Organization",
+        "OrganizationDescription": "Name, contact info, and more",
         "UsersDescription": "Manage existing users",
         "Invites": "Invites",
         "InvitesDescription": "Send, change, and cancel invites",
@@ -155,14 +181,17 @@
         "ResendInvite": "Resend Invite",
         "CancelInvite": "Cancel Invite",
         "DateSent": "Date Sent",
-        
         "ActivateUser": "Activate User",
         "ActivateUserConfirm": "Are you sure you want to activate this user?",
         "ActivateUserPost": "User Activated",
-
         "DeactivateUser": "Deactivate User",
         "DeactivateUserConfirm": "Are you sure you want to deactivate this user?",
         "DeactivateUserPost": "User Deactivated"
+      },
+      "Pages": {
+        "Projects": "Projects",
+        "ProjectDetails": "Project Details",
+        "TaskDetails": "Task Details"
       }
     }
   },
@@ -171,11 +200,86 @@
     "language": "en-US",
     "values": {
       "Projects": {
+        "NoProjectsFound": "No Projects Found",
         "DownloadNodes": "Download Nodes",
         "UploadTasks": "Upload Tasks",
         "UploadTaskIntro": "Select the file you want to upload...",
         "UploadTaskErrors": "The following errors found",
-        "UploadTaskErrorPrefix": "Please fix and try again."
+        "UploadTaskErrorPrefix": "Please fix and try again.",
+        "AddSubTask": "Add Sub-Task",
+        "EditTask": "Edit Task",
+        "CloneTask": "Clone Task",
+        "DeleteTask": "Delete Task",
+        "EditPhases": "Edit Phases",
+        "EditDisciplines": "Edit Disciplines",
+        "CancelProject": "Cancel Project",
+        "DeleteTaskQuestion": "Why are you deleting this task?",
+        "ProjectTitle": "Project Title",
+        "ProjectDescription": "Project Description",
+        "EditProjectTitle": "Edit Project Title",
+        "EditProjectDescription": "Edit Project Description",
+        "EditTaskTitle": "Edit Task Title",
+        "EditTaskDescription": "Edit Task Description",
+        "TaskCount": "Task Count",
+        "ShowUnselected": "Show Unselected",
+        "HideUnselected": "Hide Unselected",
+        "AddCustomPhases": "Add Custom Phases",
+        "AddCustomDisciplines": "Add Custom Disciplines",
+        "ProjectTitleUpdated": "Project Title Updated",
+        "ProjectDisciplinesUpdated": "Project Disciplines Updated",
+        "ProjectPhasesUpdated": "Project Phases Updated",
+        "CreateTask": "Create Task",
+        "TaskTitle": "Task Title",
+        "TaskDescription": "Task Description",
+        "Restore": "Restore To This Point",
+        "ViewTask": "View Task Details",
+        "TaskCreated": "Task Created",
+        "TaskCloned": "Task Cloned",
+        "TaskReordered": "Task Reordered",
+        "TaskTitleUpdated": "Task Title Updated",
+        "TaskDescriptionUpdated": "Task Description Updated",
+        "TreeInstructions": "Double-click to see more details."
+      },
+      "ProjectCreate": {
+        "GettingStarted_Title": "Getting Started",
+        "GettingStarted_Description": "This is some basic information about creating a new project. This page may not be needed but we're going to include it for now.",
+        "Basics_Title": "Title & Description",
+        "Basics_Description": "Please provide the title for this project.",
+        "Category_Title": "Project Category",
+        "Category_Description": "Pick the category that best describes this project.",
+        "Lib_Hand_Title": "Library Or By Hand",
+        "Lib_Hand_Description": "How do you want to get started?",
+        "Wbs_Heir_Title": "WBS Heirarchy",
+        "Wbs_Heir_Description": "Would you like the first significant digit of your project to be Phases or Disciplines?",
+        "Phases_Title": "Phases",
+        "Phases_Description": "Choose which phases which apply to your WBS. You can then drag them to your organization's preference.",
+        "Disciplines_Title": "Disciplines",
+        "Disciplines_Description": "Choose which disciplines which apply to your WBS. You can then drag them to your organization's preference.",
+        "From_Library_Title": "From Library",
+        "From_Library_Description": "Search through our amazing library of project template.",
+        "By_Hand_Title": "By Hand",
+        "By_Hand_Description": "Create your project plan by hand to match exactly what your team is looking for.",
+        "PhaseFirst_Title": "Phase First",
+        "PhaseFirst_Description": "Build the project plan by phase with the ability to view it by discipline.",
+        "DisciplineFirst_Title": "Discipline First",
+        "DisciplineFirst_Description": "Build the project plan by discipline with the ability to view it by phase."
+      },
+      "ProjectUpload": {
+        "PagesUploadProjectPlan": "Upload Project Plan",
+        "GetStartedMessage": "To get started upload your project plan using the control below.  Once uploaded we will guide you through the rest of the process.",
+        "UploadInstruction": "Drag or click to select your project plan",
+        "ExcelFile": "Excel File",
+        "ProjectFile": "Project File",
+        "ExcelFileExtensions": "Extensions: .xlsx",
+        "ProjectFileExtensions": "Extensions: .mpp, .mppx",
+        "ExcelFileDescription": "NOTE: You must use our template in order to upload from Excel.",
+        "DownloadTemplate": "Download Template"
+      },
+      "ProjectSettings": {
+        "ByRole": "By Role",
+        "ByRoleNote": "To Change roles go to the \"By User\" tab.",
+        "ByUser": "By User",
+        "NobodyAssigned": "Nobody Assigned"
       }
     }
   },
@@ -202,6 +306,7 @@
         "NodeLevelStats": "Node Level Stats",
         "InsertDescription": "Insert Description Here",
         "DeleteTask": "Delete Task",
+        "DeleteTaskMessage": "Select A Reason...",
         "DeleteList_Scope": "Not In Scope",
         "DeleteList_Sub": "Subcontractor Will Perform",
         "DeleteList_Prime": "Prime Will Perform",
@@ -231,6 +336,45 @@
         "InviteNotFoundDescription": "No invite was found for the code provided.",
         "InviteCancelled": "Invite Cancelled",
         "InviteCancelledDescription": "The invite has been cancelled.  Please contact whoever manages your organization to understand why."
+      }
+    }
+  },
+  {
+    "id": "OrgSettings",
+    "language": "en-US",
+    "values": {
+      "OrgSettings": {
+        "Title": "Organization Settings",
+        "General": "General",
+        "GeneralDescription": "Name, contact info, and more",
+        "Users": "Users",
+        "UsersDescription": "Invite and manage existing users"
+      }
+    }
+  },
+  {
+    "id": "Actions",
+    "language": "en-US",
+    "values": {
+      "Actions": {
+        "ProjectCreatedTitle": "Project Created",
+        "ProjectTitleChangedTitle": "Project Title Changed",
+        "ProjectPhasesChangedTitle": "Project Phases Changed",
+        "ProjectDisciplinesChangedTitle": "Project Disciplines Changed",
+        "TaskCreatedTitle": "Task Created",
+        "TaskTitleChangedTitle": "Task Title Changed",
+        "TaskClonedTitle": "Task Cloned",
+        "TaskReorderedTitle": "Task Reordered",
+        "TaskRemovedTitle": "Task Removed",
+        "ProjectCreatedDescription": "The project was created.",
+        "ProjectTitleChangedDescription": "The title was changed from '{from}' to '{to}'.",
+        "TaskCreatedDescription": "The task '{title}' was created.",
+        "TaskReorderedDescription": "The task '{title}' was moved from {from} to {to}.",
+        "ProjectDisciplinesChangedDescription": "The project's list of disciplines was changed.",
+        "TaskTitleChangedDescription": "The title was changed from '{from}' to '{to}'.",
+        "TaskClonedDescription": "The task '{title}' was cloned.",
+        "TaskRemovedDescription": "The task '{title}' was removed.",
+        "ProjectPhasesChangedDescription": "The project's phases was changed."
       }
     }
   }

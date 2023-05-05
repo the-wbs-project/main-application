@@ -32,6 +32,8 @@ import {
   SafeHtmlPipe,
   SafeUrlPipe,
   UserNamePipe,
+  UserSortPipe,
+  UsersPipe,
 } from './pipes';
 
 @NgModule({
@@ -66,6 +68,8 @@ import {
     SafeUrlPipe,
     SwitchComponent,
     UserNamePipe,
+    UserSortPipe,
+    UsersPipe,
   ],
   exports: [
     CategoryIconPipe,
@@ -92,6 +96,8 @@ import {
     SwitchComponent,
     TranslateModule,
     UserNamePipe,
+    UserSortPipe,
+    UsersPipe,
   ],
 })
 export class SharedModule {}

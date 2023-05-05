@@ -8,7 +8,7 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
     icon: 'fa-building',
   },
   {
-    title: 'Settings.Users',
+    title: 'General.Users',
     description: 'Settings.UsersDescription',
     path: ['/settings', 'users', 'active'],
     icon: 'fa-users',

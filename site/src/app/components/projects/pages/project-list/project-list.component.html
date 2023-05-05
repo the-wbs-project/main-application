@@ -3,14 +3,13 @@
     {{ "Pages.Projects" | translate | uppercase }}
     &nbsp;
     <a kendoButton [routerLink]="['/', 'projects', 'create']">
-      <fa-icon [icon]="faPlus" size="xs"></fa-icon>
+      <fa-icon [icon]="faPlus" size="xs" />
     </a>
   </div>
-  <div class="flex-fill tx-right">
+  <div class="flex-fill">
     <div
       *ngIf="status$ | async; let projectStatus"
       role="group"
-      aria-label="Basic example"
       class="btn-group display-flex flex-wrap"
     >
       <button
@@ -36,11 +35,30 @@
     <div class="row">
       <div *ngIf="projects.length === 0" class="col-12">
         <div class="card">
-          <div class="card-body tx-center pd-y-20">No Projects Found</div>
+          <div
+            *ngIf="loading$ | async; else noProjects"
+            class="card-body display-flex flex-flow-col flex-align-center justify-content-center"
+            appFillElement
+            [paddingBottom]="30"
+          >
+            <kendo-loader
+              type="infinite-spinner"
+              themeColor="primary"
+              size="large"
+            />
+            <h2 class="k-loading-panel-text">
+              {{ "General.Loading" | translate }}...
+            </h2>
+          </div>
+          <ng-template #noProjects>
+            <div class="card-body tx-center pd-y-20">
+              {{ "Projects.NoProjectsFound" | translate }}
+            </div>
+          </ng-template>
         </div>
       </div>
       <div
-        *ngFor="let project of projects | projectSort : 'name'"
+        *ngFor="let project of projects | projectSort : 'modified'"
         class="col-lg-3 col-md-4 col-sm-6"
       >
         <a [routerLink]="['/projects', project.id, 'view']">

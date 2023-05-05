@@ -9,8 +9,23 @@ export class ProjectDataService {
 
   constructor(private readonly ctx: Context) {}
 
-  getAllAsync(): Promise<Project[]> {
-    return this.db.getAllAsync<Project>(true);
+  async getAllAsync(): Promise<Project[]> {
+    const projects = await this.db.getAllAsync<Project>(false);
+
+    for (const p of projects) {
+      if (p.lastModified == undefined) {
+        //@ts-ignore
+        p.lastModified = p._ts * 1000;
+
+        await this.putAsync(p);
+      } else if (typeof p.lastModified == 'string') {
+        p.lastModified = new Date(p.lastModified).getTime();
+
+        await this.putAsync(p);
+      }
+    }
+
+    return projects;
   }
 
   getAllWatchedAsync(userId: string): Promise<Project[]> {

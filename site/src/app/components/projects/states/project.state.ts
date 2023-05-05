@@ -8,9 +8,11 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   ProjectCategory,
+  ROLES,
   WbsNode,
 } from '@wbs/core/models';
 import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
+import { AuthState } from '@wbs/core/states';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
@@ -36,14 +38,16 @@ import {
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
 import { ProjectManagementService } from '../services';
-import { AuthState } from '@wbs/core/states';
 
 interface StateModel {
+  approvers?: string[];
   current?: Project;
   disciplines?: WbsNodeView[];
   roles?: string[];
   nodes?: WbsNode[];
   phases?: WbsNodeView[];
+  pms?: string[];
+  smes?: string[];
 }
 
 @Injectable()
@@ -59,6 +63,11 @@ export class ProjectState {
     private readonly store: Store,
     private readonly transformers: WbsTransformers
   ) {}
+
+  @Selector()
+  static approvers(state: StateModel): string[] | undefined {
+    return state.approvers;
+  }
 
   @Selector()
   static current(state: StateModel): Project | undefined {
@@ -90,8 +99,18 @@ export class ProjectState {
   }
 
   @Selector()
+  static pms(state: StateModel): string[] | undefined {
+    return state.pms;
+  }
+
+  @Selector()
   static roles(state: StateModel): string[] | undefined {
     return state.roles;
+  }
+
+  @Selector()
+  static smes(state: StateModel): string[] | undefined {
+    return state.smes;
   }
 
   @Selector()
@@ -148,6 +167,19 @@ export class ProjectState {
               ?.map((x) => x.role) ?? [],
         })
       ),
+      tap((data) => {
+        const approvers: string[] = [];
+        const pms: string[] = [];
+        const smes: string[] = [];
+
+        for (const ur of data.project.roles) {
+          if (ur.role === ROLES.APPROVER) approvers.push(ur.userId);
+          else if (ur.role === ROLES.PM) pms.push(ur.userId);
+          else if (ur.role === ROLES.SME) smes.push(ur.userId);
+        }
+
+        ctx.patchState({ approvers, pms, smes });
+      }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews()))
     );
   }

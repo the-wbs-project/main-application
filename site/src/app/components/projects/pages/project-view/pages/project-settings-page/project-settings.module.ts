@@ -12,8 +12,10 @@ import {
   ProjectSettingsCategoriesComponent,
   ProjectSettingsComponent,
   ProjectSettingsGeneralComponent,
+  ProjectSettingsRolesComponent,
 } from './pages';
 import { routes } from './project-settings-routing.module';
+import { ProjectAssignedListComponent } from './components';
 
 @NgModule({
   imports: [
@@ -30,9 +32,11 @@ import { routes } from './project-settings-routing.module';
   ],
   providers: [],
   declarations: [
+    ProjectAssignedListComponent,
     ProjectSettingsCategoriesComponent,
     ProjectSettingsComponent,
     ProjectSettingsGeneralComponent,
+    ProjectSettingsRolesComponent,
   ],
 })
 export class ProjectSettingsModule {}

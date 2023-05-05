@@ -1,0 +1,16 @@
+<div *ngIf="ids">
+  <div class="w-100 tx-center tx-italic tx-danger" *ngIf="ids.length === 0">
+    {{ "ProjectSettings.NobodyAssigned" | translate }}
+  </div>
+  <div
+    class="display-flex w-100"
+    *ngFor="let user of ids | users : (users$ | async) | userSort"
+  >
+    <div class="flex-grow-1">
+      {{ user.name }}
+    </div>
+    <div class="wd-20 tx-center">
+      <a><fa-icon [icon]="faUserMinus" size="sm" /></a>
+    </div>
+  </div>
+</div>

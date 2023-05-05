@@ -5,7 +5,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
 import { ProjectService, Resources, TitleService } from '@wbs/core/services';
-import { ProjectListState } from '@wbs/core/states';
+import { OrganizationState } from '@wbs/core/states';
 import { map } from 'rxjs';
 
 @UntilDestroy()
@@ -21,7 +21,8 @@ export class ProjectListComponent implements OnInit {
   readonly status$ = this.route.params.pipe(
     map((p) => <PROJECT_VIEW_STATI_TYPE>p['status'])
   );
-  readonly projects$ = this.store.select(ProjectListState.list);
+  readonly loading$ = this.store.select(OrganizationState.loading);
+  readonly projects$ = this.store.select(OrganizationState.projects);
   readonly stati: PROJECT_VIEW_STATI_TYPE[] = [
     PROJECT_VIEW_STATI.ACTIVE,
     PROJECT_VIEW_STATI.PLANNING,

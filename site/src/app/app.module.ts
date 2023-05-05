@@ -22,9 +22,7 @@ import {
   AuthState,
   MetadataState,
   OrganizationState,
-  ProjectListState,
   UiState,
-  UsersState,
 } from '@wbs/core/states';
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
@@ -42,14 +40,7 @@ import { AppComponent } from './app.component';
     NgxsLoggerPluginModule.forRoot({
       disabled: false, // environment.production,
     }),
-    NgxsModule.forRoot([
-      AuthState,
-      MetadataState,
-      OrganizationState,
-      ProjectListState,
-      UiState,
-      UsersState,
-    ]),
+    NgxsModule.forRoot([AuthState, MetadataState, OrganizationState, UiState]),
     NgxsRouterPluginModule.forRoot(),
     PopupModule,
     SortableModule,

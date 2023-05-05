@@ -25,7 +25,7 @@ export class UsersComponent implements OnInit {
   private users: UserViewModel[] = [];
   private readonly crumbs: Breadcrumb[] = [
     {
-      text: 'Settings.Users',
+      text: 'General.Users',
     },
   ];
 

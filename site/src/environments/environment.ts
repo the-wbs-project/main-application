@@ -36,6 +36,6 @@ export const environment = {
   },
   datadogContext: {
     app: 'pm-empower',
-    host: window.location.hostname,
+    host: window.location.host,
   },
 };

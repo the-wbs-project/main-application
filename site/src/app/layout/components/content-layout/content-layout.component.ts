@@ -7,7 +7,7 @@ import {
 import { Select } from '@ngxs/store';
 import { Project } from '@wbs/core/models';
 import { ContainerService } from '@wbs/core/services';
-import { AuthState, ProjectListState } from '@wbs/core/states';
+import { AuthState, OrganizationState } from '@wbs/core/states';
 import { Observable } from 'rxjs';
 import { SwitcherService } from '../../services';
 
@@ -16,7 +16,7 @@ import { SwitcherService } from '../../services';
   styleUrls: ['./content-layout.component.scss'],
 })
 export class ContentLayoutComponent implements AfterContentInit {
-  @Select(ProjectListState.list) projects$!: Observable<Project[]>;
+  @Select(OrganizationState.projects) projects$!: Observable<Project[]>;
   @Select(AuthState.isAdmin) isAdmin$!: Observable<boolean>;
 
   @ViewChild('body', { static: true, read: ViewContainerRef })

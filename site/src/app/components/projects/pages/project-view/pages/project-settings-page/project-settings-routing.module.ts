@@ -5,6 +5,7 @@ import {
   ProjectSettingsCategoriesComponent,
   ProjectSettingsComponent,
   ProjectSettingsGeneralComponent,
+  ProjectSettingsRolesComponent,
 } from './pages';
 
 export const routes: Routes = [
@@ -35,6 +36,13 @@ export const routes: Routes = [
         data: {
           view: SETTINGS_PAGES.DISCIPLINES,
           cType: PROJECT_NODE_VIEW.DISCIPLINE,
+        },
+      },
+      {
+        path: 'roles',
+        component: ProjectSettingsRolesComponent,
+        data: {
+          view: SETTINGS_PAGES.ROLES,
         },
       },
     ],

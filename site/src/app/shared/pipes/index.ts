@@ -14,3 +14,5 @@ export * from './role-list.pipe';
 export * from './safe-html.pipe';
 export * from './safe-url.pipe';
 export * from './user-name.pipe';
+export * from './user-sort.pipe';
+export * from './users.pipe';

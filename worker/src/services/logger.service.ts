@@ -87,7 +87,6 @@ export class Logger {
     const cf: Record<string, any> = (<any>info.request).cf || {};
     const usr = this.ctx.get('state')?.user;
 
-    console.log(url);
     return {
       ddsource: 'worker',
       ddtags: `env:${this.ctx.env.DATADOG_ENV},app:pm-empower`,
