@@ -14,7 +14,7 @@ export class ReplyEditorComponent {
   readonly form = new FormGroup({
     message: new FormControl<string>('', [
       Validators.required,
-      noWhitespaceValidator,
+      //noWhitespaceValidator,
     ]),
   });
 

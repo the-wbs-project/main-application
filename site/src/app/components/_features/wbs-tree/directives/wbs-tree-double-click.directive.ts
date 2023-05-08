@@ -6,11 +6,10 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TreeListComponent } from '@progress/kendo-angular-treelist';
 import { delay } from 'rxjs/operators';
 
-@UntilDestroy()
 @Directive({
   selector: '[wbsTreeDoubleClick]',
 })
@@ -22,10 +21,10 @@ export class WbsTreeDoubleClickDirective implements OnInit {
 
   ngOnInit(): void {
     this.treeList.expandEvent
-      .pipe(delay(100), untilDestroyed(this))
+      .pipe(delay(100), takeUntilDestroyed())
       .subscribe(() => this.render());
     this.treeList.collapseEvent
-      .pipe(delay(100), untilDestroyed(this))
+      .pipe(delay(100), takeUntilDestroyed())
       .subscribe(() => this.render());
 
     setTimeout(() => {

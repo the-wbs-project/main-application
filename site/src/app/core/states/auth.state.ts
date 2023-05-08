@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { of } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -16,7 +15,6 @@ export interface AuthBucket {
 }
 
 @Injectable()
-@UntilDestroy()
 @State<AuthBucket>({
   name: 'auth',
   defaults: {
@@ -92,7 +90,7 @@ export class AuthState implements NgxsOnInit {
 
           return ctx.dispatch(new LoadOrganization(org.organization));
         }),
-        untilDestroyed(this)
+        takeUntilDestroyed()
       )
       .subscribe();
   }

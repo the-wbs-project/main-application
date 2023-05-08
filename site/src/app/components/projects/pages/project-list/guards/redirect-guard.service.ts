@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class RedirectGuard implements CanActivate {
+export class RedirectGuard  {
   constructor(private readonly store: Store) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> {

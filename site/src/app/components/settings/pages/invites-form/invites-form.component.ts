@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { faEnvelope, faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ROLES } from '@wbs/core/models';
@@ -12,7 +12,6 @@ import { Breadcrumb } from '../../models';
 import { InviteValidators } from '../../services';
 import { UserAdminState } from '../../states';
 
-@UntilDestroy()
 @Component({
   templateUrl: './invites-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -76,7 +75,7 @@ export class InvitesFormComponent implements OnInit {
             .selectSnapshot(UserAdminState.invites)
             .find((x) => x.id === id);
         }),
-        untilDestroyed(this)
+        takeUntilDestroyed()
       )
       .subscribe((invite) => {
         const roles = invite?.roles ?? [];

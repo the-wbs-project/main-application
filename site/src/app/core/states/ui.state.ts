@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterDataResolved } from '@ngxs/router-plugin';
 import {
   Action,
@@ -19,7 +19,6 @@ interface StateModel {
 }
 
 @Injectable()
-@UntilDestroy()
 @State<StateModel>({
   name: 'ui',
   defaults: {
@@ -52,7 +51,7 @@ export class UiState implements NgxsOnInit {
 
   ngxsOnInit(ctx: StateContext<StateModel>) {
     this.actions$
-      .pipe(ofActionSuccessful(RouterDataResolved<any>), untilDestroyed(this))
+      .pipe(ofActionSuccessful(RouterDataResolved<any>), takeUntilDestroyed())
       .subscribe((action: RouterDataResolved) =>
         ctx.dispatch(new ParseNavigation(action.routerState.url))
       );

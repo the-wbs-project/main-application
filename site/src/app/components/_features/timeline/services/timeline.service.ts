@@ -1,10 +1,8 @@
 import { Injectable } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { ActionDefinition, Activity } from '@wbs/core/models';
 import { MetadataState } from '@wbs/core/states';
 
-@UntilDestroy()
 @Injectable({ providedIn: 'root' })
 export class TimelineService {
   constructor(private readonly store: Store) {}

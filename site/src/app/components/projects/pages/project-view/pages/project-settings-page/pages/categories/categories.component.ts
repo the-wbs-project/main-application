@@ -4,8 +4,8 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { ChangeProjectCategories } from '@wbs/components/projects/actions';
 import { ProjectState } from '@wbs/components/projects/states';
@@ -14,7 +14,6 @@ import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { map } from 'rxjs/operators';
 
-@UntilDestroy()
 @Component({
   templateUrl: './categories.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -35,10 +34,10 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
   ngOnInit(): void {
     this.store
       .select(ProjectState.current)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => this.rebuild());
 
-    this.route.data.pipe(untilDestroyed(this)).subscribe(() => this.rebuild());
+    this.route.data.pipe(takeUntilDestroyed()).subscribe(() => this.rebuild());
   }
 
   save(): void {

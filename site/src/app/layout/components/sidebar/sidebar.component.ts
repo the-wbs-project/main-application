@@ -1,18 +1,17 @@
 import {
   Component,
   HostListener,
+  inject,
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
-import { MenuItem, Project } from '@wbs/core/models';
+import { Project } from '@wbs/core/models';
 import { fromEvent } from 'rxjs';
 import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
 import { NavService } from '../../services';
 import { switcherArrowFn } from './sidebar';
 import { AuthService } from '@auth0/auth0-angular';
 
-@UntilDestroy()
 @Component({
   selector: 'wbs-sidebar',
   templateUrl: './sidebar.component.html',
@@ -23,57 +22,10 @@ export class SidebarComponent {
   @Input() projects?: Project[] | null;
   @Input() isAdmin?: boolean | null;
 
+  readonly auth = inject(AuthService);
+  readonly navServices = inject(NavService);
   readonly settings = ORG_SETTINGS_MENU_ITEMS;
-  menuItems!: MenuItem[];
-  url: any;
-
-  constructor(
-    readonly auth: AuthService,
-    private readonly navServices: NavService
-  ) {}
-
-  setNavActive(item: any) {
-    this.menuItems.filter((menuItem) => {
-      if (menuItem !== item) {
-        menuItem.active = false;
-        document.querySelector('.app')?.classList.remove('sidenav-toggled');
-        document.querySelector('.app')?.classList.remove('sidenav-toggled1');
-        this.navServices.collapseSidebar = false;
-      }
-      if (menuItem.children && menuItem.children.includes(item)) {
-        menuItem.active = true;
-      }
-      if (menuItem.children) {
-        menuItem.children.filter((submenuItems) => {
-          if (submenuItems.children && submenuItems.children.includes(item)) {
-            menuItem.active = true;
-            submenuItems.active = true;
-          }
-        });
-      }
-    });
-  }
-
-  // Click Toggle menu
-  toggleNavActive(item: any) {
-    if (!item.active) {
-      this.menuItems.forEach((a: any) => {
-        if (this.menuItems.includes(item)) {
-          a.active = false;
-        }
-        if (!a.children) {
-          return false;
-        }
-        a.children.forEach((b: any) => {
-          if (a.children.includes(item)) {
-            b.active = false;
-          }
-        });
-        return;
-      });
-    }
-    item.active = !item.active;
-  }
+  scrolled = false;
 
   ngOnInit(): void {
     let sidemenu = document.querySelector('.side-menu');
@@ -102,17 +54,15 @@ export class SidebarComponent {
     });
   }
 
+  @HostListener('window:scroll', [])
+  onWindowScroll() {
+    this.scrolled = window.scrollY > 70;
+  }
+
   sidebarClose() {
     if ((this.navServices.collapseSidebar = true)) {
       document.querySelector('.app')?.classList.remove('sidenav-toggled');
       this.navServices.collapseSidebar = false;
     }
-  }
-
-  scrolled: boolean = false;
-
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    this.scrolled = window.scrollY > 70;
   }
 }

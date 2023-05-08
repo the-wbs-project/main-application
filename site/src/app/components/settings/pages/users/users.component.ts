@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Select, Store } from '@ngxs/store';
 import {
   DataStateChangeEvent,
@@ -13,7 +13,6 @@ import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb, UserViewModel } from '../../models';
 import { UserAdminState } from '../../states';
 
-@UntilDestroy()
 @Component({
   templateUrl: './users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,7 +63,7 @@ export class UsersComponent implements OnInit {
               : UserAdminState.inactiveUsers
           )
         ),
-        untilDestroyed(this)
+        takeUntilDestroyed()
       )
       .subscribe((users) => {
         this.users = users ?? [];

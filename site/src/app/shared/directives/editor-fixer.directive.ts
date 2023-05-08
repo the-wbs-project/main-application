@@ -1,8 +1,7 @@
 import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { timer } from 'rxjs';
 
-@UntilDestroy()
 @Directive({ selector: '[appEditorFixer]' })
 export class EditorFixerDirective implements OnInit {
   private lastSize = 0;
@@ -11,7 +10,7 @@ export class EditorFixerDirective implements OnInit {
 
   ngOnInit(): void {
     timer(0, 250)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => this.setSize());
   }
 

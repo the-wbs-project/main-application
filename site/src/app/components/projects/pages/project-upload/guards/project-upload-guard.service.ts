@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ProjectState } from '@wbs/components/projects/states';
@@ -9,7 +9,7 @@ import { SetAsStarted, SetPageTitle } from '../actions';
 import { ProjectUploadState } from '../states';
 
 @Injectable()
-export class ProjectUploadGuard implements CanActivate {
+export class ProjectUploadGuard  {
   constructor(private readonly store: Store) {}
 
   canActivate(route: ActivatedRouteSnapshot): boolean | Observable<boolean> {

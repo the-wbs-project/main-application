@@ -26,11 +26,11 @@ export class ForumComponent implements OnInit {
   readonly form = new FormGroup({
     title: new FormControl<string>('', [
       Validators.required,
-      noWhitespaceValidator,
+      //noWhitespaceValidator,
     ]),
     message: new FormControl<string>('', [
       Validators.required,
-      noWhitespaceValidator,
+      //noWhitespaceValidator,
     ]),
   });
 

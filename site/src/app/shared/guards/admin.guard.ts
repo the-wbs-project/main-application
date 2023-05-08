@@ -1,13 +1,13 @@
-import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { AuthState } from '@wbs/core/states';
+import { Observable } from 'rxjs';
 
 @Injectable()
-export class AdminGuard implements CanActivate {
-  constructor(private readonly store: Store) {}
+export class AdminGuard {
+  private readonly store = inject(Store);
 
-  canActivate(): boolean {
-    return this.store.selectSnapshot(AuthState.isAdmin);
+  canActivate(): Observable<boolean> {
+    return this.store.selectOnce(AuthState.isAdmin);
   }
 }

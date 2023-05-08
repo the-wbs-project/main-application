@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
   Action,
   NgxsOnInit,
@@ -14,7 +14,6 @@ import {
   WbsNode,
 } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { tap } from 'rxjs';
 import { ProjectState } from '../../../states';
 import { TASK_PAGE_VIEW_TYPE } from '../models';
 import { TaskPageChanged, VerifyTask } from '../actions';
@@ -33,7 +32,6 @@ interface StateModel {
   viewNode?: PROJECT_NODE_VIEW_TYPE;
 }
 
-@UntilDestroy()
 @Injectable()
 @State<StateModel>({
   name: 'taskView',
@@ -85,17 +83,17 @@ export class TaskViewState implements NgxsOnInit {
 
     this.store
       .select(ProjectState.disciplines)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => this.setup(ctx));
 
     this.store
       .select(ProjectState.phases)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => this.setup(ctx));
 
     this.store
       .select(ProjectState.nodes)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => this.setup(ctx));
 
     this.setup(ctx);

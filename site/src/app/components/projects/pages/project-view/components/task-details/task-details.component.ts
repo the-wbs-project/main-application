@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { RemoveTask } from '@wbs/components/projects/actions';
 import { TaskDeleteService } from '@wbs/components/_features/task-delete';
@@ -7,7 +6,6 @@ import { WbsNodeView } from '@wbs/core/view-models';
 import { TASK_MENU_ITEMS } from '../../models';
 import { ProjectNavigationService, ProjectViewService } from '../../services';
 
-@UntilDestroy()
 @Component({
   selector: 'wbs-task-details',
   templateUrl: './task-details.component.html',

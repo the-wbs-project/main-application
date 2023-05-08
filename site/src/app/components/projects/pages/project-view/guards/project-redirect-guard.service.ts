@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, CanActivate } from '@angular/router';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { PROJECT_PAGE_VIEW } from '../models';
 
 @Injectable()
-export class ProjectRedirectGuard implements CanActivate {
+export class ProjectRedirectGuard  {
   constructor(private readonly store: Store) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {

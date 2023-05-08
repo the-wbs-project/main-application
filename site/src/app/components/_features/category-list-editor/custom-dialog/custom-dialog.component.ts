@@ -5,9 +5,7 @@ import {
 } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy } from '@ngneat/until-destroy';
 
-@UntilDestroy()
 @Component({
   templateUrl: './custom-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

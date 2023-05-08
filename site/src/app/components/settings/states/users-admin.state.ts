@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Invite, User } from '@wbs/core/models';
@@ -26,7 +25,6 @@ interface StateModel {
 }
 
 @Injectable()
-@UntilDestroy()
 @State<StateModel>({
   name: 'userAdmin',
   defaults: {},

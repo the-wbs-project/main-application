@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
-import { CanActivate } from '@angular/router';
+
 import { Resources } from '@wbs/core/services';
 import { forkJoin, Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 @Injectable()
-export class ProjectResourceGuard implements CanActivate {
+export class ProjectResourceGuard  {
   constructor(private readonly resources: Resources) {}
 
   canActivate(): Observable<boolean> {

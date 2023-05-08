@@ -5,14 +5,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { TaskViewState } from '../../states';
 
-@UntilDestroy()
 @Component({
   selector: 'wbs-task-modal',
   templateUrl: './task-modal.component.html',
@@ -38,7 +37,7 @@ export class TaskModalComponent implements AfterContentInit {
     setTimeout(() => {
       this.store
         .select(RouterState.url)
-        .pipe(untilDestroyed(this))
+        .pipe(takeUntilDestroyed())
         .subscribe((url) => {
           if (!url) return;
 
@@ -50,7 +49,7 @@ export class TaskModalComponent implements AfterContentInit {
                 modalDialogClass: 'task-modal',
                 size: 'fullscreen',
               });
-              this.modal.dismissed.pipe(untilDestroyed(this)).subscribe(() => {
+              this.modal.dismissed.pipe(takeUntilDestroyed()).subscribe(() => {
                 this.modal = undefined;
               });
             }

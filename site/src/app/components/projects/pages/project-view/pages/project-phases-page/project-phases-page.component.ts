@@ -1,5 +1,4 @@
 import { ChangeDetectionStrategy, Component, ViewChild } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
 import { Select } from '@ngxs/store';
 import { Project, WbsNode } from '@wbs/core/models';
 import { UiState } from '@wbs/core/states';
@@ -9,7 +8,6 @@ import { ProjectState } from '../../../../states';
 import { ProjectNavigationService, ProjectViewService } from '../../services';
 import { TaskViewState } from '../../states';
 
-@UntilDestroy()
 @Component({
   templateUrl: './project-phases-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,

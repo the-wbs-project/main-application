@@ -4,8 +4,8 @@ import {
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { faPlus, faRefresh } from '@fortawesome/pro-solid-svg-icons';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import {
   DataStateChangeEvent,
@@ -18,7 +18,6 @@ import { ChangeBreadcrumbs, LoadInviteData } from '../../actions';
 import { Breadcrumb } from '../../models';
 import { UserAdminState } from '../../states';
 
-@UntilDestroy()
 @Component({
   templateUrl: './invites.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -54,7 +53,7 @@ export class InvitesComponent implements OnInit {
     this.store.dispatch(new ChangeBreadcrumbs(this.crumbs));
     this.store
       .select(UserAdminState.invites)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe((invites) => {
         this.isRefreshing$.next(false);
         this.invites = invites ?? [];

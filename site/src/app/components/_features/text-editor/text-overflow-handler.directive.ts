@@ -1,8 +1,7 @@
-import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Directive, ElementRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
-@UntilDestroy()
 @Directive({
   selector: '[wbsTextOverflowHandler]',
 })
@@ -16,7 +15,7 @@ export class TextOverflowHandlerDirective implements OnInit {
     const div: HTMLDivElement = this.el.nativeElement;
 
     interval(200)
-      .pipe(untilDestroyed(this))
+      .pipe(takeUntilDestroyed())
       .subscribe(() => {
         if (
           this.pastHtml === div.innerHTML &&
