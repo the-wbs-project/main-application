@@ -1,15 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { forkJoin, Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { AddUsers, LoadOrganization, ProjectUpdated } from '../actions';
+import { map } from 'rxjs/operators';
+import { LoadOrganization, ProjectUpdated } from '../actions';
 import { DataServiceFactory } from '../data-services';
-import { Project, User, UserLite } from '../models';
+import { Project, UserLite } from '../models';
 
 interface StateModel {
   loading: boolean;
   projects: Project[];
-  users?: User[];
+  users?: UserLite[];
   usersById: Map<string, UserLite>;
 }
 
@@ -36,8 +36,8 @@ export class OrganizationState {
   }
 
   @Selector()
-  static users(state: StateModel): User[] | undefined {
-    return state.users;
+  static users(state: StateModel): UserLite[] {
+    return state.users ?? [];
   }
 
   @Selector()
@@ -54,20 +54,25 @@ export class OrganizationState {
 
     return forkJoin({
       projects: this.data.projects.getMyAsync(),
-      users: this.data.users.getAllAsync(action.organization),
+      userList: this.data.users.getAllAsync(action.organization),
     }).pipe(
-      map(({ projects, users }) => {
+      map(({ projects, userList }) => {
+        const users: UserLite[] = [];
         const usersById = new Map<string, UserLite>();
+        const orgId = 'acme_engineering';
 
-        users = users.sort((a, b) => (a.name > b.name ? -1 : 1));
+        userList = userList.sort((a, b) => (a.name > b.name ? -1 : 1));
 
-        for (const x of users)
-          usersById.set(x.id, {
+        for (const x of userList) {
+          const user: UserLite = {
             email: x.email,
             id: x.id,
             name: x.name,
-          });
-
+            roles: x.appInfo.organizations[orgId],
+          };
+          users.push(user);
+          usersById.set(x.id, user);
+        }
         ctx.patchState({ projects, users, usersById });
         ctx.patchState({ loading: false });
       })

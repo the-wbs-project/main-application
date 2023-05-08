@@ -19,6 +19,7 @@
         "All": "All",
         "Children": "Children",
         "Parent": "Parent",
+        "Confirmation": "Confirmation",
         "Save": "Save",
         "SaveAndView": "Save & View",
         "Status": "Status",
@@ -65,7 +66,9 @@
         "SMEs": "SMEs",
         "SMEs-Full": "Subject Matter Experts",
         "Approver": "Approver",
+        "Approver-Full": "Approver",
         "Approvers": "Approvers",
+        "Approvers-Full": "Approvers",
         "Admin": "Admin",
         "Admin-Full": "Administrator",
         "Admin-Explain": "Can administrate the organization settings (users, etc.)",
@@ -279,7 +282,13 @@
         "ByRole": "By Role",
         "ByRoleNote": "To Change roles go to the \"By User\" tab.",
         "ByUser": "By User",
-        "NobodyAssigned": "Nobody Assigned"
+        "Assigned": "Assigned",
+        "Unassigned": "Unassigned",
+        "NobodyAssigned": "Nobody Assigned",
+        "AddUserConfirmation": "Are you sure you want to give {USER_NAME} the role of {ROLE_NAME}?",
+        "RemoveUserConfirmation": "Are you sure you want to remove {USER_NAME} from the role of {ROLE_NAME}?",
+        "UserAdded": "User Added",
+        "UserRemoved": "User Removed"
       }
     }
   },

@@ -1,0 +1,16 @@
+<div
+  *ngIf="noUsersLabel && users.length === 0"
+  class="w-100 tx-center tx-italic tx-danger"
+>
+  {{ noUsersLabel | translate }}
+</div>
+<div class="display-flex w-100" *ngFor="let user of users | userSort">
+  <div class="flex-grow-1">
+    {{ user.name }}
+  </div>
+  <div class="wd-20 tx-center">
+    <a class="pointer" (click)="selected.emit(user)">
+      <fa-icon [icon]="icon" size="sm" />
+    </a>
+  </div>
+</div>

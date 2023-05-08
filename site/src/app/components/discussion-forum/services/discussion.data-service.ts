@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { User, UserLite } from '@wbs/core/models';
+import { UserLite } from '@wbs/core/models';
 import { Observable } from 'rxjs';
 import { Discussion } from '../models';
 

@@ -15,7 +15,7 @@ import {
   ProjectSettingsRolesComponent,
 } from './pages';
 import { routes } from './project-settings-routing.module';
-import { ProjectAssignedListComponent } from './components';
+import { ProjectUserListComponent } from './components';
 
 @NgModule({
   imports: [
@@ -32,11 +32,11 @@ import { ProjectAssignedListComponent } from './components';
   ],
   providers: [],
   declarations: [
-    ProjectAssignedListComponent,
     ProjectSettingsCategoriesComponent,
     ProjectSettingsComponent,
     ProjectSettingsGeneralComponent,
     ProjectSettingsRolesComponent,
+    ProjectUserListComponent,
   ],
 })
 export class ProjectSettingsModule {}

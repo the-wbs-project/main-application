@@ -7,7 +7,7 @@
             {{ "General.PMs-Full" | translate }}
           </td>
           <td class="wd-200 border border-dark tx-center pd-5">
-            {{ "General.Approvers" | translate }}
+            {{ "General.Approvers-Full" | translate }}
           </td>
           <td class="wd-200 border border-dark tx-center pd-5">
             {{ "General.SMEs-Full" | translate }}
@@ -15,129 +15,64 @@
         </tr>
         <tr class="bg-black-9 tx-white">
           <td class="border border-dark tx-center pd-5" [colSpan]="3">
-            {{ "General.Assigned" | translate }}
+            {{ "ProjectSettings.Assigned" | translate }}
           </td>
         </tr>
         <tr>
-          <td class="wd-200 border border-dark pd-5">
-            <wbs-project-assigned-list [ids]="pms$ | async" />
+          <td class="wd-200 border border-dark pd-5 valign-top">
+            <wbs-project-user-list
+              [icon]="faUserMinus"
+              [users]="pms().assigned"
+              noUsersLabel="ProjectSettings.NobodyAssigned"
+              (selected)="remove(roles.PM, $event)"
+            />
           </td>
-          <td class="wd-200 border border-dark pd-5">
-            <wbs-project-assigned-list [ids]="approvers$ | async" />
+          <td class="wd-200 border border-dark pd-5 valign-top">
+            <wbs-project-user-list
+              [icon]="faUserMinus"
+              [users]="approvers().assigned"
+              noUsersLabel="ProjectSettings.NobodyAssigned"
+              (selected)="remove(roles.APPROVER, $event)"
+            />
           </td>
-          <td class="wd-200 border border-dark pd-5">
-            <wbs-project-assigned-list [ids]="smes$ | async" />
+          <td class="wd-200 border border-dark pd-5 valign-top">
+            <wbs-project-user-list
+              [icon]="faUserMinus"
+              [users]="smes().assigned"
+              noUsersLabel="ProjectSettings.NobodyAssigned"
+              (selected)="remove(roles.SME, $event)"
+            />
           </td>
         </tr>
         <tr class="bg-black-9 tx-white">
           <td class="border border-dark tx-center pd-5" [colSpan]="3">
-            {{ "General.Unassigned" | translate }}
+            {{ "ProjectSettings.Unassigned" | translate }}
           </td>
         </tr>
         <tr>
-          <td class="wd-200 border border-dark"></td>
-          <td class="wd-200 border border-dark"></td>
-          <td class="wd-200 border border-dark"></td>
+          <td class="wd-200 border border-dark pd-5 valign-top">
+            <wbs-project-user-list
+              [icon]="faUserPlus"
+              [users]="pms().unassigned"
+              (selected)="add(roles.PM, $event)"
+            />
+          </td>
+          <td class="wd-200 border border-dark pd-5 valign-top">
+            <wbs-project-user-list
+              [icon]="faUserPlus"
+              [users]="approvers().unassigned"
+              (selected)="add(roles.APPROVER, $event)"
+            />
+          </td>
+          <td class="wd-200 border border-dark pd-5 valign-top">
+            <wbs-project-user-list
+              [icon]="faUserPlus"
+              [users]="smes().unassigned"
+              (selected)="add(roles.SME, $event)"
+            />
+          </td>
         </tr>
       </tbody>
     </table>
   </div>
 </div>
-<div class="tx-center w-100"></div>
-<!--
-<ul ngbNav activeId="role" #nav="ngbNav" class="nav-tabs">
-  <li ngbNavItem="role">
-    <button ngbNavLink>{{ "ProjectSettings.ByRole" | translate }}</button>
-    <ng-template ngbNavContent>
-      <div class="pd-y-10 pd-l-20 tx-italic">
-        {{ "ProjectSettings.ByRoleNote" | translate }}
-      </div>
-
-      <div *ngIf="pms$ | async; let users" class="display-flex mg-y-20">
-        <div class="tx-bold wd-200">{{ "General.PMs-Full" | translate }}:</div>
-
-        <div class="tx-italic tx-danger" *ngIf="users.length === 0">
-          {{ "ProjectSettings.NobodyAssigned" | translate }}
-        </div>
-        <div *ngIf="users.length > 0">
-          <span *ngFor="let user of users" class="display-b">
-            {{ user.name }}
-          </span>
-        </div>
-      </div>
-
-      <div *ngIf="approvers$ | async; let users" class="display-flex mg-y-20">
-        <div class="tx-bold wd-200">{{ "General.Approvers" | translate }}:</div>
-
-        <div class="tx-italic tx-danger" *ngIf="users.length === 0">
-          {{ "ProjectSettings.NobodyAssigned" | translate }}
-        </div>
-        <div *ngIf="users.length > 0">
-          <span *ngFor="let user of users" class="display-b">
-            {{ user.name }}
-          </span>
-        </div>
-      </div>
-      <div *ngIf="smes$ | async; let users" class="display-flex mg-y-20">
-        <div class="tx-bold wd-200">{{ "General.SMEs-Full" | translate }}:</div>
-
-        <div class="tx-italic tx-danger" *ngIf="users.length === 0">
-          {{ "ProjectSettings.NobodyAssigned" | translate }}
-        </div>
-        <div *ngIf="users.length > 0">
-          <span *ngFor="let user of users" class="display-b">
-            {{ user.name }}
-          </span>
-        </div>
-      </div>
-    </ng-template>
-  </li>
-  <li ngbNavItem="user">
-    <button ngbNavLink>{{ "ProjectSettings.ByUser" | translate }}</button>
-    <ng-template ngbNavContent>
-      <div class="pd-y-10 pd-l-20 tx-italic">
-        {{ "ProjectSettings.ByRoleNote" | translate }}
-      </div>
-
-      <div *ngIf="pms$ | async; let users" class="display-flex mg-y-20">
-        <div class="tx-bold wd-200">{{ "General.PMs-Full" | translate }}:</div>
-
-        <div class="tx-italic tx-danger" *ngIf="users.length === 0">
-          {{ "ProjectSettings.NobodyAssigned" | translate }}
-        </div>
-        <div *ngIf="users.length > 0">
-          <span *ngFor="let user of users" class="display-b">
-            {{ user.name }}
-          </span>
-        </div>
-      </div>
-
-      <div *ngIf="approvers$ | async; let users" class="display-flex mg-y-20">
-        <div class="tx-bold wd-200">{{ "General.Approvers" | translate }}:</div>
-
-        <div class="tx-italic tx-danger" *ngIf="users.length === 0">
-          {{ "ProjectSettings.NobodyAssigned" | translate }}
-        </div>
-        <div *ngIf="users.length > 0">
-          <span *ngFor="let user of users" class="display-b">
-            {{ user.name }}
-          </span>
-        </div>
-      </div>
-      <div *ngIf="smes$ | async; let users" class="display-flex mg-y-20">
-        <div class="tx-bold wd-200">{{ "General.SMEs-Full" | translate }}:</div>
-
-        <div class="tx-italic tx-danger" *ngIf="users.length === 0">
-          {{ "ProjectSettings.NobodyAssigned" | translate }}
-        </div>
-        <div *ngIf="users.length > 0">
-          <span *ngFor="let user of users" class="display-b">
-            {{ user.name }}
-          </span>
-        </div>
-      </div>
-    </ng-template>
-  </li>
-</ul>
-<div [ngbNavOutlet]="nav"></div>
--->

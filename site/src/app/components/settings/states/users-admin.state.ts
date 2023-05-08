@@ -232,9 +232,7 @@ export class UserAdminState {
           email: x.email,
           name: x.name,
           isActive: !x.blocked,
-          roles: x.appInfo.organizationRoles?.find(
-            (x) => x.organization === org
-          )?.roles,
+          roles: x.appInfo.organizations[org] ?? [],
         }
     );
   }

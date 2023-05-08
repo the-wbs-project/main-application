@@ -1,29 +1,27 @@
 import { Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth0/auth0-angular';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { filter, map, tap } from 'rxjs/operators';
 import { LoadOrganization } from '../actions';
-import { User } from '../models';
+import { ROLES, UserLite } from '../models';
 import { Logger } from '../services';
 
 export interface AuthBucket {
-  roles?: string[];
-  isAdmin: boolean;
-  profile?: User | null;
-  organization?: string;
+  culture: string;
+  organization: string;
+  profile?: UserLite;
 }
 
 @Injectable()
 @State<AuthBucket>({
   name: 'auth',
   defaults: {
-    isAdmin: false,
+    culture: 'en-US',
+    organization: 'acme_engineering',
   },
 })
 export class AuthState implements NgxsOnInit {
-  private readonly authFlag = 'isLoggedIn';
-
   constructor(
     private readonly auth: AuthService,
     private readonly logger: Logger
@@ -31,16 +29,16 @@ export class AuthState implements NgxsOnInit {
 
   @Selector()
   static isAdmin(state: AuthBucket): boolean {
-    return state.isAdmin;
+    return (state.profile?.roles ?? []).indexOf(ROLES.ADMIN) > -1;
   }
 
   @Selector()
-  static profile(state: AuthBucket): User | null | undefined {
+  static profile(state: AuthBucket): UserLite | undefined {
     return state.profile;
   }
 
   @Selector()
-  static fullName(state: AuthBucket): string | null | undefined {
+  static fullName(state: AuthBucket): string | undefined {
     return state?.profile?.name;
   }
 
@@ -50,36 +48,21 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static roles(state: AuthBucket): string[] {
-    return state.roles ?? [];
-  }
-
-  @Selector()
   static userId(state: AuthBucket): string | null | undefined {
     return state?.profile?.id;
   }
 
   ngxsOnInit(ctx: StateContext<AuthBucket>): void {
+    const organization = ctx.getState().organization;
+
     this.auth.user$
       .pipe(
-        map((userRaw) => this.convert(userRaw)),
-        tap((profile) => {
-          if (!profile) {
-            ctx.patchState({
-              isAdmin: false,
-              organization: undefined,
-              profile,
-              roles: undefined,
-            });
-            return of();
-          }
-          const org = profile.appInfo.organizationRoles![0];
-
+        filter((x) => x != undefined),
+        map((userRaw) => this.convert(organization, userRaw!)),
+        tap(({ profile, culture }) => {
           ctx.patchState({
-            isAdmin: org.roles.indexOf('admin') > -1,
-            organization: org.organization,
+            culture,
             profile,
-            roles: org.roles,
           });
 
           this.logger.setGlobalContext({
@@ -88,7 +71,7 @@ export class AuthState implements NgxsOnInit {
             'usr.email': profile.email,
           });
 
-          return ctx.dispatch(new LoadOrganization(org.organization));
+          return ctx.dispatch(new LoadOrganization(organization));
         }),
         takeUntilDestroyed()
       )
@@ -96,26 +79,17 @@ export class AuthState implements NgxsOnInit {
   }
 
   private convert(
-    raw: Record<string, any> | null | undefined
-  ): User | undefined {
-    if (!raw) return undefined;
-
+    organization: string,
+    raw: Record<string, any>
+  ): { profile: UserLite; culture: string } {
     return {
-      email: raw['email'],
-      id: raw['sub'],
-      name: raw['name'],
-      appInfo: {
-        organizationRoles: [
-          {
-            organization: 'acme_engineering',
-            roles:
-              raw['http://thewbsproject.com/organizations']['acme_engineering'],
-          },
-        ],
+      profile: {
+        email: raw['email'],
+        id: raw['sub'],
+        name: raw['name'],
+        roles: raw['http://thewbsproject.com/organizations'][organization],
       },
-      userInfo: {
-        culture: raw['http://thewbsproject.com/culture'],
-      },
+      culture: raw['http://thewbsproject.com/culture'],
     };
   }
 }

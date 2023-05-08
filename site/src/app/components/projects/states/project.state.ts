@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { inject, Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ProjectUpdated } from '@wbs/core/actions';
@@ -11,11 +11,17 @@ import {
   ROLES,
   WbsNode,
 } from '@wbs/core/models';
-import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
+import {
+  DialogService,
+  IdService,
+  Messages,
+  WbsTransformers,
+} from '@wbs/core/services';
 import { AuthState } from '@wbs/core/states';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
+  AddUserToRole,
   ChangeProjectBasics,
   ChangeProjectCategories,
   ChangeTaskDescription,
@@ -30,6 +36,7 @@ import {
   NavigateToView,
   RebuildNodeViews,
   RemoveTask,
+  RemoveUserToRole,
   SaveTimelineAction,
   SaveUpload,
   SetProject,
@@ -37,7 +44,7 @@ import {
   VerifyProject,
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
-import { ProjectManagementService } from '../services';
+import { ProjectHelperService, ProjectManagementService } from '../services';
 
 interface StateModel {
   approvers?: string[];
@@ -56,13 +63,13 @@ interface StateModel {
   defaults: {},
 })
 export class ProjectState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly messaging: Messages,
-    private readonly service: ProjectManagementService,
-    private readonly store: Store,
-    private readonly transformers: WbsTransformers
-  ) {}
+  private data = inject(DataServiceFactory);
+  private dialog = inject(DialogService);
+  private helper = inject(ProjectHelperService);
+  private messaging = inject(Messages);
+  private service = inject(ProjectManagementService);
+  private store = inject(Store);
+  private readonly transformers = inject(WbsTransformers);
 
   @Selector()
   static approvers(state: StateModel): string[] | undefined {
@@ -167,19 +174,7 @@ export class ProjectState {
               ?.map((x) => x.role) ?? [],
         })
       ),
-      tap((data) => {
-        const approvers: string[] = [];
-        const pms: string[] = [];
-        const smes: string[] = [];
-
-        for (const ur of data.project.roles) {
-          if (ur.role === ROLES.APPROVER) approvers.push(ur.userId);
-          else if (ur.role === ROLES.PM) pms.push(ur.userId);
-          else if (ur.role === ROLES.SME) smes.push(ur.userId);
-        }
-
-        ctx.patchState({ approvers, pms, smes });
-      }),
+      tap(() => this.updateUserRoles(ctx)),
       switchMap(() => ctx.dispatch(new RebuildNodeViews()))
     );
   }
@@ -200,6 +195,90 @@ export class ProjectState {
         state.nodes
       ),
     });
+  }
+
+  @Action(AddUserToRole)
+  addUserToRole(
+    ctx: StateContext<StateModel>,
+    { role, user }: AddUserToRole
+  ): Observable<void> {
+    const project = ctx.getState().current!;
+    const roleTitle = this.helper.getRoleTitle(role, false);
+
+    return this.dialog
+      .confirm('General.Confirmation', 'ProjectSettings.AddUserConfirmation', {
+        ROLE_NAME: roleTitle,
+        USER_NAME: user.name,
+      })
+      .pipe(
+        switchMap((answer) => {
+          if (!answer) return of();
+
+          project.roles.push({
+            role,
+            userId: user.id,
+          });
+
+          return this.saveProject(ctx, project).pipe(
+            tap(() => this.messaging.success('ProjectSettings.UserAdded')),
+            tap(() => this.updateUserRoles(ctx)),
+            switchMap(() =>
+              this.saveActivity(ctx, {
+                action: PROJECT_ACTIONS.ADDED_USER,
+                data: {
+                  role: roleTitle,
+                  user: user.name,
+                },
+              })
+            )
+          );
+        })
+      );
+  }
+
+  @Action(RemoveUserToRole)
+  removeUserToRole(
+    ctx: StateContext<StateModel>,
+    { role, user }: RemoveUserToRole
+  ): Observable<void> {
+    const project = ctx.getState().current!;
+    const roleTitle = this.helper.getRoleTitle(role, false);
+    const index = project.roles.findIndex(
+      (x) => x.role === role && x.userId === user.id
+    );
+
+    if (index === -1) return of();
+
+    return this.dialog
+      .confirm(
+        'General.Confirmation',
+        'ProjectSettings.RemoveUserConfirmation',
+        {
+          ROLE_NAME: roleTitle,
+          USER_NAME: user.name,
+        }
+      )
+      .pipe(
+        switchMap((answer) => {
+          if (!answer) return of();
+
+          project.roles.splice(index, 1);
+
+          return this.saveProject(ctx, project).pipe(
+            tap(() => this.messaging.success('ProjectSettings.UserRemoved')),
+            tap(() => this.updateUserRoles(ctx)),
+            switchMap(() =>
+              this.saveActivity(ctx, {
+                action: PROJECT_ACTIONS.REMOVED_USER,
+                data: {
+                  role: roleTitle,
+                  user: user.name,
+                },
+              })
+            )
+          );
+        })
+      );
   }
 
   @Action(RemoveTask)
@@ -821,5 +900,21 @@ export class ProjectState {
     });
 
     return ctx.dispatch(new ProjectUpdated(project));
+  }
+
+  private updateUserRoles(ctx: StateContext<StateModel>) {
+    const project = ctx.getState().current;
+    const approvers: string[] = [];
+    const pms: string[] = [];
+    const smes: string[] = [];
+
+    if (project)
+      for (const ur of project.roles) {
+        if (ur.role === ROLES.APPROVER) approvers.push(ur.userId);
+        else if (ur.role === ROLES.PM) pms.push(ur.userId);
+        else if (ur.role === ROLES.SME) smes.push(ur.userId);
+      }
+
+    ctx.patchState({ approvers, pms, smes });
   }
 }

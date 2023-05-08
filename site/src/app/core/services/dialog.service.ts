@@ -13,14 +13,21 @@ export class DialogService {
   confirm(
     titleLabel: string,
     messageLabel: string,
+    data?: Record<string, string>,
     yesLabel = 'General.Yes',
     noLabel = 'General.No'
   ): Observable<boolean> {
     return new Observable<boolean>((subscriber) => {
       const title = this.resources.get(titleLabel);
-      const message = this.resources.get(messageLabel);
+      let message = this.resources.get(messageLabel);
       const yes = this.resources.get(yesLabel);
       const no = this.resources.get(noLabel);
+
+      if (data) {
+        for (const prop of Object.keys(data)) {
+          message = message.replace(`{${prop}}`, data[prop]);
+        }
+      }
 
       //@ts-ignore
       Notiflix.Confirm.show(
