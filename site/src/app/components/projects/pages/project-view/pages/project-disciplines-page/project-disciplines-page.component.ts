@@ -1,8 +1,6 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Project } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
-import { Observable } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 import { ProjectState } from '../../../../states';
 import { ProjectViewService } from '../../services';
 
@@ -11,10 +9,13 @@ import { ProjectViewService } from '../../services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectDisciplinesPageComponent {
-  @Select(ProjectState.current) project$!: Observable<Project>;
-  @Select(ProjectState.disciplines) disciplines$!: Observable<WbsNodeView[]>;
-  @Select(ProjectState.disciplineIds) disciplineIds$!: Observable<string[]>;
   taskId?: string;
 
-  constructor(readonly service: ProjectViewService) {}
+  readonly project = toSignal(this.store.select(ProjectState.current));
+  readonly disciplines = toSignal(this.store.select(ProjectState.disciplines));
+  readonly disciplineIds = toSignal(
+    this.store.select(ProjectState.disciplineIds)
+  );
+
+  constructor(readonly service: ProjectViewService, readonly store: Store) {}
 }

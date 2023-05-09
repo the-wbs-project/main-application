@@ -61,7 +61,7 @@ export class OrganizationState {
         const usersById = new Map<string, UserLite>();
         const orgId = 'acme_engineering';
 
-        userList = userList.sort((a, b) => (a.name > b.name ? -1 : 1));
+        userList = userList.sort((a, b) => (a.name < b.name ? -1 : 1));
 
         for (const x of userList) {
           const user: UserLite = {

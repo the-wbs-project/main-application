@@ -1,6 +1,7 @@
 export * from './db-object.model';
 export * from './device.type';
 export * from './dialog.component';
+export * from './header-information.model';
 export * from './menu-item.model';
 export * from './resources.model';
 export * from './route-link.model';

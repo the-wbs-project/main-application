@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
@@ -12,11 +13,13 @@ import { ProjectViewService } from './services';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectViewLayoutComponent {
-  readonly project$ = this.store.select(ProjectState.current);
+  private readonly project = toSignal(this.store.select(ProjectState.current));
   readonly pageView$ = this.store
     .select(RouterState.url)
     .pipe(map(this.getPage));
 
+  readonly category = computed(() => this.project()?.category);
+  readonly title = computed(() => this.project()?.title);
   readonly links = PROJECT_MENU_ITEMS.projectLinks;
 
   constructor(

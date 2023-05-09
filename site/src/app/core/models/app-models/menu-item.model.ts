@@ -35,3 +35,13 @@ export interface TimelineMenuItem {
   title: string;
   icon: string;
 }
+
+export interface HeaderMenuItem {
+  text?: string;
+  title?: string;
+  icon?: IconDefinition;
+  type?: 'link' | 'sub';
+  route?: string[];
+  sub?: any;
+  theme: string;
+}

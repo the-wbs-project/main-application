@@ -18,13 +18,15 @@
     [ngClass]="id"
     [wbsTreeDoubleClick]="treelist"
     (dblClicked)="showDetails.emit($event)"
+    appFillElement
+    [paddingBottom]="40"
   >
     <ng-template *ngIf="menuItems" kendoTreeListToolbarTemplate>
       <div class="display-ib pd-r-20" *ngFor="let menu of menuItems">
         <wbs-action-buttons
           [items]="menu"
           (clicked)="actionClicked.emit($event)"
-        ></wbs-action-buttons>
+        />
       </div>
     </ng-template>
     <kendo-treelist-column
@@ -59,8 +61,7 @@
       [expandable]="true"
       field="title"
       [title]="'Wbs.Task' | translate"
-    >
-    </kendo-treelist-column>
+    />
     <kendo-treelist-column
       *ngIf="view === 'phase' && (width ?? 0) > 800"
       field="disciplines"
@@ -78,18 +79,16 @@
           container="body"
           placement="left"
         >
-          <fa-duotone-icon [icon]="faCircleQuestion"></fa-duotone-icon>
+          <fa-duotone-icon [icon]="faCircleQuestion" />
         </a>
       </ng-template>
       <ng-template kendoTreeListCellTemplate let-dataItem>
-        <wbs-discipline-icon-list [disciplines]="dataItem.disciplines">
-        </wbs-discipline-icon-list>
+        <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
       </ng-template>
     </kendo-treelist-column>
   </kendo-treelist>
 </div>
 
 <ng-template #legendContent>
-  <wbs-legend-discipline [idsOrCats]="project?.categories?.discipline ?? []">
-  </wbs-legend-discipline>
+  <wbs-legend-discipline [idsOrCats]="project?.categories?.discipline ?? []" />
 </ng-template>

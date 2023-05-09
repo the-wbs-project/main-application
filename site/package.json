@@ -8,6 +8,7 @@
     "deploy:qa": "ng build --configuration qa --output-path ../dist",
     "deploy:prod": "ng build --configuration production --output-path ../dist",
     "serve": "ng serve --configuration development --watch --no-live-reload",
+    "serve2": "ng serve --configuration development --watch",
     "styles": "gulp watch && gulp dark && gulp transparent && gulp skin",
     "kendo:auth": "yarn run kendo-ui-license activate",
     "publish": "yarn run deploy"
@@ -33,6 +34,7 @@
     "@fortawesome/pro-solid-svg-icons": "^6.2.0",
     "@fortawesome/pro-thin-svg-icons": "^6.2.0",
     "@ng-bootstrap/ng-bootstrap": "^14.1.0",
+    "@ngneat/until-destroy": "^10.0.0-beta.0",
     "@ngx-translate/core": "^14.0.0",
     "@ngxs/logger-plugin": "^3.8.0",
     "@ngxs/router-plugin": "^3.8.0",

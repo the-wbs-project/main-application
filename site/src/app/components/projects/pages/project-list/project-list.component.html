@@ -1,27 +1,21 @@
-<div class="display-flex mg-t-20 mg-b-16 w-100p">
-  <div class="flex-fill main-content-title mg-b-0 mg-b-lg-1">
-    {{ "Pages.Projects" | translate | uppercase }}
-    &nbsp;
-    <a kendoButton [routerLink]="['/', 'projects', 'create']">
-      <fa-icon [icon]="faPlus" size="xs" />
-    </a>
-  </div>
-  <div class="flex-fill">
-    <div
-      *ngIf="status$ | async; let projectStatus"
-      role="group"
-      class="btn-group display-flex flex-wrap"
+<div class="mg-t-20 mg-b-16 w-100 tx-right pd-r-20">
+  <!--<a kendoButton [routerLink]="['/', 'projects', 'create']">
+    <fa-icon [icon]="faPlus" size="xs" />
+  </a>-->
+  <div
+    *ngIf="status$ | async; let projectStatus"
+    role="group"
+    class="btn-group"
+  >
+    <button
+      type="button"
+      *ngFor="let status of stati"
+      class="btn btn-outline-primary btn-sm wd-120"
+      [routerLinkActive]="'active'"
+      [routerLink]="['../', status]"
     >
-      <button
-        type="button"
-        *ngFor="let status of stati"
-        class="btn btn-outline-primary btn-sm"
-        [routerLinkActive]="'active'"
-        [routerLink]="['../', status]"
-      >
-        {{ status | projectStatus }}
-      </button>
-    </div>
+      {{ status | projectStatus }}
+    </button>
   </div>
 </div>
 <div

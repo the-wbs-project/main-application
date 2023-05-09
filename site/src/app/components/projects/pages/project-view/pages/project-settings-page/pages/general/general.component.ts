@@ -1,18 +1,21 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { ChangeProjectBasics } from '@wbs/components/projects/actions';
 import { ProjectState } from '@wbs/components/projects/states';
 import { MetadataState } from '@wbs/core/states';
 
+@UntilDestroy()
 @Component({
   templateUrl: './general.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectSettingsGeneralComponent {
-  readonly categories$ = this.store.select(MetadataState.projectCategories);
-
+  readonly categories = toSignal(
+    this.store.select(MetadataState.projectCategories)
+  );
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>(''),
@@ -24,7 +27,7 @@ export class ProjectSettingsGeneralComponent {
   ngOnInit(): void {
     this.store
       .select(ProjectState.current)
-      .pipe(takeUntilDestroyed())
+      .pipe(untilDestroyed(this))
       .subscribe((p) => {
         this.form.setValue({
           category: p?.category ?? '',

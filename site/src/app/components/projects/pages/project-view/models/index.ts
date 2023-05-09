@@ -1,3 +1,4 @@
+export * from './checklist-results.model';
 export * from './project-menu-items.const';
 export * from './project-page-view.const';
 export * from './settings-pages.const';

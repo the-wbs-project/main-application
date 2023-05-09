@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { ProjectUpdated } from '@wbs/core/actions';
+import { ProjectUpdated, SetHeaderInfo } from '@wbs/core/actions';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -13,11 +13,12 @@ import {
 } from '@wbs/core/models';
 import {
   DialogService,
+  HeaderService,
   IdService,
   Messages,
   WbsTransformers,
 } from '@wbs/core/services';
-import { AuthState } from '@wbs/core/states';
+import { AuthState, OrganizationState } from '@wbs/core/states';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
@@ -45,6 +46,7 @@ import {
 } from '../actions';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../models';
 import { ProjectHelperService, ProjectManagementService } from '../services';
+import { UserRolesViewModel } from '../pages/project-view/view-models';
 
 interface StateModel {
   approvers?: string[];
@@ -55,6 +57,7 @@ interface StateModel {
   phases?: WbsNodeView[];
   pms?: string[];
   smes?: string[];
+  users?: UserRolesViewModel[];
 }
 
 @Injectable()
@@ -65,6 +68,7 @@ interface StateModel {
 export class ProjectState {
   private data = inject(DataServiceFactory);
   private dialog = inject(DialogService);
+  private header = inject(HeaderService);
   private helper = inject(ProjectHelperService);
   private messaging = inject(Messages);
   private service = inject(ProjectManagementService);
@@ -101,6 +105,15 @@ export class ProjectState {
   }
 
   @Selector()
+  static phaseIds(state: StateModel): string[] {
+    return (
+      state.current?.categories?.phase?.map((x) =>
+        typeof x === 'string' ? x : x.id
+      ) ?? []
+    );
+  }
+
+  @Selector()
   static phases(state: StateModel): WbsNodeView[] | undefined {
     return state.phases;
   }
@@ -121,12 +134,8 @@ export class ProjectState {
   }
 
   @Selector()
-  static phaseIds(state: StateModel): string[] {
-    return (
-      state.current?.categories?.phase?.map((x) =>
-        typeof x === 'string' ? x : x.id
-      ) ?? []
-    );
+  static users(state: StateModel): UserRolesViewModel[] | undefined {
+    return state.users;
   }
 
   @Action(VerifyProject)
@@ -174,8 +183,19 @@ export class ProjectState {
               ?.map((x) => x.role) ?? [],
         })
       ),
+      tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews()))
+      switchMap((data) =>
+        ctx.dispatch([
+          new RebuildNodeViews(),
+          new SetHeaderInfo({
+            title: 'Projects.ProjectDetails',
+            titleIsResource: true,
+            breadcrumbs: [{ route: '', label: 'General.Projects' }],
+            activeItem: data.project.title,
+          }),
+        ])
+      )
     );
   }
 
@@ -221,6 +241,7 @@ export class ProjectState {
 
           return this.saveProject(ctx, project).pipe(
             tap(() => this.messaging.success('ProjectSettings.UserAdded')),
+            tap(() => this.updateUsers(ctx)),
             tap(() => this.updateUserRoles(ctx)),
             switchMap(() =>
               this.saveActivity(ctx, {
@@ -266,6 +287,7 @@ export class ProjectState {
 
           return this.saveProject(ctx, project).pipe(
             tap(() => this.messaging.success('ProjectSettings.UserRemoved')),
+            tap(() => this.updateUsers(ctx)),
             tap(() => this.updateUserRoles(ctx)),
             switchMap(() =>
               this.saveActivity(ctx, {
@@ -916,5 +938,26 @@ export class ProjectState {
       }
 
     ctx.patchState({ approvers, pms, smes });
+  }
+
+  private updateUsers(ctx: StateContext<StateModel>): void {
+    const project = ctx.getState().current!;
+    const userList = this.store.selectSnapshot(OrganizationState.users);
+    const users: UserRolesViewModel[] = [];
+
+    for (const user of userList) {
+      const roles = project.roles.filter((x) => x.userId === user.id);
+
+      if (roles.length === 0) continue;
+
+      users.push({
+        email: user.email,
+        name: user.name,
+        id: user.id,
+        roles: roles.map((x) => x.role),
+      });
+    }
+
+    ctx.patchState({ users });
   }
 }

@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
@@ -9,9 +10,9 @@ import { SETTINGS_PAGE_LISTS } from '../../../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectSettingsComponent {
-  readonly pageTitle$ = this.store
-    .select(RouterState.url)
-    .pipe(map(this.getPage));
+  private readonly url = toSignal(this.store.select(RouterState.url));
+
+  readonly title = computed(() => this.getPage(this.url()));
 
   constructor(private readonly store: Store) {}
 

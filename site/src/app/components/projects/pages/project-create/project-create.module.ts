@@ -15,7 +15,6 @@ import { SortableModule } from '@progress/kendo-angular-sortable';
 import { CategoryListEditorModule } from '@wbs/components/_features/category-list-editor';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
-import { ProjectResourceGuard } from '../../guards';
 import {
   BasicsComponent,
   CategoriesComponent,
@@ -35,7 +34,7 @@ const routes: Routes = [
   {
     path: '',
     component: ProjectCreateComponent,
-    canActivate: [ProjectResourceGuard, StartCreationGuard],
+    canActivate: [StartCreationGuard],
   },
 ];
 
@@ -57,7 +56,7 @@ const routes: Routes = [
     TextAreaModule,
     TextBoxModule,
   ],
-  providers: [ProjectResourceGuard, StartCreationGuard],
+  providers: [StartCreationGuard],
   declarations: [
     BasicsComponent,
     CategoriesComponent,

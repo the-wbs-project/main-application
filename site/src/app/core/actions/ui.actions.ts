@@ -1,9 +1,16 @@
+import { HeaderInformation } from '../models';
+
 export class MainContentSizeChanged {
   static readonly type = '[UI] Main Content Size Changed';
-  constructor(readonly width: number) {}
+  constructor(readonly mainContentWidth: number) {}
 }
 
 export class ParseNavigation {
   static readonly type = '[UI] Parse Navigation';
-  constructor(readonly url: string) {}
+  constructor(readonly path: string) {}
+}
+
+export class SetHeaderInfo {
+  static readonly type = '[UI] Set Header Info';
+  constructor(readonly header: HeaderInformation) {}
 }

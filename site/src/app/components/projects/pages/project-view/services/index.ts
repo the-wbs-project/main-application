@@ -1,4 +1,5 @@
 export * from './phase-extract-processor.service';
+export * from './project-checklist.service';
 export * from './project-navigation.service';
 export * from './project-view.service';
 export * from './text-compare.service';

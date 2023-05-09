@@ -203,6 +203,8 @@
     "language": "en-US",
     "values": {
       "Projects": {
+        "CreateProject": "Create Project",
+        "ProjectDetails": "Project Details",
         "NoProjectsFound": "No Projects Found",
         "DownloadNodes": "Download Nodes",
         "UploadTasks": "Upload Tasks",

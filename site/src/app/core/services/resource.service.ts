@@ -5,25 +5,15 @@ import {
   MissingTranslationHandlerParams,
   MissingTranslationHandler,
 } from '@ngx-translate/core';
-import { Observable, of } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import { ResourceSections } from '../models';
-
-type MissingResource = {
-  key: string;
-  culture: string;
-  path: string;
-};
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ResourceSection } from '../models';
 
 @Injectable({ providedIn: 'root' })
 export class Resources extends MissingTranslationHandler {
   private readonly culture = 'en';
-  private readonly pulled: string[] = [];
   private readonly redeemed: string[] = [];
-  private _timer$: Observable<void | null> | null = null;
-  private resources: any[] = [];
-  private _recordedMissing: string[] = [];
-  private _missingQueue: MissingResource[] = [];
+  private resources: Record<string, Record<string, string>> = {};
 
   constructor(
     private readonly http: HttpClient,
@@ -32,23 +22,24 @@ export class Resources extends MissingTranslationHandler {
     super();
   }
 
-  initiate(starter: string): Observable<void> {
-    return this.getFromServerAsync(starter).pipe(
-      map((resource) => {
-        this.resources.push(resource);
+  initiate(): Observable<void> {
+    return this.getFromServerAsync().pipe(
+      map((list) => {
+        let resources: Record<string, Record<string, string>> = {};
 
-        this.translate.setTranslation(this.culture, resource);
+        console.log(list);
+        for (const item of list) {
+          resources = {
+            ...resources,
+            ...item.values,
+          };
+        }
+        console.log(resources);
+        this.resources = resources;
+        this.translate.setTranslation(this.culture, resources);
         this.translate.setDefaultLang(this.culture);
         this.translate.missingTranslationHandler = this;
       })
-    );
-  }
-
-  verifyAsync(key: string): Observable<any> {
-    if (this.pulled.indexOf(key) > -1) return of('nothing');
-
-    return this.getFromServerAsync(key).pipe(
-      map((resources) => this.append(key, resources))
     );
   }
 
@@ -64,36 +55,18 @@ export class Resources extends MissingTranslationHandler {
       : resource;
   }
 
-  getExact(resource: string): string | null {
+  getExact(resource: string): string {
     if (resource == null) return 'EMPTY';
+    if (resource.indexOf('.') === -1) return resource;
 
     const parts = resource.split('.');
 
     try {
-      for (const resource of this.resources) {
-        if (resource != null) {
-          let x = resource;
-          if (x)
-            for (const part of parts) {
-              x = x[part];
-
-              if (!x) break;
-            }
-          if (x) return x;
-        }
-      }
-      //
-      //  Missing territory
-      //
-      let value: any;
-
-      if (value == null) this.recordMissing(resource);
-
-      return value;
+      return this.resources[parts[0]][parts[1]] ?? resource;
     } catch (e) {
       console.log(e);
       console.error(`Error trying to retrieve '${resource}' value.`);
-      return null;
+      return 'Error';
     }
   }
 
@@ -103,54 +76,13 @@ export class Resources extends MissingTranslationHandler {
     if (typeof key === 'number') return key;
     if (typeof key === 'string') {
       if (this.redeemed.indexOf(key) > -1) return key;
-
-      this.recordMissing(key);
     }
     return params.key;
   }
 
-  private append(key: string, resources: ResourceSections | null | undefined) {
-    if (resources) {
-      this.translate.setTranslation(this.culture, resources, true);
-      this.resources.push(resources);
-      this.pulled.push(key);
-    }
-  }
-
-  private recordMissing(path: string): void {
-    const key = `${this.culture}-${path}`;
-
-    if (
-      this._recordedMissing.indexOf(key) > -1 ||
-      this._missingQueue.find((r) => r.key === key)
-    )
-      return;
-
-    try {
-      this._missingQueue.push({
-        key,
-        path,
-        culture: this.culture,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-  }
-
-  private sendMissing(): Observable<void | null> {
-    if (this._missingQueue.length === 0) return of(null);
-
-    return this.http.put<void>('resources/missing', this._missingQueue).pipe(
-      tap(() => {
-        for (const item of this._missingQueue) {
-          this._recordedMissing.push(item.key);
-        }
-        this._missingQueue = [];
-      })
-    );
-  }
-
-  private getFromServerAsync(key: string): Observable<any> {
-    return this.http.get<ResourceSections>(`api/resources/${key}`);
+  private getFromServerAsync(): Observable<ResourceSection[]> {
+    return this.http
+      .get<ResourceSection[] | undefined>('api/resources')
+      .pipe(map((x) => x ?? []));
   }
 }

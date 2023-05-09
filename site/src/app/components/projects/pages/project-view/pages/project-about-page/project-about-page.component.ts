@@ -1,21 +1,18 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { UserRole } from '@wbs/core/models';
-import { map, Observable } from 'rxjs';
-import { ProjectState } from '../../../../states';
+import { ProjectState } from '@wbs/components/projects/states';
+import { map } from 'rxjs/operators';
 
 @Component({
   templateUrl: './project-about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectAboutPageComponent {
-  readonly roles$: Observable<UserRole[] | undefined>;
-  readonly description$: Observable<string | undefined>;
+  private readonly store = inject(Store);
 
-  constructor(store: Store) {
-    this.roles$ = store.select(ProjectState.current).pipe(map((p) => p?.roles));
-    this.description$ = store
-      .select(ProjectState.current)
-      .pipe(map((p) => p?.description));
-  }
+  readonly project = toSignal(
+    this.store.select(ProjectState.current).pipe(map((p) => p!))
+  );
+  readonly users = toSignal(this.store.select(ProjectState.users));
 }

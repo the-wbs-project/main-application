@@ -3,15 +3,7 @@ import { Context } from '../../config';
 export class MetadataHttpService {
   static async getResourcesAsync(ctx: Context): Promise<Response> {
     try {
-      const { category } = ctx.req.param();
-
-      if (!category) return ctx.text('Missing Parameters', 500);
-      //
-      //  Get the data from the KV
-      //
-      const data = await ctx.get('data').resources.getAsync('en-US', category);
-
-      return ctx.json(data);
+      return ctx.json(await ctx.get('data').resources.getAllAsync('en-US'));
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get resources.', 'MetadataHttpService.getResourcesAsync', <Error>e);
 

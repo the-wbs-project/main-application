@@ -1,10 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {
-  ProjectResourceGuard,
-  ProjectTimelineVerifyGuard,
-  ProjectVerifyGuard,
-} from '../../guards';
+import { ProjectTimelineVerifyGuard, ProjectVerifyGuard } from '../../guards';
 import {
   ProjectDiscussionGuard,
   ProjectRedirectGuard,
@@ -28,11 +24,7 @@ export const routes: Routes = [
   {
     path: '',
     component: ProjectViewLayoutComponent,
-    canActivate: [
-      ProjectResourceGuard,
-      ProjectVerifyGuard,
-      ProjectTimelineVerifyGuard,
-    ],
+    canActivate: [ProjectVerifyGuard, ProjectTimelineVerifyGuard],
     children: [
       {
         path: '',

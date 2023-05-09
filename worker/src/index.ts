@@ -24,7 +24,7 @@ app.use('*', cors);
 
 app.options('*', (c) => c.text(''));
 
-app.get('/api/resources/:category', cache, Http.metadata.getResourcesAsync);
+app.get('/api/resources', cache, Http.metadata.getResourcesAsync);
 app.get('/api/lists/:name', cache, Http.metadata.getListAsync);
 app.post('/api/send', MailGunService.handleHomepageInquiryAsync);
 

@@ -4,7 +4,11 @@
       <!-- // header -->
       <wbs-header />
       <!-- //sidebar -->
-      <wbs-sidebar appHoverEffectSidebar [isAdmin]="isAdmin$ | async" [projects]="projects$ | async" />
+      <wbs-sidebar
+        appHoverEffectSidebar
+        [isAdmin]="isAdmin$ | async"
+        [projects]="projects$ | async"
+      />
     </div>
     <div
       id="main-content"
@@ -16,10 +20,9 @@
         class="main-container container-fluid"
         (click)="toggleSwitcherBody()"
       >
-        <router-outlet> </router-outlet>
+        <router-outlet />
       </div>
     </div>
     <wbs-footer />
   </div>
 </div>
-<wbs-tab-to-top />

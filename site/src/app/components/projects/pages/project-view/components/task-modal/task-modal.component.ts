@@ -5,13 +5,13 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
 import { TaskViewState } from '../../states';
 
+@UntilDestroy()
 @Component({
   selector: 'wbs-task-modal',
   templateUrl: './task-modal.component.html',
@@ -21,23 +21,22 @@ import { TaskViewState } from '../../states';
 })
 export class TaskModalComponent implements AfterContentInit {
   @ViewChild('taskContent') taskContent!: any;
-  readonly previousTaskId$: Observable<string | undefined>;
-  readonly nextTaskId$: Observable<string | undefined>;
+
   private modal?: NgbModalRef;
+
+  readonly previousTaskId$ = this.store.select(TaskViewState.previousTaskId);
+  readonly nextTaskId$ = this.store.select(TaskViewState.nextTaskId);
 
   constructor(
     private readonly modalService: NgbModal,
     private readonly store: Store
-  ) {
-    this.nextTaskId$ = this.store.select(TaskViewState.nextTaskId);
-    this.previousTaskId$ = this.store.select(TaskViewState.previousTaskId);
-  }
+  ) {} 
 
   ngAfterContentInit(): void {
     setTimeout(() => {
       this.store
         .select(RouterState.url)
-        .pipe(takeUntilDestroyed())
+        .pipe(untilDestroyed(this))
         .subscribe((url) => {
           if (!url) return;
 
@@ -49,8 +48,9 @@ export class TaskModalComponent implements AfterContentInit {
                 modalDialogClass: 'task-modal',
                 size: 'fullscreen',
               });
-              this.modal.dismissed.pipe(takeUntilDestroyed()).subscribe(() => {
+              const sub = this.modal.dismissed.subscribe(() => {
                 this.modal = undefined;
+                sub.unsubscribe();
               });
             }
           } else if (this.modal) {

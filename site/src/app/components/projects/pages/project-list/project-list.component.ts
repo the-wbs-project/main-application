@@ -1,13 +1,14 @@
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
 import { ProjectService, Resources, TitleService } from '@wbs/core/services';
 import { OrganizationState } from '@wbs/core/states';
 import { map } from 'rxjs';
 
+@UntilDestroy()
 @Component({
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss'],
@@ -47,7 +48,7 @@ export class ProjectListComponent implements OnInit {
       .pipe(
         map((status) => this.projectService.getStatus(status)),
         map((status) => `${this.titlePrefix} - ${status}`),
-        takeUntilDestroyed()
+        untilDestroyed(this)
       )
       .subscribe((text) => this.title.setTitle(text, false));
   }

@@ -4,8 +4,8 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
-import { faCircle } from '@fortawesome/pro-solid-svg-icons';
-import { ROLES_TYPE } from '@wbs/core/models';
+import { faCircle, faFaceSmile } from '@fortawesome/pro-solid-svg-icons';
+import { UserRolesViewModel } from '../../view-models';
 
 @Component({
   selector: 'wbs-project-role',
@@ -14,8 +14,8 @@ import { ROLES_TYPE } from '@wbs/core/models';
   encapsulation: ViewEncapsulation.None,
 })
 export class ProjectRoleComponent {
-  @Input() role: ROLES_TYPE | undefined;
-  @Input() userId: string | undefined;
+  @Input({ required: true }) user?: UserRolesViewModel;
 
   readonly faCircle = faCircle;
+  readonly faFaceSmile = faFaceSmile;
 }

@@ -1,59 +1,77 @@
-<div class="row row-sm">
-  <div class="col-lg-12 col-md-12">
-    <div class="custom-card main-content-body-profile">
-      <div class="main-content-body tab-pane">
-        <div class="card">
-          <div class="card-body p-0 border-0 p-0 rounded-10">
-            <div class="p-4">
-              <h4 class="tx-15 text-uppercase mb-3">Path To Success</h4>
-              <p class="m-b-5">INSERT "CHECKLIST" HERE</p>
-              <div class="m-t-30">
-                <wbs-project-checklist />
-            </div>
-          </div>
-            <div class="border-top"></div>
-            <div class="p-4">
-              <h4 class="tx-15 text-uppercase mb-3">Description</h4>
-              <div [innerHTML]="description$ | async | safeHtml"></div>
-            </div>
-            <div class="border-top"></div>
-            <div class="p-4">
-              <label class="main-content-label tx-13 mg-b-20">
-                Statistics
-              </label>
-              <div class="profile-cover__info ms-4 ms-auto p-0">
-                <ul class="nav p-0 border-bottom-0 mb-0">
-                  <li class="border p-2 br-5 bg-light wd-150 ht-70">
-                    <span class="border-0 mb-0 pb-0"> 59 </span>
-                    {{ "Projects.TaskCount" | translate }}
-                  </li>
-                  <li
-                    class="border p-2 br-5 bg-light wd-150 ht-70 border-danger"
-                  >
-                    <span class="border-0 mb-0 pb-0"> 0 </span>
-                    Cash Flow Tasks
-                  </li>
-                </ul>
-              </div>
-            </div>
-            <div class="border-top"></div>
-            <div class="p-4">
-              <label class="main-content-label tx-13 mg-b-20">
-                {{ "General.Contacts" | translate }}
-              </label>
-              <div class="d-sm-flex">
-                <div
-                  *ngFor="let ur of roles$ | async"
-                  class="mg-sm-r-20 mg-b-10"
-                >
-                  <wbs-project-role [role]="ur.role" [userId]="ur.userId">
-                  </wbs-project-role>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<ng-template [ngIf]="project()" let-project>
+  <div class="px-4 py-2">
+    <h4 class="tx-15 text-uppercase mb-3">Basic Information</h4>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+        {{ "General.Category" | translate }} :
+      </span>
+      <span>
+        {{ project.category | categoryLabel }}
+      </span>
+    </p>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+        {{ "General.Status" | translate }} :
+      </span>
+      <span>
+        {{ project.status | projectStatus }},
+        {{ project.lastModified | editedDateText | lowercase }}
+      </span>
+    </p>
+  </div>
+  <div class="border-top"></div>
+  <div class="px-4 py-2">
+    <h4 class="tx-15 text-uppercase mb-3">Disciplines</h4>
+    <p class="text-muted ms-md-4 ms-0">
+      <span class="display-ib">
+        <label class="me-3" *ngFor="let disc of project.categories.discipline">
+          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
+          {{ disc | categoryLabel }}
+        </label>
+      </span>
+    </p>
+  </div>
+  <div class="border-top"></div>
+  <div class="px-4 py-2">
+    <h4 class="tx-15 text-uppercase mb-3">Path To Success</h4>
+    <p class="m-b-5">INSERT "CHECKLIST" HERE</p>
+    <div class="m-t-30">
+      <wbs-project-checklist />
     </div>
   </div>
-</div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <h4 class="tx-15 text-uppercase mb-3">Description</h4>
+    <div [innerHTML]="project.description | safeHtml"></div>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <label class="main-content-label tx-13 mg-b-20"> Statistics </label>
+    <div class="profile-cover__info ms-4 ms-auto p-0">
+      <ul class="nav p-0 border-bottom-0 mb-0">
+        <li class="border p-2 br-5 bg-light wd-150 ht-70">
+          <span class="border-0 mb-0 pb-0"> 59 </span>
+          {{ "Projects.TaskCount" | translate }}
+        </li>
+        <li class="border p-2 br-5 bg-light wd-150 ht-70 border-danger">
+          <span class="border-0 mb-0 pb-0"> 0 </span>
+          Cash Flow Tasks
+        </li>
+      </ul>
+    </div>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <label class="main-content-label tx-13 mg-b-20">
+      {{ "General.Contacts" | translate }}
+    </label>
+    <ul class="list-group">
+      <li
+        *ngFor="let user of users()"
+        class="list-group-item bd-gray-400 bd-t-1-f"
+      >
+        {{ user.name }} - {{ user.roles | roleTitle : true }}
+      </li>
+    </ul>
+  </div>
+</ng-template>

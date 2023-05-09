@@ -10,9 +10,15 @@ import {
   State,
   StateContext,
 } from '@ngxs/store';
-import { MainContentSizeChanged, ParseNavigation } from '../actions';
+import {
+  MainContentSizeChanged,
+  ParseNavigation,
+  SetHeaderInfo,
+} from '../actions';
+import { HeaderInformation, RouteLink } from '../models';
 
 interface StateModel {
+  header?: HeaderInformation;
   path?: string;
   isLoading: boolean;
   mainContentWidth: number;
@@ -28,6 +34,11 @@ interface StateModel {
 })
 export class UiState implements NgxsOnInit {
   constructor(private readonly actions$: Actions) {}
+
+  @Selector()
+  static header(state: StateModel): HeaderInformation | undefined {
+    return state.header;
+  }
 
   @Selector()
   static mainContentWidth(state: StateModel): number {
@@ -62,9 +73,7 @@ export class UiState implements NgxsOnInit {
     ctx: StateContext<StateModel>,
     action: MainContentSizeChanged
   ): void {
-    ctx.patchState({
-      mainContentWidth: action.width,
-    });
+    ctx.patchState(action);
   }
 
   @Action(ParseNavigation)
@@ -72,8 +81,11 @@ export class UiState implements NgxsOnInit {
     ctx: StateContext<StateModel>,
     action: ParseNavigation
   ): void {
-    ctx.patchState({
-      path: action.url,
-    });
+    ctx.patchState(action);
+  }
+
+  @Action(SetHeaderInfo)
+  setHeaderInfo(ctx: StateContext<StateModel>, action: SetHeaderInfo): void {
+    ctx.patchState(action);
   }
 }

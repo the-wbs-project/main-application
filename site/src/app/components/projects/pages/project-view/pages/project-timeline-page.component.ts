@@ -4,10 +4,14 @@ import { Select } from '@ngxs/store';
 import { ProjectTimelineState } from '@wbs/components/projects/states';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
-import { ProjectViewService } from '../../services';
+import { ProjectViewService } from '../services';
 
 @Component({
-  templateUrl: './project-timeline-page.component.html',
+  template: `<wbs-timeline
+    [timeline]="timeline$ | async"
+    (loadMoreClicked)="service.loadMoreTimeline()"
+    (menuItemClicked)="service.timelineAction($event, projectId)"
+  /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTimelinePageComponent {

@@ -8,7 +8,6 @@ import { NgxsModule } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SplitterModule } from '@progress/kendo-angular-layout';
-import { MenuModule } from '@progress/kendo-angular-menu';
 import { TaskCreateModule } from '@wbs/components/_features/task-create';
 import { TaskDeleteModule } from '@wbs/components/_features/task-delete';
 import { TextEditorModule } from '@wbs/components/_features/text-editor/text-editor.module';
@@ -18,14 +17,9 @@ import { WbsActionButtonsModule } from '@wbs/components/_features/wbs-action-but
 import { WbsTreeModule } from '@wbs/components/_features/wbs-tree';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
-import {
-  ProjectResourceGuard,
-  ProjectTimelineVerifyGuard,
-  ProjectVerifyGuard,
-} from '../../guards';
+import { ProjectTimelineVerifyGuard, ProjectVerifyGuard } from '../../guards';
 import {
   ProjectChecklistComponent,
-  ProjectPhasesComponent,
   ProjectRoleComponent,
   TaskDetailsComponent,
   TaskModalComponent,
@@ -60,12 +54,17 @@ import { ProjectViewLayoutComponent } from './project-view-layout.component';
 import { ProjectViewRoutingModule } from './project-view-routing.module';
 import {
   PhaseExtractProcessor,
+  ProjectChecklistService,
   ProjectNavigationService,
   ProjectViewService,
   TextCompareService,
   UploadFileService,
 } from './services';
-import { ProjectViewState, TaskViewState } from './states';
+import {
+  ProjectChecklistState,
+  ProjectViewState,
+  TaskViewState,
+} from './states';
 
 @NgModule({
   imports: [
@@ -73,7 +72,11 @@ import { ProjectViewState, TaskViewState } from './states';
     NgbDropdownModule,
     NgbNavModule,
     NgbTooltipModule,
-    NgxsModule.forFeature([ProjectViewState, TaskViewState]),
+    NgxsModule.forFeature([
+      ProjectChecklistState,
+      ProjectViewState,
+      TaskViewState,
+    ]),
     ProjectComponentModule,
     ProjectViewRoutingModule,
     SharedModule,
@@ -89,10 +92,10 @@ import { ProjectViewState, TaskViewState } from './states';
   ],
   providers: [
     PhaseExtractProcessor,
+    ProjectChecklistService,
     ProjectDiscussionGuard,
     ProjectNavigationService,
     ProjectRedirectGuard,
-    ProjectResourceGuard,
     ProjectTimelineVerifyGuard,
     ProjectViewService,
     ProjectVerifyGuard,
@@ -106,7 +109,6 @@ import { ProjectViewState, TaskViewState } from './states';
     ProjectAboutPageComponent,
     ProjectChecklistComponent,
     ProjectDisciplinesPageComponent,
-    ProjectPhasesComponent,
     ProjectPhasesPageComponent,
     ProjectRoleComponent,
     ProjectTimelinePageComponent,

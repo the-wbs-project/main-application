@@ -3,7 +3,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgxsModule } from '@ngxs/store';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { SharedModule } from '@wbs/shared/module';
-import { ProjectResourceGuard, ProjectVerifyGuard } from '../../guards';
+import { ProjectVerifyGuard } from '../../guards';
 import { ProjectUploadGuard, StartGuard } from './guards';
 import {
   DisciplinesViewComponent,
@@ -25,12 +25,7 @@ import { ProjectUploadState } from './states';
     ProjectUploadRoutingModule,
     SharedModule,
   ],
-  providers: [
-    ProjectResourceGuard,
-    ProjectUploadGuard,
-    ProjectVerifyGuard,
-    StartGuard,
-  ],
+  providers: [ProjectUploadGuard, ProjectVerifyGuard, StartGuard],
   declarations: [
     DisciplinesViewComponent,
     OptionsViewComponent,

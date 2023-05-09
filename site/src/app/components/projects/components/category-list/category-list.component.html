@@ -4,8 +4,7 @@
   [paddingBottom]="paddingBottom"
 >
   <div class="w-100 text-center" style="flex: 0 1 80px">
-    <kendo-textbox #search [placeholder]="'General.Search' | translate">
-    </kendo-textbox>
+    <kendo-textbox #search [placeholder]="'General.Search' | translate" />
   </div>
   <div class="scroll mg-t-10 w-100" style="flex: 1 1 auto">
     <div class="container-fluid">
@@ -14,7 +13,7 @@
           class="col-md-4"
           *ngFor="
             let cat of categories
-              | projectCategoryFilter: search.value
+              | projectCategoryFilter : search.value
               | projectCategorySort
           "
         >

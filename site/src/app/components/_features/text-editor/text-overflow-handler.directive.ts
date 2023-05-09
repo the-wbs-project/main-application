@@ -1,22 +1,22 @@
-import { Directive, ElementRef, OnInit } from '@angular/core';
+import { Directive, ElementRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { interval } from 'rxjs';
 
 @Directive({
   selector: '[wbsTextOverflowHandler]',
 })
-export class TextOverflowHandlerDirective implements OnInit {
+export class TextOverflowHandlerDirective {
   private pastHtml = '';
   private pastSize = 0;
 
-  constructor(private readonly el: ElementRef) {}
-
-  ngOnInit(): void {
-    const div: HTMLDivElement = this.el.nativeElement;
-
+  constructor(el: ElementRef) {
     interval(200)
       .pipe(takeUntilDestroyed())
       .subscribe(() => {
+        const div: HTMLDivElement = el.nativeElement;
+
+        if (!div) return;
+
         if (
           this.pastHtml === div.innerHTML &&
           this.pastSize === div.offsetWidth
