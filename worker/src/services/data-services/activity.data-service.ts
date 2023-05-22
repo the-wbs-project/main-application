@@ -7,8 +7,20 @@ export class ActivityDataService {
 
   constructor(private readonly ctx: Context) {}
 
-  getAllAsync(topLevelId: string): Promise<Activity[] | undefined> {
-    return this.db.getAllByPartitionAsync<Activity>(topLevelId, false);
+  getAsync(topLevelId: string, skip: number, take: number): Promise<Activity[] | undefined> {
+    return this.db.getListByQueryAsync<Activity>(
+      'SELECT * FROM c WHERE c.topLevelId = @TopLevelId ORDER BY c.timestamp desc',
+      true,
+      [
+        {
+          name: '@TopLevelId',
+          value: topLevelId,
+        },
+      ],
+      skip,
+      take,
+      true,
+    );
   }
 
   async putAsync(activity: Activity): Promise<void> {

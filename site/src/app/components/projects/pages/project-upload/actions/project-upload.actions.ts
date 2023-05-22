@@ -1,4 +1,10 @@
+import { ProjectUploadData } from '@wbs/core/models';
 import { PeopleListItem, PhaseListItem } from '../models';
+
+export class SetProject {
+  static readonly type = '[Project Upload] Set Project';
+  constructor(readonly projectId: string) {}
+}
 
 export class SetPageTitle {
   static readonly type = '[Project Upload] Set Page Title';
@@ -39,4 +45,9 @@ export class PeopleCompleted {
 
 export class PrepUploadToSave {
   static readonly type = '[Project Upload] Prep Upload To Save';
+}
+
+export class SaveUpload {
+  static readonly type = '[Project] Save Upload';
+  constructor(readonly results: ProjectUploadData) {}
 }

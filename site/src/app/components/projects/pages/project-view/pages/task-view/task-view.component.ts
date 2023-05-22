@@ -3,14 +3,12 @@ import {
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
-import { Observable } from 'rxjs';
-import { ChangeTaskTitle } from '../../../../actions';
-import { TASK_MENU_ITEMS, TASK_PAGE_VIEW_TYPE } from '../../models';
-import { TaskViewState } from '../../states';
+import { TASK_MENU_ITEMS } from '../../models';
+import { TasksState } from '../../states';
+import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
   templateUrl: './task-view.component.html',
@@ -19,25 +17,13 @@ import { TaskViewState } from '../../states';
   encapsulation: ViewEncapsulation.None,
 })
 export class TaskViewComponent {
-  @Select(TaskViewState.view) current$!: Observable<WbsNodeView>;
-  @Select(TaskViewState.parent) parent$!: Observable<WbsNodeView>;
-  @Select(TaskViewState.pageView) pageView$!: Observable<TASK_PAGE_VIEW_TYPE>;
+  readonly current = toSignal(this.store.select(TasksState.current));
+  readonly pageView = toSignal(this.store.select(TasksState.pageView));
 
   readonly links = TASK_MENU_ITEMS.links;
+  readonly faDiagramSubtask = faDiagramSubtask;
 
-  constructor(
-    title: TitleService,
-    private readonly route: ActivatedRoute,
-    private readonly store: Store
-  ) {
+  constructor(title: TitleService, private readonly store: Store) {
     title.setTitle('Project', false);
-  }
-
-  private get taskId(): string {
-    return this.route.snapshot.params['taskId'];
-  }
-
-  saveTitle(newTitle: string): void {
-    this.store.dispatch(new ChangeTaskTitle(this.taskId, newTitle));
   }
 }

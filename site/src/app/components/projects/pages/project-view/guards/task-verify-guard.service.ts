@@ -3,8 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LoadTaskTimeline } from '../../../actions';
-import { VerifyTask } from '../../project-view/actions';
+import { LoadTaskTimeline, VerifyTask } from '../actions';
 import { ProjectViewState } from '../states';
 
 @Injectable()

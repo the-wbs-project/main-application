@@ -4,11 +4,19 @@ import { Activity } from '../../models';
 export class ActivityHttpService {
   static async getByIdAsync(ctx: Context): Promise<Response> {
     try {
-      const { topLevelId } = ctx.req.param();
+      const { topLevelId, skip, take } = ctx.req.param();
+      const data = await ctx.get('data');
 
-      if (!topLevelId) return ctx.text('Missing Parameters', 500);
+      if (!topLevelId || !skip || !take) return ctx.text('Missing Parameters', 500);
 
-      return ctx.json(await ctx.get('data').activities.getAllAsync(topLevelId));
+      const skip2 = parseInt(skip);
+      const take2 = parseInt(take);
+
+      if (isNaN(skip2) || isNaN(take2)) return ctx.text('Invalid Parameters', 500);
+
+      const list = await data.activities.getAsync(topLevelId, skip2, take2);
+
+      return ctx.json(list);
     } catch (e) {
       ctx
         .get('logger')

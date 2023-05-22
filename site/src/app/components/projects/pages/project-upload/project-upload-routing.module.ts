@@ -1,7 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectVerifyGuard } from '../../guards';
-import { ProjectUploadGuard, StartGuard } from './guards';
+import {
+  ProjectUploadGuard,
+  ProjectUploadVerifyGuard,
+  StartGuard,
+} from './guards';
 import {
   DisciplinesViewComponent,
   OptionsViewComponent,
@@ -14,9 +17,9 @@ import { ProjectUploadLayoutComponent } from './project-upload-layout.component'
 
 export const routes: Routes = [
   {
-    path: '',
+    path: ':projectId',
     component: ProjectUploadLayoutComponent,
-    canActivate: [ProjectVerifyGuard],
+    canActivate: [ProjectUploadVerifyGuard],
     children: [
       {
         path: '',

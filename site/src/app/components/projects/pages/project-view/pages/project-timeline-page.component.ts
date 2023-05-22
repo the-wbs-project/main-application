@@ -1,26 +1,24 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { Select } from '@ngxs/store';
-import { ProjectTimelineState } from '@wbs/components/projects/states';
-import { TimelineViewModel } from '@wbs/core/view-models';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
 import { ProjectViewService } from '../services';
+import { ProjectTimelineState } from '../states';
 
 @Component({
   template: `<wbs-timeline
-    [timeline]="timeline$ | async"
+    [timeline]="timeline()"
     (loadMoreClicked)="service.loadMoreTimeline()"
     (menuItemClicked)="service.timelineAction($event, projectId)"
   /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectTimelinePageComponent {
-  @Select(ProjectTimelineState.project) timeline$!: Observable<
-    TimelineViewModel[]
-  >;
+  readonly timeline = toSignal(this.store.select(ProjectTimelineState.project));
 
   constructor(
     private readonly route: ActivatedRoute,
+    private readonly store: Store,
     readonly service: ProjectViewService
   ) {}
 

@@ -35,7 +35,7 @@ export class PhaseComponent implements OnInit {
 
   nav(): void {
     this.store.dispatch(
-      new PhasesChosen(this.catService.extract(this.categories, false))
+      new PhasesChosen(this.catService.extract(this.categories))
     );
   }
 }

@@ -13,7 +13,6 @@ import {
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
-import { PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
 import {
   CategorySelectionService,
   DialogService,
@@ -33,7 +32,7 @@ export class CategoryListEditorComponent {
   @Input() showButtons = true;
   @Input() showSave = false;
   @Input() categories?: CategorySelection[] | null;
-  @Input() categoryType?: PROJECT_NODE_VIEW_TYPE | null;
+  @Input() categoryType?: 'discipline' | 'phase' | null;
   @Output() readonly saveClicked = new EventEmitter<void>();
   @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 

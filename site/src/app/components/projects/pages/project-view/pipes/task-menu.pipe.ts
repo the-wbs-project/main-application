@@ -3,7 +3,7 @@ import { ActionMenuItem } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { PROJECT_MENU_ITEMS } from '../models';
 import { Store } from '@ngxs/store';
-import { ProjectState } from '@wbs/components/projects/states';
+import { ProjectState } from '../states';
 
 @Pipe({ name: 'taskMenu' })
 export class TaskMenuPipe implements PipeTransform {

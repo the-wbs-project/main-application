@@ -4,6 +4,7 @@ export enum TASK_PAGE_VIEW {
   TIMELINE = 'timeline',
   EDUATION = 'education',
   RESOURCES = 'resources',
+  SETTINGS = 'settings',
 }
 
 export type TASK_PAGE_VIEW_TYPE =
@@ -11,4 +12,5 @@ export type TASK_PAGE_VIEW_TYPE =
   | TASK_PAGE_VIEW.SUB_TASKS
   | TASK_PAGE_VIEW.TIMELINE
   | TASK_PAGE_VIEW.EDUATION
-  | TASK_PAGE_VIEW.RESOURCES;
+  | TASK_PAGE_VIEW.RESOURCES
+  | TASK_PAGE_VIEW.SETTINGS;

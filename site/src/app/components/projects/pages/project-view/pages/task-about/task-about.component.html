@@ -1,10 +1,111 @@
-<ng-template [ngIf]="current$ | async" let-task>
-  <p class="tx-12 tx-bold mg-b-10">Description</p>
-  <p>
-    <wbs-textarea-editor
-      [value]="task.description ?? ''"
-      noValueMessage="Add description here..."
-      (valueChange)="saveDescription($event)"
-    ></wbs-textarea-editor>
-  </p>
+<ng-template [ngIf]="current()" let-task>
+  <div class="p-4">
+    <h4 class="tx-15 text-uppercase mb-3">Basic Information</h4>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold display-ib wd-100 tx-right mg-r-10">
+        {{ "General.Level" | translate }} :
+      </span>
+      <span>
+        {{ task.levelText }}
+      </span>
+    </p>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold display-ib wd-100 tx-right mg-r-10">
+        {{ "General.Parent" | translate }} :
+      </span>
+      <span *ngIf="!task.parent">
+        {{ "General.None" | translate }}
+      </span>
+      <a
+        *ngIf="task.parent"
+        class="text-decoration-none"
+        [routerLink]="['../', task.parent.id, 'about']"
+      >
+        {{ task.parent.title }}
+      </a>
+    </p>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold display-ib wd-100 tx-right mg-r-10">
+        {{ "General.LastModified" | translate }} :
+      </span>
+      <span>
+        {{ task.lastModified | dateText }}
+      </span>
+    </p>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <h4 class="tx-15 text-uppercase mb-3">
+      {{ "General.Disciplines" | translate }}
+    </h4>
+    <div
+      *ngIf="task.disciplines.length === 0"
+      class="w-100 text-center ms-md-4 ms-0 tx-14"
+    >
+      <span class="text-danger">
+        <fa-icon [icon]="faTriangleExclamation" />
+        No Disciplines!
+      </span>
+      <a
+        class="btn btn-small btn-dark pd-y-1 pd-x-8 mg-l-10"
+        [routerLink]="['../', 'settings', 'disciplines']"
+      >
+        <fa-icon [icon]="faTools" size="sm" />
+        Fix
+      </a>
+    </div>
+    <div *ngIf="task.disciplines.length > 0" class="text-muted ms-md-4 ms-0">
+      <span class="display-ib">
+        <label class="me-3" *ngFor="let disc of task.disciplines">
+          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
+          {{ disc | categoryLabel }}
+        </label>
+      </span>
+    </div>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <h4 class="tx-15 text-uppercase mb-3">
+      {{ "General.Description" | translate }}
+    </h4>
+    <div
+      *ngIf="task.description"
+      [innerHTML]="task.description | safeHtml"
+    ></div>
+    <div *ngIf="!task.description" class="w-100 text-center ms-md-4 ms-0 tx-14">
+      <span class="text-danger">
+        <fa-icon [icon]="faTriangleExclamation" />
+        No Description!
+      </span>
+      <a
+        class="btn btn-small btn-dark pd-y-1 pd-x-8 mg-l-10"
+        [routerLink]="['../', 'settings', 'general']"
+      >
+        <fa-icon [icon]="faTools" size="xs" />
+        Fix
+      </a>
+    </div>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <label class="main-content-label tx-13 mg-b-20">
+      {{ "General.Statistics" | translate }}
+    </label>
+    <div class="profile-cover__info ms-4 ms-auto p-0">
+      <ul class="nav p-0 border-bottom-0 mb-0">
+        <li class="border p-2 br-5 bg-light wd-150 ht-70">
+          <span class="border-0 mb-0 pb-0">
+            {{ task.subTasks.length }}
+          </span>
+          # of Sub-Tasks
+        </li>
+        <li class="border p-2 br-5 bg-light wd-150 ht-70">
+          <span class="border-0 mb-0 pb-0">
+            {{ task.levels.length }}
+          </span>
+          Depth
+        </li>
+      </ul>
+    </div>
+  </div>
 </ng-template>

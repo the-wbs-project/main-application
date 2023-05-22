@@ -9,9 +9,9 @@ import {
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
-import { ProjectState } from '../../../states';
 import { DownloadNodes, ProjectPageChanged } from '../actions';
 import { PROJECT_PAGE_VIEW } from '../models';
+import { ProjectState, TasksState } from '../states';
 
 interface StateModel {
   viewNode?: PROJECT_NODE_VIEW_TYPE;
@@ -70,8 +70,8 @@ export class ProjectViewState {
     return (
       this.store.selectSnapshot(
         state.viewNode === PROJECT_NODE_VIEW.DISCIPLINE
-          ? ProjectState.disciplines
-          : ProjectState.phases
+          ? TasksState.disciplines
+          : TasksState.phases
       ) ?? []
     );
   }

@@ -140,24 +140,33 @@ export class CategorySelectionService {
     return cats;
   }
 
-  extract(
-    categories: CategorySelection[] | undefined,
-    idsOnly: boolean
-  ): ProjectCategory[] {
-    const ids: ProjectCategory[] = [];
+  extract(categories: CategorySelection[] | undefined): ProjectCategory[] {
+    const cats: ProjectCategory[] = [];
 
     if (categories)
       for (const x of categories) {
         if (!x.selected) continue;
-        if (!x.isCustom || idsOnly) ids.push(x.id);
+        if (!x.isCustom) cats.push(x.id);
         else
-          ids.push({
+          cats.push({
             id: x.id,
             label: x.label,
             type: 'Custom',
             description: x.description,
             tags: [],
           });
+      }
+    return cats;
+  }
+
+  extractIds(categories: CategorySelection[] | undefined): string[] {
+    const ids: string[] = [];
+
+    if (categories)
+      for (const x of categories) {
+        if (!x.selected) continue;
+
+        ids.push(x.id);
       }
     return ids;
   }

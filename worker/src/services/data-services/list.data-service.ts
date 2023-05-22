@@ -4,10 +4,12 @@ import { CosmosDbService } from './cosmos-db.service';
 
 export class ListDataService {
   private readonly prefix = 'LISTS';
-  private readonly byPass = (this.ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
+  private readonly byPass: boolean;
   private _db?: CosmosDbService;
 
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: Context) {
+    this.byPass = (ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
+  }
 
   async getAsync(type: string): Promise<ListItem[] | undefined> {
     if (this.byPass) return await this.db.getAllByPartitionAsync<ListItem>(type, true);

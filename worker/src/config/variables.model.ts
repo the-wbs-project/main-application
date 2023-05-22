@@ -1,5 +1,5 @@
 import { AuthState, OrganizationRoles } from '../models';
-import { DataServiceFactory, Logger } from '../services';
+import { DataServiceFactory, Fetcher, Logger } from '../services';
 
 export type Variables = {
   data: DataServiceFactory;

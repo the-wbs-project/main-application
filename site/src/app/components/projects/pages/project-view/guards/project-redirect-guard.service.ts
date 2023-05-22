@@ -7,7 +7,7 @@ import { map } from 'rxjs/operators';
 import { PROJECT_PAGE_VIEW } from '../models';
 
 @Injectable()
-export class ProjectRedirectGuard  {
+export class ProjectRedirectGuard {
   constructor(private readonly store: Store) {}
 
   canActivate(route: ActivatedRouteSnapshot): Observable<boolean> | boolean {
@@ -15,8 +15,8 @@ export class ProjectRedirectGuard  {
       .dispatch(
         new Navigate([
           'projects',
-          route.params['projectId'],
           'view',
+          route.params['projectId'],
           PROJECT_PAGE_VIEW.ABOUT,
         ])
       )

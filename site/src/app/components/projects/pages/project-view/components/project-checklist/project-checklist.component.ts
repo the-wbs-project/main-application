@@ -1,6 +1,5 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { faCheck, faWarning, faX } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
 import { ProjectChecklistState } from '../../states';
 
@@ -12,10 +11,6 @@ import { ProjectChecklistState } from '../../states';
 export class ProjectChecklistComponent {
   private readonly store = inject(Store);
   readonly checklist = toSignal(
-    this.store.select(ProjectChecklistState.checklist)
+    this.store.select(ProjectChecklistState.results)
   );
-
-  readonly faCheck = faCheck;
-  readonly faWarning = faWarning;
-  readonly faX = faX;
 }

@@ -1,24 +1,33 @@
 <div *ngIf="categories" class="display-flex flex-flow-col flex-align-stretch">
   <div *ngIf="showButtons" class="pd-b-10 text-center">
     <button
-      class="btn btn-outline-primary mg-x-10"
+      class="btn btn-outline-dark mg-x-10"
       (click)="hideUnselected$.next(!hideUnselected$.getValue())"
     >
       <fa-icon [icon]="hideUnselected$.getValue() ? faEye : faEyeSlash" />
-      {{ (hideUnselected$.getValue() ? "Projects.ShowUnselected" : "Projects.HideUnselected") | translate }}
+      {{
+        (hideUnselected$.getValue()
+          ? "Projects.ShowUnselected"
+          : "Projects.HideUnselected"
+        ) | translate
+      }}
     </button>
 
-    <button class="btn btn-outline-primary mg-x-10" (click)="showCreate()">
+    <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
       <fa-icon [icon]="faPlus" />
       {{ "General.Add" | translate }}
     </button>
 
-    <button *ngIf="showSave" class="btn btn-outline-primary mg-x-10" (click)="saveClicked.emit()">
+    <button
+      *ngIf="showSave"
+      class="btn btn-dark mg-x-10"
+      (click)="saveClicked.emit()"
+    >
       <fa-icon [icon]="faFloppyDisk" />
       {{ "General.Save" | translate }}
     </button>
   </div>
-  <div class="scroll mg-b-10" style="flex: 1 1 auto">
+  <div class="scroll mg-b-10" style="flex: auto">
     <kendo-sortable
       [kendoSortableBinding]="categories"
       [ngClass]="'list-group display-ib text-start w-100'"

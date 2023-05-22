@@ -1,14 +1,7 @@
-name = "pm-empower-api"
+ name = "pm-empower-api"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
 compatibility_date = "2022-05-27"
-main = "dist/index.js"
-
-[build]
-command = "yarn run -s build"
-
-[[rules]]
-type = "ESModule"
-globs = ["**/*.js"]
+main = "src/index.ts"
 
 [triggers]
 crons = ["0 0 */1 * *"]
@@ -29,6 +22,7 @@ DEBUG = "true"
 DATADOG_ENV = "development"
 CORS_ORIGINS = "http://localhost:4200"
 INVITE_TEMPLATE = "invite-template-v1"
+KV_BYPASS = "LISTS"
 
 AZURE_ENDPOINT = "http://localhost:7071"
 COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
@@ -100,4 +94,3 @@ AUTH_DOMAIN = "auth.dev.thewbsproject.com"
 
 [dev]
 port = 88
-host = "localhost:4200"

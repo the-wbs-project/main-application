@@ -4,10 +4,12 @@ import { CosmosDbService } from './cosmos-db.service';
 
 export class ProjectDataService {
   private readonly prefix = 'PROJECTS';
-  private readonly byPass = (this.ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
+  private readonly byPass: boolean;
   private _db?: CosmosDbService;
 
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: Context) {
+    this.byPass = (ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
+  }
 
   async getAllAsync(): Promise<Project[]> {
     const projects = await this.db.getAllAsync<Project>(false);

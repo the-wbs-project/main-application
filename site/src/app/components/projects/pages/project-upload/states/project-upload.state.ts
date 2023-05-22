@@ -1,13 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, WbsTransformers } from '@wbs/core/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { SaveUpload } from '../../../actions';
-import { ProjectState } from '../../../states';
 import {
   AppendOrOvewriteSelected,
   FileUploaded,
@@ -16,8 +14,10 @@ import {
   PhasesCompleted,
   PrepUploadToSave,
   ProcessFile,
+  SaveUpload,
   SetAsStarted,
   SetPageTitle,
+  SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
 
@@ -34,6 +34,7 @@ interface StateModel {
   pageTitle?: string;
   peopleList?: PeopleListItem[];
   phaseList?: PhaseListItem[];
+  project?: Project;
   rawFile?: File;
   saving: boolean;
   started: boolean;
@@ -54,9 +55,13 @@ export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messenger: Messages,
-    private readonly store: Store,
     private readonly transformer: WbsTransformers
   ) {}
+
+  @Selector()
+  static current(state: StateModel): Project | undefined {
+    return state.project;
+  }
 
   @Selector()
   static isOverwrite(state: StateModel): boolean {
@@ -122,16 +127,16 @@ export class ProjectUploadState {
     });
   }
 
-  private get project(): Project {
-    return this.store.selectSnapshot(ProjectState.current)!;
-  }
-
-  private get projectId(): string {
-    return this.project.id;
-  }
-
-  private get urlPrefix(): string[] {
-    return ['projects', this.projectId, 'upload'];
+  @Action(SetProject)
+  setProject(
+    ctx: StateContext<StateModel>,
+    { projectId }: SetProject
+  ): void | Observable<void> {
+    return this.data.projects.getAsync(projectId).pipe(
+      map((project) => {
+        ctx.patchState({ project });
+      })
+    );
   }
 
   @Action(SetPageTitle)
@@ -164,7 +169,7 @@ export class ProjectUploadState {
       rawFile: file,
     });
 
-    return ctx.dispatch(new Navigate([...this.urlPrefix, 'results']));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'results']));
   }
 
   @Action(LoadProjectFile)
@@ -241,7 +246,7 @@ export class ProjectUploadState {
     const state = ctx.getState();
 
     if (answer === 'append')
-      for (const idOrCat of this.project.categories.phase ?? []) {
+      for (const idOrCat of state.project!.categories.phase ?? []) {
         phaseList.push({ idOrCat, isEditable: false });
       }
 
@@ -255,7 +260,7 @@ export class ProjectUploadState {
       action: answer,
       phaseList,
     });
-    return ctx.dispatch(new Navigate([...this.urlPrefix, 'phases']));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'phases']));
   }
 
   @Action(PhasesCompleted)
@@ -268,7 +273,7 @@ export class ProjectUploadState {
     ctx.patchState({
       phaseList: results,
     });
-    return ctx.dispatch(new Navigate([...this.urlPrefix, urlSuffix]));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), urlSuffix]));
   }
 
   @Action(PeopleCompleted)
@@ -279,7 +284,7 @@ export class ProjectUploadState {
     ctx.patchState({
       peopleList: results,
     });
-    return ctx.dispatch(new Navigate([...this.urlPrefix, 'saving']));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'saving']));
   }
 
   @Action(PrepUploadToSave)
@@ -314,8 +319,8 @@ export class ProjectUploadState {
       nodes.set(node.levelText, node);
     }
     return forkJoin({
-      project: this.data.projects.getAsync(this.projectId),
-      existingNodes: this.data.projectNodes.getAllAsync(this.projectId),
+      project: this.data.projects.getAsync(state.project!.id),
+      existingNodes: this.data.projectNodes.getAllAsync(state.project!.id),
     }).pipe(
       switchMap((data) => {
         const results = this.transformer.nodes.phase.projectImporter.run(
@@ -338,6 +343,38 @@ export class ProjectUploadState {
     );
   }
 
+  @Action(SaveUpload)
+  saveUpload(
+    ctx: StateContext<StateModel>,
+    { results }: SaveUpload
+  ): void | Observable<any> {
+    const state = ctx.getState();
+    const project = state.project!;
+
+    project.categories.phase = results.phases;
+    project.categories.discipline = results.disciplines;
+
+    const saves: Observable<any>[] = [
+      this.data.projects
+        .putAsync(project)
+        .pipe(tap(() => ctx.patchState({ project }))),
+    ];
+
+    if (results.removeIds.length > 0 || results.upserts.length > 0) {
+      saves.push(
+        this.data.projectNodes.batchAsync(
+          project.id,
+          results.upserts,
+          results.removeIds
+        )
+      );
+    }
+
+    if (saves.length === 0) return;
+
+    return forkJoin(saves);
+  }
+
   private getFile(file: File): Observable<ArrayBuffer> {
     return new Observable<ArrayBuffer>((obs) => {
       if (!file) {
@@ -355,5 +392,9 @@ export class ProjectUploadState {
 
       reader.readAsArrayBuffer(file);
     });
+  }
+
+  private urlPrefix(ctx: StateContext<StateModel>): string[] {
+    return ['projects', 'upload', ctx.getState().project!.id];
   }
 }

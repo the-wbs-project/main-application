@@ -1,11 +1,10 @@
-<div class="pane-content" *ngIf="subTasks$ | async; let subTasks">
+<div class="pane-content">
   <wbs-tree
-    [width]="width$ | async"
+    [width]="width()"
     [view]="phaseView"
-    [nodes]="subTasks"
-    [project]="project$ | async"
+    [nodes]="task()?.subTasks"
+    [project]="project()"
     [isDraggable]="false"
     (showDetails)="navigate.toTask($event)"
-  >
-  </wbs-tree>
+  />
 </div>

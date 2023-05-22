@@ -1,10 +1,11 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
-import { ChangeTaskDescription } from '@wbs/components/projects/actions';
-import { WbsNode } from '@wbs/core/models';
-import { Observable } from 'rxjs';
-import { TaskViewState } from '../../states';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  faTriangleExclamation,
+  faTools,
+} from '@fortawesome/pro-solid-svg-icons';
+import { Store } from '@ngxs/store';
+import { TasksState } from '../../states';
 
 @Component({
   selector: 'wbs-task-about',
@@ -12,18 +13,9 @@ import { TaskViewState } from '../../states';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskAboutComponent {
-  @Select(TaskViewState.current) current$!: Observable<WbsNode>;
+  readonly faTools = faTools;
+  readonly faTriangleExclamation = faTriangleExclamation;
+  readonly current = toSignal(this.store.select(TasksState.current));
 
-  constructor(
-    private readonly route: ActivatedRoute,
-    private readonly store: Store
-  ) {}
-
-  private get taskId(): string {
-    return this.route.snapshot.params['taskId'];
-  }
-
-  saveDescription(newDescription: string): void {
-    this.store.dispatch(new ChangeTaskDescription(this.taskId, newDescription));
-  }
+  constructor(private readonly store: Store) {}
 }

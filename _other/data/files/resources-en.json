@@ -29,6 +29,7 @@
         "Select": "Select",
         "Phases": "Phases",
         "Details": "Details",
+        "Statistics": "Statistics",
         "SubTasks": "Sub Tasks",
         "Resources": "Resources",
         "Disciplines": "Disciplines",
@@ -91,6 +92,7 @@
         "Category": "Category",
         "Level": "Level",
         "Discussions": "Discussions",
+        "LastModified": "Last Modified",
         "Loading": "Loading"
       },
       "Category_Phase": {
@@ -225,7 +227,7 @@
         "EditProjectDescription": "Edit Project Description",
         "EditTaskTitle": "Edit Task Title",
         "EditTaskDescription": "Edit Task Description",
-        "TaskCount": "Task Count",
+        "TaskCount": "# of Tasks",
         "ShowUnselected": "Show Unselected",
         "HideUnselected": "Hide Unselected",
         "AddCustomPhases": "Add Custom Phases",
@@ -241,9 +243,10 @@
         "TaskCreated": "Task Created",
         "TaskCloned": "Task Cloned",
         "TaskReordered": "Task Reordered",
-        "TaskTitleUpdated": "Task Title Updated",
-        "TaskDescriptionUpdated": "Task Description Updated",
-        "TreeInstructions": "Double-click to see more details."
+        "TaskUpdated": "Task Updated",
+        "TreeInstructions": "Double-click to see more details.",
+        "SubmitForApproval": "Submit For Approval",
+        "ProjectUpdated": "Project Updated"
       },
       "ProjectCreate": {
         "GettingStarted_Title": "Getting Started",
@@ -291,6 +294,13 @@
         "RemoveUserConfirmation": "Are you sure you want to remove {USER_NAME} from the role of {ROLE_NAME}?",
         "UserAdded": "User Added",
         "UserRemoved": "User Removed"
+      },
+      "ProjectChecklist": {
+        "Description": "Your project has a description",
+        "DescriptionFail": "No description found",
+        "Phases": "Your project's phases has been defined.",
+        "PhasesWarn": "We usually suggest having more than 2 phases.",
+        "PhasesFail": "No phases have been defined."
       }
     }
   },
@@ -370,8 +380,12 @@
       "Actions": {
         "ProjectCreatedTitle": "Project Created",
         "ProjectTitleChangedTitle": "Project Title Changed",
+        "ProjectDescriptionChangedTitle": "Project Description Changed",
+        "ProjectCategoryChangedTitle": "Project Category Changed",
         "ProjectPhasesChangedTitle": "Project Phases Changed",
         "ProjectDisciplinesChangedTitle": "Project Disciplines Changed",
+        "ProjectAddUserTitle": "Project Role Assigned",
+        "ProjectRemoveUserTitle": "Project Role Revoked",
         "TaskCreatedTitle": "Task Created",
         "TaskTitleChangedTitle": "Task Title Changed",
         "TaskClonedTitle": "Task Cloned",
@@ -379,13 +393,16 @@
         "TaskRemovedTitle": "Task Removed",
         "ProjectCreatedDescription": "The project was created.",
         "ProjectTitleChangedDescription": "The title was changed from '{from}' to '{to}'.",
+        "ProjectCategoryChangedDescription": "The category was changed from '{from}' to '{to}'.",
         "TaskCreatedDescription": "The task '{title}' was created.",
         "TaskReorderedDescription": "The task '{title}' was moved from {from} to {to}.",
         "ProjectDisciplinesChangedDescription": "The project's list of disciplines was changed.",
         "TaskTitleChangedDescription": "The title was changed from '{from}' to '{to}'.",
         "TaskClonedDescription": "The task '{title}' was cloned.",
         "TaskRemovedDescription": "The task '{title}' was removed.",
-        "ProjectPhasesChangedDescription": "The project's phases was changed."
+        "ProjectPhasesChangedDescription": "The project's phases was changed.",
+        "ProjectAddUserDescription": "{user} was given the role of {role}.",
+        "ProjectRemoveUserDescription": "{user} was revoked the role of {role}."
       }
     }
   }

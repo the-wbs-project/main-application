@@ -58,7 +58,7 @@
                     activity.action
                       | actionDescription
                       | translate
-                      | actionDescriptionTransform: activity.data
+                      | actionDescriptionTransform : activity.data
                   }}
                 </p>
               </div>
@@ -71,12 +71,12 @@
                   [ngClass]="'pointer'"
                   (click)="soon()"
                 >
-                  <fa-icon [icon]="faComment"></fa-icon>
+                  <fa-icon [icon]="faComment" />
                   <fa-layers-text
                     content="0"
                     transform="shrink-10"
                     [ngClass]="'comment-count'"
-                  ></fa-layers-text>
+                  />
                 </fa-layers>
                 <span class="timeline-footer-date ms-auto">
                   {{ activity.timestamp | dateText }}
@@ -85,8 +85,8 @@
                     size="1x"
                     [icon]="faCircleInfo"
                     [ngClass]="'pointer'"
-                    [title]="(activity.timestamp | date: 'short') ?? ''"
-                  ></fa-icon>
+                    [title]="(activity.timestamp | date : 'short') ?? ''"
+                  />
                 </span>
               </div>
             </div>

@@ -1,14 +1,13 @@
 import { Injectable } from '@angular/core';
-
 import { Store } from '@ngxs/store';
-import { ProjectState } from '@wbs/components/projects/states';
 import { LoadDiscussionForum } from '@wbs/core/actions';
 import { AuthState } from '@wbs/core/states';
 import { forkJoin, Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ProjectState } from '../states';
 
 @Injectable()
-export class ProjectDiscussionGuard  {
+export class ProjectDiscussionGuard {
   constructor(private readonly store: Store) {}
 
   canActivate(): Observable<boolean> {

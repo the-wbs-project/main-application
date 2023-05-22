@@ -10,44 +10,19 @@
     <h4 class="w-100 pd-5 mg-b-0">
       {{ title() }}
     </h4>
+    <div *ngIf="canModifyAndSubmit()" style="position: absolute; right: 10px">
+      <button
+        [disabled]="!canSubmit()"
+        class="btn btn-sm btn-dark"
+        [title]="canSubmit() ? 'Click to Submit for Approval' : 'Fix issues'"
+      >
+        <fa-icon [icon]="faArrowUpFromBracket" />
+        {{ "Projects.SubmitForApproval" | translate }}
+      </button>
+    </div>
   </div>
   <div class="card-footer py-0">
-    <ul ngbNav [activeId]="pageView$ | async" class="tx-14 tx-medium">
-      <ng-template ngFor [ngForOf]="links" let-link>
-        <li *ngIf="!link.children" [ngbNavItem]="link.fragment">
-          <a
-            ngbNavLink
-            [routerLink]="['./', link.fragment]"
-            class="pd-y-5 pd-x-20"
-          >
-            {{ link.title | translate }}
-          </a>
-        </li>
-        <li
-          *ngIf="link.children"
-          ngbDropdown
-          class="nav-item"
-          role="presentation"
-        >
-          <a
-            class="nav-link pd-y-5 pd-x-20 pointer"
-            [class.active]="link.fragment === (pageView$ | async)"
-            ngbDropdownToggle
-          >
-            {{ link.title | translate }}
-          </a>
-          <div ngbDropdownMenu>
-            <a
-              ngbDropdownItem
-              *ngFor="let child of link.children"
-              [routerLink]="['./', link.fragment, child.fragment]"
-            >
-              {{ child.title | translate }}
-            </a>
-          </div>
-        </li>
-      </ng-template>
-    </ul>
+    <wbs-project-navigation [links]="links" [pageView]="pageView$ | async" />
   </div>
 </div>
 <div class="card">

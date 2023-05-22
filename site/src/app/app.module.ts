@@ -27,18 +27,19 @@ import {
 import { environment } from 'src/environments/environment';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { AUTH_CONFIG } from './globals.const';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     AppRoutingModule,
-    AuthModule.forRoot(environment.auth),
+    AuthModule.forRoot(AUTH_CONFIG),
     BrowserModule,
     BrowserAnimationsModule,
     DialogModule,
     HttpClientModule,
     NgxsLoggerPluginModule.forRoot({
-      disabled: false, // environment.production,
+      disabled: environment.production,
     }),
     NgxsModule.forRoot([AuthState, MetadataState, OrganizationState, UiState]),
     NgxsRouterPluginModule.forRoot(),

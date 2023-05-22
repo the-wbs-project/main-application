@@ -152,7 +152,7 @@ export class WbsDisciplineNodeTransformer {
         parentId: parentId,
         treeId: `${disciplineId}-${child.id}`,
         treeParentId: `${disciplineId}-${parentId}`,
-        disciplines: child.disciplineIds,
+        disciplines: child.disciplineIds ?? [],
         phaseId: phaseId,
         order: counter,
         levels: childLevel,

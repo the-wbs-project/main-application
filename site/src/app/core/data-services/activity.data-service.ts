@@ -2,7 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngxs/store';
 import { IdService } from '@wbs/core/services';
 import { AuthState } from '@wbs/core/states';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { Activity, ActivityData } from '../models';
 
 export class ActivityDataService {
@@ -15,10 +16,19 @@ export class ActivityDataService {
     return this.store.selectSnapshot(AuthState.organization)!;
   }
 
-  getAsync(topLevelId: string): Observable<Activity[]> {
-    return this.http.get<Activity[]>(
-      `api/activity/${this.organization}/${topLevelId}`
-    );
+  getAsync(
+    skip: number,
+    take: number,
+    topLevelId: string,
+    objectId?: string
+  ): Observable<Activity[]> {
+    const url = objectId
+      ? `api/activity/${this.organization}/${topLevelId}/${objectId}/${skip}/${take}`
+      : `api/activity/${this.organization}/${topLevelId}/${skip}/${take}`;
+
+    return this.http
+      .get<Activity[] | undefined>(url)
+      .pipe(map((list) => list ?? []));
   }
 
   getUserAsync(userId: string): Observable<Activity[]> {

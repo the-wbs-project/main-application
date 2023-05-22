@@ -8,6 +8,7 @@ import {
   ActionTitlePipe,
 } from './pipes';
 import { TimelineComponent } from './timeline.component';
+import { TimelineService } from './services';
 
 @NgModule({
   imports: [NgbDropdownModule, SharedModule],
@@ -18,6 +19,7 @@ import { TimelineComponent } from './timeline.component';
     ActionTitlePipe,
     TimelineComponent,
   ],
+  providers: [TimelineService],
   exports: [TimelineComponent],
 })
 export class TimelineModule {}

@@ -7,14 +7,11 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { faUserMinus, faUserPlus } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
-import { ProjectState } from '@wbs/components/projects/states';
-import { OrganizationState } from '@wbs/core/states';
-import { RoleUsersService } from './role-users.service';
 import { ROLES, ROLES_CONST, ROLES_TYPE, UserLite } from '@wbs/core/models';
-import {
-  AddUserToRole,
-  RemoveUserToRole,
-} from '@wbs/components/projects/actions';
+import { OrganizationState } from '@wbs/core/states';
+import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
+import { ProjectState } from '../../../../states';
+import { RoleUsersService } from './role-users.service';
 
 @Component({
   templateUrl: './roles.component.html',

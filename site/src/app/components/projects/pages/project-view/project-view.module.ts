@@ -17,17 +17,17 @@ import { WbsActionButtonsModule } from '@wbs/components/_features/wbs-action-but
 import { WbsTreeModule } from '@wbs/components/_features/wbs-tree';
 import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
-import { ProjectTimelineVerifyGuard, ProjectVerifyGuard } from '../../guards';
 import {
   ProjectChecklistComponent,
-  ProjectRoleComponent,
-  TaskDetailsComponent,
+  ProjectNavigationComponent,
   TaskModalComponent,
   Timeline1Component,
 } from './components';
 import {
   ProjectDiscussionGuard,
   ProjectRedirectGuard,
+  ProjectTimelineVerifyGuard,
+  ProjectVerifyGuard,
   ProjectViewGuard,
   TaskVerifyGuard,
   TaskViewGuard,
@@ -43,6 +43,8 @@ import {
   TaskViewComponent,
 } from './pages';
 import {
+  ChecklistResultClassPipe,
+  ChecklistResultIconPipe,
   RoleIconPipe,
   RoleTitlePipe,
   TaskDetailsActionsPipe,
@@ -53,8 +55,8 @@ import {
 import { ProjectViewLayoutComponent } from './project-view-layout.component';
 import { ProjectViewRoutingModule } from './project-view-routing.module';
 import {
+  ChecklistDataService,
   PhaseExtractProcessor,
-  ProjectChecklistService,
   ProjectNavigationService,
   ProjectViewService,
   TextCompareService,
@@ -62,8 +64,10 @@ import {
 } from './services';
 import {
   ProjectChecklistState,
+  ProjectState,
+  ProjectTimelineState,
   ProjectViewState,
-  TaskViewState,
+  TasksState,
 } from './states';
 
 @NgModule({
@@ -73,9 +77,11 @@ import {
     NgbNavModule,
     NgbTooltipModule,
     NgxsModule.forFeature([
+      ProjectState,
       ProjectChecklistState,
+      ProjectTimelineState,
       ProjectViewState,
-      TaskViewState,
+      TasksState,
     ]),
     ProjectComponentModule,
     ProjectViewRoutingModule,
@@ -91,8 +97,8 @@ import {
     WbsTreeModule,
   ],
   providers: [
+    ChecklistDataService,
     PhaseExtractProcessor,
-    ProjectChecklistService,
     ProjectDiscussionGuard,
     ProjectNavigationService,
     ProjectRedirectGuard,
@@ -106,18 +112,19 @@ import {
     UploadFileService,
   ],
   declarations: [
+    ChecklistResultClassPipe,
+    ChecklistResultIconPipe,
     ProjectAboutPageComponent,
     ProjectChecklistComponent,
     ProjectDisciplinesPageComponent,
+    ProjectNavigationComponent,
     ProjectPhasesPageComponent,
-    ProjectRoleComponent,
     ProjectTimelinePageComponent,
     ProjectViewLayoutComponent,
     RoleIconPipe,
     RoleTitlePipe,
     TaskAboutComponent,
     TaskDetailsActionsPipe,
-    TaskDetailsComponent,
     TaskMenuPipe,
     TaskModalComponent,
     TaskSubTasksComponent,

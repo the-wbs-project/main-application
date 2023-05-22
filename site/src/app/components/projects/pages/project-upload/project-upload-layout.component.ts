@@ -1,25 +1,25 @@
 import { Component } from '@angular/core';
-import { Select } from '@ngxs/store';
-import { Project } from '@wbs/core/models';
-import { Observable } from 'rxjs';
-import { ProjectState } from '../../states';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
 import { ProjectUploadState } from './states';
+
 @Component({
-  template: ` <wbs-page-header
-      *ngIf="project$ | async; let project"
-      [title]="(pageTitle$ | async) ?? '' | translate"
+  template: `<wbs-page-header
+      *ngIf="project(); let project"
+      [title]="title() ?? '' | translate"
       [items]="[
         { route: ['/projects', 'list', 'my'], label: 'General.Projects' },
         { route: ['/projects', project.id, 'view'], label: project.title }
       ]"
       [active_item]="'General.Upload' | translate"
     />
-
     <div class="mg-t-40">
-      <router-outlet></router-outlet>
+      <router-outlet />
     </div>`,
 })
 export class ProjectUploadLayoutComponent {
-  @Select(ProjectState.current) project$!: Observable<Project>;
-  @Select(ProjectUploadState.pageTitle) pageTitle$!: Observable<string>;
+  readonly project = toSignal(this.store.select(ProjectUploadState.current));
+  readonly title = toSignal(this.store.select(ProjectUploadState.pageTitle));
+
+  constructor(private readonly store: Store) {}
 }

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { ProjectState } from '../../../states';
 import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
-import { ProjectViewState } from '../states';
+import { ProjectState, ProjectViewState } from '../states';
 
 @Injectable()
 export class ProjectNavigationService {
@@ -20,8 +19,8 @@ export class ProjectNavigationService {
   getProjectNavAction(): any {
     return new Navigate([
       '/projects',
-      this.projectId,
       'view',
+      this.projectId,
       this.nodeView == 'phase' ? 'phases' : 'disciplines',
     ]);
   }
@@ -30,15 +29,15 @@ export class ProjectNavigationService {
     this.store.dispatch(
       new Navigate(
         page === PROJECT_PAGE_VIEW.UPLOAD
-          ? ['/projects', projectId, page]
-          : ['/projects', projectId, 'view', page]
+          ? ['/projects', page, projectId]
+          : ['/projects', 'view', projectId, page]
       )
     );
   }
 
   toProjectPage(page: string): void {
     this.store.dispatch(
-      new Navigate(['/projects', this.projectId, 'view', page])
+      new Navigate(['/projects', 'view', this.projectId, page])
     );
   }
 
@@ -46,8 +45,8 @@ export class ProjectNavigationService {
     this.store.dispatch(
       new Navigate([
         'projects',
-        this.projectId,
         'view',
+        this.projectId,
         this.nodeView == 'phase' ? 'phases' : 'disciplines',
         'task',
         taskId,

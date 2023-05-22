@@ -109,7 +109,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
     }
     if (!this.nodes) return;
 
-    this.tree$.next(JSON.parse(JSON.stringify(this.nodes)));
+    this.tree$.next(structuredClone(this.nodes));
     this.dataReady = true;
     this.setDraggableRows();
   }

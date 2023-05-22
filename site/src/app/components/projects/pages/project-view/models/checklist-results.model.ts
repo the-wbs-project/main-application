@@ -15,6 +15,12 @@ export type CHECKLIST_RESULTS_TYPE =
   | CHECKLIST_RESULTS.PASS
   | CHECKLIST_RESULTS.WARN;
 
+export interface ChecklistGroupResults {
+  description: string;
+  result: CHECKLIST_RESULTS_TYPE;
+  items: ChecklistItemResults[];
+}
+
 export interface ChecklistItemResults {
   description: string;
   result: CHECKLIST_RESULTS_TYPE;

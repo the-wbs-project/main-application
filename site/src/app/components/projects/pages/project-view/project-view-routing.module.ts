@@ -1,9 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { ProjectTimelineVerifyGuard, ProjectVerifyGuard } from '../../guards';
 import {
   ProjectDiscussionGuard,
   ProjectRedirectGuard,
+  ProjectTimelineVerifyGuard,
+  ProjectVerifyGuard,
   ProjectViewGuard,
   TaskVerifyGuard,
   TaskViewGuard,
@@ -22,7 +23,7 @@ import { ProjectViewLayoutComponent } from './project-view-layout.component';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: ':projectId',
     component: ProjectViewLayoutComponent,
     canActivate: [ProjectVerifyGuard, ProjectTimelineVerifyGuard],
     children: [
@@ -74,6 +75,18 @@ export const routes: Routes = [
                   title: 'ProjectUpload.PagesUploadProjectPlan',
                   view: TASK_PAGE_VIEW.SUB_TASKS,
                 },
+              },
+              {
+                path: 'settings',
+                canActivate: [TaskViewGuard],
+                data: {
+                  title: 'ProjectUpload.PagesUploadProjectPlan',
+                  view: TASK_PAGE_VIEW.SETTINGS,
+                },
+                loadChildren: () =>
+                  import(
+                    './pages/task-settings-page/task-settings.module'
+                  ).then((m) => m.TaskSettingsModule),
               },
             ],
           },

@@ -28,8 +28,6 @@ app.get('/api/resources', cache, Http.metadata.getResourcesAsync);
 app.get('/api/lists/:name', cache, Http.metadata.getListAsync);
 app.post('/api/send', MailGunService.handleHomepageInquiryAsync);
 
-app.get('/api/invites', verify, Http.invites.getAllAsync);
-app.put('/api/invites/:send', verify, Http.invites.putAsync);
 app.get('/api/invites/preReg/:organization/:code', Http.invites.getEmailAsync);
 app.get('/api/invites/postReg/:organization/:code', Http.invites.getAndAcceptAsync);
 //app.get('/api/resources/Info', Http.metadata.setInfo, Http.metadata.getResourcesAsync);
@@ -37,7 +35,10 @@ app.get('/api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('/api/activity/:organization/:topLevelId', verify, Http.activity.getByIdAsync);
+app.get('/api/invites', verify, Http.invites.getAllAsync);
+app.put('/api/invites/:send', verify, Http.invites.putAsync);
+app.get('/api/checklists', verify, Http.checklists.getAsync);
+app.get('/api/activity/:organization/:topLevelId/:skip/:take', verify, Http.activity.getByIdAsync);
 app.get('/api/activity/:organization/user/:userId', verify, Http.activity.getByUserIdAsync);
 app.put('/api/activity/:organization/:dataType', verify, Http.activity.putAsync);
 app.get('/api/projects/:organization/my', verify, Http.project.getAllAsync);

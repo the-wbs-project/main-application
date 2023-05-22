@@ -7,12 +7,12 @@ import {
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
-import { ChangeProjectCategories } from '@wbs/components/projects/actions';
-import { ProjectState } from '@wbs/components/projects/states';
 import { PROJECT_NODE_VIEW, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { map } from 'rxjs/operators';
+import { ProjectState } from '../../../../states';
+import { ChangeProjectCategories } from '../../../../actions';
 
 @UntilDestroy()
 @Component({
@@ -42,7 +42,7 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
   }
 
   save(): void {
-    const results = this.catService.extract(this.categories, true);
+    const results = this.catService.extract(this.categories);
     const cType: PROJECT_NODE_VIEW_TYPE = this.route.snapshot.data['cType'];
 
     this.store.dispatch(new ChangeProjectCategories(cType, results));

@@ -17,7 +17,7 @@ export const routes: Routes = [
       ),
   },
   {
-    path: ':projectId/view',
+    path: 'view',
     loadChildren: () =>
       import('./pages/project-view/project-view.module').then(
         (m) => m.ProjectViewModule

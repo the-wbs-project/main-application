@@ -8,6 +8,7 @@ import { WbsNodeView } from '@wbs/core/view-models';
 import {
   CloneTask,
   CreateTask,
+  DownloadNodes,
   LoadNextProjectTimelinePage,
   MoveTaskDown,
   MoveTaskLeft,
@@ -16,11 +17,9 @@ import {
   RemoveTask,
   RestoreProject,
   TreeReordered,
-} from '../../../actions';
-import { ProjectState } from '../../../states';
-import { DownloadNodes } from '../actions';
+} from '../actions';
 import { PROJECT_PAGE_VIEW } from '../models';
-import { ProjectViewState } from '../states';
+import { ProjectState, ProjectViewState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
 
 @Injectable()

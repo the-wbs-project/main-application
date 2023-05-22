@@ -3,9 +3,9 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
-import { ChangeProjectBasics } from '@wbs/components/projects/actions';
-import { ProjectState } from '@wbs/components/projects/states';
 import { MetadataState } from '@wbs/core/states';
+import { ProjectState } from '../../../../states';
+import { ChangeProjectBasics } from '../../../../actions';
 
 @UntilDestroy()
 @Component({

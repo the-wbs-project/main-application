@@ -86,7 +86,7 @@ export class WbsNodePhaseTransformer {
       const node: WbsNodeView = {
         children: 0,
         description: child.description,
-        disciplines: child.disciplineIds,
+        disciplines: child.disciplineIds ?? [],
         id: child.id,
         treeId: child.id,
         levels: childLevel,

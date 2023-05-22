@@ -6,6 +6,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { ActionMenuItem } from '@wbs/core/models';
 import { TASK_PAGE_VIEW } from './task-page-view.const';
+import { TASK_SETTINGS_PAGE_LISTS } from './task-settings-pages.const';
 
 export const TASK_MENU_ITEMS = {
   actions: <{ [id: string]: ActionMenuItem }>{
@@ -32,12 +33,17 @@ export const TASK_MENU_ITEMS = {
       title: 'General.SubTasks',
     },
     {
+      fragment: TASK_PAGE_VIEW.SETTINGS,
+      title: 'General.Settings',
+      children: TASK_SETTINGS_PAGE_LISTS,
+    } /*,
+    {
       fragment: TASK_PAGE_VIEW.TIMELINE,
       title: 'General.Timeline',
     },
     {
       fragment: TASK_PAGE_VIEW.RESOURCES,
       title: 'General.Resources',
-    },
+    },*/,
   ],
 };

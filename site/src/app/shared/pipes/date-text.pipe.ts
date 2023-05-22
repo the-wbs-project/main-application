@@ -46,7 +46,12 @@ export class DateTextPipe implements PipeTransform {
       }
     }
     return resource
-      ? this.resources.get(resource).replace('#', num.toString())
+      ? this.resources
+          .get(resource)
+          .replace(
+            '#',
+            num.toLocaleString(undefined, { minimumFractionDigits: 0 })
+          )
       : '';
   }
 }

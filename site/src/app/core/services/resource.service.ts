@@ -8,6 +8,7 @@ import {
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResourceSection } from '../models';
+import { Logger } from './logger.service';
 
 @Injectable({ providedIn: 'root' })
 export class Resources extends MissingTranslationHandler {
@@ -17,6 +18,7 @@ export class Resources extends MissingTranslationHandler {
 
   constructor(
     private readonly http: HttpClient,
+    private readonly logger: Logger,
     private readonly translate: TranslateService
   ) {
     super();
@@ -62,7 +64,13 @@ export class Resources extends MissingTranslationHandler {
     const parts = resource.split('.');
 
     try {
-      return this.resources[parts[0]][parts[1]] ?? resource;
+      const result = this.resources[parts[0]][parts[1]];
+
+      if (result) return result;
+
+      this.logger.error('No resource found for ' + resource);
+
+      return resource;
     } catch (e) {
       console.log(e);
       console.error(`Error trying to retrieve '${resource}' value.`);

@@ -6,14 +6,13 @@ import {
   faClone,
   faDownload,
   faEye,
-  faPencil,
   faPlus,
   faTrashAlt,
   faUpload,
 } from '@fortawesome/pro-solid-svg-icons';
 import { ActionMenuItem, ROLES } from '@wbs/core/models';
 import { PROJECT_PAGE_VIEW } from './project-page-view.const';
-import { SETTINGS_PAGE_LISTS } from './settings-pages.const';
+import { PROJECT_SETTINGS_PAGE_LISTS } from './project-settings-pages.const';
 
 export const PROJECT_MENU_ITEMS = {
   phaseTreeActions: <ActionMenuItem[]>[
@@ -100,7 +99,7 @@ export const PROJECT_MENU_ITEMS = {
     {
       fragment: PROJECT_PAGE_VIEW.SETTINGS,
       title: 'General.Settings',
-      children: SETTINGS_PAGE_LISTS,
+      children: PROJECT_SETTINGS_PAGE_LISTS,
     },
     /*{
       fragment: PROJECT_PAGE_VIEW.DISCUSSIONS,

@@ -1,28 +1,18 @@
-<ul class="list-group">
-  <li
-    *ngFor="let item of checklist()"
-    class="list-group-item"
-    [ngClass]="{
-      'list-group-item-success': item.result === 'pass',
-      'list-group-item-warning': item.result === 'warn',
-      'list-group-item-danger': item.result === 'fail',
-    }"
-  >
+<ul>
+  <li *ngFor="let group of checklist()">
+    {{ group.description | translate }}&nbsp;
     <fa-icon
-      [icon]="
-        item.result === 'pass'
-          ? faCheck
-          : item.result === 'warn'
-          ? faWarning
-          : faX
-      "
-      [ngClass]="{
-        'text-success': item.result === 'pass',
-        'text-warning': item.result === 'warn',
-        'text-danger': item.result === 'fail',
-      }"
+      [icon]="group.result | checklistResultIcon"
+      [ngClass]="group.result | checklistResultClass"
     />
-    &nbsp;
-    {{ item.description | translate }}
+    <ul>
+      <li *ngFor="let test of group.items">
+        {{ test.description | translate }}&nbsp;
+        <fa-icon
+          [icon]="test.result | checklistResultIcon"
+          [ngClass]="test.result | checklistResultClass"
+        />
+      </li>
+    </ul>
   </li>
 </ul>
