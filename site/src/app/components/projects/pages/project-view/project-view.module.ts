@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import {
+  NgbAccordionModule,
   NgbDropdownModule,
   NgbNavModule,
   NgbTooltipModule,
@@ -19,6 +20,7 @@ import { SharedModule } from '@wbs/shared/module';
 import { ProjectComponentModule } from '../../components';
 import {
   ProjectChecklistComponent,
+  ProjectChecklistModalComponent,
   ProjectNavigationComponent,
   TaskModalComponent,
   Timeline1Component,
@@ -73,6 +75,7 @@ import {
 @NgModule({
   imports: [
     ButtonModule,
+    NgbAccordionModule,
     NgbDropdownModule,
     NgbNavModule,
     NgbTooltipModule,
@@ -116,6 +119,7 @@ import {
     ChecklistResultIconPipe,
     ProjectAboutPageComponent,
     ProjectChecklistComponent,
+    ProjectChecklistModalComponent,
     ProjectDisciplinesPageComponent,
     ProjectNavigationComponent,
     ProjectPhasesPageComponent,

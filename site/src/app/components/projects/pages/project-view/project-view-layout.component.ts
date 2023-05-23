@@ -3,11 +3,13 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { faArrowUpFromBracket } from '@fortawesome/pro-solid-svg-icons';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { TitleService } from '@wbs/core/services';
+import { DialogService, TitleService } from '@wbs/core/services';
 import { map } from 'rxjs/operators';
 import { PROJECT_MENU_ITEMS } from './models';
 import { ProjectViewService } from './services';
 import { ProjectChecklistState, ProjectState } from './states';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { ProjectChecklistModalComponent } from './components';
 
 @Component({
   templateUrl: './project-view-layout.component.html',
@@ -32,10 +34,26 @@ export class ProjectViewLayoutComponent {
 
   constructor(
     title: TitleService,
+    readonly modalService: DialogService,
     readonly service: ProjectViewService,
     readonly store: Store
   ) {
     title.setTitle('Project', false);
+  }
+
+  submit(): void {
+    const modalRef = this.modalService.openDialog(
+      ProjectChecklistModalComponent,
+      {
+        size: 'lg',
+      }
+    );
+    //modalRef.componentInstance.name = 'World';
+    //this.modalService.open(content, { size: 'xl' });
+
+    modalRef.subscribe((results) => {
+      console.log(results);
+    });
   }
 
   private getPage(url: string | undefined): string {

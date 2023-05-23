@@ -1,7 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Store } from '@ngxs/store';
-import { ProjectChecklistState } from '../../states';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChecklistGroupResults } from '../../models';
 
 @Component({
   selector: 'wbs-project-checklist',
@@ -9,8 +7,6 @@ import { ProjectChecklistState } from '../../states';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ProjectChecklistComponent {
-  private readonly store = inject(Store);
-  readonly checklist = toSignal(
-    this.store.select(ProjectChecklistState.results)
-  );
+  @Input() expandIfFailed = false;
+  @Input({ required: true }) checklist: ChecklistGroupResults[] | undefined;
 }

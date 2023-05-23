@@ -1,0 +1,23 @@
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">
+      {{ "Projects.SubmitForApproval" | translate }}
+    </h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('cancelled')"
+    ></button>
+  </div>
+  <div class="modal-body pd-10">
+    <wbs-project-checklist [checklist]="checklist()" [expandIfFailed]="true" />
+  </div>
+  <div class="modal-footer">
+    <div class="w-100 tx-right">
+      <button class="btn btn-light" (click)="modal.close('submit')">
+        {{ "Projects.SubmitForApproval" | translate }}
+      </button>
+    </div>
+  </div>
+</ng-template>

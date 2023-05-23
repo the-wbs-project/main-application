@@ -1,18 +1,32 @@
-<ul>
-  <li *ngFor="let group of checklist()">
-    {{ group.description | translate }}&nbsp;
-    <fa-icon
-      [icon]="group.result | checklistResultIcon"
-      [ngClass]="group.result | checklistResultClass"
-    />
-    <ul>
-      <li *ngFor="let test of group.items">
-        {{ test.description | translate }}&nbsp;
+<div ngbAccordion>
+  <div
+    *ngFor="let group of checklist"
+    ngbAccordionItem
+    [collapsed]="!(expandIfFailed || group.result !== 'fail')"
+  >
+    <h2 ngbAccordionHeader>
+      <button ngbAccordionButton>
+        {{ group.description | translate }}&nbsp;&nbsp;
         <fa-icon
-          [icon]="test.result | checklistResultIcon"
-          [ngClass]="test.result | checklistResultClass"
+          [icon]="group.result | checklistResultIcon"
+          [ngClass]="group.result | checklistResultClass"
         />
-      </li>
-    </ul>
-  </li>
-</ul>
+      </button>
+    </h2>
+    <div ngbAccordionCollapse>
+      <div ngbAccordionBody>
+        <ng-template>
+          <ul class="list-group">
+            <li *ngFor="let test of group.items" class="list-group-item">
+              {{ test.description | translate }}&nbsp;
+              <fa-icon
+                [icon]="test.result | checklistResultIcon"
+                [ngClass]="test.result | checklistResultClass"
+              />
+            </li>
+          </ul>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>
