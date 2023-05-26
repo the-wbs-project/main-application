@@ -31,13 +31,6 @@
     </p>
   </div>
   <div class="border-top"></div>
-  <div class="px-4 py-2">
-    <h4 class="tx-15 text-uppercase mb-3">Path To Success</h4>
-    <div class="text-muted m-t-30">
-      <wbs-project-checklist [checklist]="checklist()" />
-    </div>
-  </div>
-  <div class="border-top"></div>
   <div class="p-4">
     <h4 class="tx-15 text-uppercase mb-3">
       {{ "General.Description" | translate }}
@@ -46,9 +39,9 @@
   </div>
   <div class="border-top"></div>
   <div class="p-4">
-    <label class="main-content-label tx-13 mg-b-20">
+    <h4 class="tx-15 text-uppercase mb-3">
       {{ "General.Contacts" | translate }}
-    </label>
+    </h4>
     <ul class="list-group">
       <li
         *ngFor="let user of users()"
@@ -59,10 +52,17 @@
     </ul>
   </div>
   <div class="border-top"></div>
+  <div class="px-4 py-2">
+    <h4 class="tx-15 text-uppercase mb-3">Path To Success</h4>
+    <div class="text-muted m-t-30">
+      <wbs-project-checklist [checklist]="checklist()" />
+    </div>
+  </div>
+  <div class="border-top"></div>
   <div class="p-4">
-    <label class="main-content-label tx-13 mg-b-20">
+    <h4 class="tx-15 text-uppercase mb-3">
       {{ "General.Statistics" | translate }}
-    </label>
+    </h4>
     <div class="profile-cover__info ms-4 ms-auto p-0">
       <ul class="nav p-0 border-bottom-0 mb-0">
         <li class="border p-2 br-5 bg-light wd-150 ht-70">

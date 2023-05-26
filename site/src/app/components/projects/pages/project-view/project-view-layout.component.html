@@ -7,10 +7,8 @@
         class="wd-30 h-auto"
       />
     </div>
-    <h4 class="w-100 pd-5 mg-b-0">
-      {{ title() }}
-    </h4>
-    <div *ngIf="canModifyAndSubmit()" style="position: absolute; right: 10px">
+    <h4 class="w-100 pd-5 mg-b-0">{{ title() }} {{ pageView() }}</h4>
+    <div *ngIf="canSubmit()" style="position: absolute; right: 10px">
       <button class="btn btn-sm btn-dark" (click)="checklist.open()">
         <fa-icon [icon]="faArrowUpFromBracket" />
         {{ "Projects.SubmitForApproval" | translate }}
@@ -18,7 +16,7 @@
     </div>
   </div>
   <div class="card-footer py-0">
-    <wbs-project-navigation [links]="links" [pageView]="pageView$ | async" />
+    <wbs-project-navigation [links]="links" [pageView]="pageView()" />
   </div>
 </div>
 <div class="card">

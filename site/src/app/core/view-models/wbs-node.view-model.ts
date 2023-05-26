@@ -23,6 +23,7 @@ export interface WbsNodeView {
   disciplines: string[];
   levels: number[];
   levelText: string;
+  depth: number;
   order: number;
   phaseId: string | undefined;
   title: string;

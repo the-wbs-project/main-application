@@ -112,9 +112,6 @@ export class ProjectChecklistState {
     data: DataModel,
     test: ChecklistExistsTest
   ): ChecklistItemResults {
-    console.log(data);
-    console.log(test.path);
-    console.log(apply(test.path, data));
     const results = apply(test.path, data)[0];
     const passes = results != null;
     return {
