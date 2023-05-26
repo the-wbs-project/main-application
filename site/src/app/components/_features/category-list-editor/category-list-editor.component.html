@@ -2,11 +2,11 @@
   <div *ngIf="showButtons" class="pd-b-10 text-center">
     <button
       class="btn btn-outline-dark mg-x-10"
-      (click)="hideUnselected$.next(!hideUnselected$.getValue())"
+      (click)="hideUnselected.set(!hideUnselected())"
     >
-      <fa-icon [icon]="hideUnselected$.getValue() ? faEye : faEyeSlash" />
+      <fa-icon [icon]="hideUnselected() ? faEye : faEyeSlash" />
       {{
-        (hideUnselected$.getValue()
+        (hideUnselected()
           ? "Projects.ShowUnselected"
           : "Projects.HideUnselected"
         ) | translate
@@ -36,34 +36,32 @@
       emptyItemClass="h-30 bd-2 bd-dashed border-dark"
       [activeItemStyle]="{ border: '2px dashed black', opacity: '0.7' }"
       zone="innerZone"
-      (dataMove)="changed()"
-      (dragEnd)="changed()"
+      (dataMove)="rebuild()"
+      (dragEnd)="rebuild()"
     >
       <ng-template let-cat="item">
         <div
-          *ngIf="!(hideUnselected$ | async) || cat.selected"
-          class="list-group-item display-flex flex-row"
+          *ngIf="!hideUnselected() || cat.selected"
+          class="list-group-item display-flex flex-row pd-l-0"
         >
-          <div class="pd-t-12 wd-50 mn-wd-50 ht-40">
-            <fa-layers [fixedWidth]="true">
-              <fa-icon size="3x" [icon]="faCircle" />
-              <fa-layers-text
-                *ngIf="cat.selected"
-                [content]="cat.number!.toString()"
-                transform="right-14"
-              />
-            </fa-layers>
+          <div class="wd-60 tx-semibold text-center tx-28">
+            <span *ngIf="cat.selected"> {{ cat.number }}. </span>
           </div>
           <div class="flex-grow-1">
             <div class="tx-16">
               {{ cat.label }}
             </div>
             <div class="tx-12 font-italic">
-              {{ cat.description }}
+              {{ cat.description }}&nbsp; {{ cat.selected }}
             </div>
           </div>
           <div class="pd-t-5">
-            <wbs-switch [(value)]="cat.selected" (valueChange)="changed()" />
+            <wbs-switch
+              [(value)]="cat.selected"
+              [confirmMessage]="cat.confirm?.label"
+              [confirmData]="cat.confirm?.data"
+              (valueChange)="changed()"
+            />
           </div>
         </div>
       </ng-template>

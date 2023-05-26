@@ -5,4 +5,10 @@ export interface CategorySelection {
   selected: boolean;
   number: number | null;
   isCustom: boolean;
+  confirm?: CategoryCancelConfirm;
+}
+
+export interface CategoryCancelConfirm {
+  label: string;
+  data?: Record<string, string>;
 }

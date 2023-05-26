@@ -7,7 +7,7 @@ import {
   PROJECT_NODE_VIEW_TYPE,
 } from '../models';
 import { MetadataState } from '../states';
-import { CategorySelection } from '../view-models';
+import { CategoryCancelConfirm, CategorySelection } from '../view-models';
 
 @Injectable({ providedIn: 'root' })
 export class CategorySelectionService {
@@ -15,7 +15,9 @@ export class CategorySelectionService {
 
   build(
     categoryType: PROJECT_NODE_VIEW_TYPE,
-    selected: ProjectCategory[] | undefined
+    selected: ProjectCategory[] | undefined,
+    confirmMessage?: string,
+    catCounts?: Map<string, number>
   ): CategorySelection[] {
     const cat =
       categoryType === PROJECT_NODE_VIEW.DISCIPLINE
@@ -57,6 +59,7 @@ export class CategorySelectionService {
             number: null,
             selected: true,
             isCustom: false,
+            confirm: this.createConfirm(cat.id, confirmMessage, catCounts),
           });
           usedIds.push(x);
         }
@@ -68,6 +71,7 @@ export class CategorySelectionService {
           number: null,
           selected: true,
           isCustom: true,
+          confirm: this.createConfirm(x.id, confirmMessage, catCounts),
         });
         usedIds.push(x.id);
       }
@@ -184,5 +188,22 @@ export class CategorySelectionService {
         item.number = null;
       }
     }
+  }
+
+  private createConfirm(
+    id: string,
+    confirmMessage?: string,
+    catCounts?: Map<string, number>
+  ): CategoryCancelConfirm | undefined {
+    const x = catCounts?.get(id) ?? 0;
+
+    if (x === 0 || !confirmMessage) return undefined;
+
+    return {
+      label: confirmMessage,
+      data: {
+        count: x.toString(),
+      },
+    };
   }
 }

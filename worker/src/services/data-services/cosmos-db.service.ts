@@ -53,20 +53,6 @@ export class CosmosDbService {
   }
 
   async getAllByPartitionAsync<T extends IdObject>(pk: string, clean: boolean): Promise<T[] | undefined> {
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
-    console.log('about to make the call');
     const res = await this.db.getDocuments<T>({
       partitionKey: pk,
     });

@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  signal,
   ViewEncapsulation,
 } from '@angular/core';
 import {
@@ -12,14 +13,12 @@ import {
   faFloppyDisk,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import {
   CategorySelectionService,
   DialogService,
   IdService,
 } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { BehaviorSubject } from 'rxjs';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 @Component({
@@ -36,8 +35,7 @@ export class CategoryListEditorComponent {
   @Output() readonly saveClicked = new EventEmitter<void>();
   @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 
-  readonly hideUnselected$ = new BehaviorSubject<boolean>(false);
-  readonly faCircle = faCircle;
+  readonly hideUnselected = signal(false);
   readonly faEye = faEye;
   readonly faEyeSlash = faEyeSlash;
   readonly faFloppyDisk = faFloppyDisk;
@@ -51,8 +49,7 @@ export class CategoryListEditorComponent {
   ) {}
 
   changed(): void {
-    this.catService.renumber(this.categories!);
-    this.categoriesChange.emit(this.categories!);
+    this.rebuild();
   }
 
   showCreate() {
@@ -73,7 +70,12 @@ export class CategoryListEditorComponent {
         };
         this.categories = [item, ...this.categories!];
 
-        this.changed();
+        this.rebuild();
       });
+  }
+
+  rebuild() {
+    this.catService.renumber(this.categories!);
+    this.categoriesChange.emit(this.categories!);
   }
 }
