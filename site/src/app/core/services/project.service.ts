@@ -19,7 +19,9 @@ export class ProjectService {
 
   getStatusResource(status: string): string {
     if (status === PROJECT_VIEW_STATI.ACTIVE) return 'General.Active';
-    if (status === PROJECT_VIEW_STATI.CLOSED) return 'General.Closed';
+    if (status === PROJECT_VIEW_STATI.APPROVAL)
+      return 'Projects.WaitingApproval';
+    if (status === PROJECT_VIEW_STATI.EXECUTION) return 'General.Execution';
     if (status === PROJECT_VIEW_STATI.EXECUTION) return 'General.Execution';
     if (status === PROJECT_VIEW_STATI.FOLLOW_UP) return 'General.FollowUp';
     if (status === PROJECT_VIEW_STATI.PLANNING) return 'General.Planning';

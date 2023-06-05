@@ -1,4 +1,5 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
+import { PROJECT_STATI_TYPE } from '../enums';
 
 export interface MenuItem {
   id?: string;
@@ -19,13 +20,17 @@ export interface MenuItem {
 }
 
 export interface ActionMenuItem {
+  action: string;
   id?: string;
   title?: string;
   tooltip?: string;
-  action: string;
   icon?: IconDefinition;
   disabled?: boolean;
-  roles?: string[];
+  filters?: {
+    excludeFromCat?: boolean;
+    roles?: string[];
+    stati?: PROJECT_STATI_TYPE[];
+  };
 }
 
 export interface TimelineMenuItem {

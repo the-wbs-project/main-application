@@ -95,3 +95,8 @@ export class TaskPageChanged {
   static readonly type = '[Project Task] Change Page';
   constructor(readonly pageView: TASK_PAGE_VIEW_TYPE) {}
 }
+
+export class RemoveDisciplinesFromTasks {
+  static readonly type = '[Project Task] Remove Disciplines';
+  constructor(readonly removedIds: string[]) {}
+}

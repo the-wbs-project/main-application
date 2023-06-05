@@ -5,6 +5,7 @@ import {
   ProjectCategory,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
+  ProjectCategoryChanges,
 } from '../models';
 import { MetadataState } from '../states';
 import { CategoryCancelConfirm, CategorySelection } from '../view-models';
@@ -144,15 +145,31 @@ export class CategorySelectionService {
     return cats;
   }
 
-  extract(categories: CategorySelection[] | undefined): ProjectCategory[] {
-    const cats: ProjectCategory[] = [];
+  extract(
+    viewModels: CategorySelection[] | undefined,
+    originals: ProjectCategory[]
+  ): ProjectCategoryChanges {
+    const categories: ProjectCategory[] = [];
+    const removedIds: string[] = [];
 
-    if (categories)
-      for (const x of categories) {
-        if (!x.selected) continue;
-        if (!x.isCustom) cats.push(x.id);
+    if (viewModels)
+      for (const x of viewModels) {
+        if (!x.selected) {
+          //
+          //  If this item was in the originals, add to removed Ids list
+          //
+          if (
+            originals.some(
+              (cat) => x.id === (typeof cat === 'string' ? cat : cat.id)
+            )
+          ) {
+            removedIds.push(x.id);
+          }
+          continue;
+        }
+        if (!x.isCustom) categories.push(x.id);
         else
-          cats.push({
+          categories.push({
             id: x.id,
             label: x.label,
             type: 'Custom',
@@ -160,7 +177,7 @@ export class CategorySelectionService {
             tags: [],
           });
       }
-    return cats;
+    return { categories, removedIds };
   }
 
   extractIds(categories: CategorySelection[] | undefined): string[] {

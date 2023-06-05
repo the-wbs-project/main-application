@@ -1,5 +1,6 @@
 export enum PROJECT_STATI {
   PLANNING = 'planning',
+  APPROVAL = 'approval',
   EXECUTION = 'execution',
   FOLLOW_UP = 'follow-up',
   CLOSED = 'closed',
@@ -7,6 +8,7 @@ export enum PROJECT_STATI {
 
 export type PROJECT_STATI_TYPE =
   | PROJECT_STATI.CLOSED
+  | PROJECT_STATI.APPROVAL
   | PROJECT_STATI.EXECUTION
   | PROJECT_STATI.FOLLOW_UP
   | PROJECT_STATI.PLANNING;
@@ -14,6 +16,7 @@ export type PROJECT_STATI_TYPE =
 export enum PROJECT_VIEW_STATI {
   ACTIVE = 'active',
   PLANNING = 'planning',
+  APPROVAL = 'approval',
   EXECUTION = 'execution',
   FOLLOW_UP = 'follow-up',
   CLOSED = 'closed',
@@ -21,6 +24,7 @@ export enum PROJECT_VIEW_STATI {
 
 export type PROJECT_VIEW_STATI_TYPE =
   | PROJECT_VIEW_STATI.ACTIVE
+  | PROJECT_STATI.APPROVAL
   | PROJECT_VIEW_STATI.CLOSED
   | PROJECT_VIEW_STATI.EXECUTION
   | PROJECT_VIEW_STATI.FOLLOW_UP

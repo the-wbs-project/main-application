@@ -57,8 +57,14 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
   }
 
   save(): void {
-    const results = this.catService.extract(this.categories);
+    const project = this.store.selectSnapshot(ProjectState.current)!;
     const cType: PROJECT_NODE_VIEW_TYPE = this.route.snapshot.data['cType'];
+    const cats =
+      cType === PROJECT_NODE_VIEW.DISCIPLINE
+        ? project.categories.discipline
+        : project.categories.phase;
+
+    const results = this.catService.extract(this.categories, cats);
 
     this.store.dispatch(new ChangeProjectCategories(cType, results));
   }

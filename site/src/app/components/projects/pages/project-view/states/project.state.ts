@@ -18,10 +18,12 @@ import {
   AddUserToRole,
   ChangeProjectBasics,
   ChangeProjectCategories,
+  ChangeProjectStatus,
   MarkProjectChanged,
   NavigateToView,
   PerformChecklist,
   RebuildNodeViews,
+  RemoveDisciplinesFromTasks,
   RemoveUserToRole,
   SaveTimelineAction,
   SetProject,
@@ -146,15 +148,17 @@ export class ProjectState {
     const userId = this.store.selectSnapshot(AuthState.userId);
 
     return this.data.projects.getAsync(projectId).pipe(
-      tap((project) =>
+      tap((project) => {
+        if (!project.roles) project.roles = [];
+
         ctx.patchState({
           current: project,
           roles:
             project.roles
-              ?.filter((x) => x.userId === userId)
-              ?.map((x) => x.role) ?? [],
-        })
-      ),
+              .filter((x) => x.userId === userId)
+              .map((x) => x.role) ?? [],
+        });
+      }),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
       tap((project) =>
@@ -313,10 +317,35 @@ export class ProjectState {
     );
   }
 
+  @Action(ChangeProjectStatus)
+  ChangeProjectStatus(
+    ctx: StateContext<StateModel>,
+    { status }: ChangeProjectStatus
+  ): Observable<void> {
+    const state = ctx.getState();
+    const project = state.current!;
+    const original = project.status;
+
+    project.status = status;
+
+    return this.saveProject(ctx, project).pipe(
+      tap(() => this.messaging.success('Projects.ProjectUpdated')),
+      tap(() =>
+        this.saveActivity(ctx, {
+          action: PROJECT_ACTIONS.STATUS_CHANGED,
+          data: {
+            from: original,
+            to: status,
+          },
+        })
+      )
+    );
+  }
+
   @Action(ChangeProjectCategories)
   changeProjectCategories(
     ctx: StateContext<StateModel>,
-    action: ChangeProjectCategories
+    { cType, changes }: ChangeProjectCategories
   ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
@@ -324,31 +353,39 @@ export class ProjectState {
     let saveMessage: string;
     let saveAction: string;
 
-    if (action.cType === PROJECT_NODE_VIEW.PHASE) {
+    if (cType === PROJECT_NODE_VIEW.PHASE) {
       saveMessage = 'Projects.ProjectPhasesUpdated';
       saveAction = PROJECT_ACTIONS.PHASES_CHANGED;
 
       originalList = [...project.categories.phase];
 
-      project.categories.phase = action.categories;
+      project.categories.phase = changes.categories;
     } else {
       saveMessage = 'Projects.ProjectDisciplinesUpdated';
       saveAction = PROJECT_ACTIONS.DISCIPLINES_CHANGED;
 
       originalList = [...project.categories.discipline];
 
-      project.categories.discipline = action.categories;
+      project.categories.discipline = changes.categories;
     }
 
     return this.saveProject(ctx, project).pipe(
       tap(() => this.messaging.success(saveMessage)),
-      tap(() => ctx.dispatch(new RebuildNodeViews())),
+      tap(() =>
+        ctx.dispatch(
+          cType === PROJECT_NODE_VIEW.DISCIPLINE &&
+            changes.removedIds.length > 0
+            ? new RemoveDisciplinesFromTasks(changes.removedIds)
+            : new RebuildNodeViews()
+        )
+      ),
       tap(() =>
         this.saveActivity(ctx, {
           action: saveAction,
           data: {
             from: originalList,
-            to: action.categories,
+            to: changes.categories,
+            removed: changes.removedIds,
           },
         })
       )

@@ -7,4 +7,5 @@ export enum PROJECT_ACTIONS {
   DISCIPLINES_CHANGED = 'project-disciplines-changed',
   ADDED_USER = 'project-added-user',
   REMOVED_USER = 'project-removed-user',
+  STATUS_CHANGED = 'project-status-changed',
 }

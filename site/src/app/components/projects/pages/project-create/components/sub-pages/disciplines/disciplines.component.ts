@@ -37,7 +37,9 @@ export class DisciplinesComponent implements OnInit {
 
   nav(): void {
     this.store.dispatch(
-      new DisciplinesChosen(this.catService.extract(this.categories))
+      new DisciplinesChosen(
+        this.catService.extract(this.categories, []).categories
+      )
     );
   }
 }

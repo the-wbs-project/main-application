@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ActionMenuItem } from '@wbs/core/models';
+import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { PROJECT_MENU_ITEMS } from '../models';
 import { Store } from '@ngxs/store';
@@ -15,29 +15,31 @@ export class TaskMenuPipe implements PipeTransform {
   ): ActionMenuItem[][] {
     const task = tasks?.find((x) => x.id === taskId);
     const userRoles = this.store.selectSnapshot(ProjectState.roles) ?? [];
+    const status = this.store.selectSnapshot(ProjectState.current)!.status;
 
-    const treeActions = this.filter(
+    const treeActions = this.filterList(
+      PROJECT_MENU_ITEMS.phaseTreeActions,
+      task,
       userRoles,
-      PROJECT_MENU_ITEMS.phaseTreeActions
-    );
-    const navActions = this.filter(
-      userRoles,
-      PROJECT_MENU_ITEMS.phaseItemNavActions
-    );
-    const phaseActions = this.filter(
-      userRoles,
-      PROJECT_MENU_ITEMS.phaseItemActions
+      status
     );
     const results = [treeActions];
 
+    const navActions = this.filterList(
+      PROJECT_MENU_ITEMS.phaseItemNavActions,
+      task,
+      userRoles,
+      status
+    );
+    const phaseActions = this.filterList(
+      PROJECT_MENU_ITEMS.phaseItemActions,
+      task,
+      userRoles,
+      status
+    );
     if (!task) return results;
 
     const nav: ActionMenuItem[] = [];
-    const actions: ActionMenuItem[] = [];
-
-    for (const item of phaseActions) {
-      if (item.action === 'addSub' || task.parentId != null) actions.push(item);
-    }
 
     for (const item of navActions) {
       if (item.action === 'moveLeft') {
@@ -51,36 +53,63 @@ export class TaskMenuPipe implements PipeTransform {
       }
     }
 
-    if (actions.length > 0) results.push(actions);
+    if (phaseActions.length > 0) results.push(phaseActions);
     if (nav.length > 0) results.push(nav);
 
+    console.log(results);
     return results;
   }
 
-  private filter(
-    userRoles: string[],
-    actions: ActionMenuItem[]
+  private filterList(
+    actions: ActionMenuItem[],
+    task: WbsNodeView | undefined,
+    roles: string[],
+    status: PROJECT_STATI_TYPE
   ): ActionMenuItem[] {
     if (!actions || actions.length === 0) return actions;
 
     const results: ActionMenuItem[] = [];
 
     for (const action of actions) {
-      const roles = action.roles ?? [];
-
-      if (roles.length === 0) {
+      if (this.filterItem(action, task, roles, status)) {
         results.push(action);
-        continue;
-      }
-
-      for (const role of roles) {
-        if (userRoles.indexOf(role) > -1) {
-          results.push(action);
-          continue;
-        }
       }
     }
 
     return results;
+  }
+
+  private filterItem(
+    link: ActionMenuItem,
+    task: WbsNodeView | undefined,
+    roles: string[],
+    status: PROJECT_STATI_TYPE
+  ): boolean {
+    console.log(link);
+    if (!link.filters) return true;
+    //
+    //  Perform cat check
+    //
+    if (
+      task &&
+      link.filters.excludeFromCat &&
+      (task.id === task.phaseId || task.id === task.disciplines[0])
+    )
+      return false;
+
+    if (link.filters.roles) {
+      const rolesResult = link.filters.roles.some(
+        (role) => roles.indexOf(role) > -1
+      );
+
+      if (!rolesResult) return false;
+    }
+    if (link.filters.stati) {
+      const statusResult = link.filters.stati.some((s) => s === status);
+
+      if (!statusResult) return false;
+    }
+
+    return true;
   }
 }

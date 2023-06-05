@@ -3,6 +3,8 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   ROLES_TYPE,
   UserLite,
+  ProjectCategoryChanges,
+  PROJECT_STATI,
 } from '@wbs/core/models';
 
 export class VerifyProject {
@@ -24,7 +26,7 @@ export class ChangeProjectCategories {
   static readonly type = '[Project] Change Project Categories';
   constructor(
     readonly cType: PROJECT_NODE_VIEW_TYPE,
-    readonly categories: ProjectCategory[]
+    readonly changes: ProjectCategoryChanges
   ) {}
 }
 
@@ -49,4 +51,9 @@ export class RemoveUserToRole {
 
 export class MarkProjectChanged {
   static readonly type = '[Project] Mark Changed';
+}
+
+export class ChangeProjectStatus {
+  static readonly type = '[Project] Change Status';
+  constructor(readonly status: PROJECT_STATI) {}
 }

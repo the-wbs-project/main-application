@@ -6,6 +6,7 @@ export * from './list-item.model';
 export * from './enums';
 export * from './organization.model';
 export * from './project-category.type';
+export * from './project-category-changes.model';
 export * from './project-import-result.model';
 export * from './project-upload-data.model';
 export * from './project.model';

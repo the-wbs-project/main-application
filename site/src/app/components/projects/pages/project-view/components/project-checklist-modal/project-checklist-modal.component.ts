@@ -7,8 +7,9 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
-import { first } from 'rxjs/operators';
 import { ProjectChecklistState } from '../../states';
+import { ChangeProjectStatus } from '../../actions';
+import { PROJECT_STATI } from '@wbs/core/models';
 
 @Component({
   selector: 'wbs-project-checklist-modal',
@@ -30,13 +31,16 @@ export class ProjectChecklistModalComponent {
   ) {}
 
   open(): void {
-    this.modalService
-      .open(this.content, {
-        //modalDialogClass: 'checklist-modal',
-      })
-      .dismissed.pipe(first())
-      .subscribe((value) => {
-        console.log(value);
-      });
+    const modal = this.modalService.open(this.content, {
+      size: 'lg',
+      ariaLabelledBy: 'modal-title',
+    });
+
+    modal.result.then((value) => {
+      if (value === 'submit') {
+        this.store.dispatch(new ChangeProjectStatus(PROJECT_STATI.APPROVAL));
+      }
+    });
+    modal.dismissed.subscribe();
   }
 }

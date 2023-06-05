@@ -25,6 +25,7 @@ import {
   NavigateToTask,
   PerformChecklist,
   RebuildNodeViews,
+  RemoveDisciplinesFromTasks,
   RemoveTask,
   SaveTimelineAction,
   TaskPageChanged,
@@ -209,6 +210,40 @@ export class TasksState {
         action.completedAction ? ctx.dispatch(action.completedAction) : of()
       )
     );
+  }
+
+  @Action(RemoveDisciplinesFromTasks)
+  removeDisciplinesFromTasks(
+    ctx: StateContext<StateModel>,
+    { removedIds }: RemoveDisciplinesFromTasks
+  ): Observable<any> | void {
+    const state = ctx.getState();
+    const nodes = this.copy(state.nodes)!;
+    const toSave: WbsNode[] = [];
+
+    for (const node of nodes) {
+      if (!node.disciplineIds) continue;
+
+      let save = false;
+
+      for (let i = 0; i < node.disciplineIds.length; i++) {
+        const id = node.disciplineIds[i];
+
+        if (removedIds.indexOf(id) === -1) continue;
+
+        node.disciplineIds.splice(i, 1);
+        i--;
+        save = true;
+      }
+      if (save) toSave.push(node);
+    }
+
+    return this.data.projectNodes
+      .batchAsync(state.project!.id, toSave, [])
+      .pipe(
+        tap(() => ctx.patchState({ nodes })),
+        tap(() => ctx.dispatch(new RebuildNodeViews()))
+      );
   }
 
   @Action(CloneTask)

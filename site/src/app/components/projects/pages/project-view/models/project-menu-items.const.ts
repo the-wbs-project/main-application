@@ -10,7 +10,7 @@ import {
   faTrashAlt,
   faUpload,
 } from '@fortawesome/pro-solid-svg-icons';
-import { ActionMenuItem, ROLES } from '@wbs/core/models';
+import { ActionMenuItem, PROJECT_STATI, ROLES } from '@wbs/core/models';
 import { PROJECT_PAGE_VIEW } from './project-page-view.const';
 import { PROJECT_SETTINGS_PAGE_LISTS } from './project-settings-pages.const';
 
@@ -25,7 +25,10 @@ export const PROJECT_MENU_ITEMS = {
       action: 'upload',
       icon: faUpload,
       title: 'General.Upload',
-      roles: [ROLES.PM],
+      filters: {
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+      },
     },
   ],
   phaseItemActions: <ActionMenuItem[]>[
@@ -33,7 +36,10 @@ export const PROJECT_MENU_ITEMS = {
       action: 'addSub',
       icon: faPlus,
       tooltip: 'Projects.AddSubTask',
-      roles: [ROLES.PM],
+      filters: {
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+      },
     },
     {
       action: 'viewTask',
@@ -44,13 +50,21 @@ export const PROJECT_MENU_ITEMS = {
       action: 'cloneTask',
       icon: faClone,
       tooltip: 'Projects.CloneTask',
-      roles: [ROLES.PM],
+      filters: {
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+        excludeFromCat: true,
+      },
     },
     {
       action: 'deleteTask',
       icon: faTrashAlt,
       tooltip: 'Projects.DeleteTask',
-      roles: [ROLES.PM],
+      filters: {
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+        excludeFromCat: true,
+      },
     },
   ],
   phaseItemNavActions: <ActionMenuItem[]>[
@@ -58,25 +72,41 @@ export const PROJECT_MENU_ITEMS = {
       action: 'moveLeft',
       icon: faArrowLeft,
       tooltip: 'Projects.MoveLeft',
-      roles: [ROLES.PM],
+      filters: {
+        excludeFromCat: true,
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+      },
     },
     {
       action: 'moveUp',
       icon: faArrowUp,
       tooltip: 'Projects.MoveUp',
-      roles: [ROLES.PM],
+      filters: {
+        excludeFromCat: true,
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+      },
     },
     {
       action: 'moveDown',
       icon: faArrowDown,
       tooltip: 'Projects.MoveDown',
-      roles: [ROLES.PM],
+      filters: {
+        excludeFromCat: true,
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+      },
     },
     {
       action: 'moveRight',
       icon: faArrowRight,
       tooltip: 'Projects.MoveRight',
-      roles: [ROLES.PM],
+      filters: {
+        excludeFromCat: true,
+        roles: [ROLES.PM],
+        stati: [PROJECT_STATI.PLANNING],
+      },
     },
   ],
   projectLinks: [
