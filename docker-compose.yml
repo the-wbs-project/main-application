@@ -1,0 +1,25 @@
+version: '3'
+services:
+  wbs-worker:
+    build:
+      context: ./worker
+      dockerfile: Dockerfile-dev
+    ports:
+      - "88:88"
+    container_name: wbs-worker
+    volumes:
+       - ./worker:/usr/src/app/worker
+       - /usr/src/app/worker/node_modules
+  wbs-site:
+    build:
+      context: ./site
+      dockerfile: Dockerfile-dev
+      args:
+          FA_TOKEN: $FA_TOKEN
+          KENDO_UI_LICENSE: $KENDO_UI_LICENSE
+    ports:
+      - "4200:4200"
+    container_name: wbs-site
+    volumes:
+       - ./site:/usr/src/app/site
+       - /usr/src/app/site/node_moduless

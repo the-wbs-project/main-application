@@ -9,5 +9,8 @@ _theme/Nowa
 **/data/**/config*.*
 .vs/
 .vscode/
+.env
  
 worker/.wrangler/
+
+**/.DS_store

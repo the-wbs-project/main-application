@@ -1,0 +1,12 @@
+# Stage 1
+FROM node:18.16.1 as node
+
+WORKDIR /usr/src/app/worker
+
+COPY . .
+
+RUN npm install -g wrangler@2.20.0 && npm install
+
+EXPOSE 88
+
+CMD ["npm", "start"]

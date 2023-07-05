@@ -4,10 +4,9 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "yarn run s:setup && yarn run w:setup",
-    "data": "npm run --prefix data/tool run:w",
-    "site": "yarn --cwd site run serve",
-    "styles": "yarn --cwd site run styles",
-    "worker": "yarn --cwd worker run go"
+    "build": "docker-compose build --no-cache",
+    "start": "docker-compose up",
+    "stop": "docker-compose stop"
   },
   "repository": {
     "type": "git"
