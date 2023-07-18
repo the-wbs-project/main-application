@@ -3,7 +3,7 @@ import { Env, Variables } from './config';
 import { cache, cors, isAdmin, logger, verify } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
 
-export const AZURE_ROUTES_POST: string[] = ['api/projects/export/*', 'api/projects/import/*'];
+export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/:type', '/api/projects/import/*'];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //
@@ -22,7 +22,7 @@ app.use('*', async (ctx, next) => {
 app.use('*', logger);
 app.use('*', cors);
 
-app.options('*', (c) => c.text(''));
+app.options('*', cors, (c) => c.text(''));
 
 app.get('/api/resources', cache, Http.metadata.getResourcesAsync);
 app.get('/api/lists/:name', cache, Http.metadata.getListAsync);
@@ -61,7 +61,7 @@ app.post('/api/user', verify, isAdmin, Http.users.updateUserAsync);
 app.get('/api/files/:file', verify, Http.misc.getStaticFileAsync);
 
 for (const path of AZURE_ROUTES_POST) {
-  app.post('/' + path, verify, Http.misc.handleAzureCallAsync);
+  app.post(path, verify, Http.misc.handleAzureCallAsync);
 }
 export default app;
 

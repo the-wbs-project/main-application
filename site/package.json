@@ -7,12 +7,9 @@
     "watch": "ng build --watch --configuration development",
     "deploy:qa": "ng build --configuration qa --output-path ../dist",
     "deploy:prod": "ng build --configuration production --output-path ../dist",
-    "serve": "ng serve --configuration development --watch --no-live-reload",
-    "serve2": "ng serve --configuration development",
     "styles": "gulp watch && gulp dark && gulp transparent && gulp skin",
-    "kendo:auth": "yarn run kendo-ui-license activate",
-    "publish": "yarn run deploy",
-    "start": "ng serve --host 0.0.0.0"
+    "kendo:auth": "npx kendo-ui-license activate",
+    "start": "ng serve --host 0.0.0.0 --configuration development"
   },
   "private": true,
   "dependencies": {
