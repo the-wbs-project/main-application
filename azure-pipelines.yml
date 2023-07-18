@@ -16,7 +16,7 @@ jobs:
       - task: DotNetCoreCLI@2
         inputs:
           command: "publish"
-          arguments: --output ./dist"
+          arguments: "utilities.csproj --output ./dist"
           projects: "./_other/utilities"
         displayName: "Build Azure Functions"
 
