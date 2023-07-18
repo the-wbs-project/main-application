@@ -15,9 +15,12 @@ jobs:
     steps:
       - task: DotNetCoreCLI@2
         inputs:
-          command: "build"
-          arguments: "--output ./dist"
-          projects: "./_other/utilities/utilities.csprojb"
+          command: "publish"
+          publishWebProjects: false
+          projects: "./_other/utilities/utilities.csproj"
+          arguments: "-o ./dist"
+          zipAfterPublish: true
+          modifyOutputPath: true
         displayName: "Build Azure Functions"
 
       - task: ArchiveFiles@2
