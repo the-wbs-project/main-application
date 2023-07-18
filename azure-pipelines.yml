@@ -19,7 +19,7 @@ jobs:
           publishWebProjects: false
           projects: "./_other/utilities/utilities.csproj"
           arguments: "-o ./dist"
-          zipAfterPublish: true
+          zipAfterPublish: false
           modifyOutputPath: true
         displayName: "Build Azure Functions"
 
