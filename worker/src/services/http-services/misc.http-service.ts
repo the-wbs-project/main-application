@@ -12,11 +12,19 @@ export class MiscHttpService {
     if (culture) headers.set('app-culture', culture);
     if (ctx.env.AZURE_KEY) headers.set('x-functions-key', ctx.env.AZURE_KEY);
 
-    return await ctx.get('fetcher').fetch(url, {
+    const res = await ctx.get('fetcher').fetch(url, {
       body: body,
       method: ctx.req.method,
       headers,
     });
+
+    const headers2: Record<string, string | string[]> = {};
+
+    for (const key of res.headers.keys()) {
+      headers2[key] = res.headers.get(key)!;
+    }
+
+    return ctx.newResponse(await res.arrayBuffer(), res.status, headers2);
   }
 
   static async getStaticFileAsync(ctx: Context): Promise<Response> {
