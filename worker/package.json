@@ -33,6 +33,6 @@
   "dependencies": {
     "@cfworker/cosmos": "^1.13.4",
     "@cfworker/jwt": "^4.0.4",
-    "hono": "^3.1.6"
+    "hono": "^3.3.2"
   }
 }
