@@ -22,4 +22,15 @@ services:
     container_name: wbs-site
     volumes:
        - ./site:/usr/src/app/site
-       - /usr/src/app/site/node_moduless
+       - /usr/src/app/site/node_modules
+# wbs-util:
+#    build:
+#      context: ./_other/utilities
+#      dockerfile: Dockerfile-dev
+#    ports:
+#      - "7071:7071"
+#    container_name: wbs-util
+#    volumes:
+#       - ./_other/utilities:/usr/src/app/utilities
+#       - /usr/src/app/utilities/Bin
+#       - /usr/src/app/utilities/Obj

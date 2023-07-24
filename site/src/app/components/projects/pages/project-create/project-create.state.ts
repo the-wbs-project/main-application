@@ -328,8 +328,8 @@ export class ProjectCreateState {
         });
       }
     }
-    const url = ['/projects', project.id, 'view'];
-
+    const url = ['/projects', 'view', project.id, 'about'];
+    
     return this.data.projects.putAsync(project).pipe(
       switchMap(() => this.data.projectNodes.batchAsync(project.id, nodes, [])),
       switchMap(() => ctx.dispatch(new Navigate(url)))

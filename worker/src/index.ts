@@ -22,7 +22,7 @@ app.use('*', async (ctx, next) => {
 app.use('*', logger);
 app.use('*', cors);
 
-app.options('*', cors, (c) => c.text(''));
+app.options('*', (c) => c.text(''));
 
 app.get('/api/resources', cache, Http.metadata.getResourcesAsync);
 app.get('/api/lists/:name', cache, Http.metadata.getListAsync);
