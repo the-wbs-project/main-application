@@ -4,6 +4,9 @@
 		<AzureFunctionsVersion>v4</AzureFunctionsVersion>
 		<RootNamespace>Wbs.Utilities</RootNamespace>
 	</PropertyGroup>
+	<Target Name="RunFunctions">
+    	<Exec Command="func start" />
+	</Target>
 	<ItemGroup>
 		<PackageReference Include="EPPlus" Version="4.5.3.3" />
 		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
@@ -22,8 +25,7 @@
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Update="local.settings.json">
-			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-			<CopyToPublishDirectory>Never</CopyToPublishDirectory>
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>
 </Project>

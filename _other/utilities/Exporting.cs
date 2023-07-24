@@ -35,6 +35,8 @@ namespace Wbs.Utilities
                 var nodes = JsonSerializer.Deserialize<List<WbsPhaseView>>(text);
                 var bytes = await xlsxExporter.RunAsync(nodes, culture);
 
+                log.LogDebug("Test");
+
                 return new FileContentResult(bytes, "application/vnd.ms-excel");
             }
             catch (Exception ex)
