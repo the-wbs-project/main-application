@@ -11,8 +11,9 @@ import {
   faScrewdriverWrench,
 } from '@fortawesome/pro-solid-svg-icons';
 import { Logger } from '@wbs/core/services';
-import { AppModule } from './app/app.module';
-import { environment } from './environments/environment';
+import { bootstrapApplication } from '@angular/platform-browser';
+import { AppComponent } from '@wbs/app.component';
+import { appConfig } from '@wbs/app.config';
 
 Logger.setup();
 
@@ -27,10 +28,6 @@ library.add(faScrewdriverWrench);
 //@ts-ignore
 Notiflix.Loading.standard();
 
-if (environment.production) {
-  enableProdMode();
-}
-
-platformBrowserDynamic()
-  .bootstrapModule(AppModule)
-  .catch((err) => console.error(err));
+bootstrapApplication(AppComponent, appConfig).catch((err) =>
+  console.error(err)
+);

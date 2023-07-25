@@ -1,0 +1,93 @@
+<div class="display-flex">
+  <div class="flex-grow-1">
+    <div
+      class="btn-group"
+      role="group"
+      aria-label="Basic radio toggle button group"
+    >
+      <input
+        type="radio"
+        class="btn-check"
+        name="btnUsersActive"
+        id="btnUsersActive"
+        autocomplete="off"
+        [checked]="(view$ | async) === 'active'"
+        [routerLink]="'/settings/users/active'"
+      />
+      <label class="btn btn-outline-primary" for="btnUsersActive">
+        {{ "Settings.ActiveUsers" | translate }} ({{ activeCount$ | async }})
+      </label>
+
+      <input
+        type="radio"
+        class="btn-check"
+        name="btnUsersInactive"
+        id="btnUsersInactive"
+        autocomplete="off"
+        [checked]="(view$ | async) === 'inactive'"
+        [routerLink]="'/settings/users/inactive'"
+      />
+      <label class="btn btn-outline-primary" for="btnUsersInactive">
+        {{ "Settings.InactiveUsers" | translate }} ({{
+          inactiveCount$ | async
+        }})
+      </label>
+    </div>
+  </div>
+  <div class="flex-grow-1 tx-right">
+    <span class="pd-r-10"> {{ activeCount$ | async }} / Unlimited Seats </span>
+  </div>
+</div>
+<kendo-grid
+  [data]="data$ | async"
+  [sortable]="true"
+  [filterable]="true"
+  [sort]="sort$ | async"
+  [filter]="filter$ | async"
+  [style.height.%]="95"
+  class="user-mgmt-grid"
+  (dataStateChange)="dataStateChange($event)"
+>
+  <!--
+    User
+  -->
+  <kendo-grid-column
+    field="name"
+    [title]="'General.Name' | translate"
+    [width]="300"
+    filter="text"
+    class="menu-grid-cell"
+  >
+    <ng-template kendoGridCellTemplate let-item>
+      <div>
+        <div class="name-item">{{ item.name }}</div>
+        <div class="tx-right">
+          <wbs-settings-user-actions [user]="item" />
+        </div>
+      </div>
+    </ng-template>
+  </kendo-grid-column>
+  <!--
+    Company
+  -->
+  <kendo-grid-column
+    field="email"
+    [title]="'General.Email' | translate"
+    [width]="150"
+    filter="text"
+  />
+  <!--
+    Permissions
+  -->
+  <kendo-grid-column
+    field="claims"
+    class="center"
+    filter="text"
+    [width]="200"
+    [title]="'Settings.Roles' | translate"
+  >
+    <ng-template kendoGridCellTemplate let-item>
+      {{ item.roles | roleList }}
+    </ng-template>
+  </kendo-grid-column>
+</kendo-grid>

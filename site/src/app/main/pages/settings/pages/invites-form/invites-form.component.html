@@ -1,0 +1,127 @@
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-xl-6 offset-xl-3 col-lg-8 offset-lg-2">
+      <form #inviteForm [formGroup]="form" (ngSubmit)="submit()">
+        <kendo-formfield *ngIf="isNewInvite$ | async">
+          <kendo-label [for]="email" [text]="'General.Email' | translate">
+          </kendo-label>
+          <input
+            #email
+            type="email"
+            kendoTextBox
+            formControlName="email"
+            class="form-control"
+            required
+          />
+          <kendo-formerror *ngIf="controls.email?.errors?.['required']">
+            Error: Email is required
+          </kendo-formerror>
+          <kendo-formerror *ngIf="controls.email?.errors?.['email']">
+            Error: Invalid Email Address
+          </kendo-formerror>
+          <kendo-formerror *ngIf="controls.email?.errors?.['inviteFound']">
+            Error: Already an invite sent to this email address
+          </kendo-formerror>
+          <kendo-formerror *ngIf="controls.email?.errors?.['userFound']">
+            Error: User account already exists
+          </kendo-formerror>
+        </kendo-formfield>
+        <div *ngIf="!(isNewInvite$ | async)" class="k-form-field">
+          <label class="k-label">
+            {{ "General.Email" | translate }} ({{
+              "General.IsReadOnly" | translate
+            }})
+          </label>
+          <input
+            [value]="(existingEmail$ | async) ?? ''"
+            class="form-control"
+            readonly
+          />
+        </div>
+        <label class="form-label">{{ "Settings.Roles" | translate }}</label>
+        <ul class="list-group">
+          <li class="list-group-item">
+            <div class="checkbox">
+              <div class="custom-checkbox custom-control">
+                <input
+                  type="checkbox"
+                  data-checkboxes="mygroup"
+                  class="custom-control-input"
+                  id="role-pm"
+                  formControlName="pm"
+                />
+                <label for="role-pm" class="custom-control-label mt-1">
+                  {{ "General.PM-Full" | translate }}
+                </label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="checkbox">
+              <div class="custom-checkbox custom-control">
+                <input
+                  type="checkbox"
+                  data-checkboxes="mygroup"
+                  class="custom-control-input"
+                  id="role-approver"
+                  formControlName="approver"
+                />
+                <label for="role-approver" class="custom-control-label mt-1">
+                  {{ "General.Approver" | translate }}
+                </label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="checkbox">
+              <div class="custom-checkbox custom-control">
+                <input
+                  type="checkbox"
+                  data-checkboxes="mygroup"
+                  class="custom-control-input"
+                  id="role-sme"
+                  formControlName="sme"
+                />
+                <label for="role-sme" class="custom-control-label mt-1">
+                  {{ "General.SME-Full" | translate }}
+                </label>
+              </div>
+            </div>
+          </li>
+          <li class="list-group-item">
+            <div class="checkbox">
+              <div class="custom-checkbox custom-control">
+                <input
+                  type="checkbox"
+                  data-checkboxes="mygroup"
+                  class="custom-control-input"
+                  id="role-admin"
+                  formControlName="admin"
+                />
+                <label for="role-admin" class="custom-control-label mt-1">
+                  {{ "General.Admin-Explain" | translate }}
+                </label>
+              </div>
+            </div>
+          </li>
+        </ul>
+        <kendo-formerror *ngIf="form.errors?.['atleastOneRole']">
+          Error: You must pick atleast one role
+        </kendo-formerror>
+        <div class="w-100 tx-right pd-t-10">
+          <a class="btn btn-light mg-r-10" [routerLink]="'/settings/invites'">
+            {{ "General.Cancel" | translate }}
+          </a>
+          <button
+            type="submit"
+            class="btn btn-primary"
+            [disabled]="!form.valid"
+          >
+            <fa-icon [icon]="faEnvelope" />
+            {{ "Settings.SendInvite" | translate }}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

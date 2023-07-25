@@ -1,13 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, map } from 'rxjs';
 import { INFO_PAGES } from 'src/environments/info-pages.const';
 
 @Component({
+  standalone: true,
   templateUrl: './info.component.html',
+  imports: [CommonModule, TranslateModule]
 })
 export class InfoComponent implements OnInit {
   readonly name$ = new BehaviorSubject<string | undefined>(undefined);

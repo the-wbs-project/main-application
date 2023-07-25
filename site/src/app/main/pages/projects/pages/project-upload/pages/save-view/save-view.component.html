@@ -1,0 +1,14 @@
+<div class="w-100 text-center">
+  <ng-template [ngIf]="saving$ | async">
+    <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+    <h3 class="pd-t-20">Saving changes...</h3>
+  </ng-template>
+  <ng-template [ngIf]="!(saving$ | async)">
+    <fa-icon [icon]="faCheck" size="5x" />
+    <h3 class="pd-t-20">Done!</h3>
+    <br />
+    <a class="btn btn-primary mg-t-20" [routerLink]="'../../view'">
+      {{ "General.Continue" | translate }}
+    </a>
+  </ng-template>
+</div>
