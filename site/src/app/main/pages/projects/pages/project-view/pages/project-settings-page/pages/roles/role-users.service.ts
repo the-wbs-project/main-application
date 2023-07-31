@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ROLES_TYPE, UserLite } from '@wbs/core/models';
+import { sorter } from '@wbs/core/services';
 import { RoleUsersViewModel } from './view-models/role-users.view-model';
 
 @Injectable()
@@ -9,7 +10,7 @@ export class RoleUsersService {
     userIds: string[] | undefined,
     users: UserLite[]
   ): RoleUsersViewModel {
-    const sorted = this.sort(users);
+    const sorted = users.sort((a, b) => sorter(a.name, b.name));
     const vm: RoleUsersViewModel = {
       assigned: [],
       unassigned: [],
@@ -30,9 +31,5 @@ export class RoleUsersService {
     }
 
     return vm;
-  }
-
-  private sort(list: UserLite[]): UserLite[] {
-    return list.sort((a, b) => (a.name > b.name ? 1 : -1));
   }
 }

@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ListItem } from '@wbs/core/models';
+import { sorter } from '@wbs/core/services';
 
 @Pipe({ name: 'projectCategorySort', standalone: true })
 export class ProjectCategorySortPipe implements PipeTransform {
@@ -8,6 +9,6 @@ export class ProjectCategorySortPipe implements PipeTransform {
   ): ListItem[] | null | undefined {
     if (cats == null) return cats;
 
-    return cats.sort((a, b) => (a.label < b.label ? -1 : 1));
+    return cats.sort((a, b) => sorter(a.label, b.label));
   }
 }

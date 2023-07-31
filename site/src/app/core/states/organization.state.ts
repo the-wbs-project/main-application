@@ -5,6 +5,7 @@ import { map } from 'rxjs/operators';
 import { LoadOrganization, ProjectUpdated } from '../actions';
 import { DataServiceFactory } from '../data-services';
 import { Project, UserLite } from '../models';
+import { sorter } from '../services';
 
 interface StateModel {
   id: string;
@@ -67,7 +68,7 @@ export class OrganizationState {
         const users: UserLite[] = [];
         const usersById = new Map<string, UserLite>();
 
-        userList = userList.sort((a, b) => a.name < b.name ? -1 : (a.name > b.name ? 1 : 0))
+        userList = userList.sort((a, b) => sorter(a.name, b.name));
 
         for (const x of userList) {
           const user: UserLite = {
