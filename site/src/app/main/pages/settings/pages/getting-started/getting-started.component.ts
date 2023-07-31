@@ -15,7 +15,7 @@ import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
   styleUrls: ['./getting-started.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, RouterModule, TranslateModule]
+  imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class GettingStartedComponent {
   readonly items = ORG_SETTINGS_MENU_ITEMS.slice(1);

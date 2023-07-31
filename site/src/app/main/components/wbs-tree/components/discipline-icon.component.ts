@@ -15,7 +15,12 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
   >
     <i class="fa-solid fa-sm" [ngClass]="[id | disciplineIcon]"></i>
   </span>`,
-  imports: [CategoryLabelPipe, CommonModule, DisciplineIconPipe, NgbTooltipModule]
+  imports: [
+    CategoryLabelPipe,
+    CommonModule,
+    DisciplineIconPipe,
+    NgbTooltipModule,
+  ],
 })
 export class DisciplineIconComponent {
   @Input() id: string | undefined;

@@ -1,22 +1,22 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LoadProjectFile } from '../../actions';
 import { ResultStats } from '../../models';
 import { ProjectUploadState } from '../../states';
-import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
   templateUrl: './results-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FontAwesomeModule, RouterModule, TranslateModule]
+  imports: [CommonModule, FontAwesomeModule, RouterModule, TranslateModule],
 })
 export class ResultsViewComponent implements OnInit {
   @Select(ProjectUploadState.errors) errors$!: Observable<string[] | undefined>;

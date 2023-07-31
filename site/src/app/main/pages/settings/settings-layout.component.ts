@@ -5,6 +5,6 @@ import { BreadcrumbsComponent } from './components/settings-breadcrumbs/settings
 @Component({
   standalone: true,
   template: `<wbs-settings-bread-crumbs /><br /><router-outlet />`,
-  imports: [BreadcrumbsComponent, RouterModule]
+  imports: [BreadcrumbsComponent, RouterModule],
 })
 export class SettingsLayoutComponent {}

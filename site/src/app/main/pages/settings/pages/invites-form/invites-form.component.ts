@@ -1,27 +1,44 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { ActivatedRoute, RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEnvelope, faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { FormFieldModule, TextBoxModule } from '@progress/kendo-angular-inputs';
+import { LabelModule } from '@progress/kendo-angular-label';
 import { ROLES } from '@wbs/core/models';
 import { BehaviorSubject, map } from 'rxjs';
 import { ChangeBreadcrumbs, SendInvite } from '../../actions';
 import { Breadcrumb } from '../../models';
 import { InviteValidators } from '../../services';
 import { UserAdminState } from '../../states';
-import { LabelModule } from '@progress/kendo-angular-label';
-import { CommonModule } from '@angular/common';
-import { FormFieldModule, TextBoxModule } from '@progress/kendo-angular-inputs';
-import { TranslateModule } from '@ngx-translate/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './invites-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FontAwesomeModule, FormFieldModule, FormsModule, LabelModule, ReactiveFormsModule, RouterModule, TextBoxModule, TranslateModule],
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    FormFieldModule,
+    FormsModule,
+    LabelModule,
+    ReactiveFormsModule,
+    RouterModule,
+    TextBoxModule,
+    TranslateModule,
+  ],
   providers: [InviteValidators],
 })
 export class InvitesFormComponent implements OnInit {
@@ -82,7 +99,7 @@ export class InvitesFormComponent implements OnInit {
             .selectSnapshot(UserAdminState.invites)
             .find((x) => x.id === id);
         }),
-        takeUntilDestroyed()
+        untilDestroyed(this)
       )
       .subscribe((invite) => {
         const roles = invite?.roles ?? [];

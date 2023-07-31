@@ -1,11 +1,15 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
   ViewEncapsulation,
 } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus, faRefresh } from '@fortawesome/pro-solid-svg-icons';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import {
   DataStateChangeEvent,
@@ -14,23 +18,28 @@ import {
 } from '@progress/kendo-angular-grid';
 import { process, State as kendoState } from '@progress/kendo-data-query';
 import { Invite } from '@wbs/core/models';
+import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { BehaviorSubject, map } from 'rxjs';
 import { ChangeBreadcrumbs, LoadInviteData } from '../../actions';
 import { Breadcrumb } from '../../models';
 import { UserAdminState } from '../../states';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
 import { InviteActionsComponent } from '../../components/invite-actions/invite-actions.component';
-import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { RouterModule } from '@angular/router';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './invites.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, FontAwesomeModule, GridModule, InviteActionsComponent, RoleListPipe, RouterModule, TranslateModule]
+  imports: [
+    CommonModule,
+    FontAwesomeModule,
+    GridModule,
+    InviteActionsComponent,
+    RoleListPipe,
+    RouterModule,
+    TranslateModule,
+  ],
 })
 export class InvitesComponent implements OnInit {
   private invites: Invite[] = [];
@@ -62,7 +71,7 @@ export class InvitesComponent implements OnInit {
     this.store.dispatch(new ChangeBreadcrumbs(this.crumbs));
     this.store
       .select(UserAdminState.invites)
-      .pipe(takeUntilDestroyed())
+      .pipe(untilDestroyed(this))
       .subscribe((invites) => {
         this.isRefreshing$.next(false);
         this.invites = invites ?? [];

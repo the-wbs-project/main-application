@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,25 +8,24 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faEye,
   faEyeSlash,
   faFloppyDisk,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
+import { LabelModule } from '@progress/kendo-angular-label';
+import { SortableModule } from '@progress/kendo-angular-sortable';
 import {
   CategorySelectionService,
   DialogService,
   IdService,
 } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
-import { LabelModule } from '@progress/kendo-angular-label';
-import { SortableModule } from '@progress/kendo-angular-sortable';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
 import { SwitchComponent } from '../switch';
-import { CommonModule } from '@angular/common';
+import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
 @Component({
   standalone: true,
@@ -39,7 +39,7 @@ import { CommonModule } from '@angular/common';
     LabelModule,
     SortableModule,
     SwitchComponent,
-    TranslateModule
+    TranslateModule,
   ],
 })
 export class CategoryListEditorComponent {

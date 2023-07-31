@@ -1,11 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Store } from '@ngxs/store';
 import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { PROJECT_MENU_ITEMS } from '../models';
-import { Store } from '@ngxs/store';
 import { ProjectState } from '../states';
 
-@Pipe({ name: 'taskMenu', standalone: true})
+@Pipe({ name: 'taskMenu', standalone: true })
 export class TaskMenuPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 

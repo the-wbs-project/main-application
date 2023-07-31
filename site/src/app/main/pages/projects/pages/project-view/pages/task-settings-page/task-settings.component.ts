@@ -1,17 +1,17 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { TASK_SETTINGS_PAGE_LISTS } from '../../models';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   templateUrl: './task-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterModule, TranslateModule]
+  imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class TaskSettingsComponent {
   private readonly url = toSignal(this.store.select(RouterState.url));

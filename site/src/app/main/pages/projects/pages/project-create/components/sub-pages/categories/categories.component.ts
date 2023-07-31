@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ListItem } from '@wbs/core/models';
 import { MetadataState } from '@wbs/core/states';
+import { CategoryListComponent } from '@wbs/main/pages/projects/components/category-list/category-list.component';
 import { CategoryChosen } from '../../../actions';
 import { ProjectCreateState } from '../../../states';
-import { CategoryListComponent } from '@wbs/main/pages/projects/components/category-list/category-list.component';
 import { FooterComponent } from '../../footer/footer.component';
 
 @Component({

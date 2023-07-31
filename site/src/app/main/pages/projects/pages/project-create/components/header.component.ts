@@ -1,7 +1,7 @@
 //project-create
 import { Component, Input } from '@angular/core';
-import { ProjectCreationPage } from '../models';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProjectCreationPage } from '../models';
 
 @Component({
   standalone: true,
@@ -10,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
     <p class="tx-24">{{ page?.title ?? '' | translate }}</p>
     <p>{{ page?.description ?? '' | translate }}</p>
   </div>`,
-  imports: [TranslateModule]
+  imports: [TranslateModule],
 })
 export class HeaderComponent {
   @Input() page: ProjectCreationPage | null | undefined;

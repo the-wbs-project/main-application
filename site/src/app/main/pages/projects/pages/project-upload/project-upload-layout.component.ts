@@ -21,7 +21,7 @@ import { ProjectUploadState } from './states';
     <div class="mg-t-40">
       <router-outlet />
     </div>`,
-  imports: [CommonModule, PageHeaderComponent, RouterModule, TranslateModule]
+  imports: [CommonModule, PageHeaderComponent, RouterModule, TranslateModule],
 })
 export class ProjectUploadLayoutComponent {
   readonly project = toSignal(this.store.select(ProjectUploadState.current));

@@ -11,7 +11,7 @@ import { TreeListComponent } from '@progress/kendo-angular-treelist';
 import { delay } from 'rxjs/operators';
 
 @UntilDestroy()
-@Directive({ selector: '[wbsTreeDoubleClick]', standalone: true})
+@Directive({ selector: '[wbsTreeDoubleClick]', standalone: true })
 export class WbsTreeDoubleClickDirective implements OnInit {
   @Input('wbsTreeDoubleClick') treeList!: TreeListComponent;
   @Output() readonly dblClicked = new EventEmitter<string>();

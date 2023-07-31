@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faListTree, faPeopleGroup } from '@fortawesome/pro-duotone-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { NodeViewChosen } from '../../../actions';
-import { TranslateModule } from '@ngx-translate/core';
 import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
@@ -11,7 +11,7 @@ import { FooterComponent } from '../../footer/footer.component';
   selector: 'wbs-project-create-node-view',
   templateUrl: './node-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FooterComponent, TranslateModule]
+  imports: [FooterComponent, TranslateModule],
 })
 export class NodeViewComponent {
   readonly faListTree = faListTree;

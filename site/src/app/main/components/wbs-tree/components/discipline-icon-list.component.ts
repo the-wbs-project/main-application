@@ -8,7 +8,7 @@ import { DisciplineIconComponent } from './discipline-icon.component';
   template: `<ng-template ngFor let-id [ngForOf]="disciplines ?? []">
     <wbs-discipline-icon [id]="id"> </wbs-discipline-icon>
   </ng-template>`,
-  imports: [CommonModule, DisciplineIconComponent]
+  imports: [CommonModule, DisciplineIconComponent],
 })
 export class DisciplineIconListComponent {
   @Input() disciplines: string[] | undefined;

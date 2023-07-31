@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
   selector: 'wbs-app',
   templateUrl: './app.component.html',
   encapsulation: ViewEncapsulation.None,
-  imports: [RouterModule]
+  imports: [RouterModule],
 })
 export class AppComponent implements OnInit {
   ngOnInit(): void {

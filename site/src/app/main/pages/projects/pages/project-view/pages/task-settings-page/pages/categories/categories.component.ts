@@ -10,16 +10,16 @@ import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
 import { ChangeTaskDisciplines } from '../../../../actions';
 import { ProjectState, TasksState } from '../../../../states';
-import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
 
 @UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './categories.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CategoryListEditorComponent]
+  imports: [CategoryListEditorComponent],
 })
 export class TaskSettingsCategoriesComponent implements OnInit {
   categories?: CategorySelection[];

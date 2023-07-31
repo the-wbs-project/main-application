@@ -12,7 +12,7 @@ import { GoToBasics } from '../../actions';
     </button>
   </p> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslateModule]
+  imports: [TranslateModule],
 })
 export class GettingStartedComponent {
   constructor(private readonly store: Store) {}

@@ -1,15 +1,15 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
+import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
 import { ProjectViewService } from '../../services';
 import { ProjectState, TasksState } from '../../states';
-import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
 
 @Component({
   standalone: true,
   templateUrl: './project-disciplines-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [WbsTreeComponent]
+  imports: [WbsTreeComponent],
 })
 export class ProjectDisciplinesPageComponent {
   taskId?: string;

@@ -8,6 +8,8 @@ export class UserSortPipe implements PipeTransform {
   ): UserLite[] | null | undefined {
     if (!users) return users;
 
-    return users.sort((a, b) => (a.name > b.name ? 1 : -1));
+    return users.sort((a, b) =>
+      a.name > b.name ? 1 : b.name > a.name ? -1 : 0
+    );
   }
 }

@@ -17,13 +17,19 @@ export class RoleTitlePipe implements PipeTransform {
     const isSme = roles.indexOf(ROLES.SME) > -1;
 
     if (isPm) {
-      titles.push(ProjectHelperService.getRoleTitle(ROLES.PM, useAbbreviations));
+      titles.push(
+        ProjectHelperService.getRoleTitle(ROLES.PM, useAbbreviations)
+      );
     }
     if (isApprover) {
-      titles.push(ProjectHelperService.getRoleTitle(ROLES.APPROVER, useAbbreviations));
+      titles.push(
+        ProjectHelperService.getRoleTitle(ROLES.APPROVER, useAbbreviations)
+      );
     }
     if (isSme) {
-      titles.push(ProjectHelperService.getRoleTitle(ROLES.SME, useAbbreviations));
+      titles.push(
+        ProjectHelperService.getRoleTitle(ROLES.SME, useAbbreviations)
+      );
     }
     return titles.join(', ');
   }

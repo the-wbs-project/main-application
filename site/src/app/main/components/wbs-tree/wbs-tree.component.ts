@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,9 +13,15 @@ import {
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { faEllipsisV } from '@fortawesome/pro-solid-svg-icons';
-import { NgbPopover, NgbPopoverModule, NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import {
+  NgbPopover,
+  NgbPopoverModule,
+  NgbTooltipModule,
+} from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import {
   CellClickEvent,
   SelectableSettings,
@@ -25,6 +32,7 @@ import {
 import { ActionMenuItem, Project } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import {
   BehaviorSubject,
   fromEvent,
@@ -32,6 +40,12 @@ import {
   Subscription,
   take,
 } from 'rxjs';
+import { WbsActionButtonsComponent } from '../wbs-action-buttons';
+import {
+  DisciplineIconListComponent,
+  LegendDisciplineComponent,
+} from './components';
+import { WbsTreeDoubleClickDirective } from './directives';
 import { NodeCheck, Position } from './models';
 import {
   closest,
@@ -45,13 +59,6 @@ import {
   tableRow,
   WbsPhaseService,
 } from './services';
-import { CommonModule } from '@angular/common';
-import { WbsActionButtonsComponent } from '../wbs-action-buttons';
-import { TranslateModule } from '@ngx-translate/core';
-import { DisciplineIconListComponent, LegendDisciplineComponent } from './components';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { WbsTreeDoubleClickDirective } from './directives';
 
 @Component({
   standalone: true,

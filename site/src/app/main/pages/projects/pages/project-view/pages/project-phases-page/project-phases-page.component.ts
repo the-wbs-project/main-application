@@ -2,17 +2,17 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { UiState } from '@wbs/core/states';
+import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
+import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
+import { TaskMenuPipe } from '../../pipes/task-menu.pipe';
 import { ProjectNavigationService, ProjectViewService } from '../../services';
 import { ProjectState, TasksState } from '../../states';
-import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
-import { TaskMenuPipe } from '../../pipes/task-menu.pipe';
-import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 
 @Component({
   standalone: true,
   templateUrl: './project-phases-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TaskMenuPipe, TaskModalComponent, WbsTreeComponent]
+  imports: [TaskMenuPipe, TaskModalComponent, WbsTreeComponent],
 })
 export class ProjectPhasesPageComponent {
   taskId?: string;

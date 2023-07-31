@@ -15,7 +15,7 @@ import { Observable } from 'rxjs';
     '.icon-wrapper { display: inline-block; width: 50px; }',
     '.legend-header { text-align: center; }',
   ],
-  imports: [CategoryLabelPipe, CommonModule, DisciplineIconPipe]
+  imports: [CategoryLabelPipe, CommonModule, DisciplineIconPipe],
 })
 export class LegendDisciplineComponent {
   @Input() idsOrCats: (string | ListItem)[] | null | undefined;

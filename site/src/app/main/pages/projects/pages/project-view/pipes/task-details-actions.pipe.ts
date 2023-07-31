@@ -1,8 +1,8 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Store } from '@ngxs/store';
 import { ActionMenuItem, ROLES } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { TASK_MENU_ITEMS } from '../models';
-import { Store } from '@ngxs/store';
 import { ProjectState } from '../states';
 
 @Pipe({ name: 'taskDetailsActions', standalone: true })

@@ -17,7 +17,7 @@ import { faAngleUp } from '@fortawesome/pro-solid-svg-icons';
   >
     <fa-icon [icon]="faAngleUp" size="3x" />
   </a> `,
-  imports: [CommonModule, FontAwesomeModule]
+  imports: [CommonModule, FontAwesomeModule],
 })
 export class TabToTopComponent {
   readonly faAngleUp = faAngleUp;

@@ -6,21 +6,21 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { faUserMinus, faUserPlus } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { ROLES, ROLES_CONST, ROLES_TYPE, UserLite } from '@wbs/core/models';
 import { OrganizationState } from '@wbs/core/states';
 import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
+import { ProjectUserListComponent } from '../../../../components/user-list/user-list.component';
 import { ProjectState } from '../../../../states';
 import { RoleUsersService } from './role-users.service';
-import { TranslateModule } from '@ngx-translate/core';
-import { ProjectUserListComponent } from '../../../../components/user-list/user-list.component';
 
 @Component({
   standalone: true,
   templateUrl: './roles.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RoleUsersService],
-  imports: [ProjectUserListComponent, TranslateModule]
+  imports: [ProjectUserListComponent, TranslateModule],
 })
 export class ProjectSettingsRolesComponent {
   private readonly service = inject(RoleUsersService);

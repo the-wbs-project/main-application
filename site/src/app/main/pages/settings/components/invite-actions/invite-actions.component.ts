@@ -4,19 +4,22 @@ import {
   Input,
   ViewEncapsulation,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faEllipsisVertical,
   faEnvelope,
   faPencil,
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { ContextMenuModule, ContextMenuSelectEvent } from '@progress/kendo-angular-menu';
+import {
+  ContextMenuModule,
+  ContextMenuSelectEvent,
+} from '@progress/kendo-angular-menu';
 import { Invite } from '@wbs/core/models';
 import { CancelInvite, ResendInvite } from '../../actions';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -24,7 +27,7 @@ import { TranslateModule } from '@ngx-translate/core';
   templateUrl: './invite-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [ContextMenuModule, FontAwesomeModule, TranslateModule]
+  imports: [ContextMenuModule, FontAwesomeModule, TranslateModule],
 })
 export class InviteActionsComponent {
   @Input() invite: Invite | undefined;

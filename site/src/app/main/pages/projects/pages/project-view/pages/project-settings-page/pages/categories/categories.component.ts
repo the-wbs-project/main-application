@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -14,12 +15,11 @@ import {
 } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
+import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeProjectCategories } from '../../../../actions';
 import { ProjectState, TasksState } from '../../../../states';
-import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
-import { CommonModule } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -33,7 +33,7 @@ import { CommonModule } from '@angular/common';
     />
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CategoryListEditorComponent, CommonModule]
+  imports: [CategoryListEditorComponent, CommonModule],
 })
 export class ProjectSettingsCategoriesComponent implements OnInit {
   categories?: CategorySelection[];

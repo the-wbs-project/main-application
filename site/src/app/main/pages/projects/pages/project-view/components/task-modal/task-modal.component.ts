@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -6,15 +7,14 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { first } from 'rxjs/operators';
 import { TasksState } from '../../states';
-import { TranslateModule } from '@ngx-translate/core';
-import { RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -24,7 +24,7 @@ import { CommonModule } from '@angular/common';
   styleUrls: ['./task-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, RouterModule, TranslateModule]
+  imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class TaskModalComponent implements AfterContentInit {
   @ViewChild('taskContent') taskContent!: any;

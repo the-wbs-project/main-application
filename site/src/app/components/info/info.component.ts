@@ -11,7 +11,7 @@ import { INFO_PAGES } from 'src/environments/info-pages.const';
 @Component({
   standalone: true,
   templateUrl: './info.component.html',
-  imports: [CommonModule, TranslateModule]
+  imports: [CommonModule, TranslateModule],
 })
 export class InfoComponent implements OnInit {
   readonly name$ = new BehaviorSubject<string | undefined>(undefined);

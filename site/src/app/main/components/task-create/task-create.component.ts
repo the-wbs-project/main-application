@@ -11,7 +11,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
-import { CategorySelectionService, IdService } from '@wbs/core/services';
+import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { BehaviorSubject } from 'rxjs';
 import { CategoryListEditorComponent } from '../category-list-editor';
@@ -21,7 +21,13 @@ import { CategoryListEditorComponent } from '../category-list-editor';
   templateUrl: './task-create.component.html',
   styleUrls: ['./task-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.Default,
-  imports: [CategoryListEditorComponent, CommonModule, EditorModule, FormsModule, TranslateModule]
+  imports: [
+    CategoryListEditorComponent,
+    CommonModule,
+    EditorModule,
+    FormsModule,
+    TranslateModule,
+  ],
 })
 export class TaskCreateComponent implements OnInit {
   @ViewChild('titleTextBox', { static: true }) titleTextBox!: ElementRef;
@@ -36,7 +42,7 @@ export class TaskCreateComponent implements OnInit {
   constructor(
     readonly modal: NgbActiveModal,
     private readonly catService: CategorySelectionService
-  ) { }
+  ) {}
 
   ngOnInit(): void {
     (<HTMLInputElement>this.titleTextBox.nativeElement).focus();

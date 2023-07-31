@@ -1,22 +1,33 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { FormControl, FormGroup, FormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  Validators,
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
-import { MetadataState } from '@wbs/core/states';
-import { ProjectState } from '../../../../states';
-import { ChangeProjectBasics } from '../../../../actions';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { TranslateModule } from '@ngx-translate/core';
-import { EditorModule } from '@progress/kendo-angular-editor';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { EditorModule } from '@progress/kendo-angular-editor';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { MetadataState } from '@wbs/core/states';
+import { ChangeProjectBasics } from '../../../../actions';
+import { ProjectState } from '../../../../states';
 
 @UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './general.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DropDownListModule, EditorModule, FormsModule, TextBoxModule, TranslateModule]
+  imports: [
+    DropDownListModule,
+    EditorModule,
+    FormsModule,
+    TextBoxModule,
+    TranslateModule,
+  ],
 })
 export class ProjectSettingsGeneralComponent {
   readonly categories = toSignal(

@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngxs/store';
+import { TimelineComponent } from '@wbs/main/components/timeline';
 import { ProjectViewService } from '../services';
 import { ProjectTimelineState } from '../states';
-import { TimelineComponent } from '@wbs/main/components/timeline';
 
 @Component({
   standalone: true,
@@ -14,7 +14,7 @@ import { TimelineComponent } from '@wbs/main/components/timeline';
     (menuItemClicked)="service.timelineAction($event, projectId)"
   /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TimelineComponent]
+  imports: [TimelineComponent],
 })
 export class ProjectTimelinePageComponent {
   readonly timeline = toSignal(this.store.select(ProjectTimelineState.project));

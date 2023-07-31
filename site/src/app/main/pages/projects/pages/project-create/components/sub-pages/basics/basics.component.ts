@@ -1,21 +1,28 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
+import { EditorModule } from '@progress/kendo-angular-editor';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { Observable } from 'rxjs';
 import { SubmitBasics } from '../../../actions';
 import { ProjectCreateState } from '../../../states';
-import { FormsModule } from '@angular/forms';
-import { EditorModule } from '@progress/kendo-angular-editor';
 import { FooterComponent } from '../../footer/footer.component';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { TranslateModule } from '@ngx-translate/core';
-import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-create-basics',
   templateUrl: './basics.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, EditorModule, FooterComponent, FormsModule, TextBoxModule, TranslateModule]
+  imports: [
+    CommonModule,
+    EditorModule,
+    FooterComponent,
+    FormsModule,
+    TextBoxModule,
+    TranslateModule,
+  ],
 })
 export class BasicsComponent {
   @Select(ProjectCreateState.description) description$!: Observable<string>;

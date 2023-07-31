@@ -1,15 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { Select, Store } from '@ngxs/store';
+import { Select } from '@ngxs/store';
 import { WbsNode } from '@wbs/core/models';
 import { Observable } from 'rxjs';
 import { TasksState } from '../../states';
-import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   templateUrl: './task-test.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule]
+  imports: [CommonModule],
 })
 export class TaskTestComponent {
   @Select(TasksState.current) current$!: Observable<WbsNode>;

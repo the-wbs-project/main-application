@@ -1,7 +1,9 @@
+import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import {
   DataStateChangeEvent,
@@ -9,20 +11,25 @@ import {
   GridModule,
 } from '@progress/kendo-angular-grid';
 import { process, State as kendoState } from '@progress/kendo-data-query';
+import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { BehaviorSubject, map, Observable, switchMap } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
+import { UserActionsComponent } from '../../components/user-actions/user-actions.component';
 import { Breadcrumb, UserViewModel } from '../../models';
 import { UserAdminState } from '../../states';
-import { CommonModule } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import { UserActionsComponent } from '../../components/user-actions/user-actions.component';
-import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 
 @Component({
   standalone: true,
   templateUrl: './users.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, GridModule, RoleListPipe, RouterModule, TranslateModule, UserActionsComponent]
+  imports: [
+    CommonModule,
+    GridModule,
+    RoleListPipe,
+    RouterModule,
+    TranslateModule,
+    UserActionsComponent,
+  ],
 })
 export class UsersComponent implements OnInit {
   @Select(UserAdminState.activeUserCount) activeCount$!: Observable<number>;

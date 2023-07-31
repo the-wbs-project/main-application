@@ -23,7 +23,7 @@ import { ActionMenuItem } from '@wbs/core/models';
       </span>
     </button>
   </div>`,
-  imports: [CommonModule, FontAwesomeModule, NgbTooltipModule, TranslateModule]
+  imports: [CommonModule, FontAwesomeModule, NgbTooltipModule, TranslateModule],
 })
 export class WbsActionButtonsComponent {
   @Input() items?: ActionMenuItem[] | null;

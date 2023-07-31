@@ -1,20 +1,20 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ListItem } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { BehaviorSubject } from 'rxjs';
 import { TaskDeleteService } from './task-delete.service';
-import { TranslateModule } from '@ngx-translate/core';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 
 @Component({
   standalone: true,
   templateUrl: './task-delete.component.html',
   encapsulation: ViewEncapsulation.None,
   imports: [CommonModule, FormsModule, NgbModalModule, TranslateModule],
-  providers: [TaskDeleteService]
+  providers: [TaskDeleteService],
 })
 export class TaskDeleteComponent implements OnInit {
   reason = 'none';

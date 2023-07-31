@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   templateUrl: './project-settings.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, RouterModule, TranslateModule]
+  imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class ProjectSettingsComponent {
   private readonly url = toSignal(this.store.select(RouterState.url));

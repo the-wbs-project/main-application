@@ -8,7 +8,7 @@ import { NavBack } from '../../actions';
   standalone: true,
   selector: 'wbs-project-create-footer',
   templateUrl: './footer.component.html',
-  imports: [CommonModule, TranslateModule]
+  imports: [CommonModule, TranslateModule],
 })
 export class FooterComponent {
   @Input() view?: string;

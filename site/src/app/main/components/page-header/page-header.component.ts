@@ -9,7 +9,7 @@ import { RouteLink } from '@wbs/core/models';
   selector: 'wbs-page-header',
   templateUrl: './page-header.component.html',
   styleUrls: ['./page-header.component.scss'],
-  imports: [CommonModule, RouterModule, TranslateModule]
+  imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class PageHeaderComponent {
   @Input() title!: string;

@@ -1,21 +1,21 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router, RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
+import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
 import { ProjectService, Resources, TitleService } from '@wbs/core/services';
 import { OrganizationState } from '@wbs/core/states';
+import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
+import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
+import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { map } from 'rxjs';
 import { ProjectSortPipe } from './pipes/project-sort.pipe';
 import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
-import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { TranslateModule } from '@ngx-translate/core';
-import { LoaderModule } from '@progress/kendo-angular-indicators';
-import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 
 @UntilDestroy()
 @Component({
@@ -23,7 +23,18 @@ import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
   templateUrl: './project-list.component.html',
   styleUrls: ['./project-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CategoryLabelPipe, CommonModule, EditedDateTextPipe, FillElementDirective, LoaderModule, ProjectSortPipe, ProjectStatusFilterPipe, ProjectStatusPipe, RouterModule, TranslateModule]
+  imports: [
+    CategoryLabelPipe,
+    CommonModule,
+    EditedDateTextPipe,
+    FillElementDirective,
+    LoaderModule,
+    ProjectSortPipe,
+    ProjectStatusFilterPipe,
+    ProjectStatusPipe,
+    RouterModule,
+    TranslateModule,
+  ],
 })
 export class ProjectListComponent implements OnInit {
   private readonly titlePrefix: string;

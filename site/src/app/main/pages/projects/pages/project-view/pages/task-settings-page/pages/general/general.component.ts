@@ -1,19 +1,31 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
-import { ChangeTaskBasics } from '../../../../actions';
-import { TasksState } from '../../../../states';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { TranslateModule } from '@ngx-translate/core';
+import { ChangeTaskBasics } from '../../../../actions';
+import { TasksState } from '../../../../states';
 
 @UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './general.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EditorModule, FormsModule, ReactiveFormsModule, TextBoxModule, TranslateModule]
+  imports: [
+    EditorModule,
+    FormsModule,
+    ReactiveFormsModule,
+    TextBoxModule,
+    TranslateModule,
+  ],
 })
 export class TaskSettingsGeneralComponent {
   readonly form = new FormGroup({

@@ -1,18 +1,21 @@
+import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   Input,
   ViewEncapsulation,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEllipsisVertical } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { ContextMenuModule, ContextMenuSelectEvent } from '@progress/kendo-angular-menu';
+import {
+  ContextMenuModule,
+  ContextMenuSelectEvent,
+} from '@progress/kendo-angular-menu';
 import { Messages } from '@wbs/core/services';
 import { ActivateUser, DeactivateUser } from '../../actions';
 import { UserViewModel } from '../../models';
-import { CommonModule } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
 import { UserMgmtItemsPipe } from '../../pipes/user-mgmt-items.pipe';
 
 @Component({
@@ -21,7 +24,13 @@ import { UserMgmtItemsPipe } from '../../pipes/user-mgmt-items.pipe';
   templateUrl: './user-actions.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, ContextMenuModule, FontAwesomeModule, TranslateModule, UserMgmtItemsPipe]
+  imports: [
+    CommonModule,
+    ContextMenuModule,
+    FontAwesomeModule,
+    TranslateModule,
+    UserMgmtItemsPipe,
+  ],
 })
 export class UserActionsComponent {
   @Input() user: UserViewModel | undefined;

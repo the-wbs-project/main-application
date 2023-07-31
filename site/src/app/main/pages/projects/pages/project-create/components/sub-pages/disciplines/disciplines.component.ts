@@ -8,11 +8,11 @@ import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
+import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { DisciplinesChosen } from '../../../actions';
 import { ProjectCreateState } from '../../../states';
-import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { FooterComponent } from '../../footer/footer.component';
-import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
 
 @Component({
   standalone: true,
@@ -20,7 +20,7 @@ import { CategoryListEditorComponent } from '@wbs/main/components/category-list-
   templateUrl: './disciplines.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [CategoryListEditorComponent, FillElementDirective, FooterComponent]
+  imports: [CategoryListEditorComponent, FillElementDirective, FooterComponent],
 })
 export class DisciplinesComponent implements OnInit {
   categories?: CategorySelection[];

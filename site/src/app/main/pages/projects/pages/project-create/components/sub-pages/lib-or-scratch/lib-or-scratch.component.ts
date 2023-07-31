@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faBooks, faChalkboardUser } from '@fortawesome/pro-duotone-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { LibOrScratchChosen } from '../../../actions';
-import { TranslateModule } from '@ngx-translate/core';
 import { FooterComponent } from '../../footer/footer.component';
 
 @Component({
@@ -10,7 +10,7 @@ import { FooterComponent } from '../../footer/footer.component';
   selector: 'wbs-project-create-lib-or-scratch',
   templateUrl: './lib-or-scratch.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FooterComponent, TranslateModule]
+  imports: [FooterComponent, TranslateModule],
 })
 export class LibOrScratchComponent {
   readonly faBooks = faBooks;

@@ -12,9 +12,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Project } from '@wbs/core/models';
 import { fromEvent } from 'rxjs';
 import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
+import { ProjectStatusCountPipe } from '../../pipes/project-status-count.pipe';
 import { NavService } from '../../services';
 import { switcherArrowFn } from './sidebar';
-import { ProjectStatusCountPipe } from '../../pipes/project-status-count.pipe';
 
 @Component({
   standalone: true,
@@ -22,7 +22,12 @@ import { ProjectStatusCountPipe } from '../../pipes/project-status-count.pipe';
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
   encapsulation: ViewEncapsulation.None,
-  imports: [CommonModule, ProjectStatusCountPipe, RouterModule, TranslateModule]
+  imports: [
+    CommonModule,
+    ProjectStatusCountPipe,
+    RouterModule,
+    TranslateModule,
+  ],
 })
 export class SidebarComponent {
   @Input() projects?: Project[] | null;
@@ -35,8 +40,8 @@ export class SidebarComponent {
 
   ngOnInit(): void {
     let sidemenu = document.querySelector('.side-menu');
-    sidemenu?.addEventListener('scroll', () => { }, { passive: false });
-    sidemenu?.addEventListener('wheel', () => { }, { passive: false });
+    sidemenu?.addEventListener('scroll', () => {}, { passive: false });
+    sidemenu?.addEventListener('wheel', () => {}, { passive: false });
 
     switcherArrowFn();
 
