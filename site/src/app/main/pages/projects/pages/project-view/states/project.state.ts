@@ -54,7 +54,6 @@ interface StateModel {
 export class ProjectState {
   private data = inject(DataServiceFactory);
   private dialog = inject(DialogService);
-  private helper = inject(ProjectHelperService);
   private messaging = inject(Messages);
   private service = inject(ProjectManagementService);
   private store = inject(Store);
@@ -184,7 +183,7 @@ export class ProjectState {
     { role, user }: AddUserToRole
   ): Observable<void> {
     const project = ctx.getState().current!;
-    const roleTitle = this.helper.getRoleTitle(role, false);
+    const roleTitle = ProjectHelperService.getRoleTitle(role, false);
 
     return this.dialog
       .confirm('General.Confirmation', 'ProjectSettings.AddUserConfirmation', {
@@ -224,7 +223,7 @@ export class ProjectState {
     { role, user }: RemoveUserToRole
   ): Observable<void> {
     const project = ctx.getState().current!;
-    const roleTitle = this.helper.getRoleTitle(role, false);
+    const roleTitle = ProjectHelperService.getRoleTitle(role, false);
     const index = project.roles.findIndex(
       (x) => x.role === role && x.userId === user.id
     );

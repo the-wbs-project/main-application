@@ -3,7 +3,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Invite, User } from '@wbs/core/models';
 import { DialogService, IdService, Messages } from '@wbs/core/services';
-import { AuthState } from '@wbs/core/states';
+import { OrganizationState } from '@wbs/core/states';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ActivateUser,
@@ -189,7 +189,7 @@ export class UserAdminState {
   }
 
   private getOrganization(): string {
-    return this.store.selectSnapshot(AuthState.organization)!;
+    return this.store.selectSnapshot(OrganizationState.id);
   }
 
   private changeActivation(

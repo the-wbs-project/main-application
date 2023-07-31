@@ -1,22 +1,22 @@
 import { Routes } from '@angular/router';
 import {
-  ProjectRedirectGuard,
-  ProjectViewGuard,
-  TaskVerifyGuard,
-  TaskViewGuard,
-} from '../guards';
+  projectRedirectGuard,
+  projectViewGuard,
+  taskVerifyGuard,
+  taskViewGuard,
+} from '../project-view.guards';
 import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [ProjectRedirectGuard],
+    canActivate: [projectRedirectGuard],
     loadComponent: () =>
       import('./project-about-page/project-about-page.component').then(({ ProjectAboutPageComponent }) => ProjectAboutPageComponent),
   },
   {
     path: 'about',
-    canActivate: [ProjectViewGuard],
+    canActivate: [projectViewGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGE_VIEW.ABOUT,
@@ -26,7 +26,7 @@ export const routes: Routes = [
   },
   {
     path: 'phases',
-    canActivate: [ProjectViewGuard],
+    canActivate: [projectViewGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGE_VIEW.PHASES,
@@ -36,7 +36,7 @@ export const routes: Routes = [
     children: [
       {
         path: 'task/:taskId',
-        canActivate: [TaskVerifyGuard],
+        canActivate: [taskVerifyGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
         },
@@ -45,7 +45,7 @@ export const routes: Routes = [
         children: [
           {
             path: 'about',
-            canActivate: [TaskViewGuard],
+            canActivate: [taskViewGuard],
             data: {
               title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.ABOUT,
@@ -55,7 +55,7 @@ export const routes: Routes = [
           },
           {
             path: 'sub-tasks',
-            canActivate: [TaskViewGuard],
+            canActivate: [taskViewGuard],
             data: {
               title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.SUB_TASKS,
@@ -65,7 +65,7 @@ export const routes: Routes = [
           },
           {
             path: 'settings',
-            canActivate: [TaskViewGuard],
+            canActivate: [taskViewGuard],
             data: {
               title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.SETTINGS,
@@ -81,7 +81,7 @@ export const routes: Routes = [
   },
   {
     path: 'disciplines',
-    canActivate: [ProjectViewGuard],
+    canActivate: [projectViewGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGE_VIEW.DISCIPLINES,
@@ -91,7 +91,7 @@ export const routes: Routes = [
   },
   {
     path: 'timeline',
-    canActivate: [ProjectViewGuard],
+    canActivate: [projectViewGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGE_VIEW.TIMELINE,
@@ -101,7 +101,7 @@ export const routes: Routes = [
   },
   /*{
     path: 'discussions',
-    canActivate: [ProjectViewGuard, ProjectDiscussionGuard],
+    canActivate: [projectViewGuard, ProjectDiscussionGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGE_VIEW.DISCUSSIONS,
@@ -124,7 +124,7 @@ export const routes: Routes = [
   },*/
   {
     path: 'settings',
-    canActivate: [ProjectViewGuard],
+    canActivate: [projectViewGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGE_VIEW.SETTINGS,

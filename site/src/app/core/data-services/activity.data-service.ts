@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngxs/store';
 import { IdService } from '@wbs/core/services';
-import { AuthState } from '@wbs/core/states';
+import { AuthState, OrganizationState } from '@wbs/core/states';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Activity, ActivityData } from '../models';
@@ -13,7 +13,7 @@ export class ActivityDataService {
   ) {}
 
   private get organization(): string {
-    return this.store.selectSnapshot(AuthState.organization)!;
+    return this.store.selectSnapshot(OrganizationState.id)!;
   }
 
   getAsync(

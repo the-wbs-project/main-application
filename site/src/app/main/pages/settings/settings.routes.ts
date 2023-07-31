@@ -1,10 +1,10 @@
 import { Routes } from '@angular/router';
-import { AdminGuard } from '@wbs/main/guards';
+import { adminGuard } from '@wbs/main/guards';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [AdminGuard],
+    canActivate: [adminGuard],
     loadComponent: () => import('./settings-layout.component').then((m) => m.SettingsLayoutComponent),
     loadChildren: () => import('./pages/children.routes').then((m) => m.routes),
   },

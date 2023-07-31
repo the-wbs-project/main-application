@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { InviteAdminGuard, UserAdminGuard } from '../guards';
+import { inviteAdminGuard, userAdminGuard } from '../guards';
 
 export const routes: Routes = [
   {
@@ -12,17 +12,17 @@ export const routes: Routes = [
   },
   {
     path: 'users/:view',
-    canActivate: [UserAdminGuard],
+    canActivate: [userAdminGuard],
     loadComponent: () => import('./users/users.component').then(m => m.UsersComponent)
   },
   {
     path: 'invites',
-    canActivate: [InviteAdminGuard, UserAdminGuard],
+    canActivate: [inviteAdminGuard, userAdminGuard],
     loadComponent: () => import('./invites/invites.component').then(m => m.InvitesComponent)
   },
   {
     path: 'invites/:id',
-    canActivate: [InviteAdminGuard, UserAdminGuard],
+    canActivate: [inviteAdminGuard, userAdminGuard],
     loadComponent: () => import('./invites-form/invites-form.component').then(m => m.InvitesFormComponent)
   },
 ];

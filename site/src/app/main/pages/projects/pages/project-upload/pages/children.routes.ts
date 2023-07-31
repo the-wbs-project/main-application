@@ -1,6 +1,36 @@
-import { Routes } from '@angular/router';
-import { ProjectUploadGuard } from '../guards';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
+import { map } from 'rxjs/operators';
+import { ProjectUploadState } from '../states';
+import { SetAsStarted, SetPageTitle } from '../actions';
 
+export const projectUploadGuard = (route: ActivatedRouteSnapshot) => {
+    const store = inject(Store);
+    const title = route.data['title'];
+    const validateStart = route.data['validateStart'] === true;
+    const setStart = route.data['setStart'] === true;
+  
+    if (validateStart) {
+      const started = store.selectSnapshot(ProjectUploadState.started);
+  
+      if (!started) {
+        const projectId = store.selectSnapshot(
+          ProjectUploadState.current
+        )!.id;
+        return store
+          .dispatch(new Navigate(['/projects', projectId, 'upload', 'start']))
+          .pipe(map(() => false));
+      }
+    }
+    const dispatch: any[] = [new SetPageTitle(title)];
+  
+    if (setStart) dispatch.push(new SetAsStarted());
+  
+    return store.dispatch(dispatch).pipe(map(() => true));
+  }
+  
 export const routes: Routes = [
     {
         path: '',
@@ -11,7 +41,7 @@ export const routes: Routes = [
     },
     {
         path: 'start',
-        canActivate: [ProjectUploadGuard],
+        canActivate: [projectUploadGuard],
         data: {
             title: 'ProjectUpload.PagesUploadProjectPlan',
         },
@@ -20,7 +50,7 @@ export const routes: Routes = [
     },
     {
         path: 'results',
-        canActivate: [ProjectUploadGuard],
+        canActivate: [projectUploadGuard],
         data: {
             title: 'ProjectUpload.PagesUploadProjectPlan',
         },
@@ -29,7 +59,7 @@ export const routes: Routes = [
     },
     {
         path: 'options',
-        canActivate: [ProjectUploadGuard],
+        canActivate: [projectUploadGuard],
         data: {
             title: 'ProjectUpload.PagesOptions',
         },
@@ -38,7 +68,7 @@ export const routes: Routes = [
     },
     {
         path: 'phases',
-        canActivate: [ProjectUploadGuard],
+        canActivate: [projectUploadGuard],
         data: {
             title: 'ProjectUpload.PagesUploadProjectPlan',
         },
@@ -47,7 +77,7 @@ export const routes: Routes = [
     },
     {
         path: 'disciplines',
-        canActivate: [ProjectUploadGuard],
+        canActivate: [projectUploadGuard],
         data: {
             title: 'ProjectUpload.PagesUploadProjectPlan',
         },
@@ -56,7 +86,7 @@ export const routes: Routes = [
     },
     {
         path: 'saving',
-        canActivate: [ProjectUploadGuard],
+        canActivate: [projectUploadGuard],
         data: {
             title: 'ProjectUpload.PagesUploadProjectPlan',
         },

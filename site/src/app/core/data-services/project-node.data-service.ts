@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ProjectNode, WbsNode } from '../models';
-import { AuthState } from '../states';
+import { OrganizationState } from '../states';
 
 export class ProjectNodeDataService {
   constructor(
@@ -11,7 +11,7 @@ export class ProjectNodeDataService {
   ) {}
 
   private get organization(): string {
-    return this.store.selectSnapshot(AuthState.organization)!;
+    return this.store.selectSnapshot(OrganizationState.id)!;
   }
 
   getAllAsync(projectId: string): Observable<WbsNode[]> {
