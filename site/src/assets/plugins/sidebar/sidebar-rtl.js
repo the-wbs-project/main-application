@@ -38,7 +38,6 @@
     this.transitioning = 1
 
     var complete = function () {
-      this.$element
       this.transitioning = 0
       this.$element.trigger('shown.bs.sidebar')
     }

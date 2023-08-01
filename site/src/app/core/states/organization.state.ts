@@ -5,8 +5,10 @@ import { map } from 'rxjs/operators';
 import { LoadOrganization, ProjectUpdated } from '../actions';
 import { DataServiceFactory } from '../data-services';
 import { Project, UserLite } from '../models';
+import { sorter } from '../services';
 
 interface StateModel {
+  id: string;
   loading: boolean;
   projects: Project[];
   users?: UserLite[];
@@ -17,6 +19,7 @@ interface StateModel {
 @State<StateModel>({
   name: 'organization',
   defaults: {
+    id: 'acme_engineering',
     projects: [],
     loading: false,
     usersById: new Map<string, UserLite>(),
@@ -26,13 +29,18 @@ export class OrganizationState {
   constructor(private readonly data: DataServiceFactory) {}
 
   @Selector()
-  static projects(state: StateModel): Project[] {
-    return state.projects;
+  static id(state: StateModel): string {
+    return state.id;
   }
 
   @Selector()
   static loading(state: StateModel): boolean {
     return state.loading;
+  }
+
+  @Selector()
+  static projects(state: StateModel): Project[] {
+    return state.projects;
   }
 
   @Selector()
@@ -48,32 +56,38 @@ export class OrganizationState {
   @Action(LoadOrganization)
   loadOrganization(
     ctx: StateContext<StateModel>,
-    action: LoadOrganization
+    { selected }: LoadOrganization
   ): Observable<void> {
     ctx.patchState({ loading: true });
 
     return forkJoin({
       projects: this.data.projects.getMyAsync(),
-      userList: this.data.users.getAllAsync(action.organization),
+      userList: this.data.users.getAllAsync(selected),
     }).pipe(
       map(({ projects, userList }) => {
         const users: UserLite[] = [];
         const usersById = new Map<string, UserLite>();
-        const orgId = 'acme_engineering';
 
-        userList = userList.sort((a, b) => (a.name < b.name ? -1 : 1));
+        userList = userList.sort((a, b) => sorter(a.name, b.name));
 
         for (const x of userList) {
           const user: UserLite = {
             email: x.email,
             id: x.id,
             name: x.name,
-            roles: x.appInfo.organizations[orgId],
+            roles: x.appInfo.organizations[selected],
           };
           users.push(user);
           usersById.set(x.id, user);
         }
-        ctx.patchState({ projects, users, usersById });
+        ctx.patchState({
+          projects: projects.sort((a, b) =>
+            sorter(a.lastModified, b.lastModified, 'desc')
+          ),
+          users,
+          usersById,
+          id: selected,
+        });
         ctx.patchState({ loading: false });
       })
     );

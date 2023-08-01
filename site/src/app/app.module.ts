@@ -25,10 +25,10 @@ import {
   UiState,
 } from '@wbs/core/states';
 import { environment } from 'src/environments/environment';
-import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AUTH_CONFIG } from './globals.const';
 
+/*
 @NgModule({
   declarations: [AppComponent],
   imports: [
@@ -65,3 +65,4 @@ import { AUTH_CONFIG } from './globals.const';
   ],
 })
 export class AppModule {}
+*/

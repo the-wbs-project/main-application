@@ -2,7 +2,7 @@ import { Project } from '../models';
 
 export class LoadOrganization {
   static readonly type = '[Organization] Load';
-  constructor(readonly organization: string) {}
+  constructor(readonly organizations: string[], readonly selected: string) {}
 }
 
 export class ProjectUpdated {

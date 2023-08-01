@@ -17,7 +17,7 @@ export class MailGunService {
     <p>Subject: ${blob.subject}</p>
     <p>Messasge: ${blob.message}</p>`;
 
-    return await this.sendMail(ctx, {
+    return await MailGunService.sendMail(ctx, {
       from: 'Homepage <homepage@thewbsproject.com>',
       to: 'chrisw@thewbsproject.com',
       subject: `New Inquiry From Homepage`,
@@ -29,7 +29,7 @@ export class MailGunService {
     const origin = new URL(ctx.req.url).origin;
     const url = `${origin}/setup/${invite.id}`;
 
-    return this.sendMail(ctx, {
+    return MailGunService.sendMail(ctx, {
       to: invite.email,
       from: 'The WBS Project Support <support@thewbsproject.com>',
       subject: `You have been invited to join The WBS Project Beta`,

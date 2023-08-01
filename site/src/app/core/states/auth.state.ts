@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { AuthService } from '@auth0/auth0-angular';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, tap } from 'rxjs/operators';
 import { LoadOrganization } from '../actions';
 import { ROLES, UserLite } from '../models';
 import { Logger } from '../services';
 
 export interface AuthBucket {
+
   culture: string;
-  organization: string;
   profile?: UserLite;
 }
 
@@ -18,7 +18,6 @@ export interface AuthBucket {
   name: 'auth',
   defaults: {
     culture: 'en-US',
-    organization: 'acme_engineering',
   },
 })
 export class AuthState implements NgxsOnInit {
@@ -43,23 +42,22 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static organization(state: AuthBucket): string | undefined {
-    return state.organization;
-  }
-
-  @Selector()
   static userId(state: AuthBucket): string | null | undefined {
     return state?.profile?.id;
   }
 
   ngxsOnInit(ctx: StateContext<AuthBucket>): void {
-    const organization = ctx.getState().organization;
+    console.log('test');
 
     this.auth.user$
       .pipe(
+        tap(x => console.log(x)),
         filter((x) => x != undefined),
-        map((userRaw) => this.convert(organization, userRaw!)),
-        tap(({ profile, culture }) => {
+        tap((userRaw) => {
+          console.log(userRaw);
+          const organizations = Object.keys(userRaw!['http://thewbsproject.com/organizations']);
+          const selected = organizations[0];
+          const { culture, profile } = this.convert(selected, userRaw!);
           ctx.patchState({
             culture,
             profile,
@@ -71,23 +69,22 @@ export class AuthState implements NgxsOnInit {
             'usr.email': profile.email,
           });
 
-          return ctx.dispatch(new LoadOrganization(organization));
+          return ctx.dispatch(new LoadOrganization(organizations, selected));
         }),
         takeUntilDestroyed()
       )
       .subscribe();
   }
 
-  private convert(
-    organization: string,
-    raw: Record<string, any>
-  ): { profile: UserLite; culture: string } {
+  private convert(org: string, raw: Record<string, any>): { profile: UserLite; culture: string } {
+    const orgInfo = raw['http://thewbsproject.com/organizations'];
+
     return {
       profile: {
         email: raw['email'],
         id: raw['sub'],
         name: raw['name'],
-        roles: raw['http://thewbsproject.com/organizations'][organization],
+        roles: orgInfo[org],
       },
       culture: raw['http://thewbsproject.com/culture'],
     };

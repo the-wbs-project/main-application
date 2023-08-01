@@ -7,7 +7,7 @@ import {
   LoadDiscussionForum,
   LoadPosts,
 } from '@wbs/core/actions';
-import { IdService, Messages } from '@wbs/core/services';
+import { IdService, Messages, sorter } from '@wbs/core/services';
 import { AuthState } from '@wbs/core/states';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
@@ -157,4 +157,4 @@ export class DiscussionForumState {
 }
 
 const sort = (list: Discussion[]) =>
-  list.sort((a, b) => a.lastUpdated - b.lastUpdated);
+  list.sort((a, b) => sorter(a.lastUpdated, b.lastUpdated));

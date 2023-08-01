@@ -1,0 +1,65 @@
+<div class="modal-header">
+  <h5 class="modal-title" id="modal-title">
+    {{ "General.Add" | translate }}
+  </h5>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body">
+  <form
+    #createForm
+    [formGroup]="form"
+    (submit)="modal.close([title.value, description.value])"
+  >
+    <div class="form-group">
+      <label for="title"> {{ "General.Name" | translate }} </label>
+      <input
+        #title
+        type="text"
+        kendoTextBox
+        formControlName="title"
+        class="form-control"
+        required
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="controls.title?.errors?.['required']"
+      >
+        Error: Name is required
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="description"> {{ "General.Description" | translate }} </label>
+      <input
+        #description
+        type="text"
+        kendoTextBox
+        formControlName="description"
+        class="form-control"
+        required
+      />
+      <div
+        class="invalid-feedback"
+        *ngIf="controls.description?.errors?.['required']"
+      >
+        Error: Description is required
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button class="btn btn-warning" (click)="modal.dismiss()">
+        Nevermind
+      </button>
+      <button
+        type="submit"
+        class="btn btn-success"
+        [disabled]="!form.valid"
+      >
+        Add
+      </button>
+    </div>
+  </form>
+</div>
