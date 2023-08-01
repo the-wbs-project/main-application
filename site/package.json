@@ -71,7 +71,7 @@
     "@progress/kendo-svg-icons": "^1.5.0",
     "@progress/kendo-theme-bootstrap": "^6.4.0",
     "animate.css": "^4.1.1",
-    "bootstrap": "^5.2.3",
+    "bootstrap": "^5.3.0",
     "date-fns": "^2.29.3",
     "jspath": "^0.4.0",
     "rxjs": "^7.5.5",
