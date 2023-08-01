@@ -37,7 +37,7 @@
     "@ngxs/logger-plugin": "^3.8.1",
     "@ngxs/router-plugin": "^3.8.1",
     "@ngxs/store": "^3.8.1",
-    "@popperjs/core": "^2.11.4",
+    "@popperjs/core": "^2.11.8",
     "@progress/kendo-angular-buttons": "^13.1.0",
     "@progress/kendo-angular-common": "^13.1.0",
     "@progress/kendo-angular-dateinputs": "^13.1.0",
