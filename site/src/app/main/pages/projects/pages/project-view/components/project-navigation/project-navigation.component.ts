@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectNavigationLink } from '../../models';
 
@@ -10,7 +10,13 @@ import { ProjectNavigationLink } from '../../models';
   selector: 'wbs-project-navigation',
   templateUrl: './project-navigation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, NgbNavModule, RouterModule, TranslateModule],
+  imports: [
+    CommonModule,
+    NgbDropdownModule,
+    NgbNavModule,
+    RouterModule,
+    TranslateModule,
+  ],
 })
 export class ProjectNavigationComponent {
   @Input({ required: true }) pageView!: string | null;

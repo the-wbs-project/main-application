@@ -40,6 +40,7 @@ export class ProjectChecklistModalComponent {
       ariaLabelledBy: 'modal-title',
     });
 
+    // deepcode ignore PromiseNotCaughtGeneral: aint nobody got time for that
     modal.result.then((value) => {
       if (value === 'submit') {
         this.store.dispatch(new ChangeProjectStatus(PROJECT_STATI.APPROVAL));

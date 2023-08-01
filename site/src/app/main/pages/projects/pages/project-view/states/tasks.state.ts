@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -8,10 +8,14 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   WbsNode,
 } from '@wbs/core/models';
-import { IdService, Messages, WbsTransformers } from '@wbs/core/services';
+import {
+  IdService,
+  Messages,
+  ProjectService,
+  WbsTransformers,
+} from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
-import { ProjectManagementService } from '../../../services';
 import {
   ChangeTaskBasics,
   ChangeTaskDisciplines,
@@ -52,11 +56,13 @@ interface StateModel {
   defaults: {},
 })
 export class TasksState {
-  private readonly data = inject(DataServiceFactory);
-  private readonly messaging = inject(Messages);
-  private readonly nav = inject(ProjectNavigationService);
-  private readonly service = inject(ProjectManagementService);
-  private readonly transformers = inject(WbsTransformers);
+  constructor(
+    private readonly data: DataServiceFactory,
+    private readonly messaging: Messages,
+    private readonly nav: ProjectNavigationService,
+    private readonly service: ProjectService,
+    private readonly transformers: WbsTransformers
+  ) {}
 
   @Selector()
   static current(state: StateModel): TaskDetailsViewModel | undefined {

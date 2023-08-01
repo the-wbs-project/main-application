@@ -1,5 +1,5 @@
-import { enableProdMode } from '@angular/core';
-import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
+/// <reference types="@angular/localize" />
+
 import { library } from '@fortawesome/fontawesome-svg-core';
 import {
   faBolt,

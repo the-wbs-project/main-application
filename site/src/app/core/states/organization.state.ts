@@ -80,7 +80,14 @@ export class OrganizationState {
           users.push(user);
           usersById.set(x.id, user);
         }
-        ctx.patchState({ projects, users, usersById, id: selected });
+        ctx.patchState({
+          projects: projects.sort((a, b) =>
+            sorter(a.lastModified, b.lastModified, 'desc')
+          ),
+          users,
+          usersById,
+          id: selected,
+        });
         ctx.patchState({ loading: false });
       })
     );

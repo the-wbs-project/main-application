@@ -80,6 +80,7 @@ import {
     WbsActionButtonsComponent,
     WbsTreeDoubleClickDirective,
   ],
+  providers: [WbsPhaseService],
 })
 export class WbsTreeComponent implements OnChanges, OnDestroy {
   protected dataReady = false;
@@ -136,6 +137,7 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
       if (this.expandedKeys && this.expandedKeys2.length === 0)
         this.expandedKeys2.push(...this.expandedKeys);
     }
+    console.log(this.nodes);
     if (!this.nodes) return;
 
     this.tree$.next(structuredClone(this.nodes));

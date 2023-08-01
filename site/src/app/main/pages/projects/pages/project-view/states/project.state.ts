@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { ProjectUpdated, SetHeaderInfo } from '@wbs/core/actions';
@@ -11,7 +11,7 @@ import {
   ProjectCategory,
   ROLES,
 } from '@wbs/core/models';
-import { DialogService, Messages, WbsTransformers } from '@wbs/core/services';
+import { DialogService, Messages, ProjectService } from '@wbs/core/services';
 import { AuthState, MetadataState, OrganizationState } from '@wbs/core/states';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import {
@@ -31,10 +31,6 @@ import {
   VerifyTasks,
 } from '../actions';
 import { PROJECT_ACTIONS } from '../models';
-import {
-  ProjectHelperService,
-  ProjectManagementService,
-} from '../../../services';
 import { UserRolesViewModel } from '../view-models';
 
 interface StateModel {
@@ -52,12 +48,13 @@ interface StateModel {
   defaults: {},
 })
 export class ProjectState {
-  private data = inject(DataServiceFactory);
-  private dialog = inject(DialogService);
-  private messaging = inject(Messages);
-  private service = inject(ProjectManagementService);
-  private store = inject(Store);
-  private readonly transformers = inject(WbsTransformers);
+  constructor(
+    private readonly data: DataServiceFactory,
+    private readonly dialog: DialogService,
+    private readonly messaging: Messages,
+    private readonly services: ProjectService,
+    private readonly store: Store
+  ) {}
 
   @Selector()
   static approvers(state: StateModel): string[] | undefined {
@@ -183,7 +180,7 @@ export class ProjectState {
     { role, user }: AddUserToRole
   ): Observable<void> {
     const project = ctx.getState().current!;
-    const roleTitle = ProjectHelperService.getRoleTitle(role, false);
+    const roleTitle = this.services.getRoleTitle(role, false);
 
     return this.dialog
       .confirm('General.Confirmation', 'ProjectSettings.AddUserConfirmation', {
@@ -223,7 +220,7 @@ export class ProjectState {
     { role, user }: RemoveUserToRole
   ): Observable<void> {
     const project = ctx.getState().current!;
-    const roleTitle = ProjectHelperService.getRoleTitle(role, false);
+    const roleTitle = this.services.getRoleTitle(role, false);
     const index = project.roles.findIndex(
       (x) => x.role === role && x.userId === user.id
     );

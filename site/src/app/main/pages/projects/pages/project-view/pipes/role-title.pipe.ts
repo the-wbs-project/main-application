@@ -1,9 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ROLES } from '@wbs/core/models';
-import { ProjectHelperService } from '../../../services';
+import { ProjectService } from '@wbs/core/services';
 
 @Pipe({ name: 'roleTitle', standalone: true })
 export class RoleTitlePipe implements PipeTransform {
+  constructor(private readonly service: ProjectService) {}
+
   transform(
     input: string | string[] | undefined | null,
     useAbbreviations = false
@@ -17,19 +19,13 @@ export class RoleTitlePipe implements PipeTransform {
     const isSme = roles.indexOf(ROLES.SME) > -1;
 
     if (isPm) {
-      titles.push(
-        ProjectHelperService.getRoleTitle(ROLES.PM, useAbbreviations)
-      );
+      titles.push(this.service.getRoleTitle(ROLES.PM, useAbbreviations));
     }
     if (isApprover) {
-      titles.push(
-        ProjectHelperService.getRoleTitle(ROLES.APPROVER, useAbbreviations)
-      );
+      titles.push(this.service.getRoleTitle(ROLES.APPROVER, useAbbreviations));
     }
     if (isSme) {
-      titles.push(
-        ProjectHelperService.getRoleTitle(ROLES.SME, useAbbreviations)
-      );
+      titles.push(this.service.getRoleTitle(ROLES.SME, useAbbreviations));
     }
     return titles.join(', ');
   }
