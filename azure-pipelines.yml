@@ -10,7 +10,7 @@ pool:
   vmImage: macOS-latest
 
 variables:
-  npm_config_site_cache: $(Pipeline.Workspace)/site/.npm
+  YARN_CACHE_SITE_FOLDER: $(Pipeline.Workspace)/site/.yarn
 
 jobs:
   - job: azure_job
@@ -41,6 +41,7 @@ jobs:
           ArtifactName: "drop"
           publishLocation: "Container"
         displayName: "Publish Worker"
+
   - job: worker_job
     displayName: Worker
     steps:
@@ -50,14 +51,14 @@ jobs:
         displayName: "Install Node.js"
 
       - script: |
-          npm -g add esbuild
+          yarn global add esbuild
         displayName: "Install ES Build"
 
-      - script: npm i
+      - script: yarn
         workingDirectory: "worker"
         displayName: "Install Worker Packages"
 
-      - script: npm run build
+      - script: yarn run build
         workingDirectory: "worker"
         displayName: "Build Worker"
 
@@ -83,9 +84,12 @@ jobs:
     steps:
       - task: Cache@2
         inputs:
-          key: "package-lock.json"
-          path: $(npm_config_site_cache)
-        displayName: Cache NPM packages
+          key: '"yarn" | "$(Agent.OS)" | yarn.lock'
+          restoreKeys: |
+            "yarn" | "$(Agent.OS)"
+            "yarn"
+          path: $(YARN_CACHE_SITE_FOLDER)
+        displayName: Cache Yarn packages
 
       - script: |
           echo "$(FA_LICENSE)"
@@ -94,10 +98,11 @@ jobs:
         env:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup - Font Awesome Registry"
-      - script: npm -g add @angular/cli
+
+      - script: yarn global add @angular/cli
         displayName: "Setup - Angular CLI"
 
-      - script: npm ci --cache $(npm_config_cache)
+      - script: yarn
         workingDirectory: "site"
         displayName: "Setup - Site Packages"
 
@@ -107,12 +112,7 @@ jobs:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup - Kendo UI License"
 
-      - script: |
-          npm cache ls
-          npm cache verify
-        workingDirectory: "site"
-        displayName: NPM Show cache
-      - script: npm run deploy:qa
+      - script: yarn run deploy:qa
         workingDirectory: "site"
         displayName: "QA - Build"
 
@@ -125,7 +125,7 @@ jobs:
           replaceExistingArchive: true
         displayName: "QA - Zip"
 
-      - script: npm run deploy:prod
+      - script: yarn run deploy:prod
         workingDirectory: "site"
         displayName: "Production - Build"
 
