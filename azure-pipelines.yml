@@ -7,7 +7,7 @@ trigger:
   - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: macOS-latest
 
 jobs:
   - job: azurew_job
