@@ -26,7 +26,7 @@ export class MailGunService {
   }
 
   static inviteAsync(ctx: Context, invite: Invite): Promise<Response> {
-    const origin = new URL(ctx.req.url).origin;
+    const origin = ctx.req.headers.get('origin');
     const url = `${origin}/setup/${invite.id}`;
 
     return MailGunService.sendMail(ctx, {
@@ -44,8 +44,8 @@ export class MailGunService {
     return ctx.get('fetcher').fetch(`${ctx.env.MAILGUN_ENDPOINT}/messages`, {
       method: 'POST',
       headers: {
-        Authorization: 'Basic ' + Buffer.from('api:' + ctx.env.MAILGUN_KEY).toString(),
-        //Authorization: 'Basic ' + btoa('api:' + ctx.env.MAILGUN_KEY),
+        //Authorization: 'Basic ' + Buffer.from('api:' + ctx.env.MAILGUN_KEY).toString(),
+        Authorization: 'Basic ' + btoa('api:' + ctx.env.MAILGUN_KEY),
         'Content-Type': 'application/x-www-form-urlencoded',
         'Content-Length': dataUrlEncoded.length.toString(),
       },

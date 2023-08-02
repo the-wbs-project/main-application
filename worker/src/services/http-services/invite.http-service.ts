@@ -75,7 +75,9 @@ export class InviteHttpService {
       await ctx.get('data').invites.putAsync(invite);
 
       if (send ?? false) {
-        await MailGunService.inviteAsync(ctx, invite);
+        const resp = await MailGunService.inviteAsync(ctx, invite);
+
+        console.log(await resp.json());
 
         invite.dateSent = new Date();
 

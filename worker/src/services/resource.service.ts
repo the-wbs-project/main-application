@@ -6,14 +6,12 @@ export class ResourceService {
   constructor(list: Resources[]) {
     let resources: Record<string, Record<string, string>> = {};
 
-    console.log(list);
     for (const item of list) {
       resources = {
         ...resources,
         ...item.values,
       };
     }
-    console.log(resources);
     this.resources = resources;
   }
 
