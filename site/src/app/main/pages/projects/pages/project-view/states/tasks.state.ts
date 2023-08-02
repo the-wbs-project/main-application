@@ -105,7 +105,6 @@ export class TasksState {
     ctx: StateContext<StateModel>,
     { project }: VerifyTasks
   ): Observable<void> | void {
-    console.log('verifying');
     const state = ctx.getState();
 
     if (state.project?.id === project.id) return;
@@ -578,7 +577,6 @@ export class TasksState {
     ctx: StateContext<StateModel>,
     { disciplines }: ChangeTaskDisciplines
   ): Observable<void> | void {
-    console.log('ChangeTaskDisciplines');
     const state = ctx.getState();
     const viewModel = state.current!;
     const model = state.nodes!.find((x) => x.id === viewModel.id)!;

@@ -56,7 +56,6 @@ export class TaskMenuPipe implements PipeTransform {
     if (phaseActions.length > 0) results.push(phaseActions);
     if (nav.length > 0) results.push(nav);
 
-    console.log(results);
     return results;
   }
 
@@ -85,7 +84,6 @@ export class TaskMenuPipe implements PipeTransform {
     roles: string[],
     status: PROJECT_STATI_TYPE
   ): boolean {
-    console.log(link);
     if (!link.filters) return true;
     //
     //  Perform cat check

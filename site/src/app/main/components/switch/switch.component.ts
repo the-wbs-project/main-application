@@ -38,7 +38,6 @@ export class SwitchComponent {
         if (answer) {
           this.valueChange.emit(cb.checked);
         } else {
-          console.log('trying to cancel');
           e.preventDefault();
           cb.checked = !cb.checked;
         }

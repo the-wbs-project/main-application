@@ -29,14 +29,12 @@ export class Resources extends MissingTranslationHandler {
       map((list) => {
         let resources: Record<string, Record<string, string>> = {};
 
-        console.log(list);
         for (const item of list) {
           resources = {
             ...resources,
             ...item.values,
           };
         }
-        console.log(resources);
         this.resources = resources;
         this.translate.setTranslation(this.culture, resources);
         this.translate.setDefaultLang(this.culture);

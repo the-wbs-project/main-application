@@ -137,7 +137,6 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
       if (this.expandedKeys && this.expandedKeys2.length === 0)
         this.expandedKeys2.push(...this.expandedKeys);
     }
-    console.log(this.nodes);
     if (!this.nodes) return;
 
     this.tree$.next(structuredClone(this.nodes));
@@ -193,12 +192,10 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
     //
     if (this.draggedItem.phaseInfo?.isLockedToParent) {
       results.newParentsAllowed = false;
-      console.log('no new parents');
       if (
         this.draggedItem.phaseInfo?.isDisciplineNode &&
         this.draggedItem.parentId !== this.targetedItem.parentId
       ) {
-        console.log('cant drag disicpline nodes to new parents');
         results.cancelEffect = true;
 
         return results;
@@ -237,7 +234,6 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
       this.targetedItem.phaseInfo?.isLockedToParent &&
       (position.isAfter || position.isBefore)
     ) {
-      console.log('youre trying to drop this before or after a a synced child');
       return false;
     }
 
@@ -412,8 +408,6 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
           //
           const results = this.wbsService.rebuildLevels(tree);
 
-          console.log(results.changedIds);
-
           this.zone.run(() => this.tree$.next(results.rows));
           this.reordered.emit([this.draggedItem.id, results.rows]);
         }
@@ -484,7 +478,6 @@ export class WbsTreeComponent implements OnChanges, OnDestroy {
       }
     } else {
       if (position.isBefore) {
-        console.log('before!');
         showDropHint(target, 'before');
         this.reorderRows(list, 0);
       }

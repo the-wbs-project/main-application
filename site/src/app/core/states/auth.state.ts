@@ -8,7 +8,6 @@ import { ROLES, UserLite } from '../models';
 import { Logger } from '../services';
 
 export interface AuthBucket {
-
   culture: string;
   profile?: UserLite;
 }
@@ -47,15 +46,13 @@ export class AuthState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: StateContext<AuthBucket>): void {
-    console.log('test');
-
     this.auth.user$
       .pipe(
-        tap(x => console.log(x)),
         filter((x) => x != undefined),
         tap((userRaw) => {
-          console.log(userRaw);
-          const organizations = Object.keys(userRaw!['http://thewbsproject.com/organizations']);
+          const organizations = Object.keys(
+            userRaw!['http://thewbsproject.com/organizations']
+          );
           const selected = organizations[0];
           const { culture, profile } = this.convert(selected, userRaw!);
           ctx.patchState({
@@ -76,7 +73,10 @@ export class AuthState implements NgxsOnInit {
       .subscribe();
   }
 
-  private convert(org: string, raw: Record<string, any>): { profile: UserLite; culture: string } {
+  private convert(
+    org: string,
+    raw: Record<string, any>
+  ): { profile: UserLite; culture: string } {
     const orgInfo = raw['http://thewbsproject.com/organizations'];
 
     return {
