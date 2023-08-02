@@ -85,7 +85,6 @@ jobs:
         inputs:
           key: "package-lock.json"
           path: $(npm_config_site_cache)
-        workingDirectory: "site"
         displayName: Cache NPM packages
 
       - script: |
