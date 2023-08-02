@@ -82,7 +82,6 @@ jobs:
 
   - job: site_job
     displayName: Site
-    dependsOn: worker_job
     steps:
       - task: Cache@2
         inputs:
