@@ -64,7 +64,7 @@ export class WbsNodePhaseTransformer {
         projectNodes,
         false
       );
-      parent.children = this.getChildCount(children);
+      parent.children = children.length;
 
       nodes.push(parent, ...children);
     }
@@ -124,16 +124,15 @@ export class WbsNodePhaseTransformer {
         child.phase?.syncWithDisciplines ?? false
       );
 
-      node.children = this.getChildCount(vmChildren);
+      if (node.id === 'aJqFkXX728') {
+        console.log('node', node);
+        console.log('vmChildren', vmChildren);
+      }
+
+      node.children = vmChildren.length;
 
       results.push(node, ...vmChildren);
     }
     return results;
-  }
-
-  private getChildCount(children: WbsNodeView[]): number {
-    return children
-      .map((x) => x.children + 1)
-      .reduce((partialSum, a) => partialSum + a, 0);
   }
 }

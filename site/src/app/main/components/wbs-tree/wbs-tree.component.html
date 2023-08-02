@@ -4,22 +4,20 @@
   </div>
   <kendo-treelist
     #treelist
+    appFillElement
+    kendoTreeListExpandable
+    kendoTreeListSelectable
     [kendoTreeListFlatBinding]="tree"
     parentIdField="treeParentId"
     idField="treeId"
-    kendoTreeListExpandable
+    [rowReorderable]="rowReorderable"
     [initiallyExpanded]="false"
     [(expandedKeys)]="expandedKeys2"
-    kendoTreeListSelectable
     [selectable]="settings"
-    (expand)="onToggle()"
-    (close)="onToggle()"
     (selectionChange)="rowSelected($event)"
-    [ngClass]="id"
-    [wbsTreeDoubleClick]="treelist"
-    (dblClicked)="showDetails.emit($event)"
-    appFillElement
     [paddingBottom]="40"
+    (dblclick)="showDetails.emit(clickedId)"
+    (cellClick)="clickedId = $event.dataItem.id"
   >
     <ng-template *ngIf="menuItems" kendoTreeListToolbarTemplate>
       <div class="display-ib pd-r-20" *ngFor="let menu of menuItems">
@@ -29,20 +27,14 @@
         />
       </div>
     </ng-template>
+    <kendo-treelist-rowreorder-column *ngIf="rowReorderable" [width]="40" />
     <kendo-treelist-column
       field="levelText"
       [title]="'Wbs.Level' | translate"
       [width]="100"
       class="level-column"
       headerClass="level-header-column"
-    >
-      <ng-template kendoTreeListCellTemplate let-dataItem>
-        <a [id]="dataItem.id" class="node-level">
-          {{ dataItem.levelText }}
-        </a>
-        <input type="hidden" name="id" [value]="dataItem.id" />
-      </ng-template>
-    </kendo-treelist-column>
+    />
     <kendo-treelist-column
       *ngIf="view === 'discipline'"
       field="sameAsLevelText"
