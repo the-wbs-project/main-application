@@ -14,8 +14,9 @@
     [initiallyExpanded]="false"
     [(expandedKeys)]="expandedKeys2"
     [selectable]="settings"
-    (selectionChange)="rowSelected($event)"
     [paddingBottom]="40"
+    (selectionChange)="rowSelected($event)"
+    (rowReorder)="rowReordered($event)"
     (dblclick)="showDetails.emit(clickedId)"
     (cellClick)="clickedId = $event.dataItem.id"
   >

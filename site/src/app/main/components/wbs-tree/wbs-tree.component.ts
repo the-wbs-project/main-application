@@ -21,7 +21,6 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
-  CellClickEvent,
   RowReorderEvent,
   SelectableSettings,
   SelectionChangeEvent,

@@ -38,7 +38,7 @@ export const appConfig: ApplicationConfig = {
       DialogModule,
       HttpClientModule,
       NgxsLoggerPluginModule.forRoot({
-        disabled: environment.production,
+        disabled: false, // environment.production,
       }),
       NgxsModule.forRoot([
         AuthState,
