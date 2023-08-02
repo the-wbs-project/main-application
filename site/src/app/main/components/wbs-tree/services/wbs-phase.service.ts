@@ -1,10 +1,39 @@
 import { Injectable } from '@angular/core';
+import { DropPosition } from '@progress/kendo-angular-treelist';
 import { WbsNodeService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { RebuildResults } from '../models';
 
 @Injectable()
 export class WbsPhaseService {
+  reorder(
+    list: WbsNodeView[],
+    dragged: WbsNodeView,
+    target: WbsNodeView,
+    position: DropPosition
+  ): RebuildResults {
+    dragged.phaseId = target.phaseId;
+
+    if (position === 'over') {
+      //
+      //  Set the parent to the target and give this item the last position
+      //
+      dragged.parentId = target.id;
+      dragged.order = target.children + 1;
+    } else {
+      const delta = position === 'before' ? -0.1 : 0.1;
+
+      dragged.parentId = target.parentId;
+      dragged.order = target.order + delta;
+    }
+
+    const index = list.findIndex((x) => x.id === dragged.id);
+
+    list.splice(index, 1, dragged);
+
+    return this.rebuildLevels(list);
+  }
+
   rebuildLevels(list: WbsNodeView[]): RebuildResults {
     const results: RebuildResults = {
       rows: [],
@@ -29,6 +58,7 @@ export class WbsPhaseService {
         if (child.levelText !== levelText) {
           child.levels = level;
           child.levelText = levelText;
+          child.depth = levelText.split('.').length;
           changed = true;
         }
         results.rows.push(child);

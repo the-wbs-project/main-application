@@ -462,8 +462,8 @@ export class TasksState {
     for (const vm of nodeViews) {
       const vm2 = action.rows.find((x) => x.id === vm.id);
 
-      if (!vm2) continue;
-      if (vm.order === vm2.order && vm.parentId === vm2.parentId) continue;
+      if (!vm2 || (vm.order === vm2.order && vm.parentId === vm2.parentId))
+        continue;
 
       const orig = models.find((x) => x.id === vm.id)!;
       const model = this.copy(orig);
