@@ -50,7 +50,7 @@ jobs:
         displayName: "Install Node.js"
 
       - script: |
-          npm global add esbuild
+          npm -g add esbuild
         displayName: "Install ES Build"
 
       - script: npm i
@@ -94,7 +94,7 @@ jobs:
         env:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup - Font Awesome Registry"
-      - script: npm global add @angular/cli
+      - script: npm -g add @angular/cli
         displayName: "Setup - Angular CLI"
 
       - script: npm ci --cache $(npm_config_cache)
