@@ -9,8 +9,11 @@ trigger:
 pool:
   vmImage: macOS-latest
 
+variables:
+  npm_config_site_cache: $(Pipeline.Workspace)/site/.npm
+
 jobs:
-  - job: azurew_job
+  - job: azure_job
     displayName: Azure Functions
     steps:
       - task: DotNetCoreCLI@2
@@ -47,14 +50,14 @@ jobs:
         displayName: "Install Node.js"
 
       - script: |
-          yarn global add esbuild
+          npm global add esbuild
         displayName: "Install ES Build"
 
-      - script: yarn
+      - script: npm i
         workingDirectory: "worker"
         displayName: "Install Worker Packages"
 
-      - script: yarn run build
+      - script: npm run build
         workingDirectory: "worker"
         displayName: "Build Worker"
 
@@ -78,6 +81,13 @@ jobs:
     displayName: Site
     dependsOn: worker_job
     steps:
+      - task: Cache@2
+        inputs:
+          key: "package-lock.json"
+          path: $(npm_config_site_cache)
+        workingDirectory: "site"
+        displayName: Cache NPM packages
+
       - script: |
           echo "$(FA_LICENSE)"
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
@@ -85,10 +95,10 @@ jobs:
         env:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup - Font Awesome Registry"
-      - script: yarn global add @angular/cli
+      - script: npm global add @angular/cli
         displayName: "Setup - Angular CLI"
 
-      - script: yarn
+      - script: npm ci --cache $(npm_config_cache)
         workingDirectory: "site"
         displayName: "Setup - Site Packages"
 
@@ -98,7 +108,12 @@ jobs:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup - Kendo UI License"
 
-      - script: yarn run deploy:qa
+      - script: |
+          npm cache ls
+          npm cache verify
+        workingDirectory: "site"
+        displayName: NPM Show cache
+      - script: npm run deploy:qa
         workingDirectory: "site"
         displayName: "QA - Build"
 
@@ -111,7 +126,7 @@ jobs:
           replaceExistingArchive: true
         displayName: "QA - Zip"
 
-      - script: yarn run deploy:prod
+      - script: npm run deploy:prod
         workingDirectory: "site"
         displayName: "Production - Build"
 
