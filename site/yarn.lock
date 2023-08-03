@@ -1687,7 +1687,7 @@
     "@progress/kendo-draggable" "^3.0.2"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-listview@13.1.0":
+"@progress/kendo-angular-listview@^13.1.0", "@progress/kendo-angular-listview@13.1.0":
   version "13.1.0"
   resolved "https://registry.npmjs.org/@progress/kendo-angular-listview/-/kendo-angular-listview-13.1.0.tgz"
   integrity sha512-injDqDhvBEScxk7y6HUlkv8vb173G56bMueri8lP40cf7vlAkFFGBaPew/elF1DukumVxIoTEF9HMZk2+iFJYA==
@@ -1797,7 +1797,7 @@
     "@progress/kendo-draggable" "^3.0.2"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-upload@13.1.0":
+"@progress/kendo-angular-upload@^13.1.0", "@progress/kendo-angular-upload@13.1.0":
   version "13.1.0"
   resolved "https://registry.npmjs.org/@progress/kendo-angular-upload/-/kendo-angular-upload-13.1.0.tgz"
   integrity sha512-cQGDu2oiig+ESvwIjPtzkH4ZLhzn+evfsnuv15SOar3Z6qhew0cQyDI0xa6Bn0DIdgO9hNqwmAHXa7fKb8rPFA==
