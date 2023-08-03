@@ -1,11 +1,13 @@
+import { Context } from '../../config';
 import { Activity } from '../../models';
 import { CosmosDbService } from './cosmos-db.service';
-import { Context } from '../../config';
 
 export class UserActivityDataService {
-  private _db?: CosmosDbService;
+  private readonly db: CosmosDbService;
 
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: Context) {
+    this.db = new CosmosDbService(this.ctx, 'ActivityUsers', 'userId');
+  }
 
   getAllAsync(userId: string): Promise<Activity[] | undefined> {
     return this.db.getAllByPartitionAsync<Activity>(userId, false);
@@ -13,13 +15,5 @@ export class UserActivityDataService {
 
   async putAsync(activity: Activity): Promise<Activity> {
     return await this.db.upsertDocument<Activity>(activity, activity.userId);
-  }
-
-  private get db(): CosmosDbService {
-    if (!this._db) {
-      const db = this.ctx.get('organization').organization;
-      this._db = new CosmosDbService(this.ctx, db, 'ActivityUsers', 'userId');
-    }
-    return this._db;
   }
 }

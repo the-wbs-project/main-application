@@ -4,14 +4,13 @@ import { Context } from '../../config';
 
 export class CosmosDbService {
   private readonly db: CosmosClient;
-  orgId?: string;
 
-  constructor(ctx: Context, dbId: string, collId: string, private readonly pkVariable = 'pk') {
+  constructor(ctx: Context, collectionId: string, private readonly pkVariable = 'pk') {
     this.db = new CosmosClient({
       endpoint: ctx.env.COSMOS_ENDPOINT,
       masterKey: ctx.env.COSMOS_KEY,
-      dbId,
-      collId,
+      dbId: ctx.env.COSMOS_DB,
+      collId: collectionId,
       fetch: (input: RequestInfo, init?: RequestInit<RequestInitCfProperties>) => {
         return ctx.get('fetcher').fetch(input, init);
       },

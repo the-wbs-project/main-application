@@ -3,87 +3,43 @@ import { Project } from '../../models';
 import { CosmosDbService } from './cosmos-db.service';
 
 export class ProjectDataService {
-  private readonly prefix = 'PROJECTS';
-  private readonly byPass: boolean;
-  private _db?: CosmosDbService;
+  private readonly db: CosmosDbService;
 
   constructor(private readonly ctx: Context) {
-    this.byPass = (ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
+    this.db = new CosmosDbService(this.ctx, 'Projects', 'id');
   }
 
-  async getAllAsync(): Promise<Project[]> {
-    const projects = await this.db.getAllAsync<Project>(false);
-
-    for (const p of projects) {
-      if (p.lastModified == undefined) {
-        //@ts-ignore
-        p.lastModified = p._ts * 1000;
-
-        await this.putAsync(p);
-      } else if (typeof p.lastModified == 'string') {
-        p.lastModified = new Date(p.lastModified).getTime();
-
-        await this.putAsync(p);
-      }
-    }
-
-    return projects;
+  getAllAsync(ownerId: string): Promise<Project[] | undefined> {
+    return this.db.getAllByPartitionAsync<Project>(ownerId, true);
   }
 
-  getAllWatchedAsync(userId: string): Promise<Project[]> {
+  getAllAssignedAsync(ownerId: string, userId: string): Promise<Project[]> {
     return this.db.getListByQueryAsync<Project>(
-      `SELECT * FROM c WHERE ARRAY_CONTAINS(c.watchers, @userId)`,
+      `SELECT * FROM c WHERE c.owner = @owner AND EXISTS (SELECT VALUE z FROM z in c.roles WHERE z.userId = @userId)`,
       true,
-      [{ name: '@userId', value: userId }],
+      [
+        { name: '@owner', value: ownerId },
+        { name: '@userId', value: userId },
+      ],
       undefined,
       undefined,
       true,
     );
   }
 
-  async getAsync(projectId: string): Promise<Project | undefined> {
-    if (this.byPass) return await this.getFromDbAsync(projectId);
-
-    const kvName = [this.prefix, this.organization, projectId].join('|');
-    const kvData = await this.ctx.env.KV_DATA.get<Project>(kvName, 'json');
-
-    if (kvData) return kvData;
-
-    const data = await this.getFromDbAsync(projectId);
-
-    if (data) this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(kvName, JSON.stringify(data)));
-
-    return data;
+  getAsync(ownerId: string, projectId: string): Promise<Project | undefined> {
+    return this.db.getDocumentAsync<Project>(ownerId, projectId, true);
   }
 
-  async updateModifiedDateAsync(projectId: string): Promise<void> {
-    const project = await this.getAsync(projectId);
+  async updateModifiedDateAsync(ownerId: string, projectId: string): Promise<void> {
+    const project = await this.getAsync(ownerId, projectId);
 
     if (project) await this.putAsync(project);
   }
 
   async putAsync(project: Project): Promise<void> {
-    const kvName = [this.prefix, this.organization, project.id].join('|');
-
     project.lastModified = Date.now();
 
     await this.db.upsertDocument(project, project.id);
-    await this.ctx.env.KV_DATA.delete(kvName);
-  }
-
-  private getFromDbAsync(projectId: string, clean = true): Promise<Project | undefined> {
-    return this.db.getDocumentAsync<Project>(projectId, projectId, clean);
-  }
-
-  private get organization(): string {
-    return this.ctx.get('organization').organization;
-  }
-
-  private get db(): CosmosDbService {
-    if (!this._db) {
-      const db = this.organization;
-      this._db = new CosmosDbService(this.ctx, db, 'Projects', 'id');
-    }
-    return this._db;
   }
 }

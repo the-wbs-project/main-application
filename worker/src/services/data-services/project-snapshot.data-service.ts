@@ -1,34 +1,18 @@
 import { Context } from '../../config';
 import { ProjectSnapshot } from '../../models';
-import { ProjectNodeDataService } from './project-node.data-service';
-import { ProjectDataService } from './project.data-service';
 import { StorageService } from './storage.service';
 
 export class ProjectSnapshotDataService {
   private _bucket?: StorageService;
 
-  constructor(
-    private readonly ctx: Context,
-    private readonly projectService: ProjectDataService,
-    private readonly taskService: ProjectNodeDataService,
-  ) {}
+  constructor(private readonly ctx: Context) {}
 
-  getAsync(projectId: string, activityId: string): Promise<ProjectSnapshot | null> {
-    return this.bucket.get<ProjectSnapshot>(activityId, [this.organization, projectId]);
+  getAsync(owner: string, projectId: string, activityId: string): Promise<ProjectSnapshot | null> {
+    return this.bucket.get<ProjectSnapshot>(activityId, [owner, projectId]);
   }
 
-  async putAsync(projectId: string, activityId: string): Promise<void> {
-    const [project, tasks] = await Promise.all([this.projectService.getAsync(projectId), this.taskService.getAllAsync(projectId)]);
-    const snapshot: ProjectSnapshot = {
-      ...project!,
-      tasks,
-    };
-
-    this.ctx.executionCtx.waitUntil(this.bucket.put(activityId, [this.organization, projectId], snapshot));
-  }
-
-  private get organization(): string {
-    return this.ctx.get('organization').organization;
+  async putAsync(activityId: string, snapshot: ProjectSnapshot): Promise<void> {
+    this.ctx.executionCtx.waitUntil(this.bucket.put(activityId, [snapshot.owner, snapshot.id], snapshot));
   }
 
   private get bucket(): StorageService {

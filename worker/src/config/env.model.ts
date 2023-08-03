@@ -15,6 +15,7 @@ export type Env = {
 
   COSMOS_ENDPOINT: string;
   COSMOS_KEY: string;
+  COSMOS_DB: string;
 
   DATADOG_API_KEY: string;
   DATADOG_ENV: string;

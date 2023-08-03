@@ -5,7 +5,6 @@ export class Auth0Service {
   static toUser(payload: Record<string, any>): User {
     const user: User = {
       blocked: payload.blocked ?? false,
-      appInfo: payload.app_metadata || {},
       createdAt: payload.created_at,
       email: payload.email,
       emailVerified: payload.email_verified,

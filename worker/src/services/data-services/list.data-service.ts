@@ -5,10 +5,11 @@ import { CosmosDbService } from './cosmos-db.service';
 export class ListDataService {
   private readonly prefix = 'LISTS';
   private readonly byPass: boolean;
-  private _db?: CosmosDbService;
+  private readonly db: CosmosDbService;
 
   constructor(private readonly ctx: Context) {
     this.byPass = (ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
+    this.db = new CosmosDbService(this.ctx, 'Lists', 'type');
   }
 
   async getAsync(type: string): Promise<ListItem[] | undefined> {
@@ -24,12 +25,5 @@ export class ListDataService {
     if (data && data.length > 0) this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(kvName, JSON.stringify(data)));
 
     return data;
-  }
-
-  private get db(): CosmosDbService {
-    if (!this._db) {
-      this._db = new CosmosDbService(this.ctx, '_common', 'Lists', 'type');
-    }
-    return this._db;
   }
 }

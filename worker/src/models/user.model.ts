@@ -8,16 +8,10 @@ export interface User {
   lastLogin?: Date;
   loginsCount?: number;
   userInfo: UserMetadata;
-  appInfo: UserAppMetadata;
 }
 
 export interface UserMetadata {
   culture: string;
-}
-
-export interface UserAppMetadata {
-  inviteCode?: string;
-  organizations: { [org: string]: string[] };
 }
 
 export interface UserLite {

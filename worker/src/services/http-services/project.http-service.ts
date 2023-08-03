@@ -3,7 +3,11 @@ import { Context } from '../../config';
 export class ProjectHttpService {
   static async getAllAsync(ctx: Context): Promise<Response | void> {
     try {
-      return ctx.json(await ctx.get('data').projects.getAllAsync());
+      const { owner } = ctx.req.param();
+
+      if (!owner) return ctx.text('Missing Parameters', 500);
+
+      return ctx.json(await ctx.get('data').projects.getAllAsync(owner));
     } catch (e) {
       ctx
         .get('logger')
@@ -13,15 +17,19 @@ export class ProjectHttpService {
     }
   }
 
-  static async getAllWatchedAsync(ctx: Context): Promise<Response> {
+  static async getAllAssignedAsync(ctx: Context): Promise<Response> {
     try {
+      const { owner } = ctx.req.param();
+
+      if (!owner) return ctx.text('Missing Parameters', 500);
+
       const userId = ctx.get('state').user.id;
 
-      return ctx.json(await ctx.get('data').projects.getAllWatchedAsync(userId));
+      return ctx.json(await ctx.get('data').projects.getAllAssignedAsync(owner, userId));
     } catch (e) {
       ctx
         .get('logger')
-        .trackException('An error occured trying to get all watched projects.', 'ProjectHttpService.getAllWatchedAsync', <Error>e);
+        .trackException('An error occured trying to get all assigned projects.', 'ProjectHttpService.getAllWatchedAsync', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -29,11 +37,11 @@ export class ProjectHttpService {
 
   static async getByIdAsync(ctx: Context): Promise<Response> {
     try {
-      const { projectId } = ctx.req.param();
+      const { owner, projectId } = ctx.req.param();
 
-      if (!projectId) return ctx.text('Missing Parameters', 500);
+      if (!owner || !projectId) return ctx.text('Missing Parameters', 500);
 
-      return ctx.json(await ctx.get('data').projects.getAsync(projectId));
+      return ctx.json(await ctx.get('data').projects.getAsync(owner, projectId));
     } catch (e) {
       ctx.get('logger').trackException("An error occured trying to get a project by it's ID.", 'ProjectHttpService.getByIdAsync', <Error>e);
 

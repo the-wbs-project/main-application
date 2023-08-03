@@ -1,9 +1,8 @@
 import { parseJwt } from '@cfworker/jwt';
 import { Context } from '../config';
-import { OrganizationRoles } from '../models';
 import { IdentityService } from '../services';
 
-export async function verify(ctx: Context, next: any): Promise<Response | void> {
+export async function verifyJwt(ctx: Context, next: any): Promise<Response | void> {
   let jwt = ctx.req.headers.get('Authorization');
   const issuer = `https://${ctx.env.AUTH_DOMAIN}/`;
   const audience = ctx.env.AUTH_AUDIENCE;
@@ -28,15 +27,8 @@ export async function verify(ctx: Context, next: any): Promise<Response | void> 
 
     if (!user) return ctx.text('Cannot find user', 500);
 
-    const organizations: OrganizationRoles[] = [];
-
-    for (const organization of Object.keys(user.appInfo.organizations)) {
-      organizations.push({ organization, roles: user.appInfo.organizations[organization] });
-    }
-
     state = {
       culture: user.userInfo.culture,
-      organizations,
       user: {
         id: user.id,
         name: user.name,
@@ -47,7 +39,6 @@ export async function verify(ctx: Context, next: any): Promise<Response | void> 
     await ctx.get('data').auth.putStateAsync(result.payload.sub, jwt, state, result.payload.exp);
   }
   ctx.set('state', state);
-  ctx.set('organization', state.organizations[0]);
 
   await next();
 }

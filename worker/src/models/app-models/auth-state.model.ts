@@ -1,5 +1,3 @@
-import { OrganizationRoles } from './organizations.model';
-
 export interface AuthState {
   user: {
     id: string;
@@ -7,5 +5,4 @@ export interface AuthState {
     email: string;
   };
   culture: string;
-  organizations: OrganizationRoles[];
 }

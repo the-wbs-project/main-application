@@ -20,7 +20,6 @@ export class IdentityService {
     const token = await Auth0Service.getMgmtTokenAsync(ctx);
     const response = await Auth0Service.makeAuth0CallAsync(ctx, `users/${user.id}`, 'PATCH', token, {
       blocked: user.blocked,
-      app_metadata: user.appInfo,
     });
     if (response.status !== 200) {
       const message = await response.text();
@@ -30,11 +29,6 @@ export class IdentityService {
   }
 
   static async getUserAsync(ctx: Context, userId: string): Promise<User> {
-    //const kvName = `USERS|${userId}`;
-    //let user = await this.config.kvAuth.get<User>(kvName, 'json');
-
-    //if (user) return user;
-
     const url = `users/${userId}`;
     const token = await Auth0Service.getMgmtTokenAsync(ctx);
     const response = await Auth0Service.makeAuth0CallAsync(ctx, url, 'GET', token);
@@ -43,75 +37,70 @@ export class IdentityService {
 
     const user = Auth0Service.toUser(await response.json());
 
-    //await this.config.kvAuth.put(kvName, JSON.stringify(user), {
-    //  expirationTtl: 24 * 60 * 60,
-    //});
-
     return user;
   }
 
-  static async getUsersAsync(ctx: Context): Promise<User[]> {
+  static async getUsersByIdAsync(ctx: Context, userIds: string[]): Promise<UserLite[]> {
     const token = await Auth0Service.getMgmtTokenAsync(ctx);
-    const count = await this.getUserCountAsync(ctx, token);
-    const list: User[] = [];
-    let page = 0;
-    const size = 50;
-
-    while (list.length < count) {
-      list.push(...(await this.getUserPageAsync(ctx, token, page, size)));
-      page++;
-    }
-    return list;
-  }
-
-  static async getLiteUsersAsync(ctx: Context): Promise<UserLite[]> {
-    const token = await Auth0Service.getMgmtTokenAsync(ctx);
-    const count = await this.getUserCountAsync(ctx, token);
+    const query = this.buildQueryForIds(userIds);
+    const count = await this.getUserCountAsync(ctx, token, query);
     const list: UserLite[] = [];
     let page = 0;
     const size = 50;
 
     while (list.length < count) {
-      list.push(...(await this.getLiteUserPageAsync(ctx, token, page, size)));
+      const results = await this.makeUserCall(ctx, token, query, page, size, ['email', 'name', 'user_id']);
+
+      for (const user of results) {
+        list.push(Auth0Service.toLiteUser(user));
+      }
       page++;
     }
     return list;
   }
 
-  private static async getUserPageAsync(ctx: Context, token: string, pageNumber: number, pageSize: number): Promise<User[]> {
-    const org = ctx.get('organization').organization;
+  static async getUsersByEmailAsync(ctx: Context, emails: string[]): Promise<UserLite[]> {
+    const token = await Auth0Service.getMgmtTokenAsync(ctx);
+    const query = this.buildQueryForEmails(emails);
+    const count = await this.getUserCountAsync(ctx, token, query);
+    const list: UserLite[] = [];
+    let page = 0;
+    const size = 50;
 
-    const url = `${this.usersPrefix(org)}&page=${pageNumber}&per_page=${pageSize}`;
-    const response = await Auth0Service.makeAuth0CallAsync(ctx, url, 'GET', token);
-    const results: User[] = [];
+    while (list.length < count) {
+      const results = await this.makeUserCall(ctx, token, query, page, size, ['email', 'name', 'user_id']);
 
-    if (response.status !== 200) throw new Error(await response.text());
-
-    for (const user of await response.json<any>()) {
-      results.push(Auth0Service.toUser(user));
+      for (const user of results) {
+        list.push(Auth0Service.toLiteUser(user));
+      }
+      page++;
     }
-    return results;
+    return list;
   }
 
-  private static async getLiteUserPageAsync(ctx: Context, token: string, pageNumber: number, pageSize: number): Promise<UserLite[]> {
-    const org = ctx.get('organization').organization;
+  private static async makeUserCall(
+    ctx: Context,
+    token: string,
+    query: string,
+    pageNumber: number,
+    pageSize: number,
+    fields?: string[],
+  ): Promise<any> {
+    let url = `${this.usersPrefix(query)}&page=${pageNumber}&per_page=${pageSize}`;
 
-    const url = `${this.usersPrefix(org)}&fields=email,name,user_id&page=${pageNumber}&per_page=${pageSize}`;
+    if (fields) {
+      url += `&fields=${fields.join(',')}`;
+    }
     const response = await Auth0Service.makeAuth0CallAsync(ctx, url, 'GET', token);
     const results: UserLite[] = [];
 
     if (response.status !== 200) throw new Error(await response.text());
 
-    for (const user of await response.json<any>()) {
-      results.push(Auth0Service.toLiteUser(user));
-    }
-    return results;
+    return await response.json<any>();
   }
 
-  private static async getUserCountAsync(ctx: Context, token: string): Promise<number> {
-    const org = ctx.get('organization').organization;
-
-    const url = `${this.usersPrefix(org)}&include_totals=true`;
+  private static async getUserCountAsync(ctx: Context, token: string, query: string): Promise<number> {
+    const url = `${this.usersPrefix(query)}&include_totals=true`;
     const response = await Auth0Service.makeAuth0CallAsync(ctx, url, 'GET', token);
 
     if (response.status !== 200) throw new Error(await response.text());
@@ -119,7 +108,23 @@ export class IdentityService {
     return (await response.json<any>()).total;
   }
 
-  private static usersPrefix(org: string): string {
-    return `users?sort=last_login:-1&search_engine=v3&q=_exists_:app_metadata.organizations.${org}`;
+  private static usersPrefix(query: string): string {
+    return `users?sort=last_login:-1&search_engine=v3&q=${query}`;
+  }
+
+  private static buildQueryForIds(ids: string[]): string {
+    const params: string[] = [];
+
+    for (const id of ids) params.push(`user_id%3D${id.replace('|', '%7C')}`);
+
+    return params.join('%20OR%20');
+  }
+
+  private static buildQueryForEmails(emails: string[]): string {
+    const params: string[] = [];
+
+    for (const email of emails) params.push(`email%3D${email.replace('@', '%40')}`);
+
+    return params.join('%20OR%20');
   }
 }

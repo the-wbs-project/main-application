@@ -21,10 +21,10 @@ export class InviteHttpService {
 
       if (!organization || !code) return ctx.text('Missing Parameters', 500);
 
-      ctx.set('organization', {
+      /*ctx.set('organization', {
         organization,
         roles: [],
-      });
+      });*/
       //
       //  Get the data from the KV
       //
@@ -44,10 +44,10 @@ export class InviteHttpService {
 
       if (!organization || !code) return ctx.text('Missing Parameters', 500);
 
-      ctx.set('organization', {
+      /*ctx.set('organization', {
         organization,
         roles: [],
-      });
+      });*/
       //
       //  Get the data from the KV
       //

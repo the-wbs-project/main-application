@@ -3,11 +3,11 @@ import { Context } from '../../config';
 export class ProjectSnapshotHttpService {
   static async getByActivityIdAsync(ctx: Context): Promise<Response> {
     try {
-      const { projectId, activityId } = ctx.req.param();
+      const { owner, projectId, activityId } = ctx.req.param();
 
-      if (!projectId || !activityId) return ctx.text('Missing Parameters', 500);
+      if (!owner || !projectId || !activityId) return ctx.text('Missing Parameters', 500);
 
-      return ctx.json(await ctx.get('data').projectSnapshots.getAsync(projectId, activityId));
+      return ctx.json(await ctx.get('data').projectSnapshots.getAsync(owner, projectId, activityId));
     } catch (e) {
       ctx
         .get('logger')
