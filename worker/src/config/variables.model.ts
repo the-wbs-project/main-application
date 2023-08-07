@@ -1,4 +1,4 @@
-import { AuthState, Membership } from '../models';
+import { AuthState } from '../models';
 import { DataServiceFactory, Fetcher, Logger } from '../services';
 
 export type Variables = {
@@ -6,5 +6,4 @@ export type Variables = {
   fetcher: Fetcher;
   logger: Logger;
   state: AuthState;
-  membership: Membership;
 };

@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ProjectCategory } from '@wbs/core/models';
-import { MetadataState } from '@wbs/core/states';
+import { MetadataState } from '../states';
 
 @Pipe({ name: 'categoryLabelList', pure: false, standalone: true })
 export class CategoryLabelListPipe implements PipeTransform {

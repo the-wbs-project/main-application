@@ -24,7 +24,7 @@ export class CosmosDbService {
       delete objOrArray['_rid'];
       delete objOrArray['_self'];
       delete objOrArray['_etag'];
-      //delete objOrArray['_ts'];
+      delete objOrArray['_ts'];
       delete objOrArray['_attachments'];
     }
   }
@@ -44,7 +44,10 @@ export class CosmosDbService {
 
     const result = await res.json();
 
-    if (res.status !== 200) throw new Error(JSON.stringify(result));
+    if (res.status !== 200) {
+      console.log(res.status);
+      throw new Error(JSON.stringify(result));
+    }
 
     if (clean && result) this.clean(result);
 

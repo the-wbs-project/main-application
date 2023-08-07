@@ -1,7 +1,8 @@
 export interface Organization {
   id: string;
+  display_name: string;
   name: string;
-  isActive: boolean;
-  mainProjectType: 'single' | 'multiple';
-  disciplines: string[];
+  metadata: {
+    mainProjectType: 'single' | 'multiple';
+  };
 }

@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Activity, TimelineMenuItem } from '@wbs/core/models';
-import { DialogService } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
+import { TimelineService } from '@wbs/main/components/timeline';
+import { DialogService } from '@wbs/main/services';
+import { MembershipState } from '@wbs/main/states';
 import { forkJoin, Observable } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import {
@@ -14,7 +16,6 @@ import {
   RestoreProject,
   SaveTimelineAction,
 } from '../actions';
-import { TimelineService } from '@wbs/main/components/timeline';
 
 interface StateModel {
   project: TimelineViewModel[];
@@ -35,8 +36,17 @@ export class ProjectTimelineState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly dialogs: DialogService,
-    private readonly service: TimelineService
+    private readonly service: TimelineService,
+    private readonly store: Store
   ) {}
+
+  private get userId(): string {
+    return this.store.selectSnapshot((state) => state.auth.user!.id);
+  }
+
+  private get organization(): string {
+    return this.store.selectSnapshot(MembershipState.id)!;
+  }
 
   @Selector()
   static project(state: StateModel): TimelineViewModel[] {
@@ -113,7 +123,14 @@ export class ProjectTimelineState {
     const saves: Observable<Activity>[] = [];
 
     for (const x of data)
-      saves.push(this.data.activities.putAsync(state.projectId!, x, dataType));
+      saves.push(
+        this.data.activities.putAsync(
+          this.userId,
+          state.projectId!,
+          x,
+          dataType
+        )
+      );
 
     return forkJoin(saves).pipe(
       map((activities) => {
@@ -144,7 +161,7 @@ export class ProjectTimelineState {
           const state = ctx.getState();
 
           return this.data.projectSnapshots
-            .getAsync(state.projectId!, action.activityId)
+            .getAsync(this.organization, state.projectId!, action.activityId)
             .pipe(
               map((snapshot) => {
                 //

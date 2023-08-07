@@ -6,9 +6,9 @@ import {
   EditThread,
   LoadDiscussionForum,
   LoadPosts,
-} from '@wbs/core/actions';
+} from '@wbs/main/states';
 import { IdService, Messages, sorter } from '@wbs/core/services';
-import { AuthState } from '@wbs/core/states';
+import { AuthState } from '@wbs/main/states';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Discussion } from '../models';

@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -8,12 +9,12 @@ import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
 import { ProjectService, Resources, TitleService } from '@wbs/core/services';
-import { OrganizationState } from '@wbs/core/states';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
-import { map } from 'rxjs';
+import { ProjectListState } from '@wbs/main/states';
+import { BehaviorSubject, map } from 'rxjs';
 import { ProjectSortPipe } from './pipes/project-sort.pipe';
 import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
 
@@ -43,8 +44,8 @@ export class ProjectListComponent implements OnInit {
   readonly status$ = this.route.params.pipe(
     map((p) => <PROJECT_VIEW_STATI_TYPE>p['status'])
   );
-  readonly loading$ = this.store.select(OrganizationState.loading);
-  readonly projects$ = this.store.select(OrganizationState.projects);
+  readonly loading$ = new BehaviorSubject<boolean>(false); // this.store.select(OrganizationState.projects);
+  readonly projects = toSignal(this.store.select(ProjectListState.all));
   readonly stati: PROJECT_VIEW_STATI_TYPE[] = [
     PROJECT_VIEW_STATI.ACTIVE,
     PROJECT_VIEW_STATI.PLANNING,

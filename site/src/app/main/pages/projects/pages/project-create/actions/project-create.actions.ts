@@ -2,6 +2,7 @@ import { ListItem, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
 
 export class StartWizard {
   static readonly type = '[Project Creation] Start Wizard';
+  constructor(readonly owner: string) {}
 }
 
 export class NavBack {

@@ -6,7 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faAlignLeft, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { UiState } from '@wbs/core/states';
+import { UiState } from '@wbs/main/states';
 
 @Component({
   standalone: true,

@@ -6,10 +6,9 @@ import {
   ViewContainerRef,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Select } from '@ngxs/store';
+import { Select, Store } from '@ngxs/store';
 import { Project } from '@wbs/core/models';
 import { ContainerService } from '@wbs/core/services';
-import { AuthState, OrganizationState } from '@wbs/core/states';
 import { Observable } from 'rxjs';
 import {
   FooterComponent,
@@ -18,6 +17,9 @@ import {
 } from './components';
 import { MainContentDirective } from './directives/main-content.directive';
 import { NavService, SwitcherService } from './services';
+import { iIsAdminPipe } from './pipes/is-admin.pipe';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { MembershipState, ProjectListState } from './states';
 
 @Component({
   standalone: true,
@@ -28,21 +30,25 @@ import { NavService, SwitcherService } from './services';
     FooterComponent,
     HeaderComponent,
     MainContentDirective,
+    iIsAdminPipe,
     RouterModule,
     SidebarComponent,
   ],
   providers: [NavService],
 })
 export class MainComponent implements AfterContentInit {
-  @Select(OrganizationState.projects) projects$!: Observable<Project[]>;
-  @Select(AuthState.isAdmin) isAdmin$!: Observable<boolean>;
+  readonly membershipRoles = toSignal(this.store.select(MembershipState.rolesIds));
+  readonly projects = toSignal(this.store.select(ProjectListState.all));
 
   @ViewChild('body', { static: true, read: ViewContainerRef })
   body: ViewContainerRef | undefined;
 
   private readonly switcher = new SwitcherService();
 
-  constructor(private readonly container: ContainerService) {}
+  constructor(
+    private readonly container: ContainerService,
+    private readonly store: Store
+  ) {}
 
   ngAfterContentInit() {
     this.container.register(this.body);

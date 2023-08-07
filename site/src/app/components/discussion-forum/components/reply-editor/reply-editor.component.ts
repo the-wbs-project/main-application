@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Store } from '@ngxs/store';
-import { CreateReply } from '@wbs/core/actions';
+import { CreateReply } from '@wbs/main/states';
 
 @Component({
   selector: 'wbs-forum-reply-editor',

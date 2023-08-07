@@ -1,8 +1,8 @@
 export interface User {
   id: string;
   email: string;
-  emailVerified?: boolean;
   name: string;
+  emailVerified?: boolean;
   blocked?: boolean;
   createdAt?: Date;
   lastLogin?: Date;
@@ -15,7 +15,7 @@ export interface UserMetadata {
 }
 
 export interface UserLite {
-  id?: string;
-  email?: string;
-  name?: string | null | undefined;
+  id: string;
+  email: string;
+  name: string | null | undefined;
 }

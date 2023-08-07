@@ -12,7 +12,7 @@ import {
   PROJECT_STATI,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { MetadataState } from '@wbs/core/states';
+import { MetadataState } from '@wbs/main/states';
 import { Observable, switchMap } from 'rxjs';
 import {
   CategoryChosen,
@@ -26,7 +26,10 @@ import {
   StartWizard,
   SubmitBasics,
 } from '../actions';
-import { ProjectCreationPage, PROJECT_CREATION_PAGES as PAGES } from '../models';
+import {
+  ProjectCreationPage,
+  PROJECT_CREATION_PAGES as PAGES,
+} from '../models';
 
 interface StateModel {
   category?: string;
@@ -34,6 +37,7 @@ interface StateModel {
   disciplines?: (string | ListItem)[];
   isSaving: boolean;
   nodeView?: PROJECT_NODE_VIEW_TYPE;
+  owner?: string;
   page?: ProjectCreationPage;
   phases?: (string | ListItem)[];
   scope?: PROJECT_SCOPE_TYPE;
@@ -102,8 +106,9 @@ export class ProjectCreateState {
   }
 
   @Action(StartWizard)
-  startWizard(ctx: StateContext<StateModel>): void {
+  startWizard(ctx: StateContext<StateModel>, { owner }: StartWizard): void {
     ctx.patchState({
+      owner,
       page: PAGES.GETTING_STARTED,
       description: '',
       title: '',
@@ -232,16 +237,16 @@ export class ProjectCreateState {
       isSaving: true,
     });
 
-    const catsPhases = this.store.selectSnapshot(MetadataState.phaseCategories);
-    const catsDiscipline = this.store.selectSnapshot(
-      MetadataState.disciplineCategories
-    );
+    const catsPhases = this.store.selectSnapshot(MetadataState.phases);
+    const catsDiscipline = this.store.selectSnapshot(MetadataState.disciplines);
     const state = ctx.getState();
     const phases = state.phases!;
     const disciplines = state.disciplines!;
     const now = Date.now();
     const project: Project = {
       id: IdService.generate(),
+      owner: state.owner!,
+      createdBy: '',
       categories: {
         discipline: disciplines,
         phase: phases,
@@ -329,9 +334,11 @@ export class ProjectCreateState {
       }
     }
     const url = ['/projects', 'view', project.id, 'about'];
-    
+
     return this.data.projects.putAsync(project).pipe(
-      switchMap(() => this.data.projectNodes.batchAsync(project.id, nodes, [])),
+      switchMap(() =>
+        this.data.projectNodes.batchAsync(project.owner, project.id, nodes, [])
+      ),
       switchMap(() => ctx.dispatch(new Navigate(url)))
     );
   }

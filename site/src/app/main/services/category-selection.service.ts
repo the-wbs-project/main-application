@@ -6,11 +6,14 @@ import {
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
   ProjectCategoryChanges,
-} from '../models';
+} from '@wbs/core/models';
+import {
+  CategoryCancelConfirm,
+  CategorySelection,
+} from '@wbs/core/view-models';
 import { MetadataState } from '../states';
-import { CategoryCancelConfirm, CategorySelection } from '../view-models';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class CategorySelectionService {
   constructor(private readonly store: Store) {}
 

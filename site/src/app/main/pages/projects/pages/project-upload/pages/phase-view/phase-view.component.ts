@@ -9,10 +9,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { ListItem } from '@wbs/core/models';
-import { MetadataState } from '@wbs/core/states';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { CategoryLabelListPipe } from '@wbs/main/pipes/category-label-list.pipe';
 import { JoinPipe } from '@wbs/main/pipes/join.pipe';
+import { MetadataState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { PhasesCompleted } from '../../actions';
 import { PhaseListItem } from '../../models';
@@ -35,7 +35,7 @@ import { ProjectUploadState } from '../../states';
   ],
 })
 export class PhaseViewComponent {
-  @Select(MetadataState.phaseCategories) categories$!: Observable<ListItem[]>;
+  @Select(MetadataState.phases) categories$!: Observable<ListItem[]>;
   @Select(ProjectUploadState.phaseList) phaseList$!: Observable<
     PhaseListItem[]
   >;

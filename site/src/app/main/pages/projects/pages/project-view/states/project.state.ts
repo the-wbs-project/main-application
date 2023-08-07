@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import { ProjectUpdated, SetHeaderInfo } from '@wbs/core/actions';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -11,8 +10,10 @@ import {
   ProjectCategory,
   ROLES,
 } from '@wbs/core/models';
-import { DialogService, Messages, ProjectService } from '@wbs/core/services';
-import { AuthState, MetadataState, OrganizationState } from '@wbs/core/states';
+import { Messages, ProjectService } from '@wbs/core/services';
+import { ProjectUpdated, SetHeaderInfo } from '@wbs/main/actions';
+import { DialogService } from '@wbs/main/services';
+import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { Observable, of, switchMap, tap } from 'rxjs';
 import {
   AddUserToRole,
@@ -115,12 +116,12 @@ export class ProjectState {
   @Action(VerifyProject)
   verifyProject(
     ctx: StateContext<StateModel>,
-    { projectId }: VerifyProject
+    { owner, projectId }: VerifyProject
   ): Observable<void> {
     const state = ctx.getState();
 
     return state.current?.id !== projectId
-      ? ctx.dispatch(new SetProject(projectId))
+      ? ctx.dispatch(new SetProject(owner, projectId))
       : of();
   }
 
@@ -139,11 +140,11 @@ export class ProjectState {
   @Action(SetProject)
   setProject(
     ctx: StateContext<StateModel>,
-    { projectId }: SetProject
+    { owner, projectId }: SetProject
   ): Observable<any> {
     const userId = this.store.selectSnapshot(AuthState.userId);
 
-    return this.data.projects.getAsync(projectId).pipe(
+    return this.data.projects.getAsync(owner, projectId).pipe(
       tap((project) => {
         if (!project.roles) project.roles = [];
 
@@ -443,10 +444,10 @@ export class ProjectState {
 
   private updateUsers(ctx: StateContext<StateModel>): void {
     const project = ctx.getState().current!;
-    const userList = this.store.selectSnapshot(OrganizationState.users);
+    const members = this.store.selectSnapshot(MembershipState.users) ?? [];
     const users: UserRolesViewModel[] = [];
 
-    for (const user of userList) {
+    for (const user of members) {
       const roles = project.roles.filter((x) => x.userId === user.id);
 
       if (roles.length === 0) continue;

@@ -1,15 +1,16 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { OrganizationState } from '@wbs/core/states';
+import { MembershipState } from '../states';
 
-@Pipe({ name: 'userName', pure: true, standalone: true })
+@Pipe({ name: 'userName', standalone: true })
 export class UserNamePipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
-  transform(userId: string | null | undefined): string | null | undefined {
+  transform(userId: string | null | undefined): string | undefined {
     if (!userId) return undefined;
 
-    return this.store.selectSnapshot(OrganizationState.usersById).get(userId)
-      ?.name;
+    return this.store
+      .selectSnapshot(MembershipState.users)
+      ?.find((x) => x.id === userId)?.name;
   }
 }

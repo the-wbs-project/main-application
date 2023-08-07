@@ -3,10 +3,11 @@ import { LogsInitConfiguration } from '@datadog/browser-logs';
 import { environment } from 'src/environments/environment';
 
 export const AUTH_CONFIG: AuthConfig = {
-  domain: 'auth.dev.thewbsproject.com',
+  domain: 'pm-empower.us.auth0.com',
   clientId: environment.auth_clientId,
   authorizationParams: {
-    audience: 'https://dev-3lcexa83.us.auth0.com/api/v2/',
+    connection: 'Username-Password-Authentication',
+    audience: 'https://pm-empower.us.auth0.com/api/v2/',
     redirect_uri: `${window.location.protocol}//${window.location.host}`,
   },
   // The AuthHttpInterceptor configuration

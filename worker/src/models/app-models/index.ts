@@ -1,3 +1,4 @@
+export * from './atleast.type';
 export * from './auth-state.model';
 export * from './db-object.model';
 export * from './resources.model';

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, WbsTransformers } from '@wbs/core/services';
@@ -20,6 +20,7 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
+import { MembershipState } from '@wbs/main/states';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -55,8 +56,13 @@ export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messenger: Messages,
+    private readonly store: Store,
     private readonly transformer: WbsTransformers
   ) {}
+
+  private get organization(): string {
+    return this.store.selectSnapshot(MembershipState.id)!;
+  }
 
   @Selector()
   static current(state: StateModel): Project | undefined {
@@ -132,7 +138,7 @@ export class ProjectUploadState {
     ctx: StateContext<StateModel>,
     { projectId }: SetProject
   ): void | Observable<void> {
-    return this.data.projects.getAsync(projectId).pipe(
+    return this.data.projects.getAsync(this.organization, projectId).pipe(
       map((project) => {
         ctx.patchState({ project });
       })
@@ -319,8 +325,14 @@ export class ProjectUploadState {
       nodes.set(node.levelText, node);
     }
     return forkJoin({
-      project: this.data.projects.getAsync(state.project!.id),
-      existingNodes: this.data.projectNodes.getAllAsync(state.project!.id),
+      project: this.data.projects.getAsync(
+        this.organization,
+        state.project!.id
+      ),
+      existingNodes: this.data.projectNodes.getAllAsync(
+        this.organization,
+        state.project!.id
+      ),
     }).pipe(
       switchMap((data) => {
         const results = this.transformer.nodes.phase.projectImporter.run(
@@ -363,6 +375,7 @@ export class ProjectUploadState {
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
         this.data.projectNodes.batchAsync(
+          this.organization,
           project.id,
           results.upserts,
           results.removeIds

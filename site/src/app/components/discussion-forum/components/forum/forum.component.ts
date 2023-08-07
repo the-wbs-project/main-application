@@ -7,7 +7,7 @@ import {
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
-import { CreateThread, EditThread } from '@wbs/core/actions';
+import { CreateThread, EditThread } from '@wbs/main/states';
 import { Discussion } from '../../models';
 import { DiscussionForumState } from '../../states';
 

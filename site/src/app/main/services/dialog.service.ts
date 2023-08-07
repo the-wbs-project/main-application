@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { NgbModal, NgbModalOptions } from '@ng-bootstrap/ng-bootstrap';
+import { Resources } from '@wbs//core/services';
 import { from, Observable } from 'rxjs';
-import { Resources } from './resource.service';
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class DialogService {
   constructor(
     private readonly modalService: NgbModal,

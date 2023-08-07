@@ -1,38 +1,27 @@
 import { HttpClient } from '@angular/common/http';
-import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Project } from '../models';
-import { OrganizationState } from '../states';
 
 export class ProjectDataService {
-  constructor(
-    private readonly http: HttpClient,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly http: HttpClient) {}
 
-  private get organization(): string {
-    return this.store.selectSnapshot(OrganizationState.id);
+  getAllAsync(organization: string): Observable<Project[]> {
+    return this.http.get<Project[]>(`api/projects/${organization}/all`);
   }
 
-  getMyAsync(): Observable<Project[]> {
-    return this.http.get<Project[]>(`api/projects/${this.organization}/my`);
+  getAssignedAsync(organization: string): Observable<Project[]> {
+    return this.http.get<Project[]>(`api/projects/${organization}/assigned`);
   }
 
-  getWatchedAsync(): Observable<Project[]> {
-    return this.http.get<Project[]>(
-      `api/projects/${this.organization}/watched`
-    );
-  }
-
-  getAsync(projectId: string): Observable<Project> {
+  getAsync(organization: string, projectId: string): Observable<Project> {
     return this.http.get<Project>(
-      `api/projects/${this.organization}/byId/${projectId}`
+      `api/projects/${organization}/byId/${projectId}`
     );
   }
 
   putAsync(project: Project): Observable<void> {
     return this.http.put<void>(
-      `api/projects/${this.organization}/byId/${project.id}`,
+      `api/projects/${project.owner}/byId/${project.id}`,
       project
     );
   }

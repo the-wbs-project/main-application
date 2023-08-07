@@ -11,6 +11,7 @@ export * from './project-import-result.model';
 export * from './project-upload-data.model';
 export * from './project.model';
 export * from './resource-sections.model';
+export * from './role.model';
 export * from './threaded-discussion.model';
 export * from './training-material.model';
 export * from './upload-results.model';

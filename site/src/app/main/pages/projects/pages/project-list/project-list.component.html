@@ -20,7 +20,7 @@
 </div>
 <div
   *ngIf="
-    projects$ | async | projectStatusFilter : (status$ | async);
+    projects() | projectStatusFilter : (status$ | async);
     let projects
   "
   class="wd-100p mg-t-20"

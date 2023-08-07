@@ -1,4 +1,3 @@
-export * from './auth-services';
 export * from './data-services';
 export * from './cache.service';
 export * from './fetcher.service';

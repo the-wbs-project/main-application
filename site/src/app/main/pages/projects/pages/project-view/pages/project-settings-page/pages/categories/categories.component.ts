@@ -13,9 +13,9 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   ProjectCategory,
 } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
+import { CategorySelectionService } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeProjectCategories } from '../../../../actions';
@@ -34,6 +34,7 @@ import { ProjectState, TasksState } from '../../../../states';
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CategoryListEditorComponent, CommonModule],
+  providers: [CategorySelectionService],
 })
 export class ProjectSettingsCategoriesComponent implements OnInit {
   categories?: CategorySelection[];

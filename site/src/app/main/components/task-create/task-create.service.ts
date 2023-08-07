@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { DialogService } from '@wbs/core/services';
+import { DialogService } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { TaskCreateComponent } from './task-create.component';
 import { TaskCreationResults } from './task-creation-results.model';

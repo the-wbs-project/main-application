@@ -9,7 +9,7 @@ import { faUserMinus, faUserPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { ROLES, ROLES_CONST, ROLES_TYPE, UserLite } from '@wbs/core/models';
-import { OrganizationState } from '@wbs/core/states';
+import { MembershipState } from '@wbs/main/states';
 import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
 import { ProjectUserListComponent } from '../../../../components/user-list/user-list.component';
 import { ProjectState } from '../../../../states';
@@ -25,7 +25,10 @@ import { RoleUsersService } from './role-users.service';
 export class ProjectSettingsRolesComponent {
   private readonly service = inject(RoleUsersService);
   private readonly store = inject(Store);
-  private readonly users = toSignal(this.store.select(OrganizationState.users));
+  private readonly members = toSignal(this.store.select(MembershipState.users));
+  private readonly memberRoles = toSignal(
+    this.store.select(MembershipState.userRoles)
+  );
   private readonly approverIds = toSignal(
     this.store.select(ProjectState.approvers)
   );
@@ -34,13 +37,28 @@ export class ProjectSettingsRolesComponent {
 
   readonly roles = ROLES_CONST;
   readonly approvers = computed(() =>
-    this.service.get(ROLES.APPROVER, this.approverIds(), this.users()!)
+    this.service.get(
+      ROLES.APPROVER,
+      this.approverIds(),
+      this.members()!,
+      this.memberRoles()!
+    )
   );
   readonly pms = computed(() =>
-    this.service.get(ROLES.PM, this.pmIds(), this.users()!)
+    this.service.get(
+      ROLES.PM,
+      this.pmIds(),
+      this.members()!,
+      this.memberRoles()!
+    )
   );
   readonly smes = computed(() =>
-    this.service.get(ROLES.SME, this.smeIds(), this.users()!)
+    this.service.get(
+      ROLES.SME,
+      this.smeIds(),
+      this.members()!,
+      this.memberRoles()!
+    )
   );
   readonly faUserPlus = faUserPlus;
   readonly faUserMinus = faUserMinus;

@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cors, isAdmin, logger, verifyJwt, verifyMembership } from './middle';
+import { cache, cors, logger, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
 
 export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/:type', '/api/projects/import/*'];
@@ -38,9 +38,9 @@ app.get('/api/edge-data/clear', Http.misc.clearKvAsync);
 app.get('/api/invites', verifyJwt, Http.invites.getAllAsync);
 app.put('/api/invites/:send', verifyJwt, Http.invites.putAsync);
 app.get('/api/checklists', verifyJwt, Http.checklists.getAsync);
-app.get('/api/activity/:owner/:topLevelId/:skip/:take', verifyJwt, verifyMembership, Http.activities.getByIdAsync);
-app.get('/api/activity/:owner/user/:userId', verifyJwt, verifyMembership, Http.activities.getByUserIdAsync);
-app.put('/api/activity/:owner/:dataType', verifyJwt, verifyMembership, Http.activities.putAsync);
+app.get('/api/activity/:topLevelId/:skip/:take', verifyJwt, verifyMembership, Http.activities.getByIdAsync);
+app.get('/api/activity/user/:userId', verifyJwt, verifyMembership, Http.activities.getByUserIdAsync);
+app.put('/api/activity/:dataType', verifyJwt, verifyMembership, Http.activities.putAsync);
 app.get('/api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
 app.get('/api/projects/:owner/assigned', verifyJwt, verifyMembership, Http.projects.getAllAssignedAsync);
 app.get('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
@@ -55,9 +55,11 @@ app.get('/api/discussions/:owner/:associationId/users', verifyJwt, verifyMembers
 app.get('/api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);
 app.get('/api/discussions/:owner/:associationId/:id/text', verifyJwt, verifyMembership, Http.discussions.getTextAsync);
 //app.put('/api/discussions/:owner/:id', verifyJwt, Http.discussions.putAsync);
-app.get('/api/memberships', verifyJwt, Http.memberships.getAllForUserAsync);
-app.get('/api/memberships/:owner', verifyJwt, verifyMembership, Http.memberships.getAllForOrganizationAsync);
-app.put('/api/memberships/:owner', verifyJwt, verifyMembership, isAdmin, Http.memberships.putAsync);
+app.get('/api/memberships', verifyJwt, Http.memberships.getMembershipsAsync);
+app.get('/api/roles', verifyJwt, Http.memberships.getRolesAsync);
+app.get('/api/memberships/:organization/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesAsync);
+app.get('/api/memberships/:organization/users', verifyJwt, verifyMembership, Http.memberships.getMembershipUsersAsync);
+app.get('/api/memberships/:organization/users/:userId/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesForUserAsync);
 app.get('/api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of AZURE_ROUTES_POST) {

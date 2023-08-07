@@ -109,7 +109,7 @@ export class TasksState {
 
     if (state.project?.id === project.id) return;
 
-    return this.data.projectNodes.getAllAsync(project.id).pipe(
+    return this.data.projectNodes.getAllAsync(project.owner, project.id).pipe(
       tap((nodes) =>
         ctx.patchState({
           project,
@@ -175,7 +175,7 @@ export class TasksState {
     action: RemoveTask
   ): Observable<any> | void {
     const state = ctx.getState();
-    const projectId = state.project!.id;
+    const project = state.project!;
     const changed: Observable<void>[] = [];
     const nodes = this.copy(state.nodes)!;
     const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
@@ -192,7 +192,7 @@ export class TasksState {
     for (const node of nodes) {
       if (changedIds.indexOf(node.id) === -1) continue;
 
-      changed.push(this.data.projectNodes.putAsync(projectId, node));
+      changed.push(this.data.projectNodes.putAsync(project.owner, project.id, node));
     }
     return forkJoin(changed).pipe(
       map(() =>
@@ -244,7 +244,7 @@ export class TasksState {
     }
 
     return this.data.projectNodes
-      .batchAsync(state.project!.id, toSave, [])
+      .batchAsync(state.project!.owner, state.project!.id, toSave, [])
       .pipe(
         tap(() => ctx.patchState({ nodes })),
         tap(() => ctx.dispatch(new RebuildNodeViews()))
@@ -326,7 +326,7 @@ export class TasksState {
     task.order++;
     task2.order--;
 
-    return this.saveReordered(ctx, state.project!.id, taskVm!.levelText, task, [
+    return this.saveReordered(ctx, state.project!, taskVm!.levelText, task, [
       task2,
     ]);
   }
@@ -368,7 +368,7 @@ export class TasksState {
     }
     return this.saveReordered(
       ctx,
-      state.project!.id,
+      state.project!,
       taskVm!.levelText,
       task,
       toSave
@@ -415,7 +415,7 @@ export class TasksState {
 
     return this.saveReordered(
       ctx,
-      state.project!.id,
+      state.project!,
       taskVm!.levelText,
       task,
       toSave
@@ -439,7 +439,7 @@ export class TasksState {
     task.order--;
     task2.order++;
 
-    return this.saveReordered(ctx, state.project!.id, taskVm!.levelText, task, [
+    return this.saveReordered(ctx, state.project!, taskVm!.levelText, task, [
       task2,
     ]);
   }
@@ -478,7 +478,7 @@ export class TasksState {
 
     return this.saveReordered(
       ctx,
-      project.id,
+      project,
       taskVm!.levelText,
       upserts.find((x) => x.id === action.draggedId)!,
       upserts.filter((x) => x.id !== action.draggedId)
@@ -634,19 +634,19 @@ export class TasksState {
     task.lastModified = Date.now();
 
     return this.data.projectNodes
-      .putAsync(project.id, task)
+      .putAsync(project.owner, project.id, task)
       .pipe(switchMap(() => ctx.dispatch(new MarkProjectChanged())));
   }
 
   private saveReordered(
     ctx: StateContext<StateModel>,
-    projectId: string,
+    project: Project,
     originalLevel: string,
     mainTask: WbsNode,
     others: WbsNode[]
   ): Observable<void> {
     return this.data.projectNodes
-      .batchAsync(projectId, [mainTask, ...others], [])
+      .batchAsync(project.owner, project.id, [mainTask, ...others], [])
       .pipe(
         tap(() => {
           const tasks = ctx.getState().nodes!;

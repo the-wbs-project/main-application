@@ -18,12 +18,9 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SortableModule } from '@progress/kendo-angular-sortable';
-import {
-  CategorySelectionService,
-  DialogService,
-  IdService,
-} from '@wbs/core/services';
+import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { CategorySelectionService, DialogService } from '@wbs/main/services';
 import { SwitchComponent } from '../switch';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
 
@@ -41,6 +38,7 @@ import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
     SwitchComponent,
     TranslateModule,
   ],
+  providers: [CategorySelectionService, DialogService],
 })
 export class CategoryListEditorComponent {
   @Input() showButtons = true;

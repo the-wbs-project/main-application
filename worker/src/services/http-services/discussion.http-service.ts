@@ -1,6 +1,5 @@
 import { Context } from '../../config';
 import { Discussion, User } from '../../models';
-import { IdentityService } from '../auth-services';
 
 const GLOBAL = 'global';
 

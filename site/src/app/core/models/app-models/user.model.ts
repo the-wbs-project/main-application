@@ -2,7 +2,6 @@ export interface UserLite {
   id: string;
   email: string;
   name: string;
-  roles: string[];
 }
 
 export interface User {
@@ -15,14 +14,8 @@ export interface User {
   lastLogin?: Date;
   loginsCount?: number;
   userInfo: UserMetadata;
-  appInfo: UserAppMetadata;
 }
 
 export interface UserMetadata {
   culture?: string;
-}
-
-export interface UserAppMetadata {
-  inviteCode?: string;
-  organizations: { [orgId: string]: string[] };
 }

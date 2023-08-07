@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Select } from '@ngxs/store';
-import { UiState } from '@wbs/core/states';
+import { UiState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { Breadcrumb } from '../../models';
 import { SettingsState } from '../../states';

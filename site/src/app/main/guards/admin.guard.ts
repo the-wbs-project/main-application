@@ -1,9 +1,13 @@
 import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { AuthState } from '@wbs/core/states';
+import { ROLES } from '@wbs/core/models';
+import { MembershipState } from '@wbs/main/states';
+import { map } from 'rxjs/operators';
 
 export const adminGuard = () => {
   const store = inject(Store);
 
-  return store.selectOnce(AuthState.isAdmin);
-}
+  return store
+    .selectOnce(MembershipState.rolesIds)
+    .pipe(map((roles) => roles?.includes(ROLES.ADMIN) ?? false));
+};

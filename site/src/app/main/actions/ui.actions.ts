@@ -1,4 +1,4 @@
-import { HeaderInformation } from '../models';
+import { HeaderInformation } from '@wbs/core/models';
 
 export class MainContentSizeChanged {
   static readonly type = '[UI] Main Content Size Changed';

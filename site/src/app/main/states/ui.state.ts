@@ -10,12 +10,12 @@ import {
   State,
   StateContext,
 } from '@ngxs/store';
+import { HeaderInformation } from '@wbs/core/models';
 import {
   MainContentSizeChanged,
   ParseNavigation,
   SetHeaderInfo,
 } from '../actions';
-import { HeaderInformation, RouteLink } from '../models';
 
 interface StateModel {
   header?: HeaderInformation;

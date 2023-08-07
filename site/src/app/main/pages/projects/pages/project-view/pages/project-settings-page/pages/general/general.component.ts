@@ -12,7 +12,7 @@ import { Store } from '@ngxs/store';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { MetadataState } from '@wbs/core/states';
+import { MetadataState } from '@wbs/main/states';
 import { ChangeProjectBasics } from '../../../../actions';
 import { ProjectState } from '../../../../states';
 

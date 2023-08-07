@@ -1,16 +1,17 @@
 import { Context } from '../config';
 
 export async function verifyMembership(ctx: Context, next: any): Promise<Response | void> {
+  console.log('in check');
   const state = ctx.get('state');
-  const { owner } = ctx.req.param();
+  const { owner, organization } = ctx.req.param();
+  //
+  //  Check either owner or organization, whichever is present
+  //
+  const toCheck = owner ?? organization;
 
-  if (!owner) return ctx.text('Missing Parameters', 500);
+  if (!toCheck) return ctx.text('Missing Parameters', 500);
 
-  const membership = await ctx.get('data').membership.getAsync(owner, state.user.id);
-
-  if (!membership || !membership.isActive) return ctx.text('Unauthorized', 403);
-
-  ctx.set('membership', membership);
+  if (!state.organizations.find((org) => org.id === toCheck)) return ctx.text('Unauthorized', 403);
 
   await next();
 }

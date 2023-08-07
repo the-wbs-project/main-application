@@ -11,8 +11,8 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { CategorySelectionService } from '@wbs/main/services';
 import { BehaviorSubject } from 'rxjs';
 import { CategoryListEditorComponent } from '../category-list-editor';
 
@@ -28,6 +28,7 @@ import { CategoryListEditorComponent } from '../category-list-editor';
     FormsModule,
     TranslateModule,
   ],
+  providers: [CategorySelectionService],
 })
 export class TaskCreateComponent implements OnInit {
   @ViewChild('titleTextBox', { static: true }) titleTextBox!: ElementRef;

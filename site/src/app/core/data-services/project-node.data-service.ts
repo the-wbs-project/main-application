@@ -1,43 +1,43 @@
 import { HttpClient } from '@angular/common/http';
-import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { ProjectNode, WbsNode } from '../models';
-import { OrganizationState } from '../states';
 
 export class ProjectNodeDataService {
-  constructor(
-    private readonly http: HttpClient,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly http: HttpClient) {}
 
-  private get organization(): string {
-    return this.store.selectSnapshot(OrganizationState.id)!;
-  }
-
-  getAllAsync(projectId: string): Observable<WbsNode[]> {
+  getAllAsync(organization: string, projectId: string): Observable<WbsNode[]> {
     return this.http.get<WbsNode[]>(
-      `api/projects/${this.organization}/byId/${projectId}/nodes`
+      `api/projects/${organization}/byId/${projectId}/nodes`
     );
   }
 
-  getAsync(projectId: string, taskId: string): Observable<WbsNode> {
+  getAsync(
+    organization: string,
+    projectId: string,
+    taskId: string
+  ): Observable<WbsNode> {
     return this.http.get<WbsNode>(
-      `api/projects/${this.organization}/byId/${projectId}/nodes/${taskId}`
+      `api/projects/${organization}/byId/${projectId}/nodes/${taskId}`
     );
   }
 
-  putAsync(projectId: string, node: WbsNode): Observable<void> {
+  putAsync(
+    organization: string,
+    projectId: string,
+    node: WbsNode
+  ): Observable<void> {
     const model: ProjectNode = {
       ...node,
       projectId,
     };
     return this.http.put<void>(
-      `api/projects/${this.organization}/byId/${projectId}/nodes/${model.id}`,
+      `api/projects/${organization}/byId/${projectId}/nodes/${model.id}`,
       model
     );
   }
 
   batchAsync(
+    organization: string,
     projectId: string,
     models: WbsNode[],
     removeIds: string[]
@@ -50,7 +50,7 @@ export class ProjectNodeDataService {
         projectId,
       });
     return this.http.put<void>(
-      `api/projects/${this.organization}/byId/${projectId}/nodes/batch`,
+      `api/projects/${organization}/byId/${projectId}/nodes/batch`,
       {
         upserts,
         removeIds,
