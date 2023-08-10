@@ -61,10 +61,10 @@ AZURE_ENDPOINT = "https://pm-empower-test.azurewebsites.net"
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
-AUTH_AUDIENCE = "https://dev-3lcexa83.us.auth0.com/api/v2/"
-AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
-AUTH_CONNECTION = "acme-engineering"
-AUTH_DOMAIN = "auth.dev.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
+AUTH_CONNECTION = "Username-Password-Authentication"
+AUTH_DOMAIN = "pm-empower.us.auth0.com"
 
 [env.prod]
 name = "pm-empower-api-prod"
@@ -91,10 +91,10 @@ AZURE_ENDPOINT = "https://wbs-v0-1-prod.azurewebsites.net"
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
-AUTH_AUDIENCE = "https://dev-3lcexa83.us.auth0.com/api/v2/"
-AUTH_CLIENT_ID = "FxJs3MltLs4hGSTUwDauuindOUPNjwuG"
-AUTH_CONNECTION = "acme-engineering"
-AUTH_DOMAIN = "auth.dev.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
+AUTH_CONNECTION = "Username-Password-Authentication"
+AUTH_DOMAIN = "pm-empower.us.auth0.com"
 
 [dev]
 port = 88
