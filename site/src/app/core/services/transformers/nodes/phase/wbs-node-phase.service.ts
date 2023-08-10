@@ -124,11 +124,6 @@ export class WbsNodePhaseTransformer {
         child.phase?.syncWithDisciplines ?? false
       );
 
-      if (node.id === 'aJqFkXX728') {
-        console.log('node', node);
-        console.log('vmChildren', vmChildren);
-      }
-
       node.children = vmChildren.length;
 
       results.push(node, ...vmChildren);

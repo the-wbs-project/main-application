@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { LoadDiscussionForum, VerifyTimelineData } from '@wbs/main/actions';
+import { MembershipState } from '@wbs/main/states';
 import { map } from 'rxjs/operators';
 import {
   InitiateChecklist,
@@ -18,20 +19,25 @@ import { ProjectViewState } from './states';
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const owner =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
 
   return store
-    .dispatch(
-      new LoadDiscussionForum(route.params['owner'], route.params['projectId'])
-    )
+    .dispatch(new LoadDiscussionForum(owner, route.params['projectId']))
     .pipe(map(() => true));
 };
+
 export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const owner =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
 
   return store
     .dispatch(
       new Navigate([
-        route.params['owner'],
+        owner,
         'projects',
         'view',
         route.params['projectId'],
@@ -54,11 +60,16 @@ export const projectTimelineVerifyGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const owner =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
+
+  if (!owner) return false;
 
   return store
     .dispatch([
       new InitiateChecklist(),
-      new VerifyProject(route.params['owner'], route.params['projectId']),
+      new VerifyProject(owner, route.params['projectId']),
     ])
     .pipe(map(() => true));
 };
