@@ -61,6 +61,8 @@ AZURE_ENDPOINT = "https://pm-empower-test.azurewebsites.net"
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
+COSMOS_DB = "v1"
+
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
 AUTH_CONNECTION = "Username-Password-Authentication"
