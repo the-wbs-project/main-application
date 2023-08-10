@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, map } from 'rxjs';
 import { INFO_PAGES } from 'src/environments/info-pages.const';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './info.component.html',
@@ -26,7 +27,7 @@ export class InfoComponent implements OnInit {
     this.route.params
       .pipe(
         map((x) => x['message']),
-        takeUntilDestroyed()
+        untilDestroyed(this)
       )
       .subscribe((message) => {
         const resources = INFO_PAGES[message];

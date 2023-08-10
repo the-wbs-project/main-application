@@ -1,7 +1,8 @@
 import { Directive, ElementRef, Input, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { timer } from 'rxjs';
 
+@UntilDestroy()
 @Directive({ selector: '[appMatchSize]', standalone: true })
 export class MatchSizeDirective implements OnInit {
   private lastSize = 0;
@@ -15,7 +16,7 @@ export class MatchSizeDirective implements OnInit {
 
   ngOnInit(): void {
     timer(0, 250)
-      .pipe(takeUntilDestroyed())
+      .pipe(untilDestroyed(this))
       .subscribe(() => this.setSize());
   }
 

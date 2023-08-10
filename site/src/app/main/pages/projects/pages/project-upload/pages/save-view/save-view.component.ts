@@ -1,16 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { PrepUploadToSave } from '../../actions';
 import { ProjectUploadState } from '../../states';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './save-view.component.html',
@@ -28,7 +29,7 @@ export class SaveViewComponent implements OnInit {
     this.store.dispatch(new PrepUploadToSave());
     this.store
       .select(ProjectUploadState.saving)
-      .pipe(takeUntilDestroyed())
+      .pipe(untilDestroyed(this))
       .subscribe((saving) => this.saving$.next(saving));
   }
 }

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
 import {
@@ -18,6 +18,7 @@ import { UserActionsComponent } from '../../components/user-actions/user-actions
 import { Breadcrumb, UserViewModel } from '../../models';
 import { UserAdminState } from '../../states';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './users.component.html',
@@ -77,7 +78,7 @@ export class UsersComponent implements OnInit {
               : UserAdminState.inactiveUsers
           )
         ),
-        takeUntilDestroyed()
+        untilDestroyed(this)
       )
       .subscribe((users) => {
         this.users = users ?? [];
