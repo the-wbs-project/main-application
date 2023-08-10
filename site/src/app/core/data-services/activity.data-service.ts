@@ -1,20 +1,11 @@
 import { HttpClient } from '@angular/common/http';
-import { Store } from '@ngxs/store';
 import { IdService } from '@wbs/core/services';
-import { AuthState, OrganizationState } from '@wbs/core/states';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Activity, ActivityData } from '../models';
 
 export class ActivityDataService {
-  constructor(
-    private readonly http: HttpClient,
-    private readonly store: Store
-  ) {}
-
-  private get organization(): string {
-    return this.store.selectSnapshot(OrganizationState.id)!;
-  }
+  constructor(private readonly http: HttpClient) {}
 
   getAsync(
     skip: number,
@@ -23,26 +14,26 @@ export class ActivityDataService {
     objectId?: string
   ): Observable<Activity[]> {
     const url = objectId
-      ? `api/activity/${this.organization}/${topLevelId}/${objectId}/${skip}/${take}`
-      : `api/activity/${this.organization}/${topLevelId}/${skip}/${take}`;
+      ? `api/activity/${topLevelId}/${objectId}/${skip}/${take}`
+      : `api/activity/${topLevelId}/${skip}/${take}`;
 
     return this.http
       .get<Activity[] | undefined>(url)
       .pipe(map((list) => list ?? []));
   }
 
-  getUserAsync(userId: string): Observable<Activity[]> {
+  getUserAsync(organization: string, userId: string): Observable<Activity[]> {
     return this.http.get<Activity[]>(
-      `api/activity/${this.organization}/user/${userId}`
+      `api/activity/${organization}/user/${userId}`
     );
   }
 
   putAsync(
+    userId: string,
     topLevelId: string,
     data: ActivityData,
     dataType: 'project'
   ): Observable<Activity> {
-    const userId = this.store.selectSnapshot(AuthState.userId)!;
     const model: Activity = {
       ...data,
       id: IdService.generate(),
@@ -52,7 +43,7 @@ export class ActivityDataService {
     };
 
     return this.http
-      .put<void>(`api/activity/${this.organization}/${dataType}`, model)
+      .put<void>(`api/activity/${dataType}`, model)
       .pipe(map(() => model));
   }
 }

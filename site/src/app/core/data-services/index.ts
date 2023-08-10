@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { ActivityDataService } from './activity.data-service';
 import { InviteDataService } from './invite.data-service';
+import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
 import { ProjectExportDataService } from './project-export.data-service';
 import { ProjectImportDataService } from './project-import.data-service';
@@ -14,22 +14,17 @@ import { UserDataService } from './user.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
-  readonly activities = new ActivityDataService(this.http, this.store);
+  readonly activities = new ActivityDataService(this.http);
   readonly invites = new InviteDataService(this.http);
+  readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
   readonly projectExport = new ProjectExportDataService(this.http);
   readonly projectImport = new ProjectImportDataService(this.http);
-  readonly projectNodes = new ProjectNodeDataService(this.http, this.store);
-  readonly projects = new ProjectDataService(this.http, this.store);
-  readonly projectSnapshots = new ProjectSnapshotDataService(
-    this.http,
-    this.store
-  );
+  readonly projectNodes = new ProjectNodeDataService(this.http);
+  readonly projects = new ProjectDataService(this.http);
+  readonly projectSnapshots = new ProjectSnapshotDataService(this.http);
   readonly staticFiles = new StaticFileDataService(this.http);
   readonly users = new UserDataService(this.http);
 
-  public constructor(
-    private readonly http: HttpClient,
-    private readonly store: Store
-  ) {}
+  public constructor(private readonly http: HttpClient) {}
 }

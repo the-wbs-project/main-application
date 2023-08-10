@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActionDefinition, Activity, TimelineMenuItem } from '@wbs/core/models';
-import { MetadataState } from '@wbs/core/states';
+import { MetadataState } from '@wbs/main/states';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

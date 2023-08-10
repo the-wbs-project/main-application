@@ -3,10 +3,11 @@ import { LogsInitConfiguration } from '@datadog/browser-logs';
 import { environment } from 'src/environments/environment';
 
 export const AUTH_CONFIG: AuthConfig = {
-  domain: 'auth.dev.thewbsproject.com',
+  domain: 'pm-empower.us.auth0.com',
   clientId: environment.auth_clientId,
   authorizationParams: {
-    audience: 'https://dev-3lcexa83.us.auth0.com/api/v2/',
+    connection: 'Username-Password-Authentication',
+    audience: 'https://pm-empower.us.auth0.com/api/v2/',
     redirect_uri: `${window.location.protocol}//${window.location.host}`,
   },
   // The AuthHttpInterceptor configuration
@@ -26,8 +27,8 @@ export const AUTH_CONFIG: AuthConfig = {
 };
 
 export const DATADOG_CONFIG: LogsInitConfiguration = {
-  clientToken: 'pub3cd763417a98f3cb71ee3ab8d19ddecb',
-  site: 'datadoghq.com',
+  clientToken: 'pubd0e9b67a9b76d45b8156a8ce603286d7',
+  site: 'us5.datadoghq.com',
   service: 'pm-empower-site',
   env: environment.datadog_env,
   forwardErrorsToLogs: true,

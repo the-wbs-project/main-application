@@ -1,6 +1,6 @@
 import { Store } from '@ngxs/store';
 import { ListItem, Project, WbsNode } from '@wbs/core/models';
-import { MetadataState } from '@wbs/core/states';
+import { MetadataState } from '@wbs/main/states';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Resources } from '../../../resource.service';
 import { WbsNodeService } from '../../../wbs-node.service';
@@ -12,11 +12,11 @@ export class WbsDisciplineNodeTransformer {
   ) {}
 
   private get disciplineList(): ListItem[] {
-    return this.store.selectSnapshot(MetadataState.disciplineCategories);
+    return this.store.selectSnapshot(MetadataState.disciplines);
   }
 
   private get phaseList(): ListItem[] {
-    return this.store.selectSnapshot(MetadataState.phaseCategories);
+    return this.store.selectSnapshot(MetadataState.phases);
   }
 
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {

@@ -1,11 +1,11 @@
-import { OrganizationRoles } from './organizations.model';
+import { Organization } from '../organization.model';
+import { UserLite } from '../user.model';
 
 export interface AuthState {
-  user: {
-    id: string;
-    name: string;
-    email: string;
-  };
+  userId: string;
+  user: UserLite;
   culture: string;
-  organizations: OrganizationRoles[];
+  roles: string[];
+  organizations: Organization[];
+  organizationalRoles: Record<string, string[]>;
 }

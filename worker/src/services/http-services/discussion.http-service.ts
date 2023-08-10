@@ -1,6 +1,5 @@
 import { Context } from '../../config';
 import { Discussion, User } from '../../models';
-import { IdentityService } from '../auth-services';
 
 const GLOBAL = 'global';
 
@@ -11,7 +10,7 @@ export class DiscussionHttpService {
 
       if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
+      const service = ctx.get('data').discussions;
 
       return ctx.json(await service.getAllAsync(associationId, id));
     } catch (e) {
@@ -32,13 +31,13 @@ export class DiscussionHttpService {
 
       if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
+      const service = ctx.get('data').discussions;
 
       const userIds = await service.getAllUsersAsync(associationId);
       const userGets: Promise<User>[] = [];
 
       for (const id of userIds) {
-        userGets.push(IdentityService.getUserAsync(ctx, id));
+        //userGets.push(IdentityService.getUserAsync(ctx, id));
       }
       return ctx.json(
         (await Promise.all(userGets)).map((user) => {
@@ -67,8 +66,7 @@ export class DiscussionHttpService {
 
       if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
-
+      const service = ctx.get('data').discussions;
       const thread = await service.getAsync(associationId, id);
 
       return thread ? ctx.html(`<html><body class="body">${thread.text}</body></html>`) : ctx.text('', 404);
@@ -90,7 +88,7 @@ export class DiscussionHttpService {
 
       if (!organization || !associationId) return ctx.text('Missing Parameters', 500);
 
-      const service = organization === GLOBAL ? ctx.get('data').discussionsGlobal : ctx.get('data').discussionsCorporate;
+      const service = ctx.get('data').discussions;
       const model: Discussion = await ctx.req.json();
 
       await service.putAsync(model);

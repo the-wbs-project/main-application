@@ -1,6 +1,6 @@
 import { Directive, ElementRef, OnDestroy } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { MainContentSizeChanged } from '@wbs/core/actions';
+import { MainContentSizeChanged } from '@wbs/main/actions';
 import { Subscription, timer } from 'rxjs';
 
 @Directive({ selector: '[appMainContent]', standalone: true })

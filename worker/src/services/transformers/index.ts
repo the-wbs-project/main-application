@@ -1,2 +1,5 @@
-export * from './wbs-node-discipline.service';
-export * from './wbs-node-phase.service';
+import { UserTransformer } from './user.transformer';
+
+export class Transformers {
+  static readonly users = UserTransformer;
+}

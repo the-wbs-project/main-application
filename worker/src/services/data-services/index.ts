@@ -15,27 +15,25 @@ export class DataServiceFactory {
   readonly activities: ActivityDataService;
   readonly auth: AuthDataService;
   readonly checklist: ChecklistDataService;
-  readonly discussionsCorporate: DiscussionDataService;
-  readonly discussionsGlobal: DiscussionDataService;
+  readonly discussions: DiscussionDataService;
   readonly invites: InviteDataService;
   readonly lists: ListDataService;
   readonly projects: ProjectDataService;
   readonly projectNodes: ProjectNodeDataService;
+  readonly projectSnapshots: ProjectSnapshotDataService;
   readonly resources: ResourcesDataService;
   readonly userActivities: UserActivityDataService;
-  readonly projectSnapshots: ProjectSnapshotDataService;
 
   constructor(ctx: Context) {
     this.activities = new ActivityDataService(ctx);
     this.auth = new AuthDataService(ctx);
     this.checklist = new ChecklistDataService(ctx);
-    this.discussionsCorporate = new DiscussionDataService(ctx, false);
-    this.discussionsGlobal = new DiscussionDataService(ctx, true);
+    this.discussions = new DiscussionDataService(ctx);
     this.invites = new InviteDataService(ctx);
     this.lists = new ListDataService(ctx);
     this.projects = new ProjectDataService(ctx);
     this.projectNodes = new ProjectNodeDataService(ctx);
-    this.projectSnapshots = new ProjectSnapshotDataService(ctx, this.projects, this.projectNodes);
+    this.projectSnapshots = new ProjectSnapshotDataService(ctx);
     this.resources = new ResourcesDataService(ctx);
     this.userActivities = new UserActivityDataService(ctx);
   }

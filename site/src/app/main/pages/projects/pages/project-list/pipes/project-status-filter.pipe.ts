@@ -8,7 +8,7 @@ export class ProjectStatusFilterPipe implements PipeTransform {
 
   transform(
     list: Project[] | null | undefined,
-    status: PROJECT_VIEW_STATI_TYPE | null | undefined
+    status: PROJECT_VIEW_STATI_TYPE | string | null | undefined
   ): Project[] | null | undefined {
     if (list == null || list.length === 0 || status == undefined) return list;
 

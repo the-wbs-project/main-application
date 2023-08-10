@@ -7,7 +7,7 @@ export class MiscHttpService {
     const body = await ctx.req.arrayBuffer();
     const url = `${ctx.env.AZURE_ENDPOINT}/${originalUrl.pathname}`;
     const headers = new Headers(ctx.req.headers);
-    const culture = ctx.get('state').culture;
+    const culture = 'en-US'; //ctx.get('state').culture;
 
     if (culture) headers.set('app-culture', culture);
     if (ctx.env.AZURE_KEY) headers.set('x-functions-key', ctx.env.AZURE_KEY);

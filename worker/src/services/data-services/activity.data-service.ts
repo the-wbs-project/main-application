@@ -3,9 +3,11 @@ import { Activity } from '../../models';
 import { CosmosDbService } from './cosmos-db.service';
 
 export class ActivityDataService {
-  private _db?: CosmosDbService;
+  private readonly db: CosmosDbService;
 
-  constructor(private readonly ctx: Context) {}
+  constructor(ctx: Context) {
+    this.db = new CosmosDbService(ctx, 'Activity', 'topLevelId');
+  }
 
   getAsync(topLevelId: string, skip: number, take: number): Promise<Activity[] | undefined> {
     return this.db.getListByQueryAsync<Activity>(
@@ -25,13 +27,5 @@ export class ActivityDataService {
 
   async putAsync(activity: Activity): Promise<void> {
     await this.db.upsertDocument<Activity>(activity, activity.topLevelId);
-  }
-
-  private get db(): CosmosDbService {
-    if (!this._db) {
-      const db = this.ctx.get('organization').organization;
-      this._db = new CosmosDbService(this.ctx, db, 'Activity', 'topLevelId');
-    }
-    return this._db;
   }
 }

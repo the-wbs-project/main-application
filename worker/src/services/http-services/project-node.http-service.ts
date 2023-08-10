@@ -4,9 +4,9 @@ import { ProjectNode } from '../../models';
 export class ProjectNodeHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
     try {
-      const { projectId } = ctx.req.param();
+      const { owner, projectId } = ctx.req.param();
 
-      if (!projectId) return ctx.text('Missing Parameters', 500);
+      if (!owner || !projectId) return ctx.text('Missing Parameters', 500);
       //
       //  Get the data from the KV
       //
@@ -22,13 +22,13 @@ export class ProjectNodeHttpService {
 
   static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const { projectId, nodeId } = ctx.req.param();
+      const { owner, projectId, nodeId } = ctx.req.param();
       const data = ctx.get('data');
 
-      if (!projectId || !nodeId) return ctx.text('Missing Parameters', 500);
+      if (!owner || !projectId || !nodeId) return ctx.text('Missing Parameters', 500);
 
       await data.projectNodes.putAsync(await ctx.req.json());
-      await data.projects.updateModifiedDateAsync(projectId);
+      await data.projects.updateModifiedDateAsync(owner, projectId);
 
       return ctx.text('', 204);
     } catch (e) {
@@ -40,15 +40,15 @@ export class ProjectNodeHttpService {
 
   static async batchAsync(ctx: Context): Promise<Response> {
     try {
-      const { projectId } = ctx.req.param();
+      const { owner, projectId } = ctx.req.param();
       const data = ctx.get('data');
 
-      if (!projectId) return ctx.text('Missing Parameters', 500);
+      if (!owner || !projectId) return ctx.text('Missing Parameters', 500);
 
       const { upserts, removeIds }: { upserts: ProjectNode[]; removeIds: string[] } = await ctx.req.json();
 
       await data.projectNodes.batchAsync(projectId, upserts, removeIds);
-      await data.projects.updateModifiedDateAsync(projectId);
+      await data.projects.updateModifiedDateAsync(owner, projectId);
 
       return ctx.text('', 204);
     } catch (e) {

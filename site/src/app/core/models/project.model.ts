@@ -12,6 +12,8 @@ export interface UserRole {
 
 export interface Project {
   id: string;
+  owner: string;
+  createdBy: string;
   title: string;
   description: string;
   createdOn: number;

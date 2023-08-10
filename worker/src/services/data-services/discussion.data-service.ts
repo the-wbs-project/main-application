@@ -3,9 +3,11 @@ import { Discussion } from '../../models';
 import { CosmosDbService } from './cosmos-db.service';
 
 export class DiscussionDataService {
-  private _db?: CosmosDbService;
+  private readonly db: CosmosDbService;
 
-  constructor(private readonly ctx: Context, private readonly isGlobal: boolean) {}
+  constructor(ctx: Context) {
+    this.db = new CosmosDbService(ctx, 'Discussions', 'associationId');
+  }
 
   getAsync(associationId: string, threadId: string): Promise<Discussion | undefined> {
     return this.db.getDocumentAsync<Discussion>(associationId, threadId, true);
@@ -45,13 +47,5 @@ export class DiscussionDataService {
 
   putAsync(model: Discussion): Promise<any> {
     return this.db.upsertDocument(model, model.associationId);
-  }
-
-  private get db(): CosmosDbService {
-    if (!this._db) {
-      const db = this.isGlobal ? '_common' : this.ctx.get('organization').organization;
-      this._db = new CosmosDbService(this.ctx, db, 'Discussions', 'associationId');
-    }
-    return this._db;
   }
 }

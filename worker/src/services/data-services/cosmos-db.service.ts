@@ -4,14 +4,13 @@ import { Context } from '../../config';
 
 export class CosmosDbService {
   private readonly db: CosmosClient;
-  orgId?: string;
 
-  constructor(ctx: Context, dbId: string, collId: string, private readonly pkVariable = 'pk') {
+  constructor(ctx: Context, collectionId: string, private readonly pkVariable = 'pk') {
     this.db = new CosmosClient({
       endpoint: ctx.env.COSMOS_ENDPOINT,
       masterKey: ctx.env.COSMOS_KEY,
-      dbId,
-      collId,
+      dbId: ctx.env.COSMOS_DB,
+      collId: collectionId,
       fetch: (input: RequestInfo, init?: RequestInit<RequestInitCfProperties>) => {
         return ctx.get('fetcher').fetch(input, init);
       },
@@ -25,7 +24,7 @@ export class CosmosDbService {
       delete objOrArray['_rid'];
       delete objOrArray['_self'];
       delete objOrArray['_etag'];
-      //delete objOrArray['_ts'];
+      delete objOrArray['_ts'];
       delete objOrArray['_attachments'];
     }
   }
@@ -45,7 +44,10 @@ export class CosmosDbService {
 
     const result = await res.json();
 
-    if (res.status !== 200) throw new Error(JSON.stringify(result));
+    if (res.status !== 200) {
+      console.log(res.status);
+      throw new Error(JSON.stringify(result));
+    }
 
     if (clean && result) this.clean(result);
 

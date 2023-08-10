@@ -15,6 +15,7 @@ export type Env = {
 
   COSMOS_ENDPOINT: string;
   COSMOS_KEY: string;
+  COSMOS_DB: string;
 
   DATADOG_API_KEY: string;
   DATADOG_ENV: string;
@@ -26,4 +27,7 @@ export type Env = {
   DEBUG: string;
   INVITE_TEMPLATE_ID: string;
   KV_BYPASS?: string;
+
+  IMAGES_ACCOUNT: string;
+  IMAGES_KEY: string;
 };

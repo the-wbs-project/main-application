@@ -3,7 +3,8 @@ export const sorter = (
   b: string | number,
   direction: 'asc' | 'desc' = 'asc'
 ): number => {
-  const x = direction === 'asc' ? -1 : 1;
-
-  return x * (a < b ? -1 : a > b ? 1 : 0);
+  if (direction === 'asc') {
+    return a < b ? -1 : a > b ? 1 : 0;
+  }
+  return a < b ? 1 : a > b ? -1 : 0;
 };

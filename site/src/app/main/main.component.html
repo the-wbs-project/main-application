@@ -1,13 +1,12 @@
 <div class="horizontalMenucontainer">
   <div class="page">
     <div>
-      <!-- // header -->
       <wbs-header />
-      <!-- //sidebar -->
       <wbs-sidebar
         appHoverEffectSidebar
-        [isAdmin]="isAdmin$ | async"
-        [projects]="projects$ | async"
+        [isAdmin]="membershipRoles() | isAdmin"
+        [projects]="projects()"
+        [owner]="owner()"
       />
     </div>
     <div

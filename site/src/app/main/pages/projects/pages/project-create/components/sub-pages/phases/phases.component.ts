@@ -6,10 +6,10 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
+import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { CategorySelection } from '@wbs/core/view-models';
+import { CategorySelectionService } from '@wbs/main/services';
 import { PhasesChosen } from '../../../actions';
 import { ProjectCreateState } from '../../../states';
 import { FooterComponent } from '../../footer/footer.component';
@@ -22,6 +22,7 @@ import { FooterComponent } from '../../footer/footer.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [CategoryListEditorComponent, FillElementDirective, FooterComponent],
+  providers: [CategorySelectionService],
 })
 export class PhaseComponent implements OnInit {
   categories?: CategorySelection[];

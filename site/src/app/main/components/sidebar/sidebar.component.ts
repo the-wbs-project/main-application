@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   HostListener,
-  inject,
   Input,
   ViewEncapsulation,
 } from '@angular/core';
@@ -30,13 +29,17 @@ import { switcherArrowFn } from './sidebar';
   ],
 })
 export class SidebarComponent {
+  @Input() owner?: string | null;
   @Input() projects?: Project[] | null;
   @Input() isAdmin?: boolean | null;
 
-  readonly auth = inject(AuthService);
-  readonly navServices = inject(NavService);
   readonly settings = ORG_SETTINGS_MENU_ITEMS;
   scrolled = false;
+
+  constructor(
+    readonly auth: AuthService,
+    private readonly navServices: NavService
+  ) {}
 
   ngOnInit(): void {
     let sidemenu = document.querySelector('.side-menu');
@@ -71,7 +74,7 @@ export class SidebarComponent {
   }
 
   sidebarClose() {
-    if ((this.navServices.collapseSidebar = true)) {
+    if (this.navServices.collapseSidebar === true) {
       document.querySelector('.app')?.classList.remove('sidenav-toggled');
       this.navServices.collapseSidebar = false;
     }

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { UiState } from '@wbs/core/states';
 import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
+import { UiState } from '@wbs/main/states';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { TaskMenuPipe } from '../../pipes/task-menu.pipe';
 import { ProjectNavigationService, ProjectViewService } from '../../services';

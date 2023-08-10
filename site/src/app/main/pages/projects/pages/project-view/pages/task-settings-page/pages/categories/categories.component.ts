@@ -8,9 +8,9 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
+import { CategorySelectionService } from '@wbs/main/services';
 import { ChangeTaskDisciplines } from '../../../../actions';
 import { ProjectState, TasksState } from '../../../../states';
 
@@ -20,6 +20,7 @@ import { ProjectState, TasksState } from '../../../../states';
   templateUrl: './categories.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CategoryListEditorComponent],
+  providers: [CategorySelectionService],
 })
 export class TaskSettingsCategoriesComponent implements OnInit {
   categories?: CategorySelection[];
@@ -48,10 +49,10 @@ export class TaskSettingsCategoriesComponent implements OnInit {
 
   private rebuild(): void {
     const project = this.store.selectSnapshot(ProjectState.current);
-    const task = this.store.selectSnapshot(TasksState.current);
 
     if (!project) return;
 
+    const task = this.store.selectSnapshot(TasksState.current);
     const projectCats = project.categories.discipline;
     const taskCats = task?.disciplines ?? [];
 

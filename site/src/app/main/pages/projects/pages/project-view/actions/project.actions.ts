@@ -1,5 +1,4 @@
 import {
-  ProjectCategory,
   PROJECT_NODE_VIEW_TYPE,
   ROLES_TYPE,
   UserLite,
@@ -9,12 +8,12 @@ import {
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';
-  constructor(readonly projectId: string) {}
+  constructor(readonly owner: string, readonly projectId: string) {}
 }
 
 export class SetProject {
   static readonly type = '[Project] Set';
-  constructor(readonly projectId: string) {}
+  constructor(readonly owner: string, readonly projectId: string) {}
 }
 
 export class NavigateToView {

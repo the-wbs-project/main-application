@@ -2,8 +2,9 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Invite, User } from '@wbs/core/models';
-import { DialogService, IdService, Messages } from '@wbs/core/services';
-import { OrganizationState } from '@wbs/core/states';
+import { IdService, Messages } from '@wbs/core/services';
+import { DialogService } from '@wbs/main/services';
+import { MembershipState } from '@wbs/main/states';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ActivateUser,
@@ -189,7 +190,7 @@ export class UserAdminState {
   }
 
   private getOrganization(): string {
-    return this.store.selectSnapshot(OrganizationState.id);
+    return this.store.selectSnapshot(MembershipState.id)!;
   }
 
   private changeActivation(
@@ -232,7 +233,6 @@ export class UserAdminState {
           email: x.email,
           name: x.name,
           isActive: !x.blocked,
-          roles: x.appInfo.organizations[org] ?? [],
         }
     );
   }

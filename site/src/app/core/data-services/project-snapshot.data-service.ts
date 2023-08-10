@@ -1,22 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
 import { Project } from '../models';
-import { OrganizationState } from '../states';
 
 export class ProjectSnapshotDataService {
-  constructor(
-    private readonly http: HttpClient,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly http: HttpClient) {}
 
-  private get organization(): string {
-    return this.store.selectSnapshot(OrganizationState.id)!;
-  }
-
-  getAsync(projectId: string, activityId: string): Observable<Project> {
+  getAsync(
+    organization: string,
+    projectId: string,
+    activityId: string
+  ): Observable<Project> {
     return this.http.get<Project>(
-      `api/projects/snapshot/${this.organization}/${projectId}/${activityId}`
+      `api/projects/snapshot/${organization}/${projectId}/${activityId}`
     );
   }
 }

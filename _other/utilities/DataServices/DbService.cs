@@ -37,17 +37,9 @@ namespace Wbs.Utilities.DataServices
             if (string.IsNullOrWhiteSpace(partitionKey)) throw new ArgumentNullException(nameof(partitionKey));
             if (string.IsNullOrWhiteSpace(id)) throw new ArgumentNullException(nameof(id));
 
-            try
-            {
-                var resp = await container.ReadItemAsync<T>(id, new PartitionKey(partitionKey));
+            var resp = await container.ReadItemAsync<T>(id, new PartitionKey(partitionKey));
 
-                return (resp.StatusCode == HttpStatusCode.OK) ? resp.Resource : default(T);
-            }
-            catch (CosmosException e)
-            {
-                if (e.StatusCode == HttpStatusCode.NotFound) return default(T);
-                throw;
-            }
+            return (resp.StatusCode == HttpStatusCode.OK) ? resp.Resource : default(T);
         }
 
         public async Task<List<T>> GetListAsync<T>(string query) where T : class, IIdObject

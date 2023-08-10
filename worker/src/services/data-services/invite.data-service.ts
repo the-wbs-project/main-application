@@ -3,9 +3,11 @@ import { Invite } from '../../models';
 import { CosmosDbService } from './cosmos-db.service';
 
 export class InviteDataService {
-  private _db?: CosmosDbService;
+  private readonly db: CosmosDbService;
 
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: Context) {
+    this.db = new CosmosDbService(this.ctx, 'Metadata', 'type');
+  }
 
   getAllAsync(): Promise<Invite[] | undefined> {
     return this.db.getAllByPartitionAsync<Invite>('Invites', true);
@@ -18,13 +20,5 @@ export class InviteDataService {
   async putAsync(invite: Invite): Promise<boolean> {
     invite.type = 'Invites';
     return (await this.db.upsertDocument(invite, invite.type)) != null;
-  }
-
-  private get db(): CosmosDbService {
-    if (!this._db) {
-      const db = this.ctx.get('organization').organization;
-      this._db = new CosmosDbService(this.ctx, db, 'Metadata', 'type');
-    }
-    return this._db;
   }
 }

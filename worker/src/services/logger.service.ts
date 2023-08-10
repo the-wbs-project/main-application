@@ -58,7 +58,7 @@ export class Logger {
 
   async flush(): Promise<Response | void> {
     try {
-      const res = await fetch('https://http-intake.logs.datadoghq.com/api/v2/logs', {
+      const res = await fetch('https://http-intake.logs.us5.datadoghq.com/api/v2/logs', {
         method: 'POST',
         body: JSON.stringify(this.logs),
         headers: {
@@ -85,7 +85,6 @@ export class Logger {
 
     const url = new URL(this.ctx.req.url);
     const cf: Record<string, any> = (<any>info.request).cf || {};
-    const usr = this.ctx.get('state')?.user;
 
     return {
       ddsource: 'worker',
@@ -120,16 +119,12 @@ export class Logger {
           },
         },
       },
+      usr: this.ctx.get('user'),
       ...(info.duration
         ? {
             performance: {
               duration: info.duration,
             },
-          }
-        : {}),
-      ...(usr
-        ? {
-            usr,
           }
         : {}),
       ...(info.data

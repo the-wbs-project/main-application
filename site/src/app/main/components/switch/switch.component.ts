@@ -6,7 +6,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { DialogService } from '@wbs/core/services';
+import { DialogService } from '@wbs/main/services';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -16,6 +16,7 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./switch.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [DialogService],
 })
 export class SwitchComponent {
   @Input({ required: true }) value!: boolean;

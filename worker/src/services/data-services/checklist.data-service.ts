@@ -6,7 +6,7 @@ export class ChecklistDataService {
   private db: CosmosDbService;
 
   constructor(ctx: Context) {
-    this.db = new CosmosDbService(ctx, '_common', 'Checklists', 'groupId');
+    this.db = new CosmosDbService(ctx, 'Checklists', 'groupId');
   }
 
   async getAsync(): Promise<ChecklistGroup[]> {
