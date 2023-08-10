@@ -8,12 +8,13 @@ import {
 import { RouterModule } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { TranslateModule } from '@ngx-translate/core';
-import { Project } from '@wbs/core/models';
+import { Organization, Project } from '@wbs/core/models';
 import { fromEvent } from 'rxjs';
 import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
 import { ProjectStatusCountPipe } from '../../pipes/project-status-count.pipe';
 import { NavService } from '../../services';
 import { switcherArrowFn } from './sidebar';
+import { environment } from 'src/environments/environment';
 
 @Component({
   standalone: true,
@@ -29,10 +30,12 @@ import { switcherArrowFn } from './sidebar';
   ],
 })
 export class SidebarComponent {
-  @Input() owner?: string | null;
+  @Input() organization?: Organization | null;
+  @Input() organizations?: Organization[] | null;
   @Input() projects?: Project[] | null;
   @Input() isAdmin?: boolean | null;
 
+  readonly urlPrefix = environment.apiPrefix;
   readonly settings = ORG_SETTINGS_MENU_ITEMS;
   scrolled = false;
 

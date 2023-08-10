@@ -23,6 +23,8 @@ DATADOG_ENV = "development"
 CORS_ORIGINS = "http://localhost:4200"
 INVITE_TEMPLATE_ID = "invite-template-v1"
 KV_BYPASS = "LISTS"
+IMAGES_ACCOUNT="004dc1af737b22a8aa83b3550fa9b9d3"
+
 
 AZURE_ENDPOINT = "http://localhost:7071"
 COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"

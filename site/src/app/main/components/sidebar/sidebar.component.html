@@ -56,12 +56,18 @@
           />
         </svg>
       </div>
+      <div class="w-100 text-center">
+        <img
+          *ngIf="organization?.metadata?.logo; let logo"
+          class="logo"
+          [src]="logo"
+          alt="NovaLogo"
+        />
+        <!--<select class="w-75"></select>-->
+      </div>
       <ul class="side-menu">
         <li class="slide is-expanded">
-          <a
-            class="side-menu__item"
-            routerLinkActive="active"
-          >
+          <a class="side-menu__item" routerLinkActive="active">
             <span class="side-menu__icon">
               <i class="fa-solid fa-space-station-moon-construction"></i>
             </span>
@@ -74,7 +80,14 @@
               <a
                 class="sub-side-menu__item"
                 routerLinkActive="active"
-                [routerLink]="['/', owner ,'projects', 'list', 'assigned', 'active']"
+                [routerLink]="[
+                  '/',
+                  organization?.name,
+                  'projects',
+                  'list',
+                  'assigned',
+                  'active'
+                ]"
               >
                 <span class="sub-side-menu__label">
                   Assigned To Me
@@ -84,7 +97,14 @@
               <a
                 class="sub-side-menu__item"
                 routerLinkActive="active"
-                [routerLink]="['/', owner ,'projects', 'list', 'all', 'active']"
+                [routerLink]="[
+                  '/',
+                  organization?.name,
+                  'projects',
+                  'list',
+                  'all',
+                  'active'
+                ]"
               >
                 <span class="sub-side-menu__label">
                   {{ "General.All" | translate }}

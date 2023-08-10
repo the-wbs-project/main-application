@@ -37,10 +37,8 @@ import { map } from 'rxjs/operators';
 })
 export class MainComponent implements AfterContentInit {
   readonly membershipRoles = toSignal(this.store.select(MembershipState.roles));
-  readonly owner = toSignal(
-    this.route.params.pipe(map((p) => <string>p['owner']))
-  );
   readonly org = toSignal(this.store.select(MembershipState.organization));
+  readonly orgs = toSignal(this.store.select(MembershipState.list));
   readonly projects = toSignal(this.store.select(MembershipState.projects));
 
   @ViewChild('body', { static: true, read: ViewContainerRef })
