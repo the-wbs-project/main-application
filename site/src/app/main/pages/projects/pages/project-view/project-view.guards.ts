@@ -3,9 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { LoadDiscussionForum, VerifyTimelineData } from '@wbs/main/actions';
-import { MembershipState } from '@wbs/main/states';
-import { forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import {
   InitiateChecklist,
   LoadProjectTimeline,
@@ -16,20 +14,16 @@ import {
   VerifyTask,
 } from './actions';
 import { PROJECT_PAGE_VIEW } from './models';
-import { ProjectState, ProjectViewState } from './states';
+import { ProjectViewState } from './states';
 
-export const projectDiscussionGuard = () => {
+export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
 
-  return forkJoin({
-    org: store.selectOnce(MembershipState.id),
-    project: store.selectOnce(ProjectState.current),
-  }).pipe(
-    switchMap((data) =>
-      store.dispatch(new LoadDiscussionForum(data.org!, data.project!.id))
-    ),
-    map(() => true)
-  );
+  return store
+    .dispatch(
+      new LoadDiscussionForum(route.params['owner'], route.params['projectId'])
+    )
+    .pipe(map(() => true));
 };
 export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
@@ -37,6 +31,7 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
   return store
     .dispatch(
       new Navigate([
+        route.params['owner'],
         'projects',
         'view',
         route.params['projectId'],
@@ -48,10 +43,12 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectTimelineVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const id = route.params['projectId'];
 
   return store
-    .dispatch([new VerifyTimelineData(), new LoadProjectTimeline(id)])
+    .dispatch([
+      new VerifyTimelineData(),
+      new LoadProjectTimeline(route.params['projectId']),
+    ])
     .pipe(map(() => true));
 };
 

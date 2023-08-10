@@ -13,20 +13,6 @@ export class ProjectDataService {
     return this.db.getAllByPartitionAsync<Project>(ownerId, true);
   }
 
-  getAllAssignedAsync(ownerId: string, userId: string): Promise<Project[]> {
-    return this.db.getListByQueryAsync<Project>(
-      `SELECT * FROM c WHERE c.owner = @owner AND EXISTS (SELECT VALUE z FROM z in c.roles WHERE z.userId = @userId)`,
-      true,
-      [
-        { name: '@owner', value: ownerId },
-        { name: '@userId', value: userId },
-      ],
-      undefined,
-      undefined,
-      true,
-    );
-  }
-
   getAsync(ownerId: string, projectId: string): Promise<Project | undefined> {
     return this.db.getDocumentAsync<Project>(ownerId, projectId, true);
   }
@@ -40,6 +26,6 @@ export class ProjectDataService {
   async putAsync(project: Project): Promise<void> {
     project.lastModified = Date.now();
 
-    await this.db.upsertDocument(project, project.id);
+    await this.db.upsertDocument(project, project.owner);
   }
 }

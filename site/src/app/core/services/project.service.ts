@@ -28,7 +28,7 @@ export class ProjectService {
     if (status === PROJECT_VIEW_STATI.ACTIVE) return 'General.Active';
     if (status === PROJECT_VIEW_STATI.APPROVAL)
       return 'Projects.WaitingApproval';
-    if (status === PROJECT_VIEW_STATI.EXECUTION) return 'General.Execution';
+    if (status === PROJECT_VIEW_STATI.CLOSED) return 'General.Closed';
     if (status === PROJECT_VIEW_STATI.EXECUTION) return 'General.Execution';
     if (status === PROJECT_VIEW_STATI.FOLLOW_UP) return 'General.FollowUp';
     if (status === PROJECT_VIEW_STATI.PLANNING) return 'General.Planning';
@@ -43,7 +43,8 @@ export class ProjectService {
 
     const suffix = useAbbreviations ? '' : '-Full';
 
-    if (role === ROLES.ADMIN) return this.resources.get('General.Admin' + suffix);
+    if (role === ROLES.ADMIN)
+      return this.resources.get('General.Admin' + suffix);
     if (role === ROLES.PM) return this.resources.get('General.PM' + suffix);
     if (role === ROLES.APPROVER) return this.resources.get('General.Approver');
     if (role === ROLES.SME) return this.resources.get('General.SME' + suffix);

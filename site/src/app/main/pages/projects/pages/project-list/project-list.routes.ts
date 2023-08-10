@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { headerGuard, redirectGuard } from './project-list.guards';
+import { headerGuard, redirectGuard, titleGuard } from './project-list.guards';
 
 export const routes: Routes = [
   {
@@ -18,6 +18,7 @@ export const routes: Routes = [
         ({ ProjectListComponent }) => ProjectListComponent
       ),
     canActivate: [
+      titleGuard,
       () =>
         headerGuard({
           title: 'General.Projects',

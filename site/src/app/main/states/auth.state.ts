@@ -3,7 +3,7 @@ import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Role, UserLite } from '@wbs/core/models';
+import { UserLite } from '@wbs/core/models';
 import { Logger } from '@wbs/core/services';
 import { filter, switchMap, tap } from 'rxjs/operators';
 import { LoadOrganizations } from '../actions';
@@ -11,7 +11,7 @@ import { LoadOrganizations } from '../actions';
 export interface AuthBucket {
   culture: string;
   profile?: UserLite;
-  roles?: Role[];
+  roles?: string[];
 }
 
 @UntilDestroy()
@@ -35,7 +35,7 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static roles(state: AuthBucket): Role[] | undefined {
+  static roles(state: AuthBucket): string[] | undefined {
     return state?.roles;
   }
 

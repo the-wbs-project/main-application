@@ -5,11 +5,9 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { Select, Store } from '@ngxs/store';
-import { Project } from '@wbs/core/models';
+import { ActivatedRoute, RouterModule } from '@angular/router';
+import { Store } from '@ngxs/store';
 import { ContainerService } from '@wbs/core/services';
-import { Observable } from 'rxjs';
 import {
   FooterComponent,
   HeaderComponent,
@@ -19,7 +17,8 @@ import { MainContentDirective } from './directives/main-content.directive';
 import { NavService, SwitcherService } from './services';
 import { iIsAdminPipe } from './pipes/is-admin.pipe';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MembershipState, ProjectListState } from './states';
+import { MembershipState } from './states';
+import { map } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -37,8 +36,12 @@ import { MembershipState, ProjectListState } from './states';
   providers: [NavService],
 })
 export class MainComponent implements AfterContentInit {
-  readonly membershipRoles = toSignal(this.store.select(MembershipState.rolesIds));
-  readonly projects = toSignal(this.store.select(ProjectListState.all));
+  readonly membershipRoles = toSignal(this.store.select(MembershipState.roles));
+  readonly owner = toSignal(
+    this.route.params.pipe(map((p) => <string>p['owner']))
+  );
+  readonly org = toSignal(this.store.select(MembershipState.organization));
+  readonly projects = toSignal(this.store.select(MembershipState.projects));
 
   @ViewChild('body', { static: true, read: ViewContainerRef })
   body: ViewContainerRef | undefined;
@@ -47,6 +50,7 @@ export class MainComponent implements AfterContentInit {
 
   constructor(
     private readonly container: ContainerService,
+    private readonly route: ActivatedRoute,
     private readonly store: Store
   ) {}
 

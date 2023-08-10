@@ -38,11 +38,10 @@ app.get('/api/edge-data/clear', Http.misc.clearKvAsync);
 app.get('/api/invites', verifyJwt, Http.invites.getAllAsync);
 app.put('/api/invites/:send', verifyJwt, Http.invites.putAsync);
 app.get('/api/checklists', verifyJwt, Http.checklists.getAsync);
-app.get('/api/activity/:topLevelId/:skip/:take', verifyJwt, verifyMembership, Http.activities.getByIdAsync);
+app.get('/api/activity/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
 app.get('/api/activity/user/:userId', verifyJwt, verifyMembership, Http.activities.getByUserIdAsync);
 app.put('/api/activity/:dataType', verifyJwt, verifyMembership, Http.activities.putAsync);
 app.get('/api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
-app.get('/api/projects/:owner/assigned', verifyJwt, verifyMembership, Http.projects.getAllAssignedAsync);
 app.get('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
 app.put('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, Http.projects.putAsync);
 app.get('/api/projects/:owner/byId/:projectId/nodes', verifyJwt, verifyMembership, Http.projectNodes.getAsync);
@@ -59,7 +58,6 @@ app.get('/api/memberships', verifyJwt, Http.memberships.getMembershipsAsync);
 app.get('/api/roles', verifyJwt, Http.memberships.getRolesAsync);
 app.get('/api/memberships/:organization/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesAsync);
 app.get('/api/memberships/:organization/users', verifyJwt, verifyMembership, Http.memberships.getMembershipUsersAsync);
-app.get('/api/memberships/:organization/users/:userId/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesForUserAsync);
 app.get('/api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of AZURE_ROUTES_POST) {

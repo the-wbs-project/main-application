@@ -17,24 +17,6 @@ export class ProjectHttpService {
     }
   }
 
-  static async getAllAssignedAsync(ctx: Context): Promise<Response> {
-    try {
-      const { owner } = ctx.req.param();
-
-      if (!owner) return ctx.text('Missing Parameters', 500);
-
-      const userId = ctx.get('state').user.id;
-
-      return ctx.json(await ctx.get('data').projects.getAllAssignedAsync(owner, userId));
-    } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying to get all assigned projects.', 'ProjectHttpService.getAllWatchedAsync', <Error>e);
-
-      return ctx.text('Internal Server Error', 500);
-    }
-  }
-
   static async getByIdAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, projectId } = ctx.req.param();

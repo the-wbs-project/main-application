@@ -6,6 +6,7 @@ export * from './enums';
 export * from './discussion.model';
 export * from './invite.model';
 export * from './list-item.model';
+export * from './member.model';
 export * from './metadata.model';
 export * from './organization.model';
 export * from './project.model';

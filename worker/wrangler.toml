@@ -31,7 +31,7 @@ MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 COSMOS_DB = "combined"
 
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_CLIENT_ID = "zfvKgtPltxHsUGNPMYvF6JRljlp6xDuC"
+AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
 AUTH_CONNECTION = "Username-Password-Authentication"
 AUTH_DOMAIN = "pm-empower.us.auth0.com"
 

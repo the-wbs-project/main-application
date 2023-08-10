@@ -61,15 +61,12 @@
           <a
             class="side-menu__item"
             routerLinkActive="active"
-            [routerLink]="['/projects', 'list', 'my', 'active']"
           >
             <span class="side-menu__icon">
               <i class="fa-solid fa-space-station-moon-construction"></i>
             </span>
             <span class="side-menu__label">
-              {{ "General.MyProjects" | translate }} ({{
-                [projects, "active"] | projectStatusCount
-              }})
+              {{ "General.Projects" | translate }}
             </span>
           </a>
           <ul class="slide-menu">
@@ -77,43 +74,20 @@
               <a
                 class="sub-side-menu__item"
                 routerLinkActive="active"
-                [routerLink]="['/projects', 'list', 'my', 'planning']"
+                [routerLink]="['/', owner ,'projects', 'list', 'assigned', 'active']"
               >
                 <span class="sub-side-menu__label">
-                  {{ "General.Planning" | translate }} ({{
-                    [projects, "planning"] | projectStatusCount
-                  }})
+                  Assigned To Me
+                  <!--{{ "General.AssignedToMe" | translate }}-->
                 </span>
               </a>
               <a
                 class="sub-side-menu__item"
                 routerLinkActive="active"
-                [routerLink]="['/projects', 'list', 'my', 'execution']"
+                [routerLink]="['/', owner ,'projects', 'list', 'all', 'active']"
               >
                 <span class="sub-side-menu__label">
-                  {{ "General.Execution" | translate }} &nbsp; ({{
-                    [projects, "execution"] | projectStatusCount
-                  }})
-                </span>
-              </a>
-              <a
-                class="sub-side-menu__item"
-                routerLinkActive="active"
-                [routerLink]="['/projects', 'list', 'my', 'follow-up']"
-              >
-                <span class="sub-side-menu__label">
-                  {{ "General.FollowUp" | translate }} &nbsp; ({{
-                    [projects, "followUp"] | projectStatusCount
-                  }})
-                </span>
-              </a>
-              <a
-                class="sub-side-menu__item"
-                routerLinkActive="active"
-                [routerLink]="['/projects', 'list', 'my', 'closed']"
-              >
-                <span class="sub-side-menu__label">
-                  {{ "General.Closed" | translate }}
+                  {{ "General.All" | translate }}
                 </span>
               </a>
             </li>

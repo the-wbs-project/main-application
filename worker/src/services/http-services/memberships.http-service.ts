@@ -1,9 +1,10 @@
 import { Context } from '../../config';
+import { Member } from '../../models';
 
 export class MembershipHttpService {
   static async getMembershipsAsync(ctx: Context): Promise<Response> {
     try {
-      return ctx.json(ctx.get('state').organizations);
+      return ctx.json(await ctx.get('data').auth.getUserOrganizationsAsync(ctx.get('user').id));
     } catch (e) {
       ctx
         .get('logger')
@@ -19,7 +20,7 @@ export class MembershipHttpService {
 
   static async getRolesAsync(ctx: Context): Promise<Response> {
     try {
-      return ctx.json(ctx.get('state').roles);
+      return ctx.json(await ctx.get('data').auth.getUserRolesAsync(ctx.get('user').id));
     } catch (e) {
       ctx
         .get('logger')
@@ -31,9 +32,12 @@ export class MembershipHttpService {
 
   static async getMembershipRolesAsync(ctx: Context): Promise<Response> {
     try {
+      //@ts-ignore
+      console.log(ctx.env.CLOUDFLARE_ACCOUNT_ID);
+
       const { organization } = ctx.req.param();
 
-      return ctx.json(ctx.get('state').organizationalRoles[organization] ?? []);
+      return ctx.json(await ctx.get('data').auth.getUserOrganizationalRolesAsync(organization, ctx.get('user').id));
     } catch (e) {
       ctx
         .get('logger')
@@ -51,24 +55,24 @@ export class MembershipHttpService {
     try {
       const { organization } = ctx.req.param();
 
-      return ctx.json((await ctx.get('data').auth.getOrganizationalUsersAsync(organization)) ?? []);
-    } catch (e) {
-      ctx
-        .get('logger')
-        .trackException(
-          'An error occured trying to get all memberships (and users) for an organization.',
-          'MembershipHttpService.getAllForOrganizationAsync',
-          <Error>e,
-        );
-      return ctx.text('Internal Server Error', 500);
-    }
-  }
+      const users = (await ctx.get('data').auth.getOrganizationalUsersAsync(organization)) ?? [];
 
-  static async getMembershipRolesForUserAsync(ctx: Context): Promise<Response> {
-    try {
-      const { organization, userId } = ctx.req.param();
+      console.log('user count: ' + users.length);
 
-      return ctx.json((await ctx.get('data').auth.getUserOrganizationalRolesAsync(organization, userId)) ?? []);
+      const roles: string[][] = await Promise.all(
+        users.map((x) => ctx.get('data').auth.getUserOrganizationalRolesAsync(organization, x.id)),
+      );
+
+      const members: Member[] = [];
+
+      for (let i = 0; i < users.length; i++) {
+        members.push({
+          ...users[i],
+          roles: roles[i] ?? [],
+        });
+      }
+
+      return ctx.json(members);
     } catch (e) {
       ctx
         .get('logger')

@@ -3,14 +3,7 @@ import { PROJECT_SETTINGS_PAGES } from '../../../models';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { LoadAllMembershipRoles } from '@wbs/main/actions';
-import { map } from 'rxjs/operators';
-
-export const loadRolesGuard = () => {
-  const store = inject(Store);
-
-  return store.dispatch(new LoadAllMembershipRoles()).pipe(map(() => true));
-};
+import { map, tap } from 'rxjs/operators';
 
 export const routes: Routes = [
   {
@@ -49,7 +42,6 @@ export const routes: Routes = [
   },
   {
     path: 'roles',
-    canActivate: [loadRolesGuard],
     data: {
       view: PROJECT_SETTINGS_PAGES.ROLES,
     },

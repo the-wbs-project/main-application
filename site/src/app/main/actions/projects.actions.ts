@@ -1,8 +1,8 @@
-import { Project } from '@wbs/core/models';
+import { Organization, Project } from '@wbs/core/models';
 
 export class LoadProjects {
   static readonly type = '[Projects] Load';
-  constructor(readonly organization: string) {}
+  constructor(readonly organization: Organization) {}
 }
 
 export class ProjectUpdated {

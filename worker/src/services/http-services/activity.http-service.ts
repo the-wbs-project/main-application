@@ -51,7 +51,7 @@ export class ActivityHttpService {
       const activity: Activity = await ctx.req.json();
       const data = ctx.get('data');
 
-      activity.userId = ctx.get('state').user.id;
+      activity.userId = ctx.get('user').id;
 
       await data.activities.putAsync(activity);
 

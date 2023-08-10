@@ -27,8 +27,8 @@ export const AUTH_CONFIG: AuthConfig = {
 };
 
 export const DATADOG_CONFIG: LogsInitConfiguration = {
-  clientToken: 'pub3cd763417a98f3cb71ee3ab8d19ddecb',
-  site: 'datadoghq.com',
+  clientToken: 'pubd0e9b67a9b76d45b8156a8ce603286d7',
+  site: 'us5.datadoghq.com',
   service: 'pm-empower-site',
   env: environment.datadog_env,
   forwardErrorsToLogs: true,

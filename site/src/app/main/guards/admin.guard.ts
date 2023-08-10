@@ -8,6 +8,6 @@ export const adminGuard = () => {
   const store = inject(Store);
 
   return store
-    .selectOnce(MembershipState.rolesIds)
+    .selectOnce(MembershipState.roles)
     .pipe(map((roles) => roles?.includes(ROLES.ADMIN) ?? false));
 };

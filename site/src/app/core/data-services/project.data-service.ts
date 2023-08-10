@@ -9,10 +9,6 @@ export class ProjectDataService {
     return this.http.get<Project[]>(`api/projects/${organization}/all`);
   }
 
-  getAssignedAsync(organization: string): Observable<Project[]> {
-    return this.http.get<Project[]>(`api/projects/${organization}/assigned`);
-  }
-
   getAsync(organization: string, projectId: string): Observable<Project> {
     return this.http.get<Project>(
       `api/projects/${organization}/byId/${projectId}`

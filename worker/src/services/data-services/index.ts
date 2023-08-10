@@ -1,6 +1,5 @@
 import { Context } from '../../config';
 import { ActivityDataService } from './activity.data-service';
-import { AuthStateDataService } from './auth-state.data-service';
 import { AuthDataService } from './auth.data-service';
 import { ChecklistDataService } from './checklist.data-service';
 import { DiscussionDataService } from './discussion.data-service';
@@ -15,7 +14,6 @@ import { UserActivityDataService } from './user-activity.data-service';
 export class DataServiceFactory {
   readonly activities: ActivityDataService;
   readonly auth: AuthDataService;
-  readonly authState: AuthStateDataService;
   readonly checklist: ChecklistDataService;
   readonly discussions: DiscussionDataService;
   readonly invites: InviteDataService;
@@ -29,7 +27,6 @@ export class DataServiceFactory {
   constructor(ctx: Context) {
     this.activities = new ActivityDataService(ctx);
     this.auth = new AuthDataService(ctx);
-    this.authState = new AuthStateDataService(ctx);
     this.checklist = new ChecklistDataService(ctx);
     this.discussions = new DiscussionDataService(ctx);
     this.invites = new InviteDataService(ctx);

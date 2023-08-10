@@ -19,10 +19,10 @@ export class UserTransformer {
     };
   }
 
-  static toLiteModel(payload: Record<string, any>): UserLite;
-  static toLiteModel(payload: Record<string, any>[]): UserLite[];
-  static toLiteModel(payload: Record<string, any> | Record<string, any>[]): UserLite | UserLite[] {
-    if (Array.isArray(payload)) return payload.map((m) => UserTransformer.toLiteModel(m));
+  static toUserLite(payload: Record<string, any>): UserLite;
+  static toUserLite(payload: Record<string, any>[]): UserLite[];
+  static toUserLite(payload: Record<string, any> | Record<string, any>[]): UserLite | UserLite[] {
+    if (Array.isArray(payload)) return payload.map((m) => UserTransformer.toUserLite(m));
 
     return {
       email: payload.email,

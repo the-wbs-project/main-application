@@ -3,7 +3,7 @@
     <fa-icon [icon]="faPlus" size="xs" />
   </a>-->
   <div
-    *ngIf="status$ | async; let projectStatus"
+    *ngIf="status(); let projectStatus"
     role="group"
     class="btn-group"
   >
@@ -20,7 +20,7 @@
 </div>
 <div
   *ngIf="
-    projects() | projectStatusFilter : (status$ | async);
+    projects() | projectTypeFilter : (type()) | projectStatusFilter : (status());
     let projects
   "
   class="wd-100p mg-t-20"
@@ -30,7 +30,7 @@
       <div *ngIf="projects.length === 0" class="col-12">
         <div class="card">
           <div
-            *ngIf="loading$ | async; else noProjects"
+            *ngIf="loading(); else noProjects"
             class="card-body display-flex flex-flow-col flex-align-center justify-content-center"
             appFillElement
             [paddingBottom]="30"
@@ -52,10 +52,10 @@
         </div>
       </div>
       <div
-        *ngFor="let project of projects | projectSort : 'modified'"
+        *ngFor="let project of projects"
         class="col-lg-3 col-md-4 col-sm-6"
       >
-        <a [routerLink]="['/projects', 'view', project.id]">
+        <a [routerLink]="['/', owner(), 'projects', 'view', project.id]">
           <div class="card">
             <div class="card-body">
               <div style="min-height: 100px">

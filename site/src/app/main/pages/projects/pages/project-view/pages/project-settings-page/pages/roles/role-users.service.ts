@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { ROLES_TYPE, Role, UserLite } from '@wbs/core/models';
+import { Member, ROLES_TYPE } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
 import { RoleUsersViewModel } from './view-models/role-users.view-model';
 
@@ -8,10 +8,9 @@ export class RoleUsersService {
   get(
     roleId: ROLES_TYPE,
     userIds: string[] | undefined,
-    members: UserLite[],
-    memberRoles: Record<string, Role[]>
+    members: Member[]
   ): RoleUsersViewModel {
-    const sorted = members.sort((a, b) => sorter(a.name, b.name));
+    const sorted = members?.sort((a, b) => sorter(a.name, b.name)) ?? [];
     const vm: RoleUsersViewModel = {
       assigned: [],
       unassigned: [],
@@ -26,7 +25,7 @@ export class RoleUsersService {
     for (const member of members) {
       if (userIds.indexOf(member.id) > -1) {
         vm.assigned.push(member);
-      } else if (memberRoles[member.id]?.find((x) => x.id === roleId)) {
+      } else if (member.roles.includes(roleId)) {
         vm.unassigned.push(member);
       }
     }

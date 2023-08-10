@@ -4,5 +4,6 @@ export interface Organization {
   name: string;
   metadata: {
     mainProjectType: 'single' | 'multiple';
+    logoId?: string;
   };
 }

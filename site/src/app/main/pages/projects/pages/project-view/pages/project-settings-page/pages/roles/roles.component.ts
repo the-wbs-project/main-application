@@ -26,9 +26,6 @@ export class ProjectSettingsRolesComponent {
   private readonly service = inject(RoleUsersService);
   private readonly store = inject(Store);
   private readonly members = toSignal(this.store.select(MembershipState.users));
-  private readonly memberRoles = toSignal(
-    this.store.select(MembershipState.userRoles)
-  );
   private readonly approverIds = toSignal(
     this.store.select(ProjectState.approvers)
   );
@@ -37,28 +34,13 @@ export class ProjectSettingsRolesComponent {
 
   readonly roles = ROLES_CONST;
   readonly approvers = computed(() =>
-    this.service.get(
-      ROLES.APPROVER,
-      this.approverIds(),
-      this.members()!,
-      this.memberRoles()!
-    )
+    this.service.get(ROLES.APPROVER, this.approverIds(), this.members()!)
   );
   readonly pms = computed(() =>
-    this.service.get(
-      ROLES.PM,
-      this.pmIds(),
-      this.members()!,
-      this.memberRoles()!
-    )
+    this.service.get(ROLES.PM, this.pmIds(), this.members()!)
   );
   readonly smes = computed(() =>
-    this.service.get(
-      ROLES.SME,
-      this.smeIds(),
-      this.members()!,
-      this.memberRoles()!
-    )
+    this.service.get(ROLES.SME, this.smeIds(), this.members()!)
   );
   readonly faUserPlus = faUserPlus;
   readonly faUserMinus = faUserMinus;

@@ -1,29 +1,31 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { Member, Organization, Project } from '@wbs/core/models';
+import { sorter } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { Organization, Role, UserLite } from '@wbs/core/models';
-import { sorter } from '@wbs/core/services';
 import {
   ChangeOrganization,
-  LoadAllMembershipRoles,
   LoadOrganizations,
-  LoadProjects,
+  ProjectUpdated,
 } from '../actions';
 
 interface StateModel {
   list?: Organization[];
+  loading: boolean;
   organization?: Organization;
-  roles?: Role[];
-  users?: UserLite[];
-  userRoles?: Record<string, Role[]>;
+  projects?: Project[];
+  roles?: string[];
+  users?: Member[];
 }
 
 @Injectable()
 @State<StateModel>({
   name: 'membership',
-  defaults: {},
+  defaults: {
+    loading: false,
+  },
 })
 export class MembershipState {
   constructor(private readonly data: DataServiceFactory) {}
@@ -39,32 +41,34 @@ export class MembershipState {
   }
 
   @Selector()
+  static loading(state: StateModel): boolean {
+    return state.loading;
+  }
+
+  @Selector()
   static organization(state: StateModel): Organization | undefined {
     return state.organization;
   }
 
   @Selector()
-  static roles(state: StateModel): Role[] | undefined {
+  static projects(state: StateModel): Project[] | undefined {
+    return state.projects;
+  }
+
+  @Selector()
+  static roles(state: StateModel): string[] | undefined {
     return state.roles;
   }
 
   @Selector()
-  static rolesIds(state: StateModel): string[] | undefined {
-    return state.roles?.map((x) => x.id);
-  }
-
-  @Selector()
-  static users(state: StateModel): UserLite[] | undefined {
+  static users(state: StateModel): Member[] | undefined {
     return state.users;
-  }
-
-  @Selector()
-  static userRoles(state: StateModel): Record<string, Role[]> | undefined {
-    return state.userRoles;
   }
 
   @Action(LoadOrganizations)
   loadOrganization(ctx: StateContext<StateModel>): Observable<any> {
+    ctx.patchState({ loading: true });
+
     return this.data.memberships.getMembershipsAsync().pipe(
       map((list) => list.sort((a, b) => sorter(a.name, b.name))),
       tap((list) => ctx.patchState({ list })),
@@ -77,47 +81,39 @@ export class MembershipState {
     ctx: StateContext<StateModel>,
     { organization }: ChangeOrganization
   ): Observable<void> {
-    ctx.patchState({ organization });
+    ctx.patchState({ organization, loading: true });
 
     return forkJoin({
       roles: this.data.memberships.getMembershipRolesAsync(organization.id),
       users: this.data.memberships.getMembershipUsersAsync(organization.id),
+      projects: this.data.projects.getAllAsync(organization.name),
     }).pipe(
-      map(({ roles, users }) => {
+      map(({ projects, roles, users }) => {
         ctx.patchState({
           roles,
+          projects: projects.sort((a, b) =>
+            sorter(a.lastModified, b.lastModified, 'desc')
+          ),
           users: users.sort((a, b) => sorter(a.name, b.name)),
         });
       }),
-      tap(() => ctx.dispatch(new LoadProjects(organization.id)))
+      tap(() => ctx.patchState({ loading: false }))
     );
   }
 
-  @Action(LoadAllMembershipRoles)
-  LoadAllMembershipRoles(ctx: StateContext<StateModel>): Observable<void> {
+  @Action(ProjectUpdated)
+  projectUpdated(
+    ctx: StateContext<StateModel>,
+    { project }: ProjectUpdated
+  ): void {
     const state = ctx.getState();
-    const org = state.organization?.id!;
+    const projects = [...(state.projects ?? [])];
+    const index = projects.findIndex((x) => x.id === project.id);
 
-    const calls = state.users?.map((x) => this.getRolesAsync(org, x.id)) ?? [];
+    if (index > -1) projects.splice(index, 1);
 
-    return forkJoin(calls).pipe(
-      map((userRoles) => {
-        const roles = userRoles.reduce(
-          (acc, [userId, roles]) => ({ ...acc, [userId]: roles }),
-          {} as Record<string, Role[]>
-        );
+    projects.splice(0, 0, project);
 
-        ctx.patchState({ userRoles: roles });
-      })
-    );
-  }
-
-  private getRolesAsync(
-    organization: string,
-    userId: string
-  ): Observable<[string, Role[]]> {
-    return this.data.memberships
-      .getMembershipRolesForUserAsync(organization, userId)
-      .pipe(map((roles) => [userId, roles]));
+    ctx.patchState({ projects });
   }
 }

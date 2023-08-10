@@ -1,24 +1,21 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
-import { ProjectService, Resources, TitleService } from '@wbs/core/services';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
-import { ProjectListState } from '@wbs/main/states';
-import { BehaviorSubject, map } from 'rxjs';
-import { ProjectSortPipe } from './pipes/project-sort.pipe';
+import { MembershipState } from '@wbs/main/states';
+import { map } from 'rxjs';
+import { ProjectTypeFilterPipe } from './pipes/project-type-filter.pipe';
 import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './project-list.component.html',
@@ -30,22 +27,26 @@ import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
     EditedDateTextPipe,
     FillElementDirective,
     LoaderModule,
-    ProjectSortPipe,
     ProjectStatusFilterPipe,
     ProjectStatusPipe,
+    ProjectTypeFilterPipe,
     RouterModule,
     TranslateModule,
   ],
 })
-export class ProjectListComponent implements OnInit {
-  private readonly titlePrefix: string;
-
+export class ProjectListComponent {
   readonly faPlus = faPlus;
-  readonly status$ = this.route.params.pipe(
-    map((p) => <PROJECT_VIEW_STATI_TYPE>p['status'])
+  readonly owner = toSignal(
+    this.route.params.pipe(map((p) => <string>p['owner']))
   );
-  readonly loading$ = new BehaviorSubject<boolean>(false); // this.store.select(OrganizationState.projects);
-  readonly projects = toSignal(this.store.select(ProjectListState.all));
+  readonly status = toSignal(
+    this.route.params.pipe(map((p) => <string>p['status']))
+  );
+  readonly type = toSignal(
+    this.route.params.pipe(map((p) => <string>p['type']))
+  );
+  readonly loading = toSignal(this.store.select(MembershipState.loading));
+  readonly projects = toSignal(this.store.select(MembershipState.projects));
   readonly stati: PROJECT_VIEW_STATI_TYPE[] = [
     PROJECT_VIEW_STATI.ACTIVE,
     PROJECT_VIEW_STATI.PLANNING,
@@ -55,24 +56,7 @@ export class ProjectListComponent implements OnInit {
   ];
 
   constructor(
-    resources: Resources,
-    private readonly title: TitleService,
-    private readonly projectService: ProjectService,
     private readonly store: Store,
     private readonly route: ActivatedRoute
-  ) {
-    this.titlePrefix = resources.get('Pages.Projects');
-
-    title.setTitle(this.titlePrefix, false);
-  }
-
-  ngOnInit(): void {
-    this.status$
-      .pipe(
-        map((status) => this.projectService.getStatus(status)),
-        map((status) => `${this.titlePrefix} - ${status}`),
-        untilDestroyed(this)
-      )
-      .subscribe((text) => this.title.setTitle(text, false));
-  }
+  ) {}
 }
