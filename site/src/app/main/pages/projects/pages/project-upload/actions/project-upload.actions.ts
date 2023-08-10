@@ -3,7 +3,7 @@ import { PeopleListItem, PhaseListItem } from '../models';
 
 export class SetProject {
   static readonly type = '[Project Upload] Set Project';
-  constructor(readonly projectId: string) {}
+  constructor(readonly owner: string, readonly projectId: string) {}
 }
 
 export class SetPageTitle {

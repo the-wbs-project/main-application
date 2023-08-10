@@ -8,6 +8,10 @@ import { ProjectState, ProjectViewState } from '../states';
 export class ProjectNavigationService {
   constructor(private readonly store: Store) {}
 
+  private get owner(): string {
+    return this.store.selectSnapshot(ProjectState.current)!.owner;
+  }
+
   private get projectId(): string {
     return this.store.selectSnapshot(ProjectState.current)!.id;
   }
@@ -18,7 +22,7 @@ export class ProjectNavigationService {
 
   getProjectNavAction(): any {
     return new Navigate([
-      '/projects',
+      ...this.urlPrefix(),
       'view',
       this.projectId,
       this.nodeView == 'phase' ? 'phases' : 'disciplines',
@@ -29,22 +33,22 @@ export class ProjectNavigationService {
     this.store.dispatch(
       new Navigate(
         page === PROJECT_PAGE_VIEW.UPLOAD
-          ? ['/projects', page, projectId]
-          : ['/projects', 'view', projectId, page]
+          ? [...this.urlPrefix(), page, projectId]
+          : [...this.urlPrefix(), 'view', projectId, page]
       )
     );
   }
 
   toProjectPage(page: string): void {
     this.store.dispatch(
-      new Navigate(['/projects', 'view', this.projectId, page])
+      new Navigate([...this.urlPrefix(), 'view', this.projectId, page])
     );
   }
 
   toTask(taskId: string, page = TASK_PAGE_VIEW.ABOUT): void {
     this.store.dispatch(
       new Navigate([
-        'projects',
+        ...this.urlPrefix(),
         'view',
         this.projectId,
         this.nodeView == 'phase' ? 'phases' : 'disciplines',
@@ -53,5 +57,9 @@ export class ProjectNavigationService {
         page,
       ])
     );
+  }
+
+  private urlPrefix(): string[] {
+    return ['/', this.owner, 'projects'];
   }
 }

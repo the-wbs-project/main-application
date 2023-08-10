@@ -1,4 +1,4 @@
-import { Routes } from '@angular/router';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { headerGuard, redirectGuard, titleGuard } from './project-list.guards';
 
@@ -19,7 +19,7 @@ export const routes: Routes = [
       ),
     canActivate: [
       titleGuard,
-      () =>
+      (route: ActivatedRouteSnapshot) =>
         headerGuard({
           title: 'General.Projects',
           titleIsResource: true,
@@ -27,7 +27,7 @@ export const routes: Routes = [
             {
               text: 'Projects.CreateProject',
               icon: faPlus,
-              route: ['/', 'projects', 'create'],
+              route: ['/', route.params['owner'], 'projects', 'create'],
               theme: 'primary',
               type: 'link',
             },

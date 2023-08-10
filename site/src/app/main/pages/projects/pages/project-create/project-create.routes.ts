@@ -4,11 +4,15 @@ import { NgxsModule, Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
 import { ProjectCreateState } from './states';
 import { StartWizard } from './actions';
+import { MembershipState } from '@wbs/main/states';
 
 export const startCreationGuard = (route: ActivatedRouteSnapshot) => {
-  return inject(Store)
-    .dispatch(new StartWizard(route.params['organization']))
-    .pipe(map(() => true));
+  const store = inject(Store);
+  const owner =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
+
+  return store.dispatch(new StartWizard(owner)).pipe(map(() => true));
 };
 
 export const routes: Routes = [
@@ -17,7 +21,7 @@ export const routes: Routes = [
     canActivate: [startCreationGuard],
     loadComponent: () =>
       import('./project-create.component').then(
-        ({ ProjectCreateComponent }) => ProjectCreateComponent
+        (x) => x.ProjectCreateComponent
       ),
     providers: [
       importProvidersFrom(NgxsModule.forFeature([ProjectCreateState])),

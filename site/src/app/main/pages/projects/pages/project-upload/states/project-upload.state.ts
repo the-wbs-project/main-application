@@ -20,7 +20,6 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
-import { MembershipState } from '@wbs/main/states';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -59,10 +58,6 @@ export class ProjectUploadState {
     private readonly store: Store,
     private readonly transformer: WbsTransformers
   ) {}
-
-  private get organization(): string {
-    return this.store.selectSnapshot(MembershipState.id)!;
-  }
 
   @Selector()
   static current(state: StateModel): Project | undefined {
@@ -136,9 +131,9 @@ export class ProjectUploadState {
   @Action(SetProject)
   setProject(
     ctx: StateContext<StateModel>,
-    { projectId }: SetProject
+    { owner, projectId }: SetProject
   ): void | Observable<void> {
-    return this.data.projects.getAsync(this.organization, projectId).pipe(
+    return this.data.projects.getAsync(owner, projectId).pipe(
       map((project) => {
         ctx.patchState({ project });
       })
@@ -324,15 +319,11 @@ export class ProjectUploadState {
     for (const node of state.uploadResults?.results ?? []) {
       nodes.set(node.levelText, node);
     }
+    const proj = state.project!;
+
     return forkJoin({
-      project: this.data.projects.getAsync(
-        this.organization,
-        state.project!.id
-      ),
-      existingNodes: this.data.projectNodes.getAllAsync(
-        this.organization,
-        state.project!.id
-      ),
+      project: this.data.projects.getAsync(proj.owner, proj.id),
+      existingNodes: this.data.projectNodes.getAllAsync(proj.owner, proj.id),
     }).pipe(
       switchMap((data) => {
         const results = this.transformer.nodes.phase.projectImporter.run(
@@ -375,7 +366,7 @@ export class ProjectUploadState {
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
         this.data.projectNodes.batchAsync(
-          this.organization,
+          project.owner,
           project.id,
           results.upserts,
           results.removeIds
