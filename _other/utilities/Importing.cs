@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Wbs.Utilities.DataServices;
 using Wbs.Utilities.Services.Importers;
@@ -20,9 +21,12 @@ namespace Wbs.Utilities
         private readonly ExcelFileImporter xlsxImporter;
         private readonly Storage storage;
 
-        public Importing(TelemetryConfiguration telemetryConfiguration, ExcelFileImporter xlsxImporter, ProjectFileImporter mppImporter, Storage storage)
+        public Importing(IConfiguration config, ExcelFileImporter xlsxImporter, ProjectFileImporter mppImporter, Storage storage)
         {
-            telemetry = new TelemetryClient(telemetryConfiguration);
+            telemetry = new TelemetryClient(new TelemetryConfiguration
+            {
+                ConnectionString = config["APPLICATIONINSIGHTS_CONNECTION_STRING"]
+            });
             this.mppImporter = mppImporter;
             this.xlsxImporter = xlsxImporter;
             this.storage = storage;
