@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, WbsTransformers } from '@wbs/core/services';
@@ -55,7 +55,6 @@ export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messenger: Messages,
-    private readonly store: Store,
     private readonly transformer: WbsTransformers
   ) {}
 
@@ -399,6 +398,8 @@ export class ProjectUploadState {
   }
 
   private urlPrefix(ctx: StateContext<StateModel>): string[] {
-    return ['projects', 'upload', ctx.getState().project!.id];
+    const p = ctx.getState().project!;
+
+    return ['/', p.owner, 'projects', 'upload', p.id];
   }
 }
