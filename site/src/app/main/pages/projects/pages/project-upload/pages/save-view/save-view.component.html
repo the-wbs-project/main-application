@@ -7,7 +7,17 @@
     <fa-icon [icon]="faCheck" size="5x" />
     <h3 class="pd-t-20">Done!</h3>
     <br />
-    <a class="btn btn-primary mg-t-20" [routerLink]="'../../view'">
+    <a
+      class="btn btn-primary mg-t-20"
+      [routerLink]="[
+        '/',
+        current()!.owner,
+        'projects',
+        'view',
+        current()!.id,
+        'about'
+      ]"
+    >
       {{ "General.Continue" | translate }}
     </a>
   </ng-template>

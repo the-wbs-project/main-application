@@ -9,7 +9,7 @@
 	</Target>
 	<ItemGroup>
 		<PackageReference Include="EPPlus" Version="4.5.3.3" />
-		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.20.0" />
+		<PackageReference Include="Microsoft.ApplicationInsights" Version="2.14.0" />
 		<PackageReference Include="Microsoft.Azure.Cosmos" Version="3.31.0" />
 		<PackageReference Include="Microsoft.Azure.Functions.Extensions" Version="1.1.0" />
 		<PackageReference Include="Microsoft.Azure.WebJobs.Extensions.CosmosDB" Version="3.0.10" />

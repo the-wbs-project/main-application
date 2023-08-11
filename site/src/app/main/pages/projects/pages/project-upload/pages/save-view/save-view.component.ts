@@ -10,6 +10,7 @@ import { Store } from '@ngxs/store';
 import { BehaviorSubject } from 'rxjs';
 import { PrepUploadToSave } from '../../actions';
 import { ProjectUploadState } from '../../states';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @UntilDestroy()
 @Component({
@@ -19,6 +20,7 @@ import { ProjectUploadState } from '../../states';
   imports: [CommonModule, FontAwesomeModule, RouterModule, TranslateModule],
 })
 export class SaveViewComponent implements OnInit {
+  readonly current = toSignal(this.store.select(ProjectUploadState.current));
   readonly saving$ = new BehaviorSubject<boolean>(true);
   readonly faCheck = faCheck;
   readonly faSpinner = faSpinner;
