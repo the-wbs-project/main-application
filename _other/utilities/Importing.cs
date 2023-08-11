@@ -58,7 +58,7 @@ namespace Wbs.Utilities
             {
                 log.LogError(ex.ToString());
                 telemetry.TrackException(ex);
-                return new StatusCodeResult(500);
+                return new OkObjectResult(ex.ToString());
             }
         }
 
