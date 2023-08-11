@@ -1,22 +1,23 @@
 <div class="w-100 text-center">
-  <ng-template [ngIf]="loading$ | async">
+  <ng-template [ngIf]="loading()">
     <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true">
     </fa-duotone-icon>
-    <h3 *ngIf="isXlsx$ | async" class="pd-t-20">Loading Excel File...</h3>
-    <h3 *ngIf="isMpp$ | async" class="pd-t-20">Loading MS Project File...</h3>
+    <h3 *ngIf="isXlsx()" class="pd-t-20">Loading Excel File...</h3>
+    <h3 *ngIf="isMpp()" class="pd-t-20">Loading MS Project File...</h3>
   </ng-template>
 
-  <ng-template [ngIf]="!(loading$ | async)">
+  <ng-template [ngIf]="!loading()">
     <fa-icon [icon]="faCheck" size="5x"></fa-icon>
-    <h3 *ngIf="isXlsx$ | async" class="pd-t-20">Loaded Excel File</h3>
-    <h3 *ngIf="isMpp$ | async" class="pd-t-20">Loaded MS Project File</h3>
-    <h5 *ngIf="errors$ | async" class="pd-t-20">
+    <h3 *ngIf="isXlsx()" class="pd-t-20">Loaded Excel File</h3>
+    <h3 *ngIf="isMpp()" class="pd-t-20">Loaded MS Project File</h3>
+    <h5 *ngIf="(errors() ?? []).length > 0" class="pd-t-20">
+      {{ (errors() ?? []).length }}
       Unexpected errors occured uploading the file. More explanations of these
       errors at a later time
     </h5>
-    <ng-template [ngIf]="!(errors$ | async)">
+    <ng-template [ngIf]="(errors() ?? []).length === 0">
       <ul
-        *ngIf="stats$ | async; let stats"
+        *ngIf="stats(); let stats"
         class="list-group pd-t-20 wd-300 display-ib"
       >
         <li

@@ -1,15 +1,18 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+} from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Select, Store } from '@ngxs/store';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { LoadProjectFile } from '../../actions';
-import { ResultStats } from '../../models';
 import { ProjectUploadState } from '../../states';
 
 @Component({
@@ -19,22 +22,18 @@ import { ProjectUploadState } from '../../states';
   imports: [CommonModule, FontAwesomeModule, RouterModule, TranslateModule],
 })
 export class ResultsViewComponent implements OnInit {
-  @Select(ProjectUploadState.errors) errors$!: Observable<string[] | undefined>;
-  @Select(ProjectUploadState.loadingFile) loading$!: Observable<boolean>;
-  @Select(ProjectUploadState.stats) stats$!: Observable<
-    ResultStats | undefined
-  >;
-  readonly isMpp$: Observable<boolean>;
-  readonly isXlsx$: Observable<boolean>;
+  readonly errors = toSignal(this.store.select(ProjectUploadState.errors));
+  readonly loading = toSignal(
+    this.store.select(ProjectUploadState.loadingFile)
+  );
+  readonly stats = toSignal(this.store.select(ProjectUploadState.stats));
+  readonly fileType = toSignal(this.store.select(ProjectUploadState.fileType));
+  readonly isMpp = computed(() => this.fileType() === 'project');
+  readonly isXlsx = computed(() => this.fileType() === 'excel');
   readonly faCheck = faCheck;
   readonly faSpinner = faSpinner;
 
-  constructor(private readonly store: Store) {
-    const obs = this.store.select(ProjectUploadState.fileType);
-
-    this.isMpp$ = obs.pipe(map((ext) => ext === 'project'));
-    this.isXlsx$ = obs.pipe(map((ext) => ext === 'excel'));
-  }
+  constructor(private readonly store: Store) {}
 
   ngOnInit(): void {
     this.store.dispatch(new LoadProjectFile());

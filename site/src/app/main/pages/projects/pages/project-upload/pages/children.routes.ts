@@ -46,7 +46,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./start-view/start-view.component').then(
-        ({ StartViewComponent }) => StartViewComponent
+        (x) => x.StartViewComponent
       ),
   },
   {

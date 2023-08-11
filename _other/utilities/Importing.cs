@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.WebJobs;
 using Microsoft.Azure.WebJobs.Extensions.Http;
-using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using Wbs.Utilities.DataServices;
 using Wbs.Utilities.Services.Importers;
@@ -70,9 +69,9 @@ namespace Wbs.Utilities
                 {
                     await req.Body.CopyToAsync(stream);
 
-                    var culture = req.Headers["app-culture"];
+                    var culture = "en-US"; // req.Headers["app-culture"];
 
-                    var results = xlsxImporter.RunAsync(stream, culture);
+                    var results = await xlsxImporter.RunAsync(stream, culture);
 
                     return new JsonResult(results);
                 }

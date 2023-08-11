@@ -25,8 +25,7 @@ INVITE_TEMPLATE_ID = "invite-template-v1"
 KV_BYPASS = "LISTS"
 IMAGES_ACCOUNT="004dc1af737b22a8aa83b3550fa9b9d3"
 
-
-AZURE_ENDPOINT = "http://localhost:7071"
+AZURE_ENDPOINT = "https://pm-empower-qa.azurewebsites.net"
 COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
