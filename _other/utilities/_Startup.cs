@@ -8,7 +8,6 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Linq;
-using Wbs.Utilities.Services;
 using Wbs.Utilities.Services.Importers;
 using Wbs.Utilities.Services.Exporters;
 
@@ -40,7 +39,7 @@ namespace Wbs.Utilities
             config = new AppConfig(Configuration);
             cosmos = new CosmosClient(config.cosmos.connectionString);
 
-            ConfigureTelemetry(builder);
+            //ConfigureTelemetry(builder);
 
             builder.Services.AddLogging();
             //builder.Services.AddHttpClient();
