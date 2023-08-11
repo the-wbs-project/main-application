@@ -21,12 +21,9 @@ namespace Wbs.Utilities
         private readonly ExcelFileImporter xlsxImporter;
         private readonly Storage storage;
 
-        public Importing(IConfiguration config, ExcelFileImporter xlsxImporter, ProjectFileImporter mppImporter, Storage storage)
+        public Importing(TelemetryConfiguration config, ExcelFileImporter xlsxImporter, ProjectFileImporter mppImporter, Storage storage)
         {
-            telemetry = new TelemetryClient(new TelemetryConfiguration
-            {
-                ConnectionString = config["APPLICATIONINSIGHTS_CONNECTION_STRING"]
-            });
+            telemetry = new TelemetryClient(config);
             this.mppImporter = mppImporter;
             this.xlsxImporter = xlsxImporter;
             this.storage = storage;
@@ -51,6 +48,8 @@ namespace Wbs.Utilities
                     var file = stream.ToArray();
                     var results = mppImporter.Run(file);
 
+                    log.LogWarning(Newtonsoft.Json.JsonConvert.SerializeObject(results));
+
                     return new JsonResult(results);
                 }
             }
@@ -58,7 +57,7 @@ namespace Wbs.Utilities
             {
                 log.LogError(ex.ToString());
                 telemetry.TrackException(ex);
-                return new OkObjectResult(ex.ToString());
+                return new StatusCodeResult(500);
             }
         }
 
