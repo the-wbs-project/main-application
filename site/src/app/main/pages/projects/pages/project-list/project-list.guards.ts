@@ -1,20 +1,24 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { HeaderInformation } from '@wbs/core/models';
 import { ProjectService, Resources, TitleService } from '@wbs/core/services';
 import { SetHeaderInfo } from '@wbs/main/actions';
+import { MembershipState } from '@wbs/main/states';
 import { map } from 'rxjs/operators';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const owner =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
 
   return store
     .dispatch(
       new Navigate([
         '/',
-        route.params['owner'],
+        owner,
         'projects',
         'list',
         route.params['type'],
@@ -42,8 +46,27 @@ export const titleGuard = (route: ActivatedRouteSnapshot) => {
   return true;
 };
 
-export const headerGuard = (info: HeaderInformation) => {
+export const headerGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const owner =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
 
-  return store.dispatch(new SetHeaderInfo(info)).pipe(map(() => true));
+  return store
+    .dispatch(
+      new SetHeaderInfo({
+        title: 'General.Projects',
+        titleIsResource: true,
+        rightButtons: [
+          {
+            text: 'Projects.CreateProject',
+            icon: faPlus,
+            route: ['/', owner, 'projects', 'create'],
+            theme: 'primary',
+            type: 'link',
+          },
+        ],
+      })
+    )
+    .pipe(map(() => true));
 };

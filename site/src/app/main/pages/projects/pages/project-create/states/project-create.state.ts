@@ -140,14 +140,14 @@ export class ProjectCreateState {
       ctx.patchState({
         page:
           state.nodeView === PROJECT_NODE_VIEW.PHASE
-            ? PAGES.NODE_VIEW
+            ? PAGES.CATEGORY //? PAGES.NODE_VIEW
             : PAGES.DESCIPLINES,
       });
     } else if (current === PAGES.DESCIPLINES) {
       ctx.patchState({
         page:
           state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE
-            ? PAGES.NODE_VIEW
+            ? PAGES.CATEGORY //  ? PAGES.NODE_VIEW
             : PAGES.PHASES,
       });
     }
@@ -172,8 +172,17 @@ export class ProjectCreateState {
   @Action(CategoryChosen)
   categoryChosen(ctx: StateContext<StateModel>, action: CategoryChosen): void {
     ctx.patchState({
-      page: PAGES.LIB_OR_SCRATCH,
+      page: PAGES.PHASES,
+      //
+      //  For now we are going to skip the library page and node view page and go straight to phase first
+      //
+      //page: PAGES.LIB_OR_SCRATCH,
       category: action.category,
+      //
+      //  automatically set these values since it isn't a page we are showing right now
+      //
+      useLibrary: false,
+      nodeView: PROJECT_NODE_VIEW.PHASE,
     });
   }
 
@@ -333,7 +342,7 @@ export class ProjectCreateState {
         });
       }
     }
-    const url = ['/projects', 'view', project.id, 'about'];
+    const url = ['/', project.owner, 'projects', 'view', project.id, 'about'];
 
     return this.data.projects.putAsync(project).pipe(
       switchMap(() =>
