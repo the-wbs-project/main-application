@@ -31,7 +31,7 @@
     "typescript": "^4.9.5"
   },
   "dependencies": {
-    "@cfworker/cosmos": "^1.13.4",
+    "@cfworker/cosmos": "^1.13.5",
     "@cfworker/jwt": "^4.0.4",
     "hono": "^3.3.2"
   }
