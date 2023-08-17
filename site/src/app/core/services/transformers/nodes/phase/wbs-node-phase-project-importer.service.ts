@@ -70,7 +70,7 @@ export class WbsNodePhaseProjectImporter {
         lastModified: now,
       };
 
-      for (const person of info.resources) {
+      for (const person of info.resources ?? []) {
         for (const id of people.get(person.toLowerCase()) ?? []) {
           if (node.disciplineIds!.indexOf(id) === -1)
             node.disciplineIds!.push(id);
@@ -109,7 +109,7 @@ export class WbsNodePhaseProjectImporter {
         disciplineIds: this.getDisciplinesFromChildren(children),
       };
 
-      for (const person of info.resources) {
+      for (const person of info.resources ?? []) {
         if (person) {
           for (const id of people.get(person.toLowerCase()) ?? []) {
             if (node.disciplineIds!.indexOf(id) === -1)

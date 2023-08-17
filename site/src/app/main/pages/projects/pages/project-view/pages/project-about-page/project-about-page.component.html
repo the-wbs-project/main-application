@@ -6,7 +6,7 @@
         {{ "General.Category" | translate }} :
       </span>
       <span>
-        {{ project.category | categoryLabel }}
+        {{ project.category | categoryLabel | translate }}
       </span>
     </p>
     <p class="text-muted ms-md-4 ms-0 mb-2">
@@ -25,7 +25,7 @@
       <span class="display-ib pd-l-3">
         <label class="me-3" *ngFor="let disc of project.categories.discipline">
           <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
-          {{ disc | categoryLabel }}
+          {{ disc | categoryLabel | translate }}
         </label>
       </span>
     </p>

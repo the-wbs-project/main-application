@@ -2,6 +2,7 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { adminGuard } from '@wbs/main/guards';
+import { DialogService } from '@wbs/main/services';
 import { SettingsState, UserAdminState } from './states';
 
 export const routes: Routes = [
@@ -17,6 +18,7 @@ export const routes: Routes = [
       importProvidersFrom(
         NgxsModule.forFeature([SettingsState, UserAdminState])
       ),
+      DialogService,
     ],
   },
 ];

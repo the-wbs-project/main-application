@@ -58,7 +58,7 @@
       <span class="display-ib">
         <label class="me-3" *ngFor="let disc of task.disciplines">
           <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
-          {{ disc | categoryLabel }}
+          {{ disc | categoryLabel | translate }}
         </label>
       </span>
     </div>

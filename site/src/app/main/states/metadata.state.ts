@@ -3,7 +3,6 @@ import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { forkJoin, map, Observable } from 'rxjs';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActionDefinition, ListItem, LISTS } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
 import { VerifyTimelineData } from '../actions';
 
 interface StateModel {
@@ -28,10 +27,7 @@ interface StateModel {
   },
 })
 export class MetadataState implements NgxsOnInit {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly resources: Resources
-  ) {}
+  constructor(private readonly data: DataServiceFactory) {}
 
   @Selector()
   static categoryIcons(state: StateModel): Map<string, string> {
@@ -41,11 +37,6 @@ export class MetadataState implements NgxsOnInit {
   @Selector()
   static categoryList(state: StateModel): Map<string, ListItem[]> {
     return state.categoryList;
-  }
-
-  @Selector()
-  static categoryMap(state: StateModel): Map<string, Map<string, ListItem>> {
-    return state.categoryMap;
   }
 
   @Selector()
@@ -84,13 +75,6 @@ export class MetadataState implements NgxsOnInit {
           const state = ctx.getState();
           const categoryList = state.categoryList;
           const categoryMap = state.categoryMap;
-
-          for (const cat of [...projectCats, ...discipline, ...phase]) {
-            cat.label = this.resources.get(cat.label);
-
-            if (cat.description)
-              cat.description = this.resources.get(cat.description);
-          }
 
           categoryList.set(LISTS.DISCIPLINE, discipline);
           categoryList.set(LISTS.PHASE, phase);

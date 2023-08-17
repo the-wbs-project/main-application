@@ -1,7 +1,7 @@
 <div class="container">
   <div class="row">
     <div *ngFor="let item of items" class="col-4">
-      <a [routerLink]="item.path">
+      <a [routerLink]="['/', org()].concat(item.path)">
         <div class="card bg-gray-200 bd-0">
           <div class="card-body link-block">
             <div class="link-icon">

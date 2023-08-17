@@ -25,11 +25,11 @@
       </div>
       <ng-template [ngIf]="!cat.isEditable">
         <div style="font-size: 12px">
-          {{ cat.idOrCat | categoryLabel }}
+          {{ cat.idOrCat | categoryLabel | translate }}
         </div>
-        <div class="flex-grow-1 text-end tx-10">
+        <!--<div class="flex-grow-1 text-end tx-10">
           {{ cat.idOrCat | categoryLabelList }}
-        </div>
+        </div>-->
       </ng-template>
       <ng-template [ngIf]="cat.isEditable">
         <div style="font-size: 12px; padding-right: 30px">
@@ -48,7 +48,7 @@
           >
             <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
               <span class="k-icon k-i-caret-alt-down"></span>
-              {{ dataItems | join: "label" }}
+              {{ dataItems | join : "label" }}
             </ng-template>
           </kendo-multiselect>
         </div>
