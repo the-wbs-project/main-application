@@ -25,7 +25,9 @@ import { RoleUsersService } from './role-users.service';
 export class ProjectSettingsRolesComponent {
   private readonly service = inject(RoleUsersService);
   private readonly store = inject(Store);
-  private readonly members = toSignal(this.store.select(MembershipState.users));
+  private readonly members = toSignal(
+    this.store.select(MembershipState.members)
+  );
   private readonly approverIds = toSignal(
     this.store.select(ProjectState.approvers)
   );

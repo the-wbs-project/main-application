@@ -29,4 +29,37 @@ export class MembershipDataService {
       `api/memberships/${organization}/users/${user}/roles`
     );
   }
+
+  removeUserFromOrganizationAsync(
+    organization: string,
+    userId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `api/memberships/${organization}/users/${userId}`
+    );
+  }
+
+  addUserOrganizationalRolesAsync(
+    organization: string,
+    userId: string,
+    roles: string[]
+  ): Observable<void> {
+    return this.http.post<void>(
+      `api/memberships/${organization}/users/${userId}/roles`,
+      roles
+    );
+  }
+
+  removeUserOrganizationalRolesAsync(
+    organization: string,
+    user: string,
+    roles: string[]
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `api/memberships/${organization}/users/${user}/roles`,
+      {
+        body: roles,
+      }
+    );
+  }
 }

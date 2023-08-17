@@ -42,6 +42,8 @@ import { ProjectNavigationService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
 
 interface StateModel {
+  currentId?: string;
+  currentView?: PROJECT_NODE_VIEW_TYPE;
   current?: TaskDetailsViewModel;
   pageView?: TASK_PAGE_VIEW_TYPE;
   project?: Project;
@@ -129,10 +131,13 @@ export class TasksState {
 
     if (
       state.current &&
+      state.currentId === taskId &&
       state.current.id === taskId &&
       state.current.view === viewNode
     )
       return;
+
+    ctx.patchState({ currentId: taskId, currentView: viewNode });
 
     this.createDetailsVm(ctx, taskId, viewNode);
   }
@@ -152,7 +157,7 @@ export class TasksState {
 
   @Action(RebuildNodeViews)
   rebuildNodeViews(ctx: StateContext<StateModel>): Observable<void> | void {
-    const state = ctx.getState();
+    let state = ctx.getState();
 
     if (!state.project || !state.nodes) return;
 
@@ -166,7 +171,16 @@ export class TasksState {
     );
     ctx.patchState({ disciplines, phases });
 
-    return ctx.dispatch(new PerformChecklist(undefined, disciplines, phases));
+    state = ctx.getState();
+
+    const actions: any[] = [
+      new PerformChecklist(undefined, disciplines, phases),
+    ];
+
+    if (state.currentId !== state.current?.id)
+      actions.push(new VerifyTask(state.current?.view!, state.currentId!));
+
+    return ctx.dispatch(actions);
   }
 
   @Action(RemoveTask)
@@ -192,7 +206,9 @@ export class TasksState {
     for (const node of nodes) {
       if (changedIds.indexOf(node.id) === -1) continue;
 
-      changed.push(this.data.projectNodes.putAsync(project.owner, project.id, node));
+      changed.push(
+        this.data.projectNodes.putAsync(project.owner, project.id, node)
+      );
     }
     return forkJoin(changed).pipe(
       map(() =>

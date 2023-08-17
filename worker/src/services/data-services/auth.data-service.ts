@@ -20,7 +20,7 @@ export class AuthDataService {
 
     organizations = await response.json();
 
-    await this.putStateAsync([user, 'organizations'], organizations, 60 * 2);
+    this.putStateAsync([user, 'organizations'], organizations, 60 * 2);
 
     return organizations ?? [];
   }
@@ -39,7 +39,7 @@ export class AuthDataService {
 
     roles = rolesObj.map((x) => x.name);
 
-    await this.putStateAsync([user, 'roles'], roles, 60 * 1);
+    this.putStateAsync([user, 'roles'], roles, 60 * 1);
 
     return roles;
   }
@@ -57,7 +57,7 @@ export class AuthDataService {
 
     members = users.map((x) => this.transformer.toUserLite(x));
 
-    await this.putStateAsync([organization, 'members'], members, 60 * 2);
+    this.putStateAsync([organization, 'members'], members, 60 * 2);
 
     return members;
   }
@@ -75,13 +75,45 @@ export class AuthDataService {
 
     roles = roleObjs.map((x) => x.name);
 
-    await this.putStateAsync([organization, user, 'roles'], roles, 60 * 1);
+    this.putStateAsync([organization, user, 'roles'], roles, 60 * 1);
 
     return roles;
   }
 
+  async addUserOrganizationalRolesAsync(organization: string, user: string, roles: string[]): Promise<void> {
+    const response = await this.fetch(`organizations/${organization}/members/${user}/roles`, 'POST', {
+      roles,
+    });
+
+    if (response.status !== 204) throw new Error(await response.text());
+
+    this.deleteStateAsync([organization, user, 'roles']);
+  }
+
+  async removeUserOrganizationalRolesAsync(organization: string, user: string, roles: string[]): Promise<void> {
+    const response = await this.fetch(`organizations/${organization}/members/${user}/roles`, 'DELETE', {
+      roles,
+    });
+
+    if (response.status !== 204) throw new Error(await response.text());
+
+    this.deleteStateAsync([organization, user, 'roles']);
+  }
+
+  async removeUserFromOrganizationAsync(organization: string, user: string): Promise<void> {
+    const response = await this.fetch(`organizations/${organization}/members`, 'DELETE', {
+      members: [user],
+    });
+
+    if (response.status !== 204) throw new Error(await response.text());
+
+    this.deleteStateAsync([organization, user, 'roles']);
+    this.deleteStateAsync([organization, 'members']);
+    this.deleteStateAsync([user, 'organizations']);
+  }
+
   async updateProfileAsync(user: User): Promise<void> {
-    await this.deleteStateAsync([user.id, 'user']);
+    this.deleteStateAsync([user.id, 'user']);
 
     const response = await this.fetch(`users/${user.id}`, 'PATCH', {
       name: user.name,
@@ -95,7 +127,7 @@ export class AuthDataService {
   }
 
   async updateUserAsync(user: User): Promise<void> {
-    await this.deleteStateAsync([user.id, 'user']);
+    this.deleteStateAsync([user.id, 'user']);
 
     const response = await this.fetch(`users/${user.id}`, 'PATCH', {
       blocked: user.blocked,
@@ -119,7 +151,7 @@ export class AuthDataService {
 
     user = this.transformer.toModel(await response.json());
 
-    await this.putStateAsync([userId, 'user'], user, 60 * 10);
+    this.putStateAsync([userId, 'user'], user, 60 * 10);
 
     return user;
   }
@@ -191,19 +223,22 @@ export class AuthDataService {
     return this.ctx.env.KV_AUTH.get<T>(this.key(parts), 'json');
   }
 
-  private putStateAsync<T>(parts: string[], value: T, expirationTtl: number): Promise<void> {
+  private putStateAsync<T>(parts: string[], value: T, expirationTtl: number): void {
     if (value === null) {
-      return this.deleteStateAsync(parts);
+      this.deleteStateAsync(parts);
+      return;
     }
     const value2 = typeof value === 'string' ? value : typeof value === 'number' ? value.toString() : JSON.stringify(value);
 
-    return this.ctx.env.KV_AUTH.put(this.key(parts), value2, {
-      expirationTtl,
-    });
+    this.ctx.executionCtx.waitUntil(
+      this.ctx.env.KV_AUTH.put(this.key(parts), value2, {
+        expirationTtl,
+      }),
+    );
   }
 
-  private deleteStateAsync(parts: string[]): Promise<void> {
-    return this.ctx.env.KV_AUTH.delete(this.key(parts));
+  private deleteStateAsync(parts: string[]): void {
+    this.ctx.executionCtx.waitUntil(this.ctx.env.KV_AUTH.delete(this.key(parts)));
   }
 
   private key(parts: string[]): string {

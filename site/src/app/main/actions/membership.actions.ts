@@ -8,3 +8,8 @@ export class ChangeOrganization {
   static readonly type = '[Membership] Change';
   constructor(readonly organization: Organization) {}
 }
+
+export class RemoveMemberFromOrganization {
+  static readonly type = '[Membership] Remove Member';
+  constructor(readonly memberId: string) {}
+}

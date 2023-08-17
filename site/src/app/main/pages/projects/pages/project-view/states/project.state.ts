@@ -444,7 +444,7 @@ export class ProjectState {
 
   private updateUsers(ctx: StateContext<StateModel>): void {
     const project = ctx.getState().current!;
-    const members = this.store.selectSnapshot(MembershipState.users) ?? [];
+    const members = this.store.selectSnapshot(MembershipState.members) ?? [];
     const users: UserRolesViewModel[] = [];
 
     for (const user of members) {

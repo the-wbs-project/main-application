@@ -9,6 +9,7 @@ import {
   ChangeOrganization,
   LoadOrganizations,
   ProjectUpdated,
+  RemoveMemberFromOrganization,
 } from '../actions';
 
 interface StateModel {
@@ -17,14 +18,14 @@ interface StateModel {
   organization?: Organization;
   projects?: Project[];
   roles?: string[];
-  users?: Member[];
+  members?: Member[];
 }
 
 @Injectable()
 @State<StateModel>({
   name: 'membership',
   defaults: {
-    loading: false,
+    loading: true,
   },
 })
 export class MembershipState {
@@ -61,8 +62,8 @@ export class MembershipState {
   }
 
   @Selector()
-  static users(state: StateModel): Member[] | undefined {
-    return state.users;
+  static members(state: StateModel): Member[] | undefined {
+    return state.members;
   }
 
   @Action(LoadOrganizations)
@@ -94,7 +95,7 @@ export class MembershipState {
           projects: projects.sort((a, b) =>
             sorter(a.lastModified, b.lastModified, 'desc')
           ),
-          users: users.sort((a, b) => sorter(a.name, b.name)),
+          members: users.sort((a, b) => sorter(a.name, b.name)),
         });
       }),
       tap(() => ctx.patchState({ loading: false }))
@@ -115,5 +116,26 @@ export class MembershipState {
     projects.splice(0, 0, project);
 
     ctx.patchState({ projects });
+  }
+
+  @Action(RemoveMemberFromOrganization)
+  removeMember(
+    ctx: StateContext<StateModel>,
+    { memberId }: RemoveMemberFromOrganization
+  ): Observable<void> {
+    const state = ctx.getState();
+
+    return this.data.memberships
+      .removeUserFromOrganizationAsync(state.organization!.id, memberId)
+      .pipe(
+        tap(() => {
+          const members = [...(state.members ?? [])];
+          const index = members.findIndex((x) => x.id === memberId);
+
+          if (index > -1) members.splice(index, 1);
+
+          ctx.patchState({ members });
+        })
+      );
   }
 }

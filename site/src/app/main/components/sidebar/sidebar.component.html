@@ -117,7 +117,7 @@
           <a
             class="side-menu__item"
             routerLinkActive="active"
-            [routerLink]="['/settings']"
+            [routerLink]="['/', organization?.name, 'settings']"
           >
             <span class="side-menu__icon">
               <i class="fa-solid fa-cogs"></i>
@@ -132,7 +132,7 @@
                 *ngFor="let item of settings"
                 class="sub-side-menu__item"
                 routerLinkActive="active"
-                [routerLink]="item.path"
+                [routerLink]="['/', organization?.name].concat(item.path)"
               >
                 <span class="sub-side-menu__label">
                   {{ item.title! | translate }}

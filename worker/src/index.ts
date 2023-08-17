@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cors, logger, verifyJwt, verifyMembership } from './middle';
+import { cache, cors, logger, verifyJwt, verifyMembership, verifyMembershipRole } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
+import { ROLES } from './models';
 
 export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/:type', '/api/projects/import/*'];
 
@@ -38,7 +39,8 @@ app.get('/api/edge-data/clear', Http.misc.clearKvAsync);
 app.get('/api/invites', verifyJwt, Http.invites.getAllAsync);
 app.put('/api/invites/:send', verifyJwt, Http.invites.putAsync);
 app.get('/api/checklists', verifyJwt, Http.checklists.getAsync);
-app.get('/api/activity/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
+app.get('/api/activity/topLevel/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
+app.get('/api/activity/child/:topLevelId/:childId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
 app.get('/api/activity/user/:userId', verifyJwt, verifyMembership, Http.activities.getByUserIdAsync);
 app.put('/api/activity/:dataType', verifyJwt, verifyMembership, Http.activities.putAsync);
 app.get('/api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
@@ -58,6 +60,24 @@ app.get('/api/memberships', verifyJwt, Http.memberships.getMembershipsAsync);
 app.get('/api/roles', verifyJwt, Http.memberships.getRolesAsync);
 app.get('/api/memberships/:organization/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesAsync);
 app.get('/api/memberships/:organization/users', verifyJwt, verifyMembership, Http.memberships.getMembershipUsersAsync);
+app.delete(
+  '/api/memberships/:organization/users/:userId',
+  verifyJwt,
+  verifyMembershipRole(ROLES.ADMIN),
+  Http.memberships.removeUserFromOrganizationAsync,
+);
+app.post(
+  '/api/memberships/:organization/users/:userId/roles',
+  verifyJwt,
+  verifyMembershipRole(ROLES.ADMIN),
+  Http.memberships.addUserOrganizationalRolesAsync,
+);
+app.delete(
+  '/api/memberships/:organization/users/:userId/roles',
+  verifyJwt,
+  verifyMembershipRole(ROLES.ADMIN),
+  Http.memberships.removeUserOrganizationalRolesAsync,
+);
 app.get('/api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of AZURE_ROUTES_POST) {

@@ -4,19 +4,19 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
   {
     title: 'Settings.Organization',
     description: 'Settings.OrganizationDescription',
-    path: ['/settings', 'general'],
+    path: ['settings', 'general'],
     icon: 'fa-building',
   },
   {
     title: 'General.Users',
     description: 'Settings.UsersDescription',
-    path: ['/settings', 'users', 'active'],
+    path: ['settings', 'members'],
     icon: 'fa-users',
   },
   {
     title: 'Settings.Invites',
     description: 'Settings.InvitesDescription',
-    path: ['/settings', 'invites'],
+    path: ['settings', 'invites'],
     icon: 'fa-envelope',
   },
 ];

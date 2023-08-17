@@ -10,7 +10,7 @@ export class UserNamePipe implements PipeTransform {
     if (!userId) return undefined;
 
     return this.store
-      .selectSnapshot(MembershipState.users)
+      .selectSnapshot(MembershipState.members)
       ?.find((x) => x.id === userId)?.name;
   }
 }

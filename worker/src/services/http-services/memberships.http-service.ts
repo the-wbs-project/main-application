@@ -32,10 +32,9 @@ export class MembershipHttpService {
 
   static async getMembershipRolesAsync(ctx: Context): Promise<Response> {
     try {
-      //@ts-ignore
-      console.log(ctx.env.CLOUDFLARE_ACCOUNT_ID);
-
       const { organization } = ctx.req.param();
+
+      if (!organization) return ctx.text('Missing Parameters', 400);
 
       return ctx.json(await ctx.get('data').auth.getUserOrganizationalRolesAsync(organization, ctx.get('user').id));
     } catch (e) {
@@ -51,9 +50,71 @@ export class MembershipHttpService {
     }
   }
 
+  static async removeUserFromOrganizationAsync(ctx: Context): Promise<Response> {
+    try {
+      const { organization, userId } = ctx.req.param();
+
+      if (!organization || !userId) return ctx.text('Missing Parameters', 400);
+
+      return ctx.json(await ctx.get('data').auth.removeUserFromOrganizationAsync(organization, userId));
+    } catch (e) {
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to delete this membership.',
+          'MembershipHttpService.removeUserFromOrganizationAsync',
+          <Error>e,
+        );
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async addUserOrganizationalRolesAsync(ctx: Context): Promise<Response> {
+    try {
+      const { organization, userId } = ctx.req.param();
+
+      if (!organization || !userId) return ctx.text('Missing Parameters', 400);
+
+      return ctx.json(await ctx.get('data').auth.addUserOrganizationalRolesAsync(organization, userId, await ctx.req.json()));
+    } catch (e) {
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to add roles for this membership.',
+          'MembershipHttpService.addUserOrganizationalRolesAsync',
+          <Error>e,
+        );
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async removeUserOrganizationalRolesAsync(ctx: Context): Promise<Response> {
+    try {
+      const { organization, userId } = ctx.req.param();
+
+      if (!organization || !userId) return ctx.text('Missing Parameters', 400);
+
+      return ctx.json(await ctx.get('data').auth.removeUserOrganizationalRolesAsync(organization, userId, await ctx.req.json()));
+    } catch (e) {
+      ctx
+        .get('logger')
+        .trackException(
+          'An error occured trying to delete the roles for this membership.',
+          'MembershipHttpService.removeUserOrganizationalRolesAsync',
+          <Error>e,
+        );
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
   static async getMembershipUsersAsync(ctx: Context): Promise<Response> {
     try {
       const { organization } = ctx.req.param();
+
+      if (!organization) return ctx.text('Missing Parameters', 400);
 
       const users = (await ctx.get('data').auth.getOrganizationalUsersAsync(organization)) ?? [];
 
