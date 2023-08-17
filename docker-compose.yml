@@ -1,5 +1,32 @@
 version: '3'
 services:
+  local.storage.emulator:
+      image: "mcr.microsoft.com/azure-storage/azurite:latest"
+      container_name: local.storage.emulator
+      ports:
+          - 10000:10000
+          - 10001:10001
+
+  wbs.functions:
+    container_name: wbs-functions
+    build:
+        context: ./_other/utilities
+        dockerfile: Dockerfile-dev
+    ports:
+        - 7071:7071
+    environment:
+        # Copy .env variables through to container
+        - AzureWebJobsStorage
+        - BlobContainerName
+        - BlobOutputContainerName
+        - QueueName
+    volumes:
+       - ./_other/utilities:/usr/src/app/utilities
+       - /usr/src/app/utilities/Bin
+       - /usr/src/app/utilities/Obj
+    depends_on:
+        - local.storage.emulator
+
   wbs-worker:
     build:
       context: ./worker

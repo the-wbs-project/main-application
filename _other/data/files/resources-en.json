@@ -13,6 +13,8 @@
         "Other": "Other",
         "Name": "Name",
         "Email": "Email",
+        "Edit": "Edit",
+        "Remove": "Remove",
         "Delete": "Delete",
         "General": "General",
         "Search": "Search",
@@ -372,7 +374,8 @@
         "General": "General",
         "GeneralDescription": "Name, contact info, and more",
         "Users": "Users",
-        "UsersDescription": "Invite and manage existing users"
+        "UsersDescription": "Invite and manage existing users",
+        "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?"
       }
     }
   },

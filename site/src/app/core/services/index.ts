@@ -11,7 +11,6 @@ export * from './resource.service';
 export * from './sorter.service';
 export * from './storage.service';
 export * from './theme.service';
-export * from './timeline.service';
 export * from './title.service';
 export * from './utils.service';
 export * from './wbs-node.service';

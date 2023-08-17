@@ -4,7 +4,7 @@ import { Activity } from '../../models';
 export class ActivityHttpService {
   static async getByIdAsync(ctx: Context): Promise<Response> {
     try {
-      const { topLevelId, skip, take } = ctx.req.param();
+      const { topLevelId, childId, skip, take } = ctx.req.param();
       const data = await ctx.get('data');
 
       if (!topLevelId || !skip || !take) return ctx.text('Missing Parameters', 500);
@@ -14,7 +14,9 @@ export class ActivityHttpService {
 
       if (isNaN(skip2) || isNaN(take2)) return ctx.text('Invalid Parameters', 500);
 
-      const list = await data.activities.getAsync(topLevelId, skip2, take2);
+      const list = childId
+        ? await data.activities.getByChildAsync(topLevelId, childId, skip2, take2)
+        : await data.activities.getByTopLevelAsync(topLevelId, skip2, take2);
 
       return ctx.json(list);
     } catch (e) {

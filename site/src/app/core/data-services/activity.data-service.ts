@@ -11,11 +11,11 @@ export class ActivityDataService {
     skip: number,
     take: number,
     topLevelId: string,
-    objectId?: string
+    childId?: string
   ): Observable<Activity[]> {
-    const url = objectId
-      ? `api/activity/${topLevelId}/${objectId}/${skip}/${take}`
-      : `api/activity/${topLevelId}/${skip}/${take}`;
+    const url = childId
+      ? `api/activity/child/${topLevelId}/${childId}/${skip}/${take}`
+      : `api/activity/topLevel/${topLevelId}/${skip}/${take}`;
 
     return this.http
       .get<Activity[] | undefined>(url)
