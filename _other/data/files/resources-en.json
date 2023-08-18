@@ -345,9 +345,6 @@
         "SelectDisciplines": "Select Disciplines",
         "CreateTask": "Create Task",
         "OtherFlags": "Other Flags"
-      },
-      "Actions": {
-        "NodeRecordered": "{0} was reordered from {1} to {2}."
       }
     }
   },
@@ -409,7 +406,8 @@
         "TaskRemovedDescription": "The task '{title}' was removed.",
         "ProjectPhasesChangedDescription": "The project's phases was changed.",
         "ProjectAddUserDescription": "{user} was given the role of {role}.",
-        "ProjectRemoveUserDescription": "{user} was revoked the role of {role}."
+        "ProjectRemoveUserDescription": "{user} was revoked the role of {role}.",
+        "NodeRecordered": "{0} was reordered from {1} to {2}."
       }
     }
   }

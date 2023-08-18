@@ -6,7 +6,9 @@
     "postinstall": "yarn run s:setup && yarn run w:setup",
     "build": "docker-compose build --no-cache",
     "start": "docker-compose up",
-    "stop": "docker-compose stop"
+    "stop": "docker-compose stop",
+    "resources": "cURL -X PUT -d @./_other/data/files/resources-en.json -H \"Content-Type: application/json\"",
+    "resources:local": "yarn run resources http://localhost:88/api/resources"
   },
   "repository": {
     "type": "git"

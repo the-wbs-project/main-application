@@ -80,64 +80,17 @@ jobs:
           publishLocation: "Container"
         displayName: "Publish Worker"
 
-  - job: site_job
-    displayName: Site
+  - job: resource_job
+    displayName: Resources
     steps:
-      - task: Cache@2
-        inputs:
-          key: 'yarn | "$(Agent.OS)" | yarn.lock'
-          restoreKeys: |
-            yarn | "$(Agent.OS)"
-            yarn
-          path: $(YARN_CACHE_FOLDER)
-        displayName: Cache Yarn packages
-
-      - script: |
-          echo "$(FA_LICENSE)"
-          npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
-        workingDirectory: "site"
-        env:
-          FA_LICENSE: $(FA_LICENSE)
-        displayName: "Setup - Font Awesome Registry"
-
-      - script: yarn global add @angular/cli
-        displayName: "Setup - Angular CLI"
-
-      - script: yarn
-        workingDirectory: "site"
-        displayName: "Setup - Site Packages"
-
-      - script: npx kendo-ui-license activate
-        workingDirectory: "site"
-        env:
-          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
-        displayName: "Setup - Kendo UI License"
-
-      - script: yarn run deploy:qa
-        workingDirectory: "site"
-        displayName: "QA - Build"
-
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "dist"
+          rootFolderOrFile: "_other/data/files/resources-*.json"
           includeRootFolder: false
           archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Resources.zip"
           replaceExistingArchive: true
-        displayName: "QA - Zip"
-
-      - script: yarn run deploy:prod
-        workingDirectory: "site"
-        displayName: "Production - Build"
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "dist"
-          includeRootFolder: false
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip"
-          replaceExistingArchive: true
-        displayName: "Production - Zip"
+        displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
         inputs:

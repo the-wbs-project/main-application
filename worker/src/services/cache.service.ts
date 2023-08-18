@@ -11,6 +11,14 @@ export class Cache {
     ctx.executionCtx.waitUntil(cache.put(this.req(ctx), ctx.res.clone()));
   }
 
+  static delete(ctx: Context): void {
+    ctx.executionCtx.waitUntil(
+      cache.delete(this.req(ctx), {
+        ignoreMethod: true,
+      }),
+    );
+  }
+
   private static req(ctx: Context): Request {
     return new Request(ctx.req.url, {
       method: ctx.req.method,

@@ -9,7 +9,11 @@ export class ResourcesDataService {
     this.db = new CosmosDbService(this.ctx, 'Resources', 'language');
   }
 
-  getAllAsync(culture: string): Promise<Resources[] | undefined> {
+  getAsync(culture: string): Promise<Resources[] | undefined> {
     return this.db.getAllByPartitionAsync<Resources>(culture, true);
+  }
+
+  putAsync(resources: Resources): Promise<void> {
+    return this.db.upsertDocument(resources, resources.language);
   }
 }
