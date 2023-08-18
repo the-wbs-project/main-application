@@ -31,8 +31,7 @@ export class ActivityDataService {
   putAsync(
     userId: string,
     topLevelId: string,
-    data: ActivityData,
-    dataType: 'project'
+    data: ActivityData
   ): Observable<Activity> {
     const model: Activity = {
       ...data,
@@ -42,8 +41,6 @@ export class ActivityDataService {
       userId,
     };
 
-    return this.http
-      .put<void>(`api/activity/${dataType}`, model)
-      .pipe(map(() => model));
+    return this.http.put<void>('api/activity', model).pipe(map(() => model));
   }
 }

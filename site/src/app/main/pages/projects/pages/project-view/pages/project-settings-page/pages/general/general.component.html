@@ -37,16 +37,19 @@
         valueField="id"
         [valuePrimitive]="true"
       >
+        <ng-template kendoDropDownListValueTemplate let-dataItem>
+          {{ dataItem.label | translate }}
+        </ng-template>
         <ng-template kendoDropDownListItemTemplate let-dataItem>
           <div class="d-flex flex-flow-row w-100">
             <img
               class="wd-60 hd-60 mg-10"
               [src]="dataItem.icon"
-              [alt]="dataItem.label"
+              [alt]="dataItem.label | translate"
             />
             <div class="flex-grow-1 pd-10">
-              <h5>{{ dataItem.label }}</h5>
-              {{ dataItem.description }}
+              <h5>{{ dataItem.label | translate }}</h5>
+              {{ dataItem.description | translate }}
             </div>
           </div>
         </ng-template>

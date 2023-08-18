@@ -2,7 +2,7 @@ import { ActivityData } from '@wbs/core/models';
 
 export class LoadProjectTimeline {
   static readonly type = '[Timeline] Load Project';
-  constructor(readonly projectId: string) {}
+  constructor(readonly owner: string, readonly projectId: string) {}
 }
 
 export class LoadNextProjectTimelinePage {
@@ -20,7 +20,7 @@ export class LoadNextTaskTimelinePage {
 
 export class SaveTimelineAction {
   static readonly type = '[Timeline] Save Action';
-  constructor(readonly data: ActivityData[], readonly dataType: 'project') {}
+  constructor(readonly data: ActivityData[]) {}
 }
 
 export class RestoreProject {

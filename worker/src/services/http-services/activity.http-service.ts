@@ -46,29 +46,11 @@ export class ActivityHttpService {
 
   static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, dataType } = ctx.req.param();
-
-      if (!owner || !dataType) return ctx.text('Missing Parameters', 500);
-
       const activity: Activity = await ctx.req.json();
-      const data = ctx.get('data');
 
       activity.userId = ctx.get('user').id;
 
-      await data.activities.putAsync(activity);
-
-      if (dataType === 'project') {
-        const [project, tasks] = await Promise.all([
-          data.projects.getAsync(owner, activity.topLevelId),
-          data.projectNodes.getAllAsync(activity.topLevelId),
-        ]);
-        await ctx.get('data').projectSnapshots.putAsync(activity.id, {
-          ...project!,
-          tasks,
-        });
-      }
-
-      await ctx.get('data').userActivities.putAsync(activity);
+      await ctx.get('data').activities.putAsync(activity);
 
       return ctx.text('', 204);
     } catch (e) {

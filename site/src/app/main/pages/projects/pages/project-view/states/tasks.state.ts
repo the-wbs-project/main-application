@@ -638,7 +638,7 @@ export class TasksState {
     ctx: StateContext<StateModel>,
     ...data: ActivityData[]
   ): Observable<void> {
-    return ctx.dispatch(new SaveTimelineAction(data, 'project'));
+    return ctx.dispatch(new SaveTimelineAction(data));
   }
 
   private saveTask(

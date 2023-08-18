@@ -61,6 +61,8 @@ export class Resources extends MissingTranslationHandler {
 
     const parts = resource.split('.');
 
+    console.log(this.resources);
+
     try {
       const result = this.resources[parts[0]][parts[1]];
 

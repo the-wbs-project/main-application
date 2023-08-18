@@ -5,9 +5,9 @@ import { Activity, TimelineMenuItem } from '@wbs/core/models';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { TimelineService } from '@wbs/main/components/timeline';
 import { DialogService } from '@wbs/main/services';
-import { MembershipState } from '@wbs/main/states';
+import { AuthState, MembershipState } from '@wbs/main/states';
 import { forkJoin, Observable } from 'rxjs';
-import { filter, map, switchMap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import {
   LoadNextProjectTimelinePage,
   LoadNextTaskTimelinePage,
@@ -19,6 +19,7 @@ import {
 
 interface StateModel {
   project: TimelineViewModel[];
+  owner?: string;
   projectId?: string;
   task: TimelineViewModel[];
   taskId?: string;
@@ -41,7 +42,7 @@ export class ProjectTimelineState {
   ) {}
 
   private get userId(): string {
-    return this.store.selectSnapshot((state) => state.auth.user!.id);
+    return this.store.selectSnapshot(AuthState.userId)!;
   }
 
   private get organization(): string {
@@ -61,7 +62,7 @@ export class ProjectTimelineState {
   @Action(LoadProjectTimeline)
   loadProjectTimeline(
     ctx: StateContext<StateModel>,
-    { projectId }: LoadProjectTimeline
+    { owner, projectId }: LoadProjectTimeline
   ): Observable<void> | void {
     const state = ctx.getState();
 
@@ -69,7 +70,7 @@ export class ProjectTimelineState {
 
     return this.service.loadMore([], projectId).pipe(
       map((project) => {
-        ctx.patchState({ project, projectId });
+        ctx.patchState({ owner, project, projectId });
       })
     );
   }
@@ -117,23 +118,18 @@ export class ProjectTimelineState {
   @Action(SaveTimelineAction)
   saveTimelineAction(
     ctx: StateContext<StateModel>,
-    { data, dataType }: SaveTimelineAction
+    { data }: SaveTimelineAction
   ): Observable<void> {
     const state = ctx.getState();
     const saves: Observable<Activity>[] = [];
 
     for (const x of data)
       saves.push(
-        this.data.activities.putAsync(
-          this.userId,
-          state.projectId!,
-          x,
-          dataType
-        )
+        this.data.activities.putAsync(this.userId, state.projectId!, x)
       );
 
     return forkJoin(saves).pipe(
-      map((activities) => {
+      tap((activities) => {
         const project = state.project;
         const task = state.task;
 
@@ -144,6 +140,20 @@ export class ProjectTimelineState {
             task.splice(0, 0, this.transform(activity));
         }
         ctx.patchState({ project, task });
+      }),
+      switchMap((activities) => {
+        const snapshots: Observable<void>[] = [];
+
+        for (const a of activities)
+          snapshots.push(
+            this.data.projectSnapshots.putAsync(
+              state.owner!,
+              state.projectId!,
+              a.id
+            )
+          );
+
+        return forkJoin(snapshots).pipe(map(() => {}));
       })
     );
   }

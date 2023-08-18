@@ -49,11 +49,14 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectTimelineVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const owner: string =
+    route.params['owner'] ??
+    store.selectSnapshot(MembershipState.organization)?.name;
 
   return store
     .dispatch([
       new VerifyTimelineData(),
-      new LoadProjectTimeline(route.params['projectId']),
+      new LoadProjectTimeline(owner, route.params['projectId']),
     ])
     .pipe(map(() => true));
 };

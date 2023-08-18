@@ -11,7 +11,18 @@ export class ProjectSnapshotDataService {
     activityId: string
   ): Observable<Project> {
     return this.http.get<Project>(
-      `api/projects/snapshot/${organization}/${projectId}/${activityId}`
+      `api/projects/${organization}/snapshot/${projectId}/${activityId}`
+    );
+  }
+
+  putAsync(
+    organization: string,
+    projectId: string,
+    activityId: string
+  ): Observable<void> {
+    return this.http.put<void>(
+      `api/projects/${organization}/snapshot/${projectId}/${activityId}`,
+      {}
     );
   }
 }

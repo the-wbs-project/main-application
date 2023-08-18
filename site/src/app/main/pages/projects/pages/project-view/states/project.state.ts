@@ -398,7 +398,7 @@ export class ProjectState {
     ctx: StateContext<StateModel>,
     ...data: ActivityData[]
   ): Observable<void> {
-    return ctx.dispatch(new SaveTimelineAction(data, 'project'));
+    return ctx.dispatch(new SaveTimelineAction(data));
   }
 
   private saveProject(

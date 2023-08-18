@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cors, logger, verifyJwt, verifyMembership, verifyMembershipRole } from './middle';
+import { cache, cachePurge, cors, logger, verifyJwt, verifyMembership, verifyMembershipRole } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
 import { ROLES } from './models';
 
@@ -42,8 +42,8 @@ app.put('/api/invites/:send', verifyJwt, Http.invites.putAsync);
 app.get('/api/checklists', verifyJwt, Http.checklists.getAsync);
 app.get('/api/activity/topLevel/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
 app.get('/api/activity/child/:topLevelId/:childId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
-app.get('/api/activity/user/:userId', verifyJwt, verifyMembership, Http.activities.getByUserIdAsync);
-app.put('/api/activity/:dataType', verifyJwt, verifyMembership, Http.activities.putAsync);
+app.get('/api/activity/user/:userId', verifyJwt, Http.activities.getByUserIdAsync);
+app.put('/api/activity', verifyJwt, Http.activities.putAsync);
 app.get('/api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
 app.get('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
 app.put('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, Http.projects.putAsync);
@@ -52,6 +52,7 @@ app.put('/api/projects/:owner/byId/:projectId/nodes/batch', verifyJwt, verifyMem
 app.put('/api/projects/:owner/byId/:projectId/nodes/:nodeId', verifyJwt, verifyMembership, Http.projectNodes.putAsync);
 app.get('/api/projects/:owner/byId/:projectId/users', verifyJwt, verifyMembership, Http.projectNodes.getAsync);
 app.get('/api/projects/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.getByActivityIdAsync);
+app.put('/api/projects/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.take);
 app.get('/api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 app.get('/api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
 app.get('/api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);

@@ -4,6 +4,7 @@ export interface Activity {
   timestamp: number;
   userId: string;
   objectId: string;
+  ownerId?: string;
   topLevelId: string;
   versionId?: string;
   action: string;

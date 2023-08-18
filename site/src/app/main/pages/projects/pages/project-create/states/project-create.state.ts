@@ -13,7 +13,7 @@ import {
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { MetadataState } from '@wbs/main/states';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, switchMap, tap } from 'rxjs';
 import {
   CategoryChosen,
   DisciplinesChosen,
@@ -30,6 +30,7 @@ import {
   ProjectCreationPage,
   PROJECT_CREATION_PAGES as PAGES,
 } from '../models';
+import { ProjectUpdated } from '@wbs/main/actions';
 
 interface StateModel {
   category?: string;
@@ -342,13 +343,23 @@ export class ProjectCreateState {
         });
       }
     }
-    const url = ['/', project.owner, 'projects', 'view', project.id, 'about'];
-
     return this.data.projects.putAsync(project).pipe(
       switchMap(() =>
         this.data.projectNodes.batchAsync(project.owner, project.id, nodes, [])
       ),
-      switchMap(() => ctx.dispatch(new Navigate(url)))
+      tap(() => ctx.dispatch(new ProjectUpdated(project))),
+      tap(() =>
+        ctx.dispatch(
+          new Navigate([
+            '/',
+            project.owner,
+            'projects',
+            'view',
+            project.id,
+            'about',
+          ])
+        )
+      )
     );
   }
 }
