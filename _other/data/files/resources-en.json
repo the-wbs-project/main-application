@@ -374,6 +374,7 @@
         "General": "General",
         "GeneralDescription": "Name, contact info, and more",
         "Users": "Users",
+        "AllRoles": "All Roles",
         "UsersDescription": "Invite and manage existing users",
         "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?"
       }
