@@ -151,7 +151,7 @@ jobs:
     steps:
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "_other/data/files"
+          rootFolderOrFile: "files"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Resources.zip"
