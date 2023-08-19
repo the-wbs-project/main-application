@@ -153,4 +153,18 @@ export class CosmosDbService {
     }
     return <T>await res.json();
   }
+
+  async deleteDocument(docId: string, pk: string): Promise<void> {
+    if (!this.db) throw new Error('The database has not been initiated.');
+
+    const res = await this.db.deleteDocument({
+      docId,
+      partitionKey: pk,
+    });
+    if (res.status >= 300) {
+      console.log(res.status);
+      console.log('The error message');
+      console.log(await res.json());
+    }
+  }
 }

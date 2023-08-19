@@ -3,7 +3,6 @@ import { ActivityDataService } from './activity.data-service';
 import { AuthDataService } from './auth.data-service';
 import { ChecklistDataService } from './checklist.data-service';
 import { DiscussionDataService } from './discussion.data-service';
-import { InviteDataService } from './invite.data-service';
 import { ListDataService } from './list.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectSnapshotDataService } from './project-snapshot.data-service';
@@ -16,7 +15,6 @@ export class DataServiceFactory {
   readonly auth: AuthDataService;
   readonly checklist: ChecklistDataService;
   readonly discussions: DiscussionDataService;
-  readonly invites: InviteDataService;
   readonly lists: ListDataService;
   readonly projects: ProjectDataService;
   readonly projectNodes: ProjectNodeDataService;
@@ -29,7 +27,6 @@ export class DataServiceFactory {
     this.auth = new AuthDataService(ctx);
     this.checklist = new ChecklistDataService(ctx);
     this.discussions = new DiscussionDataService(ctx);
-    this.invites = new InviteDataService(ctx);
     this.lists = new ListDataService(ctx);
     this.projects = new ProjectDataService(ctx);
     this.projectNodes = new ProjectNodeDataService(ctx);

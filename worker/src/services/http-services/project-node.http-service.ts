@@ -12,9 +12,7 @@ export class ProjectNodeHttpService {
       //
       return ctx.json(await ctx.get('data').projectNodes.getAllAsync(projectId));
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying to get the phase WBS list for a project.', 'ProjectNodeHttpService.getAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get the phase WBS list for a project.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -32,7 +30,7 @@ export class ProjectNodeHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to put a node.', 'ProjectNodeHttpService.putAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to put a node.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -52,9 +50,7 @@ export class ProjectNodeHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying upload a batch of node changes.', 'ProjectNodeHttpService.batchAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying upload a batch of node changes.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

@@ -1,7 +1,16 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  Action,
+  NgxsOnInit,
+  Selector,
+  State,
+  StateContext,
+  Store,
+} from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Activity, TimelineMenuItem } from '@wbs/core/models';
+import { Activity, UserLite } from '@wbs/core/models';
+import { Transformers } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { TimelineService } from '@wbs/main/components/timeline';
 import { DialogService } from '@wbs/main/services';
@@ -20,25 +29,29 @@ import {
 interface StateModel {
   project: TimelineViewModel[];
   owner?: string;
+  members: Map<string, UserLite>;
   projectId?: string;
   task: TimelineViewModel[];
   taskId?: string;
 }
 
 @Injectable()
+@UntilDestroy()
 @State<StateModel>({
   name: 'projectTimeline',
   defaults: {
     project: [],
     task: [],
+    members: new Map<string, UserLite>(),
   },
 })
-export class ProjectTimelineState {
+export class ProjectTimelineState implements NgxsOnInit {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly dialogs: DialogService,
     private readonly service: TimelineService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly transformer: Transformers
   ) {}
 
   private get userId(): string {
@@ -47,6 +60,20 @@ export class ProjectTimelineState {
 
   private get organization(): string {
     return this.store.selectSnapshot(MembershipState.id)!;
+  }
+
+  ngxsOnInit(ctx: StateContext<StateModel>): void {
+    this.store
+      .select(MembershipState.members)
+      .pipe(untilDestroyed(this))
+      .subscribe((list) => {
+        const members = ctx.getState().members;
+
+        for (const m of list ?? []) {
+          if (!members.has(m.id)) members.set(m.id, m);
+        }
+        ctx.patchState({ members });
+      });
   }
 
   @Selector()
@@ -65,12 +92,14 @@ export class ProjectTimelineState {
     { owner, projectId }: LoadProjectTimeline
   ): Observable<void> | void {
     const state = ctx.getState();
+    const project = state.project ?? [];
+    const members = state.members;
 
     if (state.projectId === projectId) return;
 
-    return this.service.loadMore([], projectId).pipe(
-      map((project) => {
-        ctx.patchState({ owner, project, projectId });
+    return this.service.loadMore(project, members, projectId).pipe(
+      map(() => {
+        ctx.patchState({ members, owner, project, projectId });
       })
     );
   }
@@ -78,10 +107,12 @@ export class ProjectTimelineState {
   @Action(LoadNextProjectTimelinePage)
   loadNextProjectTimelinePage(ctx: StateContext<StateModel>): Observable<void> {
     const state = ctx.getState();
+    const project = state.project ?? [];
+    const members = state.members;
 
-    return this.service.loadMore(state.project, state.projectId!).pipe(
-      map((project) => {
-        ctx.patchState({ project: [...project] });
+    return this.service.loadMore(project, members, state.projectId!).pipe(
+      map(() => {
+        ctx.patchState({ members, project });
       })
     );
   }
@@ -92,12 +123,14 @@ export class ProjectTimelineState {
     { taskId }: LoadTaskTimeline
   ): Observable<void> | void {
     const state = ctx.getState();
+    const task = state.task ?? [];
+    const members = state.members;
 
     if (state.taskId === taskId) return;
 
-    return this.service.loadMore([], state.projectId!, taskId).pipe(
-      map((task) => {
-        ctx.patchState({ task, taskId });
+    return this.service.loadMore(task, members, state.projectId!).pipe(
+      map(() => {
+        ctx.patchState({ members, task, taskId });
       })
     );
   }
@@ -105,12 +138,14 @@ export class ProjectTimelineState {
   @Action(LoadNextTaskTimelinePage)
   loadNextTaskTimelinePage(ctx: StateContext<StateModel>): Observable<void> {
     const state = ctx.getState();
+    const task = state.task ?? [];
+    const members = state.members;
 
     return this.service
-      .loadMore(state.task, state.projectId!, state.taskId!)
+      .loadMore(task, members, state.projectId!, state.taskId!)
       .pipe(
-        map((task) => {
-          ctx.patchState({ task });
+        map(() => {
+          ctx.patchState({ members, task });
         })
       );
   }
@@ -122,6 +157,7 @@ export class ProjectTimelineState {
   ): Observable<void> {
     const state = ctx.getState();
     const saves: Observable<Activity>[] = [];
+    const user = this.store.selectSnapshot(AuthState.profileLite);
 
     for (const x of data)
       saves.push(
@@ -134,10 +170,13 @@ export class ProjectTimelineState {
         const task = state.task;
 
         for (const activity of activities) {
-          project.splice(0, 0, this.transform(activity));
+          const vm = this.transformer.activities.toTimelineViewModel(
+            activity,
+            user!
+          );
+          project.splice(0, 0, vm);
 
-          if (state.taskId === activity.objectId)
-            task.splice(0, 0, this.transform(activity));
+          if (state.taskId === activity.objectId) task.splice(0, 0, vm);
         }
         ctx.patchState({ project, task });
       }),
@@ -180,42 +219,4 @@ export class ProjectTimelineState {
         })
       );
   }
-  private transform(act: Activity): TimelineViewModel {
-    const menu: TimelineMenuItem[] = [];
-
-    if (act.objectId) {
-      menu.push({
-        activityId: act.id,
-        objectId: act.objectId,
-        ...NAVIGATE_ITEM,
-      });
-    }
-    menu.push({
-      activityId: act.id,
-      objectId: act.topLevelId,
-      ...RESTORE_ITEM,
-    });
-
-    return {
-      action: act.action,
-      data: act.data,
-      id: act.id,
-      menu,
-      objectId: act.objectId ?? act.topLevelId,
-      timestamp: act.timestamp,
-      userId: act.userId,
-    };
-  }
 }
-
-const NAVIGATE_ITEM = {
-  action: 'navigate',
-  icon: 'fa-eye',
-  title: 'Projects.ViewTask',
-};
-
-const RESTORE_ITEM = {
-  action: 'restore',
-  icon: 'fa-window-restore',
-  title: 'Projects.Restore',
-};

@@ -1,8 +1,6 @@
 import { Context } from '../../config';
 import { Discussion, User } from '../../models';
 
-const GLOBAL = 'global';
-
 export class DiscussionHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
     try {
@@ -14,13 +12,7 @@ export class DiscussionHttpService {
 
       return ctx.json(await service.getAllAsync(associationId, id));
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException(
-          'An error occured trying to get all discussions based on an association.',
-          'DiscussionHttpService.getAsync',
-          <Error>e,
-        );
+      ctx.get('logger').trackException('An error occured trying to get all discussions based on an association.', <Error>e);
       return ctx.text('Internal Server Error', 500);
     }
   }
@@ -49,13 +41,7 @@ export class DiscussionHttpService {
         }),
       );
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException(
-          'An error occured trying to get all users who has responded to an association.',
-          'DiscussionHttpService.getUsersAsync',
-          <Error>e,
-        );
+      ctx.get('logger').trackException('An error occured trying to get all users who has responded to an association.', <Error>e);
       return ctx.text('Internal Server Error', 500);
     }
   }
@@ -71,13 +57,8 @@ export class DiscussionHttpService {
 
       return thread ? ctx.html(`<html><body class="body">${thread.text}</body></html>`) : ctx.text('', 404);
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException(
-          'An error occured trying to get all discussions based on an association.',
-          'DiscussionHttpService.getAsync',
-          <Error>e,
-        );
+      ctx.get('logger').trackException('An error occured trying to get all discussions based on an association.', <Error>e);
+
       return ctx.text('Internal Server Error', 500);
     }
   }
@@ -105,7 +86,7 @@ export class DiscussionHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save a discussion.', 'DiscussionHttpService.putAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to save a discussion.', <Error>e);
       return ctx.text('Internal Server Error', 500);
     }
   }

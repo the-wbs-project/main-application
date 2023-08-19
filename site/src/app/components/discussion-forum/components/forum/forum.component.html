@@ -29,18 +29,10 @@
               <div
                 class="d-flex w-100 pd-y-5 pd-x-10 bd-gray-400 bd-l bd-r bd-b bg-gray-400"
               >
-                <div class="pd-y-5 flex-grow-1">
-                  Title
-                </div>
-                <div class="pd-y-5 text-center wd-100">
-                  Created By
-                </div>
-                <div class="pd-y-5 text-center wd-100">
-                  Last Changed
-                </div>
-                <div class="pd-y-5 text-center wd-80">
-                  Replies
-                </div>
+                <div class="pd-y-5 flex-grow-1">Title</div>
+                <div class="pd-y-5 text-center wd-100">Created By</div>
+                <div class="pd-y-5 text-center wd-100">Last Changed</div>
+                <div class="pd-y-5 text-center wd-80">Replies</div>
               </div>
               <div
                 *ngFor="let thread of threads$ | async; let index = index"
@@ -93,7 +85,11 @@
       </div>
       <div class="mb-3 mb-x-5">
         <label for="message" class="form-label">Message</label>
-        <kendo-editor appEditorFixer formControlName="message" style="height: 300px;" />
+        <kendo-editor
+          appEditorFixer
+          formControlName="message"
+          style="height: 300px"
+        />
       </div>
     </form>
   </div>

@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ActionDefinition, Activity, TimelineMenuItem } from '@wbs/core/models';
-import { MetadataState } from '@wbs/main/states';
+import { ActionDefinition, UserLite } from '@wbs/core/models';
+import { Transformers } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { MetadataState } from '@wbs/main/states';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 
 @Injectable({ providedIn: 'root' })
 export class TimelineService {
@@ -13,18 +14,41 @@ export class TimelineService {
 
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly transformer: Transformers
   ) {}
 
   loadMore(
     list: TimelineViewModel[],
+    users: Map<string, UserLite>,
     topLevelId: string,
     objectId?: string
-  ): Observable<TimelineViewModel[]> {
+  ): Observable<void> {
     return this.data.activities
       .getAsync(list.length, this.take, topLevelId, objectId)
       .pipe(
-        map((activities) => {
+        switchMap((activities) => {
+          const idsToGet: string[] = [];
+
+          for (const a of activities) {
+            if (!users.has(a.userId) && idsToGet.indexOf(a.userId) === -1) {
+              idsToGet.push(a.userId);
+            }
+          }
+          const usersToGet = idsToGet.map((x) =>
+            this.data.users.getLiteAsync(x)
+          );
+
+          return forkJoin({
+            newUsers: forkJoin(usersToGet),
+            activities: of(activities),
+          });
+        }),
+        map(({ newUsers, activities }) => {
+          for (const u of newUsers) {
+            users.set(u.id, u);
+          }
+
           if (list.length > 0) {
             //
             //  There may be repeats if the user did some actions THEN loaded more.
@@ -41,8 +65,14 @@ export class TimelineService {
               }
             }
           }
-          list.push(...activities.map((x) => this.transform(x)));
-          return list;
+          list.push(
+            ...activities.map((x) =>
+              this.transformer.activities.toTimelineViewModel(
+                x,
+                users.get(x.userId)!
+              )
+            )
+          );
         })
       );
   }
@@ -73,43 +103,4 @@ export class TimelineService {
   private get(actionId: string): ActionDefinition | undefined {
     return this.store.selectSnapshot(MetadataState.timeline).get(actionId);
   }
-
-  private transform(act: Activity): TimelineViewModel {
-    const menu: TimelineMenuItem[] = [];
-
-    if (act.objectId) {
-      menu.push({
-        activityId: act.id,
-        objectId: act.objectId,
-        ...NAVIGATE_ITEM,
-      });
-    }
-    menu.push({
-      activityId: act.id,
-      objectId: act.topLevelId,
-      ...RESTORE_ITEM,
-    });
-
-    return {
-      action: act.action,
-      data: act.data,
-      id: act.id,
-      menu,
-      objectId: act.objectId ?? act.topLevelId,
-      timestamp: act.timestamp,
-      userId: act.userId,
-    };
-  }
 }
-
-const NAVIGATE_ITEM = {
-  action: 'navigate',
-  icon: 'fa-eye',
-  title: 'Projects.ViewTask',
-};
-
-const RESTORE_ITEM = {
-  action: 'restore',
-  icon: 'fa-window-restore',
-  title: 'Projects.Restore',
-};

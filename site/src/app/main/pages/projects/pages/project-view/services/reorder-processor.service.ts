@@ -30,6 +30,6 @@ export class ReorderProcessor {
   }
 
   private copy<T>(x: T): T {
-    return <T>JSON.parse(JSON.stringify(x));
+    return <T>structuredClone(x);
   }
 }

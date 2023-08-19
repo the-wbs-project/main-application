@@ -156,6 +156,16 @@ export class AuthDataService {
     return user;
   }
 
+  async getLiteUserAsync(userId: string): Promise<UserLite> {
+    const user = await this.getUserAsync(userId);
+
+    return {
+      email: user.email,
+      id: user.id,
+      name: user.name,
+    };
+  }
+
   async getUsers(pageNumber: number, pageSize: number, fields?: string[]): Promise<UserLite[]> {
     let url = `users?sort=last_login:-1&search_engine=v3&page=${pageNumber}&per_page=${pageSize}`;
 

@@ -7,7 +7,7 @@ export class ChecklistHttpService {
 
       return ctx.json(await data.checklist.getAsync());
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get all checklists.', 'ActivityHttpService.getByIdAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get all checklists.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

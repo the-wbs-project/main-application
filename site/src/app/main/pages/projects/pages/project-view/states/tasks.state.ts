@@ -12,7 +12,7 @@ import {
   IdService,
   Messages,
   ProjectService,
-  WbsTransformers,
+  Transformers,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
@@ -63,7 +63,7 @@ export class TasksState {
     private readonly messaging: Messages,
     private readonly nav: ProjectNavigationService,
     private readonly service: ProjectService,
-    private readonly transformers: WbsTransformers
+    private readonly transformers: Transformers
   ) {}
 
   @Selector()

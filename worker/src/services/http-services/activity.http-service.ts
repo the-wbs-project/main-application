@@ -20,9 +20,7 @@ export class ActivityHttpService {
 
       return ctx.json(list);
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying to get all activity for an object.', 'ActivityHttpService.getByIdAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get all activity for an object.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -36,9 +34,7 @@ export class ActivityHttpService {
 
       return ctx.json(await ctx.get('data').userActivities.getAllAsync(userId));
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying to get all activity for a user.', 'ActivityHttpService.getByUserIdAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get all activity for a user.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -54,7 +50,7 @@ export class ActivityHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to insert an activity.', 'ActivityHttpService.putAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to insert an activity.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

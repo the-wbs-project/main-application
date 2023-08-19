@@ -4,7 +4,7 @@ import { cache, cachePurge, cors, logger, verifyJwt, verifyMembership, verifyMem
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
 import { ROLES } from './models';
 
-export const AZURE_ROUTES_POST: string[] = ['/api/projects/export/:type', '/api/projects/import/*'];
+export const AZURE_ROUTES_POST: string[] = ['api/projects/export/:type', 'api/projects/import/*'];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //
@@ -25,62 +25,58 @@ app.use('*', cors);
 
 app.options('*', (c) => c.text(''));
 
-app.get('/api/resources', cache, Http.metadata.getResourcesAsync);
-app.put('/api/resources', cachePurge, Http.metadata.setResourcesAsync);
-app.get('/api/lists/:name', cache, Http.metadata.getListAsync);
-app.post('/api/send', MailGunService.handleHomepageInquiryAsync);
-
-app.get('/api/invites/preReg/:owner/:code', Http.invites.getEmailAsync);
-app.get('/api/invites/postReg/:owner/:code', Http.invites.getAndAcceptAsync);
-//app.get('/api/resources/Info', Http.metadata.setInfo, Http.metadata.getResourcesAsync);
-app.get('/api/edge-data/clear', Http.misc.clearKvAsync);
+app.get('api/resources', cache, Http.metadata.getResourcesAsync);
+app.put('api/resources', cachePurge, Http.metadata.setResourcesAsync);
+app.get('api/lists/:name', cache, Http.metadata.getListAsync);
+app.put('api/lists/:name', cache, Http.metadata.putListAsync);
+app.post('api/send', MailGunService.handleHomepageInquiryAsync);
+app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('/api/invites', verifyJwt, Http.invites.getAllAsync);
-app.put('/api/invites/:send', verifyJwt, Http.invites.putAsync);
-app.get('/api/checklists', verifyJwt, Http.checklists.getAsync);
-app.get('/api/activity/topLevel/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
-app.get('/api/activity/child/:topLevelId/:childId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
-app.get('/api/activity/user/:userId', verifyJwt, Http.activities.getByUserIdAsync);
-app.put('/api/activity', verifyJwt, Http.activities.putAsync);
-app.get('/api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
-app.get('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
-app.put('/api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, Http.projects.putAsync);
-app.get('/api/projects/:owner/byId/:projectId/nodes', verifyJwt, verifyMembership, Http.projectNodes.getAsync);
-app.put('/api/projects/:owner/byId/:projectId/nodes/batch', verifyJwt, verifyMembership, Http.projectNodes.batchAsync);
-app.put('/api/projects/:owner/byId/:projectId/nodes/:nodeId', verifyJwt, verifyMembership, Http.projectNodes.putAsync);
-app.get('/api/projects/:owner/byId/:projectId/users', verifyJwt, verifyMembership, Http.projectNodes.getAsync);
-app.get('/api/projects/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.getByActivityIdAsync);
-app.put('/api/projects/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.take);
-app.get('/api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
-app.get('/api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
-app.get('/api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);
-app.get('/api/discussions/:owner/:associationId/:id/text', verifyJwt, verifyMembership, Http.discussions.getTextAsync);
-//app.put('/api/discussions/:owner/:id', verifyJwt, Http.discussions.putAsync);
-app.get('/api/memberships', verifyJwt, Http.memberships.getMembershipsAsync);
-app.get('/api/roles', verifyJwt, Http.memberships.getRolesAsync);
-app.get('/api/memberships/:organization/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesAsync);
-app.get('/api/memberships/:organization/users', verifyJwt, verifyMembership, Http.memberships.getMembershipUsersAsync);
+app.get('api/checklists', verifyJwt, Http.checklists.getAsync);
+app.get('api/activity/topLevel/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
+app.get('api/activity/child/:topLevelId/:childId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
+app.get('api/activity/user/:userId', verifyJwt, Http.activities.getByUserIdAsync);
+app.put('api/activity', verifyJwt, Http.activities.putAsync);
+app.get('api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
+app.get('api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
+app.put('api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, Http.projects.putAsync);
+app.get('api/projects/:owner/byId/:projectId/nodes', verifyJwt, verifyMembership, Http.projectNodes.getAsync);
+app.put('api/projects/:owner/byId/:projectId/nodes/batch', verifyJwt, verifyMembership, Http.projectNodes.batchAsync);
+app.put('api/projects/:owner/byId/:projectId/nodes/:nodeId', verifyJwt, verifyMembership, Http.projectNodes.putAsync);
+app.get('api/projects/:owner/byId/:projectId/users', verifyJwt, verifyMembership, Http.projectNodes.getAsync);
+app.get('api/projects/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.getByActivityIdAsync);
+app.put('api/projects/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.take);
+app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
+app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
+app.get('api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);
+app.get('api/discussions/:owner/:associationId/:id/text', verifyJwt, verifyMembership, Http.discussions.getTextAsync);
+//app.put('api/discussions/:owner/:id', verifyJwt, Http.discussions.putAsync);
+app.get('api/memberships', verifyJwt, Http.memberships.getMembershipsAsync);
+app.get('api/roles', verifyJwt, Http.memberships.getRolesAsync);
+app.get('api/users/:userId', verifyJwt, Http.memberships.getUserAsync);
+app.get('api/memberships/:organization/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesAsync);
+app.get('api/memberships/:organization/users', verifyJwt, verifyMembership, Http.memberships.getMembershipUsersAsync);
 app.delete(
-  '/api/memberships/:organization/users/:userId',
+  'api/memberships/:organization/users/:userId',
   verifyJwt,
   verifyMembershipRole(ROLES.ADMIN),
   Http.memberships.removeUserFromOrganizationAsync,
 );
 app.post(
-  '/api/memberships/:organization/users/:userId/roles',
+  'api/memberships/:organization/users/:userId/roles',
   verifyJwt,
   verifyMembershipRole(ROLES.ADMIN),
   Http.memberships.addUserOrganizationalRolesAsync,
 );
 app.delete(
-  '/api/memberships/:organization/users/:userId/roles',
+  'api/memberships/:organization/users/:userId/roles',
   verifyJwt,
   verifyMembershipRole(ROLES.ADMIN),
   Http.memberships.removeUserOrganizationalRolesAsync,
 );
-app.get('/api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
+app.get('api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of AZURE_ROUTES_POST) {
   app.post(path, verifyJwt, Http.misc.handleAzureCallAsync);

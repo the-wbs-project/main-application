@@ -3,7 +3,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
-import { Messages, WbsTransformers } from '@wbs/core/services';
+import { Messages, Transformers } from '@wbs/core/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -55,7 +55,7 @@ export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messenger: Messages,
-    private readonly transformer: WbsTransformers
+    private readonly transformer: Transformers
   ) {}
 
   @Selector()

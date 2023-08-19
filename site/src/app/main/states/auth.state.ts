@@ -35,6 +35,17 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
+  static profileLite(state: AuthBucket): UserLite | undefined {
+    return state.profile
+      ? {
+          id: state.profile.id,
+          email: state.profile.email,
+          name: state.profile.name,
+        }
+      : undefined;
+  }
+
+  @Selector()
   static roles(state: AuthBucket): string[] | undefined {
     return state?.roles;
   }

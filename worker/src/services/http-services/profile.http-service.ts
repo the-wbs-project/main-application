@@ -10,7 +10,7 @@ export class ProfileHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx.get('logger').trackException("An error occured trying to update the user's profile.", 'ProfileHttpService.updateAsync', <Error>e);
+      ctx.get('logger').trackException("An error occured trying to update the user's profile.", <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

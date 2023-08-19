@@ -9,9 +9,7 @@ export class ProjectHttpService {
 
       return ctx.json(await ctx.get('data').projects.getAllAsync(owner));
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying to get all projects for the organization.', 'ProjectHttpService.getAllAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get all projects for the organization.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -25,7 +23,7 @@ export class ProjectHttpService {
 
       return ctx.json(await ctx.get('data').projects.getAsync(owner, projectId));
     } catch (e) {
-      ctx.get('logger').trackException("An error occured trying to get a project by it's ID.", 'ProjectHttpService.getByIdAsync', <Error>e);
+      ctx.get('logger').trackException("An error occured trying to get a project by it's ID.", <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -41,7 +39,7 @@ export class ProjectHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to update a project.', 'ProjectHttpService.putAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to update a project.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

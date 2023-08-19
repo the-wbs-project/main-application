@@ -10,9 +10,7 @@ export class ProjectSnapshotHttpService {
 
       return ctx.json(await ctx.get('data').projectSnapshots.getAsync(owner, projectId, activityId));
     } catch (e) {
-      ctx
-        .get('logger')
-        .trackException('An error occured trying to get a project snapshot.', 'ProjectSnapshotHttpService.getByActivityIdAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get a project snapshot.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -28,7 +26,7 @@ export class ProjectSnapshotHttpService {
 
       return ctx.text('', 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to insert an activity.', 'ActivityHttpService.putAsync', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to take a snapshot of a project.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

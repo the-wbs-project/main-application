@@ -21,11 +21,10 @@ export class Logger {
     });
   }
 
-  trackException(message: string, location: string, exception: Error, data?: Record<string, any>): void {
+  trackException(message: string, exception: Error, data?: Record<string, any>): void {
     this.logs.push({
       ...this.basics({
         data: {
-          location,
           data,
           message: exception ? exception.message : 'No Exception Provided',
           stack: exception ? exception.stack?.toString() : 'No Exception Provided',

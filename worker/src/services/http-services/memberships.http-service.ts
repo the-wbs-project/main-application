@@ -2,6 +2,18 @@ import { Context } from '../../config';
 import { Member } from '../../models';
 
 export class MembershipHttpService {
+  static async getUserAsync(ctx: Context): Promise<Response> {
+    try {
+      const { userId } = ctx.req.param();
+
+      return ctx.json(await ctx.get('data').auth.getLiteUserAsync(userId));
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to get user information.', 'MembershipHttpService.getUserAsync', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
   static async getMembershipsAsync(ctx: Context): Promise<Response> {
     try {
       return ctx.json(await ctx.get('data').auth.getUserOrganizationsAsync(ctx.get('user').id));

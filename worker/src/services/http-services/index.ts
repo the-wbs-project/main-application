@@ -1,7 +1,6 @@
 import { ActivityHttpService } from './activity.http-service';
 import { ChecklistHttpService } from './checklist.http-service';
 import { DiscussionHttpService } from './discussion.http-service';
-import { InviteHttpService } from './invite.http-service';
 import { MembershipHttpService } from './memberships.http-service';
 import { MetadataHttpService } from './metdata.http-service';
 import { MiscHttpService } from './misc.http-service';
@@ -14,7 +13,6 @@ export const Http = {
   activities: ActivityHttpService,
   checklists: ChecklistHttpService,
   discussions: DiscussionHttpService,
-  invites: InviteHttpService,
   memberships: MembershipHttpService,
   metadata: MetadataHttpService,
   misc: MiscHttpService,
