@@ -1,0 +1,15 @@
+{
+  "name": "the-wbs-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "upload": "sh upload.sh",
+    "upload:local": "yarn run upload http://localhost:88"
+  },
+  "repository": {
+    "type": "git"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {}
+}

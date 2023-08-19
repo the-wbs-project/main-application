@@ -392,6 +392,7 @@
         "ProjectRemoveUserTitle": "Project Role Revoked",
         "TaskCreatedTitle": "Task Created",
         "TaskTitleChangedTitle": "Task Title Changed",
+        "TaskDescriptionChangedTitle": "Task Description Changed",
         "TaskClonedTitle": "Task Cloned",
         "TaskReorderedTitle": "Task Reordered",
         "TaskRemovedTitle": "Task Removed",

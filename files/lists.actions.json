@@ -1,0 +1,112 @@
+[
+    {
+        "id": "project-created",
+        "type": "actions",
+        "title": "Actions.ProjectCreatedTitle",
+        "description": "Actions.ProjectCreatedDescription",
+        "icon": "fa-plus"
+    },
+    {
+        "id": "project-title-changed",
+        "type": "actions",
+        "title": "Actions.ProjectTitleChangedTitle",
+        "description": "Actions.ProjectTitleChangedDescription",
+        "icon": "fa-pencil"
+    },
+    {
+        "id": "project-phases-changed",
+        "type": "actions",
+        "title": "Actions.ProjectPhasesChangedTitle",
+        "description": "Actions.ProjectPhasesChangedDescription",
+        "icon": "fa-list"
+    },
+    {
+        "id": "project-disciplines-changed",
+        "type": "actions",
+        "title": "Actions.ProjectDisciplinesChangedTitle",
+        "description": "Actions.ProjectDisciplinesChangedDescription",
+        "icon": "fa-list"
+    },
+    {
+        "id": "task-created",
+        "type": "actions",
+        "title": "Actions.TaskCreatedTitle",
+        "description": "Actions.TaskCreatedDescription",
+        "icon": "fa-plus"
+    },
+    {
+        "id": "task-cloned",
+        "type": "actions",
+        "title": "Actions.TaskClonedTitle",
+        "description": "Actions.TaskClonedDescription",
+        "icon": "fa-clone"
+    },
+    {
+        "id": "task-title-changed",
+        "type": "actions",
+        "title": "Actions.TaskTitleChangedTitle",
+        "description": "Actions.TaskTitleChangedDescription",
+        "icon": "fa-pencil"
+    },
+    {
+        "id": "task-reordered",
+        "type": "actions",
+        "title": "Actions.TaskReorderedTitle",
+        "description": "Actions.TaskReorderedDescription",
+        "icon": "fa-arrow-up-arrow-down"
+    },
+    {
+        "id": "task-removed",
+        "type": "actions",
+        "title": "Actions.TaskRemovedTitle",
+        "description": "Actions.TaskRemovedDescription",
+        "icon": "fa-xmark"
+    },
+    {
+        "id": "project-description-changed",
+        "type": "actions",
+        "title": "Actions.ProjectDescriptionChangedTitle",
+        "icon": "fa-pencil"
+    },
+    {
+        "id": "project-category-changed",
+        "type": "actions",
+        "title": "Actions.ProjectCategoryChangedTitle",
+        "description": "Actions.ProjectCategoryChangedDescription",
+        "icon": "fa-pencil"
+    },
+    {
+        "id": "project-added-user",
+        "type": "actions",
+        "title": "Actions.ProjectAddUserTitle",
+        "description": "Actions.ProjectAddUserDescription",
+        "icon": "fa-user"
+    },
+    {
+        "id": "project-removed-user",
+        "type": "actions",
+        "title": "Actions.ProjectRemoveUserTitle",
+        "description": "Actions.ProjectRemoveUserDescription",
+        "icon": "fa-user"
+    },
+    {
+        "id": "project-status-changed",
+        "type": "actions",
+        "title": "Actions.ProjectStatusChangedTitle",
+        "description": "Actions.ProjectStatusChangedDescription",
+        "icon": "fa-arrow-progress"
+    },
+    {
+        "id": "task-description-changed",
+        "type": "actions",
+        "title": "Actions.TaskDescriptionChangedTitle",
+        "icon": "fa-pencil"
+    },
+    {
+        "id": "task-disciplines-changed",
+        "type": "actions",
+        "title": "Actions.TaskDisciplinesChangedTitle",
+        "description": "Actions.TaskDisciplinesChangedDescription",
+        "icon": "fa-user-helmet-safety"
+    }
+]
