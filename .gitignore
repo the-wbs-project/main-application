@@ -14,3 +14,5 @@ _theme/Nowa
 worker/.wrangler/
 
 **/.DS_store
+
+/example

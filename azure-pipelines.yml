@@ -43,6 +43,38 @@ jobs:
           publishLocation: "Container"
         displayName: "Publish Worker"
 
+  - job: api_job
+    displayName: Api
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
+
+      - script: yarn
+        workingDirectory: "worker"
+        displayName: "Install Packages"
+
+      - script: yarn run build
+        workingDirectory: "worker"
+        displayName: "Build"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "worker"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
+          replaceExistingArchive: true
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
+
   - job: worker_job
     displayName: Worker
     dependsOn: site_job

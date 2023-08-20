@@ -10,22 +10,22 @@ services:
   wbs.functions:
     container_name: wbs-functions
     build:
-        context: ./_other/utilities
-        dockerfile: Dockerfile-dev
+        context: ./api
+        dockerfile: Dockerfile
     ports:
         - 7071:7071
-    environment:
+    #environment:
         # Copy .env variables through to container
-        - AzureWebJobsStorage
-        - BlobContainerName
-        - BlobOutputContainerName
-        - QueueName
+        #- AzureWebJobsStorage
+        #- BlobContainerName
+        #- BlobOutputContainerName
+        #- QueueName
     volumes:
-       - ./_other/utilities:/usr/src/app/utilities
-       - /usr/src/app/utilities/Bin
-       - /usr/src/app/utilities/Obj
-    depends_on:
-        - local.storage.emulator
+       - ./api:/usr/src/app/api
+       - /usr/src/api/Bin
+       - /usr/src/api/Obj
+    #depends_on:
+       #- local.storage.emulator
 
   wbs-worker:
     build:
