@@ -146,12 +146,14 @@ export class CosmosDbService {
       partitionKey: pk,
       isUpsert: true,
     });
+    const body = <T>await res.json();
+
     if (res.status >= 300) {
-      console.log(res.status);
-      console.log('The error message');
-      console.log(await res.json());
+      console.log(res.status, body);
+
+      throw new Error('Error upserting data: ' + JSON.stringify(body));
     }
-    return <T>await res.json();
+    return body;
   }
 
   async deleteDocument(docId: string, pk: string): Promise<void> {
