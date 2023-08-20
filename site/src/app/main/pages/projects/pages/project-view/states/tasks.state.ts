@@ -1,5 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import {
+  Action,
+  Actions,
+  NgxsOnInit,
+  Selector,
+  State,
+  StateContext,
+  ofActionCompleted,
+} from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -15,6 +24,7 @@ import {
   Transformers,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { ProjectUpdated } from '@wbs/main/actions';
 import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
@@ -53,12 +63,14 @@ interface StateModel {
 }
 
 @Injectable()
+@UntilDestroy()
 @State<StateModel>({
   name: 'tasks',
   defaults: {},
 })
-export class TasksState {
+export class TasksState implements NgxsOnInit {
   constructor(
+    private readonly actions$: Actions,
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
     private readonly nav: ProjectNavigationService,
@@ -102,14 +114,26 @@ export class TasksState {
     return state.nodes.filter((x) => phaseIds.indexOf(x.id) === -1).length;
   }
 
+  ngxsOnInit(ctx: StateContext<any>): void {
+    this.actions$
+      .pipe(ofActionCompleted(ProjectUpdated), untilDestroyed(this))
+      .subscribe((p) => {
+        const state = ctx.getState();
+
+        if (p.action.project.id === state.project?.id) {
+          ctx.dispatch(new VerifyTasks(p.action.project, true));
+        }
+      });
+  }
+
   @Action(VerifyTasks)
   verifyTasks(
     ctx: StateContext<StateModel>,
-    { project }: VerifyTasks
+    { project, force }: VerifyTasks
   ): Observable<void> | void {
     const state = ctx.getState();
 
-    if (state.project?.id === project.id) return;
+    if (state.project?.id === project.id && !force) return;
 
     return this.data.projectNodes.getAllAsync(project.owner, project.id).pipe(
       tap((nodes) =>

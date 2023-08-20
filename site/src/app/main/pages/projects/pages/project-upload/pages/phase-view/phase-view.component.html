@@ -50,6 +50,9 @@
               <span class="k-icon k-i-caret-alt-down"></span>
               {{ dataItems | join : "label" }}
             </ng-template>
+            <ng-template kendoMultiSelectItemTemplate let-dataItem>
+              {{ dataItem.label | translate }}
+            </ng-template>
           </kendo-multiselect>
         </div>
       </ng-template>

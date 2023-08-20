@@ -279,6 +279,7 @@
       },
       "ProjectUpload": {
         "PagesUploadProjectPlan": "Upload Project Plan",
+        "PagesOptions": "Options",
         "GetStartedMessage": "To get started upload your project plan using the control below.  Once uploaded we will guide you through the rest of the process.",
         "UploadInstruction": "Drag or click to select your project plan",
         "ExcelFile": "Excel File",
