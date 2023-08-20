@@ -52,16 +52,16 @@ jobs:
         displayName: "Install Node.js"
 
       - script: yarn
-        workingDirectory: "worker"
+        workingDirectory: "api"
         displayName: "Install Packages"
 
       - script: yarn run build
-        workingDirectory: "worker"
+        workingDirectory: "api"
         displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "worker"
+          rootFolderOrFile: "api"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
