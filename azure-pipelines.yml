@@ -28,7 +28,7 @@ jobs:
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "api/dist"
+          rootFolderOrFile: "api/dist/api"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
