@@ -20,7 +20,7 @@ jobs:
         inputs:
           command: "publish"
           publishWebProjects: false
-          projects: "./api/api.csproj"
+          projects: "./api/api2.csproj"
           arguments: "-o ./api/dist"
           zipAfterPublish: false
           modifyOutputPath: true
