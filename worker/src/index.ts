@@ -4,7 +4,7 @@ import { cache, cachePurge, cors, logger, verifyJwt, verifyMembership, verifyMem
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
 import { ROLES } from './models';
 
-export const AZURE_ROUTES_POST: string[] = ['api/projects/export/:type', 'api/projects/import/*'];
+export const AZURE_ROUTES_POST: string[] = ['api/import/:type', 'api/export/:type/:culture'];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //
@@ -27,8 +27,8 @@ app.options('*', (c) => c.text(''));
 
 app.get('api/resources', cache, Http.metadata.getResourcesAsync);
 app.put('api/resources', cachePurge, Http.metadata.setResourcesAsync);
-app.get('api/lists/:name', cache, Http.metadata.getListAsync);
-app.put('api/lists/:name', cache, Http.metadata.putListAsync);
+app.get('api/lists/:type', cache, Http.metadata.getListAsync);
+app.put('api/lists/:type', cache, Http.metadata.putListAsync);
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //

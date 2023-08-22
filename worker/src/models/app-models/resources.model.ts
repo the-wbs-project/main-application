@@ -1,6 +1,5 @@
-import { IdObject } from './db-object.model';
-
-export interface Resources extends IdObject {
-  language: string;
+export interface Resources {
+  section: string;
+  locale: string;
   values: Record<string, Record<string, string>>;
 }

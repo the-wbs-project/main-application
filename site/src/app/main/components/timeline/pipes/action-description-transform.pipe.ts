@@ -1,11 +1,19 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { TimelineService } from '../services';
 
 @Pipe({ name: 'actionDescriptionTransform', standalone: true })
 export class ActionDescriptionTransformPipe implements PipeTransform {
-  constructor(private readonly service: TimelineService) {}
-
   transform(description: string, data: Record<string, any>): string {
-    return this.service.transformDescription(description, data);
+    while (description.indexOf('{') > -1) {
+      const start = description.indexOf('{');
+      const end = description.indexOf('}', start);
+      const property = description.substring(start + 1, end);
+      //
+      //  If the data doesn't exist, don't show the bad description
+      //
+      if (data[property] == undefined) return '';
+
+      description = description.replace(`{${property}}`, data[property]);
+    }
+    return description;
   }
 }

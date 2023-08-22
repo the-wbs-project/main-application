@@ -5,16 +5,12 @@ export class MiscHttpService {
   static async handleAzureCallAsync(ctx: Context): Promise<Response> {
     const originalUrl = new URL(ctx.req.url);
     const body = await ctx.req.arrayBuffer();
-    const url = `${ctx.env.AZURE_ENDPOINT}/${originalUrl.pathname}`;
+    const url = ctx.env.API_ENDPOINT + originalUrl.pathname;
     const headers = new Headers(ctx.req.headers);
-    const culture = 'en-US'; //ctx.get('state').culture;
-
-    if (culture) headers.set('app-culture', culture);
-    if (ctx.env.AZURE_KEY) headers.set('x-functions-key', ctx.env.AZURE_KEY);
 
     const res = await ctx.get('fetcher').fetch(url, {
-      body: body,
       method: ctx.req.method,
+      body,
       headers,
     });
 

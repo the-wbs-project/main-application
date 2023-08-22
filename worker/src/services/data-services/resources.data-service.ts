@@ -1,19 +1,15 @@
 import { Context } from '../../config';
 import { Resources } from '../../models';
-import { CosmosDbService } from './cosmos-db.service';
+import { AzureService } from '../azure.service';
 
 export class ResourcesDataService {
-  private readonly db: CosmosDbService;
+  constructor(private ctx: Context) {}
 
-  constructor(private ctx: Context) {
-    this.db = new CosmosDbService(this.ctx, 'Resources', 'language');
+  getAsync(locale: string): Promise<Record<string, Record<string, string>>> {
+    return AzureService.getAsync<Record<string, Record<string, string>>>(this.ctx, `resources/all/${locale}`);
   }
 
-  getAsync(culture: string): Promise<Resources[] | undefined> {
-    return this.db.getAllByPartitionAsync<Resources>(culture, true);
-  }
-
-  putAsync(resources: Resources): Promise<void> {
-    return this.db.upsertDocument(resources, resources.language);
+  async putAsync(resources: Resources): Promise<void> {
+    await AzureService.putAsync(this.ctx, `resources`, resources);
   }
 }

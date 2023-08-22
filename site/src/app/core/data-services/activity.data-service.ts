@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { IdService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Activity, ActivityData } from '../models';
+import { Activity, ActivityData, UserLite } from '../models';
 
 export class ActivityDataService {
   constructor(private readonly http: HttpClient) {}
@@ -29,18 +29,20 @@ export class ActivityDataService {
   }
 
   putAsync(
-    userId: string,
+    user: UserLite,
     topLevelId: string,
     data: ActivityData
-  ): Observable<Activity> {
-    const model: Activity = {
-      ...data,
-      id: IdService.generate(),
-      timestamp: Date.now(),
-      topLevelId,
-      userId,
-    };
+  ): Observable<string> {
+    const id = IdService.generate();
 
-    return this.http.put<void>('api/activity', model).pipe(map(() => model));
+    return this.http
+      .put<void>('api/activity', {
+        ...data,
+        id,
+        timestamp: Date.now(),
+        topLevelId,
+        userId: user.id,
+      })
+      .pipe(map(() => id));
   }
 }

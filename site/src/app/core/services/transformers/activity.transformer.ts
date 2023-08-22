@@ -1,5 +1,5 @@
-import { Activity, TimelineMenuItem, UserLite } from '@wbs/core/models';
-import { TimelineViewModel } from '@wbs/core/view-models';
+import { Activity, TimelineMenuItem } from '@wbs/core/models';
+import { ActivityViewModel, TimelineViewModel } from '@wbs/core/view-models';
 
 const NAVIGATE_ITEM = {
   action: 'navigate',
@@ -14,7 +14,7 @@ const RESTORE_ITEM = {
 };
 
 export class ActivityTransformer {
-  static toTimelineViewModel(act: Activity, user: UserLite): TimelineViewModel {
+  static toTimelineViewModel(act: ActivityViewModel): TimelineViewModel {
     const menu: TimelineMenuItem[] = [];
 
     if (act.objectId) {
@@ -37,7 +37,10 @@ export class ActivityTransformer {
       menu,
       objectId: act.objectId ?? act.topLevelId,
       timestamp: act.timestamp,
-      user,
+      user: act.userName,
+      actionDescription: act.actionDescription,
+      actionIcon: act.actionIcon,
+      actionTitle: act.actionTitle,
     };
   }
 }

@@ -1,26 +1,23 @@
 import { Injectable } from '@angular/core';
-import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { ProjectCategory, TimelineMenuItem } from '@wbs/core/models';
+import { TaskCreateService } from '@wbs/main/components/task-create';
+import { TaskDeleteService } from '@wbs/main/components/task-delete';
+import { ProjectCategory } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
   CloneTask,
   CreateTask,
   DownloadNodes,
-  LoadNextProjectTimelinePage,
   MoveTaskDown,
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
   RemoveTask,
-  RestoreProject,
   TreeReordered,
 } from '../actions';
 import { PROJECT_PAGE_VIEW } from '../models';
 import { ProjectState, ProjectViewState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
-import { TaskCreateService } from '@wbs/main/components/task-create';
-import { TaskDeleteService } from '@wbs/main/components/task-delete';
 
 @Injectable()
 export class ProjectViewService {
@@ -79,19 +76,5 @@ export class ProjectViewService {
     const view = this.store.selectSnapshot(ProjectViewState.viewNode)!;
 
     this.store.dispatch(new TreeReordered(draggedId, view, rows));
-  }
-
-  loadMoreTimeline() {
-    this.store.dispatch(new LoadNextProjectTimelinePage());
-  }
-
-  timelineAction(item: TimelineMenuItem, projectId: string) {
-    if (item.action === 'navigate') {
-      this.store.dispatch(
-        new Navigate(['projects', projectId, 'task', item.objectId])
-      );
-    } else if (item.action === 'restore') {
-      this.store.dispatch(new RestoreProject(item.activityId));
-    }
   }
 }

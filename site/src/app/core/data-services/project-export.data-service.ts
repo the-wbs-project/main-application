@@ -13,7 +13,7 @@ export class ProjectExportDataService {
     rows: WbsNodeView[]
   ): Observable<any> {
     return this.http
-      .post(`api/projects/export/${extension}`, rows, {
+      .post(`api/export/${extension}/en-US`, rows, {
         responseType: 'blob' as 'json',
       })
       .pipe(

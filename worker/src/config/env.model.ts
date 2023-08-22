@@ -10,8 +10,7 @@ export type Env = {
   AUTH_CONNECTION: string;
   AUTH_DOMAIN: string;
 
-  AZURE_ENDPOINT: string;
-  AZURE_KEY: string;
+  API_ENDPOINT: string;
 
   COSMOS_ENDPOINT: string;
   COSMOS_KEY: string;

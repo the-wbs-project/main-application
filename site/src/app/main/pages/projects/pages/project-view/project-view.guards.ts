@@ -2,13 +2,11 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { LoadDiscussionForum, VerifyTimelineData } from '@wbs/main/actions';
+import { LoadDiscussionForum } from '@wbs/main/actions';
 import { MembershipState } from '@wbs/main/states';
 import { map } from 'rxjs/operators';
 import {
   InitiateChecklist,
-  LoadProjectTimeline,
-  LoadTaskTimeline,
   ProjectPageChanged,
   TaskPageChanged,
   VerifyProject,
@@ -47,20 +45,6 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
     .pipe(map(() => true));
 };
 
-export const projectTimelineVerifyGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const owner: string =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
-
-  return store
-    .dispatch([
-      new VerifyTimelineData(),
-      new LoadProjectTimeline(owner, route.params['projectId']),
-    ])
-    .pipe(map(() => true));
-};
-
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const owner =
@@ -92,7 +76,7 @@ export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
   if (!taskId) return false;
 
   return store
-    .dispatch([new VerifyTask(viewNode, taskId), new LoadTaskTimeline(taskId)])
+    .dispatch([new VerifyTask(viewNode, taskId)])
     .pipe(map(() => true));
 };
 

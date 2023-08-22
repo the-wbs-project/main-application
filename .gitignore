@@ -16,3 +16,5 @@ worker/.wrangler/
 **/.DS_store
 
 /example
+
+**/appsettings.Development.json

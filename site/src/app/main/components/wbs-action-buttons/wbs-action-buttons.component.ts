@@ -1,7 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActionMenuItem } from '@wbs/core/models';
 
@@ -14,7 +13,6 @@ import { ActionMenuItem } from '@wbs/core/models';
       *ngFor="let item of items"
       class="btn btn-white btn-outline-primary"
       (click)="clicked.emit(item.action)"
-      [ngbTooltip]="item.title ?? '' | translate"
       placement="bottom"
     >
       <fa-icon *ngIf="item.icon" [icon]="item.icon" />
@@ -23,7 +21,7 @@ import { ActionMenuItem } from '@wbs/core/models';
       </span>
     </button>
   </div>`,
-  imports: [CommonModule, FontAwesomeModule, NgbTooltipModule, TranslateModule],
+  imports: [CommonModule, FontAwesomeModule, TranslateModule],
 })
 export class WbsActionButtonsComponent {
   @Input() items?: ActionMenuItem[] | null;

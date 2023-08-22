@@ -1,43 +1,28 @@
 version: '3'
 services:
-  local.storage.emulator:
-      image: "mcr.microsoft.com/azure-storage/azurite:latest"
-      container_name: local.storage.emulator
-      ports:
-          - 10000:10000
-          - 10001:10001
-
-  wbs.functions:
-    container_name: wbs-functions
+  api:
+    container_name: api
     build:
-        context: ./api
-        dockerfile: Dockerfile
+      context: ./api
+      dockerfile: Dockerfile-dev
     ports:
-        - 7071:7071
-    #environment:
-        # Copy .env variables through to container
-        #- AzureWebJobsStorage
-        #- BlobContainerName
-        #- BlobOutputContainerName
-        #- QueueName
+      - 5216:5216
     volumes:
-       - ./api:/usr/src/app/api
-       - /usr/src/api/Bin
-       - /usr/src/api/Obj
-    #depends_on:
-       #- local.storage.emulator
-
-  wbs-worker:
+      - './api:/usr/src/app/api'
+  
+  worker:
+    container_name: worker
     build:
       context: ./worker
       dockerfile: Dockerfile-dev
     ports:
       - "88:88"
-    container_name: wbs-worker
     volumes:
        - ./worker:/usr/src/app/worker
        - /usr/src/app/worker/node_modules
-  wbs-site:
+
+  site:
+    container_name: site
     build:
       context: ./site
       dockerfile: Dockerfile-dev
@@ -46,18 +31,6 @@ services:
           KENDO_UI_LICENSE: $KENDO_UI_LICENSE
     ports:
       - "4200:4200"
-    container_name: wbs-site
     volumes:
        - ./site:/usr/src/app/site
        - /usr/src/app/site/node_modules
-# wbs-util:
-#    build:
-#      context: ./_other/utilities
-#      dockerfile: Dockerfile-dev
-#    ports:
-#      - "7071:7071"
-#    container_name: wbs-util
-#    volumes:
-#       - ./_other/utilities:/usr/src/app/utilities
-#       - /usr/src/app/utilities/Bin
-#       - /usr/src/app/utilities/Obj

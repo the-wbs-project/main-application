@@ -4,19 +4,16 @@ import { NgxsModule } from '@ngxs/store';
 import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TaskDeleteService } from '@wbs/main/components/task-delete';
 import { DialogService } from '@wbs/main/services';
-import {
-  projectTimelineVerifyGuard,
-  projectVerifyGuard,
-} from './project-view.guards';
+import { projectVerifyGuard } from './project-view.guards';
 import {
   ChecklistDataService,
   ProjectNavigationService,
   ProjectViewService,
+  TimelineService,
 } from './services';
 import {
   ProjectChecklistState,
   ProjectState,
-  ProjectTimelineState,
   ProjectViewState,
   TasksState,
 } from './states';
@@ -24,7 +21,7 @@ import {
 export const routes: Routes = [
   {
     path: ':projectId',
-    canActivate: [projectVerifyGuard, projectTimelineVerifyGuard],
+    canActivate: [projectVerifyGuard],
     loadComponent: () =>
       import('./project-view-layout.component').then(
         (m) => m.ProjectViewLayoutComponent
@@ -34,7 +31,6 @@ export const routes: Routes = [
       importProvidersFrom(
         NgxsModule.forFeature([
           ProjectChecklistState,
-          ProjectTimelineState,
           ProjectViewState,
           ProjectState,
           TasksState,
@@ -46,6 +42,7 @@ export const routes: Routes = [
       ProjectViewService,
       TaskCreateService,
       TaskDeleteService,
+      TimelineService,
     ],
   },
 ];

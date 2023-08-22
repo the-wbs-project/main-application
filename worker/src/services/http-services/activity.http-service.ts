@@ -1,5 +1,6 @@
 import { Context } from '../../config';
 import { Activity } from '../../models';
+import { ActivityService } from '../activity.service';
 
 export class ActivityHttpService {
   static async getByIdAsync(ctx: Context): Promise<Response> {
@@ -18,7 +19,7 @@ export class ActivityHttpService {
         ? await data.activities.getByChildAsync(topLevelId, childId, skip2, take2)
         : await data.activities.getByTopLevelAsync(topLevelId, skip2, take2);
 
-      return ctx.json(list);
+      return ctx.json(await ActivityService.toViewModelAsync(ctx, list ?? []));
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get all activity for an object.', <Error>e);
 

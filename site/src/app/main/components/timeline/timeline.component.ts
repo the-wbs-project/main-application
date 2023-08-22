@@ -9,12 +9,7 @@ import { Messages } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
 import { DateTextPipe } from '../../pipes/date-text.pipe';
-import {
-  ActionDescriptionPipe,
-  ActionDescriptionTransformPipe,
-  ActionIconPipe,
-  ActionTitlePipe,
-} from './pipes';
+import { ActionDescriptionTransformPipe } from './pipes';
 
 @Component({
   standalone: true,
@@ -22,10 +17,7 @@ import {
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
   imports: [
-    ActionDescriptionPipe,
     ActionDescriptionTransformPipe,
-    ActionIconPipe,
-    ActionTitlePipe,
     CommonModule,
     DateTextPipe,
     FontAwesomeModule,

@@ -11,3 +11,10 @@ export interface Activity {
   labelTitle: string;
   data: (string | number | null | undefined)[];
 }
+
+export interface ActivityViewModel extends Activity {
+  userName?: string;
+  actionIcon?: string;
+  actionTitle?: string;
+  actionDescription?: string;
+}

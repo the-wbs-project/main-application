@@ -7,7 +7,6 @@ import {
 } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ResourceSection } from '../models';
 import { Logger } from './logger.service';
 
 @Injectable({ providedIn: 'root' })
@@ -26,15 +25,7 @@ export class Resources extends MissingTranslationHandler {
 
   initiate(): Observable<void> {
     return this.getFromServerAsync().pipe(
-      map((list) => {
-        let resources: Record<string, Record<string, string>> = {};
-
-        for (const item of list) {
-          resources = {
-            ...resources,
-            ...item.values,
-          };
-        }
+      map((resources) => {
         this.resources = resources;
         this.translate.setTranslation(this.culture, resources);
         this.translate.setDefaultLang(this.culture);
@@ -61,8 +52,6 @@ export class Resources extends MissingTranslationHandler {
 
     const parts = resource.split('.');
 
-    console.log(this.resources);
-
     try {
       const result = this.resources[parts[0]][parts[1]];
 
@@ -88,9 +77,11 @@ export class Resources extends MissingTranslationHandler {
     return params.key;
   }
 
-  private getFromServerAsync(): Observable<ResourceSection[]> {
+  private getFromServerAsync(): Observable<
+    Record<string, Record<string, string>>
+  > {
     return this.http
-      .get<ResourceSection[] | undefined>('api/resources')
-      .pipe(map((x) => x ?? []));
+      .get<Record<string, Record<string, string>>>('api/resources')
+      .pipe(map((x) => x ?? {}));
   }
 }

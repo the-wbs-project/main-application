@@ -1,31 +1,54 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  signal,
+  WritableSignal,
+} from '@angular/core';
 import { Store } from '@ngxs/store';
 import { TimelineComponent } from '@wbs/main/components/timeline';
-import { ProjectViewService } from '../services';
-import { ProjectTimelineState } from '../states';
+import { TimelineMenuItem } from '@wbs/core/models';
+import { TimelineViewModel } from '@wbs/core/view-models';
+import { ProjectNavigationService, TimelineService } from '../services';
+import { ProjectState } from '../states';
 
 @Component({
   standalone: true,
   template: `<wbs-timeline
     [timeline]="timeline()"
-    (loadMoreClicked)="service.loadMoreTimeline()"
-    (menuItemClicked)="service.timelineAction($event, projectId)"
+    (loadMoreClicked)="loadMore()"
+    (menuItemClicked)="timelineAction($event)"
   /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TimelineComponent],
 })
-export class ProjectTimelinePageComponent {
-  readonly timeline = toSignal(this.store.select(ProjectTimelineState.project));
+export class ProjectTimelinePageComponent implements OnInit {
+  readonly timeline: WritableSignal<TimelineViewModel[]> = signal([]);
 
   constructor(
-    private readonly route: ActivatedRoute,
+    private readonly nav: ProjectNavigationService,
     private readonly store: Store,
-    readonly service: ProjectViewService
+    private readonly timelineService: TimelineService
   ) {}
 
-  get projectId(): string {
-    return this.route.snapshot.params['projectId'];
+  ngOnInit(): void {
+    this.loadMore();
+  }
+
+  timelineAction(item: TimelineMenuItem) {
+    if (item.action === 'navigate') {
+      this.nav.toTask(item.objectId);
+    } else if (item.action === 'restore') {
+      //this.store.dispatch(new RestoreProject(item.activityId));
+    }
+  }
+
+  loadMore(): void {
+    const timeline = this.timeline();
+    const projectId = this.store.selectSnapshot(ProjectState.current)!.id;
+
+    this.timelineService
+      .loadMore(timeline, projectId)
+      .subscribe((newTimeline) => this.timeline.set([...newTimeline]));
   }
 }

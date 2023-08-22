@@ -3,7 +3,6 @@ import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { forkJoin, map, Observable } from 'rxjs';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActionDefinition, ListItem, LISTS } from '@wbs/core/models';
-import { VerifyTimelineData } from '../actions';
 
 interface StateModel {
   categoryIcons: Map<string, string>;
@@ -11,7 +10,6 @@ interface StateModel {
   categoryMap: Map<string, Map<string, ListItem>>;
   categoryNames: Map<string, string>;
   projectCategories: ListItem[];
-  timeline: Map<string, ActionDefinition>;
 }
 
 @Injectable()
@@ -23,7 +21,6 @@ interface StateModel {
     categoryMap: new Map<string, Map<string, ListItem>>(),
     categoryNames: new Map<string, string>(),
     projectCategories: [],
-    timeline: new Map<string, ActionDefinition>(),
   },
 })
 export class MetadataState implements NgxsOnInit {
@@ -57,11 +54,6 @@ export class MetadataState implements NgxsOnInit {
   @Selector()
   static projectCategories(state: StateModel): ListItem[] {
     return state.categoryList.get(LISTS.PROJECT_CATEGORIES)!;
-  }
-
-  @Selector()
-  static timeline(state: StateModel): Map<string, ActionDefinition> {
-    return state.timeline;
   }
 
   ngxsOnInit(ctx: StateContext<any>): void {
@@ -100,24 +92,6 @@ export class MetadataState implements NgxsOnInit {
         })
       )
       .subscribe();
-  }
-
-  @Action(VerifyTimelineData)
-  verifyTimelineData(ctx: StateContext<StateModel>): Observable<void> | void {
-    const timeline = ctx.getState().timeline;
-
-    if (timeline.size > 0) return;
-
-    return this.data.metdata.getListAsync<ActionDefinition>(LISTS.ACTIONS).pipe(
-      map((list) => {
-        for (const x of list) {
-          timeline.set(x.id, x);
-        }
-        ctx.patchState({
-          timeline,
-        });
-      })
-    );
   }
 
   private createMap(list: ListItem[]): Map<string, ListItem> {

@@ -26,12 +26,12 @@ import {
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveUserToRole,
-  SaveTimelineAction,
   SetProject,
   VerifyProject,
   VerifyTasks,
 } from '../actions';
 import { PROJECT_ACTIONS } from '../models';
+import { TimelineService } from '../services';
 import { UserRolesViewModel } from '../view-models';
 
 interface StateModel {
@@ -54,7 +54,8 @@ export class ProjectState {
     private readonly dialog: DialogService,
     private readonly messaging: Messages,
     private readonly services: ProjectService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly timeline: TimelineService
   ) {}
 
   @Selector()
@@ -201,7 +202,7 @@ export class ProjectState {
             tap(() => this.messaging.success('ProjectSettings.UserAdded')),
             tap(() => this.updateUsers(ctx)),
             tap(() => this.updateUserRoles(ctx)),
-            switchMap(() =>
+            tap(() =>
               this.saveActivity(ctx, {
                 action: PROJECT_ACTIONS.ADDED_USER,
                 data: {
@@ -247,7 +248,7 @@ export class ProjectState {
             tap(() => this.messaging.success('ProjectSettings.UserRemoved')),
             tap(() => this.updateUsers(ctx)),
             tap(() => this.updateUserRoles(ctx)),
-            switchMap(() =>
+            tap(() =>
               this.saveActivity(ctx, {
                 action: PROJECT_ACTIONS.REMOVED_USER,
                 data: {
@@ -397,8 +398,10 @@ export class ProjectState {
   private saveActivity(
     ctx: StateContext<StateModel>,
     ...data: ActivityData[]
-  ): Observable<void> {
-    return ctx.dispatch(new SaveTimelineAction(data));
+  ): void {
+    const project = ctx.getState().current!;
+
+    this.timeline.saveActions(project.owner, project.id, data);
   }
 
   private saveProject(

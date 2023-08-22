@@ -11,7 +11,7 @@
             <div class="timeline-badge success tx-center pd-t-10">
               <i
                 class="fa-solid fa-2x tx-white"
-                [ngClass]="activity.action | actionIcon"
+                [ngClass]="activity.actionIcon ?? ''"
               ></i>
             </div>
             <div class="timeline-panel">
@@ -19,7 +19,7 @@
                 <div class="display-flex flex-row w-100">
                   <div style="flex-grow: 1">
                     <h6 class="timeline-title mb-0 pd-t-3">
-                      {{ activity.action | actionTitle | translate }}
+                      {{ activity.actionTitle ?? "" | translate }}
                     </h6>
                   </div>
                   <div
@@ -49,14 +49,13 @@
                   </div>
                 </div>
                 <label class="tx-italic tx-10">
-                  {{ activity.user.name }}
+                  {{ activity.user }}
                 </label>
               </div>
               <div class="timeline-body">
                 <p>
                   {{
-                    activity.action
-                      | actionDescription
+                    activity.actionDescription ?? ""
                       | translate
                       | actionDescriptionTransform : activity.data
                   }}

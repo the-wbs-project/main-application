@@ -12,7 +12,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Activity, UserLite } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
-import { TimelineService } from '@wbs/main/components/timeline';
 import { DialogService } from '@wbs/main/services';
 import { AuthState, MembershipState } from '@wbs/main/states';
 import { forkJoin, Observable } from 'rxjs';

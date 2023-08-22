@@ -41,14 +41,13 @@ import {
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveTask,
-  SaveTimelineAction,
   TaskPageChanged,
   TreeReordered,
   VerifyTask,
   VerifyTasks,
 } from '../actions';
 import { TASK_ACTIONS, TASK_PAGE_VIEW_TYPE } from '../models';
-import { ProjectNavigationService } from '../services';
+import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
 
 interface StateModel {
@@ -75,6 +74,7 @@ export class TasksState implements NgxsOnInit {
     private readonly messaging: Messages,
     private readonly nav: ProjectNavigationService,
     private readonly service: ProjectService,
+    private readonly timeline: TimelineService,
     private readonly transformers: Transformers
   ) {}
 
@@ -241,7 +241,7 @@ export class TasksState implements NgxsOnInit {
         })
       ),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      switchMap(() =>
+      tap(() =>
         this.saveActivity(ctx, {
           action: TASK_ACTIONS.REMOVED,
           data: {
@@ -335,7 +335,7 @@ export class TasksState implements NgxsOnInit {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      switchMap(() =>
+      tap(() =>
         this.saveActivity(ctx, {
           data: {
             title: node.title,
@@ -543,7 +543,7 @@ export class TasksState implements NgxsOnInit {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      switchMap(() =>
+      tap(() =>
         this.saveActivity(ctx, {
           data: {
             title: model.title,
@@ -587,6 +587,7 @@ export class TasksState implements NgxsOnInit {
         action: TASK_ACTIONS.DESCRIPTION_CHANGED,
         objectId: model.id,
         data: {
+          title: model.title,
           from: model.description,
           to: description,
         },
@@ -607,7 +608,7 @@ export class TasksState implements NgxsOnInit {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      switchMap(() => this.saveActivity(ctx, ...activities)),
+      tap(() => this.saveActivity(ctx, ...activities)),
       tap(() => this.messaging.success('Projects.TaskUpdated'))
     );
   }
@@ -629,6 +630,7 @@ export class TasksState implements NgxsOnInit {
         action: TASK_ACTIONS.DISCIPLINES_CHANGED,
         objectId: model.id,
         data: {
+          title: model.title,
           from: model.disciplineIds,
           to: disciplines,
         },
@@ -650,7 +652,7 @@ export class TasksState implements NgxsOnInit {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      switchMap(() => this.saveActivity(ctx, ...activities))
+      tap(() => this.saveActivity(ctx, ...activities))
     );
   }
 
@@ -661,8 +663,10 @@ export class TasksState implements NgxsOnInit {
   private saveActivity(
     ctx: StateContext<StateModel>,
     ...data: ActivityData[]
-  ): Observable<void> {
-    return ctx.dispatch(new SaveTimelineAction(data));
+  ): void {
+    const project = ctx.getState().project!;
+
+    this.timeline.saveActions(project.owner, project.id, data);
   }
 
   private saveTask(
@@ -702,12 +706,12 @@ export class TasksState implements NgxsOnInit {
           });
         }),
         switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-        switchMap(() => {
+        tap(() => {
           const newVm = ctx
             .getState()
             .phases!.find((x) => x.id === mainTask.id);
 
-          return this.saveActivity(ctx, {
+          this.saveActivity(ctx, {
             data: {
               title: mainTask.title,
               from: originalLevel,

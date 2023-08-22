@@ -6,6 +6,8 @@ export class MetadataHttpService {
     try {
       return ctx.json(await ctx.get('data').resources.getAsync('en-US'));
     } catch (e) {
+      //@ts-ignore
+      console.log(e.toString());
       ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
@@ -14,13 +16,13 @@ export class MetadataHttpService {
 
   static async getListAsync(ctx: Context): Promise<Response> {
     try {
-      const { name } = ctx.req.param();
+      const { type } = ctx.req.param();
 
-      if (!name) return ctx.text('Missing Parameters', 500);
+      if (!type) return ctx.text('Missing Parameters', 500);
       //
       //  Get the data from the KV
       //
-      const data = await ctx.get('data').lists.getAsync(name);
+      const data = await ctx.get('data').lists.getAsync(type);
 
       return ctx.json(data);
     } catch (e) {
@@ -32,10 +34,11 @@ export class MetadataHttpService {
 
   static async setResourcesAsync(ctx: Context): Promise<Response> {
     try {
+      const data = ctx.get('data').resources;
       const resources: Resources[] = await ctx.req.json();
 
       for (const r of resources) {
-        ctx.executionCtx.waitUntil(ctx.get('data').resources.putAsync(r));
+        ctx.executionCtx.waitUntil(data.putAsync(r));
       }
       return ctx.text('', 204);
     } catch (e) {
@@ -47,17 +50,18 @@ export class MetadataHttpService {
 
   static async putListAsync(ctx: Context): Promise<Response> {
     try {
-      const { name } = ctx.req.param();
+      const { type } = ctx.req.param();
 
-      if (!name) return ctx.text('Missing Parameters', 500);
+      if (!type) return ctx.text('Missing Parameters', 500);
 
-      const db = ctx.get('data').lists;
+      const data = ctx.get('data').lists;
       const list: ListItem[] = await ctx.req.json();
-      const existing = await db.getAsync(name);
+      const existing = await data.getAsync(type);
+
       const existingIds = existing?.map((x) => x.id) ?? [];
 
       for (const r of list) {
-        ctx.executionCtx.waitUntil(db.putAsync(r));
+        ctx.executionCtx.waitUntil(data.putAsync(r));
 
         if (existingIds.indexOf(r.id) > -1) {
           existingIds.splice(existingIds.indexOf(r.id), 1);
@@ -67,7 +71,7 @@ export class MetadataHttpService {
       //  Delete any items that were not in the new list
       //
       for (const id of existingIds) {
-        ctx.executionCtx.waitUntil(db.deleteAsync(name, id));
+        ctx.executionCtx.waitUntil(data.deleteAsync(type, id));
       }
 
       return ctx.text('', 204);
