@@ -56,7 +56,7 @@ DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
 INVITE_TEMPLATE_ID = "invite-template-v1"
 
-AZURE_ENDPOINT = "https://pm-empower-qa.azurewebsites.net"
+API_ENDPOINT = "https://wbs-api-qa.azurewebsites.net"
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
