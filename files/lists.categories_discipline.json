@@ -1,0 +1,72 @@
+[
+    {
+        "id": "mechanical",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Mechanical_Name",
+        "description": "Category_Discipline.Mechanical_Description",
+        "tags": [
+            "Mechanical"
+        ],
+        "icon": "fa-screwdriver-wrench"
+    },
+    {
+        "id": "electrical",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Electrical_Name",
+        "description": "Category_Discipline.Electrical_Description",
+        "tags": [
+            "Electrical"
+        ],
+        "icon": "fa-bolt"
+    },
+    {
+        "id": "structural",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Structural_Name",
+        "description": "Category_Discipline.Structural_Description",
+        "tags": [
+            "Structural"
+        ],
+        "icon": "fa-bridge-suspension"
+    },
+    {
+        "id": "survey",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Survey_Name",
+        "description": "Category_Discipline.Survey_Description",
+        "tags": [
+            "Survey"
+        ],
+        "icon": "fa-drone-alt"
+    },
+    {
+        "id": "plumbing",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Plumbing_Name",
+        "description": "Category_Discipline.Plumbing_Description",
+        "tags": [
+            "Plumbing"
+        ],
+        "icon": "fa-pipe-valve"
+    },
+    {
+        "id": "civil",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Civil_Name",
+        "description": "Category_Discipline.Civil_Description",
+        "tags": [
+            "Civil"
+        ],
+        "icon": "fa-building"
+    },
+    {
+        "id": "scientist",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Scientist_Name",
+        "description": "Category_Discipline.Scientist_Description",
+        "tags": [
+            "Scientist"
+        ],
+        "icon": "fa-flask"
+    }
+]

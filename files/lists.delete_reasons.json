@@ -1,0 +1,27 @@
+[
+    {
+        "id": "delete_scope",
+        "type": "delete_reasons",
+        "label": "Wbs.DeleteList_Scope"
+    },
+    {
+        "id": "delete_prime",
+        "type": "delete_reasons",
+        "label": "Wbs.DeleteList_Prime"
+    },
+    {
+        "id": "delete_sub",
+        "type": "delete_reasons",
+        "label": "Wbs.DeleteList_Sub"
+    },
+    {
+        "id": "delete_other",
+        "type": "delete_reasons",
+        "label": "General.Other"
+    },
+    {
+        "id": "delete_client",
+        "type": "delete_reasons",
+        "label": "Wbs.DeleteList_Client"
+    }
+]

@@ -13,55 +13,22 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
-  - job: azure_job
-    displayName: Azure Functions
-    dependsOn: worker_job
+  - job: api_job
+    displayName: ASP.NET API
     steps:
       - task: DotNetCoreCLI@2
         inputs:
           command: "publish"
           publishWebProjects: false
-          projects: "./_other/utilities/utilities.csproj"
-          arguments: "-o ./_other/utilities/dist"
+          projects: "./api.csproj"
+          arguments: "-o ./api/dist"
           zipAfterPublish: false
           modifyOutputPath: true
-        displayName: "Build Azure Functions"
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "_other/utilities/dist"
-          includeRootFolder: false
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Azure.zip"
-          replaceExistingArchive: true
-        displayName: "Zip Azure"
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-          ArtifactName: "drop"
-          publishLocation: "Container"
-        displayName: "Publish Worker"
-
-  - job: api_job
-    displayName: Api
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: "18.10"
-        displayName: "Install Node.js"
-
-      - script: yarn
-        workingDirectory: "api"
-        displayName: "Install Packages"
-
-      - script: yarn run build
-        workingDirectory: "api"
         displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "api"
+          rootFolderOrFile: "api/dist"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
@@ -77,7 +44,6 @@ jobs:
 
   - job: worker_job
     displayName: Worker
-    dependsOn: site_job
     steps:
       - task: NodeTool@0
         inputs:
@@ -90,11 +56,11 @@ jobs:
 
       - script: yarn
         workingDirectory: "worker"
-        displayName: "Install Worker Packages"
+        displayName: "Install"
 
       - script: yarn run build
         workingDirectory: "worker"
-        displayName: "Build Worker"
+        displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
@@ -103,14 +69,14 @@ jobs:
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"
           replaceExistingArchive: true
-        displayName: "Zip Worker"
+        displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
         inputs:
           PathtoPublish: "$(Build.ArtifactStagingDirectory)"
           ArtifactName: "drop"
           publishLocation: "Container"
-        displayName: "Publish Worker"
+        displayName: "Publish"
 
   - job: site_job
     displayName: Site
