@@ -17,6 +17,7 @@ r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
   { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
 ]
+
 [env.dev.vars]
 DEBUG = "true"
 DATADOG_ENV = "development"
@@ -25,7 +26,6 @@ INVITE_TEMPLATE_ID = "invite-template-v1"
 KV_BYPASS = "LISTS"
 IMAGES_ACCOUNT="004dc1af737b22a8aa83b3550fa9b9d3"
 
-API_ENDPOINT = "http://api:5216"
 COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
@@ -41,7 +41,7 @@ name = "pm-empower-api-test"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-	{ pattern = "api-test.pm-empower.com", custom_domain = true, zone_name = "pm-empower.com" }
+	{ pattern = "test-api.pm-empower.com/*", zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
   { binding = "KV_AUTH", id = "6eb87b9b5d9f4261907b80164cbc0947", preview_id = "6eb87b9b5d9f4261907b80164cbc0947" },
@@ -56,7 +56,6 @@ DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
 INVITE_TEMPLATE_ID = "invite-template-v1"
 
-API_ENDPOINT = "https://test-api.pm-empower.com"
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
@@ -99,3 +98,4 @@ AUTH_DOMAIN = "pm-empower.us.auth0.com"
 
 [dev]
 port = 88
+host = "web-api"

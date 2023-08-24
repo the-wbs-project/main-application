@@ -14,7 +14,7 @@ export const AUTH_CONFIG: AuthConfig = {
   httpInterceptor: {
     allowedList: [
       {
-        uri: environment.apiPrefix + 'resources',
+        uri: environment.apiPrefix + 'resources/*',
         allowAnonymous: true,
       },
       {

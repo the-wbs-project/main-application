@@ -1,18 +1,20 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cache, cachePurge, cors, logger, verifyJwt, verifyMembership, verifyMembershipRole } from './middle';
-import { DataServiceFactory, Fetcher, Http, Logger, MailGunService } from './services';
+import { DataServiceFactory, Fetcher, Http, Logger, MailGunService, OriginService } from './services';
 import { ROLES } from './models';
 
-export const AZURE_ROUTES_POST: string[] = ['api/import/:type', 'api/export/:type/:culture'];
+export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
+
 //
 //  Dependency Injection
 //
 app.use('*', async (ctx, next) => {
   ctx.set('logger', new Logger(ctx));
   ctx.set('fetcher', new Fetcher(ctx));
+  ctx.set('origin', new OriginService(ctx));
   ctx.set('data', new DataServiceFactory(ctx));
 
   await next();
@@ -25,10 +27,12 @@ app.use('*', cors);
 
 app.options('*', (c) => c.text(''));
 
-app.get('api/resources', cache, Http.metadata.getResourcesAsync);
+app.get('api/resources/all/:locale', cache, (ctx) => OriginService.pass(ctx));
+app.get('api/lists/:type', cache, OriginService.pass);
+
 app.put('api/resources', cachePurge, Http.metadata.setResourcesAsync);
-app.get('api/lists/:type', cache, Http.metadata.getListAsync);
-app.put('api/lists/:type', cache, Http.metadata.putListAsync);
+app.put('api/lists/:type', cachePurge, Http.metadata.putListAsync);
+
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
@@ -71,43 +75,14 @@ app.post(
   Http.memberships.addUserOrganizationalRolesAsync,
 );
 app.delete(
-  'api/memberships/:organization/users/:userId/roles',
+  'memberships/:organization/users/:userId/roles',
   verifyJwt,
   verifyMembershipRole(ROLES.ADMIN),
   Http.memberships.removeUserOrganizationalRolesAsync,
 );
-app.get('api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
+app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
-for (const path of AZURE_ROUTES_POST) {
-  app.post(path, verifyJwt, Http.misc.handleAzureCallAsync);
+for (const path of ORIGIN_PASSES) {
+  app.post(path, verifyJwt, OriginService.pass);
 }
 export default app;
-
-/*
-export default {
-  async scheduled(event: any, environment: any, context: ExecutionContext) {
-    const config = new EnvironmentConfig(environment);
-    const keys = await config.kvAuth.list();
-    const deleteAt = new Date(new Date().getTime() + 25 * 24 * 60 * 60 * 1000);
-
-    for (const key of keys.keys) {
-      if (!key.expiration) {
-        await config.kvAuth.delete(key.name);
-      } else {
-        const expires = new Date(key.expiration * 1000);
-
-        if (expires < deleteAt) {
-          //
-          //  ok time wise qualifies, check the value
-          //
-          const value = await config.kvAuth.get(key.name);
-
-          if (value === '{}') {
-            await config.kvAuth.delete(key.name);
-          }
-        }
-      }
-    }
-  },
-};
-*/

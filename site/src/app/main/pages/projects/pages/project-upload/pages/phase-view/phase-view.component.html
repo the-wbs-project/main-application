@@ -48,7 +48,7 @@
           >
             <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
               <span class="k-icon k-i-caret-alt-down"></span>
-              {{ dataItems | join : "label" }}
+              {{ this.convert(dataItems) }}
             </ng-template>
             <ng-template kendoMultiSelectItemTemplate let-dataItem>
               {{ dataItem.label | translate }}

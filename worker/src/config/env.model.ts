@@ -10,8 +10,6 @@ export type Env = {
   AUTH_CONNECTION: string;
   AUTH_DOMAIN: string;
 
-  API_ENDPOINT: string;
-
   COSMOS_ENDPOINT: string;
   COSMOS_KEY: string;
   COSMOS_DB: string;

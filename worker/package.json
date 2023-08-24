@@ -7,12 +7,10 @@
     "setup": "yarn",
     "build": "esbuild src/index.ts --outfile=dist/index.js --bundle --loader:.html=text --format=esm",
     "check": "tsc -noEmit --watch",
-    "check1": "tsc -noEmit",
+    "check2": "tsc -noEmit",
     "build-test": "concurrently \"tsc -noEmit --watch\" \"yarn run esbuild\"",
     "publish": "wrangler publish --env prod",
-    "start": "wrangler dev --local true --env dev --persist true --persist-to .kv",
-    "format": "prettier --write '**/*.{js,ts,jsx,tsx,json,yml,yaml,md,html}' --ignore-path .gitignore",
-    "go": "yarn run build && concurrently \"yarn run dev\" \"yarn run check\""
+    "start": "wrangler dev --env dev --local true --persist --persist-to ./.kv"
   },
   "author": "author",
   "license": "MIT",
@@ -33,6 +31,6 @@
   "dependencies": {
     "@cfworker/cosmos": "^1.13.4",
     "@cfworker/jwt": "^4.0.4",
-    "hono": "^3.4.3"
+    "hono": "3.4.3"
   }
 }

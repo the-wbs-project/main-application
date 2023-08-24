@@ -2,36 +2,6 @@ import { Context } from '../../config';
 import { ListItem, Resources } from '../../models';
 
 export class MetadataHttpService {
-  static async getResourcesAsync(ctx: Context): Promise<Response> {
-    try {
-      return ctx.json(await ctx.get('data').resources.getAsync('en-US'));
-    } catch (e) {
-      //@ts-ignore
-      console.log(e.toString());
-      ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
-
-      return ctx.text('Internal Server Error', 500);
-    }
-  }
-
-  static async getListAsync(ctx: Context): Promise<Response> {
-    try {
-      const { type } = ctx.req.param();
-
-      if (!type) return ctx.text('Missing Parameters', 500);
-      //
-      //  Get the data from the KV
-      //
-      const data = await ctx.get('data').lists.getAsync(type);
-
-      return ctx.json(data);
-    } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a list.', <Error>e);
-
-      return ctx.text('Internal Server Error', 500);
-    }
-  }
-
   static async setResourcesAsync(ctx: Context): Promise<Response> {
     try {
       const data = ctx.get('data').resources;

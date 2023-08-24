@@ -2,27 +2,6 @@ import { Context } from '../../config';
 import { StorageService } from '../data-services/storage.service';
 
 export class MiscHttpService {
-  static async handleAzureCallAsync(ctx: Context): Promise<Response> {
-    const originalUrl = new URL(ctx.req.url);
-    const body = await ctx.req.arrayBuffer();
-    const url = ctx.env.API_ENDPOINT + originalUrl.pathname;
-    const headers = new Headers(ctx.req.headers);
-
-    const res = await ctx.get('fetcher').fetch(url, {
-      method: ctx.req.method,
-      body,
-      headers,
-    });
-
-    const headers2: Record<string, string | string[]> = {};
-
-    for (const key of res.headers.keys()) {
-      headers2[key] = res.headers.get(key)!;
-    }
-
-    return ctx.newResponse(await res.arrayBuffer(), res.status, headers2);
-  }
-
   static async getStaticFileAsync(ctx: Context): Promise<Response> {
     const service = new StorageService(ctx.env.BUCKET_STATICS);
     const { file } = ctx.req.param();

@@ -17,6 +17,7 @@ import { Observable } from 'rxjs';
 import { PhasesCompleted } from '../../actions';
 import { PhaseListItem } from '../../models';
 import { ProjectUploadState } from '../../states';
+import { Resources } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -42,9 +43,16 @@ export class PhaseViewComponent {
   readonly faCircle = faCircle;
   readonly faList = faList;
 
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly resources: Resources,
+    private readonly store: Store
+  ) {}
 
   nav(results: PhaseListItem[]): void {
     this.store.dispatch(new PhasesCompleted(results));
+  }
+
+  convert(values: { label: string }[]): string {
+    return values.map((v) => this.resources.get(v.label)).join(', ');
   }
 }

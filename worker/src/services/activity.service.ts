@@ -32,9 +32,8 @@ export class ActivityService {
         userName: users.get(model.userId) ?? '',
         actionIcon: action?.icon,
         actionDescription: action?.description,
-        actionTitle: action?.label ?? action?.title,
+        actionTitle: action?.label,
       });
-      console.log(action);
     }
     return viewModels;
   }

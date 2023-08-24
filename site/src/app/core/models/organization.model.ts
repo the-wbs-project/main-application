@@ -2,8 +2,8 @@ export interface Organization {
   id: string;
   display_name: string;
   name: string;
-  metadata: {
+  branding: {
     mainProjectType: 'single' | 'multiple';
-    logo?: string;
+    logo_url?: string;
   };
 }

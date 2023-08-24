@@ -1,15 +1,19 @@
 import { Context } from '../../config';
 import { Resources } from '../../models';
-import { AzureService } from '../azure.service';
+import { OriginService } from '../origin.service';
 
 export class ResourcesDataService {
-  constructor(private ctx: Context) {}
+  constructor(private readonly ctx: Context) {}
+
+  private get origin(): OriginService {
+    return this.ctx.get('origin');
+  }
 
   getAsync(locale: string): Promise<Record<string, Record<string, string>>> {
-    return AzureService.getAsync<Record<string, Record<string, string>>>(this.ctx, `resources/all/${locale}`);
+    return this.origin.getAsync<Record<string, Record<string, string>>>(`resources/all/${locale}`);
   }
 
   async putAsync(resources: Resources): Promise<void> {
-    await AzureService.putAsync(this.ctx, `resources`, resources);
+    await this.origin.putAsync(`resources`, resources);
   }
 }

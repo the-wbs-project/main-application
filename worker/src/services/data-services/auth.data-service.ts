@@ -6,7 +6,7 @@ export class AuthDataService {
   private readonly transformer = Transformers.users;
   private token?: string;
 
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: Context) { }
 
   async getUserOrganizationsAsync(user: string): Promise<Organization[]> {
     let organizations = await this.getStateAsync<Organization[]>([user, 'organizations']);
@@ -140,13 +140,13 @@ export class AuthDataService {
   }
 
   async getUserAsync(userId: string): Promise<User> {
-    let user = await this.getStateAsync<User>([userId, 'user']);
+        let user = await this.getStateAsync<User>([userId, 'user']);
 
     if (user) return user;
 
     const url = `users/${userId}`;
     const response = await this.fetch(url, 'GET');
-
+    
     if (response.status !== 200) throw new Error(await response.text());
 
     user = this.transformer.toModel(await response.json());
@@ -188,7 +188,7 @@ export class AuthDataService {
 
   private async fetch(urlSuffix: string, method: string, body?: unknown): Promise<Response> {
     await this.verifyTokenAsync();
-
+    
     return await this.ctx.get('fetcher').fetch(
       new Request(`https://${this.ctx.env.AUTH_DOMAIN}/api/v2/${urlSuffix}`, {
         method,
@@ -234,7 +234,7 @@ export class AuthDataService {
   }
 
   private putStateAsync<T>(parts: string[], value: T, expirationTtl: number): void {
-    if (value === null) {
+        if (value === null) {
       this.deleteStateAsync(parts);
       return;
     }

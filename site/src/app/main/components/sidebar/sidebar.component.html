@@ -58,14 +58,14 @@
       </div>
       <div class="w-100 text-center">
         <img
-          *ngIf="organization?.metadata?.logo; let logo"
+          *ngIf="organization?.branding?.logo_url; let logo"
           class="logo"
           [src]="logo"
           alt="NovaLogo"
         />
         <!--<select class="w-75"></select>-->
       </div>
-      <ul class="side-menu">
+      <ul class="side-menu m-t-10">
         <li class="slide is-expanded">
           <a class="side-menu__item" routerLinkActive="active">
             <span class="side-menu__icon">

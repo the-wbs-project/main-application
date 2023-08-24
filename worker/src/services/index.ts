@@ -4,4 +4,5 @@ export * from './fetcher.service';
 export * from './http-services';
 export * from './logger.service';
 export * from './mail-gun.service';
+export * from './origin.service';
 export * from './resource.service';

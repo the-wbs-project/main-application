@@ -9,11 +9,13 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Logger } from './logger.service';
 
+declare type ResourceType = Record<string, Record<string, string>>;
+
 @Injectable({ providedIn: 'root' })
 export class Resources extends MissingTranslationHandler {
   private readonly culture = 'en';
   private readonly redeemed: string[] = [];
-  private resources: Record<string, Record<string, string>> = {};
+  private resources: ResourceType = {};
 
   constructor(
     private readonly http: HttpClient,
@@ -77,11 +79,9 @@ export class Resources extends MissingTranslationHandler {
     return params.key;
   }
 
-  private getFromServerAsync(): Observable<
-    Record<string, Record<string, string>>
-  > {
+  private getFromServerAsync(): Observable<ResourceType> {
     return this.http
-      .get<Record<string, Record<string, string>>>('api/resources')
+      .get<ResourceType>('api/resources/all/en-US')
       .pipe(map((x) => x ?? {}));
   }
 }
