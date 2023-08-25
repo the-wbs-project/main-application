@@ -2,8 +2,8 @@
   <div class="mg-t-10 w-100" style="flex: 1 1 auto">
     <wbs-project-category-list
       [paddingBottom]="40"
-      [categories]="categories"
-      [selected]="selected"
+      [categories]="categories()"
+      [selected]="selected()"
       (categoryChosen)="nav($event)"
     />
   </div>
