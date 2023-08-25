@@ -296,7 +296,9 @@
       "PhaseFirst_Title": "Phase First",
       "PhaseFirst_Description": "Build the project plan by phase with the ability to view it by discipline.",
       "DisciplineFirst_Title": "Discipline First",
-      "DisciplineFirst_Description": "Build the project plan by discipline with the ability to view it by phase."
+      "DisciplineFirst_Description": "Build the project plan by discipline with the ability to view it by phase.",
+      "Roles_Title": "Project Role Setup",
+      "Roles_Description": "Setup the roles for this project.  You must have atleast one PM to continue."
     }
   },
   {

@@ -17,7 +17,6 @@ export class OriginService {
     return <T>await res.json();
   }
 
-
   static async pass(ctx: Context): Promise<Response> {
     const req = ctx.req;
     const res = await ctx.get('fetcher').fetch(req.url, {
@@ -35,7 +34,7 @@ export class OriginService {
   }
 
    async putAsync(suffix: string, body: any): Promise<Response> {
-    return await fetch(this.getUrl(suffix) + suffix, {
+    return await fetch(this.getUrl(suffix), {
       method: 'PUT',
       body: JSON.stringify(body),
       headers: {
@@ -46,7 +45,7 @@ export class OriginService {
   }
 
    async deleteAsync(suffix?: string): Promise<Response> {
-    return await fetch(this.getUrl(suffix) + suffix, {
+    return await fetch(this.getUrl(suffix) , {
       method: 'DELETE',
       headers: {
         Authorization: this.ctx.req.headers.get('Authorization')!,
