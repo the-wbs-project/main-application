@@ -12,9 +12,8 @@ import {
 } from '@wbs/core/models';
 import { Messages, ProjectService } from '@wbs/core/services';
 import { ProjectUpdated, SetHeaderInfo } from '@wbs/main/actions';
-import { DialogService } from '@wbs/main/services';
 import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import {
   AddUserToRole,
   ChangeProjectBasics,
@@ -51,7 +50,6 @@ interface StateModel {
 export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly dialog: DialogService,
     private readonly messaging: Messages,
     private readonly services: ProjectService,
     private readonly store: Store,
@@ -184,36 +182,25 @@ export class ProjectState {
     const project = ctx.getState().current!;
     const roleTitle = this.services.getRoleTitle(role, false);
 
-    return this.dialog
-      .confirm('General.Confirmation', 'ProjectSettings.AddUserConfirmation', {
-        ROLE_NAME: roleTitle,
-        USER_NAME: user.name,
-      })
-      .pipe(
-        switchMap((answer) => {
-          if (!answer) return of();
+    project.roles.push({
+      role,
+      userId: user.id,
+    });
 
-          project.roles.push({
-            role,
-            userId: user.id,
-          });
-
-          return this.saveProject(ctx, project).pipe(
-            tap(() => this.messaging.success('ProjectSettings.UserAdded')),
-            tap(() => this.updateUsers(ctx)),
-            tap(() => this.updateUserRoles(ctx)),
-            tap(() =>
-              this.saveActivity(ctx, {
-                action: PROJECT_ACTIONS.ADDED_USER,
-                data: {
-                  role: roleTitle,
-                  user: user.name,
-                },
-              })
-            )
-          );
+    return this.saveProject(ctx, project).pipe(
+      tap(() => this.messaging.success('ProjectSettings.UserAdded')),
+      tap(() => this.updateUsers(ctx)),
+      tap(() => this.updateUserRoles(ctx)),
+      tap(() =>
+        this.saveActivity(ctx, {
+          action: PROJECT_ACTIONS.ADDED_USER,
+          data: {
+            role: roleTitle,
+            user: user.name,
+          },
         })
-      );
+      )
+    );
   }
 
   @Action(RemoveUserToRole)
@@ -229,37 +216,22 @@ export class ProjectState {
 
     if (index === -1) return of();
 
-    return this.dialog
-      .confirm(
-        'General.Confirmation',
-        'ProjectSettings.RemoveUserConfirmation',
-        {
-          ROLE_NAME: roleTitle,
-          USER_NAME: user.name,
-        }
-      )
-      .pipe(
-        switchMap((answer) => {
-          if (!answer) return of();
+    project.roles.splice(index, 1);
 
-          project.roles.splice(index, 1);
-
-          return this.saveProject(ctx, project).pipe(
-            tap(() => this.messaging.success('ProjectSettings.UserRemoved')),
-            tap(() => this.updateUsers(ctx)),
-            tap(() => this.updateUserRoles(ctx)),
-            tap(() =>
-              this.saveActivity(ctx, {
-                action: PROJECT_ACTIONS.REMOVED_USER,
-                data: {
-                  role: roleTitle,
-                  user: user.name,
-                },
-              })
-            )
-          );
+    return this.saveProject(ctx, project).pipe(
+      tap(() => this.messaging.success('ProjectSettings.UserRemoved')),
+      tap(() => this.updateUsers(ctx)),
+      tap(() => this.updateUserRoles(ctx)),
+      tap(() =>
+        this.saveActivity(ctx, {
+          action: PROJECT_ACTIONS.REMOVED_USER,
+          data: {
+            role: roleTitle,
+            user: user.name,
+          },
         })
-      );
+      )
+    );
   }
 
   @Action(ChangeProjectBasics)

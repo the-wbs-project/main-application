@@ -1,4 +1,4 @@
-import { ListItem, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
+import { ListItem, PROJECT_NODE_VIEW_TYPE, ROLES_TYPE } from '@wbs/core/models';
 
 export class StartWizard {
   static readonly type = '[Project Creation] Start Wizard';
@@ -41,6 +41,11 @@ export class DisciplinesChosen {
 export class PhasesChosen {
   static readonly type = '[Project Creation] Phases Chosen';
   constructor(readonly phases: (string | ListItem)[]) {}
+}
+
+export class RolesChosen {
+  static readonly type = '[Project Creation] Roles Chosen';
+  constructor(readonly roles: Map<ROLES_TYPE, string[]>) {}
 }
 
 export class SaveProject {

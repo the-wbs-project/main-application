@@ -35,4 +35,9 @@ export const PROJECT_CREATION_PAGES = {
     title: 'ProjectCreate.Disciplines_Title',
     description: 'ProjectCreate.Disciplines_Description',
   },
+  ROLES: {
+    number: 9,
+    title: 'ProjectCreate.Roles_Title',
+    description: 'ProjectCreate.Roles_Description',
+  },
 };

@@ -6,10 +6,9 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconDefinition } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserLite } from '@wbs/core/models';
+import { SVGIconModule, SVGIcon } from '@progress/kendo-angular-icons';
+import { Member } from '@wbs/core/models';
 import { UserSortPipe } from '@wbs/main/pipes/user-sort.pipe';
 
 @Component({
@@ -17,11 +16,11 @@ import { UserSortPipe } from '@wbs/main/pipes/user-sort.pipe';
   selector: 'wbs-project-user-list',
   templateUrl: './user-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FontAwesomeModule, TranslateModule, UserSortPipe],
+  imports: [CommonModule, SVGIconModule, TranslateModule, UserSortPipe],
 })
 export class ProjectUserListComponent {
-  @Input({ required: true }) icon!: IconDefinition;
-  @Input({ required: true }) users!: UserLite[];
+  @Input({ required: true }) icon!: SVGIcon;
+  @Input({ required: true }) users!: Member[];
   @Input() noUsersLabel!: string;
-  @Output() readonly selected = new EventEmitter<UserLite>();
+  @Output() readonly selected = new EventEmitter<Member>();
 }

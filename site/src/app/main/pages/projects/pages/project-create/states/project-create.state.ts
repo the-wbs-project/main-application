@@ -10,6 +10,8 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_SCOPE_TYPE,
   PROJECT_STATI,
+  ROLES_TYPE,
+  UserRole,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { MetadataState } from '@wbs/main/states';
@@ -22,6 +24,7 @@ import {
   NavBack,
   NodeViewChosen,
   PhasesChosen,
+  RolesChosen,
   SaveProject,
   StartWizard,
   SubmitBasics,
@@ -41,6 +44,7 @@ interface StateModel {
   owner?: string;
   page?: ProjectCreationPage;
   phases?: (string | ListItem)[];
+  roles: Map<ROLES_TYPE, string[]>;
   scope?: PROJECT_SCOPE_TYPE;
   title: string;
   useLibrary?: boolean;
@@ -52,6 +56,7 @@ interface StateModel {
   defaults: {
     description: '',
     isSaving: false,
+    roles: new Map<ROLES_TYPE, string[]>(),
     title: '',
   },
 })
@@ -97,6 +102,11 @@ export class ProjectCreateState {
   }
 
   @Selector()
+  static roles(state: StateModel): Map<ROLES_TYPE, string[]> {
+    return state.roles;
+  }
+
+  @Selector()
   static scope(state: StateModel): PROJECT_SCOPE_TYPE | undefined {
     return state.scope;
   }
@@ -112,6 +122,7 @@ export class ProjectCreateState {
       owner,
       page: PAGES.GETTING_STARTED,
       description: '',
+      roles: new Map<ROLES_TYPE, string[]>(),
       title: '',
     });
   }
@@ -210,35 +221,40 @@ export class ProjectCreateState {
   }
 
   @Action(PhasesChosen)
-  phasesChosen(
-    ctx: StateContext<StateModel>,
-    action: PhasesChosen
-  ): void | Observable<void> {
+  phasesChosen(ctx: StateContext<StateModel>, action: PhasesChosen): void {
     const state = ctx.getState();
-    const save = state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE;
+    //const save = state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE;
 
     ctx.patchState({
-      page: save ? undefined : PAGES.DESCIPLINES,
+      //page: save ? undefined : PAGES.DESCIPLINES,
+      page: PAGES.DESCIPLINES,
       phases: action.phases,
     });
-
-    if (save) return ctx.dispatch(new SaveProject());
   }
 
   @Action(DisciplinesChosen)
   disciplinesChosen(
     ctx: StateContext<StateModel>,
     action: DisciplinesChosen
-  ): void | Observable<void> {
+  ): void {
     const state = ctx.getState();
-    const save = state.nodeView === PROJECT_NODE_VIEW.PHASE;
+    //const save = state.nodeView === PROJECT_NODE_VIEW.PHASE;
 
     ctx.patchState({
-      page: save ? undefined : PAGES.PHASES,
+      //page: save ? undefined : PAGES.PHASES,
+      page: PAGES.ROLES,
       disciplines: action.disciplines,
     });
+  }
 
-    if (save) return ctx.dispatch(new SaveProject());
+  @Action(RolesChosen)
+  rolesChosen(
+    ctx: StateContext<StateModel>,
+    { roles }: RolesChosen
+  ): void | Observable<void> {
+    ctx.patchState({ page: undefined, roles });
+
+    return ctx.dispatch(new SaveProject());
   }
 
   @Action(SaveProject)
@@ -253,6 +269,17 @@ export class ProjectCreateState {
     const phases = state.phases!;
     const disciplines = state.disciplines!;
     const now = Date.now();
+    const roles: UserRole[] = [];
+
+    for (const role of state.roles!.keys()) {
+      for (const member of state.roles!.get(role)!) {
+        roles.push({
+          role,
+          userId: member,
+        });
+      }
+    }
+
     const project: Project = {
       id: IdService.generate(),
       owner: state.owner!,
@@ -264,7 +291,7 @@ export class ProjectCreateState {
       category: state.category!,
       description: state.description,
       mainNodeView: state.nodeView!,
-      roles: [],
+      roles,
       status: PROJECT_STATI.PLANNING,
       title: state.title,
       createdOn: now,

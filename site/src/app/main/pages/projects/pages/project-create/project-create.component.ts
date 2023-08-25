@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,6 +15,7 @@ import { GettingStartedComponent } from './components/sub-pages/getting-started.
 import { LibOrScratchComponent } from './components/sub-pages/lib-or-scratch/lib-or-scratch.component';
 import { NodeViewComponent } from './components/sub-pages/node-view/node-view.component';
 import { PhaseComponent } from './components/sub-pages/phases/phases.component';
+import { RolesComponent } from './components/sub-pages/roles/roles.component';
 import { ProjectCreationPage } from './models';
 import { ProjectCreateState } from './states';
 
@@ -25,16 +26,20 @@ import { ProjectCreateState } from './states';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
+    AsyncPipe,
     BasicsComponent,
     CategoriesComponent,
-    CommonModule,
     DisciplinesComponent,
     FillElementDirective,
     GettingStartedComponent,
     HeaderComponent,
     LibOrScratchComponent,
+    NgIf,
+    NgSwitch,
+    NgSwitchCase,
     NodeViewComponent,
     PhaseComponent,
+    RolesComponent,
   ],
 })
 export class ProjectCreateComponent {

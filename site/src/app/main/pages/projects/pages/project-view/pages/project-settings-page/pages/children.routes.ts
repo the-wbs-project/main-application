@@ -46,7 +46,7 @@ export const routes: Routes = [
       view: PROJECT_SETTINGS_PAGES.ROLES,
     },
     loadComponent: () =>
-      import('./roles/roles.component').then(
+      import('./roles.component').then(
         ({ ProjectSettingsRolesComponent }) => ProjectSettingsRolesComponent
       ),
   },
