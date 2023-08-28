@@ -4,8 +4,5 @@
     "node_modules{,/**}",
     ".vscode{,/**}"
   ],
-  "appService.showBuildDuringDeployPrompt": false,
-  "appService.defaultWebAppToDeploy": "/subscriptions/4fd6c9e3-9a98-4bec-9db5-f1358f329dbc/resourceGroups/wbs-singapore/providers/Microsoft.Web/sites/wba-api-dev",
-  "appService.deploySubpath": "api/dist",
-  "dotnet.defaultSolution": "api/api2.sln"
+  "dotnet.defaultSolution": "pm-empower.sln"
 }
