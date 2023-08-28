@@ -63,7 +63,7 @@ public class Auth0Service
 
         var roles = await client.Organizations.GetAllMemberRolesAsync(organization, userId, page);
 
-        return roles.Select(r => r.Id);
+        return roles.Select(r => r.Name);
     }
 
     public async Task AddUserOrganizationalRolesAsync(string organization, string userId, IEnumerable<string> roles)
