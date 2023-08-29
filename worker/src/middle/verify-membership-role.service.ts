@@ -10,9 +10,9 @@ export function verifyMembershipRole(role: string): (ctx: Context, next: any) =>
 
     if (!toCheck) return ctx.text('Missing Parameters', 500);
 
-    const roles = await ctx.get('data').auth.getUserOrganizationalRolesAsync(toCheck, ctx.get('userId'));
+    //const roles = await ctx.get('data').organizations.addMemberRolesAsyncc(toCheck, ctx.get('userId'));
 
-    if (!roles || !roles.includes(role)) return ctx.text('Unauthorized', 403);
+    //if (!roles || !roles.includes(role)) return ctx.text('Unauthorized', 403);
 
     await next();
   };

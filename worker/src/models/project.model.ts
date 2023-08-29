@@ -14,18 +14,28 @@ export interface Project extends TaggedObject {
   createdBy: string;
   title: string;
   description: string;
-  createdOn: number;
-  lastModified: number;
+  createdOn: Date;
+  lastModified: Date;
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;
+  roles: UserRole[];
+  disciplines: ProjectCategory[];
+  phases: ProjectCategory[];
+}
+
+export interface ProjectSnapshot extends Project {
+  tasks?: WbsNode[];
+}
+
+export interface ProjectSnapshotLegacy extends Project {
+  //
+  //  when migrating to SQL database this way became unnecessary, but there are some snapshots still out there.
+  //    Maybe one day I'll fix them
+  //
   categories: {
     discipline: ProjectCategory[];
     phase: ProjectCategory[];
   };
-  roles: UserRole[];
-}
-
-export interface ProjectSnapshot extends Project {
   tasks?: WbsNode[];
 }

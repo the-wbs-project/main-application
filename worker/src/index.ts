@@ -34,6 +34,9 @@ app.put('api/lists/:type', cachePurge, Http.metadata.putListAsync);
 
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
+
+app.get('api/activities/migrate', Http.activities.migrateAsync);
+app.get('api/projects/migrate', Http.projects.migrateAsync);
 //
 //  Auth calls
 //
@@ -41,7 +44,6 @@ app.get('api/checklists', verifyJwt, Http.checklists.getAsync);
 app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
 app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
 app.put('api/activities', verifyJwt, OriginService.pass);
-app.get('api/activities/migrate', Http.activities.migrateAsync);
 app.get('api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
 app.get('api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
 app.put('api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, Http.projects.putAsync);

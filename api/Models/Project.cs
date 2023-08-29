@@ -3,7 +3,7 @@ namespace Wbs.Api.Models;
 public class Project
 {
     public string id { get; set; }
-    public string ownerId { get; set; }
+    public string owner { get; set; }
     public string createdBy { get; set; }
     public DateTime createdOn { get; set; }
     public DateTime lastModified { get; set; }

@@ -10,7 +10,7 @@ export class ActivityDataService {
     this.db = new CosmosDbService(ctx, 'Activity', 'topLevelId');
   }
 
-  getByTopLevelAsync(topLevelId: string, skip: number, take: number): Promise<Activity[] | undefined> {
+  private getByTopLevelAsync(topLevelId: string, skip: number, take: number): Promise<Activity[] | undefined> {
     return this.db.getListByQueryAsync<Activity>(
       'SELECT * FROM c WHERE c.topLevelId = @TopLevelId ORDER BY c.timestamp desc',
       true,

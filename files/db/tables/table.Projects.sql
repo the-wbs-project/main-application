@@ -1,6 +1,3 @@
-DROP TABLE dbo.Projects
-GO
-
 CREATE TABLE [dbo].[Projects] (
     [Id] nvarchar(100) NOT NULL,
     [OwnerId] nvarchar(100) NOT NULL,
@@ -18,3 +15,4 @@ CREATE TABLE [dbo].[Projects] (
     CONSTRAINT Projects_PK PRIMARY KEY CLUSTERED ([Id] ASC),
     INDEX Projects_INDX_OwnerId NONCLUSTERED ([OwnerId] ASC)
 )
+GO
