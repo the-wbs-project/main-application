@@ -4,10 +4,8 @@ export type Env = {
   BUCKET_SNAPSHOTS: R2Bucket;
   BUCKET_STATICS: R2Bucket;
 
+  AUTH_URL: string;
   AUTH_AUDIENCE: string;
-  AUTH_CLIENT_ID: string;
-  AUTH_CLIENT_SECRET: string;
-  AUTH_CONNECTION: string;
   AUTH_DOMAIN: string;
 
   COSMOS_ENDPOINT: string;
@@ -24,7 +22,4 @@ export type Env = {
   DEBUG: string;
   INVITE_TEMPLATE_ID: string;
   KV_BYPASS?: string;
-
-  IMAGES_ACCOUNT: string;
-  IMAGES_KEY: string;
 };

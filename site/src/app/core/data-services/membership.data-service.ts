@@ -5,20 +5,25 @@ import { Member, Organization } from '../models';
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getRolesAsync(): Observable<string[]> {
-    return this.http.get<string[]>('api/roles');
+  getRolesAsync(userId: string): Observable<string[]> {
+    return this.http.get<string[]>(`api/users/${userId}/roles`);
   }
 
-  getMembershipsAsync(): Observable<Organization[]> {
-    return this.http.get<Organization[]>('api/memberships');
-  }
-
-  getMembershipRolesAsync(organization: string): Observable<string[]> {
-    return this.http.get<string[]>(`api/memberships/${organization}/roles`);
+  getMembershipsAsync(userId: string): Observable<Organization[]> {
+    return this.http.get<Organization[]>(`api/users/${userId}/memberships`);
   }
 
   getMembershipUsersAsync(organization: string): Observable<Member[]> {
-    return this.http.get<Member[]>(`api/memberships/${organization}/users`);
+    return this.http.get<Member[]>(`api/organizations/${organization}/members`);
+  }
+
+  removeUserFromOrganizationAsync(
+    organization: string,
+    user: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      `api/organizations/${organization}/members/${user}`
+    );
   }
 
   getMembershipRolesForUserAsync(
@@ -26,26 +31,17 @@ export class MembershipDataService {
     user: string
   ): Observable<string[]> {
     return this.http.get<string[]>(
-      `api/memberships/${organization}/users/${user}/roles`
-    );
-  }
-
-  removeUserFromOrganizationAsync(
-    organization: string,
-    userId: string
-  ): Observable<void> {
-    return this.http.delete<void>(
-      `api/memberships/${organization}/users/${userId}`
+      `api/organizations/${organization}/members/${user}/roles`
     );
   }
 
   addUserOrganizationalRolesAsync(
     organization: string,
-    userId: string,
+    user: string,
     roles: string[]
   ): Observable<void> {
     return this.http.post<void>(
-      `api/memberships/${organization}/users/${userId}/roles`,
+      `api/organizations/${organization}/members/${user}/roles`,
       roles
     );
   }
@@ -56,7 +52,7 @@ export class MembershipDataService {
     roles: string[]
   ): Observable<void> {
     return this.http.delete<void>(
-      `api/memberships/${organization}/users/${user}/roles`,
+      `api/organizations/${organization}/members/${user}/roles`,
       {
         body: roles,
       }

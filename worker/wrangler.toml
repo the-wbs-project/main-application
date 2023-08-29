@@ -22,18 +22,15 @@ r2_buckets = [
 DEBUG = "true"
 DATADOG_ENV = "development"
 CORS_ORIGINS = "http://localhost:4200"
-INVITE_TEMPLATE_ID = "invite-template-v1"
 KV_BYPASS = "LISTS"
-IMAGES_ACCOUNT="004dc1af737b22a8aa83b3550fa9b9d3"
 
 COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
 COSMOS_DB = "combined"
 
+AUTH_URL = "http://auth-api:8080"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
-AUTH_CONNECTION = "Username-Password-Authentication"
 AUTH_DOMAIN = "pm-empower.us.auth0.com"
 
 [env.test]
@@ -54,16 +51,14 @@ r2_buckets = [
 DEBUG = "false"
 DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
-INVITE_TEMPLATE_ID = "invite-template-v1"
 
 COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
 COSMOS_DB = "v1"
 
+AUTH_URL = "https://test-auth-api.pm-empower.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
-AUTH_CONNECTION = "Username-Password-Authentication"
 AUTH_DOMAIN = "pm-empower.us.auth0.com"
 
 [env.prod]

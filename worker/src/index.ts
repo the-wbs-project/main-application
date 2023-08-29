@@ -1,8 +1,7 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cachePurge, cors, logger, verifyJwt, verifyMembership, verifyMembershipRole } from './middle';
+import { cache, cachePurge, cors, logger, verifyAdminAsync, verifyJwt, verifyMembership, verifyMyself } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService, OriginService } from './services';
-import { ROLES } from './models';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
@@ -57,29 +56,21 @@ app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembersh
 app.get('api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);
 app.get('api/discussions/:owner/:associationId/:id/text', verifyJwt, verifyMembership, Http.discussions.getTextAsync);
 //app.put('api/discussions/:owner/:id', verifyJwt, Http.discussions.putAsync);
-app.get('api/memberships', verifyJwt, Http.memberships.getMembershipsAsync);
-app.get('api/roles', verifyJwt, Http.memberships.getRolesAsync);
-app.get('api/users/:userId', verifyJwt, Http.memberships.getUserAsync);
-app.get('api/memberships/:organization/roles', verifyJwt, verifyMembership, Http.memberships.getMembershipRolesAsync);
-app.get('api/memberships/:organization/users', verifyJwt, verifyMembership, Http.memberships.getMembershipUsersAsync);
+//app.get('api/users/:userId', verifyJwt, authKv(['users', ':userId', 'user']), Http.memberships.passAsync);
+
+app.get('api/users/:user/memberships', verifyJwt, verifyMyself, Http.users.getMembershipsAsync);
+app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
+
+app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, Http.organizations.getMembersAsync);
+app.put('api/organizations/:organization/members/:user/roles', verifyJwt, verifyAdminAsync(), Http.organizations.addMemberRolesAsync);
+app.delete('api/organizations/:organization/members/:userId', verifyJwt, verifyAdminAsync(), Http.organizations.removeMemberAsync);
 app.delete(
-  'api/memberships/:organization/users/:userId',
+  'api/organizations/:organization/members/:user/roles',
   verifyJwt,
-  verifyMembershipRole(ROLES.ADMIN),
-  Http.memberships.removeUserFromOrganizationAsync,
+  verifyAdminAsync(),
+  Http.organizations.removeMemberRolesAsync,
 );
-app.post(
-  'api/memberships/:organization/users/:userId/roles',
-  verifyJwt,
-  verifyMembershipRole(ROLES.ADMIN),
-  Http.memberships.addUserOrganizationalRolesAsync,
-);
-app.delete(
-  'memberships/:organization/users/:userId/roles',
-  verifyJwt,
-  verifyMembershipRole(ROLES.ADMIN),
-  Http.memberships.removeUserOrganizationalRolesAsync,
-);
+
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of ORIGIN_PASSES) {

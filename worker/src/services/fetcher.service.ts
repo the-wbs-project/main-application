@@ -25,6 +25,9 @@ export class Fetcher {
       response = await fetch(request);
 
       return response;
+    } catch (e) {
+      console.log(e);
+      throw e;
     } finally {
       const duration = (new Date().getTime() - start.getTime()) * 1000;
       this.ctx.get('logger').trackDependency(url, method, duration, request, response);

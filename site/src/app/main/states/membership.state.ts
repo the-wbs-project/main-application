@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Organization, Project } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
@@ -11,6 +11,7 @@ import {
   ProjectUpdated,
   RemoveMemberFromOrganization,
 } from '../actions';
+import { AuthState } from './auth.state';
 
 interface StateModel {
   list?: Organization[];
@@ -29,7 +30,10 @@ interface StateModel {
   },
 })
 export class MembershipState {
-  constructor(private readonly data: DataServiceFactory) {}
+  constructor(
+    private readonly data: DataServiceFactory,
+    private readonly store: Store
+  ) {}
 
   @Selector()
   static id(state: StateModel): string | undefined {
@@ -66,11 +70,15 @@ export class MembershipState {
     return state.members;
   }
 
+  private get userId(): string {
+    return this.store.selectSnapshot(AuthState.userId)!;
+  }
+
   @Action(LoadOrganizations)
   loadOrganization(ctx: StateContext<StateModel>): Observable<any> {
     ctx.patchState({ loading: true });
 
-    return this.data.memberships.getMembershipsAsync().pipe(
+    return this.data.memberships.getMembershipsAsync(this.userId).pipe(
       map((list) => list.sort((a, b) => sorter(a.name, b.name))),
       tap((list) => ctx.patchState({ list })),
       tap((list) => ctx.dispatch(new ChangeOrganization(list[0])))
@@ -85,13 +93,12 @@ export class MembershipState {
     ctx.patchState({ organization, loading: true });
 
     return forkJoin({
-      roles: this.data.memberships.getMembershipRolesAsync(organization.id),
       users: this.data.memberships.getMembershipUsersAsync(organization.id),
       projects: this.data.projects.getAllAsync(organization.name),
     }).pipe(
-      map(({ projects, roles, users }) => {
+      map(({ projects, users }) => {
         ctx.patchState({
-          roles,
+          roles: users.find((x) => x.id === this.userId)!.roles,
           projects: projects.sort((a, b) =>
             sorter(a.lastModified, b.lastModified, 'desc')
           ),

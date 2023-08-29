@@ -5,10 +5,6 @@ import { User, UserLite } from '../models';
 export class UserDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getLiteAsync(userId: string): Observable<UserLite> {
-    return this.http.get<UserLite>(`api/users/${userId}`);
-  }
-
   getAllAsync(organization: string): Observable<User[]> {
     return this.http.get<User[]>(`api/users/${organization}`);
   }

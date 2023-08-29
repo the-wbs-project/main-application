@@ -5,7 +5,7 @@ import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { UserLite } from '@wbs/core/models';
 import { Logger } from '@wbs/core/services';
-import { filter, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { LoadOrganizations } from '../actions';
 
 export interface AuthBucket {
@@ -59,7 +59,7 @@ export class AuthState implements NgxsOnInit {
     this.auth.user$
       .pipe(
         filter((x) => x != undefined),
-        tap((userRaw) => {
+        map((userRaw) => {
           const raw = userRaw!;
           const profile = {
             email: raw['email']!,
@@ -74,8 +74,9 @@ export class AuthState implements NgxsOnInit {
             'usr.name': profile.name,
             'usr.email': profile.email,
           });
+          return profile;
         }),
-        switchMap(() => this.data.memberships.getRolesAsync()),
+        switchMap((profile) => this.data.memberships.getRolesAsync(profile.id)),
         tap((roles) => ctx.patchState({ roles })),
         tap(() => ctx.dispatch(new LoadOrganizations())),
         untilDestroyed(this)

@@ -1,16 +1,16 @@
 import { Context } from '../config';
 
 export class OriginService {
-  constructor(private readonly ctx: Context){}
+  constructor(private readonly ctx: Context) {}
 
-   async getAsync<T>(suffix?: string): Promise<T> {
+  async getAsync<T>(suffix?: string): Promise<T> {
     const req = this.ctx.req;
     const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {
       body: req.body,
       headers: req.headers,
       method: req.method,
     });
-   
+
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
@@ -24,16 +24,21 @@ export class OriginService {
       headers: req.headers,
       method: req.method,
     });
+
+    return ctx.newResponse(await res.arrayBuffer(), res.status, OriginService.headers(res));
+  }
+
+  static headers(res: Response): Record<string, string | string[]> {
     const headers2: Record<string, string | string[]> = {};
 
     for (const key of res.headers.keys()) {
       headers2[key] = res.headers.get(key)!;
     }
 
-    return ctx.newResponse(await res.arrayBuffer(), res.status, headers2);
+    return headers2;
   }
 
-   async putAsync(suffix: string, body: any): Promise<Response> {
+  async putAsync(suffix: string, body: any): Promise<Response> {
     return await fetch(this.getUrl(suffix), {
       method: 'PUT',
       body: JSON.stringify(body),
@@ -44,8 +49,8 @@ export class OriginService {
     });
   }
 
-   async deleteAsync(suffix?: string): Promise<Response> {
-    return await fetch(this.getUrl(suffix) , {
+  async deleteAsync(suffix?: string): Promise<Response> {
+    return await fetch(this.getUrl(suffix), {
       method: 'DELETE',
       headers: {
         Authorization: this.ctx.req.headers.get('Authorization')!,

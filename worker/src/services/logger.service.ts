@@ -118,7 +118,9 @@ export class Logger {
           },
         },
       },
-      usr: this.ctx.get('user'),
+      usr: {
+        id: this.ctx.get('userId'),
+      },
       ...(info.duration
         ? {
             performance: {
