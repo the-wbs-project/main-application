@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace Wbs.Api.DataServices;
 
@@ -21,11 +21,11 @@ public abstract class BaseDbService
 
     protected T DbValue<T>(SqlDataReader reader, int index) => reader.IsDBNull(index) ? default(T) : reader.GetFieldValue<T>(index);
 
-    protected T DbJson<T>(SqlDataReader reader, string column) => reader.IsDBNull(column) ? default(T) : JsonConvert.DeserializeObject<T>(reader.GetString(column));
+    protected T DbJson<T>(SqlDataReader reader, string column) => reader.IsDBNull(column) ? default(T) : JsonSerializer.Deserialize<T>(reader.GetString(column));
 
-    protected T DbJson<T>(SqlDataReader reader, int index) => reader.IsDBNull(index) ? default(T) : JsonConvert.DeserializeObject<T>(reader.GetString(index));
+    protected T DbJson<T>(SqlDataReader reader, int index) => reader.IsDBNull(index) ? default(T) : JsonSerializer.Deserialize<T>(reader.GetString(index));
 
     protected object DbValue(object obj) => obj == null ? DBNull.Value : obj;
 
-    protected object DbJson(object obj) => obj == null ? (object)DBNull.Value : JsonConvert.SerializeObject(obj);
+    protected object DbJson(object obj) => obj == null ? (object)DBNull.Value : JsonSerializer.Serialize(obj);
 }

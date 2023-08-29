@@ -1,6 +1,6 @@
 using Microsoft.Data.SqlClient;
-using Newtonsoft.Json;
 using System.Data;
+using System.Text.Json;
 using Wbs.Api.Configuration;
 
 namespace Wbs.Api.DataServices;
@@ -12,7 +12,7 @@ public class ResourcesDataService
 
     public ResourcesDataService(ILogger<ResourcesDataService> logger, AppConfig config)
     {
-        this._logger = logger;
+        _logger = logger;
         this.config = config;
     }
 
@@ -118,7 +118,7 @@ public class ResourcesDataService
         cmd.CommandType = CommandType.StoredProcedure;
         cmd.Parameters.AddWithValue("@Locale", locale);
         cmd.Parameters.AddWithValue("@Section", section);
-        cmd.Parameters.AddWithValue("@JsonValues", values == null ? "{}" : JsonConvert.SerializeObject(values));
+        cmd.Parameters.AddWithValue("@JsonValues", values == null ? "{}" : JsonSerializer.Serialize(values));
 
         await cmd.ExecuteNonQueryAsync();
     }

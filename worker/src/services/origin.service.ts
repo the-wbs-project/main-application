@@ -4,11 +4,11 @@ export class OriginService {
   constructor(private readonly ctx: Context) {}
 
   async getAsync<T>(suffix?: string): Promise<T> {
-    const req = this.ctx.req;
     const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {
-      body: req.body,
-      headers: req.headers,
-      method: req.method,
+      headers: {
+        Authentiation: this.ctx.req.header('Authentication') ?? '',
+      },
+      method: 'GET',
     });
 
     if (res.status !== 200) {
@@ -62,7 +62,7 @@ export class OriginService {
     let url = new URL(this.ctx.req.url);
 
     if (suffix) {
-      url = new URL(`${url.protocol}//${url.host}/api/${suffix}`);
+      url = new URL(`${url.origin}/api/${suffix}`);
     }
     return url.toString();
   }

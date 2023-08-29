@@ -38,10 +38,10 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //  Auth calls
 //
 app.get('api/checklists', verifyJwt, Http.checklists.getAsync);
-app.get('api/activity/topLevel/:topLevelId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
-app.get('api/activity/child/:topLevelId/:childId/:skip/:take', verifyJwt, Http.activities.getByIdAsync);
-app.get('api/activity/user/:userId', verifyJwt, Http.activities.getByUserIdAsync);
-app.put('api/activity', verifyJwt, Http.activities.putAsync);
+app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
+app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
+app.put('api/activities', verifyJwt, OriginService.pass);
+app.get('api/activities/migrate', Http.activities.migrateAsync);
 app.get('api/projects/:owner/all', verifyJwt, verifyMembership, Http.projects.getAllAsync);
 app.get('api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, cache, Http.projects.getByIdAsync);
 app.put('api/projects/:owner/byId/:projectId', verifyJwt, verifyMembership, Http.projects.putAsync);
@@ -64,12 +64,7 @@ app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsy
 app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, Http.organizations.getMembersAsync);
 app.put('api/organizations/:organization/members/:user/roles', verifyJwt, verifyAdminAsync(), Http.organizations.addMemberRolesAsync);
 app.delete('api/organizations/:organization/members/:userId', verifyJwt, verifyAdminAsync(), Http.organizations.removeMemberAsync);
-app.delete(
-  'api/organizations/:organization/members/:user/roles',
-  verifyJwt,
-  verifyAdminAsync(),
-  Http.organizations.removeMemberRolesAsync,
-);
+app.delete('api/organizations/:organization/members/:user/roles', verifyJwt, verifyAdminAsync(), Http.organizations.removeMemberRolesAsync);
 
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 

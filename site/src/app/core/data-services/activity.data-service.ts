@@ -14,8 +14,8 @@ export class ActivityDataService {
     childId?: string
   ): Observable<Activity[]> {
     const url = childId
-      ? `api/activity/child/${topLevelId}/${childId}/${skip}/${take}`
-      : `api/activity/topLevel/${topLevelId}/${skip}/${take}`;
+      ? `api/activities/child/${topLevelId}/${childId}/${skip}/${take}`
+      : `api/activities/topLevel/${topLevelId}/${skip}/${take}`;
 
     return this.http
       .get<Activity[] | undefined>(url)
@@ -24,7 +24,7 @@ export class ActivityDataService {
 
   getUserAsync(organization: string, userId: string): Observable<Activity[]> {
     return this.http.get<Activity[]>(
-      `api/activity/${organization}/user/${userId}`
+      `api/activities/${organization}/user/${userId}`
     );
   }
 
@@ -36,7 +36,7 @@ export class ActivityDataService {
     const id = IdService.generate();
 
     return this.http
-      .put<void>('api/activity', {
+      .put<void>('api/activities', {
         ...data,
         id,
         timestamp: Date.now(),

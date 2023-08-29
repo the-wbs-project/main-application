@@ -1,11 +1,12 @@
 import { Context } from '../../config';
 import { Activity } from '../../models';
+import { OriginService } from '../origin.service';
 import { CosmosDbService } from './cosmos-db.service';
 
 export class ActivityDataService {
   private readonly db: CosmosDbService;
 
-  constructor(ctx: Context) {
+  constructor(private readonly ctx: Context) {
     this.db = new CosmosDbService(ctx, 'Activity', 'topLevelId');
   }
 
@@ -25,27 +26,61 @@ export class ActivityDataService {
     );
   }
 
-  getByChildAsync(topLevelId: string, childId: string, skip: number, take: number): Promise<Activity[] | undefined> {
-    return this.db.getListByQueryAsync<Activity>(
-      'SELECT * FROM c WHERE c.topLevelId = @topLevelId AND c.objectId = @childId ORDER BY c.timestamp desc',
-      true,
-      [
-        {
-          name: '@topLevelId',
-          value: topLevelId,
-        },
-        {
-          name: '@childId',
-          value: childId,
-        },
-      ],
-      skip,
-      take,
-      true,
-    );
-  }
+  async migrateAsync(): Promise<void> {
+    const projects = await this.ctx.get('data').projects.getAllAsync('acme_engineering');
+    const origin = new OriginService(this.ctx);
+    const objects: Activity[] = [];
+    var i = 0;
 
-  async putAsync(activity: Activity): Promise<void> {
-    await this.db.upsertDocument<Activity>(activity, activity.topLevelId);
+    for (const project of projects ?? []) {
+      console.log(project.id);
+      let page = 1;
+      let cont = true;
+
+      while (cont) {
+        const activities = await this.getByTopLevelAsync(project.id, 0, 3000);
+
+        console.log(page, activities?.length);
+
+        cont = activities?.length === 3000;
+
+        page++;
+
+        objects.push(...(activities ?? []));
+      }
+    }
+
+    console.log('Saving ' + objects.length);
+
+    const save: Activity[] = [];
+
+    for (const act of objects) {
+      //@ts-ignore
+      act.timestamp = new Date(act.timestamp);
+
+      save.push(act);
+
+      if (save.length === 25) {
+        const call = await origin.putAsync(`activities`, save);
+
+        if (call.status > 204) {
+          console.log(call.status, await call.text());
+          return;
+        }
+
+        i += 25;
+        save.length = 0;
+        console.log(i);
+      }
+    }
+    if (objects.length > 0) {
+      i += objects.length;
+      const call = await origin.putAsync(`activities`, objects);
+
+      if (call.status > 204) {
+        console.log(call.status, await call.text());
+        return;
+      }
+    }
   }
 }

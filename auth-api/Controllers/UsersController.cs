@@ -1,7 +1,6 @@
 using Auth0.ManagementApi.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.ObjectPool;
 using Wbs.AuthApi.Services;
 
 namespace Wbs.AuthApi.Controllers;

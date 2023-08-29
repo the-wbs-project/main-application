@@ -1,9 +1,10 @@
-using System.Net;
-using System.Text;
 using Auth0.ManagementApi;
 using Auth0.ManagementApi.Models;
 using Auth0.ManagementApi.Paging;
-using Newtonsoft.Json;
+using System.Net;
+using System.Text;
+using System.Text.Json;
+
 using Wbs.AuthApi.Configurations;
 
 namespace Wbs.AuthApi.Services;
@@ -44,8 +45,6 @@ public class Auth0Service
         var page = new PaginationInfo(0, 50, false);
 
         var roles = await client.Users.GetRolesAsync(userId, page);
-
-        this.logger.LogWarning($"Roles: {JsonConvert.SerializeObject(roles)}");
 
         return roles.Select(r => r.Name);
     }
@@ -134,7 +133,7 @@ public class Auth0Service
             var request = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
-                Content = new StringContent(JsonConvert.SerializeObject(body), Encoding.UTF8, "application/json"),
+                Content = new StringContent(JsonSerializer.Serialize(body), Encoding.UTF8, "application/json"),
                 RequestUri = new Uri($"https://{config.Domain}/oauth/token")
             };
 
@@ -144,7 +143,7 @@ public class Auth0Service
             {
                 var raw = await response.Content.ReadAsStringAsync(); //.ReadAsAsync<MgmtTokenResponse>();
 
-                return JsonConvert.DeserializeObject<MgmtTokenResponse>(raw);
+                return JsonSerializer.Deserialize<MgmtTokenResponse>(raw);
             }
             else
             {

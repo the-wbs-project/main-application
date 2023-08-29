@@ -6,7 +6,7 @@ export async function verifyJwt(ctx: Context, next: any): Promise<Response | voi
   const issuer = `https://${ctx.env.AUTH_DOMAIN}/`;
   const audience = ctx.env.AUTH_AUDIENCE;
 
-  if (!jwt) return ctx.status(403);
+  if (!jwt) return ctx.text('Missing Authorization Header', 403);
 
   jwt = jwt.replace('Bearer ', '');
 

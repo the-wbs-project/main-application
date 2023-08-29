@@ -35,6 +35,7 @@ builder.Services.AddSingleton<AppConfig>();
 //
 builder.Services.AddSingleton<ListDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
+builder.Services.AddSingleton<ActivityDataService>();
 builder.Services.AddSingleton<Storage>();
 //
 //  Importers and Exporters
