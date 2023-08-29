@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.AuthApi.Services;
@@ -22,6 +23,10 @@ public class OrganizationsController : ControllerBase
     [HttpGet("{organization}/members")]
     public async Task<IEnumerable<Member>> GetOrganizationalUsersAsync(string organization)
     {
+        var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+        //_logger.LogWarning(identity.Actor.Name);
+
         var users = await _auth0Service.GetOrganizationalUsersAsync(organization);
         var members = new List<Member>();
         var roles = new List<IEnumerable<string>>();
@@ -39,6 +44,8 @@ public class OrganizationsController : ControllerBase
         }
         if (gets.Count > 0)
             roles.AddRange(await Task.WhenAll(gets));
+
+
 
         for (int i = 0; i < users.Count(); i++)
             members.Add(new Member
@@ -80,8 +87,8 @@ public class OrganizationsController : ControllerBase
     }
 
     [Authorize]
-    [IgnoreAntiforgeryToken(Order = 1000)]
     [HttpDelete("{organization}/members/{user}/roles")]
+    [IgnoreAntiforgeryToken(Order = 1000)]
     public async Task<IActionResult> RemoveUserOrganizationalRolesAsync(string organization, string user, [FromBody] IEnumerable<string> roles)
     {
         await _auth0Service.RemoveUserOrganizationalRolesAsync(organization, user, roles);

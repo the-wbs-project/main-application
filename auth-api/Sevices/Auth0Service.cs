@@ -45,7 +45,9 @@ public class Auth0Service
 
         var roles = await client.Users.GetRolesAsync(userId, page);
 
-        return roles.Select(r => r.Id);
+        this.logger.LogWarning($"Roles: {JsonConvert.SerializeObject(roles)}");
+
+        return roles.Select(r => r.Name);
     }
 
     public async Task<IEnumerable<OrganizationMember>> GetOrganizationalUsersAsync(string organization)
