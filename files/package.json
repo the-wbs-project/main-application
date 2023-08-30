@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "upload": "sh upload.sh",
-    "upload:local": "yarn run upload http://localhost:88"
+    "upload:local": "yarn run upload http://localhost:88",
+    "upload:qa": "yarn run upload https://test-api.pm-empower.com"
   },
   "repository": {
     "type": "git"

@@ -75,9 +75,9 @@ public class ProjectNodeDataService : BaseDbService
         cmd.Parameters.AddWithValue("@Id", node.id);
         cmd.Parameters.AddWithValue("@ProjectId", node.projectId);
         cmd.Parameters.AddWithValue("@OwnerId", owner);
-        cmd.Parameters.AddWithValue("@ParentId", node.parentId);
+        cmd.Parameters.AddWithValue("@ParentId", DbValue(node.parentId));
         cmd.Parameters.AddWithValue("@Title", node.title);
-        cmd.Parameters.AddWithValue("@Description", node.description);
+        cmd.Parameters.AddWithValue("@Description", DbValue(node.description));
         cmd.Parameters.AddWithValue("@Order", node.order);
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
         cmd.Parameters.AddWithValue("@CreatedOn", node.createdOn);

@@ -7,8 +7,8 @@ public abstract class BaseNode
     public string title { get; set; }
     public int order { get; set; }
     public bool removed { get; set; }
-    public DateTime createdOn { get; set; }
-    public DateTime lastModified { get; set; }
+    public DateTime? createdOn { get; set; }
+    public DateTime? lastModified { get; set; }
     public string description { get; set; }
     public string[] disciplineIds { get; set; }
 }
