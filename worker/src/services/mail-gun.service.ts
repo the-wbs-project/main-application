@@ -1,5 +1,4 @@
 import { Context } from '../config';
-import { Invite } from '../models';
 
 interface EmailRequestBlob {
   email: string;
@@ -25,7 +24,7 @@ export class MailGunService {
     });
   }
 
-  static inviteAsync(ctx: Context, invite: Invite): Promise<Response> {
+  /*static inviteAsync(ctx: Context, invite: Invite): Promise<Response> {
     const origin = ctx.req.headers.get('origin');
     const url = `${origin}/setup/${invite.id}`;
 
@@ -36,7 +35,7 @@ export class MailGunService {
       template: ctx.env.INVITE_TEMPLATE_ID,
       'h:X-Mailgun-Variables': JSON.stringify({ url }),
     });
-  }
+  }*/
 
   static async sendMail(ctx: Context, data: EmailData): Promise<Response> {
     const dataUrlEncoded = this.urlEncodeObject(data);
