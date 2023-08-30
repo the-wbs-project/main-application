@@ -34,7 +34,12 @@ export class ProjectNodeDataService {
       const res = await this.ctx.get('origin').putAsync(`projects/owner/${project.owner}/id/${project.id}/nodes`, { upserts });
 
       if (res.status > 204) {
-        console.log(res.status + ' ' + (await res.text()));
+        const text = await res.text();
+        const message = res.status + ' ' + text;
+
+        console.log(message);
+
+        throw new Error(message);
       }
     }
   }

@@ -26,7 +26,7 @@ export class ProjectDataService {
       project.createdOn = new Date(project.createdOn ?? project.lastModified);
       project.description = project.description ?? '';
 
-      const res = await origin.putAsync(`projects`, project);
+      const res = await origin.putAsync(`projects/owner/` + project.owner, project);
 
       console.log(res.status + ' ' + (await res.text()));
     }
