@@ -68,7 +68,7 @@ export class UserAdminState {
     return state.users;
   }
 
-  @Action(LoadInviteData)
+  /*@Action(LoadInviteData)
   loadInviteData(
     ctx: StateContext<StateModel>,
     action: LoadInviteData
@@ -84,9 +84,9 @@ export class UserAdminState {
         });
       })
     );
-  }
+  }*/
 
-  @Action(LoadUserData)
+  /*@Action(LoadUserData)
   loadUserData(
     ctx: StateContext<StateModel>,
     action: LoadUserData
@@ -103,6 +103,10 @@ export class UserAdminState {
       }),
       tap(() => this.setVms(ctx))
     );
+  }
+
+  private getOrganization(): string {
+    return this.store.selectSnapshot(MembershipState.id)!;
   }
 
   @Action(SendInvite)
@@ -189,10 +193,6 @@ export class UserAdminState {
     );
   }
 
-  private getOrganization(): string {
-    return this.store.selectSnapshot(MembershipState.id)!;
-  }
-
   private changeActivation(
     ctx: StateContext<StateModel>,
     userId: string,
@@ -256,7 +256,7 @@ export class UserAdminState {
     invite: Invite,
     send: boolean,
     message: string
-  ): Observable<void> {
+  ): Observable<void> | void {
     return this.data.invites.putAsync(invite, send).pipe(
       tap(() => this.messages.success(message)),
       map((invite2) => {
@@ -276,5 +276,5 @@ export class UserAdminState {
         }
       })
     );
-  }
+  }*/
 }
