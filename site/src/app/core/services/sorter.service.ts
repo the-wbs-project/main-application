@@ -1,6 +1,6 @@
 export const sorter = (
-  a: string | number,
-  b: string | number,
+  a: string | number | Date,
+  b: string | number | Date,
   direction: 'asc' | 'desc' = 'asc'
 ): number => {
   if (direction === 'asc') {

@@ -31,18 +31,23 @@ export class ActivityDataService {
   putAsync(
     user: UserLite,
     topLevelId: string,
-    data: ActivityData
-  ): Observable<string> {
-    const id = IdService.generate();
+    data: ActivityData[]
+  ): Observable<string[]> {
+    const ids: string[] = [];
+    const toSave: any[] = [];
 
-    return this.http
-      .put<void>('api/activities', {
-        ...data,
+    for (const d of data) {
+      const id = IdService.generate();
+
+      ids.push(id);
+      toSave.push({
+        ...d,
         id,
-        timestamp: Date.now(),
+        timestamp: new Date(),
         topLevelId,
         userId: user.id,
-      })
-      .pipe(map(() => id));
+      });
+    }
+    return this.http.put<void>('api/activities', toSave).pipe(map(() => ids));
   }
 }

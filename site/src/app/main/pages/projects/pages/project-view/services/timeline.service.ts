@@ -54,13 +54,10 @@ export class TimelineService {
   }
 
   saveActions(owner: string, projectId: string, data: ActivityData[]): void {
-    const saves: Observable<string>[] = [];
     const user = this.store.selectSnapshot(AuthState.profileLite)!;
 
-    for (const x of data)
-      saves.push(this.data.activities.putAsync(user, projectId, x));
-
-    forkJoin(saves)
+    this.data.activities
+      .putAsync(user, projectId, data)
       .pipe(
         switchMap((ids) => {
           const snapshots: Observable<void>[] = [];

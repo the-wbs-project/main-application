@@ -77,7 +77,7 @@ export class ProjectState {
   @Selector()
   static disciplineIds(state: StateModel): string[] {
     return (
-      state.current?.categories?.discipline?.map((x) =>
+      state.current?.disciplines?.map((x) =>
         typeof x === 'string' ? x : x.id
       ) ?? []
     );
@@ -86,9 +86,8 @@ export class ProjectState {
   @Selector()
   static phaseIds(state: StateModel): string[] {
     return (
-      state.current?.categories?.phase?.map((x) =>
-        typeof x === 'string' ? x : x.id
-      ) ?? []
+      state.current?.phases?.map((x) => (typeof x === 'string' ? x : x.id)) ??
+      []
     );
   }
 
@@ -327,16 +326,16 @@ export class ProjectState {
       saveMessage = 'Projects.ProjectPhasesUpdated';
       saveAction = PROJECT_ACTIONS.PHASES_CHANGED;
 
-      originalList = [...project.categories.phase];
+      originalList = [...project.phases];
 
-      project.categories.phase = changes.categories;
+      project.phases = changes.categories;
     } else {
       saveMessage = 'Projects.ProjectDisciplinesUpdated';
       saveAction = PROJECT_ACTIONS.DISCIPLINES_CHANGED;
 
-      originalList = [...project.categories.discipline];
+      originalList = [...project.disciplines];
 
-      project.categories.discipline = changes.categories;
+      project.disciplines = changes.categories;
     }
 
     return this.saveProject(ctx, project).pipe(
@@ -392,7 +391,7 @@ export class ProjectState {
   private projectChanged(ctx: StateContext<StateModel>): Observable<void> {
     const project = ctx.getState().current!;
 
-    project.lastModified = Date.now();
+    project.lastModified = new Date();
 
     ctx.patchState({
       current: project,

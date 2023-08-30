@@ -10,13 +10,9 @@ export class WbsNodePhaseReorderer {
 
   run(project: Project, nodes: WbsNode[]): string[] {
     const changed: string[] = [];
-    for (let i = 0; i < project.categories.phase.length; i++) {
+    for (let i = 0; i < project.phases.length; i++) {
       changed.push(
-        ...this.reorder(
-          [i + 1],
-          this.getCatId(project.categories.phase[i]),
-          nodes
-        )
+        ...this.reorder([i + 1], this.getCatId(project.phases[i]), nodes)
       );
     }
     return changed;

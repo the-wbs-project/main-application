@@ -25,7 +25,7 @@ export class WbsDisciplineNodeTransformer {
     const disciplines: ListItem[] = [];
     const phases: ListItem[] = [];
 
-    for (const d of project.categories.discipline) {
+    for (const d of project.disciplines) {
       if (typeof d === 'string') {
         const d2 = dList.find((c) => c.id === d);
 
@@ -33,7 +33,7 @@ export class WbsDisciplineNodeTransformer {
       } else disciplines.push(d);
     }
 
-    for (const p of project.categories.phase) {
+    for (const p of project.phases) {
       if (typeof p === 'string') {
         const p2 = pList.find((c) => c.id === p);
 
@@ -69,7 +69,7 @@ export class WbsDisciplineNodeTransformer {
         treeParentId: null,
         phaseId: undefined,
         title: this.resources.get(d.label),
-        lastModified: 0,
+        lastModified: new Date(0),
         canMoveDown: false,
         canMoveUp: false,
         canMoveLeft: false,
@@ -99,7 +99,7 @@ export class WbsDisciplineNodeTransformer {
           treeParentId: d.id,
           phaseId: p.id,
           title: this.resources.get(p.label),
-          lastModified: 0,
+          lastModified: new Date(0),
           canMoveDown: false,
           canMoveUp: false,
           canMoveLeft: false,

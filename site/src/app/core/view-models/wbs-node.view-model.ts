@@ -1,12 +1,3 @@
-import {
-  WbsNodeDisciplineRelationship,
-  WbsNodePhaseRelationship,
-} from '../models';
-
-export interface WbsNodePhaseView extends WbsNodePhaseRelationship {
-  isLockedToParent?: boolean;
-}
-
 export interface WbsNodeView {
   id: string;
   treeId: string;
@@ -27,9 +18,7 @@ export interface WbsNodeView {
   order: number;
   phaseId: string | undefined;
   title: string;
-  phaseInfo?: WbsNodePhaseView;
-  lastModified: number;
-  disciplineInfo?: WbsNodeDisciplineRelationship;
+  lastModified: Date;
 
   canMoveUp: boolean;
   canMoveDown: boolean;

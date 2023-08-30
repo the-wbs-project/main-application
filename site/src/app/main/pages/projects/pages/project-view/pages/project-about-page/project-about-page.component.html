@@ -23,7 +23,7 @@
         {{ "General.Disciplines" | translate }} :
       </span>
       <span class="display-ib pd-l-3">
-        <label class="me-3" *ngFor="let disc of project.categories.discipline">
+        <label class="me-3" *ngFor="let disc of project.disciplines">
           <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
           {{ disc | categoryLabel | translate }}
         </label>
@@ -67,13 +67,13 @@
       <ul class="nav p-0 border-bottom-0 mb-0">
         <li class="border p-2 br-5 bg-light wd-150 ht-70">
           <span class="border-0 mb-0 pb-0">
-            {{ project.categories.phase.length }}
+            {{ project.phases.length }}
           </span>
           {{ "General.Phases" | translate }}
         </li>
         <li class="border p-2 br-5 bg-light wd-150 ht-70">
           <span class="border-0 mb-0 pb-0">
-            {{ project.categories.discipline.length }}
+            {{ project.disciplines.length }}
           </span>
           {{ "General.Disciplines" | translate }}
         </li>

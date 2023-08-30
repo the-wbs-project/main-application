@@ -20,9 +20,9 @@ export class UserHttpService {
       return ctx.json(roles);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get site roles', <Error>e);
-      
+
       ctx.status(500);
-      
+
       await next();
     }
   }

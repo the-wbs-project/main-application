@@ -268,7 +268,7 @@ export class ProjectCreateState {
     const state = ctx.getState();
     const phases = state.phases!;
     const disciplines = state.disciplines!;
-    const now = Date.now();
+    const now = new Date();
     const roles: UserRole[] = [];
 
     for (const role of state.roles!.keys()) {
@@ -284,10 +284,8 @@ export class ProjectCreateState {
       id: IdService.generate(),
       owner: state.owner!,
       createdBy: '',
-      categories: {
-        discipline: disciplines,
-        phase: phases,
-      },
+      disciplines,
+      phases,
       category: state.category!,
       description: state.description,
       mainNodeView: state.nodeView!,
@@ -307,15 +305,11 @@ export class ProjectCreateState {
 
         nodes.push({
           description: cat.description,
-          discipline: [],
+          //discipline: [],
           disciplineIds: [],
           id: cat.id,
           order: i + 1,
           parentId: null,
-          phase: {
-            isDisciplineNode: false,
-            syncWithDisciplines: false,
-          },
           projectId: project.id,
           title: cat.label,
           createdOn: now,
@@ -324,15 +318,10 @@ export class ProjectCreateState {
       } else {
         nodes.push({
           description: phase.description,
-          discipline: [],
           disciplineIds: [],
           id: phase.id,
           order: i + 1,
           parentId: null,
-          phase: {
-            isDisciplineNode: false,
-            syncWithDisciplines: false,
-          },
           projectId: project.id,
           title: phase.label,
           createdOn: now,
@@ -372,7 +361,7 @@ export class ProjectCreateState {
     }
     return this.data.projects.putAsync(project).pipe(
       switchMap(() =>
-        this.data.projectNodes.batchAsync(project.owner, project.id, nodes, [])
+        this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
       ),
       tap(() => ctx.dispatch(new ProjectUpdated(project))),
       tap(() =>

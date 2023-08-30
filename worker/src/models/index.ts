@@ -3,8 +3,6 @@ export * from './app-models';
 export * from './checklist-test.model';
 export * from './db-models';
 export * from './enums';
-export * from './discussion.model';
-export * from './invite.model';
 export * from './list-item.model';
 export * from './member.model';
 export * from './metadata.model';

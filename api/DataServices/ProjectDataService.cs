@@ -27,7 +27,7 @@ public class ProjectDataService : BaseDbService
     {
         var results = new List<Project>();
 
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[Projects] WHERE [OwnerId] = @Owner ORDER BY [LastModifiedOn] DESC", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[Projects] WHERE [OwnerId] = @Owner ORDER BY [LastModified] DESC", conn);
 
         cmd.Parameters.AddWithValue("@Owner", owner);
 
@@ -62,6 +62,30 @@ public class ProjectDataService : BaseDbService
             else
                 return null;
         }
+    }
+
+    public async Task<bool> VerifyProjectAsync(string owner, string id)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await VerifyProjectAsync(conn, owner, id);
+        }
+    }
+
+    public async Task<bool> VerifyProjectAsync(SqlConnection conn, string owner, string id)
+    {
+        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId", conn);
+
+        cmd.Parameters.AddWithValue("@ProjectId", id);
+        cmd.Parameters.AddWithValue("@Ownerid", owner);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read()) return reader.GetInt32(0) == 1;
+        }
+        return false;
     }
 
     public async Task SetAsync(Project project)

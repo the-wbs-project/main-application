@@ -6,4 +6,6 @@
 #curl -X PUT -d @./lists.project_category.json -H "Content-Type: application/json" $1/api/lists/project_category
 
 #curl $1/api/activities/migrate
-curl $1/api/projects/migrate
+#curl $1/api/projects/migrate
+#curl $1/api/snapshots/migrate
+curl $1/api/nodes/migrate

@@ -1,5 +1,5 @@
 import { Context } from '../../config';
-import { Activity } from '../../models';
+import { Activity, Project } from '../../models';
 import { OriginService } from '../origin.service';
 import { CosmosDbService } from './cosmos-db.service';
 
@@ -27,7 +27,9 @@ export class ActivityDataService {
   }
 
   async migrateAsync(): Promise<void> {
-    const projects = await this.ctx.get('data').projects.getAllAsync('acme_engineering');
+    const owner = 'acme_engineering';
+    const projectDb = new CosmosDbService(this.ctx, 'Projects', 'id');
+    const projects = await projectDb.getAllByPartitionAsync<Project>(owner, true);
     const origin = new OriginService(this.ctx);
     const objects: Activity[] = [];
     var i = 0;

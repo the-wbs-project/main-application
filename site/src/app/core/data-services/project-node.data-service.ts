@@ -1,60 +1,50 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ProjectNode, WbsNode } from '../models';
 
 export class ProjectNodeDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAllAsync(organization: string, projectId: string): Observable<WbsNode[]> {
-    return this.http.get<WbsNode[]>(
-      `api/projects/${organization}/byId/${projectId}/nodes`
-    );
-  }
-
-  getAsync(
+  getAllAsync(
     organization: string,
-    projectId: string,
-    taskId: string
-  ): Observable<WbsNode> {
-    return this.http.get<WbsNode>(
-      `api/projects/${organization}/byId/${projectId}/nodes/${taskId}`
-    );
+    projectId: string
+  ): Observable<ProjectNode[]> {
+    return this.http
+      .get<ProjectNode[]>(
+        `api/projects/owner/${organization}/id/${projectId}/nodes`
+      )
+      .pipe(map((list) => this.cleanList(list)));
   }
 
   putAsync(
     organization: string,
     projectId: string,
-    node: WbsNode
-  ): Observable<void> {
-    const model: ProjectNode = {
-      ...node,
-      projectId,
-    };
-    return this.http.put<void>(
-      `api/projects/${organization}/byId/${projectId}/nodes/${model.id}`,
-      model
-    );
-  }
-
-  batchAsync(
-    organization: string,
-    projectId: string,
-    models: WbsNode[],
+    upserts: ProjectNode[],
     removeIds: string[]
   ): Observable<void> {
-    const upserts: ProjectNode[] = [];
-
-    for (const node of models)
-      upserts.push({
-        ...node,
-        projectId,
-      });
     return this.http.put<void>(
-      `api/projects/${organization}/byId/${projectId}/nodes/batch`,
+      `api/projects/owner/${organization}/id/${projectId}/nodes`,
       {
         upserts,
         removeIds,
       }
     );
+  }
+
+  private cleanList(nodes: ProjectNode[]): ProjectNode[] {
+    for (const node of nodes) this.clean(node);
+
+    return nodes;
+  }
+
+  private clean(node: ProjectNode): ProjectNode {
+    if (typeof node.createdOn === 'string')
+      node.createdOn = new Date(node.createdOn);
+
+    if (typeof node.lastModified === 'string')
+      node.lastModified = new Date(node.lastModified);
+
+    return node;
   }
 }

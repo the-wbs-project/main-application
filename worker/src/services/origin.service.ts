@@ -39,6 +39,7 @@ export class OriginService {
   }
 
   async putAsync(suffix: string, body: any): Promise<Response> {
+    console.log(this.getUrl(suffix));
     return await fetch(this.getUrl(suffix), {
       method: 'PUT',
       body: JSON.stringify(body),

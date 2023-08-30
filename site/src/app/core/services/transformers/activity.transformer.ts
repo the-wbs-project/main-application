@@ -37,7 +37,7 @@ export class ActivityTransformer {
       menu,
       objectId: act.objectId ?? act.topLevelId,
       timestamp: act.timestamp,
-      user: act.userName,
+      userId: act.userId,
       actionDescription: act.actionDescription,
       actionIcon: act.actionIcon,
       actionTitle: act.actionTitle,

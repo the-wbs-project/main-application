@@ -16,14 +16,12 @@ export interface Project {
   createdBy: string;
   title: string;
   description: string;
-  createdOn: number;
-  lastModified: number;
+  createdOn: Date;
+  lastModified: Date;
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;
-  categories: {
-    discipline: ProjectCategory[];
-    phase: ProjectCategory[];
-  };
+  disciplines: ProjectCategory[];
+  phases: ProjectCategory[];
   roles: UserRole[];
 }

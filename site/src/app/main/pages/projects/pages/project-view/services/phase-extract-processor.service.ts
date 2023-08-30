@@ -40,7 +40,7 @@ export class PhaseExtractProcessor {
     //
     //  Lets get all IDS for phase
     //
-    const removeIds = originals.filter((x) => x.phase != null).map((x) => x.id);
+    const removeIds = originals.map((x) => x.id);
 
     for (var node of fromExtract) {
       let match = viewModels.find((x) => x.levelText === node.levelText);
@@ -107,9 +107,6 @@ export class PhaseExtractProcessor {
       if (match) {
         var changed = false;
 
-        if (!match.phaseInfo) match.phaseInfo = {};
-        if (!node.phaseInfo) node.phaseInfo = {};
-
         if (match.title != node.title) {
           match.title = node.title;
           changed = true;
@@ -120,14 +117,6 @@ export class PhaseExtractProcessor {
         }
         if (!Utils.areArraysEqual(match.disciplines, node.disciplines)) {
           match.disciplines = node.disciplines;
-          changed = true;
-        }
-        if (
-          match.phaseInfo.syncWithDisciplines !=
-          node.phaseInfo.syncWithDisciplines
-        ) {
-          match.phaseInfo.syncWithDisciplines =
-            node.phaseInfo.syncWithDisciplines;
           changed = true;
         }
         if (match.parentId != node.parentId) {
@@ -146,12 +135,8 @@ export class PhaseExtractProcessor {
     //
     //  Convert the upserts
     //
-    var upserts: WbsNode[] = [];
-    const syncIds: (string | null)[] = upsertVms
-      .filter((x) => x.phaseInfo?.syncWithDisciplines)
-      .map((x) => x.id);
-
-    const now = Date.now();
+    const upserts: WbsNode[] = [];
+    const now = new Date();
 
     for (const vm of upsertVms) {
       let model = originals.find((x) => x.id === vm.id);
@@ -163,10 +148,6 @@ export class PhaseExtractProcessor {
         model.parentId = vm.parentId;
         model.order = vm.order;
         model.lastModified = now;
-        model.phase = {
-          isDisciplineNode: false,
-          syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
-        };
       } else {
         model = {
           id: vm.id,
@@ -175,23 +156,9 @@ export class PhaseExtractProcessor {
           disciplineIds: vm.disciplines,
           parentId: vm.parentId,
           order: vm.order,
-          phase: {
-            isDisciplineNode: false,
-            syncWithDisciplines: vm.phaseInfo?.syncWithDisciplines,
-          },
           createdOn: now,
           lastModified: now,
         };
-      }
-      const parentId = model.parentId;
-      //
-      //  Now let's check if parent is a sync and if disciplines match
-      //
-      if (syncIds.indexOf(parentId) > -1) {
-        const parent = upsertVms.find((x) => x.id === parentId)!;
-
-        model.phase!.isDisciplineNode =
-          (parent.disciplines?.indexOf(model.disciplineIds![0]) ?? -1) > -1;
       }
       upserts.push(model);
     }

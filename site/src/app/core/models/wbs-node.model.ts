@@ -6,23 +6,12 @@ export interface WbsNode extends TaggedObject {
   removed?: boolean;
   parentId: string | null;
   order: number;
-  createdOn: number;
-  lastModified: number;
+  createdOn: Date;
+  lastModified: Date;
   description?: string | null;
   disciplineIds?: string[] | null;
-  phase?: WbsNodePhaseRelationship;
-  discipline?: WbsNodeDisciplineRelationship[];
 }
 
 export interface ProjectNode extends WbsNode {
   projectId: string;
-}
-
-export interface WbsNodePhaseRelationship {
-  isDisciplineNode?: boolean;
-  syncWithDisciplines?: boolean;
-}
-
-export interface WbsNodeDisciplineRelationship {
-  disciplineId: string;
 }

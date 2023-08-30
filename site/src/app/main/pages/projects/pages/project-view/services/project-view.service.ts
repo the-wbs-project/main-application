@@ -33,10 +33,7 @@ export class ProjectViewService {
   }
 
   private get projectDisciplines(): ProjectCategory[] {
-    return (
-      this.store.selectSnapshot(ProjectState.current)!.categories.discipline ??
-      []
-    );
+    return this.store.selectSnapshot(ProjectState.current)!.disciplines ?? [];
   }
 
   action(action: string, taskId?: string) {

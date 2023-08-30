@@ -3,8 +3,8 @@ import {
   Project,
   PROJECT_STATI,
   PROJECT_VIEW_STATI,
+  ProjectNode,
   ROLES,
-  WbsNode,
 } from '../models';
 import { IdService } from './id.service';
 import { Resources } from './resource.service';
@@ -54,9 +54,9 @@ export class ProjectService {
 
   createTask(
     parentId: string,
-    model: Partial<WbsNode>,
-    nodes: WbsNode[]
-  ): WbsNode {
+    model: Partial<ProjectNode>,
+    nodes: ProjectNode[]
+  ): ProjectNode {
     const siblings = nodes?.filter((x) => x.parentId === parentId) ?? [];
     let order = 0;
 
@@ -65,7 +65,7 @@ export class ProjectService {
     }
     order++;
 
-    return <WbsNode>{
+    return <ProjectNode>{
       ...model,
       id: IdService.generate(),
       parentId: parentId,

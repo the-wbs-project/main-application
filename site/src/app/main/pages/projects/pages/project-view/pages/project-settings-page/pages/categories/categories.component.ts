@@ -66,8 +66,8 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
     const cType: PROJECT_NODE_VIEW_TYPE = this.route.snapshot.data['cType'];
     const cats =
       cType === PROJECT_NODE_VIEW.DISCIPLINE
-        ? project.categories.discipline
-        : project.categories.phase;
+        ? project.disciplines
+        : project.phases;
 
     const results = this.catService.extract(this.categories, cats);
 
@@ -86,11 +86,11 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
     let counts = new Map<string, number>();
 
     if (cType === PROJECT_NODE_VIEW.DISCIPLINE) {
-      cats = project.categories.discipline;
+      cats = project.disciplines;
       nodes = this.store.selectSnapshot(TasksState.disciplines) ?? [];
       confirmMessage = 'Projects.DisciplineRemoveConfirm';
     } else {
-      cats = project.categories.phase;
+      cats = project.phases;
       nodes = this.store.selectSnapshot(TasksState.phases) ?? [];
       confirmMessage = 'Projects.PhaseRemoveConfirm';
     }

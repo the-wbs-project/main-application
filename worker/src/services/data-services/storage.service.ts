@@ -3,6 +3,16 @@ import { Context } from '../../config';
 export class StorageService {
   constructor(private readonly bucket: R2Bucket) {}
 
+  async list(folders: string[]): Promise<R2Object[]> {
+    const folder = folders.join('/');
+
+    const results = await this.bucket.list({
+      prefix: folder,
+    });
+
+    return results.objects;
+  }
+
   async get<T>(fileName: string, folders: string[]): Promise<T | null> {
     const key = `${folders.join('/')}/${fileName}`;
     const object = await this.bucket.get(key);

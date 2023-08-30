@@ -15,7 +15,7 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-  WbsNode,
+  ProjectNode,
 } from '@wbs/core/models';
 import {
   IdService,
@@ -56,7 +56,7 @@ interface StateModel {
   current?: TaskDetailsViewModel;
   pageView?: TASK_PAGE_VIEW_TYPE;
   project?: Project;
-  nodes?: WbsNode[];
+  nodes?: ProjectNode[];
   phases?: WbsNodeView[];
   disciplines?: WbsNodeView[];
 }
@@ -89,7 +89,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Selector()
-  static nodes(state: StateModel): WbsNode[] | undefined {
+  static nodes(state: StateModel): ProjectNode[] | undefined {
     return state.nodes;
   }
 
@@ -107,7 +107,7 @@ export class TasksState implements NgxsOnInit {
   static taskCount(state: StateModel): number {
     if (!state.nodes || !state.project) return 0;
 
-    const phaseIds = state.project.categories.phase.map((x) =>
+    const phaseIds = state.project.phases.map((x) =>
       typeof x === 'string' ? x : x.id
     );
 
@@ -231,7 +231,7 @@ export class TasksState implements NgxsOnInit {
       if (changedIds.indexOf(node.id) === -1) continue;
 
       changed.push(
-        this.data.projectNodes.putAsync(project.owner, project.id, node)
+        this.data.projectNodes.putAsync(project.owner, project.id, [node], [])
       );
     }
     return forkJoin(changed).pipe(
@@ -264,7 +264,7 @@ export class TasksState implements NgxsOnInit {
   ): Observable<any> | void {
     const state = ctx.getState();
     const nodes = this.copy(state.nodes)!;
-    const toSave: WbsNode[] = [];
+    const toSave: ProjectNode[] = [];
 
     for (const node of nodes) {
       if (!node.disciplineIds) continue;
@@ -284,7 +284,7 @@ export class TasksState implements NgxsOnInit {
     }
 
     return this.data.projectNodes
-      .batchAsync(state.project!.owner, state.project!.id, toSave, [])
+      .putAsync(state.project!.owner, state.project!.id, toSave, [])
       .pipe(
         tap(() => ctx.patchState({ nodes })),
         tap(() => ctx.dispatch(new RebuildNodeViews()))
@@ -300,7 +300,7 @@ export class TasksState implements NgxsOnInit {
     const nodes = state.nodes ?? [];
     const node = nodes.find((x) => x.id === action.nodeId);
     const nodeVm = state.phases!.find((x) => x.id === action.nodeId);
-    const now = Date.now();
+    const now = new Date();
 
     if (node == null) return;
 
@@ -311,14 +311,13 @@ export class TasksState implements NgxsOnInit {
           .map((x) => x.order)
       ) + 1;
 
-    const newNode: WbsNode = {
+    const newNode: ProjectNode = {
       id: IdService.generate(),
       order,
+      projectId: node.projectId,
       parentId: node.parentId,
       description: node.description,
-      discipline: node.discipline,
       disciplineIds: node.disciplineIds,
-      phase: node.phase,
       removed: false,
       tags: node.tags,
       title: node.title + ' Clone',
@@ -384,7 +383,7 @@ export class TasksState implements NgxsOnInit {
 
     if (!task || !parent) return;
 
-    const toSave: WbsNode[] = [];
+    const toSave: ProjectNode[] = [];
     //
     //  Renumber the old siblings
     //
@@ -424,12 +423,12 @@ export class TasksState implements NgxsOnInit {
     const tasks = this.copy(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
-    let newParent: WbsNode | undefined;
+    let newParent: ProjectNode | undefined;
 
     if (!task) return;
 
     const oldSiblings = tasks.filter((x) => x.parentId === task.parentId);
-    const toSave: WbsNode[] = [];
+    const toSave: ProjectNode[] = [];
     //
     //  Find all current siblings which are lower in the order than task and bump them up.
     //
@@ -492,7 +491,7 @@ export class TasksState implements NgxsOnInit {
     const state = ctx.getState();
     const project = state.project!;
     const models = state.nodes!;
-    const upserts: WbsNode[] = [];
+    const upserts: ProjectNode[] = [];
     const nodeViews =
       (action.view === PROJECT_NODE_VIEW.DISCIPLINE
         ? state.disciplines
@@ -671,14 +670,14 @@ export class TasksState implements NgxsOnInit {
 
   private saveTask(
     ctx: StateContext<StateModel>,
-    task: WbsNode
+    task: ProjectNode
   ): Observable<void> {
     const project = ctx.getState().project!;
 
-    task.lastModified = Date.now();
+    task.lastModified = new Date();
 
     return this.data.projectNodes
-      .putAsync(project.owner, project.id, task)
+      .putAsync(project.owner, project.id, [task], [])
       .pipe(switchMap(() => ctx.dispatch(new MarkProjectChanged())));
   }
 
@@ -686,11 +685,11 @@ export class TasksState implements NgxsOnInit {
     ctx: StateContext<StateModel>,
     project: Project,
     originalLevel: string,
-    mainTask: WbsNode,
-    others: WbsNode[]
+    mainTask: ProjectNode,
+    others: ProjectNode[]
   ): Observable<void> {
     return this.data.projectNodes
-      .batchAsync(project.owner, project.id, [mainTask, ...others], [])
+      .putAsync(project.owner, project.id, [mainTask, ...others], [])
       .pipe(
         tap(() => {
           const tasks = ctx.getState().nodes!;

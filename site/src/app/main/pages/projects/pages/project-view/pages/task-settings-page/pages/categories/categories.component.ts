@@ -53,7 +53,7 @@ export class TaskSettingsCategoriesComponent implements OnInit {
     if (!project) return;
 
     const task = this.store.selectSnapshot(TasksState.current);
-    const projectCats = project.categories.discipline;
+    const projectCats = project.disciplines;
     const taskCats = task?.disciplines ?? [];
 
     this.categories = this.catService.buildFromList(

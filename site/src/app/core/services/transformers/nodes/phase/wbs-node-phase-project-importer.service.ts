@@ -31,11 +31,10 @@ export class WbsNodePhaseProjectImporter {
         results.removeIds.push(node.id);
       }
     } else {
-      results.phases = project.categories.phase;
+      results.phases = project.phases;
     }
     let counter = 1;
-    const phaseDelta =
-      action === 'overwrite' ? 0 : project.categories.phase.length;
+    const phaseDelta = action === 'overwrite' ? 0 : project.phases.length;
 
     while (nodes.has(counter.toString())) {
       const info = nodes.get(counter.toString())!;
@@ -59,8 +58,8 @@ export class WbsNodePhaseProjectImporter {
         people,
         nodes
       );
-      const now = Date.now();
-      const node = {
+      const now = new Date();
+      const node: WbsNode = {
         id: phaseId,
         order: counter + phaseDelta,
         title: info.title,
@@ -98,7 +97,7 @@ export class WbsNodePhaseProjectImporter {
       const info = nodes.get(level)!;
       const id = IdService.generate();
       const children = this.getChildren(id, level, people, nodes);
-      const now = Date.now();
+      const now = new Date();
       const node: WbsNode = {
         id,
         parentId,
@@ -128,9 +127,7 @@ export class WbsNodePhaseProjectImporter {
     project: Project,
     people: Map<string, ProjectCategory[]>
   ): ProjectCategory[] {
-    const results: ProjectCategory[] = [
-      ...(project.categories?.discipline ?? []),
-    ];
+    const results: ProjectCategory[] = [...(project?.disciplines ?? [])];
     //
     //  Process disciplines
     //

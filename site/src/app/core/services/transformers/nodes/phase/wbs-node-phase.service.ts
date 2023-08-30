@@ -22,7 +22,7 @@ export class WbsNodePhaseTransformer {
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
     const nodes: WbsNodeView[] = [];
     const categories = <ListItem[]>(
-      project.categories.phase
+      project.phases
         .map((x) =>
           typeof x === 'string' ? this.phaseList.find((c) => c.id === x) : x
         )
@@ -46,23 +46,17 @@ export class WbsNodePhaseTransformer {
         phaseId: cat.id,
         order: i + 1,
         title: this.resources.get(cat.label),
-        phaseInfo: {
-          isDisciplineNode: false,
-          isLockedToParent: false,
-          syncWithDisciplines: false,
-        },
-        lastModified: 0,
         canMoveDown: false,
         canMoveUp: false,
         canMoveLeft: false,
         canMoveRight: false,
+        lastModified: new Date(0),
       };
       const children = this.getPhaseChildren(
         cat.id,
         cat.id,
         parentlevel,
-        projectNodes,
-        false
+        projectNodes
       );
       parent.children = children.length;
 
@@ -75,8 +69,7 @@ export class WbsNodePhaseTransformer {
     phaseId: string,
     parentId: string,
     parentLevel: number[],
-    list: WbsNode[],
-    isLockedToParent: boolean
+    list: WbsNode[]
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parentId, list);
@@ -98,30 +91,18 @@ export class WbsNodePhaseTransformer {
         treeParentId: parentId,
         phaseId,
         title: child.title ?? '',
-        phaseInfo: {
-          isDisciplineNode: child.phase?.isDisciplineNode ?? false,
-          isLockedToParent,
-          syncWithDisciplines: child.phase?.syncWithDisciplines ?? false,
-        },
         lastModified: child.lastModified,
         canMoveDown: i !== children.length - 1,
         canMoveUp: i > 0,
         canMoveRight: i > 0,
         canMoveLeft: childLevel.length > 2,
       };
-      if (node.phaseInfo?.isDisciplineNode) {
-        const dCat = this.disciplineList.find(
-          (x) => x.id === (node.disciplines ?? [])[0]
-        );
 
-        if (dCat) node.title = this.resources.get(dCat.label);
-      }
       const vmChildren = this.getPhaseChildren(
         phaseId,
         child.id,
         childLevel,
-        list,
-        child.phase?.syncWithDisciplines ?? false
+        list
       );
 
       node.children = vmChildren.length;

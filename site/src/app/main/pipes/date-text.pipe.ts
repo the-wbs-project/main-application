@@ -11,13 +11,11 @@ import {
 export class DateTextPipe implements PipeTransform {
   constructor(private readonly resources: Resources) {}
 
-  transform(date: number | null | undefined): string {
+  transform(date: number | Date | null | undefined): string {
     if (date == null) return '';
 
-    const last = new Date(0);
+    const last = new Date(date);
     const now = new Date();
-
-    last.setUTCMilliseconds(date);
 
     let resource: string | undefined;
     let num: number | undefined;

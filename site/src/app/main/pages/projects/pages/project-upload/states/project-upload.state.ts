@@ -247,7 +247,7 @@ export class ProjectUploadState {
     const state = ctx.getState();
 
     if (answer === 'append')
-      for (const idOrCat of state.project!.categories.phase ?? []) {
+      for (const idOrCat of state.project!.phases ?? []) {
         phaseList.push({ idOrCat, isEditable: false });
       }
 
@@ -354,8 +354,8 @@ export class ProjectUploadState {
     const state = ctx.getState();
     const project = state.project!;
 
-    project.categories.phase = results.phases;
-    project.categories.discipline = results.disciplines;
+    project.phases = results.phases;
+    project.disciplines = results.disciplines;
 
     const saves: Observable<any>[] = [
       this.data.projects
@@ -365,10 +365,10 @@ export class ProjectUploadState {
 
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
-        this.data.projectNodes.batchAsync(
+        this.data.projectNodes.putAsync(
           project.owner,
           project.id,
-          results.upserts,
+          results.upserts.map((node) => ({ ...node, projectId: project.id })),
           results.removeIds
         )
       );
