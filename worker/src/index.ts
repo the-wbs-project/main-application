@@ -35,10 +35,7 @@ app.put('api/lists/:type', cachePurge, Http.metadata.putListAsync);
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 
-app.get('api/activities/migrate', Http.activities.migrateAsync);
-app.get('api/projects/migrate', Http.projects.migrateAsync);
 app.get('api/snapshots/migrate', Http.projectSnapshots.migrateAsync);
-app.get('api/nodes/migrate', Http.projectNodes.migrateAsync);
 //
 //  Auth calls
 //

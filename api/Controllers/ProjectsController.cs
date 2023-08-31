@@ -1,4 +1,5 @@
 ﻿using com.sun.tools.@internal.jxc.ap;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
@@ -9,13 +10,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ProjectsController : ControllerBase
 {
-    private readonly ILogger<ProjectsController> _logger;
+    private readonly TelemetryClient telemetry;
+    private readonly ILogger<ProjectsController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
 
-    public ProjectsController(ILogger<ProjectsController> logger, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService)
+    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.telemetry = telemetry;
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
     }
@@ -29,7 +32,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -45,7 +49,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -59,7 +64,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -76,7 +82,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -106,7 +113,8 @@ public class ProjectsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

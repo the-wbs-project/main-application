@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.Json.Serialization;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.Services.Importers;
@@ -10,13 +11,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/import")]
 public class ImportController : ControllerBase
 {
-    private readonly ILogger<ImportController> _logger;
+    private readonly TelemetryClient telemetry;
+    private readonly ILogger<ImportController> logger;
     private readonly ProjectFileImporter mppImporter;
     private readonly ExcelFileImporter xlsxImporter;
 
-    public ImportController(ILogger<ImportController> logger, ProjectFileImporter mppImporter, ExcelFileImporter xlsxImporter)
+    public ImportController(TelemetryClient telemetry, ILogger<ImportController> logger, ProjectFileImporter mppImporter, ExcelFileImporter xlsxImporter)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.telemetry = telemetry;
         this.mppImporter = mppImporter;
         this.xlsxImporter = xlsxImporter;
     }
@@ -39,7 +42,8 @@ public class ImportController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -63,7 +67,8 @@ public class ImportController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

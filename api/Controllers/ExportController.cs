@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.Models;
 using Wbs.Api.Services.Exporters;
@@ -9,12 +10,14 @@ namespace Wbs.Api.Controllers;
 [Route("api/export")]
 public class ExportController : ControllerBase
 {
-    private readonly ILogger<ExportController> _logger;
+    private readonly TelemetryClient telemetry;
+    private readonly ILogger<ExportController> logger;
     private readonly ExcelFileExporter xlsxExporter;
 
-    public ExportController(ILogger<ExportController> logger, ExcelFileExporter xlsxExporter)
+    public ExportController(TelemetryClient telemetry, ILogger<ExportController> logger, ExcelFileExporter xlsxExporter)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.telemetry = telemetry;
         this.xlsxExporter = xlsxExporter;
     }
 
@@ -30,7 +33,8 @@ public class ExportController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

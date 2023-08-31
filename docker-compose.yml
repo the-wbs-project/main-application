@@ -10,16 +10,6 @@ services:
     volumes:
       - './api:/usr/src/app/api'
   
-  auth-api:
-    container_name: auth-api
-    build:
-      context: ./auth-api
-      dockerfile: Dockerfile-dev
-    ports:
-      - 8080:8080
-    volumes:
-      - './auth-api:/usr/src/app/auth-api'
-  
   worker:
     container_name: worker
     build:

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
@@ -9,12 +10,14 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ResourcesController : ControllerBase
 {
-    private readonly ILogger<ResourcesController> _logger;
+    private readonly TelemetryClient telemetry;
+    private readonly ILogger<ResourcesController> logger;
     private readonly ResourcesDataService dataService;
 
-    public ResourcesController(ILogger<ResourcesController> logger, ResourcesDataService dataService)
+    public ResourcesController(TelemetryClient telemetry, ILogger<ResourcesController> logger, ResourcesDataService dataService)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.telemetry = telemetry;
         this.dataService = dataService;
     }
 
@@ -27,7 +30,8 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -41,7 +45,8 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -51,13 +56,14 @@ public class ResourcesController : ControllerBase
     {
         try
         {
-            _logger.LogInformation($"GetBySection: {section}, {locale}");
+            logger.LogInformation($"GetBySection: {section}, {locale}");
 
             return Ok(await dataService.GetBySectionAsync(locale, section));
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -73,7 +79,8 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

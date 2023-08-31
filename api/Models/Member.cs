@@ -1,8 +1,8 @@
 using Newtonsoft.Json;
 
-namespace Wbs.AuthApi.Controllers;
+namespace Wbs.Api.Models;
 
-public class UserLite
+public class Member
 {
     [JsonProperty("id")]
     public string Id { get; set; }
@@ -12,4 +12,7 @@ public class UserLite
 
     [JsonProperty("email")]
     public string Email { get; set; }
+
+    [JsonProperty("roles")]
+    public IEnumerable<string> Roles { get; set; }
 }

@@ -1,4 +1,4 @@
-namespace Wbs.AuthApi.Configurations;
+namespace Wbs.Api.Configurations;
 
 public class Auth0Config
 {

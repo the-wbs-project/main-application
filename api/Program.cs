@@ -3,6 +3,7 @@ using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Wbs.Api.Configuration;
 using Wbs.Api.DataServices;
+using Wbs.Api.Services;
 using Wbs.Api.Services.Exporters;
 using Wbs.Api.Services.Importers;
 
@@ -46,6 +47,8 @@ builder.Services.AddSingleton<Storage>();
 builder.Services.AddSingleton<ExcelFileExporter>();
 builder.Services.AddSingleton<ExcelFileImporter>();
 builder.Services.AddSingleton<ProjectFileImporter>();
+
+builder.Services.AddSingleton<Auth0Service>();
 
 var app = builder.Build();
 

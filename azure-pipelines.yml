@@ -42,35 +42,6 @@ jobs:
           publishLocation: "Container"
         displayName: "Publish"
 
-  - job: auth_api_job
-    displayName: ASP.NET Auth API
-    steps:
-      - task: DotNetCoreCLI@2
-        inputs:
-          command: "publish"
-          publishWebProjects: false
-          projects: "./auth-api/auth-api.csproj"
-          arguments: "-o ./auth-api/dist"
-          zipAfterPublish: false
-          modifyOutputPath: true
-        displayName: "Build"
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "auth-api/dist/auth-api"
-          includeRootFolder: false
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Auth-Api.zip"
-          replaceExistingArchive: true
-        displayName: "Zip"
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-          ArtifactName: "drop"
-          publishLocation: "Container"
-        displayName: "Publish"
-
   - job: worker_job
     displayName: Worker
     steps:

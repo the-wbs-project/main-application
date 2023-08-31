@@ -8,8 +8,9 @@ export class AuthDataService {
 
   async fetch(suffix: string, method: string, body?: any): Promise<Response> {
     const req = this.ctx.req;
+    const prefix = this.ctx.env.AUTH_URL ?? new URL(req.url).origin;
 
-    return await this.ctx.get('fetcher').fetch(`${this.ctx.env.AUTH_URL}/api/${suffix}`, {
+    return await this.ctx.get('fetcher').fetch(`${prefix}/api/${suffix}`, {
       body,
       method,
       headers: req.headers,

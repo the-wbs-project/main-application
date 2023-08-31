@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
 
@@ -8,12 +9,14 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ListsController : ControllerBase
 {
-    private readonly ILogger<ListsController> _logger;
+    private readonly TelemetryClient telemetry;
+    private readonly ILogger<ListsController> logger;
     private readonly ListDataService dataService;
 
-    public ListsController(ILogger<ListsController> logger, ListDataService dataService)
+    public ListsController(TelemetryClient telemetry, ILogger<ListsController> logger, ListDataService dataService)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.telemetry = telemetry;
         this.dataService = dataService;
     }
 
@@ -26,7 +29,8 @@ public class ListsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -42,7 +46,8 @@ public class ListsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -59,7 +64,8 @@ public class ListsController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

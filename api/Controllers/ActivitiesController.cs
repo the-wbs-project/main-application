@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
 
@@ -8,12 +9,14 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ActivitiesController : ControllerBase
 {
-    private readonly ILogger<ActivitiesController> _logger;
+    private readonly TelemetryClient telemetry;
+    private readonly ILogger<ActivitiesController> logger;
     private readonly ActivityDataService dataService;
 
-    public ActivitiesController(ILogger<ActivitiesController> logger, ActivityDataService dataService)
+    public ActivitiesController(TelemetryClient telemetry, ILogger<ActivitiesController> logger, ActivityDataService dataService)
     {
-        _logger = logger;
+        this.logger = logger;
+        this.telemetry = telemetry;
         this.dataService = dataService;
     }
 
@@ -26,7 +29,8 @@ public class ActivitiesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -40,7 +44,8 @@ public class ActivitiesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -57,7 +62,8 @@ public class ActivitiesController : ControllerBase
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex.ToString());
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

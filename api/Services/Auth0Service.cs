@@ -4,10 +4,9 @@ using Auth0.ManagementApi.Paging;
 using System.Net;
 using System.Text;
 using System.Text.Json;
+using Wbs.Api.Configurations;
 
-using Wbs.AuthApi.Configurations;
-
-namespace Wbs.AuthApi.Services;
+namespace Wbs.Api.Services;
 
 public class Auth0Service
 {
