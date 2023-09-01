@@ -24,10 +24,7 @@ DATADOG_ENV = "development"
 CORS_ORIGINS = "http://localhost:4200"
 KV_BYPASS = "LISTS"
 
-COSMOS_ENDPOINT = "https://wbs-dev-asia.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
-
-COSMOS_DB = "combined"
 
 AUTH_URL = "https://test-api.pm-empower.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
@@ -52,10 +49,7 @@ DEBUG = "false"
 DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
 
-COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
-
-COSMOS_DB = "v1"
 
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "pm-empower.us.auth0.com"
@@ -78,16 +72,11 @@ r2_buckets = [
 [env.prod.vars]
 DEBUG = "false"
 DATADOG_ENV = "production"
-CORS_ORIGINS = "http://localhost:4200"
-INVITE_TEMPLATE_ID = "invite-template-v1"
+CORS_ORIGINS = "https://app.pm-empower.com"
 
-AZURE_ENDPOINT = "https://wbs-v0-1-prod.azurewebsites.net"
-COSMOS_ENDPOINT = "https://wbs-qa.documents.azure.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_CLIENT_ID = "H6wv0AyrBtISAyGka2suyhDGJCabQp2z"
-AUTH_CONNECTION = "Username-Password-Authentication"
 AUTH_DOMAIN = "pm-empower.us.auth0.com"
 
 [dev]

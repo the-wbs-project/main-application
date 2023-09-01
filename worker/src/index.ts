@@ -1,7 +1,8 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cachePurge, cors, logger, verifyAdminAsync, verifyJwt, verifyMembership, verifyMyself } from './middle';
+import { cache, cachePurge, cors, kv, logger, verifyAdminAsync, verifyJwt, verifyMembership, verifyMyself } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService, OriginService } from './services';
+import { kvPurge } from './middle/kv-purge.service';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
@@ -26,19 +27,19 @@ app.use('*', cors);
 
 app.options('*', (c) => c.text(''));
 
-app.get('api/resources/all/:locale', cache, (ctx) => OriginService.pass(ctx));
-app.get('api/lists/:type', cache, OriginService.pass);
+app.get('api/resources/all/:locale', kv('RESOURCES|:locale'), (ctx) => OriginService.pass(ctx));
+app.get('api/lists/:type', kv('LISTS|:type'), OriginService.pass);
 
-app.put('api/resources', cachePurge, Http.metadata.putResourcesAsync);
-app.put('api/lists/:type', cachePurge, Http.metadata.putListAsync);
-app.put('api/checklists', Http.metadata.putChecklistsAsync);
+app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
+app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);
+app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
 
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('api/checklists', verifyJwt, OriginService.pass);
+app.get('api/checklists', kv('CHECKLISTS'), verifyJwt, OriginService.pass);
 app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
 app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
 app.put('api/activities', verifyJwt, OriginService.pass);
