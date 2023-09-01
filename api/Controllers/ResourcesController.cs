@@ -75,7 +75,7 @@ public class ResourcesController : ControllerBase
         {
             await dataService.SetAsync(resource.locale, resource.section, resource.values); ;
 
-            return Accepted();
+            return NoContent();
         }
         catch (Exception ex)
         {

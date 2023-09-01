@@ -19,7 +19,7 @@ export class ProjectDataService {
   }
 
   putAsync(project: Project): Observable<void> {
-    return this.http.put<void>('api/projects', project);
+    return this.http.put<void>(`api/projects/owner/${project.owner}`, project);
   }
 
   private cleanList(projects: Project[]): Project[] {

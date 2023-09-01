@@ -1,5 +1,4 @@
 using Microsoft.Data.SqlClient;
-using System.Data;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
@@ -40,54 +39,74 @@ public class ChecklistDataService : BaseDbService
                     id = groupId,
                     order = DbValue<int>(reader, "Order"),
                     description = DbValue<string>(reader, "Description"),
-                    items = await GetAllItemsAsync(conn, groupId)
+                    //items = await GetAllItemsAsync(conn, groupId)
                 });
             }
+        }
+
+        foreach (var group in results)
+        {
+            group.items = await GetAllItemsAsync(conn, group.id);
         }
         return results;
     }
 
-    /*public async Task SetAsync(ListItem item)
+    public async Task SetAsync(ChecklistGroup[] groups)
     {
         using (var conn = new SqlConnection(cs))
         {
             await conn.OpenAsync();
-            await SetAsync(conn, item);
+            await SetAsync(conn, groups);
         }
     }
 
-    public async Task SetAsync(SqlConnection conn, ListItem item)
+    public async Task SetAsync(SqlConnection conn, ChecklistGroup[] groups)
     {
-        var cmd = new SqlCommand("dbo.List_Set", conn)
+        await ClearAsync(conn);
+
+        foreach (var group in groups)
         {
-            CommandType = CommandType.StoredProcedure
-        };
-        cmd.Parameters.AddWithValue("@Id", item.id);
-        cmd.Parameters.AddWithValue("@Type", item.type);
-        cmd.Parameters.AddWithValue("@Label", item.label);
-        cmd.Parameters.AddWithValue("@SameAs", item.sameAs);
-        cmd.Parameters.AddWithValue("@Icon", item.icon);
-        cmd.Parameters.AddWithValue("@Description", item.description);
-        cmd.Parameters.AddWithValue("@Tags", DbJson(item.tags));
+            await SetGroupAsync(conn, group);
+
+            foreach (var item in group.items)
+            {
+                await SetItemAsync(conn, group.id, item);
+            }
+        }
+    }
+
+    private async Task ClearAsync(SqlConnection conn)
+    {
+        var cmd = new SqlCommand("DELETE FROM [dbo].[ChecklistItems]", conn);
+        var cmd2 = new SqlCommand("DELETE FROM [dbo].[ChecklistGroups]", conn);
+
+        await cmd.ExecuteNonQueryAsync();
+        await cmd2.ExecuteNonQueryAsync();
+    }
+
+    private async Task SetGroupAsync(SqlConnection conn, ChecklistGroup group)
+    {
+        var cmd = new SqlCommand("INSERT INTO [dbo].[ChecklistGroups] ([Id], [Order], [Description]) VALUES (@Id, @Order, @Description)", conn);
+
+        cmd.Parameters.AddWithValue("@Id", group.id);
+        cmd.Parameters.AddWithValue("@Order", group.order);
+        cmd.Parameters.AddWithValue("@Description", group.description);
 
         await cmd.ExecuteNonQueryAsync();
     }
 
-    public async Task DeleteAsync(string id, string type)
+    private async Task SetItemAsync(SqlConnection conn, string groupId, ChecklistItem item)
     {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await DeleteAsync(conn, id, type);
-        }
-    }*/
+        var cmd = new SqlCommand("INSERT INTO [dbo].[ChecklistItems] ([Id], [GroupId], [Order], [Description], [Type], [Path], [Pass], [Warn]) VALUES (@Id, @GroupId, @Order, @Description, @Type, @Path, @Pass, @Warn)", conn);
 
-    public async Task DeleteAsync(SqlConnection conn, string id, string type)
-    {
-        var cmd = new SqlCommand("DELETE FROM [dbo].[Lists] WHERE [Id] = @Id AND [Type] = @Type", conn);
-
-        cmd.Parameters.AddWithValue("@Id", id);
-        cmd.Parameters.AddWithValue("@Type", type);
+        cmd.Parameters.AddWithValue("@Id", item.id);
+        cmd.Parameters.AddWithValue("@GroupId", groupId);
+        cmd.Parameters.AddWithValue("@Order", item.order);
+        cmd.Parameters.AddWithValue("@Description", item.description);
+        cmd.Parameters.AddWithValue("@Type", item.type);
+        cmd.Parameters.AddWithValue("@Path", item.path);
+        cmd.Parameters.AddWithValue("@Pass", DbJson(item.pass));
+        cmd.Parameters.AddWithValue("@Warn", DbJson(item.warn));
 
         await cmd.ExecuteNonQueryAsync();
     }

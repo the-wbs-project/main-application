@@ -1,0 +1,123 @@
+[
+    {
+        "id": "basic-test",
+        "order": 1,
+        "description": "Project Structure Tests",
+        "items": [
+            {
+                "id": "description-test",
+                "groupId": "basic-test",
+                "description": "Is Description Set?",
+                "order": 1,
+                "type": "exists",
+                "path": ".project.description"
+            },
+            {
+                "id": "pm-test",
+                "groupId": "basic-test",
+                "description": "Has a PM been assigned?",
+                "order": 2,
+                "type": "array",
+                "path": ".project.roles{.role == \"pm\"}",
+                "pass": {
+                    "op": ">",
+                    "value": 0
+                }
+            },
+            {
+                "id": "approver-test",
+                "groupId": "basic-test",
+                "description": "Has an approver been assigned?",
+                "order": 3,
+                "type": "array",
+                "path": ".project.roles{.role == \"approver\"}",
+                "pass": {
+                    "op": ">",
+                    "value": 0
+                }
+            },
+            {
+                "id": "sme-test",
+                "groupId": "basic-test",
+                "description": "Has a SME been assigned?",
+                "order": 4,
+                "type": "array",
+                "path": ".project.roles{.role == \"sme\"}",
+                "pass": {
+                    "op": ">",
+                    "value": 0
+                }
+            },
+            {
+                "id": "phase-count-test",
+                "groupId": "basic-test",
+                "description": "Have the phases been assigned to the project?",
+                "order": 5,
+                "type": "array",
+                "path": ".project.categories.phase",
+                "warn": {
+                    "op": ">",
+                    "value": 0
+                },
+                "pass": {
+                    "op": ">=",
+                    "value": 3
+                }
+            },
+            {
+                "id": "discipline-count-test",
+                "groupId": "basic-test",
+                "description": "Have the disciplines been setup on the project?",
+                "order": 6,
+                "type": "array",
+                "path": ".project.categories.discipline",
+                "warn": {
+                    "op": ">",
+                    "value": 0
+                },
+                "pass": {
+                    "op": ">=",
+                    "value": 3
+                }
+            }
+        ]
+    },
+    {
+        "id": "phase-tests",
+        "order": 2,
+        "description": "Phase Tests",
+        "items": [
+            {
+                "id": "has-tasks-test",
+                "groupId": "phase-tests",
+                "description": "Do all phases have tasks?",
+                "order": 1,
+                "type": "array",
+                "path": ".phases{.depth === 1 && .children === 0}",
+                "pass": {
+                    "op": "=",
+                    "value": 0
+                }
+            }
+        ]
+    },
+    {
+        "id": "discipline-tests",
+        "order": 3,
+        "description": "Discipline Tests",
+        "items": [
+            {
+                "id": "has-tasks-test",
+                "groupId": "discipline-tests",
+                "description": "Do all disciplines have tasks?",
+                "order": 1,
+                "type": "array",
+                "path": ".disciplines{.depth === 1 && .children === 0}",
+                "pass": {
+                    "op": "=",
+                    "value": 0
+                }
+            }
+        ]
+    }
+]

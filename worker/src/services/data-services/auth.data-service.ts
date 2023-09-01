@@ -1,15 +1,13 @@
 import { Context } from '../../config';
-import { Transformers } from '../transformers';
 
 export class AuthDataService {
-  protected readonly transformer = Transformers.users;
-
   constructor(protected readonly ctx: Context) {}
 
   async fetch(suffix: string, method: string, body?: any): Promise<Response> {
     const req = this.ctx.req;
     const prefix = this.ctx.env.AUTH_URL ?? new URL(req.url).origin;
 
+    console.log(`${prefix}/api/${suffix}`);
     return await this.ctx.get('fetcher').fetch(`${prefix}/api/${suffix}`, {
       body,
       method,

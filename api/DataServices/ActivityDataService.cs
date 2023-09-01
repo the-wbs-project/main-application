@@ -99,29 +99,20 @@ public class ActivityDataService : BaseDbService
 
     private ActivityViewModel ToViewModel(SqlDataReader reader)
     {
-        try
+        return new ActivityViewModel
         {
-            return new ActivityViewModel
-            {
-                id = DbValue<string>(reader, "Id"),
-                action = DbValue<string>(reader, "Action"),
-                timestamp = DbValue<DateTime>(reader, "Timestamp"),
-                userId = DbValue<string>(reader, "UserId"),
-                topLevelId = DbValue<string>(reader, "TopLevelId"),
-                objectId = DbValue<string>(reader, "ObjectId"),
-                versionId = DbValue<string>(reader, "VersionId"),
-                data = DbJson<Dictionary<string, object>>(reader, "Data"),
+            id = DbValue<string>(reader, "Id"),
+            action = DbValue<string>(reader, "Action"),
+            timestamp = DbValue<DateTime>(reader, "Timestamp"),
+            userId = DbValue<string>(reader, "UserId"),
+            topLevelId = DbValue<string>(reader, "TopLevelId"),
+            objectId = DbValue<string>(reader, "ObjectId"),
+            versionId = DbValue<string>(reader, "VersionId"),
+            data = DbJson<Dictionary<string, object>>(reader, "Data"),
 
-                actionDescription = DbValue<string>(reader, "ActionDescription"),
-                actionIcon = DbValue<string>(reader, "ActionIcon"),
-                actionTitle = DbValue<string>(reader, "ActionTitle"),
-            };
-        }
-        catch (Exception e)
-        {
-            _logger.LogWarning(DbValue<string>(reader, "Id"));
-            _logger.LogWarning(DbValue<string>(reader, "Data"));
-            throw;
-        }
+            actionDescription = DbValue<string>(reader, "ActionDescription"),
+            actionIcon = DbValue<string>(reader, "ActionIcon"),
+            actionTitle = DbValue<string>(reader, "ActionTitle"),
+        };
     }
 }

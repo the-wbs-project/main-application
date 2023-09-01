@@ -1,4 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
@@ -20,6 +21,7 @@ public class ActivitiesController : ControllerBase
         this.dataService = dataService;
     }
 
+    [Authorize]
     [HttpGet("topLevel/{topLevel}/{skip}/{take}")]
     public async Task<IActionResult> GetForTopLevelAsync(string topLevel, int skip, int take)
     {
@@ -35,6 +37,7 @@ public class ActivitiesController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("child/{topLevel}/{child}/{skip}/{take}")]
     public async Task<IActionResult> GetForChildAsync(string topLevel, string child, int skip, int take)
     {
@@ -50,6 +53,7 @@ public class ActivitiesController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut]
     public async Task<IActionResult> Put(Activity[] activities)
     {
@@ -58,7 +62,7 @@ public class ActivitiesController : ControllerBase
             foreach (var activity in activities)
                 await dataService.InsertAsync(activity);
 
-            return Accepted();
+            return NoContent();
         }
         catch (Exception ex)
         {

@@ -29,34 +29,27 @@ app.options('*', (c) => c.text(''));
 app.get('api/resources/all/:locale', cache, (ctx) => OriginService.pass(ctx));
 app.get('api/lists/:type', cache, OriginService.pass);
 
-app.put('api/resources', cachePurge, Http.metadata.setResourcesAsync);
+app.put('api/resources', cachePurge, Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', cachePurge, Http.metadata.putListAsync);
+app.put('api/checklists', Http.metadata.putChecklistsAsync);
 
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
-
-app.get('api/snapshots/migrate', Http.projectSnapshots.migrateAsync);
 //
 //  Auth calls
 //
-app.get('api/checklists', verifyJwt, Http.checklists.getAsync);
+app.get('api/checklists', verifyJwt, OriginService.pass);
 app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
 app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
 app.put('api/activities', verifyJwt, OriginService.pass);
 
-app.put('api/projects', verifyJwt, verifyMembership, OriginService.pass);
 app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
+app.put('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
 app.get('api/projects/owner/:owner/id/:projectId', verifyJwt, verifyMembership, OriginService.pass);
 
 app.get('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
-app.get(
-  'api/projects/owner/:owner/snapshot/:projectId/:activityId',
-  verifyJwt,
-  verifyMembership,
-  Http.projectSnapshots.getByActivityIdAsync,
-);
-app.put('api/projects/owner/:owner/snapshot/:projectId/:activityId', verifyJwt, verifyMembership, Http.projectSnapshots.take);
+
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
 //app.get('api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);

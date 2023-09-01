@@ -1,5 +1,6 @@
-﻿using com.sun.tools.@internal.jxc.ap;
-using Microsoft.ApplicationInsights;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
@@ -14,15 +15,18 @@ public class ProjectsController : ControllerBase
     private readonly ILogger<ProjectsController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
+    private readonly ProjectSnapshotDataService snapshotDataService;
 
-    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService)
+    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectSnapshotDataService snapshotDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
+        this.snapshotDataService = snapshotDataService;
     }
 
+    [Authorize]
     [HttpGet("owner/{owner}")]
     public async Task<IActionResult> GetByOwnerAsync(string owner)
     {
@@ -38,11 +42,14 @@ public class ProjectsController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut("owner/{owner}")]
     public async Task<IActionResult> Put(string owner, Project project)
     {
         try
         {
+            if (project.owner != owner) return BadRequest("Owner in url must match owner in body");
+
             await projectDataService.SetAsync(project);
 
             return Accepted();
@@ -55,6 +62,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("owner/{owner}/id/{id}")]
     public async Task<IActionResult> GetByIdAsync(string owner, string id)
     {
@@ -70,6 +78,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpGet("owner/{owner}/id/{id}/nodes")]
     public async Task<IActionResult> GetNodesByIdAsync(string owner, string id)
     {
@@ -88,6 +97,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
+    [Authorize]
     [HttpPut("owner/{owner}/id/{id}/nodes")]
     public async Task<IActionResult> PutNode(string owner, string id, ProjectNodeSaveRecord record)
     {
@@ -109,7 +119,25 @@ public class ProjectsController : ControllerBase
 
             await nodeDataService.SetSaveRecordAsync(owner, id, record);
 
-            return Accepted();
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("snapshot/{activityId}")]
+    public async Task<IActionResult> PutSnapshot(string activityId, SnapshotData snapshot)
+    {
+        try
+        {
+            await snapshotDataService.SetAsync(activityId, snapshot.project, snapshot.nodes);
+
+            return NoContent();
         }
         catch (Exception ex)
         {

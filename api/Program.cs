@@ -36,9 +36,11 @@ builder.Services.AddSingleton<AppConfig>();
 //  Data Services
 //
 builder.Services.AddSingleton<ActivityDataService>();
+builder.Services.AddSingleton<ChecklistDataService>();
 builder.Services.AddSingleton<ListDataService>();
 builder.Services.AddSingleton<ProjectDataService>();
 builder.Services.AddSingleton<ProjectNodeDataService>();
+builder.Services.AddSingleton<ProjectSnapshotDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
 builder.Services.AddSingleton<Storage>();
 //

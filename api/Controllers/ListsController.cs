@@ -42,7 +42,7 @@ public class ListsController : ControllerBase
         {
             await dataService.SetAsync(resource);
 
-            return Accepted();
+            return NoContent();
         }
         catch (Exception ex)
         {
@@ -60,7 +60,7 @@ public class ListsController : ControllerBase
         {
             await dataService.DeleteAsync(type, id);
 
-            return Accepted();
+            return NoContent();
         }
         catch (Exception ex)
         {

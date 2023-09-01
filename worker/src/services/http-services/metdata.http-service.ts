@@ -2,7 +2,7 @@ import { Context } from '../../config';
 import { ListItem, Resources } from '../../models';
 
 export class MetadataHttpService {
-  static async setResourcesAsync(ctx: Context): Promise<Response> {
+  static async putResourcesAsync(ctx: Context): Promise<Response> {
     try {
       const data = ctx.get('data').resources;
       const resources: Resources[] = await ctx.req.json();
@@ -47,6 +47,20 @@ export class MetadataHttpService {
       return ctx.text('', 204);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async putChecklistsAsync(ctx: Context): Promise<Response> {
+    try {
+      const data = await ctx.req.json();
+
+      await ctx.get('origin').putAsync('checklists', data);
+
+      return ctx.text('', 204);
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to set checklists.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
