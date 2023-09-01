@@ -3,8 +3,8 @@ export type CHECKLIST_OPERATORS = '=' | '!=' | '>' | '>=' | '<' | '<=';
 export interface ChecklistGroup {
   id: string;
   description: string;
-  listOrder: number;
-  tests: ChecklistTest[];
+  order: number;
+  items: ChecklistTest[];
 }
 
 export interface ChecklistExistsTest {
@@ -12,14 +12,14 @@ export interface ChecklistExistsTest {
   description: string;
   type: 'exists';
   path: string;
-  listOrder: number;
+  order: number;
   failMessage?: string;
 }
 
 export interface ChecklistValueTest {
   groupId: string;
   description: string;
-  listOrder: number;
+  order: number;
   type: 'value' | 'array';
   path: string;
   pass: { op: CHECKLIST_OPERATORS; value: number };

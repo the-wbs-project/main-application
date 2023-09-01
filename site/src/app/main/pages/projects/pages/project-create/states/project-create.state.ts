@@ -137,31 +137,29 @@ export class ProjectCreateState {
         page: PAGES.GETTING_STARTED,
       });
     } else if (current === PAGES.CATEGORY) {
-      ctx.patchState({
-        page: PAGES.BASICS,
-      });
+      ctx.patchState({ page: PAGES.BASICS });
     } else if (current === PAGES.LIB_OR_SCRATCH) {
-      ctx.patchState({
-        page: PAGES.CATEGORY,
-      });
+      ctx.patchState({ page: PAGES.CATEGORY });
     } else if (current === PAGES.NODE_VIEW) {
       ctx.patchState({
         page: state.useLibrary ? PAGES.DESCIPLINES : PAGES.LIB_OR_SCRATCH,
       });
     } else if (current === PAGES.PHASES) {
       ctx.patchState({
-        page:
+        page: PAGES.CATEGORY /*
           state.nodeView === PROJECT_NODE_VIEW.PHASE
             ? PAGES.CATEGORY //? PAGES.NODE_VIEW
-            : PAGES.DESCIPLINES,
+            : PAGES.DESCIPLINES,*/,
       });
     } else if (current === PAGES.DESCIPLINES) {
       ctx.patchState({
-        page:
+        page: PAGES.PHASES /*
           state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE
             ? PAGES.CATEGORY //  ? PAGES.NODE_VIEW
-            : PAGES.PHASES,
+            : PAGES.PHASES,*/,
       });
+    } else if (current === PAGES.ROLES) {
+      ctx.patchState({ page: PAGES.DESCIPLINES });
     }
   }
 

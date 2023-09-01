@@ -81,7 +81,7 @@ export class ProjectChecklistState {
     for (const group of state.tests ?? []) {
       const items: ChecklistItemResults[] = [];
 
-      for (const test of group.tests) {
+      for (const test of group.items) {
         if (test.type === 'exists') {
           items.push(this.performExists(data, test));
         } else {
