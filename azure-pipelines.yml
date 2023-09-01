@@ -13,7 +13,27 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
+  - job: resource_job
+    displayName: Resources
+    steps:
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "files"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Resources.zip"
+          replaceExistingArchive: true
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
+
   - job: api_job
+    dependsOn: resource_job
     displayName: ASP.NET API
     steps:
       - task: DotNetCoreCLI@2
@@ -43,6 +63,7 @@ jobs:
         displayName: "Publish"
 
   - job: worker_job
+    dependsOn: api_job
     displayName: Worker
     steps:
       - task: NodeTool@0
@@ -79,6 +100,7 @@ jobs:
         displayName: "Publish"
 
   - job: site_job
+    dependsOn: worker_job
     displayName: Site
     steps:
       - task: Cache@2
@@ -136,25 +158,6 @@ jobs:
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip"
           replaceExistingArchive: true
         displayName: "Production - Zip"
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-          ArtifactName: "drop"
-          publishLocation: "Container"
-        displayName: "Publish"
-
-  - job: resource_job
-    displayName: Resources
-    steps:
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "files"
-          includeRootFolder: false
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Resources.zip"
-          replaceExistingArchive: true
-        displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
         inputs:

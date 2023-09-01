@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cachePurge, cors, kv, logger, verifyAdminAsync, verifyJwt, verifyMembership, verifyMyself } from './middle';
+import { cors, kv, logger, verifyAdminAsync, verifyJwt, verifyMembership, verifyMyself } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService, OriginService } from './services';
 import { kvPurge } from './middle/kv-purge.service';
 
@@ -27,8 +27,8 @@ app.use('*', cors);
 
 app.options('*', (c) => c.text(''));
 
-app.get('api/resources/all/:locale', kv('RESOURCES|:locale'), (ctx) => OriginService.pass(ctx));
-app.get('api/lists/:type', kv('LISTS|:type'), OriginService.pass);
+app.get('api/resources/all/:locale', kv.resources, (ctx) => OriginService.pass(ctx));
+app.get('api/lists/:type', kv.lists, OriginService.pass);
 
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);
@@ -39,7 +39,7 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('api/checklists', kv('CHECKLISTS'), verifyJwt, OriginService.pass);
+app.get('api/checklists', kv.checklists, verifyJwt, OriginService.pass);
 app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
 app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
 app.put('api/activities', verifyJwt, OriginService.pass);
@@ -58,13 +58,31 @@ app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMember
 //app.put('api/discussions/:owner/:id', verifyJwt, Http.discussions.putAsync);
 //app.get('api/users/:userId', verifyJwt, authKv(['users', ':userId', 'user']), Http.memberships.passAsync);
 
-app.get('api/users/:user/memberships', verifyJwt, verifyMyself, Http.users.getMembershipsAsync);
+app.get('api/users/:user/memberships', verifyJwt, verifyMyself, kv.memberships, Http.users.getMembershipsAsync);
 app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
 
-app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, Http.organizations.getMembersAsync);
-app.put('api/organizations/:organization/members/:user/roles', verifyJwt, verifyAdminAsync(), Http.organizations.addMemberRolesAsync);
-app.delete('api/organizations/:organization/members/:userId', verifyJwt, verifyAdminAsync(), Http.organizations.removeMemberAsync);
-app.delete('api/organizations/:organization/members/:user/roles', verifyJwt, verifyAdminAsync(), Http.organizations.removeMemberRolesAsync);
+app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, Http.organizations.getMembersAsync);
+app.put(
+  'api/organizations/:organization/members/:user/roles',
+  verifyJwt,
+  verifyMembership,
+  verifyAdminAsync(),
+  Http.organizations.addMemberRolesAsync,
+);
+app.delete(
+  'api/organizations/:organization/members/:userId',
+  verifyJwt,
+  verifyMembership,
+  verifyAdminAsync(),
+  Http.organizations.removeMemberAsync,
+);
+app.delete(
+  'api/organizations/:organization/members/:user/roles',
+  verifyJwt,
+  verifyMembership,
+  verifyAdminAsync(),
+  Http.organizations.removeMemberRolesAsync,
+);
 
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
