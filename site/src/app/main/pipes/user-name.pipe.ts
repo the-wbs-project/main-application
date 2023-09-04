@@ -1,16 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { MembershipState } from '../states';
+import { Observable, map, of } from 'rxjs';
+import { UserService } from '../services';
 
 @Pipe({ name: 'userName', standalone: true })
 export class UserNamePipe implements PipeTransform {
-  constructor(private readonly store: Store) {}
+  constructor(private readonly service: UserService) {}
 
-  transform(userId: string | null | undefined): string | undefined {
-    if (!userId) return undefined;
+  transform(userId: string | null | undefined): Observable<string | undefined> {
+    if (!userId) return of(undefined);
 
-    return this.store
-      .selectSnapshot(MembershipState.members)
-      ?.find((x) => x.id === userId)?.name;
+    return this.service.getUser(userId).pipe(map((user) => user?.name));
   }
 }

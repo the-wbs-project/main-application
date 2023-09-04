@@ -4,8 +4,7 @@ export const kv = {
   resources,
   lists,
   checklists,
-  members,
-  memberships,
+  users,
 };
 
 function resources(ctx: Context, next: any): Promise<Response | void> {
@@ -20,12 +19,8 @@ function checklists(ctx: Context, next: any): Promise<Response | void> {
   return execute(ctx, next, 'CHECKLISTS');
 }
 
-function members(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'ORGS|:organization|MEMBERS', 10 * 60);
-}
-
-function memberships(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'USERS|:user|MEMBERSHIPS', 30 * 60);
+function users(ctx: Context, next: any): Promise<Response | void> {
+  return execute(ctx, next, 'USERS|:user|PROFILE', 60 * 60);
 }
 
 function createKey(ctx: Context, key: string): string {

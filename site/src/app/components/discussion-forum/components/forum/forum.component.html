@@ -44,7 +44,7 @@
                   {{ thread.title }}
                 </div>
                 <div class="pd-y-5 text-center wd-100 tx-9">
-                  {{ thread.writtenBy | userName }}
+                  {{ thread.writtenBy | userName | async }}
                 </div>
                 <div class="pd-y-5 text-center wd-100 tx-9">
                   {{ thread.lastUpdated | dateText }}

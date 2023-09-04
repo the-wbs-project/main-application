@@ -9,10 +9,6 @@ export class MembershipDataService {
     return this.http.get<string[]>(`api/users/${userId}/roles`);
   }
 
-  getMembershipsAsync(userId: string): Observable<Organization[]> {
-    return this.http.get<Organization[]>(`api/users/${userId}/memberships`);
-  }
-
   getMembershipUsersAsync(organization: string): Observable<Member[]> {
     return this.http.get<Member[]>(`api/organizations/${organization}/members`);
   }

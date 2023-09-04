@@ -58,10 +58,10 @@ app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMember
 //app.put('api/discussions/:owner/:id', verifyJwt, Http.discussions.putAsync);
 //app.get('api/users/:userId', verifyJwt, authKv(['users', ':userId', 'user']), Http.memberships.passAsync);
 
-app.get('api/users/:user/memberships', verifyJwt, verifyMyself, kv.memberships, Http.users.getMembershipsAsync);
+app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
 app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
 
-app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, Http.organizations.getMembersAsync);
+app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, Http.organizations.getMembersAsync);
 app.put(
   'api/organizations/:organization/members/:user/roles',
   verifyJwt,
