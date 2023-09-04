@@ -363,6 +363,21 @@ export class ProjectCreateState {
       ),
       tap(() => ctx.dispatch(new ProjectUpdated(project))),
       tap(() =>
+        this.data.activities.saveProjectActivitiesAsync('', [
+          {
+            data: {
+              action: 'project-created',
+              data: {
+                title: project.title,
+                id: project.id,
+              },
+            },
+            project: project,
+            nodes: [],
+          },
+        ])
+      ),
+      tap(() =>
         ctx.dispatch(
           new Navigate([
             '/',

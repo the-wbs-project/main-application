@@ -13,12 +13,14 @@ public class ActivitiesController : ControllerBase
     private readonly TelemetryClient telemetry;
     private readonly ILogger<ActivitiesController> logger;
     private readonly ActivityDataService dataService;
+    private readonly ProjectSnapshotDataService snapshotDataService;
 
-    public ActivitiesController(TelemetryClient telemetry, ILogger<ActivitiesController> logger, ActivityDataService dataService)
+    public ActivitiesController(TelemetryClient telemetry, ILogger<ActivitiesController> logger, ActivityDataService dataService, ProjectSnapshotDataService snapshotDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
         this.dataService = dataService;
+        this.snapshotDataService = snapshotDataService;
     }
 
     [Authorize]
@@ -54,15 +56,23 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut]
-    public async Task<IActionResult> Put(Activity[] activities)
+    [HttpPut("projects")]
+    public async Task<IActionResult> PutProjects(ProjectActivityRecord[] activities)
     {
         try
         {
-            foreach (var activity in activities)
-                await dataService.InsertAsync(activity);
+            using (var conn = dataService.CreateConnection())
+            {
+                await conn.OpenAsync();
 
-            return NoContent();
+                foreach (var data in activities)
+                {
+                    await dataService.InsertAsync(conn, data.activity);
+                    await snapshotDataService.SetAsync(conn, data.activity.id, data.project, data.nodes);
+                }
+
+                return NoContent();
+            }
         }
         catch (Exception ex)
         {

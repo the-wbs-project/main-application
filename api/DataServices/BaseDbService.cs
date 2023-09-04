@@ -15,6 +15,8 @@ public abstract class BaseDbService
 
     protected string cs { get { return config["DbConnection"]; } }
 
+    public SqlConnection CreateConnection() => new SqlConnection(cs);
+
     protected DateTimeOffset? DbDate(SqlDataReader reader, string column) => reader.IsDBNull(column) ? (DateTimeOffset?)null : reader.GetDateTime(column);
 
     protected T DbValue<T>(SqlDataReader reader, string column) => reader.IsDBNull(column) ? default(T) : reader.GetFieldValue<T>(column);

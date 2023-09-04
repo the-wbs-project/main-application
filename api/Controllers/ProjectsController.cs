@@ -15,15 +15,13 @@ public class ProjectsController : ControllerBase
     private readonly ILogger<ProjectsController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
-    private readonly ProjectSnapshotDataService snapshotDataService;
 
-    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectSnapshotDataService snapshotDataService)
+    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
-        this.snapshotDataService = snapshotDataService;
     }
 
     [Authorize]
@@ -84,10 +82,15 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            if (!await projectDataService.VerifyProjectAsync(owner, id))
-                return BadRequest("Project not found for the owner provided.");
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
 
-            return Ok(await nodeDataService.GetByProjectAsync(id));
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
+
+                return Ok(await nodeDataService.GetByProjectAsync(conn, id));
+            }
         }
         catch (Exception ex)
         {
@@ -103,9 +106,6 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            if (!await projectDataService.VerifyProjectAsync(owner, id))
-                return BadRequest("Project not found for the owner provided.");
-
             if (record.upserts == null) record.upserts = new ProjectNode[] { };
             if (record.removeIds == null) record.removeIds = new string[] { };
             //
@@ -117,27 +117,17 @@ public class ProjectsController : ControllerBase
                     return BadRequest("All records must have same project id as provided in url");
             }
 
-            await nodeDataService.SetSaveRecordAsync(owner, id, record);
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
 
-            return NoContent();
-        }
-        catch (Exception ex)
-        {
-            telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
-            return new StatusCodeResult(500);
-        }
-    }
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
 
-    [Authorize]
-    [HttpPut("snapshot/{activityId}")]
-    public async Task<IActionResult> PutSnapshot(string activityId, SnapshotData snapshot)
-    {
-        try
-        {
-            await snapshotDataService.SetAsync(activityId, snapshot.project, snapshot.nodes);
+                await nodeDataService.SetSaveRecordAsync(conn, owner, id, record);
 
-            return NoContent();
+                return NoContent();
+            }
         }
         catch (Exception ex)
         {

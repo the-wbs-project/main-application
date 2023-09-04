@@ -15,6 +15,7 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
+  ProjectActivityRecord,
   ProjectNode,
 } from '@wbs/core/models';
 import {
@@ -25,7 +26,7 @@ import {
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ProjectUpdated } from '@wbs/main/actions';
-import { forkJoin, map, Observable, of, switchMap, tap } from 'rxjs';
+import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
   ChangeTaskDisciplines,
@@ -60,6 +61,8 @@ interface StateModel {
   phases?: WbsNodeView[];
   disciplines?: WbsNodeView[];
 }
+
+declare type Context = StateContext<StateModel>;
 
 @Injectable()
 @UntilDestroy()
@@ -128,7 +131,7 @@ export class TasksState implements NgxsOnInit {
 
   @Action(VerifyTasks)
   verifyTasks(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { project, force }: VerifyTasks
   ): Observable<void> | void {
     const state = ctx.getState();
@@ -147,10 +150,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(VerifyTask)
-  verifyProject(
-    ctx: StateContext<StateModel>,
-    { taskId, viewNode }: VerifyTask
-  ): void {
+  verifyProject(ctx: Context, { taskId, viewNode }: VerifyTask): void {
     const state = ctx.getState();
 
     if (
@@ -167,20 +167,17 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(TaskPageChanged)
-  taskPageChanged(
-    ctx: StateContext<StateModel>,
-    { pageView }: TaskPageChanged
-  ): void {
+  taskPageChanged(ctx: Context, { pageView }: TaskPageChanged): void {
     ctx.patchState({ pageView });
   }
 
   @Action(NavigateToTask)
-  navigateToTask({}: StateContext<StateModel>, action: NavigateToTask): void {
+  navigateToTask({}: Context, action: NavigateToTask): void {
     this.nav.toTask(action.nodeId);
   }
 
   @Action(RebuildNodeViews)
-  rebuildNodeViews(ctx: StateContext<StateModel>): Observable<void> | void {
+  rebuildNodeViews(ctx: Context): Observable<void> | void {
     let state = ctx.getState();
 
     if (!state.project || !state.nodes) return;
@@ -209,7 +206,7 @@ export class TasksState implements NgxsOnInit {
 
   @Action(RemoveTask)
   removeNodeToProject(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     action: RemoveTask
   ): Observable<any> | void {
     const state = ctx.getState();
@@ -243,7 +240,7 @@ export class TasksState implements NgxsOnInit {
         ),
         switchMap(() => ctx.dispatch(new RebuildNodeViews())),
         tap(() =>
-          this.saveActivity(ctx, {
+          this.saveActivity({
             action: TASK_ACTIONS.REMOVED,
             data: {
               title: nodes[nodeIndex].title,
@@ -260,7 +257,7 @@ export class TasksState implements NgxsOnInit {
 
   @Action(RemoveDisciplinesFromTasks)
   removeDisciplinesFromTasks(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { removedIds }: RemoveDisciplinesFromTasks
   ): Observable<any> | void {
     const state = ctx.getState();
@@ -293,10 +290,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(CloneTask)
-  cloneTask(
-    ctx: StateContext<StateModel>,
-    action: CloneTask
-  ): void | Observable<void> {
+  cloneTask(ctx: Context, action: CloneTask): void | Observable<void> {
     const state = ctx.getState();
     const nodes = state.nodes ?? [];
     const node = nodes.find((x) => x.id === action.nodeId);
@@ -336,7 +330,7 @@ export class TasksState implements NgxsOnInit {
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
       tap(() =>
-        this.saveActivity(ctx, {
+        this.saveActivity({
           data: {
             title: node.title,
             level: nodeVm!.levelText,
@@ -350,10 +344,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(MoveTaskDown)
-  moveTaskDown(
-    ctx: StateContext<StateModel>,
-    action: MoveTaskDown
-  ): void | Observable<void> {
+  moveTaskDown(ctx: Context, action: MoveTaskDown): void | Observable<void> {
     const state = ctx.getState();
     const tasks = this.copy(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
@@ -372,10 +363,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(MoveTaskLeft)
-  moveTaskLeft(
-    ctx: StateContext<StateModel>,
-    action: MoveTaskLeft
-  ): void | Observable<void> {
+  moveTaskLeft(ctx: Context, action: MoveTaskLeft): void | Observable<void> {
     const state = ctx.getState();
     const tasks = this.copy(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
@@ -416,10 +404,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(MoveTaskRight)
-  moveTaskRight(
-    ctx: StateContext<StateModel>,
-    action: MoveTaskRight
-  ): void | Observable<void> {
+  moveTaskRight(ctx: Context, action: MoveTaskRight): void | Observable<void> {
     const state = ctx.getState();
     const tasks = this.copy(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
@@ -463,10 +448,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(MoveTaskUp)
-  moveTaskUp(
-    ctx: StateContext<StateModel>,
-    action: MoveTaskUp
-  ): void | Observable<void> {
+  moveTaskUp(ctx: Context, action: MoveTaskUp): void | Observable<void> {
     const state = ctx.getState();
     const tasks = this.copy(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
@@ -485,10 +467,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(TreeReordered)
-  treeReordered(
-    ctx: StateContext<StateModel>,
-    action: TreeReordered
-  ): Observable<void> {
+  treeReordered(ctx: Context, action: TreeReordered): Observable<void> {
     const state = ctx.getState();
     const project = state.project!;
     const models = state.nodes!;
@@ -526,10 +505,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Action(CreateTask)
-  createTask(
-    ctx: StateContext<StateModel>,
-    action: CreateTask
-  ): Observable<any> {
+  createTask(ctx: Context, action: CreateTask): Observable<any> {
     const state = ctx.getState();
     const nodes = state.nodes!;
     const model = this.service.createTask(
@@ -549,7 +525,7 @@ export class TasksState implements NgxsOnInit {
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
       tap(() =>
-        this.saveActivity(ctx, {
+        this.saveActivity({
           data: {
             title: model.title,
           },
@@ -566,7 +542,7 @@ export class TasksState implements NgxsOnInit {
 
   @Action(ChangeTaskBasics)
   changeTaskBasics(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { title, description }: ChangeTaskBasics
   ): Observable<void> | void {
     const state = ctx.getState();
@@ -613,40 +589,36 @@ export class TasksState implements NgxsOnInit {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() => this.saveActivity(ctx, ...activities)),
+      tap(() => this.saveActivity(...activities)),
       tap(() => this.messaging.success('Projects.TaskUpdated'))
     );
   }
 
   @Action(ChangeTaskDisciplines)
   changeTaskDisciplines(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { disciplines }: ChangeTaskDisciplines
   ): Observable<void> | void {
     const state = ctx.getState();
     const viewModel = state.current!;
     const model = state.nodes!.find((x) => x.id === viewModel.id)!;
-    const activities: ActivityData[] = [];
 
     if (
-      JSON.stringify(model.disciplineIds ?? []) !== JSON.stringify(disciplines)
-    ) {
-      activities.push({
-        action: TASK_ACTIONS.DISCIPLINES_CHANGED,
-        objectId: model.id,
-        data: {
-          title: model.title,
-          from: model.disciplineIds,
-          to: disciplines,
-        },
-      });
-      model.disciplineIds = disciplines;
-      viewModel.disciplines = disciplines;
-    }
-    //
-    //  If no activities then nothing actually changed
-    //
-    if (activities.length === 0) return;
+      JSON.stringify(model.disciplineIds ?? []) === JSON.stringify(disciplines)
+    )
+      return;
+
+    const activityData: ActivityData = {
+      action: TASK_ACTIONS.DISCIPLINES_CHANGED,
+      objectId: model.id,
+      data: {
+        title: model.title,
+        from: model.disciplineIds,
+        to: disciplines,
+      },
+    };
+    model.disciplineIds = disciplines;
+    viewModel.disciplines = disciplines;
 
     return this.saveTask(ctx, model).pipe(
       tap(() => this.messaging.success('Projects.TaskUpdated')),
@@ -657,7 +629,7 @@ export class TasksState implements NgxsOnInit {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() => this.saveActivity(ctx, ...activities))
+      tap(() => this.saveActivity(activityData))
     );
   }
 
@@ -665,19 +637,13 @@ export class TasksState implements NgxsOnInit {
     return <T>structuredClone(x);
   }
 
-  private saveActivity(
-    ctx: StateContext<StateModel>,
-    ...data: ActivityData[]
-  ): void {
-    const project = ctx.getState().project!;
-
-    this.timeline.saveActions(project.owner, project.id, data);
+  private saveActivity(...data: ActivityData[]): void {
+    this.timeline.saveProjectActions(
+      data.map((x) => this.timeline.createProjectRecord(x))
+    );
   }
 
-  private saveTask(
-    ctx: StateContext<StateModel>,
-    task: ProjectNode
-  ): Observable<void> {
+  private saveTask(ctx: Context, task: ProjectNode): Observable<void> {
     const project = ctx.getState().project!;
 
     task.lastModified = new Date();
@@ -688,7 +654,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   private saveReordered(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     project: Project,
     originalLevel: string,
     mainTask: ProjectNode,
@@ -716,7 +682,7 @@ export class TasksState implements NgxsOnInit {
             .getState()
             .phases!.find((x) => x.id === mainTask.id);
 
-          this.saveActivity(ctx, {
+          this.saveActivity({
             data: {
               title: mainTask.title,
               from: originalLevel,
@@ -732,7 +698,7 @@ export class TasksState implements NgxsOnInit {
   }
 
   private createDetailsVm(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     id: string,
     view: PROJECT_NODE_VIEW_TYPE
   ): void {

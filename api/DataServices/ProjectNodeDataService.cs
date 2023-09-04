@@ -15,7 +15,7 @@ public class ProjectNodeDataService : BaseDbService
 
     public async Task<List<ProjectNode>> GetByProjectAsync(string projectId)
     {
-        using (var conn = new SqlConnection(cs))
+        using (var conn = CreateConnection())
         {
             await conn.OpenAsync();
 
@@ -39,9 +39,33 @@ public class ProjectNodeDataService : BaseDbService
         return results;
     }
 
+    public async Task<bool> VerifyAsync(string projectId, string nodeId)
+    {
+        using (var conn = CreateConnection())
+        {
+            await conn.OpenAsync();
+
+            return await VerifyAsync(conn, projectId, nodeId);
+        }
+    }
+
+    public async Task<bool> VerifyAsync(SqlConnection conn, string projectId, string nodeId)
+    {
+        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ProjectNodes] WHERE [ProjectId] = @ProjectId AND [Id] = @Id", conn);
+
+        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+        cmd.Parameters.AddWithValue("@Id", nodeId);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read()) return reader.GetInt32(0) == 1;
+        }
+        return false;
+    }
+
     public async Task SetSaveRecordAsync(string owner, string projectId, ProjectNodeSaveRecord record)
     {
-        using (var conn = new SqlConnection(cs))
+        using (var conn = CreateConnection())
         {
             await conn.OpenAsync();
             await SetSaveRecordAsync(conn, owner, projectId, record);
@@ -59,7 +83,7 @@ public class ProjectNodeDataService : BaseDbService
 
     public async Task SetAsync(string owner, ProjectNode node)
     {
-        using (var conn = new SqlConnection(cs))
+        using (var conn = CreateConnection())
         {
             await conn.OpenAsync();
             await SetAsync(conn, owner, node);
@@ -88,7 +112,7 @@ public class ProjectNodeDataService : BaseDbService
 
     public async Task DeleteAsync(string ownerId, string projectId, string id)
     {
-        using (var conn = new SqlConnection(cs))
+        using (var conn = CreateConnection())
         {
             await conn.OpenAsync();
             await DeleteAsync(conn, ownerId, projectId, id);

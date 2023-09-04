@@ -1,12 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ActivityData } from '@wbs/core/models';
+import {
+  ActivityData,
+  Project,
+  ProjectActivityRecord,
+  ProjectNode,
+} from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { AuthState } from '@wbs/main/states';
 import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { ProjectState, TasksState } from '../states';
 
 @Injectable()
 export class TimelineService {
@@ -17,6 +23,18 @@ export class TimelineService {
     private readonly store: Store,
     private readonly transformer: Transformers
   ) {}
+
+  createProjectRecord(
+    data: ActivityData,
+    project?: Project,
+    nodes?: ProjectNode[]
+  ): ProjectActivityRecord {
+    return {
+      data,
+      project: project ?? this.store.selectSnapshot(ProjectState.current)!,
+      nodes: nodes ?? this.store.selectSnapshot(TasksState.nodes)!,
+    };
+  }
 
   loadMore(
     list: TimelineViewModel[],
@@ -53,23 +71,9 @@ export class TimelineService {
       );
   }
 
-  saveActions(owner: string, projectId: string, data: ActivityData[]): void {
+  saveProjectActions(data: ProjectActivityRecord[]): void {
     const user = this.store.selectSnapshot(AuthState.profileLite)!;
 
-    this.data.activities
-      .putAsync(user, projectId, data)
-      .pipe(
-        switchMap((ids) => {
-          const snapshots: Observable<void>[] = [];
-
-          for (const id of ids)
-            snapshots.push(
-              this.data.projectSnapshots.putAsync(owner, projectId, id)
-            );
-
-          return forkJoin(snapshots);
-        })
-      )
-      .subscribe();
+    this.data.activities.saveProjectActivitiesAsync(user.id, data).subscribe();
   }
 }

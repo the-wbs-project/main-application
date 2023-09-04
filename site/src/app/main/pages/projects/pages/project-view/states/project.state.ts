@@ -7,6 +7,7 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
+  ProjectActivityRecord,
   ProjectCategory,
   ROLES,
 } from '@wbs/core/models';
@@ -41,6 +42,8 @@ interface StateModel {
   smes?: string[];
   users?: UserRolesViewModel[];
 }
+
+declare type Context = StateContext<StateModel>;
 
 @Injectable()
 @State<StateModel>({
@@ -113,7 +116,7 @@ export class ProjectState {
 
   @Action(VerifyProject)
   verifyProject(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { owner, projectId }: VerifyProject
   ): Observable<void> {
     const state = ctx.getState();
@@ -124,10 +127,7 @@ export class ProjectState {
   }
 
   @Action(NavigateToView)
-  navigateToView(
-    ctx: StateContext<StateModel>,
-    { view }: NavigateToView
-  ): Observable<void> {
+  navigateToView(ctx: Context, { view }: NavigateToView): Observable<void> {
     const state = ctx.getState();
 
     return ctx.dispatch(
@@ -136,10 +136,7 @@ export class ProjectState {
   }
 
   @Action(SetProject)
-  setProject(
-    ctx: StateContext<StateModel>,
-    { owner, projectId }: SetProject
-  ): Observable<any> {
+  setProject(ctx: Context, { owner, projectId }: SetProject): Observable<any> {
     const userId = this.store.selectSnapshot(AuthState.userId);
 
     return this.data.projects.getAsync(owner, projectId).pipe(
@@ -174,10 +171,7 @@ export class ProjectState {
   }
 
   @Action(AddUserToRole)
-  addUserToRole(
-    ctx: StateContext<StateModel>,
-    { role, user }: AddUserToRole
-  ): Observable<void> {
+  addUserToRole(ctx: Context, { role, user }: AddUserToRole): Observable<void> {
     const project = ctx.getState().current!;
     const roleTitle = this.services.getRoleTitle(role, false);
 
@@ -191,7 +185,7 @@ export class ProjectState {
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
       tap(() =>
-        this.saveActivity(ctx, {
+        this.saveActivity({
           action: PROJECT_ACTIONS.ADDED_USER,
           data: {
             role: roleTitle,
@@ -204,7 +198,7 @@ export class ProjectState {
 
   @Action(RemoveUserToRole)
   removeUserToRole(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { role, user }: RemoveUserToRole
   ): Observable<void> {
     const project = ctx.getState().current!;
@@ -222,7 +216,7 @@ export class ProjectState {
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
       tap(() =>
-        this.saveActivity(ctx, {
+        this.saveActivity({
           action: PROJECT_ACTIONS.REMOVED_USER,
           data: {
             role: roleTitle,
@@ -235,7 +229,7 @@ export class ProjectState {
 
   @Action(ChangeProjectBasics)
   changeProjectBasics(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     action: ChangeProjectBasics
   ): Observable<void> | void {
     const state = ctx.getState();
@@ -282,13 +276,13 @@ export class ProjectState {
 
     return this.saveProject(ctx, project).pipe(
       tap(() => this.messaging.success('Projects.ProjectUpdated')),
-      tap(() => this.saveActivity(ctx, ...activities))
+      tap(() => this.saveActivity(...activities))
     );
   }
 
   @Action(ChangeProjectStatus)
   ChangeProjectStatus(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { status }: ChangeProjectStatus
   ): Observable<void> {
     const state = ctx.getState();
@@ -300,7 +294,7 @@ export class ProjectState {
     return this.saveProject(ctx, project).pipe(
       tap(() => this.messaging.success('Projects.ProjectUpdated')),
       tap(() =>
-        this.saveActivity(ctx, {
+        this.saveActivity({
           action: PROJECT_ACTIONS.STATUS_CHANGED,
           data: {
             from: original,
@@ -313,7 +307,7 @@ export class ProjectState {
 
   @Action(ChangeProjectCategories)
   changeProjectCategories(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { cType, changes }: ChangeProjectCategories
   ): Observable<any> {
     const state = ctx.getState();
@@ -349,7 +343,7 @@ export class ProjectState {
         )
       ),
       tap(() =>
-        this.saveActivity(ctx, {
+        this.saveActivity({
           action: saveAction,
           data: {
             from: originalList,
@@ -362,23 +356,17 @@ export class ProjectState {
   }
 
   @Action(MarkProjectChanged)
-  markProjectChanged(ctx: StateContext<StateModel>): Observable<void> {
+  markProjectChanged(ctx: Context): Observable<void> {
     return this.projectChanged(ctx);
   }
 
-  private saveActivity(
-    ctx: StateContext<StateModel>,
-    ...data: ActivityData[]
-  ): void {
-    const project = ctx.getState().current!;
-
-    this.timeline.saveActions(project.owner, project.id, data);
+  private saveActivity(...data: ActivityData[]): void {
+    this.timeline.saveProjectActions(
+      data.map((x) => this.timeline.createProjectRecord(x))
+    );
   }
 
-  private saveProject(
-    ctx: StateContext<StateModel>,
-    project: Project
-  ): Observable<void> {
+  private saveProject(ctx: Context, project: Project): Observable<void> {
     return this.data.projects.putAsync(project).pipe(
       tap(() => ctx.patchState({ current: project })),
       tap(() => this.projectChanged(ctx)),
@@ -388,7 +376,7 @@ export class ProjectState {
     );
   }
 
-  private projectChanged(ctx: StateContext<StateModel>): Observable<void> {
+  private projectChanged(ctx: Context): Observable<void> {
     const project = ctx.getState().current!;
 
     project.lastModified = new Date();
@@ -400,7 +388,7 @@ export class ProjectState {
     return ctx.dispatch(new ProjectUpdated(project));
   }
 
-  private updateUserRoles(ctx: StateContext<StateModel>) {
+  private updateUserRoles(ctx: Context) {
     const project = ctx.getState().current;
     const approvers: string[] = [];
     const pms: string[] = [];
@@ -416,7 +404,7 @@ export class ProjectState {
     ctx.patchState({ approvers, pms, smes });
   }
 
-  private updateUsers(ctx: StateContext<StateModel>): void {
+  private updateUsers(ctx: Context): void {
     const project = ctx.getState().current!;
     const members = this.store.selectSnapshot(MembershipState.members) ?? [];
     const users: UserRolesViewModel[] = [];

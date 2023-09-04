@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Project } from '../models';
+import { Project, ProjectNode } from '../models';
 
 export class ProjectSnapshotDataService {
   constructor(private readonly http: HttpClient) {}
@@ -16,13 +16,14 @@ export class ProjectSnapshotDataService {
   }
 
   putAsync(
-    organization: string,
-    projectId: string,
-    activityId: string
+    owner: string,
+    activityId: string,
+    project: Project,
+    nodes: ProjectNode[]
   ): Observable<void> {
     return this.http.put<void>(
-      `api/projects/${organization}/snapshot/${projectId}/${activityId}`,
-      {}
+      `api/owner/${owner}/id/${project.id}/snapshot/${activityId}`,
+      { project, nodes }
     );
   }
 }

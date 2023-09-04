@@ -2,7 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { IdService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Activity, ActivityData, UserLite } from '../models';
+import {
+  Activity,
+  Project,
+  ProjectActivityRecord,
+  ProjectNode,
+  UserLite,
+} from '../models';
 
 export class ActivityDataService {
   constructor(private readonly http: HttpClient) {}
@@ -28,10 +34,9 @@ export class ActivityDataService {
     );
   }
 
-  putAsync(
-    user: UserLite,
-    topLevelId: string,
-    data: ActivityData[]
+  saveProjectActivitiesAsync(
+    userId: string,
+    data: ProjectActivityRecord[]
   ): Observable<string[]> {
     const ids: string[] = [];
     const toSave: any[] = [];
@@ -41,13 +46,19 @@ export class ActivityDataService {
 
       ids.push(id);
       toSave.push({
-        ...d,
-        id,
-        timestamp: new Date(),
-        topLevelId,
-        userId: user.id,
+        activity: {
+          ...d.data,
+          id,
+          timestamp: new Date(),
+          topLevelId: d.project.id,
+          userId: userId,
+        },
+        project: d.project,
+        nodes: d.nodes,
       });
     }
-    return this.http.put<void>('api/activities', toSave).pipe(map(() => ids));
+    return this.http
+      .put<void>('api/activities/projects', toSave)
+      .pipe(map(() => ids));
   }
 }

@@ -64,17 +64,17 @@ public class ProjectDataService : BaseDbService
         }
     }
 
-    public async Task<bool> VerifyProjectAsync(string owner, string id)
+    public async Task<bool> VerifyAsync(string owner, string id)
     {
         using (var conn = new SqlConnection(cs))
         {
             await conn.OpenAsync();
 
-            return await VerifyProjectAsync(conn, owner, id);
+            return await VerifyAsync(conn, owner, id);
         }
     }
 
-    public async Task<bool> VerifyProjectAsync(SqlConnection conn, string owner, string id)
+    public async Task<bool> VerifyAsync(SqlConnection conn, string owner, string id)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId", conn);
 

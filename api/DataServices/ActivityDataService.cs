@@ -70,6 +70,30 @@ public class ActivityDataService : BaseDbService
         return results;
     }
 
+    public async Task<bool> VerifyAsync(string projectId, string activityId)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await VerifyAsync(conn, projectId, activityId);
+        }
+    }
+
+    public async Task<bool> VerifyAsync(SqlConnection conn, string projectId, string activityId)
+    {
+        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[Activities] WHERE [Id] = @Id AND [TopLevelId] = @TopLevelId", conn);
+
+        cmd.Parameters.AddWithValue("@Id", activityId);
+        cmd.Parameters.AddWithValue("@TopLevelId", projectId);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read()) return reader.GetInt32(0) == 1;
+        }
+        return false;
+    }
+
     public async Task InsertAsync(Activity item)
     {
         using (var conn = new SqlConnection(cs))
