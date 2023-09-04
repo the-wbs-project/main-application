@@ -2,11 +2,10 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { UserLite } from '@wbs/core/models';
-import { Logger } from '@wbs/core/services';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { LoadOrganizations } from '../actions';
+import { Organization, UserLite } from '@wbs/core/models';
+import { Logger, sorter } from '@wbs/core/services';
+import { first } from 'rxjs/operators';
+import { InitiateOrganizations } from '../actions';
 
 export interface AuthBucket {
   culture: string;
@@ -25,7 +24,6 @@ export interface AuthBucket {
 export class AuthState implements NgxsOnInit {
   constructor(
     private readonly auth: AuthService,
-    private readonly data: DataServiceFactory,
     private readonly logger: Logger
   ) {}
 
@@ -56,31 +54,40 @@ export class AuthState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: StateContext<AuthBucket>): void {
-    this.auth.user$
-      .pipe(
-        filter((x) => x != undefined),
-        map((userRaw) => {
-          const raw = userRaw!;
-          const profile = {
-            email: raw['email']!,
-            id: raw['sub']!,
-            name: raw['name']!,
-          };
+    this.auth.idTokenClaims$.pipe(first()).subscribe((claims) => {
+      const ns = 'http://www.pm-empower.com';
+      let organizations: Organization[] = claims?.[ns + '/organizations'] ?? [];
+      let orgRoles: Record<string, string[]> = claims?.[ns + '/orgRoles'] ?? [];
+      let roles: string[] = claims?.[ns + '/orgRoles'] ?? [];
 
-          ctx.patchState({ profile });
+      organizations = organizations.sort((a, b) => sorter(a.name, b.name));
 
-          this.logger.setGlobalContext({
-            'usr.id': profile.id,
-            'usr.name': profile.name,
-            'usr.email': profile.email,
-          });
-          return profile;
-        }),
-        switchMap((profile) => this.data.memberships.getRolesAsync(profile.id)),
-        tap((roles) => ctx.patchState({ roles })),
-        tap(() => ctx.dispatch(new LoadOrganizations())),
-        untilDestroyed(this)
-      )
-      .subscribe();
+      ctx.patchState({ roles });
+
+      ctx.dispatch(new InitiateOrganizations(organizations, orgRoles));
+    });
+
+    this.auth.user$.pipe(untilDestroyed(this)).subscribe((userRaw) => {
+      if (!userRaw) return;
+
+      const raw = userRaw!;
+      const profile = {
+        email: raw['email']!,
+        id: raw['sub']!,
+        name: raw['name']!,
+      };
+
+      ctx.patchState({ profile });
+
+      this.logger.setGlobalContext({
+        'usr.id': profile.id,
+        'usr.name': profile.name,
+        'usr.email': profile.email,
+      });
+    });
+  }
+
+  private getNamespace(domain: string, property: string): string {
+    return `http://${domain}.pm-empower.com/${property}`;
   }
 }

@@ -3,20 +3,20 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Organization, Project } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
   ChangeOrganization,
-  LoadOrganizations,
+  InitiateOrganizations,
   ProjectUpdated,
   RemoveMemberFromOrganization,
 } from '../actions';
-import { AuthState } from './auth.state';
 
 interface StateModel {
   list?: Organization[];
   loading: boolean;
   organization?: Organization;
+  orgRoles?: Record<string, string[]>;
   projects?: Project[];
   roles?: string[];
   members?: Member[];
@@ -70,19 +70,14 @@ export class MembershipState {
     return state.members;
   }
 
-  private get userId(): string {
-    return this.store.selectSnapshot(AuthState.userId)!;
-  }
+  @Action(InitiateOrganizations)
+  initiateOrganizations(
+    ctx: StateContext<StateModel>,
+    { orgRoles, organizations }: InitiateOrganizations
+  ): Observable<any> {
+    ctx.patchState({ loading: true, list: organizations, orgRoles });
 
-  @Action(LoadOrganizations)
-  loadOrganization(ctx: StateContext<StateModel>): Observable<any> {
-    ctx.patchState({ loading: true });
-
-    return this.data.memberships.getMembershipsAsync(this.userId).pipe(
-      map((list) => list.sort((a, b) => sorter(a.name, b.name))),
-      tap((list) => ctx.patchState({ list })),
-      tap((list) => ctx.dispatch(new ChangeOrganization(list[0])))
-    );
+    return ctx.dispatch(new ChangeOrganization(organizations[0]));
   }
 
   @Action(ChangeOrganization)
@@ -90,9 +85,24 @@ export class MembershipState {
     ctx: StateContext<StateModel>,
     { organization }: ChangeOrganization
   ): Observable<void> {
-    ctx.patchState({ organization, loading: true });
+    ctx.patchState({
+      loading: true,
+      organization,
+      roles: ctx.getState().orgRoles?.[organization.name],
+    });
 
-    return forkJoin({
+    return this.data.projects.getAllAsync(organization.name).pipe(
+      map((projects) => {
+        ctx.patchState({
+          projects: projects.sort((a, b) =>
+            sorter(a.lastModified, b.lastModified, 'desc')
+          ),
+        });
+      }),
+      tap(() => ctx.patchState({ loading: false }))
+    );
+
+    /*return forkJoin({
       users: this.data.memberships.getMembershipUsersAsync(organization.id),
       projects: this.data.projects.getAllAsync(organization.name),
     }).pipe(
@@ -106,7 +116,7 @@ export class MembershipState {
         });
       }),
       tap(() => ctx.patchState({ loading: false }))
-    );
+    );*/
   }
 
   @Action(ProjectUpdated)

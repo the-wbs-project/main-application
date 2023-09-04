@@ -3,7 +3,9 @@ export interface Organization {
   display_name: string;
   name: string;
   branding: {
-    mainProjectType: 'single' | 'multiple';
     logo_url?: string;
+  };
+  metadata: {
+    mainProjectType: 'single' | 'multiple';
   };
 }

@@ -5,7 +5,7 @@ import {
   ViewChild,
   ViewContainerRef,
 } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ContainerService } from '@wbs/core/services';
 import {
@@ -18,7 +18,6 @@ import { NavService, SwitcherService } from './services';
 import { iIsAdminPipe } from './pipes/is-admin.pipe';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MembershipState } from './states';
-import { map } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -48,7 +47,6 @@ export class MainComponent implements AfterContentInit {
 
   constructor(
     private readonly container: ContainerService,
-    private readonly route: ActivatedRoute,
     private readonly store: Store
   ) {}
 

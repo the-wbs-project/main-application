@@ -6,10 +6,12 @@ export class Logger {
   constructor(private readonly ctx: Context) {}
 
   trackRequest(duration: number): void {
+    if (this.ctx.req.method === 'OPTIONS') return;
+
     this.logs.push({
       ...this.basics({ duration, resStatus: this.ctx.res.status }),
       status: 'Info',
-      message: `Request, ${this.ctx.req.url} (${duration}ms)`,
+      message: `Request, ${this.ctx.req.method}, ${this.ctx.req.url} (${duration}ms)`,
     });
   }
 
@@ -51,7 +53,7 @@ export class Logger {
         },
       }),
       status: 'Info',
-      message: `Dependency, ${url} (${method})`,
+      message: `Dependency, ${method}, ${url} (${duration}ms)`,
     });
   }
 

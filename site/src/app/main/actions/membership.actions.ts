@@ -1,7 +1,11 @@
 import { Organization } from '@wbs/core/models';
 
-export class LoadOrganizations {
+export class InitiateOrganizations {
   static readonly type = '[Membership] Load';
+  constructor(
+    readonly organizations: Organization[],
+    readonly orgRoles: Record<string, string[]>
+  ) {}
 }
 
 export class ChangeOrganization {
