@@ -25,7 +25,9 @@ export class OriginService {
       method: req.method,
     });
 
-    return ctx.newResponse(await res.arrayBuffer(), res.status, OriginService.headers(res));
+    const body = res.status === 202 || res.status === 204 ? '' : await res.arrayBuffer();
+
+    return ctx.newResponse(body, res.status, OriginService.headers(res));
   }
 
   static headers(res: Response): Record<string, string | string[]> {
