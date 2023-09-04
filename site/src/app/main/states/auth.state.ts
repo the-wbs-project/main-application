@@ -64,7 +64,8 @@ export class AuthState implements NgxsOnInit {
 
       ctx.patchState({ roles });
 
-      ctx.dispatch(new InitiateOrganizations(organizations, orgRoles));
+      if (organizations.length > 0)
+        ctx.dispatch(new InitiateOrganizations(organizations, orgRoles));
     });
 
     this.auth.user$.pipe(untilDestroyed(this)).subscribe((userRaw) => {
