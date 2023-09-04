@@ -214,7 +214,6 @@ export class TasksState implements NgxsOnInit {
   ): Observable<any> | void {
     const state = ctx.getState();
     const project = state.project!;
-    const changed: Observable<void>[] = [];
     const nodes = this.copy(state.nodes)!;
     const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
 
@@ -227,34 +226,36 @@ export class TasksState implements NgxsOnInit {
       ...this.transformers.nodes.phase.reorderer.run(state.project!, nodes),
     ];
 
+    const removedIds: string[] = [];
+
     for (const node of nodes) {
       if (changedIds.indexOf(node.id) === -1) continue;
 
-      changed.push(
-        this.data.projectNodes.putAsync(project.owner, project.id, [node], [])
-      );
+      removedIds.push(node.id);
     }
-    return forkJoin(changed).pipe(
-      map(() =>
-        ctx.patchState({
-          nodes,
-        })
-      ),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() =>
-        this.saveActivity(ctx, {
-          action: TASK_ACTIONS.REMOVED,
-          data: {
-            title: nodes[nodeIndex].title,
-            reason: action.reason,
-          },
-          objectId: action.nodeId,
-        })
-      ),
-      switchMap(() =>
-        action.completedAction ? ctx.dispatch(action.completedAction) : of()
-      )
-    );
+    return this.data.projectNodes
+      .putAsync(project.owner, project.id, [], removedIds)
+      .pipe(
+        map(() =>
+          ctx.patchState({
+            nodes,
+          })
+        ),
+        switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+        tap(() =>
+          this.saveActivity(ctx, {
+            action: TASK_ACTIONS.REMOVED,
+            data: {
+              title: nodes[nodeIndex].title,
+              reason: action.reason,
+            },
+            objectId: action.nodeId,
+          })
+        ),
+        switchMap(() =>
+          action.completedAction ? ctx.dispatch(action.completedAction) : of()
+        )
+      );
   }
 
   @Action(RemoveDisciplinesFromTasks)
@@ -531,7 +532,12 @@ export class TasksState implements NgxsOnInit {
   ): Observable<any> {
     const state = ctx.getState();
     const nodes = state.nodes!;
-    const model = this.service.createTask(action.parentId, action.model, nodes);
+    const model = this.service.createTask(
+      state.project!.id,
+      action.parentId,
+      action.model,
+      nodes
+    );
 
     return this.saveTask(ctx, model).pipe(
       map(() => {
