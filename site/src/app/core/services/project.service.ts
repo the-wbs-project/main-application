@@ -53,11 +53,13 @@ export class ProjectService {
   }
 
   createTask(
+    projectId: string,
     parentId: string,
     model: Partial<ProjectNode>,
     nodes: ProjectNode[]
   ): ProjectNode {
     const siblings = nodes?.filter((x) => x.parentId === parentId) ?? [];
+    const ts = new Date();
     let order = 0;
 
     for (const x of siblings) {
@@ -68,8 +70,11 @@ export class ProjectService {
     return <ProjectNode>{
       ...model,
       id: IdService.generate(),
-      parentId: parentId,
+      parentId,
+      projectId,
       order,
+      createdOn: ts,
+      lastModified: ts,
     };
   }
 }
