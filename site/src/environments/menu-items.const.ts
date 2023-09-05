@@ -13,10 +13,4 @@ export const ORG_SETTINGS_MENU_ITEMS: MenuItem[] = [
     path: ['settings', 'members'],
     icon: 'fa-users',
   },
-  {
-    title: 'Settings.Invites',
-    description: 'Settings.InvitesDescription',
-    path: ['settings', 'invites'],
-    icon: 'fa-envelope',
-  },
 ];
