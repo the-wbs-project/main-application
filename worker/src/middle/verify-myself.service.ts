@@ -5,7 +5,7 @@ export async function verifyMyself(ctx: Context, next: any): Promise<Response | 
 
   if (!user) return ctx.text('Missing Parameters', 500);
 
-  if (ctx.get('userId') !== user) return ctx.text('Unauthorized', 403);
+  if (ctx.get('idToken').userId !== user) return ctx.text('Unauthorized', 403);
 
   await next();
 }

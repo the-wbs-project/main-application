@@ -107,6 +107,21 @@ a {
   text-decoration: none;
 }
 
+.main-profile-menu {
+  .dropdown-toggle::after {
+    display: none;
+  }
+  
+  .dropdown-menu {
+    border-width: 0;
+    box-shadow: 0 0 5px rgba(28, 39, 60, 0.1);
+  }
+
+  &.show .main-img-user::before {
+    display: none;
+  }
+}
+
 @media (max-width: 768px) {
   .responsive-logo {
     display: block;

@@ -1,4 +1,5 @@
 export interface ActivityData {
+  topLevelId: string;
   objectId?: string;
   versionId?: string;
   action: string;
@@ -7,7 +8,6 @@ export interface ActivityData {
 
 export interface Activity extends ActivityData {
   id: string;
-  topLevelId: string;
-  timestamp: number;
+  timestamp: Date;
   userId: string;
 }

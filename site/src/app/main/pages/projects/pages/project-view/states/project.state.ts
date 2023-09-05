@@ -187,6 +187,7 @@ export class ProjectState {
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.ADDED_USER,
+          topLevelId: project.id,
           data: {
             role: roleTitle,
             user: user.name,
@@ -218,6 +219,7 @@ export class ProjectState {
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.REMOVED_USER,
+          topLevelId: project.id,
           data: {
             role: roleTitle,
             user: user.name,
@@ -239,6 +241,7 @@ export class ProjectState {
     if (project.title !== action.title) {
       activities.push({
         action: PROJECT_ACTIONS.TITLE_CHANGED,
+        topLevelId: project.id,
         data: {
           from: project.title,
           to: action.title,
@@ -249,6 +252,7 @@ export class ProjectState {
     if (project.description !== action.description) {
       activities.push({
         action: PROJECT_ACTIONS.DESCRIPTION_CHANGED,
+        topLevelId: project.id,
         data: {
           from: project.description,
           to: action.description,
@@ -259,6 +263,7 @@ export class ProjectState {
     if (project.category !== action.category) {
       activities.push({
         action: PROJECT_ACTIONS.CATEGORY_CHANGED,
+        topLevelId: project.id,
         data: {
           from: this.getCatName(project.category),
           to: this.getCatName(action.category),
@@ -296,6 +301,7 @@ export class ProjectState {
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.STATUS_CHANGED,
+          topLevelId: project.id,
           data: {
             from: original,
             to: status,
@@ -345,6 +351,7 @@ export class ProjectState {
       tap(() =>
         this.saveActivity({
           action: saveAction,
+          topLevelId: project.id,
           data: {
             from: originalList,
             to: changes.categories,

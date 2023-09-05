@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
   Activity,
+  ActivityData,
   Project,
   ProjectActivityRecord,
   ProjectNode,
@@ -34,6 +35,25 @@ export class ActivityDataService {
     );
   }
 
+  saveAsync(userId: string, data: ActivityData[]): Observable<string[]> {
+    const ids: string[] = [];
+    const toSave: Activity[] = [];
+
+    for (const d of data) {
+      const id = IdService.generate();
+
+      ids.push(id);
+      toSave.push({
+        ...d,
+        id,
+        timestamp: new Date(),
+        userId: userId,
+      });
+    }
+    console.log(toSave);
+    return this.http.put<void>('api/activities', toSave).pipe(map(() => ids));
+  }
+
   saveProjectActivitiesAsync(
     userId: string,
     data: ProjectActivityRecord[]
@@ -50,7 +70,6 @@ export class ActivityDataService {
           ...d.data,
           id,
           timestamp: new Date(),
-          topLevelId: d.project.id,
           userId: userId,
         },
         project: d.project,

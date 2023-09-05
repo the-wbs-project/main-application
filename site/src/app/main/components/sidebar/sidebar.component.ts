@@ -6,15 +6,16 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { AuthService } from '@auth0/auth0-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { Organization, Project } from '@wbs/core/models';
 import { fromEvent } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
 import { ProjectStatusCountPipe } from '../../pipes/project-status-count.pipe';
 import { NavService } from '../../services';
 import { switcherArrowFn } from './sidebar';
-import { environment } from 'src/environments/environment';
+import { SVGIconModule } from '@progress/kendo-angular-icons';
+import { plusIcon } from '@progress/kendo-svg-icons';
 
 @Component({
   standalone: true,
@@ -26,6 +27,7 @@ import { environment } from 'src/environments/environment';
     CommonModule,
     ProjectStatusCountPipe,
     RouterModule,
+    SVGIconModule,
     TranslateModule,
   ],
 })
@@ -35,14 +37,12 @@ export class SidebarComponent {
   @Input() projects?: Project[] | null;
   @Input() isAdmin?: boolean | null;
 
+  readonly plusIcon = plusIcon;
   readonly urlPrefix = environment.apiPrefix;
   readonly settings = ORG_SETTINGS_MENU_ITEMS;
   scrolled = false;
 
-  constructor(
-    readonly auth: AuthService,
-    private readonly navServices: NavService
-  ) {}
+  constructor(private readonly navServices: NavService) {}
 
   ngOnInit(): void {
     let sidemenu = document.querySelector('.side-menu');

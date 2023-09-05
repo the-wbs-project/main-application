@@ -1416,7 +1416,7 @@ License        :   Licensed under ThemeForest License
     padding: 0.75rem 1.25rem;
     margin-bottom: -1px;
     background-color: #fff;
-    border: 1px solid #e7ebf3;
+    border: 1px solid rgb(231, 235, 243);
 }
 
 .list-group-item:first-child {
@@ -3334,7 +3334,7 @@ a.tag-addon {
 }
 
 a.tag-addon:hover {
-    background: #eeeeff;
+    background: rgb(238, 238, 255);
     color: inherit;
 }
 
@@ -3621,7 +3621,7 @@ a.tag-addon:hover {
     height: 45px;
     position: absolute;
     top: 16px;
-    left: calc(50% - 20px);
+    left: calc(50% - 23px);
     z-index: 0;
     border-top-right-radius: 50%;
     border-top-left-radius: 50%;
@@ -3999,8 +3999,8 @@ a.tag-addon:hover {
 }
 
 .project-countdown .countdown li {
-    background: #285cf7;
-    border: 5px solid #285cf7;
+    background: rgb(40, 92, 247);
+    border: 5px solid rgb(40, 92, 247);
 }
 
 @media (min-width: 992px) {
@@ -4544,7 +4544,7 @@ a.close.disabled {
     }
 
     abbr[title]::after {
-        content: " ("attr(title) ")";
+        content: " (" attr(title) ")";
     }
 
     pre {
@@ -6276,7 +6276,7 @@ body {
 }
 
 .project-card:hover i {
-    color: #285cf7;
+    color: rgb(40, 92, 247);
     opacity: 0.16;
 }
 
@@ -7223,7 +7223,7 @@ pre {
     border-radius: 4px;
     margin: 1.5rem 0;
     padding: 14px 15px;
-    border: 1px solid #dbdbf7;
+    border: 1px solid rgb(219, 219, 247);
 }
 
 .nav-sub-item .sub-slide-item {
@@ -9845,10 +9845,6 @@ pre {
 
 .card-dashboard-events .event-user .main-img-user::after {
     display: none;
-}
-
-.main-img-user.online::after {
-    background-color: #016a59;
 }
 
 .card-dashboard-events .event-user .main-img-user+.main-img-user {
@@ -13442,7 +13438,7 @@ pre {
 }
 
 .dropdown-menu-left {
-    box-shadow: 0px 0px 15px 1px #bcb5d6;
+    box-shadow: 0px 0px 15px 1px rgb(188, 181, 214);
 }
 
 .dropdown-menu-left .dropdown-item {
@@ -18055,8 +18051,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
     border-radius: 0px;
     border-width: 0px;
     color: #6f7282;
-    background-color: #f8f8f8;
-    border-color: #e7e7e7;
+    background-color: rgb(248, 248, 248);
+    border-color: rgb(231, 231, 231);
     box-shadow: none;
     outline: none;
 }
@@ -18066,8 +18062,8 @@ table.dataTable.dtr-inline.collapsed>tbody>tr>th.dtr-control:before {
     border-radius: 0px;
     border-width: 0px;
     color: #6f7282;
-    background-color: #f8f8f8;
-    border-color: #e7e7e7;
+    background-color: rgb(248, 248, 248);
+    border-color: rgb(231, 231, 231);
     box-shadow: none;
     outline: none;
     padding: 16px 12px;
@@ -20715,7 +20711,7 @@ a.option-dots {
     color: #fff;
     font-weight: 500;
     border-top: 0;
-    background-color: #5e5fe0;
+    background-color: rgb(94, 95, 224);
 }
 
 .main-sidebar-body .nav-item.active .angle {
@@ -21613,7 +21609,7 @@ a.option-dots {
     color: #14112d;
     max-height: 100%;
     z-index: 1024;
-    background: white;
+    background: rgb(255, 255, 255);
     -webkit-box-shadow: 0px 8px 14.72px 1.28px rgba(154, 154, 204, 0.1);
     box-shadow: 0px 8px 14.72px 1.28px rgba(154, 154, 204, 0.1);
     border-right: 1px solid #ededf5;
@@ -21665,7 +21661,7 @@ a.option-dots {
 
 .app-sidebar__user img {
     box-shadow: 0 0 25px rgba(255, 255, 255, 0.1);
-    border: 2px solid white;
+    border: 2px solid rgb(255, 255, 255);
     box-shadow: 0px 5px 5px 0px rgba(44, 44, 44, 0.2);
 }
 
@@ -22627,7 +22623,7 @@ body:not(.transparent-theme) .sub-side-menu__item:hover {
 
     .app.sidebar-mini.sidenav-toggled-open .ps>.ps__rail-y>.ps__thumb-y {
         left: 3px;
-        background-color: #cfd3e1;
+        background-color: rgb(207, 211, 225);
     }
 
     .app.sidebar-mini.sidenav-toggled-open .main-sidebar-header {

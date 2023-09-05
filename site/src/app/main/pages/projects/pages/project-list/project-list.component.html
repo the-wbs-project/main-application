@@ -1,17 +1,29 @@
-<div class="mg-t-20 mg-b-16 w-100 tx-right pd-r-20">
-  <!--<a kendoButton [routerLink]="['/', 'projects', 'create']">
-    <fa-icon [icon]="faPlus" size="xs" />
-  </a>-->
-  <div *ngIf="status(); let projectStatus" role="group" class="btn-group">
+<div class="d-flex mg-t-20 mg-b-16 w-100">
+  <div class="pd-l-20">
     <button
       type="button"
-      *ngFor="let status of stati"
-      class="btn btn-outline-primary btn-sm wd-120"
-      [routerLinkActive]="'active'"
-      [routerLink]="['../', status]"
+      class="btn btn-icon btn-primary me-1"
+      [routerLink]="['/', owner(), 'projects', 'create']"
     >
-      {{ status | projectStatus }}
+      <kendo-svg-icon [icon]="plusIcon" />&nbsp;
+      {{ "Projects.CreateProject" | translate }}
     </button>
+  </div>
+  <div class="flex-grow-1 tx-right pd-r-20">
+    <!--<a kendoButton [routerLink]="['/', 'projects', 'create']">
+    <fa-icon [icon]="faPlus" size="xs" />
+  </a>-->
+    <div *ngIf="status(); let projectStatus" role="group" class="btn-group">
+      <button
+        type="button"
+        *ngFor="let status of stati"
+        class="btn btn-outline-primary btn-sm wd-120"
+        [routerLinkActive]="'active'"
+        [routerLink]="['../', status]"
+      >
+        {{ status | projectStatus }}
+      </button>
+    </div>
   </div>
 </div>
 <div

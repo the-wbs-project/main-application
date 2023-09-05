@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { ROLES } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
+import { Resources, sorter } from '@wbs/core/services';
 
 @Pipe({ name: 'roleList', standalone: true })
 export class RoleListPipe implements PipeTransform {
@@ -32,6 +32,6 @@ export class RoleListPipe implements PipeTransform {
         this.resources.get('General.SME' + (useAbbreviations ? '' : '-Full'))
       );
 
-    return list.join(', ');
+    return list.sort((a, b) => sorter(a, b)).join(', ');
   }
 }

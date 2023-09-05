@@ -5,6 +5,7 @@ using System.Net;
 using System.Text;
 using System.Text.Json;
 using Wbs.Api.Configurations;
+using Wbs.Api.Models;
 
 namespace Wbs.Api.Services;
 
@@ -87,6 +88,16 @@ public class Auth0Service
         var client = await GetClientAsync();
 
         await client.Organizations.DeleteMemberAsync(organization, new OrganizationDeleteMembersRequest { Members = users });
+    }
+
+    public async Task UpdateProfileAsync(UserLite user)
+    {
+        var client = await GetClientAsync();
+
+        await client.Users.UpdateAsync(user.Id, new UserUpdateRequest
+        {
+            FullName = user.Name
+        });
     }
 
     private async Task<ManagementApiClient> GetClientAsync()

@@ -1,3 +1,4 @@
+import { IdToken } from '../models';
 import { DataServiceFactory, Fetcher, Logger, OriginService } from '../services';
 
 export type Variables = {
@@ -5,5 +6,5 @@ export type Variables = {
   fetcher: Fetcher;
   logger: Logger;
   origin: OriginService;
-  userId: string;
+  idToken: IdToken;
 };

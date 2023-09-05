@@ -15,6 +15,8 @@ import { MembershipState } from '@wbs/main/states';
 import { map } from 'rxjs';
 import { ProjectTypeFilterPipe } from './pipes/project-type-filter.pipe';
 import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
+import { plusIcon } from '@progress/kendo-svg-icons';
+import { SVGIconModule } from '@progress/kendo-angular-icons';
 
 @Component({
   standalone: true,
@@ -31,6 +33,7 @@ import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
     ProjectStatusPipe,
     ProjectTypeFilterPipe,
     RouterModule,
+    SVGIconModule,
     TranslateModule,
   ],
 })
@@ -54,6 +57,8 @@ export class ProjectListComponent {
     PROJECT_VIEW_STATI.FOLLOW_UP,
     PROJECT_VIEW_STATI.CLOSED,
   ];
+
+  readonly plusIcon = plusIcon;
 
   constructor(
     private readonly store: Store,

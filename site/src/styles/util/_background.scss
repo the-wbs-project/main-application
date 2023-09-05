@@ -139,6 +139,13 @@ a.bg-light {
   }
 }
 
+a.bg-light-light {
+  &:hover,
+  &:focus {
+    background-color: #F8F8F8 !important;
+  }
+}
+
 button.bg-light {
   &:hover,
   &:focus {

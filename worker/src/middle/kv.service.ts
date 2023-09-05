@@ -1,9 +1,10 @@
 import { Context } from '../config';
 
 export const kv = {
-  resources,
-  lists,
   checklists,
+  lists,
+  members,
+  resources,
   users,
 };
 
@@ -21,6 +22,10 @@ function checklists(ctx: Context, next: any): Promise<Response | void> {
 
 function users(ctx: Context, next: any): Promise<Response | void> {
   return execute(ctx, next, 'USERS|:user|PROFILE', 60 * 60);
+}
+
+function members(ctx: Context, next: any): Promise<Response | void> {
+  return execute(ctx, next, 'ORGS|:organization|MEMBERS', 15 * 60);
 }
 
 function createKey(ctx: Context, key: string): string {

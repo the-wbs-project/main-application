@@ -246,6 +246,7 @@ export class TasksState implements NgxsOnInit {
               title: nodes[nodeIndex].title,
               reason: action.reason,
             },
+            topLevelId: state.project!.id,
             objectId: action.nodeId,
           })
         ),
@@ -335,6 +336,7 @@ export class TasksState implements NgxsOnInit {
             title: node.title,
             level: nodeVm!.levelText,
           },
+          topLevelId: state.project!.id,
           objectId: newNode.id,
           action: TASK_ACTIONS.CLONED,
         })
@@ -529,6 +531,7 @@ export class TasksState implements NgxsOnInit {
           data: {
             title: model.title,
           },
+          topLevelId: state.project!.id,
           objectId: model.id,
           action: TASK_ACTIONS.CREATED,
         })
@@ -553,6 +556,7 @@ export class TasksState implements NgxsOnInit {
     if (model.title !== title) {
       activities.push({
         action: TASK_ACTIONS.TITLE_CHANGED,
+        topLevelId: state.project!.id,
         objectId: model.id,
         data: {
           from: viewModel.title,
@@ -567,6 +571,7 @@ export class TasksState implements NgxsOnInit {
       activities.push({
         action: TASK_ACTIONS.DESCRIPTION_CHANGED,
         objectId: model.id,
+        topLevelId: state.project!.id,
         data: {
           title: model.title,
           from: model.description,
@@ -611,6 +616,7 @@ export class TasksState implements NgxsOnInit {
     const activityData: ActivityData = {
       action: TASK_ACTIONS.DISCIPLINES_CHANGED,
       objectId: model.id,
+      topLevelId: state.project!.id,
       data: {
         title: model.title,
         from: model.disciplineIds,
@@ -688,6 +694,7 @@ export class TasksState implements NgxsOnInit {
               from: originalLevel,
               to: newVm?.levelText,
             },
+            topLevelId: project.id,
             objectId: mainTask.id,
             action: TASK_ACTIONS.REORDERED,
           });

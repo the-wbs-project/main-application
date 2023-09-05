@@ -42,6 +42,7 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 app.get('api/checklists', kv.checklists, verifyJwt, OriginService.pass);
 app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
 app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
+app.put('api/activities', verifyJwt, OriginService.pass);
 app.put('api/activities/projects', verifyJwt, OriginService.pass);
 
 app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
@@ -59,30 +60,13 @@ app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMember
 //app.get('api/users/:userId', verifyJwt, authKv(['users', ':userId', 'user']), Http.memberships.passAsync);
 
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
-app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
+app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), OriginService.pass);
+//app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
 
-app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, Http.organizations.getMembersAsync);
-app.put(
-  'api/organizations/:organization/members/:user/roles',
-  verifyJwt,
-  verifyMembership,
-  verifyAdminAsync(),
-  Http.organizations.addMemberRolesAsync,
-);
-app.delete(
-  'api/organizations/:organization/members/:userId',
-  verifyJwt,
-  verifyMembership,
-  verifyAdminAsync(),
-  Http.organizations.removeMemberAsync,
-);
-app.delete(
-  'api/organizations/:organization/members/:user/roles',
-  verifyJwt,
-  verifyMembership,
-  verifyAdminAsync(),
-  Http.organizations.removeMemberRolesAsync,
-);
+app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, OriginService.pass);
+//app.put('api/organizations/:organization/members/:user/roles', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
+//app.delete('api/organizations/:organization/members/:userId', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
+//app.delete('api/organizations/:organization/members/:user/roles', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
 
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 

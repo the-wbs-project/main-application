@@ -2,6 +2,7 @@ export interface UserLite {
   id: string;
   email: string;
   name: string;
+  picture?: string;
 }
 
 export interface User {

@@ -72,7 +72,7 @@ export class TimelineService {
   }
 
   saveProjectActions(data: ProjectActivityRecord[]): void {
-    const user = this.store.selectSnapshot(AuthState.profileLite)!;
+    const user = this.store.selectSnapshot(AuthState.profile)!;
 
     this.data.activities.saveProjectActivitiesAsync(user.id, data).subscribe();
   }

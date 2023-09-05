@@ -48,6 +48,7 @@
       "Users": "Users",
       "Back": "Back",
       "Continue": "Continue",
+      "AssignedToMe": "Assigned To Me",
       "RetrievingData": "Retrieving Data...",
       "ReviewingData": "Reviewing Data...",
       "CreateProject": "Create Project",
@@ -57,6 +58,7 @@
       "Planning": "Planning",
       "Execution": "Execution",
       "FollowUp": "Follow Up",
+      "Close": "Close",
       "Closed": "Closed",
       "Roles": "Roles",
       "PM": "PM",
@@ -397,15 +399,13 @@
     "section": "OrgSettings",
     "locale": "en-US",
     "values": {
-      "OrgSettings": {
-        "Title": "Organization Settings",
-        "General": "General",
-        "GeneralDescription": "Name, contact info, and more",
-        "Users": "Users",
-        "AllRoles": "All Roles",
-        "UsersDescription": "Invite and manage existing users",
-        "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?"
-      }
+      "Title": "Organization Settings",
+      "General": "General",
+      "GeneralDescription": "Name, contact info, and more",
+      "Users": "Users",
+      "AllRoles": "All Roles",
+      "UsersDescription": "Invite and manage existing users",
+      "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?"
     }
   },
   {
@@ -443,6 +443,14 @@
       "ProjectAddUserDescription": "{user} was given the role of {role}.",
       "ProjectRemoveUserDescription": "{user} was revoked the role of {role}.",
       "NodeRecordered": "{0} was reordered from {1} to {2}."
+    }
+  },
+  {
+    "section": "ProfileEditor",
+    "locale": "en-US",
+    "values": {
+      "Title": "Your Profile",
+      "ProfileUpdated": "Your profile has been updated."
     }
   }
 ]

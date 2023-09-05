@@ -77,5 +77,26 @@ public class UsersController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
+
+    [Authorize]
+    [HttpPut("{user}")]
+    public async Task<IActionResult> PutUserAsync(string user, UserLite userObject)
+    {
+        try
+        {
+            if (userObject.Id != user)
+                return BadRequest();
+
+            await auth0Service.UpdateProfileAsync(userObject);
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
+            return new StatusCodeResult(500);
+        }
+    }
 }
 

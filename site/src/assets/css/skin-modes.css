@@ -424,7 +424,7 @@
 .dark-theme.light-header .main-header,
 .dark-theme.light-header .hor-header {
     background: #fff;
-    border-bottom: 1px solid #ecf0fa;
+    border-bottom: 1px solid rgb(236, 240, 250);
 }
 
 .dark-theme.light-header .app-sidebar {
@@ -2423,7 +2423,7 @@
 
 .horizontalMenucontainer .main-header.hor-header {
     position: relative;
-    border-bottom: 1px solid #f3f5f7;
+    border-bottom: 1px solid rgb(243, 245, 247);
 }
 
 .dark-theme.color-header .menu-header-content {

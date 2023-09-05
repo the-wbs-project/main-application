@@ -626,7 +626,7 @@ body.dark-theme {
 }
 
 .dark-theme hr {
-    border-color: #595a76;
+    border-color: rgb(89, 90, 118);
 }
 
 .dark-theme .main-content-label,
@@ -1103,7 +1103,7 @@ body.dark-theme {
 }
 
 .dark-theme .highlight {
-    border: 1px solid #141b2d !important;
+    border: 1px solid rgb(20, 27, 45) !important;
     background: #191f3a;
 }
 
@@ -1188,7 +1188,7 @@ body.dark-theme {
 }
 
 .dark-theme .nav-tabs .nav-link {
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .dark-theme .nav-tabs .nav-link.active,
@@ -1219,7 +1219,7 @@ body.dark-theme {
 
 .dark-theme .bs-popover-top>.arrow::before,
 .dark-theme .bs-popover-auto[data-popper-placement^=top]>.arrow::before {
-    border-top-color: #4e566d;
+    border-top-color: rgb(78, 86, 109);
 }
 
 .dark-theme .bs-popover-top>.arrow::after,
@@ -1234,7 +1234,7 @@ body.dark-theme {
 
 .dark-theme .bs-popover-bottom>.arrow::before,
 .dark-theme .bs-popover-auto[data-popper-placement^=bottom]>.arrow::before {
-    border-bottom-color: #4e566d;
+    border-bottom-color: rgb(78, 86, 109);
 }
 
 .dark-theme .bs-popover-left>.arrow::after,
@@ -1251,12 +1251,12 @@ body.dark-theme {
 
 .dark-theme .bs-popover-right>.arrow::before,
 .dark-theme .bs-popover-auto[data-popper-placement^=right]>.arrow::before {
-    border-right-color: #4e566d;
+    border-right-color: rgb(78, 86, 109);
 }
 
 .dark-theme .bs-popover-left>.arrow::before,
 .dark-theme .bs-popover-auto[data-popper-placement^=left]>.arrow::before {
-    border-left-color: #4e566d;
+    border-left-color: rgb(78, 86, 109);
 }
 
 .dark-theme .bg-gray-200 {
@@ -1466,7 +1466,7 @@ body.dark-theme {
 }
 
 .dark-theme .input-group-text {
-    color: #e6e2e2;
+    color: rgb(230, 226, 226);
     background-color: var(--primary02);
     border: 1px solid #484863;
 }
@@ -1514,7 +1514,7 @@ body.dark-theme {
 .dark-theme .SumoSelect>.optWrapper {
     background: #2a2e3f;
     border: 1px solid rgba(234, 234, 236, 0.15);
-    box-shadow: 0 2px 17px 2px #070456;
+    box-shadow: 0 2px 17px 2px rgb(7, 4, 86);
 }
 
 .dark-theme .SumoSelect .select-all {
@@ -1532,7 +1532,7 @@ body.dark-theme {
 }
 
 .dark-theme .SumoSelect.open>.optWrapper {
-    box-shadow: 0 2px 17px 2px #1c2140;
+    box-shadow: 0 2px 17px 2px rgb(28, 33, 64);
 }
 
 .dark-theme .SumoSelect>.optWrapper>.options li.opt:hover {
@@ -1743,7 +1743,7 @@ body.dark-theme {
 }
 
 .dark-theme .invoice-title {
-    color: #e1e1e1;
+    color: rgb(225, 225, 225);
 }
 
 .dark-theme .main-invoice-list .media-body h6 {
@@ -1842,7 +1842,7 @@ body.dark-theme {
 
 .dark-theme .price.panel-color>.panel-body,
 .dark-theme .price .panel-footer {
-    background-color: #26324e;
+    background-color: rgb(38, 50, 78);
 }
 
 .dark-theme .pricing .list-unstyled li {
@@ -1864,8 +1864,8 @@ body.dark-theme {
 
 .dark-theme .nice-select .list {
     background-color: #2a2e3f;
-    -webkit-box-shadow: 0px 0px 15px 1px #041138;
-    box-shadow: 0px 0px 15px 1px #041138;
+    -webkit-box-shadow: 0px 0px 15px 1px rgb(4, 17, 56);
+    box-shadow: 0px 0px 15px 1px rgb(4, 17, 56);
 }
 
 .dark-theme .nice-select .option:hover,
@@ -2423,11 +2423,11 @@ body.dark-theme {
 }
 
 .dark-theme .email-media .media-body small {
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .dark-theme .email-media .media-body .media-title {
-    color: white;
+    color: rgb(255, 255, 255);
     font-size: 15px;
 }
 
@@ -2723,7 +2723,7 @@ body.dark-theme {
 }
 
 .dark-theme .main-card-signin {
-    box-shadow: 0 1px 15px 1px #191f3a;
+    box-shadow: 0 1px 15px 1px rgb(25, 31, 58);
 }
 
 .dark-theme .page-item.disabled .page-link {
@@ -2784,7 +2784,7 @@ body.dark-theme {
 }
 
 .dark-theme .card.bg-warning-gradient {
-    background-image: linear-gradient(to left, #f76a2d, #fb8c12ed) !important;
+    background-image: linear-gradient(to left, #f76a2d, rgba(251, 140, 18, 0.9294117647)) !important;
 }
 
 .dark-theme .vmap-wrapper {
@@ -2833,7 +2833,7 @@ body.dark-theme {
 }
 
 .dark-theme nav.prod-cat li a {
-    color: #b0bbcc;
+    color: rgb(176, 187, 204);
 }
 
 .dark-theme .product-sale .wishlist {
@@ -2897,7 +2897,7 @@ body.dark-theme {
 }
 
 .dark-theme .nav-tabs.html-source .nav-link.active {
-    border-color: #141b2d;
+    border-color: rgb(20, 27, 45);
     background-color: #141b2d;
 }
 
@@ -3015,7 +3015,7 @@ body.dark-theme {
 
 .dark-theme .product-pagination .page-link {
     background-color: #1f2940 !important;
-    border: 1px solid #2e3c5d;
+    border: 1px solid rgb(46, 60, 93);
 }
 
 .dark-theme .product-pagination .page-item.disabled .page-link {
@@ -3029,7 +3029,7 @@ body.dark-theme {
 }
 
 .dark-theme #list3 .media-body h6 {
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .dark-theme #list3 .list-group-item,
@@ -3040,7 +3040,7 @@ body.dark-theme {
 }
 
 .dark-theme .bg-gray-100.nav-bg .nav-tabs {
-    border-bottom: 1px solid #2d364b;
+    border-bottom: 1px solid rgb(45, 54, 75);
 }
 
 .dark-theme .bg-gray-100.nav-bg .nav-tabs .nav-link {
@@ -3057,7 +3057,7 @@ body.dark-theme {
 }
 
 .dark-theme .toast {
-    box-shadow: -8px 12px 18px 0 #1820330f;
+    box-shadow: -8px 12px 18px 0 rgba(24, 32, 51, 0.0588235294);
 }
 
 .dark-theme .tabs-style-1 .dark-theme .border {
@@ -3379,7 +3379,7 @@ body.dark-theme {
 .dark-theme .bd-example-row .row>.col,
 .dark-theme .bd-example-row .row>[class^=col-] {
     background-color: #404353;
-    border: 1px solid #4a4a68;
+    border: 1px solid rgb(74, 74, 104);
 }
 
 .dark-theme .vtimeline .timeline-wrapper .timeline-badge {
@@ -3596,7 +3596,7 @@ body.dark-theme {
 }
 
 .dark-theme #external-events p {
-    color: #ffffff8a;
+    color: rgba(255, 255, 255, 0.5411764706);
 }
 
 .dark-theme .datepicker th {
@@ -3678,7 +3678,7 @@ body.dark-theme {
 
     .dark-theme .mobile-main-header form[role=search].active input {
         background: #2a2e3f;
-        box-shadow: 0 1px 15px 1px #3a3a4b;
+        box-shadow: 0 1px 15px 1px rgb(58, 58, 75);
     }
 
     .dark-theme .mobile-main-header form[role=search] button[type=reset] {
@@ -4026,7 +4026,7 @@ body.dark-theme {
 }
 
 .dark-theme .fc .fc-daygrid-day-number {
-    color: #fdfafa9c;
+    color: rgba(253, 250, 250, 0.6117647059);
 }
 
 .dark-theme .fc-list-table td {
@@ -4112,15 +4112,15 @@ body.dark-theme {
 }
 
 .dark-theme .datepicker>.datepicker_inner_container>.datepicker_timelist::-webkit-scrollbar-thumb {
-    background: #00000085 !important;
+    background: rgba(0, 0, 0, 0.5215686275) !important;
 }
 
 .dark-theme .main-toggle {
-    background-color: #ffffff45;
+    background-color: rgba(255, 255, 255, 0.2705882353);
 }
 
 .dark-theme .main-toggle span {
-    background-color: #000000cf;
+    background-color: rgba(0, 0, 0, 0.8117647059);
 }
 
 .dark-theme .ff_fileupload_wrap table.ff_fileupload_uploads td.ff_fileupload_summary .ff_fileupload_filename input {
@@ -4149,7 +4149,7 @@ body.dark-theme {
 }
 
 .dark-theme .fc .fc-list-sticky .fc-list-day>* {
-    background: #00000073;
+    background: rgba(0, 0, 0, 0.4509803922);
 }
 
 @media (min-width: 992px) {
@@ -4534,7 +4534,7 @@ body.dark-theme {
 }
 
 .dark-theme .richText .richText-toolbar ul li a .richText-dropdown-outer .richText-dropdown .richText-dropdown-close {
-    background: #fff0;
+    background: rgba(255, 255, 255, 0);
     color: #ffffff;
 }
 

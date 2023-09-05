@@ -56,6 +56,30 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
+    [HttpPut]
+    public async Task<IActionResult> Put(Activity[] activities)
+    {
+        try
+        {
+            using (var conn = dataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                foreach (var data in activities)
+                    await dataService.InsertAsync(conn, data);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPut("projects")]
     public async Task<IActionResult> PutProjects(ProjectActivityRecord[] activities)
     {

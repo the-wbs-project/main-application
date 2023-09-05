@@ -27,7 +27,7 @@
       </div>
     </div>
     <div class="main-header-right">
-      <div
+      <!--<div
         *ngIf="info(); let header"
         class="display-flex w-100 mg-b-16 breadcrumb-header justify-content-between"
       >
@@ -59,6 +59,47 @@
               </button>
             </ng-template>
           </div>
+        </div>
+      </div>
+    </div>-->
+
+      <div
+        ngbDropdown
+        class="main-profile-menu nav nav-item nav-link ps-lg-2"
+        *ngIf="user(); let user"
+      >
+        <a class="nav-link profile-user pointer" ngbDropdownToggle>
+          <wbs-header-profile-picture [picture]="user.picture" />
+        </a>
+        <div ngbDropdownMenu class="wd-300-f">
+          <div class="menu-header-content p-3 border-bottom">
+            <div class="display-flex wd-100p">
+              <div class="main-img-user">
+                <wbs-header-profile-picture [picture]="user.picture" />
+              </div>
+
+              <div class="ms-3 my-auto">
+                <h6 class="tx-15 font-weight-semibold mb-0">
+                  {{ user.name }}
+                </h6>
+                <span class="dropdown-title-text subtext op-6 tx-12">
+                  {{ roles() | roleList : true }}
+                </span>
+              </div>
+            </div>
+          </div>
+          <a
+            ngbDropdownItem
+            class="bg-light-light pointer"
+            (click)="launchProfileEditor()"
+          >
+            <kendo-svg-icon [icon]="userIcon" /> &nbsp;&nbsp;
+            {{ "ProfileEditor.Title" | translate }}
+          </a>
+          <a ngbDropdownItem routerLink="/logout" class="bg-light-light">
+            <kendo-svg-icon [icon]="logoutIcon" /> &nbsp;&nbsp;
+            {{ "General.LogOut" | translate }}
+          </a>
         </div>
       </div>
     </div>

@@ -367,6 +367,7 @@ export class ProjectCreateState {
           {
             data: {
               action: 'project-created',
+              topLevelId: project.id,
               data: {
                 title: project.title,
                 id: project.id,

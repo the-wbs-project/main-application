@@ -5896,10 +5896,6 @@ pre {
   }
 }
 
-.main-img-user.online::after {
-  background-color: $success;
-}
-
 .card-dashboard-events .event-user {
   .main-img-user + .main-img-user {
     margin-left: -6px;

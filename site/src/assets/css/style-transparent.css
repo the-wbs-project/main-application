@@ -448,7 +448,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .pulse:before {
-    background: #086858;
+    background: rgb(8, 104, 88);
 }
 
 .transparent-theme .breadcrumb-item.active {
@@ -1715,7 +1715,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .nav-tabs .nav-link {
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .transparent-theme .nav-tabs .nav-link.active,
@@ -2012,7 +2012,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .input-group-text {
-    color: #e6e2e2;
+    color: rgb(230, 226, 226);
     background-color: var(--primary02);
     border: 1px solid rgba(255, 255, 255, 0.15);
 }
@@ -2060,7 +2060,7 @@ body.transparent-theme.bg-img4 {
 .transparent-theme .SumoSelect>.optWrapper {
     background: var(--transparent-body);
     border: 1px solid rgba(255, 255, 255, 0.15);
-    box-shadow: 0 2px 17px 2px #070456;
+    box-shadow: 0 2px 17px 2px rgb(7, 4, 86);
 }
 
 .transparent-theme .SumoSelect .select-all {
@@ -2078,7 +2078,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .SumoSelect.open>.optWrapper {
-    box-shadow: 0 2px 17px 2px #1c2140;
+    box-shadow: 0 2px 17px 2px rgb(28, 33, 64);
 }
 
 .transparent-theme .SumoSelect>.optWrapper>.options li.opt:hover {
@@ -2298,7 +2298,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .invoice-title {
-    color: #e1e1e1;
+    color: rgb(225, 225, 225);
 }
 
 .transparent-theme .main-invoice-list .media-body h6 {
@@ -2396,7 +2396,7 @@ body.transparent-theme.bg-img4 {
 
 .transparent-theme .price.panel-color>.panel-body,
 .transparent-theme .price .panel-footer {
-    background-color: #26324e;
+    background-color: rgb(38, 50, 78);
 }
 
 .transparent-theme .pricing .list-unstyled li {
@@ -2418,8 +2418,8 @@ body.transparent-theme.bg-img4 {
 
 .transparent-theme .nice-select .list {
     background-color: var(--transparent-body);
-    -webkit-box-shadow: 0px 0px 15px 1px #041138;
-    box-shadow: 0px 0px 15px 1px #041138;
+    -webkit-box-shadow: 0px 0px 15px 1px rgb(4, 17, 56);
+    box-shadow: 0px 0px 15px 1px rgb(4, 17, 56);
 }
 
 .transparent-theme .nice-select .option:hover,
@@ -2691,8 +2691,8 @@ body.transparent-theme.bg-img4 {
 
 .transparent-theme .alert-success {
     color: #125a4e;
-    background-color: #1fddbd9e;
-    border-color: #1fddbd9e;
+    background-color: rgba(31, 221, 189, 0.6196078431);
+    border-color: rgba(31, 221, 189, 0.6196078431);
 }
 
 .transparent-theme .form-control::placeholder {
@@ -2983,11 +2983,11 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .email-media .media-body small {
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .transparent-theme .email-media .media-body .media-title {
-    color: white;
+    color: rgb(255, 255, 255);
     font-size: 15px;
 }
 
@@ -3342,7 +3342,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .card.bg-warning-gradient {
-    background-image: linear-gradient(to left, #f76a2d, #fb8c12ed) !important;
+    background-image: linear-gradient(to left, #f76a2d, rgba(251, 140, 18, 0.9294117647)) !important;
 }
 
 .transparent-theme .vmap-wrapper {
@@ -3391,7 +3391,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme nav.prod-cat li a {
-    color: #b0bbcc;
+    color: rgb(176, 187, 204);
 }
 
 .transparent-theme .product-sale .wishlist {
@@ -3587,7 +3587,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme #list3 .media-body h6 {
-    color: white;
+    color: rgb(255, 255, 255);
 }
 
 .transparent-theme #list3 .list-group-item,
@@ -3615,7 +3615,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .toast {
-    box-shadow: -8px 12px 18px 0 #1820330f;
+    box-shadow: -8px 12px 18px 0 rgba(24, 32, 51, 0.0588235294);
 }
 
 .transparent-theme .tabs-style-1 .transparent-theme .border {
@@ -3885,7 +3885,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .contact-icon {
-    box-shadow: 0px 1px 6px 0px #24443f70;
+    box-shadow: 0px 1px 6px 0px rgba(36, 68, 63, 0.4392156863);
 }
 
 .transparent-theme bg-dark-1 {
@@ -4146,7 +4146,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme #external-events p {
-    color: #ffffff8a;
+    color: rgba(255, 255, 255, 0.5411764706);
 }
 
 .transparent-theme .datepicker th {
@@ -4228,7 +4228,7 @@ body.transparent-theme.bg-img4 {
 
     .transparent-theme .mobile-main-header form[role=search].active input {
         background: var(--transparent-body);
-        box-shadow: 0 1px 15px 1px #3a3a4b;
+        box-shadow: 0 1px 15px 1px rgb(58, 58, 75);
     }
 
     .transparent-theme .mobile-main-header form[role=search] button[type=reset] {
@@ -4575,7 +4575,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .fc .fc-daygrid-day-number {
-    color: #fdfafa9c;
+    color: rgba(253, 250, 250, 0.6117647059);
 }
 
 .transparent-theme .fc-list-table td {
@@ -4665,15 +4665,15 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .datepicker>.datepicker_inner_container>.datepicker_timelist::-webkit-scrollbar-thumb {
-    background: #00000085 !important;
+    background: rgba(0, 0, 0, 0.5215686275) !important;
 }
 
 .transparent-theme .main-toggle {
-    background-color: #ffffff45;
+    background-color: rgba(255, 255, 255, 0.2705882353);
 }
 
 .transparent-theme .main-toggle span {
-    background-color: #000000cf;
+    background-color: rgba(0, 0, 0, 0.8117647059);
 }
 
 .transparent-theme .ff_fileupload_wrap table.ff_fileupload_uploads td.ff_fileupload_summary .ff_fileupload_filename input {
@@ -4702,7 +4702,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .fc .fc-list-sticky .fc-list-day>* {
-    background: #00000073;
+    background: rgba(0, 0, 0, 0.4509803922);
 }
 
 @media (min-width: 992px) {
@@ -5092,7 +5092,7 @@ body.transparent-theme.bg-img4 {
 }
 
 .transparent-theme .richText .richText-toolbar ul li a .richText-dropdown-outer .richText-dropdown .richText-dropdown-close {
-    background: #fff0;
+    background: rgba(255, 255, 255, 0);
     color: #ffffff;
 }
 
