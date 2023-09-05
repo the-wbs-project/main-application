@@ -13,9 +13,19 @@ import { SVGIconModule } from '@progress/kendo-angular-icons';
       [icon]="faUserCircle"
       style="font-size: 1.2rem"
       size="2x"
-      [ngClass]="['profile-icon']"
+      [ngClass]="['profile-img']"
     />
-    <img *ngIf="picture" [src]="picture" class="profile-icon" />`,
+    <img *ngIf="picture" [src]="picture" class="profile-img" />`,
+  styles: [
+    `
+      .profile-img {
+        width: 37px;
+        height: 37px;
+        border-radius: 50%;
+        box-shadow: 0px 4px 4px 0px #dbe4f9;
+      }
+    `,
+  ],
 })
 export class HeaderProfilePictureComponent {
   @Input() picture?: string;

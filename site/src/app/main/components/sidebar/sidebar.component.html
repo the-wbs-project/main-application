@@ -1,174 +1,143 @@
-<div class="app-sidebar_overlay" (click)="sidebarClose()"></div>
-<div class="sticky" [ngClass]="{ 'sticky-pin': scrolled }">
-  <aside class="app-sidebar">
-    <div class="main-sidebar-header active">
-      <a class="header-label active" routerLink="/">
-        <h2>PM Empower</h2>
-
-        <!--<img
-          src="./assets/img/brand/logo.png"
-          class="main-logo desktop-logo"
-          alt="NovaLogo"
-        />
-        <img
-          src="./assets/img/brand/logo-white.png"
-          class="main-logo desktop-dark"
-          alt="NovaLogo"
-        />
-        <img
-          src="./assets/img/brand/favicon.png"
-          class="main-logo mobile-logo"
-          alt="NovaLogo"
-        />
-        <img
-          src="./assets/img/brand/favicon-white.png"
-          class="main-logo mobile-dark"
-          alt="NovaLogo"
-        />-->
+<!--<perfect-scrollbar>-->
+<div class="main-sidemenu" appFillElement [paddingBottom]="5">
+  <!-- left-arrow -->
+  <div class="slide-left disabled" id="slide-left">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#7b8191"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
+      />
+    </svg>
+  </div>
+  <div class="slide-leftRTL disabled" id="slide-leftRTL">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#7b8191"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
+      />
+    </svg>
+  </div>
+  <div class="w-100 text-center">
+    <img
+      *ngIf="organization?.branding?.logo_url; let logo"
+      class="logo"
+      [src]="logo"
+      alt="NovaLogo"
+    />
+    <!--<select class="w-75"></select>-->
+  </div>
+  <ul class="side-menu m-t-10">
+    <li class="slide is-expanded">
+      <a class="side-menu__item" routerLinkActive="active">
+        <span class="side-menu__icon">
+          <i class="fa-solid fa-space-station-moon-construction"></i>
+        </span>
+        <span class="side-menu__label">
+          {{ "General.Projects" | translate }}
+        </span>
       </a>
-    </div>
-    <!--<perfect-scrollbar>-->
-    <div class="main-sidemenu">
-      <!-- left-arrow -->
-      <div class="slide-left disabled" id="slide-left">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#7b8191"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-          />
-        </svg>
-      </div>
-      <div class="slide-leftRTL disabled" id="slide-leftRTL">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#7b8191"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M13.293 6.293 7.586 12l5.707 5.707 1.414-1.414L10.414 12l4.293-4.293z"
-          />
-        </svg>
-      </div>
-      <div class="w-100 text-center">
-        <img
-          *ngIf="organization?.branding?.logo_url; let logo"
-          class="logo"
-          [src]="logo"
-          alt="NovaLogo"
-        />
-        <!--<select class="w-75"></select>-->
-      </div>
-      <ul class="side-menu m-t-10">
-        <li class="slide is-expanded">
-          <a class="side-menu__item" routerLinkActive="active">
-            <span class="side-menu__icon">
-              <i class="fa-solid fa-space-station-moon-construction"></i>
-            </span>
-            <span class="side-menu__label">
-              {{ "General.Projects" | translate }}
-            </span>
-          </a>
-          <ul class="slide-menu">
-            <li class="sub-slide is-expanded">
-              <a
-                class="sub-side-menu__item"
-                routerLinkActive="active"
-                [routerLink]="[
-                  '/',
-                  organization?.name,
-                  'projects',
-                  'list',
-                  'assigned',
-                  'active'
-                ]"
-              >
-                <span class="sub-side-menu__label">
-                  {{ "General.AssignedToMe" | translate }}
-                </span>
-              </a>
-              <a
-                class="sub-side-menu__item"
-                routerLinkActive="active"
-                [routerLink]="[
-                  '/',
-                  organization?.name,
-                  'projects',
-                  'list',
-                  'all',
-                  'active'
-                ]"
-              >
-                <span class="sub-side-menu__label">
-                  {{ "General.All" | translate }}
-                </span>
-              </a>
-            </li>
-          </ul>
-        </li>
-        <li *ngIf="isAdmin" class="slide is-expanded">
+      <ul class="slide-menu">
+        <li class="sub-slide is-expanded">
           <a
-            class="side-menu__item"
+            class="sub-side-menu__item"
             routerLinkActive="active"
-            [routerLink]="['/', organization?.name, 'settings']"
+            [routerLink]="[
+              '/',
+              organization?.name,
+              'projects',
+              'list',
+              'assigned',
+              'active'
+            ]"
           >
-            <span class="side-menu__icon">
-              <i class="fa-solid fa-cogs"></i>
-            </span>
-            <span class="side-menu__label">
-              {{ "General.General" | translate }}
+            <span class="sub-side-menu__label">
+              {{ "General.AssignedToMe" | translate }}
             </span>
           </a>
-          <ul class="slide-menu">
-            <li class="sub-slide is-expanded">
-              <a
-                *ngFor="let item of settings"
-                class="sub-side-menu__item"
-                routerLinkActive="active"
-                [routerLink]="['/', organization?.name].concat(item.path)"
-              >
-                <span class="sub-side-menu__label">
-                  {{ item.title! | translate }}
-                </span>
-              </a>
-            </li>
-          </ul>
+          <a
+            class="sub-side-menu__item"
+            routerLinkActive="active"
+            [routerLink]="[
+              '/',
+              organization?.name,
+              'projects',
+              'list',
+              'all',
+              'active'
+            ]"
+          >
+            <span class="sub-side-menu__label">
+              {{ "General.All" | translate }}
+            </span>
+          </a>
         </li>
       </ul>
-      <!-- right-arrow  -->
-      <div class="slide-right" id="slide-right">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#7b8191"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
-          />
-        </svg>
-      </div>
-      <div class="slide-rightRTL" id="slide-rightRTL">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          fill="#7b8191"
-          width="24"
-          height="24"
-          viewBox="0 0 24 24"
-        >
-          <path
-            d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
-          />
-        </svg>
-      </div>
-    </div>
-    <!--</perfect-scrollbar>-->
-  </aside>
+    </li>
+    <li *ngIf="isAdmin" class="slide is-expanded">
+      <a
+        class="side-menu__item"
+        routerLinkActive="active"
+        [routerLink]="['/', organization?.name, 'settings']"
+      >
+        <span class="side-menu__icon">
+          <i class="fa-solid fa-cogs"></i>
+        </span>
+        <span class="side-menu__label">
+          {{ "General.General" | translate }}
+        </span>
+      </a>
+      <ul class="slide-menu">
+        <li class="sub-slide is-expanded">
+          <a
+            *ngFor="let item of settings"
+            class="sub-side-menu__item"
+            routerLinkActive="active"
+            [routerLink]="['/', organization?.name].concat(item.path)"
+          >
+            <span class="sub-side-menu__label">
+              {{ item.title! | translate }}
+            </span>
+          </a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+  <!-- right-arrow  -->
+  <div class="slide-right" id="slide-right">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#7b8191"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
+      />
+    </svg>
+  </div>
+  <div class="slide-rightRTL" id="slide-rightRTL">
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      fill="#7b8191"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+    >
+      <path
+        d="M10.707 17.707 16.414 12l-5.707-5.707-1.414 1.414L13.586 12l-4.293 4.293z"
+      />
+    </svg>
+  </div>
 </div>
+<!--</perfect-scrollbar>-->

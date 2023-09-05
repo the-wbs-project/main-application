@@ -1,107 +1,30 @@
-<div class="main-header side-header sticky nav nav-item">
-  <div class="main-container container-fluid">
-    <div class="main-header-left">
-      <div class="responsive-logo">
-        <a routerLink="/" class="header-logo">
-          <h1>PM Empower</h1>
-        </a>
-      </div>
-      <div class="app-sidebar__toggle" data-bs-toggle="sidebar">
-        <a appSidemenuToggle class="open-toggle" href="javascript:void(0);">
-          <fa-icon [icon]="faAlignLeft" class="header-icon" />
-        </a>
-        <a appSidemenuToggle class="close-toggle" href="javascript:void(0);">
-          <fa-icon [icon]="faX" class="header-icon" />
-        </a>
-      </div>
-      <div
-        *ngIf="info(); let header"
-        class="mg-l-20 tx-medium tx-18 tx-uppercase"
-      >
-        <span *ngIf="header.titleIsResource">
-          {{ header.title | translate }}
-        </span>
-        <span *ngIf="!header.titleIsResource">
-          {{ header.title }}
-        </span>
-      </div>
-    </div>
-    <div class="main-header-right">
-      <!--<div
-        *ngIf="info(); let header"
-        class="display-flex w-100 mg-b-16 breadcrumb-header justify-content-between"
-      >
-        <div class="justify-content-center mt-2 mg-r-20">
-          <ol class="breadcrumb" *ngIf="header.breadcrumbs">
-            <li class="breadcrumb-item" *ngFor="let item of header.breadcrumbs">
-              <a [routerLink]="item.route">{{ item.label | translate }}</a>
-            </li>
-            <li
-              *ngIf="header.activeItem"
-              class="breadcrumb-item active"
-              aria-current="page"
-            >
-              {{ header.activeItem }}
-            </li>
-          </ol>
-          <div *ngIf="header.rightButtons" role="group" class="btn-group">
-            <ng-template ngFor [ngForOf]="header.rightButtons" let-item>
-              <button
-                type="button"
-                *ngIf="item.type === 'link'"
-                class="btn btn-dark btn-sm"
-                [routerLink]="item.route"
-              >
-                <fa-icon *ngIf="item.icon" [icon]="item.icon" />
-                <span *ngIf="item.text">
-                  {{ item.text | translate }}
-                </span>
-              </button>
-            </ng-template>
-          </div>
-        </div>
-      </div>
-    </div>-->
-
-      <div
-        ngbDropdown
-        class="main-profile-menu nav nav-item nav-link ps-lg-2"
-        *ngIf="user(); let user"
-      >
-        <a class="nav-link profile-user pointer" ngbDropdownToggle>
-          <wbs-header-profile-picture [picture]="user.picture" />
-        </a>
-        <div ngbDropdownMenu class="wd-300-f">
-          <div class="menu-header-content p-3 border-bottom">
-            <div class="display-flex wd-100p">
-              <div class="main-img-user">
-                <wbs-header-profile-picture [picture]="user.picture" />
-              </div>
-
-              <div class="ms-3 my-auto">
-                <h6 class="tx-15 font-weight-semibold mb-0">
-                  {{ user.name }}
-                </h6>
-                <span class="dropdown-title-text subtext op-6 tx-12">
-                  {{ roles() | roleList : true }}
-                </span>
-              </div>
-            </div>
-          </div>
-          <a
-            ngbDropdownItem
-            class="bg-light-light pointer"
-            (click)="launchProfileEditor()"
-          >
-            <kendo-svg-icon [icon]="userIcon" /> &nbsp;&nbsp;
-            {{ "ProfileEditor.Title" | translate }}
-          </a>
-          <a ngbDropdownItem routerLink="/logout" class="bg-light-light">
-            <kendo-svg-icon [icon]="logoutIcon" /> &nbsp;&nbsp;
-            {{ "General.LogOut" | translate }}
-          </a>
-        </div>
-      </div>
+<header>
+  <div class="header-title">
+    <button
+      kendoButton
+      [svgIcon]="menuIcon"
+      fillMode="flat"
+      class="lh-1"
+      (click)="toggleSidebar()"
+    ></button
+    >PM Empower
+  </div>
+  <div class="header-toggler">
+    <div
+      *ngIf="info(); let header"
+      class="display-ib mg-l-20 tx-medium tx-18 tx-uppercase"
+    >
+      <span *ngIf="header.titleIsResource">
+        {{ header.title | translate }}
+      </span>
+      <span *ngIf="!header.titleIsResource">
+        {{ header.title }}
+      </span>
     </div>
   </div>
-</div>
+  <div class="header-right">
+    <div class="profile-panel">
+      <wbs-header-profile />
+    </div>
+  </div>
+</header>

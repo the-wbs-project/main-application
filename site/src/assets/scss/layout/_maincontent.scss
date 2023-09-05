@@ -50,7 +50,8 @@
 }
 
 .main-content {
-  .container, .container-fluid {
+  .container,
+  .container-fluid {
     padding-left: 20px;
     padding-right: 20px;
   }
@@ -66,18 +67,19 @@
   .main-content .container {
     max-width: none;
   }
-	.browser-stats .sub-text{
-		display:none;
-	}
-	.browser-stats h6 {
-		line-height: 2;
-	}
+  .browser-stats .sub-text {
+    display: none;
+  }
+  .browser-stats h6 {
+    line-height: 2;
+  }
 }
 
 .main-content-app {
   padding-top: 0;
 
-  .container, .container-fluid {
+  .container,
+  .container-fluid {
     height: 100%;
     padding: 0;
   }
@@ -153,13 +155,14 @@
   }
 }
 
- .card-table-two .card-title, .card-dashboard-eight .card-title {
+.card-table-two .card-title,
+.card-dashboard-eight .card-title {
   color: $gray-900;
   font-weight: 700;
   text-transform: uppercase;
   line-height: 1;
   margin-bottom: 10px;
-  letter-spacing: .2px;
+  letter-spacing: 0.2px;
 }
 
 .main-content-label-sm {
@@ -167,7 +170,7 @@
   font-weight: 600;
   text-transform: uppercase;
   color: $gray-500;
-  letter-spacing: .5px;
+  letter-spacing: 0.5px;
 }
 
 .main-content-text {
@@ -199,11 +202,9 @@
 @media (min-width: 992px) {
   .main-content {
     padding-top: 0 !important;
-    margin-left: 240px;
   }
 
   .main-body.main-sidebar-hide .main-content {
-    margin-left: 80px !important;
     transition: margin-left 0.3s ease;
   }
 }
@@ -252,7 +253,7 @@
       text-transform: uppercase;
       font-size: 12px;
       font-weight: 700;
-      letter-spacing: .5px;
+      letter-spacing: 0.5px;
 
       ~ label {
         margin-top: 30px;
@@ -305,7 +306,7 @@
     font-size: 20px;
     font-weight: 400;
     color: $white;
-    letter-spacing: -.5px;
+    letter-spacing: -0.5px;
     margin-bottom: 10px;
   }
 
@@ -328,11 +329,13 @@
     figure {
       margin-bottom: 0;
 
-      &:hover img, &:focus img {
+      &:hover img,
+      &:focus img {
         transform: scale(1.75, 1.75);
       }
 
-      &:hover figcaption, &:focus figcaption {
+      &:hover figcaption,
+      &:focus figcaption {
         opacity: 1;
       }
     }
@@ -350,7 +353,8 @@
       opacity: 0;
       transition: all 0.2s ease-in-out;
 
-      .btn, .sp-container button {
+      .btn,
+      .sp-container button {
         text-transform: uppercase;
         letter-spacing: 1.5px;
         font-size: 11px;
@@ -461,7 +465,7 @@
     background-color: $gray-200;
 
     .typcn {
-      line-height: .9;
+      line-height: 0.9;
       font-size: 48px;
       margin-bottom: 10px;
     }
@@ -474,14 +478,17 @@
     }
   }
 
-  .main-content-label, .card-table-two .card-title {
+  .main-content-label,
+  .card-table-two .card-title {
     color: $gray-600;
     margin-bottom: 5px;
     letter-spacing: 1px;
   }
 }
 
-.card-table-two .main-content-choose-demo .card-title, .main-content-choose-demo .card-dashboard-eight .card-title, .card-dashboard-eight .main-content-choose-demo .card-title {
+.card-table-two .main-content-choose-demo .card-title,
+.main-content-choose-demo .card-dashboard-eight .card-title,
+.card-dashboard-eight .main-content-choose-demo .card-title {
   color: $gray-600;
   margin-bottom: 5px;
   letter-spacing: 1px;
@@ -499,6 +506,6 @@
     font-size: 17px;
   }
 }
-.main-content-left.main-content-left-mail.card-body{
-    padding: 1.25rem;
+.main-content-left.main-content-left-mail.card-body {
+  padding: 1.25rem;
 }

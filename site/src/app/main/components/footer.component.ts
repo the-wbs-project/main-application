@@ -4,8 +4,8 @@ import { environment } from 'src/environments/environment';
 @Component({
   standalone: true,
   selector: 'wbs-footer',
-  template: `<div class="main-footer">
-    <div class="container-fluid pd-t-0-f ht-100p">
+  template: `<div class="main-footer ht-40">
+    <div class="container-fluid pd-t-0-f">
       Copyright © {{ year }}
       <a href="/" class="text-primary">
         {{ appTitle }}

@@ -22,8 +22,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
-.body {
+html,
+body,
+wbs-app {
+  padding: 0;
+  height: 100%;
   font-family: "Poppins", sans-serif;
+}
+
+wbs-app {
+  display: flex;
+  flex-direction: column;
 }
 
 .notification {

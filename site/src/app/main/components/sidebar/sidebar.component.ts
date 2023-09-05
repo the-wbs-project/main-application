@@ -16,6 +16,7 @@ import { NavService } from '../../services';
 import { switcherArrowFn } from './sidebar';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { plusIcon } from '@progress/kendo-svg-icons';
+import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 
 @Component({
   standalone: true,
@@ -25,6 +26,7 @@ import { plusIcon } from '@progress/kendo-svg-icons';
   encapsulation: ViewEncapsulation.None,
   imports: [
     CommonModule,
+    FillElementDirective,
     ProjectStatusCountPipe,
     RouterModule,
     SVGIconModule,

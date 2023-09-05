@@ -1,3 +1,45 @@
+<div style="height: 100vh; display: flex; flex-direction: column">
+  <wbs-header />
+  <kendo-drawer-container>
+    <kendo-drawer #drawer mode="push" [expanded]="isSidebarExpanded()!">
+      <ng-template kendoDrawerTemplate="">
+        <wbs-sidebar
+          [isAdmin]="membershipRoles() | isAdmin"
+          [projects]="projects()"
+          [organization]="org()"
+          [organizations]="orgs()"
+        />
+      </ng-template>
+    </kendo-drawer>
+
+    <kendo-drawer-content>
+      <div appFillElement class="scroll pd-x-20" #body appMainContent>
+        <router-outlet />
+      </div>
+    </kendo-drawer-content>
+  </kendo-drawer-container>
+  <wbs-footer />
+</div>
+<!--
+<wbs-header />
+<kendo-drawer-container class="vh-100">
+  <kendo-drawer #drawer mode="push" [(expanded)]="expanded">    [svgIcon]="menuSvg"
+
+      <wbs-sidebar
+        [isAdmin]="membershipRoles() | isAdmin"
+        [projects]="projects()"
+        [organization]="org()"
+        [organizations]="orgs()"
+      />
+    </ng-template>
+  </kendo-drawer>
+
+  <kendo-drawer-content>
+    <button kendoButton (click)="drawer.toggle()">Toggle the Drawer</button>
+  </kendo-drawer-content>
+</kendo-drawer-container>
+
+
 <div class="horizontalMenucontainer">
   <div class="page">
     <div>
@@ -23,6 +65,6 @@
         <router-outlet />
       </div>
     </div>
-    <wbs-footer />
   </div>
 </div>
+-->

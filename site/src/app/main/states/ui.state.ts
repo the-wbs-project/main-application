@@ -15,14 +15,18 @@ import {
   MainContentSizeChanged,
   ParseNavigation,
   SetHeaderInfo,
+  ToggleSidebar,
 } from '../actions';
 
 interface StateModel {
   header?: HeaderInformation;
   path?: string;
   isLoading: boolean;
+  isSidebarExpanded: boolean;
   mainContentWidth: number;
 }
+
+declare type Context = StateContext<StateModel>;
 
 @UntilDestroy()
 @Injectable()
@@ -30,6 +34,7 @@ interface StateModel {
   name: 'ui',
   defaults: {
     isLoading: true,
+    isSidebarExpanded: true,
     mainContentWidth: 0,
   },
 })
@@ -52,6 +57,16 @@ export class UiState implements NgxsOnInit {
   }
 
   @Selector()
+  static isLoading(state: StateModel): boolean {
+    return state.isLoading;
+  }
+
+  @Selector()
+  static isSidebarExpanded(state: StateModel): boolean {
+    return state.isSidebarExpanded;
+  }
+
+  @Selector()
   static size(state: StateModel): 'xs' | 'sm' | 'md' | 'lg' | 'xl' {
     if (state.mainContentWidth < 576) return 'xs';
     if (state.mainContentWidth < 768) return 'sm';
@@ -61,7 +76,7 @@ export class UiState implements NgxsOnInit {
     return 'xl';
   }
 
-  ngxsOnInit(ctx: StateContext<StateModel>) {
+  ngxsOnInit(ctx: Context) {
     this.actions$
       .pipe(ofActionSuccessful(RouterDataResolved<any>), untilDestroyed(this))
       .subscribe((action: RouterDataResolved) =>
@@ -70,23 +85,22 @@ export class UiState implements NgxsOnInit {
   }
 
   @Action(MainContentSizeChanged)
-  mainContentSizeChanged(
-    ctx: StateContext<StateModel>,
-    action: MainContentSizeChanged
-  ): void {
+  mainContentSizeChanged(ctx: Context, action: MainContentSizeChanged): void {
     ctx.patchState(action);
   }
 
   @Action(ParseNavigation)
-  parseNavigation(
-    ctx: StateContext<StateModel>,
-    action: ParseNavigation
-  ): void {
+  parseNavigation(ctx: Context, action: ParseNavigation): void {
     ctx.patchState(action);
   }
 
   @Action(SetHeaderInfo)
-  setHeaderInfo(ctx: StateContext<StateModel>, action: SetHeaderInfo): void {
+  setHeaderInfo(ctx: Context, action: SetHeaderInfo): void {
     ctx.patchState(action);
+  }
+
+  @Action(ToggleSidebar)
+  toggleSidebar(ctx: Context): void {
+    ctx.patchState({ isSidebarExpanded: !ctx.getState().isSidebarExpanded });
   }
 }

@@ -14,3 +14,7 @@ export class SetHeaderInfo {
   static readonly type = '[UI] Set Header Info';
   constructor(readonly header: HeaderInformation) {}
 }
+
+export class ToggleSidebar {
+  static readonly type = '[UI] Toggle Sidebar';
+}

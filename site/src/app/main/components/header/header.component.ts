@@ -1,57 +1,29 @@
-import { CommonModule } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faAlignLeft, faX } from '@fortawesome/pro-solid-svg-icons';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
-import { logoutIcon, userIcon } from '@progress/kendo-svg-icons';
-import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { DialogService } from '@wbs/main/services';
-import { AuthState, MembershipState, UiState } from '@wbs/main/states';
-import { ProfileEditorComponent } from '../profile-editor/profile-editor.component';
-import { HeaderProfilePictureComponent } from './header-profile-picture.component';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { menuIcon } from '@progress/kendo-svg-icons';
+import { ToggleSidebar } from '@wbs/main/actions';
+import { UiState } from '@wbs/main/states';
+import { HeaderProfileComponent } from './header-profile/header-profile.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  imports: [
-    CommonModule,
-    FontAwesomeModule,
-    HeaderProfilePictureComponent,
-    NgbDropdownModule,
-    RoleListPipe,
-    RouterModule,
-    SVGIconModule,
-    TranslateModule,
-  ],
-  providers: [DialogService],
+  imports: [ButtonModule, HeaderProfileComponent, NgIf, TranslateModule],
 })
 export class HeaderComponent {
+  readonly isExpanded = toSignal(this.store.select(UiState.isSidebarExpanded));
   readonly info = toSignal(this.store.select(UiState.header));
-  readonly user = toSignal(this.store.select(AuthState.profile));
-  readonly roles = toSignal(this.store.select(MembershipState.roles));
-  readonly faAlignLeft = faAlignLeft;
-  readonly faX = faX;
-  readonly logoutIcon = logoutIcon;
-  readonly userIcon = userIcon;
-  isCollapsed = true;
+  readonly menuIcon = menuIcon;
 
-  constructor(
-    private readonly dialog: DialogService,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly store: Store) {}
 
-  launchProfileEditor() {
-    this.dialog
-      .openDialog(ProfileEditorComponent, {
-        size: 'md',
-      })
-      .subscribe();
+  toggleSidebar() {
+    this.store.dispatch(new ToggleSidebar());
   }
 }
