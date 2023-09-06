@@ -13,18 +13,30 @@ import { Resources } from './resource.service';
 export class ProjectService {
   constructor(private readonly resources: Resources) {}
 
-  filter(projects: Project[] | null | undefined, status: string): Project[] {
+  filterByStatus(
+    projects: Project[] | null | undefined,
+    status: string
+  ): Project[] {
     if (status === PROJECT_VIEW_STATI.ACTIVE)
       return (projects ?? []).filter((x) => x.status !== PROJECT_STATI.CLOSED);
 
     return (projects ?? []).filter((x) => x.status === status);
   }
 
-  getStatus(status: string): string {
+  filterByName(
+    projects: Project[] | null | undefined,
+    text: string
+  ): Project[] {
+    return (projects ?? []).filter((x) =>
+      (x.title ?? '').toLowerCase().includes(text.toLowerCase())
+    );
+  }
+
+  getStatus(status: string | undefined): string {
     return this.resources.get(this.getStatusResource(status));
   }
 
-  getStatusResource(status: string): string {
+  getStatusResource(status: string | undefined): string {
     if (status === PROJECT_VIEW_STATI.ACTIVE) return 'General.Active';
     if (status === PROJECT_VIEW_STATI.APPROVAL)
       return 'Projects.WaitingApproval';

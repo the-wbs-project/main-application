@@ -8,11 +8,12 @@ import {
 
 @Directive({ selector: '[appFillElement]', standalone: true })
 export class FillElementDirective implements AfterViewChecked {
-  private footerHeight = 40;
-  private delayNumber = 0;
   @Input() paddingBottom = 0;
   @Input() changeDelay = 0;
-  private elem: HTMLElement;
+
+  private readonly footerHeight = 40;
+  private readonly elem: HTMLElement;
+  private delayNumber = 0;
 
   constructor(ref: ElementRef) {
     this.elem = ref.nativeElement;
@@ -33,8 +34,6 @@ export class FillElementDirective implements AfterViewChecked {
     setTimeout(() => {
       if (this.delayNumber !== newId) return;
       const pos = this.cumulativeOffset();
-
-      console.log(pos);
 
       this.elem.style.height = `${
         window.innerHeight - pos.top - this.paddingBottom - this.footerHeight

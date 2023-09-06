@@ -5,7 +5,7 @@ import {
   importProvidersFrom,
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { provideRouter } from '@angular/router';
+import { provideRouter, withComponentInputBinding } from '@angular/router';
 import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
@@ -33,7 +33,7 @@ export const appConfig: ApplicationConfig = {
       NgxsRouterPluginModule.forRoot(),
       TranslateModule.forRoot(),
     ]),
-    provideRouter(routes),
+    provideRouter(routes, withComponentInputBinding()),
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,

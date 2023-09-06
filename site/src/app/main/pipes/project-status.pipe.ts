@@ -5,7 +5,7 @@ import { ProjectService } from '@wbs/core/services';
 export class ProjectStatusPipe implements PipeTransform {
   constructor(private readonly service: ProjectService) {}
 
-  transform(status: string): string {
+  transform(status: string | undefined): string {
     return this.service.getStatus(status);
   }
 }

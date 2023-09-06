@@ -1,66 +1,68 @@
 <div class="d-flex mg-t-20 mg-b-16 w-100">
-  <div class="pd-l-20">
-    <button
-      type="button"
-      class="btn btn-icon btn-primary me-1"
-      [routerLink]="['/', owner(), 'projects', 'create']"
-    >
-      <kendo-svg-icon [icon]="plusIcon" />&nbsp;
-      {{ "Projects.CreateProject" | translate }}
-    </button>
-  </div>
-  <div class="flex-grow-1 tx-right pd-r-20">
-    <!--<a kendoButton [routerLink]="['/', 'projects', 'create']">
-    <fa-icon [icon]="faPlus" size="xs" />
-  </a>-->
-    <div *ngIf="status(); let projectStatus" role="group" class="btn-group">
-      <button
-        type="button"
-        *ngFor="let status of stati"
-        class="btn btn-outline-primary btn-sm wd-120"
-        [routerLinkActive]="'active'"
-        [routerLink]="['../', status]"
-      >
-        {{ status | projectStatus }}
-      </button>
-    </div>
-  </div>
-</div>
-<div
-  *ngIf="
-    projects() | projectTypeFilter : type() | projectStatusFilter : status();
-    let projects
-  "
-  class="wd-100p mg-t-20"
->
   <div class="container-fluid">
-    <div class="row">
-      <div *ngIf="projects.length === 0" class="col-12">
-        <div class="card">
-          <div
-            *ngIf="loading(); else noProjects"
-            class="card-body display-flex flex-flow-col flex-align-center justify-content-center"
-            appFillElement
-            [paddingBottom]="30"
+    <div class="row pd-b-20">
+      <div class="col-xl-3 col-lg-3 col-md-5 col-sm-12 mg-t-10">
+        <button
+          type="button"
+          class="btn btn-icon btn-primary mg-r-10"
+          [routerLink]="['/', owner, 'projects', 'create']"
+        >
+          <kendo-svg-icon [icon]="plusIcon" />
+        </button>
+
+        <div ngbDropdown class="d-inline-block">
+          <button
+            type="button"
+            class="btn btn-primary"
+            id="dropdownBasic1"
+            ngbDropdownToggle
           >
-            <kendo-loader
-              type="infinite-spinner"
-              themeColor="primary"
-              size="large"
-            />
-            <h2 class="k-loading-panel-text">
-              {{ "General.Loading" | translate }}...
-            </h2>
+            {{ status | projectStatus }}
+          </button>
+          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
+            <button
+              ngbDropdownItem
+              *ngFor="let status of stati"
+              [routerLinkActive]="'active'"
+              [routerLink]="['../', status]"
+            >
+              {{ status | projectStatus }}
+            </button>
           </div>
-          <ng-template #noProjects>
-            <div class="card-body tx-center pd-y-20">
-              {{ "Projects.NoProjectsFound" | translate }}
-            </div>
-          </ng-template>
         </div>
       </div>
-      <div *ngFor="let project of projects" class="col-lg-3 col-md-4 col-sm-6">
-        <a [routerLink]="['/', owner(), 'projects', 'view', project.id]">
+      <div class="col-xl-9 col-lg-9 col-md-7 col-sm-12 mg-t-10">
+        <input
+          #search
+          type="text"
+          class="form-control w-100"
+          placeholder="Search Projects"
+          (keyup)="force()"
+        />
+      </div>
+    </div>
+    <div
+      class="row"
+      *ngIf="
+        projects()
+          | projectTypeFilter : type
+          | projectStatusFilter : status
+          | projectTextFilter : search.value;
+        let projects
+      "
+    >
+      <div *ngIf="!loading() && projects.length === 0" class="col-12">
+        <div class="card">
+          <div class="card-body tx-center pd-y-20">
+            {{ "Projects.NoProjectsFound" | translate }}
+          </div>
+        </div>
+      </div>
+      <div
+        *ngFor="let project of projects"
+        class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6"
+      >
+        <a [routerLink]="['/', owner, 'projects', 'view', project.id]">
           <div class="card">
             <div class="card-body">
               <div style="min-height: 100px">

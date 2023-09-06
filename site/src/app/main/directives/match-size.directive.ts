@@ -15,7 +15,7 @@ export class MatchSizeDirective implements OnInit {
   }
 
   ngOnInit(): void {
-    timer(0, 250)
+    timer(0, 20)
       .pipe(untilDestroyed(this))
       .subscribe(() => this.setSize());
   }

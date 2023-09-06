@@ -12,6 +12,6 @@ export class ProjectStatusFilterPipe implements PipeTransform {
   ): Project[] | null | undefined {
     if (list == null || list.length === 0 || status == undefined) return list;
 
-    return this.service.filter(list, status);
+    return this.service.filterByStatus(list, status);
   }
 }
