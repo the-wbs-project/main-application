@@ -19,7 +19,7 @@ builder.Configuration.AddAzureAppConfiguration(options =>
         // Load configuration values with no label
         .Select(KeyFilter.Any, LabelFilter.Null)
         // Override with any configuration values specific to current hosting env
-        .Select(KeyFilter.Any, "Dev");
+        .Select(KeyFilter.Any, builder.Configuration["AppConfig:Environment"]);
 });
 //
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
