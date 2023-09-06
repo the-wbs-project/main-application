@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Wbs.Api.Configuration;
@@ -12,6 +13,14 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //
 builder.Services.AddControllers();
+builder.Configuration.AddAzureAppConfiguration(options =>
+{
+    options.Connect(builder.Configuration["AppConfig:ConnectionString"])
+        // Load configuration values with no label
+        .Select(KeyFilter.Any, LabelFilter.Null)
+        // Override with any configuration values specific to current hosting env
+        .Select(KeyFilter.Any, "Dev");
+});
 //
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //
