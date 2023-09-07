@@ -5,11 +5,17 @@
         {{ link.title | translate }}
       </a>
     </li>
-    <li *ngIf="link.children" ngbDropdown class="nav-item" role="presentation">
+    <li
+      *ngIf="link.children"
+      ngbDropdown
+      container="body"
+      class="nav-item"
+      role="presentation"
+    >
       <a
+        ngbDropdownToggle
         class="nav-link pd-y-5 pd-x-20 pointer"
         [class.active]="link.fragment === pageView"
-        ngbDropdownToggle
       >
         {{ link.title | translate }}
       </a>
