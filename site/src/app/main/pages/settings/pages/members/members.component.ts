@@ -33,11 +33,11 @@ import { first } from 'rxjs/operators';
 import { ChangeBreadcrumbs } from '../../actions';
 import { UserActionsComponent } from '../../components/user-actions/user-actions.component';
 import { Breadcrumb } from '../../models';
-import { EditMemberComponent } from './components/edit-member/edit-member.component';
 import { SortArrowComponent } from './components/sort-arrow.component';
 import { TableHelper } from './table-helper.service';
 import { TableProcessPipe } from './table-process.pipe';
 import { SortableDirective } from './table-sorter.directive';
+import { EditMemberComponent } from './components/edit-member/edit-member.component';
 
 const ROLES = [
   {
@@ -82,7 +82,6 @@ const actionMenu: any[] = [
   imports: [
     DropDownButtonModule,
     DropDownListModule,
-    EditMemberComponent,
     FormsModule,
     NgClass,
     NgIf,
@@ -128,16 +127,19 @@ export class MembersComponent implements OnInit {
 
   userActionClicked(member: Member, action: string): void {
     if (action === 'edit') {
-      const ref = this.modalService.open(EditMemberComponent, {
-        size: 'lg',
-        centered: true,
-      });
+      this.dialogService
+        .openDialog<Member>(
+          EditMemberComponent,
+          {
+            size: 'lg',
+          },
+          structuredClone(member)
+        )
+        .subscribe((savedObject) => {
+          if (!savedObject) return;
 
-      ref.componentInstance.member = structuredClone(member);
-
-      ref.closed.subscribe((member) => {
-        console.log(member);
-      });
+          console.log(member);
+        });
     } else if (action === 'remove') {
       this.dialogService
         .confirm('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')

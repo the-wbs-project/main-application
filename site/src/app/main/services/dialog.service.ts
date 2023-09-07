@@ -60,6 +60,6 @@ export class DialogService {
 
     if (data) dialog.componentInstance.setup(data);
 
-    return from(dialog.result);
+    return from(dialog.closed);
   }
 }

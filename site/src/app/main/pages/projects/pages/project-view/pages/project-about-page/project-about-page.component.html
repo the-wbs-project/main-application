@@ -1,6 +1,8 @@
 <ng-template [ngIf]="project()" let-project>
   <div class="px-4 py-2">
-    <h4 class="tx-15 text-uppercase mb-3">Basic Information</h4>
+    <h4 class="tx-15 text-uppercase mb-3">
+      {{ "Projects.BasicInformation" | translate }}
+    </h4>
     <p class="text-muted ms-md-4 ms-0 mb-2">
       <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
         {{ "General.Category" | translate }} :
@@ -63,30 +65,31 @@
     <h4 class="tx-15 text-uppercase mb-3">
       {{ "General.Statistics" | translate }}
     </h4>
-    <div class="profile-cover__info ms-4 ms-auto p-0">
-      <ul class="nav p-0 border-bottom-0 mb-0">
-        <li class="border p-2 br-5 bg-light wd-150 ht-70">
-          <span class="border-0 mb-0 pb-0">
+    <div class="d-flex">
+      <div class="card border p-2 bg-light wd-150 mg-r-20">
+        <div class="tx-center">
+          <span class="d-block tx-36">
             {{ project.phases.length }}
           </span>
           {{ "General.Phases" | translate }}
-        </li>
-        <li class="border p-2 br-5 bg-light wd-150 ht-70">
-          <span class="border-0 mb-0 pb-0">
+        </div>
+      </div>
+      <div class="card border p-2 bg-light wd-150 mg-r-20">
+        <div class="tx-center">
+          <span class="d-block tx-36">
             {{ project.disciplines.length }}
           </span>
           {{ "General.Disciplines" | translate }}
-        </li>
-        <li class="border p-2 br-5 bg-light wd-150 ht-70">
-          <span class="border-0 mb-0 pb-0"> {{ taskCount() }} </span>
+        </div>
+      </div>
+      <div class="card border p-2 bg-light wd-150 mg-r-20">
+        <div class="tx-center">
+          <span class="d-block tx-36">
+            {{ taskCount() }}
+          </span>
           {{ "Projects.TaskCount" | translate }}
-        </li>
-        <!--
-        <li class="border p-2 br-5 bg-light wd-150 ht-70 border-danger">
-          <span class="border-0 mb-0 pb-0"> 0 </span>
-          Cash Flow Tasks
-        </li>-->
-      </ul>
+        </div>
+      </div>
     </div>
   </div>
 </ng-template>
