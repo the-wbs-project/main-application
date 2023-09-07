@@ -271,7 +271,10 @@
       "ProjectUpdated": "Project Updated",
       "DisciplineRemoveConfirm": "You are about to remove a discipline which is currently assicated with {count} task(s).  Are you sure?",
       "PhaseRemoveConfirm": "You are about to remove a phase which has {count} task(s) under it.  Are you sure?",
-      "WaitingApproval": "Waiting For Approval"
+      "WaitingApproval": "Waiting For Approval",
+      "NoDescription": "No Description!",
+      "NoDisciplines": "No Disciplines!",
+      "Fix": "Fix"
     }
   },
   {

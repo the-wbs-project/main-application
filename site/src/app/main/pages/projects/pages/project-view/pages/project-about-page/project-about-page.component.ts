@@ -12,6 +12,7 @@ import { map } from 'rxjs/operators';
 import { ProjectChecklistComponent } from '../../components/project-checklist/project-checklist.component';
 import { RoleTitlePipe } from '../../pipes/role-title.pipe';
 import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
+import { ProjectStatisticComponent } from '../../components/project-statistic.component';
 
 @Component({
   standalone: true,
@@ -23,6 +24,7 @@ import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
     DisciplineIconPipe,
     EditedDateTextPipe,
     ProjectChecklistComponent,
+    ProjectStatisticComponent,
     ProjectStatusPipe,
     RoleTitlePipe,
     SafeHtmlPipe,

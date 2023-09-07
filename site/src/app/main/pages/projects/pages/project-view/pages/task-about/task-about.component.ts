@@ -14,6 +14,7 @@ import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { TasksState } from '../../states';
+import { ProjectStatisticComponent } from '../../components/project-statistic.component';
 
 @Component({
   standalone: true,
@@ -26,6 +27,7 @@ import { TasksState } from '../../states';
     DateTextPipe,
     DisciplineIconPipe,
     FontAwesomeModule,
+    ProjectStatisticComponent,
     RouterModule,
     SafeHtmlPipe,
     TranslateModule,

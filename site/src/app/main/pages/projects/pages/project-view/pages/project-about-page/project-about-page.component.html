@@ -66,30 +66,18 @@
       {{ "General.Statistics" | translate }}
     </h4>
     <div class="d-flex">
-      <div class="card border p-2 bg-light wd-150 mg-r-20">
-        <div class="tx-center">
-          <span class="d-block tx-36">
-            {{ project.phases.length }}
-          </span>
-          {{ "General.Phases" | translate }}
-        </div>
-      </div>
-      <div class="card border p-2 bg-light wd-150 mg-r-20">
-        <div class="tx-center">
-          <span class="d-block tx-36">
-            {{ project.disciplines.length }}
-          </span>
-          {{ "General.Disciplines" | translate }}
-        </div>
-      </div>
-      <div class="card border p-2 bg-light wd-150 mg-r-20">
-        <div class="tx-center">
-          <span class="d-block tx-36">
-            {{ taskCount() }}
-          </span>
-          {{ "Projects.TaskCount" | translate }}
-        </div>
-      </div>
+      <wbs-project-statistic
+        [stat]="project.phases.length"
+        [label]="'General.Phases' | translate"
+      />
+      <wbs-project-statistic
+        [stat]="project.disciplines.length"
+        [label]="'General.Disciplines' | translate"
+      />
+      <wbs-project-statistic
+        [stat]="taskCount()"
+        [label]="'Projects.TaskCount' | translate"
+      />
     </div>
   </div>
 </ng-template>
