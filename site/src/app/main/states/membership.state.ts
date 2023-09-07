@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Organization, Project } from '@wbs/core/models';
-import { sorter } from '@wbs/core/services';
+import { Messages, sorter } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -10,8 +10,8 @@ import {
   InitiateOrganizations,
   ProjectUpdated,
   RemoveMemberFromOrganization,
+  UpdateMemberRoles,
 } from '../actions';
-import { AuthState } from './auth.state';
 import { UserService } from '../services';
 
 interface StateModel {
@@ -24,6 +24,8 @@ interface StateModel {
   members?: Member[];
 }
 
+declare type Context = StateContext<StateModel>;
+
 @Injectable()
 @State<StateModel>({
   name: 'membership',
@@ -34,6 +36,7 @@ interface StateModel {
 export class MembershipState {
   constructor(
     private readonly data: DataServiceFactory,
+    private readonly messages: Messages,
     private readonly store: Store,
     private readonly userService: UserService
   ) {}
@@ -73,13 +76,9 @@ export class MembershipState {
     return state.members;
   }
 
-  private get userId(): string {
-    return this.store.selectSnapshot(AuthState.userId)!;
-  }
-
   @Action(InitiateOrganizations)
   initiateOrganizations(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { orgRoles, organizations }: InitiateOrganizations
   ): Observable<any> {
     ctx.patchState({ loading: true, list: organizations, orgRoles });
@@ -89,7 +88,7 @@ export class MembershipState {
 
   @Action(ChangeOrganization)
   changeOrganization(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { organization }: ChangeOrganization
   ): Observable<void> {
     ctx.patchState({
@@ -120,10 +119,7 @@ export class MembershipState {
   }
 
   @Action(ProjectUpdated)
-  projectUpdated(
-    ctx: StateContext<StateModel>,
-    { project }: ProjectUpdated
-  ): void {
+  projectUpdated(ctx: Context, { project }: ProjectUpdated): void {
     const state = ctx.getState();
     const projects = [...(state.projects ?? [])];
     const index = projects.findIndex((x) => x.id === project.id);
@@ -137,7 +133,7 @@ export class MembershipState {
 
   @Action(RemoveMemberFromOrganization)
   removeMember(
-    ctx: StateContext<StateModel>,
+    ctx: Context,
     { memberId }: RemoveMemberFromOrganization
   ): Observable<void> {
     const state = ctx.getState();
@@ -154,5 +150,54 @@ export class MembershipState {
           ctx.patchState({ members });
         })
       );
+  }
+
+  @Action(UpdateMemberRoles)
+  updateMemberRoles(
+    ctx: Context,
+    { memberId, roles }: UpdateMemberRoles
+  ): Observable<any> | void {
+    const state = ctx.getState();
+    const members = state.members ?? [];
+    const index = members.findIndex((x) => x.id === memberId);
+
+    if (index === -1) return;
+
+    const orgId = state.organization!.id;
+    const member = members[index];
+
+    const toRemove = member.roles.filter((r) => !roles.includes(r));
+    const toAdd = roles.filter((r) => !member.roles.includes(r));
+    const calls: Observable<void>[] = [];
+
+    if (toRemove.length > 0)
+      calls.push(
+        this.data.memberships.removeUserOrganizationalRolesAsync(
+          memberId,
+          orgId,
+          toRemove
+        )
+      );
+
+    if (toAdd.length > 0)
+      calls.push(
+        this.data.memberships.addUserOrganizationalRolesAsync(
+          memberId,
+          orgId,
+          toAdd
+        )
+      );
+
+    if (calls.length === 0) return;
+
+    return forkJoin(calls).pipe(
+      tap(() => {
+        member.roles = roles;
+        members[index] = member;
+        ctx.patchState({ members });
+      }),
+      tap(() => this.messages.success('OrgSettings.MemberRolesUpdated'))
+    );
+    //
   }
 }

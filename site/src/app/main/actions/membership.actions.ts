@@ -17,3 +17,8 @@ export class RemoveMemberFromOrganization {
   static readonly type = '[Membership] Remove Member';
   constructor(readonly memberId: string) {}
 }
+
+export class UpdateMemberRoles {
+  static readonly type = '[Membership] Update Member Roles';
+  constructor(readonly memberId: string, readonly roles: string[]) {}
+}

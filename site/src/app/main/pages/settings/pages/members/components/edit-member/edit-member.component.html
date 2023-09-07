@@ -4,12 +4,65 @@
     type="button"
     class="btn-close"
     aria-label="Close"
-    (click)="modal.dismiss()"
+    (click)="modal.dismiss('')"
   ></button>
 </div>
-<div class="modal-body">Oh hi {{ member | json }}</div>
+<div class="modal-body">
+  <div class="container-fluid" *ngIf="member">
+    <div class="row mb-3">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">
+        {{ "General.Name" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <input
+          disabled
+          type="text"
+          class="form-control"
+          [value]="member.name"
+        />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">
+        {{ "General.Email" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <input
+          disabled
+          type="text"
+          class="form-control"
+          [value]="member.email"
+        />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">
+        Roles
+      </label>
+      <div class="col-sm-10">
+        <div class="btn-group">
+          <button
+            *ngFor="let role of roles"
+            class="btn"
+            [ngClass]="{
+              'btn-primary': member.roles.includes(role),
+              'btn-outline-primary': !member.roles.includes(role),
+            }"
+            (click)="toggleRole(role)"
+          >
+            {{ [role] | roleList : true }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="modal-footer">
-  <button type="button" class="btn btn-outline-dark" (click)="modal.dismiss()">
+  <button
+    type="button"
+    class="btn btn-outline-dark"
+    (click)="modal.dismiss('')"
+  >
     Close
   </button>
   <button type="button" class="btn btn-primary" (click)="modal.close(member)">
