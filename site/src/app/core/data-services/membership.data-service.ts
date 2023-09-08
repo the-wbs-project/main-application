@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Member, Organization } from '../models';
+import { Invite, Member } from '../models';
 
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
@@ -11,6 +11,10 @@ export class MembershipDataService {
 
   getMembershipUsersAsync(organization: string): Observable<Member[]> {
     return this.http.get<Member[]>(`api/organizations/${organization}/members`);
+  }
+
+  getInvitesAsync(organization: string): Observable<Invite[]> {
+    return this.http.get<Invite[]>(`api/organizations/${organization}/invites`);
   }
 
   removeUserFromOrganizationAsync(
@@ -36,7 +40,7 @@ export class MembershipDataService {
     user: string,
     roles: string[]
   ): Observable<void> {
-    return this.http.post<void>(
+    return this.http.put<void>(
       `api/organizations/${organization}/members/${user}/roles`,
       roles
     );

@@ -50,6 +50,8 @@ async function execute(ctx: Context, next: any, key: string, expirationInSeconds
 
   await next();
 
+  if (ctx.res.status !== 200) return;
+
   const clone = ctx.res.clone();
   const text = await clone.text();
 

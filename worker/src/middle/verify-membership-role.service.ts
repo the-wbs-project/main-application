@@ -1,4 +1,5 @@
 import { Context } from '../config';
+import { ROLES } from '../models';
 
 export function verifyMembershipRole(role: string): (ctx: Context, next: any) => Promise<Response | void> {
   return async (ctx: Context, next: any): Promise<Response | void> => {
@@ -10,6 +11,9 @@ export function verifyMembershipRole(role: string): (ctx: Context, next: any) =>
 
     if (!toCheck) return ctx.text('Missing Parameters', 500);
 
+    console.log(toCheck);
+    console.log(ctx.get('idToken').orgRoles);
+
     const roles = ctx.get('idToken').orgRoles?.[toCheck] ?? [];
 
     if (!roles || !roles.includes(role)) return ctx.text('Unauthorized', 403);
@@ -19,5 +23,5 @@ export function verifyMembershipRole(role: string): (ctx: Context, next: any) =>
 }
 
 export function verifyAdminAsync(): (ctx: Context, next: any) => Promise<Response | void> {
-  return verifyMembershipRole('admin');
+  return verifyMembershipRole(ROLES.ADMIN);
 }

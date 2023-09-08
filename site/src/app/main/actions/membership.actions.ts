@@ -22,3 +22,7 @@ export class UpdateMemberRoles {
   static readonly type = '[Membership] Update Member Roles';
   constructor(readonly memberId: string, readonly roles: string[]) {}
 }
+
+export class LoadInvitations {
+  static readonly type = '[Membership] Load Invitations';
+}

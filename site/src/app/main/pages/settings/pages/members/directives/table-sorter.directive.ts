@@ -1,6 +1,6 @@
 import { Directive, Input } from '@angular/core';
 import { State } from '@progress/kendo-data-query';
-import { TableHelper } from './table-helper.service';
+import { TableHelper } from '../services';
 
 @Directive({
   selector: 'th[sortable]',

@@ -46,6 +46,7 @@
       "Upload": "Upload",
       "Submit": "Submit",
       "Users": "Users",
+      "Members": "Members",
       "Back": "Back",
       "Continue": "Continue",
       "AssignedToMe": "Assigned To Me",
@@ -405,11 +406,13 @@
     "values": {
       "Title": "Organization Settings",
       "General": "General",
+      "Invitations": "Invitations",
       "GeneralDescription": "Name, contact info, and more",
       "Users": "Users",
       "AllRoles": "All Roles",
       "UsersDescription": "Invite and manage existing users",
-      "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?"
+      "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?",
+      "MemberRolesUpdated": "The member's roles have been updated."
     }
   },
   {

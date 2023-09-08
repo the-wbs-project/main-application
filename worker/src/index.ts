@@ -64,9 +64,24 @@ app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), OriginService.pass
 //app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
 
 app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, OriginService.pass);
-//app.put('api/organizations/:organization/members/:user/roles', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
-//app.delete('api/organizations/:organization/members/:userId', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
-//app.delete('api/organizations/:organization/members/:user/roles', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
+app.get('api/organizations/:organization/invites', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
+app.put('api/organizations/:organization/invites', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
+app.put(
+  'api/organizations/:organization/members/:user/roles',
+  verifyJwt,
+  verifyMembership,
+  verifyAdminAsync(),
+  kvPurge('ORGS|:organization|MEMBERS'),
+  OriginService.pass,
+);
+app.delete(
+  'api/organizations/:organization/members/:user/roles',
+  verifyJwt,
+  verifyMembership,
+  verifyAdminAsync(),
+  kvPurge('ORGS|:organization|MEMBERS'),
+  OriginService.pass,
+);
 
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 

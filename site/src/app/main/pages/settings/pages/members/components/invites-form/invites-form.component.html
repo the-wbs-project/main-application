@@ -1,0 +1,60 @@
+<div class="modal-header">
+  <h4 class="modal-title">Invite Users</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modal.dismiss('')"
+  ></button>
+</div>
+<div class="modal-body">
+  <div class="container-fluid">
+    <div class="row mb-3">
+      <label for="emails" class="col-sm-2 col-form-label">
+        {{ "General.Name" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <input #emails type="text" class="form-control" />
+      </div>
+    </div>
+    <div class="row mb-3">
+      <label for="inputPassword3" class="col-sm-2 col-form-label">
+        {{ "General.Roles" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <div class="btn-group">
+          <button
+            *ngFor="let role of roleList"
+            class="btn"
+            [ngClass]="{
+              'btn-primary': roles.includes(role),
+              'btn-outline-primary': !roles.includes(role),
+            }"
+            (click)="toggleRole(role)"
+          >
+            {{ [role] | roleList : true }}
+          </button>
+        </div>
+      </div>
+    </div>
+    <div *ngIf="errors.length > 0" class="row mb-3">
+      <ul>
+        <li *ngFor="let error of errors">
+          {{ error.email }}:&nbsp; {{ error.error | translate }}
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div class="modal-footer">
+  <button
+    type="button"
+    class="btn btn-outline-dark"
+    (click)="modal.dismiss('')"
+  >
+    {{ "General.Close" | translate }}
+  </button>
+  <button type="button" class="btn btn-primary" (click)="submit(emails.value)">
+    {{ "General.Invite" | translate }}
+  </button>
+</div>

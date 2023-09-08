@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { orgResolve } from './children.resolvers';
+import { verifyInvitationsLoaded } from './children.guards';
 
 export const routes: Routes = [
   {
@@ -24,6 +25,21 @@ export const routes: Routes = [
     path: 'members',
     loadComponent: () =>
       import('./members/members.component').then((m) => m.MembersComponent),
+    data: {
+      view: 'members',
+    },
+    resolve: {
+      org: orgResolve,
+    },
+  },
+  {
+    path: 'members/invitations',
+    loadComponent: () =>
+      import('./members/members.component').then((m) => m.MembersComponent),
+    canActivate: [verifyInvitationsLoaded],
+    data: {
+      view: 'invitations',
+    },
     resolve: {
       org: orgResolve,
     },

@@ -13,13 +13,15 @@ public class OrganizationsController : ControllerBase
 {
     private readonly TelemetryClient telemetry;
     private readonly ILogger<OrganizationsController> logger;
-    private readonly Auth0Service auth0Service;
+    private readonly OrganizationDataService dataService;
+    private readonly InviteDataService inviteDataService;
 
-    public OrganizationsController(TelemetryClient telemetry, ILogger<OrganizationsController> logger, Auth0Service auth0Service)
+    public OrganizationsController(TelemetryClient telemetry, ILogger<OrganizationsController> logger, OrganizationDataService dataService, InviteDataService inviteDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
-        this.auth0Service = auth0Service;
+        this.dataService = dataService;
+        this.inviteDataService = inviteDataService;
     }
 
     [Authorize]
@@ -28,14 +30,16 @@ public class OrganizationsController : ControllerBase
     {
         try
         {
-            var users = await auth0Service.GetOrganizationalUsersAsync(organization);
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            var users = await dataService.GetOrganizationalUsersAsync(orgId);
             var members = new List<Member>();
             var roles = new List<IEnumerable<string>>();
             var gets = new List<Task<IEnumerable<string>>>();
 
             foreach (var user in users)
             {
-                gets.Add(auth0Service.GetUserOrganizationalRolesAsync(organization, user.UserId));
+                gets.Add(dataService.GetUserOrganizationalRolesAsync(orgId, user.UserId));
 
                 if (gets.Count == 10)
                 {
@@ -73,7 +77,9 @@ public class OrganizationsController : ControllerBase
     {
         try
         {
-            return Ok(await auth0Service.GetUserOrganizationalRolesAsync(organization, user));
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            return Ok(await dataService.GetUserOrganizationalRolesAsync(orgId, user));
         }
         catch (Exception ex)
         {
@@ -90,7 +96,9 @@ public class OrganizationsController : ControllerBase
     {
         try
         {
-            await auth0Service.RemoveUserFromOrganizationAsync(organization, user);
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            await dataService.RemoveUserFromOrganizationAsync(orgId, user);
 
             return Ok();
         }
@@ -109,7 +117,9 @@ public class OrganizationsController : ControllerBase
     {
         try
         {
-            await auth0Service.AddUserOrganizationalRolesAsync(organization, user, roles);
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            await dataService.AddUserOrganizationalRolesAsync(orgId, user, roles);
 
             return Ok();
         }
@@ -128,9 +138,50 @@ public class OrganizationsController : ControllerBase
     {
         try
         {
-            await auth0Service.RemoveUserOrganizationalRolesAsync(organization, user, roles);
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            await dataService.RemoveUserOrganizationalRolesAsync(orgId, user, roles);
 
             return Ok();
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{organization}/invites")]
+    public async Task<IActionResult> SendInviteAsync(string organization)
+    {
+        try
+        {
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            return Ok(await inviteDataService.GetPageAsync(orgId));
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{organization}/invites")]
+    [IgnoreAntiforgeryToken(Order = 1000)]
+    public async Task<IActionResult> SendInviteAsync(string organization, [FromBody] InviteBody invite)
+    {
+        try
+        {
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            await inviteDataService.SendAsync(orgId, invite);
+
+            return NoContent();
         }
         catch (Exception ex)
         {

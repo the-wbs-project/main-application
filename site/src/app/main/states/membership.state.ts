@@ -1,13 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member, Organization, Project } from '@wbs/core/models';
+import { Invite, Member, Organization, Project } from '@wbs/core/models';
 import { Messages, sorter } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   ChangeOrganization,
   InitiateOrganizations,
+  LoadInvitations,
   ProjectUpdated,
   RemoveMemberFromOrganization,
   UpdateMemberRoles,
@@ -15,6 +16,8 @@ import {
 import { UserService } from '../services';
 
 interface StateModel {
+  invitations?: Invite[];
+  loadingInvites: boolean;
   list?: Organization[];
   loading: boolean;
   organization?: Organization;
@@ -31,19 +34,19 @@ declare type Context = StateContext<StateModel>;
   name: 'membership',
   defaults: {
     loading: true,
+    loadingInvites: false,
   },
 })
 export class MembershipState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messages: Messages,
-    private readonly store: Store,
     private readonly userService: UserService
   ) {}
 
   @Selector()
-  static id(state: StateModel): string | undefined {
-    return state.organization?.id;
+  static invitations(state: StateModel): Invite[] | undefined {
+    return state.invitations;
   }
 
   @Selector()
@@ -107,7 +110,7 @@ export class MembershipState {
       }),
       tap(() => ctx.patchState({ loading: false })),
       switchMap(() =>
-        this.data.memberships.getMembershipUsersAsync(organization.id)
+        this.data.memberships.getMembershipUsersAsync(organization.name)
       ),
       map((members) => {
         ctx.patchState({
@@ -115,6 +118,24 @@ export class MembershipState {
         });
         this.userService.addUsers(members);
       })
+    );
+  }
+
+  @Action(LoadInvitations)
+  loadInvitations(ctx: Context): Observable<any> | void {
+    const state = ctx.getState();
+
+    if (state.invitations) return;
+
+    ctx.patchState({ loadingInvites: true });
+
+    return this.data.memberships.getInvitesAsync(state.organization!.name).pipe(
+      map((invitations) =>
+        ctx.patchState({
+          invitations: [...(state.invitations ?? []), ...invitations],
+          loadingInvites: false,
+        })
+      )
     );
   }
 
@@ -139,7 +160,7 @@ export class MembershipState {
     const state = ctx.getState();
 
     return this.data.memberships
-      .removeUserFromOrganizationAsync(state.organization!.id, memberId)
+      .removeUserFromOrganizationAsync(state.organization!.name, memberId)
       .pipe(
         tap(() => {
           const members = [...(state.members ?? [])];
@@ -163,7 +184,7 @@ export class MembershipState {
 
     if (index === -1) return;
 
-    const orgId = state.organization!.id;
+    const orgId = state.organization!.name;
     const member = members[index];
 
     const toRemove = member.roles.filter((r) => !roles.includes(r));
@@ -173,8 +194,8 @@ export class MembershipState {
     if (toRemove.length > 0)
       calls.push(
         this.data.memberships.removeUserOrganizationalRolesAsync(
-          memberId,
           orgId,
+          memberId,
           toRemove
         )
       );
@@ -182,8 +203,8 @@ export class MembershipState {
     if (toAdd.length > 0)
       calls.push(
         this.data.memberships.addUserOrganizationalRolesAsync(
-          memberId,
           orgId,
+          memberId,
           toAdd
         )
       );
@@ -198,6 +219,5 @@ export class MembershipState {
       }),
       tap(() => this.messages.success('OrgSettings.MemberRolesUpdated'))
     );
-    //
   }
 }

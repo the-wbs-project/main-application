@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Auth0.ManagementApi.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
@@ -46,12 +47,15 @@ builder.Services.AddSingleton<AppConfig>();
 //
 builder.Services.AddSingleton<ActivityDataService>();
 builder.Services.AddSingleton<ChecklistDataService>();
+builder.Services.AddSingleton<InviteDataService>();
 builder.Services.AddSingleton<ListDataService>();
+builder.Services.AddSingleton<OrganizationDataService>();
 builder.Services.AddSingleton<ProjectDataService>();
 builder.Services.AddSingleton<ProjectNodeDataService>();
 builder.Services.AddSingleton<ProjectSnapshotDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
 builder.Services.AddSingleton<Storage>();
+builder.Services.AddSingleton<UserDataService>();
 //
 //  Importers and Exporters
 //
@@ -59,7 +63,6 @@ builder.Services.AddSingleton<ExcelFileExporter>();
 builder.Services.AddSingleton<ExcelFileImporter>();
 builder.Services.AddSingleton<ProjectFileImporter>();
 
-builder.Services.AddSingleton<Auth0Service>();
 
 var app = builder.Build();
 

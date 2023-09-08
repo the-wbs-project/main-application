@@ -1,6 +1,6 @@
 import { Pipe } from '@angular/core';
-import { TableHelper } from './table-helper.service';
 import { State } from '@progress/kendo-data-query';
+import { TableHelper } from '../services';
 
 @Pipe({ name: 'tableProcess', pure: false, standalone: true })
 export class TableProcessPipe {

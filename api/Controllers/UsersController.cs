@@ -1,4 +1,3 @@
-using Auth0.ManagementApi.Models;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -13,13 +12,13 @@ public class UsersController : ControllerBase
 {
     private readonly TelemetryClient telemetry;
     private readonly ILogger<UsersController> logger;
-    private readonly Auth0Service auth0Service;
+    private readonly UserDataService dataService;
 
-    public UsersController(TelemetryClient telemetry, ILogger<UsersController> logger, Auth0Service auth0Service)
+    public UsersController(TelemetryClient telemetry, ILogger<UsersController> logger, UserDataService dataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
-        this.auth0Service = auth0Service;
+        this.dataService = dataService;
     }
 
     [Authorize]
@@ -28,7 +27,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var obj = await auth0Service.GetUserAsync(user);
+            var obj = await dataService.GetUserAsync(user);
 
             return Ok(new UserLite
             {
@@ -51,9 +50,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var roles = await auth0Service.GetUserSiteRolesAsync(user);
-
-            return Ok(roles);
+            return Ok(await dataService.GetRolesAsync(user));
         }
         catch (Exception e)
         {
@@ -68,7 +65,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            return Ok(await auth0Service.GetUserOrganizationsAsync(user));
+            return Ok(await dataService.GetUserOrganizationsAsync(user));
         }
         catch (Exception ex)
         {
@@ -87,7 +84,7 @@ public class UsersController : ControllerBase
             if (userObject.Id != user)
                 return BadRequest();
 
-            await auth0Service.UpdateProfileAsync(userObject);
+            await dataService.UpdateProfileAsync(userObject);
 
             return NoContent();
         }

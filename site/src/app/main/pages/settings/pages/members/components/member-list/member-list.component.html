@@ -1,0 +1,45 @@
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" class="wd-40">&nbsp;</th>
+      <th scope="col" class="pointer" [sortable]="'name'" [state]="state()">
+        {{ "General.Name" | translate }} &nbsp;
+        <wbs-sort-arrow [state]="state()" field="name" />
+      </th>
+      <th
+        scope="col"
+        class="pointer d-md-none d-lg-table-cell"
+        [sortable]="'email'"
+        [state]="state()"
+      >
+        {{ "General.Email" | translate }} &nbsp;
+        <wbs-sort-arrow [state]="state()" field="email" />
+      </th>
+      <th scope="col">{{ "General.Roles" | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let member of members | tableProcess : state()">
+      <td>
+        <kendo-dropdownbutton
+          fillMode="link"
+          size="small"
+          buttonClass="tx-8 pd-0-f"
+          [svgIcon]="gearIcon"
+          [data]="menu"
+          (itemClick)="userActionClicked(member, $event.action)"
+        >
+          <ng-template kendoDropDownButtonItemTemplate let-dataItem>
+            <div class="pd-y-2">
+              <kendo-svg-icon [icon]="dataItem.svgIcon" />
+              <span> {{ dataItem.text | translate }} </span>
+            </div>
+          </ng-template>
+        </kendo-dropdownbutton>
+      </td>
+      <td>{{ member.name }}</td>
+      <td class="d-md-none d-lg-table-cell">{{ member.email }}</td>
+      <td>{{ member.roles | roleList : true }}</td>
+    </tr>
+  </tbody>
+</table>

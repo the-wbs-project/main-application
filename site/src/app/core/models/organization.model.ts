@@ -1,5 +1,5 @@
 export interface Organization {
-  id: string;
+  //id: string;
   display_name: string;
   name: string;
   branding: {
