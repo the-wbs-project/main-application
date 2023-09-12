@@ -11,36 +11,48 @@ import {
 export class DateTextPipe implements PipeTransform {
   constructor(private readonly resources: Resources) {}
 
-  transform(date: number | Date | null | undefined): string {
+  transform(
+    date: number | Date | null | undefined,
+    isCountdown: boolean = false
+  ): string {
     if (date == null) return '';
 
-    const last = new Date(date);
-    const now = new Date();
+    const left = isCountdown ? new Date(date) : new Date();
+    const right = isCountdown ? new Date() : new Date(date);
+
+    console.log(left);
+    console.log(right);
+    console.log(isCountdown);
 
     let resource: string | undefined;
     let num: number | undefined;
-    let minutes = differenceInMinutes(now, last);
+    let minutes = differenceInMinutes(left, right);
 
     if (minutes === 0) minutes = 1;
 
     if (minutes < 60) {
-      resource = minutes === 1 ? 'General.MinuteAgo' : 'General.MinutesAgo';
+      resource =
+        'General.Minute' +
+        (minutes === 1 ? '' : 's') +
+        (isCountdown ? '' : 'Ago');
+
       num = minutes;
     }
     //
     //  If today, show hours ago
     //
-    else if (isSameDay(now, last)) {
-      num = differenceInHours(now, last);
-      resource = num === 1 ? 'General.HourAgo' : 'General.HoursAgo';
+    else if (isSameDay(left, right)) {
+      num = differenceInHours(left, right);
+      resource =
+        'General.Hour' + (num === 1 ? '' : 's') + (isCountdown ? '' : 'Ago');
     } else {
-      num = differenceInCalendarDays(now, last);
+      num = differenceInCalendarDays(left, right);
 
       if (num === 1) {
-        resource = 'General.Yesterday';
+        resource = isCountdown ? 'General.Tomorrow' : 'General.Yesterday';
         num = 0;
       } else {
-        resource = 'General.DaysAgo';
+        resource = isCountdown ? 'General.Days' : 'General.DaysAgo';
       }
     }
     return resource

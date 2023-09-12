@@ -35,7 +35,6 @@ declare type Context = StateContext<StateModel>;
 export class RolesState implements NgxsOnInit {
   constructor(
     private readonly auth: AuthService,
-    private readonly resources: Resources,
     private readonly store: Store
   ) {}
 
@@ -91,19 +90,19 @@ export class RolesState implements NgxsOnInit {
       const sme = definitions.find((x) => x.name === ROLES.SME)!;
       const admin = definitions.find((x) => x.name === ROLES.ADMIN)!;
 
-      admin.description = this.resources.get('General.Admin-Full');
-      admin.abbreviation = this.resources.get('General.Admin');
+      admin.description = 'General.Admin-Full';
+      admin.abbreviation = 'General.Admin';
 
-      approver.description = this.resources.get('General.Approver');
-      approver.abbreviation = this.resources.get('General.Approver');
+      approver.description = 'General.Approver';
+      approver.abbreviation = 'General.Approver';
       approver.icon = ROLE_ICONS.approver;
 
-      pm.description = this.resources.get('General.PM-Full');
-      pm.abbreviation = this.resources.get('General.PM');
+      pm.description = 'General.PM-Full';
+      pm.abbreviation = 'General.PM';
       pm.icon = ROLE_ICONS.pm;
 
-      sme.description = this.resources.get('General.SME-Full');
-      sme.abbreviation = this.resources.get('General.SME');
+      sme.description = 'General.SME-Full';
+      sme.abbreviation = 'General.SME';
       sme.icon = ROLE_ICONS.sme;
 
       ctx.patchState({

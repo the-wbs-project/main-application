@@ -13,6 +13,7 @@ declare type ResourceType = Record<string, Record<string, string>>;
 
 @Injectable({ providedIn: 'root' })
 export class Resources extends MissingTranslationHandler {
+  private readonly cache = new Map<string, string>();
   private readonly culture = 'en';
   private readonly redeemed: string[] = [];
   private resources: ResourceType = {};
@@ -39,7 +40,11 @@ export class Resources extends MissingTranslationHandler {
   get(resource: string, defaultValue?: string): string {
     if (resource == null) return 'EMPTY';
 
+    if (this.cache.has(resource)) return this.cache.get(resource)!;
+
     let value = this.getExact(resource);
+
+    if (value) this.cache.set(resource, value);
 
     return value != null
       ? value

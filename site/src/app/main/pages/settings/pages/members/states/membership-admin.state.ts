@@ -9,6 +9,7 @@ import { AuthState, MembershipState } from '@wbs/main/states';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
+  CancelInvite,
   LoadInvitations,
   RemoveMemberFromOrganization,
   SendInvites,
@@ -152,6 +153,23 @@ export class MembershipAdminState extends MembershipState {
 
         ctx.patchState({
           invitations: [...invites, ...(state.invitations ?? [])],
+        });
+      })
+    );
+  }
+
+  @Action(CancelInvite)
+  cancelInvite(ctx: Context, { inviteId }: CancelInvite): Observable<void> {
+    return this.data.memberships.cancelInviteAsync(this.org, inviteId).pipe(
+      tap(() => this.messages.success('OrgSettings.InviteCancelled')),
+      tap(() => {
+        const invites = ctx.getState().invitations!;
+        const index = invites.findIndex((x) => x.id === inviteId);
+
+        if (index > -1) invites.splice(index, 1);
+
+        ctx.patchState({
+          invitations: [...invites],
         });
       })
     );

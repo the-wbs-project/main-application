@@ -53,7 +53,6 @@ public class ListsController : ControllerBase
     }
 
     [HttpDelete("{type}/{id}")]
-    [IgnoreAntiforgeryToken(Order = 1001)]
     public async Task<IActionResult> Delete(string type, string id)
     {
         try

@@ -1,11 +1,14 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { sorter } from '@wbs/core/services';
+import { Resources, sorter } from '@wbs/core/services';
 import { RolesState } from '../states';
 
 @Pipe({ name: 'roleList', standalone: true })
 export class RoleListPipe implements PipeTransform {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly resources: Resources,
+    private readonly store: Store
+  ) {}
 
   transform(
     roles: string[] | undefined | null,
@@ -24,7 +27,9 @@ export class RoleListPipe implements PipeTransform {
       if (!definition) continue;
 
       list.push(
-        useAbbreviations ? definition.abbreviation : definition.description
+        this.resources.get(
+          useAbbreviations ? definition.abbreviation : definition.description
+        )
       );
     }
     return list.sort((a, b) => sorter(a, b)).join(', ');

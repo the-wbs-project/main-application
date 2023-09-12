@@ -61,7 +61,9 @@ export class ProjectService {
       .selectSnapshot(RolesState.definitions)!
       .find((x) => x.id === role)!;
 
-    return useAbbreviations ? definition.abbreviation : definition.description;
+    return this.resources.get(
+      useAbbreviations ? definition.abbreviation : definition.description
+    );
   }
 
   createTask(

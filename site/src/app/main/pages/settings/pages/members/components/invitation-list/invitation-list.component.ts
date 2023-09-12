@@ -23,6 +23,9 @@ import { SortableDirective } from '../../directives/table-sorter.directive';
 import { TableProcessPipe } from '../../pipes/table-process.pipe';
 import { TableHelper } from '../../services';
 import { SortArrowComponent } from '../sort-arrow.component';
+import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
+import { first } from 'rxjs';
+import { CancelInvite } from '../../actions';
 
 @Component({
   standalone: true,
@@ -31,6 +34,7 @@ import { SortArrowComponent } from '../sort-arrow.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableHelper],
   imports: [
+    DateTextPipe,
     DropDownButtonModule,
     NgClass,
     NgFor,
@@ -59,9 +63,9 @@ export class InvitationListComponent implements OnChanges {
       action: 'edit',
     },
     {
-      text: 'General.Remove',
+      text: 'OrgSettings.CancelInvite',
       svgIcon: xIcon,
-      action: 'remove',
+      action: 'cancel',
     },
   ];
 
@@ -74,7 +78,7 @@ export class InvitationListComponent implements OnChanges {
     this.updateState();
   }
 
-  userActionClicked(member: Member, action: string): void {
+  userActionClicked(invite: Invite, action: string): void {
     /* if (action === 'edit') {
       this.dialogService
         .openDialog<Member>(
@@ -91,16 +95,16 @@ export class InvitationListComponent implements OnChanges {
             new UpdateMemberRoles(changedMember.id, changedMember.roles)
           );
         });
-    } else if (action === 'remove') {
+    } else */ if (action === 'cancel') {
       this.dialogService
-        .confirm('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
+        .confirm('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
         .pipe(first())
         .subscribe((answer) => {
           if (answer) {
-            this.store.dispatch(new RemoveMemberFromOrganization(member.id));
+            this.store.dispatch(new CancelInvite(invite.id));
           }
         });
-    }*/
+    }
   }
 
   updateState(): void {

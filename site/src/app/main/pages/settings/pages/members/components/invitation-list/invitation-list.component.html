@@ -3,7 +3,7 @@
     <tr>
       <th scope="col" class="wd-40">&nbsp;</th>
       <th scope="col" class="pointer" [sortable]="'invitee'" [state]="state()">
-        {{ "General.Email" | translate }} &nbsp;
+        {{ "OrgSettings.Invitee" | translate }} &nbsp;
         <wbs-sort-arrow [state]="state()" field="invitee" />
       </th>
       <th
@@ -12,7 +12,7 @@
         [sortable]="'inviter'"
         [state]="state()"
       >
-        {{ "General.InvitedBy" | translate }} &nbsp;
+        {{ "OrgSettings.Inviter" | translate }} &nbsp;
         <wbs-sort-arrow [state]="state()" field="inviter" />
       </th>
 
@@ -22,7 +22,7 @@
         [sortable]="'createdAt'"
         [state]="state()"
       >
-        {{ "General.Created" | translate }} &nbsp;
+        {{ "OrgSettings.TimeSent" | translate }} &nbsp;
         <wbs-sort-arrow [state]="state()" field="createdAt" />
       </th>
 
@@ -32,7 +32,7 @@
         [sortable]="'expiredAt'"
         [state]="state()"
       >
-        {{ "General.Expires" | translate }} &nbsp;
+        {{ "OrgSettings.TimeTilExpires" | translate }} &nbsp;
         <wbs-sort-arrow [state]="state()" field="expiredAt" />
       </th>
 
@@ -40,7 +40,7 @@
     </tr>
   </thead>
   <tbody>
-    <!--<tr *ngFor="let member of members | tableProcess : state()">
+    <tr *ngFor="let invite of invites | tableProcess : state()">
       <td>
         <kendo-dropdownbutton
           fillMode="link"
@@ -48,7 +48,7 @@
           buttonClass="tx-8 pd-0-f"
           [svgIcon]="gearIcon"
           [data]="menu"
-          (itemClick)="userActionClicked(member, $event.action)"
+          (itemClick)="userActionClicked(invite, $event.action)"
         >
           <ng-template kendoDropDownButtonItemTemplate let-dataItem>
             <div class="pd-y-2">
@@ -58,10 +58,11 @@
           </ng-template>
         </kendo-dropdownbutton>
       </td>
-      <td>{{ member.name }}</td>
-      <td class="d-md-none d-lg-table-cell">{{ member.email }}</td>
-      <td>{{ member.roles | roleList : true }}</td>
+      <td class="d-md-none d-lg-table-cell">{{ invite.invitee }}</td>
+      <td class="d-md-none d-lg-table-cell">{{ invite.inviter }}</td>
+      <td>{{ invite.createdAt | dateText }}</td>
+      <td>{{ invite.expiresAt | dateText : true }}</td>
+      <td>{{ invite.roles | roleList : true }}</td>
     </tr>
-  </tbody>-->
   </tbody>
 </table>

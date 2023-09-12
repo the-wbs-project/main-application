@@ -13,7 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
-import { ProjectService } from '@wbs/core/services';
+import { ProjectService, Resources } from '@wbs/core/services';
 import { DialogService } from '@wbs/main/services';
 import { RolesState } from '@wbs/main/states';
 import { ProjectUserListComponent } from '../user-list/user-list.component';
@@ -61,7 +61,7 @@ export class ProjectRolesComponent implements OnChanges {
 
   constructor(
     private readonly dialog: DialogService,
-    private readonly projectService: ProjectService,
+    private readonly resources: Resources,
     private readonly service: RoleUsersService,
     private readonly store: Store
   ) {}
@@ -113,9 +113,11 @@ export class ProjectRolesComponent implements OnChanges {
       output.emit({ user, role });
       return;
     }
-    const roleTitle = this.store
-      .selectSnapshot(RolesState.definitions)
-      .find((x) => x.id === role)!.description;
+    const roleTitle = this.resources.get(
+      this.store
+        .selectSnapshot(RolesState.definitions)
+        .find((x) => x.id === role)!.description
+    );
 
     this.dialog
       .confirm('General.Confirmation', message, {

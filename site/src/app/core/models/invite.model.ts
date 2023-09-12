@@ -7,5 +7,5 @@ export interface InviteBody {
 export interface Invite extends InviteBody {
   id: string;
   createdAt: Date;
-  expiredAt: Date;
+  expiresAt: Date;
 }

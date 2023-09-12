@@ -84,6 +84,12 @@
       "EditedHoursAgo": "Edited # hours ago",
       "EditedYesterday": "Edited yesterday",
       "EditedDaysAgo": "Edited # days ago",
+      "Minute": "1 minute",
+      "Minutes": "# minutes",
+      "Hour": "1 hour",
+      "Hours": "# hours",
+      "Tomorrow": "Tomorrow",
+      "Days": "# days",
       "MinuteAgo": "a minute ago",
       "MinutesAgo": "# minutes ago",
       "HourAgo": "A hour ago",
@@ -416,6 +422,10 @@
       "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?",
       "MemberRolesUpdated": "The member's roles have been updated.",
       "InviteEmailHint": "Enter the email addresses (seperated by comma) of the people you want to invite.",
+      "Invitee": "Invitee",
+      "Inviter": "Inviter",
+      "TimeSent": "Time Sent",
+      "TimeTilExpires": "Time Until Expires",
       "SendInvite": "Send Invite",
       "InviteUsers": "Invite Users",
       "InviteSent": "Invite Sent",
@@ -426,7 +436,10 @@
       "InviteErrorNoEmailAddresses": "No email addresses were provided.",
       "InviteErrorInvalidEmail": "Invalid email address",
       "InviteErrorAlreadySent": "Invite already sent",
-      "InviteErrorAlreadyMember": "User already a member"
+      "InviteErrorAlreadyMember": "User already a member",
+      "CancelInvite": "Cancel Invite",
+      "CancelInviteConfirm": "Are you sure you want to cancel this invite?",
+      "InviteCancelled": "Invite Cancelled"
     }
   },
   {

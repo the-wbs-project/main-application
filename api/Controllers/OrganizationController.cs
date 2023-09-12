@@ -90,7 +90,6 @@ public class OrganizationsController : ControllerBase
     }
 
     [Authorize]
-    [IgnoreAntiforgeryToken(Order = 1000)]
     [HttpDelete("{organization}/members/{user}")]
     public async Task<IActionResult> RemoveUserFromOrganizationAsync(string organization, string user)
     {
@@ -111,7 +110,6 @@ public class OrganizationsController : ControllerBase
     }
 
     [Authorize]
-    [IgnoreAntiforgeryToken(Order = 1000)]
     [HttpPut("{organization}/members/{user}/roles")]
     public async Task<IActionResult> AddUserOrganizationalRolesAsync(string organization, string user, [FromBody] List<string> roles)
     {
@@ -133,7 +131,6 @@ public class OrganizationsController : ControllerBase
 
     [Authorize]
     [HttpDelete("{organization}/members/{user}/roles")]
-    [IgnoreAntiforgeryToken(Order = 1000)]
     public async Task<IActionResult> RemoveUserOrganizationalRolesAsync(string organization, string user, [FromBody] List<string> roles)
     {
         try
@@ -172,7 +169,6 @@ public class OrganizationsController : ControllerBase
 
     [Authorize]
     [HttpPost("{organization}/invites")]
-    [IgnoreAntiforgeryToken(Order = 1000)]
     public async Task<IActionResult> SendInviteAsync(string organization, [FromBody] InviteBody invite)
     {
         try
@@ -180,6 +176,26 @@ public class OrganizationsController : ControllerBase
             var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
 
             return Ok(await inviteDataService.SendAsync(orgId, invite));
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            logger.LogError(ex.ToString());
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{organization}/invites/{inviteId}")]
+    public async Task<IActionResult> CancelInviteAsync(string organization, string inviteId)
+    {
+        try
+        {
+            var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
+
+            await inviteDataService.CancelAsync(orgId, inviteId);
+
+            return NoContent();
         }
         catch (Exception ex)
         {

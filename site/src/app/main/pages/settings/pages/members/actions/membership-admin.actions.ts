@@ -17,3 +17,8 @@ export class SendInvites {
   static readonly type = '[Membership Admin] Send Invites';
   constructor(readonly emails: string[], readonly roles: string[]) {}
 }
+
+export class CancelInvite {
+  static readonly type = '[Membership Admin] Cancel Invite';
+  constructor(readonly inviteId: string) {}
+}

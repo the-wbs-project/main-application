@@ -37,7 +37,6 @@ public class InviteDataService : BaseAuthDataService
         return results;
     }
 
-
     public async Task<Invite> SendAsync(string organization, InviteBody inviteBody)
     {
         var client = await GetClientAsync();
@@ -55,13 +54,20 @@ public class InviteDataService : BaseAuthDataService
         return Convert(invite);
     }
 
+    public async Task CancelAsync(string organization, string inviteId)
+    {
+        var client = await GetClientAsync();
+
+        await client.Organizations.DeleteInvitationAsync(organization, inviteId);
+    }
+
     private static Invite Convert(OrganizationInvitation invite) => new Invite
     {
         Id = invite.Id,
         CreatedAt = invite.CreatedAt,
         ExpiresAt = invite.ExpiresAt,
         Inviter = invite.Inviter.Name,
-        Invitee = invite.ConnectionId,
+        Invitee = invite.Invitee.Email,
         Roles = invite.Roles.ToArray(),
     };
 }

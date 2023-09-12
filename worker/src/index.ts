@@ -67,6 +67,7 @@ app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), OriginService.pass
 app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, OriginService.pass);
 app.get('api/organizations/:organization/invites', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
 app.post('api/organizations/:organization/invites', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
+app.delete('api/organizations/:organization/invites/:inviteId', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
 app.put(
   'api/organizations/:organization/members/:user/roles',
   verifyJwt,

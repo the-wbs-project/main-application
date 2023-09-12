@@ -27,6 +27,12 @@ export class MembershipDataService {
     );
   }
 
+  cancelInviteAsync(organization: string, inviteId: string): Observable<void> {
+    return this.http.delete<void>(
+      `api/organizations/${organization}/invites/${inviteId}`
+    );
+  }
+
   removeUserFromOrganizationAsync(
     organization: string,
     user: string
