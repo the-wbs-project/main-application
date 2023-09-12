@@ -68,10 +68,10 @@ jobs:
     dependsOn: resource_job
     displayName: Worker
     steps:
-      #- task: NodeTool@0
-      #  inputs:
-      #    versionSpec: "18.10"
-      #  displayName: "Install Node.js"
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
 
       - script: npm global add yarn
         displayName: "Install Yarn"
