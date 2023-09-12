@@ -16,16 +16,16 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { gearIcon, pencilIcon, xIcon } from '@progress/kendo-svg-icons';
-import { Invite, Member } from '@wbs/core/models';
+import { Invite } from '@wbs/core/models';
+import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
+import { first } from 'rxjs';
+import { CancelInvite } from '../../actions';
 import { SortableDirective } from '../../directives/table-sorter.directive';
 import { TableProcessPipe } from '../../pipes/table-process.pipe';
 import { TableHelper } from '../../services';
 import { SortArrowComponent } from '../sort-arrow.component';
-import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { first } from 'rxjs';
-import { CancelInvite } from '../../actions';
 
 @Component({
   standalone: true,

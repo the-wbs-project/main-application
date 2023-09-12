@@ -439,7 +439,9 @@
       "InviteErrorAlreadyMember": "User already a member",
       "CancelInvite": "Cancel Invite",
       "CancelInviteConfirm": "Are you sure you want to cancel this invite?",
-      "InviteCancelled": "Invite Cancelled"
+      "InviteCancelled": "Invite Cancelled",
+      "ResendInvite": "Resend Invite",
+      "ResendInviteConfirm": "Are you sure you want to resend the invite? This will cause the previous invite sent to be invalid."
     }
   },
   {

@@ -21,7 +21,11 @@ public class OrganizationDataService : BaseAuthDataService
         var client = await GetClientAsync();
         var org = await client.Organizations.GetByNameAsync(orgName);
 
-        orgIds.Add(orgName, org.Id);
+        try
+        {
+            orgIds.Add(orgName, org.Id);
+        }
+        catch (ArgumentException) { }
 
         return org.Id;
     }
