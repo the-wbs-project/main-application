@@ -73,8 +73,11 @@ jobs:
       #    versionSpec: "18.10"
       #  displayName: "Install Node.js"
 
-      #- script: yarn global add esbuild
-      #  displayName: "Install ES Build"
+      - script: npm global add yarn
+        displayName: "Install Yarn"
+
+      - script: yarn global add esbuild
+        displayName: "Install ES Build"
 
       - script: yarn
         workingDirectory: "worker"
