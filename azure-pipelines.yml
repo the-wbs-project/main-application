@@ -15,20 +15,6 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
-  - job: setup_job
-    displayName: Setup
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: "18.10"
-        displayName: "Install Node.js"
-
-      - script: npm install --global yarn
-        displayName: "Install Yarn"
-
-      - script: yarn global add esbuild
-        displayName: "Install ES Build"
-
   - job: resource_job
     displayName: Resources
     steps:
@@ -79,9 +65,20 @@ jobs:
         displayName: "Publish"
 
   - job: worker_job
-    dependsOn: setup_job
+    dependsOn: resource_job
     displayName: Worker
     steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
+
+      - script: npm install --global yarn
+        displayName: "Install Yarn"
+
+      - script: yarn global add esbuild
+        displayName: "Install ES Build"
+
       - script: yarn
         workingDirectory: "worker"
         displayName: "Install"
