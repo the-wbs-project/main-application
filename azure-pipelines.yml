@@ -73,17 +73,14 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: npm install --global yarn
-        displayName: "Install Yarn"
-
-      - script: yarn global add esbuild
+      - script: npm install --global esbuild
         displayName: "Install ES Build"
 
-      - script: yarn
+      - script: npm install
         workingDirectory: "worker"
         displayName: "Install"
 
-      - script: yarn run build
+      - script: npm run build
         workingDirectory: "worker"
         displayName: "Build"
 
@@ -107,6 +104,11 @@ jobs:
     dependsOn: worker_job
     displayName: Site
     steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
+
       - script: |
           echo "$(FA_LICENSE)"
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
@@ -115,10 +117,10 @@ jobs:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup - Font Awesome Registry"
 
-      - script: yarn global add @angular/cli
+      - script: npm install --global @angular/cli
         displayName: "Setup - Angular CLI"
 
-      - script: yarn
+      - script: npm install
         workingDirectory: "site"
         displayName: "Setup - Site Packages"
 
@@ -128,7 +130,7 @@ jobs:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup - Kendo UI License"
 
-      - script: yarn run deploy:qa
+      - script: npm run deploy:qa
         workingDirectory: "site"
         displayName: "QA - Build"
 
@@ -141,7 +143,7 @@ jobs:
           replaceExistingArchive: true
         displayName: "QA - Zip"
 
-      - script: yarn run deploy:prod
+      - script: npm run deploy:prod
         workingDirectory: "site"
         displayName: "Production - Build"
 
