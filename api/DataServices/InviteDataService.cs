@@ -44,9 +44,9 @@ public class InviteDataService : BaseAuthDataService
 
         var invite = await client.Organizations.CreateInvitationAsync(organization, new OrganizationCreateInvitationRequest
         {
-            Invitee = new OrganizationInvitationInvitee { Email = inviteBody.invitee },
-            Inviter = new OrganizationInvitationInviter { Name = inviteBody.inviter },
-            Roles = inviteBody.roles,
+            Invitee = new OrganizationInvitationInvitee { Email = inviteBody.Invitee },
+            Inviter = new OrganizationInvitationInviter { Name = inviteBody.Inviter },
+            Roles = inviteBody.Roles,
             ClientId = config.ClientId,
             SendInvitationEmail = true,
         });
