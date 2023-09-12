@@ -48,6 +48,7 @@ public class InviteDataService : BaseAuthDataService
             Inviter = new OrganizationInvitationInviter { Name = inviteBody.Inviter },
             Roles = inviteBody.Roles,
             ClientId = config.ClientId,
+            ConnectionId = config.Connection,
             SendInvitationEmail = true,
         });
 
