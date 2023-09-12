@@ -15,6 +15,20 @@ variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
+  - job: setup_job
+    displayName: Setup
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
+
+      - script: npm install --global yarn
+        displayName: "Install Yarn"
+
+      - script: yarn global add esbuild
+        displayName: "Install ES Build"
+
   - job: resource_job
     displayName: Resources
     steps:
@@ -65,20 +79,9 @@ jobs:
         displayName: "Publish"
 
   - job: worker_job
-    dependsOn: resource_job
+    dependsOn: setup_job
     displayName: Worker
     steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: "18.10"
-        displayName: "Install Node.js"
-
-      - script: npm install --global yarn
-        displayName: "Install Yarn"
-
-      - script: yarn global add esbuild
-        displayName: "Install ES Build"
-
       - script: yarn
         workingDirectory: "worker"
         displayName: "Install"
@@ -107,15 +110,6 @@ jobs:
     dependsOn: worker_job
     displayName: Site
     steps:
-      - task: Cache@2
-        inputs:
-          key: 'yarn | "$(Agent.OS)" | yarn.lock'
-          restoreKeys: |
-            yarn | "$(Agent.OS)"
-            yarn
-          path: $(YARN_CACHE_FOLDER)
-        displayName: Cache Yarn packages
-
       - script: |
           echo "$(FA_LICENSE)"
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
