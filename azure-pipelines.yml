@@ -22,7 +22,7 @@ jobs:
         inputs:
           rootFolderOrFile: "files"
           includeRootFolder: false
-          archiveType: "zip"
+          archiveType: "7z"
           archiveFile: "publish/resources/$(Build.BuildId)-Resources.zip"
           replaceExistingArchive: true
         displayName: "Zip"
