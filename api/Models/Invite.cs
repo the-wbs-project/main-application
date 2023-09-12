@@ -9,6 +9,9 @@ public class InviteBody
 
 public class Invite
 {
+  public string inviter { get; set; }
+  public string invitee { get; set; }
+  public string[] roles { get; set; }
   public string Id { get; set; }
   public DateTime CreatedAt { get; set; }
   public DateTime ExpiresAt { get; set; }

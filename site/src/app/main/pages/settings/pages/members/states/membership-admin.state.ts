@@ -133,7 +133,7 @@ export class MembershipAdminState extends MembershipState {
 
   @Action(SendInvites)
   sendInvites(ctx: Context, { emails, roles }: SendInvites): Observable<void> {
-    const inviter = this.store.selectSnapshot(AuthState.userId)!;
+    const inviter = this.store.selectSnapshot(AuthState.profile)!.name;
     const saves: Observable<Invite>[] = [];
 
     for (const invitee of emails) {

@@ -47,7 +47,8 @@ public class InviteDataService : BaseAuthDataService
             Invitee = new OrganizationInvitationInvitee { Email = inviteBody.invitee },
             Inviter = new OrganizationInvitationInviter { Name = inviteBody.inviter },
             Roles = inviteBody.roles,
-            ClientId = config.ClientId
+            ClientId = config.ClientId,
+            SendInvitationEmail = true,
         });
 
         return Convert(invite);
