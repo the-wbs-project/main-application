@@ -23,13 +23,13 @@ jobs:
           rootFolderOrFile: "files"
           includeRootFolder: false
           archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Resources.zip"
+          archiveFile: "publish/resources/$(Build.BuildId)-Resources.zip"
           replaceExistingArchive: true
         displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
         inputs:
-          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          PathtoPublish: "publish/resources/"
           ArtifactName: "drop"
           publishLocation: "Container"
         displayName: "Publish"
