@@ -35,7 +35,7 @@ jobs:
         displayName: "Publish"
 
   - job: api_job
-    dependsOn: resource_job
+    dependsOn: site_job
     displayName: ASP.NET API
     steps:
       - task: DotNetCoreCLI@2
@@ -65,7 +65,7 @@ jobs:
         displayName: "Publish"
 
   - job: worker_job
-    dependsOn: api_job
+    dependsOn: resource_job
     displayName: Worker
     steps:
       - task: NodeTool@0
