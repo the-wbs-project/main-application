@@ -6,16 +6,13 @@
 trigger:
   - main
 
-pool:
-  name: Default
-  #demands:
-  # - agent.name -equals Weltgeist
-
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
 
 jobs:
   - job: resource_job
+    pool:
+      vmImage: ubuntu-latest
     displayName: Resources
     steps:
       - task: ArchiveFiles@2
@@ -35,7 +32,8 @@ jobs:
         displayName: "Publish"
 
   - job: api_job
-    dependsOn: site_job
+    pool:
+      vmImage: ubuntu-latest
     displayName: ASP.NET API
     steps:
       - task: DotNetCoreCLI@2
@@ -65,7 +63,8 @@ jobs:
         displayName: "Publish"
 
   - job: worker_job
-    dependsOn: resource_job
+    pool:
+      vmImage: ubuntu-latest
     displayName: Worker
     steps:
       - task: NodeTool@0
@@ -101,7 +100,8 @@ jobs:
         displayName: "Publish"
 
   - job: site_job
-    dependsOn: worker_job
+    pool:
+      name: Default
     displayName: Site
     steps:
       - task: NodeTool@0
