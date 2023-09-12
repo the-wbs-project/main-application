@@ -73,7 +73,7 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: npm global add yarn
+      - script: npm install --global yarn
         displayName: "Install Yarn"
 
       - script: yarn global add esbuild
