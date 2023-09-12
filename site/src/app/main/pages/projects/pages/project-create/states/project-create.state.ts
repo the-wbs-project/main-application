@@ -10,7 +10,6 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_SCOPE_TYPE,
   PROJECT_STATI,
-  ROLES_TYPE,
   UserRole,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
@@ -44,7 +43,7 @@ interface StateModel {
   owner?: string;
   page?: ProjectCreationPage;
   phases?: (string | ListItem)[];
-  roles: Map<ROLES_TYPE, string[]>;
+  roles: Map<string, string[]>;
   scope?: PROJECT_SCOPE_TYPE;
   title: string;
   useLibrary?: boolean;
@@ -56,7 +55,7 @@ interface StateModel {
   defaults: {
     description: '',
     isSaving: false,
-    roles: new Map<ROLES_TYPE, string[]>(),
+    roles: new Map<string, string[]>(),
     title: '',
   },
 })
@@ -102,7 +101,7 @@ export class ProjectCreateState {
   }
 
   @Selector()
-  static roles(state: StateModel): Map<ROLES_TYPE, string[]> {
+  static roles(state: StateModel): Map<string, string[]> {
     return state.roles;
   }
 
@@ -122,7 +121,7 @@ export class ProjectCreateState {
       owner,
       page: PAGES.GETTING_STARTED,
       description: '',
-      roles: new Map<ROLES_TYPE, string[]>(),
+      roles: new Map<string, string[]>(),
       title: '',
     });
   }

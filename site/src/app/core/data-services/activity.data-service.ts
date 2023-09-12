@@ -50,7 +50,6 @@ export class ActivityDataService {
         userId: userId,
       });
     }
-    console.log(toSave);
     return this.http.put<void>('api/activities', toSave).pipe(map(() => ids));
   }
 

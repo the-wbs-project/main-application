@@ -3,6 +3,11 @@ import { Routes } from '@angular/router';
 export const routes: Routes = [
   { path: '', redirectTo: '/loading', pathMatch: 'full' },
   {
+    path: 'login',
+    loadComponent: () =>
+      import('./login.component').then((x) => x.LoginComponent),
+  },
+  {
     path: 'logout',
     loadComponent: () =>
       import('./logout.component').then((x) => x.LogoutComponent),

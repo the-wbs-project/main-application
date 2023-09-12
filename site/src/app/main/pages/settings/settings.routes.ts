@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { adminGuard } from '@wbs/main/guards';
 import { DialogService } from '@wbs/main/services';
-import { SettingsState, UserAdminState } from './states';
+import { SettingsState } from './states';
 
 export const routes: Routes = [
   {
@@ -15,9 +15,7 @@ export const routes: Routes = [
       ),
     loadChildren: () => import('./pages/children.routes').then((m) => m.routes),
     providers: [
-      importProvidersFrom(
-        NgxsModule.forFeature([SettingsState, UserAdminState])
-      ),
+      importProvidersFrom(NgxsModule.forFeature([SettingsState])),
       DialogService,
     ],
   },

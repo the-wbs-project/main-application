@@ -1,11 +1,8 @@
-import { Organization } from '@wbs/core/models';
+import { Member, Organization } from '@wbs/core/models';
 
 export class InitiateOrganizations {
   static readonly type = '[Membership] Load';
-  constructor(
-    readonly organizations: Organization[],
-    readonly orgRoles: Record<string, string[]>
-  ) {}
+  constructor(readonly organizations: Organization[]) {}
 }
 
 export class ChangeOrganization {
@@ -13,16 +10,7 @@ export class ChangeOrganization {
   constructor(readonly organization: Organization) {}
 }
 
-export class RemoveMemberFromOrganization {
-  static readonly type = '[Membership] Remove Member';
-  constructor(readonly memberId: string) {}
-}
-
-export class UpdateMemberRoles {
-  static readonly type = '[Membership] Update Member Roles';
-  constructor(readonly memberId: string, readonly roles: string[]) {}
-}
-
-export class LoadInvitations {
-  static readonly type = '[Membership] Load Invitations';
+export class UpdateMembers {
+  static readonly type = '[Membership] Update';
+  constructor(readonly members: Member[]) {}
 }

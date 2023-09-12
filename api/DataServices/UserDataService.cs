@@ -13,6 +13,13 @@ public class UserDataService : BaseAuthDataService
         this.logger = logger;
     }
 
+    public async Task<List<Role>> GetRolesAsync()
+    {
+        var client = await GetClientAsync();
+
+        return new List<Role>(await client.Roles.GetAllAsync(new GetRolesRequest()));
+    }
+
     public async Task<User> GetUserAsync(string userId)
     {
         var client = await GetClientAsync();
@@ -25,7 +32,7 @@ public class UserDataService : BaseAuthDataService
         var client = await GetClientAsync();
         var roles = await client.Users.GetRolesAsync(userId);
 
-        return roles.Select(x => x.Name).ToList();
+        return roles.Select(x => x.Id).ToList();
     }
 
     public async Task<IEnumerable<Organization>> GetUserOrganizationsAsync(string userId)

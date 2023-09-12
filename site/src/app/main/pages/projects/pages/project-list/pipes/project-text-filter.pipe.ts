@@ -10,7 +10,6 @@ export class ProjectTextFilterPipe implements PipeTransform {
     list: Project[] | null | undefined,
     text: string | null | undefined
   ): Project[] | null | undefined {
-    console.log(text);
     if (list == null || list.length === 0 || !text || text.trim() === '')
       return list;
 

@@ -1,10 +1,11 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ROLES } from '@wbs/core/models';
-import { Resources, sorter } from '@wbs/core/services';
+import { Store } from '@ngxs/store';
+import { sorter } from '@wbs/core/services';
+import { RolesState } from '../states';
 
 @Pipe({ name: 'roleList', standalone: true })
 export class RoleListPipe implements PipeTransform {
-  constructor(private readonly resources: Resources) {}
+  constructor(private readonly store: Store) {}
 
   transform(
     roles: string[] | undefined | null,
@@ -13,25 +14,19 @@ export class RoleListPipe implements PipeTransform {
     if (!roles) return '';
 
     const list: string[] = [];
+    const defintions = this.store.selectSnapshot(RolesState.definitions);
 
-    if (roles.indexOf(ROLES.ADMIN) > -1)
-      list.push(
-        this.resources.get('General.Admin' + (useAbbreviations ? '' : '-Full'))
+    for (const role of roles) {
+      const definition = defintions.find(
+        (x) => x.id === role || x.name === role
       );
 
-    if (roles.indexOf(ROLES.PM) > -1)
+      if (!definition) continue;
+
       list.push(
-        this.resources.get('General.PM' + (useAbbreviations ? '' : '-Full'))
+        useAbbreviations ? definition.abbreviation : definition.description
       );
-
-    if (roles.indexOf(ROLES.APPROVER) > -1)
-      list.push(this.resources.get('General.Approver'));
-
-    if (roles.indexOf(ROLES.SME) > -1)
-      list.push(
-        this.resources.get('General.SME' + (useAbbreviations ? '' : '-Full'))
-      );
-
+    }
     return list.sort((a, b) => sorter(a, b)).join(', ');
   }
 }

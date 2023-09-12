@@ -9,7 +9,7 @@ import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { logoutIcon, userIcon } from '@progress/kendo-svg-icons';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
-import { AuthState, MembershipState } from '@wbs/main/states';
+import { AuthState, RolesState } from '@wbs/main/states';
 import { ProfileEditorComponent } from '../../profile-editor/profile-editor.component';
 import { HeaderProfilePictureComponent } from './header-profile-picture.component';
 
@@ -18,6 +18,7 @@ import { HeaderProfilePictureComponent } from './header-profile-picture.componen
   selector: 'wbs-header-profile',
   templateUrl: './header-profile.component.html',
   styleUrls: ['./header-profile.component.scss'],
+  providers: [DialogService],
   imports: [
     HeaderProfilePictureComponent,
     NgbDropdownModule,
@@ -27,11 +28,10 @@ import { HeaderProfilePictureComponent } from './header-profile-picture.componen
     SVGIconModule,
     TranslateModule,
   ],
-  providers: [DialogService],
 })
 export class HeaderProfileComponent {
   readonly user = toSignal(this.store.select(AuthState.profile));
-  readonly roles = toSignal(this.store.select(MembershipState.roles));
+  readonly roles = toSignal(this.store.select(RolesState.orgRoles));
   readonly logoutIcon = logoutIcon;
   readonly userIcon = userIcon;
   isCollapsed = true;

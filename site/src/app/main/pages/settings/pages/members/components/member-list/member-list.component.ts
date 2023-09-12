@@ -22,13 +22,10 @@ import {
   xIcon,
 } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
-import {
-  RemoveMemberFromOrganization,
-  UpdateMemberRoles,
-} from '@wbs/main/actions';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
 import { first } from 'rxjs/operators';
+import { RemoveMemberFromOrganization, UpdateMemberRoles } from '../../actions';
 import { SortableDirective } from '../../directives/table-sorter.directive';
 import { TableProcessPipe } from '../../pipes/table-process.pipe';
 import { TableHelper } from '../../services';
@@ -147,7 +144,6 @@ export class MemberListComponent implements OnChanges {
       logic: 'and',
       filters,
     };
-    console.log(state);
     this.state.set(state);
   }
 }

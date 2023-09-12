@@ -5,11 +5,16 @@ export const kv = {
   lists,
   members,
   resources,
+  roles,
   users,
 };
 
 function resources(ctx: Context, next: any): Promise<Response | void> {
   return execute(ctx, next, 'RESOURCES|:locale');
+}
+
+function roles(ctx: Context, next: any): Promise<Response | void> {
+  return execute(ctx, next, 'ROLES');
 }
 
 function lists(ctx: Context, next: any): Promise<Response | void> {

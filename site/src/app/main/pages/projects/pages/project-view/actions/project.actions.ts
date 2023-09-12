@@ -1,6 +1,5 @@
 import {
   PROJECT_NODE_VIEW_TYPE,
-  ROLES_TYPE,
   UserLite,
   ProjectCategoryChanges,
   PROJECT_STATI,
@@ -40,12 +39,12 @@ export class ChangeProjectBasics {
 
 export class AddUserToRole {
   static readonly type = '[Project] Add User To Role';
-  constructor(readonly role: ROLES_TYPE, readonly user: UserLite) {}
+  constructor(readonly role: string, readonly user: UserLite) {}
 }
 
 export class RemoveUserToRole {
   static readonly type = '[Project] Remove User To Role';
-  constructor(readonly role: ROLES_TYPE, readonly user: UserLite) {}
+  constructor(readonly role: string, readonly user: UserLite) {}
 }
 
 export class MarkProjectChanged {

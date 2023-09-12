@@ -4,7 +4,7 @@
     <kendo-drawer #drawer mode="push" [expanded]="isSidebarExpanded()!">
       <ng-template kendoDrawerTemplate="">
         <wbs-sidebar
-          [isAdmin]="membershipRoles() | isAdmin"
+          [isAdmin]="isAdmin()"
           [projects]="projects()"
           [organization]="org()"
           [organizations]="orgs()"

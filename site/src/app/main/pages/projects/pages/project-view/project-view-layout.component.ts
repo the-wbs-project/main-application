@@ -14,6 +14,7 @@ import { ProjectChecklistModalComponent } from './components/project-checklist-m
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_MENU_ITEMS } from './models';
 import { ProjectState } from './states';
+import { RolesState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -32,11 +33,10 @@ import { ProjectState } from './states';
 })
 export class ProjectViewLayoutComponent {
   private readonly url = toSignal(this.store.select(RouterState.url));
-  private readonly project = toSignal(this.store.select(ProjectState.current));
-
+  readonly project = toSignal(this.store.select(ProjectState.current));
   readonly links = PROJECT_MENU_ITEMS.projectLinks;
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
-  readonly canSubmit = toSignal(this.store.select(ProjectState.canSubmit));
+  readonly isPm = toSignal(this.store.select(RolesState.isPm));
   readonly pageView = computed(() => this.getPage(this.url()));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);

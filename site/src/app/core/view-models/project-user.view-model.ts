@@ -1,8 +1,6 @@
-import { ROLES_TYPE } from '../models';
-
 export interface ProjectUserViewModel {
   name: string;
-  role: ROLES_TYPE;
+  role: string;
   email: string;
   phone: string;
 }

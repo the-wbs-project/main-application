@@ -49,7 +49,7 @@
         *ngFor="let user of users()"
         class="list-group-item bd-gray-400 bd-t-1-f"
       >
-        {{ user.name }} - {{ user.roles | roleTitle : true }}
+        {{ user.name }} - {{ user.roles | roleList : true }}
       </li>
     </ul>
   </div>

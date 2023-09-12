@@ -1,4 +1,9 @@
-<div ngbDropdown *ngIf="user(); let user" class="profile-menu">
+<div
+  ngbDropdown
+  *ngIf="user(); let user"
+  class="profile-dropdown"
+  container="body"
+>
   <a class="pointer" ngbDropdownToggle>
     <wbs-header-profile-picture [picture]="user.picture" />
   </a>

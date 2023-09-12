@@ -11,10 +11,18 @@
   <div class="container-fluid">
     <div class="row mb-3">
       <label for="emails" class="col-sm-2 col-form-label">
-        {{ "General.Name" | translate }}
+        {{ "General.Emails" | translate }}
       </label>
       <div class="col-sm-10">
-        <input #emails type="text" class="form-control" />
+        <input
+          #emails
+          type="text"
+          class="form-control"
+          [autocomplete]="false"
+        />
+        <div id="emailHelp" class="form-text">
+          {{ "OrgSettings.InviteEmailHint" | translate }}
+        </div>
       </div>
     </div>
     <div class="row mb-3">
@@ -24,25 +32,32 @@
       <div class="col-sm-10">
         <div class="btn-group">
           <button
-            *ngFor="let role of roleList"
+            *ngFor="let role of roleList()"
             class="btn"
             [ngClass]="{
-              'btn-primary': roles.includes(role),
-              'btn-outline-primary': !roles.includes(role),
+              'btn-primary': roles.includes(role.id),
+              'btn-outline-primary': !roles.includes(role.id),
             }"
-            (click)="toggleRole(role)"
+            (click)="toggleRole(role.id)"
           >
-            {{ [role] | roleList : true }}
+            {{ role.abbreviation }}
           </button>
         </div>
       </div>
     </div>
     <div *ngIf="errors.length > 0" class="row mb-3">
-      <ul>
-        <li *ngFor="let error of errors">
-          {{ error.email }}:&nbsp; {{ error.error | translate }}
-        </li>
-      </ul>
+      <label class="col-sm-2 col-form-label">
+        {{ "General.Errors" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <p>{{ "OrgSettings.InviteErrorHeader" | translate }}:</p>
+        <ul class="tx-danger">
+          <li *ngFor="let error of errors">
+            {{ error.email ? error.email + ": " : "" }}
+            {{ error.error | translate }}
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </div>
@@ -55,6 +70,6 @@
     {{ "General.Close" | translate }}
   </button>
   <button type="button" class="btn btn-primary" (click)="submit(emails.value)">
-    {{ "General.Invite" | translate }}
+    {{ "OrgSettings.SendInvite" | translate }}
   </button>
 </div>

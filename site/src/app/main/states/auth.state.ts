@@ -10,9 +10,7 @@ import { switchMap, tap } from 'rxjs/operators';
 import { ChangeProfileName, InitiateOrganizations } from '../actions';
 
 interface AuthBucket {
-  culture: string;
   profile?: UserLite;
-  roles?: string[];
 }
 
 declare type Context = StateContext<AuthBucket>;
@@ -21,9 +19,7 @@ declare type Context = StateContext<AuthBucket>;
 @Injectable()
 @State<AuthBucket>({
   name: 'auth',
-  defaults: {
-    culture: 'en-US',
-  },
+  defaults: {},
 })
 export class AuthState implements NgxsOnInit {
   constructor(
@@ -44,11 +40,6 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static roles(state: AuthBucket): string[] | undefined {
-    return state?.roles;
-  }
-
-  @Selector()
   static userId(state: AuthBucket): string | undefined {
     return state?.profile?.id;
   }
@@ -56,8 +47,6 @@ export class AuthState implements NgxsOnInit {
   ngxsOnInit(ctx: Context): void {
     this.auth.user$.pipe(untilDestroyed(this)).subscribe((user) => {
       if (!user) return;
-
-      console.log(user);
 
       const ns = 'http://www.pm-empower.com';
       const profile: UserLite = {
@@ -67,7 +56,7 @@ export class AuthState implements NgxsOnInit {
         picture: user['picture']!,
       };
 
-      ctx.patchState({ profile, roles: user[ns + '/orgRoles'] ?? [] });
+      ctx.patchState({ profile });
 
       this.logger.setGlobalContext({
         'usr.id': profile.id,
@@ -80,12 +69,7 @@ export class AuthState implements NgxsOnInit {
       organizations = organizations.sort((a, b) => sorter(a.name, b.name));
 
       if (organizations.length > 0)
-        ctx.dispatch(
-          new InitiateOrganizations(
-            organizations,
-            user[ns + '/organizations-roles'] ?? []
-          )
-        );
+        ctx.dispatch([new InitiateOrganizations(organizations)]);
     });
   }
 

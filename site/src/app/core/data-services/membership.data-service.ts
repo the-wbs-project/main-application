@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Invite, Member } from '../models';
+import { Invite, InviteBody, Member } from '../models';
 
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
@@ -15,6 +15,16 @@ export class MembershipDataService {
 
   getInvitesAsync(organization: string): Observable<Invite[]> {
     return this.http.get<Invite[]>(`api/organizations/${organization}/invites`);
+  }
+
+  sendInvitesAsync(
+    organization: string,
+    inviteBody: InviteBody
+  ): Observable<Invite> {
+    return this.http.post<Invite>(
+      `api/organizations/${organization}/invites`,
+      inviteBody
+    );
   }
 
   removeUserFromOrganizationAsync(

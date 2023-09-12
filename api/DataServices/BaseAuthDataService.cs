@@ -1,12 +1,8 @@
 using Auth0.ManagementApi;
-using Auth0.ManagementApi.Models;
-using Auth0.ManagementApi.Paging;
-using Microsoft.AspNetCore.Identity;
 using System.Net;
 using System.Text;
 using System.Text.Json;
 using Wbs.Api.Configurations;
-using Wbs.Api.Models;
 
 namespace Wbs.Api.Services;
 
@@ -15,8 +11,6 @@ public abstract class BaseAuthDataService
     protected string mgmtToken;
     protected DateTime? expiration;
     protected ManagementApiClient client;
-    protected Dictionary<string, string> roles = new Dictionary<string, string>();
-
     protected readonly Auth0Config config;
     private readonly ILogger logger;
 
@@ -24,21 +18,6 @@ public abstract class BaseAuthDataService
     {
         this.config = new Auth0Config(config.GetSection("Auth0"));
         this.logger = logger;
-    }
-
-    protected async Task EnsureRolesAsync()
-    {
-        if (roles.Count > 0) return;
-
-        var client = await GetClientAsync();
-
-        foreach (var role in await client.Roles.GetAllAsync(new GetRolesRequest()))
-        {
-            if (roles.ContainsKey(role.Name))
-                roles[role.Name] = role.Id;
-            else
-                roles.Add(role.Name, role.Id);
-        }
     }
 
     protected async Task<ManagementApiClient> GetClientAsync()
@@ -69,13 +48,12 @@ public abstract class BaseAuthDataService
         }
     }
 
-
     private async Task<MgmtTokenResponse> PullManagementTokenAsync()
     {
         var body = new
         {
-            client_id = config.ClientId,
-            client_secret = config.ClientSecret,
+            client_id = config.M2MClientId,
+            client_secret = config.M2MClientSecret,
             audience = config.Audience,
             grant_type = "client_credentials"
         };

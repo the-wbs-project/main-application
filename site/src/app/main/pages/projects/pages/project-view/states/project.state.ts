@@ -7,13 +7,17 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
-  ProjectActivityRecord,
   ProjectCategory,
   ROLES,
 } from '@wbs/core/models';
 import { Messages, ProjectService } from '@wbs/core/services';
 import { ProjectUpdated, SetHeaderInfo } from '@wbs/main/actions';
-import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
+import {
+  AuthState,
+  MembershipState,
+  MetadataState,
+  RolesState,
+} from '@wbs/main/states';
 import { Observable, of, tap } from 'rxjs';
 import {
   AddUserToRole,
@@ -140,9 +144,8 @@ export class ProjectState {
     const userId = this.store.selectSnapshot(AuthState.userId);
 
     return this.data.projects.getAsync(owner, projectId).pipe(
+      tap((project) => this.verifyRoles(project)),
       tap((project) => {
-        if (!project.roles) project.roles = [];
-
         ctx.patchState({
           current: project,
           roles:
@@ -400,12 +403,13 @@ export class ProjectState {
     const approvers: string[] = [];
     const pms: string[] = [];
     const smes: string[] = [];
+    const ids = this.store.selectSnapshot(RolesState.ids);
 
     if (project)
       for (const ur of project.roles) {
-        if (ur.role === ROLES.APPROVER) approvers.push(ur.userId);
-        else if (ur.role === ROLES.PM) pms.push(ur.userId);
-        else if (ur.role === ROLES.SME) smes.push(ur.userId);
+        if (ur.role === ids.approver) approvers.push(ur.userId);
+        else if (ur.role === ids.pm) pms.push(ur.userId);
+        else if (ur.role === ids.sme) smes.push(ur.userId);
       }
 
     ctx.patchState({ approvers, pms, smes });
@@ -441,5 +445,23 @@ export class ProjectState {
       );
 
     return idsOrCat.label;
+  }
+
+  private verifyRoles(project: Project): void {
+    if (!project.roles) {
+      project.roles = [];
+      return;
+    }
+
+    const definitions = this.store.selectSnapshot(RolesState.definitions);
+
+    for (const role of project.roles) {
+      const defByName = definitions.find((x) => x.name === role.role);
+
+      if (defByName) {
+        role.role = defByName.id;
+        continue;
+      }
+    }
   }
 }

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Member, ROLES_TYPE } from '@wbs/core/models';
+import { Member } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
 import { RoleUsersViewModel } from '../view-models';
 
 @Injectable()
 export class RoleUsersService {
   get(
-    roleId: ROLES_TYPE,
+    roleId: string,
     userIds: string[] | undefined,
     members: Member[]
   ): RoleUsersViewModel {

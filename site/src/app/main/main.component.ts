@@ -17,9 +17,8 @@ import {
 } from './components';
 import { MainContentDirective } from './directives/main-content.directive';
 import { NavService, SwitcherService } from './services';
-import { iIsAdminPipe } from './pipes/is-admin.pipe';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { MembershipState, UiState } from './states';
+import { MembershipState, RolesState, UiState } from './states';
 import { DrawerModule } from '@progress/kendo-angular-layout';
 import { FillElementDirective } from './directives/fill-element.directive';
 
@@ -29,6 +28,7 @@ import { FillElementDirective } from './directives/fill-element.directive';
   styleUrls: ['./main.component.scss'],
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [NavService],
   imports: [
     CommonModule,
     DrawerModule,
@@ -36,17 +36,15 @@ import { FillElementDirective } from './directives/fill-element.directive';
     FooterComponent,
     HeaderComponent,
     MainContentDirective,
-    iIsAdminPipe,
     RouterModule,
     SidebarComponent,
   ],
-  providers: [NavService],
 })
 export class MainComponent implements AfterContentInit {
   readonly isSidebarExpanded = toSignal(
     this.store.select(UiState.isSidebarExpanded)
   );
-  readonly membershipRoles = toSignal(this.store.select(MembershipState.roles));
+  readonly isAdmin = toSignal(this.store.select(RolesState.isAdmin));
   readonly org = toSignal(this.store.select(MembershipState.organization));
   readonly orgs = toSignal(this.store.select(MembershipState.list));
   readonly projects = toSignal(this.store.select(MembershipState.projects));

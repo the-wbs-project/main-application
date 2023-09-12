@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { ROLES, ROLES_TYPE } from '@wbs/core/models';
+import { RoleIds } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
-import { MembershipState } from '@wbs/main/states';
+import { MembershipState, RolesState } from '@wbs/main/states';
 import { RolesChosen } from '../../../actions';
 import { ProjectCreateState } from '../../../states';
 import { FooterComponent } from '../../footer/footer.component';
@@ -30,49 +30,46 @@ export class RolesComponent implements OnInit {
 
   constructor(private readonly store: Store) {}
 
+  private get ids(): RoleIds {
+    return this.store.selectSnapshot(RolesState.ids);
+  }
+
   ngOnInit(): void {
     const roles = this.store.selectSnapshot(ProjectCreateState.roles);
 
-    this.approverIds.set(this.getIds(roles, ROLES.APPROVER));
-    this.pmIds.set(this.getIds(roles, ROLES.PM));
-    this.smeIds.set(this.getIds(roles, ROLES.SME));
+    this.approverIds.set(roles.get(this.ids.approver) ?? []);
+    this.pmIds.set(roles.get(this.ids.pm) ?? []);
+    this.smeIds.set(roles.get(this.ids.sme) ?? []);
   }
 
   nav(): void {
-    const roles = new Map<ROLES_TYPE, string[]>();
+    const roles = new Map<string, string[]>();
 
-    roles.set(ROLES.APPROVER, this.approverIds());
-    roles.set(ROLES.PM, this.pmIds());
-    roles.set(ROLES.SME, this.smeIds());
+    roles.set(this.ids.approver, this.approverIds());
+    roles.set(this.ids.pm, this.pmIds());
+    roles.set(this.ids.sme, this.smeIds());
 
     this.store.dispatch(new RolesChosen(roles));
   }
 
   add(role: string, user: string) {
-    if (role === ROLES.APPROVER) {
+    if (role === this.ids.approver) {
       this.addUser(this.approverIds, user);
-    } else if (role === ROLES.PM) {
+    } else if (role === this.ids.pm) {
       this.addUser(this.pmIds, user);
-    } else if (role === ROLES.SME) {
+    } else if (role === this.ids.sme) {
       this.addUser(this.smeIds, user);
     }
   }
 
   remove(role: string, user: string) {
-    if (role === ROLES.APPROVER) {
+    if (role === this.ids.approver) {
       this.removeUser(this.approverIds, user);
-    } else if (role === ROLES.PM) {
+    } else if (role === this.ids.pm) {
       this.removeUser(this.pmIds, user);
-    } else if (role === ROLES.SME) {
+    } else if (role === this.ids.sme) {
       this.removeUser(this.smeIds, user);
     }
-  }
-
-  private getIds(
-    roles: Map<ROLES_TYPE, string[]> | undefined,
-    role: ROLES_TYPE
-  ): string[] {
-    return roles?.get(role) ?? [];
   }
 
   private addUser(list: WritableSignal<string[]>, user: string) {

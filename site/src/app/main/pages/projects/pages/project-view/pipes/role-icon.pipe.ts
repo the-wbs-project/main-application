@@ -1,16 +1,18 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { faQuestion } from '@fortawesome/pro-solid-svg-icons';
-import { ROLES, ROLES_TYPE } from '@wbs/core/models';
-import { ROLE_ICONS } from 'src/environments/icons';
+import { Store } from '@ngxs/store';
+import { RolesState } from '@wbs/main/states';
 
 @Pipe({ name: 'roleIcon', standalone: true })
 export class RoleIconPipe implements PipeTransform {
-  transform(role: ROLES_TYPE, defaultIcon = faQuestion): IconDefinition {
-    if (role === ROLES.APPROVER) return ROLE_ICONS.approver;
-    if (role === ROLES.PM) return ROLE_ICONS.pm;
-    if (role === ROLES.SME) return ROLE_ICONS.sme;
+  constructor(private readonly store: Store) {}
 
-    return defaultIcon;
+  transform(role: string, defaultIcon = faQuestion): IconDefinition {
+    return (
+      this.store
+        .selectSnapshot(RolesState.definitions)
+        .find((r) => r.id === role)?.icon ?? defaultIcon
+    );
   }
 }

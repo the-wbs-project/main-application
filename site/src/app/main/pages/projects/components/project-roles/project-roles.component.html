@@ -24,7 +24,7 @@
               [icon]="minusIcon"
               [users]="pms().assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles.PM, $event)"
+              (selected)="remove(roles()!.pm, $event)"
             />
           </td>
           <td class="wd-200 border border-dark pd-5 valign-top">
@@ -32,7 +32,7 @@
               [icon]="minusIcon"
               [users]="approvers().assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles.APPROVER, $event)"
+              (selected)="remove(roles()!.approver, $event)"
             />
           </td>
           <td class="wd-200 border border-dark pd-5 valign-top">
@@ -40,7 +40,7 @@
               [icon]="minusIcon"
               [users]="smes().assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles.SME, $event)"
+              (selected)="remove(roles()!.sme, $event)"
             />
           </td>
         </tr>
@@ -54,21 +54,21 @@
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="pms().unassigned"
-              (selected)="add(roles.PM, $event)"
+              (selected)="add(roles()!.pm, $event)"
             />
           </td>
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="approvers().unassigned"
-              (selected)="add(roles.APPROVER, $event)"
+              (selected)="add(roles()!.approver, $event)"
             />
           </td>
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="smes().unassigned"
-              (selected)="add(roles.SME, $event)"
+              (selected)="add(roles()!.sme, $event)"
             />
           </td>
         </tr>

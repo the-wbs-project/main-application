@@ -13,10 +13,8 @@ public class InviteDataService : BaseAuthDataService
         this.logger = logger;
     }
 
-    public async Task<List<Invite>> GetPageAsync(string organization)
+    public async Task<List<Invite>> GetAllAsync(string organization)
     {
-        await EnsureRolesAsync();
-
         var page = 0;
         var size = 100;
         var keepGoing = true;
@@ -32,16 +30,7 @@ public class InviteDataService : BaseAuthDataService
             };
             var invites = await client.Organizations.GetAllInvitationsAsync(organization, request, pageInfo);
 
-            results.AddRange(invites
-                .Select(i => new Invite
-                {
-                    Id = i.Id,
-                    CreatedAt = i.CreatedAt,
-                    ExpiresAt = i.ExpiresAt,
-                    Inviter = i.Inviter.Name,
-                    Invitee = i.Invitee.Email,
-                    Roles = i.Roles.ToArray(),
-                }));
+            results.AddRange(invites.Select(Convert));
 
             keepGoing = invites.Count() == size;
         }
@@ -49,68 +38,28 @@ public class InviteDataService : BaseAuthDataService
     }
 
 
-    public async Task SendAsync(string organization, InviteBody invite)
+    public async Task<Invite> SendAsync(string organization, InviteBody inviteBody)
     {
-        await EnsureRolesAsync();
-
-        invite.roles = invite.roles
-            .Select(role => this.roles[role])
-            .ToArray();
-
         var client = await GetClientAsync();
 
-        await client.Organizations.CreateInvitationAsync(organization, new OrganizationCreateInvitationRequest
+        var invite = await client.Organizations.CreateInvitationAsync(organization, new OrganizationCreateInvitationRequest
         {
-            Invitee = new OrganizationInvitationInvitee { Email = invite.invitee },
-            Inviter = new OrganizationInvitationInviter { Name = invite.inviter },
-            Roles = invite.roles,
+            Invitee = new OrganizationInvitationInvitee { Email = inviteBody.invitee },
+            Inviter = new OrganizationInvitationInviter { Name = inviteBody.inviter },
+            Roles = inviteBody.roles,
+            ClientId = config.ClientId
         });
+
+        return Convert(invite);
     }
 
-    public async Task<IEnumerable<OrganizationMember>> GetOrganizationalUsersAsync(string organization)
+    private static Invite Convert(OrganizationInvitation invite) => new Invite
     {
-        var client = await GetClientAsync();
-        var page = new PaginationInfo(0, 50, false);
-
-        return await client.Organizations.GetAllMembersAsync(organization, page);
-    }
-
-    public async Task<IEnumerable<string>> GetUserOrganizationalRolesAsync(string organization, string userId)
-    {
-        var client = await GetClientAsync();
-        var page = new PaginationInfo(0, 50, false);
-
-        var roles = await client.Organizations.GetAllMemberRolesAsync(organization, userId, page);
-
-        return roles.Select(r => r.Name);
-    }
-
-    public async Task AddUserOrganizationalRolesAsync(string organization, string userId, IEnumerable<string> roles)
-    {
-        await EnsureRolesAsync();
-
-        var client = await GetClientAsync();
-        var ids = roles.Select(id => this.roles[id]).ToArray();
-
-        await client.Organizations.AddMemberRolesAsync(organization, userId, new OrganizationAddMemberRolesRequest { Roles = ids });
-    }
-
-    public async Task RemoveUserOrganizationalRolesAsync(string organization, string userId, IEnumerable<string> roles)
-    {
-        await EnsureRolesAsync();
-
-        var client = await GetClientAsync();
-        var ids = roles.Select(id => this.roles[id]).ToArray();
-
-        await client.Organizations.DeleteMemberRolesAsync(organization, userId, new OrganizationDeleteMemberRolesRequest { Roles = ids });
-    }
-
-    public Task RemoveUserFromOrganizationAsync(string organization, string user) => RemoveUserFromOrganizationAsync(organization, new string[] { user });
-
-    public async Task RemoveUserFromOrganizationAsync(string organization, string[] users)
-    {
-        var client = await GetClientAsync();
-
-        await client.Organizations.DeleteMemberAsync(organization, new OrganizationDeleteMembersRequest { Members = users });
-    }
+        Id = invite.Id,
+        CreatedAt = invite.CreatedAt,
+        ExpiresAt = invite.ExpiresAt,
+        Inviter = invite.Inviter.Name,
+        Invitee = invite.ConnectionId,
+        Roles = invite.Roles.ToArray(),
+    };
 }

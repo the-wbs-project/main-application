@@ -1,9 +1,12 @@
-import { JsonPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { Member, ROLES } from '@wbs/core/models';
+import { Member } from '@wbs/core/models';
 import { RoleListPipe } from '../../../../../../pipes/role-list.pipe';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Store } from '@ngxs/store';
+import { RolesState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -13,11 +16,11 @@ import { RoleListPipe } from '../../../../../../pipes/role-list.pipe';
   imports: [NgClass, NgFor, NgIf, TranslateModule, RoleListPipe],
 })
 export class EditMemberComponent implements OnInit {
-  readonly roles = [ROLES.PM, ROLES.APPROVER, ROLES.SME, ROLES.ADMIN];
+  readonly roles = toSignal(this.store.select(RolesState.definitions));
 
   member?: Member;
 
-  constructor(readonly modal: NgbActiveModal) {}
+  constructor(readonly modal: NgbActiveModal, readonly store: Store) {}
 
   ngOnInit(): void {}
 

@@ -4,14 +4,18 @@ import {
   PROJECT_STATI,
   PROJECT_VIEW_STATI,
   ProjectNode,
-  ROLES,
 } from '../models';
 import { IdService } from './id.service';
 import { Resources } from './resource.service';
+import { Store } from '@ngxs/store';
+import { RolesState } from '@wbs/main/states';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
-  constructor(private readonly resources: Resources) {}
+  constructor(
+    private readonly resources: Resources,
+    private readonly store: Store
+  ) {}
 
   filterByStatus(
     projects: Project[] | null | undefined,
@@ -53,15 +57,11 @@ export class ProjectService {
   ): string {
     if (!role) return '';
 
-    const suffix = useAbbreviations ? '' : '-Full';
+    const definition = this.store
+      .selectSnapshot(RolesState.definitions)!
+      .find((x) => x.id === role)!;
 
-    if (role === ROLES.ADMIN)
-      return this.resources.get('General.Admin' + suffix);
-    if (role === ROLES.PM) return this.resources.get('General.PM' + suffix);
-    if (role === ROLES.APPROVER) return this.resources.get('General.Approver');
-    if (role === ROLES.SME) return this.resources.get('General.SME' + suffix);
-
-    return '';
+    return useAbbreviations ? definition.abbreviation : definition.description;
   }
 
   createTask(

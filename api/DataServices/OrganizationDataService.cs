@@ -41,27 +41,21 @@ public class OrganizationDataService : BaseAuthDataService
 
         var roles = await client.Organizations.GetAllMemberRolesAsync(organization, userId, page);
 
-        return roles.Select(r => r.Name);
+        return roles.Select(r => r.Id);
     }
 
-    public async Task AddUserOrganizationalRolesAsync(string organization, string userId, IEnumerable<string> roles)
+    public async Task AddUserOrganizationalRolesAsync(string organization, string userId, List<string> roles)
     {
-        await EnsureRolesAsync();
-
         var client = await GetClientAsync();
-        var ids = roles.Select(id => this.roles[id]).ToArray();
 
-        await client.Organizations.AddMemberRolesAsync(organization, userId, new OrganizationAddMemberRolesRequest { Roles = ids });
+        await client.Organizations.AddMemberRolesAsync(organization, userId, new OrganizationAddMemberRolesRequest { Roles = roles });
     }
 
-    public async Task RemoveUserOrganizationalRolesAsync(string organization, string userId, IEnumerable<string> roles)
+    public async Task RemoveUserOrganizationalRolesAsync(string organization, string userId, List<string> roles)
     {
-        await EnsureRolesAsync();
-
         var client = await GetClientAsync();
-        var ids = roles.Select(id => this.roles[id]).ToArray();
 
-        await client.Organizations.DeleteMemberRolesAsync(organization, userId, new OrganizationDeleteMemberRolesRequest { Roles = ids });
+        await client.Organizations.DeleteMemberRolesAsync(organization, userId, new OrganizationDeleteMemberRolesRequest { Roles = roles });
     }
 
     public Task RemoveUserFromOrganizationAsync(string organization, string user) => RemoveUserFromOrganizationAsync(organization, new string[] { user });

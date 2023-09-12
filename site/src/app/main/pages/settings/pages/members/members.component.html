@@ -1,83 +1,118 @@
 <div class="container-fluid">
   <div class="row mg-b-20">
-    <div class="col-6">
-      <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="col-8 offset-2">
+      <div class="card overflow-hidden">
+        <div class="card-header pd-b-0 border-bottom-0 tx-center">
+          <h4 class="card-title">Membership Rollup</h4>
+        </div>
+        <div class="card-body tx-center">
+          <div class="row mb-2 ps-lg-5">
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+              <p class="mb-1">Total Members</p>
+              <h5>{{ members()?.length ?? 0 }}</h5>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+              <p class="mb-1">Total Invites</p>
+              <h5>{{ invites()?.length ?? 0 }}</h5>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+              <p class="mb-1">Total Capacity</p>
+              <h5>
+                {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
+              </h5>
+            </div>
+            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
+              <p class="mb-1">Capacity Remaining</p>
+              <h5>
+                {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
+              </h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mg-b-20">
+      <div class="col-6">
+        <div class="btn-group" role="group" aria-label="Basic example">
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="{
+              'btn-primary': view() === 'members',
+              'btn-outline-primary': view() !== 'members'
+            }"
+            (click)="view.set('members')"
+          >
+            {{ "General.Members" | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn"
+            [ngClass]="{
+              'btn-primary': view() === 'invitations',
+              'btn-outline-primary': view() !== 'invitations'
+            }"
+            (click)="view.set('invitations')"
+          >
+            {{ "OrgSettings.Invitations" | translate }}
+          </button>
+        </div>
+      </div>
+      <div class="col-6 tx-right">
         <button
-          type="button"
-          class="btn"
-          [ngClass]="{
-            'btn-primary': view === 'members',
-            'btn-outline-primary': view !== 'members'
-          }"
-          [routerLink]="['/', org, 'settings', 'members']"
+          *ngIf="remaining() !== 0"
+          class="btn btn-sm btn-primary"
+          (click)="openInviteDialog()"
         >
-          {{ "General.Members" | translate }}
-        </button>
-        <button
-          type="button"
-          class="btn"
-          [ngClass]="{
-            'btn-primary': view === 'invitations',
-            'btn-outline-primary': view !== 'invitations'
-          }"
-          [routerLink]="['/', org, 'settings', 'members', 'invitations']"
-        >
-          {{ "OrgSettings.Invitations" | translate }}
+          <kendo-svg-icon [icon]="plusIcon" />
+          {{ "OrgSettings.InviteMembers" | translate }}
         </button>
       </div>
     </div>
-    <div class="col-6 tx-right">
-      <span class="pd-r-10">
-        {{ members()?.length ?? 0 }} / Unlimited Seats
-      </span>
-      <button class="btn btn-sm btn-primary">
-        <kendo-svg-icon [icon]="plusIcon" />
-        Invite Members
-      </button>
-    </div>
-  </div>
-  <div class="row mg-b-20">
-    <div class="col-lg-8 col-md-12 pd-lg-b-0 pd-md-b-20">
-      <input
-        type="text"
-        [(ngModel)]="textFilter"
-        class="form-control w-100"
-        placeholder="Search by name or email"
-      />
-    </div>
-    <div class="col-lg-4 col-md-12">
-      <kendo-dropdownlist
-        size="medium"
-        class="w-100"
-        [data]="roles"
-        [(value)]="role"
-        textField="text"
-        valueField="name"
-        [valuePrimitive]="true"
-      >
-        <ng-template
-          kendoDropDownListItemTemplate
-          kendoDropDownListValueTemplate
-          let-dataItem
+    <div class="row mg-b-20">
+      <div class="col-lg-8 col-md-12 pd-lg-b-0 pd-md-b-20">
+        <input
+          type="text"
+          [(ngModel)]="textFilter"
+          class="form-control w-100"
+          placeholder="Search by name or email"
+        />
+      </div>
+      <div class="col-lg-4 col-md-12 d-none">
+        <kendo-dropdownlist
+          size="medium"
+          class="w-100"
+          [data]="roles()"
+          [(value)]="role"
+          textField="text"
+          valueField="name"
+          [valuePrimitive]="true"
         >
-          {{ dataItem.text | translate }}
-        </ng-template>
-      </kendo-dropdownlist>
+          <ng-template
+            kendoDropDownListItemTemplate
+            kendoDropDownListValueTemplate
+            let-dataItem
+          >
+            {{ dataItem.text | translate }}
+          </ng-template>
+        </kendo-dropdownlist>
+      </div>
     </div>
-  </div>
-  <div class="row">
-    <div class="col-12">
-      <wbs-member-list
-        *ngIf="view === 'members'"
-        [role]="role"
-        [members]="members()"
-        [textFilter]="textFilter"
-      />
-      <wbs-invitation-list
-        *ngIf="view === 'invitations'"
-        [role]="role"
-        [textFilter]="textFilter"
-      />
+    <div class="row">
+      <div class="col-12">
+        <wbs-member-list
+          *ngIf="view() === 'members'"
+          [role]="role"
+          [members]="members()"
+          [textFilter]="textFilter"
+        />
+        <wbs-invitation-list
+          *ngIf="view() === 'invitations'"
+          [role]="role"
+          [invites]="invites()"
+          [textFilter]="textFilter"
+        />
+      </div>
     </div>
   </div>
 </div>

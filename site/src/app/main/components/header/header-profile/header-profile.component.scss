@@ -1,24 +1,24 @@
-.profile-menu {
+.profile-dropdown {
   .dropdown-toggle::after {
     display: none;
   }
+}
 
-  .profile-menu {
-    border: solid 1px #eeeeee;
-    margin-top: 12px !important;
-    width: 300px !important;
+.profile-menu {
+  border: solid 1px #eeeeee;
+  margin-top: 12px !important;
+  width: 300px !important;
 
-    > a {
-      position: relative;
-      padding: 20px 16px;
-      height: 38px;
-      display: flex;
-      align-items: center;
-      font-size: 12px;
-      color: #7a839b;
-    }
-    .dropdown-item + .dropdown-item {
-      border-top: 1px solid #e2eaf9;
-    }
+  > a {
+    position: relative;
+    padding: 20px 16px;
+    height: 38px;
+    display: flex;
+    align-items: center;
+    font-size: 12px;
+    color: #7a839b;
+  }
+  .dropdown-item + .dropdown-item {
+    border-top: 1px solid #e2eaf9;
   }
 }

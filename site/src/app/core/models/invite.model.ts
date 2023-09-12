@@ -1,8 +1,11 @@
-export interface Invite {
-  id: string;
+export interface InviteBody {
   inviter: string;
   invitee: string;
   roles: string[];
+}
+
+export interface Invite extends InviteBody {
+  id: string;
   createdAt: Date;
   expiredAt: Date;
 }

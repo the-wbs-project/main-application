@@ -3,9 +3,13 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { ROLES } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
+import { SendInvites } from '../../actions';
 import { InviteValidators } from './invite-validators.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RolesState } from '@wbs/main/states';
+
+declare type InviteError = { email?: string; error: string };
 
 @Component({
   standalone: true,
@@ -15,9 +19,9 @@ import { InviteValidators } from './invite-validators.service';
   imports: [CommonModule, TranslateModule, RoleListPipe],
 })
 export class InvitesFormComponent {
-  readonly roleList = [ROLES.PM, ROLES.APPROVER, ROLES.SME, ROLES.ADMIN];
+  readonly roleList = toSignal(this.store.select(RolesState.definitions));
   roles: string[] = [];
-  errors: { email: string; error: string }[] = [];
+  errors: InviteError[] = [];
 
   constructor(
     readonly modal: NgbActiveModal,
@@ -32,27 +36,35 @@ export class InvitesFormComponent {
     else this.roles.push(role);
   }
 
-  submit(emails: string) {
-    const list = emails.split(',').map((e) => e.trim());
+  submit(emailText: string) {
+    const emails = emailText.split(',').map((e) => e.trim());
+    const errors: InviteError[] = [];
+    const hasRoles = this.roles.length > 0;
+    const hasEmails = emails.length > 0;
 
-    const alreadyExists = this.validators.checkIfAnyExists(list);
-    const alreadyInvited = this.validators.checkIfAnyInvited(list);
+    if (!hasRoles) errors.push({ error: 'OrgSettings.InviteErrorNoRoles' });
 
-    if (alreadyExists.length === 0 && alreadyInvited.length === 0) {
-      this.modal.close(list);
-      return;
+    if (!hasEmails) {
+      errors.push({ error: 'OrgSettings.InviteErrorNoEmails' });
     } else {
-      this.errors = [
-        ...alreadyExists.map((email) => ({
-          email,
-          error: 'General.UserAlreadyExists',
-        })),
-        ...alreadyInvited.map((email) => ({
-          email,
-          error: 'General.UserAlreadyInvited',
-        })),
-      ];
+      for (const email of this.validators.checkIfAnyInvalid(emails)) {
+        errors.push({ email, error: 'OrgSettings.InviteErrorInvalidEmail' });
+      }
+
+      for (const email of this.validators.checkIfAnyExists(emails)) {
+        errors.push({ email, error: 'OrgSettings.InviteErrorAlreadyMember' });
+      }
+
+      for (const email of this.validators.checkIfAnyInvited(emails)) {
+        errors.push({ email, error: 'OrgSettings.InviteErrorAlreadySent' });
+      }
     }
-    //
+    if (errors.length === 0) {
+      this.store.dispatch(new SendInvites(emails, this.roles)).subscribe(() => {
+        this.modal.close();
+      });
+    } else {
+      this.errors = errors;
+    }
   }
 }

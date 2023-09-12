@@ -25,7 +25,6 @@ export class TableHelper {
   }
 
   process<T>(data: T[], state: State): T[] {
-    //
     return process(data, state).data;
   }
 }

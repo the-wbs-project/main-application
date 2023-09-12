@@ -2,7 +2,13 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
-import { AuthState, MetadataState, MembershipState, UiState } from './states';
+import {
+  AuthState,
+  MetadataState,
+  MembershipState,
+  UiState,
+  RolesState,
+} from './states';
 import { UserService } from './services';
 
 export const routes: Routes = [
@@ -17,6 +23,7 @@ export const routes: Routes = [
           AuthState,
           MetadataState,
           MembershipState,
+          RolesState,
           UiState,
         ])
       ),

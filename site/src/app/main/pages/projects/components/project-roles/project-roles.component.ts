@@ -8,14 +8,17 @@ import {
   SimpleChanges,
   signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
+import { Store } from '@ngxs/store';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
-import { Member, ROLES, ROLES_CONST, ROLES_TYPE } from '@wbs/core/models';
+import { Member } from '@wbs/core/models';
 import { ProjectService } from '@wbs/core/services';
 import { DialogService } from '@wbs/main/services';
+import { RolesState } from '@wbs/main/states';
 import { ProjectUserListComponent } from '../user-list/user-list.component';
 import { RoleUsersService } from './services';
-import { RoleUsersViewModel } from './view-models/role-users.view-model';
+import { RoleUsersViewModel } from './view-models';
 
 declare type OutputType = {
   user: Member;
@@ -39,39 +42,50 @@ export class ProjectRolesComponent implements OnChanges {
   @Output() readonly addUserToRole = new EventEmitter<OutputType>();
   @Output() readonly removeUserToRole = new EventEmitter<OutputType>();
 
-  readonly approvers = signal(<RoleUsersViewModel>{});
-  readonly pms = signal(<RoleUsersViewModel>{});
-  readonly smes = signal(<RoleUsersViewModel>{});
+  readonly roles = toSignal(this.store.select(RolesState.ids));
+  readonly approvers = signal<RoleUsersViewModel>({
+    assigned: [],
+    unassigned: [],
+  });
+  readonly pms = signal<RoleUsersViewModel>({
+    assigned: [],
+    unassigned: [],
+  });
+  readonly smes = signal<RoleUsersViewModel>({
+    assigned: [],
+    unassigned: [],
+  });
 
   readonly minusIcon = minusIcon;
   readonly plusIcon = plusIcon;
-  readonly roles = ROLES_CONST;
 
   constructor(
     private readonly dialog: DialogService,
     private readonly projectService: ProjectService,
-    private readonly service: RoleUsersService
+    private readonly service: RoleUsersService,
+    private readonly store: Store
   ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     if (!this.members) return;
 
     const keys = Object.keys(changes);
+    const ids = this.store.selectSnapshot(RolesState.ids);
 
     if (keys.includes('approverIds') && this.approverIds) {
       this.approvers.set(
-        this.service.get(ROLES.APPROVER, this.approverIds, this.members)
+        this.service.get(ids.approver, this.approverIds, this.members)
       );
     }
     if (keys.includes('pmIds') && this.pmIds) {
-      this.pms.set(this.service.get(ROLES.PM, this.pmIds, this.members));
+      this.pms.set(this.service.get(ids.pm, this.pmIds, this.members));
     }
     if (keys.includes('smeIds') && this.smeIds) {
-      this.smes.set(this.service.get(ROLES.SME, this.smeIds, this.members));
+      this.smes.set(this.service.get(ids.sme, this.smeIds, this.members));
     }
   }
 
-  add(role: ROLES_TYPE, user: Member) {
+  add(role: string, user: Member) {
     this.run(
       role,
       user,
@@ -80,7 +94,7 @@ export class ProjectRolesComponent implements OnChanges {
     );
   }
 
-  remove(role: ROLES_TYPE, user: Member) {
+  remove(role: string, user: Member) {
     this.run(
       role,
       user,
@@ -90,7 +104,7 @@ export class ProjectRolesComponent implements OnChanges {
   }
 
   private run(
-    role: ROLES_TYPE,
+    role: string,
     user: Member,
     message: string,
     output: EventEmitter<OutputType>
@@ -99,7 +113,9 @@ export class ProjectRolesComponent implements OnChanges {
       output.emit({ user, role });
       return;
     }
-    const roleTitle = this.projectService.getRoleTitle(role, false);
+    const roleTitle = this.store
+      .selectSnapshot(RolesState.definitions)
+      .find((x) => x.id === role)!.description;
 
     this.dialog
       .confirm('General.Confirmation', message, {

@@ -12,6 +12,7 @@
       "Other": "Other",
       "Name": "Name",
       "Email": "Email",
+      "Emails": "Email(s)",
       "Edit": "Edit",
       "Remove": "Remove",
       "Delete": "Delete",
@@ -410,9 +411,22 @@
       "GeneralDescription": "Name, contact info, and more",
       "Users": "Users",
       "AllRoles": "All Roles",
+      "Unlimited": "Unlimited",
       "UsersDescription": "Invite and manage existing users",
       "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?",
-      "MemberRolesUpdated": "The member's roles have been updated."
+      "MemberRolesUpdated": "The member's roles have been updated.",
+      "InviteEmailHint": "Enter the email addresses (seperated by comma) of the people you want to invite.",
+      "SendInvite": "Send Invite",
+      "InviteUsers": "Invite Users",
+      "InviteSent": "Invite Sent",
+      "InvitesSent": "Invites Sent",
+      "InviteMembers": "Invite Members",
+      "InviteErrorHeader": "The following errors were found",
+      "InviteErrorNoRoles": "No roles were selected.",
+      "InviteErrorNoEmailAddresses": "No email addresses were provided.",
+      "InviteErrorInvalidEmail": "Invalid email address",
+      "InviteErrorAlreadySent": "Invite already sent",
+      "InviteErrorAlreadyMember": "User already a member"
     }
   },
   {

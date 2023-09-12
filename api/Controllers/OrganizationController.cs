@@ -113,7 +113,7 @@ public class OrganizationsController : ControllerBase
     [Authorize]
     [IgnoreAntiforgeryToken(Order = 1000)]
     [HttpPut("{organization}/members/{user}/roles")]
-    public async Task<IActionResult> AddUserOrganizationalRolesAsync(string organization, string user, [FromBody] IEnumerable<string> roles)
+    public async Task<IActionResult> AddUserOrganizationalRolesAsync(string organization, string user, [FromBody] List<string> roles)
     {
         try
         {
@@ -134,7 +134,7 @@ public class OrganizationsController : ControllerBase
     [Authorize]
     [HttpDelete("{organization}/members/{user}/roles")]
     [IgnoreAntiforgeryToken(Order = 1000)]
-    public async Task<IActionResult> RemoveUserOrganizationalRolesAsync(string organization, string user, [FromBody] IEnumerable<string> roles)
+    public async Task<IActionResult> RemoveUserOrganizationalRolesAsync(string organization, string user, [FromBody] List<string> roles)
     {
         try
         {
@@ -154,13 +154,13 @@ public class OrganizationsController : ControllerBase
 
     [Authorize]
     [HttpGet("{organization}/invites")]
-    public async Task<IActionResult> SendInviteAsync(string organization)
+    public async Task<IActionResult> GetAllInvitesAsync(string organization)
     {
         try
         {
             var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
 
-            return Ok(await inviteDataService.GetPageAsync(orgId));
+            return Ok(await inviteDataService.GetAllAsync(orgId));
         }
         catch (Exception ex)
         {
@@ -171,7 +171,7 @@ public class OrganizationsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{organization}/invites")]
+    [HttpPost("{organization}/invites")]
     [IgnoreAntiforgeryToken(Order = 1000)]
     public async Task<IActionResult> SendInviteAsync(string organization, [FromBody] InviteBody invite)
     {
@@ -179,9 +179,7 @@ public class OrganizationsController : ControllerBase
         {
             var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
 
-            await inviteDataService.SendAsync(orgId, invite);
-
-            return NoContent();
+            return Ok(await inviteDataService.SendAsync(orgId, invite));
         }
         catch (Exception ex)
         {

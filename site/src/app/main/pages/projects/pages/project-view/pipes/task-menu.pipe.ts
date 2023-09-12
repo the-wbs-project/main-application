@@ -4,6 +4,7 @@ import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { PROJECT_MENU_ITEMS } from '../models';
 import { ProjectState } from '../states';
+import { RolesState } from '@wbs/main/states';
 
 @Pipe({ name: 'taskMenu', standalone: true })
 export class TaskMenuPipe implements PipeTransform {
@@ -96,7 +97,7 @@ export class TaskMenuPipe implements PipeTransform {
       return false;
 
     if (link.filters.roles) {
-      const rolesResult = link.filters.roles.some(
+      const rolesResult = this.convertRoles(link.filters.roles).some(
         (role) => roles.indexOf(role) > -1
       );
 
@@ -109,5 +110,19 @@ export class TaskMenuPipe implements PipeTransform {
     }
 
     return true;
+  }
+
+  private convertRoles(roles: string[]): string[] {
+    const ids = this.store.selectSnapshot(RolesState.ids);
+    const results: string[] = [];
+
+    for (const role of roles) {
+      if (role === 'admin') results.push(ids.admin);
+      else if (role === 'approver') results.push(ids.approver);
+      else if (role === 'pm') results.push(ids.pm);
+      else if (role === 'sme') results.push(ids.sme);
+    }
+
+    return results;
   }
 }

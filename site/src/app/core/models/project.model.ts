@@ -1,12 +1,8 @@
-import {
-  PROJECT_NODE_VIEW_TYPE,
-  PROJECT_STATI_TYPE,
-  ROLES_TYPE,
-} from './enums';
+import { PROJECT_NODE_VIEW_TYPE, PROJECT_STATI_TYPE } from './enums';
 import { ProjectCategory } from './project-category.type';
 
 export interface UserRole {
-  role: ROLES_TYPE;
+  role: string;
   userId: string;
 }
 

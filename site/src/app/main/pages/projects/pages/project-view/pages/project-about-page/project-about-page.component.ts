@@ -10,9 +10,9 @@ import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { map } from 'rxjs/operators';
 import { ProjectChecklistComponent } from '../../components/project-checklist/project-checklist.component';
-import { RoleTitlePipe } from '../../pipes/role-title.pipe';
 import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
+import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 
 @Component({
   standalone: true,
@@ -26,7 +26,7 @@ import { ProjectStatisticComponent } from '../../components/project-statistic.co
     ProjectChecklistComponent,
     ProjectStatisticComponent,
     ProjectStatusPipe,
-    RoleTitlePipe,
+    RoleListPipe,
     SafeHtmlPipe,
     TranslateModule,
   ],

@@ -6,7 +6,6 @@ import {
   OnChanges,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
@@ -17,16 +16,9 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { gearIcon, pencilIcon, xIcon } from '@progress/kendo-svg-icons';
-import { Member } from '@wbs/core/models';
-import {
-  RemoveMemberFromOrganization,
-  UpdateMemberRoles,
-} from '@wbs/main/actions';
+import { Invite, Member } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
-import { MembershipState } from '@wbs/main/states';
-import { first } from 'rxjs/operators';
-import { EditMemberComponent } from '../edit-member/edit-member.component';
 import { SortableDirective } from '../../directives/table-sorter.directive';
 import { TableProcessPipe } from '../../pipes/table-process.pipe';
 import { TableHelper } from '../../services';
@@ -52,10 +44,10 @@ import { SortArrowComponent } from '../sort-arrow.component';
   ],
 })
 export class InvitationListComponent implements OnChanges {
+  @Input({ required: true }) invites?: Invite[];
   @Input() role = '';
   @Input() textFilter = '';
 
-  readonly invites = toSignal(this.store.select(MembershipState.invitations));
   readonly state = signal(<State>{
     sort: [{ field: 'name', dir: 'asc' }],
   });
@@ -83,7 +75,7 @@ export class InvitationListComponent implements OnChanges {
   }
 
   userActionClicked(member: Member, action: string): void {
-    if (action === 'edit') {
+    /* if (action === 'edit') {
       this.dialogService
         .openDialog<Member>(
           EditMemberComponent,
@@ -108,7 +100,7 @@ export class InvitationListComponent implements OnChanges {
             this.store.dispatch(new RemoveMemberFromOrganization(member.id));
           }
         });
-    }
+    }*/
   }
 
   updateState(): void {

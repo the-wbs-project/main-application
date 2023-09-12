@@ -7,5 +7,6 @@ export interface Organization {
   };
   metadata: {
     mainProjectType: 'single' | 'multiple';
+    seatCount?: number;
   };
 }
