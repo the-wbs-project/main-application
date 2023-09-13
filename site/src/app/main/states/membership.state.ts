@@ -1,5 +1,12 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import {
+  Action,
+  NgxsOnInit,
+  Selector,
+  State,
+  StateContext,
+  Store,
+} from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Organization, Project } from '@wbs/core/models';
 import { Messages, sorter } from '@wbs/core/services';
@@ -12,6 +19,8 @@ import {
   UpdateMembers,
 } from '../actions';
 import { UserService } from '../services';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AuthState } from './auth.state';
 
 interface MembershipStateModel {
   list?: Organization[];
@@ -24,16 +33,18 @@ interface MembershipStateModel {
 declare type Context = StateContext<MembershipStateModel>;
 
 @Injectable()
+@UntilDestroy()
 @State<MembershipStateModel>({
   name: 'membership',
   defaults: {
     loading: true,
   },
 })
-export class MembershipState {
+export class MembershipState implements NgxsOnInit {
   constructor(
     protected readonly data: DataServiceFactory,
     protected readonly messages: Messages,
+    protected readonly store: Store,
     protected readonly userService: UserService
   ) {}
 
@@ -60,6 +71,25 @@ export class MembershipState {
   @Selector()
   static members(state: MembershipStateModel): Member[] | undefined {
     return state.members;
+  }
+
+  ngxsOnInit(ctx: Context): void {
+    this.store
+      .select(AuthState.profile)
+      .pipe(untilDestroyed(this))
+      .subscribe((profile) => {
+        if (!profile) return;
+
+        const members = ctx.getState().members ?? [];
+
+        if (members.length == 0) return;
+
+        const member = members.find((x) => x.id === profile?.id);
+
+        if (member) member.name = profile.name;
+
+        ctx.patchState({ members });
+      });
   }
 
   @Action(InitiateOrganizations)

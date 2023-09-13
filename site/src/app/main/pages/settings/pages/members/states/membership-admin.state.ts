@@ -26,15 +26,13 @@ declare type Context = StateContext<StateModel>;
   name: 'membershipAdmin',
 })
 @Injectable()
-export class MembershipAdminState extends MembershipState {
+export class MembershipAdminState {
   constructor(
-    data: DataServiceFactory,
-    messages: Messages,
-    userService: UserService,
+    private readonly data: DataServiceFactory,
+    private readonly messages: Messages,
+    private readonly userService: UserService,
     private readonly store: Store
-  ) {
-    super(data, messages, userService);
-  }
+  ) {}
 
   @Selector()
   static invitations(state: StateModel): Invite[] | undefined {
@@ -134,7 +132,8 @@ export class MembershipAdminState extends MembershipState {
 
   @Action(SendInvites)
   sendInvites(ctx: Context, { emails, roles }: SendInvites): Observable<void> {
-    const inviter = this.store.selectSnapshot(AuthState.profile)!.name;
+    const profile = this.store.selectSnapshot(AuthState.profile)!;
+    const inviter = profile.name;
     const saves: Observable<Invite>[] = [];
 
     for (const invitee of emails) {

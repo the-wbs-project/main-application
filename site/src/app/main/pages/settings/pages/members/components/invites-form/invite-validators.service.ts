@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { MembershipAdminState } from '../../states';
+import { MembershipState } from '@wbs/main/states';
 
 @Injectable()
 export class InviteValidators {
@@ -19,7 +20,7 @@ export class InviteValidators {
 
   checkIfAnyExists(emails: string[]): string[] {
     const existing: string[] = [];
-    const users = this.store.selectSnapshot(MembershipAdminState.members)!;
+    const users = this.store.selectSnapshot(MembershipState.members)!;
 
     for (const email of emails) {
       if (users.some((x) => x.email.toLowerCase() === email.toLowerCase())) {

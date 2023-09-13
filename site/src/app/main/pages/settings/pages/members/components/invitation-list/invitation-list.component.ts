@@ -15,7 +15,7 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { gearIcon, pencilIcon, xIcon } from '@progress/kendo-svg-icons';
+import { gearIcon, xIcon } from '@progress/kendo-svg-icons';
 import { Invite } from '@wbs/core/models';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
@@ -57,11 +57,6 @@ export class InvitationListComponent implements OnChanges {
   });
   readonly gearIcon = gearIcon;
   readonly menu = [
-    {
-      text: 'General.Edit',
-      svgIcon: pencilIcon,
-      action: 'edit',
-    },
     {
       text: 'OrgSettings.CancelInvite',
       svgIcon: xIcon,
@@ -118,12 +113,12 @@ export class InvitationListComponent implements OnChanges {
         logic: 'or',
         filters: [
           {
-            field: 'name',
+            field: 'inviter',
             operator: 'contains',
             value: this.textFilter,
           },
           {
-            field: 'email',
+            field: 'invitee',
             operator: 'contains',
             value: this.textFilter,
           },

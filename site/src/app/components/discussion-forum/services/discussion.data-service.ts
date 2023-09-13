@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { UserLite } from '@wbs/core/models';
+import { User } from '@wbs/core/models';
 import { Observable } from 'rxjs';
 import { Discussion } from '../models';
 
@@ -23,8 +23,8 @@ export class DiscussionDataService {
   getUsersAsync(
     organization: string,
     associationId: string
-  ): Observable<UserLite[]> {
-    return this.http.get<UserLite[]>(
+  ): Observable<User[]> {
+    return this.http.get<User[]>(
       `discussions/${organization}/${associationId}/users`
     );
   }

@@ -15,6 +15,8 @@
         {{ "General.Email" | translate }} &nbsp;
         <wbs-sort-arrow [state]="state()" field="email" />
       </th>
+      <th scope="col">{{ "OrgSettings.LoginCount" | translate }}</th>
+      <th scope="col">{{ "OrgSettings.LastLogin" | translate }}</th>
       <th scope="col">{{ "General.Roles" | translate }}</th>
     </tr>
   </thead>
@@ -39,6 +41,8 @@
       </td>
       <td>{{ member.name }}</td>
       <td class="d-md-none d-lg-table-cell">{{ member.email }}</td>
+      <td>{{ member.loginCount }}</td>
+      <td>{{ member.lastLogin | dateText }}</td>
       <td>{{ member.roles | roleList : true }}</td>
     </tr>
   </tbody>

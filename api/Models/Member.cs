@@ -1,18 +1,32 @@
-using Newtonsoft.Json;
+using Auth0.ManagementApi.Models;
 
 namespace Wbs.Api.Models;
 
 public class Member
 {
-    [JsonProperty("id")]
+    public Member() { }
+    public Member(User user)
+    {
+        Id = user.UserId;
+        Name = user.FullName;
+        Email = user.Email;
+        Picture = user.Picture;
+        CreatedAt = user.CreatedAt;
+        LastLogin = user.LastLogin;
+
+        if (!string.IsNullOrEmpty(user.LoginsCount)
+            && int.TryParse(user.LoginsCount, out var loginCount))
+        {
+            LoginCount = loginCount;
+        }
+    }
+
     public string Id { get; set; }
-
-    [JsonProperty("name")]
     public string Name { get; set; }
-
-    [JsonProperty("email")]
     public string Email { get; set; }
-
-    [JsonProperty("roles")]
-    public IEnumerable<string> Roles { get; set; }
+    public string Picture { get; set; }
+    public DateTime? CreatedAt { get; set; }
+    public DateTime? LastLogin { get; set; }
+    public int? LoginCount { get; set; }
+    public List<string> Roles { get; set; }
 }

@@ -1,8 +1,8 @@
 import {
   PROJECT_NODE_VIEW_TYPE,
-  UserLite,
-  ProjectCategoryChanges,
   PROJECT_STATI,
+  ProjectCategoryChanges,
+  User,
 } from '@wbs/core/models';
 
 export class VerifyProject {
@@ -39,12 +39,12 @@ export class ChangeProjectBasics {
 
 export class AddUserToRole {
   static readonly type = '[Project] Add User To Role';
-  constructor(readonly role: string, readonly user: UserLite) {}
+  constructor(readonly role: string, readonly user: User) {}
 }
 
 export class RemoveUserToRole {
   static readonly type = '[Project] Remove User To Role';
-  constructor(readonly role: string, readonly user: UserLite) {}
+  constructor(readonly role: string, readonly user: User) {}
 }
 
 export class MarkProjectChanged {

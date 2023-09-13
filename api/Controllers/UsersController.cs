@@ -27,14 +27,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            var obj = await dataService.GetUserAsync(user);
-
-            return Ok(new UserLite
-            {
-                Id = obj.UserId,
-                Name = obj.FullName,
-                Email = obj.Email
-            });
+            return Ok(await dataService.GetUserAsync(user));
         }
         catch (Exception ex)
         {
@@ -77,7 +70,7 @@ public class UsersController : ControllerBase
 
     [Authorize]
     [HttpPut("{user}")]
-    public async Task<IActionResult> PutUserAsync(string user, UserLite userObject)
+    public async Task<IActionResult> PutUserAsync(string user, Member userObject)
     {
         try
         {

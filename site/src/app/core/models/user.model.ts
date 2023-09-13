@@ -1,22 +1,9 @@
-export interface UserLite {
+export interface User {
   id: string;
   email: string;
   name: string;
   picture?: string;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  emailVerified?: boolean;
-  name: string;
-  blocked?: boolean;
   createdAt?: Date;
   lastLogin?: Date;
-  loginsCount?: number;
-  userInfo: UserMetadata;
-}
-
-export interface UserMetadata {
-  culture?: string;
+  loginCount?: number;
 }

@@ -121,7 +121,7 @@ export class Logger {
         },
       },
       usr: {
-        id: this.ctx.get('userId'),
+        id: this.ctx.get('idToken')?.userId,
       },
       ...(info.duration
         ? {

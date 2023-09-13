@@ -418,6 +418,8 @@
       "Users": "Users",
       "AllRoles": "All Roles",
       "Unlimited": "Unlimited",
+      "LoginCount": "Login Count",
+      "LastLogin": "Last Login",
       "UsersDescription": "Invite and manage existing users",
       "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?",
       "MemberRolesUpdated": "The member's roles have been updated.",

@@ -1,5 +1,10 @@
+using System.Net;
+using System.Net.Http.Headers;
+using System.Text.Json;
 using Auth0.ManagementApi.Models;
 using Auth0.ManagementApi.Paging;
+using Newtonsoft.Json;
+using Wbs.Api.Models;
 
 namespace Wbs.Api.Services;
 
@@ -30,12 +35,49 @@ public class OrganizationDataService : BaseAuthDataService
         return org.Id;
     }
 
-    public async Task<IEnumerable<OrganizationMember>> GetOrganizationalUsersAsync(string organization)
+    public async Task<IEnumerable<Member>> GetOrganizationalUsersAsync(string organization)
     {
-        var client = await GetClientAsync();
-        var page = new PaginationInfo(0, 50, false);
+        using (var http = new HttpClient())
+        {
+            var request = new HttpRequestMessage
+            {
+                Method = HttpMethod.Get,
+                RequestUri = new Uri($"https://{config.Domain}/api/v2/organizations/{organization}/members?per_page=100&take=100&fields=user_id"),
+            };
 
-        return await client.Organizations.GetAllMembersAsync(organization, page);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", mgmtToken);
+
+            var response = await http.SendAsync(request);
+            var raw = await response.Content.ReadAsStringAsync();
+
+            if (response.StatusCode == HttpStatusCode.OK)
+            {
+                //
+                //  UGLY, and I mean UGLY hack.  But I was nota ble to figure out why the deserialization didn't work.
+                //
+                var members = JsonConvert.DeserializeObject<MemberIds>(raw);
+                var query = $"user_id: ({string.Join(" OR ", members.members.Select(m => $"\"{m.user_id}\"").ToArray())})";
+
+                request = new HttpRequestMessage
+                {
+                    Method = HttpMethod.Get,
+                    RequestUri = new Uri($"https://{config.Domain}/api/v2/users?per_page=100&take=100&q={query}"),
+                };
+
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", mgmtToken);
+
+                response = await http.SendAsync(request);
+                raw = await response.Content.ReadAsStringAsync();
+
+                return JsonConvert.DeserializeObject<User[]>(raw).Select(u => new Member(u));
+            }
+            else
+            {
+                logger.LogError(response.StatusCode + ": " + raw);
+
+                throw new Exception($"Failed to pull management token: {response.StatusCode}");
+            }
+        }
     }
 
     public async Task<IEnumerable<string>> GetUserOrganizationalRolesAsync(string organization, string userId)
@@ -69,5 +111,16 @@ public class OrganizationDataService : BaseAuthDataService
         var client = await GetClientAsync();
 
         await client.Organizations.DeleteMemberAsync(organization, new OrganizationDeleteMembersRequest { Members = users });
+    }
+
+    public class UserId
+    {
+        public string user_id { get; set; }
+    }
+
+    public class MemberIds
+    {
+        public UserId[] members { get; set; }
+        public string next { get; set; }
     }
 }

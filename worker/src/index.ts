@@ -1,8 +1,7 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cors, kv, logger, verifyAdminAsync, verifyJwt, verifyMembership, verifyMyself } from './middle';
+import { cors, kv, kvPurge, kvPurgeOrgs, logger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, Logger, MailGunService, OriginService } from './services';
-import { kvPurge } from './middle/kv-purge.service';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
@@ -61,7 +60,7 @@ app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMember
 
 app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
-app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), OriginService.pass);
+app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), kvPurgeOrgs, OriginService.pass);
 //app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
 
 app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, OriginService.pass);

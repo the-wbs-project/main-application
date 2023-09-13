@@ -20,11 +20,11 @@ public class UserDataService : BaseAuthDataService
         return new List<Role>(await client.Roles.GetAllAsync(new GetRolesRequest()));
     }
 
-    public async Task<User> GetUserAsync(string userId)
+    public async Task<Member> GetUserAsync(string userId)
     {
         var client = await GetClientAsync();
 
-        return await client.Users.GetAsync(userId);
+        return new Member(await client.Users.GetAsync(userId));
     }
 
     public async Task<List<string>> GetRolesAsync(string userId)
@@ -43,7 +43,7 @@ public class UserDataService : BaseAuthDataService
         return await client.Users.GetAllOrganizationsAsync(userId, page);
     }
 
-    public async Task UpdateProfileAsync(UserLite user)
+    public async Task UpdateProfileAsync(Member user)
     {
         var client = await GetClientAsync();
 

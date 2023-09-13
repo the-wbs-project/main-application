@@ -22,6 +22,7 @@ import {
   xIcon,
 } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
+import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
 import { first } from 'rxjs/operators';
@@ -39,6 +40,7 @@ import { SortArrowComponent } from '../sort-arrow.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableHelper],
   imports: [
+    DateTextPipe,
     DropDownButtonModule,
     NgFor,
     RoleListPipe,
@@ -55,7 +57,7 @@ export class MemberListComponent implements OnChanges {
   @Input() textFilter = '';
 
   readonly state = signal(<State>{
-    sort: [{ field: 'name', dir: 'asc' }],
+    sort: [{ field: 'lastLogin', dir: 'desc' }],
   });
   readonly gearIcon = gearIcon;
   readonly plusIcon = plusIcon;

@@ -1,5 +1,15 @@
 import { Context } from '../config';
 
+export async function kvPurgeOrgs(ctx: Context, next: any): Promise<Response | void> {
+  await next();
+
+  if (ctx.res.status > 204) return;
+
+  for (const org of ctx.get('idToken').organizations) {
+    await ctx.env.KV_DATA.delete(`ORGS|${org.name}|members`);
+  }
+}
+
 export function kvPurge(prefix: string): (ctx: Context, next: any) => Promise<Response | void> {
   return async (ctx: Context, next: any): Promise<Response | void> => {
     await next();

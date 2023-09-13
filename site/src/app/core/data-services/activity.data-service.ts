@@ -2,14 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { IdService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  Activity,
-  ActivityData,
-  Project,
-  ProjectActivityRecord,
-  ProjectNode,
-  UserLite,
-} from '../models';
+import { Activity, ActivityData, ProjectActivityRecord } from '../models';
 
 export class ActivityDataService {
   constructor(private readonly http: HttpClient) {}

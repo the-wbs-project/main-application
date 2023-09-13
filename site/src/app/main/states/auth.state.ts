@@ -3,14 +3,14 @@ import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Organization, UserLite } from '@wbs/core/models';
+import { Organization, User } from '@wbs/core/models';
 import { Logger, Messages, sorter } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ChangeProfileName, InitiateOrganizations } from '../actions';
 
 interface AuthBucket {
-  profile?: UserLite;
+  profile?: User;
 }
 
 declare type Context = StateContext<AuthBucket>;
@@ -35,7 +35,7 @@ export class AuthState implements NgxsOnInit {
   }
 
   @Selector()
-  static profile(state: AuthBucket): UserLite | undefined {
+  static profile(state: AuthBucket): User | undefined {
     return state.profile;
   }
 
@@ -49,12 +49,16 @@ export class AuthState implements NgxsOnInit {
       if (!user) return;
 
       const ns = 'http://www.pm-empower.com';
-      const profile: UserLite = {
+      const profile: User = {
         email: user['email']!,
         id: user['sub']!,
         name: user['name']!,
         picture: user['picture']!,
       };
+
+      if (profile.email === profile.name) {
+        profile.name = '';
+      }
 
       ctx.patchState({ profile });
 

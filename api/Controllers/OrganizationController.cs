@@ -32,14 +32,13 @@ public class OrganizationsController : ControllerBase
         {
             var orgId = await dataService.GetOrganizationIdByNameAsync(organization);
 
-            var users = await dataService.GetOrganizationalUsersAsync(orgId);
-            var members = new List<Member>();
+            var users = new List<Member>(await dataService.GetOrganizationalUsersAsync(orgId));
             var roles = new List<IEnumerable<string>>();
             var gets = new List<Task<IEnumerable<string>>>();
 
             foreach (var user in users)
             {
-                gets.Add(dataService.GetUserOrganizationalRolesAsync(orgId, user.UserId));
+                gets.Add(dataService.GetUserOrganizationalRolesAsync(orgId, user.Id));
 
                 if (gets.Count == 10)
                 {
@@ -50,18 +49,10 @@ public class OrganizationsController : ControllerBase
             if (gets.Count > 0)
                 roles.AddRange(await Task.WhenAll(gets));
 
-
-
             for (int i = 0; i < users.Count(); i++)
-                members.Add(new Member
-                {
-                    Id = users.ElementAt(i).UserId,
-                    Name = users.ElementAt(i).Name,
-                    Email = users.ElementAt(i).Email,
-                    Roles = roles.ElementAt(i)
-                });
+                users[i].Roles = roles.ElementAt(i).ToList();
 
-            return Ok(members);
+            return Ok(users);
         }
         catch (Exception ex)
         {
