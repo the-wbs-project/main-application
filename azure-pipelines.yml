@@ -64,7 +64,7 @@ jobs:
 
   - job: worker_job
     pool:
-      vmImage: ubuntu-latest
+      name: Default
     displayName: Worker
     steps:
       - task: NodeTool@0
@@ -99,10 +99,10 @@ jobs:
           publishLocation: "Container"
         displayName: "Publish"
 
-  - job: site_job
+  - job: site_qa_job
     pool:
       name: Default
-    displayName: Site
+    displayName: Site QA
     steps:
       - task: NodeTool@0
         inputs:
@@ -132,7 +132,7 @@ jobs:
 
       - script: npm run deploy:qa
         workingDirectory: "site"
-        displayName: "QA - Build"
+        displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
@@ -141,11 +141,49 @@ jobs:
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-QA.zip"
           replaceExistingArchive: true
-        displayName: "QA - Zip"
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
+
+  - job: site_prod_job
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Site Prod
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
+
+      - script: |
+          echo "$(FA_LICENSE)"
+          npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
+        workingDirectory: "site"
+        env:
+          FA_LICENSE: $(FA_LICENSE)
+        displayName: "Setup - Font Awesome Registry"
+
+      - script: npm install --global @angular/cli
+        displayName: "Setup - Angular CLI"
+
+      - script: npm install
+        workingDirectory: "site"
+        displayName: "Setup - Site Packages"
+
+      - script: npx kendo-ui-license activate
+        workingDirectory: "site"
+        env:
+          KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
+        displayName: "Setup - Kendo UI License"
 
       - script: npm run deploy:prod
         workingDirectory: "site"
-        displayName: "Production - Build"
+        displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
@@ -154,7 +192,7 @@ jobs:
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Prod.zip"
           replaceExistingArchive: true
-        displayName: "Production - Zip"
+        displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
         inputs:
