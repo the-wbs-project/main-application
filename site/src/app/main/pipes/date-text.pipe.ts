@@ -20,10 +20,6 @@ export class DateTextPipe implements PipeTransform {
     const left = isCountdown ? new Date(date) : new Date();
     const right = isCountdown ? new Date() : new Date(date);
 
-    console.log(left);
-    console.log(right);
-    console.log(isCountdown);
-
     let resource: string | undefined;
     let num: number | undefined;
     let minutes = differenceInMinutes(left, right);

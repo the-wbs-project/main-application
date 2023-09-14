@@ -53,7 +53,7 @@ import { SortArrowComponent } from '../sort-arrow.component';
 })
 export class MemberListComponent implements OnChanges {
   @Input() members?: Member[];
-  @Input() role = '';
+  @Input() roles: string[] = [];
   @Input() textFilter = '';
 
   readonly state = signal(<State>{
@@ -135,12 +135,20 @@ export class MemberListComponent implements OnChanges {
         ],
       });
     }
-    if (this.role !== 'all') {
-      filters.push({
-        field: 'roles',
-        operator: 'contains',
-        value: this.role,
-      });
+    if (this.roles.length > 0) {
+      const roleFilter: CompositeFilterDescriptor = {
+        logic: 'or',
+        filters: [],
+      };
+
+      for (const role of this.roles) {
+        roleFilter.filters.push({
+          field: 'roleList',
+          operator: 'contains',
+          value: role.toString(),
+        });
+      }
+      filters.push(roleFilter);
     }
     state.filter = {
       logic: 'and',

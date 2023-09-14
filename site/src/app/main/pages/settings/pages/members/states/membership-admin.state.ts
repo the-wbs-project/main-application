@@ -56,9 +56,13 @@ export class MembershipAdminState {
 
     if (state.invitations) return;
 
-    return this.data.memberships
-      .getInvitesAsync(org)
-      .pipe(map((invitations) => ctx.patchState({ invitations })));
+    return this.data.memberships.getInvitesAsync(org).pipe(
+      map((invitations) => {
+        this.setRoleList(invitations);
+
+        ctx.patchState({ invitations });
+      })
+    );
   }
 
   @Action(RemoveMemberFromOrganization)
@@ -150,6 +154,8 @@ export class MembershipAdminState {
       map((invites) => {
         const state = ctx.getState();
 
+        this.setRoleList(invites);
+
         ctx.patchState({
           invitations: [...invites, ...(state.invitations ?? [])],
         });
@@ -172,5 +178,9 @@ export class MembershipAdminState {
         });
       })
     );
+  }
+
+  private setRoleList(invites: Invite[]): void {
+    for (const invite of invites) invite.roleList = invite.roles.join(',');
   }
 }

@@ -2,6 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Resources, sorter } from '@wbs/core/services';
 import { RolesState } from '../states';
+import { Role } from '@wbs/core/models';
 
 @Pipe({ name: 'roleList', standalone: true })
 export class RoleListPipe implements PipeTransform {
@@ -11,7 +12,7 @@ export class RoleListPipe implements PipeTransform {
   ) {}
 
   transform(
-    roles: string[] | undefined | null,
+    roles: (Role | string)[] | undefined | null,
     useAbbreviations = false
   ): string {
     if (!roles) return '';
@@ -20,8 +21,10 @@ export class RoleListPipe implements PipeTransform {
     const defintions = this.store.selectSnapshot(RolesState.definitions);
 
     for (const role of roles) {
+      const roleId = typeof role === 'string' ? role : role.id;
+
       const definition = defintions.find(
-        (x) => x.id === role || x.name === role
+        (x) => x.id === roleId || x.name === roleId
       );
 
       if (!definition) continue;

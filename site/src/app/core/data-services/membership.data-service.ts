@@ -9,8 +9,18 @@ export class MembershipDataService {
     return this.http.get<string[]>(`api/users/${userId}/roles`);
   }
 
-  getMembershipUsersAsync(organization: string): Observable<Member[]> {
-    return this.http.get<Member[]>(`api/organizations/${organization}/members`);
+  getMembershipUsersAsync(
+    organization: string,
+    forceRefresh = false
+  ): Observable<Member[]> {
+    return this.http.get<Member[]>(
+      `api/organizations/${organization}/members`,
+      {
+        headers: {
+          'force-refresh': forceRefresh.toString(),
+        },
+      }
+    );
   }
 
   getInvitesAsync(organization: string): Observable<Invite[]> {

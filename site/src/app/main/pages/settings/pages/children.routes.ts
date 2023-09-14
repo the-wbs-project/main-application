@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
-import { verifyInvitationsLoaded } from './children.guards';
+import { refreshMembers, verifyInvitationsLoaded } from './children.guards';
 import { orgResolve } from './children.resolvers';
 import { MembershipAdminState } from './members/states';
 
@@ -28,7 +28,7 @@ export const routes: Routes = [
     path: 'members',
     loadComponent: () =>
       import('./members/members.component').then((m) => m.MembersComponent),
-    canActivate: [verifyInvitationsLoaded],
+    canActivate: [verifyInvitationsLoaded, refreshMembers],
     resolve: {
       org: orgResolve,
     },

@@ -17,11 +17,13 @@ import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { gearIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { DialogService } from '@wbs/main/services';
 import { MembershipState, RolesState } from '@wbs/main/states';
+import { first, skipWhile } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
 import { InvitationListComponent } from './components/invitation-list/invitation-list.component';
 import { InvitesFormComponent } from './components/invites-form/invites-form.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
+import { RoleFilterListComponent } from './components/role-filter-list/role-filter-list.component';
 import { MembershipAdminState } from './states';
 
 const ROLES = [
@@ -58,6 +60,7 @@ const ROLES = [
     MemberListComponent,
     NgClass,
     NgIf,
+    RoleFilterListComponent,
     RouterModule,
     SVGIconModule,
     TranslateModule,
@@ -89,11 +92,11 @@ export class MembersComponent implements OnInit {
       ? (this.capacity() ?? 0) - this.memberCount() - this.inviteCount()
       : undefined
   );
+  readonly roleFilters = signal<string[]>([]);
   readonly view = signal<'members' | 'invitations'>('members');
   readonly gearIcon = gearIcon;
   readonly plusIcon = plusIcon;
 
-  role = 'all';
   textFilter = '';
 
   constructor(
@@ -104,14 +107,23 @@ export class MembersComponent implements OnInit {
   ngOnInit(): void {
     this.store.dispatch(new ChangeBreadcrumbs(this.crumbs));
 
-    const definitions = this.store.selectSnapshot(RolesState.definitions);
+    this.store
+      .select(RolesState.definitions)
+      .pipe(
+        skipWhile((list) => list == undefined),
+        first()
+      )
+      .subscribe((definitions) => {
+        if (!definitions) return;
 
-    for (const role of ROLES) {
-      if (role.name === 'all') continue;
+        for (const role of ROLES) {
+          if (role.name === 'all') continue;
 
-      role.name = definitions.find((x) => x.name === role.name)!.id;
-    }
-    this.roles.set(ROLES);
+          role.name = definitions.find((x) => x.name === role.name)!.id;
+        }
+        console.log(ROLES);
+        this.roles.set(ROLES);
+      });
   }
 
   openInviteDialog() {

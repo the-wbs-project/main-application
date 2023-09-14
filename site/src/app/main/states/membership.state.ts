@@ -16,6 +16,7 @@ import {
   ChangeOrganization,
   InitiateOrganizations,
   ProjectUpdated,
+  RefreshMembers,
   UpdateMembers,
 } from '../actions';
 import { UserService } from '../services';
@@ -120,15 +121,7 @@ export class MembershipState implements NgxsOnInit {
         });
       }),
       tap(() => ctx.patchState({ loading: false })),
-      switchMap(() =>
-        this.data.memberships.getMembershipUsersAsync(organization.name)
-      ),
-      map((members) => {
-        ctx.patchState({
-          members: members.sort((a, b) => sorter(a.name, b.name)),
-        });
-        this.userService.addUsers(members);
-      })
+      switchMap(() => this.getMembers(ctx, false))
     );
   }
 
@@ -147,6 +140,32 @@ export class MembershipState implements NgxsOnInit {
 
   @Action(UpdateMembers)
   updateMembers(ctx: Context, { members }: UpdateMembers): void {
+    this.setRoleList(members);
+
     ctx.patchState({ members });
+  }
+
+  @Action(RefreshMembers)
+  refreshMembers(ctx: Context): Observable<void> {
+    return this.getMembers(ctx, true);
+  }
+
+  private getMembers(ctx: Context, forceRefresh: boolean): Observable<void> {
+    return this.data.memberships
+      .getMembershipUsersAsync(ctx.getState().organization!.name, forceRefresh)
+      .pipe(
+        map((members) => {
+          this.setRoleList(members);
+
+          ctx.patchState({
+            members: members.sort((a, b) => sorter(a.name, b.name)),
+          });
+          this.userService.addUsers(members);
+        })
+      );
+  }
+
+  private setRoleList(members: Member[]): void {
+    for (const member of members) member.roleList = member.roles.join(',');
   }
 }

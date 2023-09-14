@@ -47,12 +47,14 @@ function createKey(ctx: Context, key: string): string {
 async function execute(ctx: Context, next: any, key: string, expirationInSeconds?: number): Promise<Response | void> {
   key = createKey(ctx, key);
 
-  const kvData = await ctx.env.KV_DATA.get(key, 'json');
+  //
+  //  If we aren't forcing a refresh, check the KV store first
+  //
+  if (ctx.req.headers.get('force-refresh') !== 'true') {
+    const kvData = await ctx.env.KV_DATA.get(key, 'json');
 
-  if (kvData) return ctx.json(kvData);
-
-  console.log('KV ' + key + ' not found');
-
+    if (kvData) return ctx.json(kvData);
+  }
   await next();
 
   if (ctx.res.status !== 200) return;

@@ -1,6 +1,9 @@
 import { StatusCode } from 'hono/utils/http-status';
 import { Context } from '../config';
 
+const headers = 'authorization, content-type, force-refresh';
+const methods = 'GET,POST,PUT,DELETE';
+
 export async function cors(ctx: Context, next: any) {
   await next();
 
@@ -11,12 +14,12 @@ export async function cors(ctx: Context, next: any) {
     ctx.newResponse(ctx.res.body, <StatusCode>ctx.res.status, {
       ...ctx.res.headers,
       'Access-Control-Allow-Origin': ctx.env.CORS_ORIGINS,
-      'Access-Control-Allow-Headers': 'Authorization',
-      'Access-Control-Allow-Methods': 'GET,POST,PUT,DELETE',
+      'Access-Control-Allow-Headers': headers,
+      'Access-Control-Allow-Methods': methods,
     });
   } else {
     ctx.res.headers.set('Access-Control-Allow-Origin', ctx.env.CORS_ORIGINS);
-    ctx.res.headers.set('Access-Control-Allow-Headers', 'authorization, content-type');
-    ctx.res.headers.set('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE');
+    ctx.res.headers.set('Access-Control-Allow-Headers', headers);
+    ctx.res.headers.set('Access-Control-Allow-Methods', methods);
   }
 }
