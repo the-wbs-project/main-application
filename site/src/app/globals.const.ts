@@ -3,7 +3,7 @@ import { LogsInitConfiguration } from '@datadog/browser-logs';
 import { environment } from 'src/environments/environment';
 
 export const AUTH_CONFIG: AuthConfig = {
-  domain: 'pm-empower.us.auth0.com',
+  domain: 'auth.pm-empower.com',
   clientId: environment.auth_clientId,
   authorizationParams: {
     connection: 'Username-Password-Authentication',

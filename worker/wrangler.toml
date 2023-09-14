@@ -22,12 +22,9 @@ DEBUG = "true"
 DATADOG_ENV = "development"
 CORS_ORIGINS = "http://localhost:4200"
 KV_BYPASS = "LISTS"
-
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
-
-AUTH_URL = "https://test-api.pm-empower.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_DOMAIN = "pm-empower.us.auth0.com"
+AUTH_DOMAIN = "auth.pm-empower.com"
 
 [env.test]
 name = "pm-empower-api-test"
@@ -47,11 +44,9 @@ r2_buckets = [
 DEBUG = "false"
 DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
-
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
-
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_DOMAIN = "pm-empower.us.auth0.com"
+AUTH_DOMAIN = "auth.pm-empower.com"
 
 [env.prod]
 name = "pm-empower-api-prod"
@@ -71,11 +66,9 @@ r2_buckets = [
 DEBUG = "false"
 DATADOG_ENV = "production"
 CORS_ORIGINS = "https://app.pm-empower.com"
-
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
-
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_DOMAIN = "pm-empower.us.auth0.com"
+AUTH_DOMAIN = "auth.pm-empower.com"
 
 [dev]
 port = 88
