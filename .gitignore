@@ -2,6 +2,7 @@
 _playground/
 _theme/Documentation
 _theme/Nowa
+**/node_modules
 **/bin
 **/obj
 **/dist
