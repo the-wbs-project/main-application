@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { PageHeaderComponent } from '@wbs/main/components';
+import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { ProjectUploadState } from './states';
 
 @Component({

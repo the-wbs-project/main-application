@@ -7,20 +7,23 @@ import { faArrowUpFromBracket } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { gearIcon } from '@progress/kendo-svg-icons';
 import { TitleService } from '@wbs/core/services';
+import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
+import { RolesState } from '@wbs/main/states';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_MENU_ITEMS } from './models';
 import { ProjectState } from './states';
-import { RolesState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
   templateUrl: './project-view-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ActionIconListComponent,
     CategoryIconPipe,
     CommonModule,
     FillElementDirective,
@@ -40,6 +43,14 @@ export class ProjectViewLayoutComponent {
   readonly pageView = computed(() => this.getPage(this.url()));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
+  readonly gearIcon = gearIcon;
+  readonly menu = [
+    {
+      text: 'Projects.SubmitForApproval',
+      icon: faArrowUpFromBracket,
+      action: 'submitForApproval',
+    },
+  ];
 
   constructor(title: TitleService, private readonly store: Store) {
     title.setTitle('Project', false);

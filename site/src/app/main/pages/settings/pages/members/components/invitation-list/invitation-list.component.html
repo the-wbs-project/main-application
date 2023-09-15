@@ -42,21 +42,12 @@
   <tbody>
     <tr *ngFor="let invite of invites | tableProcess : state()">
       <td>
-        <kendo-dropdownbutton
-          fillMode="link"
+        <wbs-action-icon-list
           size="small"
-          buttonClass="tx-8 pd-0-f"
-          [svgIcon]="gearIcon"
-          [data]="menu"
-          (itemClick)="userActionClicked(invite, $event.action)"
-        >
-          <ng-template kendoDropDownButtonItemTemplate let-dataItem>
-            <div class="pd-y-2">
-              <kendo-svg-icon [icon]="dataItem.svgIcon" />
-              <span> {{ dataItem.text | translate }} </span>
-            </div>
-          </ng-template>
-        </kendo-dropdownbutton>
+          fillMode="link"
+          [mainIcon]="gearIcon"
+          [menuItems]="menu"
+        />
       </td>
       <td class="d-md-none d-lg-table-cell">{{ invite.invitee }}</td>
       <td class="d-md-none d-lg-table-cell">{{ invite.inviter }}</td>

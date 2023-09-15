@@ -1,28 +1,29 @@
 import { Directive, ElementRef, OnDestroy } from '@angular/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { MainContentSizeChanged } from '@wbs/main/actions';
 import { Subscription, timer } from 'rxjs';
 
+@UntilDestroy()
 @Directive({ selector: '[appMainContent]', standalone: true })
 export class MainContentDirective implements OnDestroy {
-  private readonly sub: Subscription;
   private lastSize = 0;
   private elem: HTMLElement;
 
   constructor(ref: ElementRef, private readonly store: Store) {
     this.elem = ref.nativeElement;
 
-    this.sub = timer(0, 500).subscribe(() => {
-      const width = this.elem.offsetWidth;
+    timer(0, 500)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        const width = this.elem.offsetWidth;
 
-      if (this.lastSize === width) return;
+        if (this.lastSize === width) return;
 
-      this.lastSize = width;
-      this.store.dispatch(new MainContentSizeChanged(width));
-    });
+        this.lastSize = width;
+        this.store.dispatch(new MainContentSizeChanged(width));
+      });
   }
 
-  ngOnDestroy(): void {
-    this.sub.unsubscribe();
-  }
+  ngOnDestroy(): void {}
 }

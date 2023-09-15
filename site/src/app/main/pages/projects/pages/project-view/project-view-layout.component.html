@@ -12,10 +12,13 @@
       *ngIf="project()?.status === 'planning' && isPm()"
       style="position: absolute; right: 10px"
     >
-      <button class="btn btn-sm btn-dark" (click)="checklist.open()">
-        <fa-icon [icon]="faArrowUpFromBracket" />
-        {{ "Projects.SubmitForApproval" | translate }}
-      </button>
+      <wbs-action-icon-list
+        size="large"
+        align="right"
+        fillMode="outline"
+        [mainIcon]="gearIcon"
+        [menuItems]="menu"
+      />
     </div>
   </div>
   <div class="card-footer py-0">

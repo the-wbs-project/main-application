@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
 import {
   CompositeFilterDescriptor,
@@ -17,6 +16,7 @@ import {
 } from '@progress/kendo-data-query';
 import { gearIcon, xIcon } from '@progress/kendo-svg-icons';
 import { Invite } from '@wbs/core/models';
+import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
@@ -34,8 +34,8 @@ import { SortArrowComponent } from '../sort-arrow.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableHelper],
   imports: [
+    ActionIconListComponent,
     DateTextPipe,
-    DropDownButtonModule,
     NgClass,
     NgFor,
     NgIf,
@@ -59,7 +59,7 @@ export class InvitationListComponent implements OnChanges {
   readonly menu = [
     {
       text: 'OrgSettings.CancelInvite',
-      svgIcon: xIcon,
+      icon: xIcon,
       action: 'cancel',
     },
   ];

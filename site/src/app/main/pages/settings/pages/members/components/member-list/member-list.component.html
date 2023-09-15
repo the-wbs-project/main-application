@@ -23,21 +23,12 @@
   <tbody>
     <tr *ngFor="let member of members | tableProcess : state()">
       <td>
-        <kendo-dropdownbutton
-          fillMode="link"
+        <wbs-action-icon-list
           size="small"
-          buttonClass="tx-8 pd-0-f"
-          [svgIcon]="gearIcon"
-          [data]="menu"
-          (itemClick)="userActionClicked(member, $event.action)"
-        >
-          <ng-template kendoDropDownButtonItemTemplate let-dataItem>
-            <div class="pd-y-2">
-              <kendo-svg-icon [icon]="dataItem.svgIcon" />
-              <span> {{ dataItem.text | translate }} </span>
-            </div>
-          </ng-template>
-        </kendo-dropdownbutton>
+          fillMode="link"
+          [mainIcon]="gearIcon"
+          [menuItems]="menu"
+        />
       </td>
       <td>{{ member.name }}</td>
       <td class="d-md-none d-lg-table-cell">{{ member.email }}</td>
