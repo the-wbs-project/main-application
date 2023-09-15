@@ -56,11 +56,10 @@ routes = [
 	{ pattern = "api.pm-empower.com/*", zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
-
   { binding = "KV_DATA", id = "408389bba37f437da346442f36b25a45", preview_id = "408389bba37f437da346442f36b25a45" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod.com" }
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
 ]
 [env.prod.vars]
 DEBUG = "false"

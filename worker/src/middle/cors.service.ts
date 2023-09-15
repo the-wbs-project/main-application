@@ -1,7 +1,7 @@
 import { StatusCode } from 'hono/utils/http-status';
 import { Context } from '../config';
 
-const headers = 'authorization, content-type, force-refresh';
+const headers = 'authorization,content-type,force-refresh';
 const methods = 'GET,POST,PUT,DELETE';
 
 export async function cors(ctx: Context, next: any) {
