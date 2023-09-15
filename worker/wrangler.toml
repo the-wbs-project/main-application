@@ -35,7 +35,7 @@ routes = [
 	{ pattern = "temp-api.pm-empower.com/*", zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
-  { binding = "KV_DATA", id = "6a8e3a3a07014e228d56aa7f28059ed2", preview_id = "6a8e3a3a07014e228d56aa7f28059ed2" },
+  { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
@@ -56,7 +56,7 @@ routes = [
 	{ pattern = "api.pm-empower.com/*", zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
-  { binding = "KV_DATA", id = "408389bba37f437da346442f36b25a45", preview_id = "408389bba37f437da346442f36b25a45" },
+  { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 r2_buckets = [
   { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
