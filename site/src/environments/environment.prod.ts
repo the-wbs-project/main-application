@@ -2,6 +2,6 @@ export const environment = {
   production: true,
   appTitle: 'PM Empower',
   apiPrefix: 'https://api.pm-empower.com/api/',
-  auth_clientId: '1nOKv3soErPVx2nJlfZFZdIqYkjUnMkX',
+  auth_clientId: 'fcglfNwfePIkurCZYGTE7lkIxbfPnyWk',
   datadog_env: 'production',
 };
