@@ -11,7 +11,8 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
 import { AuthState, RolesState } from '@wbs/main/states';
 import { ProfileEditorComponent } from '../../profile-editor/profile-editor.component';
-import { HeaderProfilePictureComponent } from './header-profile-picture.component';
+import { HeaderProfileHeaderComponent } from '../header-profile-header/header-profile-header.component';
+import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
 
 @Component({
   standalone: true,
@@ -20,6 +21,7 @@ import { HeaderProfilePictureComponent } from './header-profile-picture.componen
   styleUrls: ['./header-profile.component.scss'],
   providers: [DialogService],
   imports: [
+    HeaderProfileHeaderComponent,
     HeaderProfilePictureComponent,
     NgbDropdownModule,
     NgIf,

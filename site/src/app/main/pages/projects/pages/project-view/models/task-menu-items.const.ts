@@ -4,7 +4,7 @@ import {
   faPlus,
   faTrashAlt,
 } from '@fortawesome/pro-solid-svg-icons';
-import { ActionMenuItem } from '@wbs/core/models';
+import { ActionMenuItem, ROLES } from '@wbs/core/models';
 import { TASK_PAGE_VIEW } from './task-page-view.const';
 import { TASK_SETTINGS_PAGE_LISTS } from './task-settings-pages.const';
 
@@ -35,6 +35,7 @@ export const TASK_MENU_ITEMS = {
     {
       fragment: TASK_PAGE_VIEW.SETTINGS,
       title: 'General.Settings',
+      roles: [ROLES.PM, ROLES.ADMIN, ROLES.APPROVER, ROLES.SME],
       children: TASK_SETTINGS_PAGE_LISTS,
     } /*,
     {

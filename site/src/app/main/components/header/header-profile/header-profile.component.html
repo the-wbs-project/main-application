@@ -7,23 +7,9 @@
   <a class="pointer" ngbDropdownToggle>
     <wbs-header-profile-picture [picture]="user.picture" />
   </a>
-  <div ngbDropdownMenu class="profile-menu">
-    <div class="menu-header-content p-3 border-bottom">
-      <div class="display-flex wd-100p">
-        <div class="main-img-user">
-          <wbs-header-profile-picture [picture]="user.picture" />
-        </div>
+  <div ngbDropdownMenu class="profile-menu pb-0 bg-gray-200">
+    <wbs-header-profile-header [user]="user" [roles]="roles()" />
 
-        <div class="ms-3 my-auto">
-          <h6 class="tx-15 font-weight-semibold mb-0">
-            {{ user.name }}
-          </h6>
-          <span class="dropdown-title-text subtext op-6 tx-12">
-            {{ roles() | roleList : true }}
-          </span>
-        </div>
-      </div>
-    </div>
     <a
       ngbDropdownItem
       class="bg-light-light pointer"

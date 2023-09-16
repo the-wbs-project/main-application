@@ -37,12 +37,13 @@ import { ProjectState } from './states';
 export class ProjectViewLayoutComponent {
   private readonly url = toSignal(this.store.select(RouterState.url));
   readonly project = toSignal(this.store.select(ProjectState.current));
-  readonly links = PROJECT_MENU_ITEMS.projectLinks;
-  readonly faArrowUpFromBracket = faArrowUpFromBracket;
+  readonly roles = toSignal(this.store.select(ProjectState.roles));
   readonly isPm = toSignal(this.store.select(RolesState.isPm));
   readonly pageView = computed(() => this.getPage(this.url()));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
+  readonly links = PROJECT_MENU_ITEMS.projectLinks;
+  readonly faArrowUpFromBracket = faArrowUpFromBracket;
   readonly gearIcon = gearIcon;
   readonly menu = [
     {

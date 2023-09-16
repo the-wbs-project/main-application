@@ -1,33 +1,39 @@
 <ul ngbNav [activeId]="pageView" class="tx-14 tx-medium">
   <ng-template ngFor [ngForOf]="links" let-link>
-    <li *ngIf="!link.children" [ngbNavItem]="link.fragment">
-      <a ngbNavLink [routerLink]="['./', link.fragment]" class="pd-y-5 pd-x-20">
-        {{ link.title | translate }}
-      </a>
-    </li>
-    <li
-      *ngIf="link.children"
-      ngbDropdown
-      container="body"
-      class="nav-item"
-      role="presentation"
-    >
-      <a
-        ngbDropdownToggle
-        class="nav-link pd-y-5 pd-x-20 pointer"
-        [class.active]="link.fragment === pageView"
-      >
-        {{ link.title | translate }}
-      </a>
-      <div ngbDropdownMenu>
+    <ng-template [ngIf]="link.roles | projectRoleFilter : []">
+      <li *ngIf="!link.children" [ngbNavItem]="link.fragment">
         <a
-          ngbDropdownItem
-          *ngFor="let child of link.children"
-          [routerLink]="['./', link.fragment, child.fragment]"
+          ngbNavLink
+          [routerLink]="['./', link.fragment]"
+          class="pd-y-5 pd-x-20"
         >
-          {{ child.title | translate }}
+          {{ link.title | translate }}
         </a>
-      </div>
-    </li>
+      </li>
+      <li
+        *ngIf="link.children"
+        ngbDropdown
+        container="body"
+        class="nav-item"
+        role="presentation"
+      >
+        <a
+          ngbDropdownToggle
+          class="nav-link pd-y-5 pd-x-20 pointer"
+          [class.active]="link.fragment === pageView"
+        >
+          {{ link.title | translate }}
+        </a>
+        <div ngbDropdownMenu>
+          <a
+            ngbDropdownItem
+            *ngFor="let child of link.children"
+            [routerLink]="['./', link.fragment, child.fragment]"
+          >
+            {{ child.title | translate }}
+          </a>
+        </div>
+      </li>
+    </ng-template>
   </ng-template>
 </ul>

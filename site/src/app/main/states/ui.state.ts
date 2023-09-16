@@ -11,13 +11,13 @@ import {
   StateContext,
 } from '@ngxs/store';
 import { HeaderInformation } from '@wbs/core/models';
+import { timer } from 'rxjs';
 import {
   MainContentSizeChanged,
   ParseNavigation,
   SetHeaderInfo,
   ToggleSidebar,
 } from '../actions';
-import { timer } from 'rxjs';
 
 interface StateModel {
   header?: HeaderInformation;

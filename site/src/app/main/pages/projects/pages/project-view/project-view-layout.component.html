@@ -22,7 +22,11 @@
     </div>
   </div>
   <div class="card-footer py-0">
-    <wbs-project-navigation [links]="links" [pageView]="pageView()" />
+    <wbs-project-navigation
+      [links]="links"
+      [userRoles]="roles()"
+      [pageView]="pageView()"
+    />
   </div>
 </div>
 <div class="card">

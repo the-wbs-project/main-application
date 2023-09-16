@@ -128,7 +128,14 @@ export const PROJECT_MENU_ITEMS = {
     },
     {
       fragment: PROJECT_PAGE_VIEW.SETTINGS,
+      roles: [ROLES.PM, ROLES.ADMIN, ROLES.APPROVER, ROLES.SME],
       title: 'General.Settings',
+      children: PROJECT_SETTINGS_PAGE_LISTS,
+    },
+    {
+      fragment: PROJECT_PAGE_VIEW.SETTINGS,
+      roles: [ROLES.PM, ROLES.ADMIN, ROLES.APPROVER, ROLES.SME],
+      title: 'General.Actions',
       children: PROJECT_SETTINGS_PAGE_LISTS,
     },
     /*{

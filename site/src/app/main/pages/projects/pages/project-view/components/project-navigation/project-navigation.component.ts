@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectNavigationLink } from '../../models';
+import { ProjectRoleFilterPipe } from '../../pipes/project-role-filter.pipe';
 
 @Component({
   standalone: true,
@@ -14,6 +15,7 @@ import { ProjectNavigationLink } from '../../models';
     CommonModule,
     NgbDropdownModule,
     NgbNavModule,
+    ProjectRoleFilterPipe,
     RouterModule,
     TranslateModule,
   ],
@@ -21,4 +23,5 @@ import { ProjectNavigationLink } from '../../models';
 export class ProjectNavigationComponent {
   @Input({ required: true }) pageView!: string | null;
   @Input({ required: true }) links!: ProjectNavigationLink[];
+  @Input({ required: true }) userRoles?: string[];
 }
