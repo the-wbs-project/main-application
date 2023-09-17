@@ -1,7 +1,11 @@
 <ul ngbNav [activeId]="pageView" class="tx-14 tx-medium">
   <ng-template ngFor [ngForOf]="links" let-link>
-    <ng-template [ngIf]="link.roles | projectRoleFilter : []">
-      <li *ngIf="!link.children" [ngbNavItem]="link.fragment">
+    <ng-template [ngIf]="link.roles | projectRoleFilter : userRoles">
+      <li
+        *ngIf="!link.children"
+        [ngbNavItem]="link.fragment"
+        [ngClass]="link.classes"
+      >
         <a
           ngbNavLink
           [routerLink]="['./', link.fragment]"
@@ -15,6 +19,7 @@
         ngbDropdown
         container="body"
         class="nav-item"
+        [ngClass]="link.classes"
         role="presentation"
       >
         <a

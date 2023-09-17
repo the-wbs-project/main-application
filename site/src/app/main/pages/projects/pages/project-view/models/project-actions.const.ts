@@ -1,4 +1,4 @@
-export enum PROJECT_SETTINGS_PAGES {
+export enum PROJECT_ACTIONS {
   GENERAL = 'general',
   PHASES = 'phases',
   DISCIPLINES = 'disciplines',
@@ -7,19 +7,19 @@ export enum PROJECT_SETTINGS_PAGES {
 
 export const PROJECT_SETTINGS_PAGE_LISTS = [
   {
-    fragment: PROJECT_SETTINGS_PAGES.GENERAL,
+    fragment: PROJECT_ACTIONS.GENERAL,
     title: 'General.General',
   },
   {
-    fragment: PROJECT_SETTINGS_PAGES.PHASES,
+    fragment: PROJECT_ACTIONS.PHASES,
     title: 'General.Phases',
   },
   {
-    fragment: PROJECT_SETTINGS_PAGES.DISCIPLINES,
+    fragment: PROJECT_ACTIONS.DISCIPLINES,
     title: 'General.Disciplines',
   },
   {
-    fragment: PROJECT_SETTINGS_PAGES.ROLES,
+    fragment: PROJECT_ACTIONS.ROLES,
     title: 'General.Roles',
   },
 ];

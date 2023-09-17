@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass, NgFor, NgForOf, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
@@ -12,7 +12,10 @@ import { ProjectRoleFilterPipe } from '../../pipes/project-role-filter.pipe';
   templateUrl: './project-navigation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
+    NgClass,
+    NgFor,
+    NgForOf,
+    NgIf,
     NgbDropdownModule,
     NgbNavModule,
     ProjectRoleFilterPipe,

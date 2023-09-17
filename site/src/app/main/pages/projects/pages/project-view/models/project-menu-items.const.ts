@@ -112,18 +112,45 @@ export const PROJECT_MENU_ITEMS = {
   projectLinks: [
     {
       fragment: PROJECT_PAGE_VIEW.ABOUT,
+      classes: ['d-sm-inline', 'd-md-none'],
+      title: 'General.Views',
+      children: [
+        {
+          fragment: PROJECT_PAGE_VIEW.ABOUT,
+          title: 'General.About',
+        },
+        {
+          fragment: PROJECT_PAGE_VIEW.PHASES,
+          title: 'General.Phases',
+        },
+        {
+          fragment: PROJECT_PAGE_VIEW.DISCIPLINES,
+          title: 'General.Disciplines',
+        },
+        {
+          fragment: PROJECT_PAGE_VIEW.TIMELINE,
+          title: 'General.Timeline',
+        },
+      ],
+    },
+    {
+      fragment: PROJECT_PAGE_VIEW.ABOUT,
+      classes: ['d-none', 'd-md-inline'],
       title: 'General.About',
     },
     {
       fragment: PROJECT_PAGE_VIEW.PHASES,
+      classes: ['d-none', 'd-md-inline'],
       title: 'General.Phases',
     },
     {
       fragment: PROJECT_PAGE_VIEW.DISCIPLINES,
+      classes: ['d-none', 'd-md-inline'],
       title: 'General.Disciplines',
     },
     {
       fragment: PROJECT_PAGE_VIEW.TIMELINE,
+      classes: ['d-none', 'd-md-inline'],
       title: 'General.Timeline',
     },
     {
