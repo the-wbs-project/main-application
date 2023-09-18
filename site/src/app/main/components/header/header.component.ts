@@ -5,7 +5,6 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { menuIcon } from '@progress/kendo-svg-icons';
 import { ToggleSidebar } from '@wbs/main/actions';
 import { OrgUrlPipe } from '@wbs/main/pipes/org-url.pipe';
@@ -19,7 +18,6 @@ import { HeaderProfileComponent } from './header-profile/header-profile.componen
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   imports: [
-    ButtonModule,
     NgbDropdownModule,
     HeaderProfileComponent,
     NgbNavModule,

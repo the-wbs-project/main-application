@@ -12,15 +12,12 @@ import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
-import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { PROJECT_VIEW_STATI } from '@wbs/core/models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
-import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { MetadataState } from '@wbs/main/states';
 import { ProjectListFiltersComponent } from './components/project-list-filters/project-list-filters.component';
 import { ProjectListFilters } from './models';
@@ -37,16 +34,13 @@ import { ProjectListState } from './states';
     EditedDateTextPipe,
     FillElementDirective,
     FontAwesomeModule,
-    LoaderModule,
     NgbDropdownModule,
     NgFor,
     NgIf,
     PageHeaderComponent,
     ProjectListFiltersComponent,
-    ProjectStatusPipe,
     ProjectFilterPipe,
     RouterModule,
-    SVGIconModule,
     TranslateModule,
   ],
 })
