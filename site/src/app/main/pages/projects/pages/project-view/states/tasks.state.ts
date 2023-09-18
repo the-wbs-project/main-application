@@ -15,7 +15,6 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-  ProjectActivityRecord,
   ProjectNode,
 } from '@wbs/core/models';
 import {
@@ -25,7 +24,6 @@ import {
   Transformers,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { ProjectUpdated } from '@wbs/main/actions';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
@@ -118,15 +116,13 @@ export class TasksState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: StateContext<any>): void {
-    this.actions$
-      .pipe(ofActionCompleted(ProjectUpdated), untilDestroyed(this))
-      .subscribe((p) => {
-        const state = ctx.getState();
+    /*this.actions$.pipe(untilDestroyed(this)).subscribe((p) => {
+      const state = ctx.getState();
 
-        if (p.action.project.id === state.project?.id) {
-          ctx.dispatch(new VerifyTasks(p.action.project, true));
-        }
-      });
+      if (p.action.project.id === state.project?.id) {
+        ctx.dispatch(new VerifyTasks(p.action.project, true));
+      }
+    });*/
   }
 
   @Action(VerifyTasks)

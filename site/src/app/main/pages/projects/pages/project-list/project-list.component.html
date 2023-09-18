@@ -1,83 +1,65 @@
-<div class="d-flex mg-t-20 mg-b-16 w-100">
-  <div class="container-fluid">
-    <div class="row pd-b-20">
-      <div class="col-xl-3 col-lg-3 col-md-5 col-sm-12 mg-t-10">
-        <button
-          type="button"
-          class="btn btn-icon btn-primary mg-r-10"
-          [routerLink]="['/', owner, 'projects', 'create']"
-        >
-          <kendo-svg-icon [icon]="plusIcon" />
-        </button>
-
-        <div ngbDropdown class="d-inline-block">
-          <button
-            type="button"
-            class="btn btn-primary"
-            id="dropdownBasic1"
-            ngbDropdownToggle
-          >
-            {{ status | projectStatus }}
-          </button>
-          <div ngbDropdownMenu aria-labelledby="dropdownBasic1">
-            <button
-              ngbDropdownItem
-              *ngFor="let status of stati"
-              [routerLinkActive]="'active'"
-              [routerLink]="['../', status]"
-            >
-              {{ status | projectStatus }}
-            </button>
-          </div>
-        </div>
-      </div>
-      <div class="col-xl-9 col-lg-9 col-md-7 col-sm-12 mg-t-10">
-        <input
-          #search
-          type="text"
-          class="form-control w-100"
-          placeholder="Search Projects"
-          (keyup)="force()"
-        />
-      </div>
+<div class="d-flex">
+  <div class="border-end pd-r-20" appFillElement [paddingBottom]="5">
+    <div class="wd-250">
+      <wbs-project-list-filters [(filters)]="filters" />
     </div>
-    <div
-      class="row"
-      *ngIf="
-        projects()
-          | projectTypeFilter : type
-          | projectStatusFilter : status
-          | projectTextFilter : search.value;
-        let projects
-      "
-    >
-      <div *ngIf="!loading() && projects.length === 0" class="col-12">
-        <div class="card">
-          <div class="card-body tx-center pd-y-20">
-            {{ "Projects.NoProjectsFound" | translate }}
-          </div>
+  </div>
+  <div class="mg-t-20 mg-b-16 flex-grow-1">
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-12">
+          <wbs-page-header />
         </div>
       </div>
       <div
-        *ngFor="let project of projects"
-        class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6"
+        class="row"
+        *ngIf="projects() | projectFilter : filters; let projects"
       >
-        <a [routerLink]="['/', owner, 'projects', 'view', project.id]">
-          <div class="card">
-            <div class="card-body">
-              <div style="min-height: 100px">
-                <div class="tx-14 tx-semibold">{{ project.title }}</div>
-                <div class="tx-10">
-                  {{ project.category | categoryLabel | translate }}
+        <div
+          *ngIf="!loading() && projects.length === 0"
+          class="col-12 pd-t-100 tx-20 tx-center"
+        >
+          <fa-icon [icon]="faCactus" size="2xl" />
+          <br />
+          <br />
+          {{ "Projects.NoProjectsFound" | translate }}
+        </div>
+        <div
+          *ngFor="let project of projects"
+          class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6"
+        >
+          <a [routerLink]="['/', owner, 'projects', 'view', project.id]">
+            <div class="card">
+              <div class="card-body">
+                <div style="min-height: 100px">
+                  <div class="tx-14 tx-semibold">{{ project.title }}</div>
+                  <div class="tx-10">
+                    {{ project.category | categoryLabel | translate }}
+                  </div>
+                </div>
+                <div class="tx-right tx-10 tx-gray-600">
+                  {{ project.lastModified | editedDateText }}
                 </div>
               </div>
-              <div class="tx-right tx-10 tx-gray-600">
-                {{ project.lastModified | editedDateText }}
-              </div>
             </div>
-          </div>
-        </a>
+          </a>
+        </div>
       </div>
     </div>
   </div>
+  <!--
+  <kendo-drawer-container>
+    <kendo-drawer #drawer mode="push" [(expanded)]="expanded">
+      <ng-template kendoDrawerTemplate>
+        <div appFillElement [paddingBottom]="5">
+          <form class="k-form" *ngIf="expanded"></form>
+        </div>
+      </ng-template>
+    </kendo-drawer>
+
+    <kendo-drawer-content>
+      <button kendoButton (click)="drawer.toggle()">Toggle the Drawer</button>
+   
+    </kendo-drawer-content>
+  </kendo-drawer-container>-->
 </div>

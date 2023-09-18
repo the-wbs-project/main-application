@@ -20,7 +20,6 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
-import { ProjectUpdated } from '@wbs/main/actions';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -376,9 +375,7 @@ export class ProjectUploadState {
 
     if (saves.length === 0) return;
 
-    return forkJoin(saves).pipe(
-      tap(() => ctx.dispatch(new ProjectUpdated(project)))
-    );
+    return forkJoin(saves);
   }
 
   private getFile(file: File): Observable<ArrayBuffer> {

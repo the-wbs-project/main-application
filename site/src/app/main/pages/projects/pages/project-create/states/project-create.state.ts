@@ -32,7 +32,6 @@ import {
   ProjectCreationPage,
   PROJECT_CREATION_PAGES as PAGES,
 } from '../models';
-import { ProjectUpdated } from '@wbs/main/actions';
 
 interface StateModel {
   category?: string;
@@ -360,7 +359,6 @@ export class ProjectCreateState {
       switchMap(() =>
         this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
       ),
-      tap(() => ctx.dispatch(new ProjectUpdated(project))),
       tap(() =>
         this.data.activities.saveProjectActivitiesAsync('', [
           {

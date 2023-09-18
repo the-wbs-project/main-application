@@ -3,8 +3,8 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { ProjectRoleFilterPipe } from '../../../../../../pipes/project-role-filter.pipe';
 import { ProjectNavigationLink } from '../../models';
-import { ProjectRoleFilterPipe } from '../../pipes/project-role-filter.pipe';
 
 @Component({
   standalone: true,

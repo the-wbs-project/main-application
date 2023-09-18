@@ -10,6 +10,7 @@ import { Store } from '@ngxs/store';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
+import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { RolesState } from '@wbs/main/states';
@@ -28,6 +29,7 @@ import { ProjectState } from './states';
     CommonModule,
     FillElementDirective,
     FontAwesomeModule,
+    PageHeaderComponent,
     ProjectChecklistModalComponent,
     ProjectNavigationComponent,
     RouterModule,

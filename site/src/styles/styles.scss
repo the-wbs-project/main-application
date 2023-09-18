@@ -368,14 +368,6 @@ button:focus:not(:focus-visible) {
   z-index: max;
 }
 
-.nav-link {
-  color: $gray-800;
-  &.active {
-    font-weight: 700;
-    color: $primary;
-  }
-}
-
 /* ######## UTILITIES-STYLES ######## */
 @import "util/background";
 @import "util/border";

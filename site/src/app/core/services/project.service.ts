@@ -1,14 +1,9 @@
 import { Injectable } from '@angular/core';
-import {
-  Project,
-  PROJECT_STATI,
-  PROJECT_VIEW_STATI,
-  ProjectNode,
-} from '../models';
-import { IdService } from './id.service';
-import { Resources } from './resource.service';
 import { Store } from '@ngxs/store';
 import { RolesState } from '@wbs/main/states';
+import { Project, PROJECT_VIEW_STATI, ProjectNode } from '../models';
+import { IdService } from './id.service';
+import { Resources } from './resource.service';
 
 @Injectable({ providedIn: 'root' })
 export class ProjectService {
@@ -17,14 +12,22 @@ export class ProjectService {
     private readonly store: Store
   ) {}
 
-  filterByStatus(
+  filterByStati(
     projects: Project[] | null | undefined,
-    status: string
+    stati: string[]
   ): Project[] {
-    if (status === PROJECT_VIEW_STATI.ACTIVE)
-      return (projects ?? []).filter((x) => x.status !== PROJECT_STATI.CLOSED);
+    if (!projects || stati.length === 0) return [];
 
-    return (projects ?? []).filter((x) => x.status === status);
+    return projects.filter((x) => stati.includes(x.status));
+  }
+
+  filterByCategories(
+    projects: Project[] | null | undefined,
+    categories: string[]
+  ): Project[] {
+    if (!projects || categories.length === 0) return [];
+
+    return projects.filter((x) => categories.includes(x.category));
   }
 
   filterByName(
@@ -40,6 +43,12 @@ export class ProjectService {
     return this.resources.get(this.getStatusResource(status));
   }
 
+  getTypeText(type: string | undefined): string {
+    if (type === 'assigned') return this.resources.get('General.AssignedToMe');
+    if (type === 'all') return this.resources.get('General.All');
+    return '';
+  }
+
   getStatusResource(status: string | undefined): string {
     if (status === PROJECT_VIEW_STATI.ACTIVE) return 'General.Active';
     if (status === PROJECT_VIEW_STATI.APPROVAL)
@@ -48,6 +57,7 @@ export class ProjectService {
     if (status === PROJECT_VIEW_STATI.EXECUTION) return 'General.Execution';
     if (status === PROJECT_VIEW_STATI.FOLLOW_UP) return 'General.FollowUp';
     if (status === PROJECT_VIEW_STATI.PLANNING) return 'General.Planning';
+    if (status === PROJECT_VIEW_STATI.ARCHIVED) return 'General.Archived';
     return '';
   }
 

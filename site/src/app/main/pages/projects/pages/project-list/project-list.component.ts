@@ -6,23 +6,26 @@ import {
   Input,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, RouterModule } from '@angular/router';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
+import { PROJECT_VIEW_STATI } from '@wbs/core/models';
+import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
+import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
-import { MembershipState } from '@wbs/main/states';
-import { map } from 'rxjs';
-import { ProjectStatusFilterPipe } from './pipes/project-status-filter.pipe';
-import { ProjectTextFilterPipe } from './pipes/project-text-filter.pipe';
-import { ProjectTypeFilterPipe } from './pipes/project-type-filter.pipe';
+import { MetadataState } from '@wbs/main/states';
+import { ProjectListFiltersComponent } from './components/project-list-filters/project-list-filters.component';
+import { ProjectListFilters } from './models';
+import { ProjectFilterPipe } from './pipes/project-filter.pipe';
+import { ProjectListState } from './states';
 
 @Component({
   standalone: true,
@@ -32,14 +35,16 @@ import { ProjectTypeFilterPipe } from './pipes/project-type-filter.pipe';
   imports: [
     CategoryLabelPipe,
     EditedDateTextPipe,
+    FillElementDirective,
+    FontAwesomeModule,
     LoaderModule,
     NgbDropdownModule,
     NgFor,
     NgIf,
-    ProjectStatusFilterPipe,
+    PageHeaderComponent,
+    ProjectListFiltersComponent,
     ProjectStatusPipe,
-    ProjectTextFilterPipe,
-    ProjectTypeFilterPipe,
+    ProjectFilterPipe,
     RouterModule,
     SVGIconModule,
     TranslateModule,
@@ -50,32 +55,28 @@ export class ProjectListComponent {
   @Input() status?: string;
   @Input() type?: string;
 
-  readonly faPlus = faPlus;
-  /*readonly owner = toSignal(
-    this.route.params.pipe(map((p) => <string>p['owner']))
-  );
-  readonly status = toSignal(
-    this.route.params.pipe(map((p) => <string>p['status']))
-  );
-  readonly type = toSignal(
-    this.route.params.pipe(map((p) => <string>p['type']))
-  );*/
-  readonly loading = toSignal(this.store.select(MembershipState.loading));
-  readonly projects = toSignal(this.store.select(MembershipState.projects));
-  readonly stati: PROJECT_VIEW_STATI_TYPE[] = [
-    PROJECT_VIEW_STATI.ACTIVE,
-    PROJECT_VIEW_STATI.PLANNING,
-    PROJECT_VIEW_STATI.EXECUTION,
-    PROJECT_VIEW_STATI.FOLLOW_UP,
-    PROJECT_VIEW_STATI.CLOSED,
-  ];
+  readonly faCactus = faCactus;
 
+  filters: ProjectListFilters = {
+    assignedToMe: true,
+    stati: [
+      PROJECT_VIEW_STATI.PLANNING,
+      PROJECT_VIEW_STATI.EXECUTION,
+      PROJECT_VIEW_STATI.FOLLOW_UP,
+    ],
+    categories: this.store
+      .selectSnapshot(MetadataState.projectCategories)
+      .map((c) => c.id),
+  };
+  expanded = true;
+
+  readonly projects = toSignal(this.store.select(ProjectListState.list));
+  readonly loading = toSignal(this.store.select(ProjectListState.loading));
   readonly plusIcon = plusIcon;
 
   constructor(
     private readonly cd: ChangeDetectorRef,
-    private readonly store: Store,
-    private readonly route: ActivatedRoute
+    private readonly store: Store
   ) {}
 
   force() {

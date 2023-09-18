@@ -11,7 +11,6 @@ import {
   ROLES,
 } from '@wbs/core/models';
 import { Messages, ProjectService } from '@wbs/core/services';
-import { ProjectUpdated, SetHeaderInfo } from '@wbs/main/actions';
 import {
   AuthState,
   MembershipState,
@@ -156,17 +155,7 @@ export class ProjectState {
       }),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
-      tap((project) =>
-        ctx.dispatch([
-          new VerifyTasks(project),
-          new SetHeaderInfo({
-            title: 'Projects.ProjectDetails',
-            titleIsResource: true,
-            breadcrumbs: [{ route: '', label: 'General.Projects' }],
-            activeItem: project.title,
-          }),
-        ])
-      ),
+      tap((project) => ctx.dispatch([new VerifyTasks(project)])),
       tap((project) =>
         ctx.dispatch(new PerformChecklist(project, undefined, undefined))
       )
@@ -395,7 +384,7 @@ export class ProjectState {
       current: project,
     });
 
-    return ctx.dispatch(new ProjectUpdated(project));
+    return ctx.dispatch(new VerifyTasks(project, true));
   }
 
   private updateUserRoles(ctx: Context) {
