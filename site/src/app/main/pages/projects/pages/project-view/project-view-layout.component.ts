@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowUpFromBracket } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterState } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { TitleService } from '@wbs/core/services';
@@ -37,11 +36,9 @@ import { ProjectState } from './states';
   ],
 })
 export class ProjectViewLayoutComponent {
-  private readonly url = toSignal(this.store.select(RouterState.url));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
   readonly isPm = toSignal(this.store.select(RolesState.isPm));
-  readonly pageView = computed(() => this.getPage(this.url()));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
   readonly links = PROJECT_MENU_ITEMS.projectLinks;
@@ -57,14 +54,5 @@ export class ProjectViewLayoutComponent {
 
   constructor(title: TitleService, private readonly store: Store) {
     title.setTitle('Project', false);
-  }
-
-  private getPage(url: string | undefined): string {
-    if (!url) return '';
-
-    const parts = url.split('/');
-    const parentIndex = parts.indexOf('view');
-
-    return parts[parentIndex + 2];
   }
 }

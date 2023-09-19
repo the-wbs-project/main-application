@@ -1,7 +1,7 @@
 import { NgFor, NgForOf, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
@@ -16,11 +16,9 @@ import { HeaderProfileComponent } from './header-profile/header-profile.componen
   standalone: true,
   selector: 'wbs-header',
   templateUrl: './header.component.html',
-  styleUrls: ['./header.component.scss'],
   imports: [
-    NgbDropdownModule,
     HeaderProfileComponent,
-    NgbNavModule,
+    NgbDropdownModule,
     NgFor,
     NgForOf,
     NgIf,

@@ -8,7 +8,6 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   ProjectPageChanged,
-  TaskPageChanged,
   VerifyProject,
   VerifyTask,
 } from './actions';
@@ -94,11 +93,4 @@ export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
   return store
     .dispatch([new VerifyTask(viewNode, taskId)])
     .pipe(map(() => true));
-};
-
-export const taskViewGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const view = route.data['view'];
-
-  return store.dispatch(new TaskPageChanged(view)).pipe(map(() => true));
 };

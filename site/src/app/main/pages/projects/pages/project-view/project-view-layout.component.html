@@ -1,46 +1,30 @@
-<div class="container-fluid mg-t-20">
+<div class="container-fluid mg-y-20">
   <div class="row">
-    <div class="col-12">
+    <div class="col-6">
+      <div class="display-flex">
+        <div class="wd-50 tx-center">
+          <img
+            *ngIf="category() | categoryIcon; let url"
+            [src]="url"
+            class="wd-30 h-auto"
+          />
+        </div>
+        <h4 class="w-100 pd-5 mg-b-0">{{ title() }}</h4>
+      </div>
+    </div>
+    <div class="col-6" style="line-height: 35px">
       <wbs-page-header />
     </div>
   </div>
 </div>
-<div class="card mg-t-20">
-  <div class="card-body display-flex">
-    <div class="wd-50 tx-center">
-      <img
-        *ngIf="category() | categoryIcon; let url"
-        [src]="url"
-        class="wd-30 h-auto"
-      />
-    </div>
-    <h4 class="w-100 pd-5 mg-b-0">{{ title() }}</h4>
-    <!--<div
-      *ngIf="project()?.status === 'planning' && isPm()"
-      style="position: absolute; right: 10px"
-    >
-      <wbs-action-icon-list
-        size="large"
-        align="right"
-        fillMode="outline"
-        [mainIcon]="gearIcon"
-        [menuItems]="menu"
-      />
-    </div>-->
+<div class="card border border-dark">
+  <div class="card-header py-0 mg-b-0 bg-dark">
+    <wbs-project-navigation [links]="links" [userRoles]="roles()" />
   </div>
-  <div class="card-footer py-0">
-    <wbs-project-navigation
-      [links]="links"
-      [userRoles]="roles()"
-      [pageView]="pageView()"
-    />
-  </div>
-</div>
-<div class="card">
   <div
     class="card-body border-0 p-0 rounded-10 scroll"
     appFillElement
-    [paddingBottom]="15"
+    [paddingBottom]="30"
   >
     <router-outlet />
   </div>

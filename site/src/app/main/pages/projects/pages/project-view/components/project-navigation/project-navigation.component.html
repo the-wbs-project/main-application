@@ -1,44 +1,50 @@
-<ul ngbNav [activeId]="pageView" class="tx-14 tx-medium">
-  <ng-template ngFor [ngForOf]="links" let-link>
-    <ng-template [ngIf]="link.roles | projectRoleFilter : userRoles">
-      <li
-        *ngIf="!link.children"
-        [ngbNavItem]="link.fragment"
-        [ngClass]="link.classes"
-      >
-        <a
-          ngbNavLink
-          [routerLink]="['./', link.fragment]"
-          class="pd-y-5 pd-x-20"
-        >
-          {{ link.title | translate }}
-        </a>
-      </li>
-      <li
-        *ngIf="link.children"
-        ngbDropdown
-        container="body"
-        class="nav-item"
-        [ngClass]="link.classes"
-        role="presentation"
-      >
-        <a
-          ngbDropdownToggle
-          class="nav-link pd-y-5 pd-x-20 pointer"
-          [class.active]="link.fragment === pageView"
-        >
-          {{ link.title | translate }}
-        </a>
-        <div ngbDropdownMenu>
-          <a
-            ngbDropdownItem
-            *ngFor="let child of link.children"
-            [routerLink]="['./', link.fragment, child.fragment]"
-          >
-            {{ child.title | translate }}
-          </a>
-        </div>
-      </li>
-    </ng-template>
-  </ng-template>
-</ul>
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="container-fluid">
+    <div
+      class="navbar-collapse justify-content-center"
+      id="navbarCenteredExample"
+    >
+      <ul ngbNav class="tx-14 tx-medium">
+        <ng-template ngFor [ngForOf]="links" let-link>
+          <ng-template [ngIf]="link.roles | projectRoleFilter : userRoles">
+            <li
+              *ngIf="!link.children"
+              [ngClass]="link.classes"
+              class="nav-item tx-uppercase"
+            >
+              <a
+                [routerLink]="['./', link.fragment]"
+                class="nav-link pd-y-5 pd-x-20"
+              >
+                {{ link.title | translate }}
+              </a>
+            </li>
+            <li
+              *ngIf="link.children"
+              ngbDropdown
+              class="nav-item tx-uppercase"
+              [ngClass]="link.classes"
+            >
+              <a
+                ngbDropdownToggle
+                class="nav-link pd-y-5 pd-x-20 pointer"
+                role="button"
+              >
+                {{ link.title | translate }}
+              </a>
+              <div ngbDropdownMenu class="z-index: 10000;">
+                <a
+                  ngbDropdownItem
+                  *ngFor="let child of link.children"
+                  [routerLink]="['./', link.fragment, child.fragment]"
+                >
+                  {{ child.title | translate }}
+                </a>
+              </div>
+            </li>
+          </ng-template>
+        </ng-template>
+      </ul>
+    </div>
+  </div>
+</nav>

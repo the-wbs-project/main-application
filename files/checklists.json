@@ -18,7 +18,7 @@
                 "description": "Has a PM been assigned?",
                 "order": 2,
                 "type": "array",
-                "path": ".project.roles{.role == \"pm\"}",
+                "path": ".project.roles{.role == \"rol_12jH9Osuw8nL4YV9\"}",
                 "pass": {
                     "op": ">",
                     "value": 0
@@ -30,7 +30,7 @@
                 "description": "Has an approver been assigned?",
                 "order": 3,
                 "type": "array",
-                "path": ".project.roles{.role == \"approver\"}",
+                "path": ".project.roles{.role == \"rol_vvEl0ctJiZHVoGP3\"}",
                 "pass": {
                     "op": ">",
                     "value": 0
@@ -42,7 +42,7 @@
                 "description": "Has a SME been assigned?",
                 "order": 4,
                 "type": "array",
-                "path": ".project.roles{.role == \"sme\"}",
+                "path": ".project.roles{.role == \"rol_Ee7HoMw07f91vljJ\"}",
                 "pass": {
                     "op": ">",
                     "value": 0
@@ -54,7 +54,7 @@
                 "description": "Have the phases been assigned to the project?",
                 "order": 5,
                 "type": "array",
-                "path": ".project.categories.phase",
+                "path": ".project.phases",
                 "warn": {
                     "op": ">",
                     "value": 0
@@ -70,7 +70,7 @@
                 "description": "Have the disciplines been setup on the project?",
                 "order": 6,
                 "type": "array",
-                "path": ".project.categories.discipline",
+                "path": ".project.disciplines",
                 "warn": {
                     "op": ">",
                     "value": 0

@@ -23,7 +23,6 @@ import { ProjectNavigationComponent } from '../../components/project-navigation/
 })
 export class TaskViewComponent {
   readonly current = toSignal(this.store.select(TasksState.current));
-  readonly pageView = toSignal(this.store.select(TasksState.pageView));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
 
   readonly links = TASK_MENU_ITEMS.links;

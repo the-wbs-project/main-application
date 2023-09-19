@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   Action,
   Actions,
@@ -7,7 +6,6 @@ import {
   Selector,
   State,
   StateContext,
-  ofActionCompleted,
 } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -36,16 +34,15 @@ import {
   MoveTaskRight,
   MoveTaskUp,
   NavigateToTask,
-  PerformChecklist,
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveTask,
-  TaskPageChanged,
+  SetChecklistData,
   TreeReordered,
   VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { TASK_ACTIONS, TASK_PAGE_VIEW_TYPE } from '../models';
+import { TASK_ACTIONS } from '../models';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
 
@@ -53,7 +50,6 @@ interface StateModel {
   currentId?: string;
   currentView?: PROJECT_NODE_VIEW_TYPE;
   current?: TaskDetailsViewModel;
-  pageView?: TASK_PAGE_VIEW_TYPE;
   project?: Project;
   nodes?: ProjectNode[];
   phases?: WbsNodeView[];
@@ -63,7 +59,6 @@ interface StateModel {
 declare type Context = StateContext<StateModel>;
 
 @Injectable()
-@UntilDestroy()
 @State<StateModel>({
   name: 'tasks',
   defaults: {},
@@ -92,11 +87,6 @@ export class TasksState implements NgxsOnInit {
   @Selector()
   static nodes(state: StateModel): ProjectNode[] | undefined {
     return state.nodes;
-  }
-
-  @Selector()
-  static pageView(state: StateModel): TASK_PAGE_VIEW_TYPE | undefined {
-    return state.pageView;
   }
 
   @Selector()
@@ -162,11 +152,6 @@ export class TasksState implements NgxsOnInit {
     this.createDetailsVm(ctx, taskId, viewNode);
   }
 
-  @Action(TaskPageChanged)
-  taskPageChanged(ctx: Context, { pageView }: TaskPageChanged): void {
-    ctx.patchState({ pageView });
-  }
-
   @Action(NavigateToTask)
   navigateToTask({}: Context, action: NavigateToTask): void {
     this.nav.toTask(action.nodeId);
@@ -191,7 +176,7 @@ export class TasksState implements NgxsOnInit {
     state = ctx.getState();
 
     const actions: any[] = [
-      new PerformChecklist(undefined, disciplines, phases),
+      new SetChecklistData(undefined, disciplines, phases),
     ];
 
     if (state.currentId !== state.current?.id)

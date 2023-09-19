@@ -24,7 +24,6 @@ import { ProjectNavigationLink } from '../../models';
   ],
 })
 export class ProjectNavigationComponent {
-  @Input({ required: true }) pageView!: string | null;
   @Input({ required: true }) links!: ProjectNavigationLink[];
   @Input({ required: true }) userRoles?: string[];
 }

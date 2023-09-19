@@ -25,10 +25,10 @@ import {
   ChangeProjectStatus,
   MarkProjectChanged,
   NavigateToView,
-  PerformChecklist,
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveUserToRole,
+  SetChecklistData,
   SetProject,
   VerifyProject,
   VerifyTasks,
@@ -157,7 +157,7 @@ export class ProjectState {
       tap(() => this.updateUserRoles(ctx)),
       tap((project) => ctx.dispatch([new VerifyTasks(project)])),
       tap((project) =>
-        ctx.dispatch(new PerformChecklist(project, undefined, undefined))
+        ctx.dispatch(new SetChecklistData(project, undefined, undefined))
       )
     );
   }
@@ -370,7 +370,7 @@ export class ProjectState {
       tap(() => ctx.patchState({ current: project })),
       tap(() => this.projectChanged(ctx)),
       tap(() =>
-        ctx.dispatch(new PerformChecklist(project, undefined, undefined))
+        ctx.dispatch(new SetChecklistData(project, undefined, undefined))
       )
     );
   }

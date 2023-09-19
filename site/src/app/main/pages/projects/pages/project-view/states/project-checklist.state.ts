@@ -4,8 +4,8 @@ import { Project } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { apply } from 'jspath';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { InitiateChecklist, PerformChecklist } from '../actions';
+import { map, tap } from 'rxjs/operators';
+import { InitiateChecklist, PerformChecks, SetChecklistData } from '../actions';
 import {
   CHECKLIST_OPERATORS,
   CHECKLIST_RESULTS,
@@ -55,14 +55,17 @@ export class ProjectChecklistState {
   initiateChecklist(ctx: StateContext<StateModel>): Observable<any> | void {
     if (ctx.getState().tests) return;
 
-    return this.data.getAsync().pipe(map((tests) => ctx.patchState({ tests })));
+    return this.data.getAsync().pipe(
+      map((tests) => ctx.patchState({ tests })),
+      tap(() => ctx.dispatch(new PerformChecks()))
+    );
   }
 
-  @Action(PerformChecklist)
+  @Action(SetChecklistData)
   performChecklist(
     ctx: StateContext<StateModel>,
-    action: PerformChecklist
-  ): void {
+    action: SetChecklistData
+  ): Observable<void> {
     const state = ctx.getState();
     const data = state.data;
 
@@ -72,7 +75,14 @@ export class ProjectChecklistState {
 
     ctx.patchState({ data });
 
-    if (!state.tests) return;
+    return ctx.dispatch(new PerformChecks());
+  }
+
+  @Action(PerformChecks)
+  performChecks(ctx: StateContext<StateModel>): void {
+    const state = ctx.getState();
+
+    if (!state.tests || !state.data) return;
     //
     //  Perform checks
     //
@@ -83,9 +93,9 @@ export class ProjectChecklistState {
 
       for (const test of group.items) {
         if (test.type === 'exists') {
-          items.push(this.performExists(data, test));
+          items.push(this.performExists(state.data, test));
         } else {
-          items.push(this.performValue(data, test));
+          items.push(this.performValue(state.data, test));
         }
       }
 
