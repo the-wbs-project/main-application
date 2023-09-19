@@ -29,7 +29,7 @@ public abstract class BaseAuthDataService
             var token = await PullManagementTokenAsync();
 
             mgmtToken = token.access_token;
-            expiration = DateTime.Now.AddSeconds(token.expires_in - 60);
+            expiration = DateTime.Now.AddHours(12);
 
             client = new ManagementApiClient(mgmtToken, new Uri($"https://{config.Domain}/api/v2"));
         }
