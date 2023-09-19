@@ -233,11 +233,8 @@ export class TasksState implements NgxsOnInit {
     return this.data.projectNodes
       .putAsync(project.owner, project.id, [], removedIds)
       .pipe(
-        map(() =>
-          ctx.patchState({
-            nodes,
-          })
-        ),
+        map(() => ctx.patchState({ nodes })),
+        tap(() => this.messaging.success('Projects.TaskRemoved')),
         switchMap(() => ctx.dispatch(new RebuildNodeViews())),
         tap(() =>
           this.saveActivity({

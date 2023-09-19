@@ -4,7 +4,7 @@ GO
 CREATE TABLE [dbo].[Activities] (
     [Id] nvarchar(100) NOT NULL,
     [Action] nvarchar(200) NOT NULL,
-    [Timestamp] datetime NOT NULL,
+    [Timestamp] datetimeoffset NOT NULL,
     [UserId] nvarchar(100) NOT NULL,
     [TopLevelId] nvarchar(100) NOT NULL,
     [ObjectId] nvarchar(100) NULL,

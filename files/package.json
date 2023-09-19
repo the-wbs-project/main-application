@@ -5,7 +5,8 @@
   "scripts": {
     "upload": "sh upload.sh",
     "upload:local": "yarn run upload http://localhost:88",
-    "upload:qa": "yarn run upload https://test-api.pm-empower.com"
+    "upload:qa": "yarn run upload https://test-api.pm-empower.com",
+    "upload:prod": "yarn run upload https://api.pm-empower.com"
   },
   "repository": {
     "type": "git"

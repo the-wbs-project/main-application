@@ -104,8 +104,6 @@ public class ProjectNodeDataService : BaseDbService
         cmd.Parameters.AddWithValue("@Description", DbValue(node.description));
         cmd.Parameters.AddWithValue("@Order", node.order);
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
-        cmd.Parameters.AddWithValue("@CreatedOn", node.createdOn);
-        cmd.Parameters.AddWithValue("@LastModified", node.lastModified);
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -145,8 +143,8 @@ public class ProjectNodeDataService : BaseDbService
             id = DbValue<string>(reader, "Id"),
             projectId = DbValue<string>(reader, "ProjectId"),
             parentId = DbValue<string>(reader, "ParentId"),
-            createdOn = DbValue<DateTime>(reader, "CreatedOn"),
-            lastModified = DbValue<DateTime>(reader, "LastModified"),
+            createdOn = DbValue<DateTimeOffset>(reader, "CreatedOn"),
+            lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),

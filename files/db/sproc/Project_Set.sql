@@ -5,10 +5,8 @@ CREATE PROCEDURE [dbo].[Project_Set]
     @Id nvarchar(100),
     @OwnerId nvarchar(100),
     @CreatedBy nvarchar(100),
-    @CreatedOn datetime,
     @Title nvarchar(200),
     @Description nvarchar(MAX),
-    @LastModified datetime,
     @Status nvarchar(50),
     @MainNodeView nvarchar(20),
     @Category nvarchar(50),
@@ -22,10 +20,9 @@ IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
         UPDATE [dbo].[Projects]
         SET [OwnerId] = @OwnerId,
             [CreatedBy] = @CreatedBy,
-            [CreatedOn] = @CreatedOn,
             [Title] = @Title,
             [Description] = @Description,
-            [LastModified] = @LastModified,
+            [LastModified] = GETUTCDATE(),
             [Status] = @Status,
             [MainNodeView] = @MainNodeView,
             [Category] = @Category,
@@ -37,7 +34,7 @@ IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
 ELSE
     BEGIN
         INSERT INTO [dbo].[Projects]
-        VALUES (@Id, @OwnerId, @CreatedBy, @CreatedOn, @Title, @Description, @LastModified, @Status, @MainNodeView, @Category, @Phases, @Disciplines, @Roles)
+        VALUES (@Id, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Phases, @Disciplines, @Roles)
     END
 END
 GO

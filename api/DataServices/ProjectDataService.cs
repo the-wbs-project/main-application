@@ -106,8 +106,6 @@ public class ProjectDataService : BaseDbService
         cmd.Parameters.AddWithValue("@Id", project.id);
         cmd.Parameters.AddWithValue("@OwnerId", project.owner);
         cmd.Parameters.AddWithValue("@CreatedBy", project.createdBy);
-        cmd.Parameters.AddWithValue("@CreatedOn", project.createdOn);
-        cmd.Parameters.AddWithValue("@LastModified", project.lastModified);
         cmd.Parameters.AddWithValue("@Title", project.title);
         cmd.Parameters.AddWithValue("@Description", project.description);
         cmd.Parameters.AddWithValue("@Status", project.status);
@@ -127,8 +125,8 @@ public class ProjectDataService : BaseDbService
             id = DbValue<string>(reader, "Id"),
             owner = DbValue<string>(reader, "OwnerId"),
             createdBy = DbValue<string>(reader, "CreatedBy"),
-            createdOn = DbValue<DateTime>(reader, "CreatedOn"),
-            lastModified = DbValue<DateTime>(reader, "LastModified"),
+            createdOn = DbValue<DateTimeOffset>(reader, "CreatedOn"),
+            lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
             status = DbValue<string>(reader, "Status"),

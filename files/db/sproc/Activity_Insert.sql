@@ -4,7 +4,6 @@ GO
 CREATE PROCEDURE [dbo].[Activity_Insert]
 	@Id [nvarchar](100),
 	@Action [nvarchar](100),
-	@Timestamp [datetime],
 	@UserId [nvarchar](100),
 	@TopLevelId [nvarchar](100),
 	@ObjectId [nvarchar](100) = NULL,
@@ -21,7 +20,7 @@ BEGIN
 		UPDATE [dbo].[Activities]
 		SET
 			[Action] = @Action,
-			[Timestamp] = @Timestamp,
+			[Timestamp] = GETUTCDATE(),
 			[UserId] = @UserId,
 			[TopLevelId] = @TopLevelId,
 			[ObjectId] = @ObjectId,
@@ -43,7 +42,7 @@ BEGIN
 		) VALUES (
 			@Id,
 			@Action,
-			@Timestamp,
+			GETUTCDATE(),
 			@UserId,
 			@TopLevelId,
 			@ObjectId,

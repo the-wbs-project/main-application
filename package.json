@@ -9,6 +9,7 @@
     "stop": "docker-compose stop",
     "upload": "cd files && yarn run upload:local",
     "upload:qa": "cd files && yarn run upload:qa",
+    "upload:prod": "cd files && yarn run upload:prod",
     "prune": "docker builder prune --all -f"
   },
   "repository": {

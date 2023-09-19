@@ -24,7 +24,7 @@ public class ProjectSnapshotDataService : BaseDbService
 
     public async Task SetAsync(SqlConnection conn, string activityId, Project project, ProjectNode[] nodes)
     {
-        var cmd = new SqlCommand("INSERT INTO [dbo].[ProjectSnapshots] ([ActivityId], [ProjectId], [Timestamp], [Project], [Nodes]) VALUES (@ActivityId, @ProjectId, GETDATE(), @Project, @Nodes)", conn);
+        var cmd = new SqlCommand("INSERT INTO [dbo].[ProjectSnapshots] ([ActivityId], [ProjectId], [Timestamp], [Project], [Nodes]) VALUES (@ActivityId, @ProjectId, GETUTCDATE(), @Project, @Nodes)", conn);
 
         cmd.Parameters.AddWithValue("@ActivityId", activityId);
         cmd.Parameters.AddWithValue("@ProjectId", project.id);
