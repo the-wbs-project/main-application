@@ -57,7 +57,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -75,7 +74,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -95,7 +93,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -115,7 +112,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -135,7 +131,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -153,7 +148,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -171,7 +165,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -191,7 +184,6 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }

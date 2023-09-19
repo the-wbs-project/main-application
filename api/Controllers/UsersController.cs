@@ -32,7 +32,6 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -47,8 +46,8 @@ public class UsersController : ControllerBase
         }
         catch (Exception e)
         {
-            logger.LogError(e, "Error getting user site roles");
-            return StatusCode(500, e.Message);
+            telemetry.TrackException(e);
+            return new StatusCodeResult(500);
         }
     }
 
@@ -63,7 +62,6 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
@@ -84,7 +82,6 @@ public class UsersController : ControllerBase
         catch (Exception ex)
         {
             telemetry.TrackException(ex);
-            logger.LogError(ex.ToString());
             return new StatusCodeResult(500);
         }
     }
