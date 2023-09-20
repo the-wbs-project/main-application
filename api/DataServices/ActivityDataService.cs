@@ -111,7 +111,6 @@ public class ActivityDataService : BaseDbService
         };
         cmd.Parameters.AddWithValue("@Id", item.id);
         cmd.Parameters.AddWithValue("@Action", item.action);
-        cmd.Parameters.AddWithValue("@Timestamp", item.timestamp);
         cmd.Parameters.AddWithValue("@UserId", item.userId);
         cmd.Parameters.AddWithValue("@TopLevelId", item.topLevelId);
         cmd.Parameters.AddWithValue("@ObjectId", item.objectId);
@@ -127,7 +126,7 @@ public class ActivityDataService : BaseDbService
         {
             id = DbValue<string>(reader, "Id"),
             action = DbValue<string>(reader, "Action"),
-            timestamp = DbValue<DateTime>(reader, "Timestamp"),
+            timestamp = DbValue<DateTimeOffset>(reader, "Timestamp"),
             userId = DbValue<string>(reader, "UserId"),
             topLevelId = DbValue<string>(reader, "TopLevelId"),
             objectId = DbValue<string>(reader, "ObjectId"),
