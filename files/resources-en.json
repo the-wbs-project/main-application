@@ -23,6 +23,7 @@
       "Parent": "Parent",
       "Confirmation": "Confirmation",
       "Save": "Save",
+      "Saving": "Saving",
       "SaveAndView": "Save & View",
       "Status": "Status",
       "About": "About",
@@ -51,6 +52,7 @@
       "Members": "Members",
       "Views": "Views",
       "Back": "Back",
+      "Create": "Create",
       "Continue": "Continue",
       "AssignedToMe": "Assigned To Me",
       "RetrievingData": "Retrieving Data...",
@@ -317,7 +319,9 @@
       "DisciplineFirst_Title": "Discipline First",
       "DisciplineFirst_Description": "Build the project plan by discipline with the ability to view it by phase.",
       "Roles_Title": "Project Role Setup",
-      "Roles_Description": "Setup the roles for this project.  You must have atleast one PM to continue."
+      "Roles_Description": "Setup the roles for this project.  You must have atleast one PM to continue.",
+      "Saving_Title": "Creating Project",
+      "Saving_Description": "We are working hard to create your new project."
     }
   },
   {

@@ -18,29 +18,25 @@ import { Observable, switchMap, tap } from 'rxjs';
 import {
   CategoryChosen,
   DisciplinesChosen,
-  GoToBasics,
-  LibOrScratchChosen,
   NavBack,
-  NodeViewChosen,
   PhasesChosen,
   RolesChosen,
   SaveProject,
+  SetHeaderInformation,
   StartWizard,
   SubmitBasics,
 } from '../actions';
-import {
-  ProjectCreationPage,
-  PROJECT_CREATION_PAGES as PAGES,
-} from '../models';
 
 interface StateModel {
   category?: string;
   description: string;
   disciplines?: (string | ListItem)[];
+  headerTitle?: string;
+  headerDescription?: string;
   isSaving: boolean;
+  isWizardActive: boolean;
   nodeView?: PROJECT_NODE_VIEW_TYPE;
   owner?: string;
-  page?: ProjectCreationPage;
   phases?: (string | ListItem)[];
   roles: Map<string, string[]>;
   scope?: PROJECT_SCOPE_TYPE;
@@ -54,6 +50,7 @@ interface StateModel {
   defaults: {
     description: '',
     isSaving: false,
+    isWizardActive: false,
     roles: new Map<string, string[]>(),
     title: '',
   },
@@ -80,18 +77,28 @@ export class ProjectCreateState {
   }
 
   @Selector()
+  static headerDescription(state: StateModel): string | undefined {
+    return state.headerDescription;
+  }
+
+  @Selector()
+  static headerTitle(state: StateModel): string | undefined {
+    return state.headerTitle;
+  }
+
+  @Selector()
   static isSaving(state: StateModel): boolean {
     return state.isSaving;
   }
 
   @Selector()
-  static nodeView(state: StateModel): PROJECT_NODE_VIEW_TYPE | undefined {
-    return state.nodeView;
+  static isWizardActive(state: StateModel): boolean {
+    return state.isWizardActive;
   }
 
   @Selector()
-  static page(state: StateModel): ProjectCreationPage | undefined {
-    return state.page;
+  static nodeView(state: StateModel): PROJECT_NODE_VIEW_TYPE | undefined {
+    return state.nodeView;
   }
 
   @Selector()
@@ -118,16 +125,28 @@ export class ProjectCreateState {
   startWizard(ctx: StateContext<StateModel>, { owner }: StartWizard): void {
     ctx.patchState({
       owner,
-      page: PAGES.GETTING_STARTED,
+      isWizardActive: true,
       description: '',
       roles: new Map<string, string[]>(),
       title: '',
     });
   }
 
+  @Action(SetHeaderInformation)
+  setHeader(
+    ctx: StateContext<StateModel>,
+    { title, description }: SetHeaderInformation
+  ): void {
+    ctx.patchState({
+      headerDescription: description,
+      headerTitle: title,
+    });
+  }
+
   @Action(NavBack)
   navBack(ctx: StateContext<StateModel>): void {
     const state = ctx.getState();
+    /*
     const current = state.page!;
 
     if (current === PAGES.BASICS) {
@@ -144,43 +163,29 @@ export class ProjectCreateState {
       });
     } else if (current === PAGES.PHASES) {
       ctx.patchState({
-        page: PAGES.CATEGORY /*
-          state.nodeView === PROJECT_NODE_VIEW.PHASE
-            ? PAGES.CATEGORY //? PAGES.NODE_VIEW
-            : PAGES.DESCIPLINES,*/,
+        page: PAGES.CATEGORY
       });
     } else if (current === PAGES.DESCIPLINES) {
       ctx.patchState({
-        page: PAGES.PHASES /*
-          state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE
-            ? PAGES.CATEGORY //  ? PAGES.NODE_VIEW
-            : PAGES.PHASES,*/,
+        page: PAGES.PHASES
       });
     } else if (current === PAGES.ROLES) {
-      ctx.patchState({ page: PAGES.DESCIPLINES });
-    }
-  }
-
-  @Action(GoToBasics)
-  goToBasics(ctx: StateContext<StateModel>): void {
-    ctx.patchState({
-      page: PAGES.BASICS,
-    });
+      ctx.patchState({ page: PAGES.DESCIPLINES }); 
+    }*/
   }
 
   @Action(SubmitBasics)
   submitBasics(ctx: StateContext<StateModel>, action: SubmitBasics): void {
     ctx.patchState({
-      page: PAGES.CATEGORY,
       description: action.description,
       title: action.title,
     });
+    console.log('saved');
   }
 
   @Action(CategoryChosen)
   categoryChosen(ctx: StateContext<StateModel>, action: CategoryChosen): void {
     ctx.patchState({
-      page: PAGES.PHASES,
       //
       //  For now we are going to skip the library page and node view page and go straight to phase first
       //
@@ -194,36 +199,12 @@ export class ProjectCreateState {
     });
   }
 
-  @Action(LibOrScratchChosen)
-  libOrScratchChosen(
-    ctx: StateContext<StateModel>,
-    action: LibOrScratchChosen
-  ): void {
-    ctx.patchState({
-      page: PAGES.NODE_VIEW,
-      useLibrary: action.useLibrary,
-    });
-  }
-
-  @Action(NodeViewChosen)
-  nodeViewChosen(ctx: StateContext<StateModel>, action: NodeViewChosen): void {
-    ctx.patchState({
-      page:
-        action.nodeView === PROJECT_NODE_VIEW.DISCIPLINE
-          ? PAGES.DESCIPLINES
-          : PAGES.PHASES,
-      nodeView: action.nodeView,
-    });
-  }
-
   @Action(PhasesChosen)
   phasesChosen(ctx: StateContext<StateModel>, action: PhasesChosen): void {
     const state = ctx.getState();
     //const save = state.nodeView === PROJECT_NODE_VIEW.DISCIPLINE;
 
     ctx.patchState({
-      //page: save ? undefined : PAGES.DESCIPLINES,
-      page: PAGES.DESCIPLINES,
       phases: action.phases,
     });
   }
@@ -237,8 +218,6 @@ export class ProjectCreateState {
     //const save = state.nodeView === PROJECT_NODE_VIEW.PHASE;
 
     ctx.patchState({
-      //page: save ? undefined : PAGES.PHASES,
-      page: PAGES.ROLES,
       disciplines: action.disciplines,
     });
   }
@@ -248,7 +227,7 @@ export class ProjectCreateState {
     ctx: StateContext<StateModel>,
     { roles }: RolesChosen
   ): void | Observable<void> {
-    ctx.patchState({ page: undefined, roles });
+    ctx.patchState({ roles });
 
     return ctx.dispatch(new SaveProject());
   }
@@ -301,7 +280,6 @@ export class ProjectCreateState {
 
         nodes.push({
           description: cat.description,
-          //discipline: [],
           disciplineIds: [],
           id: cat.id,
           order: i + 1,
@@ -374,6 +352,12 @@ export class ProjectCreateState {
             nodes: [],
           },
         ])
+      ),
+      tap(() =>
+        ctx.patchState({
+          isSaving: false,
+          isWizardActive: false,
+        })
       ),
       tap(() =>
         ctx.dispatch(

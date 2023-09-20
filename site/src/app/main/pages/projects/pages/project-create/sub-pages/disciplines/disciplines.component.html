@@ -11,7 +11,12 @@
   </div>
   <div class="w-100 text-center" style="flex: 0 1 20px">
     <div class="display-ib wd-600">
-      <wbs-project-create-footer view="bc" (continueClicked)="nav()" />
+      <wbs-project-create-footer
+        view="bc"
+        [disableContinue]="disable(categories)"
+        (backClicked)="back()"
+        (continueClicked)="continue()"
+      />
     </div>
   </div>
 </div>

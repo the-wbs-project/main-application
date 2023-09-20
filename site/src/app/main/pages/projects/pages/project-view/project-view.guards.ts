@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { LoadDiscussionForum, SetHeaderInfo } from '@wbs/main/actions';
+import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
 import { MembershipState } from '@wbs/main/states';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -61,15 +61,15 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
       switchMap(() => store.selectOnce(ProjectState.current)),
       tap((project) =>
         store.dispatch(
-          new SetHeaderInfo({
-            breadcrumbs: [
+          new SetBreadcrumbs(
+            [
               {
                 route: ['/', owner, 'projects'],
                 label: 'General.Projects',
               },
             ],
-            activeItem: project!.title,
-          })
+            project!.title
+          )
         )
       ),
       map(() => true)

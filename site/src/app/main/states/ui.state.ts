@@ -15,7 +15,7 @@ import { timer } from 'rxjs';
 import {
   MainContentSizeChanged,
   ParseNavigation,
-  SetHeaderInfo,
+  SetBreadcrumbs,
   ToggleSidebar,
 } from '../actions';
 
@@ -129,9 +129,9 @@ export class UiState implements NgxsOnInit {
     ctx.patchState(action);
   }
 
-  @Action(SetHeaderInfo)
-  setHeaderInfo(ctx: Context, action: SetHeaderInfo): void {
-    ctx.patchState(action);
+  @Action(SetBreadcrumbs)
+  setHeaderInfo(ctx: Context, header: SetBreadcrumbs): void {
+    ctx.patchState({ header });
   }
 
   @Action(ToggleSidebar)

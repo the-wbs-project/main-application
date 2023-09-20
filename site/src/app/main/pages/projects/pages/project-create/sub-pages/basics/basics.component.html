@@ -1,0 +1,22 @@
+<div class="display-ib w-100 mx-wd-800">
+  <kendo-textbox
+    #titleEditor
+    [ngModel]="title"
+    [placeholder]="'Projects.ProjectTitle' | translate"
+  />
+  <br />
+  <br />
+  <kendo-editor
+    #descriptionEditor
+    [value]="description"
+    [placeholder]="'Projects.ProjectDescription' | translate"
+  />
+  <br />
+  <br />
+  <wbs-project-create-footer
+    view="bc"
+    [disableContinue]="titleEditor.value === ''"
+    (backClicked)="back()"
+    (continueClicked)="continue(titleEditor.value, descriptionEditor.value)"
+  />
+</div>

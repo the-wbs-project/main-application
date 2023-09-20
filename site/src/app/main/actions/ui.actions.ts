@@ -1,4 +1,4 @@
-import { HeaderInformation } from '@wbs/core/models';
+import { HeaderInformation, RouteLink } from '@wbs/core/models';
 
 export class MainContentSizeChanged {
   static readonly type = '[UI] Main Content Size Changed';
@@ -10,9 +10,12 @@ export class ParseNavigation {
   constructor(readonly path: string) {}
 }
 
-export class SetHeaderInfo {
-  static readonly type = '[UI] Set Header Info';
-  constructor(readonly header: HeaderInformation) {}
+export class SetBreadcrumbs {
+  static readonly type = '[UI] Set Breadcrumbs';
+  constructor(
+    readonly breadcrumbs: RouteLink[],
+    readonly activeItem?: string
+  ) {}
 }
 
 export class ToggleSidebar {

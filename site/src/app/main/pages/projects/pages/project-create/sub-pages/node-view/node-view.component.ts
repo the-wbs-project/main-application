@@ -3,8 +3,8 @@ import { faListTree, faPeopleGroup } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
-import { NodeViewChosen } from '../../../actions';
-import { FooterComponent } from '../../footer/footer.component';
+import { NodeViewChosen } from '../../actions';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   standalone: true,

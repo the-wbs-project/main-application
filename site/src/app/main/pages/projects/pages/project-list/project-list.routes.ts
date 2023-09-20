@@ -2,7 +2,7 @@ import { importProvidersFrom, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { Resources, TitleService } from '@wbs/core/services';
-import { SetHeaderInfo } from '@wbs/main/actions';
+import { SetBreadcrumbs } from '@wbs/main/actions';
 import { MembershipState } from '@wbs/main/states';
 import { map } from 'rxjs/operators';
 import { ProjectListState } from './states';
@@ -20,13 +20,7 @@ export const loadGuard = (route: ActivatedRouteSnapshot) => {
   titleService.setTitle(title, false);
 
   return store
-    .dispatch([
-      new LoadProjects(owner),
-      new SetHeaderInfo({
-        breadcrumbs: [],
-        activeItem: title,
-      }),
-    ])
+    .dispatch([new LoadProjects(owner), new SetBreadcrumbs([], title)])
     .pipe(map(() => true));
 };
 

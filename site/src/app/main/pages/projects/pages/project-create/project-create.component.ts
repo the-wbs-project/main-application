@@ -1,22 +1,14 @@
-import { AsyncPipe, NgIf, NgSwitch, NgSwitchCase } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ViewEncapsulation,
 } from '@angular/core';
-import { Select } from '@ngxs/store';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store } from '@ngxs/store';
+import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { Observable } from 'rxjs';
-import { HeaderComponent } from './components/header.component';
-import { BasicsComponent } from './components/sub-pages/basics/basics.component';
-import { CategoriesComponent } from './components/sub-pages/categories/categories.component';
-import { DisciplinesComponent } from './components/sub-pages/disciplines/disciplines.component';
-import { GettingStartedComponent } from './components/sub-pages/getting-started.component';
-import { LibOrScratchComponent } from './components/sub-pages/lib-or-scratch/lib-or-scratch.component';
-import { NodeViewComponent } from './components/sub-pages/node-view/node-view.component';
-import { PhaseComponent } from './components/sub-pages/phases/phases.component';
-import { RolesComponent } from './components/sub-pages/roles/roles.component';
-import { ProjectCreationPage } from './models';
 import { ProjectCreateState } from './states';
 
 @Component({
@@ -26,24 +18,17 @@ import { ProjectCreateState } from './states';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    AsyncPipe,
-    BasicsComponent,
-    CategoriesComponent,
-    DisciplinesComponent,
     FillElementDirective,
-    GettingStartedComponent,
-    HeaderComponent,
-    LibOrScratchComponent,
-    NgIf,
-    NgSwitch,
-    NgSwitchCase,
-    NodeViewComponent,
-    PhaseComponent,
-    RolesComponent,
+    PageHeaderComponent,
+    RouterModule,
+    TranslateModule,
   ],
 })
 export class ProjectCreateComponent {
-  @Select(ProjectCreateState.page) page$!: Observable<
-    ProjectCreationPage | undefined
-  >;
+  title = toSignal(this.store.select(ProjectCreateState.headerTitle));
+  description = toSignal(
+    this.store.select(ProjectCreateState.headerDescription)
+  );
+
+  constructor(private readonly store: Store) {}
 }

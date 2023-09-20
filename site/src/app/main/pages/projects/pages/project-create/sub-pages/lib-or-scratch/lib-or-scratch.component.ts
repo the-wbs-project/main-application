@@ -2,8 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faBooks, faChalkboardUser } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { LibOrScratchChosen } from '../../../actions';
-import { FooterComponent } from '../../footer/footer.component';
+import { LibOrScratchChosen } from '../../actions';
+import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   standalone: true,

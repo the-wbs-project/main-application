@@ -1,13 +1,13 @@
 <div class="display-flex flex-flow-col flex-align-stretch">
   <div class="mg-t-10 w-100" style="flex: 1 1 auto">
     <wbs-project-category-list
-      [paddingBottom]="40"
+      [paddingBottom]="50"
       [categories]="categories()"
       [selected]="selected()"
-      (categoryChosen)="nav($event)"
+      (categoryChosen)="continue($event)"
     />
   </div>
   <div class="mg-t-10 w-100" style="flex: 0 1 30px">
-    <wbs-project-create-footer view="b-c" />
+    <wbs-project-create-footer view="b-c" (backClicked)="back()" />
   </div>
 </div>

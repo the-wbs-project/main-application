@@ -13,6 +13,7 @@
   <wbs-project-create-footer
     view="bc"
     [disableContinue]="pmIds().length === 0"
-    (continueClicked)="nav()"
+    (backClicked)="back()"
+    (continueClicked)="continue()"
   />
 </div>
