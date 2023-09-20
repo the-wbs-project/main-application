@@ -13,7 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { CheckBoxModule } from '@progress/kendo-angular-inputs';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { PROJECT_VIEW_STATI, PROJECT_VIEW_STATI_TYPE } from '@wbs/core/models';
+import { PROJECT_STATI, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { SwitchComponent } from '@wbs/main/components/switch';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { MetadataState } from '@wbs/main/states';
@@ -41,12 +41,12 @@ export class ProjectListFiltersComponent {
   expanded = true;
 
   readonly cats = toSignal(this.store.select(MetadataState.projectCategories));
-  readonly stati: PROJECT_VIEW_STATI_TYPE[] = [
-    PROJECT_VIEW_STATI.PLANNING,
-    PROJECT_VIEW_STATI.EXECUTION,
-    PROJECT_VIEW_STATI.FOLLOW_UP,
-    PROJECT_VIEW_STATI.CLOSED,
-    PROJECT_VIEW_STATI.ARCHIVED,
+  readonly stati: PROJECT_STATI_TYPE[] = [
+    PROJECT_STATI.PLANNING,
+    PROJECT_STATI.EXECUTION,
+    PROJECT_STATI.FOLLOW_UP,
+    PROJECT_STATI.CLOSED,
+    PROJECT_STATI.ARCHIVED,
   ];
 
   readonly plusIcon = plusIcon;

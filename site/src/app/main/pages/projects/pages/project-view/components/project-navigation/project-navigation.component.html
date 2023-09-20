@@ -13,8 +13,16 @@
               class="nav-item tx-uppercase"
             >
               <a
+                *ngIf="link.fragment"
                 [routerLink]="['./', link.fragment]"
                 class="nav-link pd-y-5 pd-x-20"
+              >
+                {{ link.title | translate }}
+              </a>
+              <a
+                *ngIf="link.action"
+                class="nav-link pd-y-5 pd-x-20 pointer"
+                (click)="call(link.action)"
               >
                 {{ link.title | translate }}
               </a>
@@ -33,13 +41,23 @@
                 {{ link.title | translate }}
               </a>
               <div ngbDropdownMenu class="z-index: 10000;">
-                <a
-                  ngbDropdownItem
-                  *ngFor="let child of link.children"
-                  [routerLink]="['./', link.fragment, child.fragment]"
-                >
-                  {{ child.title | translate }}
-                </a>
+                <ng-template ngFor let-child [ngForOf]="link.children">
+                  <a
+                    ngbDropdownItem
+                    *ngIf="child.fragment"
+                    [routerLink]="['./', link.fragment, child.fragment]"
+                  >
+                    {{ child.title | translate }}
+                  </a>
+                  <a
+                    ngbDropdownItem
+                    *ngIf="child.action"
+                    class="pointer"
+                    (click)="call(child.action)"
+                  >
+                    {{ child.title | translate }}
+                  </a>
+                </ng-template>
               </div>
             </li>
           </ng-template>

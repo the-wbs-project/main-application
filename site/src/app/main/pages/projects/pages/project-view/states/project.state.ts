@@ -17,9 +17,10 @@ import {
   MetadataState,
   RolesState,
 } from '@wbs/main/states';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import {
   AddUserToRole,
+  ArchiveProject,
   ChangeProjectBasics,
   ChangeProjectCategories,
   ChangeProjectStatus,
@@ -36,6 +37,7 @@ import {
 import { PROJECT_ACTIONS } from '../models';
 import { TimelineService } from '../services';
 import { UserRolesViewModel } from '../view-models';
+import { DialogService } from '@wbs/main/services';
 
 interface StateModel {
   approvers?: string[];
@@ -56,6 +58,7 @@ declare type Context = StateContext<StateModel>;
 export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
+    private readonly dialog: DialogService,
     private readonly messaging: Messages,
     private readonly services: ProjectService,
     private readonly store: Store,
@@ -141,16 +144,23 @@ export class ProjectState {
   @Action(SetProject)
   setProject(ctx: Context, { owner, projectId }: SetProject): Observable<any> {
     const userId = this.store.selectSnapshot(AuthState.userId);
+    const adminRoleId = this.store
+      .selectSnapshot(RolesState.definitions)
+      .find((x) => x.name === ROLES.ADMIN)!.id;
+
+    const roles: string[] = this.store.selectSnapshot(RolesState.isAdmin)
+      ? [adminRoleId]
+      : [];
 
     return this.data.projects.getAsync(owner, projectId).pipe(
       tap((project) => this.verifyRoles(project)),
       tap((project) => {
+        for (const role of project!.roles.filter((x) => x.userId === userId)) {
+          roles.push(role.role);
+        }
         ctx.patchState({
           current: project,
-          roles:
-            project.roles
-              .filter((x) => x.userId === userId)
-              .map((x) => x.role) ?? [],
+          roles,
         });
       }),
       tap(() => this.updateUsers(ctx)),
@@ -352,6 +362,37 @@ export class ProjectState {
         })
       )
     );
+  }
+
+  @Action(ArchiveProject)
+  archiveProject(ctx: Context): Observable<void> {
+    return this.dialog
+      .confirm('Projects.ArchiveProject', 'Projects.ArchiveProjectConfirm')
+      .pipe(
+        switchMap((result) => {
+          if (!result) return of();
+
+          const state = ctx.getState();
+          const project = state.current!;
+          const original = project.status;
+
+          project.status = PROJECT_STATI.ARCHIVED;
+
+          return this.saveProject(ctx, project).pipe(
+            tap(() => this.messaging.success('Projects.ProjectArchived')),
+            tap(() =>
+              this.saveActivity({
+                action: PROJECT_ACTIONS.STATUS_CHANGED,
+                topLevelId: project.id,
+                data: {
+                  from: original,
+                  to: PROJECT_STATI.ARCHIVED,
+                },
+              })
+            )
+          );
+        })
+      );
   }
 
   @Action(MarkProjectChanged)

@@ -5,6 +5,7 @@ import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectRoleFilterPipe } from '../../../../../../pipes/project-role-filter.pipe';
 import { ProjectNavigationLink } from '../../models';
+import { Store } from '@ngxs/store';
 
 @Component({
   standalone: true,
@@ -26,4 +27,10 @@ import { ProjectNavigationLink } from '../../models';
 export class ProjectNavigationComponent {
   @Input({ required: true }) links!: ProjectNavigationLink[];
   @Input({ required: true }) userRoles?: string[];
+
+  constructor(private readonly store: Store) {}
+
+  call(action: any): void {
+    this.store.dispatch(action);
+  }
 }

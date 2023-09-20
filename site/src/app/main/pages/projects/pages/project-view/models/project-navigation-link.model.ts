@@ -1,6 +1,6 @@
 export interface ProjectNavigationLink {
   fragment?: string;
-  action?: string;
+  action?: { type: string };
   title: string;
   roles?: string[];
   classes?: string[];

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { RolesState } from '@wbs/main/states';
-import { Project, PROJECT_VIEW_STATI, ProjectNode } from '../models';
+import { Project, PROJECT_STATI, ProjectNode } from '../models';
 import { IdService } from './id.service';
 import { Resources } from './resource.service';
 
@@ -50,14 +50,12 @@ export class ProjectService {
   }
 
   getStatusResource(status: string | undefined): string {
-    if (status === PROJECT_VIEW_STATI.ACTIVE) return 'General.Active';
-    if (status === PROJECT_VIEW_STATI.APPROVAL)
-      return 'Projects.WaitingApproval';
-    if (status === PROJECT_VIEW_STATI.CLOSED) return 'General.Closed';
-    if (status === PROJECT_VIEW_STATI.EXECUTION) return 'General.Execution';
-    if (status === PROJECT_VIEW_STATI.FOLLOW_UP) return 'General.FollowUp';
-    if (status === PROJECT_VIEW_STATI.PLANNING) return 'General.Planning';
-    if (status === PROJECT_VIEW_STATI.ARCHIVED) return 'General.Archived';
+    if (status === PROJECT_STATI.APPROVAL) return 'Projects.WaitingApproval';
+    if (status === PROJECT_STATI.CLOSED) return 'General.Closed';
+    if (status === PROJECT_STATI.EXECUTION) return 'General.Execution';
+    if (status === PROJECT_STATI.FOLLOW_UP) return 'General.FollowUp';
+    if (status === PROJECT_STATI.PLANNING) return 'General.Planning';
+    if (status === PROJECT_STATI.ARCHIVED) return 'General.Archived';
     return '';
   }
 

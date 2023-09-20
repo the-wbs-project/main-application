@@ -13,7 +13,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { PROJECT_VIEW_STATI } from '@wbs/core/models';
+import { PROJECT_STATI } from '@wbs/core/models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
@@ -54,9 +54,9 @@ export class ProjectListComponent {
   filters: ProjectListFilters = {
     assignedToMe: true,
     stati: [
-      PROJECT_VIEW_STATI.PLANNING,
-      PROJECT_VIEW_STATI.EXECUTION,
-      PROJECT_VIEW_STATI.FOLLOW_UP,
+      PROJECT_STATI.PLANNING,
+      PROJECT_STATI.EXECUTION,
+      PROJECT_STATI.FOLLOW_UP,
     ],
     categories: this.store
       .selectSnapshot(MetadataState.projectCategories)
