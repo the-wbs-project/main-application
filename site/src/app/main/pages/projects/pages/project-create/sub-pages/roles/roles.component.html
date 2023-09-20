@@ -1,0 +1,19 @@
+<div class="display-ib wd-800">
+  <wbs-project-roles
+    [members]="members()"
+    [approverIds]="approverIds()"
+    [pmIds]="pmIds()"
+    [smeIds]="smeIds()"
+    [mustConfirm]="false"
+    (addUserToRole)="add($event.role, $event.user.id)"
+    (removeUserToRole)="remove($event.role, $event.user.id)"
+  />
+  <br />
+  <br />
+  <wbs-project-create-footer
+    view="bc"
+    [disableContinue]="pmIds().length === 0"
+    (backClicked)="back()"
+    (continueClicked)="continue()"
+  />
+</div>

@@ -1,25 +1,12 @@
+import { ArchiveProject } from '../actions';
+
 export enum PROJECT_ACTIONS {
-  GENERAL = 'general',
-  PHASES = 'phases',
-  DISCIPLINES = 'disciplines',
-  ROLES = 'roles',
+  ARCHIVE = 'archive',
 }
 
-export const PROJECT_SETTINGS_PAGE_LISTS = [
+export const PROJECT_ACTIONS_LIST = [
   {
-    fragment: PROJECT_ACTIONS.GENERAL,
-    title: 'General.General',
-  },
-  {
-    fragment: PROJECT_ACTIONS.PHASES,
-    title: 'General.Phases',
-  },
-  {
-    fragment: PROJECT_ACTIONS.DISCIPLINES,
-    title: 'General.Disciplines',
-  },
-  {
-    fragment: PROJECT_ACTIONS.ROLES,
-    title: 'General.Roles',
+    title: 'Projects.ArchiveProject',
+    action: new ArchiveProject(),
   },
 ];

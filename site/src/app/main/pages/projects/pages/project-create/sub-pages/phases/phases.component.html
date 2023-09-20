@@ -1,0 +1,23 @@
+<div
+  class="display-flex flex-flow-col flex-align-stretch"
+  appFillElement
+  [paddingBottom]="20"
+>
+  <div class="scroll mg-b-10 w-100" style="flex: 1 1 auto">
+    <wbs-category-list-editor
+      [(categories)]="categories"
+      [categoryType]="phase"
+    />
+  </div>
+
+  <div class="w-100 text-center" style="flex: 0 1 20px">
+    <div class="display-ib wd-600">
+      <wbs-project-create-footer
+        view="bc"
+        [disableContinue]="disable(categories)"
+        (backClicked)="back()"
+        (continueClicked)="continue()"
+      />
+    </div>
+  </div>
+</div>

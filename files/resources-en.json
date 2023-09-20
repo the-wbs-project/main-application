@@ -23,6 +23,7 @@
       "Parent": "Parent",
       "Confirmation": "Confirmation",
       "Save": "Save",
+      "Saving": "Saving",
       "SaveAndView": "Save & View",
       "Status": "Status",
       "About": "About",
@@ -51,12 +52,15 @@
       "Members": "Members",
       "Views": "Views",
       "Back": "Back",
+      "Create": "Create",
       "Continue": "Continue",
       "AssignedToMe": "Assigned To Me",
       "RetrievingData": "Retrieving Data...",
       "ReviewingData": "Reviewing Data...",
       "CreateProject": "Create Project",
+      "ProjectList": "Project List",
       "Settings": "Settings",
+      "Organizational": "Organizational",
       "SiteAdministration": "Site Administration",
       "LogOut": "Log Out",
       "Planning": "Planning",
@@ -64,6 +68,7 @@
       "FollowUp": "Follow Up",
       "Close": "Close",
       "Closed": "Closed",
+      "Archived": "Archived",
       "Roles": "Roles",
       "PM": "PM",
       "PM-Full": "Project Manager",
@@ -280,12 +285,15 @@
       "TreeInstructions": "Double-click to see more details.",
       "SubmitForApproval": "Submit For Approval",
       "ProjectUpdated": "Project Updated",
+      "ProjectArchived": "Project Archived",
       "DisciplineRemoveConfirm": "You are about to remove a discipline which is currently assicated with {count} task(s).  Are you sure?",
       "PhaseRemoveConfirm": "You are about to remove a phase which has {count} task(s) under it.  Are you sure?",
       "WaitingApproval": "Waiting For Approval",
       "NoDescription": "No Description!",
       "NoDisciplines": "No Disciplines!",
-      "Fix": "Fix"
+      "Fix": "Fix",
+      "ArchiveProject": "Archive Project",
+      "ArchiveProjectConfirm": "Are you sure you want to archive this project?"
     }
   },
   {
@@ -315,7 +323,9 @@
       "DisciplineFirst_Title": "Discipline First",
       "DisciplineFirst_Description": "Build the project plan by discipline with the ability to view it by phase.",
       "Roles_Title": "Project Role Setup",
-      "Roles_Description": "Setup the roles for this project.  You must have atleast one PM to continue."
+      "Roles_Description": "Setup the roles for this project.  You must have atleast one PM to continue.",
+      "Saving_Title": "Creating Project",
+      "Saving_Description": "We are working hard to create your new project."
     }
   },
   {
@@ -331,7 +341,13 @@
       "ExcelFileExtensions": "Extensions: .xlsx",
       "ProjectFileExtensions": "Extensions: .mpp, .mppx",
       "ExcelFileDescription": "NOTE: You must use our template in order to upload from Excel.",
-      "DownloadTemplate": "Download Template"
+      "DownloadTemplate": "Download Template",
+      "Page_LetsGetStarted": "Lets Get Started",
+      "Page_UploadResults": "Upload Results",
+      "Page_Options": "Upload Options",
+      "Page_Phases": "Phase Mapping",
+      "Page_Disciplines": "Disciplines",
+      "Page_Saving": "Saving"
     }
   },
   {

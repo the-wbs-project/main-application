@@ -1,9 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { MembershipState } from './states';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
+import { MembershipState } from './states';
 
 @UntilDestroy()
 @Component({
@@ -12,9 +13,9 @@ import { LoaderModule } from '@progress/kendo-angular-indicators';
     <kendo-loader type="infinite-spinner" themeColor="primary" size="large" />
     <br />
     <br />
-    <h1>Loading...</h1>
+    <h1>{{ 'General.Loading' | translate }}...</h1>
   </div>`,
-  imports: [LoaderModule],
+  imports: [LoaderModule, TranslateModule],
 })
 export class MainLoadingComponent implements OnInit {
   constructor(private readonly store: Store) {}
@@ -24,19 +25,7 @@ export class MainLoadingComponent implements OnInit {
       .select(MembershipState.organization)
       .pipe(untilDestroyed(this))
       .subscribe((org) => {
-        if (org)
-          this.store.dispatch(
-            new Navigate([
-              '/',
-              org.name,
-              'projects',
-              'list',
-              'assigned',
-              'active',
-            ])
-          );
-
-        //
+        if (org) this.store.dispatch(new Navigate(['/', org.name, 'projects']));
       });
   }
 }

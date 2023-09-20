@@ -5,12 +5,13 @@ export class StartWizard {
   constructor(readonly owner: string) {}
 }
 
-export class NavBack {
-  static readonly type = '[Project Creation] Navigate Back';
+export class SetHeaderInformation {
+  static readonly type = '[Project Creation] Set Header Information';
+  constructor(readonly title: string, readonly description: string) {}
 }
 
-export class GoToBasics {
-  static readonly type = '[Project Creation] Go To Basics';
+export class NavBack {
+  static readonly type = '[Project Creation] Navigate Back';
 }
 
 export class SubmitBasics {

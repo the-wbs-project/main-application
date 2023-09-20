@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
-import { Messages, Transformers } from '@wbs/core/services';
+import { Messages, Resources, Transformers } from '@wbs/core/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -20,7 +20,7 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
-import { ProjectUpdated } from '@wbs/main/actions';
+import { MetadataState } from '@wbs/main/states';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -56,6 +56,8 @@ export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messenger: Messages,
+    private readonly resources: Resources,
+    private readonly store: Store,
     private readonly transformer: Transformers
   ) {}
 
@@ -251,10 +253,19 @@ export class ProjectUploadState {
         phaseList.push({ idOrCat, isEditable: false });
       }
 
+    const phaseNames = new Map<string, string>();
+
+    for (const cat of this.store.selectSnapshot(MetadataState.phases)) {
+      phaseNames.set(this.resources.get(cat.label), cat.id);
+    }
     if (state.uploadResults?.results)
       for (const row of state.uploadResults.results) {
         if (row.levelText.split('.').length === 1) {
-          phaseList.push({ text: row.title, sameAs: [], isEditable: true });
+          const sameAs = phaseNames.has(row.title)
+            ? [phaseNames.get(row.title)!]
+            : [];
+
+          phaseList.push({ text: row.title, sameAs, isEditable: true });
         }
       }
     ctx.patchState({
@@ -376,9 +387,7 @@ export class ProjectUploadState {
 
     if (saves.length === 0) return;
 
-    return forkJoin(saves).pipe(
-      tap(() => ctx.dispatch(new ProjectUpdated(project)))
-    );
+    return forkJoin(saves);
   }
 
   private getFile(file: File): Observable<ArrayBuffer> {

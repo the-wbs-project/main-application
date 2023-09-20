@@ -1,30 +1,50 @@
-<header>
-  <div class="header-title">
-    <button
-      kendoButton
-      [svgIcon]="menuIcon"
-      fillMode="flat"
-      class="lh-1"
-      (click)="toggleSidebar()"
-    ></button
-    >PM Empower
+<header class="w-100 d-flex bg-white ht-55">
+  <div class="header-title mg-l-20 wd-240 tx-24 tx-semibold lh-15">
+    {{ appTitle }}
   </div>
-  <div class="header-toggler">
-    <div
-      *ngIf="info(); let header"
-      class="display-ib mg-l-20 tx-medium tx-18 tx-uppercase"
-    >
-      <span *ngIf="header.titleIsResource">
-        {{ header.title | translate }}
-      </span>
-      <span *ngIf="!header.titleIsResource">
-        {{ header.title }}
-      </span>
-    </div>
-  </div>
-  <div class="header-right">
+  <div class="tx-right pd-r-10 flex-1">
     <div class="display-ib wd-60 mg-t-8 mg-r-20">
       <wbs-header-profile />
     </div>
   </div>
 </header>
+<nav class="navbar navbar-expand navbar-dark bg-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand pos-absolute l-20">
+      {{ org()?.display_name }}
+    </span>
+    <div
+      class="navbar-collapse justify-content-center"
+      id="navbarCenteredExample"
+    >
+      <ul class="nav">
+        <li *ngFor="let item of menu" class="nav-item mg-x-20" ngbDropdown>
+          <a
+            class="nav-link dropdown-toggle tx-uppercase"
+            ngbDropdownToggle
+            role="button"
+          >
+            {{ item.header | translate }}
+          </a>
+          <div ngbDropdownMenu class="pt-0">
+            <ng-template ngFor [ngForOf]="item.items" let-link>
+              <h6
+                *ngIf="link.header"
+                class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
+              >
+                {{ link.header | translate }}
+              </h6>
+              <a
+                *ngIf="link.url | orgUrl : org()?.name"
+                ngbDropdownItem
+                [routerLink]="link.url"
+              >
+                {{ link.text! | translate }}
+              </a>
+            </ng-template>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>

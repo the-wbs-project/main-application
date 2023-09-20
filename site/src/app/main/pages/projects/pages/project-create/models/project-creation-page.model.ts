@@ -1,5 +1,5 @@
 export interface ProjectCreationPage {
-  number: number;
+  page: string;
   title: string;
   description: string;
 }

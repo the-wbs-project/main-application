@@ -2,7 +2,7 @@ import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
-    path: 'list',
+    path: '',
     loadChildren: () =>
       import('./pages/project-list/project-list.routes').then((x) => x.routes),
   },

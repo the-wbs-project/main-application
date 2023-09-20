@@ -55,3 +55,7 @@ export class ChangeProjectStatus {
   static readonly type = '[Project] Change Status';
   constructor(readonly status: PROJECT_STATI) {}
 }
+
+export class ArchiveProject {
+  static readonly type = '[Project] Archive';
+}

@@ -1,22 +1,19 @@
-<div class="flex-col" appFillElement>
-  <div class="pd-y-20 page-header">
-    <span class="main-content-title mg-b-0 mg-b-lg-1"> New Project </span>
+<div class="container-fluid mg-y-20">
+  <div class="row">
+    <div class="col-12">
+      <wbs-page-header />
+    </div>
   </div>
-
-  <div class="page-card" *ngIf="page$ | async; let page">
-    <div class="flex-col">
-      <div class="proj-create-form tx-center" [ngSwitch]="page.number">
-        <div>
-          <wbs-project-create-header [page]="page" />
-          <wbs-project-create-getting-started *ngSwitchCase="1" />
-          <wbs-project-create-basics *ngSwitchCase="2" />
-          <wbs-project-pick-category *ngSwitchCase="3" />
-          <wbs-project-create-lib-or-scratch *ngSwitchCase="4" />
-          <wbs-project-create-node-view *ngSwitchCase="6" />
-          <wbs-project-create-phases *ngSwitchCase="7" />
-          <wbs-project-create-disciplines *ngSwitchCase="8" />
-          <wbs-project-create-roles *ngSwitchCase="9" />
+</div>
+<div class="row">
+  <div class="col-12">
+    <div class="proj-create-form tx-center">
+      <div>
+        <div class="pd-t-30">
+          <p class="tx-24">{{ title() ?? "" | translate }}</p>
+          <p>{{ description() ?? "" | translate }}</p>
         </div>
+        <router-outlet />
       </div>
     </div>
   </div>

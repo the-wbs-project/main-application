@@ -1,8 +1,8 @@
 import { Routes } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
 import { NgxsModule } from '@ngxs/store';
+import { orgResolve } from '@wbs/main/services';
 import { refreshMembers, verifyInvitationsLoaded } from './children.guards';
-import { orgResolve } from './children.resolvers';
 import { MembershipAdminState } from './members/states';
 
 export const routes: Routes = [

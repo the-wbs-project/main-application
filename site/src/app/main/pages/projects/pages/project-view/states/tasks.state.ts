@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   Action,
   Actions,
@@ -7,7 +6,6 @@ import {
   Selector,
   State,
   StateContext,
-  ofActionCompleted,
 } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -15,7 +13,6 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
-  ProjectActivityRecord,
   ProjectNode,
 } from '@wbs/core/models';
 import {
@@ -25,7 +22,6 @@ import {
   Transformers,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { ProjectUpdated } from '@wbs/main/actions';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
@@ -38,16 +34,15 @@ import {
   MoveTaskRight,
   MoveTaskUp,
   NavigateToTask,
-  PerformChecklist,
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveTask,
-  TaskPageChanged,
+  SetChecklistData,
   TreeReordered,
   VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { TASK_ACTIONS, TASK_PAGE_VIEW_TYPE } from '../models';
+import { TASK_ACTIONS } from '../models';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
 
@@ -55,7 +50,6 @@ interface StateModel {
   currentId?: string;
   currentView?: PROJECT_NODE_VIEW_TYPE;
   current?: TaskDetailsViewModel;
-  pageView?: TASK_PAGE_VIEW_TYPE;
   project?: Project;
   nodes?: ProjectNode[];
   phases?: WbsNodeView[];
@@ -65,7 +59,6 @@ interface StateModel {
 declare type Context = StateContext<StateModel>;
 
 @Injectable()
-@UntilDestroy()
 @State<StateModel>({
   name: 'tasks',
   defaults: {},
@@ -97,11 +90,6 @@ export class TasksState implements NgxsOnInit {
   }
 
   @Selector()
-  static pageView(state: StateModel): TASK_PAGE_VIEW_TYPE | undefined {
-    return state.pageView;
-  }
-
-  @Selector()
   static phases(state: StateModel): WbsNodeView[] | undefined {
     return state.phases;
   }
@@ -118,15 +106,13 @@ export class TasksState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: StateContext<any>): void {
-    this.actions$
-      .pipe(ofActionCompleted(ProjectUpdated), untilDestroyed(this))
-      .subscribe((p) => {
-        const state = ctx.getState();
+    /*this.actions$.pipe(untilDestroyed(this)).subscribe((p) => {
+      const state = ctx.getState();
 
-        if (p.action.project.id === state.project?.id) {
-          ctx.dispatch(new VerifyTasks(p.action.project, true));
-        }
-      });
+      if (p.action.project.id === state.project?.id) {
+        ctx.dispatch(new VerifyTasks(p.action.project, true));
+      }
+    });*/
   }
 
   @Action(VerifyTasks)
@@ -166,11 +152,6 @@ export class TasksState implements NgxsOnInit {
     this.createDetailsVm(ctx, taskId, viewNode);
   }
 
-  @Action(TaskPageChanged)
-  taskPageChanged(ctx: Context, { pageView }: TaskPageChanged): void {
-    ctx.patchState({ pageView });
-  }
-
   @Action(NavigateToTask)
   navigateToTask({}: Context, action: NavigateToTask): void {
     this.nav.toTask(action.nodeId);
@@ -195,7 +176,7 @@ export class TasksState implements NgxsOnInit {
     state = ctx.getState();
 
     const actions: any[] = [
-      new PerformChecklist(undefined, disciplines, phases),
+      new SetChecklistData(undefined, disciplines, phases),
     ];
 
     if (state.currentId !== state.current?.id)

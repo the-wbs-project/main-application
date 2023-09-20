@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,10 +17,12 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./switch.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  imports: [NgClass],
   providers: [DialogService],
 })
 export class SwitchComponent {
   @Input({ required: true }) value!: boolean;
+  @Input() size: 'lg' | 'sm' = 'lg';
   @Input() confirmMessage?: string;
   @Input() confirmData?: Record<string, string>;
   @Output() valueChange = new EventEmitter<boolean>();

@@ -8,14 +8,13 @@ import {
   Store,
 } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member, Organization, Project } from '@wbs/core/models';
+import { Member, Organization } from '@wbs/core/models';
 import { Messages, sorter } from '@wbs/core/services';
 import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import {
   ChangeOrganization,
   InitiateOrganizations,
-  ProjectUpdated,
   RefreshMembers,
   UpdateMembers,
 } from '../actions';
@@ -24,10 +23,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AuthState } from './auth.state';
 
 interface MembershipStateModel {
-  list?: Organization[];
   loading: boolean;
+  list?: Organization[];
   organization?: Organization;
-  projects?: Project[];
   members?: Member[];
 }
 
@@ -62,11 +60,6 @@ export class MembershipState implements NgxsOnInit {
   @Selector()
   static organization(state: MembershipStateModel): Organization | undefined {
     return state.organization;
-  }
-
-  @Selector()
-  static projects(state: MembershipStateModel): Project[] | undefined {
-    return state.projects;
   }
 
   @Selector()
@@ -108,34 +101,11 @@ export class MembershipState implements NgxsOnInit {
     ctx: Context,
     { organization }: ChangeOrganization
   ): Observable<void> {
-    ctx.patchState({
-      loading: true,
-      organization,
-    });
-    return this.data.projects.getAllAsync(organization.name).pipe(
-      map((projects) => {
-        ctx.patchState({
-          projects: projects.sort((a, b) =>
-            sorter(a.lastModified, b.lastModified, 'desc')
-          ),
-        });
-      }),
-      tap(() => ctx.patchState({ loading: false })),
-      switchMap(() => this.getMembers(ctx, false))
+    ctx.patchState({ loading: true, organization });
+
+    return this.getMembers(ctx, false).pipe(
+      tap(() => ctx.patchState({ loading: false }))
     );
-  }
-
-  @Action(ProjectUpdated)
-  projectUpdated(ctx: Context, { project }: ProjectUpdated): void {
-    const state = ctx.getState();
-    const projects = [...(state.projects ?? [])];
-    const index = projects.findIndex((x) => x.id === project.id);
-
-    if (index > -1) projects.splice(index, 1);
-
-    projects.splice(0, 0, project);
-
-    ctx.patchState({ projects });
   }
 
   @Action(UpdateMembers)

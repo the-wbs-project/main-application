@@ -2,18 +2,17 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { LoadDiscussionForum } from '@wbs/main/actions';
+import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
 import { MembershipState } from '@wbs/main/states';
-import { map } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   ProjectPageChanged,
-  TaskPageChanged,
   VerifyProject,
   VerifyTask,
 } from './actions';
 import { PROJECT_PAGE_VIEW } from './models';
-import { ProjectViewState } from './states';
+import { ProjectState, ProjectViewState } from './states';
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
@@ -58,7 +57,23 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
       new InitiateChecklist(),
       new VerifyProject(owner, route.params['projectId']),
     ])
-    .pipe(map(() => true));
+    .pipe(
+      switchMap(() => store.selectOnce(ProjectState.current)),
+      tap((project) =>
+        store.dispatch(
+          new SetBreadcrumbs(
+            [
+              {
+                route: ['/', owner, 'projects'],
+                label: 'General.Projects',
+              },
+            ],
+            project!.title
+          )
+        )
+      ),
+      map(() => true)
+    );
 };
 
 export const projectViewGuard = (route: ActivatedRouteSnapshot) => {
@@ -78,11 +93,4 @@ export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
   return store
     .dispatch([new VerifyTask(viewNode, taskId)])
     .pipe(map(() => true));
-};
-
-export const taskViewGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const view = route.data['view'];
-
-  return store.dispatch(new TaskPageChanged(view)).pipe(map(() => true));
 };
