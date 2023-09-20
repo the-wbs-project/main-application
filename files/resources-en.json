@@ -337,7 +337,13 @@
       "ExcelFileExtensions": "Extensions: .xlsx",
       "ProjectFileExtensions": "Extensions: .mpp, .mppx",
       "ExcelFileDescription": "NOTE: You must use our template in order to upload from Excel.",
-      "DownloadTemplate": "Download Template"
+      "DownloadTemplate": "Download Template",
+      "Page_LetsGetStarted": "Lets Get Started",
+      "Page_UploadResults": "Upload Results",
+      "Page_Options": "Upload Options",
+      "Page_Phases": "Phase Mapping",
+      "Page_Disciplines": "Disciplines",
+      "Page_Saving": "Saving"
     }
   },
   {

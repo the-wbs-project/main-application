@@ -1,28 +1,23 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
-import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { ProjectUploadState } from './states';
 
 @Component({
   standalone: true,
-  template: `<wbs-page-header *ngIf="project(); let project" />
-    <!--<wbs-page-header
-      *ngIf="project(); let project"
-      [title]="title() ?? '' | translate"
-      [items]="[
-        { route: ['/projects', 'my'], label: 'General.Projects' },
-        { route: ['/projects', project.id, 'view'], label: project.title }
-      ]"
-      [active_item]="'General.Upload' | translate"
-    />-->
+  template: `<div class="container-fluid mg-y-20">
+      <div class="row">
+        <div class="col-12">
+          <wbs-page-header />
+        </div>
+      </div>
+    </div>
     <div class="mg-t-40">
       <router-outlet />
     </div>`,
-  imports: [CommonModule, PageHeaderComponent, RouterModule, TranslateModule],
+  imports: [PageHeaderComponent, RouterModule],
 })
 export class ProjectUploadLayoutComponent {
   readonly project = toSignal(this.store.select(ProjectUploadState.current));

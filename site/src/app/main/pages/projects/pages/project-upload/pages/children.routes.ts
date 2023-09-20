@@ -1,48 +1,13 @@
-import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, Routes } from '@angular/router';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
-import { map } from 'rxjs/operators';
-import { ProjectUploadState } from '../states';
-import { SetAsStarted, SetPageTitle } from '../actions';
-
-export const projectUploadGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const title = route.data['title'];
-  const validateStart = route.data['validateStart'] === true;
-  const setStart = route.data['setStart'] === true;
-
-  if (validateStart) {
-    const started = store.selectSnapshot(ProjectUploadState.started);
-
-    if (!started) {
-      const projectId = store.selectSnapshot(ProjectUploadState.current)!.id;
-      return store
-        .dispatch(new Navigate(['/projects', projectId, 'upload', 'start']))
-        .pipe(map(() => false));
-    }
-  }
-  const dispatch: any[] = [new SetPageTitle(title)];
-
-  if (setStart) dispatch.push(new SetAsStarted());
-
-  return store.dispatch(dispatch).pipe(map(() => true));
-};
+import { Routes } from '@angular/router';
+import { setupGuard, startGuard, verifyStartedGuard } from './children.guards';
 
 export const routes: Routes = [
-  {
-    path: '',
-    redirectTo: 'start',
-    pathMatch: 'full',
-    //  canActivate: [StartGuard],
-    //loadComponent: () =>
-    //    import('./start-view/start-view.component').then(({ StartViewComponent }) => StartViewComponent),
-  },
+  { path: '', redirectTo: 'start', pathMatch: 'full' },
   {
     path: 'start',
-    canActivate: [projectUploadGuard],
+    canActivate: [startGuard, setupGuard],
     data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
+      title: 'ProjectUpload.Page_LetsGetStarted',
     },
     loadComponent: () =>
       import('./start-view/start-view.component').then(
@@ -51,9 +16,9 @@ export const routes: Routes = [
   },
   {
     path: 'results',
-    canActivate: [projectUploadGuard],
+    canActivate: [verifyStartedGuard, setupGuard],
     data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
+      title: 'ProjectUpload.Page_UploadResults',
     },
     loadComponent: () =>
       import('./results-view/results-view.component').then(
@@ -62,9 +27,9 @@ export const routes: Routes = [
   },
   {
     path: 'options',
-    canActivate: [projectUploadGuard],
+    canActivate: [verifyStartedGuard, setupGuard],
     data: {
-      title: 'ProjectUpload.PagesOptions',
+      title: 'ProjectUpload.Page_Options',
     },
     loadComponent: () =>
       import('./options-view/options-view.component').then(
@@ -73,9 +38,9 @@ export const routes: Routes = [
   },
   {
     path: 'phases',
-    canActivate: [projectUploadGuard],
+    canActivate: [verifyStartedGuard, setupGuard],
     data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
+      title: 'ProjectUpload.Page_Phases',
     },
     loadComponent: () =>
       import('./phase-view/phase-view.component').then(
@@ -84,9 +49,9 @@ export const routes: Routes = [
   },
   {
     path: 'disciplines',
-    canActivate: [projectUploadGuard],
+    canActivate: [verifyStartedGuard, setupGuard],
     data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
+      title: 'ProjectUpload.Page_Disciplines',
     },
     loadComponent: () =>
       import('./disciplines-view/disciplines-view.component').then(
@@ -95,9 +60,9 @@ export const routes: Routes = [
   },
   {
     path: 'saving',
-    canActivate: [projectUploadGuard],
+    canActivate: [verifyStartedGuard, setupGuard],
     data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
+      title: 'ProjectUpload.Page_Saving',
     },
     loadComponent: () =>
       import('./save-view/save-view.component').then(
