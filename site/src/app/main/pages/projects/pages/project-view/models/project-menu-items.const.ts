@@ -112,7 +112,6 @@ export const PROJECT_MENU_ITEMS = {
   ],
   projectLinks: [
     {
-      fragment: PROJECT_PAGE_VIEW.ABOUT,
       classes: ['d-sm-inline', 'd-md-none'],
       title: 'General.Views',
       children: [

@@ -5,6 +5,8 @@ import {
   HostListener,
   Input,
 } from '@angular/core';
+import { Store } from '@ngxs/store';
+import { UiState } from '../states';
 
 @Directive({ selector: '[appFillElement]', standalone: true })
 export class FillElementDirective implements AfterViewChecked {
@@ -15,16 +17,22 @@ export class FillElementDirective implements AfterViewChecked {
   private readonly elem: HTMLElement;
   private delayNumber = 0;
 
-  constructor(ref: ElementRef) {
+  constructor(ref: ElementRef, private readonly store: Store) {
     this.elem = ref.nativeElement;
   }
 
+  private get disabled(): boolean {
+    return this.store.selectSnapshot(UiState.isMobile);
+  }
+
   ngAfterViewChecked() {
+    if (this.disabled) return;
     this.setSize();
   }
 
   @HostListener('window:resize')
   onResize() {
+    if (this.disabled) return;
     this.setSize();
   }
 

@@ -69,11 +69,7 @@
     >
       <ul class="navbar-nav">
         <ng-template ngFor [ngForOf]="menu" let-parentItem>
-          <ng-template
-            ngFor
-            [ngForOf]="parentItem.items ?? [parentItem]"
-            let-link
-          >
+          <ng-template ngFor [ngForOf]="parentItem.items" let-link>
             <li class="nav-item tx-uppercase">
               <a
                 *ngIf="link.url"

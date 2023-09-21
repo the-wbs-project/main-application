@@ -1,4 +1,4 @@
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -13,35 +13,38 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { CheckBoxModule } from '@progress/kendo-angular-inputs';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { PROJECT_STATI, PROJECT_STATI_TYPE } from '@wbs/core/models';
+import { PROJECT_STATI } from '@wbs/core/models';
 import { SwitchComponent } from '@wbs/main/components/switch';
-import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { MetadataState } from '@wbs/main/states';
 import { ProjectListFilters } from '../../models';
+import { CheckboxFilterListComponent } from '@wbs/main/components/checkbox-filter-list/checkbox-filter-list.component';
+import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-list-filters',
   templateUrl: './project-list-filters.component.html',
-  styleUrls: ['./project-list-filters.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckBoxModule,
+    CheckboxFilterListComponent,
     FormsModule,
     NgFor,
+    NgIf,
     ProjectStatusPipe,
     SwitchComponent,
     TranslateModule,
   ],
 })
 export class ProjectListFiltersComponent {
+  @Input({ required: true }) position!: 'side' | 'top';
   @Input({ required: true }) filters!: ProjectListFilters;
   @Output() readonly filtersChange = new EventEmitter<ProjectListFilters>();
 
   expanded = true;
 
   readonly cats = toSignal(this.store.select(MetadataState.projectCategories));
-  readonly stati: PROJECT_STATI_TYPE[] = [
+  readonly stati = [
     PROJECT_STATI.PLANNING,
     PROJECT_STATI.EXECUTION,
     PROJECT_STATI.FOLLOW_UP,

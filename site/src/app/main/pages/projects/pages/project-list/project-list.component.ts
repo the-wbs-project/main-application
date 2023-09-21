@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -23,6 +23,7 @@ import { ProjectListFiltersComponent } from './components/project-list-filters/p
 import { ProjectListFilters } from './models';
 import { ProjectFilterPipe } from './pipes/project-filter.pipe';
 import { ProjectListState } from './states';
+import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -35,6 +36,7 @@ import { ProjectListState } from './states';
     FillElementDirective,
     FontAwesomeModule,
     NgbDropdownModule,
+    NgClass,
     NgFor,
     NgIf,
     PageHeaderComponent,
@@ -50,6 +52,9 @@ export class ProjectListComponent {
   @Input() type?: string;
 
   readonly faCactus = faCactus;
+  readonly faFilters = faFilters;
+
+  filterToggle = false;
 
   filters: ProjectListFilters = {
     assignedToMe: true,

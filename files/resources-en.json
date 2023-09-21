@@ -15,6 +15,7 @@
       "Emails": "Email(s)",
       "Edit": "Edit",
       "Remove": "Remove",
+      "Only": "Only",
       "Delete": "Delete",
       "General": "General",
       "Search": "Search",
@@ -108,6 +109,7 @@
       "More": "More",
       "Less": "Less",
       "Category": "Category",
+      "Categories": "Categories",
       "Level": "Level",
       "Discussions": "Discussions",
       "LastModified": "Last Modified",
@@ -293,7 +295,9 @@
       "NoDisciplines": "No Disciplines!",
       "Fix": "Fix",
       "ArchiveProject": "Archive Project",
-      "ArchiveProjectConfirm": "Are you sure you want to archive this project?"
+      "ArchiveProjectConfirm": "Are you sure you want to archive this project?",
+      "OnlyAssignedToMe": "Only Assigned To Me",
+      "SearchProjects": "Search Projects"
     }
   },
   {

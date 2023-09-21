@@ -1,14 +1,42 @@
 <div class="d-flex">
-  <div class="border-end pd-r-20" appFillElement [paddingBottom]="5">
+  <div
+    class="border-end pd-r-20 d-none d-lg-block"
+    appFillElement
+    [paddingBottom]="5"
+  >
     <div class="wd-250">
-      <wbs-project-list-filters [(filters)]="filters" />
+      <wbs-project-list-filters [(filters)]="filters" position="side" />
     </div>
   </div>
   <div class="mg-t-20 mg-b-16 flex-grow-1">
     <div class="container-fluid">
-      <div class="row mg-b-15">
+      <div class="row mg-b-15 d-none d-lg-block">
         <div class="col-12">
           <wbs-page-header />
+        </div>
+      </div>
+      <div class="row mg-b-15 d-md-block d-lg-none">
+        <div class="col-6">
+          <button
+            class="btn btn-dark btn-block"
+            (click)="filterToggle = !filterToggle"
+          >
+            <fa-icon [icon]="faFilters" />
+          </button>
+        </div>
+        <div class="col-6">
+          <wbs-page-header />
+        </div>
+      </div>
+      <div class="row mg-b-15 d-md-block d-lg-none">
+        <div
+          class="col-12 animate__animated animate__faster"
+          [ngClass]="{
+            'd-none': !filterToggle,
+            animate__slideInUp: filterToggle,
+          }"
+        >
+          <wbs-project-list-filters [(filters)]="filters" position="top" />
         </div>
       </div>
       <div

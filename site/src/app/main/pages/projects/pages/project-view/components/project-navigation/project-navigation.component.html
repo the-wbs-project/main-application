@@ -45,7 +45,11 @@
                   <a
                     ngbDropdownItem
                     *ngIf="child.fragment"
-                    [routerLink]="['./', link.fragment, child.fragment]"
+                    [routerLink]="
+                      link.fragment
+                        ? ['./', link.fragment, child.fragment]
+                        : ['./', child.fragment]
+                    "
                   >
                     {{ child.title | translate }}
                   </a>
