@@ -29,7 +29,7 @@ public class ExportController : ControllerBase
         {
             var bytes = await xlsxExporter.RunAsync(nodes, culture);
 
-            return File(bytes, "application/vnd.ms-excel");
+            return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }
         catch (Exception ex)
         {
