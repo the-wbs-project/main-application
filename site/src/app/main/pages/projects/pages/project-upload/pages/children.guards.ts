@@ -2,14 +2,14 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { MembershipState } from '@wbs/main/states';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { ProjectUploadState } from '../states';
-import { forkJoin, of } from 'rxjs';
-import { SetAsStarted } from '../actions';
 import { Resources } from '@wbs/core/services';
-import { SetHeaderInformation } from '../../project-create/actions';
 import { SetBreadcrumbs } from '@wbs/main/actions';
+import { MembershipState } from '@wbs/main/states';
+import { forkJoin, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { SetHeaderInformation } from '../../project-create/actions';
+import { SetAsStarted } from '../actions';
+import { ProjectUploadState } from '../states';
 
 function redirect(store: Store, route: ActivatedRouteSnapshot) {
   return forkJoin({
@@ -70,24 +70,24 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
             route.data['title'],
             route.data['description']
           ),
-          new SetBreadcrumbs(
-            [
-              {
-                route: ['/', ownerId, 'projects'],
-                label: 'General.Projects',
-              },
-              {
-                route: ['/', ownerId, 'projects', 'view', project!.id],
-                label: project!.title,
-                isText: true,
-              },
-              {
-                route: ['/', ownerId, 'projects', 'upload', project!.id],
-                label: 'General.Upload',
-              },
-            ],
-            resources.get(route.data['title'] ?? '')
-          ),
+          new SetBreadcrumbs([
+            {
+              route: ['/', ownerId, 'projects'],
+              text: 'General.Projects',
+            },
+            {
+              route: ['/', ownerId, 'projects', 'view', project!.id],
+              text: project!.title,
+              isText: true,
+            },
+            {
+              route: ['/', ownerId, 'projects', 'upload', project!.id],
+              text: 'General.Upload',
+            },
+            {
+              text: route.data['title'],
+            },
+          ]),
         ]),
         map(() => true)
       );

@@ -61,15 +61,16 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
       switchMap(() => store.selectOnce(ProjectState.current)),
       tap((project) =>
         store.dispatch(
-          new SetBreadcrumbs(
-            [
-              {
-                route: ['/', owner, 'projects'],
-                label: 'General.Projects',
-              },
-            ],
-            project!.title
-          )
+          new SetBreadcrumbs([
+            {
+              route: ['/', owner, 'projects'],
+              text: 'General.Projects',
+            },
+            {
+              text: project!.title,
+              isText: true,
+            },
+          ])
         )
       ),
       map(() => true)

@@ -10,7 +10,7 @@ import {
   State,
   StateContext,
 } from '@ngxs/store';
-import { HeaderInformation } from '@wbs/core/models';
+import { RoutedBreadCrumbItem } from '@wbs/core/models';
 import { timer } from 'rxjs';
 import {
   MainContentSizeChanged,
@@ -20,7 +20,7 @@ import {
 } from '../actions';
 
 interface StateModel {
-  header?: HeaderInformation;
+  breadcrumbs?: RoutedBreadCrumbItem[];
   path?: string;
   lastWindowCheck?: number;
   isLoading: boolean;
@@ -45,8 +45,8 @@ export class UiState implements NgxsOnInit {
   constructor(private readonly actions$: Actions) {}
 
   @Selector()
-  static header(state: StateModel): HeaderInformation | undefined {
-    return state.header;
+  static breadcrumbs(state: StateModel): RoutedBreadCrumbItem[] | undefined {
+    return state.breadcrumbs;
   }
 
   @Selector()
@@ -130,8 +130,8 @@ export class UiState implements NgxsOnInit {
   }
 
   @Action(SetBreadcrumbs)
-  setHeaderInfo(ctx: Context, header: SetBreadcrumbs): void {
-    ctx.patchState({ header });
+  setHeaderInfo(ctx: Context, action: SetBreadcrumbs): void {
+    ctx.patchState(action);
   }
 
   @Action(ToggleSidebar)

@@ -8,17 +8,14 @@
     </div>
   </div>
 </header>
-<nav class="navbar navbar-expand navbar-dark bg-dark">
+<nav class="wbs-nav-lg navbar navbar-expand navbar-dark bg-dark">
   <div class="container-fluid">
-    <span class="navbar-brand pos-absolute l-20">
+    <span class="navbar-brand">
       {{ org()?.display_name }}
     </span>
-    <div
-      class="navbar-collapse justify-content-center"
-      id="navbarCenteredExample"
-    >
-      <ul class="nav">
-        <li *ngFor="let item of menu" class="nav-item mg-x-20" ngbDropdown>
+    <div class="navbar-collapse">
+      <ul class="navbar-nav">
+        <li *ngFor="let item of menu" class="nav-item" ngbDropdown>
           <a
             class="nav-link dropdown-toggle tx-uppercase"
             ngbDropdownToggle
@@ -44,6 +41,52 @@
             </ng-template>
           </div>
         </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<nav class="wbs-nav-sm navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container-fluid">
+    <span class="navbar-brand">
+      {{ org()?.display_name }}
+    </span>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarTogglerDemo01"
+      aria-controls="navbarTogglerDemo01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse d-sm-none d-md-flex"
+      name="navbarTogglerDemo01"
+      id="navbarTogglerDemo01"
+    >
+      <ul class="navbar-nav">
+        <ng-template ngFor [ngForOf]="menu" let-parentItem>
+          <ng-template
+            ngFor
+            [ngForOf]="parentItem.items ?? [parentItem]"
+            let-link
+          >
+            <li class="nav-item tx-uppercase">
+              <a
+                *ngIf="link.url"
+                [routerLink]="link.url | orgUrl : org()?.name"
+                class="nav-link pd-y-5 pd-x-20"
+              >
+                {{ parentItem.header! | translate }}
+                &nbsp;-&nbsp;
+                {{ link.text! | translate }}
+              </a>
+            </li>
+          </ng-template>
+        </ng-template>
       </ul>
     </div>
   </div>

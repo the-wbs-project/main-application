@@ -1,26 +1,31 @@
 import { importProvidersFrom, inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
-import { Resources, TitleService } from '@wbs/core/services';
+import { TitleService } from '@wbs/core/services';
 import { SetBreadcrumbs } from '@wbs/main/actions';
 import { MembershipState } from '@wbs/main/states';
 import { map } from 'rxjs/operators';
-import { ProjectListState } from './states';
 import { LoadProjects } from './actions';
+import { ProjectListState } from './states';
 
 export const loadGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const resources = inject(Resources);
   const titleService = inject(TitleService);
-  const title = resources.get('Pages.Projects');
   const owner =
     route.params['owner'] ??
     store.selectSnapshot(MembershipState.organization)?.name;
 
-  titleService.setTitle(title, false);
+  titleService.setTitle('Pages.Projects', true);
 
   return store
-    .dispatch([new LoadProjects(owner), new SetBreadcrumbs([], title)])
+    .dispatch([
+      new LoadProjects(owner),
+      new SetBreadcrumbs([
+        {
+          text: 'Pages.Projects',
+        },
+      ]),
+    ])
     .pipe(map(() => true));
 };
 

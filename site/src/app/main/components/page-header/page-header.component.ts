@@ -1,5 +1,5 @@
-import { NgFor, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { NgClass, NgFor, NgIf } from '@angular/common';
+import { Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,10 +11,10 @@ import { UiState } from '@wbs/main/states';
   selector: 'wbs-page-header',
   templateUrl: './page-header.component.html',
   styleUrls: ['./page-header.component.scss'],
-  imports: [NgFor, NgIf, RouterModule, TranslateModule],
+  imports: [NgClass, NgFor, NgIf, RouterModule, TranslateModule],
 })
 export class PageHeaderComponent {
-  readonly header = toSignal(this.store.select(UiState.header));
-
+  readonly breadcrumbs = toSignal(this.store.select(UiState.breadcrumbs));
+  items: any[] = [];
   constructor(private readonly store: Store) {}
 }

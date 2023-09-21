@@ -1,14 +1,23 @@
-<div *ngIf="header(); let header" class="w-100 breadcrumb-header tx-right">
+<div *ngIf="breadcrumbs(); let crumbs" class="w-100 breadcrumb-header tx-right">
   <div class="display-ib">
     <ol class="breadcrumb">
-      <li class="breadcrumb-item" *ngFor="let item of header.breadcrumbs">
-        <a *ngIf="item.isText" [routerLink]="item.route">{{ item.label }}</a>
-        <a *ngIf="!item.isText" [routerLink]="item.route">
-          {{ item.label | translate }}
+      <li
+        class="breadcrumb-item"
+        *ngFor="let item of crumbs; let index = index"
+        [ngClass]="{ active: crumbs.length === index + 1 }"
+      >
+        <a *ngIf="item.route && item.isText" [routerLink]="item.route">
+          {{ item.text }}
         </a>
-      </li>
-      <li class="breadcrumb-item active" aria-current="page">
-        {{ header.activeItem }}
+        <a *ngIf="item.route && !item.isText" [routerLink]="item.route">
+          {{ item.text! | translate }}
+        </a>
+        <span *ngIf="!item.route && item.isText">
+          {{ item.text }}
+        </span>
+        <span *ngIf="!item.route && !item.isText">
+          {{ item.text! | translate }}
+        </span>
       </li>
     </ol>
   </div>

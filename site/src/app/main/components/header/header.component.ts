@@ -16,6 +16,7 @@ import { HeaderProfileComponent } from './header-profile/header-profile.componen
   standalone: true,
   selector: 'wbs-header',
   templateUrl: './header.component.html',
+  styleUrls: ['./header.component.scss'],
   imports: [
     HeaderProfileComponent,
     NgbDropdownModule,
