@@ -13,6 +13,7 @@ import { PageHeaderComponent } from '@wbs/main/components/page-header/page-heade
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { RolesState } from '@wbs/main/states';
+import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_MENU_ITEMS } from './models';
@@ -31,6 +32,7 @@ import { ProjectState } from './states';
     PageHeaderComponent,
     ProjectChecklistModalComponent,
     ProjectNavigationComponent,
+    ProjectTitleComponent,
     RouterModule,
     TranslateModule,
   ],

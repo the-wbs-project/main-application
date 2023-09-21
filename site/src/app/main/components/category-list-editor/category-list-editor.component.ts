@@ -23,6 +23,9 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService, DialogService } from '@wbs/main/services';
 import { SwitchComponent } from '../switch';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
+import { UtilsModule } from '@progress/kendo-angular-utils';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { arrowsMoveIcon, SVGIcon } from '@progress/kendo-svg-icons';
 
 @Component({
   standalone: true,
@@ -31,16 +34,36 @@ import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
+    ButtonModule,
     CommonModule,
     FontAwesomeModule,
     LabelModule,
     SortableModule,
     SwitchComponent,
     TranslateModule,
+    UtilsModule,
   ],
   providers: [CategorySelectionService, DialogService],
+  styleUrls: ['./style.scss'],
 })
 export class CategoryListEditorComponent {
+  public dropTargets = ['A', 'B', 'C', 'D'];
+  public currentBox = 'A';
+  public enteredBox = 'A';
+  public btnText = 'Press the drag icon!';
+  public moveIcon: SVGIcon = arrowsMoveIcon;
+
+  public handleDrop(id: string): void {
+    this.currentBox = id;
+  }
+
+  public handleDragEnter(id: string): void {
+    this.enteredBox = id;
+  }
+
+  public handleDragLeave(): void {
+    this.enteredBox = '';
+  }
   @Input() showButtons = true;
   @Input() showSave = false;
   @Input() categories?: CategorySelection[] | null;

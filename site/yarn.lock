@@ -2063,6 +2063,14 @@
     "@progress/kendo-angular-schematics" "13.5.0"
     tslib "^2.3.1"
 
+"@progress/kendo-angular-pager@^13.5.0":
+  version "13.5.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-pager/-/kendo-angular-pager-13.5.0.tgz#72afd3b0f98ea41721986c3e7bb0ec168e70d53f"
+  integrity sha512-E1C0q3cBKE+nmiklwOlXr7aR78J6+RQaUPg77tlEGzl01aI9Arm7C7M1w64P3VTH9xWr3TeLa6O1nnlSojDcNw==
+  dependencies:
+    "@progress/kendo-angular-schematics" "13.5.0"
+    tslib "^2.3.1"
+
 "@progress/kendo-angular-pdf-export@^13.5.0":
   version "13.5.0"
   resolved "https://registry.yarnpkg.com/@progress/kendo-angular-pdf-export/-/kendo-angular-pdf-export-13.5.0.tgz#023d6d2a40ecf9d700538117d17676c8780f4fa2"

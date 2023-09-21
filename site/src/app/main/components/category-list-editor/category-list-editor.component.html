@@ -28,6 +28,65 @@
     </button>
   </div>
   <div class="scroll mg-b-10" style="flex: auto">
+    <div class="container">
+      <div
+        *ngFor="let dropTarget of dropTargets"
+        kendoDropTarget
+        (onDragEnter)="handleDragEnter(dropTarget)"
+        (onDrop)="handleDrop(dropTarget)"
+        (onDragLeave)="handleDragLeave()"
+        [ngClass]="{
+          'my-drop': true,
+          entered: enteredBox === dropTarget && enteredBox !== currentBox
+        }"
+      >
+        <div kendoDragTarget *ngIf="currentBox === dropTarget" class="my-drag">
+          <button
+            kendoButton
+            kendoDragHandle
+            [svgIcon]="moveIcon"
+            fillMode="flat"
+          ></button>
+          {{ btnText }}
+        </div>
+        {{ currentBox !== dropTarget ? "Drop Here" : "" }}
+      </div>
+    </div>
+    <!-- <kendo-listview
+      class="demo-listview"
+      [data]="categories"
+      [itemClass]="{ 'item-border': true }"
+      data-kendo-listview-index="0"
+    >
+      <ng-template kendoListViewItemTemplate let-cat="dataItem">
+        <div
+          *ngIf="!hideUnselected() || cat.selected"
+          class="list-group-item display-flex flex-row pd-l-0"
+        >
+          <span class="k-icon k-i-reorder"></span>
+          <div class="wd-60 tx-semibold text-center tx-28">
+            <span *ngIf="cat.selected"> {{ cat.number }}. </span>
+          </div>
+          <div class="flex-grow-1">
+            <div class="tx-16">
+              {{ cat.label | translate }}
+            </div>
+            <div class="tx-12 font-italic">
+              {{ cat.description | translate }}
+            </div>
+          </div>
+          <div class="pd-t-5">
+            <wbs-switch
+              [(value)]="cat.selected"
+              [confirmMessage]="cat.confirm?.label"
+              [confirmData]="cat.confirm?.data"
+              (valueChange)="changed()"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </kendo-listview>
+  
     <kendo-sortable
       [kendoSortableBinding]="categories"
       [ngClass]="'list-group display-ib text-start w-100'"
@@ -65,6 +124,6 @@
           </div>
         </div>
       </ng-template>
-    </kendo-sortable>
+    </kendo-sortable>-->
   </div>
 </div>
