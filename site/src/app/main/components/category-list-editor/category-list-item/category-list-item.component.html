@@ -1,0 +1,24 @@
+<div
+  *ngIf="!hideUnselected || cat.selected"
+  class="list-group-item display-flex flex-row pd-l-0"
+>
+  <div class="wd-60 tx-semibold text-center tx-28">
+    <span *ngIf="cat.selected"> {{ cat.number }}. </span>
+  </div>
+  <div class="flex-grow-1">
+    <div class="tx-16">
+      {{ cat.label | translate }}
+    </div>
+    <div class="tx-12 font-italic">
+      {{ cat.description | translate }}
+    </div>
+  </div>
+  <div class="pd-t-5">
+    <wbs-switch
+      [(value)]="cat.selected"
+      [confirmMessage]="cat.confirm?.label"
+      [confirmData]="cat.confirm?.data"
+      (valueChange)="changed.emit()"
+    />
+  </div>
+</div>

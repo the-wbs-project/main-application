@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,6 +8,7 @@ import {
   signal,
   ViewEncapsulation,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faEye,
@@ -16,16 +17,19 @@ import {
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { Store } from '@ngxs/store';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { SortableModule } from '@progress/kendo-angular-sortable';
+import {
+  DragStartEvent,
+  SortableModule,
+} from '@progress/kendo-angular-sortable';
 import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService, DialogService } from '@wbs/main/services';
+import { UiState } from '@wbs/main/states';
 import { SwitchComponent } from '../switch';
+import { CategoryListItemComponent } from './category-list-item/category-list-item.component';
 import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
-import { UtilsModule } from '@progress/kendo-angular-utils';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { arrowsMoveIcon, SVGIcon } from '@progress/kendo-svg-icons';
 
 @Component({
   standalone: true,
@@ -34,36 +38,19 @@ import { arrowsMoveIcon, SVGIcon } from '@progress/kendo-svg-icons';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    ButtonModule,
-    CommonModule,
+    CategoryListItemComponent,
     FontAwesomeModule,
     LabelModule,
+    NgClass,
+    NgFor,
+    NgIf,
     SortableModule,
     SwitchComponent,
     TranslateModule,
-    UtilsModule,
   ],
   providers: [CategorySelectionService, DialogService],
-  styleUrls: ['./style.scss'],
 })
 export class CategoryListEditorComponent {
-  public dropTargets = ['A', 'B', 'C', 'D'];
-  public currentBox = 'A';
-  public enteredBox = 'A';
-  public btnText = 'Press the drag icon!';
-  public moveIcon: SVGIcon = arrowsMoveIcon;
-
-  public handleDrop(id: string): void {
-    this.currentBox = id;
-  }
-
-  public handleDragEnter(id: string): void {
-    this.enteredBox = id;
-  }
-
-  public handleDragLeave(): void {
-    this.enteredBox = '';
-  }
   @Input() showButtons = true;
   @Input() showSave = false;
   @Input() categories?: CategorySelection[] | null;
@@ -76,12 +63,14 @@ export class CategoryListEditorComponent {
   readonly faEyeSlash = faEyeSlash;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faPlus = faPlus;
+  readonly isMobile = toSignal(this.store.select(UiState.isMobile));
 
   flip = false;
 
   constructor(
     private readonly catService: CategorySelectionService,
-    private readonly dialogService: DialogService
+    private readonly dialogService: DialogService,
+    private readonly store: Store
   ) {}
 
   changed(): void {
@@ -109,6 +98,8 @@ export class CategoryListEditorComponent {
         this.rebuild();
       });
   }
+
+  onDragStart(e: DragStartEvent): void {}
 
   rebuild() {
     this.catService.renumber(this.categories!);
