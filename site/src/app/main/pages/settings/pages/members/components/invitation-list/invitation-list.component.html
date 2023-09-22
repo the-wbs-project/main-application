@@ -52,7 +52,10 @@
       <td class="d-md-none d-lg-table-cell">{{ invite.invitee }}</td>
       <td class="d-md-none d-lg-table-cell">{{ invite.inviter }}</td>
       <td>{{ invite.createdAt | dateText }}</td>
-      <td>{{ invite.expiresAt | dateText : true }}</td>
+      <td *ngIf="!(invite.expiresAt | isExpired)">
+        {{ invite.expiresAt | dateText : true }}
+      </td>
+      <td *ngIf="invite.expiresAt | isExpired" class="tx-danger-f">Expired</td>
       <td>{{ invite.roles | roleList : true }}</td>
     </tr>
   </tbody>

@@ -26,6 +26,7 @@ import { SortableDirective } from '../../directives/table-sorter.directive';
 import { TableProcessPipe } from '../../pipes/table-process.pipe';
 import { TableHelper } from '../../services';
 import { SortArrowComponent } from '../sort-arrow.component';
+import { IsExpiredPipe } from './is-expired.pipe';
 
 @Component({
   standalone: true,
@@ -36,6 +37,7 @@ import { SortArrowComponent } from '../sort-arrow.component';
   imports: [
     ActionIconListComponent,
     DateTextPipe,
+    IsExpiredPipe,
     NgClass,
     NgFor,
     NgIf,
