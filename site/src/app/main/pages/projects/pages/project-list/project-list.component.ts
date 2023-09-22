@@ -57,7 +57,8 @@ export class ProjectListComponent {
   filterToggle = false;
 
   filters: ProjectListFilters = {
-    assignedToMe: true,
+    assignedToMe:
+      this.store.selectSnapshot(ProjectListState.anyAssignedTome) ?? false,
     stati: [
       PROJECT_STATI.PLANNING,
       PROJECT_STATI.EXECUTION,

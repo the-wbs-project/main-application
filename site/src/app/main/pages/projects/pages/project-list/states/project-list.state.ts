@@ -6,9 +6,11 @@ import { sorter } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { LoadProjects } from '../actions';
+import { AuthState } from '@wbs/main/states';
 
 interface ProjectListStateModel {
   list?: Project[];
+  anyAssignedTome?: boolean;
   filter: {};
   loading: boolean;
 }
@@ -30,6 +32,11 @@ export class ProjectListState {
   ) {}
 
   @Selector()
+  static anyAssignedTome(state: ProjectListStateModel): boolean | undefined {
+    return state.anyAssignedTome;
+  }
+
+  @Selector()
   static list(state: ProjectListStateModel): Project[] | undefined {
     return state.list;
   }
@@ -44,14 +51,24 @@ export class ProjectListState {
     ctx.patchState({ loading: true });
 
     return this.data.projects.getAllAsync(owner).pipe(
-      map((projects) => {
+      tap((projects) => {
         ctx.patchState({
           list: projects.sort((a, b) =>
             sorter(a.lastModified, b.lastModified, 'desc')
           ),
         });
       }),
-      tap(() => ctx.patchState({ loading: false }))
+
+      tap((projects) => {
+        const userId = this.store.selectSnapshot(AuthState.userId)!;
+
+        ctx.patchState({
+          anyAssignedTome: projects.some(
+            (p) => p.roles?.some((r) => r.userId === userId) ?? false
+          ),
+          loading: false,
+        });
+      })
     );
   }
 }
