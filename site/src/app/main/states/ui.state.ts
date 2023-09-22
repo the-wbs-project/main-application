@@ -108,8 +108,6 @@ export class UiState implements NgxsOnInit {
 
         if (lastWindowCheck === newWindowCheck) return;
 
-        console.log(lastWindowCheck, newWindowCheck);
-
         ctx.patchState({
           lastWindowCheck: newWindowCheck,
           isSidebarExpanded:

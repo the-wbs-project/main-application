@@ -2,8 +2,8 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { RolesState } from '@wbs/main/states';
 
-@Pipe({ name: 'projectRoleFilter', standalone: true })
-export class ProjectRoleFilterPipe implements PipeTransform {
+@Pipe({ name: 'roleFilter', standalone: true })
+export class RoleFilterPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
   transform(

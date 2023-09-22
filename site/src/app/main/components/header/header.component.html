@@ -15,32 +15,39 @@
     </span>
     <div class="navbar-collapse">
       <ul class="navbar-nav">
-        <li *ngFor="let item of menu" class="nav-item" ngbDropdown>
-          <a
-            class="nav-link dropdown-toggle tx-uppercase"
-            ngbDropdownToggle
-            role="button"
+        <ng-template ngFor [ngForOf]="menu" let-parentItem>
+          <li
+            *ngIf="parentItem.roles | roleFilter : userRoles()"
+            class="nav-item"
+            ngbDropdown
           >
-            {{ item.header | translate }}
-          </a>
-          <div ngbDropdownMenu class="pt-0">
-            <ng-template ngFor [ngForOf]="item.items" let-link>
-              <h6
-                *ngIf="link.header"
-                class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
-              >
-                {{ link.header | translate }}
-              </h6>
-              <a
-                *ngIf="link.url | orgUrl : org()?.name"
-                ngbDropdownItem
-                [routerLink]="link.url"
-              >
-                {{ link.text! | translate }}
-              </a>
-            </ng-template>
-          </div>
-        </li>
+            <a
+              class="nav-link dropdown-toggle tx-uppercase"
+              ngbDropdownToggle
+              role="button"
+            >
+              {{ parentItem.label | translate }}
+            </a>
+            <div ngbDropdownMenu class="py-0">
+              <ng-template ngFor [ngForOf]="parentItem.items" let-link>
+                <h6
+                  *ngIf="link.type === 'header'"
+                  class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
+                >
+                  {{ link.label | translate }}
+                </h6>
+                <a
+                  *ngIf="link.type === 'link'"
+                  ngbDropdownItem
+                  [routerLink]="link.route | orgUrl : org()?.name"
+                  class="lh-5"
+                >
+                  {{ link.label | translate }}
+                </a>
+              </ng-template>
+            </div>
+          </li>
+        </ng-template>
       </ul>
     </div>
   </div>
@@ -72,13 +79,11 @@
           <ng-template ngFor [ngForOf]="parentItem.items" let-link>
             <li class="nav-item tx-uppercase">
               <a
-                *ngIf="link.url"
-                [routerLink]="link.url | orgUrl : org()?.name"
+                *ngIf="link.type === 'link'"
+                [routerLink]="link.route | orgUrl : org()?.name"
                 class="nav-link pd-y-5 pd-x-20"
               >
-                {{ parentItem.header! | translate }}
-                &nbsp;-&nbsp;
-                {{ link.text! | translate }}
+                {{ link.label! | translate }}
               </a>
             </li>
           </ng-template>

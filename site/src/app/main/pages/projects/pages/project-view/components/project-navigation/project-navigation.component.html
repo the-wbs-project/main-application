@@ -6,7 +6,7 @@
     >
       <ul ngbNav class="tx-14 tx-medium">
         <ng-template ngFor [ngForOf]="links" let-link>
-          <ng-template [ngIf]="link.roles | projectRoleFilter : userRoles">
+          <ng-template [ngIf]="link.roles | roleFilter : userRoles">
             <li
               *ngIf="!link.children"
               [ngClass]="link.classes"

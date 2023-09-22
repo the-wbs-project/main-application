@@ -3,7 +3,7 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { ProjectRoleFilterPipe } from '../../../../../../pipes/project-role-filter.pipe';
+import { RoleFilterPipe } from '../../../../../../pipes/role-filter.pipe';
 import { ProjectNavigationLink } from '../../models';
 import { Store } from '@ngxs/store';
 
@@ -19,7 +19,7 @@ import { Store } from '@ngxs/store';
     NgIf,
     NgbDropdownModule,
     NgbNavModule,
-    ProjectRoleFilterPipe,
+    RoleFilterPipe,
     RouterModule,
     TranslateModule,
   ],

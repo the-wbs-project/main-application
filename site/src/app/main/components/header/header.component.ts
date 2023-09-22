@@ -8,9 +8,24 @@ import { Store } from '@ngxs/store';
 import { menuIcon } from '@progress/kendo-svg-icons';
 import { ToggleSidebar } from '@wbs/main/actions';
 import { OrgUrlPipe } from '@wbs/main/pipes/org-url.pipe';
-import { MembershipState } from '@wbs/main/states';
+import { MembershipState, RolesState } from '@wbs/main/states';
 import { environment } from 'src/environments/environment';
 import { HeaderProfileComponent } from './header-profile/header-profile.component';
+import { ROLES } from '@wbs/core/models';
+import { RoleFilterPipe } from '@wbs/main/pipes/role-filter.pipe';
+
+interface RouteLinkGroup {
+  label: string;
+  roles?: string[];
+  items: (
+    | { type: 'header'; label: string }
+    | {
+        type: 'link';
+        route: string[];
+        label: string;
+      }
+  )[];
+}
 
 @Component({
   standalone: true,
@@ -24,40 +39,44 @@ import { HeaderProfileComponent } from './header-profile/header-profile.componen
     NgForOf,
     NgIf,
     OrgUrlPipe,
+    RoleFilterPipe,
     RouterModule,
     TranslateModule,
   ],
 })
 export class HeaderComponent {
   readonly org = toSignal(this.store.select(MembershipState.organization));
+  readonly userRoles = toSignal(this.store.select(RolesState.orgRoles));
   readonly menuIcon = menuIcon;
   readonly appTitle = environment.appTitle;
-  readonly menu = [
+  readonly menu: RouteLinkGroup[] = [
     {
-      header: 'General.Projects',
+      label: 'General.Projects',
       items: [
         {
-          url: ['/', ':orgId', 'projects'],
-          text: 'General.ProjectList',
+          type: 'link',
+          route: ['/', ':orgId', 'projects'],
+          label: 'General.ProjectList',
         },
         {
-          header: 'General.Actions',
-        },
-        {
-          url: ['/', ':orgId', 'projects', 'create'],
-          text: 'General.CreateProject',
+          type: 'link',
+          route: ['/', ':orgId', 'projects', 'create'],
+          label: 'General.CreateProject',
         },
       ],
     },
     {
-      header: 'General.Settings',
+      label: 'General.Settings',
+      roles: [ROLES.ADMIN],
       items: [
         {
-          header: 'General.Organizational',
+          type: 'header',
+          label: 'General.Organizational',
         },
         {
-          url: ['/', ':orgId', 'settings', 'members'],
-          text: 'General.Members',
+          type: 'link',
+          route: ['/', ':orgId', 'settings', 'members'],
+          label: 'General.Members',
         },
       ],
     },
