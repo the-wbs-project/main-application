@@ -121,7 +121,6 @@ export class MembersComponent implements OnInit {
 
           role.name = definitions.find((x) => x.name === role.name)!.id;
         }
-        console.log(ROLES);
         this.roles.set(ROLES);
       });
   }

@@ -28,6 +28,7 @@
           fillMode="link"
           [mainIcon]="gearIcon"
           [menuItems]="menu"
+          (itemClicked)="userActionClicked(member, $event)"
         />
       </td>
       <td>{{ member.name }}</td>
