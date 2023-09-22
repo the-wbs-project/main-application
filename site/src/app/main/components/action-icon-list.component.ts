@@ -1,4 +1,6 @@
+import { NgClass, NgIf } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { TranslateModule } from '@ngx-translate/core';
 import {
@@ -6,8 +8,7 @@ import {
   ButtonSize,
   DropDownButtonModule,
 } from '@progress/kendo-angular-buttons';
-import { SVGIcon } from '@progress/kendo-angular-icons';
-import { IconComponent } from './icon/icon.component';
+import { ActionMenuItem } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -16,29 +17,42 @@ import { IconComponent } from './icon/icon.component';
     [fillMode]="fillMode"
     [size]="size"
     buttonClass="tx-8 pd-0-f"
-    [svgIcon]="mainIcon"
     [data]="menuItems"
     [popupSettings]="{ align: align }"
-    (itemClick)="itemClicked.emit($event.action)"
+    (itemClick)="clicked($event)"
   >
+    <fa-icon [icon]="mainIcon" />
     <ng-template kendoDropDownButtonItemTemplate let-dataItem>
-      <div class="pd-y-5 ">
-        <wbs-icon [icon]="dataItem.icon" />
-        <span class="mg-l-10"> {{ dataItem.text | translate }} </span>
+      <div class="lh-10" [ngClass]="dataItem.cssClasses">
+        <ng-template [ngIf]="dataItem.icon" [ngIfElse]="noIcon">
+          <fa-icon [icon]="dataItem.icon" />
+          <span class="mg-l-10"> {{ dataItem.text | translate }} </span>
+        </ng-template>
+        <ng-template #noIcon>
+          {{ dataItem.text | translate }}
+        </ng-template>
       </div>
     </ng-template>
   </kendo-dropdownbutton>`,
-  imports: [DropDownButtonModule, IconComponent, TranslateModule],
+  imports: [
+    DropDownButtonModule,
+    FontAwesomeModule,
+    NgClass,
+    NgIf,
+    TranslateModule,
+  ],
 })
 export class ActionIconListComponent {
   @Input() align?: 'left' | 'right' | 'center';
   @Input({ required: true }) size!: ButtonSize;
   @Input({ required: true }) fillMode!: ButtonFillMode;
-  @Input({ required: true }) mainIcon!: SVGIcon;
-  @Input({ required: true }) menuItems!: {
-    icon: SVGIcon | IconDefinition;
-    text: string;
-    action: string;
-  }[];
+  @Input({ required: true }) mainIcon!: IconDefinition;
+  @Input({ required: true }) menuItems!: ActionMenuItem[];
   @Output() readonly itemClicked = new EventEmitter<string>();
+
+  clicked(item: ActionMenuItem): void {
+    if (item.disabled) return;
+
+    this.itemClicked.emit(item.action);
+  }
 }

@@ -6,6 +6,7 @@ import {
   OnChanges,
   signal,
 } from '@angular/core';
+import { faGear, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
@@ -14,7 +15,6 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { gearIcon, xIcon } from '@progress/kendo-svg-icons';
 import { Invite } from '@wbs/core/models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
@@ -55,11 +55,11 @@ export class InvitationListComponent implements OnChanges {
   readonly state = signal(<State>{
     sort: [{ field: 'name', dir: 'asc' }],
   });
-  readonly gearIcon = gearIcon;
+  readonly faGear = faGear;
   readonly menu = [
     {
       text: 'OrgSettings.CancelInvite',
-      icon: xIcon,
+      icon: faX,
       action: 'cancel',
     },
   ];

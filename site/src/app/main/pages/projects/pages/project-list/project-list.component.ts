@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
+import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { plusIcon } from '@progress/kendo-svg-icons';
@@ -23,7 +23,6 @@ import { ProjectListFiltersComponent } from './components/project-list-filters/p
 import { ProjectListFilters } from './models';
 import { ProjectFilterPipe } from './pipes/project-filter.pipe';
 import { ProjectListState } from './states';
-import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
   standalone: true,
@@ -35,7 +34,6 @@ import { faFilters } from '@fortawesome/pro-solid-svg-icons';
     EditedDateTextPipe,
     FillElementDirective,
     FontAwesomeModule,
-    NgbDropdownModule,
     NgClass,
     NgFor,
     NgIf,

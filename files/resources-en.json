@@ -207,7 +207,6 @@
       "Organization": "Organization",
       "OrganizationDescription": "Name, contact info, and more",
       "UsersDescription": "Manage existing users",
-      "Invites": "Invites",
       "InvitesDescription": "Send, change, and cancel invites",
       "Roles": "Roles",
       "ActiveUsers": "Active Users",
@@ -466,7 +465,10 @@
       "CancelInviteConfirm": "Are you sure you want to cancel this invite?",
       "InviteCancelled": "Invite Cancelled",
       "ResendInvite": "Resend Invite",
-      "ResendInviteConfirm": "Are you sure you want to resend the invite? This will cause the previous invite sent to be invalid."
+      "ResendInviteConfirm": "Are you sure you want to resend the invite? This will cause the previous invite sent to be invalid.",
+      "MembershipRollup": "Membership Rollup",
+      "Capacity": "Capacity",
+      "Remaining": "Remaining"
     }
   },
   {

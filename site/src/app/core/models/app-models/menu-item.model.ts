@@ -21,11 +21,11 @@ export interface MenuItem {
 
 export interface ActionMenuItem {
   action: string;
-  id?: string;
-  title?: string;
-  tooltip?: string;
+  text?: string;
   icon?: IconDefinition;
+  tooltip?: string;
   disabled?: boolean;
+  cssClasses?: string;
   filters?: {
     excludeFromCat?: boolean;
     roles?: string[];

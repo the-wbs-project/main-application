@@ -13,19 +13,18 @@ import {
 import { ActionMenuItem, PROJECT_STATI, ROLES } from '@wbs/core/models';
 import { PROJECT_PAGE_VIEW } from './project-page-view.const';
 import { PROJECT_SETTINGS_PAGE_LISTS } from './project-settings-pages.const';
-import { PROJECT_ACTIONS_LIST } from './project-actions.const';
 
 export const PROJECT_MENU_ITEMS = {
   phaseTreeActions: <ActionMenuItem[]>[
     {
       action: 'download',
       icon: faDownload,
-      title: 'General.Download',
+      text: 'General.Download',
     },
     {
       action: 'upload',
       icon: faUpload,
-      title: 'General.Upload',
+      text: 'General.Upload',
       filters: {
         roles: [ROLES.PM],
         stati: [PROJECT_STATI.PLANNING],
@@ -159,15 +158,5 @@ export const PROJECT_MENU_ITEMS = {
       title: 'General.Settings',
       children: PROJECT_SETTINGS_PAGE_LISTS,
     },
-    /* {
-      fragment: PROJECT_PAGE_VIEW.SETTINGS,
-      roles: [ROLES.PM, ROLES.ADMIN, ROLES.APPROVER, ROLES.SME],
-      title: 'General.Actions',
-      children: PROJECT_ACTIONS_LIST,
-    },
-    /*{
-      fragment: PROJECT_PAGE_VIEW.DISCUSSIONS,
-      title: 'General.Discussions',
-    },*/
   ],
 };

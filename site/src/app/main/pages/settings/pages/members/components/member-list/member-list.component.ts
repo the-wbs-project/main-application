@@ -6,6 +6,12 @@ import {
   OnChanges,
   signal,
 } from '@angular/core';
+import {
+  faGear,
+  faPencil,
+  faPlus,
+  faX,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
@@ -14,12 +20,6 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import {
-  gearIcon,
-  pencilIcon,
-  plusIcon,
-  xIcon,
-} from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
@@ -59,17 +59,17 @@ export class MemberListComponent implements OnChanges {
   readonly state = signal(<State>{
     sort: [{ field: 'lastLogin', dir: 'desc' }],
   });
-  readonly gearIcon = gearIcon;
-  readonly plusIcon = plusIcon;
+  readonly faGear = faGear;
+  readonly faPlus = faPlus;
   readonly menu = [
     {
       text: 'General.Edit',
-      icon: pencilIcon,
+      icon: faPencil,
       action: 'edit',
     },
     {
       text: 'General.Remove',
-      icon: xIcon,
+      icon: faX,
       action: 'remove',
     },
   ];

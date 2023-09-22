@@ -1,28 +1,78 @@
 <div class="container-fluid">
   <div class="row mg-b-20">
-    <div class="col-8 offset-2">
+    <div
+      class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1"
+    >
       <div class="card overflow-hidden">
-        <div class="card-header pd-b-0 border-bottom-0 tx-center">
-          <h4 class="card-title">Membership Rollup</h4>
+        <div class="card-header pd-b-0 border-bottom-0">
+          <h4 class="card-title tx-center">
+            {{ "OrgSettings.MembershipRollup" | translate }}
+          </h4>
         </div>
-        <div class="card-body tx-center">
+        <div class="card-body tx-center d-none d-sm-block">
           <div class="row mb-2">
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-              <p class="mb-1">Total Members</p>
+            <div class="col-3">
+              <p class="mb-1">
+                {{ "General.Members" | translate }}
+              </p>
               <h5>{{ members()?.length ?? 0 }}</h5>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-              <p class="mb-1">Total Invites</p>
+            <div class="col-3">
+              <p class="mb-1">
+                {{ "OrgSettings.Invitations" | translate }}
+              </p>
               <h5>{{ invites()?.length ?? 0 }}</h5>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-              <p class="mb-1">Total Capacity</p>
+            <div class="col-3">
+              <p class="mb-1">
+                {{ "OrgSettings.Capacity" | translate }}
+              </p>
               <h5>
                 {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
               </h5>
             </div>
-            <div class="col-xl-3 col-lg-3 col-md-3 col-sm-3">
-              <p class="mb-1">Capacity Remaining</p>
+            <div class="col-3">
+              <p class="mb-1">
+                {{ "OrgSettings.Remaining" | translate }}
+              </p>
+              <h5>
+                {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
+              </h5>
+            </div>
+          </div>
+        </div>
+        <div class="card-body d-xs-block d-sm-none">
+          <div class="row mb-2">
+            <div class="col-6">
+              {{ "General.Members" | translate }}
+            </div>
+            <div class="col-6 tx-center">
+              <h5>{{ members()?.length ?? 0 }}</h5>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              {{ "OrgSettings.Invitations" | translate }}
+            </div>
+            <div class="col-6 tx-center">
+              <h5>{{ invites()?.length ?? 0 }}</h5>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              {{ "OrgSettings.Capacity" | translate }}
+            </div>
+            <div class="col-6 tx-center">
+              <h5>
+                {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
+              </h5>
+            </div>
+          </div>
+          <div class="row mb-2">
+            <div class="col-6">
+              {{ "OrgSettings.Remaining" | translate }}
+            </div>
+            <div class="col-6 tx-center">
               <h5>
                 {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
               </h5>
@@ -31,71 +81,75 @@
         </div>
       </div>
     </div>
-    <div class="row mg-b-20">
-      <div class="col-6">
-        <div class="btn-group" role="group" aria-label="Basic example">
+    <div class="col-12">
+      <div class="row mg-b-20">
+        <div class="col-6">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button
+              type="button"
+              class="btn"
+              [ngClass]="{
+                'btn-primary': view() === 'members',
+                'btn-outline-primary': view() !== 'members'
+              }"
+              (click)="view.set('members')"
+            >
+              {{ "General.Members" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn"
+              [ngClass]="{
+                'btn-primary': view() === 'invitations',
+                'btn-outline-primary': view() !== 'invitations'
+              }"
+              (click)="view.set('invitations')"
+            >
+              {{ "OrgSettings.Invitations" | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="col-6 tx-right">
           <button
-            type="button"
-            class="btn"
-            [ngClass]="{
-              'btn-primary': view() === 'members',
-              'btn-outline-primary': view() !== 'members'
-            }"
-            (click)="view.set('members')"
+            *ngIf="remaining() !== 0"
+            class="btn btn-sm btn-primary"
+            (click)="openInviteDialog()"
           >
-            {{ "General.Members" | translate }}
-          </button>
-          <button
-            type="button"
-            class="btn"
-            [ngClass]="{
-              'btn-primary': view() === 'invitations',
-              'btn-outline-primary': view() !== 'invitations'
-            }"
-            (click)="view.set('invitations')"
-          >
-            {{ "OrgSettings.Invitations" | translate }}
+            <kendo-svg-icon [icon]="plusIcon" />
+            <span class="d-none d-sm-inline">
+              {{ "OrgSettings.InviteMembers" | translate }}
+            </span>
           </button>
         </div>
       </div>
-      <div class="col-6 tx-right">
-        <button
-          *ngIf="remaining() !== 0"
-          class="btn btn-sm btn-primary"
-          (click)="openInviteDialog()"
-        >
-          <kendo-svg-icon [icon]="plusIcon" />
-          {{ "OrgSettings.InviteMembers" | translate }}
-        </button>
+      <div class="row">
+        <div class="col-xl-8 col-lg-7 col-md-12 mg-b-20">
+          <input
+            type="text"
+            [(ngModel)]="textFilter"
+            class="form-control w-100"
+            placeholder="Search by name or email"
+          />
+        </div>
+        <div class="col-xl-4 col-lg-5 col-md-12 mg-b-20">
+          <wbs-role-filter-list (valueChanged)="roleFilters.set($event)" />
+        </div>
       </div>
-    </div>
-    <div class="row mg-b-20">
-      <div class="col-xl-8 col-lg-7 col-md-12 pd-lg-b-0 pd-md-b-20">
-        <input
-          type="text"
-          [(ngModel)]="textFilter"
-          class="form-control w-100"
-          placeholder="Search by name or email"
-        />
-      </div>
-      <div class="col-xl-4 col-lg-5 col-md-12">
-        <wbs-role-filter-list (valueChanged)="roleFilters.set($event)" />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-12">
-        <wbs-member-list
-          *ngIf="view() === 'members'"
-          [roles]="roleFilters()"
-          [members]="members()"
-          [textFilter]="textFilter"
-        />
-        <wbs-invitation-list
-          *ngIf="view() === 'invitations'"
-          [roles]="roleFilters()"
-          [invites]="invites()"
-          [textFilter]="textFilter"
-        />
+      <div class="row">
+        <div class="col-12">
+          <wbs-member-list
+            *ngIf="view() === 'members'"
+            [roles]="roleFilters()"
+            [members]="members()"
+            [textFilter]="textFilter"
+          />
+          <wbs-invitation-list
+            *ngIf="view() === 'invitations'"
+            [roles]="roleFilters()"
+            [invites]="invites()"
+            [textFilter]="textFilter"
+          />
+        </div>
       </div>
     </div>
   </div>

@@ -16,8 +16,8 @@ import { ActionMenuItem } from '@wbs/core/models';
       placement="bottom"
     >
       <fa-icon *ngIf="item.icon" [icon]="item.icon" />
-      <span *ngIf="showTitle && item.title">
-        {{ item.title | translate }}
+      <span *ngIf="showTitle && item.text">
+        {{ item.text | translate }}
       </span>
     </button>
   </div>`,
