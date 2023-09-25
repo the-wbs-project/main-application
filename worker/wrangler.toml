@@ -31,8 +31,7 @@ name = "pm-empower-api-test"
 usage_model = "unbound"
 workers_dev = false
 routes = [
-	{ pattern = "test-api.pm-empower.com/*", zone_name = "pm-empower.com" },
-	{ pattern = "temp-api.pm-empower.com/*", zone_name = "pm-empower.com" }
+	{ pattern = "test.pm-empower.com/api/*", zone_name = "pm-empower.com" },
 ]
 kv_namespaces = [
   { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
