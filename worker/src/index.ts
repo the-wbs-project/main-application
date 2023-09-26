@@ -21,8 +21,9 @@ app.use('*', async (ctx, next) => {
 //
 // CORS
 //
-app.use('api/*', logger);
-app.use('api/*', cors);
+app.use('*', logger);
+app.use('*', cors);
+
 app.options('api/*', (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, (ctx) => OriginService.pass(ctx));
@@ -83,7 +84,7 @@ app.delete(
   OriginService.pass,
 );
 
-app.get('api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
+app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of ORIGIN_PASSES) {
   app.post(path, verifyJwt, OriginService.pass);
