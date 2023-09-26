@@ -3,7 +3,6 @@ import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NgxsOnInit, Selector, State, StateContext, Store } from '@ngxs/store';
 import { Role, RoleIds } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
 import { ROLE_ICONS } from 'src/environments/icons';
 import { MembershipState } from './membership.state';
 

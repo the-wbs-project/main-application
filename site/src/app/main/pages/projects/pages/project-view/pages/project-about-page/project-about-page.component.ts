@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { LowerCasePipe, NgClass, NgFor, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
@@ -7,12 +7,12 @@ import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
+import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { map } from 'rxjs/operators';
 import { ProjectChecklistComponent } from '../../components/project-checklist/project-checklist.component';
-import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
-import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
+import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
 
 @Component({
   standalone: true,
@@ -20,9 +20,12 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
-    CommonModule,
     DisciplineIconPipe,
     EditedDateTextPipe,
+    LowerCasePipe,
+    NgClass,
+    NgFor,
+    NgIf,
     ProjectChecklistComponent,
     ProjectStatisticComponent,
     ProjectStatusPipe,

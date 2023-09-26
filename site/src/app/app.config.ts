@@ -16,7 +16,6 @@ import {
   AppInitializerFactory,
   RequestInterceptor,
   Resources,
-  ThemeService,
 } from './core/services';
 import { AUTH_CONFIG } from './globals.const';
 
@@ -37,7 +36,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [Resources, ThemeService],
+      deps: [Resources],
       multi: true,
     },
     {

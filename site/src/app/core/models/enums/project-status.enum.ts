@@ -4,7 +4,7 @@ export enum PROJECT_STATI {
   EXECUTION = 'execution',
   FOLLOW_UP = 'follow-up',
   CLOSED = 'closed',
-  ARCHIVED = 'archived',
+  CANCELLED = 'cancelled',
 }
 
 export type PROJECT_STATI_TYPE =
@@ -13,4 +13,4 @@ export type PROJECT_STATI_TYPE =
   | PROJECT_STATI.EXECUTION
   | PROJECT_STATI.FOLLOW_UP
   | PROJECT_STATI.PLANNING
-  | PROJECT_STATI.ARCHIVED;
+  | PROJECT_STATI.CANCELLED;

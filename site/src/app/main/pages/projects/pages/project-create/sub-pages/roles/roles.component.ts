@@ -10,7 +10,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { RoleIds } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
-import { MembershipState, RolesState } from '@wbs/main/states';
+import { AuthState, MembershipState, RolesState } from '@wbs/main/states';
 import { RolesChosen } from '../../actions';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { PROJECT_CREATION_PAGES } from '../../models';
@@ -44,9 +44,11 @@ export class RolesComponent implements OnInit {
   ngOnInit(): void {
     const roles = this.store.selectSnapshot(ProjectCreateState.roles);
 
-    this.approverIds.set(roles.get(this.ids.approver) ?? []);
-    this.pmIds.set(roles.get(this.ids.pm) ?? []);
+    this.pmIds.set(
+      roles.get(this.ids.pm) ?? [this.store.selectSnapshot(AuthState.userId)!]
+    );
     this.smeIds.set(roles.get(this.ids.sme) ?? []);
+    this.approverIds.set(roles.get(this.ids.approver) ?? []);
   }
 
   back(): void {

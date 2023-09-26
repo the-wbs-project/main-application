@@ -1,11 +1,8 @@
 import { Resources } from './resource.service';
-import { ThemeService } from './theme.service';
 
 export class AppInitializerFactory {
-  static run(resources: Resources, theme: ThemeService) {
+  static run(resources: Resources) {
     return () => {
-      theme.apply();
-
       return resources.initiate();
     };
   }

@@ -46,10 +46,11 @@ export class ProjectListFiltersComponent {
   readonly cats = toSignal(this.store.select(MetadataState.projectCategories));
   readonly stati = [
     PROJECT_STATI.PLANNING,
+    PROJECT_STATI.APPROVAL,
     PROJECT_STATI.EXECUTION,
     PROJECT_STATI.FOLLOW_UP,
     PROJECT_STATI.CLOSED,
-    PROJECT_STATI.ARCHIVED,
+    PROJECT_STATI.CANCELLED,
   ];
 
   readonly plusIcon = plusIcon;

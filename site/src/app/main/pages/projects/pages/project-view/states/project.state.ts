@@ -17,10 +17,9 @@ import {
   MetadataState,
   RolesState,
 } from '@wbs/main/states';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import {
   AddUserToRole,
-  ArchiveProject,
   ChangeProjectBasics,
   ChangeProjectCategories,
   ChangeProjectStatus,
@@ -299,7 +298,6 @@ export class ProjectState {
     project.status = status;
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success('Projects.ProjectUpdated')),
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.STATUS_CHANGED,
@@ -364,37 +362,6 @@ export class ProjectState {
     );
   }
 
-  @Action(ArchiveProject)
-  archiveProject(ctx: Context): Observable<void> {
-    return this.dialog
-      .confirm('Projects.ArchiveProject', 'Projects.ArchiveProjectConfirm')
-      .pipe(
-        switchMap((result) => {
-          if (!result) return of();
-
-          const state = ctx.getState();
-          const project = state.current!;
-          const original = project.status;
-
-          project.status = PROJECT_STATI.ARCHIVED;
-
-          return this.saveProject(ctx, project).pipe(
-            tap(() => this.messaging.success('Projects.ProjectArchived')),
-            tap(() =>
-              this.saveActivity({
-                action: PROJECT_ACTIONS.STATUS_CHANGED,
-                topLevelId: project.id,
-                data: {
-                  from: original,
-                  to: PROJECT_STATI.ARCHIVED,
-                },
-              })
-            )
-          );
-        })
-      );
-  }
-
   @Action(MarkProjectChanged)
   markProjectChanged(ctx: Context): Observable<void> {
     return this.projectChanged(ctx);
@@ -408,7 +375,7 @@ export class ProjectState {
 
   private saveProject(ctx: Context, project: Project): Observable<void> {
     return this.data.projects.putAsync(project).pipe(
-      tap(() => ctx.patchState({ current: project })),
+      tap(() => ctx.patchState({ current: structuredClone(project) })),
       tap(() => this.projectChanged(ctx)),
       tap(() =>
         ctx.dispatch(new SetChecklistData(project, undefined, undefined))

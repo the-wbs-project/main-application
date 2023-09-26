@@ -1,0 +1,51 @@
+<ng-template [ngIf]="menu()" let-menu>
+  <button
+    #anchor
+    class="btn btn-sm btn-outline-dark mg-y-4 mg-r-15"
+    (click)="toggle()"
+  >
+    <fa-icon [icon]="faBoltLightning" />
+    &nbsp; Actions
+  </button>
+
+  <kendo-popup
+    #popup
+    *ngIf="show"
+    [anchor]="anchor"
+    (anchorViewportLeave)="toggle()"
+    [anchorAlign]="{ horizontal: 'right', vertical: 'bottom' }"
+    [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
+  >
+    <div class="wd-200">
+      <ul
+        role="menu"
+        aria-orientation="vertical"
+        class="k-context-menu k-menu-group k-menu-group-md"
+      >
+        <ng-template ngFor let-item [ngForOf]="menu" let-index="index">
+          <li
+            *ngIf="item.separator"
+            aria-hidden="true"
+            class="k-separator k-item"
+          >
+            &nbsp;
+          </li>
+          <li
+            *ngIf="!item.separator"
+            role="menuitem"
+            class="k-item k-menu-item tx-12-f"
+            [class.k-last]="menu.length === index + 1"
+            [attr.aria-label]="item.text! | translate"
+            tabindex="-1"
+            (click)="service.handleAction(item.action!)"
+          >
+            <span role="presentation" class="k-link k-menu-link">
+              <fa-icon [icon]="item.icon!" />&nbsp;
+              {{ item.text! | translate }}
+            </span>
+          </li>
+        </ng-template>
+      </ul>
+    </div>
+  </kendo-popup>
+</ng-template>

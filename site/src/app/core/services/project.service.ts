@@ -55,7 +55,7 @@ export class ProjectService {
     if (status === PROJECT_STATI.EXECUTION) return 'General.Execution';
     if (status === PROJECT_STATI.FOLLOW_UP) return 'General.FollowUp';
     if (status === PROJECT_STATI.PLANNING) return 'General.Planning';
-    if (status === PROJECT_STATI.ARCHIVED) return 'General.Archived';
+    if (status === PROJECT_STATI.CANCELLED) return 'General.Cancelled';
     return '';
   }
 

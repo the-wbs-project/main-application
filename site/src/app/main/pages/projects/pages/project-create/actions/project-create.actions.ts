@@ -10,10 +10,6 @@ export class SetHeaderInformation {
   constructor(readonly title: string, readonly description: string) {}
 }
 
-export class NavBack {
-  static readonly type = '[Project Creation] Navigate Back';
-}
-
 export class SubmitBasics {
   static readonly type = '[Project Creation] Submit Basics';
   constructor(readonly title: string, readonly description: string) {}

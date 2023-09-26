@@ -37,17 +37,8 @@
             ],
             "styles": [
               "src/styles/bootstrap.scss",
-              "src/styles/styles.scss",
-              {
-                "inject": false,
-                "input": "src/styles/kendoui-theme-dark.scss",
-                "bundleName": "kendoui-dark"
-              },
-              {
-                "inject": false,
-                "input": "src/styles/kendoui-theme-light.scss",
-                "bundleName": "kendoui-light"
-              }
+              "src/styles/kendo.scss",
+              "src/styles/styles.scss"
             ],
             "scripts": [],
             "allowedCommonJsDependencies": []

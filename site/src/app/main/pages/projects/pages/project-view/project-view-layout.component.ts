@@ -18,6 +18,7 @@ import { ProjectChecklistModalComponent } from './components/project-checklist-m
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_MENU_ITEMS } from './models';
 import { ProjectState } from './states';
+import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 
 @Component({
   standalone: true,
@@ -35,6 +36,7 @@ import { ProjectState } from './states';
     ProjectTitleComponent,
     RouterModule,
     TranslateModule,
+    ProjectActionButtonComponent,
   ],
 })
 export class ProjectViewLayoutComponent {

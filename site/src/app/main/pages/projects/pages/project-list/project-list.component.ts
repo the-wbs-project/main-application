@@ -59,6 +59,7 @@ export class ProjectListComponent {
       this.store.selectSnapshot(ProjectListState.anyAssignedTome) ?? false,
     stati: [
       PROJECT_STATI.PLANNING,
+      PROJECT_STATI.APPROVAL,
       PROJECT_STATI.EXECUTION,
       PROJECT_STATI.FOLLOW_UP,
     ],

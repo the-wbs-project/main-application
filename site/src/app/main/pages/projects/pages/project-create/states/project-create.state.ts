@@ -13,12 +13,11 @@ import {
   UserRole,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/states';
+import { AuthState, MetadataState } from '@wbs/main/states';
 import { Observable, switchMap, tap } from 'rxjs';
 import {
   CategoryChosen,
   DisciplinesChosen,
-  NavBack,
   PhasesChosen,
   RolesChosen,
   SaveProject,
@@ -143,37 +142,6 @@ export class ProjectCreateState {
     });
   }
 
-  @Action(NavBack)
-  navBack(ctx: StateContext<StateModel>): void {
-    const state = ctx.getState();
-    /*
-    const current = state.page!;
-
-    if (current === PAGES.BASICS) {
-      ctx.patchState({
-        page: PAGES.GETTING_STARTED,
-      });
-    } else if (current === PAGES.CATEGORY) {
-      ctx.patchState({ page: PAGES.BASICS });
-    } else if (current === PAGES.LIB_OR_SCRATCH) {
-      ctx.patchState({ page: PAGES.CATEGORY });
-    } else if (current === PAGES.NODE_VIEW) {
-      ctx.patchState({
-        page: state.useLibrary ? PAGES.DESCIPLINES : PAGES.LIB_OR_SCRATCH,
-      });
-    } else if (current === PAGES.PHASES) {
-      ctx.patchState({
-        page: PAGES.CATEGORY
-      });
-    } else if (current === PAGES.DESCIPLINES) {
-      ctx.patchState({
-        page: PAGES.PHASES
-      });
-    } else if (current === PAGES.ROLES) {
-      ctx.patchState({ page: PAGES.DESCIPLINES }); 
-    }*/
-  }
-
   @Action(SubmitBasics)
   submitBasics(ctx: StateContext<StateModel>, action: SubmitBasics): void {
     ctx.patchState({
@@ -258,7 +226,7 @@ export class ProjectCreateState {
     const project: Project = {
       id: IdService.generate(),
       owner: state.owner!,
-      createdBy: '',
+      createdBy: this.store.selectSnapshot(AuthState.userId)!,
       disciplines,
       phases,
       category: state.category!,

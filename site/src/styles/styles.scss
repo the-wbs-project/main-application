@@ -22,6 +22,17 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
+/* ######## UTILITIES-STYLES ######## */
+@import "util/background";
+@import "util/border";
+@import "util/height";
+@import "util/margin";
+@import "util/opacity";
+@import "util/padding";
+@import "util/position";
+@import "util/typography";
+@import "util/width";
+
 html,
 body,
 wbs-app {
@@ -303,47 +314,8 @@ wbs-app {
   }
 }
 
-.dark-theme {
-  .mat-menu-panel {
-    background-color: #383d52;
-    color: #fff;
-  }
-
-  .label-wrapper {
-    color: #fff;
-  }
-
-  .mat-form-field-appearance-outline .mat-form-field-outline {
-    color: #404353;
-  }
-}
-
-.transparent-theme {
-  .mat-menu-panel {
-    background-color: var(--transparent-body);
-    color: #fff;
-  }
-
-  .label-wrapper {
-    color: #fff;
-  }
-
-  .mat-form-field-appearance-outline .mat-form-field-outline {
-    color: #4cb0a0;
-  }
-}
-
-.transparent-theme .btn-light:not(:disabled):not(.disabled):active:focus,
-.transparent-theme .btn-light:not(:disabled):not(.disabled).active:focus {
-  box-shadow: none !important;
-}
-
-.dark-theme .btn-close {
-  filter: invert(1);
-}
-
-.transparent-theme .btn-close {
-  filter: invert(1);
+.notiflix-report-button {
+  text-decoration: none;
 }
 
 button:focus:not(:focus-visible) {
@@ -367,14 +339,3 @@ button:focus:not(:focus-visible) {
 .my-custom-class {
   z-index: max;
 }
-
-/* ######## UTILITIES-STYLES ######## */
-@import "util/background";
-@import "util/border";
-@import "util/height";
-@import "util/margin";
-@import "util/opacity";
-@import "util/padding";
-@import "util/position";
-@import "util/typography";
-@import "util/width";

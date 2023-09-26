@@ -1,12 +1,12 @@
-import { Directive, ElementRef, OnDestroy } from '@angular/core';
+import { Directive, ElementRef } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { MainContentSizeChanged } from '@wbs/main/actions';
-import { Subscription, timer } from 'rxjs';
+import { timer } from 'rxjs';
 
 @UntilDestroy()
 @Directive({ selector: '[appMainContent]', standalone: true })
-export class MainContentDirective implements OnDestroy {
+export class MainContentDirective {
   private lastSize = 0;
   private elem: HTMLElement;
 
@@ -24,6 +24,4 @@ export class MainContentDirective implements OnDestroy {
         this.store.dispatch(new MainContentSizeChanged(width));
       });
   }
-
-  ngOnDestroy(): void {}
 }
