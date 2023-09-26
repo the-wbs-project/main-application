@@ -89,7 +89,7 @@ export class AuthState implements NgxsOnInit {
     const profile = { ...originalProfile, name };
 
     return this.data.users.putAsync(profile).pipe(
-      tap(() => this.messages.success('ProfileEditor.ProfileUpdated')),
+      tap(() => this.messages.notify.success('ProfileEditor.ProfileUpdated')),
       tap(() => ctx.patchState({ profile })),
       switchMap(() =>
         this.data.activities.saveAsync(profile.id, [

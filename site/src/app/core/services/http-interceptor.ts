@@ -58,7 +58,7 @@ export class RequestInterceptor implements HttpInterceptor {
             ? 'General.LoginExpired'
             : 'General.UnexpectedServerError';
 
-        this.messages.error(message, true);
+        this.messages.notify.error(message, true);
       }
 
       this.logError(request.url, request.headers, err);

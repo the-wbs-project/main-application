@@ -57,7 +57,7 @@ export class ProjectViewState {
   downloadNodes(ctx: StateContext<StateModel>): Observable<void> {
     const state = ctx.getState();
 
-    this.messages.info('General.RetrievingData');
+    this.messages.notify.info('General.RetrievingData');
 
     return this.data.projectExport.runAsync(
       this.project,

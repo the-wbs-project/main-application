@@ -16,10 +16,10 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { Invite } from '@wbs/core/models';
+import { Messages } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { DialogService } from '@wbs/main/services';
 import { first } from 'rxjs';
 import { CancelInvite } from '../../actions';
 import { SortableDirective } from '../../directives/table-sorter.directive';
@@ -67,7 +67,7 @@ export class InvitationListComponent implements OnChanges {
   ];
 
   constructor(
-    private readonly dialogService: DialogService,
+    private readonly messages: Messages,
     private readonly store: Store
   ) {}
 
@@ -93,8 +93,8 @@ export class InvitationListComponent implements OnChanges {
           );
         });
     } else */ if (action === 'cancel') {
-      this.dialogService
-        .confirm('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
+      this.messages.confirm
+        .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
         .pipe(first())
         .subscribe((answer) => {
           if (answer) {

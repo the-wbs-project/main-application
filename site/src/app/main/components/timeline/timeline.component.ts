@@ -37,6 +37,6 @@ export class TimelineComponent {
   constructor(private readonly messages: Messages) {}
 
   soon() {
-    this.messages.info('Discussion Coming Soon...', false);
+    this.messages.notify.info('Discussion Coming Soon...', false);
   }
 }

@@ -121,7 +121,7 @@ export class WbsTreeComponent implements OnChanges {
 
   rowReordered(e: RowReorderEvent) {
     if (e.dropPosition === 'forbidden') {
-      this.messages.error('You cannot drop a node under itself', false);
+      this.messages.notify.error('You cannot drop a node under itself', false);
       this.tree$.next(structuredClone(this.nodes!));
       return;
     }
@@ -130,7 +130,10 @@ export class WbsTreeComponent implements OnChanges {
     const target: WbsNodeView = e.dropTargetRow?.dataItem;
 
     if (dragged.id === dragged.phaseId) {
-      this.messages.error('You cannot move a phase from this screen.', false);
+      this.messages.notify.error(
+        'You cannot move a phase from this screen.',
+        false
+      );
       this.tree$.next(structuredClone(this.nodes!));
       return;
     }

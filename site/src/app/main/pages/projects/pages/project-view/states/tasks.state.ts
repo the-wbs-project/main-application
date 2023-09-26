@@ -215,7 +215,7 @@ export class TasksState implements NgxsOnInit {
       .putAsync(project.owner, project.id, [], removedIds)
       .pipe(
         map(() => ctx.patchState({ nodes })),
-        tap(() => this.messaging.success('Projects.TaskRemoved')),
+        tap(() => this.messaging.notify.success('Projects.TaskRemoved')),
         switchMap(() => ctx.dispatch(new RebuildNodeViews())),
         tap(() =>
           this.saveActivity({
@@ -319,7 +319,7 @@ export class TasksState implements NgxsOnInit {
           action: TASK_ACTIONS.CLONED,
         })
       ),
-      tap(() => this.messaging.success('Projects.TaskCloned'))
+      tap(() => this.messaging.notify.success('Projects.TaskCloned'))
     );
   }
 
@@ -514,7 +514,7 @@ export class TasksState implements NgxsOnInit {
           action: TASK_ACTIONS.CREATED,
         })
       ),
-      tap(() => this.messaging.success('Projects.TaskCreated')),
+      tap(() => this.messaging.notify.success('Projects.TaskCreated')),
       switchMap(() =>
         action.navigateTo ? ctx.dispatch(new NavigateToTask(model.id)) : of()
       )
@@ -573,7 +573,7 @@ export class TasksState implements NgxsOnInit {
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
       tap(() => this.saveActivity(...activities)),
-      tap(() => this.messaging.success('Projects.TaskUpdated'))
+      tap(() => this.messaging.notify.success('Projects.TaskUpdated'))
     );
   }
 
@@ -605,7 +605,7 @@ export class TasksState implements NgxsOnInit {
     viewModel.disciplines = disciplines;
 
     return this.saveTask(ctx, model).pipe(
-      tap(() => this.messaging.success('Projects.TaskUpdated')),
+      tap(() => this.messaging.notify.success('Projects.TaskUpdated')),
       map(() => {
         ctx.patchState({
           current: viewModel,
@@ -677,7 +677,7 @@ export class TasksState implements NgxsOnInit {
             action: TASK_ACTIONS.REORDERED,
           });
         }),
-        tap(() => this.messaging.success('Projects.TaskReordered')),
+        tap(() => this.messaging.notify.success('Projects.TaskReordered')),
         switchMap(() => ctx.dispatch(new MarkProjectChanged()))
       );
   }

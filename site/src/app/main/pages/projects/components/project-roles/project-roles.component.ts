@@ -13,8 +13,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
-import { ProjectService, Resources } from '@wbs/core/services';
-import { DialogService } from '@wbs/main/services';
+import { Messages, Resources } from '@wbs/core/services';
 import { RolesState } from '@wbs/main/states';
 import { ProjectUserListComponent } from '../user-list/user-list.component';
 import { RoleUsersService } from './services';
@@ -31,7 +30,7 @@ declare type OutputType = {
   templateUrl: './project-roles.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ProjectUserListComponent, TranslateModule],
-  providers: [DialogService, RoleUsersService],
+  providers: [RoleUsersService],
 })
 export class ProjectRolesComponent implements OnChanges {
   @Input() mustConfirm = false;
@@ -60,7 +59,7 @@ export class ProjectRolesComponent implements OnChanges {
   readonly plusIcon = plusIcon;
 
   constructor(
-    private readonly dialog: DialogService,
+    private readonly messages: Messages,
     private readonly resources: Resources,
     private readonly service: RoleUsersService,
     private readonly store: Store
@@ -119,8 +118,8 @@ export class ProjectRolesComponent implements OnChanges {
         .find((x) => x.id === role)!.description
     );
 
-    this.dialog
-      .confirm('General.Confirmation', message, {
+    this.messages.confirm
+      .show('General.Confirmation', message, {
         ROLE_NAME: roleTitle,
         USER_NAME: user.name,
       })

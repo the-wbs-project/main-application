@@ -36,7 +36,6 @@ import {
 import { PROJECT_ACTIONS } from '../models';
 import { TimelineService } from '../services';
 import { UserRolesViewModel } from '../view-models';
-import { DialogService } from '@wbs/main/services';
 
 interface StateModel {
   approvers?: string[];
@@ -57,7 +56,6 @@ declare type Context = StateContext<StateModel>;
 export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly dialog: DialogService,
     private readonly messaging: Messages,
     private readonly services: ProjectService,
     private readonly store: Store,
@@ -182,7 +180,7 @@ export class ProjectState {
     });
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success('ProjectSettings.UserAdded')),
+      tap(() => this.messaging.notify.success('ProjectSettings.UserAdded')),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
       tap(() =>
@@ -214,7 +212,7 @@ export class ProjectState {
     project.roles.splice(index, 1);
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success('ProjectSettings.UserRemoved')),
+      tap(() => this.messaging.notify.success('ProjectSettings.UserRemoved')),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
       tap(() =>
@@ -281,7 +279,7 @@ export class ProjectState {
     project.category = action.category;
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success('Projects.ProjectUpdated')),
+      tap(() => this.messaging.notify.success('Projects.ProjectUpdated')),
       tap(() => this.saveActivity(...activities))
     );
   }
@@ -339,7 +337,7 @@ export class ProjectState {
     }
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.success(saveMessage)),
+      tap(() => this.messaging.notify.success(saveMessage)),
       tap(() =>
         ctx.dispatch(
           cType === PROJECT_NODE_VIEW.DISCIPLINE &&

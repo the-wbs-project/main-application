@@ -7,7 +7,7 @@ import {
   Output,
   ViewEncapsulation,
 } from '@angular/core';
-import { DialogService } from '@wbs/main/services';
+import { Messages } from '@wbs/core/services';
 import { first } from 'rxjs/operators';
 
 @Component({
@@ -18,7 +18,6 @@ import { first } from 'rxjs/operators';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [NgClass],
-  providers: [DialogService],
 })
 export class SwitchComponent {
   @Input({ required: true }) value!: boolean;
@@ -27,7 +26,7 @@ export class SwitchComponent {
   @Input() confirmData?: Record<string, string>;
   @Output() valueChange = new EventEmitter<boolean>();
 
-  constructor(private readonly dialog: DialogService) {}
+  constructor(private readonly messages: Messages) {}
 
   changed(e: Event, cb: HTMLInputElement): void {
     if (!this.confirmMessage || cb.checked) {
@@ -35,8 +34,8 @@ export class SwitchComponent {
       return;
     }
 
-    this.dialog
-      .confirm('General.Confirmation', this.confirmMessage, this.confirmData)
+    this.messages.confirm
+      .show('General.Confirmation', this.confirmMessage, this.confirmData)
       .pipe(first())
       .subscribe((answer) => {
         if (answer) {

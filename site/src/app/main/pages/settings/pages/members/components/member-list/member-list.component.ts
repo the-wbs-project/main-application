@@ -21,6 +21,7 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { Member } from '@wbs/core/models';
+import { Messages } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
@@ -76,6 +77,7 @@ export class MemberListComponent implements OnChanges {
 
   constructor(
     private readonly dialogService: DialogService,
+    private readonly messages: Messages,
     private readonly store: Store
   ) {}
 
@@ -101,8 +103,8 @@ export class MemberListComponent implements OnChanges {
           );
         });
     } else if (action === 'remove') {
-      this.dialogService
-        .confirm('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
+      this.messages.confirm
+        .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
         .pipe(first())
         .subscribe((answer) => {
           if (answer) {

@@ -4,6 +4,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, Resources, Transformers } from '@wbs/core/services';
+import { MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -20,7 +21,6 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
-import { MetadataState } from '@wbs/main/states';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -162,7 +162,7 @@ export class ProjectUploadState {
     const fileType = EXTENSION_PAGES[extension];
 
     if (!fileType) {
-      this.messenger.error('Invalid file extension.', false);
+      this.messenger.notify.error('Invalid file extension.', false);
       return;
     }
     ctx.patchState({

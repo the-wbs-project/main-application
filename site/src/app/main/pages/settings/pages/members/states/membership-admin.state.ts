@@ -130,7 +130,7 @@ export class MembershipAdminState {
 
         return ctx.dispatch(new UpdateMembers(members));
       }),
-      tap(() => this.messages.success('OrgSettings.MemberRolesUpdated'))
+      tap(() => this.messages.notify.success('OrgSettings.MemberRolesUpdated'))
     );
   }
 
@@ -150,7 +150,7 @@ export class MembershipAdminState {
       );
     }
     return forkJoin(saves).pipe(
-      tap(() => this.messages.success('OrgSettings.InvitesSent')),
+      tap(() => this.messages.notify.success('OrgSettings.InvitesSent')),
       map((invites) => {
         const state = ctx.getState();
 
@@ -166,7 +166,7 @@ export class MembershipAdminState {
   @Action(CancelInvite)
   cancelInvite(ctx: Context, { inviteId }: CancelInvite): Observable<void> {
     return this.data.memberships.cancelInviteAsync(this.org, inviteId).pipe(
-      tap(() => this.messages.success('OrgSettings.InviteCancelled')),
+      tap(() => this.messages.notify.success('OrgSettings.InviteCancelled')),
       tap(() => {
         const invites = ctx.getState().invitations!;
         const index = invites.findIndex((x) => x.id === inviteId);
