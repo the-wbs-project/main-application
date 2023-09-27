@@ -4,7 +4,7 @@
       {{ "Projects.BasicInformation" | translate }}
     </h4>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-100 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
         {{ "General.Level" | translate }} :
       </span>
       <span>
@@ -12,7 +12,7 @@
       </span>
     </p>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-100 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
         {{ "General.Parent" | translate }} :
       </span>
       <span *ngIf="!task.parent">
@@ -27,7 +27,7 @@
       </a>
     </p>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-100 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
         {{ "General.LastModified" | translate }} :
       </span>
       <span>
@@ -35,12 +35,12 @@
       </span>
     </p>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-80 tx-right mg-r-10">
         {{ "General.Disciplines" | translate }} :
       </span>
       <span
         *ngIf="task.disciplines.length > 0; else noDisciplines"
-        class="display-ib pd-l-3"
+        class="d-ib pd-l-3"
       >
         <label class="me-3" *ngFor="let disc of task.disciplines">
           <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
@@ -48,7 +48,7 @@
         </label>
       </span>
       <ng-template #noDisciplines>
-        <span class="display-ib pd-l-3">
+        <span class="d-ib pd-l-3">
           <span class="text-danger">
             <fa-icon [icon]="faTriangleExclamation" />
             {{ "Projects.NoDisciplines" | translate }}

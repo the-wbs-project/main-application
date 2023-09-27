@@ -1,7 +1,7 @@
 <div class="w-100 text-center">
   <p>{{ "ProjectUpload.GetStartedMessage" | translate }}</p>
   <div
-    class="box has-advanced-upload pointer display-ib w-50"
+    class="box has-advanced-upload pointer d-ib w-50"
     [class.is-dragover]="over$ | async"
     (click)="backup.click()"
     (drop)="dropHandler($event)"

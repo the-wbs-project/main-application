@@ -32,7 +32,7 @@
   </label>
 
   <div *ngFor="let status of stati" class="mg-t-10 mg-l-15">
-    <div class="display-ib wd-200 tx-12">
+    <div class="d-ib wd-200 tx-12">
       <input
         [name]="status"
         kendoCheckbox
@@ -55,7 +55,7 @@
   </label>
 
   <div *ngFor="let cat of cats()" class="mg-t-10 mg-l-15">
-    <div class="display-ib wd-200 tx-12">
+    <div class="d-ib wd-200 tx-12">
       <input
         [name]="cat.id"
         kendoCheckbox
@@ -133,7 +133,7 @@
         </label>
 
         <div *ngFor="let status of stati" class="mg-t-10 mg-l-15">
-          <div class="display-ib wd-120 tx-12">
+          <div class="d-ib wd-120 tx-12">
             <input
               [name]="status"
               kendoCheckbox
@@ -156,7 +156,7 @@
           {{ "General.Categories" | translate }}:
         </label>
         <div *ngFor="let cat of cats()" class="mg-t-10 mg-l-15">
-          <div class="display-ib wd-200 tx-12">
+          <div class="d-ib wd-200 tx-12">
             <input
               [name]="cat.id"
               kendoCheckbox

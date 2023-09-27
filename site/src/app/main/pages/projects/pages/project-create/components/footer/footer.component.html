@@ -1,4 +1,4 @@
-<div class="display-ib wd-100p">
+<div class="d-ib wd-100p">
   <div
     *ngIf="view === 'b-c' || view === 'c-c'; else elseBlock"
     class="wd-100p tx-center"
@@ -21,7 +21,7 @@
     </button>
   </div>
   <ng-template #elseBlock>
-    <div class="display-ib wd-50p text-start">
+    <div class="d-ib wd-50p text-start">
       <button
         *ngIf="view === 'b' || view === 'bc'"
         [disabled]="disableBack"
@@ -31,7 +31,7 @@
         {{ "General.Back" | translate }}
       </button>
     </div>
-    <div class="display-ib wd-50p text-end">
+    <div class="d-ib wd-50p text-end">
       <button
         *ngIf="view === 'c' || view === 'bc'"
         class="btn btn-primary"

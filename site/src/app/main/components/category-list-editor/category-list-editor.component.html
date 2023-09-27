@@ -1,4 +1,4 @@
-<div *ngIf="categories" class="display-flex flex-flow-col flex-align-stretch">
+<div *ngIf="categories" class="d-flex flex-flow-col flex-align-stretch">
   <div *ngIf="showButtons" class="pd-b-10 text-center">
     <button
       class="btn btn-outline-dark mg-x-10"
@@ -31,7 +31,7 @@
     <kendo-sortable
       *ngIf="!isMobile()"
       [kendoSortableBinding]="categories"
-      [ngClass]="'list-group display-ib text-start w-100'"
+      [ngClass]="'list-group d-ib text-start w-100'"
       [itemStyle]="{ cursor: 'move' }"
       [itemClass]="'opacity-1'"
       emptyItemClass="h-30 bd-2 bd-dashed border-dark"
@@ -49,7 +49,7 @@
         />
       </ng-template>
     </kendo-sortable>
-    <div *ngIf="isMobile()" class="list-group display-ib text-start w-100">
+    <div *ngIf="isMobile()" class="list-group d-ib text-start w-100">
       <div
         *ngFor="let cat of categories"
         class="opacity-1'"

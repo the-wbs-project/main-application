@@ -21,7 +21,7 @@
     (cellClick)="clickedId = $event.dataItem.id"
   >
     <ng-template *ngIf="menuItems" kendoTreeListToolbarTemplate>
-      <div class="display-ib pd-r-20" *ngFor="let menu of menuItems">
+      <div class="d-ib pd-r-20" *ngFor="let menu of menuItems">
         <wbs-action-buttons
           [items]="menu"
           (clicked)="actionClicked.emit($event)"

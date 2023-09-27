@@ -5,7 +5,7 @@ import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 @Component({
   standalone: true,
   selector: 'wbs-project-title',
-  template: `<div class="display-flex">
+  template: `<div class="d-flex">
     <div class="wd-50 tx-center">
       <img
         *ngIf="category | categoryIcon; let url"

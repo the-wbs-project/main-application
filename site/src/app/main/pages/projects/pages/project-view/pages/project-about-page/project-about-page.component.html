@@ -4,7 +4,7 @@
       {{ "Projects.BasicInformation" | translate }}
     </h4>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-80 tx-right mg-r-10">
         {{ "General.Category" | translate }} :
       </span>
       <span>
@@ -12,7 +12,7 @@
       </span>
     </p>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-80 tx-right mg-r-10">
         {{ "General.Status" | translate }} :
       </span>
       <span>
@@ -21,10 +21,10 @@
       </span>
     </p>
     <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold display-ib wd-80 tx-right mg-r-10">
+      <span class="tx-semibold d-ib wd-80 tx-right mg-r-10">
         {{ "General.Disciplines" | translate }} :
       </span>
-      <span class="display-ib pd-l-3">
+      <span class="d-ib pd-l-3">
         <label class="me-3" *ngFor="let disc of project.disciplines">
           <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
           {{ disc | categoryLabel | translate }}

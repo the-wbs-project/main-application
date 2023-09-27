@@ -13,10 +13,10 @@
   <div class="list-group text-start w-100 pd-t-20">
     <div
       *ngFor="let cat of phaseList; let i = index"
-      class="list-group-item display-flex flex-row-f"
+      class="list-group-item d-flex flex-row-f"
       [class.bg-gray-200]="!cat.isEditable"
     >
-      <div class="pd-t-1 wd-60 display-ib">
+      <div class="pd-t-1 wd-60 d-ib">
         <fa-layers [fixedWidth]="true">
           <fa-icon size="2x" [icon]="faCircle"></fa-icon>
           <fa-layers-text [content]="(i + 1).toString()" transform="right-6">
