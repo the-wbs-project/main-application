@@ -6,23 +6,27 @@ import {
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
+import {
+  AuthClientConfig,
+  AuthHttpInterceptor,
+  AuthModule,
+} from '@auth0/auth0-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { routes } from './app.routes';
 import {
+  AppConfig,
   AppInitializerFactory,
   RequestInterceptor,
   Resources,
 } from './core/services';
-import { AUTH_CONFIG } from './globals.const';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom([
-      AuthModule.forRoot(AUTH_CONFIG),
+      AuthModule.forRoot(),
       BrowserAnimationsModule,
       HttpClientModule,
       NgxsLoggerPluginModule.forRoot({
@@ -36,7 +40,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [Resources],
+      deps: [Resources, AuthClientConfig, AppConfig],
       multi: true,
     },
     {

@@ -10,12 +10,9 @@ import {
   faPipeValve,
   faScrewdriverWrench,
 } from '@fortawesome/pro-solid-svg-icons';
-import { Logger } from '@wbs/core/services';
 import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from '@wbs/app.component';
 import { appConfig } from '@wbs/app.config';
-
-Logger.setup();
 
 library.add(faBolt);
 library.add(faBridgeSuspension);

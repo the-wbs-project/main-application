@@ -4,14 +4,14 @@ import { environment } from 'src/environments/environment';
 @Component({
   standalone: true,
   selector: 'wbs-footer',
-  template: `<div class="main-footer ht-40">
-    <div class="container-fluid pd-t-0-f">
-      Copyright © {{ year }}
-      <a href="/" class="text-primary">
-        {{ appTitle }}
-      </a>
-      All rights reserved
-    </div>
+  template: `<div
+    class="bg-white border-top ht-40 w-100 tx-12 pd-t-10 tx-center"
+  >
+    Copyright © {{ year }}
+    <a href="/" class="text-primary">
+      {{ appTitle }}
+    </a>
+    All rights reserved
   </div>`,
 })
 export class FooterComponent {

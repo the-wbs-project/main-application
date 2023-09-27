@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
 import { datadogLogs } from '@datadog/browser-logs';
-import { DATADOG_CONFIG, DATADOG_CONTEXT } from '@wbs/globals.const';
+import { AppConfig } from './app-config.service';
 
 declare type Context = { [x: string]: any };
 
 @Injectable({ providedIn: 'root' })
 export class Logger {
-  static setup(): void {
-    datadogLogs.init(DATADOG_CONFIG);
-    datadogLogs.logger.setContext(DATADOG_CONTEXT);
+  constructor(config: AppConfig) {
+    datadogLogs.init(config.datadogConfig);
+    datadogLogs.logger.setContext(config.datadogContext);
   }
 
   setGlobalContext(newContext: Context): void {

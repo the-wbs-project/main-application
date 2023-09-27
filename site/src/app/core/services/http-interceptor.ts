@@ -10,7 +10,7 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
+import { AppConfig } from './app-config.service';
 import { Logger } from './logger.service';
 import { Messages } from './messages.service';
 
@@ -19,6 +19,7 @@ const noErrorUrls = ['logger/activity', 'logger/activities'];
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
   constructor(
+    private readonly config: AppConfig,
     private readonly logger: Logger,
     private readonly messages: Messages
   ) {}
@@ -27,12 +28,14 @@ export class RequestInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
+    console.log(this.config);
+
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 
     if (request.url.indexOf('api/') === 0) {
       request = request.clone({
-        url: request.url.replace('api/', environment.apiPrefix),
+        url: `${this.config.apiDomain}/${request.url}`,
       });
     }
     //@ts-ignore

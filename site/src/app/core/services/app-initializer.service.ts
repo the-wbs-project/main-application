@@ -1,8 +1,13 @@
+import { AuthClientConfig, AuthService } from '@auth0/auth0-angular';
 import { Resources } from './resource.service';
+import { AppConfig } from './app-config.service';
 
 export class AppInitializerFactory {
-  static run(resources: Resources) {
+  static run(resources: Resources, auth: AuthClientConfig, config: AppConfig) {
     return () => {
+      console.log('init', config.authConfig);
+      auth.set(config.authConfig);
+
       return resources.initiate();
     };
   }

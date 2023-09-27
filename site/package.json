@@ -4,12 +4,13 @@
   "scripts": {
     "setup": "yarn",
     "build": "ng build",
-    "watch": "ng build --watch --configuration development",
-    "deploy:qa": "ng build --configuration qa --output-path ../dist",
-    "deploy:prod": "ng build --configuration production --output-path ../dist",
+    "watch": "ng build --watch --configuration development --output-path dist",
+    "deploy": "ng build --configuration production --output-path ../dist",
     "styles": "gulp watch && gulp dark && gulp transparent && gulp skin",
     "kendo:auth": "npx kendo-ui-license activate",
-    "start": "ng serve --host 0.0.0.0 --configuration development"
+    "start:build": "ng build --watch --configuration development --output-path dist",
+    "start:server": "wrangler pages dev dist --compatibility-date=2021-09-20 --port 4200 --script-path _worker.js",
+    "start": "concurrently \"yarn run start:build\" \"yarn run start:server\""
   },
   "private": true,
   "dependencies": {
@@ -86,6 +87,7 @@
     "@angular-devkit/build-angular": "^16.2.1",
     "@angular/cli": "^16.2.1",
     "@angular/compiler-cli": "^16.2.4",
+    "@cloudflare/workers-types": "^4.20230922.0",
     "@types/jasmine": "^4.0.0",
     "@types/jspath": "^0.4.0",
     "@types/node": "^18.14.1",

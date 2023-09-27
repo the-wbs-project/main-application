@@ -1,0 +1,10 @@
+# Stage 1
+FROM node:18.16.1 as node
+
+WORKDIR /usr/src/app/pages
+
+COPY ./ ./
+
+RUN yarn global add wrangler@3.8.0 && yarn
+
+CMD ["yarn", "start"]

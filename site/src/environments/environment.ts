@@ -1,7 +1,18 @@
 export const environment = {
   production: false,
   appTitle: 'PM Empower',
-  apiPrefix: 'http://localhost:88/api/',
-  auth_clientId: '44pcQ5Xo33vimvBb4G8eZfjFaGIsyWfg',
-  datadog_env: 'development',
 };
+/*qa
+
+  apiPrefix: 'https://test-api.pm-empower.com/api/',
+  auth_clientId: 'zfvKgtPltxHsUGNPMYvF6JRljlp6xDuC',
+  datadog_env: 'test',
+
+  */
+
+/* prod
+
+  apiPrefix: 'https://api.pm-empower.com/api/',
+  auth_clientId: 'fcglfNwfePIkurCZYGTE7lkIxbfPnyWk',
+  datadog_env: 'production',
+  */
