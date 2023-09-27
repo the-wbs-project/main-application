@@ -4,7 +4,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   standalone: true,
   selector: 'wbs-app',
-  templateUrl: './app.component.html',
+  template: '<router-outlet />',
   encapsulation: ViewEncapsulation.None,
   imports: [RouterModule],
 })

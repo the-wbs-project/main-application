@@ -1,9 +1,5 @@
 <ng-template [ngIf]="menu()" let-menu>
-  <button
-    #anchor
-    class="btn btn-sm btn-outline-dark mg-y-4 mg-r-15"
-    (click)="toggle()"
-  >
+  <button #anchor class="btn btn-sm btn-outline-dark mg-y-4" (click)="toggle()">
     <fa-icon [icon]="faBoltLightning" />
     &nbsp; Actions
   </button>

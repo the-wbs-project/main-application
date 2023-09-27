@@ -21,7 +21,7 @@ import { AuthState } from './states';
   standalone: true,
   template: `<div class="d-flex flex-column vh-100">
     <wbs-header />
-    <div appFillElement class="scroll pd-x-20" #body appMainContent>
+    <div #body appMainContent appFillElement class="scroll pd-x-20">
       <router-outlet />
     </div>
     <wbs-footer />

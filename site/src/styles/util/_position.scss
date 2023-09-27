@@ -1,5 +1,9 @@
 /* ###### 9.7 Position   ###### */
 
+.d-ib {
+  display: inline-block;
+}
+
 .display-ib {
   display: inline-block;
 }
@@ -29,19 +33,27 @@
 }
 
 .flex-row {
+  flex-direction: row;
+}
+
+.flex-row-f {
   flex-direction: row !important;
 }
 
 .flex-column {
+  flex-direction: column;
+}
+
+.flex-column-f {
   flex-direction: column !important;
 }
 
 .flex-row-reverse {
-  flex-direction: row-reverse !important;
+  flex-direction: row-reverse;
 }
 
 .flex-column-reverse {
-  flex-direction: column-reverse !important;
+  flex-direction: column-reverse;
 }
 
 .flex-wrap {
