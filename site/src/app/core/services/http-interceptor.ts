@@ -28,8 +28,6 @@ export class RequestInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    console.log(this.config);
-
     if (request.url === 'uploadSaveUrl')
       return of(new HttpResponse({ status: 200 }));
 

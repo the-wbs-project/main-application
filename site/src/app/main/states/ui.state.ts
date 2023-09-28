@@ -1,4 +1,4 @@
-import { HostListener, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { RouterDataResolved } from '@ngxs/router-plugin';
 import {
@@ -117,11 +117,6 @@ export class UiState implements NgxsOnInit {
               : state.isSidebarExpanded,
         });
       });
-  }
-
-  @HostListener('window:resize', ['$event'])
-  onResize(event: any) {
-    console.log(event.target.innerWidth);
   }
 
   @Action(MainContentSizeChanged)

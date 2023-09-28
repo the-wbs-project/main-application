@@ -10,10 +10,10 @@ _theme/Nowa
 **/data/**/config*.*
 .vs/
 .vscode/
+.angular
 .env
+.wrangler
 *.vars
- 
-worker/.wrangler/
 
 **/.DS_store
 

@@ -5,7 +5,6 @@ import { AppConfig } from './app-config.service';
 export class AppInitializerFactory {
   static run(resources: Resources, auth: AuthClientConfig, config: AppConfig) {
     return () => {
-      console.log('init', config.authConfig);
       auth.set(config.authConfig);
 
       return resources.initiate();
