@@ -101,7 +101,7 @@ jobs:
 
   - job: site_job
     pool:
-      name: Default
+      vmImage: ubuntu-latest
     displayName: Site Prod
     steps:
       - task: NodeTool@0
