@@ -4,6 +4,7 @@
   "scripts": {
     "setup": "npm",
     "build": "ng build",
+    "purge": "rm -r .angular",
     "watch": "ng build --watch --configuration development --output-path dist",
     "deploy": "ng build --configuration production --output-path ../dist",
     "styles": "gulp watch && gulp dark && gulp transparent && gulp skin",
