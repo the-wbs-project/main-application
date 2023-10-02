@@ -84,6 +84,10 @@ app.delete(
   OriginService.pass,
 );
 
+app.get('api/chat/:model', verifyJwt, Http.chat.getAsync);
+app.put('api/chat/:model', verifyJwt, Http.chat.putAsync);
+app.delete('api/chat/:model', verifyJwt, Http.chat.deleteAsync);
+
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 for (const path of ORIGIN_PASSES) {

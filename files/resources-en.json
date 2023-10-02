@@ -533,5 +533,13 @@
       "Title": "Your Profile",
       "ProfileUpdated": "Your profile has been updated."
     }
+  },
+  {
+    "section": "AI",
+    "locale": "en-US",
+    "values": {
+      "Title": "AI Assistant",
+      "ClearConfirm": "Are you sure you want to clear your AI assist history?"
+    }
   }
 ]

@@ -8,6 +8,7 @@ import {
   MembershipState,
   UiState,
   RolesState,
+  AiState,
 } from './states';
 import { UserService } from './services';
 
@@ -20,6 +21,7 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(
         NgxsModule.forFeature([
+          AiState,
           AuthState,
           MetadataState,
           MembershipState,
