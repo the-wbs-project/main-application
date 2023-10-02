@@ -120,7 +120,7 @@ jobs:
       - script: npm install --global @angular/cli
         displayName: "Setup - Angular CLI"
 
-      - script: npm install
+      - script: npm install --force
         workingDirectory: "site"
         displayName: "Setup - Site Packages"
 
