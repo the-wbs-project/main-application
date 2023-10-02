@@ -1,32 +1,41 @@
-/**
- * Welcome to Cloudflare Workers! This is your first worker.
- *
- * - Run `npm run dev` in your terminal to start a development server
- * - Open a browser tab at http://localhost:8787/ to see your worker in action
- * - Run `npm run deploy` to publish your worker
- *
- * Learn more at https://developers.cloudflare.com/workers/
- */
+import { Hono } from 'hono';
+import { Context, Context_Env, Context_Variables } from './context';
+import { TEXT_MODELS } from './CONSTS';
+import { cors, verify } from './middle';
+import { AIService } from './services';
 
-export interface Env {
-	// Example binding to KV. Learn more at https://developers.cloudflare.com/workers/runtime-apis/kv/
-	// MY_KV_NAMESPACE: KVNamespace;
-	//
-	// Example binding to Durable Object. Learn more at https://developers.cloudflare.com/workers/runtime-apis/durable-objects/
-	// MY_DURABLE_OBJECT: DurableObjectNamespace;
-	//
-	// Example binding to R2. Learn more at https://developers.cloudflare.com/workers/runtime-apis/r2/
-	// MY_BUCKET: R2Bucket;
-	//
-	// Example binding to a Service. Learn more at https://developers.cloudflare.com/workers/runtime-apis/service-bindings/
-	// MY_SERVICE: Fetcher;
-	//
-	// Example binding to a Queue. Learn more at https://developers.cloudflare.com/queues/javascript-apis/
-	// MY_QUEUE: Queue;
-}
+const app = new Hono<{ Bindings: Context_Env; Variables: Context_Variables }>();
 
-export default {
-	async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
-		return new Response('Hello World!');
-	},
-};
+app.use('*', async (ctx, next) => {
+	ctx.set('ai', new AIService(ctx.env.AI_GATEWAY, ctx.env.OPEN_AI_KEY, ctx.env.AI_REST_TOKEN));
+
+	await next();
+});
+app.use('*', cors);
+app.options('*', (c) => c.text(''));
+
+app.get('api/models/text', verify, (ctx) => ctx.json(TEXT_MODELS));
+app.post('api/run/worker-ai', verify, async (ctx: Context) => {
+	try {
+		const body: { model: string; body: string } = await ctx.req.json();
+
+		return ctx.json(await ctx.var.ai.runWorkerAiAsync(body.model, JSON.stringify(body.body)));
+	} catch (err: any) {
+		console.log(err.message);
+		console.log(err.toString());
+		return ctx.text(err.message, 500);
+	}
+});
+app.post('api/run/open-ai', verify, async (ctx: Context) => ctx.json(await ctx.var.ai.runOpenAiAsync(await ctx.req.text())));
+
+app.get('api/logs', verify, async (ctx: Context) => ctx.json(await ctx.env.KV.get('LOGS', 'json')));
+app.post('api/logs', verify, async (ctx: Context) => {
+	const list = (await ctx.env.KV.get<any[]>('LOGS', 'json')) ?? [];
+
+	list?.push(await ctx.req.json());
+
+	await ctx.env.KV.put('LOGS', JSON.stringify(list));
+
+	return ctx.text('', 204);
+});
+export default app;

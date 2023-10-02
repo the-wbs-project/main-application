@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:18.16.1 as node
+FROM node:20.7.0 as node
 
 WORKDIR /usr/src/app/site
 
@@ -11,9 +11,11 @@ ARG KENDO_UI_LICENSE
 ENV FA_TOKEN=${FA_TOKEN}
 ENV KENDO_UI_LICENSE=${KENDO_UI_LICENSE}
 
-RUN yarn global add wrangler concurrently @angular/cli @angular-devkit/build-angular && npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" ${FA_TOKEN} && yarn
-RUN yarn run kendo:auth
+RUN npm run docker:globals
+RUN npm run docker:fa ${FA_TOKEN}
+RUN npm run docker:install
+RUN npm run kendo:auth
 
 EXPOSE 4200
 
-CMD ["yarn", "start"]
+CMD ["npm", "start"]

@@ -1,0 +1,23 @@
+.ai-chat-panel {
+  max-height: 90vh;
+  .k-expander-header {
+    padding-block: 0.5rem;
+    background-color: #eeeeee;
+  }
+  .k-expander-title {
+    color: black;
+  }
+}
+
+.ai-chat {
+  min-width: 400px;
+}
+
+.ai-action-popup {
+  .k-item:focus,
+  .k-item.k-focus {
+    > .k-link {
+      box-shadow: none !important;
+    }
+  }
+}

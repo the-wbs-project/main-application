@@ -35,13 +35,14 @@ export class AppConfig {
       httpInterceptor: {
         allowedList: [
           {
-            uri: this.apiDomain + '/resources/*',
+            uri: this.apiDomain + '/api/resources/*',
             allowAnonymous: true,
           },
           {
-            uri: this.apiDomain + '/lists/*',
+            uri: this.apiDomain + '/api/lists/*',
             allowAnonymous: true,
           },
+          'https://ai.pm-empower.com/*',
           this.apiDomain + '/*',
         ],
       },
