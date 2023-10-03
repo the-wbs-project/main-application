@@ -1,62 +1,94 @@
 <div class="w-100 text-center">
   <p>{{ "ProjectUpload.GetStartedMessage" | translate }}</p>
   <div
-    class="box has-advanced-upload pointer d-ib w-50"
-    [class.is-dragover]="over$ | async"
-    (click)="backup.click()"
-    (drop)="dropHandler($event)"
-    (dragover)="dragOverHandler($event)"
-    (dragleave)="dragLeaveHandler($event)"
+    class="d-ib dropzone-wrapper wd-xl-50p wd-lg-50p wd-md-75p wd-sm-100p wd-xs-100p"
   >
-    <div class="box-input">
-      <fa-icon [icon]="faUpload" size="2x" />
-      <p>{{ "ProjectUpload.UploadInstruction" | translate }}</p>
-    </div>
+    <kendo-uploaddropzone zoneId="myZone" class="w-100">
+      {{ "ProjectUpload.UploadInstruction" | translate }}
+    </kendo-uploaddropzone>
+    <kendo-fileselect
+      zoneId="myZone"
+      [multiple]="false"
+      [ngClass]="'w-100'"
+      (select)="onSelect($event)"
+    >
+      <kendo-upload-messages dropFilesHere="" />
+    </kendo-fileselect>
   </div>
-
-  <input
-    #backup
-    type="file"
-    accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,.mpp"
-    style="visibility: hidden; width: 1px; height: 1px"
-    (change)="handleUpload(backup)"
-  />
   <br />
-  <h4 class="mg-t-30">Supported Files</h4>
   <div class="container-fluid mg-t-10">
     <div class="row">
-      <div class="offset-lg-3 col-lg-3 col-md-6 col-sm-6">
-        <div class="card tx-center border-1 bd-primary">
-          <div id="excelHelpBody" class="card-body">
-            <fa-icon [icon]="faTable" size="3x" />
-            <h5 class="mg-t-10">
-              {{ "ProjectUpload.ExcelFile" | translate }}
-            </h5>
-            <p class="card-text">
-              {{ "ProjectUpload.ExcelFileExtensions" | translate }}
-            </p>
-            <p class="card-text">
-              {{ "ProjectUpload.ExcelFileDescription" | translate }}
-            </p>
-            <button
-              class="btn btn-primary w-100 mg-t-10"
-              (click)="downloadTemplate()"
-            >
-              {{ "ProjectUpload.DownloadTemplate" | translate }}
-            </button>
+      <div class="offset-xl-1 col-xl-6 col-lg-8 col-md-8 col-sm-12">
+        <div class="container-fluid mg-t-10">
+          <div class="row">
+            <div class="col-12">
+              <h4 class="mg-t-30">
+                {{ "ProjectUpload.SupportedFiles" | translate }}
+              </h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-md-6 col-sm-12">
+              <div class="card tx-center border-1 bd-primary">
+                <div class="card-body ht-200">
+                  <fa-icon [icon]="faTable" size="3x" />
+                  <h5 class="mg-t-10">
+                    {{ "ProjectUpload.ExcelFile" | translate }}
+                  </h5>
+                  <p class="card-text">
+                    {{ "ProjectUpload.ExcelFileExtensions" | translate }}
+                  </p>
+                  <button
+                    class="btn btn-primary w-100 mg-t-10"
+                    (click)="downloadTemplate()"
+                  >
+                    {{ "ProjectUpload.DownloadTemplate" | translate }}
+                  </button>
+                </div>
+              </div>
+            </div>
+            <div class="col-md-6 col-sm-12">
+              <div class="card tx-center border-1 bd-primary">
+                <div class="card-body ht-200">
+                  <fa-icon [icon]="faChartGantt" size="3x"></fa-icon>
+                  <h5 class="mg-t-10">
+                    {{ "ProjectUpload.ProjectFile" | translate }}
+                  </h5>
+                  <p class="card-text ht-135">
+                    {{ "ProjectUpload.ProjectFileExtensions" | translate }}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="col-lg-3 col-md-6 col-sm-6">
-        <div class="card tx-center border-1 bd-primary">
-          <div class="card-body" appMatchSize [idToMatch]="'excelHelpBody'">
-            <fa-icon [icon]="faChartGantt" size="3x"></fa-icon>
-            <h5 class="mg-t-10">
-              {{ "ProjectUpload.ProjectFile" | translate }}
-            </h5>
-            <p class="card-text ht-135">
-              {{ "ProjectUpload.ProjectFileExtensions" | translate }}
-            </p>
+      <div class="col-xl-3 col-lg-4 col-md-4 col-sm-12">
+        <div class="container-fluid mg-t-10">
+          <div class="row">
+            <div class="col-12">
+              <h4 class="mg-t-30">
+                {{ "ProjectUpload.UnsupportedFiles" | translate }}
+              </h4>
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div class="card tx-center border-1 bd-primary">
+                <div class="card-body ht-200">
+                  <fa-icon [icon]="faFile" size="3x" />
+                  <h5 class="mg-t-10">
+                    {{ "ProjectUpload.OtherFiles" | translate }}
+                  </h5>
+                  <p class="card-text">
+                    {{ "ProjectUpload.OtherFileExtensions" | translate }}
+                  </p>
+                  <p class="card-text">
+                    {{ "ProjectUpload.OtherFileDescription" | translate }}
+                  </p>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>

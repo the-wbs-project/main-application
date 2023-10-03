@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, Resources, Transformers } from '@wbs/core/services';
@@ -37,7 +38,7 @@ interface StateModel {
   peopleList?: PeopleListItem[];
   phaseList?: PhaseListItem[];
   project?: Project;
-  rawFile?: File;
+  rawFile?: FileInfo;
   saving: boolean;
   started: boolean;
   stats?: ResultStats;
@@ -184,25 +185,9 @@ export class ProjectUploadState {
 
     return this.getFile(state.rawFile).pipe(
       switchMap((body) =>
-        forkJoin([
-          this.data.projectImport.runAsync(body, state.extension!),
-          this.data.jira
-            .createUploadIssueAsync(
-              'Hello!',
-              this.store.selectSnapshot(AuthState.profile)!
-            )
-            .pipe(
-              switchMap((jiraIssueId) =>
-                this.data.jira.uploadAttachmentAsync(
-                  jiraIssueId,
-                  state.rawFile!.name,
-                  body
-                )
-              )
-            ),
-        ])
+        this.data.projectImport.runAsync(body, state.extension!)
       ),
-      switchMap(([uploadResults]) => {
+      switchMap((uploadResults) => {
         ctx.patchState({
           uploadResults,
           loadingFile: false,
@@ -211,13 +196,7 @@ export class ProjectUploadState {
         return (uploadResults.errors ?? []).length === 0
           ? ctx.dispatch(new ProcessFile())
           : of();
-      }),
-      switchMap(() =>
-        this.data.jira.createUploadIssueAsync(
-          'Hello!',
-          this.store.selectSnapshot(AuthState.profile)!
-        )
-      )
+      })
     );
   }
 
@@ -438,7 +417,7 @@ export class ProjectUploadState {
     return forkJoin(saves);
   }
 
-  private getFile(file: File): Observable<ArrayBuffer> {
+  private getFile(file: FileInfo): Observable<ArrayBuffer> {
     return new Observable<ArrayBuffer>((obs) => {
       if (!file) {
         obs.complete();
@@ -453,7 +432,8 @@ export class ProjectUploadState {
         obs.complete();
       };
 
-      reader.readAsArrayBuffer(file);
+      reader.readAsArrayBuffer(file.rawFile!);
+      //reader.readAsDataURL(file.rawFile!);
     });
   }
 

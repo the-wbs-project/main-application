@@ -1,3 +1,4 @@
+import { FileInfo } from '@progress/kendo-angular-upload';
 import { ProjectUploadData } from '@wbs/core/models';
 import { PeopleListItem, PhaseListItem } from '../models';
 
@@ -17,7 +18,7 @@ export class SetAsStarted {
 
 export class FileUploaded {
   static readonly type = '[Project Upload] File Uploaded';
-  constructor(readonly file: File) {}
+  constructor(readonly file: FileInfo) {}
 }
 
 export class LoadProjectFile {

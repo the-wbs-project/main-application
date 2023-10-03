@@ -14,8 +14,8 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "123", preview_id = "338c0ca3e3164ddf84b761218a121aa0" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
-  { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "123" },
+  { binding = "BUCKET_STATICS", bucket_name = "BUCKET_STATICS" },
 ]
 
 [env.dev.vars]
@@ -40,7 +40,8 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" },
+  { binding = "BUCKET_STATICS", bucket_name = "statics-qa", preview_bucket_name = "statics-dev" }
 ]
 [env.test.vars]
 DEBUG = "false"
@@ -61,7 +62,8 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" },
+  { binding = "BUCKET_STATICS", bucket_name = "statics-prod", preview_bucket_name = "statics-dev" }
 ]
 [env.prod.vars]
 DEBUG = "false"
