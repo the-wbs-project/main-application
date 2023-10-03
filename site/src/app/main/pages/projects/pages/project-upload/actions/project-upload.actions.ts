@@ -24,6 +24,11 @@ export class LoadProjectFile {
   static readonly type = '[Project Upload] Load Project File';
 }
 
+export class CreateJiraTicket {
+  static readonly type = '[Project Upload] Create Jira Ticket';
+  constructor(readonly description: string) {}
+}
+
 export class ProcessFile {
   static readonly type = '[Project Upload] Process File';
 }

@@ -4,11 +4,12 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, Resources, Transformers } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/states';
+import { AuthState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AppendOrOvewriteSelected,
+  CreateJiraTicket,
   FileUploaded,
   LoadProjectFile,
   PeopleCompleted,
@@ -183,18 +184,65 @@ export class ProjectUploadState {
 
     return this.getFile(state.rawFile).pipe(
       switchMap((body) =>
-        this.data.projectImport.runAsync(body, state.extension!)
+        forkJoin([
+          this.data.projectImport.runAsync(body, state.extension!),
+          this.data.jira
+            .createUploadIssueAsync(
+              'Hello!',
+              this.store.selectSnapshot(AuthState.profile)!
+            )
+            .pipe(
+              switchMap((jiraIssueId) =>
+                this.data.jira.uploadAttachmentAsync(
+                  jiraIssueId,
+                  state.rawFile!.name,
+                  body
+                )
+              )
+            ),
+        ])
       ),
-      tap((uploadResults) =>
+      switchMap(([uploadResults]) => {
         ctx.patchState({
           uploadResults,
           loadingFile: false,
-        })
-      ),
-      switchMap((results) =>
-        (results.errors ?? []).length === 0
+        });
+
+        return (uploadResults.errors ?? []).length === 0
           ? ctx.dispatch(new ProcessFile())
-          : of()
+          : of();
+      }),
+      switchMap(() =>
+        this.data.jira.createUploadIssueAsync(
+          'Hello!',
+          this.store.selectSnapshot(AuthState.profile)!
+        )
+      )
+    );
+  }
+
+  @Action(CreateJiraTicket)
+  createJiraTicket(
+    ctx: StateContext<StateModel>,
+    { description }: CreateJiraTicket
+  ): void | Observable<any> {
+    const state = ctx.getState();
+
+    if (!state.rawFile || !state.extension) return;
+
+    return forkJoin({
+      body: this.getFile(state.rawFile),
+      jiraIssueId: this.data.jira.createUploadIssueAsync(
+        description,
+        this.store.selectSnapshot(AuthState.profile)!
+      ),
+    }).pipe(
+      tap(({ body, jiraIssueId }) =>
+        this.data.jira.uploadAttachmentAsync(
+          jiraIssueId,
+          state.rawFile!.name,
+          body
+        )
       )
     );
   }

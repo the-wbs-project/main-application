@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cors, kv, kvPurge, kvPurgeOrgs, logger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
-import { DataServiceFactory, Fetcher, Http, Logger, MailGunService, OriginService } from './services';
+import { DataServiceFactory, Fetcher, Http, JiraService, Logger, MailGunService, OriginService } from './services';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
@@ -13,6 +13,7 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 app.use('*', async (ctx, next) => {
   ctx.set('logger', new Logger(ctx));
   ctx.set('fetcher', new Fetcher(ctx));
+  ctx.set('jira', new JiraService(ctx));
   ctx.set('origin', new OriginService(ctx));
   ctx.set('data', new DataServiceFactory(ctx));
 
@@ -89,6 +90,9 @@ app.put('api/chat/:model', verifyJwt, Http.chat.putAsync);
 app.delete('api/chat/:model', verifyJwt, Http.chat.deleteAsync);
 
 app.get('files/:file', verifyJwt, Http.misc.getStaticFileAsync);
+
+app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
+app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
 
 for (const path of ORIGIN_PASSES) {
   app.post(path, verifyJwt, OriginService.pass);

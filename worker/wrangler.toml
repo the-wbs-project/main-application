@@ -26,6 +26,8 @@ KV_BYPASS = "LISTS"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
 
 [env.test]
 name = "pm-empower-api-test"
