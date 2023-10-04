@@ -10,7 +10,7 @@
     "check2": "tsc -noEmit",
     "build-test": "concurrently \"tsc -noEmit --watch\" \"yarn run esbuild\"",
     "publish": "wrangler publish --env prod",
-    "start": "wrangler dev --env dev --local true --persist --persist-to ./.kv"
+    "start": "wrangler dev --env dev"
   },
   "author": "author",
   "license": "MIT",

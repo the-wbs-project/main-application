@@ -1,0 +1,22 @@
+<div class="w-100 text-center">
+  <p *ngIf="reasonCode === 'other'">
+    {{ "ProjectUpload.TicketOtherMessage" | translate }}
+  </p>
+  <p *ngIf="reasonCode === 'issue'">
+    {{ "ProjectUpload.TicketErrormessage" | translate }}
+  </p>
+</div>
+
+<button
+  kendoButton
+  [disabled]="sending()"
+  (click)="go('testing the whole thing out')"
+>
+  <kendo-loader size="small" *ngIf="sending()" />
+  <span *ngIf="!sending()">
+    {{ "General.Send" | translate }}
+  </span>
+  <span *ngIf="sending()">
+    {{ "General.Sending" | translate }}
+  </span>
+</button>

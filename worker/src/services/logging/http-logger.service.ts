@@ -1,14 +1,17 @@
-import { Context } from '../config';
+import { Context } from '../../config';
+import { DataDogService } from './data-dog.service';
 
-export class Logger {
-  private readonly logs: any[] = [];
-
+export class HttpLogger {
   constructor(private readonly ctx: Context) {}
+
+  private get datadog(): DataDogService {
+    return this.ctx.get('datadog');
+  }
 
   trackRequest(duration: number): void {
     if (this.ctx.req.method === 'OPTIONS') return;
 
-    this.logs.push({
+    this.datadog.appendLog({
       ...this.basics({ duration, resStatus: this.ctx.res.status }),
       status: 'Info',
       message: `Request, ${this.ctx.req.method}, ${this.ctx.req.url} (${duration}ms)`,
@@ -16,7 +19,7 @@ export class Logger {
   }
 
   trackEvent(message: string, status: 'Error' | 'Info' | 'Warn' | 'Notice', data?: Record<string, any>): void {
-    this.logs.push({
+    this.datadog.appendLog({
       ...this.basics({ data }),
       status,
       message: message,
@@ -24,7 +27,7 @@ export class Logger {
   }
 
   trackException(message: string, exception: Error, data?: Record<string, any>): void {
-    this.logs.push({
+    this.datadog.appendLog({
       ...this.basics({
         data: {
           data,
@@ -38,7 +41,7 @@ export class Logger {
   }
 
   trackDependency(url: string, method: string, duration: number, request: Request, response?: Response): void {
-    this.logs.push({
+    this.datadog.appendLog({
       ...this.basics({
         duration,
         request,
@@ -55,25 +58,6 @@ export class Logger {
       status: 'Info',
       message: `Dependency, ${method}, ${url} (${duration}ms)`,
     });
-  }
-
-  async flush(): Promise<Response | void> {
-    try {
-      const res = await fetch('https://http-intake.logs.us5.datadoghq.com/api/v2/logs', {
-        method: 'POST',
-        body: JSON.stringify(this.logs),
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'DD-API-KEY': this.ctx.env.DATADOG_API_KEY,
-        },
-      });
-
-      return res;
-    } catch (e) {
-      //@ts-ignore
-      console.log(e.message);
-    }
   }
 
   private basics(info: {

@@ -5,7 +5,7 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Messages, Resources, Transformers } from '@wbs/core/services';
-import { AuthState, MetadataState } from '@wbs/main/states';
+import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -163,15 +163,19 @@ export class ProjectUploadState {
     const extension = parts[parts.length - 1].toLowerCase();
     const fileType = EXTENSION_PAGES[extension];
 
+    ctx.patchState({
+      fileType,
+      extension,
+      rawFile: file,
+    });
+
     if (!fileType) {
-      this.messenger.notify.error('Invalid file extension.', false);
-      return;
+      return ctx.dispatch(
+        new Navigate([...this.urlPrefix(ctx), 'ticket', 'other'])
+      );
     }
     ctx.patchState({
-      extension,
-      fileType,
       loadingFile: true,
-      rawFile: file,
     });
 
     return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'results']));
@@ -207,16 +211,17 @@ export class ProjectUploadState {
   ): void | Observable<any> {
     const state = ctx.getState();
 
-    if (!state.rawFile || !state.extension) return;
+    if (!state.rawFile) return;
 
     return forkJoin({
       body: this.getFile(state.rawFile),
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
+        this.store.selectSnapshot(MembershipState.organization)!.display_name,
         this.store.selectSnapshot(AuthState.profile)!
       ),
     }).pipe(
-      tap(({ body, jiraIssueId }) =>
+      switchMap(({ body, jiraIssueId }) =>
         this.data.jira.uploadAttachmentAsync(
           jiraIssueId,
           state.rawFile!.name,

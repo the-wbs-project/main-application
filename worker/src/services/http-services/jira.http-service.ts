@@ -3,8 +3,9 @@ import { Context } from '../../config';
 export class JiraHttpService {
   static async createUploadIssueAsync(ctx: Context): Promise<Response> {
     try {
-      const { description, user } = await ctx.req.json();
-      const issueId = await ctx.get('jira').createUploadIssueAsync(ctx, description, user);
+      const { description, organization, user } = await ctx.req.json();
+
+      const issueId = await ctx.get('jira').createUploadIssueAsync(ctx, description, organization, user);
 
       return ctx.text(issueId);
     } catch (e) {
@@ -23,7 +24,7 @@ export class JiraHttpService {
 
       await ctx.get('jira').attachFileAsync(ctx, jiraIssueId, fileName, file);
 
-      return ctx.text('Ok, 204');
+      return ctx.text('', 204);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to create upload an attachment to JIRA issue.', <Error>e);
 

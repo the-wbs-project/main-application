@@ -5,7 +5,7 @@ WORKDIR /usr/src/app/worker
 
 COPY . .
 
-RUN yarn global add wrangler@2.20.0 && yarn
+RUN yarn global add wrangler@latest && yarn
 
 EXPOSE 88
 

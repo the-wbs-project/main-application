@@ -1,11 +1,12 @@
 import { IdToken } from '../models';
-import { DataServiceFactory, Fetcher, JiraService, Logger, OriginService } from '../services';
+import { DataServiceFactory, Fetcher, JiraService, HttpLogger, OriginService, DataDogService } from '../services';
 
 export type Variables = {
   data: DataServiceFactory;
+  datadog: DataDogService;
   jira: JiraService;
   fetcher: Fetcher;
-  logger: Logger;
+  logger: HttpLogger;
   origin: OriginService;
   idToken: IdToken;
 };

@@ -22,7 +22,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./results-view/results-view.component').then(
-        ({ ResultsViewComponent }) => ResultsViewComponent
+        (x) => x.ResultsViewComponent
       ),
   },
   {
@@ -33,7 +33,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./options-view/options-view.component').then(
-        ({ OptionsViewComponent }) => OptionsViewComponent
+        (x) => x.OptionsViewComponent
       ),
   },
   {
@@ -44,7 +44,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./phase-view/phase-view.component').then(
-        ({ PhaseViewComponent }) => PhaseViewComponent
+        (x) => x.PhaseViewComponent
       ),
   },
   {
@@ -55,7 +55,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./disciplines-view/disciplines-view.component').then(
-        ({ DisciplinesViewComponent }) => DisciplinesViewComponent
+        (x) => x.DisciplinesViewComponent
       ),
   },
   {
@@ -66,7 +66,18 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./save-view/save-view.component').then(
-        ({ SaveViewComponent }) => SaveViewComponent
+        (x) => x.SaveViewComponent
+      ),
+  },
+  {
+    path: 'ticket/:reasonCode',
+    canActivate: [verifyStartedGuard, setupGuard],
+    data: {
+      title: 'ProjectUpload.Page_Ticket',
+    },
+    loadComponent: () =>
+      import('./ticket-view/ticket-view.component').then(
+        (x) => x.TicketViewComponent
       ),
   },
 ];

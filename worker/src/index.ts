@@ -1,7 +1,7 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cors, kv, kvPurge, kvPurgeOrgs, logger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
-import { DataServiceFactory, Fetcher, Http, JiraService, Logger, MailGunService, OriginService } from './services';
+import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
@@ -11,7 +11,8 @@ const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //  Dependency Injection
 //
 app.use('*', async (ctx, next) => {
-  ctx.set('logger', new Logger(ctx));
+  ctx.set('datadog', new DataDogService(ctx.env));
+  ctx.set('logger', new HttpLogger(ctx));
   ctx.set('fetcher', new Fetcher(ctx));
   ctx.set('jira', new JiraService(ctx));
   ctx.set('origin', new OriginService(ctx));
@@ -93,8 +94,41 @@ app.get('api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
 
 app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
 app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
+app.get('api/queue/test', (ctx) => {
+  ctx.env.JIRA_SYNC_QUEUE.send({
+    message: 'Hello World!',
+  });
+  return ctx.text('OK');
+});
 
 for (const path of ORIGIN_PASSES) {
   app.post(path, verifyJwt, OriginService.pass);
 }
-export default app;
+
+export default {
+  fetch: app.fetch,
+  async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext) {
+    //
+  },
+  async queue(batch: MessageBatch, env: Env, ctx: ExecutionContext): Promise<void> {
+    /*console.log(`${batch.queue}: ${batch.messages.length} Messages`);
+
+    const datadog = new DataDogService(env);
+    const logger = new JobLogger(env, datadog, batch.queue);
+
+    try {
+      if (batch.queue.startsWith('wbs-jira-sync')) {
+        const message = batch.messages[0];
+
+        console.log(res.status, res.statusText, await res.text());
+
+        batch.ackAll();
+        logger.trackEvent('Executed ' + batch.queue, 'Info', <any>message.body);
+      }
+    } catch (e) {
+      logger.trackException('An error occured trying to process a queue message.', <Error>e);
+    } finally {
+      ctx.waitUntil(datadog.flush());
+    }*/
+  },
+};
