@@ -10,8 +10,6 @@ export class JiraService {
   }
 
   async createUploadIssueAsync(ctx: Context, description: string, organization: string, user: User): Promise<string> {
-    const fullDescription = `Organization:${organization}\nUser Name: ${user.name}\nUser Email: ${user.email}\nUser's Description:\n\n${description}`;
-
     const bodyData = {
       fields: {
         description: {
@@ -19,7 +17,7 @@ export class JiraService {
             {
               content: [
                 {
-                  text: fullDescription,
+                  text: description,
                   type: 'text',
                 },
               ],
@@ -32,19 +30,20 @@ export class JiraService {
         issuetype: {
           id: '10029',
         },
-        //labels: ['bugfix', 'blitz_test'],
         project: {
           key: 'TASKS',
         },
         reporter: {
-          id: '712020%3Ae703d1b3-929f-4939-8b5e-25c72985fccd',
+          id: '712020:e703d1b3-929f-4939-8b5e-25c72985fccd',
         },
+        customfield_10048: user.name,
+        customfield_10049: user.email,
+        customfield_10050: organization,
         summary: 'Assistance With Uploading WBS - ' + user.email,
       },
       update: {},
     };
 
-    console.log(`${ctx.env.JIRA_EMAIL}:${ctx.env.JIRA_API_KEY}`);
     const response = await fetch(`https://${ctx.env.JIRA_DOMAIN}/rest/api/3/issue`, {
       method: 'POST',
       headers: {
@@ -54,7 +53,7 @@ export class JiraService {
       },
       body: JSON.stringify(bodyData),
     });
-    //console.log(`Response: ${response.status} ${response.statusText}`);
+    console.log(`Response: ${response.status} ${response.statusText}`);
 
     const responseBody: any = await response.json();
 

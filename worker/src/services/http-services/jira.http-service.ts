@@ -15,7 +15,7 @@ export class JiraHttpService {
     }
   }
 
-  static async uploadAttachmentAsync(ctx: Context): Promise<Response> {
+  static async uploadAttachmentAsync(ctx: Context, next: any): Promise<Response | void> {
     try {
       const { jiraIssueId } = await ctx.req.param();
 
@@ -24,7 +24,9 @@ export class JiraHttpService {
 
       await ctx.get('jira').attachFileAsync(ctx, jiraIssueId, fileName, file);
 
-      return ctx.text('', 204);
+      ctx.status(204);
+
+      await next();
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to create upload an attachment to JIRA issue.', <Error>e);
 
