@@ -12,13 +12,14 @@ import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.c
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { RolesState } from '@wbs/main/states';
 import { ProjectTitleComponent } from '../../components/project-title.component';
+import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_MENU_ITEMS } from './models';
 import { ProjectState } from './states';
-import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 
 @Component({
   standalone: true,
@@ -27,6 +28,7 @@ import { ProjectActionButtonComponent } from './components/project-action-button
   imports: [
     ActionIconListComponent,
     CategoryIconPipe,
+    CheckPipe,
     CommonModule,
     FillElementDirective,
     FontAwesomeModule,
@@ -40,6 +42,7 @@ import { ProjectActionButtonComponent } from './components/project-action-button
   ],
 })
 export class ProjectViewLayoutComponent {
+  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
   readonly isPm = toSignal(this.store.select(RolesState.isPm));

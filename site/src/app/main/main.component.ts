@@ -17,7 +17,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { FillElementDirective } from './directives/fill-element.directive';
 import { MainContentDirective } from './directives/main-content.directive';
-import { DialogService } from './services';
+import { DialogService, ProjectPermissionsService } from './services';
 import { AiState, AuthState } from './states';
 
 @Component({
@@ -34,7 +34,7 @@ import { AiState, AuthState } from './states';
   </div> `,
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
+  providers: [DialogService, ProjectPermissionsService],
   imports: [
     ChatWindowComponent,
     FillElementDirective,

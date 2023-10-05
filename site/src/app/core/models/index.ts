@@ -10,6 +10,8 @@ export * from './member.model';
 export * from './open-ai-request.model';
 export * from './open-ai-results.model';
 export * from './organization.model';
+export * from './permission-filter.model';
+export * from './permissions.type';
 export * from './project-activity-record.model';
 export * from './project-category.type';
 export * from './project-category-changes.model';

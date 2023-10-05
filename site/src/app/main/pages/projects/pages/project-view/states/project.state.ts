@@ -6,18 +6,19 @@ import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
-  PROJECT_STATI,
   ProjectCategory,
   ROLES,
 } from '@wbs/core/models';
 import { Messages, ProjectService } from '@wbs/core/services';
+import { ProjectPermissionsService } from '@wbs/main/services';
 import {
   AuthState,
   MembershipState,
   MetadataState,
   RolesState,
 } from '@wbs/main/states';
-import { Observable, of, tap } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AddUserToRole,
   ChangeProjectBasics,
@@ -41,6 +42,7 @@ interface StateModel {
   approvers?: string[];
   current?: Project;
   roles?: string[];
+  permissions?: Map<string, boolean>;
   pms?: string[];
   smes?: string[];
   users?: UserRolesViewModel[];
@@ -57,6 +59,7 @@ export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
+    private readonly permissions: ProjectPermissionsService,
     private readonly services: ProjectService,
     private readonly store: Store,
     private readonly timeline: TimelineService
@@ -65,23 +68,6 @@ export class ProjectState {
   @Selector()
   static approvers(state: StateModel): string[] | undefined {
     return state.approvers;
-  }
-
-  @Selector()
-  static canSubmit(state: StateModel): boolean {
-    return (
-      state.current?.status === PROJECT_STATI.PLANNING &&
-      (state.roles ?? []).includes(ROLES.PM)
-    );
-  }
-
-  @Selector()
-  static canEdit(state: StateModel): boolean {
-    return (
-      state.current?.status === PROJECT_STATI.PLANNING &&
-      ((state.roles ?? []).includes(ROLES.PM) ||
-        (state.roles ?? []).includes(ROLES.ADMIN))
-    );
   }
 
   @Selector()
@@ -96,6 +82,11 @@ export class ProjectState {
         typeof x === 'string' ? x : x.id
       ) ?? []
     );
+  }
+
+  @Selector()
+  static permissions(state: StateModel): Map<string, boolean> {
+    return state.permissions ?? new Map();
   }
 
   @Selector()
@@ -174,7 +165,8 @@ export class ProjectState {
       tap((project) => ctx.dispatch([new VerifyTasks(project)])),
       tap((project) =>
         ctx.dispatch(new SetChecklistData(project, undefined, undefined))
-      )
+      ),
+      switchMap(() => this.updatePermissions(ctx))
     );
   }
 
@@ -192,6 +184,7 @@ export class ProjectState {
       tap(() => this.messaging.notify.success('ProjectSettings.UserAdded')),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
+      tap(() => this.updatePermissions(ctx)),
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.ADDED_USER,
@@ -224,6 +217,7 @@ export class ProjectState {
       tap(() => this.messaging.notify.success('ProjectSettings.UserRemoved')),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
+      tap(() => this.updatePermissions(ctx)),
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.REMOVED_USER,
@@ -417,6 +411,16 @@ export class ProjectState {
       }
 
     ctx.patchState({ approvers, pms, smes });
+  }
+
+  private updatePermissions(ctx: Context): Observable<void> {
+    const project = ctx.getState().current!;
+
+    return this.permissions.getPermissionsAsync(project).pipe(
+      map((permissions) => {
+        ctx.patchState({ permissions });
+      })
+    );
   }
 
   private updateUsers(ctx: Context): void {

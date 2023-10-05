@@ -10,7 +10,7 @@ import {
   RolesState,
   AiState,
 } from './states';
-import { UserService } from './services';
+import { ProjectPermissionsService, UserService } from './services';
 
 export const routes: Routes = [
   {

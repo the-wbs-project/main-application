@@ -54,7 +54,7 @@
             {{ "Projects.NoDisciplines" | translate }}
           </span>
           <a
-            *ngIf="canEdit()"
+            *ngIf="permissions() | check : canEditKey"
             class="btn btn-small btn-dark pd-y-1 pd-x-8 mg-l-10"
             [routerLink]="['../', 'settings', 'disciplines']"
           >
@@ -80,7 +80,7 @@
         {{ "Projects.NoDescription" | translate }}
       </span>
       <a
-        *ngIf="canEdit()"
+        *ngIf="permissions() | check : canEditKey"
         class="btn btn-small btn-dark pd-y-1 pd-x-8 mg-l-10"
         [routerLink]="['../', 'settings', 'general']"
       >

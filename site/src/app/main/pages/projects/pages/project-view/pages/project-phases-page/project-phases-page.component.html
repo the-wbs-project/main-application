@@ -4,7 +4,7 @@
     [width]="width()"
     [nodes]="phases()"
     [project]="project()"
-    [rowReorderable]="canEdit()!"
+    [rowReorderable]="permissions() | check : canEditKey"
     [expandedKeys]="phaseIds() ?? []"
     [menuItems]="phases() | taskMenu : taskId"
     [isDraggable]="true"

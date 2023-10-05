@@ -2,26 +2,30 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { ProjectPermissionsService } from '@wbs/main/services';
+import { RolesState } from '@wbs/main/states';
 import { PROJECT_MENU_ITEMS } from '../models';
 import { ProjectState } from '../states';
-import { RolesState } from '@wbs/main/states';
 
 @Pipe({ name: 'taskMenu', standalone: true })
 export class TaskMenuPipe implements PipeTransform {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly permissionService: ProjectPermissionsService,
+    private readonly store: Store
+  ) {}
 
   transform(
     tasks: WbsNodeView[] | undefined | null,
     taskId: string | undefined | null
   ): ActionMenuItem[][] {
     const task = tasks?.find((x) => x.id === taskId);
-    const userRoles = this.store.selectSnapshot(ProjectState.roles) ?? [];
+    const permissions = this.store.selectSnapshot(ProjectState.permissions);
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
 
     const treeActions = this.filterList(
       PROJECT_MENU_ITEMS.phaseTreeActions,
       task,
-      userRoles,
+      permissions,
       status
     );
     const results = [treeActions];
@@ -29,13 +33,13 @@ export class TaskMenuPipe implements PipeTransform {
     const navActions = this.filterList(
       PROJECT_MENU_ITEMS.phaseItemNavActions,
       task,
-      userRoles,
+      permissions,
       status
     );
     const phaseActions = this.filterList(
       PROJECT_MENU_ITEMS.phaseItemActions,
       task,
-      userRoles,
+      permissions,
       status
     );
     if (!task) return results;
@@ -63,7 +67,7 @@ export class TaskMenuPipe implements PipeTransform {
   private filterList(
     actions: ActionMenuItem[],
     task: WbsNodeView | undefined,
-    roles: string[],
+    permissions: Map<string, boolean>,
     status: PROJECT_STATI_TYPE
   ): ActionMenuItem[] {
     if (!actions || actions.length === 0) return actions;
@@ -71,7 +75,7 @@ export class TaskMenuPipe implements PipeTransform {
     const results: ActionMenuItem[] = [];
 
     for (const action of actions) {
-      if (this.filterItem(action, task, roles, status)) {
+      if (this.filterItem(action, task, permissions, status)) {
         results.push(action);
       }
     }
@@ -82,7 +86,7 @@ export class TaskMenuPipe implements PipeTransform {
   private filterItem(
     link: ActionMenuItem,
     task: WbsNodeView | undefined,
-    roles: string[],
+    permissions: Map<string, boolean>,
     status: PROJECT_STATI_TYPE
   ): boolean {
     if (!link.filters) return true;
@@ -96,12 +100,13 @@ export class TaskMenuPipe implements PipeTransform {
     )
       return false;
 
-    if (link.filters.roles) {
-      const rolesResult = this.convertRoles(link.filters.roles).some(
-        (role) => roles.indexOf(role) > -1
+    if (link.permissions) {
+      const result = this.permissionService.check(
+        permissions,
+        link.permissions
       );
 
-      if (!rolesResult) return false;
+      if (!result) return false;
     }
     if (link.filters.stati) {
       const statusResult = link.filters.stati.some((s) => s === status);

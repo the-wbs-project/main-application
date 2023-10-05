@@ -22,6 +22,7 @@ import { ProjectNavigationComponent } from '../../components/project-navigation/
   imports: [FontAwesomeModule, ProjectNavigationComponent, RouterModule],
 })
 export class TaskViewComponent {
+  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
   readonly current = toSignal(this.store.select(TasksState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
 

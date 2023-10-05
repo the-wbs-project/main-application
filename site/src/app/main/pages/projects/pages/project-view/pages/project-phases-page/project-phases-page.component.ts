@@ -1,8 +1,10 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
+import { PROJECT_PERMISSION_KEYS } from '@wbs/core/models';
 import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
 import { UiState } from '@wbs/main/states';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { TaskMenuPipe } from '../../pipes/task-menu.pipe';
 import { ProjectNavigationService, ProjectViewService } from '../../services';
@@ -12,16 +14,18 @@ import { ProjectState, TasksState } from '../../states';
   standalone: true,
   templateUrl: './project-phases-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TaskMenuPipe, TaskModalComponent, WbsTreeComponent],
+  imports: [CheckPipe, TaskMenuPipe, TaskModalComponent, WbsTreeComponent],
 })
 export class ProjectPhasesPageComponent {
   taskId?: string;
+
+  readonly canEditKey = PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS;
 
   readonly width = toSignal(this.store.select(UiState.mainContentWidth));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly phases = toSignal(this.store.select(TasksState.phases));
   readonly phaseIds = toSignal(this.store.select(ProjectState.phaseIds));
-  readonly canEdit = toSignal(this.store.select(ProjectState.canEdit));
+  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
   readonly task = toSignal(this.store.select(TasksState.current));
 
   constructor(

@@ -15,6 +15,8 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
 import { ProjectState, TasksState } from '../../states';
+import { PROJECT_PERMISSION_KEYS } from '@wbs/core/models';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 
 @Component({
   standalone: true,
@@ -23,6 +25,7 @@ import { ProjectState, TasksState } from '../../states';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
+    CheckPipe,
     CommonModule,
     DateTextPipe,
     DisciplineIconPipe,
@@ -36,8 +39,9 @@ import { ProjectState, TasksState } from '../../states';
 export class TaskAboutComponent {
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
+  readonly canEditKey = PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS;
   readonly current = toSignal(this.store.select(TasksState.current));
-  readonly canEdit = toSignal(this.store.select(ProjectState.canEdit));
+  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
 
   constructor(private readonly store: Store) {}
 }

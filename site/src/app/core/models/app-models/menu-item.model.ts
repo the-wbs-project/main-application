@@ -1,5 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { PROJECT_STATI_TYPE } from '../enums';
+import { PermissionFilter } from '../permission-filter.model';
 
 export interface MenuItem {
   id?: string;
@@ -28,9 +29,9 @@ export interface ActionMenuItem {
   cssClasses?: string;
   filters?: {
     excludeFromCat?: boolean;
-    roles?: string[];
     stati?: PROJECT_STATI_TYPE[];
   };
+  permissions?: PermissionFilter;
 }
 
 export interface TimelineMenuItem {

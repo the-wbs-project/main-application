@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TaskDeleteService } from '@wbs/main/components/task-delete';
-import { DialogService } from '@wbs/main/services';
+import { DialogService, ProjectPermissionsService } from '@wbs/main/services';
 import { projectVerifyGuard } from './project-view.guards';
 import {
   ChecklistDataService,
@@ -39,6 +39,7 @@ export const routes: Routes = [
       ChecklistDataService,
       DialogService,
       ProjectNavigationService,
+      ProjectPermissionsService,
       ProjectViewService,
       TaskCreateService,
       TaskDeleteService,

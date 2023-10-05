@@ -1,5 +1,3 @@
-///api/files/:file
-
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from '@progress/kendo-file-saver';
 import { map, Observable } from 'rxjs';

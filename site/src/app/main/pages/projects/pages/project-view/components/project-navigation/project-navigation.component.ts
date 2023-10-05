@@ -3,9 +3,9 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { RoleFilterPipe } from '../../../../../../pipes/role-filter.pipe';
-import { ProjectNavigationLink } from '../../models';
 import { Store } from '@ngxs/store';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { ProjectNavigationLink } from '../../models';
 
 @Component({
   standalone: true,
@@ -13,13 +13,13 @@ import { Store } from '@ngxs/store';
   templateUrl: './project-navigation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    CheckPipe,
     NgClass,
     NgFor,
     NgForOf,
     NgIf,
     NgbDropdownModule,
     NgbNavModule,
-    RoleFilterPipe,
     RouterModule,
     TranslateModule,
   ],
@@ -27,6 +27,7 @@ import { Store } from '@ngxs/store';
 export class ProjectNavigationComponent {
   @Input({ required: true }) links!: ProjectNavigationLink[];
   @Input({ required: true }) userRoles?: string[];
+  @Input({ required: true }) permissions?: Map<string, boolean>;
 
   constructor(private readonly store: Store) {}
 
