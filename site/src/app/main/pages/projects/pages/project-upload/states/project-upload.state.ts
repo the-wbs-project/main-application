@@ -4,7 +4,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
-import { Messages, Resources, Transformers } from '@wbs/core/services';
+import { Resources, Transformers } from '@wbs/core/services';
 import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -57,7 +57,6 @@ interface StateModel {
 export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly messenger: Messages,
     private readonly resources: Resources,
     private readonly store: Store,
     private readonly transformer: Transformers

@@ -26,6 +26,6 @@ export class MiscHttpService {
     }
     if (calls.length > 0) await Promise.all(calls);
 
-    return ctx.text('', 204);
+    return ctx.newResponse(null, { status: 204 });
   }
 }

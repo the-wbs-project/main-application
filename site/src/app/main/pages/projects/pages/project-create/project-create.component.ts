@@ -14,7 +14,6 @@ import { ProjectCreateState } from './states';
 @Component({
   standalone: true,
   templateUrl: './project-create.component.html',
-  styleUrls: ['./project-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [

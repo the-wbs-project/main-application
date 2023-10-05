@@ -24,9 +24,7 @@ export class JiraHttpService {
 
       await ctx.get('jira').attachFileAsync(ctx, jiraIssueId, fileName, file);
 
-      ctx.status(204);
-
-      await next();
+      return ctx.newResponse(null, { status: 204 });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to create upload an attachment to JIRA issue.', <Error>e);
 

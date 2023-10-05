@@ -52,6 +52,8 @@
       "Download": "Download",
       "Upload": "Upload",
       "Submit": "Submit",
+      "Submitting": "Submitting",
+      "NoThankYou": "No Thank You",
       "Users": "Users",
       "Members": "Members",
       "Views": "Views",
@@ -374,7 +376,11 @@
       "Page_Disciplines": "Disciplines",
       "Page_Saving": "Saving",
       "Page_Ticket": "Create Ticket",
-      "TicketOtherMessage": "You have uploaded a file that is not currently supported in our do-it-yourself upload system. If you wish to have our team help you upload this file manually, please provide us more with any information that would help us upload your file into the system.",
+      "TicketDifferentFile": "Upload A Different File",
+      "TicketOtherMessage": "You have uploaded a file that is not currently supported in our do-it-yourself upload system.",
+      "TicketSubmitted": "Your WBS file has been submitted for review. We will contact you shortly to initiate the process.",
+      "TicketDescription": "Please provide us with all information possible to help us understand and manually process your WBS.",
+      "ReturnToProject": "Return To Project",
       "TicketErrormessage": "An error occurred when our system tried to upload your file into the project plan. If you wish to have our team help you upload this file manually, please provide us more with any information that would help us upload your file into the system."
     }
   },
