@@ -18,6 +18,26 @@ public class OrganizationDataService : BaseAuthDataService
         this.logger = logger;
     }
 
+    public async Task<IEnumerable<Organization>> GetOrganizationsAsync()
+    {
+        var client = await GetClientAsync();
+
+        return await client.Organizations.GetAllAsync(new PaginationInfo(0, 100, false));
+    }
+
+    public async Task UpdateOrganizationAsync(Organization organization)
+    {
+        var client = await GetClientAsync();
+
+        await client.Organizations.UpdateAsync(organization.Id, new OrganizationUpdateRequest
+        {
+            Name = organization.Name,
+            DisplayName = organization.DisplayName,
+            Branding = organization.Branding,
+            Metadata = organization.Metadata
+        });
+    }
+
     public async Task<string> GetOrganizationIdByNameAsync(string orgName)
     {
         if (orgIds.ContainsKey(orgName))

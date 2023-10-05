@@ -11,5 +11,5 @@ export async function logger(ctx: Context, next: any) {
 
   logger.trackRequest(duration);
 
-  ctx.executionCtx.waitUntil(logger.flush());
+  ctx.executionCtx.waitUntil(ctx.get('datadog').flush());
 }

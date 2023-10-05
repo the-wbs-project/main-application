@@ -10,7 +10,7 @@ export class MetadataHttpService {
       for (const r of resources) {
         ctx.executionCtx.waitUntil(data.putAsync(r));
       }
-      return ctx.text('', 204);
+      return ctx.newResponse(null, { status: 204 });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
 
@@ -44,7 +44,7 @@ export class MetadataHttpService {
         ctx.executionCtx.waitUntil(data.deleteAsync(type, id));
       }
 
-      return ctx.text('', 204);
+      return ctx.newResponse(null, { status: 204 });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
 
@@ -58,7 +58,7 @@ export class MetadataHttpService {
 
       await ctx.get('origin').putAsync('checklists', data);
 
-      return ctx.text('', 204);
+      return ctx.newResponse(null, { status: 204 });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to set checklists.', <Error>e);
 

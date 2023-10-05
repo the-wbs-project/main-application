@@ -74,6 +74,8 @@ export class ProjectActionButtonComponent implements OnChanges {
   }
 
   private contains(target: EventTarget | null): boolean {
+    if (!this.anchor?.nativeElement || !this.popup?.nativeElement) return false;
+
     return (
       this.anchor.nativeElement.contains(target) ||
       (this.popup ? this.popup.nativeElement.contains(target) : false)

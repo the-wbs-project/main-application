@@ -1,0 +1,14 @@
+.dropzone-wrapper {
+  font-size: 1rem;
+}
+
+.k-dropzone-inner {
+  background-color: #c8dadf;
+}
+
+.upload-wrapper,
+.fileselect-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 375.2px;
+}

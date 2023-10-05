@@ -4,9 +4,6 @@ compatibility_date = "2022-05-27"
 main = "src/index.ts"
 logpush = true
 
-[triggers]
-crons = ["0 0 */1 * *"]
-
 [env.dev]
 name = "pm-empower-api-dev"
 usage_model = "unbound"
@@ -14,8 +11,8 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "123", preview_id = "338c0ca3e3164ddf84b761218a121aa0" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "snapshots-dev" },
-  { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "statics-dev" },
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "123", preview_bucket_name = "456" },
+  { binding = "BUCKET_STATICS", bucket_name = "123", preview_bucket_name = "456" },
 ]
 
 [env.dev.vars]
@@ -26,6 +23,8 @@ KV_BYPASS = "LISTS"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
 
 [env.test]
 name = "pm-empower-api-test"
@@ -38,7 +37,8 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" }
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-qa" },
+  { binding = "BUCKET_STATICS", bucket_name = "statics-qa", preview_bucket_name = "statics-dev" }
 ]
 [env.test.vars]
 DEBUG = "false"
@@ -59,7 +59,8 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 r2_buckets = [
-  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" }
+  { binding = "BUCKET_SNAPSHOTS", bucket_name = "snapshots-prod" },
+  { binding = "BUCKET_STATICS", bucket_name = "statics-prod", preview_bucket_name = "statics-dev" }
 ]
 [env.prod.vars]
 DEBUG = "false"

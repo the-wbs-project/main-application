@@ -1,14 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
-import { Messages, Resources, Transformers } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/states';
+import { Resources, Transformers } from '@wbs/core/services';
+import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   AppendOrOvewriteSelected,
+  CreateJiraTicket,
   FileUploaded,
   LoadProjectFile,
   PeopleCompleted,
@@ -36,7 +38,7 @@ interface StateModel {
   peopleList?: PeopleListItem[];
   phaseList?: PhaseListItem[];
   project?: Project;
-  rawFile?: File;
+  rawFile?: FileInfo;
   saving: boolean;
   started: boolean;
   stats?: ResultStats;
@@ -55,7 +57,6 @@ interface StateModel {
 export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly messenger: Messages,
     private readonly resources: Resources,
     private readonly store: Store,
     private readonly transformer: Transformers
@@ -161,15 +162,19 @@ export class ProjectUploadState {
     const extension = parts[parts.length - 1].toLowerCase();
     const fileType = EXTENSION_PAGES[extension];
 
+    ctx.patchState({
+      fileType,
+      extension,
+      rawFile: file,
+    });
+
     if (!fileType) {
-      this.messenger.notify.error('Invalid file extension.', false);
-      return;
+      return ctx.dispatch(
+        new Navigate([...this.urlPrefix(ctx), 'ticket', 'other'])
+      );
     }
     ctx.patchState({
-      extension,
-      fileType,
       loadingFile: true,
-      rawFile: file,
     });
 
     return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'results']));
@@ -185,16 +190,45 @@ export class ProjectUploadState {
       switchMap((body) =>
         this.data.projectImport.runAsync(body, state.extension!)
       ),
-      tap((uploadResults) =>
+      switchMap((uploadResults) => {
         ctx.patchState({
           uploadResults,
           loadingFile: false,
-        })
-      ),
-      switchMap((results) =>
-        (results.errors ?? []).length === 0
+        });
+
+        return (uploadResults.errors ?? []).length === 0
           ? ctx.dispatch(new ProcessFile())
-          : of()
+          : of();
+      }),
+      catchError((err, caught) =>
+        ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'ticket', 'error']))
+      )
+    );
+  }
+
+  @Action(CreateJiraTicket)
+  createJiraTicket(
+    ctx: StateContext<StateModel>,
+    { description }: CreateJiraTicket
+  ): void | Observable<any> {
+    const state = ctx.getState();
+
+    if (!state.rawFile) return;
+
+    return forkJoin({
+      body: this.getFile(state.rawFile),
+      jiraIssueId: this.data.jira.createUploadIssueAsync(
+        description,
+        this.store.selectSnapshot(MembershipState.organization)!.display_name,
+        this.store.selectSnapshot(AuthState.profile)!
+      ),
+    }).pipe(
+      switchMap(({ body, jiraIssueId }) =>
+        this.data.jira.uploadAttachmentAsync(
+          jiraIssueId,
+          state.rawFile!.name,
+          body
+        )
       )
     );
   }
@@ -390,7 +424,7 @@ export class ProjectUploadState {
     return forkJoin(saves);
   }
 
-  private getFile(file: File): Observable<ArrayBuffer> {
+  private getFile(file: FileInfo): Observable<ArrayBuffer> {
     return new Observable<ArrayBuffer>((obs) => {
       if (!file) {
         obs.complete();
@@ -405,7 +439,8 @@ export class ProjectUploadState {
         obs.complete();
       };
 
-      reader.readAsArrayBuffer(file);
+      reader.readAsArrayBuffer(file.rawFile!);
+      //reader.readAsDataURL(file.rawFile!);
     });
   }
 

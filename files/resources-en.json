@@ -52,6 +52,8 @@
       "Download": "Download",
       "Upload": "Upload",
       "Submit": "Submit",
+      "Submitting": "Submitting",
+      "NoThankYou": "No Thank You",
       "Users": "Users",
       "Members": "Members",
       "Views": "Views",
@@ -291,13 +293,13 @@
       "TaskRemoved": "Task Removed",
       "TreeInstructions": "Double-click to see more details.",
       "SubmitForApproval": "Submit For Approval",
-      "SubmitForApprovalError": "You cannot submit for approval because this project doesn't have any approvers assigned.  Please go to Settings -> Roles and select at least one approver.",
+      "SubmitForApprovalError": "You cannot submit for approval because this project doesn't have any approvers assigned. Please go to Settings -> Roles and select at least one approver.",
       "SubmitForApprovalSuccess": "The project is ready for approval.",
       "SubmitForApprovalConfirm": "Are you sure you want to submit this project for approval?",
       "ProjectUpdated": "Project Updated",
       "ProjectArchived": "Project Archived",
-      "DisciplineRemoveConfirm": "You are about to remove a discipline which is currently assicated with {count} task(s).  Are you sure?",
-      "PhaseRemoveConfirm": "You are about to remove a phase which has {count} task(s) under it.  Are you sure?",
+      "DisciplineRemoveConfirm": "You are about to remove a discipline which is currently assicated with {count} task(s). Are you sure?",
+      "PhaseRemoveConfirm": "You are about to remove a phase which has {count} task(s) under it. Are you sure?",
       "WaitingApproval": "Waiting For Approval",
       "NoDescription": "No Description!",
       "NoDisciplines": "No Disciplines!",
@@ -344,7 +346,7 @@
       "DisciplineFirst_Title": "Discipline First",
       "DisciplineFirst_Description": "Build the project plan by discipline with the ability to view it by phase.",
       "Roles_Title": "Project Role Setup",
-      "Roles_Description": "Setup the roles for this project.  You must have atleast one PM to continue.",
+      "Roles_Description": "Setup the roles for this project. You must have atleast one PM to continue.",
       "Saving_Title": "Creating Project",
       "Saving_Description": "We are working hard to create your new project."
     }
@@ -355,20 +357,31 @@
     "values": {
       "PagesUploadProjectPlan": "Upload Project Plan",
       "PagesOptions": "Options",
-      "GetStartedMessage": "To get started upload your project plan using the control below.  Once uploaded we will guide you through the rest of the process.",
+      "GetStartedMessage": "To get started upload your project plan using the control below. Once uploaded we will guide you through the rest of the process.",
       "UploadInstruction": "Drag or click to select your project plan",
+      "SupportedFiles": "Supported DIY Files",
+      "UnsupportedFiles": "Unsupported DIY Files",
       "ExcelFile": "Excel File",
       "ProjectFile": "Project File",
+      "OtherFiles": "Other Files",
       "ExcelFileExtensions": "Extensions: .xlsx",
       "ProjectFileExtensions": "Extensions: .mpp, .mppx",
-      "ExcelFileDescription": "NOTE: You must use our template in order to upload from Excel.",
+      "OtherFileExtensions": "Extensions: .pdf, .docx, etc.",
+      "OtherFileDescription": "This file will be submitted for a manual upload.",
       "DownloadTemplate": "Download Template",
       "Page_LetsGetStarted": "Lets Get Started",
       "Page_UploadResults": "Upload Results",
       "Page_Options": "Upload Options",
       "Page_Phases": "Phase Mapping",
       "Page_Disciplines": "Disciplines",
-      "Page_Saving": "Saving"
+      "Page_Saving": "Saving",
+      "Page_Ticket": "Create Ticket",
+      "TicketDifferentFile": "Upload A Different File",
+      "TicketOtherMessage": "You have uploaded a file that is not currently supported in our do-it-yourself upload system.",
+      "TicketSubmitted": "Your WBS file has been submitted for review. We will contact you shortly to initiate the process.",
+      "TicketDescription": "Please provide us with all information possible to help us understand and manually process your WBS.",
+      "ReturnToProject": "Return To Project",
+      "TicketErrormessage": "An error occurred when our system tried to upload your file into the project plan. If you wish to have our team help you upload this file manually, please provide us more with any information that would help us upload your file into the system."
     }
   },
   {
@@ -444,7 +457,7 @@
       "InviteNotFound": "Invite Not Found",
       "InviteNotFoundDescription": "No invite was found for the code provided.",
       "InviteCancelled": "Invite Cancelled",
-      "InviteCancelledDescription": "The invite has been cancelled.  Please contact whoever manages your organization to understand why."
+      "InviteCancelledDescription": "The invite has been cancelled. Please contact whoever manages your organization to understand why."
     }
   },
   {
