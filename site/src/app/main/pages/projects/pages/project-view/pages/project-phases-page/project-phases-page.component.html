@@ -4,7 +4,7 @@
     [width]="width()"
     [nodes]="phases()"
     [project]="project()"
-    [rowReorderable]="project()?.status === 'planning'"
+    [rowReorderable]="canEdit()!"
     [expandedKeys]="phaseIds() ?? []"
     [menuItems]="phases() | taskMenu : taskId"
     [isDraggable]="true"

@@ -54,7 +54,7 @@ export class TaskModalComponent implements AfterContentInit {
                 modalDialogClass: 'task-modal',
                 size: 'fullscreen',
               });
-              this.modal.dismissed.pipe(first()).subscribe(() => {
+              this.modal.dismissed.subscribe(() => {
                 this.modal = undefined;
               });
             }

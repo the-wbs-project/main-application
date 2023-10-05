@@ -21,6 +21,7 @@ export class ProjectPhasesPageComponent {
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly phases = toSignal(this.store.select(TasksState.phases));
   readonly phaseIds = toSignal(this.store.select(ProjectState.phaseIds));
+  readonly canEdit = toSignal(this.store.select(ProjectState.canEdit));
   readonly task = toSignal(this.store.select(TasksState.current));
 
   constructor(

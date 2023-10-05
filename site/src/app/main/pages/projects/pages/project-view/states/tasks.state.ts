@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -56,7 +56,7 @@ declare type Context = StateContext<StateModel>;
   name: 'tasks',
   defaults: {},
 })
-export class TasksState implements NgxsOnInit {
+export class TasksState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
@@ -95,16 +95,6 @@ export class TasksState implements NgxsOnInit {
     );
 
     return state.nodes.filter((x) => phaseIds.indexOf(x.id) === -1).length;
-  }
-
-  ngxsOnInit(ctx: StateContext<any>): void {
-    /*this.actions$.pipe(untilDestroyed(this)).subscribe((p) => {
-      const state = ctx.getState();
-
-      if (p.action.project.id === state.project?.id) {
-        ctx.dispatch(new VerifyTasks(p.action.project, true));
-      }
-    });*/
   }
 
   @Action(VerifyTasks)
