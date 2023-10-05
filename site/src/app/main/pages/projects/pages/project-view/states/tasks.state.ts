@@ -1,12 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  Action,
-  Actions,
-  NgxsOnInit,
-  Selector,
-  State,
-  StateContext,
-} from '@ngxs/store';
+import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -65,7 +58,6 @@ declare type Context = StateContext<StateModel>;
 })
 export class TasksState implements NgxsOnInit {
   constructor(
-    private readonly actions$: Actions,
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
     private readonly nav: ProjectNavigationService,

@@ -71,7 +71,16 @@ export class ProjectState {
   static canSubmit(state: StateModel): boolean {
     return (
       state.current?.status === PROJECT_STATI.PLANNING &&
-      (state.roles ?? []).indexOf(ROLES.PM) > -1
+      (state.roles ?? []).includes(ROLES.PM)
+    );
+  }
+
+  @Selector()
+  static canEdit(state: StateModel): boolean {
+    return (
+      state.current?.status === PROJECT_STATI.PLANNING &&
+      ((state.roles ?? []).includes(ROLES.PM) ||
+        (state.roles ?? []).includes(ROLES.ADMIN))
     );
   }
 

@@ -13,8 +13,8 @@ import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { TasksState } from '../../states';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
+import { ProjectState, TasksState } from '../../states';
 
 @Component({
   standalone: true,
@@ -37,6 +37,7 @@ export class TaskAboutComponent {
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
   readonly current = toSignal(this.store.select(TasksState.current));
+  readonly canEdit = toSignal(this.store.select(ProjectState.canEdit));
 
   constructor(private readonly store: Store) {}
 }

@@ -7,7 +7,7 @@ import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Resources, Transformers } from '@wbs/core/services';
 import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   AppendOrOvewriteSelected,
   CreateJiraTicket,
@@ -199,7 +199,10 @@ export class ProjectUploadState {
         return (uploadResults.errors ?? []).length === 0
           ? ctx.dispatch(new ProcessFile())
           : of();
-      })
+      }),
+      catchError((err, caught) =>
+        ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'ticket', 'error']))
+      )
     );
   }
 
