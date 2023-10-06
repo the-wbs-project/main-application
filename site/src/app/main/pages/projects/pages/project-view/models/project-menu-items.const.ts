@@ -31,8 +31,10 @@ const phaseTreeActions: ActionMenuItem[] = [
     icon: faUpload,
     text: 'General.Upload',
     filters: {
-      roles: [ROLES.PM],
       stati: [PROJECT_STATI.PLANNING],
+    },
+    permissions: {
+      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
     },
   },
 ];
