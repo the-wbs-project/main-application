@@ -1,6 +1,5 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
@@ -15,13 +14,15 @@ public class ProjectsController : ControllerBase
     private readonly ILogger<ProjectsController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
+    private readonly ProejctResourceDataService resourceDataService;
 
-    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService)
+    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProejctResourceDataService resourceDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
+        this.resourceDataService = resourceDataService;
     }
 
     [Authorize]
@@ -121,6 +122,58 @@ public class ProjectsController : ControllerBase
                     return BadRequest("Project not found for the owner provided.");
 
                 await nodeDataService.SetSaveRecordAsync(conn, owner, id, record);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+
+    [Authorize]
+    [HttpGet("owner/{owner}/id/{id}/resources")]
+    public async Task<IActionResult> GetResourcesById(string owner, string id)
+    {
+        try
+        {
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
+
+                return Ok(await resourceDataService.GetByProjectAsync(conn, id));
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("owner/{owner}/id/{id}/resources")]
+    public async Task<IActionResult> PutResources(string owner, string id, ProjectResource resources)
+    {
+        try
+        {
+            if (resources.ProjectId != id)
+                return BadRequest("All records must have same project id as provided in url");
+
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
+
+                await resourceDataService.SetAsync(conn, resources);
 
                 return NoContent();
             }
