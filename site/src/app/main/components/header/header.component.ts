@@ -8,21 +8,22 @@ import { Store } from '@ngxs/store';
 import { menuIcon } from '@progress/kendo-svg-icons';
 import { ToggleSidebar } from '@wbs/main/actions';
 import { OrgUrlPipe } from '@wbs/main/pipes/org-url.pipe';
-import { MembershipState, RolesState } from '@wbs/main/states';
+import { MembershipState, PermissionsState } from '@wbs/main/states';
 import { environment } from 'src/environments/environment';
 import { HeaderProfileComponent } from './header-profile/header-profile.component';
-import { ROLES } from '@wbs/core/models';
-import { RoleFilterPipe } from '@wbs/main/pipes/role-filter.pipe';
+import { ORGANIZATION_CLAIMS, PROJECT_CLAIMS } from '@wbs/core/models';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 
 interface RouteLinkGroup {
   label: string;
-  roles?: string[];
+  claim?: string;
   items: (
     | { type: 'header'; label: string }
     | {
         type: 'link';
         route: string[];
         label: string;
+        claim?: string;
       }
   )[];
 }
@@ -33,20 +34,20 @@ interface RouteLinkGroup {
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
   imports: [
+    CheckPipe,
     HeaderProfileComponent,
     NgbDropdownModule,
     NgFor,
     NgForOf,
     NgIf,
     OrgUrlPipe,
-    RoleFilterPipe,
     RouterModule,
     TranslateModule,
   ],
 })
 export class HeaderComponent {
   readonly org = toSignal(this.store.select(MembershipState.organization));
-  readonly userRoles = toSignal(this.store.select(RolesState.orgRoles));
+  readonly claims = toSignal(this.store.select(PermissionsState.claims));
   readonly menuIcon = menuIcon;
   readonly appTitle = environment.appTitle;
   readonly menu: RouteLinkGroup[] = [
@@ -62,12 +63,13 @@ export class HeaderComponent {
           type: 'link',
           route: ['/', ':orgId', 'projects', 'create'],
           label: 'General.CreateProject',
+          claim: PROJECT_CLAIMS.CREATE,
         },
       ],
     },
     {
       label: 'General.Settings',
-      roles: [ROLES.ADMIN],
+      claim: ORGANIZATION_CLAIMS.SETTINGS.READ,
       items: [
         {
           type: 'header',
@@ -77,6 +79,7 @@ export class HeaderComponent {
           type: 'link',
           route: ['/', ':orgId', 'settings', 'members'],
           label: 'General.Members',
+          claim: ORGANIZATION_CLAIMS.MEMBERS.READ,
         },
       ],
     },

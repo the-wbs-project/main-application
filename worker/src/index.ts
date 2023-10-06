@@ -2,7 +2,7 @@ import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cors, kv, kvPurge, kvPurgeOrgs, logger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
-import { PROJECT_PERMISSIONS } from './models';
+import { ORGANZIATION_PERMISSIONS, PROJECT_PERMISSIONS } from './models';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
@@ -31,7 +31,9 @@ app.options('api/*', (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, (ctx) => OriginService.pass(ctx));
 app.get('api/lists/:type', kv.lists, OriginService.pass);
+
 app.get('api/permissions/projects', (ctx) => ctx.json(PROJECT_PERMISSIONS));
+app.get('api/permissions/organization', (ctx) => ctx.json(ORGANZIATION_PERMISSIONS));
 
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);

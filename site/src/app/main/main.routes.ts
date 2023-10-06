@@ -3,14 +3,14 @@ import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
 import {
-  AuthState,
-  MetadataState,
-  MembershipState,
-  UiState,
-  RolesState,
   AiState,
+  AuthState,
+  MembershipState,
+  MetadataState,
+  PermissionsState,
+  UiState,
 } from './states';
-import { ProjectPermissionsService, UserService } from './services';
+import { UserService } from './services';
 
 export const routes: Routes = [
   {
@@ -23,9 +23,9 @@ export const routes: Routes = [
         NgxsModule.forFeature([
           AiState,
           AuthState,
-          MetadataState,
           MembershipState,
-          RolesState,
+          MetadataState,
+          PermissionsState,
           UiState,
         ])
       ),

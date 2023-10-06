@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { RolesState } from '@wbs/main/states';
+import { PermissionsState } from '@wbs/main/states';
 import { Project, PROJECT_STATI, ProjectNode } from '../models';
 import { IdService } from './id.service';
 import { Resources } from './resource.service';
@@ -66,7 +66,7 @@ export class ProjectService {
     if (!role) return '';
 
     const definition = this.store
-      .selectSnapshot(RolesState.definitions)!
+      .selectSnapshot(PermissionsState.roleDefinitions)!
       .find((x) => x.id === role)!;
 
     return this.resources.get(

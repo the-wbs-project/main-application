@@ -1,1 +1,1 @@
-export * from './admin.guard';
+export * from './claims.guard';

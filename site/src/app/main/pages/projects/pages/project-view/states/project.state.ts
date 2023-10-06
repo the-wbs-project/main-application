@@ -7,18 +7,17 @@ import {
   Project,
   PROJECT_NODE_VIEW,
   ProjectCategory,
-  ROLES,
 } from '@wbs/core/models';
 import { Messages, ProjectService } from '@wbs/core/services';
-import { ProjectPermissionsService } from '@wbs/main/services';
+import { UpdateProjectClaims } from '@wbs/main/actions';
 import {
   AuthState,
   MembershipState,
   MetadataState,
-  RolesState,
+  PermissionsState,
 } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import {
   AddUserToRole,
   ChangeProjectBasics,
@@ -42,7 +41,6 @@ interface StateModel {
   approvers?: string[];
   current?: Project;
   roles?: string[];
-  permissions?: Map<string, boolean>;
   pms?: string[];
   smes?: string[];
   users?: UserRolesViewModel[];
@@ -59,7 +57,6 @@ export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
-    private readonly permissions: ProjectPermissionsService,
     private readonly services: ProjectService,
     private readonly store: Store,
     private readonly timeline: TimelineService
@@ -82,11 +79,6 @@ export class ProjectState {
         typeof x === 'string' ? x : x.id
       ) ?? []
     );
-  }
-
-  @Selector()
-  static permissions(state: StateModel): Map<string, boolean> {
-    return state.permissions ?? new Map();
   }
 
   @Selector()
@@ -141,13 +133,7 @@ export class ProjectState {
   @Action(SetProject)
   setProject(ctx: Context, { owner, projectId }: SetProject): Observable<any> {
     const userId = this.store.selectSnapshot(AuthState.userId);
-    const adminRoleId = this.store
-      .selectSnapshot(RolesState.definitions)
-      .find((x) => x.name === ROLES.ADMIN)!.id;
-
-    const roles: string[] = this.store.selectSnapshot(RolesState.isAdmin)
-      ? [adminRoleId]
-      : [];
+    const roles: string[] = [];
 
     return this.data.projects.getAsync(owner, projectId).pipe(
       tap((project) => this.verifyRoles(project)),
@@ -401,7 +387,7 @@ export class ProjectState {
     const approvers: string[] = [];
     const pms: string[] = [];
     const smes: string[] = [];
-    const ids = this.store.selectSnapshot(RolesState.ids);
+    const ids = this.store.selectSnapshot(PermissionsState.roleIds)!;
 
     if (project)
       for (const ur of project.roles) {
@@ -414,12 +400,10 @@ export class ProjectState {
   }
 
   private updatePermissions(ctx: Context): Observable<void> {
-    const project = ctx.getState().current!;
+    const state = ctx.getState();
 
-    return this.permissions.getPermissionsAsync(project).pipe(
-      map((permissions) => {
-        ctx.patchState({ permissions });
-      })
+    return this.store.dispatch(
+      new UpdateProjectClaims(state.current!.id, state.roles!)
     );
   }
 
@@ -461,7 +445,9 @@ export class ProjectState {
       return;
     }
 
-    const definitions = this.store.selectSnapshot(RolesState.definitions);
+    const definitions = this.store.selectSnapshot(
+      PermissionsState.roleDefinitions
+    );
 
     for (const role of project.roles) {
       const defByName = definitions.find((x) => x.name === role.role);

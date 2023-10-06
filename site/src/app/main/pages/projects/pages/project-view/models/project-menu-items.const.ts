@@ -12,13 +12,12 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import {
   ActionMenuItem,
-  PROJECT_PERMISSION_KEYS,
+  PROJECT_CLAIMS,
   PROJECT_STATI,
-  ROLES,
 } from '@wbs/core/models';
+import { ProjectNavigationLink } from './project-navigation-link.model';
 import { PROJECT_PAGE_VIEW } from './project-page-view.const';
 import { PROJECT_SETTINGS_PAGE_LISTS } from './project-settings-pages.const';
-import { ProjectNavigationLink } from './project-navigation-link.model';
 
 const phaseTreeActions: ActionMenuItem[] = [
   {
@@ -33,9 +32,7 @@ const phaseTreeActions: ActionMenuItem[] = [
     filters: {
       stati: [PROJECT_STATI.PLANNING],
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
 ];
 
@@ -47,14 +44,13 @@ const phaseItemActions: ActionMenuItem[] = [
     filters: {
       stati: [PROJECT_STATI.PLANNING],
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.CREATE,
   },
   {
     action: 'viewTask',
     icon: faEye,
     tooltip: 'Projects.ViewTask',
+    claim: PROJECT_CLAIMS.TASKS.READ,
   },
   {
     action: 'cloneTask',
@@ -64,9 +60,7 @@ const phaseItemActions: ActionMenuItem[] = [
       stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.CREATE,
   },
   {
     action: 'deleteTask',
@@ -76,9 +70,7 @@ const phaseItemActions: ActionMenuItem[] = [
       stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.DELETE,
   },
 ];
 
@@ -91,9 +83,7 @@ const phaseItemNavActions: ActionMenuItem[] = [
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
   {
     action: 'moveUp',
@@ -103,9 +93,7 @@ const phaseItemNavActions: ActionMenuItem[] = [
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
   {
     action: 'moveDown',
@@ -115,9 +103,7 @@ const phaseItemNavActions: ActionMenuItem[] = [
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
   {
     action: 'moveRight',
@@ -127,9 +113,7 @@ const phaseItemNavActions: ActionMenuItem[] = [
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
     },
-    permissions: {
-      keys: [PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS],
-    },
+    claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
 ];
 const projectLinks: ProjectNavigationLink[] = [
@@ -179,13 +163,7 @@ const projectLinks: ProjectNavigationLink[] = [
     fragment: PROJECT_PAGE_VIEW.SETTINGS,
     title: 'General.Settings',
     children: PROJECT_SETTINGS_PAGE_LISTS,
-    permissions: {
-      keys: [
-        PROJECT_PERMISSION_KEYS.CAN_EDIT_METADATA,
-        PROJECT_PERMISSION_KEYS.CAN_EDIT_ROLES,
-      ],
-      op: 'or',
-    },
+    claim: PROJECT_CLAIMS.SETTINGS.READ,
   },
 ];
 

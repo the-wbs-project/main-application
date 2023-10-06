@@ -16,7 +16,7 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { gearIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { DialogService } from '@wbs/main/services';
-import { MembershipState, RolesState } from '@wbs/main/states';
+import { MembershipState, PermissionsState } from '@wbs/main/states';
 import { first, skipWhile } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
@@ -108,7 +108,7 @@ export class MembersComponent implements OnInit {
     this.store.dispatch(new ChangeBreadcrumbs(this.crumbs));
 
     this.store
-      .select(RolesState.definitions)
+      .select(PermissionsState.roleDefinitions)
       .pipe(
         skipWhile((list) => list == undefined),
         first()
