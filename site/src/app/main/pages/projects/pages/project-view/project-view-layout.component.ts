@@ -13,7 +13,7 @@ import { PageHeaderComponent } from '@wbs/main/components/page-header/page-heade
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
-import { RolesState } from '@wbs/main/states';
+import { PermissionsState } from '@wbs/main/states';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
@@ -42,10 +42,9 @@ import { ProjectState } from './states';
   ],
 })
 export class ProjectViewLayoutComponent {
-  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
+  readonly claims = toSignal(this.store.select(PermissionsState.claims));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
-  readonly isPm = toSignal(this.store.select(RolesState.isPm));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
   readonly links = PROJECT_MENU_ITEMS.projectLinks;

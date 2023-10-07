@@ -17,7 +17,7 @@
       <ul class="navbar-nav">
         <ng-template ngFor [ngForOf]="menu" let-parentItem>
           <li
-            *ngIf="parentItem.roles | roleFilter : userRoles()"
+            *ngIf="claims() | check : parentItem.claim"
             class="nav-item"
             ngbDropdown
           >

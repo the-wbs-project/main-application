@@ -13,7 +13,7 @@ import { Store } from '@ngxs/store';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { Role } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { RolesState } from '@wbs/main/states';
+import { PermissionsState } from '@wbs/main/states';
 import { first, skipWhile } from 'rxjs/operators';
 
 @Component({
@@ -27,14 +27,17 @@ import { first, skipWhile } from 'rxjs/operators';
 export class RoleFilterListComponent implements OnInit {
   @Output() readonly valueChanged = new EventEmitter<string[]>();
 
-  readonly roles = toSignal(this.store.select(RolesState.definitions));
+  private readonly roleDefintions = this.store.select(
+    PermissionsState.roleDefinitions
+  );
+
+  readonly roles = toSignal(this.roleDefintions);
   readonly values = signal<Role[]>([]);
 
   constructor(readonly store: Store) {}
 
   ngOnInit(): void {
-    this.store
-      .select(RolesState.definitions)
+    this.roleDefintions
       .pipe(
         skipWhile((list) => list == undefined),
         first()

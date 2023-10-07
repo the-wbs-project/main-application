@@ -6,7 +6,7 @@
     >
       <ul ngbNav class="tx-14 tx-medium">
         <ng-template ngFor [ngForOf]="links" let-link>
-          <ng-template [ngIf]="permissions | check : link.permissions">
+          <ng-template [ngIf]="claims | check : link.claim">
             <li
               *ngIf="!link.children"
               [ngClass]="link.classes"
@@ -42,25 +42,27 @@
               </a>
               <div ngbDropdownMenu class="z-index: 10000;">
                 <ng-template ngFor let-child [ngForOf]="link.children">
-                  <a
-                    ngbDropdownItem
-                    *ngIf="child.fragment"
-                    [routerLink]="
-                      link.fragment
-                        ? ['./', link.fragment, child.fragment]
-                        : ['./', child.fragment]
-                    "
-                  >
-                    {{ child.title | translate }}
-                  </a>
-                  <a
-                    ngbDropdownItem
-                    *ngIf="child.action"
-                    class="pointer"
-                    (click)="call(child.action)"
-                  >
-                    {{ child.title | translate }}
-                  </a>
+                  <ng-template [ngIf]="claims | check : child.claim">
+                    <a
+                      ngbDropdownItem
+                      *ngIf="child.fragment"
+                      [routerLink]="
+                        link.fragment
+                          ? ['./', link.fragment, child.fragment]
+                          : ['./', child.fragment]
+                      "
+                    >
+                      {{ child.title | translate }}
+                    </a>
+                    <a
+                      ngbDropdownItem
+                      *ngIf="child.action"
+                      class="pointer"
+                      (click)="call(child.action)"
+                    >
+                      {{ child.title | translate }}
+                    </a>
+                  </ng-template>
                 </ng-template>
               </div>
             </li>

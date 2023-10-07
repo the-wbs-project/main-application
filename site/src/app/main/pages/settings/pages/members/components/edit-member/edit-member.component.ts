@@ -6,7 +6,7 @@ import { Member } from '@wbs/core/models';
 import { RoleListPipe } from '../../../../../../pipes/role-list.pipe';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { RolesState } from '@wbs/main/states';
+import { PermissionsState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -16,7 +16,9 @@ import { RolesState } from '@wbs/main/states';
   imports: [NgClass, NgFor, NgIf, TranslateModule, RoleListPipe],
 })
 export class EditMemberComponent implements OnInit {
-  readonly roles = toSignal(this.store.select(RolesState.definitions));
+  readonly roles = toSignal(
+    this.store.select(PermissionsState.roleDefinitions)
+  );
 
   member?: Member;
 

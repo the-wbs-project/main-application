@@ -1,4 +1,6 @@
 import { Injectable } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   Action,
   NgxsOnInit,
@@ -11,21 +13,22 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Organization } from '@wbs/core/models';
 import { Messages, sorter } from '@wbs/core/services';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
   ChangeOrganization,
   InitiateOrganizations,
   RefreshMembers,
   UpdateMembers,
+  UpdateOrganizationClaims,
 } from '../actions';
 import { UserService } from '../services';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AuthState } from './auth.state';
 
 interface MembershipStateModel {
   loading: boolean;
   list?: Organization[];
   organization?: Organization;
+  orgRoleList?: Record<string, string[]>;
   members?: Member[];
 }
 
@@ -41,6 +44,7 @@ declare type Context = StateContext<MembershipStateModel>;
 })
 export class MembershipState implements NgxsOnInit {
   constructor(
+    private readonly auth: AuthService,
     protected readonly data: DataServiceFactory,
     protected readonly messages: Messages,
     protected readonly store: Store,
@@ -68,6 +72,15 @@ export class MembershipState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: Context): void {
+    this.auth.user$.pipe(untilDestroyed(this)).subscribe((user) => {
+      if (!user) return;
+
+      const ns = 'http://www.pm-empower.com';
+
+      ctx.patchState({
+        orgRoleList: user[ns + '/organizations-roles']!,
+      });
+    });
     this.store
       .select(AuthState.profile)
       .pipe(untilDestroyed(this))
@@ -104,7 +117,15 @@ export class MembershipState implements NgxsOnInit {
     ctx.patchState({ loading: true, organization });
 
     return this.getMembers(ctx, false).pipe(
-      tap(() => ctx.patchState({ loading: false }))
+      tap(() => ctx.patchState({ loading: false })),
+      switchMap(() =>
+        ctx.dispatch(
+          new UpdateOrganizationClaims(
+            organization.name,
+            ctx.getState().orgRoleList?.[organization.name] ?? []
+          )
+        )
+      )
     );
   }
 

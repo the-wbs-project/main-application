@@ -9,14 +9,15 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
+import { PROJECT_CLAIMS } from '@wbs/core/models';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
+import { PermissionsState } from '@wbs/main/states';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
-import { ProjectState, TasksState } from '../../states';
-import { PROJECT_PERMISSION_KEYS } from '@wbs/core/models';
-import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { TasksState } from '../../states';
 
 @Component({
   standalone: true,
@@ -39,9 +40,9 @@ import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 export class TaskAboutComponent {
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
-  readonly canEditKey = PROJECT_PERMISSION_KEYS.CAN_EDIT_TASKS;
+  readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
   readonly current = toSignal(this.store.select(TasksState.current));
-  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
+  readonly claims = toSignal(this.store.select(PermissionsState.claims));
 
   constructor(private readonly store: Store) {}
 }

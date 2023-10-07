@@ -12,6 +12,7 @@ import { TitleService } from '@wbs/core/services';
 import { TASK_MENU_ITEMS } from '../../models';
 import { ProjectState, TasksState } from '../../states';
 import { ProjectNavigationComponent } from '../../components/project-navigation/project-navigation.component';
+import { PermissionsState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -22,7 +23,7 @@ import { ProjectNavigationComponent } from '../../components/project-navigation/
   imports: [FontAwesomeModule, ProjectNavigationComponent, RouterModule],
 })
 export class TaskViewComponent {
-  readonly permissions = toSignal(this.store.select(ProjectState.permissions));
+  readonly claims = toSignal(this.store.select(PermissionsState.claims));
   readonly current = toSignal(this.store.select(TasksState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
 
