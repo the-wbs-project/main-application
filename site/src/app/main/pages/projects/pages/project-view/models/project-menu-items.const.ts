@@ -31,7 +31,6 @@ const phaseTreeActions: ActionMenuItem[] = [
     icon: faUpload,
     text: 'General.Upload',
     filters: {
-      roles: [ROLES.PM],
       stati: [PROJECT_STATI.PLANNING],
     },
   },
@@ -151,6 +150,10 @@ const projectLinks: ProjectNavigationLink[] = [
         fragment: PROJECT_PAGE_VIEW.TIMELINE,
         title: 'General.Timeline',
       },
+      {
+        fragment: PROJECT_PAGE_VIEW.RESOURCES,
+        title: 'General.Resources',
+      },
     ],
   },
   {
@@ -172,6 +175,11 @@ const projectLinks: ProjectNavigationLink[] = [
     fragment: PROJECT_PAGE_VIEW.TIMELINE,
     classes: ['d-none', 'd-md-inline'],
     title: 'General.Timeline',
+  },
+  {
+    fragment: PROJECT_PAGE_VIEW.RESOURCES,
+    classes: ['d-none', 'd-md-inline'],
+    title: 'General.Resources',
   },
   {
     fragment: PROJECT_PAGE_VIEW.SETTINGS,

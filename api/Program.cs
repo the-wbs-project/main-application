@@ -55,6 +55,7 @@ builder.Services.AddSingleton<OrganizationDataService>();
 builder.Services.AddSingleton<ProjectDataService>();
 builder.Services.AddSingleton<ProjectNodeDataService>();
 builder.Services.AddSingleton<ProjectSnapshotDataService>();
+builder.Services.AddSingleton<RecordResourceDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
 builder.Services.AddSingleton<Storage>();
 builder.Services.AddSingleton<UserDataService>();

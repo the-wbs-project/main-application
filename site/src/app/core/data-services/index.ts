@@ -10,6 +10,7 @@ import { PermissionsDataService } from './permissions.data-service';
 import { ProjectExportDataService } from './project-export.data-service';
 import { ProjectImportDataService } from './project-import.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
+import { ProjectResourcesDataService } from './project-resources.data-service';
 import { ProjectSnapshotDataService } from './project-snapshot.data-service';
 import { ProjectDataService } from './project.data-service';
 import { StaticFileDataService } from './static-files.data-service';
@@ -27,6 +28,7 @@ export class DataServiceFactory {
   readonly projectExport = new ProjectExportDataService(this.http);
   readonly projectImport = new ProjectImportDataService(this.http);
   readonly projectNodes = new ProjectNodeDataService(this.http);
+  readonly projectResources = new ProjectResourcesDataService(this.http);
   readonly projects = new ProjectDataService(this.http);
   readonly projectSnapshots = new ProjectSnapshotDataService(this.http);
   readonly staticFiles = new StaticFileDataService(this.http);

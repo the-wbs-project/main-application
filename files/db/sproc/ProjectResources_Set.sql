@@ -10,6 +10,7 @@ CREATE PROCEDURE [dbo].[ProjectResources_Set]
     @Resource nvarchar(MAX),
     @Description nvarchar(MAX)
 AS
+    DECLARE @ts DATETIMEOFFSET = GETUTCDATE();
 BEGIN
 IF EXISTS(SELECT * FROM [dbo].[ProjectResources] WHERE [Id] = @Id)
     BEGIN
@@ -18,6 +19,7 @@ IF EXISTS(SELECT * FROM [dbo].[ProjectResources] WHERE [Id] = @Id)
             [Name] = @Name,
             [Type] = @Type,
             [Order] = @Order,
+            [LastModifiedOn] = @ts,
             [Resource] = @Resource,
             [Description] = @Description
         WHERE [Id] = @Id
@@ -25,7 +27,7 @@ IF EXISTS(SELECT * FROM [dbo].[ProjectResources] WHERE [Id] = @Id)
 ELSE
     BEGIN
         INSERT INTO [dbo].[ProjectResources]
-        VALUES (@Id, @ProjectId, @Name, @Type, @Order, @Resource, @Description)
+        VALUES (@Id, @ProjectId, @Name, @Type, @Order, @ts, @ts, @Resource, @Description)
     END
 END
 GO

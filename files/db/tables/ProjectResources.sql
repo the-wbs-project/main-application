@@ -1,13 +1,15 @@
-CREATE TABLE [dbo].[ProjectResources] (
+CREATE TABLE [dbo].[RecordResources] (
     [Id] nvarchar(100) NOT NULL,
-    [ProjectId] nvarchar(100) NOT NULL,
+    [OwnerId] nvarchar(100) NOT NULL,
+    [RecordId] nvarchar(100) NOT NULL,
     [Name] nvarchar(100) NOT NULL,
     [Type] nvarchar(100) NOT NULL,
     [Order] int NOT NULL,
+    [CreatedOn] DateTimeOffset NOT NULL,
+    [LastModified] DateTimeOffset NOT NULL,
     [Resource] nvarchar(MAX) NOT NULL,
-    [Description] nvarchar(MAX) NOT NULL,
-    CONSTRAINT ProjectResources_PK PRIMARY KEY CLUSTERED ([Id] ASC),
-    CONSTRAINT ProjectResources_FK_ProjectId FOREIGN KEY ([ProjectId]) REFERENCES [dbo].[Projects] ([Id]) ON DELETE CASCADE
+    [Description] nvarchar(MAX) NULL,
+    CONSTRAINT RecordResources_PK PRIMARY KEY CLUSTERED ([Id] ASC)
 )
 GO
 

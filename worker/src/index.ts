@@ -55,6 +55,9 @@ app.get('api/projects/owner/:owner/id/:projectId', verifyJwt, verifyMembership, 
 app.get('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
 
+app.get('api/projects/owner/:owner/id/:projectId/resources', verifyJwt, verifyMembership, OriginService.pass);
+app.put('api/projects/owner/:owner/id/:projectId/resources/:resourcesId', verifyJwt, verifyMembership, OriginService.pass);
+
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
 //app.get('api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);

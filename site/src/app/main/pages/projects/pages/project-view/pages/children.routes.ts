@@ -53,7 +53,7 @@ export const routes: Routes = [
           {
             path: 'about',
             data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
+              //title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.ABOUT,
             },
             loadComponent: () =>
@@ -64,7 +64,7 @@ export const routes: Routes = [
           {
             path: 'sub-tasks',
             data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
+              //title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.SUB_TASKS,
             },
             loadComponent: () =>
@@ -110,7 +110,19 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./project-timeline-page.component').then(
-        ({ ProjectTimelinePageComponent }) => ProjectTimelinePageComponent
+        (x) => x.ProjectTimelinePageComponent
+      ),
+  },
+  {
+    path: 'resources',
+    canActivate: [projectViewGuard],
+    data: {
+      //title: 'ProjectUpload.PagesUploadProjectPlan',
+      view: PROJECT_PAGE_VIEW.RESOURCES,
+    },
+    loadComponent: () =>
+      import('./project-resources-page/project-resources-page.component').then(
+        (x) => x.ProjectResourcesPageComponent
       ),
   },
   /*{
