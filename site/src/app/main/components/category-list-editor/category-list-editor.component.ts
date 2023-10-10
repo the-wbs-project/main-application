@@ -1,6 +1,7 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -19,10 +20,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { LabelModule } from '@progress/kendo-angular-label';
-import {
-  DragStartEvent,
-  SortableModule,
-} from '@progress/kendo-angular-sortable';
+import { SortableModule } from '@progress/kendo-angular-sortable';
 import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService, DialogService } from '@wbs/main/services';
@@ -68,6 +66,7 @@ export class CategoryListEditorComponent {
   flip = false;
 
   constructor(
+    private readonly cd: ChangeDetectorRef,
     private readonly catService: CategorySelectionService,
     private readonly dialogService: DialogService,
     private readonly store: Store
@@ -99,10 +98,10 @@ export class CategoryListEditorComponent {
       });
   }
 
-  onDragStart(e: DragStartEvent): void {}
-
   rebuild() {
     this.catService.renumber(this.categories!);
     this.categoriesChange.emit(this.categories!);
+    this.categories = [...this.categories!];
+    this.cd.detectChanges();
   }
 }
