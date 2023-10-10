@@ -1,14 +1,14 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { claimsGuard } from '@wbs/main/guards';
+import { settingsReadGuard } from '@wbs/main/guards';
 import { DialogService } from '@wbs/main/services';
 import { SettingsState } from './states';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [claimsGuard],
+    canActivate: [settingsReadGuard],
     loadComponent: () =>
       import('./settings-layout.component').then(
         (m) => m.SettingsLayoutComponent

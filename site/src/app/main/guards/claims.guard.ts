@@ -1,10 +1,10 @@
 import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { ORGANIZATION_CLAIMS } from '@wbs/core/models';
 import { MembershipState, PermissionsState } from '@wbs/main/states';
 import { map, skipWhile, switchMap } from 'rxjs/operators';
 
-export const claimsGuard = (claims: string | string[]) => {
-  const store = inject(Store);
+const claimsGuard = (store: Store, claims: string | string[]) => {
   //
   //  We need to wait for the membership state to load before we can check the roles.
   //
@@ -22,4 +22,8 @@ export const claimsGuard = (claims: string | string[]) => {
       return false;
     })
   );
+};
+
+export const settingsReadGuard = () => {
+  return claimsGuard(inject(Store), [ORGANIZATION_CLAIMS.SETTINGS.READ]);
 };

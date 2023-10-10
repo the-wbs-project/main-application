@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { MembershipAdminState } from '../../states';
 import { MembershipState } from '@wbs/main/states';
+import { MembershipAdminState } from '../../states';
 
 @Injectable()
 export class InviteValidators {
@@ -38,7 +38,11 @@ export class InviteValidators {
 
     for (const email of emails) {
       if (
-        invitations.some((x) => x.invitee.toLowerCase() === email.toLowerCase())
+        invitations.some(
+          (x) =>
+            x.invitee.toLowerCase() === email.toLowerCase() &&
+            new Date(x.expiresAt) > new Date()
+        )
       ) {
         existing.push(email);
       }
