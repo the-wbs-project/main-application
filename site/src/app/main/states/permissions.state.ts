@@ -145,7 +145,7 @@ export class PermissionsState implements NgxsOnInit {
     console.log('Org Roles', id, roles);
 
     const state = ctx.getState();
-    const claims = this.getClaims(state.organizationPermissions!, roles);
+    const claims = this.getClaims(state.organizationPermissions, roles);
 
     ctx.patchState({
       organizationId: id,
@@ -181,7 +181,7 @@ export class PermissionsState implements NgxsOnInit {
       if (state.organizationRoles.includes(role)) actualRoles.push(role);
     }
     ctx.patchState({
-      projectClaims: this.getClaims(state.projectPermissions!, actualRoles),
+      projectClaims: this.getClaims(state.projectPermissions, actualRoles),
     });
   }
 
@@ -191,14 +191,15 @@ export class PermissionsState implements NgxsOnInit {
     return roles.map((role) => definitions.find((rd) => rd.name === role)!.id);
   }
 
-  private getClaims(permissions: Permissions, roles: string[]) {
+  private getClaims(permissions: Permissions | undefined, roles: string[]) {
     const results: string[] = [];
 
-    for (const key of Object.keys(permissions)) {
-      const claimRoles = permissions[key];
+    if (permissions)
+      for (const key of Object.keys(permissions)) {
+        const claimRoles = permissions[key];
 
-      if (claimRoles.some((r) => roles.includes(r))) results.push(key);
-    }
+        if (claimRoles.some((r) => roles.includes(r))) results.push(key);
+      }
     return results;
   }
 }

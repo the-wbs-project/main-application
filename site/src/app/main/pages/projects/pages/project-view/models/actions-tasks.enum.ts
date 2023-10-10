@@ -6,4 +6,7 @@ export enum TASK_ACTIONS {
   CLONED = 'task-cloned',
   REORDERED = 'task-reordered',
   REMOVED = 'task-removed',
+  RESOURCE_ADDED = 'task-resource-added',
+  RESOURCE_UPDATED = 'task-resource-updated',
+  RESOURCE_REMOVED = 'task-resource-removed',
 }
