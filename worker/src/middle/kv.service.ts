@@ -31,7 +31,9 @@ function users(ctx: Context, next: any): Promise<Response | void> {
 }
 
 function members(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'ORGS|:organization|MEMBERS', 15 * 60);
+  const user = ctx.get('idToken').userId;
+
+  return execute(ctx, next, 'ORGS|:organization|MEMBERS', 15 * 60, (list: { id: string }[]) => list.some((x) => x.id === user));
 }
 
 function membersClear(ctx: Context, next: any): Promise<Response | void> {
@@ -49,7 +51,13 @@ function createKey(ctx: Context, key: string): string {
   return key.replace('auth0|', '');
 }
 
-async function execute(ctx: Context, next: any, key: string, expirationInSeconds?: number): Promise<Response | void> {
+async function execute(
+  ctx: Context,
+  next: any,
+  key: string,
+  expirationInSeconds?: number,
+  dataVerification?: (data: any) => boolean,
+): Promise<Response | void> {
   key = createKey(ctx, key);
 
   //
@@ -58,7 +66,10 @@ async function execute(ctx: Context, next: any, key: string, expirationInSeconds
   if (ctx.req.headers.get('force-refresh') !== 'true') {
     const kvData = await ctx.env.KV_DATA.get(key, 'json');
 
-    if (kvData) return ctx.json(kvData);
+    if (kvData) {
+      if (dataVerification == undefined) return ctx.json(kvData);
+      if (dataVerification(kvData)) return ctx.json(kvData);
+    }
   }
   await next();
 
