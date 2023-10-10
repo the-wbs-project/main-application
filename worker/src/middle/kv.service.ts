@@ -4,6 +4,7 @@ export const kv = {
   checklists,
   lists,
   members,
+  membersClear,
   resources,
   roles,
   users,
@@ -31,6 +32,10 @@ function users(ctx: Context, next: any): Promise<Response | void> {
 
 function members(ctx: Context, next: any): Promise<Response | void> {
   return execute(ctx, next, 'ORGS|:organization|MEMBERS', 15 * 60);
+}
+
+function membersClear(ctx: Context, next: any): Promise<Response | void> {
+  return clear(ctx, next, 'ORGS|:organization|MEMBERS');
 }
 
 function createKey(ctx: Context, key: string): string {
@@ -65,4 +70,12 @@ async function execute(ctx: Context, next: any, key: string, expirationInSeconds
   await ctx.env.KV_DATA.put(key, text, {
     expirationTtl: expirationInSeconds,
   });
+}
+
+async function clear(ctx: Context, next: any, key: string): Promise<Response | void> {
+  key = createKey(ctx, key);
+
+  await ctx.env.KV_DATA.delete(key);
+
+  await next();
 }
