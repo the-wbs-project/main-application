@@ -1,10 +1,34 @@
-import { Routes } from '@angular/router';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
+import { Store } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { RecordResource } from '@wbs/core/models';
+import { MembershipState } from '@wbs/main/states';
 import {
   projectRedirectGuard,
   projectViewGuard,
   taskVerifyGuard,
 } from '../project-view.guards';
 import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
+import { orgResolve } from '@wbs/main/services';
+import { ProjectState } from '../states';
+import { projectClaimsResolve } from '../services';
+
+export const resourceResolve: ResolveFn<RecordResource[]> = (
+  route: ActivatedRouteSnapshot
+) => {
+  const org =
+    route.params['org'] ??
+    inject(Store).selectSnapshot(MembershipState.organization)?.name;
+  const projectId =
+    route.params['projectId'] ??
+    inject(Store).selectSnapshot(ProjectState.current)?.id;
+
+  return inject(DataServiceFactory).projectResources.getByProjectIdAsync(
+    org,
+    projectId
+  );
+};
 
 export const routes: Routes = [
   {
@@ -53,7 +77,7 @@ export const routes: Routes = [
           {
             path: 'about',
             data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
+              //title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.ABOUT,
             },
             loadComponent: () =>
@@ -64,7 +88,7 @@ export const routes: Routes = [
           {
             path: 'sub-tasks',
             data: {
-              title: 'ProjectUpload.PagesUploadProjectPlan',
+              //title: 'ProjectUpload.PagesUploadProjectPlan',
               view: TASK_PAGE_VIEW.SUB_TASKS,
             },
             loadComponent: () =>
@@ -110,7 +134,23 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./project-timeline-page.component').then(
-        ({ ProjectTimelinePageComponent }) => ProjectTimelinePageComponent
+        (x) => x.ProjectTimelinePageComponent
+      ),
+  },
+  {
+    path: 'resources',
+    canActivate: [projectViewGuard],
+    data: {
+       view: PROJECT_PAGE_VIEW.RESOURCES,
+    },
+    resolve: {
+      owner: orgResolve,
+      list: resourceResolve,
+      claims: projectClaimsResolve,
+    },
+    loadComponent: () =>
+      import('./project-resources-page/project-resources-page.component').then(
+        (x) => x.ProjectResourcesPageComponent
       ),
   },
   /*{
@@ -124,17 +164,6 @@ export const routes: Routes = [
       import('../../../discussion-forum/discussion-forum.module').then(
         (m) => m.DiscussionForumModule
       ),
-  },
-  {
-    path: 'task/:taskId/:view',
-    component: TaskViewComponent,
-    canActivate: [TaskVerifyGuard, TaskViewGuard],
-    data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.TIMELINE,
-    },
-    loadComponent: () =>
-      import('./task-sub-tasks/task-sub-tasks.component').then(({ TaskSubTasksComponent }) => TaskSubTasksComponent),
   },*/
   {
     path: 'settings',

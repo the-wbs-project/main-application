@@ -6,7 +6,7 @@ export class OriginService {
   async getAsync<T>(suffix?: string): Promise<T> {
     const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {
       headers: {
-        Authentiation: this.ctx.req.header('Authentication') ?? '',
+        Authorization: this.ctx.req.header('Authorization') ?? '',
       },
       method: 'GET',
     });

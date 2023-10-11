@@ -3,7 +3,7 @@ import { State, process } from '@progress/kendo-data-query';
 
 @Injectable()
 export class TableHelper {
-  filter(state: State, columns: string[], filter: string): void {
+  static filter(state: State, columns: string[], filter: string): void {
     state.filter = {
       logic: 'or',
       filters: columns.map((x) => ({

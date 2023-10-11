@@ -1,30 +1,25 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProjectNode, WbsNode } from '../models';
+import { ProjectNode } from '../models';
 
 export class ProjectNodeDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAllAsync(
-    organization: string,
-    projectId: string
-  ): Observable<ProjectNode[]> {
+  getAllAsync(owner: string, projectId: string): Observable<ProjectNode[]> {
     return this.http
-      .get<ProjectNode[]>(
-        `api/projects/owner/${organization}/id/${projectId}/nodes`
-      )
+      .get<ProjectNode[]>(`api/projects/owner/${owner}/id/${projectId}/nodes`)
       .pipe(map((list) => this.cleanList(list)));
   }
 
   putAsync(
-    organization: string,
+    owner: string,
     projectId: string,
     upserts: ProjectNode[],
     removeIds: string[]
   ): Observable<void> {
     return this.http.put<void>(
-      `api/projects/owner/${organization}/id/${projectId}/nodes`,
+      `api/projects/owner/${owner}/id/${projectId}/nodes`,
       {
         upserts,
         removeIds,

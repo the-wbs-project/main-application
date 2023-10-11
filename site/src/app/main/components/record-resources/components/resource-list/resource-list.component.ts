@@ -1,82 +1,80 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  OnChanges,
-  signal,
-} from '@angular/core';
-import { faGear, faX } from '@fortawesome/pro-solid-svg-icons';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faDownload, faGear, faTrash } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
 import {
   CompositeFilterDescriptor,
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Invite } from '@wbs/core/models';
+import { PROJECT_CLAIMS, RecordResource } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
+import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
-import { TableHelper } from '@wbs/main/services';
-import { first } from 'rxjs';
-import { CancelInvite } from '../../actions';
-import { SortArrowComponent } from '../../../../../../components/sort-arrow.component';
-import { IsExpiredPipe } from './is-expired.pipe';
+import { DialogService, TableHelper } from '@wbs/main/services';
+import { ResourceTypeDownloadablePipe } from '../../pipes/resource-type-downloadable.pipe';
+import { ResourceTypeIconPipe } from '../../pipes/resource-type-icon.pipe';
+import { ResourceTypeNamePipe } from '../../pipes/resource-type-name.pipe';
+import { CheckPipe } from '../../../../pipes/check.pipe';
+import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-link.component';
 
 @Component({
   standalone: true,
-  selector: 'wbs-invitation-list',
-  templateUrl: './invitation-list.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  selector: 'wbs-resource-list',
+  templateUrl: './resource-list.component.html',
   providers: [TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
-    IsExpiredPipe,
+    FontAwesomeModule,
     NgClass,
     NgFor,
     NgIf,
-    RoleListPipe,
+    ResourceTypeDownloadablePipe,
+    ResourceTypeIconPipe,
+    ResourceTypeNamePipe,
+    ResourceViewLinkComponent,
     SortableDirective,
     SortArrowComponent,
-    SVGIconModule,
     TableProcessPipe,
     TranslateModule,
+    CheckPipe,
   ],
 })
-export class InvitationListComponent implements OnChanges {
-  @Input({ required: true }) invites?: Invite[];
-  @Input() roles: string[] = [];
-  @Input() textFilter = '';
+export class ResourceListComponent {
+  @Input({ required: true }) claims!: string[];
+  @Input({ required: true }) list!: RecordResource[];
+  @Output() readonly save = new EventEmitter<RecordResource>();
+
+  readonly editClaim = PROJECT_CLAIMS.RESOURCES.UPDATE;
+  readonly deleteClaim = PROJECT_CLAIMS.RESOURCES.DELETE;
 
   readonly state = signal(<State>{
-    sort: [{ field: 'name', dir: 'asc' }],
+    sort: [{ field: 'order', dir: 'asc' }],
   });
   readonly faGear = faGear;
-  readonly menu = [
-    {
-      text: 'OrgSettings.CancelInvite',
-      icon: faX,
-      action: 'cancel',
-    },
-  ];
+  readonly faTrash = faTrash;
+  readonly faDownload = faDownload;
+  readonly menu = [];
 
   constructor(
+    private readonly dialogService: DialogService,
     private readonly messages: Messages,
     private readonly store: Store
   ) {}
 
-  ngOnChanges(): void {
-    this.updateState();
+  view(resource: RecordResource): void {
+    //
   }
 
-  userActionClicked(invite: Invite, action: string): void {
-    /* if (action === 'edit') {
+  actionClicked(resource: RecordResource, action: string): void {
+    /*
+    if (action === 'edit') { 
       this.dialogService
         .openDialog<Member>(
           EditMemberComponent,
@@ -92,16 +90,16 @@ export class InvitationListComponent implements OnChanges {
             new UpdateMemberRoles(changedMember.id, changedMember.roles)
           );
         });
-    } else */ if (action === 'cancel') {
+    } else if (action === 'remove') {
       this.messages.confirm
-        .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
+        .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
         .pipe(first())
         .subscribe((answer) => {
           if (answer) {
-            this.store.dispatch(new CancelInvite(invite.id));
+            this.store.dispatch(new RemoveMemberFromOrganization(member.id));
           }
         });
-    }
+    }*/
   }
 
   updateState(): void {
@@ -110,17 +108,18 @@ export class InvitationListComponent implements OnChanges {
     };
     const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
 
+    /*
     if (this.textFilter) {
       filters.push(<CompositeFilterDescriptor>{
         logic: 'or',
         filters: [
           {
-            field: 'inviter',
+            field: 'name',
             operator: 'contains',
             value: this.textFilter,
           },
           {
-            field: 'invitee',
+            field: 'email',
             operator: 'contains',
             value: this.textFilter,
           },
@@ -146,6 +145,7 @@ export class InvitationListComponent implements OnChanges {
       logic: 'and',
       filters,
     };
+    */
     this.state.set(state);
   }
 }

@@ -1,0 +1,69 @@
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" class="wd-40" [sortable]="'order'" [state]="state()">
+        <wbs-sort-arrow [state]="state()" field="order" />
+      </th>
+      <th scope="col" class="pointer" [sortable]="'type'" [state]="state()">
+        {{ "General.Type" | translate }} &nbsp;
+        <wbs-sort-arrow [state]="state()" field="type" />
+      </th>
+      <th scope="col" class="pointer" [sortable]="'name'" [state]="state()">
+        {{ "General.Name" | translate }} &nbsp;
+        <wbs-sort-arrow [state]="state()" field="name" />
+      </th>
+      <th
+        scope="col"
+        class="pointer d-none d-md-table-cell"
+        [sortable]="'description'"
+        [state]="state()"
+      >
+        {{ "General.Description" | translate }} &nbsp;
+        <wbs-sort-arrow [state]="state()" field="description" />
+      </th>
+      <th
+        scope="col"
+        class="pointer d-none d-lg-table-cell"
+        [sortable]="'lastModified'"
+        [state]="state()"
+      >
+        {{ "General.LastModified" | translate }} &nbsp;
+        <wbs-sort-arrow [state]="state()" field="lastModified" />
+      </th>
+      <th scope="col">&nbsp;</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let resource of list | tableProcess : state()">
+      <td>{{ resource.order }}</td>
+      <td class="mn-wd-100">
+        <fa-icon
+          *ngIf="resource.type | resourceTypeIcon; let icon"
+          [icon]="icon"
+        />&nbsp;
+        {{ resource.type | resourceTypeName | translate }}
+      </td>
+      <td class="mn-wd-200">{{ resource.name }}</td>
+      <td class="d-none d-md-table-cell tx-12">
+        {{ resource.description }}
+      </td>
+      <td class="d-none d-lg-table-cell">
+        {{ resource.lastModified | dateText }}
+      </td>
+      <td class="wd-85 pd-x-0-f">
+        <div class="d-ib wd-40 tx-center">
+          <wbs-resource-view-link [resource]="resource" />
+        </div>
+        <div class="d-ib wd-40 tx-center">
+          <a
+            *ngIf="claims | check : [editClaim, deleteClaim]"
+            class="pointer text-decoration-none tx-black"
+            (click)="view(resource)"
+          >
+            <fa-icon [icon]="faGear" />
+          </a>
+        </div>
+      </td>
+    </tr>
+  </tbody>
+</table>

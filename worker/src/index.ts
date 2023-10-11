@@ -35,6 +35,9 @@ app.get('api/lists/:type', kv.lists, OriginService.pass);
 app.get('api/permissions/projects', (ctx) => ctx.json(PROJECT_PERMISSIONS));
 app.get('api/permissions/organization', (ctx) => ctx.json(ORGANZIATION_PERMISSIONS));
 
+app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);
+app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
+
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
@@ -56,6 +59,9 @@ app.get('api/projects/owner/:owner/id/:projectId', verifyJwt, verifyMembership, 
 
 app.get('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
+
+app.get('api/projects/owner/:owner/id/:projectId/resources', verifyJwt, verifyMembership, OriginService.pass);
+app.put('api/projects/owner/:owner/id/:projectId/resources/:resourcesId', verifyJwt, verifyMembership, OriginService.pass);
 
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
@@ -111,13 +117,15 @@ for (const path of ORIGIN_PASSES) {
   app.post(path, verifyJwt, OriginService.pass);
 }
 
+export default app;
+/*
 export default {
   fetch: app.fetch,
   async scheduled(controller: ScheduledController, env: Env, ctx: ExecutionContext) {
     //
   },
   async queue(batch: MessageBatch, env: Env, ctx: ExecutionContext): Promise<void> {
-    /*console.log(`${batch.queue}: ${batch.messages.length} Messages`);
+    console.log(`${batch.queue}: ${batch.messages.length} Messages`);
 
     const datadog = new DataDogService(env);
     const logger = new JobLogger(env, datadog, batch.queue);
@@ -135,6 +143,7 @@ export default {
       logger.trackException('An error occured trying to process a queue message.', <Error>e);
     } finally {
       ctx.waitUntil(datadog.flush());
-    }*/
+    }
   },
 };
+*/
