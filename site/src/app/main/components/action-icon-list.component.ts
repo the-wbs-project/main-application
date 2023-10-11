@@ -21,7 +21,7 @@ import { ActionMenuItem } from '@wbs/core/models';
     [popupSettings]="{ align: align }"
     (itemClick)="clicked($event)"
   >
-    <fa-icon [icon]="mainIcon" />
+    <fa-icon [icon]="mainIcon" size="xl" />
     <ng-template kendoDropDownButtonItemTemplate let-dataItem>
       <div class="lh-10" [ngClass]="dataItem.cssClasses">
         <ng-template [ngIf]="dataItem.icon" [ngIfElse]="noIcon">

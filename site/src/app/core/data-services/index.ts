@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { ActivityDataService } from './activity.data-service';
 import { AiDataService } from './ai.data-service';
 import { ChatDataService } from './chat.data-service';
+import { ClaimsDataService } from './claims.data-service';
 import { JiraDataService } from './jira.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
@@ -21,6 +22,7 @@ export class DataServiceFactory {
   readonly activities = new ActivityDataService(this.http);
   readonly ai = new AiDataService(this.http);
   readonly chat = new ChatDataService(this.http);
+  readonly claims = new ClaimsDataService(this.http);
   readonly jira = new JiraDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);

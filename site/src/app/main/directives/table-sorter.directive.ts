@@ -10,10 +10,13 @@ import { TableHelper } from '../services';
     '[class.desc]': 'direction === "desc"',
     '(click)': 'rotate()',
   },
+  providers: [TableHelper],
 })
 export class SortableDirective {
   @Input() state!: State;
   @Input() sortable!: string;
+
+  
 
   constructor(private readonly service: TableHelper) {}
 

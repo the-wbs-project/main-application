@@ -4,6 +4,7 @@ import { ListItem, Resources } from '../../models';
 export class MetadataHttpService {
   static async putResourcesAsync(ctx: Context): Promise<Response> {
     try {
+      console.error('ERROR');
       const data = ctx.get('data').resources;
       const resources: Resources[] = await ctx.req.json();
 

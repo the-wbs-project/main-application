@@ -1,5 +1,5 @@
-import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { MembershipState } from '@wbs/main/states';
 

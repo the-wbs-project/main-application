@@ -33,8 +33,8 @@ export class ProjectResourcesDataService {
       if (typeof node.createdOn === 'string')
         node.createdOn = new Date(node.createdOn);
 
-      if (typeof node.lastModifiedOn === 'string')
-        node.lastModifiedOn = new Date(node.lastModifiedOn);
+      if (typeof node.lastModified === 'string')
+        node.lastModified = new Date(node.lastModified);
     }
     return nodes;
   }

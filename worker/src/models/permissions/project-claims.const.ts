@@ -19,4 +19,10 @@ export const PROJECT_CLAIMS = {
     UPDATE: 'update:project_roles',
     DELETE: 'delete:project_roles',
   },
+  RESOURCES: {
+    READ: 'read:project_resources',
+    CREATE: 'create:project_resources',
+    UPDATE: 'update:project_resources',
+    DELETE: 'delete:project_resources',
+  },
 };

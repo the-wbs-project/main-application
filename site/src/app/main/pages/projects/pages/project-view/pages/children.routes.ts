@@ -12,6 +12,7 @@ import {
 import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
 import { orgResolve } from '@wbs/main/services';
 import { ProjectState } from '../states';
+import { projectClaimsResolve } from '../services';
 
 export const resourceResolve: ResolveFn<RecordResource[]> = (
   route: ActivatedRouteSnapshot
@@ -140,12 +141,12 @@ export const routes: Routes = [
     path: 'resources',
     canActivate: [projectViewGuard],
     data: {
-      //title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.RESOURCES,
+       view: PROJECT_PAGE_VIEW.RESOURCES,
     },
     resolve: {
       owner: orgResolve,
       list: resourceResolve,
+      claims: projectClaimsResolve,
     },
     loadComponent: () =>
       import('./project-resources-page/project-resources-page.component').then(

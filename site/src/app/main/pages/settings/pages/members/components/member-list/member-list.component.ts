@@ -23,16 +23,15 @@ import {
 import { Member } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
+import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
+import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { DialogService } from '@wbs/main/services';
+import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
+import { DialogService, TableHelper } from '@wbs/main/services';
 import { first } from 'rxjs/operators';
 import { RemoveMemberFromOrganization, UpdateMemberRoles } from '../../actions';
-import { SortableDirective } from '../../directives/table-sorter.directive';
-import { TableProcessPipe } from '../../pipes/table-process.pipe';
-import { TableHelper } from '../../services';
 import { EditMemberComponent } from '../edit-member/edit-member.component';
-import { SortArrowComponent } from '../sort-arrow.component';
 
 @Component({
   standalone: true,

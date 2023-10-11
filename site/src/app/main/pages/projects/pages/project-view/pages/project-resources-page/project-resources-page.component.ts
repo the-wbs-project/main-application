@@ -18,6 +18,7 @@ export class ProjectResourcesPageComponent {
   @Input({ required: true }) list!: RecordResource[];
   @Input({ required: true }) owner!: string;
   @Input({ required: true }) projectId!: string;
+  @Input({ required: true }) claims!: string[];
 
   constructor(
     private readonly cd: ChangeDetectorRef,

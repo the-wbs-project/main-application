@@ -19,6 +19,7 @@
       "Delete": "Delete",
       "General": "General",
       "Search": "Search",
+      "Type": "Type",
       "All": "All",
       "Error": "Error",
       "Success": "Success",
@@ -29,6 +30,7 @@
       "Save": "Save",
       "Saving": "Saving",
       "SaveAndView": "Save & View",
+      "View": "View",
       "Status": "Status",
       "About": "About",
       "Active": "Active",
@@ -119,7 +121,12 @@
       "Level": "Level",
       "Discussions": "Discussions",
       "LastModified": "Last Modified",
-      "Loading": "Loading"
+      "Loading": "Loading",
+      "Pdf": "PDF",
+      "Link": "Link",
+      "Image": "Image",
+      "File": "File",
+      "Video": "Video"
     }
   },
   {

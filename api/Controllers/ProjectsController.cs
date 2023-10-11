@@ -75,6 +75,21 @@ public class ProjectsController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("owner/{owner}/id/{id}/roles")]
+    public async Task<IActionResult> GetRolesByIdAsync(string owner, string id)
+    {
+        try
+        {
+            return Ok((await projectDataService.GetByIdAsync(id)).roles);
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("owner/{owner}/id/{id}/nodes")]
     public async Task<IActionResult> GetNodesByIdAsync(string owner, string id)
     {
