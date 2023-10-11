@@ -39,6 +39,29 @@ public class RecordResourceDataService : BaseDbService
         return results;
     }
 
+    public async Task<RecordResource> GetByIdAsync(string resourceId, string recordId)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await GetByIdAsync(conn, resourceId, recordId);
+        }
+    }
+
+    public async Task<RecordResource> GetByIdAsync(SqlConnection conn, string resourceId, string recordId)
+    {
+        var cmd = new SqlCommand("SELECT TOP 1 * FROM [dbo].[RecordResources] WHERE [Id] = @Id AND [RecordId] = @RecordId", conn);
+
+        cmd.Parameters.AddWithValue("@RecordId", recordId);
+        cmd.Parameters.AddWithValue("@Id", resourceId);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            return reader.Read() ? ToModel(reader) : null;
+        }
+    }
+
     public async Task SetAsync(RecordResource resource)
     {
         using (var conn = new SqlConnection(cs))

@@ -173,6 +173,29 @@ public class ProjectsController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("owner/{owner}/id/{id}/resources/{resourceId}")]
+    public async Task<IActionResult> GetResourcesById(string owner, string id, string resourceId)
+    {
+        try
+        {
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
+
+                return Ok(await resourceDataService.GetByIdAsync(conn, resourceId, id));
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPut("owner/{owner}/id/{projectId}/resources/{resourceId}")]
     public async Task<IActionResult> PutResources(string owner, string projectId, string resourceId, RecordResource resources)
     {
