@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { SetBreadcrumbs } from '@wbs/main/actions';
-import { MembershipState } from '@wbs/main/states';
+import { Utils } from '@wbs/main/services';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SetHeaderInformation, StartWizard } from '../actions';
@@ -11,9 +11,7 @@ import { PROJECT_CREATION_PAGES } from '../models';
 import { ProjectCreateState } from '../states';
 
 function redirect(store: Store, route: ActivatedRouteSnapshot) {
-  const owner =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
+  const owner = Utils.getOrgName(store, route);
 
   return store
     .dispatch(
@@ -32,9 +30,7 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) =>
 
 export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
+  const owner = Utils.getOrgName(store, route);
 
   return (
     store.dispatch([
@@ -59,9 +55,7 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
 
 export const startWizardGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
+  const owner = Utils.getOrgName(store, route);
 
   return store.dispatch(new StartWizard(owner)).pipe(map(() => true));
 };

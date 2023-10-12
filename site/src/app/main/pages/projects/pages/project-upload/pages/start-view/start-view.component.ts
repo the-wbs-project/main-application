@@ -12,8 +12,9 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { FileSelectModule, SelectEvent } from '@progress/kendo-angular-upload';
+import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { UploaderComponent } from '@wbs/main/components/uploader/uploader.component';
 import { FileUploaded } from '../../actions';
 
 @Component({
@@ -21,7 +22,7 @@ import { FileUploaded } from '../../actions';
   templateUrl: './start-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [FileSelectModule, FontAwesomeModule, NgClass, TranslateModule],
+  imports: [FontAwesomeModule, NgClass, TranslateModule, UploaderComponent],
   styles: ['.k-dropzone-inner { background-color: #c8dadf; }'],
 })
 export class StartViewComponent {
@@ -34,8 +35,8 @@ export class StartViewComponent {
     private readonly store: Store
   ) {}
 
-  onSelect(ev: SelectEvent): void {
-    this.store.dispatch(new FileUploaded(ev.files[0]));
+  onSelect(file: FileInfo): void {
+    this.store.dispatch(new FileUploaded(file));
   }
 
   downloadTemplate() {

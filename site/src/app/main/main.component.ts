@@ -19,7 +19,7 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
 import { FillElementDirective } from './directives/fill-element.directive';
 import { MainContentDirective } from './directives/main-content.directive';
 import { DialogService } from './services';
-import { AiState, AuthState, MembershipState } from './states';
+import { AiState, AuthState } from './states';
 import { Organization } from '@wbs/core/models';
 
 @Component({

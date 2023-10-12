@@ -1,0 +1,68 @@
+<div class="container-fluid">
+  <div class="row">
+    <span class="col-3 pd-t-10"> Resource Type </span>
+    <div class="col-9">
+      <kendo-dropdownlist [data]="typeList" [(value)]="vm.type">
+        <ng-template
+          kendoDropDownListItemTemplate
+          kendoDropDownListValueTemplate
+          let-dataItem
+        >
+          <wbs-resource-type-text [type]="dataItem" />
+        </ng-template>
+      </kendo-dropdownlist>
+      <span class="tx-italic tx-11">
+        Select the type of resource you would like to add.
+      </span>
+    </div>
+  </div>
+  <ng-template [ngIf]="vm.type">
+    <div class="row mg-t-20">
+      <span class="col-3 pd-t-10"> Name </span>
+      <div class="col-9">
+        <input type="text" [(ngModel)]="vm.name" class="form-control w-100" />
+        <span class="tx-italic tx-11"> The name of the resource </span>
+      </div>
+    </div>
+    <div class="row mg-t-20">
+      <span class="col-3 pd-t-10"> Description </span>
+      <div class="col-9">
+        <textarea
+          [(ngModel)]="vm.name"
+          class="form-control w-100"
+          rows="5"
+        ></textarea>
+        <span class="tx-italic tx-11">
+          A brief description of the resource
+        </span>
+      </div>
+    </div>
+    <div *ngIf="vm.type === 'link'" class="row mg-t-20">
+      <span class="col-3 pd-t-10"> URL </span>
+      <div class="col-9">
+        <input type="text" [(ngModel)]="vm.url" class="form-control w-100" />
+        <span class="tx-italic tx-11"> The URL of the link. </span>
+      </div>
+    </div>
+    <div *ngIf="vm.type === 'youtube'" class="row mg-t-20">
+      <span class="col-3 pd-t-10"> YouTube Information </span>
+      <div class="col-9">
+        <textarea
+          [(ngModel)]="vm.url"
+          class="form-control w-100"
+          rows="5"
+        ></textarea>
+        <span class="tx-italic tx-11">
+          Go to your YouTube video, click Share, click the Embed button, then
+          paste here.
+        </span>
+      </div>
+    </div>
+    <div *ngIf="vm.type !== 'youtube'" class="row mg-t-20">
+      <span class="col-3 pd-t-10"> File Upload </span>
+      <div class="col-9">
+        <wbs-uploader />
+      </div>
+    </div>
+  </ng-template>
+</div>

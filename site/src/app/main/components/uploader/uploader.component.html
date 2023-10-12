@@ -1,0 +1,11 @@
+<kendo-uploaddropzone zoneId="myZone" class="w-100">
+  {{ zoneMessage }}
+</kendo-uploaddropzone>
+<kendo-fileselect
+  zoneId="myZone"
+  [multiple]="false"
+  [ngClass]="'w-100'"
+  (select)="uploaded.emit($event.files[0])"
+>
+  <kendo-upload-messages dropFilesHere="" />
+</kendo-fileselect>

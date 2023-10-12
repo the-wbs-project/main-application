@@ -10,7 +10,7 @@ import {
   RoleState,
   UiState,
 } from './states';
-import { UserService, orgClaimsResolve } from './services';
+import { UserService, orgClaimsResolve, orgObjResolve } from './services';
 
 export const routes: Routes = [
   {
@@ -57,6 +57,7 @@ export const routes: Routes = [
         ],
         resolve: {
           claims: orgClaimsResolve,
+          org: orgObjResolve,
         },
       },
     ],

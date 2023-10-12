@@ -8,9 +8,9 @@
     <wbs-header-profile-picture [picture]="user.picture" />
   </a>
   <div ngbDropdownMenu class="profile-menu pb-0 profile-shadow">
-    <div class="w-100 text-center" *ngIf="org()?.branding?.logo_url; let logo">
+    <!--<div class="w-100 text-center" *ngIf="org.branding?.logo_url; let logo">
       <img class="logo" [src]="logo" />
-    </div>
+    </div>-->
     <wbs-header-profile-header [user]="user" [roles]="roles()" />
 
     <a

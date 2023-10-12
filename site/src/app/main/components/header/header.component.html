@@ -1,17 +1,17 @@
 <header class="w-100 d-flex bg-white ht-55">
   <div class="header-title mg-l-20 wd-240 tx-24 tx-semibold lh-15">
-    {{ appTitle }} {{ claims != null }}
+    {{ appTitle }} {{ org == null }}
   </div>
   <div class="tx-right pd-r-10 flex-1">
     <div class="d-ib wd-60 mg-t-8 mg-r-20">
-      <wbs-header-profile />
+      <wbs-header-profile [org]="org" />
     </div>
   </div>
 </header>
 <nav class="wbs-nav-lg navbar navbar-expand navbar-dark bg-dark">
   <div class="container-fluid">
     <span class="navbar-brand">
-      {{ org?.display_name }}
+      {{ org.display_name }}
     </span>
     <div class="navbar-collapse">
       <ul class="navbar-nav">
@@ -39,7 +39,7 @@
                 <a
                   *ngIf="link.type === 'link'"
                   ngbDropdownItem
-                  [routerLink]="link.route | orgUrl : org?.name"
+                  [routerLink]="link.route | orgUrl : org.name"
                   class="lh-5"
                 >
                   {{ link.label | translate }}
@@ -56,7 +56,7 @@
 <nav class="wbs-nav-sm navbar navbar-expand-sm navbar-dark bg-dark">
   <div class="container-fluid">
     <span class="navbar-brand">
-      {{ org?.display_name }}
+      {{ org.display_name }}
     </span>
     <button
       class="navbar-toggler"
@@ -80,7 +80,7 @@
             <li class="nav-item tx-uppercase">
               <a
                 *ngIf="link.type === 'link'"
-                [routerLink]="link.route | orgUrl : org?.name"
+                [routerLink]="link.route | orgUrl : org.name"
                 class="nav-link pd-y-5 pd-x-20"
               >
                 {{ link.label! | translate }}

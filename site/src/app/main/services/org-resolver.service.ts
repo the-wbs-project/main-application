@@ -4,10 +4,10 @@ import { Store } from '@ngxs/store';
 import { Organization } from '@wbs/core/models';
 import { MembershipState } from '@wbs/main/states';
 import { first, map, skipWhile, tap } from 'rxjs/operators';
+import { Utils } from './utils.service';
 
 export const orgResolve: ResolveFn<string> = (route: ActivatedRouteSnapshot) =>
-  route.params['org'] ??
-  inject(Store).selectSnapshot(MembershipState.organization)?.name;
+  Utils.getOrgName(inject(Store), route);
 
 export const orgObjResolve: ResolveFn<Organization> = () =>
   inject(Store)

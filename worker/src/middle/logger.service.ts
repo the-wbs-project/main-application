@@ -1,6 +1,6 @@
 import { Context } from '../config';
 
-export async function logger(ctx: Context, next: any) {
+export async function ddLogger(ctx: Context, next: any) {
   const start = new Date();
 
   await next();

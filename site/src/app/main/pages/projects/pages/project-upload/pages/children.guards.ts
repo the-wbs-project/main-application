@@ -11,38 +11,24 @@ import { SetHeaderInformation } from '../../project-create/actions';
 import { SetAsStarted } from '../actions';
 import { ProjectUploadState } from '../states';
 
-function redirect(store: Store, route: ActivatedRouteSnapshot) {
-  return forkJoin({
-    project: store.selectOnce(ProjectUploadState.current),
-    owner: route.params['owner']
-      ? of(route.params['owner'])
-      : store.selectOnce(MembershipState.organization),
-  }).pipe(
-    tap(({ project, owner }) => {
-      const ownerId = typeof owner === 'string' ? owner : owner?.name;
-
-      return store.dispatch(
-        new Navigate([
-          '/' + ownerId,
-          'projects',
-          'upload',
-          project!.id,
-          'start',
-        ])
-      );
-    }),
+function redirect(store: Store) {
+  return store.selectOnce(ProjectUploadState.current).pipe(
+    map((p) => p!),
+    tap((p) =>
+      store.dispatch(
+        new Navigate(['/' + p.owner, 'projects', 'upload', p.id, 'start'])
+      )
+    ),
     map(() => true)
   );
 }
 
-export const verifyStartedGuard = (route: ActivatedRouteSnapshot) => {
+export const verifyStartedGuard = () => {
   const store = inject(Store);
 
   return store
     .selectOnce(ProjectUploadState.started)
-    .pipe(
-      switchMap((started) => (started ? of(true) : redirect(store, route)))
-    );
+    .pipe(switchMap((started) => (started ? of(true) : redirect(store))));
 };
 
 export const startGuard = () => {
@@ -53,17 +39,10 @@ export const startGuard = () => {
 
 export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const resources = inject(Resources);
 
-  return forkJoin({
-    project: store.selectOnce(ProjectUploadState.current),
-    owner: route.params['owner']
-      ? of(route.params['owner'])
-      : store.selectOnce(MembershipState.organization),
-  }).pipe(
-    tap(({ project, owner }) => {
-      const ownerId = typeof owner === 'string' ? owner : owner?.name;
-
+  return store.selectOnce(ProjectUploadState.current).pipe(
+    map((p) => p!),
+    tap((project) => {
       return (
         store.dispatch([
           new SetHeaderInformation(
@@ -72,16 +51,16 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
           ),
           new SetBreadcrumbs([
             {
-              route: ['/', ownerId, 'projects'],
+              route: ['/', project.owner, 'projects'],
               text: 'General.Projects',
             },
             {
-              route: ['/', ownerId, 'projects', 'view', project!.id],
-              text: project!.title,
+              route: ['/', project.owner, 'projects', 'view', project.id],
+              text: project.title,
               isText: true,
             },
             {
-              route: ['/', ownerId, 'projects', 'upload', project!.id],
+              route: ['/', project.owner, 'projects', 'upload', project.id],
               text: 'General.Upload',
             },
             {

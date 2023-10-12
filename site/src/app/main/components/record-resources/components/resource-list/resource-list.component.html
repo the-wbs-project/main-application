@@ -33,11 +33,7 @@
   <tbody>
     <tr *ngFor="let resource of list | tableProcess : state()">
       <td class="mn-wd-100">
-        <fa-icon
-          *ngIf="resource.type | resourceTypeIcon; let icon"
-          [icon]="icon"
-        />&nbsp;
-        {{ resource.type | resourceTypeName | translate }}
+        <wbs-resource-type-text [type]="resource.type" />
       </td>
       <td class="mn-wd-200">{{ resource.name }}</td>
       <td class="d-none d-md-table-cell tx-12">
@@ -54,7 +50,6 @@
           <a
             *ngIf="claims | check : [editClaim, deleteClaim]"
             class="pointer text-decoration-none tx-black"
-            (click)="view(resource)"
           >
             <fa-icon [icon]="faGear" />
           </a>

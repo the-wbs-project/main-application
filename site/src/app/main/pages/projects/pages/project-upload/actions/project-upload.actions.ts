@@ -1,10 +1,10 @@
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { ProjectUploadData } from '@wbs/core/models';
+import { Project, ProjectUploadData } from '@wbs/core/models';
 import { PeopleListItem, PhaseListItem } from '../models';
 
 export class SetProject {
   static readonly type = '[Project Upload] Set Project';
-  constructor(readonly owner: string, readonly projectId: string) {}
+  constructor(readonly project: Project) {}
 }
 
 export class SetPageTitle {

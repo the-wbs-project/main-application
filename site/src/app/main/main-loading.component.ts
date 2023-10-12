@@ -1,12 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
+import { first, skipWhile, tap } from 'rxjs/operators';
 import { MembershipState } from './states';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   template: `<div class="w-100 text-center pd-t-200">
@@ -23,9 +22,13 @@ export class MainLoadingComponent implements OnInit {
   ngOnInit(): void {
     this.store
       .select(MembershipState.organization)
-      .pipe(untilDestroyed(this))
-      .subscribe((org) => {
-        if (org) this.store.dispatch(new Navigate(['/', org.name, 'projects']));
-      });
+      .pipe(
+        skipWhile((x) => x == undefined),
+        first(),
+        tap((org) =>
+          this.store.dispatch(new Navigate(['/', org!.name, 'projects']))
+        )
+      )
+      .subscribe();
   }
 }

@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
-import { MembershipState } from '@wbs/main/states';
+import { Utils } from '@wbs/main/services';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   InitiateChecklist,
@@ -16,9 +16,7 @@ import { ProjectState, ProjectViewState } from './states';
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
+  const owner = Utils.getOrgName(store, route);
 
   return store
     .dispatch(new LoadDiscussionForum(owner, route.params['projectId']))
@@ -27,9 +25,7 @@ export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
+  const owner = Utils.getOrgName(store, route);
 
   return store
     .dispatch(
@@ -46,9 +42,7 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner =
-    route.params['owner'] ??
-    store.selectSnapshot(MembershipState.organization)?.name;
+  const owner = Utils.getOrgName(store, route);
 
   if (!owner) return false;
 

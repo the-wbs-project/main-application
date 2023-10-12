@@ -132,15 +132,8 @@ export class ProjectUploadState {
   }
 
   @Action(SetProject)
-  setProject(
-    ctx: StateContext<StateModel>,
-    { owner, projectId }: SetProject
-  ): void | Observable<void> {
-    return this.data.projects.getAsync(owner, projectId).pipe(
-      map((project) => {
-        ctx.patchState({ project });
-      })
-    );
+  setProject(ctx: StateContext<StateModel>, { project }: SetProject): void {
+    ctx.patchState({ project });
   }
 
   @Action(SetPageTitle)

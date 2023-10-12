@@ -3,23 +3,20 @@ import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { RecordResource } from '@wbs/core/models';
-import { MembershipState } from '@wbs/main/states';
+import { Utils, orgResolve } from '@wbs/main/services';
+import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
 import {
   projectRedirectGuard,
   projectViewGuard,
   taskVerifyGuard,
 } from '../project-view.guards';
-import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
-import { orgResolve } from '@wbs/main/services';
-import { ProjectState } from '../states';
 import { projectClaimsResolve } from '../services';
+import { ProjectState } from '../states';
 
 export const resourceResolve: ResolveFn<RecordResource[]> = (
   route: ActivatedRouteSnapshot
 ) => {
-  const org =
-    route.params['org'] ??
-    inject(Store).selectSnapshot(MembershipState.organization)?.name;
+  const org = Utils.getOrgName(inject(Store), route);
   const projectId =
     route.params['projectId'] ??
     inject(Store).selectSnapshot(ProjectState.current)?.id;

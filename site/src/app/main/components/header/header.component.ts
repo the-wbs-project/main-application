@@ -42,13 +42,13 @@ interface RouteLinkGroup {
     NgForOf,
     NgIf,
     OrgUrlPipe,
-    RouterModule, 
+    RouterModule,
     TranslateModule,
   ],
 })
 export class HeaderComponent {
   @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) org?: Organization;
+  @Input({ required: true }) org!: Organization;
 
   readonly menuIcon = menuIcon;
   readonly appTitle = environment.appTitle;

@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -13,6 +13,7 @@ import { AuthState, MembershipState } from '@wbs/main/states';
 import { ProfileEditorComponent } from '../../profile-editor/profile-editor.component';
 import { HeaderProfileHeaderComponent } from '../header-profile-header/header-profile-header.component';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
+import { Organization } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -32,9 +33,10 @@ import { HeaderProfilePictureComponent } from '../header-profile-picture.compone
   ],
 })
 export class HeaderProfileComponent {
+  @Input({ required: true }) org!: Organization;
+
   readonly user = toSignal(this.store.select(AuthState.profile));
   readonly roles = toSignal(this.store.select(MembershipState.roles));
-  readonly org = toSignal(this.store.select(MembershipState.organization));
   readonly logoutIcon = logoutIcon;
   readonly userIcon = userIcon;
   isCollapsed = true;

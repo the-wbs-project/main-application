@@ -1,1 +1,39 @@
-<wbs-resource-list [claims]="claims" [list]="list" />
+<div class="container-fluid">
+  <div class="row d-none">
+    <div class="col-12 tx-right">
+      <button class="btn btn-outline-dark" (click)="launchNew(content)">
+        <fa-icon [icon]="faPlus" />
+        &nbsp;Add Resource
+      </button>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12 mg-t-10">
+      <wbs-resource-list [claims]="claims" [list]="list" />
+    </div>
+  </div>
+</div>
+
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add Resource</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <wbs-resource-editor *ngIf="vm; let viewModel" [vm]="viewModel" />
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="modal.close('Close click')"
+    >
+      Close
+    </button>
+  </div>
+</ng-template>
