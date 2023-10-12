@@ -8,10 +8,7 @@ export async function cors(ctx: Context, next: any) {
 		const origin = ctx.req.raw.headers.get('origin');
 
 		if (!origin) return ctx.text('Unauthorized', 403);
-
-		console.log(origin);
-
-		//if (!ctx.env.CORS_ORIGINS.includes(origin)) return ctx.text('Unauthorized: ' + origin, 403);
+		if (!ctx.env.CORS_ORIGINS.includes(origin)) return ctx.text('Unauthorized: ' + origin, 403);
 
 		await next();
 

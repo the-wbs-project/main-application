@@ -7,7 +7,6 @@ import { ClaimsDataService } from './claims.data-service';
 import { JiraDataService } from './jira.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
-import { PermissionsDataService } from './permissions.data-service';
 import { ProjectExportDataService } from './project-export.data-service';
 import { ProjectImportDataService } from './project-import.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
@@ -26,7 +25,6 @@ export class DataServiceFactory {
   readonly jira = new JiraDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
-  readonly permissions = new PermissionsDataService(this.http);
   readonly projectExport = new ProjectExportDataService(this.http);
   readonly projectImport = new ProjectImportDataService(this.http);
   readonly projectNodes = new ProjectNodeDataService(this.http);

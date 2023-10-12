@@ -14,7 +14,7 @@ import { Store } from '@ngxs/store';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
 import { Messages, Resources } from '@wbs/core/services';
-import { PermissionsState } from '@wbs/main/states';
+import { RoleState } from '@wbs/main/states';
 import { ProjectUserListComponent } from '../user-list/user-list.component';
 import { RoleUsersService } from './services';
 import { RoleUsersViewModel } from './view-models';
@@ -41,7 +41,7 @@ export class ProjectRolesComponent implements OnChanges {
   @Output() readonly addUserToRole = new EventEmitter<OutputType>();
   @Output() readonly removeUserToRole = new EventEmitter<OutputType>();
 
-  readonly roles = toSignal(this.store.select(PermissionsState.roleIds));
+  readonly roles = toSignal(this.store.select(RoleState.ids));
   readonly approvers = signal<RoleUsersViewModel>({
     assigned: [],
     unassigned: [],
@@ -69,7 +69,7 @@ export class ProjectRolesComponent implements OnChanges {
     if (!this.members) return;
 
     const keys = Object.keys(changes);
-    const ids = this.store.selectSnapshot(PermissionsState.roleIds)!;
+    const ids = this.store.selectSnapshot(RoleState.ids)!;
 
     if (keys.includes('approverIds') && this.approverIds) {
       this.approvers.set(
@@ -114,7 +114,7 @@ export class ProjectRolesComponent implements OnChanges {
     }
     const roleTitle = this.resources.get(
       this.store
-        .selectSnapshot(PermissionsState.roleDefinitions)
+        .selectSnapshot(RoleState.definitions)
         .find((x) => x.id === role)!.description
     );
 

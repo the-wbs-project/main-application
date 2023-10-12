@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  computed,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,7 +18,6 @@ import { PageHeaderComponent } from '@wbs/main/components/page-header/page-heade
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
-import { PermissionsState } from '@wbs/main/states';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
@@ -42,7 +46,8 @@ import { ProjectState } from './states';
   ],
 })
 export class ProjectViewLayoutComponent {
-  readonly claims = toSignal(this.store.select(PermissionsState.claims));
+  @Input({ required: true }) claims!: string[];
+
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
   readonly category = computed(() => this.project()?.category);

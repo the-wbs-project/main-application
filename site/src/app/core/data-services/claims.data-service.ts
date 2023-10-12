@@ -7,6 +7,10 @@ export class ClaimsDataService {
 
   constructor(private readonly http: HttpClient) {}
 
+  clearCache(): void {
+    this.cache.clear();
+  }
+
   getOrganizationClaimsAsync(organization: string): Observable<string[]> {
     if (this.cache.has(organization)) {
       return of(this.cache.get(organization) ?? []);

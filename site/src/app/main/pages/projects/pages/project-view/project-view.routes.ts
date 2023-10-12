@@ -10,6 +10,7 @@ import {
   ProjectNavigationService,
   ProjectViewService,
   TimelineService,
+  projectClaimsResolve,
 } from './services';
 import {
   ProjectChecklistState,
@@ -44,5 +45,8 @@ export const routes: Routes = [
       TaskDeleteService,
       TimelineService,
     ],
+    resolve: {
+      claims: projectClaimsResolve,
+    },
   },
 ];

@@ -7,10 +7,10 @@ import {
   AuthState,
   MembershipState,
   MetadataState,
-  PermissionsState,
+  RoleState,
   UiState,
 } from './states';
-import { UserService } from './services';
+import { UserService, orgClaimsResolve } from './services';
 
 export const routes: Routes = [
   {
@@ -25,7 +25,7 @@ export const routes: Routes = [
           AuthState,
           MembershipState,
           MetadataState,
-          PermissionsState,
+          RoleState,
           UiState,
         ])
       ),
@@ -55,6 +55,9 @@ export const routes: Routes = [
               import('./pages/settings/settings.routes').then((m) => m.routes),
           },
         ],
+        resolve: {
+          claims: orgClaimsResolve,
+        },
       },
     ],
   },

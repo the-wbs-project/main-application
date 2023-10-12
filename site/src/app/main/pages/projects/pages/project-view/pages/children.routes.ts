@@ -62,6 +62,9 @@ export const routes: Routes = [
       import('./project-phases-page/project-phases-page.component').then(
         ({ ProjectPhasesPageComponent }) => ProjectPhasesPageComponent
       ),
+    resolve: {
+      claims: projectClaimsResolve,
+    },
     children: [
       {
         path: 'task/:taskId',
@@ -84,6 +87,9 @@ export const routes: Routes = [
               import('./task-about/task-about.component').then(
                 ({ TaskAboutComponent }) => TaskAboutComponent
               ),
+            resolve: {
+              claims: projectClaimsResolve,
+            },
           },
           {
             path: 'sub-tasks',
@@ -108,6 +114,9 @@ export const routes: Routes = [
               ),
           },
         ],
+        resolve: {
+          claims: projectClaimsResolve,
+        },
       },
     ],
   },
@@ -141,7 +150,7 @@ export const routes: Routes = [
     path: 'resources',
     canActivate: [projectViewGuard],
     data: {
-       view: PROJECT_PAGE_VIEW.RESOURCES,
+      view: PROJECT_PAGE_VIEW.RESOURCES,
     },
     resolve: {
       owner: orgResolve,

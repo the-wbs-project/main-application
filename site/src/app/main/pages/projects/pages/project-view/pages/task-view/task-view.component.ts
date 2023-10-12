@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  Input,
   ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -12,7 +13,6 @@ import { TitleService } from '@wbs/core/services';
 import { TASK_MENU_ITEMS } from '../../models';
 import { ProjectState, TasksState } from '../../states';
 import { ProjectNavigationComponent } from '../../components/project-navigation/project-navigation.component';
-import { PermissionsState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -23,7 +23,8 @@ import { PermissionsState } from '@wbs/main/states';
   imports: [FontAwesomeModule, ProjectNavigationComponent, RouterModule],
 })
 export class TaskViewComponent {
-  readonly claims = toSignal(this.store.select(PermissionsState.claims));
+  @Input({ required: true }) claims!: string[];
+
   readonly current = toSignal(this.store.select(TasksState.current));
   readonly roles = toSignal(this.store.select(ProjectState.roles));
 

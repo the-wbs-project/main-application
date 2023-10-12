@@ -1,16 +1,17 @@
 import { inject } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import { ORGANIZATION_CLAIMS } from '@wbs/core/models';
-import { MembershipState, PermissionsState } from '@wbs/main/states';
-import { map, skipWhile, switchMap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 
-const claimsGuard = (store: Store, claims: string | string[]) => {
+const claimsGuard = (
+  data: DataServiceFactory,
+  org: string,
+  claims: string | string[]
+) => {
   //
   //  We need to wait for the membership state to load before we can check the roles.
   //
-  return store.select(MembershipState.loading).pipe(
-    skipWhile((loading) => loading),
-    switchMap(() => store.selectOnce(PermissionsState.claims)),
+  return data.claims.getOrganizationClaimsAsync(org).pipe(
     map((userClaims) => {
       if (!userClaims) return false;
 
@@ -25,5 +26,8 @@ const claimsGuard = (store: Store, claims: string | string[]) => {
 };
 
 export const settingsReadGuard = () => {
-  return claimsGuard(inject(Store), [ORGANIZATION_CLAIMS.SETTINGS.READ]);
+  //TODO FIX!!!
+  return claimsGuard(inject(DataServiceFactory), 'acme_engineering', [
+    ORGANIZATION_CLAIMS.SETTINGS.READ,
+  ]);
 };

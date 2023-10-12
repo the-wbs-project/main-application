@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS } from '@wbs/core/models';
 import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
-import { PermissionsState, UiState } from '@wbs/main/states';
+import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { TaskModalComponent } from '../../components/task-modal/task-modal.component';
 import { TaskMenuPipe } from '../../pipes/task-menu.pipe';
@@ -17,6 +17,8 @@ import { ProjectState, TasksState } from '../../states';
   imports: [CheckPipe, TaskMenuPipe, TaskModalComponent, WbsTreeComponent],
 })
 export class ProjectPhasesPageComponent {
+  @Input({ required: true }) claims!: string[];
+
   taskId?: string;
 
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
@@ -25,7 +27,6 @@ export class ProjectPhasesPageComponent {
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly phases = toSignal(this.store.select(TasksState.phases));
   readonly phaseIds = toSignal(this.store.select(ProjectState.phaseIds));
-  readonly claims = toSignal(this.store.select(PermissionsState.claims));
   readonly task = toSignal(this.store.select(TasksState.current));
 
   constructor(

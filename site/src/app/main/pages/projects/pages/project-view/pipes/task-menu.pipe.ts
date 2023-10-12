@@ -2,7 +2,6 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { PermissionsState } from '@wbs/main/states';
 import { PROJECT_MENU_ITEMS } from '../models';
 import { ProjectState } from '../states';
 
@@ -11,11 +10,10 @@ export class TaskMenuPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
   transform(
-    tasks: WbsNodeView[] | undefined | null,
+    [tasks, claims]: [WbsNodeView[] | undefined | null, string[]],
     taskId: string | undefined | null
   ): ActionMenuItem[][] {
     const task = tasks?.find((x) => x.id === taskId);
-    const claims = this.store.selectSnapshot(PermissionsState.claims);
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
 
     const treeActions = this.filterList(

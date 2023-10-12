@@ -2,7 +2,7 @@ import { Context } from '../config';
 import { Cache } from '../services';
 
 export async function cache(ctx: Context, next: any) {
-  const perform = ctx.env.DEBUG === 'true';
+  const perform = true; // ctx.env.DEBUG === 'false';
 
   if (perform) {
     const match = await Cache.match(ctx);

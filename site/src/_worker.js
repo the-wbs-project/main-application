@@ -1,10 +1,9 @@
 const prefetches = [
+  "/api/roles",
   "/api/resources/all/en-US",
   "/api/lists/project_category",
   "/api/lists/categories_phase",
   "/api/lists/categories_discipline",
-  "/api/permissions/organization",
-  "/api/permissions/projects",
 ];
 
 export default {

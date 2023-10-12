@@ -9,12 +9,11 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { Messages, ProjectService } from '@wbs/core/services';
-import { UpdateProjectClaims } from '@wbs/main/actions';
 import {
   AuthState,
   MembershipState,
   MetadataState,
-  PermissionsState,
+  RoleState,
 } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -152,7 +151,7 @@ export class ProjectState {
       tap((project) =>
         ctx.dispatch(new SetChecklistData(project, undefined, undefined))
       ),
-      switchMap(() => this.updatePermissions(ctx))
+      tap(() => this.clearClaimCache())
     );
   }
 
@@ -170,7 +169,7 @@ export class ProjectState {
       tap(() => this.messaging.notify.success('ProjectSettings.UserAdded')),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
-      tap(() => this.updatePermissions(ctx)),
+      tap(() => this.clearClaimCache()),
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.ADDED_USER,
@@ -203,7 +202,7 @@ export class ProjectState {
       tap(() => this.messaging.notify.success('ProjectSettings.UserRemoved')),
       tap(() => this.updateUsers(ctx)),
       tap(() => this.updateUserRoles(ctx)),
-      tap(() => this.updatePermissions(ctx)),
+      tap(() => this.clearClaimCache()),
       tap(() =>
         this.saveActivity({
           action: PROJECT_ACTIONS.REMOVED_USER,
@@ -387,7 +386,7 @@ export class ProjectState {
     const approvers: string[] = [];
     const pms: string[] = [];
     const smes: string[] = [];
-    const ids = this.store.selectSnapshot(PermissionsState.roleIds)!;
+    const ids = this.store.selectSnapshot(RoleState.ids)!;
 
     if (project)
       for (const ur of project.roles) {
@@ -399,12 +398,8 @@ export class ProjectState {
     ctx.patchState({ approvers, pms, smes });
   }
 
-  private updatePermissions(ctx: Context): Observable<void> {
-    const state = ctx.getState();
-
-    return this.store.dispatch(
-      new UpdateProjectClaims(state.current!.id, state.roles!)
-    );
+  private clearClaimCache(): void {
+    this.data.claims.clearCache();
   }
 
   private updateUsers(ctx: Context): void {
@@ -445,9 +440,7 @@ export class ProjectState {
       return;
     }
 
-    const definitions = this.store.selectSnapshot(
-      PermissionsState.roleDefinitions
-    );
+    const definitions = this.store.selectSnapshot(RoleState.definitions);
 
     for (const role of project.roles) {
       const defByName = definitions.find((x) => x.name === role.role);

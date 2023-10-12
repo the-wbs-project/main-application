@@ -5,7 +5,7 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { PermissionsState } from '@wbs/main/states';
+import { RoleState } from '@wbs/main/states';
 import { SendInvites } from '../../actions';
 import { InviteValidators } from './invite-validators.service';
 
@@ -19,9 +19,7 @@ declare type InviteError = { email?: string; error: string };
   imports: [CommonModule, TranslateModule, RoleListPipe],
 })
 export class InvitesFormComponent {
-  readonly roleList = toSignal(
-    this.store.select(PermissionsState.roleDefinitions)
-  );
+  readonly roleList = toSignal(this.store.select(RoleState.definitions));
   roles: string[] = [];
   errors: InviteError[] = [];
 

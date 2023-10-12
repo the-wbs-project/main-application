@@ -5,7 +5,9 @@ export class ClaimsHttpService {
   static async getForOrganizationAsync(ctx: Context): Promise<Response> {
     try {
       const { organization } = ctx.req.param();
-      const roles = ctx.get('idToken').orgRoles[organization];
+      const definitions = await ctx.get('data').roles.getAsync();
+
+      let roles = ctx.get('idToken').orgRoles[organization].map((r) => definitions.find((d) => d.id === r)?.name ?? '');
 
       return ctx.json(ClaimsHttpService.getClaims(ORGANZIATION_PERMISSIONS, roles));
     } catch (e) {
@@ -22,7 +24,7 @@ export class ClaimsHttpService {
       const origin = ctx.get('origin');
       const [projectRoles, definitions] = await Promise.all([
         origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`),
-        origin.getAsync<{ id: string; name: string }[]>('roles'),
+        ctx.get('data').roles.getAsync(),
       ]);
       const roles = projectRoles.filter((r) => r.userId === userId).map((r) => definitions.find((d) => d.id === r.role)?.name ?? '');
 

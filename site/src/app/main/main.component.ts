@@ -3,6 +3,7 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  Input,
   ViewChild,
   ViewContainerRef,
   ViewEncapsulation,
@@ -18,12 +19,13 @@ import { ProfileEditorComponent } from './components/profile-editor/profile-edit
 import { FillElementDirective } from './directives/fill-element.directive';
 import { MainContentDirective } from './directives/main-content.directive';
 import { DialogService } from './services';
-import { AiState, AuthState } from './states';
+import { AiState, AuthState, MembershipState } from './states';
+import { Organization } from '@wbs/core/models';
 
 @Component({
   standalone: true,
   template: `<div class="d-flex flex-column vh-100">
-    <wbs-header />
+    <wbs-header [claims]="claims" [org]="org" />
     <div #body appMainContent appFillElement class="scroll pd-x-20">
       <router-outlet />
     </div>
@@ -46,9 +48,12 @@ import { AiState, AuthState } from './states';
   ],
 })
 export class MainComponent implements AfterContentInit {
+  @Input({ required: true }) claims!: string[];
+  @Input({ required: true }) org!: Organization;
   @ViewChild('body', { static: true }) body!: ViewContainerRef;
 
   readonly isAiEnabled = toSignal(this.store.select(AiState.isEnabled));
+  //readonly org = toSignal(this.store.select(MembershipState.organization));
 
   constructor(
     private readonly container: ContainerService,

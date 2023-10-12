@@ -13,30 +13,30 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Organization } from '@wbs/core/models';
 import { Messages, sorter } from '@wbs/core/services';
 import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import {
   ChangeOrganization,
   InitiateOrganizations,
   RefreshMembers,
   UpdateMembers,
-  UpdateOrganizationClaims,
 } from '../actions';
 import { UserService } from '../services';
 import { AuthState } from './auth.state';
 
-interface MembershipStateModel {
+interface StateModel {
   loading: boolean;
   list?: Organization[];
   organization?: Organization;
   orgRoleList?: Record<string, string[]>;
+  roles?: string[];
   members?: Member[];
 }
 
-declare type Context = StateContext<MembershipStateModel>;
+declare type Context = StateContext<StateModel>;
 
 @Injectable()
 @UntilDestroy()
-@State<MembershipStateModel>({
+@State<StateModel>({
   name: 'membership',
   defaults: {
     loading: true,
@@ -52,23 +52,28 @@ export class MembershipState implements NgxsOnInit {
   ) {}
 
   @Selector()
-  static list(state: MembershipStateModel): Organization[] | undefined {
+  static list(state: StateModel): Organization[] | undefined {
     return state.list;
   }
 
   @Selector()
-  static loading(state: MembershipStateModel): boolean {
+  static loading(state: StateModel): boolean {
     return state.loading;
   }
 
   @Selector()
-  static organization(state: MembershipStateModel): Organization | undefined {
+  static members(state: StateModel): Member[] | undefined {
+    return state.members;
+  }
+
+  @Selector()
+  static organization(state: StateModel): Organization | undefined {
     return state.organization;
   }
 
   @Selector()
-  static members(state: MembershipStateModel): Member[] | undefined {
-    return state.members;
+  static roles(state: StateModel): string[] | undefined {
+    return state.roles;
   }
 
   ngxsOnInit(ctx: Context): void {
@@ -117,14 +122,11 @@ export class MembershipState implements NgxsOnInit {
     ctx.patchState({ loading: true, organization });
 
     return this.getMembers(ctx, false).pipe(
-      tap(() => ctx.patchState({ loading: false })),
-      switchMap(() =>
-        ctx.dispatch(
-          new UpdateOrganizationClaims(
-            organization.name,
-            ctx.getState().orgRoleList?.[organization.name] ?? []
-          )
-        )
+      tap(() =>
+        ctx.patchState({
+          loading: false,
+          roles: ctx.getState().orgRoleList?.[organization.name] ?? [],
+        })
       )
     );
   }

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,7 +15,6 @@ import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { PermissionsState } from '@wbs/main/states';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
 import { TasksState } from '../../states';
 
@@ -38,11 +37,12 @@ import { TasksState } from '../../states';
   ],
 })
 export class TaskAboutComponent {
+  @Input({ required: true }) claims!: string[];
+
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
   readonly current = toSignal(this.store.select(TasksState.current));
-  readonly claims = toSignal(this.store.select(PermissionsState.claims));
 
   constructor(private readonly store: Store) {}
 }

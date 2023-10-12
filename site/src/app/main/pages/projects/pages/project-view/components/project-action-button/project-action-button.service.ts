@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_STATI, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { PermissionsState } from '@wbs/main/states';
+import { RoleState } from '@wbs/main/states';
 import { of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ChangeProjectStatus } from '../../actions';
@@ -31,7 +31,7 @@ export class ProjectActionButtonService {
   buildMenu(project: Project): ProjectAction[] | undefined {
     //const isSiteAdmin = this.store.selectSnapshot(PermissionsState.isSiteAdmin);
     const roles = this.store.selectSnapshot(ProjectState.roles) ?? [];
-    const roleIds = this.store.selectSnapshot(PermissionsState.roleIds)!;
+    const roleIds = this.store.selectSnapshot(RoleState.ids)!;
     const items: ProjectAction[] = [];
     const stati = PROJECT_STATI;
     const isPm = roles.includes(roleIds.pm);

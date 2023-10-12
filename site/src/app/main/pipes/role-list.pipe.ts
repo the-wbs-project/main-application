@@ -1,7 +1,7 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { Resources, sorter } from '@wbs/core/services';
-import { PermissionsState } from '../states';
+import { RoleState } from '../states';
 import { Role } from '@wbs/core/models';
 
 @Pipe({ name: 'roleList', standalone: true })
@@ -18,9 +18,7 @@ export class RoleListPipe implements PipeTransform {
     if (!roles) return '';
 
     const list: string[] = [];
-    const defintions = this.store.selectSnapshot(
-      PermissionsState.roleDefinitions
-    );
+    const defintions = this.store.selectSnapshot(RoleState.definitions);
 
     for (const role of roles) {
       const roleId = typeof role === 'string' ? role : role.id;
