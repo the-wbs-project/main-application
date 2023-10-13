@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cache, cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
+import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
@@ -28,9 +28,9 @@ app.use('*', cors);
 
 app.options('api/*', cors, (c) => c.text(''));
 
-app.get('api/resources/all/:locale', cache, kv.resources, (ctx) => OriginService.pass(ctx));
-app.get('api/lists/:type', cache, kv.lists, OriginService.pass);
-app.get('api/roles', cache, async (ctx) => ctx.json(await ctx.get('data').roles.getAsync()));
+app.get('api/resources/all/:locale', kv.resources, (ctx) => OriginService.pass(ctx));
+app.get('api/lists/:type', kv.lists, OriginService.pass);
+app.get('api/roles', async (ctx) => ctx.json(await ctx.get('data').roles.getAsync()));
 
 app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);
 app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
