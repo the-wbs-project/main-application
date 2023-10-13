@@ -7,8 +7,8 @@ export class Cache {
     return cache.match(this.req(ctx));
   }
 
-  static put(ctx: Context): void {
-    ctx.executionCtx.waitUntil(cache.put(this.req(ctx), ctx.res.clone()));
+  static put(ctx: Context, res: Response): void {
+    ctx.executionCtx.waitUntil(cache.put(this.req(ctx), res));
   }
 
   static delete(ctx: Context): void {

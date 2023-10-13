@@ -75,12 +75,14 @@ async function execute(
 
   if (ctx.res.status !== 200) return;
 
-  const clone = ctx.res.clone();
-  const text = await clone.text();
+  const text = await ctx.res.clone().text();
+  const headers = new Headers(ctx.res.headers);
 
   await ctx.env.KV_DATA.put(key, text, {
     expirationTtl: expirationInSeconds,
   });
+
+  return ctx.newResponse(text, { status: ctx.res.status, headers });
 }
 
 async function clear(ctx: Context, next: any, key: string): Promise<Response | void> {
