@@ -1,3 +1,4 @@
+using Auth0.Core.Exceptions;
 using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -28,6 +29,14 @@ public class UsersController : ControllerBase
         try
         {
             return Ok(await dataService.GetUserAsync(user));
+        }
+        catch (ErrorApiException ex)
+        {
+            if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+                return NotFound();
+
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
         }
         catch (Exception ex)
         {

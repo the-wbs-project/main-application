@@ -26,7 +26,7 @@ app.use('*', async (ctx, next) => {
 app.use('*', ddLogger);
 app.use('*', cors);
 
-app.options('api/*', (c) => c.text(''));
+app.options('api/*', cors, (c) => c.text(''));
 
 app.get('api/resources/all/:locale', cache, kv.resources, (ctx) => OriginService.pass(ctx));
 app.get('api/lists/:type', cache, kv.lists, OriginService.pass);
