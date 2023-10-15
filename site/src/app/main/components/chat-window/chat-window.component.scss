@@ -1,5 +1,6 @@
+@import "../../../../styles/variables";
+
 .ai-chat-panel {
-  max-height: 90vh;
   .k-expander-header {
     padding-block: 0.5rem;
     background-color: #eeeeee;
@@ -7,10 +8,15 @@
   .k-expander-title {
     color: black;
   }
-}
 
-.ai-chat {
-  min-width: 400px;
+  .content {
+    height: 70vh;
+
+    .ai-chat {
+      height: 100%;
+      min-width: 400px;
+    }
+  }
 }
 
 .ai-action-popup {
@@ -20,4 +26,12 @@
       box-shadow: none !important;
     }
   }
+}
+
+.k-message-list-content {
+  font-size: 14px;
+}
+
+.k-chat .k-alt .k-chat-bubble {
+  background-color: $aqua-blue;
 }
