@@ -26,7 +26,7 @@ app.use('*', async (ctx, next) => {
 app.use('*', ddLogger);
 app.use('*', cors);
 app.onError((err, ctx) => {
-  ctx.var.logger.trackException('An uncaught error occured trying to process a request.', <Error>err);
+  ctx.get('logger').trackException('An uncaught error occured trying to process a request.', <Error>err);
 
   return ctx.text('Unexpected Error', { status: 500 });
 });
