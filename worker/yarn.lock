@@ -406,15 +406,6 @@
   resolved "https://registry.npmjs.org/@bcoe/v8-coverage/-/v8-coverage-0.2.3.tgz"
   integrity sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==
 
-"@cfworker/cosmos@^1.13.4":
-  version "1.13.6"
-  resolved "https://registry.yarnpkg.com/@cfworker/cosmos/-/cosmos-1.13.6.tgz#a7623373e8ea25d1e3522b798cbf4e47048dc435"
-  integrity sha512-nOnJdvAYK3Z5bKkkps48OuiT57opFEGdGEpefLBe8g2sKZd2XQ/IsommN7kTrS4bNI3DrM9qocz3obeNeASRsQ==
-  dependencies:
-    "@cfworker/worker-types" "^1.12.3"
-    "@cloudflare/workers-types" "^2.2.2"
-    rfc4648 "^1.5.2"
-
 "@cfworker/jwt@^4.0.4":
   version "4.0.5"
   resolved "https://registry.yarnpkg.com/@cfworker/jwt/-/jwt-4.0.5.tgz#660f980f0460b9c402159cd2933793658d30fc24"
