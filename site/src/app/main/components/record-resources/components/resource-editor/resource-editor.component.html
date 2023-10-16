@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row">
-    <span class="col-3 pd-t-10"> Resource Type </span>
+    <span class="col-3 pd-t-10"> Resource Type * </span>
     <div class="col-9">
       <kendo-dropdownlist [data]="typeList" [(value)]="vm.type">
         <ng-template
@@ -18,30 +18,66 @@
   </div>
   <ng-template [ngIf]="vm.type">
     <div class="row mg-t-20">
-      <span class="col-3 pd-t-10"> Name </span>
+      <span class="col-3 pd-t-10"> Name *</span>
       <div class="col-9">
-        <input type="text" [(ngModel)]="vm.name" class="form-control w-100" />
-        <span class="tx-italic tx-11"> The name of the resource </span>
+        <input
+          type="text"
+          [(ngModel)]="vm.name"
+          class="form-control w-100"
+          [ngClass]="{
+            'is-valid': vm.errors.nameRequired === false,
+            'is-invalid': vm.errors.nameRequired
+          }"
+          (blur)="validator.validateName(vm)"
+        />
+        <span class="tx-italic tx-11" *ngIf="!vm.errors?.nameRequired">
+          The name of the resource
+        </span>
+        <div class="invalid-feedback" *ngIf="vm.errors.nameRequired">
+          {{ "Resources.NameIsRequired" | translate }}
+        </div>
       </div>
     </div>
     <div class="row mg-t-20">
-      <span class="col-3 pd-t-10"> Description </span>
+      <span class="col-3 pd-t-10"> Description * </span>
       <div class="col-9">
         <textarea
-          [(ngModel)]="vm.name"
+          [(ngModel)]="vm.description"
           class="form-control w-100"
           rows="5"
+          [ngClass]="{
+            'is-valid': vm.errors.descriptionRequired === false,
+            'is-invalid': vm.errors.descriptionRequired
+          }"
+          (blur)="validator.validateDescription(vm)"
         ></textarea>
-        <span class="tx-italic tx-11">
+        <span class="tx-italic tx-11" *ngIf="!vm.errors?.descriptionRequired">
           A brief description of the resource
         </span>
+        <div class="invalid-feedback" *ngIf="vm.errors?.descriptionRequired">
+          {{ "Resources.DescriptionIsRequired" | translate }}
+        </div>
       </div>
     </div>
     <div *ngIf="vm.type === 'link'" class="row mg-t-20">
-      <span class="col-3 pd-t-10"> URL </span>
+      <span class="col-3 pd-t-10"> Link URL * </span>
       <div class="col-9">
-        <input type="text" [(ngModel)]="vm.url" class="form-control w-100" />
-        <span class="tx-italic tx-11"> The URL of the link. </span>
+        <input
+          type="text"
+          [(ngModel)]="vm.url"
+          class="form-control w-100"
+          [ngClass]="{
+            'is-valid': vm.errors.urlRequired === false,
+            'is-invalid': vm.errors.urlRequired
+          }"
+          (blur)="validator.validateUrl(vm)"
+        />
+        <span class="tx-italic tx-11" *ngIf="!vm.errors?.urlRequired">
+          The URL of the link.
+        </span>
+        <div class="invalid-feedback" *ngIf="vm.errors?.urlRequired">
+          {{ "Resources.UrlIsRequired" | translate }}
+        </div>
       </div>
     </div>
     <div *ngIf="vm.type === 'youtube'" class="row mg-t-20">
@@ -58,7 +94,10 @@
         </span>
       </div>
     </div>
-    <div *ngIf="vm.type !== 'youtube'" class="row mg-t-20">
+    <div
+      *ngIf="vm.type !== 'youtube' && vm.type !== 'link'"
+      class="row mg-t-20"
+    >
       <span class="col-3 pd-t-10"> File Upload </span>
       <div class="col-9">
         <wbs-uploader />

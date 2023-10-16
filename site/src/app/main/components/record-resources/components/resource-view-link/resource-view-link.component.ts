@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { NgIf } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye } from '@fortawesome/pro-solid-svg-icons';
@@ -17,7 +17,6 @@ import { YouTubeSizerDirective } from '../../directives/youtube-sizer.directive'
   templateUrl: './resource-view-link.component.html',
   imports: [
     FontAwesomeModule,
-    NgFor,
     NgIf,
     PDFViewerModule,
     TranslateModule,
@@ -43,15 +42,10 @@ export class ResourceViewLinkComponent {
   constructor(private modalService: NgbModal) {}
 
   open(content: any) {
-    this.modalService
-      .open(content, {
-        fullscreen: true,
-        ariaLabelledBy: 'modal-basic-title',
-        modalDialogClass: 'modal-almost-fullscreen',
-      })
-      .result.then(
-        (result) => {},
-        (reason) => {}
-      );
+    this.modalService.open(content, {
+      fullscreen: true,
+      ariaLabelledBy: 'modal-basic-title',
+      modalDialogClass: 'modal-almost-fullscreen',
+    });
   }
 }

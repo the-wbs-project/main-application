@@ -1,3 +1,7 @@
 <div class="pd-15">
-  <wbs-record-resources [claims]="claims" [list]="list" />
+  <wbs-record-resources
+    [claims]="claims"
+    [list]="list()"
+    (save)="save($event)"
+  />
 </div>

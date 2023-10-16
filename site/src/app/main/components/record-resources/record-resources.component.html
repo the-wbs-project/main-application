@@ -25,15 +25,16 @@
     ></button>
   </div>
   <div class="modal-body">
-    <wbs-resource-editor *ngIf="vm; let viewModel" [vm]="viewModel" />
+    <wbs-resource-editor [vm]="vm()" />
   </div>
   <div class="modal-footer">
     <button
+      *ngIf="vm().type"
       type="button"
       class="btn btn-outline-dark"
-      (click)="modal.close('Close click')"
+      (click)="saveClicked()"
     >
-      Close
+      {{ "General.Save" | translate }}
     </button>
   </div>
 </ng-template>

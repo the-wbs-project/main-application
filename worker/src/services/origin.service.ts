@@ -25,7 +25,7 @@ export class OriginService {
       method: req.method,
     });
 
-    const body = res.status === 202 || res.status === 204 ? '' : await res.arrayBuffer();
+    const body = res.status === 202 || res.status === 204 ? null : await res.arrayBuffer();
 
     return ctx.newResponse(body, res.status, OriginService.headers(res));
   }

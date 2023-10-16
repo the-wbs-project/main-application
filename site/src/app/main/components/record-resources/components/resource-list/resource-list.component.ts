@@ -11,6 +11,7 @@ import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
+import { TrackById } from 'ngxtension/trackby-id-prop';
 import { CheckPipe } from '../../../../pipes/check.pipe';
 import { ResourceTypeTextComponent } from '../resource-type-text.component';
 import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-link.component';
@@ -33,6 +34,7 @@ import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-l
     SortableDirective,
     SortArrowComponent,
     TableProcessPipe,
+    TrackById,
     TranslateModule,
   ],
 })
