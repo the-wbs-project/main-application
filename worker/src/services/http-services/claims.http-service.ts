@@ -22,11 +22,9 @@ export class ClaimsHttpService {
       const { owner, project } = ctx.req.param();
       const userId = ctx.get('idToken').userId;
       const origin = ctx.get('origin');
-      const [projectRoles, definitions] = await Promise.all([
-        origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`),
-        ctx.get('data').roles.getAsync(),
-      ]);
-      const roles = projectRoles.filter((r) => r.userId === userId).map((r) => definitions.find((d) => d.id === r.role)?.name ?? '');
+
+      const projectRoles = await origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`);
+      const roles = projectRoles.filter((r) => r.userId === userId).map((r) => r.role);
 
       return ctx.json(ClaimsHttpService.getClaims(PROJECT_PERMISSIONS, roles));
     } catch (e) {
