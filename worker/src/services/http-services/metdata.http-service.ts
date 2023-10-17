@@ -27,7 +27,7 @@ export class MetadataHttpService {
 
       const data = ctx.get('data').lists;
       const list: ListItem[] = await ctx.req.json();
-      const existing = await data.getAsync(type);
+      const existing = (await data.getAsync(type)) ?? [];
 
       const existingIds = existing?.map((x) => x.id) ?? [];
 

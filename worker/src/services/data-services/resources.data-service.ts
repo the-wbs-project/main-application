@@ -9,7 +9,7 @@ export class ResourcesDataService {
     return this.ctx.get('origin');
   }
 
-  getAsync(locale: string): Promise<Record<string, Record<string, string>>> {
+  getAsync(locale: string): Promise<Record<string, Record<string, string>> | undefined> {
     return this.origin.getAsync<Record<string, Record<string, string>>>(`resources/all/${locale}`);
   }
 

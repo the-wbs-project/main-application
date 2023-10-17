@@ -25,6 +25,6 @@ export class RolesDataService {
 
     if (data && data.length > 0 && !this.byPass) this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(this.key, JSON.stringify(data)));
 
-    return data;
+    return data ?? [];
   }
 }

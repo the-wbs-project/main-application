@@ -1,5 +1,5 @@
 import { Context } from '../../config';
-import { ORGANZIATION_PERMISSIONS, PROJECT_PERMISSIONS, Permissions } from '../../models';
+import { ORGANZIATION_PERMISSIONS, PROJECT_PERMISSIONS, Permissions, ROLES } from '../../models';
 
 export class ClaimsHttpService {
   static async getForOrganizationAsync(ctx: Context): Promise<Response> {
@@ -7,7 +7,7 @@ export class ClaimsHttpService {
       const { organization } = ctx.req.param();
       const definitions = await ctx.get('data').roles.getAsync();
 
-      let roles = ctx.get('idToken').orgRoles[organization].map((r) => definitions.find((d) => d.id === r)?.name ?? '');
+      const roles = ctx.get('idToken').orgRoles[organization].map((r) => definitions.find((d) => d.id === r)?.name ?? '');
 
       return ctx.json(ClaimsHttpService.getClaims(ORGANZIATION_PERMISSIONS, roles));
     } catch (e) {
@@ -23,8 +23,14 @@ export class ClaimsHttpService {
       const userId = ctx.get('idToken').userId;
       const origin = ctx.get('origin');
 
-      const projectRoles = await origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`);
-      const roles = projectRoles.filter((r) => r.userId === userId).map((r) => r.role);
+      const definitions = await ctx.get('data').roles.getAsync();
+      const projectRoles = (await origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`)) ?? [];
+
+      const orgRoles = ctx.get('idToken').orgRoles[owner].map((r) => definitions.find((d) => d.id === r)?.name ?? '');
+
+      const roles = projectRoles.filter((r) => r.userId === userId && orgRoles.includes(r.role)).map((r) => r.role);
+
+      if (orgRoles.includes(ROLES.ADMIN)) roles.push(ROLES.ADMIN);
 
       return ctx.json(ClaimsHttpService.getClaims(PROJECT_PERMISSIONS, roles));
     } catch (e) {

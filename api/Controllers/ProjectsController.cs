@@ -80,7 +80,7 @@ public class ProjectsController : ControllerBase
     {
         try
         {
-            return Ok((await projectDataService.GetByIdAsync(id)).roles);
+            return Ok((await projectDataService.GetByIdAsync(id)).roles ?? new ProjectRole[] { });
         }
         catch (Exception ex)
         {
