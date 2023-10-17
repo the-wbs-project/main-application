@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 
@@ -9,7 +10,7 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
   selector: 'wbs-discipline-icon',
   template: `<span
     class="mg-r-5"
-    [ngbTooltip]="id | categoryLabel"
+    [ngbTooltip]="id | categoryLabel | translate"
     placement="top"
     container="body"
   >
@@ -20,6 +21,7 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
     CommonModule,
     DisciplineIconPipe,
     NgbTooltipModule,
+    TranslateModule,
   ],
 })
 export class DisciplineIconComponent {

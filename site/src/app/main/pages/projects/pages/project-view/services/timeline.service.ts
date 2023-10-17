@@ -16,7 +16,7 @@ import { ProjectState, TasksState } from '../states';
 
 @Injectable()
 export class TimelineService {
-  private readonly take = 20;
+  private readonly take = 50;
 
   constructor(
     private readonly data: DataServiceFactory,
