@@ -48,7 +48,7 @@ export class RequestInterceptor implements HttpInterceptor {
     request: HttpRequest<any>,
     err: HttpErrorResponse
   ): Observable<void | null> {
-    if (err.status === 404) return of(null);
+    if (err.status === 404) return of(undefined);
     if (err instanceof HttpErrorResponse) {
       console.error(err);
       let showMessage = !this.isInList(noErrorUrls, request.url);

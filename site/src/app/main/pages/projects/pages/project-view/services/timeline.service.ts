@@ -7,11 +7,11 @@ import {
   ProjectActivityRecord,
   ProjectNode,
 } from '@wbs/core/models';
-import { Transformers } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
+import { Transformers } from '@wbs/main/services';
 import { AuthState } from '@wbs/main/states';
-import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { ProjectState, TasksState } from '../states';
 
 @Injectable()

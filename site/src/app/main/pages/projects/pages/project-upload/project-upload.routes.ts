@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_CLAIMS } from '@wbs/core/models';
-import { Utils } from '@wbs/main/services';
+import { Transformers, Utils } from '@wbs/main/services';
 import { map, switchMap } from 'rxjs/operators';
 import { SetProject } from './actions';
 import { ProjectUploadState } from './states';
@@ -45,6 +45,7 @@ export const routes: Routes = [
 
     providers: [
       importProvidersFrom(NgxsModule.forFeature([ProjectUploadState])),
+      Transformers,
     ],
   },
 ];

@@ -5,8 +5,8 @@ import { User } from '../models';
 export class UserDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(userId: string): Observable<User> {
-    return this.http.get<User>(`api/users/${userId}`);
+  getAsync(userId: string): Observable<User | undefined> {
+    return this.http.get<User | undefined>(`api/users/${userId}`);
   }
 
   putAsync(user: User): Observable<void> {

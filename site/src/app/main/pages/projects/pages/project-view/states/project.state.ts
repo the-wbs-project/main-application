@@ -8,7 +8,7 @@ import {
   PROJECT_NODE_VIEW,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages, ProjectService } from '@wbs/core/services';
+import { Messages, ProjectService, Resources } from '@wbs/core/services';
 import {
   AuthState,
   MembershipState,
@@ -16,7 +16,7 @@ import {
   RoleState,
 } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import {
   AddUserToRole,
   ChangeProjectBasics,
@@ -56,6 +56,7 @@ export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
+    private readonly resources: Resources,
     private readonly services: ProjectService,
     private readonly store: Store,
     private readonly timeline: TimelineService
@@ -426,9 +427,8 @@ export class ProjectState {
   private getCatName(idsOrCat: ProjectCategory | null | undefined): string {
     if (!idsOrCat) return '';
     if (typeof idsOrCat === 'string')
-      return (
-        this.store.selectSnapshot(MetadataState.categoryNames).get(idsOrCat) ??
-        ''
+      return this.resources.get(
+        this.store.selectSnapshot(MetadataState.categoryNames).get(idsOrCat)!
       );
 
     return idsOrCat.label;

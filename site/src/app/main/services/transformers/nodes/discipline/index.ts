@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { Resources } from '../../../resource.service';
+import { Resources } from '../../../../../core/services/resource.service';
 import { WbsDisciplineNodeTransformer } from './wbs-node-discipline.service';
 
 export class WbsDisciplineNodeTransformers {

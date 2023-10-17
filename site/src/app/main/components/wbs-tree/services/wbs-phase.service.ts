@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
-import { WbsNodeService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { WbsNodeService } from '@wbs/main/services';
 import { RebuildResults } from '../models';
 
 @Injectable()

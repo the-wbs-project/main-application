@@ -1,4 +1,4 @@
-import { Activity, TimelineMenuItem } from '@wbs/core/models';
+import { TimelineMenuItem } from '@wbs/core/models';
 import { ActivityViewModel, TimelineViewModel } from '@wbs/core/view-models';
 
 const NAVIGATE_ITEM = {

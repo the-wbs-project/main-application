@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { Resources } from '../../../resource.service';
+import { Resources } from '../../../../../core/services/resource.service';
 import { WbsNodePhaseProjectImporter } from './wbs-node-phase-project-importer.service';
 import { WbsNodePhaseReorderer } from './wbs-node-phase-reorderer.service';
 import { WbsNodePhaseTransformer } from './wbs-node-phase.service';

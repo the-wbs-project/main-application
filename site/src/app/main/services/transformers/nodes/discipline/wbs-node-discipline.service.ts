@@ -1,9 +1,9 @@
 import { Store } from '@ngxs/store';
 import { ListItem, Project, WbsNode } from '@wbs/core/models';
-import { MetadataState } from '@wbs/main/states';
+import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Resources } from '../../../resource.service';
-import { WbsNodeService } from '../../../wbs-node.service';
+import { WbsNodeService } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 
 export class WbsDisciplineNodeTransformer {
   constructor(

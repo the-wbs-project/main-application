@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
@@ -7,8 +7,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TimelineMenuItem } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
+import { WaitNotifyDirective } from '@wbs/main/directives/wait-notify.directive';
+import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
-import { DateTextPipe } from '../../pipes/date-text.pipe';
 import { ActionDescriptionTransformPipe } from './pipes';
 
 @Component({
@@ -22,11 +23,14 @@ import { ActionDescriptionTransformPipe } from './pipes';
     DateTextPipe,
     FontAwesomeModule,
     NgbDropdownModule,
+    NgClass,
     TranslateModule,
     UserNamePipe,
+    WaitNotifyDirective,
   ],
 })
 export class TimelineComponent {
+  @Input() loading = false;
   @Input() timeline?: TimelineViewModel[] | null;
   @Output() loadMoreClicked = new EventEmitter<void>();
   @Output() menuItemClicked = new EventEmitter<TimelineMenuItem>();

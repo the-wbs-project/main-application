@@ -4,11 +4,31 @@ import { Observable } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class Messages {
+  readonly block = new Block(this.resources);
   readonly notify = new Toasts(this.resources);
   readonly confirm = new Confirm(this.resources);
   readonly report = new Report(this.resources);
 
   constructor(private readonly resources: Resources) {}
+}
+
+class Block {
+  constructor(private readonly resources: Resources) {}
+
+  show(className: string, message?: string): void {
+    if (message) {
+      //@ts-ignore
+      Notiflix.Block.standard(className, this.resources.get(message));
+    } else {
+      //@ts-ignore
+      Notiflix.Block.standard(className);
+    }
+  }
+
+  cancel(className: string): void {
+    //@ts-ignore
+    Notiflix.Block.remove(className);
+  }
 }
 
 class Toasts {
@@ -33,16 +53,6 @@ class Toasts {
 
     //@ts-ignore
     Notiflix.Notify.success(x);
-  }
-
-  block(className: string): void {
-    //@ts-ignore
-    Notiflix.Block.hourglass(className);
-  }
-
-  unblock(className: string): void {
-    //@ts-ignore
-    Notiflix.Block.remove(className);
   }
 }
 

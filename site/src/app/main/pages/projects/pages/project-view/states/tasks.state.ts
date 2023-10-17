@@ -8,13 +8,9 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   ProjectNode,
 } from '@wbs/core/models';
-import {
-  IdService,
-  Messages,
-  ProjectService,
-  Transformers,
-} from '@wbs/core/services';
+import { IdService, Messages, ProjectService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { Transformers } from '@wbs/main/services';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,

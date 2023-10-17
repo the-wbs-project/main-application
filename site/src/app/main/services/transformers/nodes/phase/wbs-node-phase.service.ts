@@ -1,9 +1,9 @@
 import { Store } from '@ngxs/store';
 import { ListItem, Project, WbsNode } from '@wbs/core/models';
-import { MetadataState } from '@wbs/main/states';
+import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Resources } from '../../../resource.service';
-import { WbsNodeService } from '../../../wbs-node.service';
+import { WbsNodeService } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 
 export class WbsNodePhaseTransformer {
   constructor(
@@ -32,9 +32,19 @@ export class WbsNodePhaseTransformer {
       const cat = categories[i];
       const parentlevel = [i + 1];
       const node = projectNodes.find((x) => x.id === cat.id);
+      let description = (node?.description ?? '').trim();
+
+      const catDescription =
+        !cat.description && (cat.sameAs ?? []).length > 0
+          ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.description
+          : cat.description;
+
+      if (description === '' || description === catDescription) {
+        description = this.resources.get(catDescription!);
+      }
       const parent: WbsNodeView = {
         children: 0,
-        description: node?.description ?? null,
+        description,
         disciplines: node?.disciplineIds ?? [],
         id: cat.id,
         treeId: cat.id,

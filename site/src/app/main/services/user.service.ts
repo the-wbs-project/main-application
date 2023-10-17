@@ -10,7 +10,7 @@ export class UserService {
 
   constructor(private readonly data: DataServiceFactory) {}
 
-  getUser(userId: string): Observable<User> {
+  getUser(userId: string): Observable<User | undefined> {
     if (this.users.has(userId)) {
       return <Observable<User>>(
         this.users.get(userId)!.pipe(skipWhile((u) => u === undefined))

@@ -1,5 +1,5 @@
 import { ListItem, Project, WbsNode } from '@wbs/core/models';
-import { WbsNodeService } from '../../../wbs-node.service';
+import { WbsNodeService } from '@wbs/main/services';
 
 export class WbsNodePhaseReorderer {
   getMaxOrder(parentId: string, nodes: WbsNode[]): number {
