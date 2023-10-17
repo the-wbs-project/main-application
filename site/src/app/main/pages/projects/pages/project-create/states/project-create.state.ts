@@ -201,7 +201,7 @@ export class ProjectCreateState {
   }
 
   @Action(SaveProject)
-  saveProject(ctx: StateContext<StateModel>): Observable<void> | void {
+  saveProject(ctx: StateContext<StateModel>): Observable<any> | void {
     ctx.patchState({
       isSaving: true,
     });
@@ -226,7 +226,7 @@ export class ProjectCreateState {
     const project: Project = {
       id: IdService.generate(),
       owner: state.owner!,
-      createdBy: this.store.selectSnapshot(AuthState.userId)!,
+      createdBy: this.getUserId(),
       disciplines,
       phases,
       category: state.category!,
@@ -305,8 +305,8 @@ export class ProjectCreateState {
       switchMap(() =>
         this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
       ),
-      tap(() =>
-        this.data.activities.saveProjectActivitiesAsync('', [
+      switchMap(() =>
+        this.data.activities.saveProjectActivitiesAsync(this.getUserId(), [
           {
             data: {
               action: 'project-created',
@@ -317,7 +317,7 @@ export class ProjectCreateState {
               },
             },
             project: project,
-            nodes: [],
+            nodes: nodes,
           },
         ])
       ),
@@ -340,5 +340,9 @@ export class ProjectCreateState {
         )
       )
     );
+  }
+
+  private getUserId(): string {
+    return this.store.selectSnapshot(AuthState.userId)!;
   }
 }
