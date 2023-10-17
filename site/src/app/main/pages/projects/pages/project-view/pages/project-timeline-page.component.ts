@@ -15,6 +15,7 @@ import { ProjectState } from '../states';
 @Component({
   standalone: true,
   template: `<wbs-timeline
+    [length]="length()"
     [loading]="loading()"
     [timeline]="timeline()"
     (loadMoreClicked)="loadMore()"
@@ -24,8 +25,10 @@ import { ProjectState } from '../states';
   imports: [TimelineComponent],
 })
 export class ProjectTimelinePageComponent implements OnInit {
+  private count?: number;
   readonly timeline: WritableSignal<TimelineViewModel[]> = signal([]);
   readonly loading = signal(false);
+  readonly length = signal<number | undefined>(undefined);
 
   constructor(
     private readonly nav: ProjectNavigationService,
@@ -33,8 +36,18 @@ export class ProjectTimelinePageComponent implements OnInit {
     private readonly timelineService: TimelineService
   ) {}
 
+  private get projectId(): string {
+    return this.store.selectSnapshot(ProjectState.current)!.id;
+  }
+
   ngOnInit(): void {
-    this.loadMore();
+    this.timelineService.getCountAsync(this.projectId).subscribe((count) => {
+      this.length.set(count);
+
+      if (count > 0) {
+        this.loadMore();
+      }
+    });
   }
 
   timelineAction(item: TimelineMenuItem) {
@@ -46,13 +59,12 @@ export class ProjectTimelinePageComponent implements OnInit {
   }
 
   loadMore(): void {
-    const timeline = this.timeline();
-    const projectId = this.store.selectSnapshot(ProjectState.current)!.id;
-
     this.loading.set(true);
 
+    const timeline = this.timeline();
+
     this.timelineService
-      .loadMore(timeline, projectId)
+      .loadMore(timeline, this.projectId)
       .subscribe((newTimeline) => {
         this.loading.set(false);
         this.timeline.set([...newTimeline]);

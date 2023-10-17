@@ -14,6 +14,28 @@ public class ActivityDataService : BaseDbService
         _logger = logger;
     }
 
+    public async Task<int> GetCountForTopLevelAsync(string topLevel)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await GetCountForTopLevelAsync(conn, topLevel);
+        }
+    }
+
+    public async Task<int> GetCountForTopLevelAsync(SqlConnection conn, string topLevel)
+    {
+        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ActivitiesView] WHERE [TopLevelId] = @TopLevel", conn);
+        cmd.Parameters.AddWithValue("@TopLevel", topLevel);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read()) return reader.GetInt32(0);
+        }
+        return 0;
+    }
+
     public async Task<List<ActivityViewModel>> GetForTopLevelAsync(string topLevel, int skip, int take)
     {
         using (var conn = new SqlConnection(cs))
@@ -39,6 +61,30 @@ public class ActivityDataService : BaseDbService
                 results.Add(this.ToViewModel(reader));
         }
         return results;
+    }
+
+    public async Task<int> GetCountForChildAsync(string topLevel, string child)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await GetCountForChildAsync(conn, topLevel, child);
+        }
+    }
+
+    public async Task<int> GetCountForChildAsync(SqlConnection conn, string topLevel, string child)
+    {
+        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ActivitiesView] WHERE [TopLevelId] = @TopLevel AND [ObjectId] = @Child", conn);
+
+        cmd.Parameters.AddWithValue("@TopLevel", topLevel);
+        cmd.Parameters.AddWithValue("@Child", child);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read()) return reader.GetInt32(0);
+        }
+        return 0;
     }
 
     public async Task<List<ActivityViewModel>> GetForChildAsync(string topLevel, string child, int skip, int take)

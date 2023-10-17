@@ -24,6 +24,21 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("topLevel/{topLevel}/count")]
+    public async Task<IActionResult> GetCountForTopLevelAsync(string topLevel)
+    {
+        try
+        {
+            return Ok(await dataService.GetCountForTopLevelAsync(topLevel));
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("topLevel/{topLevel}/{skip}/{take}")]
     public async Task<IActionResult> GetForTopLevelAsync(string topLevel, int skip, int take)
     {
@@ -39,7 +54,22 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("child/{topLevel}/{child}/{skip}/{take}")]
+    [HttpGet("topLevel/{topLevel}/child/{child}/count")]
+    public async Task<IActionResult> GetForChildAsync(string topLevel, string child)
+    {
+        try
+        {
+            return Ok(await dataService.GetCountForChildAsync(topLevel, child));
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("topLevel/{topLevel}/child/{child}/{skip}/{take}")]
     public async Task<IActionResult> GetForChildAsync(string topLevel, string child, int skip, int take)
     {
         try

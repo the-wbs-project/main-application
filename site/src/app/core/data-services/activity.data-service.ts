@@ -7,18 +7,38 @@ import { Activity, ActivityData, ProjectActivityRecord } from '../models';
 export class ActivityDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(
-    skip: number,
-    take: number,
-    topLevelId: string,
-    childId?: string
-  ): Observable<Activity[]> {
-    const url = childId
-      ? `api/activities/child/${topLevelId}/${childId}/${skip}/${take}`
-      : `api/activities/topLevel/${topLevelId}/${skip}/${take}`;
+  getTopLevelCountAsync(topLevelId: string): Observable<number> {
+    return this.http.get<number>(`api/activities/topLevel/${topLevelId}/count`);
+  }
 
+  getTopLevelAsync(
+    topLevelId: string,
+    skip: number,
+    take: number
+  ): Observable<Activity[]> {
     return this.http
-      .get<Activity[] | undefined>(url)
+      .get<Activity[] | undefined>(
+        `api/activities/topLevel/${topLevelId}/${skip}/${take}`
+      )
+      .pipe(map((list) => list ?? []));
+  }
+
+  getChildCountAsync(topLevelId: string, childId: string): Observable<number> {
+    return this.http.get<number>(
+      `api/activities/topLevel/${topLevelId}/child/${childId}/count`
+    );
+  }
+
+  getChildAsync(
+    topLevelId: string,
+    childId: string,
+    skip: number,
+    take: number
+  ): Observable<Activity[]> {
+    return this.http
+      .get<Activity[] | undefined>(
+        `api/activities/topLevel/${topLevelId}/child/${childId}/${skip}/${take}`
+      )
       .pipe(map((list) => list ?? []));
   }
 
