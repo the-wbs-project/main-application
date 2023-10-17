@@ -21,7 +21,7 @@
       <a
         *ngIf="task.parent"
         class="text-decoration-none"
-        [routerLink]="['../', task.parent.id, 'about']"
+        [routerLink]="['../../', task.parent.id, 'about']"
       >
         {{ task.parent.title }}
       </a>
