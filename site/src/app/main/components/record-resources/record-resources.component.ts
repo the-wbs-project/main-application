@@ -12,6 +12,7 @@ import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { RESOURCE_TYPES, RecordResource } from '@wbs/core/models';
+import { Messages } from '@wbs/core/services';
 import { ResourceEditorComponent } from './components/resource-editor/resource-editor.component';
 import { ResourceListComponent } from './components/resource-list/resource-list.component';
 import { RecordResourceValidation } from './services';
@@ -46,15 +47,17 @@ export class RecordResourcesComponent {
   });
 
   constructor(
-    readonly modalService: NgbModal,
+    private readonly messages: Messages,
+    private readonly modalService: NgbModal,
     private readonly validator: RecordResourceValidation
   ) {}
 
   launchNew(content: any): void {
-    this.modal = this.modalService.open(content, {
-      fullscreen: true,
-      modalDialogClass: 'modal-almost-fullscreen',
-    });
+    this.messages.notify.info('Coming soon...', false);
+    //this.modal = this.modalService.open(content, {
+    //  fullscreen: true,
+    //  modalDialogClass: 'modal-almost-fullscreen',
+    //});
   }
 
   saveClicked(): void {
