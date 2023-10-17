@@ -3,6 +3,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { ActionMenuItem } from '@wbs/core/models';
+import { TrackByProp } from 'ngxtension/trackby-id-prop';
 
 @Component({
   standalone: true,
@@ -10,7 +11,7 @@ import { ActionMenuItem } from '@wbs/core/models';
   template: `<div class="btn-group">
     <button
       type="button"
-      *ngFor="let item of items"
+      *ngFor="let item of items ?? []; trackByProp: 'action'"
       class="btn btn-white btn-outline-primary"
       (click)="clicked.emit(item.action)"
       placement="bottom"
@@ -21,10 +22,10 @@ import { ActionMenuItem } from '@wbs/core/models';
       </span>
     </button>
   </div>`,
-  imports: [CommonModule, FontAwesomeModule, TranslateModule],
+  imports: [CommonModule, FontAwesomeModule, TrackByProp, TranslateModule],
 })
 export class WbsActionButtonsComponent {
-  @Input() items?: ActionMenuItem[] | null;
+  @Input() items?: ActionMenuItem[];
   @Input() showTitle = true;
   @Output() readonly clicked = new EventEmitter<string>();
 }
