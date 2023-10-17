@@ -50,20 +50,15 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //  Auth calls
 //
 app.get('api/checklists', kv.checklists, verifyJwt, OriginService.pass);
-app.get('api/activities/topLevel/:topLevelId/:skip/:take', verifyJwt, OriginService.pass);
-app.get('api/activities/child/:topLevelId/:childId/:skip/:take', verifyJwt, OriginService.pass);
+
+app.get('api/activities/*', verifyJwt, OriginService.pass);
 app.put('api/activities', verifyJwt, OriginService.pass);
 app.put('api/activities/projects', verifyJwt, OriginService.pass);
 
 app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
+app.get('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
-app.get('api/projects/owner/:owner/id/:projectId', verifyJwt, verifyMembership, OriginService.pass);
-
-app.get('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
-app.put('api/projects/owner/:owner/id/:projectId/nodes', verifyJwt, verifyMembership, OriginService.pass);
-
-app.get('api/projects/owner/:owner/id/:projectId/resources', verifyJwt, verifyMembership, OriginService.pass);
-app.put('api/projects/owner/:owner/id/:projectId/resources/:resourcesId', verifyJwt, verifyMembership, OriginService.pass);
+app.put('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);

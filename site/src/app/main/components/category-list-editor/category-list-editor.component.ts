@@ -100,8 +100,10 @@ export class CategoryListEditorComponent {
 
   rebuild() {
     this.catService.renumber(this.categories!);
-    this.categoriesChange.emit(this.categories!);
+
     this.categories = [...this.categories!];
+
+    this.categoriesChange.emit(this.categories!);
     this.cd.detectChanges();
   }
 }

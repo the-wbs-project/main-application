@@ -56,7 +56,7 @@ export class RoleFilterListComponent implements OnInit {
   }
 
   private set(value: Role[]): void {
-    this.values.set(value);
+    this.values.set([...value]);
     this.valueChanged.emit(value.map((r) => r.id));
   }
 }
