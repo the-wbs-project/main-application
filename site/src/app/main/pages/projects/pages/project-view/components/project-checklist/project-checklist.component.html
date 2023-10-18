@@ -2,7 +2,7 @@
   <div
     *ngFor="let group of checklist"
     ngbAccordionItem
-    [collapsed]="!(expandIfFailed || group.result !== 'fail')"
+    [collapsed]="!expandIfFailed || group.result !== 'fail'"
   >
     <h2 ngbAccordionHeader>
       <button ngbAccordionButton>
