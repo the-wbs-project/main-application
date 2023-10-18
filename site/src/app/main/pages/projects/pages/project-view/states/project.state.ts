@@ -118,7 +118,7 @@ export class ProjectState {
 
     return state.current?.id !== projectId
       ? ctx.dispatch(new SetProject(owner, projectId))
-      : of().pipe(tap(() => ctx.dispatch(new VerifyTasks(state.current!))));
+      : of(); //.pipe(tap(() => ctx.dispatch(new VerifyTasks(state.current!))));
   }
 
   @Action(NavigateToView)
