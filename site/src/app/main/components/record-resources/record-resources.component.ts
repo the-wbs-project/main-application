@@ -11,8 +11,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { RESOURCE_TYPES, RecordResource } from '@wbs/core/models';
+import {
+  PROJECT_CLAIMS,
+  RESOURCE_TYPES,
+  RecordResource,
+} from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { ResourceEditorComponent } from './components/resource-editor/resource-editor.component';
 import { ResourceListComponent } from './components/resource-list/resource-list.component';
 import { RecordResourceValidation } from './services';
@@ -24,6 +29,7 @@ import { RecordResourceViewModel } from './view-models';
   templateUrl: './record-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    CheckPipe,
     FontAwesomeModule,
     NgIf,
     ResourceEditorComponent,
@@ -39,6 +45,7 @@ export class RecordResourcesComponent {
 
   private modal?: NgbModalRef;
   readonly faPlus = faPlus;
+  readonly addClaim = PROJECT_CLAIMS.RESOURCES.CREATE;
   readonly vm = signal<RecordResourceViewModel>({
     description: '',
     name: '',

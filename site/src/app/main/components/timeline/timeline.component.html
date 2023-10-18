@@ -103,7 +103,7 @@
         </div>
       </div>
       <div
-        *ngIf="timeline.length < (length ?? 0)"
+        *ngIf="loaded && timeline.length < (length ?? 0)"
         class="w-100 pd-10 tx-center"
       >
         <button class="btn btn-primary" (click)="loadMoreClicked.emit()">
@@ -111,7 +111,7 @@
         </button>
       </div>
       <div
-        *ngIf="timeline.length === (length ?? 0)"
+        *ngIf="loaded && timeline.length === (length ?? 0)"
         class="w-100 pd-10 tx-center tx-bold tx-20"
       >
         The End

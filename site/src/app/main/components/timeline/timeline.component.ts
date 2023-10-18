@@ -31,6 +31,7 @@ import { ActionDescriptionTransformPipe } from './pipes';
 })
 export class TimelineComponent {
   @Input({ required: true }) loading = false;
+  @Input({ required: true }) loaded = false;
   @Input({ required: true }) length?: number;
   @Input({ required: true }) timeline?: TimelineViewModel[] | null;
   @Output() loadMoreClicked = new EventEmitter<void>();

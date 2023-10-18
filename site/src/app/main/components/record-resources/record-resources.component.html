@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  <div class="row">
+  <div *ngIf="list.length > 0 && (claims | check : addClaim)" class="row">
     <div class="col-12 tx-right">
       <button class="btn btn-outline-dark" (click)="launchNew(content)">
         <fa-icon [icon]="faPlus" />
@@ -7,7 +7,17 @@
       </button>
     </div>
   </div>
-  <div class="row">
+  <div *ngIf="list.length === 0" class="row">
+    <div class="col-12 mg-t-40 text-center tx-20">
+      <div>No Resources Found</div>
+
+      <button class="btn btn-outline-dark mg-t-20" (click)="launchNew(content)">
+        <fa-icon [icon]="faPlus" />
+        &nbsp;Add
+      </button>
+    </div>
+  </div>
+  <div *ngIf="list.length > 0" class="row">
     <div class="col-12 mg-t-10">
       <wbs-resource-list [claims]="claims" [list]="list" />
     </div>

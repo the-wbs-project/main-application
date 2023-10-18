@@ -16,6 +16,7 @@ import { ProjectState } from '../states';
   standalone: true,
   template: `<wbs-timeline
     [length]="length()"
+    [loaded]="loaded()"
     [loading]="loading()"
     [timeline]="timeline()"
     (loadMoreClicked)="loadMore()"
@@ -25,8 +26,8 @@ import { ProjectState } from '../states';
   imports: [TimelineComponent],
 })
 export class ProjectTimelinePageComponent implements OnInit {
-  private count?: number;
   readonly timeline: WritableSignal<TimelineViewModel[]> = signal([]);
+  readonly loaded = signal(false);
   readonly loading = signal(false);
   readonly length = signal<number | undefined>(undefined);
 
@@ -68,6 +69,7 @@ export class ProjectTimelinePageComponent implements OnInit {
       .subscribe((newTimeline) => {
         this.loading.set(false);
         this.timeline.set([...newTimeline]);
+        this.loaded.set(true);
       });
   }
 }

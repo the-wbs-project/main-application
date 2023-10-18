@@ -27,10 +27,14 @@ export class WaitNotifyDirective implements OnInit, OnChanges {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['show']) {
-      if (this.show)
-        this.messages.block.show('.' + this.className, this.message);
-      else this.messages.block.cancel('.' + this.className);
+    try {
+      if (changes['show']) {
+        if (this.show && this.elem)
+          this.messages.block.show('.' + this.className, this.message);
+        else this.messages.block.cancel('.' + this.className);
+      }
+    } catch (e: any) {
+      console.log('Message: ' + e.message);
     }
   }
 

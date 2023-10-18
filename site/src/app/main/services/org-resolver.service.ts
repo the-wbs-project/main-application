@@ -15,6 +15,5 @@ export const orgObjResolve: ResolveFn<Organization> = () =>
     .pipe(
       skipWhile((x) => x == undefined),
       map((x) => x!),
-      tap((x) => console.log('org', x)),
       first()
     );
