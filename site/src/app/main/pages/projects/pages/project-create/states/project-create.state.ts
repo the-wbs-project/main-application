@@ -317,8 +317,8 @@ export class ProjectCreateState {
                 id: project.id,
               },
             },
-            project: project,
-            nodes: nodes,
+            project,
+            nodes,
           },
         ])
       ),

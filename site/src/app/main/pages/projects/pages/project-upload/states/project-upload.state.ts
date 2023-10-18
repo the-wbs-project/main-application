@@ -24,6 +24,7 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
+import { PROJECT_ACTIONS } from '../../../models';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -415,7 +416,27 @@ export class ProjectUploadState {
 
     if (saves.length === 0) return;
 
-    return forkJoin(saves);
+    return forkJoin(saves).pipe(
+      switchMap(() =>
+        this.data.projectNodes.getAllAsync(project.owner, project.id)
+      ),
+      switchMap((nodes) =>
+        this.data.activities.saveProjectActivitiesAsync(
+          this.store.selectSnapshot(AuthState.userId)!,
+          [
+            {
+              data: {
+                action: PROJECT_ACTIONS.UPLOADED,
+                topLevelId: project.id,
+                data: {},
+              },
+              project,
+              nodes,
+            },
+          ]
+        )
+      )
+    );
   }
 
   private getFile(file: FileInfo): Observable<ArrayBuffer> {

@@ -7,6 +7,12 @@
         "icon": "fa-plus"
     },
     {
+        "id": "project-uploaded",
+        "type": "actions",
+        "label": "Actions.ProjectUploadedTitle",
+        "icon": "fa-upload"
+    },
+    {
         "id": "project-title-changed",
         "type": "actions",
         "label": "Actions.ProjectTitleChangedTitle",

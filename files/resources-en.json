@@ -521,6 +521,7 @@
       "ProjectDisciplinesChangedTitle": "Project Disciplines Changed",
       "ProjectAddUserTitle": "Project Role Assigned",
       "ProjectRemoveUserTitle": "Project Role Revoked",
+      "ProjectUploadedTitle": "Project File Imported",
       "TaskCreatedTitle": "Task Created",
       "TaskTitleChangedTitle": "Task Title Changed",
       "TaskDescriptionChangedTitle": "Task Description Changed",
