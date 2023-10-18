@@ -12,6 +12,7 @@ import { IdService, Messages, ProjectService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
+import { TASK_ACTIONS } from '../../../models';
 import {
   ChangeTaskBasics,
   ChangeTaskDisciplines,
@@ -31,7 +32,6 @@ import {
   VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { TASK_ACTIONS } from '../models';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
 

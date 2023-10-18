@@ -49,7 +49,6 @@ export class ProjectViewLayoutComponent {
   @Input({ required: true }) claims!: string[];
 
   readonly project = toSignal(this.store.select(ProjectState.current));
-  readonly roles = toSignal(this.store.select(ProjectState.roles));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
   readonly links = PROJECT_MENU_ITEMS.projectLinks;

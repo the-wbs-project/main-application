@@ -15,6 +15,7 @@ import {
 import { IdService } from '@wbs/core/services';
 import { AuthState, MetadataState } from '@wbs/main/states';
 import { Observable, switchMap, tap } from 'rxjs';
+import { PROJECT_ACTIONS } from '../../../models';
 import {
   CategoryChosen,
   DisciplinesChosen,
@@ -309,7 +310,7 @@ export class ProjectCreateState {
         this.data.activities.saveProjectActivitiesAsync(this.getUserId(), [
           {
             data: {
-              action: 'project-created',
+              action: PROJECT_ACTIONS.CREATED,
               topLevelId: project.id,
               data: {
                 title: project.title,

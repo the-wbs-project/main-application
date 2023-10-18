@@ -1,5 +1,6 @@
 export enum PROJECT_ACTIONS {
   CREATED = 'project-created',
+  UPLOADED = 'project-uploaded',
   TITLE_CHANGED = 'project-title-changed',
   DESCRIPTION_CHANGED = 'project-description-changed',
   CATEGORY_CHANGED = 'project-category-changed',

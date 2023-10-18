@@ -10,9 +10,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
-import { TASK_MENU_ITEMS } from '../../models';
-import { ProjectState, TasksState } from '../../states';
 import { ProjectNavigationComponent } from '../../components/project-navigation/project-navigation.component';
+import { TASK_MENU_ITEMS } from '../../models';
+import { TasksState } from '../../states';
 
 @Component({
   standalone: true,
@@ -26,8 +26,6 @@ export class TaskViewComponent {
   @Input({ required: true }) claims!: string[];
 
   readonly current = toSignal(this.store.select(TasksState.current));
-  readonly roles = toSignal(this.store.select(ProjectState.roles));
-
   readonly links = TASK_MENU_ITEMS.links;
   readonly faDiagramSubtask = faDiagramSubtask;
 

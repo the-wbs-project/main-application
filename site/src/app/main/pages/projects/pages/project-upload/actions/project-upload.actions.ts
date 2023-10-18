@@ -54,6 +54,6 @@ export class PrepUploadToSave {
 }
 
 export class SaveUpload {
-  static readonly type = '[Project] Save Upload';
+  static readonly type = '[Project Upload] Save Upload';
   constructor(readonly results: ProjectUploadData) {}
 }

@@ -17,6 +17,7 @@ import {
 } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
+import { PROJECT_ACTIONS } from '../../../models';
 import {
   AddUserToRole,
   ChangeProjectBasics,
@@ -32,7 +33,6 @@ import {
   VerifyProject,
   VerifyTasks,
 } from '../actions';
-import { PROJECT_ACTIONS } from '../models';
 import { TimelineService } from '../services';
 import { UserRolesViewModel } from '../view-models';
 
@@ -118,7 +118,7 @@ export class ProjectState {
 
     return state.current?.id !== projectId
       ? ctx.dispatch(new SetProject(owner, projectId))
-      : of();
+      : of().pipe(tap(() => ctx.dispatch(new VerifyTasks(state.current!))));
   }
 
   @Action(NavigateToView)

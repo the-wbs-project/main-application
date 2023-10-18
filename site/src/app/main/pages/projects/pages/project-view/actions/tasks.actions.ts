@@ -1,6 +1,5 @@
 import { PROJECT_NODE_VIEW_TYPE, Project, WbsNode } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { TASK_PAGE_VIEW_TYPE } from '../models';
 
 export class VerifyTasks {
   static readonly type = '[Tasks] Verify';
@@ -8,11 +7,11 @@ export class VerifyTasks {
 }
 
 export class RebuildNodeViews {
-  static readonly type = '[Task] Rebuild Node Views';
+  static readonly type = '[Tasks] Rebuild Node Views';
 }
 
 export class TreeReordered {
-  static readonly type = '[Task] Tree Reordered';
+  static readonly type = '[Tasks] Tree Reordered';
   constructor(
     readonly draggedId: string,
     readonly view: PROJECT_NODE_VIEW_TYPE,
@@ -21,7 +20,7 @@ export class TreeReordered {
 }
 
 export class RemoveTask {
-  static readonly type = '[Task] Remove Task';
+  static readonly type = '[Tasks] Remove Task';
   constructor(
     readonly nodeId: string,
     readonly reason: string,
@@ -30,47 +29,47 @@ export class RemoveTask {
 }
 
 export class NavigateToTask {
-  static readonly type = '[Task] Navigate To';
+  static readonly type = '[Tasks] Navigate To';
   constructor(readonly nodeId: string) {}
 }
 
 export class CloneTask {
-  static readonly type = '[Task] Clone Task';
+  static readonly type = '[Tasks] Clone Task';
   constructor(readonly nodeId: string) {}
 }
 
 export class MoveTaskUp {
-  static readonly type = '[Task] Move Task Up';
+  static readonly type = '[Tasks] Move Task Up';
   constructor(readonly taskId: string) {}
 }
 
 export class MoveTaskDown {
-  static readonly type = '[Task] Move Task Down';
+  static readonly type = '[Tasks] Move Task Down';
   constructor(readonly taskId: string) {}
 }
 
 export class MoveTaskLeft {
-  static readonly type = '[Task] Move Task Left';
+  static readonly type = '[Tasks] Move Task Left';
   constructor(readonly taskId: string) {}
 }
 
 export class MoveTaskRight {
-  static readonly type = '[Task] Move Task Right';
+  static readonly type = '[Tasks] Move Task Right';
   constructor(readonly taskId: string) {}
 }
 
 export class ChangeTaskBasics {
-  static readonly type = '[Task] Change Task Basics';
+  static readonly type = '[Tasks] Change Task Basics';
   constructor(readonly title: string, readonly description: string) {}
 }
 
 export class ChangeTaskDisciplines {
-  static readonly type = '[Task] Change Task Disciplines';
+  static readonly type = '[Tasks] Change Task Disciplines';
   constructor(readonly disciplines: string[]) {}
 }
 
 export class CreateTask {
-  static readonly type = '[Task] Create Task';
+  static readonly type = '[Tasks] Create Task';
   constructor(
     readonly parentId: string,
     readonly model: Partial<WbsNode>,
@@ -79,7 +78,7 @@ export class CreateTask {
 }
 
 export class SaveTask {
-  static readonly type = '[Task] Save Task';
+  static readonly type = '[Tasks] Save Task';
   constructor(readonly task: WbsNode) {}
 }
 

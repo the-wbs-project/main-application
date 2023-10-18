@@ -26,7 +26,6 @@ import { ProjectNavigationLink } from '../../models';
 })
 export class ProjectNavigationComponent {
   @Input({ required: true }) links!: ProjectNavigationLink[];
-  @Input({ required: true }) userRoles?: string[];
   @Input({ required: true }) claims?: string[];
 
   constructor(private readonly store: Store) {}
