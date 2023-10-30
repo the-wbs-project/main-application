@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Select } from '@ngxs/store';
 import { ListItem } from '@wbs/core/models';
@@ -16,6 +16,7 @@ import { Observable } from 'rxjs';
     '.icon-wrapper { display: inline-block; width: 50px; }',
     '.legend-header { text-align: center; }',
   ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
     CommonModule,

@@ -1,5 +1,5 @@
 import { CommonModule, ViewportScroller } from '@angular/common';
-import { Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, Component, HostListener } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faAngleUp } from '@fortawesome/pro-solid-svg-icons';
 
@@ -17,6 +17,7 @@ import { faAngleUp } from '@fortawesome/pro-solid-svg-icons';
   >
     <fa-icon [icon]="faAngleUp" size="3x" />
   </a> `,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FontAwesomeModule],
 })
 export class TabToTopComponent {

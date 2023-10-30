@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faUserCircle } from '@fortawesome/pro-solid-svg-icons';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
@@ -7,6 +7,7 @@ import { SVGIconModule } from '@progress/kendo-angular-icons';
 @Component({
   standalone: true,
   selector: 'wbs-header-profile-picture',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, NgIf, SVGIconModule],
   template: `<fa-icon
       *ngIf="!picture"

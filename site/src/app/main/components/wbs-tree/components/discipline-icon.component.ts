@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
@@ -16,6 +16,7 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
   >
     <i class="fa-solid fa-sm" [ngClass]="[id | disciplineIcon]"></i>
   </span>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
     CommonModule,

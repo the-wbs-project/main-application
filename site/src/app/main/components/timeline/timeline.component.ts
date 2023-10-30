@@ -1,5 +1,11 @@
 import { CommonModule, NgClass } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
@@ -17,6 +23,7 @@ import { ActionDescriptionTransformPipe } from './pipes';
   selector: 'wbs-timeline',
   templateUrl: './timeline.component.html',
   styleUrls: ['./timeline.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ActionDescriptionTransformPipe,
     CommonModule,

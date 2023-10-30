@@ -1,5 +1,12 @@
 import { NgClass, NgFor, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+  signal,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faGear } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,6 +27,7 @@ import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-l
   standalone: true,
   selector: 'wbs-resource-list',
   templateUrl: './resource-list.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [TableHelper],
   imports: [
     ActionIconListComponent,

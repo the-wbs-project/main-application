@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { environment } from 'src/environments/environment';
 
 @Component({
@@ -13,6 +13,7 @@ import { environment } from 'src/environments/environment';
     </a>
     All rights reserved
   </div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
   readonly year = new Date().getFullYear();

@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResourceTypeIconPipe } from '../pipes/resource-type-icon.pipe';
@@ -11,6 +11,7 @@ import { RESOURCE_TYPE_TYPE } from '@wbs/core/models';
   selector: 'wbs-resource-type-text',
   template: `<fa-icon *ngIf="type | resourceTypeIcon; let icon" [icon]="icon" />
     &nbsp; {{ type | resourceTypeName | translate }}`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FontAwesomeModule,
     NgIf,

@@ -5,6 +5,7 @@
   zoneId="myZone"
   [multiple]="false"
   [ngClass]="'w-100'"
+  (remove)="removed.emit()"
   (select)="uploaded.emit($event.files[0])"
 >
   <kendo-upload-messages dropFilesHere="" />

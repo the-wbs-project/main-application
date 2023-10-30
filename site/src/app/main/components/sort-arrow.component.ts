@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { State } from '@progress/kendo-data-query';
 import { arrowDownIcon, arrowUpIcon } from '@progress/kendo-svg-icons';
@@ -11,6 +11,7 @@ import { arrowDownIcon, arrowUpIcon } from '@progress/kendo-svg-icons';
     *ngIf="state.sort![0]?.field === field && state.sort![0]?.dir"
     [icon]="state.sort![0].dir === 'asc' ? arrowDownIcon : arrowUpIcon"
   />`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, SVGIconModule],
 })
 export class SortArrowComponent {

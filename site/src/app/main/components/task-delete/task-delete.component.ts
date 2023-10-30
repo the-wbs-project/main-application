@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  ViewEncapsulation,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
@@ -13,6 +18,7 @@ import { TaskDeleteService } from './task-delete.service';
   standalone: true,
   templateUrl: './task-delete.component.html',
   encapsulation: ViewEncapsulation.None,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, FormsModule, NgbModalModule, TranslateModule],
   providers: [TaskDeleteService],
 })

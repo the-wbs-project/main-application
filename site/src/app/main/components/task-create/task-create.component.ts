@@ -20,7 +20,7 @@ import { CategoryListEditorComponent } from '../category-list-editor';
   standalone: true,
   templateUrl: './task-create.component.html',
   styleUrls: ['./task-create.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryListEditorComponent,
     CommonModule,

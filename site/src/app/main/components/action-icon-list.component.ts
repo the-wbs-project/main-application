@@ -1,5 +1,5 @@
 import { NgClass, NgIf } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -35,6 +35,7 @@ import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
       </div>
     </ng-template>
   </kendo-dropdownbutton>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DropDownButtonModule,
     FontAwesomeModule,

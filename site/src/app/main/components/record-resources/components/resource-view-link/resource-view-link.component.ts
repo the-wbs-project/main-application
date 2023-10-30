@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
@@ -15,6 +15,7 @@ import { YouTubeSizerDirective } from '../../directives/youtube-sizer.directive'
   standalone: true,
   selector: 'wbs-resource-view-link',
   templateUrl: './resource-view-link.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FontAwesomeModule,
     NgIf,

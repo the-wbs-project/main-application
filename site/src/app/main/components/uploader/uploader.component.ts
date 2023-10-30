@@ -20,5 +20,6 @@ import { FileInfo, FileSelectModule } from '@progress/kendo-angular-upload';
 })
 export class UploaderComponent {
   @Input() zoneMessage?: string;
+  @Output() readonly removed = new EventEmitter<void>();
   @Output() readonly uploaded = new EventEmitter<FileInfo>();
 }

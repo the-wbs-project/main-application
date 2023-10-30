@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DisciplineIconComponent } from './discipline-icon.component';
 
 @Component({
@@ -8,6 +8,7 @@ import { DisciplineIconComponent } from './discipline-icon.component';
   template: `<ng-template ngFor let-id [ngForOf]="disciplines ?? []">
     <wbs-discipline-icon [id]="id"> </wbs-discipline-icon>
   </ng-template>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [CommonModule, DisciplineIconComponent],
 })
 export class DisciplineIconListComponent {
