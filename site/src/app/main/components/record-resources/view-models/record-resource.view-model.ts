@@ -9,6 +9,7 @@ export interface RecordResourceViewModel {
   url: string;
   file?: FileInfo;
   errors: {
+    started?: boolean;
     nameRequired?: boolean;
     descriptionRequired?: boolean;
     urlRequired?: boolean;

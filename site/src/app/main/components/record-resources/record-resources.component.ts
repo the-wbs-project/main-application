@@ -60,11 +60,11 @@ export class RecordResourcesComponent {
   ) {}
 
   launchNew(content: any): void {
-    this.messages.notify.info('Coming soon...', false);
-    //this.modal = this.modalService.open(content, {
-    //  fullscreen: true,
-    //  modalDialogClass: 'modal-almost-fullscreen',
-    //});
+    //this.messages.notify.info('Coming soon...', false);
+    this.modal = this.modalService.open(content, {
+      fullscreen: true,
+      modalDialogClass: 'modal-almost-fullscreen',
+    });
   }
 
   saveClicked(): void {

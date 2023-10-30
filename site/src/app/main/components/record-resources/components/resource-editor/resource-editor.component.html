@@ -100,8 +100,22 @@
     >
       <span class="col-3 pd-t-10"> File Upload </span>
       <div class="col-9">
-        <wbs-uploader />
+        <div
+          [ngClass]="{
+            'is-valid border border-success': vm.errors.fileRequired === false,
+            'is-invalid border border-danger': vm.errors.fileRequired
+          }"
+        >
+          <wbs-uploader
+            (removed)="setFile(undefined)"
+            (uploaded)="setFile($event)"
+          />
+        </div>
+        <div class="invalid-feedback" *ngIf="vm.errors?.fileRequired">
+          {{ "Resources.UrlIsRequired" | translate }}
+        </div>
       </div>
+      {{ vm.file?.name }}
     </div>
   </ng-template>
 </div>

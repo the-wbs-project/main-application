@@ -5,7 +5,9 @@ import { RESOURCE_TYPES } from '@wbs/core/models';
 @Injectable()
 export class RecordResourceValidation {
   validate(vm: RecordResourceViewModel): boolean {
-    vm.errors = {};
+    vm.errors = {
+      started: true,
+    };
 
     this.validateName(vm);
     this.validateDescription(vm);
@@ -17,6 +19,15 @@ export class RecordResourceValidation {
         !vm.errors.nameRequired &&
         !vm.errors.descriptionRequired &&
         !vm.errors.urlRequired
+      );
+    }
+    if (vm.type === RESOURCE_TYPES.PDF || vm.type === RESOURCE_TYPES.IMAGE) {
+      this.validateFile(vm);
+
+      return (
+        !vm.errors.nameRequired &&
+        !vm.errors.descriptionRequired &&
+        !vm.errors.fileRequired
       );
     }
 
@@ -33,5 +44,9 @@ export class RecordResourceValidation {
 
   validateUrl(vm: RecordResourceViewModel): void {
     vm.errors.urlRequired = (vm.url?.trim() ?? '') === '';
+  }
+
+  validateFile(vm: RecordResourceViewModel): void {
+    vm.errors.fileRequired = vm.file == undefined;
   }
 }

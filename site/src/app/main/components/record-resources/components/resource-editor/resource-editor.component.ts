@@ -9,6 +9,7 @@ import { RestrictionsPipe } from '../../pipes/restrictions.pipe';
 import { RecordResourceValidation } from '../../services';
 import { RecordResourceViewModel } from '../../view-models';
 import { ResourceTypeTextComponent } from '../resource-type-text.component';
+import { FileInfo } from '@progress/kendo-angular-upload';
 
 @Component({
   standalone: true,
@@ -37,4 +38,12 @@ export class ResourceEditorComponent {
   ];
 
   constructor(readonly validator: RecordResourceValidation) {}
+
+  setFile(file: FileInfo | undefined): void {
+    this.vm.file = file;
+
+    if (this.vm.errors.started) {
+      this.validator.validateFile(this.vm);
+    }
+  }
 }
