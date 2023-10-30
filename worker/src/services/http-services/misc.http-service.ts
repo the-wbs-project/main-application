@@ -1,16 +1,6 @@
 import { Context } from '../../config';
-import { StorageService } from '../data-services/storage.service';
 
 export class MiscHttpService {
-  static async getStaticFileAsync(ctx: Context): Promise<Response> {
-    const service = new StorageService(ctx.env.BUCKET_STATICS);
-    const { file } = ctx.req.param();
-
-    if (!file) return ctx.text('Missing Parameters', 500);
-
-    return service.getAsResponse(ctx, file);
-  }
-
   static async clearKvAsync(ctx: Context): Promise<Response> {
     const kv = ctx.env.KV_DATA;
     const keys = await kv.list();

@@ -99,8 +99,6 @@ app.get('api/chat/:model', verifyJwt, Http.chat.getAsync);
 app.put('api/chat/:model', verifyJwt, Http.chat.putAsync);
 app.delete('api/chat/:model', verifyJwt, Http.chat.deleteAsync);
 
-app.get('api/files/:file', verifyJwt, Http.misc.getStaticFileAsync);
-
 app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
 app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
 app.get('api/queue/test', (ctx) => {

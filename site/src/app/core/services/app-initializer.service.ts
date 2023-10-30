@@ -1,4 +1,4 @@
-import { AuthClientConfig, AuthService } from '@auth0/auth0-angular';
+import { AuthClientConfig } from '@auth0/auth0-angular';
 import { Resources } from './resource.service';
 import { AppConfig } from './app-config.service';
 
