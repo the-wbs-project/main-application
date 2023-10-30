@@ -1,9 +1,8 @@
 <div class="w-100 text-center">
   <fa-icon [icon]="faQuestion" size="5x" />
-  <h3 class="pd-t-20">Options</h3>
+  <h3 class="pd-t-20">{{ "ProjectUpload.Options" | translate }}</h3>
   <p class="pd-t-20">
-    Do you want to overwrite any existing project plan with the uploaded one or
-    append to the end?
+    {{ "General.OptionsMessage" | translate }}
   </p>
   <div class="d-ib">
     <button
@@ -11,14 +10,14 @@
       class="btn btn-primary mg-r-10"
       (click)="select('overwrite')"
     >
-      Overwrite
+      {{ "General.Overwrite" | translate }}
     </button>
     <button
       type="button"
       class="btn btn-primary mg-l-10"
       (click)="select('append')"
     >
-      Append
+      {{ "General.Append" | translate }}
     </button>
   </div>
 </div>

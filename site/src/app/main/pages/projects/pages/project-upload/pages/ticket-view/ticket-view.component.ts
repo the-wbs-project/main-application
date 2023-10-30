@@ -16,7 +16,6 @@ import { ProjectUploadState } from '../../states';
 @Component({
   standalone: true,
   templateUrl: './ticket-view.component.html',
-  styleUrls: ['./ticket-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [LoaderModule, NgIf, RouterModule, TextAreaModule, TranslateModule],
 })

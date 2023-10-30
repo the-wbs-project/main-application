@@ -1,6 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faQuestion } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { AppendOrOvewriteSelected } from '../../actions';
 
@@ -8,7 +9,7 @@ import { AppendOrOvewriteSelected } from '../../actions';
   standalone: true,
   templateUrl: './options-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule],
+  imports: [FontAwesomeModule, TranslateModule],
 })
 export class OptionsViewComponent {
   readonly faQuestion = faQuestion;

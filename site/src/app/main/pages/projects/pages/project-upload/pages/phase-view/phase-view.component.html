@@ -1,13 +1,10 @@
 <div *ngIf="phaseList$ | async; let phaseList" class="w-100 text-center">
   <fa-icon [icon]="faList" size="5x"></fa-icon>
-  <h3 class="pd-t-20">Phase Mapping</h3>
+  <h3 class="pd-t-20">{{ "ProjectUpload.Page_Phases" | translate }}</h3>
   <ngb-alert type="info">
-    <h4 class="alert-heading">Why?</h4>
+    <h4 class="alert-heading">{{ "ProjectUpload.Why" | translate }}</h4>
     <p>
-      The main purpose of this tool is to help you build better work breakdown
-      structures. To achieve this we need to understand more about the project
-      plan as it currently stands. Also this will help us provide learning
-      opportunities within your plan.
+      {{ "ProjectUpload.PhaseMessage" | translate }}
     </p>
   </ngb-alert>
   <div class="list-group text-start w-100 pd-t-20">

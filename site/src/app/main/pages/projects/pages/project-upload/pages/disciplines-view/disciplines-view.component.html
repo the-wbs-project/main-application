@@ -1,13 +1,10 @@
 <div *ngIf="peopleList$ | async; let people" class="w-100 text-center">
   <fa-icon [icon]="faList" size="5x" />
-  <h3 class="pd-t-20">Discipline Mapping</h3>
+  <h3 class="pd-t-20">{{ "ProjectUpload.Page_Disciplines" | translate }}</h3>
   <ngb-alert type="info">
-    <h4 class="alert-heading">Why?</h4>
+    <h4 class="alert-heading">{{ "ProjectUpload.Why" | translate }}</h4>
     <p>
-      While we don't store who is assigned to certain tasks we can use this
-      information to figure out what disciplines are assigned to each task. If
-      you can define what disciplines each individual performs we will do the
-      mapping.
+      {{ "DisciplineMessage.Why" | translate }}
     </p>
   </ngb-alert>
   <div class="list-group text-start w-100 pd-t-20">
