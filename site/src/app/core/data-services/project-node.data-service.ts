@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectNode } from '../models';
+import { Utils } from '../services';
 
 export class ProjectNodeDataService {
   constructor(private readonly http: HttpClient) {}
@@ -9,7 +10,7 @@ export class ProjectNodeDataService {
   getAllAsync(owner: string, projectId: string): Observable<ProjectNode[]> {
     return this.http
       .get<ProjectNode[]>(`api/projects/owner/${owner}/id/${projectId}/nodes`)
-      .pipe(map((list) => this.cleanList(list)));
+      .pipe(map((list) => this.clean(list)));
   }
 
   putAsync(
@@ -27,19 +28,9 @@ export class ProjectNodeDataService {
     );
   }
 
-  private cleanList(nodes: ProjectNode[]): ProjectNode[] {
-    for (const node of nodes) this.clean(node);
+  private clean(nodes: ProjectNode[]): ProjectNode[] {
+    Utils.cleanDates(nodes, 'createdOn', 'lastModified');
 
     return nodes;
-  }
-
-  private clean(node: ProjectNode): ProjectNode {
-    if (typeof node.createdOn === 'string')
-      node.createdOn = new Date(node.createdOn);
-
-    if (typeof node.lastModified === 'string')
-      node.lastModified = new Date(node.lastModified);
-
-    return node;
   }
 }

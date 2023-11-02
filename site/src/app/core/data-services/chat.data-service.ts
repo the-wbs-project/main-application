@@ -1,28 +1,40 @@
 import { HttpClient } from '@angular/common/http';
-import { Message } from '@progress/kendo-angular-conversational-ui';
-import { Observable, map } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { ChatComment } from '../models';
+import { Utils } from '../services';
 
 export class ChatDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(model: string): Observable<Message[]> {
-    return this.http.get<Message[]>(`api/chat/${model}`).pipe(
-      map((data) => {
-        for (const record of data) {
-          if (typeof record.timestamp === 'string') {
-            record.timestamp = new Date(record.timestamp);
-          }
-        }
-        return data;
-      })
+  getPageAsync(
+    threadId: string,
+    skip: number,
+    take: number
+  ): Observable<ChatComment[]> {
+    return this.http
+      .get<ChatComment[] | undefined>(
+        `thread/${threadId}/comments/skip/${skip}/take/${take}`
+      )
+      .pipe(map((list) => this.clean(list ?? [])));
+  }
+
+  getNewCommentCountAsync(
+    threadId: string,
+    timestamp: Date
+  ): Observable<number> {
+    return this.http.get<number>(
+      `api/thread/${threadId}/comments/${timestamp}/count`
     );
   }
 
-  putAsync(model: string, feed: Message[]): Observable<void> {
-    return this.http.put<void>(`api/chat/${model}`, feed);
+  insertAsync(comment: ChatComment): Observable<void> {
+    return this.http.put<void>(`api/chat/thread/${comment.threadId}`, comment);
   }
 
-  deleteAsync(model: string): Observable<void> {
-    return this.http.delete<void>(`api/chat/${model}`);
+  private clean(nodes: ChatComment[]): ChatComment[] {
+    Utils.cleanDates(nodes, 'timestamp');
+
+    return nodes;
   }
 }

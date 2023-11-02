@@ -19,4 +19,21 @@ export class Utils {
 
     return b2.length === 0;
   }
+
+  static cleanDates<T, K extends keyof T>(
+    obj: T | T[],
+    ...properties: K[]
+  ): void {
+    if (Array.isArray(obj)) {
+      for (const item of obj) this.cleanDates(item, ...properties);
+      return;
+    }
+
+    for (const property of properties) {
+      const value = <string | undefined>obj[property];
+
+      //@ts-ignore
+      if (value) obj[property] = new Date(value);
+    }
+  }
 }

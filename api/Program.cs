@@ -47,6 +47,7 @@ builder.Services.AddSingleton<JiraHelpDeskConfig>();
 //  Data Services
 //
 builder.Services.AddSingleton<ActivityDataService>();
+builder.Services.AddSingleton<ChatDataService>();
 builder.Services.AddSingleton<ChecklistDataService>();
 builder.Services.AddSingleton<InviteDataService>();
 builder.Services.AddSingleton<JiraHelpDeskDataService>();

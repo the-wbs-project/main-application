@@ -125,7 +125,7 @@ export class AiState implements NgxsOnInit {
 
     this.setCurrentModel(model.model);
 
-    return this.data.chat
+    return this.data.aiChat
       .getAsync(this.getChatModelId(model.model))
       .pipe(tap((feed) => ctx.patchState({ feed })));
   }
@@ -277,7 +277,7 @@ export class AiState implements NgxsOnInit {
   clear(ctx: Context): Observable<void> {
     const model = ctx.getState().model!.model;
 
-    return this.data.chat
+    return this.data.aiChat
       .deleteAsync(this.getChatModelId(model))
       .pipe(tap(() => ctx.patchState({ feed: [] })));
   }
@@ -285,7 +285,7 @@ export class AiState implements NgxsOnInit {
   private saveChat(ctx: Context): void {
     const state = ctx.getState();
 
-    this.data.chat
+    this.data.aiChat
       .putAsync(this.getChatModelId(state.model!.model), state.feed)
       .subscribe();
   }

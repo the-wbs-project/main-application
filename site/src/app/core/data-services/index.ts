@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { ActivityDataService } from './activity.data-service';
 import { AiDataService } from './ai.data-service';
+import { AiChatDataService } from './ai-chat.data-service';
 import { ChatDataService } from './chat.data-service';
 import { ClaimsDataService } from './claims.data-service';
 import { JiraDataService } from './jira.data-service';
@@ -20,6 +21,7 @@ import { UserDataService } from './user.data-service';
 export class DataServiceFactory {
   readonly activities = new ActivityDataService(this.http);
   readonly ai = new AiDataService(this.http);
+  readonly aiChat = new AiChatDataService(this.http);
   readonly chat = new ChatDataService(this.http);
   readonly claims = new ClaimsDataService(this.http);
   readonly jira = new JiraDataService(this.http);
