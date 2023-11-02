@@ -1,6 +1,8 @@
 <div class="container-fluid">
   <div class="row">
-    <span class="col-3 pd-t-10"> Resource Type * </span>
+    <span class="col-3 pd-t-10">
+      {{ "Resources.ResourceType" | translate }} *
+    </span>
     <div class="col-9">
       <kendo-dropdownlist [data]="typeList" [(value)]="vm.type">
         <ng-template
@@ -12,13 +14,13 @@
         </ng-template>
       </kendo-dropdownlist>
       <span class="tx-italic tx-11">
-        Select the type of resource you would like to add.
+        {{ "Resources.ResourceTypeHelper" | translate }}
       </span>
     </div>
   </div>
   <ng-template [ngIf]="vm.type">
     <div class="row mg-t-20">
-      <span class="col-3 pd-t-10"> Name *</span>
+      <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
       <div class="col-9">
         <input
           type="text"
@@ -31,7 +33,7 @@
           (blur)="validator.validateName(vm)"
         />
         <span class="tx-italic tx-11" *ngIf="!vm.errors?.nameRequired">
-          The name of the resource
+          {{ "Resources.ResourceNameHelper" | translate }}
         </span>
         <div class="invalid-feedback" *ngIf="vm.errors.nameRequired">
           {{ "Resources.NameIsRequired" | translate }}
@@ -39,7 +41,9 @@
       </div>
     </div>
     <div class="row mg-t-20">
-      <span class="col-3 pd-t-10"> Description * </span>
+      <span class="col-3 pd-t-10">
+        {{ "General.Description" | translate }} *
+      </span>
       <div class="col-9">
         <textarea
           [(ngModel)]="vm.description"
@@ -52,7 +56,7 @@
           (blur)="validator.validateDescription(vm)"
         ></textarea>
         <span class="tx-italic tx-11" *ngIf="!vm.errors?.descriptionRequired">
-          A brief description of the resource
+          {{ "Resources.ResourceDescriptionHelper" | translate }}
         </span>
         <div class="invalid-feedback" *ngIf="vm.errors?.descriptionRequired">
           {{ "Resources.DescriptionIsRequired" | translate }}
@@ -60,7 +64,9 @@
       </div>
     </div>
     <div *ngIf="vm.type === 'link'" class="row mg-t-20">
-      <span class="col-3 pd-t-10"> Link URL * </span>
+      <span class="col-3 pd-t-10">
+        {{ "Resources.LinkUrl" | translate }} *
+      </span>
       <div class="col-9">
         <input
           type="text"
@@ -73,7 +79,7 @@
           (blur)="validator.validateUrl(vm)"
         />
         <span class="tx-italic tx-11" *ngIf="!vm.errors?.urlRequired">
-          The URL of the link.
+          {{ "Resources.UrlIsRequired" | translate }}
         </span>
         <div class="invalid-feedback" *ngIf="vm.errors?.urlRequired">
           {{ "Resources.UrlIsRequired" | translate }}
@@ -98,7 +104,9 @@
       *ngIf="vm.type !== 'youtube' && vm.type !== 'link'"
       class="row mg-t-20"
     >
-      <span class="col-3 pd-t-10"> File Upload </span>
+      <span class="col-3 pd-t-10">
+        {{ "Resources.FileUpload" | translate }}
+      </span>
       <div class="col-9">
         <div
           [ngClass]="{
@@ -115,7 +123,6 @@
           {{ "Resources.UrlIsRequired" | translate }}
         </div>
       </div>
-      {{ vm.file?.name }}
     </div>
   </ng-template>
 </div>

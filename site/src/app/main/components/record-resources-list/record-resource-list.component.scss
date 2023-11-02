@@ -1,0 +1,62 @@
+@import "../../../../styles/variables";
+
+.rr-list-item {
+  flex: 1;
+}
+
+.reorder-item {
+  width: 40px;
+  flex: 0 0 40px;
+}
+
+.type-item {
+  width: 100px;
+  flex: 0 0 100px;
+}
+
+.name-item {
+  width: 200px;
+  flex: 0 0 200px;
+}
+
+.actions-item {
+  width: 30px;
+  flex: 0 0 30px;
+}
+
+.view-item {
+  width: 30px;
+  flex: 0 0 30px;
+}
+
+.rr-list-item:nth-child(odd) {
+  background: $light-grey;
+}
+
+.rowHint {
+  background-color: #ededed;
+  padding: 5px;
+  pointer-events: none;
+}
+
+.rowHint > td {
+  border: none;
+}
+
+.k-d-flex.k-flex-wrap {
+  justify-content: space-evenly;
+}
+
+.item-border {
+  padding: 10px;
+  border-bottom: 1px solid lightgrey;
+}
+
+.k-listview-item:hover {
+  background-color: #ededed;
+}
+
+.item {
+  display: flex;
+  justify-content: space-between;
+}

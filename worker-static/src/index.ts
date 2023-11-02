@@ -1,36 +1,48 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { Context_Env, Context_Variables } from './context';
-import { cors, verify } from './middle';
+import { verify } from './middle';
+import { Storage } from './storage.service';
 
 const app = new Hono<{ Bindings: Context_Env; Variables: Context_Variables }>();
 
-app.use('*', cors);
-app.options('*', cors, (c) => c.text(''));
+app.use(
+	'*',
+	cors({
+		origin: ['http://localhost:4200', 'https://test.pm-empower.com', 'https://app.pm-empower.com'],
+		allowHeaders: ['Authorization'],
+		allowMethods: ['PUT', 'GET', 'OPTIONS'],
+		//exposeHeaders: ['Content-Length', 'X-Kuma-Revision'],
+		maxAge: 600,
+		credentials: true,
+	})
+);
+app.options('*', (c) => c.text(''));
 
 app.get('api/:file', verify, async (cxt) => {
 	const { file } = cxt.req.param();
 
-	if (!file) return cxt.text('Missing Parameters', 500);
-
-	const key = decodeURIComponent(file);
-	const object = await cxt.env.BUCKET.get(key);
-
-	if (!object) return cxt.text('Not Found', 404);
-
-	const headers = new Headers();
-	object.writeHttpMetadata(headers);
-	headers.set('etag', object.httpEtag);
-
-	return cxt.newResponse(object.body, {
-		headers,
-	});
+	return await Storage.getAsResponseAsync(cxt, file);
 });
+
+app.get('api/:owner/:file', verify, async (cxt) => {
+	const { file, owner } = cxt.req.param();
+
+	return await Storage.getAsResponseAsync(cxt, file, [owner]);
+});
+
 app.put('api/:file', verify, async (cxt) => {
 	const { file } = cxt.req.param();
 
-	if (!file) return cxt.text('Missing Parameters', 500);
+	await Storage.putAsync(cxt, file);
 
-	await cxt.env.BUCKET.put(file, cxt.req.body);
+	return cxt.newResponse(null, { status: 204 });
+});
+
+app.put('api/:owner/:file', verify, async (cxt) => {
+	const { file, owner } = cxt.req.param();
+
+	await Storage.putAsync(cxt, file, [owner]);
 
 	return cxt.newResponse(null, { status: 204 });
 });

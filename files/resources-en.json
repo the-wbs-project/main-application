@@ -578,5 +578,23 @@
       "Title": "AI Assistant",
       "ClearConfirm": "Are you sure you want to clear your AI assist history?"
     }
+  },
+  {
+    "section": "Resources",
+    "locale": "en-US",
+    "values": {
+      "AddResource": "Add Resource",
+      "NoResourcesFound": "No Resources Found",
+      "ResourceTypeHelper": "Select the type of resource you would like to add.",
+      "ResourceNameHelper": "The name of the resource",
+      "ResourceDescriptionHelper": "The brief description of the resource",
+      "ResourceUrlHelper": "The URL of the link.",
+      "ResourceSaved": "Resource Saved",
+      "LinkUrl": "Link URL",
+      "FileUpload": "File Upload",
+      "UrlIsRequired": "Url Is Required",
+      "NameIsRequired": "Name Is Required",
+      "DescriptionIsRequired": "Description Is Required"
+    }
   }
 ]

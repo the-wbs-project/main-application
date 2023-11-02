@@ -10,5 +10,5 @@ export interface RecordResource {
   createdOn: Date;
   lastModified: Date;
   order: number;
-  resource: string;
+  resource?: string;
 }

@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { AsyncPipe, NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye } from '@fortawesome/pro-solid-svg-icons';
@@ -10,6 +10,7 @@ import {
 } from '@progress/kendo-angular-pdfviewer';
 import { RecordResource } from '@wbs/core/models';
 import { YouTubeSizerDirective } from '../../directives/youtube-sizer.directive';
+import { ResourceObjectPipe } from '../../pipes/resource-object.pipe';
 
 @Component({
   standalone: true,
@@ -17,15 +18,18 @@ import { YouTubeSizerDirective } from '../../directives/youtube-sizer.directive'
   templateUrl: './resource-view-link.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AsyncPipe,
     FontAwesomeModule,
     NgIf,
     PDFViewerModule,
+    ResourceObjectPipe,
     TranslateModule,
     YouTubeSizerDirective,
   ],
 })
 export class ResourceViewLinkComponent {
-  @Input({ required: true }) resource!: RecordResource;
+  @Input({ required: true }) owner!: string;
+  @Input({ required: true }) record!: RecordResource;
 
   readonly faEye = faEye;
   readonly tools: PDFViewerTool[] = [

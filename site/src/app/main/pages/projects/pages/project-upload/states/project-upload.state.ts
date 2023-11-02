@@ -5,7 +5,7 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
-import { Transformers } from '@wbs/main/services';
+import { Transformers, Utils } from '@wbs/main/services';
 import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -181,7 +181,7 @@ export class ProjectUploadState {
 
     if (!state.rawFile || !state.extension) return;
 
-    return this.getFile(state.rawFile).pipe(
+    return Utils.getFileAsync(state.rawFile).pipe(
       switchMap((body) =>
         this.data.projectImport.runAsync(body, state.extension!)
       ),
@@ -211,7 +211,7 @@ export class ProjectUploadState {
     if (!state.rawFile) return;
 
     return forkJoin({
-      body: this.getFile(state.rawFile),
+      body: Utils.getFileAsync(state.rawFile),
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
         this.store.selectSnapshot(MembershipState.organization)!.display_name,
@@ -437,26 +437,6 @@ export class ProjectUploadState {
         )
       )
     );
-  }
-
-  private getFile(file: FileInfo): Observable<ArrayBuffer> {
-    return new Observable<ArrayBuffer>((obs) => {
-      if (!file) {
-        obs.complete();
-        return;
-      }
-      const reader = new FileReader();
-
-      reader.onload = function (ev) {
-        const data = ev.target?.result;
-
-        obs.next(<ArrayBuffer>data);
-        obs.complete();
-      };
-
-      reader.readAsArrayBuffer(file.rawFile!);
-      //reader.readAsDataURL(file.rawFile!);
-    });
   }
 
   private urlPrefix(ctx: StateContext<StateModel>): string[] {

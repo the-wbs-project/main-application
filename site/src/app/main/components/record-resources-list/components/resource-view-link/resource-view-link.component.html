@@ -1,0 +1,53 @@
+<a
+  *ngIf="record.type === 'link'"
+  class="text-decoration-none tx-black"
+  [href]="record.resource!"
+  target="_blank"
+>
+  <fa-icon [icon]="faEye" />
+</a>
+<a
+  *ngIf="record.type !== 'link'"
+  class="pointer text-decoration-none tx-black"
+  (click)="open(content)"
+>
+  <fa-icon [icon]="faEye" />
+</a>
+<ng-template #content let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">{{ record.name }}</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="modal.dismiss('')"
+    ></button>
+  </div>
+  <div *ngIf="record.type === 'image'" class="modal-body">
+    <img class="w-100" [src]="record.resource" />
+  </div>
+  <div *ngIf="record.type === 'pdf'" class="modal-body">
+    <kendo-pdfviewer
+      *ngIf="record.resource"
+      style="height: 100%"
+      [tools]="tools"
+      [url]="record.resource"
+      [saveFileName]="record.name + '.pdf'"
+    />
+    <kendo-pdfviewer
+      *ngIf="!record.resource"
+      style="height: 100%"
+      [tools]="tools"
+      [arrayBuffer]="([owner, record.id] | resourceObject | async)!"
+      [saveFileName]="record.name + '.pdf'"
+    />
+  </div>
+  <div *ngIf="record.type === 'youtube'" class="modal-body tx-center">
+    <iframe
+      frameborder="0"
+      [wbsYouTubeSizer]="record.resource!"
+      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      allowfullscreen
+    ></iframe>
+  </div>
+</ng-template>

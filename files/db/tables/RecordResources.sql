@@ -7,7 +7,7 @@ CREATE TABLE [dbo].[RecordResources] (
     [Order] int NOT NULL,
     [CreatedOn] DateTimeOffset NOT NULL,
     [LastModified] DateTimeOffset NOT NULL,
-    [Resource] nvarchar(MAX) NOT NULL,
+    [Resource] nvarchar(MAX) NULL,
     [Description] nvarchar(MAX) NULL,
     CONSTRAINT RecordResources_PK PRIMARY KEY CLUSTERED ([Id] ASC)
 )

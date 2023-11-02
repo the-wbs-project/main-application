@@ -1,8 +1,9 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { MembershipState } from '../states';
+import { FileInfo } from '@progress/kendo-angular-upload';
 import { Observable, of } from 'rxjs';
 import { first, map, skipWhile } from 'rxjs/operators';
+import { MembershipState } from '../states';
 
 export class Utils {
   static getOrgName(store: Store, route: ActivatedRouteSnapshot): string {
@@ -26,5 +27,25 @@ export class Utils {
       map((x) => x!.name),
       first()
     );
+  }
+
+  static getFileAsync(file: FileInfo): Observable<ArrayBuffer> {
+    return new Observable<ArrayBuffer>((obs) => {
+      if (!file) {
+        obs.complete();
+        return;
+      }
+      const reader = new FileReader();
+
+      reader.onload = function (ev) {
+        const data = ev.target?.result;
+
+        obs.next(<ArrayBuffer>data);
+        obs.complete();
+      };
+
+      reader.readAsArrayBuffer(file.rawFile!);
+      //reader.readAsDataURL(file.rawFile!);
+    });
   }
 }

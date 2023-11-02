@@ -3,18 +3,18 @@ import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { RESOURCE_TYPES } from '@wbs/core/models';
-import { UploaderComponent } from '@wbs/main/components/uploader/uploader.component';
-import { RestrictionsPipe } from '../../pipes/restrictions.pipe';
-import { RecordResourceValidation } from '../../services';
-import { RecordResourceViewModel } from '../../view-models';
-import { ResourceTypeTextComponent } from '../resource-type-text.component';
 import { FileInfo } from '@progress/kendo-angular-upload';
+import { RESOURCE_TYPES } from '@wbs/core/models';
+import { RecordResourceViewModel } from '@wbs/core/view-models';
+import { UploaderComponent } from '@wbs/main/components/uploader/uploader.component';
+import { RecordResourceValidation } from '@wbs/main/services';
+import { ResourceTypeTextComponent } from '../record-resources-type-text/resource-type-text.component';
+import { RestrictionsPipe } from './pipes/restrictions.pipe';
 
 @Component({
   standalone: true,
-  selector: 'wbs-resource-editor',
-  templateUrl: './resource-editor.component.html',
+  selector: 'wbs-record-resource-editor',
+  templateUrl: './record-resource-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DropDownListModule,
@@ -27,7 +27,7 @@ import { FileInfo } from '@progress/kendo-angular-upload';
     UploaderComponent,
   ],
 })
-export class ResourceEditorComponent {
+export class RecordResourceEditorComponent {
   @Input({ required: true }) vm!: RecordResourceViewModel;
 
   readonly typeList = [

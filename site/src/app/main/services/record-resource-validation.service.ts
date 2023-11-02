@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { RecordResourceViewModel } from '../view-models';
 import { RESOURCE_TYPES } from '@wbs/core/models';
+import { RecordResourceViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class RecordResourceValidation {
