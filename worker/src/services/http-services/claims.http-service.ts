@@ -25,12 +25,13 @@ export class ClaimsHttpService {
 
       const definitions = await ctx.get('data').roles.getAsync();
       const projectRoles = (await origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`)) ?? [];
+      const orgRoleIds = ctx.get('idToken').orgRoles[owner];
+      const orgRoleNames = orgRoleIds.map((r) => definitions.find((d) => d.id === r)?.name ?? '');
+      const roles = projectRoles
+        .filter((r) => r.userId === userId && orgRoleIds.includes(r.role))
+        .map((r) => definitions.find((d) => d.id === r.role)!.name);
 
-      const orgRoles = ctx.get('idToken').orgRoles[owner].map((r) => definitions.find((d) => d.id === r)?.name ?? '');
-
-      const roles = projectRoles.filter((r) => r.userId === userId && orgRoles.includes(r.role)).map((r) => r.role);
-
-      if (orgRoles.includes(ROLES.ADMIN)) roles.push(ROLES.ADMIN);
+      if (orgRoleNames.includes(ROLES.ADMIN)) roles.push(ROLES.ADMIN);
 
       return ctx.json(ClaimsHttpService.getClaims(PROJECT_PERMISSIONS, roles));
     } catch (e) {

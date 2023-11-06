@@ -36,6 +36,8 @@
   <div class="p-4">
     <h4 class="tx-15-f text-uppercase mb-3">
       {{ "General.Description" | translate }}
+      &nbsp;
+      <wbs-approval-badge size="2x" id="project-description" />
     </h4>
     <div [innerHTML]="project.description | safeHtml"></div>
   </div>
@@ -49,6 +51,14 @@
         *ngFor="let user of users()"
         class="list-group-item bd-gray-400 bd-t-1-f"
       >
+        <div class="d-ib wd-40">
+          <img
+            *ngIf="user.picture"
+            class="rounded-circle wd-30 ht-30 object-fit-cover"
+            [src]="user.picture"
+            alt="avatar"
+          />
+        </div>
         {{ user.name }} - {{ user.roles | roleList : true }}
       </li>
     </ul>

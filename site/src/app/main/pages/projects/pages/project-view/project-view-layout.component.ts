@@ -8,7 +8,7 @@ import {
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faArrowUpFromBracket } from '@fortawesome/pro-solid-svg-icons';
+import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { gearIcon } from '@progress/kendo-svg-icons';
@@ -20,10 +20,11 @@ import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
+import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_MENU_ITEMS } from './models';
-import { ProjectState } from './states';
+import { ProjectApprovalState, ProjectState } from './states';
 
 @Component({
   standalone: true,
@@ -37,22 +38,27 @@ import { ProjectState } from './states';
     FillElementDirective,
     FontAwesomeModule,
     PageHeaderComponent,
+    ProjectActionButtonComponent,
+    ProjectApprovalWindowComponent,
     ProjectChecklistModalComponent,
     ProjectNavigationComponent,
     ProjectTitleComponent,
     RouterModule,
     TranslateModule,
-    ProjectActionButtonComponent,
   ],
 })
 export class ProjectViewLayoutComponent {
   @Input({ required: true }) claims!: string[];
+  @Input({ required: true }) userId!: string;
 
+  readonly approval = toSignal(this.store.select(ProjectApprovalState.current));
+  readonly chat = toSignal(this.store.select(ProjectApprovalState.messages));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
   readonly links = PROJECT_MENU_ITEMS.projectLinks;
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
+  readonly faX = faX;
   readonly gearIcon = gearIcon;
   readonly menu = [
     {

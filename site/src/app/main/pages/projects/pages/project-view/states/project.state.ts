@@ -6,7 +6,9 @@ import {
   ActivityData,
   Project,
   PROJECT_NODE_VIEW,
+  PROJECT_STATI,
   ProjectCategory,
+  User,
 } from '@wbs/core/models';
 import { Messages, ProjectService, Resources } from '@wbs/core/services';
 import {
@@ -15,8 +17,8 @@ import {
   MetadataState,
   RoleState,
 } from '@wbs/main/states';
-import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, forkJoin, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
 import {
   AddUserToRole,
@@ -284,6 +286,13 @@ export class ProjectState {
 
     project.status = status;
 
+    if (status === PROJECT_STATI.APPROVAL) {
+      //
+      //  If the status is approval, set to true.  If its not true leave it alone (don't set to false).
+      //
+      project.approvalStarted = true;
+    }
+
     return this.saveProject(ctx, project).pipe(
       tap(() =>
         this.saveActivity({
@@ -403,25 +412,68 @@ export class ProjectState {
     this.data.claims.clearCache();
   }
 
-  private updateUsers(ctx: Context): void {
+  private updateUsers(ctx: Context): void | Observable<void> {
     const project = ctx.getState().current!;
     const members = this.store.selectSnapshot(MembershipState.members) ?? [];
+    const userIds: string[] = [];
+    const gets: Observable<User | undefined>[] = [];
+    const getIds: string[] = [];
     const users: UserRolesViewModel[] = [];
 
-    for (const user of members) {
-      const roles = project.roles.filter((x) => x.userId === user.id);
+    for (const pr of project.roles) {
+      if (!userIds.includes(pr.userId)) userIds.push(pr.userId);
+    }
+    for (const userId of userIds) {
+      const roles = project.roles.filter((x) => x.userId === userId);
+      const user = members.find((x) => x.id === userId);
 
-      if (roles.length === 0) continue;
-
-      users.push({
-        email: user.email,
-        name: user.name,
-        id: user.id,
-        roles: roles.map((x) => x.role),
-      });
+      if (user) {
+        users.push({
+          email: user.email,
+          name: user.name,
+          id: user.id,
+          picture: user.picture,
+          roles: roles.map((x) => x.role),
+        });
+        continue;
+      }
+      gets.push(this.data.users.getAsync(userId));
+      getIds.push(userId);
     }
 
-    ctx.patchState({ users });
+    if (gets.length === 0) {
+      ctx.patchState({ users });
+      return;
+    }
+
+    return forkJoin(gets).pipe(
+      map((missingUsers) => {
+        for (const userId of getIds) {
+          const roles = project.roles.filter((x) => x.userId === userId);
+          const user = missingUsers.find((x) => x?.id === userId);
+
+          if (!user) {
+            users.push({
+              email: '',
+              name: 'Unknown User',
+              id: userId,
+              roles: roles.map((x) => x.role),
+            });
+            continue;
+          }
+
+          users.push({
+            email: user.email,
+            name: user.name,
+            id: user.id,
+            picture: user.picture,
+            roles: roles.map((x) => x.role),
+          });
+        }
+
+        ctx.patchState({ users });
+      })
+    );
   }
 
   private getCatName(idsOrCat: ProjectCategory | null | undefined): string {

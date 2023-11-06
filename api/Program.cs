@@ -53,6 +53,7 @@ builder.Services.AddSingleton<InviteDataService>();
 builder.Services.AddSingleton<JiraHelpDeskDataService>();
 builder.Services.AddSingleton<ListDataService>();
 builder.Services.AddSingleton<OrganizationDataService>();
+builder.Services.AddSingleton<ProjectApprovalDataService>();
 builder.Services.AddSingleton<ProjectDataService>();
 builder.Services.AddSingleton<ProjectNodeDataService>();
 builder.Services.AddSingleton<ProjectSnapshotDataService>();

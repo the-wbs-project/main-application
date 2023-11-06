@@ -62,7 +62,8 @@ public class ChatController : ControllerBase
 
             await dataService.InsertAsync(comment);
 
-            return NoContent();
+            comment.timestamp = DateTimeOffset.UtcNow;
+            return Ok(comment);
         }
         catch (Exception ex)
         {

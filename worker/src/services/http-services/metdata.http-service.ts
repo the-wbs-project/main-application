@@ -4,7 +4,6 @@ import { ListItem, Resources } from '../../models';
 export class MetadataHttpService {
   static async putResourcesAsync(ctx: Context): Promise<Response> {
     try {
-      console.error('ERROR');
       const data = ctx.get('data').resources;
       const resources: Resources[] = await ctx.req.json();
 
@@ -57,7 +56,7 @@ export class MetadataHttpService {
     try {
       const data = await ctx.req.json();
 
-      await ctx.get('origin').putAsync('checklists', data);
+      await ctx.get('origin').putAsync(data, 'checklists');
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {

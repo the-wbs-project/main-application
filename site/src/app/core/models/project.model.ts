@@ -14,6 +14,7 @@ export interface Project {
   description: string;
   createdOn: Date;
   lastModified: Date;
+  approvalStarted?: boolean;
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;

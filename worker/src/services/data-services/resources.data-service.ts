@@ -14,6 +14,6 @@ export class ResourcesDataService {
   }
 
   async putAsync(resources: Resources): Promise<void> {
-    await this.origin.putAsync(`resources`, resources);
+    await this.origin.putAsync(resources, `resources`);
   }
 }

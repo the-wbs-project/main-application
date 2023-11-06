@@ -157,6 +157,10 @@
   border-right: 1px solid $border;
 }
 
+.bd-1-1 {
+  border-left-width: 1px;
+}
+
 .bd-0 {
   border-width: 0;
 }
@@ -361,6 +365,10 @@ radius-1 {
 
 .radius-50 {
   border-radius: 50px !important;
+}
+
+.bd-solid {
+  border-style: solid;
 }
 
 .bd-dashed {

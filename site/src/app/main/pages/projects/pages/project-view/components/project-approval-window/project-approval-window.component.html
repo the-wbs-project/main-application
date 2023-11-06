@@ -1,0 +1,56 @@
+<div
+  class="ht-30 d-flex flex-align-center bg-primary bd-solid bd-1 bd-gray-900 tx-16"
+>
+  <div class="flex-fill pd-10">Approval</div>
+  <div class="wd-30 tx-center">
+    <a (click)="closeApprovalWindow()">
+      <fa-icon class="pointer" [icon]="faX" />
+    </a>
+  </div>
+</div>
+<div class="flex-fill d-flex flex-column bd-solid bd-1 bd-gray-900">
+  <div class="ht-40 align-center" *ngIf="claims | check : canApproveClaims">
+    <div class="d-ib wd-50p tx-center pd-t-5">
+      <button
+        *ngIf="approval.isApproved === false"
+        class="btn btn-sm btn-outline-success"
+        (click)="approvalChanged(true)"
+      >
+        Approve
+      </button>
+      <button
+        *ngIf="approval.isApproved === true"
+        class="btn btn-sm btn-success"
+        (click)="approvalChanged(true)"
+      >
+        Approved
+      </button>
+    </div>
+    <div class="d-ib wd-50p tx-center pd-t-5">
+      <button
+        *ngIf="approval.isApproved === true"
+        class="btn btn-sm btn-outline-danger"
+        (click)="approvalChanged(false)"
+      >
+        Reject
+      </button>
+      <button
+        *ngIf="approval.isApproved === false"
+        class="btn btn-sm btn-danger"
+        (click)="approvalChanged(false)"
+      >
+        Rejected
+      </button>
+    </div>
+  </div>
+  <div class="ht-100 align-center" *ngIf="!(claims | check : canApproveClaims)">
+    {{ claims.indexOf(canApproveClaims) }} &nbsp; {{ canApproveClaims }}
+  </div>
+  <kendo-chat
+    [messages]="chat"
+    [user]="{ id: userId }"
+    class="flex-fill w-100 h-100"
+    [ngClass]="{ 'readonly-chat': !(claims | check : canCommentClaims) }"
+    (sendMessage)="sendMessage($event)"
+  />
+</div>

@@ -12,6 +12,7 @@ CREATE TABLE [dbo].[Projects] (
     [Phases] nvarchar(MAX) NULL,
     [Disciplines] nvarchar(MAX) NULL,
     [Roles] nvarchar(MAX) NULL,
+    [ApprovalStarted] bit NULL,
     CONSTRAINT Projects_PK PRIMARY KEY CLUSTERED ([Id] ASC),
     INDEX Projects_INDX_OwnerId NONCLUSTERED ([OwnerId] ASC)
 )

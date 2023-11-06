@@ -114,6 +114,7 @@ public class ProjectDataService : BaseDbService
         cmd.Parameters.AddWithValue("@Phases", DbJson(project.phases));
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(project.disciplines));
         cmd.Parameters.AddWithValue("@Roles", DbJson(project.roles));
+        cmd.Parameters.AddWithValue("@ApprovalStarted", DbValue(project.approvalStarted));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -136,6 +137,8 @@ public class ProjectDataService : BaseDbService
             phases = DbJson<object[]>(reader, "Phases"),
             disciplines = DbJson<object[]>(reader, "Disciplines"),
             roles = DbJson<ProjectRole[]>(reader, "Roles"),
+
+            approvalStarted = DbValue<bool?>(reader, "ApprovalStarted"),
         };
     }
 }

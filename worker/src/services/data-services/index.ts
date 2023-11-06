@@ -6,14 +6,14 @@ import { RolesDataService } from './roles.data-service';
 import { UserDataService } from './user.data-service';
 
 export class DataServiceFactory {
-  readonly chat: AiChatDataService;
+  readonly aiChat: AiChatDataService;
   readonly lists: ListDataService;
   readonly resources: ResourcesDataService;
   readonly roles: RolesDataService;
   readonly user: UserDataService;
 
   constructor(ctx: Context) {
-    this.chat = new AiChatDataService(ctx);
+    this.aiChat = new AiChatDataService(ctx);
     this.lists = new ListDataService(ctx);
     this.resources = new ResourcesDataService(ctx);
     this.roles = new RolesDataService(ctx);

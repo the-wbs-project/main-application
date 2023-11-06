@@ -25,4 +25,8 @@ export const PROJECT_CLAIMS = {
     UPDATE: 'update:project_resources',
     DELETE: 'delete:project_resources',
   },
+  APPROVAL: {
+    CAN_APPROVE: 'update:approve:project',
+    CAN_COMMENT: 'comment:approve:project',
+  },
 };

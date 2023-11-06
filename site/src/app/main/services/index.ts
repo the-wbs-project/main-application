@@ -8,6 +8,7 @@ export * from './org-resolver.service';
 export * from './record-resource-validation.service';
 export * from './script.service';
 export * from './table-helper.service';
+export * from './user-id-resolver.service';
 export * from './user.service';
 export * from './utils.service';
 export * from './wbs-node.service';

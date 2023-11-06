@@ -16,6 +16,7 @@ import { ProjectSnapshotDataService } from './project-snapshot.data-service';
 import { ProjectDataService } from './project.data-service';
 import { StaticFileDataService } from './static-files.data-service';
 import { UserDataService } from './user.data-service';
+import { ProjectApprovalDataService } from './project-approval.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -27,6 +28,7 @@ export class DataServiceFactory {
   readonly jira = new JiraDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
+  readonly projectApprovals = new ProjectApprovalDataService(this.http);
   readonly projectExport = new ProjectExportDataService(this.http);
   readonly projectImport = new ProjectImportDataService(this.http);
   readonly projectNodes = new ProjectNodeDataService(this.http);

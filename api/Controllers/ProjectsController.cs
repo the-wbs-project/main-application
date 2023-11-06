@@ -14,14 +14,16 @@ public class ProjectsController : ControllerBase
     private readonly ILogger<ProjectsController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
+    private readonly ProjectApprovalDataService approvalDataService;
     private readonly RecordResourceDataService resourceDataService;
 
-    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, RecordResourceDataService resourceDataService)
+    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, RecordResourceDataService resourceDataService, ProjectApprovalDataService approvalDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
+        this.approvalDataService = approvalDataService;
         this.resourceDataService = resourceDataService;
     }
 
@@ -215,6 +217,60 @@ public class ProjectsController : ControllerBase
                     return BadRequest("Project not found for the owner provided.");
 
                 await resourceDataService.SetAsync(conn, resources);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("owner/{owner}/id/{id}/approvals")]
+    public async Task<IActionResult> GetApprovalsById(string owner, string id)
+    {
+        try
+        {
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
+
+                return Ok(await approvalDataService.GetByProjectAsync(conn, id));
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("owner/{owner}/id/{id}/approvals/{approvalId}")]
+    public async Task<IActionResult> SetApprovalsById(string owner, string id, string approvalId, ProjectApproval approval)
+    {
+        try
+        {
+            if (approval.projectId != id)
+                return BadRequest("The project id in the body must match the project id in the url");
+
+            if (approval.id != approvalId)
+                return BadRequest("The approval id in the body must match the approval id in the url");
+
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, id))
+                    return BadRequest("Project not found for the owner provided.");
+
+                await approvalDataService.SetAsync(conn, owner, approval);
 
                 return NoContent();
             }

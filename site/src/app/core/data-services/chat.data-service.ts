@@ -1,4 +1,5 @@
 import { HttpClient } from '@angular/common/http';
+import { Message } from '@progress/kendo-angular-conversational-ui';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChatComment } from '../models';
@@ -11,12 +12,12 @@ export class ChatDataService {
     threadId: string,
     skip: number,
     take: number
-  ): Observable<ChatComment[]> {
+  ): Observable<Message[]> {
     return this.http
-      .get<ChatComment[] | undefined>(
-        `thread/${threadId}/comments/skip/${skip}/take/${take}`
+      .get<Message[] | undefined>(
+        `api/chat/thread/${threadId}/comments/skip/${skip}/take/${take}`
       )
-      .pipe(map((list) => this.clean(list ?? [])));
+      .pipe(map((list) => this.cleanArray(list ?? [])));
   }
 
   getNewCommentCountAsync(
@@ -24,15 +25,23 @@ export class ChatDataService {
     timestamp: Date
   ): Observable<number> {
     return this.http.get<number>(
-      `api/thread/${threadId}/comments/${timestamp}/count`
+      `api/chat/thread/${threadId}/comments/${timestamp}/count`
     );
   }
 
-  insertAsync(comment: ChatComment): Observable<void> {
-    return this.http.put<void>(`api/chat/thread/${comment.threadId}`, comment);
+  insertAsync(comment: ChatComment): Observable<Message> {
+    return this.http
+      .post<Message>(`api/chat/thread/${comment.threadId}`, comment)
+      .pipe(map((message) => this.clean(message)));
   }
 
-  private clean(nodes: ChatComment[]): ChatComment[] {
+  private clean(nodes: Message): Message {
+    Utils.cleanDates(nodes, 'timestamp');
+
+    return nodes;
+  }
+
+  private cleanArray(nodes: Message[]): Message[] {
     Utils.cleanDates(nodes, 'timestamp');
 
     return nodes;

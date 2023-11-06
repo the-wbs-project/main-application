@@ -10,6 +10,7 @@ import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { map } from 'rxjs/operators';
+import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectChecklistComponent } from '../../components/project-checklist/project-checklist.component';
 import { ProjectStatisticComponent } from '../../components/project-statistic.component';
 import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
@@ -19,6 +20,7 @@ import { ProjectChecklistState, ProjectState, TasksState } from '../../states';
   templateUrl: './project-about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ApprovalBadgeComponent,
     CategoryLabelPipe,
     DisciplineIconPipe,
     EditedDateTextPipe,

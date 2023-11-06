@@ -18,11 +18,21 @@
     <wbs-project-navigation [links]="links" [claims]="claims" />
   </div>
   <div
-    class="card-body border-0 p-0 rounded-10 scroll"
     appFillElement
     [paddingBottom]="30"
+    class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100"
   >
-    <router-outlet />
+    <div class="flex-fill scroll">
+      <router-outlet />
+    </div>
+    <wbs-project-approval-window
+      *ngIf="approval(); let approval"
+      [approval]="approval"
+      [claims]="claims"
+      [userId]="userId"
+      [chat]="chat() ?? []"
+      class="wd-500 border d-flex flex-column"
+    />
   </div>
 </div>
 <wbs-project-checklist-modal #checklist />

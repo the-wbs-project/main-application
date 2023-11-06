@@ -48,7 +48,7 @@ public class ChatDataService : BaseDbService
 
     public async Task<List<ChatComment>> GetPageAsync(SqlConnection conn, string threadId, int skip, int take)
     {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[ChatComment] WHERE [ThreadId] = @ThreadId ORDER BY [Timestamp] desc OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[ChatComment] WHERE [ThreadId] = @ThreadId ORDER BY [Timestamp] OFFSET @Skip ROWS FETCH NEXT @Take ROWS ONLY", conn);
         cmd.Parameters.AddWithValue("@ThreadId", threadId);
         cmd.Parameters.AddWithValue("@Skip", skip);
         cmd.Parameters.AddWithValue("@Take", take);
@@ -74,10 +74,8 @@ public class ChatDataService : BaseDbService
 
     public async Task InsertAsync(SqlConnection conn, ChatComment comment)
     {
-        var cmd = new SqlCommand("INSERT INTO [dbo].[ChatComment] VALUES (@ThreadId, GETUTCDATE(), @Author, @Text)", conn)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
+        var cmd = new SqlCommand("INSERT INTO [dbo].[ChatComment] VALUES (@ThreadId, GETUTCDATE(), @Author, @Text)", conn);
+
         cmd.Parameters.AddWithValue("@ThreadId", comment.threadId);
         cmd.Parameters.AddWithValue("@Author", comment.author);
         cmd.Parameters.AddWithValue("@Text", comment.text);

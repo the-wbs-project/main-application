@@ -30,7 +30,7 @@ export class ListDataService {
   }
 
   async putAsync(item: ListItem): Promise<void> {
-    const resp = await this.origin.putAsync(`lists`, item);
+    const resp = await this.origin.putAsync(item, `lists`);
 
     this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.delete(this.key(item.type)));
   }

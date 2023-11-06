@@ -15,4 +15,5 @@ public class Project
     public object[] phases { get; set; }
     public object[] disciplines { get; set; }
     public ProjectRole[] roles { get; set; }
+    public bool? approvalStarted { get; set; }
 }

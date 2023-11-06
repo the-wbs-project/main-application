@@ -43,9 +43,20 @@ export class OriginService {
     return headers2;
   }
 
-  async putAsync(suffix: string, body: any): Promise<Response> {
+  async putAsync(body: any, suffix?: string): Promise<Response> {
     return await fetch(this.getUrl(suffix), {
       method: 'PUT',
+      body: JSON.stringify(body),
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: this.ctx.req.headers.get('Authorization')!,
+      },
+    });
+  }
+
+  async postAsync(body: any, suffix?: string): Promise<Response> {
+    return await fetch(this.getUrl(suffix), {
+      method: 'POST',
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',

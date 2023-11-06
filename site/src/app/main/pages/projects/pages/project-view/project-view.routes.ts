@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TaskDeleteService } from '@wbs/main/components/task-delete';
-import { DialogService, Transformers } from '@wbs/main/services';
+import { DialogService, Transformers, userIdResolve } from '@wbs/main/services';
 import { projectVerifyGuard } from './project-view.guards';
 import {
   ChecklistDataService,
@@ -13,6 +13,7 @@ import {
   projectClaimsResolve,
 } from './services';
 import {
+  ProjectApprovalState,
   ProjectChecklistState,
   ProjectState,
   ProjectViewState,
@@ -31,6 +32,7 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(
         NgxsModule.forFeature([
+          ProjectApprovalState,
           ProjectChecklistState,
           ProjectViewState,
           ProjectState,
@@ -48,6 +50,7 @@ export const routes: Routes = [
     ],
     resolve: {
       claims: projectClaimsResolve,
+      userId: userIdResolve,
     },
   },
 ];

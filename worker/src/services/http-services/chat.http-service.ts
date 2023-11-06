@@ -1,44 +1,63 @@
 import { Context } from '../../config';
+import { ChatComment, Message, MessageUser } from '../../models';
 
 export class ChatHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
     try {
-      const { model } = ctx.req.param();
+      const list = (await ctx.get('origin').getAsync<ChatComment[]>()) ?? [];
+      const names = new Map<string, MessageUser>();
+      const messages: Message[] = [];
 
-      return ctx.json(await ctx.get('data').chat.getAsync(model));
+      for (const item of list) {
+        messages.push(await convertMessage(ctx, item, names));
+      }
+
+      return ctx.json(messages);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get AI chat history.', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get chat info', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
   }
-
-  static async putAsync(ctx: Context): Promise<Response> {
+  static async postAsync(ctx: Context): Promise<Response> {
     try {
-      const { model } = ctx.req.param();
-      const history = await ctx.req.json();
+      const body = await ctx.req.json();
+      const response = await ctx.get('origin').postAsync(body);
+      const record: ChatComment = await response.json();
 
-      await ctx.get('data').chat.putAsync(model, history);
+      console.log(record);
 
-      return ctx.text('', 202);
+      return ctx.json(await convertMessage(ctx, record));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save AI chat history.', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get chat info', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
   }
+}
 
-  static async deleteAsync(ctx: Context): Promise<Response> {
-    try {
-      const { model } = ctx.req.param();
+async function convertMessage(ctx: Context, item: ChatComment, users?: Map<string, MessageUser>): Promise<Message> {
+  const author = item.author;
 
-      await ctx.get('data').chat.deleteAsync(model);
-
-      return ctx.text('', 202);
-    } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to delete AI chat history.', <Error>e);
-
-      return ctx.text('Internal Server Error', 500);
-    }
+  if (users?.has(author)) {
+    return {
+      author: users.get(author)!,
+      text: item.text,
+      timestamp: item.timestamp,
+    };
   }
+  const user = await ctx.get('data').user.getAsync(author);
+  let mUser: MessageUser = {
+    id: author,
+    name: user?.name ?? 'Unknown User',
+    avatarUrl: user?.picture,
+  };
+
+  if (users) users.set(author, mUser);
+
+  return {
+    author: mUser,
+    text: item.text,
+    timestamp: item.timestamp,
+  };
 }

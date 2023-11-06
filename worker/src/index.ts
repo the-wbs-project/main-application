@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, userName } from './middle';
+import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
@@ -95,13 +95,13 @@ app.delete(
 
 app.delete('api/organizations/:organization/members', kv.membersClear, (ctx) => ctx.newResponse('', { status: 204 }));
 
-app.get('api/chat/:model', verifyJwt, Http.chat.getAsync);
-app.put('api/chat/:model', verifyJwt, Http.chat.putAsync);
-app.delete('api/chat/:model', verifyJwt, Http.chat.deleteAsync);
+app.get('api/chat/:model', verifyJwt, Http.aiChat.getAsync);
+app.put('api/chat/:model', verifyJwt, Http.aiChat.putAsync);
+app.delete('api/chat/:model', verifyJwt, Http.aiChat.deleteAsync);
 
-app.get('api/chat/thread/:threadId/comments/skip/:skip/take/:take', verifyJwt, userName('author'), OriginService.pass);
+app.get('api/chat/thread/:threadId/comments/skip/:skip/take/:take', verifyJwt, Http.chat.getAsync);
 app.get('api/chat/thread/:threadId/comments/:timestamp/count', verifyJwt, OriginService.pass);
-app.post('api/chat/thread/:threadId', verifyJwt, OriginService.pass);
+app.post('api/chat/thread/:threadId', verifyJwt, Http.chat.postAsync);
 
 app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
 app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
