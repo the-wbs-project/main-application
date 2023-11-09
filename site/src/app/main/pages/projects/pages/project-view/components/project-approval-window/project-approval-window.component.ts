@@ -1,4 +1,4 @@
-import { JsonPipe, NgClass, NgIf } from '@angular/common';
+import { NgClass, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,19 +7,21 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faX } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import {
   ChatModule,
   Message,
   SendMessageEvent,
 } from '@progress/kendo-angular-conversational-ui';
-import { ChatComment, PROJECT_CLAIMS, ProjectApproval } from '@wbs/core/models';
+import { PROJECT_CLAIMS, ProjectApproval } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import {
   ApprovalChanged,
   SendApprovalMessage,
   SetApproval,
 } from '../../actions';
+import { ProjectApprovalWindowTitlePipe } from './project-approval-window-title.component';
 
 @Component({
   standalone: true,
@@ -28,7 +30,15 @@ import {
   styleUrls: ['./project-approval-window.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [ChatModule, CheckPipe, FontAwesomeModule, NgClass, NgIf, JsonPipe],
+  imports: [
+    ChatModule,
+    CheckPipe,
+    FontAwesomeModule,
+    NgClass,
+    NgIf,
+    ProjectApprovalWindowTitlePipe,
+    TranslateModule,
+  ],
 })
 export class ProjectApprovalWindowComponent {
   @Input({ required: true }) claims!: string[];

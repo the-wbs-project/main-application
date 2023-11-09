@@ -12,3 +12,4 @@ export * from './user-id-resolver.service';
 export * from './user.service';
 export * from './utils.service';
 export * from './wbs-node.service';
+export * from './wbs-phase.service';

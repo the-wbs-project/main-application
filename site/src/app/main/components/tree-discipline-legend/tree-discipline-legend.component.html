@@ -1,0 +1,21 @@
+{{ "Wbs.Disciplines" | translate }} &nbsp;
+<a
+  placement="right"
+  popoverClass="legend-popover"
+  [popoverTitle]="'Wbs.DisciplineLegend' | translate"
+  [ngbPopover]="legendContent"
+  container="body"
+  placement="left"
+>
+  <fa-duotone-icon [icon]="faCircleQuestion" />
+</a>
+<ng-template #legendContent>
+  <ul class="list-group" *ngIf="idsOrCats">
+    <li class="list-group-item" *ngFor="let idsOrCat of idsOrCats">
+      <span class="icon-wrapper">
+        <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>
+      </span>
+      {{ idsOrCat | categoryLabel | translate }}
+    </li>
+  </ul>
+</ng-template>

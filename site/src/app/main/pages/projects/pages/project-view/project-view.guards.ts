@@ -8,11 +8,17 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   ProjectPageChanged,
+  SetApproval,
   VerifyProject,
   VerifyTask,
 } from './actions';
-import { PROJECT_PAGE_VIEW } from './models';
+import { PROJECT_PAGES } from './models';
 import { ProjectState, ProjectViewState } from './states';
+
+export const closeApprovalWindowGuard = () =>
+  inject(Store)
+    .dispatch(new SetApproval())
+    .pipe(map(() => true));
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
@@ -34,7 +40,7 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
         'projects',
         'view',
         route.params['projectId'],
-        PROJECT_PAGE_VIEW.ABOUT,
+        PROJECT_PAGES.ABOUT,
       ])
     )
     .pipe(map(() => true));

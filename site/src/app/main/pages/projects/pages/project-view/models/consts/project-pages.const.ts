@@ -1,0 +1,19 @@
+export enum PROJECT_PAGES {
+  ABOUT = 'about',
+  PHASES = 'phases',
+  DISCIPLINES = 'disciplines',
+  DISCUSSIONS = 'discussions',
+  TIMELINE = 'timeline',
+  RESOURCES = 'resources',
+  UPLOAD = 'upload',
+  SETTINGS = 'settings',
+}
+
+export type PROJECT_PAGES_TYPE =
+  | PROJECT_PAGES.ABOUT
+  | PROJECT_PAGES.PHASES
+  | PROJECT_PAGES.DISCIPLINES
+  | PROJECT_PAGES.DISCUSSIONS
+  | PROJECT_PAGES.RESOURCES
+  | PROJECT_PAGES.TIMELINE
+  | PROJECT_PAGES.SETTINGS;

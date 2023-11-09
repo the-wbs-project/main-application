@@ -170,7 +170,7 @@ export class TasksState {
   ): Observable<any> | void {
     const state = ctx.getState();
     const project = state.project!;
-    const nodes = this.copy(state.nodes)!;
+    const nodes = structuredClone(state.nodes)!;
     const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
 
     if (nodeIndex === -1) return of();
@@ -218,7 +218,7 @@ export class TasksState {
     { removedIds }: RemoveDisciplinesFromTasks
   ): Observable<any> | void {
     const state = ctx.getState();
-    const nodes = this.copy(state.nodes)!;
+    const nodes = structuredClone(state.nodes)!;
     const toSave: ProjectNode[] = [];
 
     for (const node of nodes) {
@@ -304,7 +304,7 @@ export class TasksState {
   @Action(MoveTaskDown)
   moveTaskDown(ctx: Context, action: MoveTaskDown): void | Observable<void> {
     const state = ctx.getState();
-    const tasks = this.copy(state.nodes)!;
+    const tasks = structuredClone(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
     const task2 = tasks.find(
@@ -323,7 +323,7 @@ export class TasksState {
   @Action(MoveTaskLeft)
   moveTaskLeft(ctx: Context, action: MoveTaskLeft): void | Observable<void> {
     const state = ctx.getState();
-    const tasks = this.copy(state.nodes)!;
+    const tasks = structuredClone(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
     const parent = tasks.find((x) => x.id === task?.parentId);
@@ -364,7 +364,7 @@ export class TasksState {
   @Action(MoveTaskRight)
   moveTaskRight(ctx: Context, action: MoveTaskRight): void | Observable<void> {
     const state = ctx.getState();
-    const tasks = this.copy(state.nodes)!;
+    const tasks = structuredClone(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
     let newParent: ProjectNode | undefined;
@@ -408,7 +408,7 @@ export class TasksState {
   @Action(MoveTaskUp)
   moveTaskUp(ctx: Context, action: MoveTaskUp): void | Observable<void> {
     const state = ctx.getState();
-    const tasks = this.copy(state.nodes)!;
+    const tasks = structuredClone(state.nodes)!;
     const task = tasks.find((x) => x.id === action.taskId);
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
     const task2 = tasks.find(
@@ -425,25 +425,29 @@ export class TasksState {
   }
 
   @Action(TreeReordered)
-  treeReordered(ctx: Context, action: TreeReordered): Observable<void> {
+  treeReordered(
+    ctx: Context,
+    { draggedId, rows }: TreeReordered
+  ): Observable<void> {
     const state = ctx.getState();
     const project = state.project!;
     const models = state.nodes!;
     const upserts: ProjectNode[] = [];
-    const nodeViews =
-      (action.view === PROJECT_NODE_VIEW.DISCIPLINE
-        ? state.disciplines
-        : state.phases) ?? [];
-    const taskVm = state.phases!.find((x) => x.id === action.draggedId);
+    const nodeViews = state.phases ?? [];
+    const taskVm = state.phases!.find((x) => x.id === draggedId);
 
     for (const vm of nodeViews) {
-      const vm2 = action.rows.find((x) => x.id === vm.id);
+      const vm2 = rows.find((x) => x.id === vm.id);
 
+      if (vm.id === 'CyG51hu81h') {
+        console.log(vm);
+        console.log(vm2);
+      }
       if (!vm2 || (vm.order === vm2.order && vm.parentId === vm2.parentId))
         continue;
 
       const orig = models.find((x) => x.id === vm.id)!;
-      const model = this.copy(orig);
+      const model = structuredClone(orig);
 
       model.order = vm2.order;
       model.parentId = vm2.parentId;
@@ -453,12 +457,14 @@ export class TasksState {
 
     if (upserts.length === 0) return of();
 
+    console.log(upserts);
+
     return this.saveReordered(
       ctx,
       project,
       taskVm!.levelText,
-      upserts.find((x) => x.id === action.draggedId)!,
-      upserts.filter((x) => x.id !== action.draggedId)
+      upserts.find((x) => x.id === draggedId)!,
+      upserts.filter((x) => x.id !== draggedId)
     );
   }
 
@@ -595,10 +601,6 @@ export class TasksState {
     );
   }
 
-  private copy<T>(x: T): T {
-    return <T>structuredClone(x);
-  }
-
   private saveActivity(...data: ActivityData[]): void {
     this.timeline.saveProjectActions(
       data.map((x) => this.timeline.createProjectRecord(x))
@@ -714,7 +716,7 @@ export class TasksState {
     for (const x of phaseViews) {
       if (subTaskIds.indexOf(x.id) === -1) continue;
 
-      const item = this.copy(x);
+      const item = structuredClone(x);
 
       if (item.parentId === taskId) {
         item.parentId = null;

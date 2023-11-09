@@ -6,7 +6,10 @@
   </div>
   <div class="row">
     <div class="col-6">
-      <wbs-project-title [category]="category()" [title]="title()" />
+      <div class="d-flex flex-align-center">
+        <wbs-project-title [category]="category()" [title]="title()" /> &nbsp;
+        <wbs-approval-badge [approval]="approvals()?.get('project-title')" />
+      </div>
     </div>
     <div class="col-6 mg-t-5 tx-right pd-r-15">
       <wbs-project-action-button [project]="project()" />
@@ -26,12 +29,11 @@
       <router-outlet />
     </div>
     <wbs-project-approval-window
-      *ngIf="approval(); let approval"
+      *ngIf="isProjectApproval() && approval(); let approval"
       [approval]="approval"
       [claims]="claims"
       [userId]="userId"
       [chat]="chat() ?? []"
-      class="wd-500 border d-flex flex-column"
     />
   </div>
 </div>

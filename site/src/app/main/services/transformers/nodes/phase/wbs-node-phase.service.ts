@@ -44,6 +44,7 @@ export class WbsNodePhaseTransformer {
       }
       const parent: WbsNodeView = {
         children: 0,
+        childrenIds: [],
         description,
         disciplines: node?.disciplineIds ?? [],
         id: cat.id,
@@ -69,6 +70,7 @@ export class WbsNodePhaseTransformer {
         projectNodes
       );
       parent.children = children.length;
+      parent.childrenIds = children.map((x) => x.id);
 
       nodes.push(parent, ...children);
     }
@@ -89,6 +91,7 @@ export class WbsNodePhaseTransformer {
       const childLevel = [...parentLevel, child.order];
       const node: WbsNodeView = {
         children: 0,
+        childrenIds: [],
         description: child.description,
         disciplines: child.disciplineIds ?? [],
         id: child.id,
@@ -116,6 +119,7 @@ export class WbsNodePhaseTransformer {
       );
 
       node.children = vmChildren.length;
+      node.childrenIds = vmChildren.map((x) => x.id);
 
       results.push(node, ...vmChildren);
     }

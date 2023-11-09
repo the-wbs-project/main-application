@@ -1,9 +1,6 @@
+export * from './consts';
+
 export * from './checklist-results.model';
 export * from './checklist-test.model';
-export * from './project-menu-items.const';
+export * from './children-approval-stats.model';
 export * from './project-navigation-link.model';
-export * from './project-page-view.const';
-export * from './project-settings-pages.const';
-export * from './task-menu-items.const';
-export * from './task-page-view.const';
-export * from './task-settings-pages.const';

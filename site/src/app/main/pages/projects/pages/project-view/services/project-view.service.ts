@@ -15,7 +15,7 @@ import {
   RemoveTask,
   TreeReordered,
 } from '../actions';
-import { PROJECT_PAGE_VIEW } from '../models';
+import { PROJECT_PAGES } from '../models';
 import { ProjectState, ProjectViewState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
 
@@ -40,7 +40,7 @@ export class ProjectViewService {
     if (action === 'download') {
       this.store.dispatch(new DownloadNodes());
     } else if (action === 'upload') {
-      this.nav.toProject(this.projectId, PROJECT_PAGE_VIEW.UPLOAD);
+      this.nav.toProject(this.projectId, PROJECT_PAGES.UPLOAD);
     } else if (taskId) {
       if (action === 'addSub') {
         this.taskCreate.open(this.projectDisciplines).subscribe((results) => {

@@ -1,0 +1,105 @@
+<ng-template [ngIf]="current()" let-task>
+  <div class="p-4">
+    <h4 class="tx-15-f text-uppercase mb-3">
+      {{ "Projects.BasicInformation" | translate }}
+    </h4>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+        {{ "General.Level" | translate }} :
+      </span>
+      <span>
+        {{ task.levelText }}
+      </span>
+    </p>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+        {{ "General.Parent" | translate }} :
+      </span>
+      <span *ngIf="!task.parent">
+        {{ "General.None" | translate }}
+      </span>
+      <a
+        *ngIf="task.parent"
+        class="text-decoration-none"
+        [routerLink]="['../../', task.parent.id, 'about']"
+      >
+        {{ task.parent.title }}
+      </a>
+    </p>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+        {{ "General.LastModified" | translate }} :
+      </span>
+      <span>
+        {{ task.lastModified | dateText }}
+      </span>
+    </p>
+    <p class="text-muted ms-md-4 ms-0 mb-2">
+      <span class="tx-semibold d-ib wd-80 tx-right mg-r-10">
+        {{ "General.Disciplines" | translate }} :
+      </span>
+      <span
+        *ngIf="task.disciplines.length > 0; else noDisciplines"
+        class="d-ib pd-l-3"
+      >
+        <label class="me-3" *ngFor="let disc of task.disciplines">
+          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
+          {{ disc | categoryLabel | translate }}
+        </label>
+      </span>
+      <ng-template #noDisciplines>
+        <span class="d-ib pd-l-3">
+          <span class="text-danger">
+            <fa-icon [icon]="faTriangleExclamation" />
+            {{ "Projects.NoDisciplines" | translate }}
+          </span>
+          <a
+            *ngIf="isPlanning() && (claims | check : canEditClaim)"
+            class="btn btn-small btn-dark pd-y-1 pd-x-8 mg-l-10"
+            [routerLink]="['../', 'settings', 'disciplines']"
+          >
+            <fa-icon [icon]="faTools" size="sm" />
+            {{ "Projects.Fix" | translate }}
+          </a>
+        </span>
+      </ng-template>
+    </p>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <h4 class="tx-15-f text-uppercase mb-3">
+      {{ "General.Description" | translate }}
+    </h4>
+    <div
+      *ngIf="task.description"
+      [innerHTML]="task.description | safeHtml"
+    ></div>
+    <div *ngIf="!task.description" class="w-100 text-center ms-md-4 ms-0 tx-14">
+      <span class="text-danger">
+        <fa-icon [icon]="faTriangleExclamation" />
+        {{ "Projects.NoDescription" | translate }}
+      </span>
+      <a
+        *ngIf="isPlanning() && (claims | check : canEditClaim)"
+        class="btn btn-small btn-dark pd-y-1 pd-x-8 mg-l-10"
+        [routerLink]="['../', 'settings', 'general']"
+      >
+        <fa-icon [icon]="faTools" size="xs" />
+        {{ "Projects.Fix" | translate }}
+      </a>
+    </div>
+  </div>
+  <div class="border-top"></div>
+  <div class="p-4">
+    <h4 class="tx-15-f text-uppercase mb-3">
+      {{ "General.Statistics" | translate }}
+    </h4>
+    <div class="d-flex">
+      <wbs-project-statistic
+        [stat]="task.subTasks.length"
+        [label]="'# of Sub-Tasks'"
+      />
+      <wbs-project-statistic [stat]="task.levels.length" [label]="'Depth'" />
+    </div>
+  </div>
+</ng-template>

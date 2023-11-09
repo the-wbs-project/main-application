@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,20 +7,15 @@ import {
   NgZone,
   OnChanges,
   Output,
+  QueryList,
   SimpleChanges,
   ViewChild,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
-import { faEllipsisV } from '@fortawesome/pro-solid-svg-icons';
-import {
-  NgbPopover,
-  NgbPopoverModule,
-  NgbTooltipModule,
-} from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import {
+  ColumnBase,
   RowReorderEvent,
   SelectableSettings,
   SelectionChangeEvent,
@@ -31,13 +26,10 @@ import { ActionMenuItem, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { BehaviorSubject } from 'rxjs';
+import { WbsPhaseService } from '@wbs/main/services';
+import { DisciplineIconListComponent } from '../discipline-icon-list.component';
+import { TreeDisciplineLegendComponent } from '../tree-discipline-legend/tree-discipline-legend.component';
 import { WbsActionButtonsComponent } from '../wbs-action-buttons';
-import {
-  DisciplineIconListComponent,
-  LegendDisciplineComponent,
-} from './components';
-import { WbsPhaseService } from './services';
 
 @Component({
   standalone: true,
@@ -46,23 +38,19 @@ import { WbsPhaseService } from './services';
   styleUrls: ['./wbs-tree.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [WbsPhaseService],
   imports: [
-    CommonModule,
     DisciplineIconListComponent,
     FillElementDirective,
-    FontAwesomeModule,
-    NgbPopoverModule,
-    NgbTooltipModule,
-    LegendDisciplineComponent,
+    NgFor,
+    NgIf,
     TranslateModule,
+    TreeDisciplineLegendComponent,
     TreeListModule,
     WbsActionButtonsComponent,
   ],
-  providers: [WbsPhaseService],
 })
 export class WbsTreeComponent implements OnChanges {
-  private currentPopover?: NgbPopover;
-
   @Input() menuItems?: ActionMenuItem[][] | null;
   @Input() view?: 'phase' | 'discipline' | null;
   @Input() nodes?: WbsNodeView[] | null;
@@ -71,6 +59,7 @@ export class WbsTreeComponent implements OnChanges {
   @Input() rowReorderable = false;
   @Input() expandedKeys?: string[];
   @Input() isDraggable = true;
+  @Input({ required: true }) columns!: QueryList<ColumnBase>;
   @Output() readonly actionClicked = new EventEmitter<string>();
   @Output() readonly selectedChanged = new EventEmitter<WbsNodeView>();
   @Output() readonly reordered = new EventEmitter<[string, WbsNodeView[]]>();
@@ -87,9 +76,7 @@ export class WbsTreeComponent implements OnChanges {
     readonly: false,
   };
 
-  readonly faEllipsisV = faEllipsisV;
-  readonly faCircleQuestion = faCircleQuestion;
-  readonly tree$ = new BehaviorSubject<WbsNodeView[] | undefined>(undefined);
+  readonly tree = signal<WbsNodeView[] | undefined>(undefined);
 
   constructor(
     private readonly messages: Messages,
@@ -104,25 +91,17 @@ export class WbsTreeComponent implements OnChanges {
     }
     if (!this.nodes) return;
 
-    this.tree$.next(structuredClone(this.nodes));
+    this.tree.set(structuredClone(this.nodes));
   }
 
   rowSelected(e: SelectionChangeEvent): void {
     this.selectedChanged.emit(e.items[0].dataItem);
   }
 
-  togglePopup(popover: NgbPopover, data: WbsNodeView): void {
-    if (this.currentPopover) this.currentPopover.close();
-
-    popover.open({ data });
-
-    this.currentPopover = popover;
-  }
-
   rowReordered(e: RowReorderEvent) {
     if (e.dropPosition === 'forbidden') {
       this.messages.notify.error('You cannot drop a node under itself', false);
-      this.tree$.next(structuredClone(this.nodes!));
+      this.tree.set(structuredClone(this.nodes!));
       return;
     }
 
@@ -134,7 +113,7 @@ export class WbsTreeComponent implements OnChanges {
         'You cannot move a phase from this screen.',
         false
       );
-      this.tree$.next(structuredClone(this.nodes!));
+      this.tree.set(structuredClone(this.nodes!));
       return;
     }
 
@@ -145,7 +124,7 @@ export class WbsTreeComponent implements OnChanges {
       e.dropPosition
     );
 
-    this.zone.run(() => this.tree$.next(results.rows));
+    this.zone.run(() => this.tree.set(results.rows));
     this.reordered.emit([dragged.id, results.rows]);
   }
 }

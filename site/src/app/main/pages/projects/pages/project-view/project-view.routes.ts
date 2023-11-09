@@ -4,7 +4,10 @@ import { NgxsModule } from '@ngxs/store';
 import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TaskDeleteService } from '@wbs/main/components/task-delete';
 import { DialogService, Transformers, userIdResolve } from '@wbs/main/services';
-import { projectVerifyGuard } from './project-view.guards';
+import {
+  closeApprovalWindowGuard,
+  projectVerifyGuard,
+} from './project-view.guards';
 import {
   ChecklistDataService,
   ProjectNavigationService,
@@ -24,6 +27,7 @@ export const routes: Routes = [
   {
     path: ':projectId',
     canActivate: [projectVerifyGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     loadComponent: () =>
       import('./project-view-layout.component').then(
         (m) => m.ProjectViewLayoutComponent

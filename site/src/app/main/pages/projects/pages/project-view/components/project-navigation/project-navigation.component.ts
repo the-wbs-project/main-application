@@ -28,7 +28,7 @@ export class ProjectNavigationComponent {
   @Input({ required: true }) links!: ProjectNavigationLink[];
   @Input({ required: true }) claims?: string[];
 
-  constructor(private readonly store: Store) {}
+  constructor(readonly store: Store) {}
 
   call(action: any): void {
     this.store.dispatch(action);

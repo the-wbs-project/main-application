@@ -4,8 +4,9 @@ import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { RecordResource } from '@wbs/core/models';
 import { Utils, orgResolve } from '@wbs/main/services';
-import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
+import { PROJECT_PAGES, TASK_PAGE_VIEW } from '../models';
 import {
+  closeApprovalWindowGuard,
   projectRedirectGuard,
   projectViewGuard,
   taskVerifyGuard,
@@ -32,31 +33,33 @@ export const routes: Routes = [
     path: '',
     canActivate: [projectRedirectGuard],
     loadComponent: () =>
-      import('./project-about-page/project-about-page.component').then(
+      import('./projects/about/project-about-page.component').then(
         ({ ProjectAboutPageComponent }) => ProjectAboutPageComponent
       ),
   },
   {
     path: 'about',
     canActivate: [projectViewGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.ABOUT,
+      view: PROJECT_PAGES.ABOUT,
     },
     loadComponent: () =>
-      import('./project-about-page/project-about-page.component').then(
+      import('./projects/about/project-about-page.component').then(
         ({ ProjectAboutPageComponent }) => ProjectAboutPageComponent
       ),
   },
   {
     path: 'phases',
     canActivate: [projectViewGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.PHASES,
+      view: PROJECT_PAGES.PHASES,
     },
     loadComponent: () =>
-      import('./project-phases-page/project-phases-page.component').then(
+      import('./projects/phases/project-phases-page.component').then(
         ({ ProjectPhasesPageComponent }) => ProjectPhasesPageComponent
       ),
     resolve: {
@@ -66,11 +69,12 @@ export const routes: Routes = [
       {
         path: 'task/:taskId',
         canActivate: [taskVerifyGuard],
+        canDeactivate: [closeApprovalWindowGuard],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
         },
         loadComponent: () =>
-          import('./task-view/task-view.component').then(
+          import('./tasks/task-view.component').then(
             ({ TaskViewComponent }) => TaskViewComponent
           ),
         children: [
@@ -81,7 +85,7 @@ export const routes: Routes = [
               view: TASK_PAGE_VIEW.ABOUT,
             },
             loadComponent: () =>
-              import('./task-about/task-about.component').then(
+              import('./tasks/about/task-about.component').then(
                 ({ TaskAboutComponent }) => TaskAboutComponent
               ),
             resolve: {
@@ -95,7 +99,7 @@ export const routes: Routes = [
               view: TASK_PAGE_VIEW.SUB_TASKS,
             },
             loadComponent: () =>
-              import('./task-sub-tasks/task-sub-tasks.component').then(
+              import('./tasks/sub-tasks/task-sub-tasks.component').then(
                 ({ TaskSubTasksComponent }) => TaskSubTasksComponent
               ),
           },
@@ -106,7 +110,7 @@ export const routes: Routes = [
               view: TASK_PAGE_VIEW.SETTINGS,
             },
             loadChildren: () =>
-              import('./task-settings-page/task-settings.routes').then(
+              import('./tasks/settings/task-settings.routes').then(
                 ({ routes }) => routes
               ),
           },
@@ -120,23 +124,23 @@ export const routes: Routes = [
   {
     path: 'disciplines',
     canActivate: [projectViewGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.DISCIPLINES,
+      view: PROJECT_PAGES.DISCIPLINES,
     },
     loadComponent: () =>
-      import(
-        './project-disciplines-page/project-disciplines-page.component'
-      ).then(
+      import('./projects/disciplines/project-disciplines-page.component').then(
         ({ ProjectDisciplinesPageComponent }) => ProjectDisciplinesPageComponent
       ),
   },
   {
     path: 'timeline',
     canActivate: [projectViewGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.TIMELINE,
+      view: PROJECT_PAGES.TIMELINE,
     },
     loadComponent: () =>
       import('./project-timeline-page.component').then(
@@ -146,8 +150,9 @@ export const routes: Routes = [
   {
     path: 'resources',
     canActivate: [projectViewGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     data: {
-      view: PROJECT_PAGE_VIEW.RESOURCES,
+      view: PROJECT_PAGES.RESOURCES,
     },
     resolve: {
       owner: orgResolve,
@@ -155,7 +160,7 @@ export const routes: Routes = [
       claims: projectClaimsResolve,
     },
     loadComponent: () =>
-      import('./project-resources-page/project-resources-page.component').then(
+      import('./projects/resources/project-resources-page.component').then(
         (x) => x.ProjectResourcesPageComponent
       ),
   },
@@ -174,12 +179,13 @@ export const routes: Routes = [
   {
     path: 'settings',
     canActivate: [projectViewGuard],
+    canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGE_VIEW.SETTINGS,
+      view: PROJECT_PAGES.SETTINGS,
     },
     loadChildren: () =>
-      import('./project-settings-page/project-settings.routes').then(
+      import('./projects/settings/project-settings.routes').then(
         ({ routes }) => routes
       ),
   },

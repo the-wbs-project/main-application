@@ -10,7 +10,7 @@ import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { DownloadNodes, ProjectPageChanged } from '../actions';
-import { PROJECT_PAGE_VIEW } from '../models';
+import { PROJECT_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 
 interface StateModel {
@@ -45,9 +45,9 @@ export class ProjectViewState {
   ): void {
     ctx.patchState({
       viewNode:
-        action.view === PROJECT_PAGE_VIEW.PHASES
+        action.view === PROJECT_PAGES.PHASES
           ? PROJECT_NODE_VIEW.PHASE
-          : action.view === PROJECT_PAGE_VIEW.DISCIPLINES
+          : action.view === PROJECT_PAGES.DISCIPLINES
           ? PROJECT_NODE_VIEW.DISCIPLINE
           : undefined,
     });

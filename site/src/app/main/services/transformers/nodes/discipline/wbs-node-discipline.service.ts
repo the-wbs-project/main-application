@@ -57,6 +57,7 @@ export class WbsDisciplineNodeTransformer {
       const dNode = projectNodes.find((x) => x.id === d.id);
       const dView: WbsNodeView = {
         children: 0,
+        childrenIds: [],
         description: dNode?.description,
         disciplines: [d.id],
         id: d.id,
@@ -87,6 +88,7 @@ export class WbsDisciplineNodeTransformer {
 
         const pView: WbsNodeView = {
           children: 0,
+          childrenIds: [],
           description: pNode?.description,
           disciplines: [d.id],
           id: p.id,
@@ -151,6 +153,7 @@ export class WbsDisciplineNodeTransformer {
       const childLevel = [...parentLevel, counter];
       const node: WbsNodeView = {
         id: child.id,
+        childrenIds: [],
         parentId: parentId,
         treeId: `${disciplineId}-${child.id}`,
         treeParentId: `${disciplineId}-${parentId}`,

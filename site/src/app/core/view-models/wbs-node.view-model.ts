@@ -10,6 +10,7 @@ export interface WbsNodeView {
   sameAsLevelText?: string | null;
 
   children: number;
+  childrenIds: string[];
   description?: string | null;
   disciplines: string[];
   levels: number[];

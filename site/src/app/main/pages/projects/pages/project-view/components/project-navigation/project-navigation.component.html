@@ -6,7 +6,12 @@
     >
       <ul ngbNav class="tx-14 tx-medium">
         <ng-template ngFor [ngForOf]="links" let-link>
-          <ng-template [ngIf]="claims | check : link.claim">
+          <ng-template
+            [ngIf]="
+              (link.showIf == undefined || link.showIf(store)) &&
+              (claims | check : link.claim)
+            "
+          >
             <li
               *ngIf="!link.children"
               [ngClass]="link.classes"

@@ -1,3 +1,5 @@
+import { Store } from '@ngxs/store';
+
 export interface ProjectNavigationLink {
   fragment?: string;
   action?: { type: string };
@@ -5,4 +7,5 @@ export interface ProjectNavigationLink {
   classes?: string[];
   children?: ProjectNavigationLink[];
   claim?: string;
+  showIf?: (store: Store) => boolean;
 }

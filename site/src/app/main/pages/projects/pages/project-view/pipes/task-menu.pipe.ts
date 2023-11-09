@@ -2,7 +2,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { PROJECT_MENU_ITEMS } from '../models';
+import { PROJECT_TREE_MENU_ITEMS } from '../models';
 import { ProjectState } from '../states';
 
 @Pipe({ name: 'taskMenu', standalone: true })
@@ -17,7 +17,7 @@ export class TaskMenuPipe implements PipeTransform {
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
 
     const treeActions = this.filterList(
-      PROJECT_MENU_ITEMS.phaseTreeActions,
+      PROJECT_TREE_MENU_ITEMS.phaseActions,
       task,
       claims,
       status
@@ -25,13 +25,14 @@ export class TaskMenuPipe implements PipeTransform {
     const results = [treeActions];
 
     const navActions = this.filterList(
-      PROJECT_MENU_ITEMS.phaseItemNavActions,
+      PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
       task,
       claims,
       status
     );
+    console.log(navActions);
     const phaseActions = this.filterList(
-      PROJECT_MENU_ITEMS.phaseItemActions,
+      PROJECT_TREE_MENU_ITEMS.taskActions,
       task,
       claims,
       status

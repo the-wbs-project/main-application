@@ -19,11 +19,12 @@ import { FillElementDirective } from '@wbs/main/directives/fill-element.directiv
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';
+import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
-import { PROJECT_MENU_ITEMS } from './models';
+import { PROJECT_NAVIGATION } from './models';
 import { ProjectApprovalState, ProjectState } from './states';
 
 @Component({
@@ -32,6 +33,7 @@ import { ProjectApprovalState, ProjectState } from './states';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ActionIconListComponent,
+    ApprovalBadgeComponent,
     CategoryIconPipe,
     CheckPipe,
     CommonModule,
@@ -52,11 +54,16 @@ export class ProjectViewLayoutComponent {
   @Input({ required: true }) userId!: string;
 
   readonly approval = toSignal(this.store.select(ProjectApprovalState.current));
+  readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
+  readonly isProjectApproval = toSignal(
+    this.store.select(ProjectApprovalState.isProjectApproval)
+  );
   readonly chat = toSignal(this.store.select(ProjectApprovalState.messages));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
-  readonly links = PROJECT_MENU_ITEMS.projectLinks;
+
+  readonly links = PROJECT_NAVIGATION;
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
   readonly faX = faX;
   readonly gearIcon = gearIcon;

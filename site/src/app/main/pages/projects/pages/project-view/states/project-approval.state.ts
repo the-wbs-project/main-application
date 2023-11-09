@@ -8,6 +8,7 @@ import {
   StateContext,
   Store,
 } from '@ngxs/store';
+import { Message } from '@progress/kendo-angular-conversational-ui';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ChatComment, ProjectApproval } from '@wbs/core/models';
 import { Observable } from 'rxjs';
@@ -19,11 +20,11 @@ import {
   SetApproval,
 } from '../actions';
 import { ProjectState } from './project.state';
-import { Message } from '@progress/kendo-angular-conversational-ui';
 
 interface StateModel {
   current?: ProjectApproval;
-  list?: ProjectApproval[];
+  list: Map<string, ProjectApproval>;
+  stats?: { count: number; completed: number; percent: number };
   messages?: Message[];
   owner?: string;
   started: boolean;
@@ -35,6 +36,7 @@ declare type Context = StateContext<StateModel>;
 @State<StateModel>({
   name: 'projectApproval',
   defaults: {
+    list: new Map<string, ProjectApproval>(),
     started: false,
   },
 })
@@ -50,7 +52,21 @@ export class ProjectApprovalState implements NgxsOnInit {
   }
 
   @Selector()
-  static list(state: StateModel): ProjectApproval[] | undefined {
+  static isProjectApproval(state: StateModel): boolean {
+    return (
+      state.current != undefined && state.current.id.startsWith('project-')
+    );
+  }
+
+  @Selector()
+  static isTaskApproval(state: StateModel): boolean {
+    return (
+      state.current != undefined && !state.current.id.startsWith('project-')
+    );
+  }
+
+  @Selector()
+  static list(state: StateModel): Map<string, ProjectApproval> {
     return state.list;
   }
 
@@ -62,6 +78,13 @@ export class ProjectApprovalState implements NgxsOnInit {
   @Selector()
   static started(state: StateModel): boolean {
     return state.started;
+  }
+
+  @Selector()
+  static stats(
+    state: StateModel
+  ): { count: number; completed: number; percent: number } | undefined {
+    return state.stats;
   }
 
   ngxsOnInit(ctx: Context): void {
@@ -93,11 +116,15 @@ export class ProjectApprovalState implements NgxsOnInit {
   initiateApprovals(
     ctx: Context,
     { owner, projectId }: InitiateApprovals
-  ): Observable<void> {
+  ): Observable<any> {
     return this.data.projectApprovals.getAllAsync(owner, projectId).pipe(
       map((list) => {
-        ctx.patchState({ list });
-      })
+        const map = new Map<string, ProjectApproval>();
+        for (const item of list) map.set(item.id, item);
+        return map;
+      }),
+      tap((list) => ctx.patchState({ list })),
+      tap(() => this.runStats(ctx))
     );
   }
 
@@ -135,11 +162,11 @@ export class ProjectApprovalState implements NgxsOnInit {
       .putAsync(state.owner!, current.projectId, current)
       .pipe(
         tap(() => {
-          const index = state.list!.findIndex((a) => a.id === current.id);
-          state.list![index] = current;
+          state.list.set(current.id, current);
 
-          ctx.patchState({ current, list: [...state.list!] });
-        })
+          ctx.patchState({ current, list: state.list });
+        }),
+        tap(() => this.runStats(ctx))
       );
   }
 
@@ -171,5 +198,14 @@ export class ProjectApprovalState implements NgxsOnInit {
     const state = ctx.getState();
 
     return `approval|${state.current?.projectId}|${state.current?.id}`;
+  }
+
+  private runStats(ctx: Context): void {
+    const list = [...ctx.getState().list.values()];
+    const count = list.length;
+    const completed = list.filter((a) => a.isApproved).length;
+    const percent = Math.round((completed / count) * 100);
+
+    ctx.patchState({ stats: { count, completed, percent } });
   }
 }

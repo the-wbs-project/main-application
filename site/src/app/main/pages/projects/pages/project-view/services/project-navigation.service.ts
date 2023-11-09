@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { PROJECT_PAGE_VIEW, TASK_PAGE_VIEW } from '../models';
+import { PROJECT_PAGES, TASK_PAGE_VIEW } from '../models';
 import { ProjectState, ProjectViewState } from '../states';
 
 @Injectable()
@@ -29,10 +29,10 @@ export class ProjectNavigationService {
     ]);
   }
 
-  toProject(projectId: string, page = PROJECT_PAGE_VIEW.ABOUT): void {
+  toProject(projectId: string, page = PROJECT_PAGES.ABOUT): void {
     this.store.dispatch(
       new Navigate(
-        page === PROJECT_PAGE_VIEW.UPLOAD
+        page === PROJECT_PAGES.UPLOAD
           ? [...this.urlPrefix(), page, projectId]
           : [...this.urlPrefix(), 'view', projectId, page]
       )
