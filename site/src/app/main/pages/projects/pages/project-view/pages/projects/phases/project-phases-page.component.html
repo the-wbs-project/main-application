@@ -1,25 +1,6 @@
 <div class="pd-15">
-  <!--<wbs-tree
-    view="phase"
-    [width]="width()"
-    [nodes]="phases()"
-    [project]="project()"
-    [columns]="columns"
-    [rowReorderable]="claims | check : canEditClaim"
-    [expandedKeys]="phaseIds() ?? []"
-    [menuItems]="[phases(), claims] | taskMenu : taskId"
-    [isDraggable]="true"
-    (actionClicked)="service.action($event, taskId!)"
-    (reordered)="service.reordered($event)"
-    (selectedChanged)="taskId = $event.id"
-    (showDetails)="navigate.toTask($event)"
-  />-->
-  <div
-    *ngIf="phases(); let phases"
-    class="d-flex flex-column"
-    appFillElement
-    [paddingBottom]="30"
-  >
+  @if (phases(); as phases) {
+  <div class="d-flex flex-column" appFillElement [paddingBottom]="30">
     <div class="tx-italic tx-10">
       {{ "Projects.TreeInstructions" | translate }}
     </div>
@@ -41,21 +22,20 @@
         (dblclick)="navigate.toTask(taskId!)"
         (cellClick)="taskId = $event.dataItem.id"
       >
-        <!--<ng-template
-          kendoTreeListToolbarTemplate
-          *ngIf="[phases(), claims] | taskMenu : taskId; let menuItems"
-        >
-          <div class="d-ib pd-r-20" *ngFor="let menu of menuItems">
+        @if ([phases, claims] | taskMenu : taskId; as menuItems) {
+        <ng-template kendoTreeListToolbarTemplate>
+          <div class="d-ib pd-r-20">
+            @for (menu of menuItems; track $index){
             <wbs-action-buttons
               [items]="menu"
               (clicked)="service.action($event, taskId!)"
             />
+            }
           </div>
-        </ng-template>-->
-        <kendo-treelist-rowreorder-column
-          *ngIf="claims | check : canEditClaim"
-          [width]="40"
-        />
+        </ng-template>
+        } @if (claims | check : canEditClaim) {
+        <kendo-treelist-rowreorder-column [width]="40" />
+        }
         <kendo-treelist-column
           field="levelText"
           [title]="'Wbs.Level' | translate"
@@ -76,24 +56,20 @@
                 [fontSize]="8"
                 [approval]="approvals()?.get(dataItem.id)"
               />
-              <div
-                *ngIf="
-                  dataItem.childrenIds | childrenApproval : approvals();
-                  let stats
-                "
-                class="d-ib wd-100 mg-l-10"
-                [title]="stats.totalCount"
-              >
+              @if (dataItem.childrenIds | childrenApproval : approvals(); as
+              stats) {
+              <div class="d-ib wd-100 mg-l-10" [title]="stats.totalCount">
                 <wbs-progress-bar
                   [passPercent]="stats.passedPercent"
                   [failPercent]="stats.failedPercent"
                 />
               </div>
+              }
             </div>
           </ng-template>
         </kendo-treelist-column>
+        @if ((width() ?? 0) > 800) {
         <kendo-treelist-column
-          *ngIf="(width() ?? 0) > 800"
           field="disciplines"
           [width]="150"
           class="discipline-column"
@@ -108,9 +84,10 @@
             <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
           </ng-template>
         </kendo-treelist-column>
+        }
       </kendo-treelist>
     </div>
   </div>
+  }
 </div>
-
 <wbs-task-modal />

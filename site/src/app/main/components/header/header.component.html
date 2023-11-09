@@ -15,39 +15,36 @@
     </span>
     <div class="navbar-collapse">
       <ul class="navbar-nav">
-        <ng-template ngFor [ngForOf]="menu" let-parentItem>
-          <li
-            *ngIf="claims | check : parentItem.claim"
-            class="nav-item"
-            ngbDropdown
+        @for (parentItem of menu; track parentItem.label) { @if (claims | check
+        : parentItem.claim) {
+        <li class="nav-item" ngbDropdown>
+          <a
+            class="nav-link dropdown-toggle tx-uppercase"
+            ngbDropdownToggle
+            role="button"
           >
-            <a
-              class="nav-link dropdown-toggle tx-uppercase"
-              ngbDropdownToggle
-              role="button"
+            {{ parentItem.label | translate }}
+          </a>
+          <div ngbDropdownMenu class="py-0">
+            @for (link of parentItem.items; track link.label) { @switch
+            (link.type) { @case ('header') {
+            <h6
+              class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
             >
-              {{ parentItem.label | translate }}
+              {{ link.label | translate }}
+            </h6>
+            } @case ('link') {
+            <a
+              ngbDropdownItem
+              [routerLink]="link.route | orgUrl : org.name"
+              class="lh-5"
+            >
+              {{ link.label | translate }}
             </a>
-            <div ngbDropdownMenu class="py-0">
-              <ng-template ngFor [ngForOf]="parentItem.items" let-link>
-                <h6
-                  *ngIf="link.type === 'header'"
-                  class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
-                >
-                  {{ link.label | translate }}
-                </h6>
-                <a
-                  *ngIf="link.type === 'link'"
-                  ngbDropdownItem
-                  [routerLink]="link.route | orgUrl : org.name"
-                  class="lh-5"
-                >
-                  {{ link.label | translate }}
-                </a>
-              </ng-template>
-            </div>
-          </li>
-        </ng-template>
+            } } }
+          </div>
+        </li>
+        } }
       </ul>
     </div>
   </div>

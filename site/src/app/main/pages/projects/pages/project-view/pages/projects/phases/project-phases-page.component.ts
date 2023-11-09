@@ -1,4 +1,3 @@
-import { NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -52,8 +51,6 @@ import {
     ChildrenApprovalPipe,
     DisciplineIconListComponent,
     FillElementDirective,
-    NgFor,
-    NgIf,
     ProgressBarComponent,
     TaskMenuPipe,
     TaskModalComponent,
@@ -82,8 +79,6 @@ export class ProjectPhasesPageComponent implements OnInit {
   readonly width = toSignal(this.store.select(UiState.mainContentWidth));
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly phases = toSignal(this.store.select(TasksState.phases));
-  readonly phaseIds = toSignal(this.store.select(ProjectState.phaseIds));
-  readonly task = toSignal(this.store.select(TasksState.current));
   readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
 
   constructor(

@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   AfterContentInit,
   ChangeDetectionStrategy,
@@ -30,7 +29,9 @@ import { AiState, AuthState } from './states';
     </div>
     <wbs-footer />
     <div class="pos-absolute b-40 r-0">
-      <wbs-chat-window *ngIf="isAiEnabled()" />
+      @if (isAiEnabled()) {
+      <wbs-chat-window />
+      }
     </div>
   </div> `,
   //encapsulation: ViewEncapsulation.None,
@@ -42,7 +43,6 @@ import { AiState, AuthState } from './states';
     FooterComponent,
     HeaderComponent,
     MainContentDirective,
-    NgIf,
     RouterModule,
   ],
 })

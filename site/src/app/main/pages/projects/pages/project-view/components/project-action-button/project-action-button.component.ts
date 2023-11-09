@@ -1,4 +1,3 @@
-import { NgForOf, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,10 +14,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBoltLightning } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupModule } from '@progress/kendo-angular-popup';
-import { FaToKendoPipe } from '@wbs/main/pipes/fa-to-kendo.pipe';
-import { ProjectActionButtonService } from './project-action-button.service';
-import { ProjectAction } from './project-action.model';
 import { Project } from '@wbs/core/models';
+import { FaToKendoPipe } from '@wbs/main/pipes/fa-to-kendo.pipe';
+import { ProjectAction } from './project-action.model';
+import { ProjectActionButtonService } from './project-action-button.service';
 
 @Component({
   standalone: true,
@@ -29,8 +28,6 @@ import { Project } from '@wbs/core/models';
   imports: [
     FaToKendoPipe,
     FontAwesomeModule,
-    NgForOf,
-    NgIf,
     PopupModule,
     RouterModule,
     TranslateModule,
