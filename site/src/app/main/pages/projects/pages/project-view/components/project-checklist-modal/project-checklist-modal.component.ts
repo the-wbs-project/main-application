@@ -17,7 +17,6 @@ import { ProjectChecklistState } from '../../states';
   standalone: true,
   selector: 'wbs-project-checklist-modal',
   templateUrl: './project-checklist-modal.component.html',
-  styleUrls: ['./project-checklist-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [ProjectChecklistComponent, TranslateModule],
