@@ -17,21 +17,21 @@
         [initiallyExpanded]="false"
         [(expandedKeys)]="expandedKeys"
         [selectable]="settings"
-        (selectionChange)="taskId = $event.items[0].dataItem"
+        (selectionChange)="taskId = $event.items[0].dataItem.id"
         (rowReorder)="rowReordered($event)"
         (dblclick)="navigate.toTask(taskId!)"
         (cellClick)="taskId = $event.dataItem.id"
       >
         @if ([phases, claims] | taskMenu : taskId; as menuItems) {
         <ng-template kendoTreeListToolbarTemplate>
+          @for (menu of menuItems; track $index){
           <div class="d-ib pd-r-20">
-            @for (menu of menuItems; track $index){
             <wbs-action-buttons
               [items]="menu"
               (clicked)="service.action($event, taskId!)"
             />
-            }
           </div>
+          }
         </ng-template>
         } @if (claims | check : canEditClaim) {
         <kendo-treelist-rowreorder-column [width]="40" />
@@ -49,6 +49,7 @@
           [title]="'Wbs.Task' | translate"
           class="tx-11"
         />
+        @if (project()?.approvalStarted) {
         <kendo-treelist-column [width]="175" [title]="'Approval'">
           <ng-template kendoTreeListCellTemplate let-dataItem>
             <div class="tx-12 w-100 d-flex flex-row flex-align-center">
@@ -68,7 +69,7 @@
             </div>
           </ng-template>
         </kendo-treelist-column>
-        @if ((width() ?? 0) > 800) {
+        } @if ((width() ?? 0) > 800) {
         <kendo-treelist-column
           field="disciplines"
           [width]="150"
