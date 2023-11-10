@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -36,7 +35,6 @@ import { ProjectApprovalState, ProjectState } from './states';
     ApprovalBadgeComponent,
     CategoryIconPipe,
     CheckPipe,
-    CommonModule,
     FillElementDirective,
     FontAwesomeModule,
     PageHeaderComponent,

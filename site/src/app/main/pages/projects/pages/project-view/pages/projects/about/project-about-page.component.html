@@ -1,106 +1,110 @@
-<ng-template [ngIf]="project()" let-project>
-  <div class="px-4 py-2">
-    <h4 class="tx-15-f text-uppercase mb-3">
-      {{ "Projects.BasicInformation" | translate }}
-    </h4>
-    <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-        {{ "General.Category" | translate }} :
-      </span>
-      <span>
-        {{ project.category | categoryLabel | translate }}
-      </span>
-    </p>
-    <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-        {{ "General.Status" | translate }} :
-      </span>
-      <span>
-        {{ project.status | projectStatus }},
-        {{ project.lastModified | editedDateText | lowercase }}
-      </span>
-    </p>
-    <p class="text-muted ms-md-4 ms-0 mb-2">
-      <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-        {{ "General.Disciplines" | translate }} :
-      </span>
-      <span class="d-ib pd-l-3">
-        <label class="me-3" *ngFor="let disc of project.disciplines">
-          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
-          {{ disc | categoryLabel | translate }}
-        </label>
-      </span>
-    </p>
-    <p class="text-muted ms-md-4 ms-0 mb-2" *ngIf="project.approvalStarted">
-      <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-        Approval Status :
-        <!--{{ "General.Disciplines" | translate }}-->
-      </span>
-      <span class="d-ib pd-l-3" *ngIf="approvalStats(); let stats">
-        {{ stats.completed }} / {{ stats.count }} &nbsp; ({{ stats.percent }} %)
-      </span>
-    </p>
+@if (project(); as project) {
+<div class="px-4 py-2">
+  <h4 class="tx-15-f text-uppercase mb-3">
+    {{ "Projects.BasicInformation" | translate }}
+  </h4>
+  <p class="text-muted ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+      {{ "General.Category" | translate }} :
+    </span>
+    <span>
+      {{ project.category | categoryLabel | translate }}
+    </span>
+  </p>
+  <p class="text-muted ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+      {{ "General.Status" | translate }} :
+    </span>
+    <span>
+      {{ project.status | projectStatus }},
+      {{ project.lastModified | editedDateText | lowercase }}
+    </span>
+  </p>
+  <p class="text-muted ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+      {{ "General.Disciplines" | translate }} :
+    </span>
+    <span class="d-ib pd-l-3">
+      @for (disc of project.disciplines; track $index){
+      <label class="me-3">
+        <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
+        {{ disc | categoryLabel | translate }}
+      </label>
+      }
+    </span>
+  </p>
+  @if(project.approvalStarted) {
+  <p class="text-muted ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+      Approval Status :
+      <!--{{ "General.Disciplines" | translate }}-->
+    </span>
+    @if(approvalStats(); as stats) {
+    <span class="d-ib pd-l-3">
+      {{ stats.completed }} / {{ stats.count }} &nbsp; ({{ stats.percent }} %)
+    </span>
+    }
+  </p>
+  }
+</div>
+<div class="border-top"></div>
+<div class="p-4">
+  <h4 class="tx-15-f text-uppercase mb-3">
+    {{ "General.Description" | translate }}
+    &nbsp;
+    <wbs-approval-badge [approval]="approvals()?.get('project-description')" />
+  </h4>
+  <div [innerHTML]="project.description | safeHtml"></div>
+</div>
+<div class="border-top"></div>
+<div class="p-4">
+  <h4 class="tx-15-f text-uppercase mb-3">
+    {{ "General.Contacts" | translate }}
+    &nbsp;
+    <wbs-approval-badge [approval]="approvals()?.get('project-roles')" />
+  </h4>
+  <ul class="list-group">
+    @for (user of users(); track user.id) {
+    <li class="list-group-item bd-gray-400 bd-t-1-f">
+      <div class="d-ib wd-40">
+        @if (user.picture){
+        <img
+          class="rounded-circle wd-30 ht-30 object-fit-cover"
+          [src]="user.picture"
+          alt="avatar"
+        />
+        }
+      </div>
+      {{ user.name }} - {{ user.roles | roleList : true }}
+    </li>
+    }
+  </ul>
+</div>
+<div class="border-top"></div>
+<div class="p-4">
+  <h4 class="tx-15-f text-uppercase mb-3">Path To Success</h4>
+  <div class="text-muted m-t-30">
+    <wbs-project-checklist [checklist]="checklist()" />
   </div>
-  <div class="border-top"></div>
-  <div class="p-4">
-    <h4 class="tx-15-f text-uppercase mb-3">
-      {{ "General.Description" | translate }}
-      &nbsp;
-      <wbs-approval-badge
-        [approval]="approvals()?.get('project-description')"
-      />
-    </h4>
-    <div [innerHTML]="project.description | safeHtml"></div>
+</div>
+<div class="border-top"></div>
+<div class="p-4">
+  <h4 class="tx-15-f text-uppercase mb-3">
+    {{ "General.Statistics" | translate }}
+  </h4>
+  <div class="d-flex flex-column flex-sm-row tx-center">
+    <wbs-project-statistic
+      [stat]="project.phases.length"
+      [label]="'General.Phases' | translate"
+    />
+    <wbs-project-statistic
+      [stat]="project.disciplines.length"
+      [label]="'General.Disciplines' | translate"
+    />
+    <wbs-project-statistic
+      [stat]="taskCount()"
+      [label]="'Projects.TaskCount' | translate"
+    />
   </div>
-  <div class="border-top"></div>
-  <div class="p-4">
-    <h4 class="tx-15-f text-uppercase mb-3">
-      {{ "General.Contacts" | translate }}
-      &nbsp;
-      <wbs-approval-badge [approval]="approvals()?.get('project-roles')" />
-    </h4>
-    <ul class="list-group">
-      <li
-        *ngFor="let user of users()"
-        class="list-group-item bd-gray-400 bd-t-1-f"
-      >
-        <div class="d-ib wd-40">
-          <img
-            *ngIf="user.picture"
-            class="rounded-circle wd-30 ht-30 object-fit-cover"
-            [src]="user.picture"
-            alt="avatar"
-          />
-        </div>
-        {{ user.name }} - {{ user.roles | roleList : true }}
-      </li>
-    </ul>
-  </div>
-  <div class="border-top"></div>
-  <div class="p-4">
-    <h4 class="tx-15-f text-uppercase mb-3">Path To Success</h4>
-    <div class="text-muted m-t-30">
-      <wbs-project-checklist [checklist]="checklist()" />
-    </div>
-  </div>
-  <div class="border-top"></div>
-  <div class="p-4">
-    <h4 class="tx-15-f text-uppercase mb-3">
-      {{ "General.Statistics" | translate }}
-    </h4>
-    <div class="d-flex flex-column flex-sm-row tx-center">
-      <wbs-project-statistic
-        [stat]="project.phases.length"
-        [label]="'General.Phases' | translate"
-      />
-      <wbs-project-statistic
-        [stat]="project.disciplines.length"
-        [label]="'General.Disciplines' | translate"
-      />
-      <wbs-project-statistic
-        [stat]="taskCount()"
-        [label]="'Projects.TaskCount' | translate"
-      />
-    </div>
-  </div>
-</ng-template>
+</div>
+}

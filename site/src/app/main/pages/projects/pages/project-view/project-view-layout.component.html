@@ -28,13 +28,14 @@
     <div class="flex-fill scroll">
       <router-outlet />
     </div>
+    @if (approvalView() === 'project' && approval(); as approval) {
     <wbs-project-approval-window
-      *ngIf="isProjectApproval() && approval(); let approval"
       [approval]="approval"
       [claims]="claims"
       [userId]="userId"
       [chat]="chat() ?? []"
     />
+    }
   </div>
 </div>
 <wbs-project-checklist-modal #checklist />

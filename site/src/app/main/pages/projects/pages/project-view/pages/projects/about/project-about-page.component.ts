@@ -1,10 +1,4 @@
-import {
-  LowerCasePipe,
-  NgClass,
-  NgFor,
-  NgIf,
-  PercentPipe,
-} from '@angular/common';
+import { LowerCasePipe, NgClass, PercentPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -39,8 +33,6 @@ import {
     PercentPipe,
     LowerCasePipe,
     NgClass,
-    NgFor,
-    NgIf,
     ProjectChecklistComponent,
     ProjectStatisticComponent,
     ProjectStatusPipe,

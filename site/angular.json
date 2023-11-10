@@ -21,7 +21,7 @@
       "prefix": "wbs",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:browser-esbuild",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/site",
             "index": "src/index.html",
