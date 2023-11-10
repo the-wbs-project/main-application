@@ -55,6 +55,8 @@ app.get('api/activities/*', verifyJwt, OriginService.pass);
 app.put('api/activities', verifyJwt, OriginService.pass);
 app.put('api/activities/projects', verifyJwt, OriginService.pass);
 
+app.get('api/projects/owner/:owner/id/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
+
 app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
 app.get('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);

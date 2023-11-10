@@ -38,6 +38,7 @@ export class ProjectActionButtonComponent implements OnChanges {
   @ViewChild('anchor', { read: ElementRef, static: false }) anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef, static: false }) popup!: ElementRef;
   @Input({ required: true }) project?: Project;
+  @Input({ required: true }) claims?: string[];
 
   readonly menu = signal<ProjectAction[] | undefined>(undefined);
   readonly faBoltLightning = faBoltLightning;
@@ -47,8 +48,8 @@ export class ProjectActionButtonComponent implements OnChanges {
   constructor(readonly service: ProjectActionButtonService) {}
 
   ngOnChanges(): void {
-    if (this.project) {
-      this.menu.set(this.service.buildMenu(this.project));
+    if (this.project && this.claims) {
+      this.menu.set(this.service.buildMenu(this.project, this.claims));
     }
   }
 

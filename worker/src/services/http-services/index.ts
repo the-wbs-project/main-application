@@ -4,6 +4,7 @@ import { ClaimsHttpService } from './claims.http-service';
 import { JiraHttpService } from './jira.http-service';
 import { MetadataHttpService } from './metdata.http-service';
 import { MiscHttpService } from './misc.http-service';
+import { ProjectHttpService } from './project.http-service';
 
 export const Http = {
   aiChat: AiChatHttpService,
@@ -12,4 +13,5 @@ export const Http = {
   jira: JiraHttpService,
   metadata: MetadataHttpService,
   misc: MiscHttpService,
+  projects: ProjectHttpService,
 };

@@ -21,10 +21,9 @@ export class ClaimsHttpService {
     try {
       const { owner, project } = ctx.req.param();
       const userId = ctx.get('idToken').userId;
-      const origin = ctx.get('origin');
 
       const definitions = await ctx.get('data').roles.getAsync();
-      const projectRoles = (await origin.getAsync<{ role: string; userId: string }[]>(`projects/owner/${owner}/id/${project}/roles`)) ?? [];
+      const projectRoles = await ctx.get('data').projects.getRolesAsync(owner, project);
       const orgRoleIds = ctx.get('idToken').orgRoles[owner];
       const orgRoleNames = orgRoleIds.map((r) => definitions.find((d) => d.id === r)?.name ?? '');
       const roles = projectRoles

@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Project } from '../models';
+import { UserRolesViewModel } from '../view-models';
 
 export class ProjectDataService {
   constructor(private readonly http: HttpClient) {}
@@ -16,6 +17,15 @@ export class ProjectDataService {
     return this.http
       .get<Project>(`api/projects/owner/${owner}/id/${projectId}`)
       .pipe(map((node) => this.clean(node)));
+  }
+
+  getUsersAsync(
+    owner: string,
+    projectId: string
+  ): Observable<UserRolesViewModel[]> {
+    return this.http.get<UserRolesViewModel[]>(
+      `api/projects/owner/${owner}/id/${projectId}/users`
+    );
   }
 
   putAsync(project: Project): Observable<void> {

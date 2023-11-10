@@ -46,7 +46,7 @@ async function convertMessage(ctx: Context, item: ChatComment, users?: Map<strin
       timestamp: item.timestamp,
     };
   }
-  const user = await ctx.get('data').user.getAsync(author);
+  const user = await ctx.get('data').users.getAsync(author);
   let mUser: MessageUser = {
     id: author,
     name: user?.name ?? 'Unknown User',

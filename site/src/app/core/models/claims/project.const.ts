@@ -29,4 +29,11 @@ export const PROJECT_CLAIMS = {
     CAN_APPROVE: 'update:approve:project',
     CAN_COMMENT: 'comment:approve:project',
   },
+  STATI: {
+    CAN_SUBMIT_FOR_APPROVAL: 'submit:stati:project',
+    CAN_RETURN_TO_PLANNING: 'return:stati:project',
+    CAN_REJECT: 'reject:stati:project',
+    CAN_APPROVE: 'approve:stati:project',
+    CAN_CANCEL: 'cancel:stati:project',
+  },
 };

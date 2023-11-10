@@ -1,9 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { Member } from '@wbs/core/models';
+import { Member, Project, ROLES, Role } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
-import { MembershipState } from '@wbs/main/states';
+import { MembershipState, RoleState } from '@wbs/main/states';
 import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
 import { ProjectState } from '../../../../states';
 
@@ -22,10 +22,19 @@ import { ProjectState } from '../../../../states';
   imports: [ProjectRolesComponent],
 })
 export class ProjectSettingsRolesComponent {
+  private readonly project = toSignal(this.store.select(ProjectState.current));
+  private readonly roleIds = toSignal(this.store.select(RoleState.definitions));
+
   readonly members = toSignal(this.store.select(MembershipState.members));
-  readonly approverIds = toSignal(this.store.select(ProjectState.approvers));
-  readonly pmIds = toSignal(this.store.select(ProjectState.pms));
-  readonly smeIds = toSignal(this.store.select(ProjectState.smes));
+  readonly approverIds = computed(() =>
+    this.getUserIds(ROLES.APPROVER, this.roleIds(), this.project())
+  );
+  readonly pmIds = computed(() =>
+    this.getUserIds(ROLES.PM, this.roleIds(), this.project())
+  );
+  readonly smeIds = computed(() =>
+    this.getUserIds(ROLES.SME, this.roleIds(), this.project())
+  );
 
   constructor(private readonly store: Store) {}
 
@@ -35,5 +44,16 @@ export class ProjectSettingsRolesComponent {
 
   remove(role: string, user: Member) {
     this.store.dispatch(new RemoveUserToRole(role, user));
+  }
+
+  private getUserIds(
+    roleName: string,
+    roles: Role[] | undefined,
+    project: Project | undefined
+  ): string[] {
+    const role = roles?.find((r) => r.name === roleName)?.id;
+    return (
+      project?.roles?.filter((r) => r.role === role).map((r) => r.userId) ?? []
+    );
   }
 }

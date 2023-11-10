@@ -6,7 +6,12 @@ import {
   faXmarkToSlot,
 } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
-import { PROJECT_STATI, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
+import {
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
+  PROJECT_STATI_TYPE,
+  Project,
+} from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { RoleState } from '@wbs/main/states';
 import { of } from 'rxjs';
@@ -28,19 +33,12 @@ export class ProjectActionButtonService {
     private readonly store: Store
   ) {}
 
-  buildMenu(project: Project): ProjectAction[] | undefined {
-    //const isSiteAdmin = this.store.selectSnapshot(PermissionsState.isSiteAdmin);
-    const roles = this.store.selectSnapshot(ProjectState.roles) ?? [];
-    const roleIds = this.store.selectSnapshot(RoleState.ids)!;
+  buildMenu(project: Project, claims: string[]): ProjectAction[] | undefined {
     const items: ProjectAction[] = [];
     const stati = PROJECT_STATI;
-    const isPm = roles.includes(roleIds.pm);
-    const isApprover = roles.includes(roleIds.approver);
-    const isAdmin = roles.includes(roleIds.admin);
-    const isPmOrAdmin = isPm || isAdmin; // || isSiteAdmin;
 
     if (project.status === stati.PLANNING) {
-      if (isPm) {
+      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
         items.push({
           text: 'Projects.SubmitForApproval',
           icon: faCheck,
@@ -48,32 +46,30 @@ export class ProjectActionButtonService {
         });
       }
     } else if (project.status === stati.APPROVAL) {
-      if (isPm) {
+      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_RETURN_TO_PLANNING)) {
         items.push({
           text: 'Projects.ReturnToPlanning',
           icon: faStamp,
           action: this.actionReturnPlanning,
         });
       }
-      if (isApprover) {
-        items.push({
-          text: 'Projects.RejectProject',
-          icon: faXmarkToSlot,
-          action: this.actionReject,
-        });
+      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_APPROVE)) {
         items.push({
           text: 'Projects.ApproveProject',
           icon: faStamp,
           action: this.actionApprove,
         });
       }
+      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_REJECT)) {
+        items.push({
+          text: 'Projects.RejectProject',
+          icon: faXmarkToSlot,
+          action: this.actionReject,
+        });
+      }
     }
 
-    if (
-      isPmOrAdmin &&
-      project.status !== stati.CANCELLED &&
-      project.status !== stati.CLOSED
-    ) {
+    if (claims.includes(PROJECT_CLAIMS.STATI.CAN_CANCEL)) {
       if (items.length > 0) items.push({ separator: true });
       items.push({
         text: 'Projects.CancelProject',
@@ -117,7 +113,11 @@ export class ProjectActionButtonService {
   }
 
   private approval(): void {
-    const approvals = this.store.selectSnapshot(ProjectState.approvers) ?? [];
+    const roleIds = this.store.selectSnapshot(RoleState.ids)!;
+    const approvals = this.store
+      .selectSnapshot(ProjectState.current)!
+      .roles.filter((r) => r.role === roleIds.approver)
+      .map((r) => r.userId);
 
     if (approvals.length === 0) {
       this.messages.report.failure(
