@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
   OnInit,
   ViewChild,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
@@ -13,7 +13,6 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { BehaviorSubject } from 'rxjs';
 import { CategoryListEditorComponent } from '../category-list-editor';
 
 @Component({
@@ -23,7 +22,6 @@ import { CategoryListEditorComponent } from '../category-list-editor';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryListEditorComponent,
-    CommonModule,
     EditorModule,
     FormsModule,
     TranslateModule,
@@ -34,7 +32,7 @@ export class TaskCreateComponent implements OnInit {
   @ViewChild('titleTextBox', { static: true }) titleTextBox!: ElementRef;
 
   readonly discipline = PROJECT_NODE_VIEW.DISCIPLINE;
-  readonly more$ = new BehaviorSubject<boolean>(false);
+  readonly more = signal<boolean>(false);
 
   title = '';
   description = '';
@@ -64,7 +62,7 @@ export class TaskCreateComponent implements OnInit {
       title: this.title,
     };
 
-    if (this.more$.getValue()) {
+    if (this.more()) {
       if (this.description) model.description = this.description;
 
       const disciplines: string[] = [];

@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, Member } from '@wbs/core/models';
+import { Invite } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { UpdateMembers } from '@wbs/main/actions';
 import { UserService } from '@wbs/main/services';
 import { AuthState, MembershipState } from '@wbs/main/states';
 import { Observable, forkJoin } from 'rxjs';
@@ -39,10 +38,6 @@ export class MembershipAdminState {
     return state.invitations;
   }
 
-  private get members(): Member[] {
-    return this.store.selectSnapshot(MembershipState.members)!;
-  }
-
   private get org(): string {
     return this.store.selectSnapshot(MembershipState.organization)!.name;
   }
@@ -72,18 +67,10 @@ export class MembershipAdminState {
   ): Observable<void> {
     const state = ctx.getState();
 
-    return this.data.memberships
-      .removeUserFromOrganizationAsync(this.org, memberId)
-      .pipe(
-        tap(() => {
-          const members = [...(this.members ?? [])];
-          const index = members.findIndex((x) => x.id === memberId);
-
-          if (index > -1) members.splice(index, 1);
-
-          return ctx.dispatch(new UpdateMembers(members));
-        })
-      );
+    return this.data.memberships.removeUserFromOrganizationAsync(
+      this.org,
+      memberId
+    );
   }
 
   @Action(UpdateMemberRoles)
@@ -92,7 +79,7 @@ export class MembershipAdminState {
     { memberId, roles }: UpdateMemberRoles
   ): Observable<any> | void {
     const state = ctx.getState();
-    const members = [...(this.members ?? [])];
+    /*const members = [...(this.members ?? [])];
     const index = members.findIndex((x) => x.id === memberId);
 
     if (index === -1) return;
@@ -131,7 +118,7 @@ export class MembershipAdminState {
         return ctx.dispatch(new UpdateMembers(members));
       }),
       tap(() => this.messages.notify.success('OrgSettings.MemberRolesUpdated'))
-    );
+    );*/
   }
 
   @Action(SendInvites)

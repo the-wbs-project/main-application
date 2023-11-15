@@ -10,18 +10,11 @@ import {
   Store,
 } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member, Organization } from '@wbs/core/models';
-import { Messages, sorter } from '@wbs/core/services';
+import { Organization } from '@wbs/core/models';
+import { Messages } from '@wbs/core/services';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
-import {
-  ChangeOrganization,
-  InitiateOrganizations,
-  RefreshMembers,
-  UpdateMembers,
-} from '../actions';
+import { ChangeOrganization, InitiateOrganizations } from '../actions';
 import { UserService } from '../services';
-import { AuthState } from './auth.state';
 
 interface StateModel {
   loading: boolean;
@@ -29,7 +22,6 @@ interface StateModel {
   organization?: Organization;
   orgRoleList?: Record<string, string[]>;
   roles?: string[];
-  members?: Member[];
 }
 
 declare type Context = StateContext<StateModel>;
@@ -62,11 +54,6 @@ export class MembershipState implements NgxsOnInit {
   }
 
   @Selector()
-  static members(state: StateModel): Member[] | undefined {
-    return state.members;
-  }
-
-  @Selector()
   static organization(state: StateModel): Organization | undefined {
     return state.organization;
   }
@@ -86,22 +73,6 @@ export class MembershipState implements NgxsOnInit {
         orgRoleList: user[ns + '/organizations-roles']!,
       });
     });
-    this.store
-      .select(AuthState.profile)
-      .pipe(untilDestroyed(this))
-      .subscribe((profile) => {
-        if (!profile) return;
-
-        const members = ctx.getState().members ?? [];
-
-        if (members.length == 0) return;
-
-        const member = members.find((x) => x.id === profile?.id);
-
-        if (member) member.name = profile.name;
-
-        ctx.patchState({ members });
-      });
   }
 
   @Action(InitiateOrganizations)
@@ -115,50 +86,7 @@ export class MembershipState implements NgxsOnInit {
   }
 
   @Action(ChangeOrganization)
-  changeOrganization(
-    ctx: Context,
-    { organization }: ChangeOrganization
-  ): Observable<void> {
+  changeOrganization(ctx: Context, { organization }: ChangeOrganization): void {
     ctx.patchState({ loading: true, organization });
-
-    return this.getMembers(ctx, false).pipe(
-      tap(() =>
-        ctx.patchState({
-          loading: false,
-          roles: ctx.getState().orgRoleList?.[organization.name] ?? [],
-        })
-      )
-    );
-  }
-
-  @Action(UpdateMembers)
-  updateMembers(ctx: Context, { members }: UpdateMembers): void {
-    this.setRoleList(members);
-
-    ctx.patchState({ members });
-  }
-
-  @Action(RefreshMembers)
-  refreshMembers(ctx: Context): Observable<void> {
-    return this.getMembers(ctx, true);
-  }
-
-  private getMembers(ctx: Context, forceRefresh: boolean): Observable<void> {
-    return this.data.memberships
-      .getMembershipUsersAsync(ctx.getState().organization!.name, forceRefresh)
-      .pipe(
-        map((members) => {
-          this.setRoleList(members);
-
-          ctx.patchState({
-            members: members.sort((a, b) => sorter(a.name, b.name)),
-          });
-          this.userService.addUsers(members);
-        })
-      );
-  }
-
-  private setRoleList(members: Member[]): void {
-    for (const member of members) member.roleList = member.roles.join(',');
   }
 }

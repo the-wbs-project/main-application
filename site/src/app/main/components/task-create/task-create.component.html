@@ -25,34 +25,27 @@
   <br />
   <br />
   <div class="wd-100p tx-right">
-    <button
-      *ngIf="!(more$ | async)"
-      class="btn btn-sm btn-primary"
-      (click)="more$.next(true)"
-    >
-      {{ "General.More" | translate }}
-    </button>
-    <button
-      *ngIf="more$ | async"
-      class="btn btn-sm btn-primary"
-      (click)="more$.next(false)"
-    >
-      {{ "General.Less" | translate }}
+    <button class="btn btn-sm btn-primary" (click)="more.set(!more())">
+      {{ (more() ? "General.Less" : "General.More") | translate }}
     </button>
   </div>
-  <ng-template [ngIf]="more$ | async">
-    <label class="form-label">
-      {{ "Projects.TaskDescription" | translate }}
-    </label>
+  @if (more()) {
+  <label class="form-label">
+    {{ "Projects.TaskDescription" | translate }}
+  </label>
 
-    <kendo-editor [(value)]="description" [resizable]="true"></kendo-editor>
-    <br />
-    <br />
-    <label class="form-label">
-      {{ "Projects.TaskDisciplines" | translate }}
-    </label>
-    <wbs-category-list-editor [showButtons]="false" [(categories)]="disciplines" [categoryType]="discipline" />
-  </ng-template>
+  <kendo-editor [(value)]="description" [resizable]="true" />
+  <br />
+  <br />
+  <label class="form-label">
+    {{ "Projects.TaskDisciplines" | translate }}
+  </label>
+  <wbs-category-list-editor
+    [showButtons]="false"
+    [(categories)]="disciplines"
+    [categoryType]="discipline"
+  />
+  }
 </div>
 
 <div class="modal-footer">

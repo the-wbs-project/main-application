@@ -124,11 +124,11 @@ export class ProjectState {
           roles,
         });
       }),
-      switchMap(() => this.updateUsers(ctx)),
       tap((project) => ctx.dispatch([new VerifyTasks(project)])),
       tap((project) =>
         ctx.dispatch(new SetChecklistData(project, undefined, undefined))
       ),
+      switchMap(() => this.updateUsers(ctx)),
       tap(() => this.clearClaimCache())
     );
   }

@@ -1,93 +1,91 @@
 @if (project(); as project) {
-<div class="px-4 py-2">
-  <h4 class="tx-15-f text-uppercase mb-3">
-    {{ "Projects.BasicInformation" | translate }}
-  </h4>
-  <p class="text-muted ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-      {{ "General.Category" | translate }} :
-    </span>
-    <span>
-      {{ project.category | categoryLabel | translate }}
-    </span>
-  </p>
-  <p class="text-muted ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-      {{ "General.Status" | translate }} :
-    </span>
-    <span>
-      {{ project.status | projectStatus }},
-      {{ project.lastModified | editedDateText | lowercase }}
-    </span>
-  </p>
-  <p class="text-muted ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-      {{ "General.Disciplines" | translate }} :
-    </span>
-    <span class="d-ib pd-l-3">
+<div class="about-page-grid pd-20" resizedCss>
+  <div class="card border">
+    <div class="card-header">
+      {{ "General.Disciplines" | translate | uppercase }}
+    </div>
+    <div class="card-body">
       @for (disc of project.disciplines; track $index){
-      <label class="me-3">
-        <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
-        {{ disc | categoryLabel | translate }}
-      </label>
+      <p class="mb-2 mx-0 tx-16">
+        <span class="d-ib wd-30">
+          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
+        </span>
+        <span class="mg-l-10">
+          {{ disc | categoryLabel | translate }}
+        </span>
+      </p>
       }
-    </span>
-  </p>
-  @if(project.approvalStarted) {
-  <p class="text-muted ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
-      Approval Status :
-      <!--{{ "General.Disciplines" | translate }}-->
-    </span>
-    @if(approvalStats(); as stats) {
-    <span class="d-ib pd-l-3">
-      {{ stats.completed }} / {{ stats.count }} &nbsp; ({{ stats.percent }} %)
-    </span>
-    }
-  </p>
-  }
-</div>
-<div class="border-top"></div>
-<div class="p-4">
-  <h4 class="tx-15-f text-uppercase mb-3">
-    {{ "General.Description" | translate }}
-    &nbsp;
-    <wbs-approval-badge [approval]="approvals()?.get('project-description')" />
-  </h4>
-  <div [innerHTML]="project.description | safeHtml"></div>
-</div>
-<div class="border-top"></div>
-<div class="p-4">
-  <h4 class="tx-15-f text-uppercase mb-3">
-    {{ "General.Contacts" | translate }}
-    &nbsp;
-    <wbs-approval-badge [approval]="approvals()?.get('project-roles')" />
-  </h4>
-  <ul class="list-group">
-    @for (user of users(); track user.id) {
-    <li class="list-group-item bd-gray-400 bd-t-1-f">
-      <div class="d-ib wd-40">
-        @if (user.picture){
-        <img
-          class="rounded-circle wd-30 ht-30 object-fit-cover"
-          [src]="user.picture"
-          alt="avatar"
-        />
+    </div>
+  </div>
+
+  <div class="card border">
+    <div class="card-header">
+      {{ "General.Status" | translate | uppercase }}
+    </div>
+    <div class="card-body">
+      <wbs-project-status-tile [project]="project" />
+    </div>
+  </div>
+
+  <div class="card border double-item">
+    <div class="card-header">
+      {{ "Projects.ApprovalStatus" | translate }}
+    </div>
+    <div class="card-body">
+      <wbs-project-approval-tile [stats]="approvalStats()" />
+    </div>
+  </div>
+
+  <div class="card border full-item">
+    <div class="card-header">
+      {{ "General.Description" | translate | uppercase }}
+      &nbsp;
+      <wbs-approval-badge
+        [approval]="approvals() | findById : 'project-description'"
+      />
+    </div>
+    <div class="card-body" [innerHTML]="project.description | safeHtml"></div>
+  </div>
+
+  <div class="card border double-item">
+    <div class="card-header">
+      {{ "General.Contacts" | translate | uppercase }}
+      &nbsp;
+      <wbs-approval-badge
+        [approval]="approvals() | findById : 'project-roles'"
+      />
+    </div>
+    <div class="card-body">
+      <ul class="list-group">
+        @for (user of users(); track user.id) {
+        <li class="list-group-item bd-gray-400 bd-t-1-f">
+          <div class="d-ib wd-40">
+            @if (user.picture){
+            <img
+              class="rounded-circle wd-30 ht-30 object-fit-cover"
+              [src]="user.picture"
+              alt="avatar"
+            />
+            }
+          </div>
+          {{ user.name }} - {{ user.roles | roleList : true }}
+        </li>
         }
-      </div>
-      {{ user.name }} - {{ user.roles | roleList : true }}
-    </li>
-    }
-  </ul>
-</div>
-<div class="border-top"></div>
-<div class="p-4">
-  <h4 class="tx-15-f text-uppercase mb-3">Path To Success</h4>
-  <div class="text-muted m-t-30">
-    <wbs-project-checklist [checklist]="checklist()" />
+      </ul>
+    </div>
+  </div>
+
+  <div class="card border double-item">
+    <div class="card-header">
+      {{ "Projects.PathToSuccess" | translate }}
+    </div>
+    <div class="card-body">
+      <wbs-project-checklist [checklist]="checklist()" />
+    </div>
   </div>
 </div>
-<div class="border-top"></div>
+
+<!--
 <div class="p-4">
   <h4 class="tx-15-f text-uppercase mb-3">
     {{ "General.Statistics" | translate }}
@@ -107,4 +105,5 @@
     />
   </div>
 </div>
+-->
 }

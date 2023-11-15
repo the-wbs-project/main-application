@@ -1,6 +1,6 @@
 <div ngbAccordion class="checklist-accordion">
+  @for (group of checklist; track $index) {
   <div
-    *ngFor="let group of checklist"
     ngbAccordionItem
     [collapsed]="!expandIfFailed || group.result !== 'fail'"
   >
@@ -17,16 +17,19 @@
       <div ngbAccordionBody>
         <ng-template>
           <ul class="list-group">
-            <li *ngFor="let test of group.items" class="list-group-item">
+            @for (test of group.items; track $index){
+            <li class="list-group-item">
               {{ test.description | translate }}&nbsp;
               <fa-icon
                 [icon]="test.result | checklistResultIcon"
                 [ngClass]="test.result | checklistResultClass"
               />
             </li>
+            }
           </ul>
         </ng-template>
       </div>
     </div>
   </div>
+  }
 </div>

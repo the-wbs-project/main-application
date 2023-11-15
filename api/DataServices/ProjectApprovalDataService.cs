@@ -42,29 +42,33 @@ public class ProjectApprovalDataService : BaseDbService
         return results;
     }
 
-    public async Task SetAsync(string owner, ProjectApproval approval)
+    public async Task SetAsync(string owner, ProjectApprovalSaveRecord record)
     {
         using (var conn = CreateConnection())
         {
             await conn.OpenAsync();
-            await SetAsync(conn, owner, approval);
+            await SetAsync(conn, owner, record);
         }
     }
 
-    public async Task SetAsync(SqlConnection conn, string owner, ProjectApproval approval)
+    public async Task SetAsync(SqlConnection conn, string owner, ProjectApprovalSaveRecord record)
     {
         var cmd = new SqlCommand("dbo.ProjectApproval_Set", conn)
         {
             CommandType = CommandType.StoredProcedure
         };
-        cmd.Parameters.AddWithValue("@Id", approval.id);
-        cmd.Parameters.AddWithValue("@ProjectId", approval.projectId);
+        cmd.Parameters.AddWithValue("@Id", "");
+        cmd.Parameters.AddWithValue("@ProjectId", record.projectId);
         cmd.Parameters.AddWithValue("@OwnerId", owner);
-        cmd.Parameters.AddWithValue("@ApprovedOn", DbValue(approval.approvedOn));
-        cmd.Parameters.AddWithValue("@ApprovedBy", DbValue(approval.approvedBy));
-        cmd.Parameters.AddWithValue("@IsApproved", DbJson(approval.isApproved));
+        cmd.Parameters.AddWithValue("@ApprovedOn", DbValue(record.approvedOn));
+        cmd.Parameters.AddWithValue("@ApprovedBy", DbValue(record.approvedBy));
+        cmd.Parameters.AddWithValue("@IsApproved", DbJson(record.isApproved));
 
-        await cmd.ExecuteNonQueryAsync();
+        foreach (var id in record.ids)
+        {
+            cmd.Parameters["@Id"].Value = id;
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 
     private ProjectApproval ToModel(SqlDataReader reader)

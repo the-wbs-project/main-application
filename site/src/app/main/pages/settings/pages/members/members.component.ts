@@ -25,6 +25,7 @@ import { InvitesFormComponent } from './components/invites-form/invites-form.com
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { RoleFilterListComponent } from './components/role-filter-list/role-filter-list.component';
 import { MembershipAdminState } from './states';
+import { Member } from '@wbs/core/models';
 
 const ROLES = [
   {
@@ -69,6 +70,7 @@ const ROLES = [
 })
 export class MembersComponent implements OnInit {
   @Input() org!: string;
+  @Input() members!: Member[];
 
   private readonly crumbs: Breadcrumb[] = [
     {
@@ -83,13 +85,11 @@ export class MembersComponent implements OnInit {
     this.store.select(MembershipAdminState.invitations)
   );
   readonly roles = signal<any[]>([]);
-  readonly members = toSignal(this.store.select(MembershipState.members));
-  readonly memberCount = computed(() => this.members()?.length ?? 0);
   readonly inviteCount = computed(() => this.invites()?.length ?? 0);
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
   readonly remaining = computed(() =>
     this.capacity()
-      ? (this.capacity() ?? 0) - this.memberCount() - this.inviteCount()
+      ? (this.capacity() ?? 0) - this.members.length - this.inviteCount()
       : undefined
   );
   readonly roleFilters = signal<string[]>([]);
@@ -126,8 +126,12 @@ export class MembersComponent implements OnInit {
   }
 
   openInviteDialog() {
-    this.dialogService.openDialog(InvitesFormComponent, {
-      size: 'lg',
-    });
+    const dialog = this.dialogService.openDialog(
+      InvitesFormComponent,
+      {
+        size: 'lg',
+      },
+      this.members
+    );
   }
 }

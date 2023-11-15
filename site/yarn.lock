@@ -1788,289 +1788,305 @@
   dependencies:
     "@progress/pako-esm" "^1.0.1"
 
-"@progress/kendo-angular-buttons@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-buttons/-/kendo-angular-buttons-13.5.0.tgz"
-  integrity sha512-4eVCMELvMRg7TvY/vRMlD8I0Lq6YJoUuP0BdVCBs3WFyWd5ST1/tdmehmL3H1kOtotpRkYUfbOPz/JS9Tk4S5w==
+"@progress/kendo-angular-buttons@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-buttons/-/kendo-angular-buttons-14.1.0.tgz#2384ec3442d44aa0b3d454799bdd36960eed4d52"
+  integrity sha512-R7/WNz4eVmbEjgQklQDzkO7EHJSLYFMh0Dz+opnzFA1Wm8VmfC/gWFXpOp7YQMtxgfnE7b0aT1VvrKD0x2X3zQ==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.1"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-common@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-common/-/kendo-angular-common-13.5.0.tgz"
-  integrity sha512-IHT1y284rM3I72VJwJiXu2u+I4BXZ+Sw9k4yICrFUpviAKu2pd4D9C7oZm/mrPT1AZbjW+MMdMjGLhLdgxEsYA==
+"@progress/kendo-angular-charts@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-charts/-/kendo-angular-charts-14.1.0.tgz#ff541d40c3a1699db84c22d3e56377173945ec02"
+  integrity sha512-QJul41pFWTmUe6ogi4GNzfHe52ZJhoAH0kg+zgCu17TSEU+Gkja1Hzuch4BSKSYkMr8UDeQBUMx3IyWXWA/q4Q==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
+    "@progress/kendo-charts" "^1.32.0"
+    "@progress/kendo-svg-icons" "^2.0.0"
+    tslib "^2.3.1"
+
+"@progress/kendo-angular-common@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-common/-/kendo-angular-common-14.1.0.tgz#830d8cb3427de87b2778e18ef0cce8806ee7015f"
+  integrity sha512-QI31cEiIX8OrjTtp86ehxkQvsHVOKKH6YXr+pZLQcBt6imc+2ysyAR2uP2kc/sd0o+/g4kM18QWiQ84Dk6JUpg==
+  dependencies:
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.1"
     "@progress/kendo-draggable" "^3.0.2"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-conversational-ui@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-conversational-ui/-/kendo-angular-conversational-ui-13.5.0.tgz"
-  integrity sha512-4ZstI+aAAIqL7PLygJAgvzonwR2g4zz2mWhxOFD5pN/E8zvdl8exFo083cea4xCpNjNn4ZjnNqHJbDo2uCyBEw==
+"@progress/kendo-angular-conversational-ui@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-conversational-ui/-/kendo-angular-conversational-ui-14.1.0.tgz#767fc54d3ae3656e6df581f09a9f805b80a776f8"
+  integrity sha512-jfwJc+6vGV1Kl5nGLVA1+fWgxUSCA4pRVNPgX5Guops2pBKvwRvDv6QHkEBOS2iHCTjfxpJHkjij2zxBxhzHXA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-dateinputs@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-dateinputs/-/kendo-angular-dateinputs-13.5.0.tgz"
-  integrity sha512-5ZIabAZanruxzRkS15VzCS3OsP0M2hKkLAeqcC2fHkOGH7D4Ym+hCeyXcLN4QXQmc+yjxDjfXIeDyFxwJK8flw==
+"@progress/kendo-angular-dateinputs@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-dateinputs/-/kendo-angular-dateinputs-14.1.0.tgz#0ec109c4ca3a732bc8a5a19ea52d7257e0ac2822"
+  integrity sha512-96hhXBhNj/jY6McFrqzjbu7O9oX0t521AIXKJHE4n1UlExb8C2sKwYYxDt9/6+nyz4kLHad3mS+NV7so9heVcA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.0"
     "@progress/kendo-date-math" "^1.1.0"
+    "@progress/kendo-dateinputs-common" v0.3.0
     tslib "^2.3.1"
 
-"@progress/kendo-angular-dialog@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-dialog/-/kendo-angular-dialog-13.5.0.tgz"
-  integrity sha512-eI4/XzDFwVyy/7C/oa23MK9cjrgOrSjaG4U3bGAMHbDhQrviBsYUnKv5m6KhuVRr8452mGuDKHlH6y5BNo+t3A==
+"@progress/kendo-angular-dialog@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-dialog/-/kendo-angular-dialog-14.1.0.tgz#20dbe965ebc47540bcbe7581e19c19964c572103"
+  integrity sha512-JfWV6dJx9t1jziND0d3ccD6iSwyCrnIFUQK1R+lI/h11UFy+490n7XxA93GjXuPBNJ9Y10lqfPCw/rAYySaboA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-popup-common" "^1.7.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-dropdowns@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-dropdowns/-/kendo-angular-dropdowns-13.5.0.tgz"
-  integrity sha512-dX9bwYcX/wzMrcZpFYIofTTHx9vWLujs9Qw9JCwY/MfK3n4WQu6BjrQHMXGqYhLRXi+NhwwWzuWWaFizJVgKsg==
+"@progress/kendo-angular-dropdowns@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-dropdowns/-/kendo-angular-dropdowns-14.1.0.tgz#0a2fdb80a04af3769f6f0952879b350a9298c05e"
+  integrity sha512-rM13phyjyuSlmtkbICaTF6NX3nS5szLXhJkBL0aHoTa7yMtLuARKy1ZGqySYEtTL1Zye4AFWdYixNBTxUqw+Tw==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.1"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-editor@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-editor/-/kendo-angular-editor-13.5.0.tgz"
-  integrity sha512-XZpToAZ1BkCgQ16QZiAZZu1cl/Zq1HzNUh5qldSOu3Fu8YQ7LN8KzAVOkf7DAySWHy+75wDGD3dhu1o1g8yc9w==
+"@progress/kendo-angular-editor@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-editor/-/kendo-angular-editor-14.1.0.tgz#3a771f9d924bcd01784ad945d8b23282b7efe7a8"
+  integrity sha512-OHEJoL8Xc8IqyjkmmRJj/jK5Zvr8E1o2d17tNMdH5Yr08476hLraQ1NNMId/4rG2cZOcXNx7wMTGkI4hY9sUYA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
-    "@progress/kendo-editor-common" "1.10.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
+    "@progress/kendo-editor-common" "1.10.3"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-excel-export@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-excel-export/-/kendo-angular-excel-export-13.5.0.tgz"
-  integrity sha512-4LV4tXM4rSLSdaHM3bPRAFT+AnLC9eCpzpaz/SPbrlIRmTHCT2HL5n/28byRJTX/lXp0GCnm6z18A79a5n8Ayg==
+"@progress/kendo-angular-excel-export@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-excel-export/-/kendo-angular-excel-export-14.1.0.tgz#3c00b26488d8efd05e955cb6772ab10270e86f4f"
+  integrity sha512-AcmngNB2v1E4z0v9S1Ezd4ULJgDB4/TXuCGUI7ZR/KHQ60Y8rsxeL2lR7U9gCzHPMN2o7GwO55Gj7EGQcgudCg==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-file-saver" "^1.0.0"
     "@progress/kendo-intl" "^3.0.0"
     "@progress/kendo-ooxml" "^1.6.1"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-grid@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-grid/-/kendo-angular-grid-13.5.0.tgz"
-  integrity sha512-KLwDLMK4u+adBIoEsvvqLdyITLTFrd9SoW1g/K078HLogLE81oeGuq7Q+uYwikgIREZyBNiNSEm1V7eF9XXbIQ==
+"@progress/kendo-angular-grid@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-grid/-/kendo-angular-grid-14.1.0.tgz#e38f079d3d3364528f949ac766730ef9c61c2a71"
+  integrity sha512-8NpGY+esZh3hz5lc3hvYiXZo3dZ+vQWyqciFrCmVvclWTXzjLm+JxxoWwx/uM7vIt+aKEGzWlgsCj8u4dk+CkA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.0"
     "@progress/kendo-file-saver" "^1.0.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-icons@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-icons/-/kendo-angular-icons-13.5.0.tgz"
-  integrity sha512-QClBc/YDzEhSZkgmUOfG/1OG43xpIW7ASh2s7BuadLBExJ0A7KSS7CUd2lLoL5zZsihpR0yY3XF3ifxBxirFeQ==
+"@progress/kendo-angular-icons@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-icons/-/kendo-angular-icons-14.1.0.tgz#819bcb29eef0c0a690cfafebfaf2d848579e4e5a"
+  integrity sha512-U8nKnnJE22Z9ZTmJic54Fs6t/gM+L6dCBnbfR0xqZmymi2aiVi7kFd+ura4k/iojOsn7+tjhm0d6FEpUgSawFg==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-indicators@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-indicators/-/kendo-angular-indicators-13.5.0.tgz"
-  integrity sha512-gj3W+KkBdUE49nosEZUG0OGW+ADvHmTsidX7QvhH+SSNVubYyqThX1C0OnElW6F3Ux1YWCYgmJTT+szLXjwjsw==
+"@progress/kendo-angular-indicators@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-indicators/-/kendo-angular-indicators-14.1.0.tgz#2abec44f4062d472b009abb265633375364ddaac"
+  integrity sha512-ZMB1MkREvcDq+wKrVxaP5qnO4FsV0HyZ1JUzjeRvh5zyyePEFWl6/d6uYNtGDv/R+hpE/NErW190erTXBLpHtA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-inputs@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-inputs/-/kendo-angular-inputs-13.5.0.tgz"
-  integrity sha512-5nN6tSyN1JNDfRkk7ijdKF2U7w0K7h/wZ8WAj2RdCE8Gn/Up/gZvsGXmnN9cPa7P+9nYbxJB8MkEukV2JXk5Mg==
+"@progress/kendo-angular-inputs@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-inputs/-/kendo-angular-inputs-14.1.0.tgz#189eaa4e9744b84de917f12b30e35d10a1db526c"
+  integrity sha512-/HjqL+h+qqPPL4vhW+PJ1V8KFGYVgFYZ7HmsOYV6MAwVCx+IBTnD3+QDxbb+AZMx3THiZTXVPtJWOBtVEbg8jA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.2"
     "@progress/kendo-draggable" "^3.0.0"
     "@progress/kendo-inputs-common" "^3.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-intl@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-intl/-/kendo-angular-intl-13.5.0.tgz"
-  integrity sha512-ZqJuJ21VGFRQiI93e2IC0V56nPCV4NqyQJcX5U+mhWAFaxmhEXsjSYaWHuPgE1j2IkrBnrrPioWTtsz7TKkX3w==
+"@progress/kendo-angular-intl@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-intl/-/kendo-angular-intl-14.1.0.tgz#c2df12dc9b4564bc550c0d60134f5f2e607f9de0"
+  integrity sha512-VhW+Ughl3wENzTB5ou+G33WTCJvsp9DtQdiPAkYx9XjeX32zjTCJ+pqEa1omJaqlGZLzfQylt2fPdpCFVkzvWw==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-intl" "^3.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-l10n@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-l10n/-/kendo-angular-l10n-13.5.0.tgz"
-  integrity sha512-GF+/fNLDknVTnGeDwGU4GsgpfX0E5oLrV9Bh0TycTi/+Atc5r+rU+wILcqIU6uEQ4zlMBB7jEzgXQzfOv//7sg==
+"@progress/kendo-angular-l10n@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-l10n/-/kendo-angular-l10n-14.1.0.tgz#f22e81843dbd39867b50c822dd7a36e1331d03ca"
+  integrity sha512-K9raz8dOzS9f9KWamFTIPTgGcGDv6443snsn9hckctr0xp2YonVDgAnAbmbsqCO/X6VqgF8puBTdukVENfnnIw==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-label@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-label/-/kendo-angular-label-13.5.0.tgz"
-  integrity sha512-JaHsJC2pLzVFjsA6AZgjrJ//ueEbksCZbN89IdlfdW81Lh+UZqMuQgbHueyvLwFApCYz0Q7flY1qPayeem8s5w==
+"@progress/kendo-angular-label@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-label/-/kendo-angular-label-14.1.0.tgz#a4b5fade5444eadf132762cadbf6040994bf4ee7"
+  integrity sha512-Y499bG1pEFQvCO6/zWInwfzoXDj2vS8M/Buq+zQMlkzCVl4ZemISINDS4ukUcvROE/9IqSQRMX2SPYWGSWCW2w==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-layout@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-layout/-/kendo-angular-layout-13.5.0.tgz"
-  integrity sha512-K6xmG19ASnsgj0tcteWacs2ztO9bpmqOtaWuEuZzhfamVPXPuiQtRuyuwZrwdmgdzvZcXLBp13UWwdhOfDohTg==
+"@progress/kendo-angular-layout@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-layout/-/kendo-angular-layout-14.1.0.tgz#e94373365ceb54bbddfa98ee16ffefb7a9547ecc"
+  integrity sha512-0AS3RSmSoXt6X4aOUM9QyqsCJJye9RPRHC7TNJvqrD/zjCm7YxZaNhWSAor4BGUUulRZL7/K38UC3XpHLaR8IQ==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-draggable" "^3.0.2"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-listview@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-listview/-/kendo-angular-listview-13.5.0.tgz"
-  integrity sha512-3uV0l3YN3f0gadV1bW0JVdwM5aHLD47hblcVqll/uDfDLroTPk3ObC41/zWeVbuIq8rxEGKDzmDxYGuf6BqibQ==
+"@progress/kendo-angular-listview@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-listview/-/kendo-angular-listview-14.1.0.tgz#4b1095daca658ec26ac72981eb9988b4276eb634"
+  integrity sha512-z3iOknmCeqvPJpd7PvutdEW3S983RoGaTWBpEutOTLD5VAS7kNo8cIHbqBFhd7Tug4scIA5IUTslCqNNT2DiYA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-menu@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-menu/-/kendo-angular-menu-13.5.0.tgz"
-  integrity sha512-nRIHvuH2HcTe2BP7L5Y72nRykneftm1NxcsX+M+vxlUsyoJx3X3Z8WGRwd2zA5/Gp+bnEUnqkArsNchU7WsZxg==
+"@progress/kendo-angular-menu@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-menu/-/kendo-angular-menu-14.1.0.tgz#db9ddbe1b96019b6a5c397d63372e49efe81f26f"
+  integrity sha512-pLxk1w0myd4lb+rDNMJ2QoL8m97CbSiv+u6C1rc9GSvHvE5sjsbvDqPqzWFSUQRQAS9RiQ+Nfm6LnepiBTDwhg==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-navigation@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-navigation/-/kendo-angular-navigation-13.5.0.tgz"
-  integrity sha512-qavfDTZh2t1Rs+eMkS2bUjM97uVz3+1D4ETMNn46wfHJpca6KBuP/X2sXOp0An6WER3C91AuOsaA/wUCEH1Ymg==
+"@progress/kendo-angular-navigation@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-navigation/-/kendo-angular-navigation-14.1.0.tgz#1e26e89aa8f4dd0d930fa19d4ad91dc39eb4ab09"
+  integrity sha512-tnoVMFKDEnDhXiNUUzSWNEMHIGzkpx8gg/KaFQGD3qdi8SAN0hIDXnMj9gxtJZuWeClQ6hy1F/lNr3s7T+Oxmw==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-pager@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-pager/-/kendo-angular-pager-13.5.0.tgz"
-  integrity sha512-E1C0q3cBKE+nmiklwOlXr7aR78J6+RQaUPg77tlEGzl01aI9Arm7C7M1w64P3VTH9xWr3TeLa6O1nnlSojDcNw==
+"@progress/kendo-angular-pager@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-pager/-/kendo-angular-pager-14.1.0.tgz#239499e6646b3f3bf7e167ce0f432aca830a321a"
+  integrity sha512-0OWCPoVyYimF3WhS7vNVAseOuWn2wAEF2dI4Aws1J5uapgtqNB5Qs/a300LE9oS2A09D00eKnZNgMR+FGA3Law==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-pdf-export@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-pdf-export/-/kendo-angular-pdf-export-13.5.0.tgz"
-  integrity sha512-J7tCDe16NqGjUWBSdUmjEH4Oqu7YPjo9nU2RC2umMbJEM4VkfYSzHjMaPLLCRL9mgihTE8BXrJGD5LWquHfqOQ==
+"@progress/kendo-angular-pdf-export@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-pdf-export/-/kendo-angular-pdf-export-14.1.0.tgz#e7879ee03ba6940650fec4e81da6f8c4c67915ac"
+  integrity sha512-SVPQaKYNwgRxf+VkUcR/wc6zmEaidzTj2RP+FmHYglrCjLk79B1j0PrjryH8gNjLslXPigxsDetPiZKUKgEgUg==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-file-saver" "^1.0.1"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-pdfviewer@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-pdfviewer/-/kendo-angular-pdfviewer-13.5.0.tgz"
-  integrity sha512-kpBovlPUHwxQLsTQ6q+X7ZFgB3l/+/fTr8XuRzqczKXqa16/3Fqr497pQ1VyzYP8lbqEfkgDBTQ3M9eq91VpLg==
+"@progress/kendo-angular-pdfviewer@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-pdfviewer/-/kendo-angular-pdfviewer-14.1.0.tgz#6707411a4012be3a135134bb327afc345395bb40"
+  integrity sha512-c2nn6pADwSiQQ8ldj0Baso/adOWEmW+YpUp5hG9YETYshb0AbUx9o7cv8bb7Yp2zLCVDHAuYb6AB+0j9u3X6lw==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
-    "@progress/kendo-pdfviewer-common" "0.2.2"
+    "@progress/kendo-angular-schematics" "14.1.0"
+    "@progress/kendo-pdfviewer-common" "0.2.4"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-popup@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-popup/-/kendo-angular-popup-13.5.0.tgz"
-  integrity sha512-5cIXYMebdeUXbLUM9yXHymycNynQ5XFK6CO7GwwWYcVkHnnFr5SXeYuHsND5dWEp8Q//nbC96kl0tAIL6+NhPQ==
+"@progress/kendo-angular-popup@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-popup/-/kendo-angular-popup-14.1.0.tgz#b0b0c4683b2b6f993d8fcdd06bd7d2a3af84dd4c"
+  integrity sha512-xfG+GFIzzCwoKFarVfClecnKtQMo7a6YYvclOBenz0d8eh0msBY2vPPktsmtHLh95d57FNGT0RqHsRm1C7wdSA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-popup-common" "^1.7.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-progressbar@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-progressbar/-/kendo-angular-progressbar-13.5.0.tgz"
-  integrity sha512-O9PdR8c8niJnS5lSZbEiVYg1pSrSrxaSGZrTYFfQbTRQHFPeWxYkL1wDBZNK807ip4PILS/6OpkibV9YN1CiFw==
+"@progress/kendo-angular-progressbar@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-progressbar/-/kendo-angular-progressbar-14.1.0.tgz#28c9753ba152e61bec7a52dedb96c7eb2b016164"
+  integrity sha512-oGbfhcknAY6e3vJlPL3tI1HsGPJG1tISJ6oc4LBpvSptO82sTYUvSoFzwlal6jcj4NKuvPuhq7eZkvym1801/A==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-schematics@13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-schematics/-/kendo-angular-schematics-13.5.0.tgz"
-  integrity sha512-o/NGwijhaBDkEqD2gZQmjT4vkiZnI8DGi5UZDdq3gJTyHvKrziHzxpJI6HOHFnqOCAcMxHBUPG/dKSU505RtMQ==
+"@progress/kendo-angular-schematics@14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-schematics/-/kendo-angular-schematics-14.1.0.tgz#3c1e39a71bbf284b255e8bf9612b39c27be66b03"
+  integrity sha512-oHNyK3FBgm9jKwcv7dvRm1TIZAtAJJkoLr2IqLB+pHpGVkepRey2EY4+XFuPNl1iolPQup9ny1pD/1lHriozMA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@types/semver" "^7.5.0"
     semver "^7.5.3"
 
-"@progress/kendo-angular-sortable@13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-sortable/-/kendo-angular-sortable-13.5.0.tgz"
-  integrity sha512-MeCzHdSci2qAFRMGzGdMqazV8zN39a8Z/XLGyuqWMXYsQ5MPeFjfIhNkjhI/S0xSq/AIYSYprxxdQ8viYi2LwQ==
+"@progress/kendo-angular-sortable@14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-sortable/-/kendo-angular-sortable-14.1.0.tgz#f3b97f454f25f999ccee246b343a5b1b2525fc53"
+  integrity sha512-ObBppruDUjdC7wNO5mwCsFyxeozDNuoRHGm+wsbt8o60fEASwzEDUVG3FuY4rCq47+Be3/am0fBEJeTKfCmodg==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-draggable" "^3.0.2"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-toolbar@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-toolbar/-/kendo-angular-toolbar-13.5.0.tgz"
-  integrity sha512-CUHXJARHeXps6L+S1doElnIZMinFW7eBAVFEjyxlkPTPfHkpxIdFrGW/8KqUB1FPy8Rut70gn/h5AqgXE7P3kQ==
+"@progress/kendo-angular-toolbar@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-toolbar/-/kendo-angular-toolbar-14.1.0.tgz#45593ca614df55c6dc649b319b55f3f07dec45e2"
+  integrity sha512-S/rlRtVP63a6kNA41oNco+6CZMLCgglOb5Dukm2zYv+v4W1wolXpzmCXMOM3hP1E+w/s53PZmJ3H59TI2QDJ4Q==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-tooltip@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-tooltip/-/kendo-angular-tooltip-13.5.0.tgz"
-  integrity sha512-2EdAfWVvuiGAkLkMwNp6DUZ02hvyTpDPEicvUQshjdYKsct6SHtk15M1+LhqvX7xai8x2Y2CrshjcISfJwt7Vw==
+"@progress/kendo-angular-tooltip@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-tooltip/-/kendo-angular-tooltip-14.1.0.tgz#e16773f176a4e72cfec6aebd1ccb7de8aa149053"
+  integrity sha512-k5R6W5rlzir9M8+REPm5qQOnyvBMMs2XhiaPbwOXtPtcapWYvBSfLn0H4srxVABNwQ7Lvm/MrIAybkK3MKAUdQ==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-treelist@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-treelist/-/kendo-angular-treelist-13.5.0.tgz"
-  integrity sha512-D5K4xCwa6Ubi8pL7l/nizU2ELhj2zH8BTW257qjLZFMBmPnpwKCpzXpZwD2HXCK067ktP6r+g+ErSe/gxjfaWA==
+"@progress/kendo-angular-treelist@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-treelist/-/kendo-angular-treelist-14.1.0.tgz#3d0c02f7105bd6d0eeaf69bed31e96d81997598d"
+  integrity sha512-0CL4K49h+2l/U4lxfIR77WcNXdBq2Pr474yHlLcEFW3ePFh2UHQVoNFglQHliKfwbCvJR5wXEqEU68JqT02N1w==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.0"
     "@progress/kendo-file-saver" "^1.0.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-treeview@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-treeview/-/kendo-angular-treeview-13.5.0.tgz"
-  integrity sha512-UeXKHAVEcSHfnIkL5bjBrTrSWY9i1Flf9KVcFAYAexh+tL6aCcFccMFM/nPBqXzPcWNHkIkazqrZoFq9e4teuQ==
+"@progress/kendo-angular-treeview@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-treeview/-/kendo-angular-treeview-14.1.0.tgz#cb35c33c135764bada7d808db104e5ab542a2ffb"
+  integrity sha512-E3PI7+HwExs44IFf0U0PYzgQts/lSJBW6KLhrQAPUNCqa0p8ylWdQu7W0GqKJDOcfXYvwbzVRvTUAWvEM751xA==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-common" "^0.2.0"
     "@progress/kendo-draggable" "^3.0.2"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-upload@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-upload/-/kendo-angular-upload-13.5.0.tgz"
-  integrity sha512-t099J4EJar6giWFg1w1+edWodO+zW+TSIzqlFl+w71ONm63TO0UfpgBcmLf3YnCgjoTDTVHtLT+yn55k6MtC7g==
+"@progress/kendo-angular-upload@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-upload/-/kendo-angular-upload-14.1.0.tgz#daa4c8f5a12895fc8dde5ea8778b3251f246557c"
+  integrity sha512-52MwYDxkcddfvwrbZbe26GydYrH+kULBsmlg7DthUKlXi1UGUwbT9UNl4Rrvs7pmkt19SeHwoAkwBxcY7fcN8g==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     tslib "^2.3.1"
 
-"@progress/kendo-angular-utils@^13.5.0":
-  version "13.5.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-angular-utils/-/kendo-angular-utils-13.5.0.tgz"
-  integrity sha512-1E/e+UEwW+KmpE/30ZbBBVMpMHyNAP+2lCgZB2LIuMdYUhEFM3nMVh/Xet7e6EivE+Tos0uoJZTPLWrZbhZtFQ==
+"@progress/kendo-angular-utils@^14.1.0":
+  version "14.1.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-angular-utils/-/kendo-angular-utils-14.1.0.tgz#5c772b2aa99dd2585d8b05a637ee0b62b9e0bbc0"
+  integrity sha512-Wu67nPBjwbzGcd7wFSvxF91lEkb0p3CEY4SVbzcS6Z96gF55y3mrPqG77rnKbC6/tfdAQNoUqA1lNk/R1lguyQ==
   dependencies:
-    "@progress/kendo-angular-schematics" "13.5.0"
+    "@progress/kendo-angular-schematics" "14.1.0"
     "@progress/kendo-draggable-common" "^0.2.3"
     tslib "^2.3.1"
+
+"@progress/kendo-charts@^1.32.0":
+  version "1.32.1"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-charts/-/kendo-charts-1.32.1.tgz#5256ab1230029c7be25c4b7863d3267a72cd77a7"
+  integrity sha512-7G08KNnJ7SVzG0t0aOI4UygzpPAzz5FhlSee/0EMUikCc5c/k5e3AKE2JbmJYr3jkKFChnZpy+q0nIT4F3s4Fg==
 
 "@progress/kendo-common@^0.2.0", "@progress/kendo-common@^0.2.1", "@progress/kendo-common@^0.2.2":
   version "0.2.2"
@@ -2081,7 +2097,7 @@
 
 "@progress/kendo-data-query@^1.7.0":
   version "1.7.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-data-query/-/kendo-data-query-1.7.0.tgz"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-data-query/-/kendo-data-query-1.7.0.tgz#d2d6ae61232415ae1c893bba25af5f48bb86f509"
   integrity sha512-mB+2WZFAZghxRwBhgWiJIysx7qcFkilnbcZWq0AfQ3KXfC3N5IY/EuKJNijhYrTdauYA1eL1GMe2FHsOWAlRHA==
   dependencies:
     tslib "^1.7.0"
@@ -2092,6 +2108,21 @@
   integrity sha512-epKemkZ5iPoYQ7lhBh5DDqMjzmiT3ZksofzNr13xEhyOJM7q+850sBMkRwyrEePl0hjQpNdnmeaRk+XvgLVMyg==
   dependencies:
     tslib "^1.7.0"
+
+"@progress/kendo-date-math@^1.5.9":
+  version "1.5.12"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-date-math/-/kendo-date-math-1.5.12.tgz#fa4876e02c64f865e86355e0aa3fa75b3e79f233"
+  integrity sha512-cELK9aNVUu20a71FLnYd7JhBhCXk8NsFd9tu6n/LZJvOYzCYQ6J4XIVDc2RwLvbrD7MlBw4YARX1IIsESg7thg==
+  dependencies:
+    tslib "^1.7.0"
+
+"@progress/kendo-dateinputs-common@v0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-dateinputs-common/-/kendo-dateinputs-common-0.3.0.tgz#8faeeb566a12bef6fa0be996e39b2f9305759992"
+  integrity sha512-wunP6VCm8C+3mUGVMPjVcOQqxRupwTKQIqwK7lgwBZRJAdmrUY0+WziJ8Ap6AyJlwvHbYDQYQsOdJL9TVMaNWQ==
+  dependencies:
+    "@progress/kendo-date-math" "^1.5.9"
+    tslib "^2.4.1"
 
 "@progress/kendo-draggable-common@^0.2.3":
   version "0.2.3"
@@ -2105,17 +2136,17 @@
   resolved "https://registry.npmjs.org/@progress/kendo-draggable/-/kendo-draggable-3.0.2.tgz"
   integrity sha512-B5bR1bEtLZ4i0eCtbT1umem3w9dC82QZ8wJ9/MMjcS0/luBiARnIacRM69b0PYN+uESztBuzKrrTpW70FCT47A==
 
-"@progress/kendo-drawing@^1.17.6":
-  version "1.17.6"
-  resolved "https://registry.npmjs.org/@progress/kendo-drawing/-/kendo-drawing-1.17.6.tgz"
-  integrity sha512-zdV15Egm3XywkWZ0kS0k3HsoSKeuEN0x9JhS5+r+rfAIwzti5RWrieg+swDxMeErr5e6BgCBO4gW3pS+3ZvvsA==
+"@progress/kendo-drawing@^1.18.1":
+  version "1.18.1"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-drawing/-/kendo-drawing-1.18.1.tgz#4d036b869743b92ff3b6b61093ad02adc4750a6a"
+  integrity sha512-8670UsH59XJ8/UrZ8hLjBvl5IuHpjywM+zqfY+o49kO5Jc5FKa5atGFV0QhvJP+q8X4rsCdw1s3PHXEyuduStg==
   dependencies:
     "@progress/pako-esm" "^1.0.1"
 
-"@progress/kendo-editor-common@1.10.0":
-  version "1.10.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-editor-common/-/kendo-editor-common-1.10.0.tgz"
-  integrity sha512-9HCi1RWRVQmP4WpUhDA+z+Tvj4LYo+l9Tc6QcYRJU+zGYe+2u98ah5nIeer3dHyNFU17kUjrSlH/mstmquiCpw==
+"@progress/kendo-editor-common@1.10.3":
+  version "1.10.3"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-editor-common/-/kendo-editor-common-1.10.3.tgz#f5fa6fc2a648f18c894e9adf5df374d60c523796"
+  integrity sha512-/KR2g/HeJHNnRUxvcZ8ZoNJ9Gn+MUsGDBvvNFbaEbgVUaNvvtX0Fcj9u8enomqzCvq6fBvQ8gvnXckYWRa5ABA==
   dependencies:
     prosemirror-commands "1.5.2"
     prosemirror-dropcursor "1.8.1"
@@ -2127,8 +2158,8 @@
     prosemirror-schema-list "1.3.0"
     prosemirror-state "1.4.3"
     prosemirror-tables "1.3.4"
-    prosemirror-transform "1.7.3"
-    prosemirror-view "1.31.5"
+    prosemirror-transform "1.7.5"
+    prosemirror-view "1.31.8"
     tslib "^2.4.0"
 
 "@progress/kendo-file-saver@^1.0.0", "@progress/kendo-file-saver@^1.0.1", "@progress/kendo-file-saver@^1.1.1":
@@ -2148,12 +2179,12 @@
   resolved "https://registry.npmjs.org/@progress/kendo-intl/-/kendo-intl-3.1.1.tgz"
   integrity sha512-Dv+j4rQTSODq3EMTlzvWMBsDmnbupAgMUFmVG6wbgg29xtvQTYDoKej4m3POazh7BitdlascbP+2bqs/9Xcm3g==
 
-"@progress/kendo-licensing@^1.3.2":
-  version "1.3.2"
-  resolved "https://registry.npmjs.org/@progress/kendo-licensing/-/kendo-licensing-1.3.2.tgz"
-  integrity sha512-G+PiBzEtw4MLvLm2Gg5qcGMmTIWhZvKpMBH6FeIoAgFQ9mshN1r6PJpF/qZzvTVkjTW0Y8WrcE9d+mScFhagdA==
+"@progress/kendo-licensing@^1.3.3":
+  version "1.3.3"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-licensing/-/kendo-licensing-1.3.3.tgz#b1cafae1cd82bf0d29cc6c3fade83d7db0a24711"
+  integrity sha512-BcIT0Sg2s0dr6biTTXKFQzb1RYASncW+rbR0hyPokVky33jtii96tq1kjyvZ4XJPEhxhCUiBqoL5ZC+TnPnyTA==
   dependencies:
-    jsonwebtoken "^9.0.0"
+    jsonwebtoken "^9.0.2"
 
 "@progress/kendo-ooxml@^1.6.1":
   version "1.7.0"
@@ -2163,12 +2194,13 @@
     "@progress/jszip-esm" "^1.0.3"
     "@progress/pako-esm" "^1.0.1"
 
-"@progress/kendo-pdfviewer-common@0.2.2":
-  version "0.2.2"
-  resolved "https://registry.npmjs.org/@progress/kendo-pdfviewer-common/-/kendo-pdfviewer-common-0.2.2.tgz"
-  integrity sha512-ogHoaQqPvQbT1FIavDa/zOU7+KXTn6StE16GaFg4dq4Hx8QRaEuPwJ30QvRdWoAUlep0ogQcY3J7OnYB5zuMZA==
+"@progress/kendo-pdfviewer-common@0.2.4":
+  version "0.2.4"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-pdfviewer-common/-/kendo-pdfviewer-common-0.2.4.tgz#a8e6a9fac6a7f1d42fd20d15d7385ee8be37f70c"
+  integrity sha512-p9inR52sLnw4O88CeaUJRaRJS3fI3Oc4Zzy4UVbznXzGQawxsLft+RJjyg/metoYZxu04GkEgYECPf876uTLCQ==
   dependencies:
-    pdfjs-dist "3.7.107"
+    "@progress/kendo-common" "^0.2.2"
+    pdfjs-dist "3.11.174"
     tslib "^2.4.1"
 
 "@progress/kendo-popup-common@^1.7.0":
@@ -2181,37 +2213,37 @@
   resolved "https://registry.npmjs.org/@progress/kendo-svg-icons/-/kendo-svg-icons-2.0.0.tgz"
   integrity sha512-0eXDk+lgjg6r2TIUBp383sqKQbQZido0S/KnrF3ZEqxJ+rO10K6WSphFINmk0BKqneAaA94RVwPsMb5yOY/PbA==
 
-"@progress/kendo-theme-bootstrap@^7.0.0":
-  version "7.0.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-7.0.0.tgz"
-  integrity sha512-UBKtu8PiAfbrbSFcedBNDd7KWU8nh3yQlGenseBePtPda3TWFf+sRZWQ3p6luHqjLZ+c5n1hMTQOXubLoO5rGg==
+"@progress/kendo-theme-bootstrap@^7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-bootstrap/-/kendo-theme-bootstrap-7.0.2.tgz#8ae3c352ef2c890d8d572507e7246211fccbf14f"
+  integrity sha512-xVXa7XVf5NnZkaUgXtDJGLcoKSRxOEydIuGKgDFgUEiPol3N+1NUtdKVJh6ykLClozRARmJSed5n7C559mW97Q==
   dependencies:
     "@progress/kendo-svg-icons" "2.0.0"
-    "@progress/kendo-theme-core" "7.0.0"
-    "@progress/kendo-theme-default" "7.0.0"
-    "@progress/kendo-theme-utils" "7.0.0"
+    "@progress/kendo-theme-core" "7.0.2"
+    "@progress/kendo-theme-default" "7.0.2"
+    "@progress/kendo-theme-utils" "7.0.2"
     bootstrap "5.2.1"
 
-"@progress/kendo-theme-core@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-theme-core/-/kendo-theme-core-7.0.0.tgz"
-  integrity sha512-IWmwagOhTwe9IsiK+CC/B1w6ygpFFFuZ6aGINk3WnSL+udR3OECYf1bZeVXwxilkVbPXIwrE6uMmk8+GbY10Mw==
+"@progress/kendo-theme-core@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-core/-/kendo-theme-core-7.0.2.tgz#fd6f88305e8ce0bc5d1fbc411f4bb063d86574e5"
+  integrity sha512-poq6dZ/SkKSpfR0agzuWWlX/JXMK9LhBUx0dNWA7NzkEnfvjkmX7rDgPPmy6ZfLFTuMjf1ehKhykxLlATu7c1g==
 
-"@progress/kendo-theme-default@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-theme-default/-/kendo-theme-default-7.0.0.tgz"
-  integrity sha512-j6cY96L6HyOOC1WyGJRTKBCi9i77Uwe3AYDsysxe0J+AW46hwydFmbcvbrMGbMZLCzsaUU9DVAGdIo0vc4e2zg==
+"@progress/kendo-theme-default@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-default/-/kendo-theme-default-7.0.2.tgz#7f0fca213156a3b91c1949dbba4d1338a6a9bf1f"
+  integrity sha512-t6c9nkEPh0Nafq3XnsxKN4zWv1xSOTfVGoatwKcnSOyWY3iqoLZdiRHITnkzzC/2QLm2ZD4hftEPrq9vfrbV0Q==
   dependencies:
     "@progress/kendo-svg-icons" "2.0.0"
-    "@progress/kendo-theme-core" "7.0.0"
-    "@progress/kendo-theme-utils" "7.0.0"
+    "@progress/kendo-theme-core" "7.0.2"
+    "@progress/kendo-theme-utils" "7.0.2"
 
-"@progress/kendo-theme-utils@7.0.0":
-  version "7.0.0"
-  resolved "https://registry.npmjs.org/@progress/kendo-theme-utils/-/kendo-theme-utils-7.0.0.tgz"
-  integrity sha512-Ad/JefH83ogYIeRq9htDhPKcNzzRAqnFPcEbuwRcstmdNtunKm/pMnrNTePJAiccZq7j7or7axQChnZGi+graw==
+"@progress/kendo-theme-utils@7.0.2":
+  version "7.0.2"
+  resolved "https://registry.yarnpkg.com/@progress/kendo-theme-utils/-/kendo-theme-utils-7.0.2.tgz#94daef222ce1f3cf42d64de31ed3f197438c147f"
+  integrity sha512-jSO8jRMsa5orlDUypB8V0cXn+5i1kVUTKwVCIO53hYkkgsmELnJlJcKo+ToVpKSUH5IX+c5j0XfkTtoJiCAA7w==
   dependencies:
-    "@progress/kendo-theme-core" "7.0.0"
+    "@progress/kendo-theme-core" "7.0.2"
 
 "@progress/pako-esm@^1.0.1":
   version "1.0.1"
@@ -5347,6 +5379,11 @@ gzip-size@^6.0.0:
   dependencies:
     duplexer "^0.1.2"
 
+hammerjs@^2.0.8:
+  version "2.0.8"
+  resolved "https://registry.yarnpkg.com/hammerjs/-/hammerjs-2.0.8.tgz#04ef77862cff2bb79d30f7692095930222bf60f1"
+  integrity sha512-tSQXBXS/MWQOn/RKckawJ61vvsDpCom87JgxiYdGwHdOa0ht0vzUWDlfioofFCRU0L+6NGDt6XzbgoJvZkMeRQ==
+
 handle-thing@^2.0.0:
   version "2.0.1"
   resolved "https://registry.npmjs.org/handle-thing/-/handle-thing-2.0.1.tgz"
@@ -6166,15 +6203,21 @@ jsonparse@^1.3.1:
   resolved "https://registry.npmjs.org/jsonparse/-/jsonparse-1.3.1.tgz"
   integrity sha512-POQXvpdL69+CluYsillJ7SUhKvytYjW9vG/GKpnf+xP8UWgYEM/RaMzHHofbALDiKbbP1W8UEYmgGl39WkPZsg==
 
-jsonwebtoken@^9.0.0:
-  version "9.0.0"
-  resolved "https://registry.npmjs.org/jsonwebtoken/-/jsonwebtoken-9.0.0.tgz"
-  integrity sha512-tuGfYXxkQGDPnLJ7SibiQgVgeDgfbPq2k2ICcbgqW8WxWLBAxKQM/ZCu/IT8SOSwmaYl4dpTFCW5xZv7YbbWUw==
+jsonwebtoken@^9.0.2:
+  version "9.0.2"
+  resolved "https://registry.yarnpkg.com/jsonwebtoken/-/jsonwebtoken-9.0.2.tgz#65ff91f4abef1784697d40952bb1998c504caaf3"
+  integrity sha512-PRp66vJ865SSqOlgqS8hujT5U4AOgMfhrwYIuIhfKaoSCZcirrmASQr8CX7cUg+RMih+hgznrjp99o+W4pJLHQ==
   dependencies:
     jws "^3.2.2"
-    lodash "^4.17.21"
+    lodash.includes "^4.3.0"
+    lodash.isboolean "^3.0.3"
+    lodash.isinteger "^4.0.4"
+    lodash.isnumber "^3.0.3"
+    lodash.isplainobject "^4.0.6"
+    lodash.isstring "^4.0.1"
+    lodash.once "^4.0.0"
     ms "^2.1.1"
-    semver "^7.3.8"
+    semver "^7.5.4"
 
 jspath@^0.4.0:
   version "0.4.0"
@@ -6461,10 +6504,45 @@ lodash.debounce@^4.0.8:
   resolved "https://registry.npmjs.org/lodash.debounce/-/lodash.debounce-4.0.8.tgz"
   integrity sha512-FT1yDzDYEoYWhnSGnpE/4Kj1fLZkDFyqRb7fNt6FdYOSxlUWAtp42Eh6Wb0rGIv/m9Bgo7x4GhQbm5Ys4SG5ow==
 
+lodash.includes@^4.3.0:
+  version "4.3.0"
+  resolved "https://registry.yarnpkg.com/lodash.includes/-/lodash.includes-4.3.0.tgz#60bb98a87cb923c68ca1e51325483314849f553f"
+  integrity sha512-W3Bx6mdkRTGtlJISOvVD/lbqjTlPPUDTMnlXZFnVwi9NKJ6tiAk6LVdlhZMm17VZisqhKcgzpO5Wz91PCt5b0w==
+
+lodash.isboolean@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/lodash.isboolean/-/lodash.isboolean-3.0.3.tgz#6c2e171db2a257cd96802fd43b01b20d5f5870f6"
+  integrity sha512-Bz5mupy2SVbPHURB98VAcw+aHh4vRV5IPNhILUCsOzRmsTmSQ17jIuqopAentWoehktxGd9e/hbIXq980/1QJg==
+
 lodash.isfinite@^3.3.2:
   version "3.3.2"
   resolved "https://registry.npmjs.org/lodash.isfinite/-/lodash.isfinite-3.3.2.tgz"
   integrity sha512-7FGG40uhC8Mm633uKW1r58aElFlBlxCrg9JfSi3P6aYiWmfiWF0PgMd86ZUsxE5GwWPdHoS2+48bwTh2VPkIQA==
+
+lodash.isinteger@^4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/lodash.isinteger/-/lodash.isinteger-4.0.4.tgz#619c0af3d03f8b04c31f5882840b77b11cd68343"
+  integrity sha512-DBwtEWN2caHQ9/imiNeEA5ys1JoRtRfY3d7V9wkqtbycnAmTvRRmbHKDV4a0EYc678/dia0jrte4tjYwVBaZUA==
+
+lodash.isnumber@^3.0.3:
+  version "3.0.3"
+  resolved "https://registry.yarnpkg.com/lodash.isnumber/-/lodash.isnumber-3.0.3.tgz#3ce76810c5928d03352301ac287317f11c0b1ffc"
+  integrity sha512-QYqzpfwO3/CWf3XP+Z+tkQsfaLL/EnUlXWVkIk5FUPc4sBdTehEqZONuyRt2P67PXAk+NXmTBcc97zw9t1FQrw==
+
+lodash.isplainobject@^4.0.6:
+  version "4.0.6"
+  resolved "https://registry.yarnpkg.com/lodash.isplainobject/-/lodash.isplainobject-4.0.6.tgz#7c526a52d89b45c45cc690b88163be0497f550cb"
+  integrity sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==
+
+lodash.isstring@^4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/lodash.isstring/-/lodash.isstring-4.0.1.tgz#d527dfb5456eca7cc9bb95d5daeaf88ba54a5451"
+  integrity sha512-0wJxfxH1wgO3GrbuP+dTTk7op+6L41QCXbGINEmD+ny/G/eCqGzxyCsh7159S+mgDDcoarnBw6PC1PS5+wUGgw==
+
+lodash.once@^4.0.0:
+  version "4.1.1"
+  resolved "https://registry.yarnpkg.com/lodash.once/-/lodash.once-4.1.1.tgz#0dd3971213c7c56df880977d504c88fb471a97ac"
+  integrity sha512-Sb487aTOCr9drQVL8pIxOzVhafOjZN9UU54hiN8PU3uAiSV7lx1yYNpbNmex2PK6dSJoNTSJUUswT651yww3Mg==
 
 lodash@^4.17.10, lodash@^4.17.14, lodash@^4.17.20, lodash@^4.17.21:
   version "4.17.21"
@@ -7560,10 +7638,10 @@ path2d-polyfill@^2.0.1:
   resolved "https://registry.npmjs.org/path2d-polyfill/-/path2d-polyfill-2.0.1.tgz"
   integrity sha512-ad/3bsalbbWhmBo0D6FZ4RNMwsLsPpL6gnvhuSaU5Vm7b06Kr5ubSltQQ0T7YKsiJQO+g22zJ4dJKNTXIyOXtA==
 
-pdfjs-dist@3.7.107:
-  version "3.7.107"
-  resolved "https://registry.npmjs.org/pdfjs-dist/-/pdfjs-dist-3.7.107.tgz"
-  integrity sha512-D0pZgz4u8VNjCCXfNCjzeFcenxKFGh2RnGlLIvDHgpT+ZvOlsBlHugpOfmcLQyKk7csHBhPalf+mCM6thiclSQ==
+pdfjs-dist@3.11.174:
+  version "3.11.174"
+  resolved "https://registry.yarnpkg.com/pdfjs-dist/-/pdfjs-dist-3.11.174.tgz#5ff47b80f2d58c8dd0d74f615e7c6a7e7e704c4b"
+  integrity sha512-TdTZPf1trZ8/UFu5Cx/GXB7GZM30LT+wWUNfsi6Bq8ePLnb+woNKtDymI2mxZYBpMbonNFqKmiz684DIfnd8dA==
   optionalDependencies:
     canvas "^2.11.2"
     path2d-polyfill "^2.0.1"
@@ -7849,14 +7927,30 @@ prosemirror-tables@1.3.4:
     prosemirror-transform "^1.2.1"
     prosemirror-view "^1.13.3"
 
-prosemirror-transform@1.7.3, prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transform@^1.2.1, prosemirror-transform@^1.7.3:
+prosemirror-transform@1.7.5:
+  version "1.7.5"
+  resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.7.5.tgz#c62aac8645bd4f8cf447d6d53dda80abe8489f03"
+  integrity sha512-U/fWB6frEzY7dzwJUo+ir8dU1JEanaI/RwL12Imy9js/527N0v/IRUKewocP1kTq998JNT18IGtThaDLwLOBxQ==
+  dependencies:
+    prosemirror-model "^1.0.0"
+
+prosemirror-transform@^1.0.0, prosemirror-transform@^1.1.0, prosemirror-transform@^1.2.1, prosemirror-transform@^1.7.3:
   version "1.7.3"
   resolved "https://registry.npmjs.org/prosemirror-transform/-/prosemirror-transform-1.7.3.tgz"
   integrity sha512-qDapyx5lqYfxVeUWEw0xTGgeP2S8346QtE7DxkalsXlX89lpzkY6GZfulgfHyk1n4tf74sZ7CcXgcaCcGjsUtA==
   dependencies:
     prosemirror-model "^1.0.0"
 
-prosemirror-view@1.31.5, prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.13.3, prosemirror-view@^1.27.0, prosemirror-view@^1.31.0:
+prosemirror-view@1.31.8:
+  version "1.31.8"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.31.8.tgz#01c566a1c26c5a082ca4c04c017b832e1ea45b1f"
+  integrity sha512-VQrEIdiPJ4YV65Ifj2kWISwaiqocMHy7cpUKVQYt19C/87FepoqnwVW3kMKRpeY/nQzED8L+vyOaYDBn0WqT7w==
+  dependencies:
+    prosemirror-model "^1.16.0"
+    prosemirror-state "^1.0.0"
+    prosemirror-transform "^1.1.0"
+
+prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.13.3, prosemirror-view@^1.27.0, prosemirror-view@^1.31.0:
   version "1.31.5"
   resolved "https://registry.npmjs.org/prosemirror-view/-/prosemirror-view-1.31.5.tgz"
   integrity sha512-tobRCDeCp61elR1d97XE/JTL9FDIfswZpWeNs7GKJjAJvWyMGHWYFCq29850p6bbG2bckP+i9n1vT56RifosbA==
@@ -8424,7 +8518,7 @@ semver-greatest-satisfied-range@^1.1.0:
   resolved "https://registry.npmjs.org/semver/-/semver-5.7.1.tgz"
   integrity sha512-sauaDf/PZdVgrLTNYHRtpXa1iRiKcaebiKQ1BJdpQlWH2lCvexQdX55snPFyK7QzpudqbCI0qXFfOasHdyNDGQ==
 
-semver@7.5.4, semver@^7.0.0, semver@^7.1.1, semver@^7.3.5, semver@^7.3.8, semver@^7.5.3:
+semver@7.5.4, semver@^7.0.0, semver@^7.1.1, semver@^7.3.5, semver@^7.3.8, semver@^7.5.3, semver@^7.5.4:
   version "7.5.4"
   resolved "https://registry.npmjs.org/semver/-/semver-7.5.4.tgz"
   integrity sha512-1bCSESV6Pv+i21Hvpxp3Dx+pSD8lIPt8uVjRrxAUt/nbswYc+tK6Y2btiULjd4+fnq15PX+nqQDC7Oft7WkwcA==

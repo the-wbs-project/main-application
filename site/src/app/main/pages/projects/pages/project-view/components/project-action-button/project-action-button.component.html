@@ -1,7 +1,7 @@
 @if (menu()) {
 <button #anchor class="btn btn-sm btn-outline-dark mg-y-4" (click)="toggle()">
   <fa-icon [icon]="faBoltLightning" />
-  &nbsp; Actions
+  &nbsp; {{ "General.Actions" | translate }}
 </button>
 
 @if (show) {

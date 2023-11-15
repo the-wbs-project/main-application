@@ -1,18 +1,16 @@
+@if (record.type === 'link') {
 <a
-  *ngIf="record.type === 'link'"
   class="text-decoration-none tx-black"
   [href]="record.resource!"
   target="_blank"
 >
   <fa-icon [icon]="faEye" />
 </a>
-<a
-  *ngIf="record.type !== 'link'"
-  class="pointer text-decoration-none tx-black"
-  (click)="open(content)"
->
+} @else {
+<a class="pointer text-decoration-none tx-black" (click)="open(content)">
   <fa-icon [icon]="faEye" />
 </a>
+}
 <ng-template #content let-modal>
   <div class="modal-header">
     <h4 class="modal-title" id="modal-basic-title">{{ record.name }}</h4>
@@ -23,26 +21,30 @@
       (click)="modal.dismiss('')"
     ></button>
   </div>
-  <div *ngIf="record.type === 'image'" class="modal-body">
+  @if (record.type === 'image') {
+  <div class="modal-body">
     <img class="w-100" [src]="record.resource" />
   </div>
-  <div *ngIf="record.type === 'pdf'" class="modal-body">
+  } @else if (record.type === 'pdf') {
+  <div class="modal-body">
+    @if (record.resource) {
     <kendo-pdfviewer
-      *ngIf="record.resource"
       style="height: 100%"
       [tools]="tools"
       [url]="record.resource"
       [saveFileName]="record.name + '.pdf'"
     />
+    } @else {
     <kendo-pdfviewer
-      *ngIf="!record.resource"
       style="height: 100%"
       [tools]="tools"
       [arrayBuffer]="([owner, record.id] | resourceObject | async)!"
       [saveFileName]="record.name + '.pdf'"
     />
+    }
   </div>
-  <div *ngIf="record.type === 'youtube'" class="modal-body tx-center">
+  } @else if (record.type === 'youtube') {
+  <div class="modal-body tx-center">
     <iframe
       frameborder="0"
       [wbsYouTubeSizer]="record.resource!"
@@ -50,4 +52,5 @@
       allowfullscreen
     ></iframe>
   </div>
+  }
 </ng-template>

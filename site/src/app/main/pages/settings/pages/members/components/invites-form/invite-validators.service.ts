@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { MembershipState } from '@wbs/main/states';
 import { MembershipAdminState } from '../../states';
+import { Member } from '@wbs/core/models';
 
 @Injectable()
 export class InviteValidators {
@@ -18,12 +19,11 @@ export class InviteValidators {
     return invalid;
   }
 
-  checkIfAnyExists(emails: string[]): string[] {
+  checkIfAnyExists(members: Member[], emails: string[]): string[] {
     const existing: string[] = [];
-    const users = this.store.selectSnapshot(MembershipState.members)!;
 
     for (const email of emails) {
-      if (users.some((x) => x.email.toLowerCase() === email.toLowerCase())) {
+      if (members.some((x) => x.email.toLowerCase() === email.toLowerCase())) {
         existing.push(email);
       }
     }

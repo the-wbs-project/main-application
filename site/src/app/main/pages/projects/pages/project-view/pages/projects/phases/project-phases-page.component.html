@@ -54,11 +54,12 @@
           <ng-template kendoTreeListCellTemplate let-dataItem>
             <div class="tx-12 w-100 d-flex flex-row flex-align-center">
               <wbs-approval-badge
-                [fontSize]="8"
-                [approval]="approvals()?.get(dataItem.id)"
+                [fontSize]="11"
+                [childrenIds]="dataItem.childrenIds"
+                [approval]="approvals() | findById : dataItem.id"
               />
-              @if (dataItem.childrenIds | childrenApproval : approvals(); as
-              stats) {
+              @if (approvals() | findThemById : dataItem.childrenIds |
+              childrenApproval; as stats) {
               <div class="d-ib wd-100 mg-l-10" [title]="stats.totalCount">
                 <wbs-progress-bar
                   [passPercent]="stats.passedPercent"

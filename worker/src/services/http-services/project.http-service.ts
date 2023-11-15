@@ -1,5 +1,4 @@
 import { Context } from '../../config';
-import { ORGANZIATION_PERMISSIONS, PROJECT_PERMISSIONS, Permissions, ROLES } from '../../models';
 import { UserRolesViewModel } from '../../view-models';
 
 export class ProjectHttpService {

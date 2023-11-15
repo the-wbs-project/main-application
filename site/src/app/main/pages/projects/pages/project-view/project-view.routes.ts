@@ -19,7 +19,6 @@ import {
   ProjectApprovalState,
   ProjectChecklistState,
   ProjectState,
-  ProjectViewState,
   TasksState,
 } from './states';
 
@@ -38,7 +37,6 @@ export const routes: Routes = [
         NgxsModule.forFeature([
           ProjectApprovalState,
           ProjectChecklistState,
-          ProjectViewState,
           ProjectState,
           TasksState,
         ])

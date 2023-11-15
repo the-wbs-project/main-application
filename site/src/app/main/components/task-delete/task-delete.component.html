@@ -20,9 +20,11 @@
       {{ "Wbs.DeleteTaskMessage" | translate }}
     </option>
 
-    <option *ngFor="let r of reasons$ | async" [value]="r.id">
+    @for (r of reasons(); track r.id){
+    <option [value]="r.id">
       {{ r.label | translate }}
     </option>
+    }
   </select>
   <div [style.display]="reason === dOtherId ? 'block' : 'none'" class="mg-t-10">
     <label class="tx-10 font-italic">

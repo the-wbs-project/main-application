@@ -5,17 +5,15 @@ import { ChildrenApprovalStats } from '../models';
 @Pipe({ name: 'childrenApproval', standalone: true })
 export class ChildrenApprovalPipe implements PipeTransform {
   transform(
-    children: string[],
-    map: Map<string, ProjectApproval> | undefined
+    children: ProjectApproval[] | undefined
   ): ChildrenApprovalStats | undefined {
-    if (children.length === 0 || map === undefined) return undefined;
+    if (children === undefined || children.length === 0) return undefined;
 
     let total = 0;
     let pass = 0;
     let fail = 0;
 
-    for (const id of children) {
-      const a = map.get(id);
+    for (const a of children) {
       if (!a) continue;
 
       if (a.isApproved === true) pass++;

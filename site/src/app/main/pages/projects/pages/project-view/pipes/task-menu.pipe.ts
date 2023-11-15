@@ -13,6 +13,8 @@ export class TaskMenuPipe implements PipeTransform {
     [tasks, claims]: [WbsNodeView[] | undefined | null, string[]],
     taskId: string | undefined | null
   ): ActionMenuItem[][] {
+    console.log(taskId);
+
     const task = tasks?.find((x) => x.id === taskId);
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
 
@@ -30,7 +32,6 @@ export class TaskMenuPipe implements PipeTransform {
       claims,
       status
     );
-    console.log(navActions);
     const phaseActions = this.filterList(
       PROJECT_TREE_MENU_ITEMS.taskActions,
       task,
@@ -56,6 +57,7 @@ export class TaskMenuPipe implements PipeTransform {
     if (phaseActions.length > 0) results.push(phaseActions);
     if (nav.length > 0) results.push(nav);
 
+    console.log(results);
     return results;
   }
 

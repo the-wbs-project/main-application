@@ -1,7 +1,6 @@
 export enum PROJECT_PAGES {
   ABOUT = 'about',
-  PHASES = 'phases',
-  DISCIPLINES = 'disciplines',
+  TASKS = 'tasks',
   DISCUSSIONS = 'discussions',
   TIMELINE = 'timeline',
   RESOURCES = 'resources',
@@ -11,8 +10,7 @@ export enum PROJECT_PAGES {
 
 export type PROJECT_PAGES_TYPE =
   | PROJECT_PAGES.ABOUT
-  | PROJECT_PAGES.PHASES
-  | PROJECT_PAGES.DISCIPLINES
+  | PROJECT_PAGES.TASKS
   | PROJECT_PAGES.DISCUSSIONS
   | PROJECT_PAGES.RESOURCES
   | PROJECT_PAGES.TIMELINE

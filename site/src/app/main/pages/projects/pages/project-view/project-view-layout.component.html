@@ -8,7 +8,9 @@
     <div class="col-6">
       <div class="d-flex flex-align-center">
         <wbs-project-title [category]="category()" [title]="title()" /> &nbsp;
-        <wbs-approval-badge [approval]="approvals()?.get('project-title')" />
+        <wbs-approval-badge
+          [approval]="approvals() | findById : 'project-title'"
+        />
       </div>
     </div>
     <div class="col-6 mg-t-5 tx-right pd-r-15">
@@ -33,7 +35,9 @@
       [approval]="approval"
       [claims]="claims"
       [userId]="userId"
+      [isReadyOnly]="project()?.status !== 'approval'"
       [chat]="chat() ?? []"
+      [hasChildren]="approvalHasChildren()!"
     />
     }
   </div>

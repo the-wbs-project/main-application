@@ -15,8 +15,8 @@ import { Messages } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { WaitNotifyDirective } from '@wbs/main/directives/wait-notify.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
+import { TextTransformPipe } from '@wbs/main/pipes/text-transform.pipe';
 import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
-import { ActionDescriptionTransformPipe } from './pipes';
 
 @Component({
   standalone: true,
@@ -25,12 +25,12 @@ import { ActionDescriptionTransformPipe } from './pipes';
   styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ActionDescriptionTransformPipe,
     CommonModule,
     DateTextPipe,
     FontAwesomeModule,
     NgbDropdownModule,
     NgClass,
+    TextTransformPipe,
     TranslateModule,
     UserNamePipe,
     WaitNotifyDirective,

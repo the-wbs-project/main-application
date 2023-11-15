@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,6 +7,7 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faX } from '@fortawesome/pro-solid-svg-icons';
+import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import {
@@ -16,35 +17,45 @@ import {
 } from '@progress/kendo-angular-conversational-ui';
 import { PROJECT_CLAIMS, ProjectApproval } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { TextTransformPipe } from '@wbs/main/pipes/text-transform.pipe';
+import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
 import {
   ApprovalChanged,
   SendApprovalMessage,
   SetApproval,
 } from '../../actions';
 import { ProjectApprovalWindowTitlePipe } from './project-approval-window-title.component';
+import { TaskNamePipe } from '../../pipes/task-name.pipe';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-approval-window',
   templateUrl: './project-approval-window.component.html',
-  styleUrls: ['./project-approval-window.component.scss'],
+  styleUrl: './project-approval-window.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
+    AsyncPipe,
     ChatModule,
     CheckPipe,
+    DatePipe,
     FontAwesomeModule,
+    NgbDropdownModule,
     NgClass,
-    NgIf,
     ProjectApprovalWindowTitlePipe,
+    TaskNamePipe,
+    TextTransformPipe,
     TranslateModule,
+    UserNamePipe,
   ],
 })
 export class ProjectApprovalWindowComponent {
   @Input({ required: true }) claims!: string[];
   @Input({ required: true }) userId!: string;
   @Input({ required: true }) approval!: ProjectApproval;
+  @Input({ required: true }) isReadyOnly!: boolean;
   @Input({ required: true }) chat!: Message[];
+  @Input({ required: true }) hasChildren!: boolean;
 
   readonly faX = faX;
   readonly canApproveClaims = PROJECT_CLAIMS.APPROVAL.CAN_APPROVE;
@@ -56,8 +67,8 @@ export class ProjectApprovalWindowComponent {
     this.store.dispatch(new SetApproval());
   }
 
-  approvalChanged(isApproved: boolean): void {
-    this.store.dispatch(new ApprovalChanged(isApproved));
+  changed(isApproved: boolean, childrenToo: boolean): void {
+    this.store.dispatch(new ApprovalChanged(isApproved, childrenToo));
   }
 
   sendMessage(e: SendMessageEvent): void {

@@ -14,6 +14,8 @@ import { bootstrapApplication } from '@angular/platform-browser';
 import { AppComponent } from '@wbs/app.component';
 import { appConfig } from '@wbs/app.config';
 
+import 'hammerjs';
+
 library.add(faBolt);
 library.add(faBridgeSuspension);
 library.add(faBuilding);

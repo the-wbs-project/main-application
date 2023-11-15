@@ -28,6 +28,10 @@
   font-weight: 100;
 }
 
+.rotate-90 {
+  transform: rotate(90deg);
+}
+
 .tx-sserif {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
     "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
@@ -70,12 +74,20 @@
   color: $success;
 }
 
+.tx-success-f {
+  color: $success !important;
+}
+
 .tx-warning {
   color: $warning;
 }
 
 .tx-danger {
   color: $danger;
+}
+
+.tx-danger-f {
+  color: $danger !important;
 }
 
 .tx-danger-f {
@@ -136,6 +148,10 @@
 
 .tx-gray-600 {
   color: $gray-600;
+}
+
+.tx-gray-600-f {
+  color: $gray-600 !important;
 }
 
 .tx-gray-700 {

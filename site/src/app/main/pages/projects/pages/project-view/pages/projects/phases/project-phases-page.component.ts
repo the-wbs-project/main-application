@@ -1,5 +1,6 @@
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   OnInit,
@@ -7,6 +8,7 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import {
   RowReorderEvent,
@@ -24,6 +26,8 @@ import { FillElementDirective } from '@wbs/main/directives/fill-element.directiv
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
+import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
 import { TreeReordered } from '../../../actions';
 import { ApprovalBadgeComponent } from '../../../components/approval-badge.component';
 import { TaskModalComponent } from '../../../components/task-modal/task-modal.component';
@@ -40,6 +44,7 @@ import {
   TasksState,
 } from '../../../states';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './project-phases-page.component.html',
@@ -51,6 +56,8 @@ import {
     ChildrenApprovalPipe,
     DisciplineIconListComponent,
     FillElementDirective,
+    FindByIdPipe,
+    FindThemByIdPipe,
     ProgressBarComponent,
     TaskMenuPipe,
     TaskModalComponent,
@@ -84,15 +91,27 @@ export class ProjectPhasesPageComponent implements OnInit {
   constructor(
     readonly navigate: ProjectNavigationService,
     readonly service: ProjectViewService,
+    private readonly cd: ChangeDetectorRef,
     private readonly messages: Messages,
     private readonly store: Store,
     private readonly wbsService: WbsPhaseService
   ) {}
 
   ngOnInit(): void {
-    this.store.select(TasksState.phases).subscribe((phases) => {
-      this.tree.set(structuredClone(phases));
-    });
+    this.store
+      .select(TasksState.phases)
+      .pipe(untilDestroyed(this))
+      .subscribe((phases) => {
+        this.tree.set(structuredClone(phases));
+      });
+    this.store
+      .select(ProjectApprovalState.list)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        console.error('update');
+        this.cd.detectChanges();
+      });
+
     this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
   }
 

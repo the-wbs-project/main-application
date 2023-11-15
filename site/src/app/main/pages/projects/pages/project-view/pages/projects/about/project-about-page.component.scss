@@ -1,0 +1,38 @@
+.about-page-grid {
+  display: grid;
+  background-color: #f8f9fa;
+  grid-template-rows: auto;
+  gap: 20px;
+}
+
+.about-page-grid.wbs-container-xl,
+.about-page-grid.wbs-container-xxl {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  .double-item {
+    grid-column: span 2;
+  }
+
+  .full-item {
+    grid-column: span 4;
+  }
+}
+
+.about-page-grid.wbs-container-md,
+.about-page-grid.wbs-container-lg {
+  grid-template-columns: 1fr 1fr;
+
+  .double-item,
+  .full-item {
+    grid-column: span 2;
+  }
+}
+
+.about-page-grid.wbs-container-sm {
+  grid-template-columns: 1fr;
+
+  .full-item,
+  .double-item {
+    grid-column: span 1;
+  }
+}

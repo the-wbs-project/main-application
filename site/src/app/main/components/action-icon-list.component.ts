@@ -1,5 +1,11 @@
-import { NgClass, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { NgClass } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,21 +23,20 @@ import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
   template: `<kendo-dropdownbutton
     [fillMode]="fillMode"
     [size]="size"
-    buttonClass="tx-8 pd-0-f"
     [data]="menuItems"
+    buttonClass="tx-8 pd-0-f"
     [popupSettings]="{ align: align }"
     (itemClick)="clicked($event)"
   >
     <fa-icon [icon]="mainIcon" size="xl" />
     <ng-template kendoDropDownButtonItemTemplate let-dataItem>
       <div class="lh-10" [ngClass]="dataItem.cssClasses">
-        <ng-template [ngIf]="dataItem.icon" [ngIfElse]="noIcon">
-          <fa-icon [icon]="dataItem.icon" />
-          <span class="mg-l-10"> {{ dataItem.text | translate }} </span>
-        </ng-template>
-        <ng-template #noIcon>
-          {{ dataItem.text | translate }}
-        </ng-template>
+        @if (dataItem.icon) {
+        <fa-icon [icon]="dataItem.icon" />
+        <span class="mg-l-10"> {{ dataItem.text | translate }} </span>
+        } @else {
+        {{ dataItem.text | translate }}
+        }
       </div>
     </ng-template>
   </kendo-dropdownbutton>`,
@@ -41,7 +46,6 @@ import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
     FontAwesomeModule,
     KendoToFaSizePipe,
     NgClass,
-    NgIf,
     TranslateModule,
   ],
 })

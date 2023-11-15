@@ -252,16 +252,13 @@ public class ProjectsController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("owner/{owner}/id/{id}/approvals/{approvalId}")]
-    public async Task<IActionResult> SetApprovalsById(string owner, string id, string approvalId, ProjectApproval approval)
+    [HttpPut("owner/{owner}/id/{id}/approvals")]
+    public async Task<IActionResult> SetApprovalsById(string owner, string id, ProjectApprovalSaveRecord approval)
     {
         try
         {
             if (approval.projectId != id)
                 return BadRequest("The project id in the body must match the project id in the url");
-
-            if (approval.id != approvalId)
-                return BadRequest("The approval id in the body must match the approval id in the url");
 
             using (var conn = projectDataService.CreateConnection())
             {

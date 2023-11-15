@@ -14,6 +14,7 @@ export interface TaskDetailsViewModel {
 
   parent?: WbsNodeView;
   subTasks: WbsNodeView[];
+  childrenIds: string[];
 
   previousTaskId?: string;
   nextTaskId?: string;

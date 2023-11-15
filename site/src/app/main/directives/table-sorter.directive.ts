@@ -16,8 +16,6 @@ export class SortableDirective {
   @Input() state!: State;
   @Input() sortable!: string;
 
-  
-
   constructor(private readonly service: TableHelper) {}
 
   rotate() {

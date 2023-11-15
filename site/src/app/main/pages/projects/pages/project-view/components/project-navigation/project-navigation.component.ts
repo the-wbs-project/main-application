@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgForOf, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgbDropdownModule, NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
@@ -15,9 +15,6 @@ import { ProjectNavigationLink } from '../../models';
   imports: [
     CheckPipe,
     NgClass,
-    NgFor,
-    NgForOf,
-    NgIf,
     NgbDropdownModule,
     NgbNavModule,
     RouterModule,

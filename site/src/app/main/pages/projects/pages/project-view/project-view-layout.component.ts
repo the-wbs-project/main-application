@@ -17,6 +17,7 @@ import { PageHeaderComponent } from '@wbs/main/components/page-header/page-heade
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
@@ -25,6 +26,7 @@ import { ProjectChecklistModalComponent } from './components/project-checklist-m
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_NAVIGATION } from './models';
 import { ProjectApprovalState, ProjectState } from './states';
+import { DrawerModule } from '@progress/kendo-angular-layout';
 
 @Component({
   standalone: true,
@@ -35,7 +37,9 @@ import { ProjectApprovalState, ProjectState } from './states';
     ApprovalBadgeComponent,
     CategoryIconPipe,
     CheckPipe,
+    DrawerModule,
     FillElementDirective,
+    FindByIdPipe,
     FontAwesomeModule,
     PageHeaderComponent,
     ProjectActionButtonComponent,
@@ -53,8 +57,14 @@ export class ProjectViewLayoutComponent {
 
   readonly approval = toSignal(this.store.select(ProjectApprovalState.current));
   readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
-  readonly isProjectApproval = toSignal(
-    this.store.select(ProjectApprovalState.isProjectApproval)
+  readonly approvalView = toSignal(
+    this.store.select(ProjectApprovalState.view)
+  );
+  readonly showApproval = computed(
+    () => this.approvalView() === 'project' && this.approval() != undefined
+  );
+  readonly approvalHasChildren = toSignal(
+    this.store.select(ProjectApprovalState.hasChildren)
   );
   readonly chat = toSignal(this.store.select(ProjectApprovalState.messages));
   readonly project = toSignal(this.store.select(ProjectState.current));

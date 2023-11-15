@@ -702,6 +702,7 @@ export class TasksState {
             : taskVms[nodeIndex + 1].id,
         previousTaskId: nodeIndex === 0 ? undefined : taskVms[nodeIndex - 1].id,
         subTasks: this.getSubTasks(id, taskVms),
+        childrenIds: task.childrenIds,
       },
     });
   }

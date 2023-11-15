@@ -15,7 +15,7 @@
               <p class="mb-1">
                 {{ "General.Members" | translate }}
               </p>
-              <h5>{{ members()?.length ?? 0 }}</h5>
+              <h5>{{ members.length }}</h5>
             </div>
             <div class="col-3">
               <p class="mb-1">
@@ -47,7 +47,7 @@
               {{ "General.Members" | translate }}
             </div>
             <div class="col-6 tx-center">
-              <h5>{{ members()?.length ?? 0 }}</h5>
+              <h5>{{ members.length }}</h5>
             </div>
           </div>
           <div class="row mb-2">
@@ -140,7 +140,7 @@
           <wbs-member-list
             *ngIf="view() === 'members'"
             [roles]="roleFilters()"
-            [members]="members()"
+            [members]="members"
             [textFilter]="textFilter"
           />
           <wbs-invitation-list

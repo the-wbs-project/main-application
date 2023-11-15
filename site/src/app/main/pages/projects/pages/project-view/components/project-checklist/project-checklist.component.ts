@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,15 +16,14 @@ import { ChecklistResultIconPipe } from '../../pipes/checklist-result-icon.pipe'
   standalone: true,
   selector: 'wbs-project-checklist',
   templateUrl: './project-checklist.component.html',
-  styleUrls: ['./project-checklist.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
     ChecklistResultClassPipe,
     ChecklistResultIconPipe,
-    CommonModule,
     FontAwesomeModule,
     NgbAccordionModule,
+    NgClass,
     TranslateModule,
   ],
 })

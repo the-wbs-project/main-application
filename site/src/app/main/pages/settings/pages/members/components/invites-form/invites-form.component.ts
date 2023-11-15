@@ -8,6 +8,7 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { RoleState } from '@wbs/main/states';
 import { SendInvites } from '../../actions';
 import { InviteValidators } from './invite-validators.service';
+import { Member } from '@wbs/core/models';
 
 declare type InviteError = { email?: string; error: string };
 
@@ -22,12 +23,17 @@ export class InvitesFormComponent {
   readonly roleList = toSignal(this.store.select(RoleState.definitions));
   roles: string[] = [];
   errors: InviteError[] = [];
+  members!: Member[];
 
   constructor(
     readonly modal: NgbActiveModal,
     private readonly store: Store,
     private readonly validators: InviteValidators
   ) {}
+
+  setup(members: Member[]): void {
+    this.members = members;
+  }
 
   toggleRole(role: string): void {
     const index = this.roles.indexOf(role);
@@ -51,7 +57,10 @@ export class InvitesFormComponent {
         errors.push({ email, error: 'OrgSettings.InviteErrorInvalidEmail' });
       }
 
-      for (const email of this.validators.checkIfAnyExists(emails)) {
+      for (const email of this.validators.checkIfAnyExists(
+        this.members,
+        emails
+      )) {
         errors.push({ email, error: 'OrgSettings.InviteErrorAlreadyMember' });
       }
 

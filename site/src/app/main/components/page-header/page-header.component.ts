@@ -10,7 +10,7 @@ import { UiState } from '@wbs/main/states';
   standalone: true,
   selector: 'wbs-page-header',
   templateUrl: './page-header.component.html',
-  styleUrls: ['./page-header.component.scss'],
+  styleUrl: './page-header.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, NgFor, NgIf, RouterModule, TranslateModule],
 })

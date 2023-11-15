@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
   ViewEncapsulation,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { NgbActiveModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
@@ -11,7 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ListItem } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
-import { BehaviorSubject } from 'rxjs';
 import { TaskDeleteService } from './task-delete.service';
 
 @Component({
@@ -19,14 +18,14 @@ import { TaskDeleteService } from './task-delete.service';
   templateUrl: './task-delete.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, FormsModule, NgbModalModule, TranslateModule],
+  imports: [FormsModule, NgbModalModule, TranslateModule],
   providers: [TaskDeleteService],
 })
 export class TaskDeleteComponent implements OnInit {
   reason = 'none';
   dOtherId = 'delete_other';
 
-  readonly reasons$ = new BehaviorSubject<ListItem[]>([]);
+  readonly reasons = signal<ListItem[]>([]);
 
   constructor(
     readonly modal: NgbActiveModal,
@@ -37,7 +36,7 @@ export class TaskDeleteComponent implements OnInit {
   ngOnInit(): void {
     this.data.metdata
       .getListAsync<ListItem>('delete_reasons')
-      .subscribe((list) => this.reasons$.next(list));
+      .subscribe((list) => this.reasons.set(list));
   }
 
   finishDelete(dReasonId: string, otherReasonText: string) {
@@ -45,9 +44,7 @@ export class TaskDeleteComponent implements OnInit {
       if (dReasonId === this.dOtherId) {
         this.modal.close(otherReasonText.trim());
       } else {
-        const dReason = this.reasons$
-          .getValue()
-          .find((x) => x.id === dReasonId)!;
+        const dReason = this.reasons().find((x) => x.id === dReasonId)!;
 
         this.modal.close(this.resources.get(dReason.label));
       }

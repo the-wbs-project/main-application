@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProjectApproval } from '../models';
+import { ProjectApproval, ProjectApprovalSaveRecord } from '../models';
 import { Utils } from '../services';
 
 export class ProjectApprovalDataService {
@@ -18,10 +18,10 @@ export class ProjectApprovalDataService {
   putAsync(
     owner: string,
     projectId: string,
-    approval: ProjectApproval
+    approval: ProjectApprovalSaveRecord
   ): Observable<void> {
     return this.http.put<void>(
-      `api/projects/owner/${owner}/id/${projectId}/approvals/${approval.id}`,
+      `api/projects/owner/${owner}/id/${projectId}/approvals`,
       approval
     );
   }

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -17,7 +16,6 @@ import { first } from 'rxjs/operators';
   styleUrls: ['./switch.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [NgClass],
 })
 export class SwitchComponent {
   @Input({ required: true }) value!: boolean;

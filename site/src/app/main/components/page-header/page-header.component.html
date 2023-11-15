@@ -1,24 +1,26 @@
-<div *ngIf="breadcrumbs(); let crumbs" class="w-100 breadcrumb-header tx-right">
+@if (breadcrumbs(); as crumbs) {
+<div class="w-100 breadcrumb-header tx-right">
   <div class="d-ib">
     <ol class="breadcrumb">
+      @for (item of crumbs; let index = $index; track index) {
       <li
         class="breadcrumb-item"
-        *ngFor="let item of crumbs; let index = index"
         [ngClass]="{ active: crumbs.length === index + 1 }"
       >
-        <a *ngIf="item.route && item.isText" [routerLink]="item.route">
-          {{ item.text }}
+        @if (item.route) {
+        <a [routerLink]="item.route">
+          @if (item.isText) { {{ item.text }} } @else {
+          {{ item.text! | translate }} }
         </a>
-        <a *ngIf="item.route && !item.isText" [routerLink]="item.route">
-          {{ item.text! | translate }}
-        </a>
-        <span *ngIf="!item.route && item.isText">
-          {{ item.text }}
+        } @else {
+        <span>
+          @if (item.isText) { {{ item.text }} } @else {
+          {{ item.text! | translate }} }
         </span>
-        <span *ngIf="!item.route && !item.isText">
-          {{ item.text! | translate }}
-        </span>
+        }
       </li>
+      }
     </ol>
   </div>
 </div>
+}

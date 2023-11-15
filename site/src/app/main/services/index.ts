@@ -4,6 +4,7 @@ export * from './dialog.service';
 export * from './fa-to-kendo.service';
 export * from './layout.service';
 export * from './org-claims-resolver.service';
+export * from './org-member-resolver.service';
 export * from './org-resolver.service';
 export * from './record-resource-validation.service';
 export * from './script.service';

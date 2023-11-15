@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { orgResolve } from '@wbs/main/services';
+import { orgMemberResolve, orgResolve } from '@wbs/main/services';
 import {
   redirectGuard,
   setupGuard,
@@ -99,6 +99,7 @@ export const routes: Routes = [
     },
     resolve: {
       org: orgResolve,
+      members: orgMemberResolve,
     },
   },
   {

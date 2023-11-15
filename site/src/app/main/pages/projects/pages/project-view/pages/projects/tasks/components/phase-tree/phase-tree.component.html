@@ -1,0 +1,92 @@
+@if (phases(); as phases) {
+<div class="d-flex flex-column" appFillElement [paddingBottom]="30">
+  <div class="tx-italic tx-10">
+    {{ "Projects.TreeInstructions" | translate }}
+  </div>
+  <div class="flex-fill">
+    <kendo-treelist
+      #treelist
+      class="h-100 tx-12"
+      kendoTreeListExpandable
+      kendoTreeListSelectable
+      [kendoTreeListFlatBinding]="phases"
+      parentIdField="treeParentId"
+      idField="treeId"
+      [rowReorderable]="claims | check : canEditClaim"
+      [initiallyExpanded]="false"
+      [(expandedKeys)]="expandedKeys"
+      [selectable]="settings"
+      (selectionChange)="taskId = $event.items[0].dataItem.id"
+      (rowReorder)="rowReordered($event)"
+      (dblclick)="navigate.toTask(taskId!)"
+      (cellClick)="taskId = $event.dataItem.id"
+    >
+      @if ([phases, claims] | taskMenu : taskId; as menuItems) {
+      <ng-template kendoTreeListToolbarTemplate>
+        @for (menu of menuItems; track $index){
+        <div class="d-ib pd-r-20">
+          <wbs-action-buttons
+            [items]="menu"
+            (clicked)="service.action($event, taskId!)"
+          />
+        </div>
+        }
+      </ng-template>
+      } @if (claims | check : canEditClaim) {
+      <kendo-treelist-rowreorder-column [width]="40" />
+      }
+      <kendo-treelist-column
+        field="levelText"
+        [title]="'Wbs.Level' | translate"
+        [width]="100"
+        class="level-column tx-11"
+        headerClass="level-header-column"
+      />
+      <kendo-treelist-column
+        [expandable]="true"
+        field="title"
+        [title]="'Wbs.Task' | translate"
+        class="tx-11"
+      />
+      @if (project?.approvalStarted) {
+      <kendo-treelist-column [width]="175" [title]="'Approval'">
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <div class="tx-12 w-100 d-flex flex-row flex-align-center">
+            <wbs-approval-badge
+              [fontSize]="11"
+              [childrenIds]="dataItem.childrenIds"
+              [approval]="approvals() | findById : dataItem.id"
+            />
+            @if (approvals() | findThemById : dataItem.childrenIds |
+            childrenApproval; as stats) {
+            <div class="d-ib wd-100 mg-l-10" [title]="stats.totalCount">
+              <wbs-progress-bar
+                [passPercent]="stats.passedPercent"
+                [failPercent]="stats.failedPercent"
+              />
+            </div>
+            }
+          </div>
+        </ng-template>
+      </kendo-treelist-column>
+      } @if ((width() ?? 0) > 800) {
+      <kendo-treelist-column
+        field="disciplines"
+        [width]="150"
+        class="discipline-column"
+        headerClass="discipline-column"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <wbs-tree-discipline-legend
+            [idsOrCats]="project?.disciplines ?? []"
+          />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
+        </ng-template>
+      </kendo-treelist-column>
+      }
+    </kendo-treelist>
+  </div>
+</div>
+}

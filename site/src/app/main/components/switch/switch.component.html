@@ -1,10 +1,4 @@
-<label
-  class="switch"
-  [ngClass]="{
-  'switch-lg': size === 'lg',
-  'switch-sm': size === 'sm',
-}"
->
+<label [class]="'switch switch-' + size">
   <input #cb type="checkbox" [checked]="value" (change)="changed($event, cb)" />
   <span class="slider round"></span>
 </label>

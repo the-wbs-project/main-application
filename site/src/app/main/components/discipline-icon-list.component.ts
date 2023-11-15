@@ -1,15 +1,14 @@
-import { NgFor } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { DisciplineIconComponent } from './discipline-icon.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-discipline-icon-list',
-  template: `<ng-template ngFor let-id [ngForOf]="disciplines ?? []">
+  template: `@for (id of disciplines ?? []; track id) {
     <wbs-discipline-icon [id]="id" />
-  </ng-template>`,
+    }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DisciplineIconComponent, NgFor],
+  imports: [DisciplineIconComponent],
 })
 export class DisciplineIconListComponent {
   @Input() disciplines: string[] | undefined;

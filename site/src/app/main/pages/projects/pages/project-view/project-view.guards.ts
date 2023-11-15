@@ -2,18 +2,19 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
 import { Utils } from '@wbs/main/services';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   InitiateChecklist,
-  ProjectPageChanged,
   SetApproval,
+  SetApprovalView,
   VerifyProject,
   VerifyTask,
 } from './actions';
 import { PROJECT_PAGES } from './models';
-import { ProjectState, ProjectViewState } from './states';
+import { ProjectState } from './states';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store)
@@ -77,21 +78,23 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
     );
 };
 
-export const projectViewGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const view = route.data['view'];
-
-  return store.dispatch(new ProjectPageChanged(view)).pipe(map(() => true));
-};
-
 export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const viewNode = store.selectSnapshot(ProjectViewState.viewNode)!;
   const taskId = route.params['taskId'];
 
   if (!taskId) return false;
 
   return store
-    .dispatch([new VerifyTask(viewNode, taskId)])
+    .dispatch([new VerifyTask(PROJECT_NODE_VIEW.PHASE, taskId)])
     .pipe(map(() => true));
 };
+
+export const setApprovalViewAsTask = () =>
+  inject(Store)
+    .dispatch(new SetApprovalView('task'))
+    .pipe(map(() => true));
+
+export const setApprovalViewAsProject = () =>
+  inject(Store)
+    .dispatch(new SetApprovalView('project'))
+    .pipe(map(() => true));

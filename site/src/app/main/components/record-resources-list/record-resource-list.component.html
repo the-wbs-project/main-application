@@ -20,11 +20,13 @@
       let-dataItem="dataItem"
       let-index="index"
     >
-      <div *ngIf="claims | check : editClaim" class="reorder-item">
+      @if (claims | check : editClaim) {
+      <div class="reorder-item">
         <span class="k-i-reorder">
           <fa-icon [icon]="faBars" />
         </span>
       </div>
+      }
       <div class="type-item">
         <wbs-resource-type-text [type]="dataItem.type" />
       </div>
@@ -36,14 +38,13 @@
       <div class="view-item tx-center">
         <wbs-resource-view-link [owner]="owner" [record]="dataItem" />
       </div>
-      <div
-        *ngIf="claims | check : [editClaim, deleteClaim]"
-        class="actions-item tx-center"
-      >
+      @if (claims | check : [editClaim, deleteClaim]) {
+      <div class="actions-item tx-center">
         <a class="pointer text-decoration-none tx-black">
           <fa-icon [icon]="faGear" />
         </a>
       </div>
+      }
     </ng-template>
   </kendo-listview>
 </div>
@@ -82,9 +83,9 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let resource of (list | tableProcess : state()) ?? []; trackById"
-    >
+    @for (resource of (list | tableProcess : state()) ?? []; track resource.id)
+    {
+    <tr>
       <td class="mn-wd-100">
         <wbs-resource-type-text [type]="resource.type" />
       </td>
@@ -100,14 +101,14 @@
           <wbs-resource-view-link [owner]="owner" [record]="resource" />
         </div>
         <div class="d-ib wd-40 tx-center">
-          <a
-            *ngIf="claims | check : [editClaim, deleteClaim]"
-            class="pointer text-decoration-none tx-black"
-          >
+          @if (claims | check : [editClaim, deleteClaim]) {
+          <a class="pointer text-decoration-none tx-black">
             <fa-icon [icon]="faGear" />
           </a>
+          }
         </div>
       </td>
     </tr>
+    }
   </tbody>
 </table>

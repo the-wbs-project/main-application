@@ -1,4 +1,3 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -50,9 +49,6 @@ import {
     DragAndDropModule,
     FontAwesomeModule,
     ListViewModule,
-    NgClass,
-    NgFor,
-    NgIf,
     ResourceTypeTextComponent,
     ResourceViewLinkComponent,
     SortableDirective,

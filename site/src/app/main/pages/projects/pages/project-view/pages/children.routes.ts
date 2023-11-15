@@ -3,12 +3,13 @@ import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { RecordResource } from '@wbs/core/models';
-import { Utils, orgResolve } from '@wbs/main/services';
+import { Utils, orgResolve, userIdResolve } from '@wbs/main/services';
 import { PROJECT_PAGES, TASK_PAGE_VIEW } from '../models';
 import {
   closeApprovalWindowGuard,
   projectRedirectGuard,
-  projectViewGuard,
+  setApprovalViewAsProject,
+  setApprovalViewAsTask,
   taskVerifyGuard,
 } from '../project-view.guards';
 import { projectClaimsResolve } from '../services';
@@ -39,7 +40,6 @@ export const routes: Routes = [
   },
   {
     path: 'about',
-    canActivate: [projectViewGuard],
     canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
@@ -51,25 +51,23 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'phases',
-    canActivate: [projectViewGuard],
+    path: 'tasks',
     canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGES.PHASES,
     },
     loadComponent: () =>
-      import('./projects/phases/project-phases-page.component').then(
-        ({ ProjectPhasesPageComponent }) => ProjectPhasesPageComponent
+      import('./projects/tasks/tasks.component').then(
+        (x) => x.ProjectTasksComponent
       ),
     resolve: {
       claims: projectClaimsResolve,
     },
     children: [
       {
-        path: 'task/:taskId',
-        canActivate: [taskVerifyGuard],
-        canDeactivate: [closeApprovalWindowGuard],
+        path: ':taskId',
+        canActivate: [taskVerifyGuard, setApprovalViewAsTask],
+        canDeactivate: [closeApprovalWindowGuard, setApprovalViewAsProject],
         data: {
           title: 'ProjectUpload.PagesUploadProjectPlan',
         },
@@ -117,26 +115,13 @@ export const routes: Routes = [
         ],
         resolve: {
           claims: projectClaimsResolve,
+          userId: userIdResolve,
         },
       },
     ],
   },
   {
-    path: 'disciplines',
-    canActivate: [projectViewGuard],
-    canDeactivate: [closeApprovalWindowGuard],
-    data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
-      view: PROJECT_PAGES.DISCIPLINES,
-    },
-    loadComponent: () =>
-      import('./projects/disciplines/project-disciplines-page.component').then(
-        ({ ProjectDisciplinesPageComponent }) => ProjectDisciplinesPageComponent
-      ),
-  },
-  {
     path: 'timeline',
-    canActivate: [projectViewGuard],
     canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',
@@ -149,7 +134,6 @@ export const routes: Routes = [
   },
   {
     path: 'resources',
-    canActivate: [projectViewGuard],
     canDeactivate: [closeApprovalWindowGuard],
     data: {
       view: PROJECT_PAGES.RESOURCES,
@@ -178,7 +162,6 @@ export const routes: Routes = [
   },*/
   {
     path: 'settings',
-    canActivate: [projectViewGuard],
     canDeactivate: [closeApprovalWindowGuard],
     data: {
       title: 'ProjectUpload.PagesUploadProjectPlan',

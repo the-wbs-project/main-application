@@ -1,0 +1,16 @@
+<fa-icon
+  [icon]="
+    status === 'completed'
+      ? faCircleCheck
+      : status === 'rejected'
+      ? faCircleXmark
+      : faCircle
+  "
+  [ngClass]="{
+    'tx-success': status === 'completed',
+    'tx-danger': status === 'rejected',
+    'tx-info': status === 'in-progress',
+    'tx-gray-500': status === 'unstarted',
+    'animate__animated animate__pulse animate__slow animate__infinite': status === 'in-progress',
+  }"
+/>

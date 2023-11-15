@@ -1,16 +1,21 @@
-import { ChangeDetectionStrategy, Component, computed } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  computed,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { Member, Project, ROLES, Role } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
-import { MembershipState, RoleState } from '@wbs/main/states';
+import { RoleState } from '@wbs/main/states';
 import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
 import { ProjectState } from '../../../../states';
 
 @Component({
   standalone: true,
   template: `<wbs-project-roles
-    [members]="members()"
+    [members]="members"
     [approverIds]="approverIds()"
     [pmIds]="pmIds()"
     [smeIds]="smeIds()"
@@ -22,10 +27,11 @@ import { ProjectState } from '../../../../states';
   imports: [ProjectRolesComponent],
 })
 export class ProjectSettingsRolesComponent {
+  @Input() members!: Member[];
+
   private readonly project = toSignal(this.store.select(ProjectState.current));
   private readonly roleIds = toSignal(this.store.select(RoleState.definitions));
 
-  readonly members = toSignal(this.store.select(MembershipState.members));
   readonly approverIds = computed(() =>
     this.getUserIds(ROLES.APPROVER, this.roleIds(), this.project())
   );

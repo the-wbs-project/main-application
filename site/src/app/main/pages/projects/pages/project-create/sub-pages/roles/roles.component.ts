@@ -6,11 +6,10 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { RoleIds } from '@wbs/core/models';
+import { Member, RoleIds } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
-import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
+import { AuthState, RoleState } from '@wbs/main/states';
 import { RolesChosen } from '../../actions';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { PROJECT_CREATION_PAGES } from '../../models';
@@ -25,8 +24,7 @@ import { ProjectCreateState } from '../../states';
 })
 export class RolesComponent implements OnInit {
   @Input() org!: string;
-
-  readonly members = toSignal(this.store.select(MembershipState.members));
+  @Input() members!: Member[];
 
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);

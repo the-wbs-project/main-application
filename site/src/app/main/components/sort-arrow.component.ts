@@ -7,10 +7,11 @@ import { arrowDownIcon, arrowUpIcon } from '@progress/kendo-svg-icons';
 @Component({
   standalone: true,
   selector: 'wbs-sort-arrow',
-  template: ` <kendo-svg-icon
-    *ngIf="state.sort![0]?.field === field && state.sort![0]?.dir"
-    [icon]="state.sort![0].dir === 'asc' ? arrowDownIcon : arrowUpIcon"
-  />`,
+  template: `@if (state.sort![0].field === field && state.sort![0].dir) {
+    <kendo-svg-icon
+      [icon]="state.sort![0].dir === 'asc' ? arrowDownIcon : arrowUpIcon"
+    />
+    }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgIf, SVGIconModule],
 })

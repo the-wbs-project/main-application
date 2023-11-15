@@ -9,12 +9,3 @@ export class ChangeOrganization {
   static readonly type = '[Membership] Change';
   constructor(readonly organization: Organization) {}
 }
-
-export class UpdateMembers {
-  static readonly type = '[Membership] Update';
-  constructor(readonly members: Member[]) {}
-}
-
-export class RefreshMembers {
-  static readonly type = '[Membership] Refresh Members';
-}

@@ -13,12 +13,8 @@ export const PROJECT_NAVIGATION: ProjectNavigationLink[] = [
         title: 'General.About',
       },
       {
-        fragment: PROJECT_PAGES.PHASES,
-        title: 'General.Phases',
-      },
-      {
-        fragment: PROJECT_PAGES.DISCIPLINES,
-        title: 'General.Disciplines',
+        fragment: PROJECT_PAGES.TASKS,
+        title: 'General.Tasks',
       },
       {
         fragment: PROJECT_PAGES.TIMELINE,
@@ -36,14 +32,9 @@ export const PROJECT_NAVIGATION: ProjectNavigationLink[] = [
     title: 'General.About',
   },
   {
-    fragment: PROJECT_PAGES.PHASES,
+    fragment: PROJECT_PAGES.TASKS,
     classes: ['d-none', 'd-md-inline'],
-    title: 'General.Phases',
-  },
-  {
-    fragment: PROJECT_PAGES.DISCIPLINES,
-    classes: ['d-none', 'd-md-inline'],
-    title: 'General.Disciplines',
+    title: 'General.Tasks',
   },
   {
     fragment: PROJECT_PAGES.TIMELINE,

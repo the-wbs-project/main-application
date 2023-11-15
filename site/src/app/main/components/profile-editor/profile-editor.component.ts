@@ -14,7 +14,6 @@ import { AuthState } from '@wbs/main/states';
   styleUrls: ['./profile-editor.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgbModalModule, SVGIconModule, TranslateModule],
-  providers: [],
 })
 export class ProfileEditorComponent {
   readonly profile = toSignal(this.store.select(AuthState.profile));
