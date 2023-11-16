@@ -427,30 +427,18 @@ export class TasksState {
   @Action(TreeReordered)
   treeReordered(
     ctx: Context,
-    { draggedId, rows }: TreeReordered
+    { draggedId, results }: TreeReordered
   ): Observable<void> {
     const state = ctx.getState();
-    const project = state.project!;
-    const models = state.nodes!;
     const upserts: ProjectNode[] = [];
-    const nodeViews = state.phases ?? [];
     const taskVm = state.phases!.find((x) => x.id === draggedId);
 
-    for (const vm of nodeViews) {
-      const vm2 = rows.find((x) => x.id === vm.id);
+    for (const id of results.changedIds) {
+      const vm = results.rows.find((x) => x.id === id)!;
+      const model = state.nodes!.find((x) => x.id === id)!;
 
-      if (vm.id === 'CyG51hu81h') {
-        console.log(vm);
-        console.log(vm2);
-      }
-      if (!vm2 || (vm.order === vm2.order && vm.parentId === vm2.parentId))
-        continue;
-
-      const orig = models.find((x) => x.id === vm.id)!;
-      const model = structuredClone(orig);
-
-      model.order = vm2.order;
-      model.parentId = vm2.parentId;
+      model.order = vm.order;
+      model.parentId = vm.parentId;
 
       upserts.push(model);
     }
@@ -461,7 +449,7 @@ export class TasksState {
 
     return this.saveReordered(
       ctx,
-      project,
+      state.project!,
       taskVm!.levelText,
       upserts.find((x) => x.id === draggedId)!,
       upserts.filter((x) => x.id !== draggedId)
@@ -637,7 +625,7 @@ export class TasksState {
             else tasks.push(task);
           }
           ctx.patchState({
-            nodes: tasks,
+            nodes: structuredClone(tasks),
           });
         }),
         switchMap(() => ctx.dispatch(new RebuildNodeViews())),

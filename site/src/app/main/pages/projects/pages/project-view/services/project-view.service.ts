@@ -1,13 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  PROJECT_NODE_VIEW,
-  PROJECT_NODE_VIEW_TYPE,
-  ProjectCategory,
-} from '@wbs/core/models';
+import { ProjectCategory } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TaskDeleteService } from '@wbs/main/components/task-delete';
 import { Observable } from 'rxjs';
@@ -19,7 +14,6 @@ import {
   MoveTaskRight,
   MoveTaskUp,
   RemoveTask,
-  TreeReordered,
 } from '../actions';
 import { PROJECT_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
@@ -45,7 +39,9 @@ export class ProjectViewService {
   }
 
   action(action: string, taskId?: string) {
-    if (action === 'upload') {
+    if (action === 'download') {
+      this.downloadNodes().subscribe();
+    } else if (action === 'upload') {
       this.nav.toProject(this.projectId, PROJECT_PAGES.UPLOAD);
     } else if (taskId) {
       if (action === 'addSub') {
@@ -75,23 +71,13 @@ export class ProjectViewService {
     }
   }
 
-  downloadNodes(view: PROJECT_NODE_VIEW_TYPE): Observable<void> {
+  downloadNodes(): Observable<void> {
     this.messages.notify.info('General.RetrievingData');
 
     return this.data.projectExport.runAsync(
       this.store.selectSnapshot(ProjectState.current)!,
       'xlsx',
-      this.store.selectSnapshot(
-        view === PROJECT_NODE_VIEW.DISCIPLINE
-          ? TasksState.disciplines
-          : TasksState.phases
-      ) ?? []
-    );
-  }
-
-  reordered([draggedId, rows]: [string, WbsNodeView[]]): void {
-    this.store.dispatch(
-      new TreeReordered(draggedId, PROJECT_NODE_VIEW.PHASE, rows)
+      this.store.selectSnapshot(TasksState.phases) ?? []
     );
   }
 }

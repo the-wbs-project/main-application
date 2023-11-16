@@ -105,10 +105,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.store
       .select(ProjectApprovalState.list)
       .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        console.error('update');
-        this.cd.detectChanges();
-      });
+      .subscribe(() => this.cd.detectChanges());
 
     this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
   }
@@ -133,9 +130,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
       this.tree.set(nodes);
       return;
     }
-    console.log(dragged);
-    console.log(target);
-
     const results = this.wbsService.reorder(
       nodes,
       dragged,
@@ -149,7 +143,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     //this.zone.run(() => this.tree.set(results.rows));
 
     this.store.dispatch(
-      new TreeReordered(dragged.id, PROJECT_NODE_VIEW.PHASE, results.rows)
+      new TreeReordered(dragged.id, PROJECT_NODE_VIEW.PHASE, results)
     );
     //this.service.reordered([dragged.id, results.rows]);*/
   }

@@ -1,5 +1,5 @@
 import { PROJECT_NODE_VIEW_TYPE, Project, WbsNode } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { RebuildResults } from '@wbs/main/models';
 
 export class VerifyTasks {
   static readonly type = '[Tasks] Verify';
@@ -15,7 +15,7 @@ export class TreeReordered {
   constructor(
     readonly draggedId: string,
     readonly view: PROJECT_NODE_VIEW_TYPE,
-    readonly rows: WbsNodeView[]
+    readonly results: RebuildResults
   ) {}
 }
 
