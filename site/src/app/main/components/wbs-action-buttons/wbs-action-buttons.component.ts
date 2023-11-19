@@ -18,7 +18,7 @@ import { TrackByProp } from 'ngxtension/trackby-id-prop';
     <button
       type="button"
       *ngFor="let item of items ?? []; trackByProp: 'action'"
-      class="btn btn-white btn-outline-primary"
+      class="btn btn-white btn-outline-dark"
       (click)="clicked.emit(item.action)"
       placement="bottom"
     >

@@ -1,22 +1,17 @@
 import { Injectable } from '@angular/core';
 import {
   faCheck,
+  faCloudDownload,
+  faCloudUpload,
   faPowerOff,
   faStamp,
   faXmarkToSlot,
 } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
-import {
-  PROJECT_CLAIMS,
-  PROJECT_STATI,
-  PROJECT_STATI_TYPE,
-  Project,
-} from '@wbs/core/models';
+import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { RoleState } from '@wbs/main/states';
-import { of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
-import { ChangeProjectStatus } from '../../actions';
+import { ProjectViewService } from '../../services';
 import { ProjectState } from '../../states';
 import { ProjectAction } from './project-action.model';
 
@@ -27,15 +22,37 @@ export class ProjectActionButtonService {
   private readonly actionReturnPlanning = 'returnPlanning';
   private readonly actionReject = 'reject';
   private readonly actionApprove = 'approve';
+  private readonly actionDownload = 'download';
+  private readonly actionUpload = 'upload';
 
   constructor(
+    private readonly actions: ProjectViewService,
     private readonly messages: Messages,
     private readonly store: Store
   ) {}
 
   buildMenu(project: Project, claims: string[]): ProjectAction[] | undefined {
-    const items: ProjectAction[] = [];
     const stati = PROJECT_STATI;
+    const items: ProjectAction[] = [
+      { separator: true },
+      {
+        action: this.actionDownload,
+        icon: faCloudDownload,
+        text: 'Projects.DownloadTasks',
+      },
+    ];
+
+    if (
+      project.status === stati.PLANNING &&
+      claims.includes(PROJECT_CLAIMS.TASKS.UPDATE)
+    ) {
+      items.push({
+        action: this.actionUpload,
+        icon: faCloudUpload,
+        text: 'Projects.UploadTasks',
+      });
+    }
+    items.push({ separator: true });
 
     if (project.status === stati.PLANNING) {
       if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
@@ -82,6 +99,14 @@ export class ProjectActionButtonService {
 
   handleAction(action: string): void {
     switch (action) {
+      case this.actionDownload:
+        this.actions.downloadTasks();
+        break;
+
+      case this.actionUpload:
+        this.actions.uploadTasks();
+        break;
+
       case this.actionApproval:
         this.approval();
         break;
@@ -105,7 +130,7 @@ export class ProjectActionButtonService {
   }
 
   private cancel(): void {
-    this.confirmAndChange(
+    this.actions.confirmAndChangeStatus(
       PROJECT_STATI.CANCELLED,
       'Projects.CancelProjectConfirm',
       'Projects.CancelProjectSuccess'
@@ -126,7 +151,7 @@ export class ProjectActionButtonService {
       );
       return;
     }
-    this.confirmAndChange(
+    this.actions.confirmAndChangeStatus(
       PROJECT_STATI.APPROVAL,
       'Projects.SubmitForApprovalConfirm',
       'Projects.SubmitForApprovalSuccess'
@@ -134,7 +159,7 @@ export class ProjectActionButtonService {
   }
 
   private backToPlanning(): void {
-    this.confirmAndChange(
+    this.actions.confirmAndChangeStatus(
       PROJECT_STATI.PLANNING,
       'Projects.ReturnToPlanningConfirm',
       'Projects.ReturnToPlanningSuccess'
@@ -142,7 +167,7 @@ export class ProjectActionButtonService {
   }
 
   private reject(): void {
-    this.confirmAndChange(
+    this.actions.confirmAndChangeStatus(
       PROJECT_STATI.PLANNING,
       'Projects.RejectProjectConfirm',
       'Projects.RejectProjectSuccess'
@@ -150,33 +175,10 @@ export class ProjectActionButtonService {
   }
 
   private approve(): void {
-    this.confirmAndChange(
+    this.actions.confirmAndChangeStatus(
       PROJECT_STATI.EXECUTION,
       'Projects.ApproveProjectConfirm',
       'Projects.ApproveProjectSuccess'
     );
-  }
-
-  private confirmAndChange(
-    status: PROJECT_STATI_TYPE,
-    confirmMessage: string,
-    successMessage: string
-  ) {
-    this.messages.confirm
-      .show('General.Confirm', confirmMessage)
-      .pipe(
-        switchMap((answer: boolean) => {
-          if (!answer) return of();
-
-          return this.store
-            .dispatch(new ChangeProjectStatus(status))
-            .pipe(
-              tap(() =>
-                this.messages.report.success('General.Success', successMessage)
-              )
-            );
-        })
-      )
-      .subscribe();
   }
 }

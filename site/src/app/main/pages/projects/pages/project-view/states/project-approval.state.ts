@@ -114,18 +114,15 @@ export class ProjectApprovalState implements NgxsOnInit {
           started: project.approvalStarted,
           owner: project.owner,
           projectId: project.id,
+          childrenIds: undefined,
+          current: undefined,
+          list: [],
+          messages: undefined,
+          stats: undefined,
         });
 
         if (project.approvalStarted) {
           ctx.dispatch(new InitiateApprovals(project.owner, project.id));
-        } else {
-          ctx.patchState({
-            childrenIds: undefined,
-            current: undefined,
-            list: [],
-            messages: undefined,
-            stats: undefined,
-          });
         }
       });
   }

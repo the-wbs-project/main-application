@@ -3,5 +3,5 @@
   view="discipline"
   [nodes]="disciplines()"
   [project]="project"
-  [expandedKeys]="disciplineIds() ?? []"
+  [expandedKeys]="project?.disciplines | disciplineIds"
 />

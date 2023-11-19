@@ -1,68 +1,67 @@
-import { Pipe, PipeTransform } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ActionMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
+import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { PROJECT_TREE_MENU_ITEMS } from '../models';
-import { ProjectState } from '../states';
+import { ContextMenuItem } from '../../../../../models';
+import { ProjectState } from '../../../../../states';
+import { PROJECT_TREE_MENU_ITEMS_V2 } from '../../../../../models/consts/project-tree-menu-items.const copy';
 
-@Pipe({ name: 'taskMenu', standalone: true })
-export class TaskMenuPipe implements PipeTransform {
+declare type Seperator = { separator: true };
+
+@Injectable()
+export class PhaseTreeMenuService {
   constructor(private readonly store: Store) {}
 
-  transform(
-    [tasks, claims]: [WbsNodeView[] | undefined | null, string[]],
-    taskId: string | undefined | null
-  ): ActionMenuItem[][] {
-    console.log(taskId);
+  buildMenu(
+    tasks: WbsNodeView[],
+    claims: string[],
+    selectedTaskId: string | undefined
+  ): (ContextMenuItem | Seperator)[] {
+    if (selectedTaskId === undefined) return [];
 
-    const task = tasks?.find((x) => x.id === taskId);
+    const task = tasks?.find((x) => x.id === selectedTaskId)!;
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
-    const results: ActionMenuItem[][] = [];
-
     const navActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
+      PROJECT_TREE_MENU_ITEMS_V2.reorderTaskActions,
       task,
       claims,
       status
     );
     const phaseActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS.taskActions,
+      PROJECT_TREE_MENU_ITEMS_V2.taskActions,
       task,
       claims,
       status
     );
-    if (!task) return results;
 
-    const nav: ActionMenuItem[] = [];
+    const movers: ContextMenuItem[] = [];
 
     for (const item of navActions) {
       if (item.action === 'moveLeft') {
-        if (task.canMoveLeft) nav.push(item);
+        if (task.canMoveLeft) movers.push(item);
       } else if (item.action === 'moveRight') {
-        if (task.canMoveRight) nav.push(item);
+        if (task.canMoveRight) movers.push(item);
       } else if (item.action === 'moveUp') {
-        if (task.canMoveUp) nav.push(item);
+        if (task.canMoveUp) movers.push(item);
       } else if (item.action === 'moveDown') {
-        if (task.canMoveDown) nav.push(item);
+        if (task.canMoveDown) movers.push(item);
       }
     }
 
-    if (phaseActions.length > 0) results.push(phaseActions);
-    if (nav.length > 0) results.push(nav);
-
-    console.log(results);
-    return results;
+    return movers.length === 0
+      ? phaseActions
+      : [...phaseActions, { separator: true }, ...movers];
   }
 
   private filterList(
-    actions: ActionMenuItem[],
+    actions: ContextMenuItem[],
     task: WbsNodeView | undefined,
     claims: string[],
     status: PROJECT_STATI_TYPE
-  ): ActionMenuItem[] {
+  ): ContextMenuItem[] {
     if (!actions || actions.length === 0) return actions;
 
-    const results: ActionMenuItem[] = [];
+    const results: ContextMenuItem[] = [];
 
     for (const action of actions) {
       if (this.filterItem(action, task, claims, status)) {
@@ -74,7 +73,7 @@ export class TaskMenuPipe implements PipeTransform {
   }
 
   private filterItem(
-    link: ActionMenuItem,
+    link: ContextMenuItem,
     task: WbsNodeView | undefined,
     claims: string[],
     status: PROJECT_STATI_TYPE

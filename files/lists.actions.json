@@ -10,7 +10,7 @@
         "id": "project-uploaded",
         "type": "actions",
         "label": "Actions.ProjectUploadedTitle",
-        "icon": "fa-upload"
+        "icon": "fa-cloud-upload"
     },
     {
         "id": "project-title-changed",

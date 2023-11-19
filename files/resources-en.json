@@ -271,7 +271,7 @@
       "CreateProject": "Create Project",
       "ProjectDetails": "Project Details",
       "NoProjectsFound": "No Projects Found",
-      "DownloadNodes": "Download Nodes",
+      "DownloadTasks": "Download Tasks",
       "UploadTasks": "Upload Tasks",
       "UploadTaskIntro": "Select the file you want to upload...",
       "UploadTaskErrors": "The following errors found",
@@ -352,7 +352,12 @@
       "Project Cancelled": "Project Cancelled",
       "NoApproval": "No Approval Yet",
       "ApprovedBy": "Approved By {name} on {date}",
-      "RejectedBy": "Rejected By {name} on {date}"
+      "RejectedBy": "Rejected By {name} on {date}",
+      "MoveUp": "Move Up",
+      "MoveDown": "Move Down",
+      "MoveLeft": "Move Left",
+      "MoveRight": "Move Right",
+      "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)"
     }
   },
   {

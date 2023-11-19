@@ -4,7 +4,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
   Project,
-  PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
   ProjectNode,
 } from '@wbs/core/models';
@@ -42,7 +41,6 @@ interface StateModel {
   project?: Project;
   nodes?: ProjectNode[];
   phases?: WbsNodeView[];
-  disciplines?: WbsNodeView[];
 }
 
 declare type Context = StateContext<StateModel>;
@@ -65,11 +63,6 @@ export class TasksState {
   @Selector()
   static current(state: StateModel): TaskDetailsViewModel | undefined {
     return state.current;
-  }
-
-  @Selector()
-  static disciplines(state: StateModel): WbsNodeView[] | undefined {
-    return state.disciplines;
   }
 
   @Selector()
@@ -149,7 +142,7 @@ export class TasksState {
       state.project,
       state.nodes
     );
-    ctx.patchState({ disciplines, phases });
+    ctx.patchState({ phases });
 
     state = ctx.getState();
 
@@ -657,10 +650,7 @@ export class TasksState {
   ): void {
     const state = ctx.getState();
     const tasks = state.nodes ?? [];
-    const taskVms =
-      (view === PROJECT_NODE_VIEW.DISCIPLINE
-        ? state.disciplines
-        : state.phases) ?? [];
+    const taskVms = state.phases ?? [];
 
     if (!state.project || tasks.length === 0 || taskVms.length === 0) {
       ctx.patchState({

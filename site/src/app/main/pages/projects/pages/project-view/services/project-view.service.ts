@@ -1,12 +1,16 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ProjectCategory } from '@wbs/core/models';
+import { PROJECT_STATI_TYPE, Project, ProjectCategory } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TaskDeleteService } from '@wbs/main/components/task-delete';
-import { Observable } from 'rxjs';
+import { Transformers } from '@wbs/main/services';
+import { of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import {
+  ChangeProjectStatus,
   CloneTask,
   CreateTask,
   MoveTaskDown,
@@ -27,7 +31,8 @@ export class ProjectViewService {
     private readonly nav: ProjectNavigationService,
     private readonly store: Store,
     private readonly taskCreate: TaskCreateService,
-    private readonly taskDelete: TaskDeleteService
+    private readonly taskDelete: TaskDeleteService,
+    private readonly transformers: Transformers
   ) {}
 
   private get projectId(): string {
@@ -40,7 +45,7 @@ export class ProjectViewService {
 
   action(action: string, taskId?: string) {
     if (action === 'download') {
-      this.downloadNodes().subscribe();
+      this.downloadTasks();
     } else if (action === 'upload') {
       this.nav.toProject(this.projectId, PROJECT_PAGES.UPLOAD);
     } else if (taskId) {
@@ -71,13 +76,45 @@ export class ProjectViewService {
     }
   }
 
-  downloadNodes(): Observable<void> {
+  uploadTasks(): void {
+    this.nav.toProject(this.projectId, PROJECT_PAGES.UPLOAD);
+  }
+
+  downloadTasks(project?: Project, phases?: WbsNodeView[]): void {
     this.messages.notify.info('General.RetrievingData');
 
-    return this.data.projectExport.runAsync(
-      this.store.selectSnapshot(ProjectState.current)!,
-      'xlsx',
-      this.store.selectSnapshot(TasksState.phases) ?? []
-    );
+    if (!project) {
+      project = this.store.selectSnapshot(ProjectState.current)!;
+    }
+    if (!phases) {
+      const nodes = this.store.selectSnapshot(TasksState.nodes)!;
+
+      phases = this.transformers.nodes.phase.view.run(project, nodes);
+    }
+
+    this.data.projectExport.runAsync(project, 'xlsx', phases).subscribe();
+  }
+
+  confirmAndChangeStatus(
+    status: PROJECT_STATI_TYPE,
+    confirmMessage: string,
+    successMessage: string
+  ) {
+    this.messages.confirm
+      .show('General.Confirm', confirmMessage)
+      .pipe(
+        switchMap((answer: boolean) => {
+          if (!answer) return of();
+
+          return this.store
+            .dispatch(new ChangeProjectStatus(status))
+            .pipe(
+              tap(() =>
+                this.messages.report.success('General.Success', successMessage)
+              )
+            );
+        })
+      )
+      .subscribe();
   }
 }

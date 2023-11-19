@@ -25,6 +25,7 @@ import {
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
 import { PROJECT_ACTIONS } from '../../../models';
+import { VerifyTasks } from '../../project-view/actions';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -435,7 +436,8 @@ export class ProjectUploadState {
             },
           ]
         )
-      )
+      ),
+      switchMap(() => ctx.dispatch(new VerifyTasks(project, true)))
     );
   }
 

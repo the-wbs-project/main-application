@@ -61,15 +61,6 @@ export class ProjectState {
   }
 
   @Selector()
-  static disciplineIds(state: StateModel): string[] {
-    return (
-      state.current?.disciplines?.map((x) =>
-        typeof x === 'string' ? x : x.id
-      ) ?? []
-    );
-  }
-
-  @Selector()
   static phaseIds(state: StateModel): string[] {
     return (
       state.current?.phases?.map((x) => (typeof x === 'string' ? x : x.id)) ??

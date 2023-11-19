@@ -4,15 +4,23 @@ import {
   Component,
   Input,
   OnInit,
+  ViewChild,
+  computed,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Store } from '@ngxs/store';
+import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
 import {
+  ContextMenuComponent,
+  ContextMenuModule,
+} from '@progress/kendo-angular-menu';
+import {
+  CellClickEvent,
   RowReorderEvent,
   SelectableSettings,
+  TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
 import { PROJECT_CLAIMS, PROJECT_NODE_VIEW, Project } from '@wbs/core/models';
@@ -28,10 +36,9 @@ import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
-import { TreeReordered } from '../../../../../actions';
+import { CreateTask, TreeReordered } from '../../../../../actions';
 import { ApprovalBadgeComponent } from '../../../../../components/approval-badge.component';
 import { ChildrenApprovalPipe } from '../../../../../pipes/children-approval.pipe';
-import { TaskMenuPipe } from '../../../../../pipes/task-menu.pipe';
 import {
   ProjectNavigationService,
   ProjectViewService,
@@ -41,6 +48,7 @@ import {
   ProjectState,
   TasksState,
 } from '../../../../../states';
+import { PhaseTreeMenuService } from './phase-tree-menu.service';
 
 @UntilDestroy()
 @Component({
@@ -48,17 +56,17 @@ import {
   selector: 'wbs-project-phase-tree',
   templateUrl: './phase-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [WbsPhaseService],
+  providers: [PhaseTreeMenuService, WbsPhaseService],
   imports: [
     ApprovalBadgeComponent,
     CheckPipe,
     ChildrenApprovalPipe,
+    ContextMenuModule,
     DisciplineIconListComponent,
     FillElementDirective,
     FindByIdPipe,
     FindThemByIdPipe,
     ProgressBarComponent,
-    TaskMenuPipe,
     TranslateModule,
     TreeDisciplineLegendComponent,
     TreeListModule,
@@ -68,8 +76,9 @@ import {
 export class ProjectPhaseTreeComponent implements OnInit {
   @Input({ required: true }) claims!: string[];
   @Input({ required: true }) project?: Project;
+  @ViewChild(ContextMenuComponent) gridContextMenu!: ContextMenuComponent;
+  @ViewChild(TreeListComponent) treeList!: TreeListComponent;
 
-  taskId?: string;
   expandedKeys: string[] = [];
   settings: SelectableSettings = {
     enabled: true,
@@ -85,11 +94,17 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly width = toSignal(this.store.select(UiState.mainContentWidth));
   readonly phases = toSignal(this.store.select(TasksState.phases));
   readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
+  readonly taskId = signal<string | undefined>(undefined);
+  readonly menu = computed(() =>
+    this.menuService.buildMenu(this.phases()!, this.claims, this.taskId())
+  );
 
   constructor(
     readonly navigate: ProjectNavigationService,
     readonly service: ProjectViewService,
+    private readonly actions$: Actions,
     private readonly cd: ChangeDetectorRef,
+    private readonly menuService: PhaseTreeMenuService,
     private readonly messages: Messages,
     private readonly store: Store,
     private readonly wbsService: WbsPhaseService
@@ -107,11 +122,50 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe(() => this.cd.detectChanges());
 
+    this.actions$
+      .pipe(ofActionSuccessful(CreateTask), untilDestroyed(this))
+      .subscribe(() => {
+        const phases = this.phases() ?? [];
+        const taskIndex = phases.findIndex((x) => x.id === this.taskId());
+        if (!taskIndex) return;
+
+        const task = phases[taskIndex];
+
+        if (task) {
+          this.treeList.expand(task);
+          this.treeList.focusCell(taskIndex, 0);
+        }
+      });
+
     this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
   }
 
-  rowReordered(e: RowReorderEvent) {
-    const nodes = JSON.parse(JSON.stringify(this.getNodesSnapshot()));
+  onAction(action: string): void {
+    if (action === 'download') {
+      this.service.downloadTasks(this.project!, this.phases()!);
+    } else this.service.action(action, this.taskId());
+  }
+
+  onCellClick(e: CellClickEvent): void {
+    this.taskId.set(e.dataItem.id);
+
+    if (e.type === 'contextmenu') {
+      const originalEvent = e.originalEvent;
+      originalEvent.preventDefault();
+
+      this.gridContextMenu.show({
+        left: originalEvent.pageX,
+        top: originalEvent.pageY,
+      });
+    } else {
+      this.taskId.set(e.dataItem.id);
+    }
+  }
+
+  onRowReordered(e: RowReorderEvent) {
+    const nodes = JSON.parse(
+      JSON.stringify(this.store.selectSnapshot(TasksState.phases)!)
+    );
 
     if (e.dropPosition === 'forbidden') {
       this.messages.notify.error('You cannot drop a node under itself', false);
@@ -137,18 +191,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
       e.dropPosition
     );
 
-    console.log(dragged);
-    console.log(target);
-    console.log(results);
-    //this.zone.run(() => this.tree.set(results.rows));
-
     this.store.dispatch(
       new TreeReordered(dragged.id, PROJECT_NODE_VIEW.PHASE, results)
     );
-    //this.service.reordered([dragged.id, results.rows]);*/
-  }
-
-  private getNodesSnapshot(): WbsNodeView[] {
-    return this.store.selectSnapshot(TasksState.phases)!;
   }
 }

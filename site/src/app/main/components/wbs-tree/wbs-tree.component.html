@@ -20,7 +20,7 @@
         [title]="'Wbs.Level' | translate"
         [width]="100"
         class="level-column tx-11"
-        headerClass="level-header-column"
+        headerClass="level-header-column tx-14"
       />
       @if (view === 'discipline') {
       <kendo-treelist-column
@@ -28,13 +28,14 @@
         title="Same As"
         [width]="100"
         class="level-column same-level tx-11"
-        headerClass="level-header-column"
+        headerClass="level-header-column tx-14"
       />
       }
       <kendo-treelist-column
         [expandable]="true"
         field="title"
         class="tx-11"
+        headerClass="tx-14"
         [title]="'Wbs.Task' | translate"
       />
       @if (view === 'phase' && (width ?? 0) > 800) {
@@ -42,7 +43,7 @@
         field="disciplines"
         [width]="150"
         class="discipline-column"
-        headerClass="discipline-column"
+        headerClass="discipline-column tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
           <wbs-tree-discipline-legend

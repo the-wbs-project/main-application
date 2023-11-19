@@ -16,23 +16,13 @@
       [initiallyExpanded]="false"
       [(expandedKeys)]="expandedKeys"
       [selectable]="settings"
-      (selectionChange)="taskId = $event.items[0].dataItem.id"
-      (rowReorder)="rowReordered($event)"
-      (dblclick)="navigate.toTask(taskId!)"
-      (cellClick)="taskId = $event.dataItem.id"
+      [navigable]="true"
+      (selectionChange)="taskId.set($event.items[0].dataItem.id)"
+      (dblclick)="navigate.toTask(taskId()!)"
+      (rowReorder)="onRowReordered($event)"
+      (cellClick)="onCellClick($event)"
     >
-      @if ([phases, claims] | taskMenu : taskId; as menuItems) {
-      <ng-template kendoTreeListToolbarTemplate>
-        @for (menu of menuItems; track $index){
-        <div class="d-ib pd-r-20">
-          <wbs-action-buttons
-            [items]="menu"
-            (clicked)="service.action($event, taskId!)"
-          />
-        </div>
-        }
-      </ng-template>
-      } @if (claims | check : canEditClaim) {
+      @if (claims | check : canEditClaim) {
       <kendo-treelist-rowreorder-column [width]="40" />
       }
       <kendo-treelist-column
@@ -40,16 +30,21 @@
         [title]="'Wbs.Level' | translate"
         [width]="100"
         class="level-column tx-11"
-        headerClass="level-header-column"
+        headerClass="level-header-column tx-14"
       />
       <kendo-treelist-column
         [expandable]="true"
         field="title"
-        [title]="'Wbs.Task' | translate"
+        [title]="'Projects.Activity_Title' | translate"
         class="tx-11"
+        headerClass="tx-14"
       />
       @if (project?.approvalStarted) {
-      <kendo-treelist-column [width]="175" [title]="'Approval'">
+      <kendo-treelist-column
+        [width]="175"
+        [title]="'Approval'"
+        headerClass="tx-14"
+      >
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <div class="tx-12 w-100 d-flex flex-row flex-align-center">
             <wbs-approval-badge
@@ -74,7 +69,7 @@
         field="disciplines"
         [width]="150"
         class="discipline-column"
-        headerClass="discipline-column"
+        headerClass="discipline-column tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
           <wbs-tree-discipline-legend
@@ -87,6 +82,14 @@
       </kendo-treelist-column>
       }
     </kendo-treelist>
+    <kendo-contextmenu
+      [items]="menu()"
+      (select)="service.action($event.item.action, taskId()!)"
+    >
+      <ng-template kendoMenuItemTemplate let-item="item">
+        {{ item.text | translate }}
+      </ng-template>
+    </kendo-contextmenu>
   </div>
 </div>
 }

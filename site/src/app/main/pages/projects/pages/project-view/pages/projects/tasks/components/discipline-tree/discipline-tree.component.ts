@@ -1,27 +1,36 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  computed,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
-import { ProjectViewService } from '../../../../../services';
-import { ProjectState, TasksState } from '../../../../../states';
 import { Project } from '@wbs/core/models';
+import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
+import { Transformers } from '@wbs/main/services';
+import { TasksState } from '../../../../../states';
+import { DisciplineIdsPipe } from './discipline-ids.pipe';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-discipline-tree',
   templateUrl: './discipline-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [WbsTreeComponent],
+  imports: [DisciplineIdsPipe, WbsTreeComponent],
 })
 export class ProjectDisciplinesTreeComponent {
   @Input({ required: true }) project?: Project;
 
   taskId?: string;
 
-  readonly disciplines = toSignal(this.store.select(TasksState.disciplines));
-  readonly disciplineIds = toSignal(
-    this.store.select(ProjectState.disciplineIds)
+  readonly nodes = toSignal(this.store.select(TasksState.nodes));
+  readonly disciplines = computed(() =>
+    this.transformers.nodes.discipline.view.run(this.project!, this.nodes()!)
   );
 
-  constructor(readonly service: ProjectViewService, readonly store: Store) {}
+  constructor(
+    private readonly store: Store,
+    private readonly transformers: Transformers
+  ) {}
 }

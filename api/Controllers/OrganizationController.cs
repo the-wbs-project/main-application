@@ -39,7 +39,7 @@ public class OrganizationsController : ControllerBase
             {
                 gets.Add(dataService.GetUserOrganizationalRolesAsync(orgId, user.Id));
 
-                if (gets.Count == 10)
+                if (gets.Count == 15)
                 {
                     roles.AddRange(await Task.WhenAll(gets));
                     gets.Clear();

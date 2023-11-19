@@ -13,13 +13,14 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   ProjectCategory,
 } from '@wbs/core/models';
-import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
+import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
 import { CategorySelectionService } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ChangeProjectCategories } from '../../../../../actions';
 import { ProjectState, TasksState } from '../../../../../states';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +28,7 @@ import { ProjectState, TasksState } from '../../../../../states';
   template: `
     <wbs-category-list-editor
       [(categories)]="categories"
-      [categoryType]="cType$ | async"
+      [categoryType]="cType()"
       [showSave]="true"
       (saveClicked)="save()"
     />
@@ -38,8 +39,8 @@ import { ProjectState, TasksState } from '../../../../../states';
 })
 export class ProjectSettingsCategoriesComponent implements OnInit {
   categories?: CategorySelection[];
-  readonly cType$ = this.route.data.pipe(
-    map((d) => <PROJECT_NODE_VIEW_TYPE>d['cType'])
+  readonly cType = toSignal(
+    this.route.data.pipe(map((d) => <PROJECT_NODE_VIEW_TYPE>d['cType']))
   );
 
   constructor(
@@ -52,8 +53,9 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
   ngOnInit(): void {
     const data: Observable<any>[] = [
       this.store.select(ProjectState.current),
-      this.store.select(TasksState.disciplines),
-      this.store.select(TasksState.phases),
+      this.store.select(TasksState.nodes),
+      //this.store.select(TasksState.disciplines),
+      //this.store.select(TasksState.phases),
       this.route.data,
     ];
 
@@ -82,16 +84,17 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
 
     let cats: ProjectCategory[];
     let confirmMessage: string;
-    let nodes: WbsNodeView[];
+    //let nodes: WbsNodeView[];
     let counts = new Map<string, number>();
+    const nodes = this.store.selectSnapshot(TasksState.nodes)!;
 
     if (cType === PROJECT_NODE_VIEW.DISCIPLINE) {
       cats = project.disciplines;
-      nodes = this.store.selectSnapshot(TasksState.disciplines) ?? [];
+      //nodes = this.store.selectSnapshot(TasksState.disciplines) ?? [];
       confirmMessage = 'Projects.DisciplineRemoveConfirm';
     } else {
       cats = project.phases;
-      nodes = this.store.selectSnapshot(TasksState.phases) ?? [];
+      //nodes = this.store.selectSnapshot(TasksState.phases) ?? [];
       confirmMessage = 'Projects.PhaseRemoveConfirm';
     }
 
@@ -99,7 +102,14 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
       const id = typeof cat === 'string' ? cat : cat.id;
       const node = nodes.find((x) => x.id === id);
 
-      counts.set(id, node?.children ?? 0);
+      if (cType === PROJECT_NODE_VIEW.PHASE) {
+        counts.set(id, nodes.filter((x) => x.parentId === id).length);
+      } else {
+        counts.set(
+          id,
+          nodes.filter((x) => x.disciplineIds?.includes(id)).length
+        );
+      }
     }
 
     this.categories = this.catService.build(

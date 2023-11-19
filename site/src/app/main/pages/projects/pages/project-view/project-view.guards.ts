@@ -12,9 +12,11 @@ import {
   SetApprovalView,
   VerifyProject,
   VerifyTask,
+  VerifyTasks,
 } from './actions';
 import { PROJECT_PAGES } from './models';
 import { ProjectState } from './states';
+import { of } from 'rxjs';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store)
@@ -60,21 +62,25 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
     ])
     .pipe(
       switchMap(() => store.selectOnce(ProjectState.current)),
-      tap((project) =>
-        store.dispatch(
-          new SetBreadcrumbs([
-            {
-              route: ['/', owner, 'projects'],
-              text: 'General.Projects',
-            },
-            {
-              text: project!.title,
-              isText: true,
-            },
+      switchMap((project) => {
+        if (!project) return of(false);
+
+        return store
+          .dispatch([
+            new VerifyTasks(project, true),
+            new SetBreadcrumbs([
+              {
+                route: ['/', owner, 'projects'],
+                text: 'General.Projects',
+              },
+              {
+                text: project.title,
+                isText: true,
+              },
+            ]),
           ])
-        )
-      ),
-      map(() => true)
+          .pipe(map(() => true));
+      })
     );
 };
 

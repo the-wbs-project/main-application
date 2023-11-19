@@ -1,9 +1,6 @@
 DROP PROCEDURE IF EXISTS [dbo].[ProjectApproval_Get]
 GO
 
-DROP PROCEDURE IF EXISTS [dbo].[ProjectApproval_Get]
-GO
-
 CREATE PROCEDURE [dbo].[ProjectApproval_Get]
     @ProjectId nvarchar(100)
 AS
@@ -17,8 +14,8 @@ BEGIN
         FROM [dbo].[ProjectNodes]
         WHERE [ProjectId] = @ProjectId AND [Removed] = 0
 
-    SELECT id.Id, ISNULL(pa.ProjectId, @ProjectId) ProjectId, pa.ApprovedOn, pa.ApprovedBy, pa.IsApproved
-        FROM #Ids id LEFT JOIN [dbo].[ProjectApproval] pa ON pa.[Id] = id.ID
+    SELECT id.Id, pa.ProjectId, pa.ApprovedOn, pa.ApprovedBy, pa.IsApproved
+        FROM #Ids id LEFT JOIN [dbo].[ProjectApproval] pa ON pa.[Id] = id.ID and pa.[ProjectId] = @ProjectId
 
     DROP TABLE #Ids
 END
