@@ -78,10 +78,7 @@ export class ProjectResourcesPageComponent {
 
   saveClicked(): void {
     const vm = structuredClone(this.vm()!);
-
-    console.log('save clicked', vm);
-
-    var valid = this.validator.validate(vm);
+    const valid = this.validator.validate(vm);
 
     this.vm.set(vm);
 
@@ -144,15 +141,13 @@ export class ProjectResourcesPageComponent {
       order: data.order ?? Math.max(...this.list.map((x) => x.order), 0) + 1,
     };
 
-    return this.data.projectResources
-      .putAsync(this.owner, this.projectId, resource)
-      .pipe(
-        map(() => {
-          console.log('Saved');
+    return this.data.projectResources.putAsync(resource).pipe(
+      map(() => {
+        console.log('Saved');
 
-          this.list = structuredClone([...this.list, resource]);
-          this.cd.detectChanges();
-        })
-      );
+        this.list = structuredClone([...this.list, resource]);
+        this.cd.detectChanges();
+      })
+    );
   }
 }

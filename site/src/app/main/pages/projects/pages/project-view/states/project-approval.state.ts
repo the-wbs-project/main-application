@@ -171,7 +171,7 @@ export class ProjectApprovalState implements NgxsOnInit {
     const state = ctx.getState();
     const record: ProjectApprovalSaveRecord = {
       isApproved,
-      projectId: state.current!.projectId,
+      projectId: state.projectId!,
       ids: [state.current!.id],
       approvedBy: this.store.selectSnapshot(AuthState.userId)!,
       approvedOn: new Date(),
