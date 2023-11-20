@@ -5,14 +5,29 @@
   dragTargetFilter=".k-master-row, .k-listview-item"
   dropTargetFilter=".k-master-row, .k-listview-item"
   [dragData]="dragData"
-  [hint]="{ hintClass: 'rowHint' }"
+  [hint]="{ hintClass: 'row-hint' }"
   (onDrop)="onDrop($event)"
   dragHandle=".k-i-reorder"
 >
+  <div class="rr-item rr-list-header">
+    @if (claims | check : editClaim) {
+    <div class="reorder-item">&nbsp;</div>
+    }
+    <div class="type-item">{{ "General.Type" | translate }} &nbsp;</div>
+    <div class="name-item">{{ "General.Name" | translate }}</div>
+    <div class="description-item">{{ "General.Description" | translate }}</div>
+    <div class="modified-item">
+      {{ "General.LastModified" | translate }}
+    </div>
+    <div class="view-item">&nbsp;</div>
+    @if (claims | check : [editClaim, deleteClaim]) {
+    <div class="actions-item">&nbsp;</div>
+    }
+  </div>
   <kendo-listview
     class="demo-listview"
     [data]="(list | tableProcess : state()) ?? []"
-    itemClass="w-100 d-flex flex-align-center item-border rr-list-item tx-12"
+    itemClass="rr-item rr-list-item"
     data-kendo-listview-index="0"
   >
     <ng-template
@@ -30,16 +45,14 @@
       <div class="type-item">
         <wbs-resource-type-text [type]="dataItem.type" />
       </div>
-      <div class="name-item">
-        {{ dataItem.name }}
-      </div>
-      <div class="flex-fill">{{ dataItem.description }}</div>
-
-      <div class="view-item tx-center">
+      <div class="name-item">{{ dataItem.name }}</div>
+      <div class="description-item">{{ dataItem.description }}</div>
+      <div class="modified-item">{{ dataItem.lastModified | dateText }}</div>
+      <div class="view-item">
         <wbs-resource-view-link [owner]="owner" [record]="dataItem" />
       </div>
       @if (claims | check : [editClaim, deleteClaim]) {
-      <div class="actions-item tx-center">
+      <div class="actions-item">
         <a class="pointer text-decoration-none tx-black">
           <fa-icon [icon]="faGear" />
         </a>
@@ -48,67 +61,3 @@
     </ng-template>
   </kendo-listview>
 </div>
-<br />
-<br />
-<table class="table table-striped table-bordered">
-  <thead class="thead-light">
-    <tr>
-      <th scope="col" class="pointer" [sortable]="'type'" [state]="state()">
-        {{ "General.Type" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="type" />
-      </th>
-      <th scope="col" class="pointer" [sortable]="'name'" [state]="state()">
-        {{ "General.Name" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="name" />
-      </th>
-      <th
-        scope="col"
-        class="pointer d-none d-md-table-cell"
-        [sortable]="'description'"
-        [state]="state()"
-      >
-        {{ "General.Description" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="description" />
-      </th>
-      <th
-        scope="col"
-        class="pointer d-none d-lg-table-cell"
-        [sortable]="'lastModified'"
-        [state]="state()"
-      >
-        {{ "General.LastModified" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="lastModified" />
-      </th>
-      <th scope="col">&nbsp;</th>
-    </tr>
-  </thead>
-  <tbody>
-    @for (resource of (list | tableProcess : state()) ?? []; track resource.id)
-    {
-    <tr>
-      <td class="mn-wd-100">
-        <wbs-resource-type-text [type]="resource.type" />
-      </td>
-      <td class="mn-wd-200">{{ resource.name }}</td>
-      <td class="d-none d-md-table-cell tx-12">
-        {{ resource.description }}
-      </td>
-      <td class="d-none d-lg-table-cell mn-wd-150">
-        {{ resource.lastModified | dateText }}
-      </td>
-      <td class="wd-85 pd-x-0-f">
-        <div class="d-ib wd-40 tx-center">
-          <wbs-resource-view-link [owner]="owner" [record]="resource" />
-        </div>
-        <div class="d-ib wd-40 tx-center">
-          @if (claims | check : [editClaim, deleteClaim]) {
-          <a class="pointer text-decoration-none tx-black">
-            <fa-icon [icon]="faGear" />
-          </a>
-          }
-        </div>
-      </td>
-    </tr>
-    }
-  </tbody>
-</table>
