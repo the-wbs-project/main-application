@@ -12,7 +12,7 @@ import {
   setApprovalViewAsTask,
   taskVerifyGuard,
 } from '../project-view.guards';
-import { projectClaimsResolve } from '../services';
+import { projectClaimsResolve, projectIdResolve } from '../services';
 import { ProjectState } from '../states';
 
 export const resourceResolve: ResolveFn<RecordResource[]> = (
@@ -141,6 +141,7 @@ export const routes: Routes = [
     resolve: {
       owner: orgResolve,
       list: resourceResolve,
+      projectId: projectIdResolve,
       claims: projectClaimsResolve,
     },
     loadComponent: () =>

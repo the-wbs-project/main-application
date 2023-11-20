@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { PROJECT_SETTINGS_PAGES } from '../../../../models';
-import { orgMemberResolve } from '@wbs/main/services';
+import { orgResolve } from '@wbs/main/services';
 
 export const routes: Routes = [
   {
@@ -48,7 +48,7 @@ export const routes: Routes = [
         ({ ProjectSettingsRolesComponent }) => ProjectSettingsRolesComponent
       ),
     resolve: {
-      members: orgMemberResolve,
+      org: orgResolve,
     },
   },
 ];
