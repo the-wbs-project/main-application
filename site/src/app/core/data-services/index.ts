@@ -17,6 +17,7 @@ import { ProjectDataService } from './project.data-service';
 import { StaticFileDataService } from './static-files.data-service';
 import { UserDataService } from './user.data-service';
 import { ProjectApprovalDataService } from './project-approval.data-service';
+import { ResourceFileDataService } from './resource-files.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -35,6 +36,7 @@ export class DataServiceFactory {
   readonly projectResources = new ProjectResourcesDataService(this.http);
   readonly projects = new ProjectDataService(this.http);
   readonly projectSnapshots = new ProjectSnapshotDataService(this.http);
+  readonly resourceFiles = new ResourceFileDataService(this.http);
   readonly staticFiles = new StaticFileDataService(this.http);
   readonly users = new UserDataService(this.http);
 

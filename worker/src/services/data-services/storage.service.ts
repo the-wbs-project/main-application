@@ -20,7 +20,7 @@ export class StorageService {
     return object == null ? null : <T>object.json();
   }
 
-  async getAsResponse(ctx: Context, fileName: string, folders?: string[]): Promise<Response> {
+  async getAsResponseAsync(ctx: Context, fileName: string, folders?: string[]): Promise<Response> {
     fileName = decodeURIComponent(fileName);
 
     const key = folders ? `${folders.join('/')}/${fileName}` : fileName;
@@ -32,14 +32,14 @@ export class StorageService {
     object.writeHttpMetadata(headers);
     headers.set('etag', object.httpEtag);
 
-    return new Response(object.body, {
+    return ctx.newResponse(object.body, {
       headers,
     });
   }
 
-  async put<T>(fileName: string, folders: string[], body: T): Promise<void> {
-    const key = `${folders.join('/')}/${fileName}`;
+  async putAsync(ctx: Context, fileName: string, folders?: string[]): Promise<void> {
+    const key = folders ? `${folders.join('/')}/${fileName}` : fileName;
 
-    await this.bucket.put(key, JSON.stringify(body));
+    await this.bucket.put(key, ctx.req.body);
   }
 }

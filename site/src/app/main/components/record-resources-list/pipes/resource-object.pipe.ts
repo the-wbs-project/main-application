@@ -7,6 +7,6 @@ export class ResourceObjectPipe implements PipeTransform {
   constructor(private readonly data: DataServiceFactory) {}
 
   transform([owner, id]: [string, string]): Observable<ArrayBuffer> {
-    return this.data.staticFiles.getForOwnerAsync(owner, id);
+    return this.data.resourceFiles.getAsync(owner, id);
   }
 }

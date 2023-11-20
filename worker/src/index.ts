@@ -6,7 +6,6 @@ import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunServ
 export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
-
 //
 //  Dependency Injection
 //
@@ -107,6 +106,11 @@ app.post('api/chat/thread/:threadId', verifyJwt, Http.chat.postAsync);
 
 app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
 app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
+
+app.get('api/files/statics/:file', verifyJwt, Http.statics.getAsync);
+app.get('api/files/resources/:owner/:file', verifyJwt, Http.resourceFiles.getAsync);
+app.put('api/files/resources/:owner/:file', verifyJwt, Http.resourceFiles.putAsync);
+
 app.get('api/queue/test', (ctx) => {
   ctx.env.JIRA_SYNC_QUEUE.send({
     message: 'Hello World!',

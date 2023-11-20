@@ -43,7 +43,6 @@ export class AppConfig {
             allowAnonymous: true,
           },
           'https://ai.pm-empower.com/*',
-          'https://static.pm-empower.com/*',
           this.apiDomain + '/*',
         ],
       },

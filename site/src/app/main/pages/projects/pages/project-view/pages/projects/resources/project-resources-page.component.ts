@@ -120,7 +120,7 @@ export class ProjectResourcesPageComponent {
 
     return Utils.getFileAsync(rawFile).pipe(
       switchMap((file) =>
-        this.data.staticFiles.uploadForOwnerAsync(this.owner, data.id!, file)
+        this.data.resourceFiles.uploadAsync(this.owner, data.id!, file)
       ),
       switchMap(() => this.save(data))
     );
