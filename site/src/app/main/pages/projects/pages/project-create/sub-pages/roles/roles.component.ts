@@ -6,10 +6,15 @@ import {
   signal,
   WritableSignal,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, RoleIds } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
 import { AuthState, RoleState } from '@wbs/main/states';
+import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { PROJECT_CREATION_PAGES } from '../../models';
@@ -20,17 +25,25 @@ import { ProjectCreateState } from '../../states';
   standalone: true,
   templateUrl: './roles.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FooterComponent, ProjectRolesComponent],
+  imports: [
+    FontAwesomeModule,
+    FooterComponent,
+    ProjectRolesComponent,
+    TranslateModule,
+  ],
 })
 export class RolesComponent implements OnInit {
   @Input() org!: string;
-  @Input() members!: Member[];
 
+  readonly faSpinner = faSpinner;
+  readonly isLoading = signal<boolean>(true);
+  readonly members = signal<Member[]>([]);
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
   readonly smeIds = signal<string[]>([]);
 
   constructor(
+    private readonly data: DataServiceFactory,
     private readonly service: ProjectCreateService,
     private readonly store: Store
   ) {}
@@ -40,13 +53,18 @@ export class RolesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const roles = this.store.selectSnapshot(ProjectCreateState.roles);
+    forkJoin({
+      members: this.data.memberships.getMembershipUsersAsync(this.org),
+      roles: this.store.selectOnce(ProjectCreateState.roles),
+      userId: this.store.selectOnce(AuthState.userId),
+    }).subscribe(({ members, roles, userId }) => {
+      this.members.set(members);
 
-    this.pmIds.set(
-      roles.get(this.ids.pm) ?? [this.store.selectSnapshot(AuthState.userId)!]
-    );
-    this.smeIds.set(roles.get(this.ids.sme) ?? []);
-    this.approverIds.set(roles.get(this.ids.approver) ?? []);
+      this.pmIds.set(roles.get(this.ids.pm) ?? [userId!]);
+      this.smeIds.set(roles.get(this.ids.sme) ?? []);
+      this.approverIds.set(roles.get(this.ids.approver) ?? []);
+      this.isLoading.set(false);
+    });
   }
 
   back(): void {
