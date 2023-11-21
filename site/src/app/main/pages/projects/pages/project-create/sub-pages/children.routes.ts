@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { orgResolve } from '@wbs/main/services';
+import { orgResolve, projectCategoryResolver } from '@wbs/main/services';
 import {
   redirectGuard,
   setupGuard,
@@ -58,6 +58,7 @@ export const routes: Routes = [
     },
     resolve: {
       org: orgResolve,
+      categories: projectCategoryResolver,
     },
   },
   {

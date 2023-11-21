@@ -3,43 +3,43 @@
   appFillElement
   [paddingBottom]="paddingBottom"
 >
-  <div class="w-100 text-center" style="flex: 0 1 80px">
-    <kendo-textbox #search [placeholder]="'General.Search' | translate" />
-  </div>
   <div class="scroll mg-t-10 w-100" style="flex: 1 1 auto">
-    <div class="container-fluid">
-      <div class="row">
-        <div
-          class="col-lg-3 col-md-4 col-sm-6"
-          *ngFor="
-            let cat of categories
-              | projectCategoryFilter : search.value
-              | projectCategorySort
-          "
-        >
-          <div
-            class="card tx-center border-1"
-            [ngClass]="{
-              'border-primary': cat.id !== selected,
-              'border-danger': cat.id === selected
-            }"
-          >
-            <div class="card-body">
-              <img class="wd-40 hd-40" [src]="cat.icon" />
-              <h5 class="mg-t-10">{{ cat.label | translate }}</h5>
-              <p class="card-text ht-60">
-                {{ cat.description ?? "" | translate }}
-              </p>
-              <button
-                class="btn btn-primary w-100"
-                (click)="categoryChosen.emit(cat.id)"
-              >
-                {{ "General.Select" | translate }}
-              </button>
-            </div>
+    <div class="list-group d-ib text-start w-100">
+      @for (cat of categories; track cat.id) {
+      <div
+        class="list-group-item d-flex pd-l-0 flex-align-center border-primary"
+        style="border-bottom-width: 2px !important"
+      >
+        <div class="wd-80 tx-center" style="flex: 0 0 80px">
+          <img class="wd-40 hd-40" [src]="cat.icon" />
+        </div>
+        <div class="flex-grow-1">
+          <div class="tx-16">
+            {{ cat.label | translate }}
+          </div>
+          <div class="tx-12 font-italic">
+            @if (cat.description){
+            {{ cat.description | translate }}
+            }
           </div>
         </div>
+        <div class="pd-l-10">
+          @if( cat.id === selected) {
+          <button class="btn btn-primary" (click)="categoryChosen.emit(cat.id)">
+            {{ "General.Selected" | translate }}
+          </button>
+          } @else {
+          <button
+            class="btn btn-outline-primary"
+            (click)="categoryChosen.emit(cat.id)"
+          >
+            {{ "General.Select" | translate }}
+          </button>
+          }
+        </div>
       </div>
+
+      }
     </div>
   </div>
 </div>

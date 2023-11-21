@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Organization } from '@wbs/core/models';
 import { MembershipState } from '@wbs/main/states';
-import { first, map, skipWhile, tap } from 'rxjs/operators';
-import { Utils } from './utils.service';
+import { first, map, skipWhile } from 'rxjs/operators';
+import { Utils } from '../utils.service';
 
 export const orgResolve: ResolveFn<string> = (route: ActivatedRouteSnapshot) =>
   Utils.getOrgName(inject(Store), route);

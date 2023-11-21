@@ -9,7 +9,7 @@
             "Buildings - Residential"
         ],
         "order": 1,
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/a32f672d-a598-4f1c-c061-e1dd9e60ad00/icon"
     },
     {
         "id": "buildings-commercial",
@@ -21,7 +21,7 @@
             "Buildings - Commercial"
         ],
         "order": 2,
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/270a2ddc-182d-4801-6fa6-ebae1dc54900/icon"
     },
     {
         "id": "buildings-institutional",
@@ -33,7 +33,7 @@
             "Buildings - Institutional"
         ],
         "order": 3,
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/a624bd3b-b0c1-46ec-073e-26de4a150900/icon"
     },
     {
         "id": "emergency-management",

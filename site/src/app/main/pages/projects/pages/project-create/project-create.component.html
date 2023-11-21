@@ -1,4 +1,4 @@
-<div class="container-fluid mg-y-20">
+<div class="container-fluid mg-y-10">
   <div class="row">
     <div class="col-12">
       <wbs-page-header />
@@ -8,13 +8,9 @@
 <div class="row">
   <div class="col-12">
     <div class="flex-fill tx-center">
-      <div>
-        <div class="pd-t-30">
-          <p class="tx-24">{{ title() ?? "" | translate }}</p>
-          <p>{{ description() ?? "" | translate }}</p>
-        </div>
-        <router-outlet />
-      </div>
+      <p class="tx-24">{{ title() ?? "" | translate }}</p>
+      <p>{{ description() ?? "" | translate }}</p>
+      <router-outlet />
     </div>
   </div>
 </div>

@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Utils } from './utils.service';
+import { Utils } from '../utils.service';
 
 export const orgClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
