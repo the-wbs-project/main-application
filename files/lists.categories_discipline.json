@@ -1,72 +1,230 @@
 [
     {
-        "id": "mechanical",
+        "id": "principal-in-charge",
         "type": "categories_discipline",
-        "label": "Category_Discipline.Mechanical_Name",
-        "description": "Category_Discipline.Mechanical_Description",
+        "label": "Category_Discipline.PrincipalInCharge_Name",
         "tags": [
-            "Mechanical"
+            "principal-in-charge"
         ],
-        "icon": "fa-screwdriver-wrench"
+        "icon": "fa-people-roof",
+        "order": 1
     },
     {
-        "id": "electrical",
+        "id": "project-manager",
         "type": "categories_discipline",
-        "label": "Category_Discipline.Electrical_Name",
-        "description": "Category_Discipline.Electrical_Description",
+        "label": "Category_Discipline.Project_Manager_Name",
         "tags": [
-            "Electrical"
+            "PM",
+            "Project Manager"
         ],
-        "icon": "fa-bolt"
+        "icon": "fa-chart-gantt",
+        "order": 2
     },
     {
-        "id": "structural",
+        "id": "architect",
         "type": "categories_discipline",
-        "label": "Category_Discipline.Structural_Name",
-        "description": "Category_Discipline.Structural_Description",
+        "label": "Category_Discipline.Architect_Name",
         "tags": [
-            "Structural"
+            "architect"
         ],
-        "icon": "fa-bridge-suspension"
-    },
-    {
-        "id": "survey",
-        "type": "categories_discipline",
-        "label": "Category_Discipline.Survey_Name",
-        "description": "Category_Discipline.Survey_Description",
-        "tags": [
-            "Survey"
-        ],
-        "icon": "fa-drone-alt"
-    },
-    {
-        "id": "plumbing",
-        "type": "categories_discipline",
-        "label": "Category_Discipline.Plumbing_Name",
-        "description": "Category_Discipline.Plumbing_Description",
-        "tags": [
-            "Plumbing"
-        ],
-        "icon": "fa-pipe-valve"
+        "icon": "fa-building",
+        "order": 3
     },
     {
         "id": "civil",
         "type": "categories_discipline",
         "label": "Category_Discipline.Civil_Name",
-        "description": "Category_Discipline.Civil_Description",
         "tags": [
-            "Civil"
+            "Civil",
+            "Civil Engineer"
         ],
-        "icon": "fa-building"
+        "icon": "fa-road-bridge",
+        "order": 4
+    },
+    {
+        "id": "environmental",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Environmental_Name",
+        "tags": [
+            "Environmental",
+            "Environmental Engineer"
+        ],
+        "icon": "fa-wind-turbine",
+        "order": 5
+    },
+    {
+        "id": "structural",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Structural_Name",
+        "tags": [
+            "Structural",
+            "Structural Engineer"
+        ],
+        "icon": "fa-bridge-suspension",
+        "order": 6
+    },
+    {
+        "id": "mechanical",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Mechanical_Name",
+        "tags": [
+            "Mechanical"
+        ],
+        "icon": "fa-screwdriver-wrench",
+        "order": 7
+    },
+    {
+        "id": "electrical",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Electrical_Name",
+        "tags": [
+            "Electrical",
+            "Electrical Engineer"
+        ],
+        "icon": "fa-bolt",
+        "order": 8
+    },
+    {
+        "id": "plumbing",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Plumbing_Name",
+        "tags": [
+            "Plumbing",
+            "Plumbing Engineer"
+        ],
+        "icon": "fa-pipe-valve",
+        "order": 9
     },
     {
         "id": "scientist",
         "type": "categories_discipline",
         "label": "Category_Discipline.Scientist_Name",
-        "description": "Category_Discipline.Scientist_Description",
         "tags": [
             "Scientist"
         ],
-        "icon": "fa-flask"
+        "icon": "fa-flask",
+        "order": 10
+    },
+    {
+        "id": "cultural-resource",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Cultural_Name",
+        "tags": [
+            "Cultural",
+            "Cultural Resource",
+            "Cultural Resource Specialist"
+        ],
+        "icon": "fa-brush",
+        "order": 11
+    },
+    {
+        "id": "landscape-architect",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.LandscapeAchitect_Name",
+        "tags": [
+            "Landscape",
+            "Landscape Architect"
+        ],
+        "icon": "fa-flower-tulip",
+        "order": 12
+    },
+    {
+        "id": "interior-designers",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.InteriorDesigners_Name",
+        "tags": [
+            "Interior",
+            "Interior Designers"
+        ],
+        "icon": "fa-chair",
+        "order": 13
+    },
+    {
+        "id": "planner",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Planner_Name",
+        "tags": [
+            "Planner"
+        ],
+        "icon": "fa-calendar-days",
+        "order": 14
+    },
+    {
+        "id": "survey",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Survey_Name",
+        "tags": [
+            "Survey"
+        ],
+        "icon": "fa-drone-alt",
+        "order": 15
+    },
+    {
+        "id": "construction-manager",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.ConstructionManager_Name",
+        "tags": [
+            "Construction",
+            "Construction Manager"
+        ],
+        "icon": "fa-user-helmet-safety",
+        "order": 16
+    },
+    {
+        "id": "operation-manager",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.OperationManager_Name",
+        "tags": [
+            "Operations",
+            "Operation Manager"
+        ],
+        "icon": "fa-calculator",
+        "order": 17
+    },
+    {
+        "id": "accountant",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Accountant_Name",
+        "tags": [
+            "Accountant"
+        ],
+        "icon": "fa-dollar-sign",
+        "order": 18
+    },
+    {
+        "id": "marketing-specialist",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.MarketingSpecialist_Name",
+        "tags": [
+            "Marketing",
+            "Marketing Specialist"
+        ],
+        "icon": "fa-megaphone",
+        "order": 19
+    },
+    {
+        "id": "intern",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.Intern_Name",
+        "tags": [
+            "Intern"
+        ],
+        "icon": "fa-graduation-cap",
+        "order": 20
+    },
+    {
+        "id": "administrative-assistant",
+        "type": "categories_discipline",
+        "label": "Category_Discipline.AdministrativeAssistant_Name",
+        "tags": [
+            "Admin",
+            "Administrative",
+            "Administration",
+            "Assistant",
+            "Admin Assistant",
+            "Administrative Assistant"
+        ],
+        "icon": "fa-notebook",
+        "order": 21
     }
 ]

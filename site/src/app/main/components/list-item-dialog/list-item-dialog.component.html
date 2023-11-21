@@ -10,11 +10,7 @@
   ></button>
 </div>
 <div class="modal-body">
-  <form
-    #createForm
-    [formGroup]="form"
-    (submit)="modal.close([title.value, description.value])"
-  >
+  <form [formGroup]="form" (submit)="close()">
     <div class="form-group">
       <label for="title"> {{ "General.Name" | translate }} </label>
       <input
@@ -25,13 +21,11 @@
         class="form-control"
         required
       />
-      <div
-        class="invalid-feedback"
-        *ngIf="controls.title?.errors?.['required']"
-      >
-        Error: Name is required
-      </div>
+      @if (controls.title.errors?.['required']) {
+      <div class="invalid-feedback">Error: Name is required</div>
+      }
     </div>
+    @if (showDescription) {
     <div class="form-group">
       <label for="description"> {{ "General.Description" | translate }} </label>
       <input
@@ -42,22 +36,16 @@
         class="form-control"
         required
       />
-      <div
-        class="invalid-feedback"
-        *ngIf="controls.description?.errors?.['required']"
-      >
-        Error: Description is required
-      </div>
+      @if (controls.description.errors?.['required']) {
+      <div class="invalid-feedback">Error: Description is required</div>
+      }
     </div>
+    }
     <div class="modal-footer">
       <button class="btn btn-warning" (click)="modal.dismiss()">
         Nevermind
       </button>
-      <button
-        type="submit"
-        class="btn btn-success"
-        [disabled]="!form.valid"
-      >
+      <button type="submit" class="btn btn-success" [disabled]="!form.valid">
         Add
       </button>
     </div>

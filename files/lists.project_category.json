@@ -1,5 +1,98 @@
 [
     {
+        "id": "buildings-residential",
+        "type": "project_category",
+        "label": "Category_Project.BuildingsResidential_Name",
+        "description": "Category_Project.BuildingsResidential_Description",
+        "tags": [
+            "Residential",
+            "Buildings - Residential"
+        ],
+        "order": 1,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+    },
+    {
+        "id": "buildings-commercial",
+        "type": "project_category",
+        "label": "Category_Project.BuildingsCommercial_Name",
+        "description": "Category_Project.BuildingsCommercial_Description",
+        "tags": [
+            "Commercial",
+            "Buildings - Commercial"
+        ],
+        "order": 2,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+    },
+    {
+        "id": "buildings-institutional",
+        "type": "project_category",
+        "label": "Category_Project.BuildingsInstitutional_Name",
+        "description": "Category_Project.BuildingsInstitutional_Description",
+        "tags": [
+            "Institutional",
+            "Buildings - Institutional"
+        ],
+        "order": 3,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+    },
+    {
+        "id": "emergency-management",
+        "type": "project_category",
+        "label": "Category_Project.EmergencyManagement_Name",
+        "description": "Category_Project.EmergencyManagement_Description",
+        "tags": [
+            "Emergency",
+            "Emergency Management"
+        ],
+        "order": 4,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
+    },
+    {
+        "id": "environmental",
+        "type": "project_category",
+        "label": "Category_Project.Environmental_Name",
+        "description": "Category_Project.Environmental_Description",
+        "tags": [
+            "Environmental"
+        ],
+        "order": 5,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/5b1c0000-f477-4ddc-4f8a-565081fe3c00/icon"
+    },
+    {
+        "id": "land-development",
+        "type": "project_category",
+        "label": "Category_Project.LandDevelopment_Name",
+        "description": "Category_Project.LandDevelopment_Description",
+        "tags": [
+            "Land",
+            "Land Development"
+        ],
+        "order": 6,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/a0fafc27-e431-47cc-b4e4-561b06f73c00/icon"
+    },
+    {
+        "id": "transportation",
+        "type": "project_category",
+        "label": "Category_Project.Transportation_Name",
+        "description": "Category_Project.Transportation_Description",
+        "tags": [
+            "Transportation"
+        ],
+        "order": 7,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/17eba6d3-acbd-4300-c442-00b5b2612b00/icon"
+    },
+    {
+        "id": "water-resources",
+        "type": "project_category",
+        "label": "Category_Project.WaterResources_Name",
+        "description": "Category_Project.WaterResources_Description",
+        "tags": [
+            "Water Resources"
+        ],
+        "order": 8,
+        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/d3dc6134-73ab-4656-0310-f33d77ac7300/icon"
+    },
+    {
         "id": "water-treatment",
         "type": "project_category",
         "label": "Category_Project.WaterTreatment_Name",
@@ -8,6 +101,7 @@
             "Water",
             "Water Treatment"
         ],
+        "order": 9,
         "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/ef814260-92b2-4ee5-2bc8-1ff31d142000/icon"
     },
     {
@@ -19,70 +113,7 @@
             "Waste Water",
             "Waste Water Treatment"
         ],
+        "order": 10,
         "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/021efcf1-458e-4808-118b-884b9b0bdf00/icon"
-    },
-    {
-        "id": "land-development",
-        "type": "project_category",
-        "label": "Category_Project.LandDevelopment_Name",
-        "description": "Category_Project.LandDevelopment_Description",
-        "tags": [
-            "Land",
-            "Land Development"
-        ],
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/a0fafc27-e431-47cc-b4e4-561b06f73c00/icon"
-    },
-    {
-        "id": "public-works",
-        "type": "project_category",
-        "label": "Category_Project.PublicWorks_Name",
-        "description": "Category_Project.PublicWorks_Description",
-        "tags": [
-            "Public",
-            "Works",
-            "Public Works"
-        ],
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/e49aa26f-f687-4ae6-7265-b7fb4c428c00/icon"
-    },
-    {
-        "id": "emergency-management",
-        "type": "project_category",
-        "label": "Category_Project.EmergencyManagement_Name",
-        "description": "Category_Project.EmergencyManagement_Description",
-        "tags": [
-            "Emergency",
-            "Emergency Management"
-        ],
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/f8e04731-ba5e-41bd-8726-edf3eda1fc00/icon"
-    },
-    {
-        "id": "aquatics",
-        "type": "project_category",
-        "label": "Category_Project.Aquatics_Name",
-        "description": "Category_Project.Aquatics_Description",
-        "tags": [
-            "Aquatics"
-        ],
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/d3dc6134-73ab-4656-0310-f33d77ac7300/icon"
-    },
-    {
-        "id": "transportation",
-        "type": "project_category",
-        "label": "Category_Project.Transportation_Name",
-        "description": "Category_Project.Transportation_Description",
-        "tags": [
-            "Transportation"
-        ],
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/17eba6d3-acbd-4300-c442-00b5b2612b00/icon"
-    },
-    {
-        "id": "environmental",
-        "type": "project_category",
-        "label": "Category_Project.Environmental_Name",
-        "description": "Category_Project.Environmental_Description",
-        "tags": [
-            "Environmental"
-        ],
-        "icon": "https://imagedelivery.net/UNpURFLvIIdmk6NSmOg2Rg/5b1c0000-f477-4ddc-4f8a-565081fe3c00/icon"
     }
 ]

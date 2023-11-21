@@ -2,26 +2,31 @@
     {
         "id": "delete_scope",
         "type": "delete_reasons",
-        "label": "Wbs.DeleteList_Scope"
+        "label": "Wbs.DeleteList_Scope",
+        "order": 1
     },
     {
         "id": "delete_prime",
         "type": "delete_reasons",
-        "label": "Wbs.DeleteList_Prime"
+        "label": "Wbs.DeleteList_Prime",
+        "order": 2
     },
     {
         "id": "delete_sub",
         "type": "delete_reasons",
-        "label": "Wbs.DeleteList_Sub"
-    },
-    {
-        "id": "delete_other",
-        "type": "delete_reasons",
-        "label": "General.Other"
+        "label": "Wbs.DeleteList_Sub",
+        "order": 3
     },
     {
         "id": "delete_client",
         "type": "delete_reasons",
-        "label": "Wbs.DeleteList_Client"
+        "label": "Wbs.DeleteList_Client",
+        "order": 4
+    },
+    {
+        "id": "delete_other",
+        "type": "delete_reasons",
+        "label": "General.Other",
+        "order": 5
     }
 ]

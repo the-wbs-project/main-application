@@ -40,11 +40,7 @@
   <label class="form-label">
     {{ "Projects.TaskDisciplines" | translate }}
   </label>
-  <wbs-category-list-editor
-    [showButtons]="false"
-    [(categories)]="disciplines"
-    [categoryType]="discipline"
-  />
+  <wbs-discipline-list [showButtons]="false" [(categories)]="disciplines" />
   }
 </div>
 

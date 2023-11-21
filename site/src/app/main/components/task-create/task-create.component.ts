@@ -13,7 +13,7 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { CategoryListEditorComponent } from '../category-list-editor';
+import { DisciplineListComponent } from '../discipline-list';
 
 @Component({
   standalone: true,
@@ -21,7 +21,7 @@ import { CategoryListEditorComponent } from '../category-list-editor';
   styleUrls: ['./task-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CategoryListEditorComponent,
+    DisciplineListComponent,
     EditorModule,
     FormsModule,
     TranslateModule,
@@ -31,7 +31,6 @@ import { CategoryListEditorComponent } from '../category-list-editor';
 export class TaskCreateComponent implements OnInit {
   @ViewChild('titleTextBox', { static: true }) titleTextBox!: ElementRef;
 
-  readonly discipline = PROJECT_NODE_VIEW.DISCIPLINE;
   readonly more = signal<boolean>(false);
 
   title = '';

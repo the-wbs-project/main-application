@@ -10,7 +10,7 @@ export interface TaskDetailsViewModel {
   disciplines: string[];
   levels: number[];
   levelText: string;
-  lastModified: Date;
+  lastModified?: Date;
 
   parent?: WbsNodeView;
   subTasks: WbsNodeView[];

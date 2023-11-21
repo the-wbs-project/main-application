@@ -5,6 +5,7 @@ import {
   Component,
   OnInit,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
@@ -14,27 +15,34 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
+import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
+import { PhaseListComponent } from '@wbs/main/components/phase-list';
 import { CategorySelectionService } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ChangeProjectCategories } from '../../../../../actions';
-import { ProjectState, TasksState } from '../../../../../states';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeProjectCategories } from '../../../../actions';
+import { ProjectState, TasksState } from '../../../../states';
 
 @UntilDestroy()
 @Component({
   standalone: true,
   template: `
-    <wbs-category-list-editor
+    @if (cType() === 'discipline') {
+    <wbs-discipline-list
       [(categories)]="categories"
-      [categoryType]="cType()"
       [showSave]="true"
       (saveClicked)="save()"
     />
+    } @else if (cType() === 'phase') {
+    <wbs-phase-list
+      [(categories)]="categories"
+      [showSave]="true"
+      (saveClicked)="save()"
+    />
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CategoryListEditorComponent, CommonModule],
+  imports: [DisciplineListComponent, PhaseListComponent, CommonModule],
   providers: [CategorySelectionService],
 })
 export class ProjectSettingsCategoriesComponent implements OnInit {
@@ -100,7 +108,6 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
 
     for (const cat of cats) {
       const id = typeof cat === 'string' ? cat : cat.id;
-      const node = nodes.find((x) => x.id === id);
 
       if (cType === PROJECT_NODE_VIEW.PHASE) {
         counts.set(id, nodes.filter((x) => x.parentId === id).length);

@@ -40,6 +40,7 @@ public class ListDataService : BaseDbService
                     id = DbValue<string>(reader, "Id"),
                     type = DbValue<string>(reader, "Type"),
                     label = DbValue<string>(reader, "Label"),
+                    order = DbValue<int>(reader, "Order"),
                     description = DbValue<string>(reader, "Description"),
                     sameAs = DbValue<string>(reader, "SameAs"),
                     icon = DbValue<string>(reader, "Icon"),
@@ -68,9 +69,10 @@ public class ListDataService : BaseDbService
         cmd.Parameters.AddWithValue("@Id", item.id);
         cmd.Parameters.AddWithValue("@Type", item.type);
         cmd.Parameters.AddWithValue("@Label", item.label);
+        cmd.Parameters.AddWithValue("@Order", item.order);
         cmd.Parameters.AddWithValue("@SameAs", item.sameAs);
         cmd.Parameters.AddWithValue("@Icon", item.icon);
-        cmd.Parameters.AddWithValue("@Description", item.description);
+        cmd.Parameters.AddWithValue("@Description", DbValue(item.description));
         cmd.Parameters.AddWithValue("@Tags", DbJson(item.tags));
 
         await cmd.ExecuteNonQueryAsync();

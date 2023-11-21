@@ -61,7 +61,7 @@ export class WbsNodePhaseTransformer {
         canMoveUp: false,
         canMoveLeft: false,
         canMoveRight: false,
-        lastModified: new Date(0),
+        lastModified: node?.lastModified,
       };
       const children = this.getPhaseChildren(
         cat.id,

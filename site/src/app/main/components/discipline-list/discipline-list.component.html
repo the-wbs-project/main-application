@@ -1,5 +1,7 @@
-<div *ngIf="categories" class="d-flex flex-flow-col flex-align-stretch">
-  <div *ngIf="showButtons" class="pd-b-10 text-center">
+@if (categories) {
+<div class="d-flex flex-flow-col flex-align-stretch">
+  @if (showButtons) {
+  <div class="pd-b-10 text-center">
     <button
       class="btn btn-outline-dark mg-x-10"
       (click)="hideUnselected.set(!hideUnselected())"
@@ -18,20 +20,31 @@
       {{ "General.Add" | translate }}
     </button>
 
-    <button
-      *ngIf="showSave"
-      class="btn btn-dark mg-x-10"
-      (click)="saveClicked.emit()"
-    >
+    @if (showSave) {
+    <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
       <fa-icon [icon]="faFloppyDisk" />
       {{ "General.Save" | translate }}
     </button>
+    }
   </div>
-  <div class="scroll mg-b-10" style="flex: auto">
+  }
+  <div class="scroll mg-b-10 tx-center" style="flex: auto">
+    @if (isMobile()) {
+    <div class="list-group d-ib text-start wd-xs-400 wd-sm-500">
+      @for (cat of categories; track cat.id) {
+      <div class="opacity-1'" style="cursor: 'move'">
+        <wbs-discipline-list-item
+          [cat]="cat"
+          [hideUnselected]="hideUnselected()"
+          (changed)="changed()"
+        />
+      </div>
+      }
+    </div>
+    } @else {
     <kendo-sortable
-      *ngIf="!isMobile()"
       [kendoSortableBinding]="categories"
-      [ngClass]="'list-group d-ib text-start w-100'"
+      [ngClass]="'list-group d-ib text-start wd-xs-400 wd-sm-500'"
       [itemStyle]="{ cursor: 'move' }"
       [itemClass]="'opacity-1'"
       emptyItemClass="h-30 bd-2 bd-dashed border-dark"
@@ -41,25 +54,14 @@
       (dragEnd)="rebuild()"
     >
       <ng-template let-cat="item">
-        <wbs-category-list-item
+        <wbs-discipline-list-item
           [cat]="cat"
           [hideUnselected]="hideUnselected()"
           (changed)="changed()"
         />
       </ng-template>
     </kendo-sortable>
-    <div *ngIf="isMobile()" class="list-group d-ib text-start w-100">
-      <div
-        *ngFor="let cat of categories"
-        class="opacity-1'"
-        style="cursor: 'move'"
-      >
-        <wbs-category-list-item
-          [cat]="cat"
-          [hideUnselected]="hideUnselected()"
-          (changed)="changed()"
-        />
-      </div>
-    </div>
+    }
   </div>
 </div>
+}

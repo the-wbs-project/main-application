@@ -1,118 +1,13 @@
 [
     {
-        "id": "initial",
-        "type": "categories_phase",
-        "label": "Category_Phase.Initial_Name",
-        "description": "Category_Phase.Initial_Description",
-        "tags": [
-            "Initial",
-            "Initial Phase"
-        ]
-    },
-    {
-        "id": "design_dev",
-        "type": "categories_phase",
-        "label": "Category_Phase.DesignDev_Name",
-        "description": "Category_Phase.DesignDev_Description",
-        "tags": [
-            "Design",
-            "Design Development"
-        ]
-    },
-    {
-        "id": "design_meetings",
-        "type": "categories_phase",
-        "label": "Category_Phase.DesignMeetings_Name",
-        "description": "Category_Phase.DesignMeetings_Description",
-        "tags": [
-            "Design",
-            "Meetings",
-            "Design Meetings"
-        ]
-    },
-    {
-        "id": "contract_docs",
-        "type": "categories_phase",
-        "label": "Category_Phase.ContractDocs_Name",
-        "description": "Category_Phase.ContractDocs_Description",
-        "tags": [
-            "Contract",
-            "Contract Documents"
-        ]
-    },
-    {
-        "id": "bidding",
-        "type": "categories_phase",
-        "label": "Category_Phase.Bidding_Name",
-        "description": "Category_Phase.Bidding_Description",
-        "tags": [
-            "Bidding"
-        ]
-    },
-    {
         "id": "project_management",
         "type": "categories_phase",
         "label": "Category_Phase.ProjectMangement_Name",
         "description": "Category_Phase.ProjectMangement_Description",
         "tags": [
             "Project Management"
-        ]
-    },
-    {
-        "id": "const_admin",
-        "type": "categories_phase",
-        "label": "Category_Phase.ConstructionAdmin_Name",
-        "description": "Category_Phase.ConstructionAdmin_Description",
-        "tags": [
-            "Construction Administration"
-        ]
-    },
-    {
-        "id": "project_reporting",
-        "type": "categories_phase",
-        "label": "Category_Phase.ProjectReporting_Name",
-        "description": "Category_Phase.ProjectReporting_Description",
-        "tags": [
-            "Project Reporting"
-        ]
-    },
-    {
-        "id": "asset_cost_impact",
-        "type": "categories_phase",
-        "label": "Category_Phase.AssetCostImpact_Name",
-        "description": "Category_Phase.AssetCostImpact_Description",
-        "tags": [
-            "Asset Cost Impact"
-        ]
-    },
-    {
-        "id": "ca_meetings",
-        "type": "categories_phase",
-        "label": "Category_Phase.CaMeetings_Name",
-        "description": "Category_Phase.CaMeetings_Description",
-        "tags": [
-            "CA Meetings"
-        ]
-    },
-    {
-        "id": "contract",
-        "type": "categories_phase",
-        "label": "Category_Phase.Contract_Name",
-        "description": "Category_Phase.Contract_Description",
-        "tags": [
-            "Contract",
-            "Contract Phase"
-        ]
-    },
-    {
-        "id": "execution",
-        "type": "categories_phase",
-        "label": "Category_Phase.Execution_Name",
-        "description": "Category_Phase.Execution_Description",
-        "tags": [
-            "Execution",
-            "Execution Phase"
-        ]
+        ],
+        "order": 1
     },
     {
         "id": "master_plan",
@@ -122,17 +17,8 @@
         "tags": [
             "Master",
             "Master Plan"
-        ]
-    },
-    {
-        "id": "pre_design",
-        "type": "categories_phase",
-        "label": "Category_Phase.PreDesign_Name",
-        "description": "Category_Phase.PreDesign_Description",
-        "tags": [
-            "Pre Design",
-            "Pre-Design"
-        ]
+        ],
+        "order": 2
     },
     {
         "id": "planning",
@@ -142,16 +28,19 @@
         "tags": [
             "Planning",
             "Planning Phase"
-        ]
+        ],
+        "order": 3
     },
     {
-        "id": "post_contruction",
+        "id": "pre_design",
         "type": "categories_phase",
-        "label": "Category_Phase.PostContruction_Name",
-        "description": "Category_Phase.PostContruction_Description",
+        "label": "Category_Phase.PreDesign_Name",
+        "description": "Category_Phase.PreDesign_Description",
         "tags": [
-            "Post Contruction"
-        ]
+            "Pre Design",
+            "Pre-Design"
+        ],
+        "order": 4
     },
     {
         "id": "schematic_design",
@@ -161,6 +50,68 @@
         "tags": [
             "Schematic",
             "Schematic Design"
-        ]
+        ],
+        "order": 5
+    },
+    {
+        "id": "design_dev",
+        "type": "categories_phase",
+        "label": "Category_Phase.DesignDev_Name",
+        "description": "Category_Phase.DesignDev_Description",
+        "tags": [
+            "Design",
+            "Design Development"
+        ],
+        "order": 6
+    },
+    {
+        "id": "construction_docs",
+        "type": "categories_phase",
+        "label": "Category_Phase.ConstructionDocs_Name",
+        "description": "Category_Phase.ConstructionDocs_Description",
+        "tags": [
+            "Construction Documents"
+        ],
+        "order": 7
+    },
+    {
+        "id": "permitting",
+        "type": "categories_phase",
+        "label": "Category_Phase.Permitting_Name",
+        "description": "Category_Phase.Permitting_Description",
+        "tags": [
+            "Permitting"
+        ],
+        "order": 8
+    },
+    {
+        "id": "bidding",
+        "type": "categories_phase",
+        "label": "Category_Phase.Bidding_Name",
+        "description": "Category_Phase.Bidding_Description",
+        "tags": [
+            "Bidding"
+        ],
+        "order": 9
+    },
+    {
+        "id": "const_admin",
+        "type": "categories_phase",
+        "label": "Category_Phase.ConstructionAdmin_Name",
+        "description": "Category_Phase.ConstructionAdmin_Description",
+        "tags": [
+            "Construction Administration"
+        ],
+        "order": 10
+    },
+    {
+        "id": "nepa_process",
+        "type": "categories_phase",
+        "label": "Category_Phase.NepaProcess_Name",
+        "description": "Category_Phase.NepaProcess_Description",
+        "tags": [
+            "NEPA Process"
+        ],
+        "order": 11
     }
 ]

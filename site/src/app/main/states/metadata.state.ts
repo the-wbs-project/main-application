@@ -68,6 +68,10 @@ export class MetadataState implements NgxsOnInit {
           const categoryList = state.categoryList;
           const categoryMap = state.categoryMap;
 
+          discipline = discipline.sort((a, b) => a.order - b.order);
+          phase = phase.sort((a, b) => a.order - b.order);
+          projectCats = projectCats.sort((a, b) => a.order - b.order);
+
           categoryList.set(LISTS.DISCIPLINE, discipline);
           categoryList.set(LISTS.PHASE, phase);
           categoryList.set(LISTS.PROJECT_CATEGORIES, projectCats);

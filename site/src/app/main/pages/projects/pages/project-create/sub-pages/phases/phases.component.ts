@@ -6,9 +6,9 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW, PROJECT_NODE_VIEW_TYPE } from '@wbs/core/models';
+import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
+import { PhaseListComponent } from '@wbs/main/components/phase-list';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { PhasesChosen } from '../../actions';
@@ -22,14 +22,13 @@ import { ProjectCreateState } from '../../states';
   templateUrl: './phases.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [CategoryListEditorComponent, FillElementDirective, FooterComponent],
+  imports: [PhaseListComponent, FillElementDirective, FooterComponent],
   providers: [CategorySelectionService],
 })
 export class PhaseComponent implements OnInit {
   @Input() org!: string;
 
   categories?: CategorySelection[];
-  phase: PROJECT_NODE_VIEW_TYPE = PROJECT_NODE_VIEW.PHASE;
 
   constructor(
     private readonly catService: CategorySelectionService,

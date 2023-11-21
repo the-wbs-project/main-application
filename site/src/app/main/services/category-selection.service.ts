@@ -178,6 +178,7 @@ export class CategorySelectionService {
             type: 'Custom',
             description: x.description,
             tags: [],
+            order: x.number!,
           });
       }
     return { categories, removedIds };

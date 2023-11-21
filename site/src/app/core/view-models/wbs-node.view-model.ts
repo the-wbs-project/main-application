@@ -19,7 +19,7 @@ export interface WbsNodeView {
   order: number;
   phaseId: string | undefined;
   title: string;
-  lastModified: Date;
+  lastModified?: Date;
 
   canMoveUp: boolean;
   canMoveDown: boolean;

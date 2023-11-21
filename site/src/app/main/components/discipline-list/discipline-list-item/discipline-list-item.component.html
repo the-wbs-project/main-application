@@ -1,0 +1,22 @@
+@if (!hideUnselected || cat.selected) {
+<div class="list-group-item d-flex flex-align-center flex-row-f pd-l-0 pd-y-5">
+  <div class="wd-60 tx-semibold text-center tx-20">
+    @if (cat.selected){ {{ cat.number }}. }
+  </div>
+  <div class="flex-grow-1 tx-16">
+    <span class="d-ib tx-center wd-25">
+      <i class="fa-solid" [ngClass]="cat.id | disciplineIcon"></i>
+    </span>
+    {{ cat.label | translate }}
+  </div>
+  <div class="pd-t-5">
+    <wbs-switch
+      size="sm"
+      [(value)]="cat.selected"
+      [confirmMessage]="cat.confirm?.label"
+      [confirmData]="cat.confirm?.data"
+      (valueChange)="changed.emit()"
+    />
+  </div>
+</div>
+}

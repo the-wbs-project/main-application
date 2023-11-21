@@ -11,7 +11,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./general/general.component').then(
-        ({ ProjectSettingsGeneralComponent }) => ProjectSettingsGeneralComponent
+        (x) => x.ProjectSettingsGeneralComponent
       ),
   },
   {
@@ -21,9 +21,8 @@ export const routes: Routes = [
       cType: PROJECT_NODE_VIEW.PHASE,
     },
     loadComponent: () =>
-      import('./categories/categories.component').then(
-        ({ ProjectSettingsCategoriesComponent }) =>
-          ProjectSettingsCategoriesComponent
+      import('./categories.component').then(
+        (x) => x.ProjectSettingsCategoriesComponent
       ),
   },
   {
@@ -33,9 +32,8 @@ export const routes: Routes = [
       cType: PROJECT_NODE_VIEW.DISCIPLINE,
     },
     loadComponent: () =>
-      import('./categories/categories.component').then(
-        ({ ProjectSettingsCategoriesComponent }) =>
-          ProjectSettingsCategoriesComponent
+      import('./categories.component').then(
+        (x) => x.ProjectSettingsCategoriesComponent
       ),
   },
   {
@@ -44,9 +42,7 @@ export const routes: Routes = [
       view: PROJECT_SETTINGS_PAGES.ROLES,
     },
     loadComponent: () =>
-      import('./roles.component').then(
-        ({ ProjectSettingsRolesComponent }) => ProjectSettingsRolesComponent
-      ),
+      import('./roles.component').then((x) => x.ProjectSettingsRolesComponent),
     resolve: {
       org: orgResolve,
     },

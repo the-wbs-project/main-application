@@ -10,7 +10,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./general/general.component').then(
-        ({ TaskSettingsGeneralComponent }) => TaskSettingsGeneralComponent
+        (x) => x.TaskSettingsGeneralComponent
       ),
   },
   {
@@ -20,8 +20,8 @@ export const routes: Routes = [
       cType: PROJECT_NODE_VIEW.DISCIPLINE,
     },
     loadComponent: () =>
-      import('./categories/categories.component').then(
-        ({ TaskSettingsCategoriesComponent }) => TaskSettingsCategoriesComponent
+      import('./disciplines.component').then(
+        (x) => x.TaskSettingDisciplineComponent
       ),
   },
 ];

@@ -13,13 +13,13 @@ import { SwitchComponent } from '../../switch';
 
 @Component({
   standalone: true,
-  selector: 'wbs-category-list-item',
-  templateUrl: './category-list-item.component.html',
+  selector: 'wbs-phase-list-item',
+  templateUrl: './phase-list-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [NgIf, SwitchComponent, TranslateModule],
 })
-export class CategoryListItemComponent {
+export class PhaseListItemComponent {
   @Input({ required: true }) hideUnselected!: boolean;
   @Input({ required: true }) cat!: CategorySelection;
 

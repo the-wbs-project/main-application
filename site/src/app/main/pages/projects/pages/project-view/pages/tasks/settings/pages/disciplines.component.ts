@@ -9,20 +9,24 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategoryListEditorComponent } from '@wbs/main/components/category-list-editor';
+import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
 import { CategorySelectionService } from '@wbs/main/services';
-import { ChangeTaskDisciplines } from '../../../../../actions';
-import { ProjectState, TasksState } from '../../../../../states';
+import { ChangeTaskDisciplines } from '../../../../actions';
+import { ProjectState, TasksState } from '../../../../states';
 
 @UntilDestroy()
 @Component({
   standalone: true,
-  templateUrl: './categories.component.html',
+  template: `<wbs-discipline-list
+    [(categories)]="categories"
+    [showSave]="true"
+    (saveClicked)="save()"
+  /> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CategoryListEditorComponent],
+  imports: [DisciplineListComponent],
   providers: [CategorySelectionService],
 })
-export class TaskSettingsCategoriesComponent implements OnInit {
+export class TaskSettingDisciplineComponent implements OnInit {
   categories?: CategorySelection[];
 
   constructor(

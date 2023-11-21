@@ -5,6 +5,7 @@ export interface ListItemBase {
 
 export interface ListItem extends ListItemBase {
   label: string;
+  order: number;
   description?: string;
   sameAs?: string[];
   tags: string[];

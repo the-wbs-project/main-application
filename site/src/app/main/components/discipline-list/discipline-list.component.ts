@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -19,36 +19,30 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { LabelModule } from '@progress/kendo-angular-label';
 import { SortableModule } from '@progress/kendo-angular-sortable';
 import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService, DialogService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
-import { SwitchComponent } from '../switch';
-import { CategoryListItemComponent } from './category-list-item/category-list-item.component';
-import { CustomDialogComponent } from './custom-dialog/custom-dialog.component';
+import { ListItemDialogComponent } from '../list-item-dialog/list-item-dialog.component';
+import { PhaseListItemComponent } from './discipline-list-item/discipline-list-item.component';
 
 @Component({
   standalone: true,
-  selector: 'wbs-category-list-editor',
-  templateUrl: './category-list-editor.component.html',
+  selector: 'wbs-discipline-list',
+  templateUrl: './discipline-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
-    CategoryListItemComponent,
     FontAwesomeModule,
-    LabelModule,
     NgClass,
-    NgFor,
-    NgIf,
+    PhaseListItemComponent,
     SortableModule,
-    SwitchComponent,
     TranslateModule,
   ],
   providers: [CategorySelectionService, DialogService],
 })
-export class CategoryListEditorComponent {
+export class DisciplineListComponent {
   @Input() showButtons = true;
   @Input() showSave = false;
   @Input() categories?: CategorySelection[] | null;
@@ -78,9 +72,15 @@ export class CategoryListEditorComponent {
 
   showCreate() {
     this.dialogService
-      .openDialog<[string, string] | null>(CustomDialogComponent, {
-        scrollable: true,
-      })
+      .openDialog<[string, string] | null>(
+        ListItemDialogComponent,
+        {
+          scrollable: true,
+        },
+        {
+          showDescription: false,
+        }
+      )
       .subscribe((result) => {
         if (result == null) return;
 
