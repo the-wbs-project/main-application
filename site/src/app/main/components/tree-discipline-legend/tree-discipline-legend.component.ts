@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
@@ -20,8 +20,6 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
     FontAwesomeModule,
     NgbPopoverModule,
     NgClass,
-    NgFor,
-    NgIf,
     TranslateModule,
   ],
 })

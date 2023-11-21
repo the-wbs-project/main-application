@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -7,7 +7,12 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   ProjectNode,
 } from '@wbs/core/models';
-import { IdService, Messages, ProjectService } from '@wbs/core/services';
+import {
+  IdService,
+  Messages,
+  ProjectService,
+  Resources,
+} from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
@@ -33,6 +38,7 @@ import {
 } from '../actions';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
+import { MetadataState } from '@wbs/main/states';
 
 interface StateModel {
   currentId?: string;
@@ -55,7 +61,9 @@ export class TasksState {
     private readonly data: DataServiceFactory,
     private readonly messaging: Messages,
     private readonly nav: ProjectNavigationService,
+    private readonly resources: Resources,
     private readonly service: ProjectService,
+    private readonly store: Store,
     private readonly timeline: TimelineService,
     private readonly transformers: Transformers
   ) {}
@@ -556,12 +564,21 @@ export class TasksState {
     )
       return;
 
+    const taskName =
+      model.parentId == undefined
+        ? this.resources.get(
+            this.store
+              .selectSnapshot(MetadataState.categoryNames)
+              .get(model.id)!
+          )
+        : model.title;
+
     const activityData: ActivityData = {
       action: TASK_ACTIONS.DISCIPLINES_CHANGED,
       objectId: model.id,
       topLevelId: state.project!.id,
       data: {
-        title: model.title,
+        taskName,
         from: model.disciplineIds,
         to: disciplines,
       },

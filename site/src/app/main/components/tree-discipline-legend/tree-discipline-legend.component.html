@@ -10,12 +10,16 @@
   <fa-duotone-icon [icon]="faCircleQuestion" />
 </a>
 <ng-template #legendContent>
-  <ul class="list-group" *ngIf="idsOrCats">
-    <li class="list-group-item" *ngFor="let idsOrCat of idsOrCats">
+  @if (idsOrCats){
+  <ul class="list-group wd-400">
+    @for( idsOrCat of idsOrCats; track $index) {
+    <li class="list-group-item">
       <span class="icon-wrapper">
         <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>
       </span>
       {{ idsOrCat | categoryLabel | translate }}
     </li>
+    }
   </ul>
+  }
 </ng-template>

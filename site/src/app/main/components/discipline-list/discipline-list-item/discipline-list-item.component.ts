@@ -9,6 +9,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
+import { CategoryLabelPipe } from '../../../pipes/category-label.pipe';
 import { SwitchComponent } from '../../switch';
 
 @Component({
@@ -16,7 +17,13 @@ import { SwitchComponent } from '../../switch';
   selector: 'wbs-discipline-list-item',
   templateUrl: './discipline-list-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DisciplineIconPipe, NgClass, SwitchComponent, TranslateModule],
+  imports: [
+    CategoryLabelPipe,
+    DisciplineIconPipe,
+    NgClass,
+    SwitchComponent,
+    TranslateModule,
+  ],
 })
 export class PhaseListItemComponent {
   @Input({ required: true }) hideUnselected!: boolean;

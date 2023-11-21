@@ -16,7 +16,7 @@
       <a
         class="btn btn-outline-dark"
         *ngIf="task()?.previousTaskId; let taskId"
-        [routerLink]="['task', taskId, 'about']"
+        [routerLink]="[taskId, 'about']"
       >
         {{ "General.Previous" | translate }}
       </a>
@@ -25,7 +25,7 @@
       <a
         class="btn btn-outline-dark"
         *ngIf="task()?.nextTaskId; let taskId"
-        [routerLink]="['task', taskId, 'about']"
+        [routerLink]="[taskId, 'about']"
       >
         {{ "General.Next" | translate }}
       </a>

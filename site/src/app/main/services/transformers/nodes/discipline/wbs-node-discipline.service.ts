@@ -20,6 +20,9 @@ export class WbsDisciplineNodeTransformer {
   }
 
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
+    console.log(project);
+    console.log(projectNodes);
+
     const dList = this.disciplineList;
     const pList = this.phaseList;
     const disciplines: ListItem[] = [];
@@ -41,14 +44,6 @@ export class WbsDisciplineNodeTransformer {
       } else phases.push(p);
     }
 
-    return this.fromPhaseFirst(projectNodes, disciplines, phases);
-  }
-
-  private fromPhaseFirst(
-    projectNodes: WbsNode[],
-    disciplines: ListItem[],
-    phases: ListItem[]
-  ): WbsNodeView[] {
     const nodes: WbsNodeView[] = [];
 
     for (let i = 0; i < disciplines.length; i++) {
@@ -115,7 +110,9 @@ export class WbsDisciplineNodeTransformer {
           pLevel,
           projectNodes
         );
-        if (children.length === 0) continue;
+        const hasDiscipline = pNode?.disciplineIds?.includes(d.id) ?? false;
+
+        if (!hasDiscipline && children.length === 0) continue;
 
         pView.children = this.getChildCount(children);
 

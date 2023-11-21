@@ -320,7 +320,7 @@
       "TaskReordered": "Task Reordered",
       "TaskUpdated": "Task Updated",
       "TaskRemoved": "Task Removed",
-      "TreeInstructions": "Double-click to see more details.",
+      "TreeInstructions": "Right-click for task options and double-click to see view all details.",
       "SubmitForApproval": "Submit For Approval",
       "SubmitForApprovalError": "You cannot submit for approval because this project doesn't have any approvers assigned. Please go to Settings -> Roles and select at least one approver.",
       "SubmitForApprovalSuccess": "The project is ready for approval.",
@@ -365,7 +365,9 @@
       "MoveDown": "Move Down",
       "MoveLeft": "Move Left",
       "MoveRight": "Move Right",
-      "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)"
+      "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)",
+      "ByPhase": "By Phase",
+      "ByDiscipline": "By Discipline"
     }
   },
   {
@@ -583,7 +585,7 @@
       "ProjectCreatedDescription": "The project was created.",
       "ProjectStatusChangedTitle": "Project Status Changed",
       "TaskDisciplinesChangedTitle": "Task Disciplines Changed",
-      "TaskDisciplinesChangedDescription": "The disciplines were changed for task '{title}'.",
+      "TaskDisciplinesChangedDescription": "The disciplines for task '{taskName}' was changed.",
       "ProjectStatusChangedDescription": "The status was changed from '{from}' to '{to}'.",
       "ProjectTitleChangedDescription": "The title was changed from '{from}' to '{to}'.",
       "ProjectCategoryChangedDescription": "The category was changed from '{from}' to '{to}'.",
