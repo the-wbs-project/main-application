@@ -1,12 +1,12 @@
 @if (phases(); as phases) {
-<div class="d-flex flex-column" appFillElement [paddingBottom]="30">
+<div class="d-flex flex-column">
   <div class="tx-italic tx-14 pd-b-5">
     {{ "Projects.TreeInstructions" | translate }}
   </div>
   <div class="flex-fill">
     <kendo-treelist
       #treelist
-      class="h-100 tx-12"
+      class="tx-12"
       kendoTreeListExpandable
       kendoTreeListSelectable
       [kendoTreeListFlatBinding]="phases"

@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -7,16 +6,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { MetadataState } from '@wbs/main/states';
+import { ListItem } from '@wbs/core/models';
+import { DirtyComponent } from '@wbs/main/models';
 import { ChangeProjectBasics } from '../../../../../actions';
 import { ProjectState } from '../../../../../states';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './general.component.html',
@@ -29,10 +27,9 @@ import { ProjectState } from '../../../../../states';
     TranslateModule,
   ],
 })
-export class ProjectSettingsGeneralComponent {
-  readonly categories = toSignal(
-    this.store.select(MetadataState.projectCategories)
-  );
+export class ProjectSettingsGeneralComponent implements DirtyComponent {
+  @Input() readonly categories!: ListItem[];
+
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>(''),
@@ -41,17 +38,18 @@ export class ProjectSettingsGeneralComponent {
 
   constructor(private readonly store: Store) {}
 
+  get isDirty(): boolean {
+    return this.form.dirty;
+  }
+
   ngOnInit(): void {
-    this.store
-      .select(ProjectState.current)
-      .pipe(untilDestroyed(this))
-      .subscribe((p) => {
-        this.form.setValue({
-          category: p?.category ?? '',
-          description: p?.description ?? '',
-          title: p?.title ?? '',
-        });
-      });
+    const p = this.store.selectSnapshot(ProjectState.current);
+
+    this.form.setValue({
+      category: p?.category ?? '',
+      description: p?.description ?? '',
+      title: p?.title ?? '',
+    });
   }
 
   save(): void {
@@ -66,5 +64,6 @@ export class ProjectSettingsGeneralComponent {
         values.category!
       )
     );
+    this.form.reset(values);
   }
 }

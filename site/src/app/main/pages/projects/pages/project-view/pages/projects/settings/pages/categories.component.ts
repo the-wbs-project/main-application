@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -17,6 +16,7 @@ import {
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
 import { PhaseListComponent } from '@wbs/main/components/phase-list';
+import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -32,20 +32,26 @@ import { ProjectState, TasksState } from '../../../../states';
       [(categories)]="categories"
       [showSave]="true"
       (saveClicked)="save()"
+      (categoriesChange)="isDirty = true"
     />
     } @else if (cType() === 'phase') {
     <wbs-phase-list
       [(categories)]="categories"
       [showSave]="true"
       (saveClicked)="save()"
+      (categoriesChange)="isDirty = true"
     />
     }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DisciplineListComponent, PhaseListComponent, CommonModule],
+  imports: [DisciplineListComponent, PhaseListComponent],
   providers: [CategorySelectionService],
 })
-export class ProjectSettingsCategoriesComponent implements OnInit {
+export class ProjectSettingsCategoriesComponent
+  implements OnInit, DirtyComponent
+{
+  isDirty = false;
+
   categories?: CategorySelection[];
   readonly cType = toSignal(
     this.route.data.pipe(map((d) => <PROJECT_NODE_VIEW_TYPE>d['cType']))
@@ -82,6 +88,7 @@ export class ProjectSettingsCategoriesComponent implements OnInit {
     const results = this.catService.extract(this.categories, cats);
 
     this.store.dispatch(new ChangeProjectCategories(cType, results));
+    this.isDirty = false;
   }
 
   private rebuild(): void {

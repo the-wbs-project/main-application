@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -14,7 +14,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
+import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
@@ -31,10 +31,10 @@ import { ProjectState, TasksState } from '../../../states';
   imports: [
     CategoryLabelPipe,
     CheckPipe,
-    CommonModule,
     DateTextPipe,
     DisciplineIconPipe,
     FontAwesomeModule,
+    NgClass,
     ProjectStatisticComponent,
     RouterModule,
     SafeHtmlPipe,

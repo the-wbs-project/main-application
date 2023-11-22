@@ -7,14 +7,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { ChangeTaskBasics } from '../../../../../actions';
-import { TasksState } from '../../../../../states';
+import { DirtyComponent } from '@wbs/main/models';
+import { ChangeTaskBasics } from '../../../../actions';
+import { TasksState } from '../../../../states';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './general.component.html',
@@ -27,27 +26,26 @@ import { TasksState } from '../../../../../states';
     TranslateModule,
   ],
 })
-export class TaskSettingsGeneralComponent {
+export class TaskSettingsGeneralComponent implements DirtyComponent {
+  readonly contentCss = `.k-content { font-family: "Poppins", sans-serif; }`;
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>(''),
   });
-  readonly contentCss = `.k-content {
-    font-family: "Poppins", sans-serif;
-  }`;
 
   constructor(private readonly store: Store) {}
 
+  get isDirty(): boolean {
+    return this.form.dirty;
+  }
+
   ngOnInit(): void {
-    this.store
-      .select(TasksState.current)
-      .pipe(untilDestroyed(this))
-      .subscribe((t) =>
-        this.form.setValue({
-          description: t?.description ?? '',
-          title: t?.title ?? '',
-        })
-      );
+    const t = this.store.selectSnapshot(TasksState.current);
+
+    this.form.setValue({
+      description: t?.description ?? '',
+      title: t?.title ?? '',
+    });
   }
 
   save(): void {
@@ -58,5 +56,6 @@ export class TaskSettingsGeneralComponent {
     this.store.dispatch(
       new ChangeTaskBasics(values.title!, values.description!)
     );
+    this.form.reset(values);
   }
 }

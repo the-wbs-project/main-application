@@ -6,27 +6,37 @@ import {
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
+import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { ChangeTaskDisciplines } from '../../../../actions';
-import { ProjectState, TasksState } from '../../../../states';
+import { ChangeTaskDisciplines } from '../../../actions';
+import { ProjectState, TasksState } from '../../../states';
 
 @UntilDestroy()
 @Component({
   standalone: true,
-  template: `<wbs-discipline-list
-    [(categories)]="categories"
-    [showSave]="true"
-    (saveClicked)="save()"
-  /> `,
+  template: `<div class="card-header tx-medium">
+      {{ 'General.Settings' | translate }} >
+      {{ 'General.Disciplines' | translate }}
+    </div>
+    <div class="pd-15">
+      <wbs-discipline-list
+        [(categories)]="categories"
+        [showSave]="true"
+        (saveClicked)="save()"
+        (categoriesChange)="isDirty = true"
+      />
+    </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DisciplineListComponent],
+  imports: [DisciplineListComponent, TranslateModule],
   providers: [CategorySelectionService],
 })
-export class TaskSettingDisciplineComponent implements OnInit {
+export class TaskSettingDisciplineComponent implements DirtyComponent, OnInit {
+  isDirty = false;
   categories?: CategorySelection[];
 
   constructor(
@@ -49,6 +59,7 @@ export class TaskSettingDisciplineComponent implements OnInit {
     const results = this.catService.extractIds(this.categories);
 
     this.store.dispatch(new ChangeTaskDisciplines(results));
+    this.isDirty = false;
   }
 
   private rebuild(): void {

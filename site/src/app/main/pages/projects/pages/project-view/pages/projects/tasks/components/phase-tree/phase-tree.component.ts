@@ -30,7 +30,6 @@ import { DisciplineIconListComponent } from '@wbs/main/components/discipline-ico
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend/tree-discipline-legend.component';
 import { WbsActionButtonsComponent } from '@wbs/main/components/wbs-action-buttons';
-import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
@@ -63,7 +62,6 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     ChildrenApprovalPipe,
     ContextMenuModule,
     DisciplineIconListComponent,
-    FillElementDirective,
     FindByIdPipe,
     FindThemByIdPipe,
     ProgressBarComponent,

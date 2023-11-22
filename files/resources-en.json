@@ -140,7 +140,9 @@
       "Link": "Link",
       "Image": "Image",
       "File": "File",
-      "Video": "Video"
+      "Video": "Video",
+      "ConfirmDiscardMessage": "You have unsaved data.  Are you sure you want to discard it?",
+      "ConfirmDiscardTitle": "Confirm Discard"
     }
   },
   {
@@ -161,7 +163,7 @@
       "DesignDev_Description": "The phase where the initial design concepts from earlier phases (e.g. SD) are refined and developed into a more detailed and comprehensive plan. This phase involves converting the approved schematic design into a more concrete and technically refined plan/layout.",
       "ConstructionDocs_Name": "Construction Documents (CD) / 90% Design",
       "ConstructionDocs_Description": "The comprehensive set of detailed drawings, specifications, and written instructions that serve as a guide for contractors and construction teams during the building phase of a project. These documents provide the necessary information and instructions to accurately execute the design as intended by the architects and engineers.",
-      "Permitting_Name": "Bidding",
+      "Permitting_Name": "Permitting",
       "Permitting_Description": "The process of obtaining official approval or authorization from relevant governmental or regulatory bodies to proceed with a construction project.",
       "Bidding_Name": "Bidding",
       "Bidding_Description": "The process in which contractors or construction firms submit proposals or competitive bids to undertake a construction project.",

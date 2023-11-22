@@ -28,13 +28,22 @@ export class WbsNodePhaseTransformer {
       const cat = categories[i];
       const parentlevel = [i + 1];
       const node = projectNodes.find((x) => x.id === cat.id);
+      let label = (node?.title ?? '').trim();
       let description = (node?.description ?? '').trim();
+
+      const catLabel =
+        !cat.label && (cat.sameAs ?? []).length > 0
+          ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.label
+          : cat.label;
 
       const catDescription =
         !cat.description && (cat.sameAs ?? []).length > 0
           ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.description
           : cat.description;
 
+      if (label === '' || label === catLabel) {
+        label = this.resources.get(catLabel!);
+      }
       if (description === '' || description === catDescription) {
         description = this.resources.get(catDescription!);
       }
@@ -52,7 +61,7 @@ export class WbsNodePhaseTransformer {
         treeParentId: null,
         phaseId: cat.id,
         order: i + 1,
-        title: this.resources.get(cat.label),
+        title: label,
         canMoveDown: false,
         canMoveUp: false,
         canMoveLeft: false,

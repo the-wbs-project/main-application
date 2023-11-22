@@ -5,8 +5,9 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./project-settings.component').then(({ ProjectSettingsComponent }) => ProjectSettingsComponent),
-    loadChildren: () =>
-      import('./pages/children.routes').then(({ routes }) => routes),
+      import('./project-settings.component').then(
+        (x) => x.ProjectSettingsComponent
+      ),
+    loadChildren: () => import('./pages/children.routes').then((x) => x.routes),
   },
 ];

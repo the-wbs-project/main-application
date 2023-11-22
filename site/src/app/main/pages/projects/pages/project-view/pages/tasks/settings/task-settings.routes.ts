@@ -1,12 +1,23 @@
 import { Routes } from '@angular/router';
+import { dirtyGuard } from '@wbs/main/guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'general', pathMatch: 'full' },
+
   {
-    path: '',
+    path: 'general',
+    canDeactivate: [dirtyGuard],
     loadComponent: () =>
-      import('./task-settings.component').then(({ TaskSettingsComponent }) => TaskSettingsComponent),
-    loadChildren: () =>
-      import('./pages/children.routes').then(({ routes }) => routes),
+      import('./general/general.component').then(
+        (x) => x.TaskSettingsGeneralComponent
+      ),
+  },
+  {
+    path: 'disciplines',
+    canDeactivate: [dirtyGuard],
+    loadComponent: () =>
+      import('./disciplines.component').then(
+        (x) => x.TaskSettingDisciplineComponent
+      ),
   },
 ];
