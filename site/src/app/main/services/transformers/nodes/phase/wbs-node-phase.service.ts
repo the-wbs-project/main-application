@@ -11,10 +11,6 @@ export class WbsNodePhaseTransformer {
     private readonly store: Store
   ) {}
 
-  private get disciplineList(): ListItem[] {
-    return this.store.selectSnapshot(MetadataState.disciplines);
-  }
-
   private get phaseList(): ListItem[] {
     return this.store.selectSnapshot(MetadataState.phases);
   }

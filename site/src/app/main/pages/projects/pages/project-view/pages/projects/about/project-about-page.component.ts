@@ -3,6 +3,7 @@ import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
+import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
@@ -20,9 +21,8 @@ import {
   ProjectState,
   TasksState,
 } from '../../../states';
-import { ProjectStatusTileComponent } from './components/project-status-tile/project-status-tile.component';
-import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { ProjectApprovalTileComponent } from './components/project-approval-tile/project-approval-tile.component';
+import { ProjectStatusTileComponent } from './components/project-status-tile/project-status-tile.component';
 
 @Component({
   standalone: true,

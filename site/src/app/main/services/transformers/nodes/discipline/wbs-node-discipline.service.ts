@@ -20,9 +20,6 @@ export class WbsDisciplineNodeTransformer {
   }
 
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
-    console.log(project);
-    console.log(projectNodes);
-
     const dList = this.disciplineList;
     const pList = this.phaseList;
     const disciplines: ListItem[] = [];
