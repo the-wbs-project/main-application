@@ -11,7 +11,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ListItem } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
-import { TaskDeleteService } from './task-delete.service';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { map } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -19,13 +20,16 @@ import { TaskDeleteService } from './task-delete.service';
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FormsModule, NgbModalModule, TranslateModule],
-  providers: [TaskDeleteService],
 })
-export class TaskDeleteComponent implements OnInit {
+export class TaskDeleteComponent {
   reason = 'none';
   dOtherId = 'delete_other';
 
-  readonly reasons = signal<ListItem[]>([]);
+  readonly reasons = toSignal(
+    this.data.metdata
+      .getListAsync<ListItem>('delete_reasons')
+      .pipe(map((list) => list.sort((a, b) => a.order - b.order)))
+  );
 
   constructor(
     readonly modal: NgbActiveModal,
@@ -33,18 +37,12 @@ export class TaskDeleteComponent implements OnInit {
     private readonly resources: Resources
   ) {}
 
-  ngOnInit(): void {
-    this.data.metdata
-      .getListAsync<ListItem>('delete_reasons')
-      .subscribe((list) => this.reasons.set(list));
-  }
-
   finishDelete(dReasonId: string, otherReasonText: string) {
     if (dReasonId)
       if (dReasonId === this.dOtherId) {
         this.modal.close(otherReasonText.trim());
       } else {
-        const dReason = this.reasons().find((x) => x.id === dReasonId)!;
+        const dReason = this.reasons()!.find((x) => x.id === dReasonId)!;
 
         this.modal.close(this.resources.get(dReason.label));
       }

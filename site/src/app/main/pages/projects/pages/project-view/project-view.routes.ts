@@ -2,7 +2,6 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { TaskCreateService } from '@wbs/main/components/task-create';
-import { TaskDeleteService } from '@wbs/main/components/task-delete';
 import { DialogService, Transformers, userIdResolve } from '@wbs/main/services';
 import {
   closeApprovalWindowGuard,
@@ -46,7 +45,6 @@ export const routes: Routes = [
       ProjectNavigationService,
       ProjectViewService,
       TaskCreateService,
-      TaskDeleteService,
       TimelineService,
       Transformers,
     ],

@@ -5,8 +5,7 @@ import { PROJECT_STATI_TYPE, Project, ProjectCategory } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreateService } from '@wbs/main/components/task-create';
-import { TaskDeleteService } from '@wbs/main/components/task-delete';
-import { Transformers } from '@wbs/main/services';
+import { DialogService, Transformers } from '@wbs/main/services';
 import { of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import {
@@ -19,6 +18,7 @@ import {
   MoveTaskUp,
   RemoveTask,
 } from '../actions';
+import { TaskDeleteComponent } from '../components/task-delete/task-delete.component';
 import { PROJECT_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
@@ -27,11 +27,11 @@ import { ProjectNavigationService } from './project-navigation.service';
 export class ProjectViewService {
   constructor(
     private readonly data: DataServiceFactory,
+    private readonly dialogs: DialogService,
     private readonly messages: Messages,
     private readonly nav: ProjectNavigationService,
     private readonly store: Store,
     private readonly taskCreate: TaskCreateService,
-    private readonly taskDelete: TaskDeleteService,
     private readonly transformers: Transformers
   ) {}
 
@@ -61,9 +61,11 @@ export class ProjectViewService {
       } else if (action === 'viewTask') {
         this.nav.toTask(taskId);
       } else if (action === 'deleteTask') {
-        this.taskDelete.open().subscribe((reason) => {
-          if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));
-        });
+        this.dialogs
+          .openDialog<string>(TaskDeleteComponent)
+          .subscribe((reason) => {
+            if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));
+          });
       } else if (action === 'moveLeft') {
         this.store.dispatch(new MoveTaskLeft(taskId));
       } else if (action === 'moveRight') {

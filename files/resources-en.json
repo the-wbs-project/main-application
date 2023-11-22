@@ -595,7 +595,7 @@
       "ProjectDisciplinesChangedDescription": "The project's list of disciplines was changed.",
       "TaskTitleChangedDescription": "The title was changed from '{from}' to '{to}'.",
       "TaskClonedDescription": "The task '{title}' was cloned.",
-      "TaskRemovedDescription": "The task '{title}' was removed.",
+      "TaskRemovedDescription": "The task '{title}' was removed because '{reason}'.",
       "ProjectPhasesChangedDescription": "The project's phases was changed.",
       "ProjectAddUserDescription": "{user} was given the role of {role}.",
       "ProjectRemoveUserDescription": "{user} was revoked the role of {role}.",
