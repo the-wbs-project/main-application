@@ -1,0 +1,86 @@
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+} from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
+import { Store } from '@ngxs/store';
+import { PROJECT_NODE_VIEW } from '@wbs/core/models';
+import { CategorySelection } from '@wbs/core/view-models';
+import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
+import { DirtyComponent } from '@wbs/main/models';
+import { CategorySelectionService } from '@wbs/main/services';
+import { ChangeProjectCategories } from '../../../../actions';
+import { ProjectState, TasksState } from '../../../../states';
+
+@Component({
+  standalone: true,
+  template: `<div class="card-header tx-medium">
+      {{ 'General.Settings' | translate }} >
+      {{ 'General.Disciplines' | translate }}
+    </div>
+    <div class="pd-15">
+      <wbs-discipline-list
+        [(categories)]="categories"
+        [showSave]="true"
+        (saveClicked)="save()"
+        (categoriesChange)="isDirty = true"
+      />
+    </div>`,
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [DisciplineListComponent, TranslateModule],
+  providers: [CategorySelectionService],
+})
+export class ProjectSettingsDisciplinesComponent
+  implements OnInit, DirtyComponent
+{
+  isDirty = false;
+
+  categories?: CategorySelection[];
+
+  constructor(
+    private readonly catService: CategorySelectionService,
+    private readonly cd: ChangeDetectorRef,
+    private readonly store: Store
+  ) {}
+
+  ngOnInit(): void {
+    this.rebuild();
+  }
+
+  save(): void {
+    const project = this.store.selectSnapshot(ProjectState.current)!;
+    const results = this.catService.extract(
+      this.categories,
+      project.disciplines
+    );
+
+    this.store.dispatch(
+      new ChangeProjectCategories(PROJECT_NODE_VIEW.DISCIPLINE, results)
+    );
+    this.isDirty = false;
+  }
+
+  private rebuild(): void {
+    const project = this.store.selectSnapshot(ProjectState.current);
+
+    if (!project) return;
+
+    let counts = new Map<string, number>();
+    const nodes = this.store.selectSnapshot(TasksState.nodes)!;
+
+    for (const cat of project.disciplines) {
+      const id = typeof cat === 'string' ? cat : cat.id;
+      counts.set(id, nodes.filter((x) => x.disciplineIds?.includes(id)).length);
+    }
+
+    this.categories = this.catService.build(
+      PROJECT_NODE_VIEW.DISCIPLINE,
+      project.disciplines,
+      'Projects.DisciplineRemoveConfirm',
+      counts
+    );
+    this.cd.detectChanges();
+  }
+}

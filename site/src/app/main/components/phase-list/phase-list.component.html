@@ -2,19 +2,6 @@
 <div class="d-flex flex-flow-col flex-align-stretch">
   @if (showButtons) {
   <div class="pd-b-10 text-center">
-    <button
-      class="btn btn-outline-dark mg-x-10"
-      (click)="hideUnselected.set(!hideUnselected())"
-    >
-      <fa-icon [icon]="hideUnselected() ? faEye : faEyeSlash" />
-      {{
-        (hideUnselected()
-          ? "Projects.ShowUnselected"
-          : "Projects.HideUnselected"
-        ) | translate
-      }}
-    </button>
-
     <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
       <fa-icon [icon]="faPlus" />
       {{ "General.Add" | translate }}
@@ -35,7 +22,7 @@
       <div class="opacity-1'" style="cursor: 'move'">
         <wbs-phase-list-item
           [cat]="cat"
-          [hideUnselected]="hideUnselected()"
+          [hideUnselected]="false"
           (changed)="changed()"
         />
       </div>
@@ -56,7 +43,7 @@
       <ng-template let-cat="item">
         <wbs-phase-list-item
           [cat]="cat"
-          [hideUnselected]="hideUnselected()"
+          [hideUnselected]="false"
           (changed)="changed()"
         />
       </ng-template>

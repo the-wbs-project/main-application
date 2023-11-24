@@ -12,10 +12,14 @@ import {
   CategorySelection,
 } from '@wbs/core/view-models';
 import { MetadataState } from '../states';
+import { Resources } from '@wbs/core/services';
 
 @Injectable()
 export class CategorySelectionService {
-  constructor(private readonly store: Store) {}
+  constructor(
+    private readonly resources: Resources,
+    private readonly store: Store
+  ) {}
 
   build(
     categoryType: PROJECT_NODE_VIEW_TYPE,
@@ -41,8 +45,8 @@ export class CategorySelectionService {
     for (const cat of categories) {
       cats.push({
         id: cat.id,
-        label: cat.label,
-        description: cat.description ?? '',
+        label: this.resources.get(cat.label),
+        description: cat.description ? this.resources.get(cat.description) : '',
         number: null,
         selected: false,
         isCustom: false,
@@ -125,8 +129,10 @@ export class CategorySelectionService {
         if (cat) {
           cats.push({
             id: cat.id,
-            label: cat.label,
-            description: cat.description ?? '',
+            label: this.resources.get(cat.label),
+            description: cat.description
+              ? this.resources.get(cat.description)
+              : '',
             number: null,
             selected: selected.indexOf(x) > -1,
             isCustom: false,

@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   Output,
-  signal,
   ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -25,7 +24,7 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService, DialogService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { ListItemDialogComponent } from '../list-item-dialog/list-item-dialog.component';
-import { PhaseListItemComponent } from './discipline-list-item/discipline-list-item.component';
+import { DisciplineListItemComponent } from './discipline-list-item/discipline-list-item.component';
 
 @Component({
   standalone: true,
@@ -34,9 +33,9 @@ import { PhaseListItemComponent } from './discipline-list-item/discipline-list-i
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
+    DisciplineListItemComponent,
     FontAwesomeModule,
     NgClass,
-    PhaseListItemComponent,
     SortableModule,
     TranslateModule,
   ],
@@ -50,7 +49,6 @@ export class DisciplineListComponent {
   @Output() readonly saveClicked = new EventEmitter<void>();
   @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 
-  readonly hideUnselected = signal(false);
   readonly faEye = faEye;
   readonly faEyeSlash = faEyeSlash;
   readonly faFloppyDisk = faFloppyDisk;

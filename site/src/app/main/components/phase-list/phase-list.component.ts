@@ -6,7 +6,6 @@ import {
   EventEmitter,
   Input,
   Output,
-  signal,
   ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -49,7 +48,6 @@ export class PhaseListComponent {
   @Output() readonly saveClicked = new EventEmitter<void>();
   @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 
-  readonly hideUnselected = signal(false);
   readonly faEye = faEye;
   readonly faEyeSlash = faEyeSlash;
   readonly faFloppyDisk = faFloppyDisk;

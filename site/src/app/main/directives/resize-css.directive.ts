@@ -1,13 +1,10 @@
 import {
   Directive,
   ElementRef,
-  EventEmitter,
   NgZone,
   OnDestroy,
   OnInit,
-  Output,
 } from '@angular/core';
-import { ResizedEvent } from '../models';
 
 @Directive({
   selector: '[resizedCss]',

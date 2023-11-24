@@ -1,75 +1,83 @@
-<form #generalForm [formGroup]="form" (ngSubmit)="save()">
-  <div class="row mb-3">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">
-      {{ "Projects.ProjectTitle" | translate }}
-    </label>
-    <div class="col-sm-10">
-      <kendo-textbox
-        class="form-control z-index-0"
-        formControlName="title"
-        [placeholder]="'Projects.ProjectTitle' | translate"
-      />
-    </div>
-  </div>
-  <div class="row mb-3">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">
-      {{ "Projects.ProjectDescription" | translate }}
-    </label>
-    <div class="col-sm-10">
-      <kendo-editor
-        #editor
-        class="form-control"
-        formControlName="description"
-        [placeholder]="'Projects.ProjectDescription' | translate"
-      />
-    </div>
-  </div>
-  <div class="row mb-3">
-    <label for="inputEmail3" class="col-sm-2 col-form-label">
-      {{ "ProjectCreate.Category_Title" | translate }}
-    </label>
-    <div class="col-sm-10">
-      <kendo-dropdownlist
-        class="form-control"
-        formControlName="category"
-        [data]="categories"
-        textField="label"
-        valueField="id"
-        [valuePrimitive]="true"
-      >
-        <ng-template kendoDropDownListValueTemplate let-dataItem>
-          {{ dataItem.label | translate }}
-        </ng-template>
-        <ng-template kendoDropDownListItemTemplate let-dataItem>
-          <div class="d-flex flex-flow-row w-100">
-            <div class="pd-t-15 mg-r-10">
-              <img
-                class="wd-40 hd-40"
-                [src]="dataItem.icon"
-                [alt]="dataItem.label | translate"
-              />
+<div class="card-header tx-medium">
+  {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
+</div>
+<div class="pd-15">
+  <form #generalForm [formGroup]="form" (ngSubmit)="save()">
+    <div class="row mb-3">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">
+        {{ "ProjectCreate.Category_Title" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <kendo-dropdownlist
+          class="form-control"
+          formControlName="category"
+          [data]="categories"
+          textField="label"
+          valueField="id"
+          [valuePrimitive]="true"
+          [listHeight]="300"
+        >
+          <ng-template kendoDropDownListValueTemplate let-dataItem>
+            {{ dataItem.label | translate }}
+          </ng-template>
+          <ng-template kendoDropDownListItemTemplate let-dataItem>
+            <div class="d-flex flex-flow-row w-100">
+              <div class="pd-t-15 mg-r-10">
+                <img
+                  class="wd-40 hd-40"
+                  [src]="dataItem.icon"
+                  [alt]="dataItem.label | translate"
+                />
+              </div>
+              <div class="flex-grow-1 pd-10">
+                <span class="d-block tx-semibold">
+                  {{ dataItem.label | translate }}
+                </span>
+                <span class="tx-10">
+                  {{ dataItem.description | translate }}
+                </span>
+              </div>
             </div>
-            <div class="flex-grow-1 pd-10">
-              <span class="d-block tx-semibold">
-                {{ dataItem.label | translate }}
-              </span>
-              {{ dataItem.description | translate }}
-            </div>
-          </div>
-        </ng-template>
-      </kendo-dropdownlist>
-      <i>{{ "ProjectCreate.Category_Description" | translate }}</i>
+          </ng-template>
+        </kendo-dropdownlist>
+        <i>{{ "ProjectCreate.Category_Description" | translate }}</i>
+      </div>
     </div>
-  </div>
-  <div class="row md-3">
-    <div class="offset-sm-2 col-sm-10">
-      <button
-        class="btn btn-primary mg-r-10"
-        [disabled]="!form.valid"
-        type="submit"
-      >
-        {{ "General.Save" | translate }}
-      </button>
+    <div class="row mb-3">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">
+        {{ "Projects.ProjectTitle" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <kendo-textbox
+          class="form-control z-index-0"
+          formControlName="title"
+          [placeholder]="'Projects.ProjectTitle' | translate"
+        />
+      </div>
     </div>
-  </div>
-</form>
+    <div class="row mb-3">
+      <label for="inputEmail3" class="col-sm-2 col-form-label">
+        {{ "Projects.ProjectDescription" | translate }}
+      </label>
+      <div class="col-sm-10">
+        <kendo-editor
+          #editor
+          class="form-control"
+          formControlName="description"
+          [placeholder]="'Projects.ProjectDescription' | translate"
+        />
+      </div>
+    </div>
+    <div class="row md-3">
+      <div class="offset-sm-2 col-sm-10">
+        <button
+          class="btn btn-primary mg-r-10"
+          [disabled]="!form.valid"
+          type="submit"
+        >
+          {{ "General.Save" | translate }}
+        </button>
+      </div>
+    </div>
+  </form>
+</div>

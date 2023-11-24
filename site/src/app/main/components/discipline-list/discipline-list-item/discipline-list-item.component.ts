@@ -6,9 +6,9 @@ import {
   Input,
   Output,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
+import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
 import { CategoryLabelPipe } from '../../../pipes/category-label.pipe';
 import { SwitchComponent } from '../../switch';
 
@@ -21,11 +21,11 @@ import { SwitchComponent } from '../../switch';
     CategoryLabelPipe,
     DisciplineIconPipe,
     NgClass,
+    ProjectCategoryLabelPipe,
     SwitchComponent,
-    TranslateModule,
   ],
 })
-export class PhaseListItemComponent {
+export class DisciplineListItemComponent {
   @Input({ required: true }) hideUnselected!: boolean;
   @Input({ required: true }) cat!: CategorySelection;
 

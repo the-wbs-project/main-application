@@ -20,24 +20,29 @@ import { ProjectState } from '../../../../states';
 
 @Component({
   standalone: true,
-  template: `@if (isLoading()) {
-    <div class="w-100 tx-center mg-t-50">
-      <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
-      <h3 class="pd-t-20">
-        {{ 'General.Loading' | translate }}
-      </h3>
+  template: `<div class="card-header tx-medium">
+      {{ 'General.Settings' | translate }} > {{ 'General.Roles' | translate }}
     </div>
-    } @else {
-    <wbs-project-roles
-      [members]="members()"
-      [approverIds]="approverIds()"
-      [pmIds]="pmIds()"
-      [smeIds]="smeIds()"
-      [mustConfirm]="true"
-      (addUserToRole)="add($event.role, $event.user)"
-      (removeUserToRole)="remove($event.role, $event.user)"
-    />
-    }`,
+    <div class="pd-15">
+      @if (isLoading()) {
+      <div class="w-100 tx-center mg-t-50">
+        <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+        <h3 class="pd-t-20">
+          {{ 'General.Loading' | translate }}
+        </h3>
+      </div>
+      } @else {
+      <wbs-project-roles
+        [members]="members()"
+        [approverIds]="approverIds()"
+        [pmIds]="pmIds()"
+        [smeIds]="smeIds()"
+        [mustConfirm]="true"
+        (addUserToRole)="add($event.role, $event.user)"
+        (removeUserToRole)="remove($event.role, $event.user)"
+      />
+      }
+    </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, ProjectRolesComponent, TranslateModule],
 })
