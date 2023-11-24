@@ -6,13 +6,25 @@ import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
 import { UiState } from '@wbs/main/states';
 import { ProjectNavigationService } from '../../../services';
 import { ProjectState, TasksState } from '../../../states';
+import {
+  SelectableSettings,
+  TreeListModule,
+} from '@progress/kendo-angular-treelist';
+import { TranslateModule } from '@ngx-translate/core';
+import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend/tree-discipline-legend.component';
+import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-task-sub-tasks',
   templateUrl: './task-sub-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [WbsTreeComponent],
+  imports: [
+    DisciplineIconListComponent,
+    TranslateModule,
+    TreeDisciplineLegendComponent,
+    TreeListModule,
+  ],
 })
 export class TaskSubTasksComponent {
   readonly phaseView = PROJECT_NODE_VIEW.PHASE;
@@ -20,6 +32,14 @@ export class TaskSubTasksComponent {
   readonly project = toSignal(this.store.select(ProjectState.current));
   readonly task = toSignal(this.store.select(TasksState.current));
 
+  clickedId?: string;
+  settings: SelectableSettings = {
+    enabled: true,
+    mode: 'row',
+    multiple: false,
+    drag: false,
+    readonly: false,
+  };
   constructor(
     readonly navigate: ProjectNavigationService,
     private readonly store: Store

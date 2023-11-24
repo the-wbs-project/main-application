@@ -1,4 +1,4 @@
-import { NgClass } from '@angular/common';
+import { NgClass, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -15,10 +15,12 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
+import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { ProjectStatisticComponent } from '../../../components/project-statistic.component';
 import { ProjectState, TasksState } from '../../../states';
@@ -27,6 +29,7 @@ import { ProjectState, TasksState } from '../../../states';
   standalone: true,
   selector: 'wbs-task-about',
   templateUrl: './task-about.component.html',
+  styleUrl: './task-about.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
@@ -36,9 +39,12 @@ import { ProjectState, TasksState } from '../../../states';
     FontAwesomeModule,
     NgClass,
     ProjectStatisticComponent,
+    ProjectCategoryLabelPipe,
+    ResizedCssDirective,
     RouterModule,
     SafeHtmlPipe,
     TranslateModule,
+    UpperCasePipe,
   ],
 })
 export class TaskAboutComponent {

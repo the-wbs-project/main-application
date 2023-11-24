@@ -685,6 +685,7 @@ export class TasksState {
         parent,
         view,
         id,
+        phaseId: task.phaseId,
         disciplines: task.disciplines,
         lastModified: task.lastModified,
         levels: task.levels,

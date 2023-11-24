@@ -76,6 +76,7 @@ export class TaskSettingDisciplineComponent implements DirtyComponent, OnInit {
       projectCats,
       taskCats
     );
+    console.log(this.categories);
     this.cd.detectChanges();
   }
 }

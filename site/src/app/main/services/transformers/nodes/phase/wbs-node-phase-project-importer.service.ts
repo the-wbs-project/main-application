@@ -14,7 +14,7 @@ export class WbsNodePhaseProjectImporter {
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
     people: Map<string, string[]>,
-    phases: Map<string, string[]>,
+    phases: Map<string, string | undefined>,
     nodes: Map<string, ProjectImportResult>
   ): ProjectUploadData {
     const results: ProjectUploadData = {

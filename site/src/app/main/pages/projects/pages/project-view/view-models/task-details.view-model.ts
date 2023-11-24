@@ -12,6 +12,7 @@ export interface TaskDetailsViewModel {
   levelText: string;
   lastModified?: Date;
 
+  phaseId?: string;
   parent?: WbsNodeView;
   subTasks: WbsNodeView[];
   childrenIds: string[];

@@ -1,23 +1,21 @@
-<div class="card border">
-  <div class="card-body d-flex">
-    <div class="wd-50 tx-center mg-r-20">
-      <fa-icon [icon]="faDiagramSubtask" size="3x" />
-    </div>
-    @if (current(); as current) {
-    <h4 class="w-100 pd-5 mg-b-0">
-      {{ current.title }}&nbsp;
-      <wbs-approval-badge
-        [approval]="approvals() | findById : current.id"
-        [childrenIds]="current.childrenIds"
-      />
-    </h4>
-    }
+<div class="d-flex flex-align-center mg-y-5">
+  <div class="wd-50 tx-center mg-r-20">
+    <fa-icon [icon]="faDiagramSubtask" size="3x" />
   </div>
-  <div class="card-footer py-0">
-    <wbs-project-navigation [links]="links" [claims]="claims" />
-  </div>
+  @if (current(); as current) {
+  <h4 class="w-100 pd-5 mg-b-0">
+    {{ current.title }}&nbsp;
+    <wbs-approval-badge
+      [approval]="approvals() | findById : current.id"
+      [childrenIds]="current.childrenIds"
+    />
+  </h4>
+  }
 </div>
 <div class="card border border-dark">
+  <div class="card-header py-0 mg-b-0 bg-dark">
+    <wbs-project-navigation [links]="links" [claims]="claims" />
+  </div>
   <div class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100">
     <div class="flex-fill scroll">
       <router-outlet />
