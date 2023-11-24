@@ -41,7 +41,6 @@ public class ExcelFileImporter : BaseExtractService
 
                 obj.levelText = sheet.GetValue<string>(row, 1)?.Trim();
                 obj.title = sheet.GetValue<string>(row, 18)?.Trim();
-                //obj.syncWithDisciplines = sync == "y" || sync == "yes";
 
                 for (var i = 1; i <= 10; i++)
                 {
@@ -53,7 +52,7 @@ public class ExcelFileImporter : BaseExtractService
                         break;
                     }
                 }
-                for (var i = 1; i <= 5; i++)
+                for (var i = 1; i <= 25; i++)
                 {
                     var text = sheet.GetValue<string>(row, i + 11)?.Trim()?.ToLower();
 

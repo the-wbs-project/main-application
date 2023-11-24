@@ -14,10 +14,15 @@ public class ExcelFileExporter : BaseExtractService
         this.storage = storage;
     }
 
-    public async Task<byte[]> RunAsync(IEnumerable<WbsPhaseView> nodes, string culture)
+    public async Task<byte[]> RunAsync(IEnumerable<WbsPhaseView> nodes, List<ListItem> customDisciplines, string culture)
     {
         var wbFile = await storage.GetFileAsBytesAsync("templates", "phase-extract.xlsx");
         var disciplines = await GetDisciplinesAsync(culture);
+
+        foreach (var custom in customDisciplines)
+        {
+            disciplines.Add(custom.id, custom.label);
+        }
 
         using (var package = new ExcelPackage())
         {
@@ -44,14 +49,12 @@ public class ExcelFileExporter : BaseExtractService
             {
                 wbsSheet.SetValue(row, 1, node.levelText);
                 wbsSheet.SetValue(row, node.levelText.Split('.').Length + 1, node.title);
-                wbsSheet.SetValue(row, 17, (node.syncWithDisciplines ?? false) ? "Yes" : "No");
-                wbsSheet.SetValue(row, 18, node.description);
 
                 var col = 12;
 
                 if (node.disciplines != null)
                 {
-                    foreach (var id in node.disciplines.Take(5))
+                    foreach (var id in node.disciplines)
                     {
                         if (id == null) continue;
 

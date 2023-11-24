@@ -23,11 +23,11 @@ public class ExportController : ControllerBase
 
     [Authorize]
     [HttpPost("xlsx/{culture}")]
-    public async Task<IActionResult> Get(string culture, [FromBody] WbsPhaseView[] nodes)
+    public async Task<IActionResult> Get(string culture, [FromBody] ExportData data)
     {
         try
         {
-            var bytes = await xlsxExporter.RunAsync(nodes, culture);
+            var bytes = await xlsxExporter.RunAsync(data.nodes, data.customDisciplines, culture);
 
             return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }

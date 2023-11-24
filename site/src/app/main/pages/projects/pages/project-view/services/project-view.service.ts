@@ -1,7 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI_TYPE, Project, ProjectCategory } from '@wbs/core/models';
+import {
+  ListItem,
+  PROJECT_STATI_TYPE,
+  Project,
+  ProjectCategory,
+} from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreateService } from '@wbs/main/components/task-create';
@@ -93,8 +98,14 @@ export class ProjectViewService {
 
       phases = this.transformers.nodes.phase.view.run(project, nodes);
     }
+    const customDisciplines: ListItem[] = [];
 
-    this.data.projectExport.runAsync(project, 'xlsx', phases).subscribe();
+    for (const d of project.disciplines)
+      if (typeof d !== 'string') customDisciplines.push(d);
+
+    this.data.projectExport
+      .runAsync(project, 'xlsx', customDisciplines, phases)
+      .subscribe();
   }
 
   confirmAndChangeStatus(
