@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -6,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
   standalone: true,
   selector: 'wbs-project-create-footer',
   templateUrl: './footer.component.html',
-  imports: [CommonModule, TranslateModule],
+  imports: [TranslateModule],
 })
 export class FooterComponent {
   @Input() view?: string;

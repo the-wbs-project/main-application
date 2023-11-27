@@ -1,18 +1,17 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
+import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW } from '@wbs/core/models';
-import { WbsTreeComponent } from '@wbs/main/components/wbs-tree';
-import { UiState } from '@wbs/main/states';
-import { ProjectNavigationService } from '../../../services';
-import { ProjectState, TasksState } from '../../../states';
 import {
   SelectableSettings,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { TranslateModule } from '@ngx-translate/core';
-import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend/tree-discipline-legend.component';
+import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
+import { UiState } from '@wbs/main/states';
+import { TreeDisciplineLegendComponent } from '../../../components/tree-discipline-legend/tree-discipline-legend.component';
+import { ProjectNavigationService } from '../../../services';
+import { ProjectState, TasksState } from '../../../states';
 
 @Component({
   standalone: true,

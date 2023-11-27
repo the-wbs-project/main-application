@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
+import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { DisciplinesChosen } from '../../actions';
@@ -22,7 +22,7 @@ import { ProjectCreateState } from '../../states';
   templateUrl: './disciplines.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [DisciplineListComponent, FillElementDirective, FooterComponent],
+  imports: [DisciplineEditorComponent, FillElementDirective, FooterComponent],
   providers: [CategorySelectionService],
 })
 export class DisciplinesComponent implements OnInit {

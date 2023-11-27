@@ -291,9 +291,7 @@ export class ProjectUploadState {
     if (state.uploadResults?.results)
       for (const row of state.uploadResults.results) {
         if (row.levelText.split('.').length === 1) {
-          const sameAs = phaseNames.has(row.title)
-            ? [phaseNames.get(row.title)!]
-            : [];
+          const sameAs = phaseNames.get(row.title);
 
           phaseList.push({ text: row.title, sameAs, isEditable: true });
         }
@@ -336,7 +334,7 @@ export class ProjectUploadState {
     });
     const state = ctx.getState();
     const people = new Map<string, string[]>();
-    const phases = new Map<string, string[]>();
+    const phases = new Map<string, string | undefined>();
     const nodes = new Map<string, ProjectImportResult>();
     //
     //  Put people into map

@@ -20,7 +20,7 @@
     <div class="list-group d-ib text-start wd-xs-400 wd-sm-500">
       @for (cat of categories; track cat.id) {
       <div class="opacity-1'" style="cursor: 'move'">
-        <wbs-discipline-list-item
+        <wbs-discipline-editor-item
           [cat]="cat"
           [hideUnselected]="false"
           (changed)="changed()"
@@ -41,7 +41,7 @@
       (dragEnd)="rebuild()"
     >
       <ng-template let-cat="item">
-        <wbs-discipline-list-item
+        <wbs-discipline-editor-item
           [cat]="cat"
           [hideUnselected]="false"
           (changed)="changed()"

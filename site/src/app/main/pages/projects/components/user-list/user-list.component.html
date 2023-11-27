@@ -1,10 +1,9 @@
-<div
-  *ngIf="noUsersLabel && users.length === 0"
-  class="w-100 tx-center tx-italic tx-danger"
->
+@if (noUsersLabel && users.length === 0) {
+<div class="w-100 tx-center tx-italic tx-danger">
   {{ noUsersLabel | translate }}
 </div>
-<div class="d-flex w-100" *ngFor="let user of users | userSort">
+@for (user of users | userSort; track user.id) {
+<div class="d-flex w-100">
   <div class="flex-grow-1">
     {{ user.name }}
   </div>
@@ -14,3 +13,4 @@
     </a>
   </div>
 </div>
+} }

@@ -18,111 +18,104 @@
       </span>
     </div>
   </div>
-  <ng-template [ngIf]="vm.type">
-    <div class="row mg-t-20">
-      <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
-      <div class="col-9">
-        <input
-          type="text"
-          [(ngModel)]="vm.name"
-          class="form-control w-100"
-          [ngClass]="{
-            'is-valid': vm.errors.nameRequired === false,
-            'is-invalid': vm.errors.nameRequired
-          }"
-          (blur)="validator.validateName(vm)"
+  @if (vm.type) {
+  <div class="row mg-t-20">
+    <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
+    <div class="col-9">
+      <input
+        type="text"
+        [(ngModel)]="vm.name"
+        class="form-control w-100"
+        [ngClass]="{
+          'is-valid': vm.errors.nameRequired === false,
+          'is-invalid': vm.errors.nameRequired
+        }"
+        (blur)="validator.validateName(vm)"
+      />
+      @if (vm.errors.nameRequired) {
+      <div class="invalid-feedback">
+        {{ "Resources.NameIsRequired" | translate }}
+      </div>
+      } @else {
+      <span class="tx-italic tx-11">
+        {{ "Resources.ResourceNameHelper" | translate }}
+      </span>
+      }
+    </div>
+  </div>
+  <div class="row mg-t-20">
+    <span class="col-3 pd-t-10">
+      {{ "General.Description" | translate }} *
+    </span>
+    <div class="col-9">
+      <textarea
+        [(ngModel)]="vm.description"
+        class="form-control w-100"
+        rows="5"
+        [ngClass]="{
+          'is-valid': vm.errors.descriptionRequired === false,
+          'is-invalid': vm.errors.descriptionRequired
+        }"
+        (blur)="validator.validateDescription(vm)"
+      ></textarea>
+      @if (vm.errors.descriptionRequired) {
+      <div class="invalid-feedback">
+        {{ "Resources.DescriptionIsRequired" | translate }}
+      </div>
+      } @else {
+      <span class="tx-italic tx-11">
+        {{ "Resources.ResourceDescriptionHelper" | translate }}
+      </span>
+      }
+    </div>
+  </div>
+  @switch (vm.type) { @case ('link') {
+  <div class="row mg-t-20">
+    <span class="col-3 pd-t-10"> {{ "Resources.LinkUrl" | translate }} * </span>
+    <div class="col-9">
+      <input
+        type="text"
+        [(ngModel)]="vm.url"
+        class="form-control w-100"
+        [ngClass]="{
+          'is-valid': vm.errors.urlRequired === false,
+          'is-invalid': vm.errors.urlRequired
+        }"
+        (blur)="validator.validateUrl(vm)"
+      />
+      <div
+        [ngClass]="{
+          'tx-italic tx-11': vm.errors.urlRequired,
+          'invalid-feedback': !vm.errors.urlRequired
+        }"
+      >
+        {{ "Resources.UrlIsRequired" | translate }}
+      </div>
+    </div>
+  </div>
+  } @case ('youtube') { } @default {
+  <div class="row mg-t-20">
+    <span class="col-3 pd-t-10">
+      {{ "Resources.FileUpload" | translate }}
+    </span>
+    <div class="col-9">
+      <div
+        [ngClass]="{
+          'is-valid border border-success': vm.errors.fileRequired === false,
+          'is-invalid border border-danger': vm.errors.fileRequired
+        }"
+      >
+        <wbs-uploader
+          (removed)="setFile(undefined)"
+          (uploaded)="setFile($event)"
         />
-        <span class="tx-italic tx-11" *ngIf="!vm.errors?.nameRequired">
-          {{ "Resources.ResourceNameHelper" | translate }}
-        </span>
-        <div class="invalid-feedback" *ngIf="vm.errors.nameRequired">
-          {{ "Resources.NameIsRequired" | translate }}
-        </div>
       </div>
-    </div>
-    <div class="row mg-t-20">
-      <span class="col-3 pd-t-10">
-        {{ "General.Description" | translate }} *
-      </span>
-      <div class="col-9">
-        <textarea
-          [(ngModel)]="vm.description"
-          class="form-control w-100"
-          rows="5"
-          [ngClass]="{
-            'is-valid': vm.errors.descriptionRequired === false,
-            'is-invalid': vm.errors.descriptionRequired
-          }"
-          (blur)="validator.validateDescription(vm)"
-        ></textarea>
-        <span class="tx-italic tx-11" *ngIf="!vm.errors?.descriptionRequired">
-          {{ "Resources.ResourceDescriptionHelper" | translate }}
-        </span>
-        <div class="invalid-feedback" *ngIf="vm.errors?.descriptionRequired">
-          {{ "Resources.DescriptionIsRequired" | translate }}
-        </div>
+      @if (vm.errors.fileRequired) {
+      <div class="invalid-feedback">
+        {{ "Resources.UrlIsRequired" | translate }}
       </div>
+      }
     </div>
-    <div *ngIf="vm.type === 'link'" class="row mg-t-20">
-      <span class="col-3 pd-t-10">
-        {{ "Resources.LinkUrl" | translate }} *
-      </span>
-      <div class="col-9">
-        <input
-          type="text"
-          [(ngModel)]="vm.url"
-          class="form-control w-100"
-          [ngClass]="{
-            'is-valid': vm.errors.urlRequired === false,
-            'is-invalid': vm.errors.urlRequired
-          }"
-          (blur)="validator.validateUrl(vm)"
-        />
-        <span class="tx-italic tx-11" *ngIf="!vm.errors?.urlRequired">
-          {{ "Resources.UrlIsRequired" | translate }}
-        </span>
-        <div class="invalid-feedback" *ngIf="vm.errors?.urlRequired">
-          {{ "Resources.UrlIsRequired" | translate }}
-        </div>
-      </div>
-    </div>
-    <div *ngIf="vm.type === 'youtube'" class="row mg-t-20">
-      <span class="col-3 pd-t-10"> YouTube Information </span>
-      <div class="col-9">
-        <textarea
-          [(ngModel)]="vm.url"
-          class="form-control w-100"
-          rows="5"
-        ></textarea>
-        <span class="tx-italic tx-11">
-          Go to your YouTube video, click Share, click the Embed button, then
-          paste here.
-        </span>
-      </div>
-    </div>
-    <div
-      *ngIf="vm.type !== 'youtube' && vm.type !== 'link'"
-      class="row mg-t-20"
-    >
-      <span class="col-3 pd-t-10">
-        {{ "Resources.FileUpload" | translate }}
-      </span>
-      <div class="col-9">
-        <div
-          [ngClass]="{
-            'is-valid border border-success': vm.errors.fileRequired === false,
-            'is-invalid border border-danger': vm.errors.fileRequired
-          }"
-        >
-          <wbs-uploader
-            (removed)="setFile(undefined)"
-            (uploaded)="setFile($event)"
-          />
-        </div>
-        <div class="invalid-feedback" *ngIf="vm.errors?.fileRequired">
-          {{ "Resources.UrlIsRequired" | translate }}
-        </div>
-      </div>
-    </div>
-  </ng-template>
+  </div>
+  } } }
 </div>

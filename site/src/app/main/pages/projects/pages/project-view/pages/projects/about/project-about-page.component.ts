@@ -4,8 +4,6 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
-import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
@@ -13,6 +11,7 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { map } from 'rxjs/operators';
 import { ApprovalBadgeComponent } from '../../../components/approval-badge.component';
+import { DisciplineListComponent } from '../../../components/discipline-list.component';
 import { ProjectChecklistComponent } from '../../../components/project-checklist/project-checklist.component';
 import { ProjectStatisticComponent } from '../../../components/project-statistic.component';
 import {
@@ -31,8 +30,7 @@ import { ProjectStatusTileComponent } from './components/project-status-tile/pro
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ApprovalBadgeComponent,
-    CategoryLabelPipe,
-    DisciplineIconPipe,
+    DisciplineListComponent,
     EditedDateTextPipe,
     FindByIdPipe,
     NgClass,

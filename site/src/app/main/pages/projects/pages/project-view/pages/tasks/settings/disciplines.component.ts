@@ -10,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { DisciplineListComponent } from '@wbs/main/components/discipline-list';
+import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { ChangeTaskDisciplines } from '../../../actions';
@@ -24,7 +24,7 @@ import { ProjectState, TasksState } from '../../../states';
       {{ 'General.Disciplines' | translate }}
     </div>
     <div class="pd-15">
-      <wbs-discipline-list
+      <wbs-discipline-editor
         [(categories)]="categories"
         [showSave]="true"
         (saveClicked)="save()"
@@ -32,7 +32,7 @@ import { ProjectState, TasksState } from '../../../states';
       />
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DisciplineListComponent, TranslateModule],
+  imports: [DisciplineEditorComponent, TranslateModule],
   providers: [CategorySelectionService],
 })
 export class TaskSettingDisciplineComponent implements DirtyComponent, OnInit {

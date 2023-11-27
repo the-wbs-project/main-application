@@ -72,16 +72,10 @@
     @if (task.disciplines.length > 0) {
 
     <div class="card-body">
-      @for (disc of task.disciplines; track $index){
-      <p class="mb-2 mx-0 tx-16">
-        <span class="d-ib wd-30">
-          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
-        </span>
-        <span class="mg-l-10">
-          {{ disc | categoryLabel | translate }}
-        </span>
-      </p>
-      }
+      <wbs-discipline-list
+        [disciplines]="task.disciplines"
+        [projectDisciplines]="project()!.disciplines"
+      />
     </div>
     } @else {
     <div class="card-body tx-center">

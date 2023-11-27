@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { setupGuard, startGuard, verifyStartedGuard } from './children.guards';
+import { phaseListResolver } from '../services';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'start', pathMatch: 'full' },
@@ -46,6 +47,9 @@ export const routes: Routes = [
       import('./phase-view/phase-view.component').then(
         (x) => x.PhaseViewComponent
       ),
+    resolve: {
+      phases: phaseListResolver,
+    },
   },
   {
     path: 'disciplines',

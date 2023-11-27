@@ -14,8 +14,8 @@ import { SwitchComponent } from '../../switch';
 
 @Component({
   standalone: true,
-  selector: 'wbs-discipline-list-item',
-  templateUrl: './discipline-list-item.component.html',
+  selector: 'wbs-discipline-editor-item',
+  templateUrl: './discipline-editor-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
@@ -25,7 +25,7 @@ import { SwitchComponent } from '../../switch';
     SwitchComponent,
   ],
 })
-export class DisciplineListItemComponent {
+export class DisciplineEditorItemComponent {
   @Input({ required: true }) hideUnselected!: boolean;
   @Input({ required: true }) cat!: CategorySelection;
 

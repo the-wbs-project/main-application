@@ -7,7 +7,7 @@ export interface ListItem extends ListItemBase {
   label: string;
   order: number;
   description?: string;
-  sameAs?: string[];
+  sameAs?: string;
   tags: string[];
   icon?: string;
 }

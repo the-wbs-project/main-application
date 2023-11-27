@@ -24,27 +24,27 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService, DialogService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { ListItemDialogComponent } from '../list-item-dialog/list-item-dialog.component';
-import { PhaseListItemComponent } from './phase-list-item/phase-list-item.component';
+import { PhaseEditorItemComponent } from './phase-editor-item/phase-editor-item.component';
 
 @Component({
   standalone: true,
-  selector: 'wbs-phase-list',
-  templateUrl: './phase-list.component.html',
+  selector: 'wbs-phase-editor',
+  templateUrl: './phase-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [
     FontAwesomeModule,
     NgClass,
-    PhaseListItemComponent,
+    PhaseEditorItemComponent,
     SortableModule,
     TranslateModule,
   ],
   providers: [CategorySelectionService, DialogService],
 })
-export class PhaseListComponent {
+export class PhaseEditorComponent {
+  @Input({ required: true }) categories?: CategorySelection[] | null;
   @Input() showButtons = true;
   @Input() showSave = false;
-  @Input() categories?: CategorySelection[] | null;
   @Output() readonly saveClicked = new EventEmitter<void>();
   @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 

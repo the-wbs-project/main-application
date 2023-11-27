@@ -39,24 +39,21 @@
           <wbs-project-list-filters [(filters)]="filters" position="top" />
         </div>
       </div>
-      <div
-        class="row"
-        *ngIf="projects() | projectFilter : filters; let projects"
-      >
-        <div
-          *ngIf="!loading() && projects.length === 0"
-          class="col-12 pd-t-100 tx-20 tx-center"
-        >
+      @if (projects() | projectFilter : filters; as projects) {
+      <div class="row">
+        @if (!loading() && projects.length === 0) {
+        <div class="col-12 pd-t-100 tx-20 tx-center">
           <fa-icon [icon]="faCactus" size="2xl" />
           <br />
           <br />
           {{ "Projects.NoProjectsFound" | translate }}
         </div>
-        <div
-          *ngFor="let project of projects"
-          class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6"
-        >
-          <a [routerLink]="['/', owner, 'projects', 'view', project.id]">
+        } @for (project of projects; track project.id) {
+        <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6">
+          <a
+            class="tx-black text-decoration-none"
+            [routerLink]="['/', owner, 'projects', 'view', project.id]"
+          >
             <div class="card">
               <div class="card-body">
                 <div style="min-height: 100px">
@@ -72,7 +69,9 @@
             </div>
           </a>
         </div>
+        }
       </div>
+      }
     </div>
   </div>
 </div>

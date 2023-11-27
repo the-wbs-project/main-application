@@ -28,8 +28,7 @@ import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
-import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend/tree-discipline-legend.component';
-import { WbsActionButtonsComponent } from '@wbs/main/components/wbs-action-buttons';
+import { TreeDisciplineLegendComponent } from '@wbs/main/pages/projects/pages/project-view/components/tree-discipline-legend/tree-discipline-legend.component';
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
@@ -68,7 +67,6 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     TranslateModule,
     TreeDisciplineLegendComponent,
     TreeListModule,
-    WbsActionButtonsComponent,
   ],
 })
 export class ProjectPhaseTreeComponent implements OnInit {

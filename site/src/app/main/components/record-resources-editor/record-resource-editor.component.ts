@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -20,7 +20,6 @@ import { RestrictionsPipe } from './pipes/restrictions.pipe';
     DropDownListModule,
     FormsModule,
     NgClass,
-    NgIf,
     ResourceTypeTextComponent,
     RestrictionsPipe,
     TranslateModule,

@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -16,7 +15,7 @@ import { UserSortPipe } from '@wbs/main/pipes/user-sort.pipe';
   selector: 'wbs-project-user-list',
   templateUrl: './user-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CommonModule, SVGIconModule, TranslateModule, UserSortPipe],
+  imports: [SVGIconModule, TranslateModule, UserSortPipe],
 })
 export class ProjectUserListComponent {
   @Input({ required: true }) icon!: SVGIcon;

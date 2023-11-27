@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
@@ -26,7 +25,6 @@ import { HeaderProfilePictureComponent } from '../header-profile-picture.compone
     HeaderProfileHeaderComponent,
     HeaderProfilePictureComponent,
     NgbDropdownModule,
-    NgIf,
     RoleListPipe,
     RouterModule,
     SVGIconModule,

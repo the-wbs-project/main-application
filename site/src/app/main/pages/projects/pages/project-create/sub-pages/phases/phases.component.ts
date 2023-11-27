@@ -8,7 +8,7 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { PhaseListComponent } from '@wbs/main/components/phase-list';
+import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { PhasesChosen } from '../../actions';
@@ -22,7 +22,7 @@ import { ProjectCreateState } from '../../states';
   templateUrl: './phases.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [PhaseListComponent, FillElementDirective, FooterComponent],
+  imports: [PhaseEditorComponent, FillElementDirective, FooterComponent],
   providers: [CategorySelectionService],
 })
 export class PhaseComponent implements OnInit {

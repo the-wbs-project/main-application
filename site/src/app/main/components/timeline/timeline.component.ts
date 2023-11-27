@@ -1,4 +1,4 @@
-import { CommonModule, NgClass } from '@angular/common';
+import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -25,7 +25,8 @@ import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
   styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
+    AsyncPipe,
+    DatePipe,
     DateTextPipe,
     FontAwesomeModule,
     NgbDropdownModule,

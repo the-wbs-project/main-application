@@ -16,12 +16,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
+import { DisciplineListComponent } from '../../../components/discipline-list.component';
 import { ProjectStatisticComponent } from '../../../components/project-statistic.component';
 import { ProjectState, TasksState } from '../../../states';
 
@@ -32,10 +31,9 @@ import { ProjectState, TasksState } from '../../../states';
   styleUrl: './task-about.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CategoryLabelPipe,
     CheckPipe,
     DateTextPipe,
-    DisciplineIconPipe,
+    DisciplineListComponent,
     FontAwesomeModule,
     NgClass,
     ProjectStatisticComponent,

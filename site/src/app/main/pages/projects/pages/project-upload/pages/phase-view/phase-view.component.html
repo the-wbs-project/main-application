@@ -1,5 +1,6 @@
-<div *ngIf="phaseList$ | async; let phaseList" class="w-100 text-center">
-  <fa-icon [icon]="faList" size="5x"></fa-icon>
+@if (phaseList(); as phaseList) {
+<div class="w-100 text-center">
+  <fa-icon [icon]="faList" size="5x" />
   <h3 class="pd-t-20">{{ "ProjectUpload.Page_Phases" | translate }}</h3>
   <ngb-alert type="info">
     <h4 class="alert-heading">{{ "ProjectUpload.Why" | translate }}</h4>
@@ -8,54 +9,35 @@
     </p>
   </ngb-alert>
   <div class="list-group text-start w-100 pd-t-20">
+    @for (cat of phaseList; let i = $index; track i) {
     <div
-      *ngFor="let cat of phaseList; let i = index"
       class="list-group-item d-flex flex-row-f"
       [class.bg-gray-200]="!cat.isEditable"
     >
       <div class="pd-t-1 wd-60 d-ib">
         <fa-layers [fixedWidth]="true">
-          <fa-icon size="2x" [icon]="faCircle"></fa-icon>
-          <fa-layers-text [content]="(i + 1).toString()" transform="right-6">
-          </fa-layers-text>
+          <fa-icon size="2x" [icon]="faCircle" />
+          <fa-layers-text [content]="(i + 1).toString()" transform="right-6" />
         </fa-layers>
       </div>
-      <ng-template [ngIf]="!cat.isEditable">
-        <div style="font-size: 12px">
-          {{ cat.idOrCat | categoryLabel | translate }}
-        </div>
-        <!--<div class="flex-grow-1 text-end tx-10">
-          {{ cat.idOrCat | categoryLabelList }}
-        </div>-->
-      </ng-template>
-      <ng-template [ngIf]="cat.isEditable">
-        <div style="font-size: 12px; padding-right: 30px">
-          {{ cat.text }}
-        </div>
-        <div class="flex-grow-1 text-end tx-10">
-          <kendo-multiselect
-            [data]="(categories$ | async) ?? []"
-            textField="label"
-            valueField="id"
-            [ngStyle]="{ 'max-width': '300px' }"
-            [valuePrimitive]="true"
-            [(ngModel)]="cat.sameAs"
-            size="small"
-            kendoMultiSelectSummaryTag
-          >
-            <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
-              {{ this.convert(dataItems) }}
-            </ng-template>
-            <ng-template kendoMultiSelectItemTemplate let-dataItem>
-              {{ dataItem.label | translate }}
-            </ng-template>
-          </kendo-multiselect>
-        </div>
-      </ng-template>
+      @if (cat.isEditable) {
+      <div style="font-size: 12px; padding-right: 30px">
+        {{ cat.text }}
+      </div>
+      <div class="flex-grow-1 text-end tx-10">
+        <wbs-phase-match-list [phases]="phases" [category]="cat" />
+      </div>
+      } @else {
+      <div style="font-size: 12px">
+        {{ cat.idOrCat | categoryLabel : project()!.disciplines | translate }}
+      </div>
+      }
     </div>
+    }
   </div>
   <br />
   <a class="btn btn-primary mg-y-20" (click)="nav(phaseList)">
     {{ "General.Continue" | translate }}
   </a>
 </div>
+}

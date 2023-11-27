@@ -1,22 +1,23 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faUserCircle } from '@fortawesome/pro-solid-svg-icons';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
 
 @Component({
   standalone: true,
   selector: 'wbs-header-profile-picture',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, NgClass, NgIf, SVGIconModule],
-  template: `<fa-icon
-      *ngIf="!picture"
+  imports: [FontAwesomeModule, NgClass],
+  template: `@if (picture) {
+    <img [src]="picture" class="profile-img" />
+    } @else {
+    <fa-icon
       [icon]="faUserCircle"
       style="font-size: 1.2rem"
       size="2x"
-      [ngClass]="['profile-img']"
+      [ngClass]="'profile-img'"
     />
-    <img *ngIf="picture" [src]="picture" class="profile-img" />`,
+    }`,
   styles: [
     `
       .profile-img {

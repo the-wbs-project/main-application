@@ -20,7 +20,7 @@
     <div class="list-group d-ib text-start w-100">
       @for (cat of categories; track cat.id) {
       <div class="opacity-1'" style="cursor: 'move'">
-        <wbs-phase-list-item
+        <wbs-phase-editor-item
           [cat]="cat"
           [hideUnselected]="false"
           (changed)="changed()"
@@ -41,7 +41,7 @@
       (dragEnd)="rebuild()"
     >
       <ng-template let-cat="item">
-        <wbs-phase-list-item
+        <wbs-phase-editor-item
           [cat]="cat"
           [hideUnselected]="false"
           (changed)="changed()"

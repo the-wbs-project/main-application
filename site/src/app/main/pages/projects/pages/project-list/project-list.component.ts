@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -27,7 +27,6 @@ import { ProjectListState } from './states';
 @Component({
   standalone: true,
   templateUrl: './project-list.component.html',
-  styleUrls: ['./project-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryLabelPipe,
@@ -35,8 +34,6 @@ import { ProjectListState } from './states';
     FillElementDirective,
     FontAwesomeModule,
     NgClass,
-    NgFor,
-    NgIf,
     PageHeaderComponent,
     ProjectListFiltersComponent,
     ProjectFilterPipe,

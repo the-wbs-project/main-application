@@ -13,15 +13,14 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { DisciplineListComponent } from '../discipline-list';
+import { DisciplineEditorComponent } from '../discipline-editor';
 
 @Component({
   standalone: true,
   templateUrl: './task-create.component.html',
-  styleUrls: ['./task-create.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DisciplineListComponent,
+    DisciplineEditorComponent,
     EditorModule,
     FormsModule,
     TranslateModule,

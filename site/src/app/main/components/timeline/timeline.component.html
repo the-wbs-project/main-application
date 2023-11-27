@@ -1,8 +1,6 @@
 <div
   class="h-100 w-100 pos-absolute top-0 pd-t-50"
-  [ngClass]="{
-  'd-none': !loading,
-}"
+  [ngClass]="{ 'd-none': !loading }"
 >
   <div
     class="h-100 w-100 pd-t-200 text-center op-9"
@@ -13,11 +11,12 @@
   ></div>
 </div>
 <div class="container-fluid mg-t-10" style="min-height: 300px">
-  <div class="row" *ngIf="timeline">
+  @if (timeline) {
+  <div class="row">
     <div class="col-lg-12">
       <div class="vtimeline">
+        @for (activity of timeline; track activity.id; let i = $index) {
         <div
-          *ngFor="let activity of timeline; let i = index"
           class="timeline-wrapper timeline-wrapper-primary"
           [ngClass]="{ 'timeline-inverted': i % 2 === 1 }"
         >
@@ -35,11 +34,8 @@
                     {{ activity.actionTitle ?? "" | translate }}
                   </h6>
                 </div>
-                <div
-                  *ngIf="activity.menu && activity.menu.length > 0"
-                  ngbDropdown
-                  style="display: inline-block"
-                >
+                @if (activity.menu && activity.menu.length > 0) {
+                <div ngbDropdown class="d-ib">
                   <button
                     type="button"
                     id="actionMenu"
@@ -49,17 +45,19 @@
                     <i class="fa-solid fa-ellipsis"></i>
                   </button>
                   <div ngbDropdownMenu aria-labelledby="actionMenu">
+                    @for (item of activity.menu; track $index) {
                     <button
                       ngbDropdownItem
-                      *ngFor="let item of activity.menu"
                       (click)="menuItemClicked.emit(item)"
                     >
                       <i class="fa-solid" [ngClass]="item.icon"></i>
                       &nbsp;
                       {{ item.title | translate }}
                     </button>
+                    }
                   </div>
                 </div>
+                }
               </div>
               <label class="tx-italic tx-10">
                 {{ activity.userId | userName | async }}
@@ -101,21 +99,18 @@
             </div>
           </div>
         </div>
+        }
       </div>
-      <div
-        *ngIf="loaded && timeline.length < (length ?? 0)"
-        class="w-100 pd-10 tx-center"
-      >
+      @if (loaded && timeline.length < (length ?? 0)) {
+      <div class="w-100 pd-10 tx-center">
         <button class="btn btn-primary" (click)="loadMoreClicked.emit()">
           Load More
         </button>
       </div>
-      <div
-        *ngIf="loaded && timeline.length === (length ?? 0)"
-        class="w-100 pd-10 tx-center tx-bold tx-20"
-      >
-        The End
-      </div>
+      } @if (loaded && timeline.length === (length ?? 0)) {
+      <div class="w-100 pd-10 tx-center tx-bold tx-20">The End</div>
+      }
     </div>
   </div>
+  }
 </div>

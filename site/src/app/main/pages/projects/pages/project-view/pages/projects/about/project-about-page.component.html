@@ -5,16 +5,10 @@
       {{ "General.Disciplines" | translate | uppercase }}
     </div>
     <div class="card-body">
-      @for (disc of project.disciplines; track $index){
-      <p class="mb-2 mx-0 tx-16">
-        <span class="d-ib wd-30">
-          <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
-        </span>
-        <span class="mg-l-10">
-          {{ disc | categoryLabel | translate }}
-        </span>
-      </p>
-      }
+      <wbs-discipline-list
+        [disciplines]="project.disciplines"
+        [projectDisciplines]="project.disciplines"
+      />
     </div>
   </div>
 

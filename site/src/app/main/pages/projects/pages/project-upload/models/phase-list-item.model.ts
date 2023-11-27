@@ -7,6 +7,6 @@ export type PhaseListItem =
     }
   | {
       text: string;
-      sameAs: string[];
+      sameAs?: string;
       isEditable: true;
     };
