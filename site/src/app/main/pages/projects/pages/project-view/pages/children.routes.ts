@@ -136,7 +136,7 @@ export const routes: Routes = [
               claims: projectClaimsResolve,
             },
             loadComponent: () =>
-              import('./tasks/resources/task-resources-page.component').then(
+              import('./tasks/task-resources-page.component').then(
                 (x) => x.TaskResourcesPageComponent
               ),
           },
@@ -184,7 +184,7 @@ export const routes: Routes = [
       claims: projectClaimsResolve,
     },
     loadComponent: () =>
-      import('./projects/resources/project-resources-page.component').then(
+      import('./projects/project-resources-page.component').then(
         (x) => x.ProjectResourcesPageComponent
       ),
   },

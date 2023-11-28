@@ -5,6 +5,7 @@ import {
   Input,
   signal,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -18,32 +19,34 @@ import {
 } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
-import { RecordResourceEditorComponent } from '@wbs/main/components/record-resources-editor/record-resource-editor.component';
-import { RecordResourceListComponent } from '@wbs/main/components/record-resources-list/record-resource-list.component';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { RecordResourceValidation, Utils } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
+import { RecordResourceEditorComponent } from './components/record-resources-editor/record-resource-editor.component';
+import { RecordResourceListComponent } from './components/record-resources-list/record-resource-list.component';
 
 @Component({
   standalone: true,
-  templateUrl: './task-resources-page.component.html',
+  selector: 'wbs-record-resources-page',
+  templateUrl: './record-resources-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckPipe,
     FontAwesomeModule,
     RecordResourceEditorComponent,
     RecordResourceListComponent,
+    RouterModule,
     TranslateModule,
   ],
   providers: [RecordResourceValidation],
 })
-export class TaskResourcesPageComponent {
+export class RecordResourcesPageComponent {
   @Input({ required: true }) list!: RecordResource[];
   @Input({ required: true }) owner!: string;
   @Input({ required: true }) projectId!: string;
-  @Input({ required: true }) taskId!: string;
   @Input({ required: true }) claims!: string[];
+  @Input() taskId?: string;
 
   private modal?: NgbModalRef;
 
@@ -133,17 +136,29 @@ export class TaskResourcesPageComponent {
       resource: data.resource,
 
       ownerId: this.owner,
-      recordId: this.taskId,
+      recordId: this.taskId ?? this.projectId,
       order: data.order ?? Math.max(...this.list.map((x) => x.order), 0) + 1,
     };
+    let obs: Observable<void> = this.taskId
+      ? this.data.projectResources.putTaskAsync(
+          this.owner,
+          this.projectId,
+          this.taskId,
+          resource
+        )
+      : this.data.projectResources.putProjectAsync(
+          this.owner,
+          this.projectId,
+          resource
+        );
 
-    return this.data.projectResources
-      .putTaskAsync(this.owner, this.projectId, this.taskId, resource)
-      .pipe(
-        map(() => {
-          this.list = structuredClone([...this.list, resource]);
-          this.cd.detectChanges();
-        })
-      );
+    return obs.pipe(
+      map(() => {
+        console.log('Saved');
+
+        this.list = structuredClone([...this.list, resource]);
+        this.cd.detectChanges();
+      })
+    );
   }
 }

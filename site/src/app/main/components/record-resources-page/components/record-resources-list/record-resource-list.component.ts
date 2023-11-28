@@ -15,6 +15,12 @@ import {
   ListViewComponent,
   ListViewModule,
 } from '@progress/kendo-angular-listview';
+import {
+  DragAndDropModule,
+  DragTargetContainerDirective,
+  DropTargetContainerDirective,
+  DropTargetEvent,
+} from '@progress/kendo-angular-utils';
 import { State } from '@progress/kendo-data-query';
 import { PROJECT_CLAIMS, RecordResource } from '@wbs/core/models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
@@ -26,13 +32,7 @@ import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
 import { TrackById } from 'ngxtension/trackby-id-prop';
 import { ResourceTypeTextComponent } from '../record-resources-type-text/resource-type-text.component';
-import { ResourceViewLinkComponent } from './components/resource-view-link/resource-view-link.component';
-import {
-  DragAndDropModule,
-  DragTargetContainerDirective,
-  DropTargetContainerDirective,
-  DropTargetEvent,
-} from '@progress/kendo-angular-utils';
+import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-link.component';
 
 @Component({
   standalone: true,

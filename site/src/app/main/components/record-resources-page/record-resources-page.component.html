@@ -1,6 +1,6 @@
 <div class="pd-15">
   <div class="container-fluid">
-    @if (list.length > 0 && (claims | check : addClaim)) {
+    @if (claims | check : addClaim) {
     <div class="row">
       <div class="col-12 tx-right">
         <button class="btn btn-outline-dark" (click)="launchNew(content)">
