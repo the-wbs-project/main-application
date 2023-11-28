@@ -1,5 +1,5 @@
 <div class="d-ib wd-100p">
-  @if (view === 'b-c' || view === 'c-c') {
+  @if (view === 'b-c') {
   <div class="wd-100p tx-center">
     <button
       [disabled]="disableBack"
@@ -8,6 +8,9 @@
     >
       {{ "General.Back" | translate }}
     </button>
+  </div>
+  } @else if (view === 'c-c') {
+  <div class="wd-100p tx-center">
     <button
       class="btn btn-primary"
       [disabled]="disableContinue"

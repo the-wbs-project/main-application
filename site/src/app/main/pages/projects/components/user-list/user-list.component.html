@@ -2,7 +2,7 @@
 <div class="w-100 tx-center tx-italic tx-danger">
   {{ noUsersLabel | translate }}
 </div>
-@for (user of users | userSort; track user.id) {
+} @else { @for (user of users | userSort; track user.id) {
 <div class="d-flex w-100">
   <div class="flex-grow-1">
     {{ user.name }}
