@@ -11,7 +11,7 @@ import { TimelineMenuItem } from '@wbs/core/models';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { ProjectState } from '../states';
-import { TASK_PAGE_VIEW } from '../models';
+import { TASK_PAGES } from '../models';
 
 @Component({
   standalone: true,
@@ -54,7 +54,7 @@ export class ProjectTimelinePageComponent implements OnInit {
 
   timelineAction(item: TimelineMenuItem) {
     if (item.action === 'navigate') {
-      this.nav.toTaskPage(item.objectId, TASK_PAGE_VIEW.ABOUT);
+      this.nav.toTaskPage(item.objectId, TASK_PAGES.ABOUT);
     } else if (item.action === 'restore') {
       //this.store.dispatch(new RestoreProject(item.activityId));
     }

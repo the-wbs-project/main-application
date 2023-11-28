@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { RecordResource } from '@wbs/core/models';
 import { Utils, orgResolve, userIdResolve } from '@wbs/main/services';
-import { PROJECT_PAGES, TASK_PAGE_VIEW } from '../models';
+import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import {
   closeApprovalWindowGuard,
   projectRedirectGuard,
@@ -12,8 +12,12 @@ import {
   setApprovalViewAsTask,
   taskVerifyGuard,
 } from '../project-view.guards';
-import { projectClaimsResolve, projectIdResolve } from '../services';
-import { ProjectState } from '../states';
+import {
+  projectClaimsResolve,
+  projectIdResolve,
+  taskIdResolve,
+} from '../services';
+import { ProjectState, TasksState } from '../states';
 
 export const resourceResolve: ResolveFn<RecordResource[]> = (
   route: ActivatedRouteSnapshot
@@ -26,6 +30,24 @@ export const resourceResolve: ResolveFn<RecordResource[]> = (
   return inject(DataServiceFactory).projectResources.getByProjectIdAsync(
     org,
     projectId
+  );
+};
+
+export const taskResourceResolve: ResolveFn<RecordResource[]> = (
+  route: ActivatedRouteSnapshot
+) => {
+  const org = Utils.getOrgName(inject(Store), route);
+  const projectId =
+    route.params['projectId'] ??
+    inject(Store).selectSnapshot(ProjectState.current)?.id;
+  const taskId =
+    route.params['taskId'] ??
+    inject(Store).selectSnapshot(TasksState.current)?.id;
+
+  return inject(DataServiceFactory).projectResources.getByTaskIdAsync(
+    org,
+    projectId,
+    taskId
   );
 };
 
@@ -80,7 +102,7 @@ export const routes: Routes = [
             path: 'about',
             data: {
               //title: 'ProjectUpload.PagesUploadProjectPlan',
-              view: TASK_PAGE_VIEW.ABOUT,
+              view: TASK_PAGES.ABOUT,
             },
             loadComponent: () =>
               import('./tasks/about/task-about.component').then(
@@ -93,8 +115,7 @@ export const routes: Routes = [
           {
             path: 'sub-tasks',
             data: {
-              //title: 'ProjectUpload.PagesUploadProjectPlan',
-              view: TASK_PAGE_VIEW.SUB_TASKS,
+              view: TASK_PAGES.SUB_TASKS,
             },
             loadComponent: () =>
               import('./tasks/sub-tasks/task-sub-tasks.component').then(
@@ -102,10 +123,28 @@ export const routes: Routes = [
               ),
           },
           {
+            path: 'resources',
+            canDeactivate: [closeApprovalWindowGuard],
+            data: {
+              view: TASK_PAGES.RESOURCES,
+            },
+            resolve: {
+              owner: orgResolve,
+              list: taskResourceResolve,
+              projectId: projectIdResolve,
+              taskId: taskIdResolve,
+              claims: projectClaimsResolve,
+            },
+            loadComponent: () =>
+              import('./tasks/resources/task-resources-page.component').then(
+                (x) => x.TaskResourcesPageComponent
+              ),
+          },
+          {
             path: 'settings',
             data: {
               title: 'ProjectUpload.PagesUploadProjectPlan',
-              view: TASK_PAGE_VIEW.SETTINGS,
+              view: TASK_PAGES.SETTINGS,
             },
             loadChildren: () =>
               import('./tasks/settings/task-settings.routes').then(

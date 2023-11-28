@@ -12,7 +12,6 @@ import { gearIcon } from '@progress/kendo-svg-icons';
 import { TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
-import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
@@ -32,7 +31,6 @@ import { ProjectNavigationService } from './services';
   imports: [
     ActionIconListComponent,
     ApprovalBadgeComponent,
-    FillElementDirective,
     FindByIdPipe,
     NavMenuProcessPipe,
     PageHeaderComponent,

@@ -1,6 +1,6 @@
 import { PROJECT_CLAIMS } from '@wbs/core/models';
 import { ProjectNavigationLink } from '../project-navigation-link.model';
-import { TASK_PAGE_VIEW } from './task-page-view.const';
+import { TASK_PAGES } from './task-pages.const';
 
 const settings: ProjectNavigationLink[] = [
   {
@@ -16,12 +16,16 @@ const settings: ProjectNavigationLink[] = [
 ];
 export const TASK_NAVIGATION: ProjectNavigationLink[] = [
   {
-    route: [TASK_PAGE_VIEW.ABOUT],
+    route: [TASK_PAGES.ABOUT],
     text: 'General.About',
   },
   {
-    route: [TASK_PAGE_VIEW.SUB_TASKS],
+    route: [TASK_PAGES.SUB_TASKS],
     text: 'General.SubTasks',
+  },
+  {
+    route: [TASK_PAGES.RESOURCES],
+    text: 'General.Resources',
   },
   {
     text: 'General.Settings',

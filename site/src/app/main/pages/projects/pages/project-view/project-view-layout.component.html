@@ -1,39 +1,37 @@
-<div class="d-flex flex-align-center mg-y-5">
-  <wbs-project-title [category]="category()" [title]="title()" />
-  <wbs-approval-badge [approval]="approvals() | findById : 'project-title'" />
+<div class="d-flex flex-column h-100">
+  <div class="d-flex flex-align-center mg-y-5">
+    <wbs-project-title [category]="category()" [title]="title()" />
+    <wbs-approval-badge [approval]="approvals() | findById : 'project-title'" />
 
-  <div class="flex-fill tx-right">
-    <div class="d-ib mg-r-20">
-      <wbs-page-header />
+    <div class="flex-fill tx-right">
+      <div class="d-ib mg-r-20">
+        <wbs-page-header />
+      </div>
+      <wbs-project-action-button [project]="project()" [claims]="claims" />
     </div>
-    <wbs-project-action-button [project]="project()" [claims]="claims" />
   </div>
-</div>
-<div class="card border border-dark">
-  <div class="card-header py-0 mg-b-0 bg-dark">
-    <wbs-project-navigation
-      [menu]="links | navMenuProcess : claims"
-      (navigate)="navigate($event)"
-    />
-  </div>
-  <div
-    appFillElement
-    [paddingBottom]="30"
-    class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100"
-  >
-    <div class="flex-fill scroll">
-      <router-outlet />
+  <div class="card border border-dark flex-fill">
+    <div class="card-header py-0 mg-b-0 bg-dark">
+      <wbs-project-navigation
+        [menu]="links | navMenuProcess : claims"
+        (navigate)="navigate($event)"
+      />
     </div>
-    @if (approvalView() === 'project' && approval(); as approval) {
-    <wbs-project-approval-window
-      [approval]="approval"
-      [claims]="claims"
-      [userId]="userId"
-      [isReadyOnly]="project()?.status !== 'approval'"
-      [chat]="chat() ?? []"
-      [hasChildren]="approvalHasChildren()!"
-    />
-    }
+    <div class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100">
+      <div class="flex-fill scroll">
+        <router-outlet />
+      </div>
+      @if (approvalView() === 'project' && approval(); as approval) {
+      <wbs-project-approval-window
+        [approval]="approval"
+        [claims]="claims"
+        [userId]="userId"
+        [isReadyOnly]="project()?.status !== 'approval'"
+        [chat]="chat() ?? []"
+        [hasChildren]="approvalHasChildren()!"
+      />
+      }
+    </div>
   </div>
 </div>
 <wbs-project-checklist-modal #checklist />

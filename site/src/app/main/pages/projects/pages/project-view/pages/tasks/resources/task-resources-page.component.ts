@@ -1,4 +1,3 @@
-import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -6,7 +5,6 @@ import {
   Input,
   signal,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
@@ -29,23 +27,22 @@ import { map, switchMap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
-  templateUrl: './project-resources-page.component.html',
+  templateUrl: './task-resources-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckPipe,
     FontAwesomeModule,
-    NgIf,
     RecordResourceEditorComponent,
     RecordResourceListComponent,
-    RouterModule,
     TranslateModule,
   ],
   providers: [RecordResourceValidation],
 })
-export class ProjectResourcesPageComponent {
+export class TaskResourcesPageComponent {
   @Input({ required: true }) list!: RecordResource[];
   @Input({ required: true }) owner!: string;
   @Input({ required: true }) projectId!: string;
+  @Input({ required: true }) taskId!: string;
   @Input({ required: true }) claims!: string[];
 
   private modal?: NgbModalRef;
@@ -136,16 +133,14 @@ export class ProjectResourcesPageComponent {
       resource: data.resource,
 
       ownerId: this.owner,
-      recordId: this.projectId,
+      recordId: this.taskId,
       order: data.order ?? Math.max(...this.list.map((x) => x.order), 0) + 1,
     };
 
     return this.data.projectResources
-      .putProjectAsync(this.owner, this.projectId, resource)
+      .putTaskAsync(this.owner, this.projectId, this.taskId, resource)
       .pipe(
         map(() => {
-          console.log('Saved');
-
           this.list = structuredClone([...this.list, resource]);
           this.cd.detectChanges();
         })

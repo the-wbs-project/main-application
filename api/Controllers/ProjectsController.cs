@@ -153,7 +153,7 @@ public class ProjectsController : ControllerBase
 
     [Authorize]
     [HttpGet("owner/{owner}/id/{id}/resources")]
-    public async Task<IActionResult> GetResourcesById(string owner, string id)
+    public async Task<IActionResult> GetProjectResources(string owner, string id)
     {
         try
         {
@@ -174,9 +174,36 @@ public class ProjectsController : ControllerBase
         }
     }
 
+
+    [Authorize]
+    [HttpGet("owner/{owner}/id/{projectId}/nodes/{nodeId}/resources")]
+    public async Task<IActionResult> GetTaskResources(string owner, string projectId, string nodeId)
+    {
+        try
+        {
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
+                    return BadRequest("Node not found for the project provided.");
+
+                return Ok(await resourceDataService.GetListByRecordIdAsync(conn, nodeId));
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
     [Authorize]
     [HttpGet("owner/{owner}/id/{id}/resources/{resourceId}")]
-    public async Task<IActionResult> GetResourcesById(string owner, string id, string resourceId)
+    public async Task<IActionResult> GetProjectResourceById(string owner, string id, string resourceId)
     {
         try
         {
@@ -198,8 +225,34 @@ public class ProjectsController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("owner/{owner}/id/{projectId}/nodes/{nodeId}/resources/{resourceId}")]
+    public async Task<IActionResult> GeTaskResourceById(string owner, string projectId, string nodeId, string resourceId)
+    {
+        try
+        {
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
+                    return BadRequest("Node not found for the project provided.");
+
+                return Ok(await resourceDataService.GetByIdAsync(conn, resourceId, nodeId));
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPut("owner/{owner}/id/{projectId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutResources(string owner, string projectId, string resourceId, RecordResource resources)
+    public async Task<IActionResult> PutProjectResources(string owner, string projectId, string resourceId, RecordResource resources)
     {
         try
         {
@@ -217,6 +270,40 @@ public class ProjectsController : ControllerBase
                     return BadRequest("Project not found for the owner provided.");
 
                 await resourceDataService.SetAsync(conn, resources);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("owner/{owner}/id/{projectId}/nodes/{nodeId}/resources/{resourceId}")]
+    public async Task<IActionResult> PutTaskResources(string owner, string projectId, string nodeId, string resourceId, RecordResource model)
+    {
+        try
+        {
+            if (model.RecordId != nodeId)
+                return BadRequest("The node id in the body must match the node id in the url");
+
+            if (model.Id != resourceId)
+                return BadRequest("The resource id in the body must match the resource id in the url");
+
+            using (var conn = projectDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
+                    return BadRequest("Node not found for the project provided.");
+
+                await resourceDataService.SetAsync(conn, model);
 
                 return NoContent();
             }

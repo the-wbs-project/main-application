@@ -17,9 +17,37 @@ export class ProjectResourcesDataService {
       .pipe(map((list) => this.cleanList(list)));
   }
 
-  putAsync(resource: RecordResource): Observable<void> {
+  getByTaskIdAsync(
+    owner: string,
+    projectId: string,
+    taskId: string
+  ): Observable<RecordResource[]> {
+    return this.http
+      .get<RecordResource[]>(
+        `api/projects/owner/${owner}/id/${projectId}/nodes/${taskId}/resources`
+      )
+      .pipe(map((list) => this.cleanList(list)));
+  }
+
+  putProjectAsync(
+    ownerId: string,
+    projectId: string,
+    resource: RecordResource
+  ): Observable<void> {
     return this.http.put<void>(
-      `api/projects/owner/${resource.ownerId}/id/${resource.recordId}/resources/${resource.id}`,
+      `api/projects/owner/${ownerId}/id/${projectId}/resources/${resource.id}`,
+      resource
+    );
+  }
+
+  putTaskAsync(
+    ownerId: string,
+    projectId: string,
+    taskId: string,
+    resource: RecordResource
+  ): Observable<void> {
+    return this.http.put<void>(
+      `api/projects/owner/${ownerId}/id/${projectId}/nodes/${taskId}/resources/${resource.id}`,
       resource
     );
   }

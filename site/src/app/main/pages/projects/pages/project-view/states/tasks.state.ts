@@ -37,7 +37,7 @@ import {
   VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { TASK_PAGE_VIEW } from '../models';
+import { TASK_PAGES } from '../models';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
 
@@ -484,8 +484,7 @@ export class TasksState {
           action: TASK_ACTIONS.CREATED,
         });
 
-        if (action.navigateTo)
-          this.nav.toTaskPage(model.id, TASK_PAGE_VIEW.ABOUT);
+        if (action.navigateTo) this.nav.toTaskPage(model.id, TASK_PAGES.ABOUT);
       })
     );
   }

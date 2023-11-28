@@ -4,6 +4,7 @@ export * from './project-claims-resolver.service';
 export * from './project-id-resolver.service';
 export * from './project-navigation.service';
 export * from './project-view.service';
+export * from './task-id-resolver.service';
 export * from './text-compare.service';
 export * from './timeline.service';
 export * from './upload-file.service';
