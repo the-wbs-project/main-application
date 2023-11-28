@@ -626,6 +626,7 @@
     "values": {
       "AddResource": "Add Resource",
       "NoResourcesFound": "No Resources Found",
+      "ResourceType": "Resource Type",
       "ResourceTypeHelper": "Select the type of resource you would like to add.",
       "ResourceNameHelper": "The name of the resource",
       "ResourceDescriptionHelper": "The brief description of the resource",

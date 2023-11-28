@@ -9,7 +9,7 @@
     idField="treeId"
     [initiallyExpanded]="false"
     [selectable]="settings"
-    (dblclick)="navigate.toTask(clickedId!)"
+    (dblclick)="navigate.toTaskPage(clickedId!, 'about')"
     (cellClick)="clickedId = $event.dataItem.id"
   >
     <kendo-treelist-column

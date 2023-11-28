@@ -13,7 +13,6 @@ import { map } from 'rxjs/operators';
 import { ApprovalBadgeComponent } from '../../../components/approval-badge.component';
 import { DisciplineListComponent } from '../../../components/discipline-list.component';
 import { ProjectChecklistComponent } from '../../../components/project-checklist/project-checklist.component';
-import { ProjectStatisticComponent } from '../../../components/project-statistic.component';
 import {
   ProjectApprovalState,
   ProjectChecklistState,
@@ -36,7 +35,6 @@ import { ProjectStatusTileComponent } from './components/project-status-tile/pro
     NgClass,
     ProjectApprovalTileComponent,
     ProjectChecklistComponent,
-    ProjectStatisticComponent,
     ProjectStatusPipe,
     ProjectStatusTileComponent,
     ResizedCssDirective,
