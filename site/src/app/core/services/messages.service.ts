@@ -38,21 +38,21 @@ class Toasts {
     const x = isResource ? this.resources.get(label) : label;
 
     //@ts-ignore
-    Notiflix.Notify.info(x);
+    Notiflix.Notify.info(x, { clickToClose: true });
   }
 
   error(label: string, isResource = true): void {
     const x = isResource ? this.resources.get(label) : label;
 
     //@ts-ignore
-    Notiflix.Notify.failure(x);
+    Notiflix.Notify.failure(x, { clickToClose: true });
   }
 
   success(label: string, isResource = true): void {
     const x = isResource ? this.resources.get(label) : label;
 
     //@ts-ignore
-    Notiflix.Notify.success(x);
+    Notiflix.Notify.success(x, { clickToClose: true });
   }
 }
 
