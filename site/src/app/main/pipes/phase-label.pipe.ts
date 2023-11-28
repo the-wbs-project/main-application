@@ -1,22 +1,24 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ProjectCategory } from '@wbs/core/models';
+import { LISTS, ProjectCategory } from '@wbs/core/models';
 import { MetadataState } from '../states';
 
-@Pipe({ name: 'categoryLabel', pure: false, standalone: true })
-export class CategoryLabelPipe implements PipeTransform {
+@Pipe({ name: 'phaseLabel', standalone: true })
+export class PhaseLabelPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
   transform(
     idsOrCat: ProjectCategory | null | undefined,
-    projectCategories?: ProjectCategory[]
+    projectCategories: ProjectCategory[]
   ): string {
     if (!idsOrCat) return '';
     if (typeof idsOrCat !== 'string') return idsOrCat.label;
 
     const cName =
-      this.store.selectSnapshot(MetadataState.categoryNames).get(idsOrCat) ??
-      '';
+      this.store
+        .selectSnapshot(MetadataState.categoryNames)
+        .get(LISTS.PHASE)!
+        .get(idsOrCat) ?? '';
 
     if (cName) return cName;
 

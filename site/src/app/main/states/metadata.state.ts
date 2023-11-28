@@ -1,14 +1,14 @@
 import { Injectable } from '@angular/core';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
-import { forkJoin, map, Observable } from 'rxjs';
+import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ActionDefinition, ListItem, LISTS } from '@wbs/core/models';
+import { ListItem, LISTS } from '@wbs/core/models';
+import { forkJoin, map } from 'rxjs';
 
 interface StateModel {
-  categoryIcons: Map<string, string>;
+  categoryIcons: Map<string, Map<string, string>>;
   categoryList: Map<string, ListItem[]>;
   categoryMap: Map<string, Map<string, ListItem>>;
-  categoryNames: Map<string, string>;
+  categoryNames: Map<string, Map<string, string>>;
   projectCategories: ListItem[];
 }
 
@@ -16,10 +16,10 @@ interface StateModel {
 @State<StateModel>({
   name: 'metadata',
   defaults: {
-    categoryIcons: new Map<string, string>(),
+    categoryIcons: new Map<string, Map<string, string>>(),
     categoryList: new Map<string, ListItem[]>(),
     categoryMap: new Map<string, Map<string, ListItem>>(),
-    categoryNames: new Map<string, string>(),
+    categoryNames: new Map<string, Map<string, string>>(),
     projectCategories: [],
   },
 })
@@ -27,7 +27,7 @@ export class MetadataState implements NgxsOnInit {
   constructor(private readonly data: DataServiceFactory) {}
 
   @Selector()
-  static categoryIcons(state: StateModel): Map<string, string> {
+  static categoryIcons(state: StateModel): Map<string, Map<string, string>> {
     return state.categoryIcons;
   }
 
@@ -37,7 +37,7 @@ export class MetadataState implements NgxsOnInit {
   }
 
   @Selector()
-  static categoryNames(state: StateModel): Map<string, string> {
+  static categoryNames(state: StateModel): Map<string, Map<string, string>> {
     return state.categoryNames;
   }
 
@@ -67,10 +67,26 @@ export class MetadataState implements NgxsOnInit {
           const state = ctx.getState();
           const categoryList = state.categoryList;
           const categoryMap = state.categoryMap;
+          const categoryIcons = new Map<string, Map<string, string>>();
+          const categoryNames = new Map<string, Map<string, string>>();
 
           discipline = discipline.sort((a, b) => a.order - b.order);
           phase = phase.sort((a, b) => a.order - b.order);
           projectCats = projectCats.sort((a, b) => a.order - b.order);
+
+          categoryIcons.set(LISTS.DISCIPLINE, new Map<string, string>());
+          categoryIcons.set(LISTS.PHASE, new Map<string, string>());
+          categoryIcons.set(
+            LISTS.PROJECT_CATEGORIES,
+            new Map<string, string>()
+          );
+
+          categoryNames.set(LISTS.DISCIPLINE, new Map<string, string>());
+          categoryNames.set(LISTS.PHASE, new Map<string, string>());
+          categoryNames.set(
+            LISTS.PROJECT_CATEGORIES,
+            new Map<string, string>()
+          );
 
           categoryList.set(LISTS.DISCIPLINE, discipline);
           categoryList.set(LISTS.PHASE, phase);
@@ -84,14 +100,16 @@ export class MetadataState implements NgxsOnInit {
           );
 
           for (const cat of [...projectCats, ...discipline, ...phase]) {
-            state.categoryNames.set(cat.id, cat.label);
+            categoryNames.get(cat.type)!.set(cat.id, cat.label);
 
-            if (cat.icon) state.categoryIcons.set(cat.id, cat.icon);
+            if (cat.icon) categoryIcons.get(cat.type)!.set(cat.id, cat.icon);
           }
+
           ctx.patchState({
+            categoryIcons,
             categoryList,
             categoryMap,
-            categoryNames: state.categoryNames,
+            categoryNames,
           });
         })
       )

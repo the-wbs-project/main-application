@@ -6,17 +6,13 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
-import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { CategoryIconPipe } from '@wbs/main/pipes/category-icon.pipe';
-import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
@@ -26,7 +22,6 @@ import { ProjectChecklistModalComponent } from './components/project-checklist-m
 import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
 import { PROJECT_NAVIGATION } from './models';
 import { ProjectApprovalState, ProjectState } from './states';
-import { DrawerModule } from '@progress/kendo-angular-layout';
 
 @Component({
   standalone: true,
@@ -35,12 +30,8 @@ import { DrawerModule } from '@progress/kendo-angular-layout';
   imports: [
     ActionIconListComponent,
     ApprovalBadgeComponent,
-    CategoryIconPipe,
-    CheckPipe,
-    DrawerModule,
     FillElementDirective,
     FindByIdPipe,
-    FontAwesomeModule,
     PageHeaderComponent,
     ProjectActionButtonComponent,
     ProjectApprovalWindowComponent,
@@ -48,7 +39,6 @@ import { DrawerModule } from '@progress/kendo-angular-layout';
     ProjectNavigationComponent,
     ProjectTitleComponent,
     RouterModule,
-    TranslateModule,
   ],
 })
 export class ProjectViewLayoutComponent {

@@ -5,8 +5,8 @@ import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListItem } from '@wbs/core/models';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
+import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
 
 @Component({
   standalone: true,
@@ -15,8 +15,8 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
   styleUrls: ['./tree-discipline-legend.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CategoryLabelPipe,
     DisciplineIconPipe,
+    DisciplineLabelPipe,
     FontAwesomeModule,
     NgbPopoverModule,
     NgClass,

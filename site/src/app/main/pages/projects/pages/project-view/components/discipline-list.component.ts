@@ -2,8 +2,8 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
+import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
 
 @Component({
   standalone: true,
@@ -14,12 +14,12 @@ import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
         <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
       </span>
       <span class="mg-l-10">
-        {{ disc | categoryLabel : projectDisciplines | translate }}
+        {{ disc | disciplineLabel : projectDisciplines | translate }}
       </span>
     </p>
     }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [CategoryLabelPipe, DisciplineIconPipe, NgClass, TranslateModule],
+  imports: [DisciplineIconPipe, DisciplineLabelPipe, NgClass, TranslateModule],
 })
 export class DisciplineListComponent {
   @Input({ required: true }) disciplines?: ProjectCategory[];

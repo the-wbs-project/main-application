@@ -3,6 +3,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
+  LISTS,
   Project,
   PROJECT_NODE_VIEW_TYPE,
   ProjectNode,
@@ -569,6 +570,7 @@ export class TasksState {
         ? this.resources.get(
             this.store
               .selectSnapshot(MetadataState.categoryNames)
+              .get(LISTS.PHASE)!
               .get(model.id)!
           )
         : model.title;

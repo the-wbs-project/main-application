@@ -4,6 +4,7 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
+  LISTS,
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
@@ -219,8 +220,8 @@ export class ProjectState {
         action: PROJECT_ACTIONS.CATEGORY_CHANGED,
         topLevelId: project.id,
         data: {
-          from: this.getCatName(project.category),
-          to: this.getCatName(action.category),
+          from: this.getCatName(project.category, LISTS.PROJECT_CATEGORIES),
+          to: this.getCatName(action.category, LISTS.PROJECT_CATEGORIES),
         },
       });
     }
@@ -367,11 +368,17 @@ export class ProjectState {
       .pipe(tap((users) => ctx.patchState({ users })));
   }
 
-  private getCatName(idsOrCat: ProjectCategory | null | undefined): string {
+  private getCatName(
+    idsOrCat: ProjectCategory | null | undefined,
+    type: string
+  ): string {
     if (!idsOrCat) return '';
     if (typeof idsOrCat === 'string')
       return this.resources.get(
-        this.store.selectSnapshot(MetadataState.categoryNames).get(idsOrCat)!
+        this.store
+          .selectSnapshot(MetadataState.categoryNames)
+          .get(type)!
+          .get(idsOrCat)!
       );
 
     return idsOrCat.label;

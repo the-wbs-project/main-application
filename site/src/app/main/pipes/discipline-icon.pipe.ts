@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { ListItem } from '@wbs/core/models';
+import { LISTS, ListItem } from '@wbs/core/models';
 import { MetadataState } from '../states';
 
 @Pipe({ name: 'disciplineIcon', standalone: true })
@@ -13,7 +13,10 @@ export class DisciplineIconPipe implements PipeTransform {
   ): string {
     return (
       (typeof idsOrCat === 'string'
-        ? this.store.selectSnapshot(MetadataState.categoryIcons)!.get(idsOrCat)
+        ? this.store
+            .selectSnapshot(MetadataState.categoryIcons)!
+            .get(LISTS.DISCIPLINE)!
+            .get(idsOrCat)
         : null) ?? defaultIcon
     );
   }

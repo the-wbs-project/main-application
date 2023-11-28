@@ -22,7 +22,7 @@
           class="text-decoration-none"
           [routerLink]="['../../', phaseId, 'about']"
         >
-          {{ phaseId | projectCategoryLabel : project()!.phases }}
+          {{ phaseId | phaseLabel : project()!.phases }}
         </a>
         } @else {
         <span>

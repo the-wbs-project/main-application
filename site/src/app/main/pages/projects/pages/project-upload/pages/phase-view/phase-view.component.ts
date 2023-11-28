@@ -7,8 +7,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { Resources } from '@wbs/core/services';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
-import { CategoryLabelListPipe } from '@wbs/main/pipes/category-label-list.pipe';
+import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
 import { PhasesCompleted } from '../../actions';
 import { PhaseListItem } from '../../models';
 import { ProjectUploadState } from '../../states';
@@ -19,10 +18,9 @@ import { PhaseMatchListComponent } from './phase-match-list.component';
   templateUrl: './phase-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CategoryLabelListPipe,
-    CategoryLabelPipe,
     FontAwesomeModule,
     NgbAlertModule,
+    PhaseLabelPipe,
     PhaseMatchListComponent,
     TranslateModule,
   ],

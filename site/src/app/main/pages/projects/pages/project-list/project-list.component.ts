@@ -16,8 +16,8 @@ import { plusIcon } from '@progress/kendo-svg-icons';
 import { PROJECT_STATI } from '@wbs/core/models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
-import { CategoryLabelPipe } from '@wbs/main/pipes/category-label.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
+import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
 import { MetadataState } from '@wbs/main/states';
 import { ProjectListFiltersComponent } from './components/project-list-filters/project-list-filters.component';
 import { ProjectListFilters } from './models';
@@ -29,12 +29,12 @@ import { ProjectListState } from './states';
   templateUrl: './project-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CategoryLabelPipe,
     EditedDateTextPipe,
     FillElementDirective,
     FontAwesomeModule,
     NgClass,
     PageHeaderComponent,
+    ProjectCategoryLabelPipe,
     ProjectListFiltersComponent,
     ProjectFilterPipe,
     RouterModule,

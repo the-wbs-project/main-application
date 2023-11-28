@@ -8,8 +8,7 @@ import {
 } from '@angular/core';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
-import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
-import { CategoryLabelPipe } from '../../../pipes/category-label.pipe';
+import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
 import { SwitchComponent } from '../../switch';
 
 @Component({
@@ -18,10 +17,9 @@ import { SwitchComponent } from '../../switch';
   templateUrl: './discipline-editor-item.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CategoryLabelPipe,
     DisciplineIconPipe,
+    DisciplineLabelPipe,
     NgClass,
-    ProjectCategoryLabelPipe,
     SwitchComponent,
   ],
 })
