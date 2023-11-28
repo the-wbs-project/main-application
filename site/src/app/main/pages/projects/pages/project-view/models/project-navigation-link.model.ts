@@ -1,11 +1,6 @@
-import { Store } from '@ngxs/store';
+import { MenuItem } from '@progress/kendo-angular-menu';
 
-export interface ProjectNavigationLink {
-  fragment?: string;
-  action?: { type: string };
-  title: string;
-  classes?: string[];
-  children?: ProjectNavigationLink[];
+export type ProjectNavigationLink = MenuItem & {
+  route?: string[];
   claim?: string;
-  showIf?: (store: Store) => boolean;
-}
+};

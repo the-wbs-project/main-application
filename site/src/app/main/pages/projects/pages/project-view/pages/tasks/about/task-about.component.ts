@@ -1,4 +1,3 @@
-import { NgClass, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -21,7 +20,6 @@ import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { DisciplineListComponent } from '../../../components/discipline-list.component';
-import { ProjectStatisticComponent } from '../../../components/project-statistic.component';
 import { ProjectState, TasksState } from '../../../states';
 
 @Component({
@@ -35,14 +33,11 @@ import { ProjectState, TasksState } from '../../../states';
     DateTextPipe,
     DisciplineListComponent,
     FontAwesomeModule,
-    NgClass,
     PhaseLabelPipe,
-    ProjectStatisticComponent,
     ResizedCssDirective,
     RouterModule,
     SafeHtmlPipe,
     TranslateModule,
-    UpperCasePipe,
   ],
 })
 export class TaskAboutComponent {

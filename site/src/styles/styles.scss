@@ -346,4 +346,27 @@ button:focus:not(:focus-visible) {
   z-index: max;
 }
 
+.project-nav {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  align-items: center;
 
+  ul {
+    padding-block: 0 !important;
+    background-color: transparent !important;
+
+    li {
+      color: #38cab3 !important;
+      font-size: 14px;
+      font-weight: 500;
+      padding: 5px 20px !important;
+
+      .k-menu-link {
+        padding-block: 0 !important;
+      }
+    }
+  }
+}

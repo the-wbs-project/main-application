@@ -14,7 +14,10 @@
 </div>
 <div class="card border border-dark">
   <div class="card-header py-0 mg-b-0 bg-dark">
-    <wbs-project-navigation [links]="links" [claims]="claims" />
+    <wbs-project-navigation
+      [menu]="links | navMenuProcess : claims"
+      (navigate)="navigate($event)"
+    />
   </div>
   <div class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100">
     <div class="flex-fill scroll">

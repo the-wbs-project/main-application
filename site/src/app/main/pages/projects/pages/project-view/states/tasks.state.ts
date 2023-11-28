@@ -16,6 +16,7 @@ import {
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
 import {
@@ -28,7 +29,6 @@ import {
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
-  NavigateToTask,
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveTask,
@@ -37,9 +37,9 @@ import {
   VerifyTask,
   VerifyTasks,
 } from '../actions';
+import { TASK_PAGE_VIEW } from '../models';
 import { ProjectNavigationService, TimelineService } from '../services';
 import { TaskDetailsViewModel } from '../view-models';
-import { MetadataState } from '@wbs/main/states';
 
 interface StateModel {
   currentId?: string;
@@ -130,11 +130,6 @@ export class TasksState {
     ctx.patchState({ currentId: taskId, currentView: viewNode });
 
     this.createDetailsVm(ctx, taskId, viewNode);
-  }
-
-  @Action(NavigateToTask)
-  navigateToTask({}: Context, action: NavigateToTask): void {
-    this.nav.toTask(action.nodeId);
   }
 
   @Action(RebuildNodeViews)
@@ -478,7 +473,8 @@ export class TasksState {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() =>
+      tap(() => {
+        this.messaging.notify.success('Projects.TaskCreated');
         this.saveActivity({
           data: {
             title: model.title,
@@ -486,12 +482,11 @@ export class TasksState {
           topLevelId: state.project!.id,
           objectId: model.id,
           action: TASK_ACTIONS.CREATED,
-        })
-      ),
-      tap(() => this.messaging.notify.success('Projects.TaskCreated')),
-      switchMap(() =>
-        action.navigateTo ? ctx.dispatch(new NavigateToTask(model.id)) : of()
-      )
+        });
+
+        if (action.navigateTo)
+          this.nav.toTaskPage(model.id, TASK_PAGE_VIEW.ABOUT);
+      })
     );
   }
 

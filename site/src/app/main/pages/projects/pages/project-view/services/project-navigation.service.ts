@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { PROJECT_PAGES, TASK_PAGE_VIEW } from '../models';
+import { PROJECT_PAGES } from '../models';
 import { ProjectState } from '../states';
 
 @Injectable()
@@ -26,13 +26,13 @@ export class ProjectNavigationService {
     );
   }
 
-  toProjectPage(page: string): void {
+  toProjectPage(...pages: string[]): void {
     this.store.dispatch(
-      new Navigate([...this.urlPrefix(), 'view', this.projectId, page])
+      new Navigate([...this.urlPrefix(), 'view', this.projectId, ...pages])
     );
   }
 
-  toTask(taskId: string, page = TASK_PAGE_VIEW.ABOUT): void {
+  toTaskPage(taskId: string, ...pages: string[]): void {
     this.store.dispatch(
       new Navigate([
         ...this.urlPrefix(),
@@ -40,7 +40,7 @@ export class ProjectNavigationService {
         this.projectId,
         'tasks',
         taskId,
-        page,
+        ...pages,
       ])
     );
   }

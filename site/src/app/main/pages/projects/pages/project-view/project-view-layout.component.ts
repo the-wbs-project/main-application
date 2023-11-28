@@ -19,9 +19,11 @@ import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
-import { ProjectNavigationComponent } from './components/project-navigation/project-navigation.component';
+import { ProjectNavigationComponent } from './components/project-navigation.component';
 import { PROJECT_NAVIGATION } from './models';
+import { NavMenuProcessPipe } from './pipes/nav-menu-process.pipe';
 import { ProjectApprovalState, ProjectState } from './states';
+import { ProjectNavigationService } from './services';
 
 @Component({
   standalone: true,
@@ -32,6 +34,7 @@ import { ProjectApprovalState, ProjectState } from './states';
     ApprovalBadgeComponent,
     FillElementDirective,
     FindByIdPipe,
+    NavMenuProcessPipe,
     PageHeaderComponent,
     ProjectActionButtonComponent,
     ProjectApprovalWindowComponent,
@@ -73,7 +76,15 @@ export class ProjectViewLayoutComponent {
     },
   ];
 
-  constructor(title: TitleService, private readonly store: Store) {
+  constructor(
+    title: TitleService,
+    private readonly nav: ProjectNavigationService,
+    private readonly store: Store
+  ) {
     title.setTitle('Project', false);
+  }
+
+  navigate(route: string[]) {
+    this.nav.toProjectPage(...route);
   }
 }

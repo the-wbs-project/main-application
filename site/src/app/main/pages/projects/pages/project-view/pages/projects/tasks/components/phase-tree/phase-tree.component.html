@@ -18,7 +18,7 @@
       [selectable]="settings"
       [navigable]="true"
       (selectionChange)="taskId.set($event.items[0].dataItem.id)"
-      (dblclick)="navigate.toTask(taskId()!)"
+      (dblclick)="navigate.toTaskPage(taskId()!, 'about')"
       (rowReorder)="onRowReordered($event)"
       (cellClick)="onCellClick($event)"
     >

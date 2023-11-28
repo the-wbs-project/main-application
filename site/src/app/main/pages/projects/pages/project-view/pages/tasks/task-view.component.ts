@@ -10,12 +10,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
+import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectApprovalWindowComponent } from '../../components/project-approval-window/project-approval-window.component';
-import { ProjectNavigationComponent } from '../../components/project-navigation/project-navigation.component';
-import { TASK_MENU_ITEMS } from '../../models';
+import { ProjectNavigationComponent } from '../../components/project-navigation.component';
+import { TASK_NAVIGATION } from '../../models';
+import { NavMenuProcessPipe } from '../../pipes/nav-menu-process.pipe';
 import { ProjectApprovalState, ProjectState, TasksState } from '../../states';
-import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
+import { ProjectNavigationService } from '../../services';
 
 @Component({
   standalone: true,
@@ -27,6 +29,7 @@ import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
     ApprovalBadgeComponent,
     FindByIdPipe,
     FontAwesomeModule,
+    NavMenuProcessPipe,
     ProjectApprovalWindowComponent,
     ProjectNavigationComponent,
     RouterModule,
@@ -47,10 +50,18 @@ export class TaskViewComponent {
     this.store.select(ProjectApprovalState.hasChildren)
   );
   readonly chat = toSignal(this.store.select(ProjectApprovalState.messages));
-  readonly links = TASK_MENU_ITEMS.links;
+  readonly links = TASK_NAVIGATION;
   readonly faDiagramSubtask = faDiagramSubtask;
 
-  constructor(title: TitleService, private readonly store: Store) {
+  constructor(
+    title: TitleService,
+    private readonly nav: ProjectNavigationService,
+    private readonly store: Store
+  ) {
     title.setTitle('Project', false);
+  }
+
+  navigate(route: string[]) {
+    this.nav.toTaskPage(this.current()!.id, ...route);
   }
 }

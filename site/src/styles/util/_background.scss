@@ -10,7 +10,7 @@ a.bg-primary {
 }
 
 .bg-transparent {
-  background: transaprent !important;
+  background-color: transaprent !important;
 }
 
 button.bg-primary {
@@ -142,7 +142,7 @@ a.bg-light {
 a.bg-light-light {
   &:hover,
   &:focus {
-    background-color: #F8F8F8 !important;
+    background-color: #f8f8f8 !important;
   }
 }
 

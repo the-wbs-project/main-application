@@ -1,8 +1,8 @@
 @if (current(); as task) {
 <div class="about-page-grid pd-20" resizedCss>
   <div class="card border">
-    <div class="card-header">
-      {{ "Projects.BasicInformation" | translate | uppercase }}
+    <div class="card-header tx-uppercase">
+      {{ "Projects.BasicInformation" | translate }}
     </div>
     <div class="card-body">
       <p class="ms-md-4 ms-0 mb-2">
@@ -13,6 +13,7 @@
           {{ task.levelText }}
         </span>
       </p>
+      @if (task.phaseId !== task.id) {
       <p class="ms-md-4 ms-0 mb-2">
         <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
           {{ "Wbs.Phase" | translate }} :
@@ -22,7 +23,7 @@
           class="text-decoration-none"
           [routerLink]="['../../', phaseId, 'about']"
         >
-          {{ phaseId | phaseLabel : project()!.phases }}
+          {{ phaseId | phaseLabel : project()!.phases | translate }}
         </a>
         } @else {
         <span>
@@ -30,6 +31,7 @@
         </span>
         }
       </p>
+      }
       <p class="ms-md-4 ms-0 mb-2">
         <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
           {{ "General.Parent" | translate }} :
@@ -66,8 +68,8 @@
     </div>
   </div>
   <div class="card border">
-    <div class="card-header">
-      {{ "General.Disciplines" | translate | uppercase }}
+    <div class="card-header tx-uppercase">
+      {{ "General.Disciplines" | translate }}
     </div>
     @if (task.disciplines.length > 0) {
 
@@ -96,8 +98,8 @@
     }
   </div>
   <div class="card border full-item">
-    <div class="card-header">
-      {{ "General.Description" | translate | uppercase }}
+    <div class="card-header tx-uppercase">
+      {{ "General.Description" | translate }}
     </div>
     @if (task.description) {
     <div class="card-body" [innerHTML]="task.description | safeHtml"></div>

@@ -114,7 +114,7 @@ const reorderTaskActions: ActionMenuItem[] = [
   },
 ];
 
-export const PROJECT_TREE_MENU_ITEMS = {
+export const PROJECT_MENU_ITEMS = {
   phaseActions,
   taskActions,
   reorderTaskActions,

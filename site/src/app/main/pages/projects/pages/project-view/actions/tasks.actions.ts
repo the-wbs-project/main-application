@@ -28,11 +28,6 @@ export class RemoveTask {
   ) {}
 }
 
-export class NavigateToTask {
-  static readonly type = '[Tasks] Navigate To';
-  constructor(readonly nodeId: string) {}
-}
-
 export class CloneTask {
   static readonly type = '[Tasks] Clone Task';
   constructor(readonly nodeId: string) {}

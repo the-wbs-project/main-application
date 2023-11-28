@@ -4,10 +4,6 @@
   display: inline-block;
 }
 
-.d-flex {
-  display: flex;
-}
-
 .flex-flow-col {
   flex-flow: column;
 }
@@ -78,10 +74,6 @@
 
 .flex-shrink-1 {
   flex-shrink: 1 !important;
-}
-
-.justify-content-center {
-  justify-content: center;
 }
 
 .pos-absolute {

@@ -24,7 +24,7 @@ import {
   RemoveTask,
 } from '../actions';
 import { TaskDeleteComponent } from '../components/task-delete/task-delete.component';
-import { PROJECT_PAGES } from '../models';
+import { PROJECT_PAGES, TASK_PAGE_VIEW } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
 
@@ -64,7 +64,7 @@ export class ProjectViewService {
       } else if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(taskId));
       } else if (action === 'viewTask') {
-        this.nav.toTask(taskId);
+        this.nav.toTaskPage(taskId, TASK_PAGE_VIEW.ABOUT);
       } else if (action === 'deleteTask') {
         this.dialogs
           .openDialog<string>(TaskDeleteComponent)
