@@ -2,9 +2,11 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { ContextMenuItem } from '../../../../../models';
+import {
+  ContextMenuItem,
+  PROJECT_TREE_MENU_ITEMS,
+} from '../../../../../models';
 import { ProjectState } from '../../../../../states';
-import { PROJECT_TREE_MENU_ITEMS_V2 } from '../../../../../models/consts/project-tree-menu-items.const copy';
 
 declare type Seperator = { separator: true };
 
@@ -22,13 +24,13 @@ export class PhaseTreeMenuService {
     const task = tasks?.find((x) => x.id === selectedTaskId)!;
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
     const navActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS_V2.reorderTaskActions,
+      PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
       task,
       claims,
       status
     );
     const phaseActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS_V2.taskActions,
+      PROJECT_TREE_MENU_ITEMS.taskActions,
       task,
       claims,
       status

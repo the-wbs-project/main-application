@@ -1,43 +1,21 @@
+import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import { ContextMenuItem } from '../context-menu-item.model';
 import {
-  faArrowDown,
-  faArrowLeft,
-  faArrowRight,
-  faArrowUp,
-  faClone,
-  faDownload,
-  faEye,
-  faPlus,
-  faTrashAlt,
-  faUpload,
-} from '@fortawesome/pro-solid-svg-icons';
-import {
-  ActionMenuItem,
-  PROJECT_CLAIMS,
-  PROJECT_STATI,
-} from '@wbs/core/models';
+  arrowDownIcon,
+  arrowLeftIcon,
+  arrowRightIcon,
+  arrowUpIcon,
+  copyIcon,
+  eyeIcon,
+  plusIcon,
+  trashIcon,
+} from '@progress/kendo-svg-icons';
 
-const phaseActions: ActionMenuItem[] = [
-  {
-    action: 'download',
-    icon: faDownload,
-    text: 'General.Download',
-  },
-  {
-    action: 'upload',
-    icon: faUpload,
-    text: 'General.Upload',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-    },
-    claim: PROJECT_CLAIMS.TASKS.UPDATE,
-  },
-];
-
-const taskActions: ActionMenuItem[] = [
+const taskActions: ContextMenuItem[] = [
   {
     action: 'addSub',
-    icon: faPlus,
-    tooltip: 'Projects.AddSubTask',
+    svgIcon: plusIcon,
+    text: 'Projects.AddSubTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
     },
@@ -45,14 +23,14 @@ const taskActions: ActionMenuItem[] = [
   },
   {
     action: 'viewTask',
-    icon: faEye,
-    tooltip: 'Projects.ViewTask',
+    svgIcon: eyeIcon,
+    text: 'Projects.ViewTask',
     claim: PROJECT_CLAIMS.TASKS.READ,
   },
   {
     action: 'cloneTask',
-    icon: faClone,
-    tooltip: 'Projects.CloneTask',
+    svgIcon: copyIcon,
+    text: 'Projects.CloneTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
@@ -61,8 +39,8 @@ const taskActions: ActionMenuItem[] = [
   },
   {
     action: 'deleteTask',
-    icon: faTrashAlt,
-    tooltip: 'Projects.DeleteTask',
+    svgIcon: trashIcon,
+    text: 'Projects.DeleteTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
@@ -71,11 +49,11 @@ const taskActions: ActionMenuItem[] = [
   },
 ];
 
-const reorderTaskActions: ActionMenuItem[] = [
+const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveLeft',
-    icon: faArrowLeft,
-    tooltip: 'Projects.MoveLeft',
+    svgIcon: arrowLeftIcon,
+    text: 'Projects.MoveLeft',
     filters: {
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
@@ -84,8 +62,8 @@ const reorderTaskActions: ActionMenuItem[] = [
   },
   {
     action: 'moveUp',
-    icon: faArrowUp,
-    tooltip: 'Projects.MoveUp',
+    svgIcon: arrowUpIcon,
+    text: 'Projects.MoveUp',
     filters: {
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
@@ -94,8 +72,8 @@ const reorderTaskActions: ActionMenuItem[] = [
   },
   {
     action: 'moveDown',
-    icon: faArrowDown,
-    tooltip: 'Projects.MoveDown',
+    svgIcon: arrowDownIcon,
+    text: 'Projects.MoveDown',
     filters: {
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
@@ -104,8 +82,8 @@ const reorderTaskActions: ActionMenuItem[] = [
   },
   {
     action: 'moveRight',
-    icon: faArrowRight,
-    tooltip: 'Projects.MoveRight',
+    svgIcon: arrowRightIcon,
+    text: 'Projects.MoveRight',
     filters: {
       excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
@@ -114,8 +92,7 @@ const reorderTaskActions: ActionMenuItem[] = [
   },
 ];
 
-export const PROJECT_MENU_ITEMS = {
-  phaseActions,
+export const PROJECT_TREE_MENU_ITEMS = {
   taskActions,
   reorderTaskActions,
 };
