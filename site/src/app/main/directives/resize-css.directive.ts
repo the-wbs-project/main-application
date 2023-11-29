@@ -1,10 +1,4 @@
-import {
-  Directive,
-  ElementRef,
-  NgZone,
-  OnDestroy,
-  OnInit,
-} from '@angular/core';
+import { Directive, ElementRef, HostListener, OnInit } from '@angular/core';
 
 @Directive({
   selector: '[resizedCss]',
@@ -17,27 +11,18 @@ import {
     '[class.wbs-container-xxl]': 'size > 1200',
   },
 })
-export class ResizedCssDirective implements OnInit, OnDestroy {
-  private observer: ResizeObserver;
+export class ResizedCssDirective implements OnInit {
+  protected size = 0;
 
-  size = 0;
-
-  public constructor(
-    private readonly element: ElementRef,
-    private readonly zone: NgZone
-  ) {
-    this.observer = new ResizeObserver(() =>
-      this.zone.run(() => this.observe())
-    );
-  }
+  public constructor(private readonly element: ElementRef) {}
 
   ngOnInit(): void {
-    this.observer.observe(this.element.nativeElement);
     this.observe();
   }
 
-  ngOnDestroy(): void {
-    this.observer.disconnect();
+  @HostListener('window:resize')
+  windowResized() {
+    this.observe();
   }
 
   private observe(): void {
