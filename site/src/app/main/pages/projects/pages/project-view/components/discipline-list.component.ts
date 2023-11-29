@@ -9,11 +9,11 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   standalone: true,
   selector: 'wbs-discipline-list',
   template: `@for (disc of disciplines; track $index){
-    <p class="mb-2 mx-0 tx-16">
-      <span class="d-ib wd-30">
+    <p class="mb-2 mx-0 tx-14">
+      <span class="d-ib wd-20">
         <i class="fa-solid" [ngClass]="disc | disciplineIcon"></i>
       </span>
-      <span class="mg-l-10">
+      <span class="mg-l-5">
         {{ disc | disciplineLabel : projectDisciplines | translate }}
       </span>
     </p>
