@@ -14,7 +14,7 @@ import { ProjectUploadState } from './states';
         </div>
       </div>
     </div>
-    <div class="mg-t-40">
+    <div class="mg-t-40 mg-b-20">
       <router-outlet />
     </div>`,
   imports: [PageHeaderComponent, RouterModule],

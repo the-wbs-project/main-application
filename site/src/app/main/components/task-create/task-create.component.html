@@ -40,8 +40,9 @@
   <label class="form-label">
     {{ "Projects.TaskDisciplines" | translate }}
   </label>
+  @if (disciplines) {
   <wbs-discipline-editor [showButtons]="false" [(categories)]="disciplines" />
-  }
+  } }
 </div>
 
 <div class="modal-footer">

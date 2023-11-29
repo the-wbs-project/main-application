@@ -6,11 +6,13 @@ import {
   EventEmitter,
   Input,
   Output,
+  ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
+  faBars,
   faEye,
   faEyeSlash,
   faFloppyDisk,
@@ -18,13 +20,26 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { SortableModule } from '@progress/kendo-angular-sortable';
+import {
+  ListViewComponent,
+  ListViewModule,
+} from '@progress/kendo-angular-listview';
+import {
+  DragAndDropModule,
+  DragTargetContainerDirective,
+  DropTargetContainerDirective,
+  DropTargetEvent,
+} from '@progress/kendo-angular-utils';
 import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategorySelectionService, DialogService } from '@wbs/main/services';
+import {
+  CategorySelectionService,
+  DialogService,
+  DragDropService,
+} from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { ListItemDialogComponent } from '../list-item-dialog/list-item-dialog.component';
-import { PhaseEditorItemComponent } from './phase-editor-item/phase-editor-item.component';
+import { SwitchComponent } from '../switch';
 
 @Component({
   standalone: true,
@@ -32,22 +47,30 @@ import { PhaseEditorItemComponent } from './phase-editor-item/phase-editor-item.
   templateUrl: './phase-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
+  providers: [CategorySelectionService, DialogService, DragDropService],
   imports: [
+    DragAndDropModule,
     FontAwesomeModule,
+    ListViewModule,
     NgClass,
-    PhaseEditorItemComponent,
-    SortableModule,
     TranslateModule,
+    SwitchComponent,
   ],
-  providers: [CategorySelectionService, DialogService],
 })
 export class PhaseEditorComponent {
-  @Input({ required: true }) categories?: CategorySelection[] | null;
+  @Input({ required: true }) categories!: CategorySelection[];
   @Input() showButtons = true;
   @Input() showSave = false;
   @Output() readonly saveClicked = new EventEmitter<void>();
   @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 
+  @ViewChild(ListViewComponent) listview!: ListViewComponent;
+  @ViewChild('wrapper', { read: DragTargetContainerDirective })
+  dragTargetContainer: any;
+  @ViewChild('wrapper', { read: DropTargetContainerDirective })
+  dropTargetContainer: any;
+
+  readonly faBars = faBars;
   readonly faEye = faEye;
   readonly faEyeSlash = faEyeSlash;
   readonly faFloppyDisk = faFloppyDisk;
@@ -57,6 +80,7 @@ export class PhaseEditorComponent {
   flip = false;
 
   constructor(
+    readonly dragDrop: DragDropService,
     private readonly cd: ChangeDetectorRef,
     private readonly catService: CategorySelectionService,
     private readonly dialogService: DialogService,
@@ -65,6 +89,15 @@ export class PhaseEditorComponent {
 
   changed(): void {
     this.rebuild();
+  }
+
+  onDrop(e: DropTargetEvent): void {
+    this.dragDrop.onDrop(e, this.categories);
+
+    this.rebuild();
+
+    this.dragTargetContainer.notify();
+    this.dropTargetContainer.notify();
   }
 
   showCreate() {

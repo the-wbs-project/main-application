@@ -1,17 +1,13 @@
-import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { Select, Store } from '@ngxs/store';
-import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
-import { ListItem } from '@wbs/core/models';
-import { JoinPipe } from '@wbs/main/pipes/join.pipe';
-import { MetadataState } from '@wbs/main/states';
-import { Observable } from 'rxjs';
+import { Store } from '@ngxs/store';
+import { CategoryMatchListComponent } from '../../../../components/category-match-list.component';
 import { PeopleCompleted } from '../../actions';
 import { PeopleListItem } from '../../models';
 import { ProjectUploadState } from '../../states';
@@ -21,20 +17,19 @@ import { ProjectUploadState } from '../../states';
   templateUrl: './disciplines-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CommonModule,
+    CategoryMatchListComponent,
     FontAwesomeModule,
     FormsModule,
-    JoinPipe,
-    MultiSelectModule,
     NgbAlertModule,
     TranslateModule,
   ],
 })
 export class DisciplinesViewComponent {
-  @Select(MetadataState.disciplines) categories$!: Observable<ListItem[]>;
-  @Select(ProjectUploadState.peopleList) peopleList$!: Observable<
-    PeopleListItem[]
-  >;
+  @Input() disciplines!: { id: string; label: string }[];
+
+  readonly peopleList = toSignal(
+    this.store.select(ProjectUploadState.peopleList)
+  );
   readonly faCircle = faCircle;
   readonly faList = faList;
 

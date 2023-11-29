@@ -1,4 +1,3 @@
-@if (categories) {
 <div class="d-flex flex-flow-col flex-align-stretch">
   @if (showButtons) {
   <div class="pd-b-10 text-center">
@@ -15,40 +14,56 @@
     }
   </div>
   }
-  <div class="scroll mg-b-10 tx-center" style="flex: auto">
-    @if (isMobile()) {
-    <div class="list-group d-ib text-start wd-xs-400 wd-sm-500">
-      @for (cat of categories; track cat.id) {
-      <div class="opacity-1'" style="cursor: 'move'">
-        <wbs-discipline-editor-item
-          [cat]="cat"
-          [hideUnselected]="false"
-          (changed)="changed()"
-        />
-      </div>
-      }
-    </div>
-    } @else {
-    <kendo-sortable
-      [kendoSortableBinding]="categories"
-      [ngClass]="'list-group d-ib text-start wd-xs-400 wd-sm-500'"
-      [itemStyle]="{ cursor: 'move' }"
-      [itemClass]="'opacity-1'"
-      emptyItemClass="h-30 bd-2 bd-dashed border-dark"
-      [activeItemStyle]="{ border: '2px dashed black', opacity: '0.7' }"
-      zone="innerZone"
-      (dataMove)="rebuild()"
-      (dragEnd)="rebuild()"
+  <div
+    #wrapper
+    kendoDragTargetContainer
+    kendoDropTargetContainer
+    dragTargetFilter=".k-master-row, .k-listview-item"
+    dropTargetFilter=".k-master-row, .k-listview-item"
+    [dragData]="dragDrop.dragData"
+    [hint]="{ hintClass: 'row-hint' }"
+    (onDrop)="onDrop($event)"
+    dragHandle=".k-i-reorder"
+  >
+    <kendo-listview
+      [data]="categories"
+      itemClass="rr-item rr-list-item"
+      data-kendo-listview-index="0"
     >
-      <ng-template let-cat="item">
-        <wbs-discipline-editor-item
-          [cat]="cat"
-          [hideUnselected]="false"
-          (changed)="changed()"
-        />
+      <ng-template
+        kendoListViewItemTemplate
+        let-dataItem="dataItem"
+        let-index="index"
+      >
+        <div
+          class="d-grid list-group-item pd-5 flex-align-center"
+          style="gap: 5px; grid-template-columns: 25px 35px auto 40px"
+        >
+          <div class="tx-center">
+            <span class="k-i-reorder">
+              <fa-icon [icon]="faBars" />
+            </span>
+          </div>
+          <div class="tx-semibold tx-center tx-20">
+            @if (dataItem.selected){ {{ dataItem.number }}. }
+          </div>
+          <div class="tx-16 tx-left">
+            <span class="d-ib tx-center wd-25">
+              <i class="fa-solid" [ngClass]="dataItem.id | disciplineIcon"></i>
+            </span>
+            {{ dataItem.label }}
+          </div>
+          <div class="tx-center">
+            <wbs-switch
+              size="sm"
+              [(value)]="dataItem.selected"
+              [confirmMessage]="dataItem.confirm?.label"
+              [confirmData]="dataItem.confirm?.data"
+              (valueChange)="changed()"
+            />
+          </div>
+        </div>
       </ng-template>
-    </kendo-sortable>
-    }
+    </kendo-listview>
   </div>
 </div>
-}

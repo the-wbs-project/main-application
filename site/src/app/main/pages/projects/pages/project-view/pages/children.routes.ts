@@ -27,10 +27,7 @@ export const resourceResolve: ResolveFn<RecordResource[]> = (
     route.params['projectId'] ??
     inject(Store).selectSnapshot(ProjectState.current)?.id;
 
-  return inject(DataServiceFactory).projectResources.getByProjectIdAsync(
-    org,
-    projectId
-  );
+  return inject(DataServiceFactory).projectResources.getAsync(org, projectId);
 };
 
 export const taskResourceResolve: ResolveFn<RecordResource[]> = (
@@ -44,7 +41,7 @@ export const taskResourceResolve: ResolveFn<RecordResource[]> = (
     route.params['taskId'] ??
     inject(Store).selectSnapshot(TasksState.current)?.id;
 
-  return inject(DataServiceFactory).projectResources.getByTaskIdAsync(
+  return inject(DataServiceFactory).projectResources.getAsync(
     org,
     projectId,
     taskId

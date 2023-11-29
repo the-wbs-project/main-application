@@ -6,20 +6,20 @@ import { MetadataState } from '@wbs/main/states';
 import { forkJoin, map } from 'rxjs';
 import { ProjectUploadState } from '../states';
 
-export const phaseListResolver: ResolveFn<
+export const disciplineListResolver: ResolveFn<
   { id: string; label: string }[]
 > = () => {
   const store = inject(Store);
   const resources = inject(Resources);
 
   return forkJoin({
-    categories: store.selectOnce(MetadataState.phases),
+    categories: store.selectOnce(MetadataState.disciplines),
     project: store.selectOnce(ProjectUploadState.current),
   }).pipe(
     map(({ categories, project }) => {
       const items: { id: string; label: string }[] = [];
 
-      for (const category of project!.phases) {
+      for (const category of project!.disciplines) {
         if (typeof category !== 'string') {
           items.push({
             id: category.id,

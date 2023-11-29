@@ -21,7 +21,7 @@ import { IdService, Messages } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { RecordResourceValidation, Utils } from '@wbs/main/services';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { RecordResourceEditorComponent } from './components/record-resources-editor/record-resource-editor.component';
 import { RecordResourceListComponent } from './components/record-resources-list/record-resource-list.component';
@@ -111,6 +111,24 @@ export class RecordResourcesPageComponent {
     });
   }
 
+  saveReordered(records: RecordResource[]): void {
+    let obs: Observable<void>[] = [];
+
+    for (const record of records) {
+      obs.push(
+        this.data.projectResources.putAsync(
+          this.owner,
+          this.projectId,
+          this.taskId,
+          record
+        )
+      );
+    }
+    forkJoin(obs).subscribe(() =>
+      this.messages.notify.success('Resources.ResourceSaved')
+    );
+  }
+
   private uploadAndSave(
     rawFile: FileInfo,
     data: Partial<RecordResource>
@@ -128,7 +146,7 @@ export class RecordResourcesPageComponent {
   private save(data: Partial<RecordResource>): Observable<void> {
     const resource: RecordResource = {
       id: data.id ?? IdService.generate(),
-      createdOn: new Date(),
+      createdOn: data.createdOn ?? new Date(),
       lastModified: new Date(),
       name: data.name!,
       description: data.description!,
@@ -139,26 +157,16 @@ export class RecordResourcesPageComponent {
       recordId: this.taskId ?? this.projectId,
       order: data.order ?? Math.max(...this.list.map((x) => x.order), 0) + 1,
     };
-    let obs: Observable<void> = this.taskId
-      ? this.data.projectResources.putTaskAsync(
-          this.owner,
-          this.projectId,
-          this.taskId,
-          resource
-        )
-      : this.data.projectResources.putProjectAsync(
-          this.owner,
-          this.projectId,
-          resource
-        );
 
-    return obs.pipe(
-      map(() => {
-        console.log('Saved');
+    return this.data.projectResources
+      .putAsync(this.owner, this.projectId, this.taskId, resource)
+      .pipe(
+        map(() => {
+          console.log('Saved');
 
-        this.list = structuredClone([...this.list, resource]);
-        this.cd.detectChanges();
-      })
-    );
+          this.list = structuredClone([...this.list, resource]);
+          this.cd.detectChanges();
+        })
+      );
   }
 }

@@ -6,50 +6,31 @@ import { RecordResource } from '../models';
 export class ProjectResourcesDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getByProjectIdAsync(
+  getAsync(
     owner: string,
-    projectId: string
+    projectId: string,
+    taskId?: string
   ): Observable<RecordResource[]> {
+    const url = taskId
+      ? `api/projects/owner/${owner}/id/${projectId}/nodes/${taskId}/resources`
+      : `api/projects/owner/${owner}/id/${projectId}/resources`;
+
     return this.http
-      .get<RecordResource[]>(
-        `api/projects/owner/${owner}/id/${projectId}/resources`
-      )
+      .get<RecordResource[]>(url)
       .pipe(map((list) => this.cleanList(list)));
   }
 
-  getByTaskIdAsync(
-    owner: string,
-    projectId: string,
-    taskId: string
-  ): Observable<RecordResource[]> {
-    return this.http
-      .get<RecordResource[]>(
-        `api/projects/owner/${owner}/id/${projectId}/nodes/${taskId}/resources`
-      )
-      .pipe(map((list) => this.cleanList(list)));
-  }
-
-  putProjectAsync(
+  putAsync(
     ownerId: string,
     projectId: string,
+    taskId: string | undefined,
     resource: RecordResource
   ): Observable<void> {
-    return this.http.put<void>(
-      `api/projects/owner/${ownerId}/id/${projectId}/resources/${resource.id}`,
-      resource
-    );
-  }
+    const url = taskId
+      ? `api/projects/owner/${ownerId}/id/${projectId}/nodes/${taskId}/resources/${resource.id}`
+      : `api/projects/owner/${ownerId}/id/${projectId}/resources/${resource.id}`;
 
-  putTaskAsync(
-    ownerId: string,
-    projectId: string,
-    taskId: string,
-    resource: RecordResource
-  ): Observable<void> {
-    return this.http.put<void>(
-      `api/projects/owner/${ownerId}/id/${projectId}/nodes/${taskId}/resources/${resource.id}`,
-      resource
-    );
+    return this.http.put<void>(url, resource);
   }
 
   private cleanList(nodes: RecordResource[]): RecordResource[] {

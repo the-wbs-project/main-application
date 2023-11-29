@@ -13,7 +13,7 @@ export class WbsNodePhaseProjectImporter {
     project: Project,
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
-    people: Map<string, string[]>,
+    people: Map<string, string>,
     phases: Map<string, string | undefined>,
     nodes: Map<string, ProjectImportResult>
   ): ProjectUploadData {
@@ -71,10 +71,10 @@ export class WbsNodePhaseProjectImporter {
       };
 
       for (const person of info.resources ?? []) {
-        for (const id of people.get(person.toLowerCase()) ?? []) {
-          if (node.disciplineIds!.indexOf(id) === -1)
-            node.disciplineIds!.push(id);
-        }
+        const id = people.get(person.toLowerCase());
+
+        if (id && node.disciplineIds!.indexOf(id) === -1)
+          node.disciplineIds!.push(id);
       }
 
       results.upserts.push(node, ...children);
@@ -87,7 +87,7 @@ export class WbsNodePhaseProjectImporter {
   private getChildren(
     parentId: string,
     parentLevel: string,
-    people: Map<string, string[]>,
+    people: Map<string, string>,
     nodes: Map<string, ProjectImportResult>
   ): WbsNode[] {
     const results: WbsNode[] = [];
@@ -126,7 +126,7 @@ export class WbsNodePhaseProjectImporter {
 
   private getDisciplines(
     project: Project,
-    people: Map<string, ProjectCategory[]>
+    people: Map<string, ProjectCategory>
   ): ProjectCategory[] {
     const results: ProjectCategory[] = [...(project?.disciplines ?? [])];
     //
@@ -134,12 +134,11 @@ export class WbsNodePhaseProjectImporter {
     //
     for (const person of people.keys()) {
       if (person) {
-        for (const discipline of people.get(person)!) {
-          const index = results.findIndex((x) =>
-            typeof x === 'string' ? x === discipline : x.id === discipline
-          );
-          if (index === -1) results.push(discipline);
-        }
+        const discipline = people.get(person)!;
+        const index = results.findIndex((x) =>
+          typeof x === 'string' ? x === discipline : x.id === discipline
+        );
+        if (index === -1) results.push(discipline);
       }
     }
     return results;

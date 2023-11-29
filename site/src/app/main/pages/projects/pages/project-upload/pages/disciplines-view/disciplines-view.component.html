@@ -1,17 +1,16 @@
-<div *ngIf="peopleList$ | async; let people" class="w-100 text-center">
+@if (peopleList(); as people) {
+<div class="w-100 text-center">
   <fa-icon [icon]="faList" size="5x" />
   <h3 class="pd-t-20">{{ "ProjectUpload.Page_Disciplines" | translate }}</h3>
   <ngb-alert type="info">
     <h4 class="alert-heading">{{ "ProjectUpload.Why" | translate }}</h4>
     <p>
-      {{ "DisciplineMessage.Why" | translate }}
+      {{ "ProjectUpload.DisciplineMessage" | translate }}
     </p>
   </ngb-alert>
   <div class="list-group text-start w-100 pd-t-20">
-    <div
-      *ngFor="let person of people; let i = index"
-      class="list-group-item d-flex flex-row-f"
-    >
+    @for (person of people; track i; let i = $index) {
+    <div class="list-group-item d-flex flex-row-f">
       <div class="pd-t-1 wd-60 d-ib">
         <fa-layers [fixedWidth]="true">
           <fa-icon size="2x" [icon]="faCircle" />
@@ -22,26 +21,17 @@
         {{ person.name }}
       </div>
       <div class="flex-grow-1 text-end tx-10">
-        <kendo-multiselect
-          size="small"
-          textField="label"
-          valueField="id"
-          [ngStyle]="{ 'max-width': '300px' }"
-          [data]="(categories$ | async) ?? []"
-          [valuePrimitive]="true"
-          [(ngModel)]="person.disciplineIds"
-          kendoMultiSelectSummaryTag
-        >
-          <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
-            <span class="k-icon k-i-caret-alt-down"></span>
-            {{ dataItems | join : "label" }}
-          </ng-template>
-        </kendo-multiselect>
+        <wbs-category-match-list
+          [categories]="disciplines"
+          [(value)]="person.disciplineId"
+        />
       </div>
     </div>
+    }
   </div>
   <br />
   <a class="btn btn-primary mg-y-20" (click)="nav(people)">
     {{ "General.Continue" | translate }}
   </a>
 </div>
+}

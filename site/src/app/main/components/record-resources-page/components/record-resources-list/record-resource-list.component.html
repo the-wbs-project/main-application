@@ -4,7 +4,7 @@
   kendoDropTargetContainer
   dragTargetFilter=".k-master-row, .k-listview-item"
   dropTargetFilter=".k-master-row, .k-listview-item"
-  [dragData]="dragData"
+  [dragData]="dragDrop.dragData"
   [hint]="{ hintClass: 'row-hint' }"
   (onDrop)="onDrop($event)"
   dragHandle=".k-i-reorder"
@@ -25,8 +25,7 @@
     }
   </div>
   <kendo-listview
-    class="demo-listview"
-    [data]="(list | tableProcess : state()) ?? []"
+    [data]="list"
     itemClass="rr-item rr-list-item"
     data-kendo-listview-index="0"
   >

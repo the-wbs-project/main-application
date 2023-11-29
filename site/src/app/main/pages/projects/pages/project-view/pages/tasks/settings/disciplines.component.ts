@@ -24,12 +24,14 @@ import { ProjectState, TasksState } from '../../../states';
       {{ 'General.Disciplines' | translate }}
     </div>
     <div class="pd-15">
+      @if (categories) {
       <wbs-discipline-editor
         [(categories)]="categories"
         [showSave]="true"
         (saveClicked)="save()"
         (categoriesChange)="isDirty = true"
       />
+      }
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DisciplineEditorComponent, TranslateModule],

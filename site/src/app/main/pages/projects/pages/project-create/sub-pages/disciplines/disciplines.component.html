@@ -4,10 +4,12 @@
   [paddingBottom]="55"
 >
   <div class="scroll mg-b-10 w-100" style="flex: 1 1 auto">
+    @if (categories) {
     <wbs-discipline-editor [(categories)]="categories" />
+    }
   </div>
   <div class="w-100 text-center" style="flex: 0 1 20px">
-    <div class="d-ib wd-600">
+    <div class="wd-600 mx-wd-100p">
       <wbs-project-create-footer
         view="bc"
         [disableContinue]="disable(categories)"

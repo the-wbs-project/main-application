@@ -7,7 +7,7 @@
     <div class="list-group d-ib text-start w-100">
       @for (cat of categories; track cat.id) {
       <div
-        class="list-group-item d-flex pd-l-0 flex-align-center border-primary"
+        class="list-group-item pd-l-0 flex-align-center border-primary d-none d-sm-flex"
         style="border-bottom-width: 2px !important"
       >
         <div class="wd-80 tx-center" style="flex: 0 0 80px">
@@ -38,7 +38,37 @@
           }
         </div>
       </div>
-
+      <div
+        class="list-group-item border-primary d-xs-block d-sm-none tx-center"
+        style="border-bottom-width: 2px !important"
+      >
+        <div>
+          <img class="wd-40 hd-40" [src]="cat.icon" />
+        </div>
+        <div class="tx-16">
+          {{ cat.label | translate }}
+        </div>
+        <div class="tx-12 font-italic mg-b-15">
+          @if (cat.description){
+          {{ cat.description | translate }}
+          }
+        </div>
+        @if( cat.id === selected) {
+        <button
+          class="btn btn-sm btn-primary w-100"
+          (click)="categoryChosen.emit(cat.id)"
+        >
+          {{ "General.Selected" | translate }}
+        </button>
+        } @else {
+        <button
+          class="btn btn-sm btn-outline-primary w-100"
+          (click)="categoryChosen.emit(cat.id)"
+        >
+          {{ "General.Select" | translate }}
+        </button>
+        }
+      </div>
       }
     </div>
   </div>

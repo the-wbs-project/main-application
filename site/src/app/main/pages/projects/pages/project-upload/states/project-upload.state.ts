@@ -251,7 +251,7 @@ export class ProjectUploadState {
             }
           } else {
             if (peopleList.findIndex((x) => x.name === resource) === -1) {
-              peopleList.push({ name: resource, disciplineIds: [] });
+              peopleList.push({ name: resource });
             }
           }
         }
@@ -333,16 +333,16 @@ export class ProjectUploadState {
       saving: true,
     });
     const state = ctx.getState();
-    const people = new Map<string, string[]>();
+    const people = new Map<string, string>();
     const phases = new Map<string, string | undefined>();
     const nodes = new Map<string, ProjectImportResult>();
     //
     //  Put people into map
     //
     for (const person of state.peopleList ?? []) {
-      if (person.disciplineIds.length === 0) continue;
+      if (person.disciplineId === undefined) continue;
 
-      people.set(person.name.toLowerCase(), person.disciplineIds);
+      people.set(person.name.toLowerCase(), person.disciplineId);
     }
     //
     //  Put phases into map
