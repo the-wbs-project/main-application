@@ -15,20 +15,36 @@
               <p class="mb-1">
                 {{ "General.Members" | translate }}
               </p>
-              <h5>{{ members.length }}</h5>
+              <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
+                {{ members().length }}
+                }
+              </h5>
             </div>
             <div class="col-3">
               <p class="mb-1">
                 {{ "OrgSettings.Invitations" | translate }}
               </p>
-              <h5>{{ invites()?.length ?? 0 }}</h5>
+              <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
+                {{ invites()?.length ?? 0 }}
+                }
+              </h5>
             </div>
             <div class="col-3">
               <p class="mb-1">
                 {{ "OrgSettings.Capacity" | translate }}
               </p>
               <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
                 {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
+                }
               </h5>
             </div>
             <div class="col-3">
@@ -36,7 +52,11 @@
                 {{ "OrgSettings.Remaining" | translate }}
               </p>
               <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
                 {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
+                }
               </h5>
             </div>
           </div>
@@ -47,7 +67,13 @@
               {{ "General.Members" | translate }}
             </div>
             <div class="col-6 tx-center">
-              <h5>{{ members.length }}</h5>
+              <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
+                {{ members.length }}
+                }
+              </h5>
             </div>
           </div>
           <div class="row mb-2">
@@ -55,7 +81,13 @@
               {{ "OrgSettings.Invitations" | translate }}
             </div>
             <div class="col-6 tx-center">
-              <h5>{{ invites()?.length ?? 0 }}</h5>
+              <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
+                {{ invites()?.length ?? 0 }}
+                }
+              </h5>
             </div>
           </div>
           <div class="row mb-2">
@@ -64,7 +96,11 @@
             </div>
             <div class="col-6 tx-center">
               <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
                 {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
+                }
               </h5>
             </div>
           </div>
@@ -74,13 +110,29 @@
             </div>
             <div class="col-6 tx-center">
               <h5>
+                @if (isLoading()) {
+                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+                } @else {
                 {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
+                }
               </h5>
             </div>
           </div>
         </div>
       </div>
     </div>
+  </div>
+  @if (isLoading()) {
+  <div class="row">
+    <div class="col-12 tx-center mg-t-50">
+      <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+      <h3 class="pd-t-20">
+        {{ "General.Loading" | translate }}
+      </h3>
+    </div>
+  </div>
+  } @else {
+  <div class="row">
     <div class="col-12">
       <div class="row mg-b-20">
         <div class="col-6">
@@ -140,8 +192,9 @@
           <wbs-member-list
             *ngIf="view() === 'members'"
             [roles]="roleFilters()"
-            [members]="members"
+            [members]="members()"
             [textFilter]="textFilter"
+            (membersChanged)="members.set($event)"
           />
           <wbs-invitation-list
             *ngIf="view() === 'invitations'"
@@ -153,4 +206,5 @@
       </div>
     </div>
   </div>
+  }
 </div>

@@ -76,25 +76,16 @@ export class MembershipAdminState {
   @Action(UpdateMemberRoles)
   updateMemberRoles(
     ctx: Context,
-    { memberId, roles }: UpdateMemberRoles
+    { member, toAdd, toRemove }: UpdateMemberRoles
   ): Observable<any> | void {
     const state = ctx.getState();
-    /*const members = [...(this.members ?? [])];
-    const index = members.findIndex((x) => x.id === memberId);
-
-    if (index === -1) return;
-
-    const member = members[index];
-
-    const toRemove = member.roles.filter((r) => !roles.includes(r));
-    const toAdd = roles.filter((r) => !member.roles.includes(r));
     const calls: Observable<void>[] = [];
 
     if (toRemove.length > 0)
       calls.push(
         this.data.memberships.removeUserOrganizationalRolesAsync(
           this.org,
-          memberId,
+          member.id,
           toRemove
         )
       );
@@ -103,7 +94,7 @@ export class MembershipAdminState {
       calls.push(
         this.data.memberships.addUserOrganizationalRolesAsync(
           this.org,
-          memberId,
+          member.id,
           toAdd
         )
       );
@@ -111,14 +102,8 @@ export class MembershipAdminState {
     if (calls.length === 0) return;
 
     return forkJoin(calls).pipe(
-      tap(() => {
-        member.roles = roles;
-        members[index] = member;
-
-        return ctx.dispatch(new UpdateMembers(members));
-      }),
       tap(() => this.messages.notify.success('OrgSettings.MemberRolesUpdated'))
-    );*/
+    );
   }
 
   @Action(SendInvites)

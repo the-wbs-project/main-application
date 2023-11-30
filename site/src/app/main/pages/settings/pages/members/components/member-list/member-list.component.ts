@@ -1,9 +1,12 @@
 import { NgFor } from '@angular/common';
 import {
   ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   signal,
 } from '@angular/core';
 import {
@@ -55,6 +58,7 @@ export class MemberListComponent implements OnChanges {
   @Input() members?: Member[];
   @Input() roles: string[] = [];
   @Input() textFilter = '';
+  @Output() readonly membersChanged = new EventEmitter<Member[]>();
 
   readonly state = signal(<State>{
     sort: [{ field: 'lastLogin', dir: 'desc' }],
@@ -97,9 +101,20 @@ export class MemberListComponent implements OnChanges {
         .subscribe((changedMember) => {
           if (!changedMember) return;
 
-          this.store.dispatch(
-            new UpdateMemberRoles(changedMember.id, changedMember.roles)
+          const toRemove = changedMember.roles.filter(
+            (r) => !member.roles.includes(r)
           );
+          const toAdd = member.roles.filter(
+            (r) => !changedMember.roles.includes(r)
+          );
+
+          this.store.dispatch(
+            new UpdateMemberRoles(changedMember, toAdd, toRemove)
+          );
+          const index = this.members!.findIndex((m) => m.id === member.id);
+          this.members![index] = changedMember;
+
+          this.membersChanged.emit(this.members!);
         });
     } else if (action === 'remove') {
       this.messages.confirm

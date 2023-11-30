@@ -1,3 +1,5 @@
+import { Member } from '@wbs/core/models';
+
 export class LoadInvitations {
   static readonly type = '[Membership Admin] Load Invitations';
   constructor(readonly org: string) {}
@@ -10,7 +12,11 @@ export class RemoveMemberFromOrganization {
 
 export class UpdateMemberRoles {
   static readonly type = '[Membership Admin] Update Member Roles';
-  constructor(readonly memberId: string, readonly roles: string[]) {}
+  constructor(
+    readonly member: Member,
+    readonly toAdd: string[],
+    readonly toRemove: string[]
+  ) {}
 }
 
 export class SendInvites {

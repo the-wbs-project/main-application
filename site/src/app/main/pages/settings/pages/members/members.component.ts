@@ -26,6 +26,9 @@ import { MemberListComponent } from './components/member-list/member-list.compon
 import { RoleFilterListComponent } from './components/role-filter-list/role-filter-list.component';
 import { MembershipAdminState } from './states';
 import { Member } from '@wbs/core/models';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 
 const ROLES = [
   {
@@ -57,6 +60,7 @@ const ROLES = [
   providers: [],
   imports: [
     DropDownListModule,
+    FontAwesomeModule,
     FormsModule,
     MemberListComponent,
     NgClass,
@@ -70,7 +74,6 @@ const ROLES = [
 })
 export class MembersComponent implements OnInit {
   @Input() org!: string;
-  @Input() members!: Member[];
 
   private readonly crumbs: Breadcrumb[] = [
     {
@@ -84,22 +87,26 @@ export class MembersComponent implements OnInit {
   readonly invites = toSignal(
     this.store.select(MembershipAdminState.invitations)
   );
+  readonly isLoading = signal<boolean>(true);
+  readonly members = signal<Member[]>([]);
   readonly roles = signal<any[]>([]);
   readonly inviteCount = computed(() => this.invites()?.length ?? 0);
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
   readonly remaining = computed(() =>
     this.capacity()
-      ? (this.capacity() ?? 0) - this.members.length - this.inviteCount()
+      ? (this.capacity() ?? 0) - this.members().length - this.inviteCount()
       : undefined
   );
   readonly roleFilters = signal<string[]>([]);
   readonly view = signal<'members' | 'invitations'>('members');
   readonly gearIcon = gearIcon;
   readonly plusIcon = plusIcon;
+  readonly faSpinner = faSpinner;
 
   textFilter = '';
 
   constructor(
+    private readonly data: DataServiceFactory,
     private readonly dialogService: DialogService,
     private readonly store: Store
   ) {}
@@ -123,6 +130,12 @@ export class MembersComponent implements OnInit {
         }
         this.roles.set(ROLES);
       });
+    this.data.memberships
+      .getMembershipUsersAsync(this.org)
+      .subscribe((members) => {
+        this.members.set(members);
+        this.isLoading.set(false);
+      });
   }
 
   openInviteDialog() {
@@ -131,7 +144,7 @@ export class MembersComponent implements OnInit {
       {
         size: 'lg',
       },
-      this.members
+      this.members()
     );
   }
 }
