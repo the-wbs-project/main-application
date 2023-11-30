@@ -1,20 +1,19 @@
 import { Injectable } from '@angular/core';
-import { DataServiceFactory } from '@wbs/core/data-services';
+import { Store } from '@ngxs/store';
 import { Invite, Member, Role } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
+import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
 import { DialogService } from '@wbs/main/services';
-import { Observable, forkJoin, of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { AuthState } from '@wbs/main/states';
+import { Observable, of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import { MembershipAdminService } from './membership-admin.service';
 import { EditMemberComponent } from '../components/edit-member/edit-member.component';
 import { InvitesFormComponent } from '../components/invites-form/invites-form.component';
-import { Store } from '@ngxs/store';
-import { AuthState } from '@wbs/main/states';
 
 @Injectable()
 export class MembershipAdminUiService {
   constructor(
-    private readonly data: DataServiceFactory,
     private readonly dialogService: DialogService,
     private readonly service: MembershipAdminService,
     private readonly messages: Messages,
@@ -23,11 +22,11 @@ export class MembershipAdminUiService {
 
   openEditMemberDialog(
     org: string,
-    member: Member,
+    member: MemberViewModel,
     roles: Role[]
-  ): Observable<Member | undefined> {
+  ): Observable<MemberViewModel | undefined> {
     return this.dialogService
-      .openDialog<Member>(
+      .openDialog<MemberViewModel>(
         EditMemberComponent,
         {
           size: 'lg',
@@ -44,6 +43,8 @@ export class MembershipAdminUiService {
           const toAdd = member.roles.filter(
             (r) => !changedMember.roles.includes(r)
           );
+
+          changedMember.roleList = changedMember.roles.join(',');
 
           return this.service
             .updateMemberRolesAsync(org, changedMember, toAdd, toRemove)
@@ -94,7 +95,7 @@ export class MembershipAdminUiService {
       );
   }
 
-  openCancelInviteDialog(org: string, invite: Invite): Observable<boolean> {
+  openCancelInviteDialog(org: string, inviteId: string): Observable<boolean> {
     return this.messages.confirm
       .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
       .pipe(
@@ -102,7 +103,7 @@ export class MembershipAdminUiService {
           if (!answer) return of(false);
 
           return this.service
-            .cancelInviteAsync(org, invite.id)
+            .cancelInviteAsync(org, inviteId)
             .pipe(map(() => true));
         })
       );

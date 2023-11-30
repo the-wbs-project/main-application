@@ -8,5 +8,4 @@ export interface Invite extends InviteBody {
   id: string;
   createdAt: Date;
   expiresAt: Date;
-  roleList: string;
 }

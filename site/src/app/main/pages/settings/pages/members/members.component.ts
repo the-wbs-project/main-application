@@ -14,7 +14,7 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { Invite, Member, Role } from '@wbs/core/models';
+import { Role } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { MembershipState, RoleState } from '@wbs/main/states';
 import { first, forkJoin, skipWhile } from 'rxjs';
@@ -24,6 +24,7 @@ import { InvitationListComponent } from './components/invitation-list/invitation
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { RoleFilterListComponent } from './components/role-filter-list/role-filter-list.component';
 import { MembershipAdminUiService } from './services';
+import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
 
 const ROLES = [
   {
@@ -76,8 +77,8 @@ export class MembersComponent implements OnInit {
     this.store.select(MembershipState.organization)
   );
   readonly isLoading = signal<boolean>(true);
-  readonly members = signal<Member[]>([]);
-  readonly invites = signal<Invite[]>([]);
+  readonly members = signal<MemberViewModel[]>([]);
+  readonly invites = signal<InviteViewModel[]>([]);
   readonly roles = signal<any[]>([]);
   readonly roleDefinitions = signal<Role[]>([]);
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
@@ -128,8 +129,22 @@ export class MembersComponent implements OnInit {
       members: this.data.memberships.getMembershipUsersAsync(this.org),
       invites: this.data.memberships.getInvitesAsync(this.org),
     }).subscribe(({ members, invites }) => {
-      this.members.set(members);
-      this.invites.set(invites);
+      this.members.set(
+        members.map((m) => {
+          return {
+            ...m,
+            roleList: m.roles.join(','),
+          };
+        })
+      );
+      this.invites.set(
+        invites.map((i) => {
+          return {
+            ...i,
+            roleList: i.roles.join(','),
+          };
+        })
+      );
       this.isLoading.set(false);
     });
   }
@@ -145,7 +160,15 @@ export class MembersComponent implements OnInit {
       .subscribe((invites) => {
         if (!invites) return;
 
-        this.invites.set([...invites, ...this.invites()]);
+        this.invites.set([
+          ...invites.map((i) => {
+            return {
+              ...i,
+              roleList: i.roles.join(','),
+            };
+          }),
+          ...this.invites(),
+        ]);
       });
   }
 }

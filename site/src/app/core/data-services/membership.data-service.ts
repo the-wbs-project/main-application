@@ -25,18 +25,17 @@ export class MembershipDataService {
   }
 
   getInvitesAsync(organization: string): Observable<Invite[]> {
-    return this.http
-      .get<Invite[]>(`api/organizations/${organization}/invites`)
-      .pipe(tap((invites) => this.setRoleList(invites)));
+    return this.http.get<Invite[]>(`api/organizations/${organization}/invites`);
   }
 
   sendInvitesAsync(
     organization: string,
     inviteBody: InviteBody
   ): Observable<Invite> {
-    return this.http
-      .post<Invite>(`api/organizations/${organization}/invites`, inviteBody)
-      .pipe(tap((invite) => this.setRoleList([invite])));
+    return this.http.post<Invite>(
+      `api/organizations/${organization}/invites`,
+      inviteBody
+    );
   }
 
   cancelInviteAsync(organization: string, inviteId: string): Observable<void> {
@@ -85,9 +84,5 @@ export class MembershipDataService {
         body: roles,
       }
     );
-  }
-
-  private setRoleList(invites: Invite[]): void {
-    for (const invite of invites) invite.roleList = invite.roles.join(',');
   }
 }

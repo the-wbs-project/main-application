@@ -14,7 +14,7 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Invite } from '@wbs/core/models';
+import { InviteViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
@@ -43,11 +43,11 @@ import { IsExpiredPipe } from './is-expired.pipe';
   ],
 })
 export class InvitationListComponent implements OnChanges {
-  @Input({ required: true }) invites!: Invite[];
+  @Input({ required: true }) invites!: InviteViewModel[];
   @Input({ required: true }) org!: string;
   @Input() filteredRoles: string[] = [];
   @Input() textFilter = '';
-  @Output() readonly invitesChanged = new EventEmitter<Invite[]>();
+  @Output() readonly invitesChanged = new EventEmitter<InviteViewModel[]>();
 
   readonly state = signal(<State>{
     sort: [{ field: 'name', dir: 'asc' }],
@@ -67,7 +67,7 @@ export class InvitationListComponent implements OnChanges {
     this.updateState();
   }
 
-  userActionClicked(invite: Invite, action: string): void {
+  userActionClicked(invite: InviteViewModel, action: string): void {
     if (action === 'cancel') {
       this.openCancelDialog(invite);
     }
@@ -118,9 +118,9 @@ export class InvitationListComponent implements OnChanges {
     this.state.set(state);
   }
 
-  private openCancelDialog(invite: Invite): void {
+  private openCancelDialog(invite: InviteViewModel): void {
     this.uiService
-      .openCancelInviteDialog(this.org, invite)
+      .openCancelInviteDialog(this.org, invite.id)
       .subscribe((answer) => {
         if (!answer) return;
 

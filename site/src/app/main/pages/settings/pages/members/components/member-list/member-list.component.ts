@@ -28,6 +28,7 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
 import { MembershipAdminUiService } from '../../services';
+import { MemberViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -46,12 +47,12 @@ import { MembershipAdminUiService } from '../../services';
   ],
 })
 export class MemberListComponent implements OnChanges {
-  @Input({ required: true }) members!: Member[];
+  @Input({ required: true }) members!: MemberViewModel[];
   @Input({ required: true }) org!: string;
   @Input({ required: true }) roles!: Role[];
   @Input() filteredRoles: string[] = [];
   @Input() textFilter = '';
-  @Output() readonly membersChanged = new EventEmitter<Member[]>();
+  @Output() readonly membersChanged = new EventEmitter<MemberViewModel[]>();
 
   readonly state = signal(<State>{
     sort: [{ field: 'lastLogin', dir: 'desc' }],
@@ -77,7 +78,7 @@ export class MemberListComponent implements OnChanges {
     this.updateState();
   }
 
-  userActionClicked(member: Member, action: string): void {
+  userActionClicked(member: MemberViewModel, action: string): void {
     if (action === 'edit') {
       this.openEditDialog(member);
     } else if (action === 'remove') {
@@ -127,10 +128,11 @@ export class MemberListComponent implements OnChanges {
       logic: 'and',
       filters,
     };
+    console.log(state);
     this.state.set(state);
   }
 
-  private openEditDialog(member: Member): void {
+  private openEditDialog(member: MemberViewModel): void {
     this.uiService
       .openEditMemberDialog(this.org, member, this.roles)
       .subscribe((changedMember) => {
