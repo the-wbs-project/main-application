@@ -65,17 +65,10 @@ export class WbsNodePhaseProjectImporter {
         order: counter + phaseDelta,
         title: info.title,
         parentId: null,
-        disciplineIds: this.getDisciplinesFromChildren(children),
         createdOn: now,
         lastModified: now,
+        disciplineIds: this.getDisciplineFromPeople(info, people),
       };
-
-      for (const person of info.resources ?? []) {
-        const id = people.get(person.toLowerCase());
-
-        if (id && node.disciplineIds!.indexOf(id) === -1)
-          node.disciplineIds!.push(id);
-      }
 
       results.upserts.push(node, ...children);
       counter++;
@@ -106,22 +99,29 @@ export class WbsNodePhaseProjectImporter {
         createdOn: now,
         lastModified: now,
         title: info.title,
-        disciplineIds: this.getDisciplinesFromChildren(children),
+        disciplineIds: this.getDisciplineFromPeople(info, people),
       };
-
-      for (const person of info.resources ?? []) {
-        if (person) {
-          for (const id of people.get(person.toLowerCase()) ?? []) {
-            if (node.disciplineIds!.indexOf(id) === -1)
-              node.disciplineIds!.push(id);
-          }
-        }
-      }
 
       results.push(node, ...children);
       counter++;
     }
     return results;
+  }
+
+  private getDisciplineFromPeople(
+    info: ProjectImportResult,
+    people: Map<string, string>
+  ): string[] {
+    const ids: string[] = [];
+
+    for (const person of info.resources ?? []) {
+      if (!person) continue;
+
+      const id = people.get(person.toLowerCase());
+
+      if (id && ids.indexOf(id) === -1) ids.push(id);
+    }
+    return ids;
   }
 
   private getDisciplines(
@@ -142,17 +142,5 @@ export class WbsNodePhaseProjectImporter {
       }
     }
     return results;
-  }
-
-  private getDisciplinesFromChildren(children: WbsNode[]): string[] {
-    const ids: string[] = [];
-
-    for (const child of children) {
-      for (const id of child.disciplineIds ?? []) {
-        if (ids.indexOf(id) === -1) ids.push(id);
-      }
-    }
-
-    return ids;
   }
 }
