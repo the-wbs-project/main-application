@@ -1,4 +1,4 @@
-import { NgClass, NgIf } from '@angular/common';
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,26 +9,21 @@ import {
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
+import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
-import { gearIcon, plusIcon } from '@progress/kendo-svg-icons';
-import { DialogService } from '@wbs/main/services';
+import { Invite, Member, Role } from '@wbs/core/models';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import { MembershipState, RoleState } from '@wbs/main/states';
-import { first, skipWhile } from 'rxjs';
+import { first, forkJoin, skipWhile } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
 import { InvitationListComponent } from './components/invitation-list/invitation-list.component';
-import { InvitesFormComponent } from './components/invites-form/invites-form.component';
 import { MemberListComponent } from './components/member-list/member-list.component';
 import { RoleFilterListComponent } from './components/role-filter-list/role-filter-list.component';
-import { MembershipAdminState } from './states';
-import { Member } from '@wbs/core/models';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
+import { MembershipAdminUiService } from './services';
 
 const ROLES = [
   {
@@ -59,17 +54,13 @@ const ROLES = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [],
   imports: [
-    DropDownListModule,
     FontAwesomeModule,
     FormsModule,
+    InvitationListComponent,
     MemberListComponent,
     NgClass,
-    NgIf,
     RoleFilterListComponent,
-    RouterModule,
-    SVGIconModule,
     TranslateModule,
-    InvitationListComponent,
   ],
 })
 export class MembersComponent implements OnInit {
@@ -84,31 +75,33 @@ export class MembersComponent implements OnInit {
   readonly organization = toSignal(
     this.store.select(MembershipState.organization)
   );
-  readonly invites = toSignal(
-    this.store.select(MembershipAdminState.invitations)
-  );
   readonly isLoading = signal<boolean>(true);
   readonly members = signal<Member[]>([]);
+  readonly invites = signal<Invite[]>([]);
   readonly roles = signal<any[]>([]);
-  readonly inviteCount = computed(() => this.invites()?.length ?? 0);
+  readonly roleDefinitions = signal<Role[]>([]);
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
   readonly remaining = computed(() =>
     this.capacity()
-      ? (this.capacity() ?? 0) - this.members().length - this.inviteCount()
+      ? (this.capacity() ?? 0) - this.members().length - this.invites().length
       : undefined
   );
+  readonly canAdd = computed(() => {
+    const r = this.remaining();
+
+    return r === undefined || r > 0;
+  });
   readonly roleFilters = signal<string[]>([]);
   readonly view = signal<'members' | 'invitations'>('members');
-  readonly gearIcon = gearIcon;
-  readonly plusIcon = plusIcon;
+  readonly faPlus = faPlus;
   readonly faSpinner = faSpinner;
 
   textFilter = '';
 
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly dialogService: DialogService,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly uiService: MembershipAdminUiService
   ) {}
 
   ngOnInit(): void {
@@ -129,22 +122,30 @@ export class MembersComponent implements OnInit {
           role.name = definitions.find((x) => x.name === role.name)!.id;
         }
         this.roles.set(ROLES);
+        this.roleDefinitions.set(definitions);
       });
-    this.data.memberships
-      .getMembershipUsersAsync(this.org)
-      .subscribe((members) => {
-        this.members.set(members);
-        this.isLoading.set(false);
-      });
+    forkJoin({
+      members: this.data.memberships.getMembershipUsersAsync(this.org),
+      invites: this.data.memberships.getInvitesAsync(this.org),
+    }).subscribe(({ members, invites }) => {
+      this.members.set(members);
+      this.invites.set(invites);
+      this.isLoading.set(false);
+    });
   }
 
   openInviteDialog() {
-    const dialog = this.dialogService.openDialog(
-      InvitesFormComponent,
-      {
-        size: 'lg',
-      },
-      this.members()
-    );
+    this.uiService
+      .openNewInviteDialog(
+        this.org,
+        this.invites(),
+        this.members(),
+        this.roleDefinitions()
+      )
+      .subscribe((invites) => {
+        if (!invites) return;
+
+        this.invites.set([...invites, ...this.invites()]);
+      });
   }
 }

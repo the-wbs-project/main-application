@@ -1,5 +1,7 @@
 <div class="modal-header">
-  <h4 class="modal-title">Invite Users</h4>
+  <h4 class="modal-title">
+    {{ "OrgSettings.SendInvite" | translate }}
+  </h4>
   <button
     type="button"
     class="btn-close"
@@ -31,8 +33,8 @@
       </label>
       <div class="col-sm-10">
         <div class="btn-group">
+          @for (role of roleDefinitions; track role.id) {
           <button
-            *ngFor="let role of roleList()"
             class="btn"
             [ngClass]="{
               'btn-primary': roles.includes(role.id),
@@ -42,23 +44,28 @@
           >
             {{ role.abbreviation | translate }}
           </button>
+          }
         </div>
       </div>
     </div>
-    <div *ngIf="errors.length > 0" class="row mb-3">
+    @if (errors.length > 0) {
+    <div class="row mb-3">
       <label class="col-sm-2 col-form-label">
         {{ "General.Errors" | translate }}
       </label>
       <div class="col-sm-10">
         <p>{{ "OrgSettings.InviteErrorHeader" | translate }}:</p>
         <ul class="tx-danger">
-          <li *ngFor="let error of errors">
+          @for (error of errors; track $index) {
+          <li>
             {{ error.email ? error.email + ": " : "" }}
             {{ error.error | translate }}
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
   </div>
 </div>
 <div class="modal-footer">

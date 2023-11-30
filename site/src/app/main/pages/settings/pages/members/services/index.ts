@@ -1,1 +1,2 @@
-export * from './table-helper.service';
+export * from './membership-admin.service';
+export * from './membership-admin-ui.service';

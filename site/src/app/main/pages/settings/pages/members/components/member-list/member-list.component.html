@@ -21,7 +21,8 @@
     </tr>
   </thead>
   <tbody>
-    <tr *ngFor="let member of members | tableProcess : state()">
+    @for (member of members | tableProcess : state(); track member.id) {
+    <tr>
       <td>
         <wbs-action-icon-list
           size="medium"
@@ -37,5 +38,6 @@
       <td>{{ member.lastLogin | dateText }}</td>
       <td>{{ member.roles | roleList : true }}</td>
     </tr>
+    }
   </tbody>
 </table>

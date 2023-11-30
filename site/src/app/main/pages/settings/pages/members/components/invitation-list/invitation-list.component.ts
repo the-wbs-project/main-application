@@ -1,31 +1,28 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
   Input,
   OnChanges,
+  Output,
   signal,
 } from '@angular/core';
 import { faGear, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
 import {
   CompositeFilterDescriptor,
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
 import { Invite } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
+import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
-import { first } from 'rxjs';
-import { CancelInvite } from '../../actions';
-import { SortArrowComponent } from '../../../../../../components/sort-arrow.component';
+import { MembershipAdminUiService } from '../../services';
 import { IsExpiredPipe } from './is-expired.pipe';
 
 @Component({
@@ -38,21 +35,19 @@ import { IsExpiredPipe } from './is-expired.pipe';
     ActionIconListComponent,
     DateTextPipe,
     IsExpiredPipe,
-    NgClass,
-    NgFor,
-    NgIf,
     RoleListPipe,
     SortableDirective,
     SortArrowComponent,
-    SVGIconModule,
     TableProcessPipe,
     TranslateModule,
   ],
 })
 export class InvitationListComponent implements OnChanges {
-  @Input({ required: true }) invites?: Invite[];
-  @Input() roles: string[] = [];
+  @Input({ required: true }) invites!: Invite[];
+  @Input({ required: true }) org!: string;
+  @Input() filteredRoles: string[] = [];
   @Input() textFilter = '';
+  @Output() readonly invitesChanged = new EventEmitter<Invite[]>();
 
   readonly state = signal(<State>{
     sort: [{ field: 'name', dir: 'asc' }],
@@ -66,41 +61,15 @@ export class InvitationListComponent implements OnChanges {
     },
   ];
 
-  constructor(
-    private readonly messages: Messages,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly uiService: MembershipAdminUiService) {}
 
   ngOnChanges(): void {
     this.updateState();
   }
 
   userActionClicked(invite: Invite, action: string): void {
-    /* if (action === 'edit') {
-      this.dialogService
-        .openDialog<Member>(
-          EditMemberComponent,
-          {
-            size: 'lg',
-          },
-          structuredClone(member)
-        )
-        .subscribe((changedMember) => {
-          if (!changedMember) return;
-
-          this.store.dispatch(
-            new UpdateMemberRoles(changedMember.id, changedMember.roles)
-          );
-        });
-    } else */ if (action === 'cancel') {
-      this.messages.confirm
-        .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
-        .pipe(first())
-        .subscribe((answer) => {
-          if (answer) {
-            this.store.dispatch(new CancelInvite(invite.id));
-          }
-        });
+    if (action === 'cancel') {
+      this.openCancelDialog(invite);
     }
   }
 
@@ -127,13 +96,13 @@ export class InvitationListComponent implements OnChanges {
         ],
       });
     }
-    if (this.roles.length > 0) {
+    if (this.filteredRoles.length > 0) {
       const roleFilter: CompositeFilterDescriptor = {
         logic: 'or',
         filters: [],
       };
 
-      for (const role of this.roles) {
+      for (const role of this.filteredRoles) {
         roleFilter.filters.push({
           field: 'roleList',
           operator: 'contains',
@@ -147,5 +116,18 @@ export class InvitationListComponent implements OnChanges {
       filters,
     };
     this.state.set(state);
+  }
+
+  private openCancelDialog(invite: Invite): void {
+    this.uiService
+      .openCancelInviteDialog(this.org, invite)
+      .subscribe((answer) => {
+        if (!answer) return;
+
+        const index = this.invites.findIndex((i) => i.id === invite.id);
+        this.invites.splice(index, 1);
+
+        this.invitesChanged.emit(this.invites);
+      });
   }
 }

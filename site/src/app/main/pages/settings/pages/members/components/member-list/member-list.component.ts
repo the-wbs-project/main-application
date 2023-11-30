@@ -1,7 +1,5 @@
-import { NgFor } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
   Input,
@@ -16,25 +14,20 @@ import {
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
-import { SVGIconModule } from '@progress/kendo-angular-icons';
 import {
   CompositeFilterDescriptor,
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Member } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
+import { Member, Role } from '@wbs/core/models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
-import { DialogService, TableHelper } from '@wbs/main/services';
-import { first } from 'rxjs/operators';
-import { RemoveMemberFromOrganization, UpdateMemberRoles } from '../../actions';
-import { EditMemberComponent } from '../edit-member/edit-member.component';
+import { TableHelper } from '@wbs/main/services';
+import { MembershipAdminUiService } from '../../services';
 
 @Component({
   standalone: true,
@@ -45,18 +38,18 @@ import { EditMemberComponent } from '../edit-member/edit-member.component';
   imports: [
     ActionIconListComponent,
     DateTextPipe,
-    NgFor,
     RoleListPipe,
     SortableDirective,
     SortArrowComponent,
-    SVGIconModule,
     TableProcessPipe,
     TranslateModule,
   ],
 })
 export class MemberListComponent implements OnChanges {
-  @Input() members?: Member[];
-  @Input() roles: string[] = [];
+  @Input({ required: true }) members!: Member[];
+  @Input({ required: true }) org!: string;
+  @Input({ required: true }) roles!: Role[];
+  @Input() filteredRoles: string[] = [];
   @Input() textFilter = '';
   @Output() readonly membersChanged = new EventEmitter<Member[]>();
 
@@ -78,11 +71,7 @@ export class MemberListComponent implements OnChanges {
     },
   ];
 
-  constructor(
-    private readonly dialogService: DialogService,
-    private readonly messages: Messages,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly uiService: MembershipAdminUiService) {}
 
   ngOnChanges(): void {
     this.updateState();
@@ -90,41 +79,9 @@ export class MemberListComponent implements OnChanges {
 
   userActionClicked(member: Member, action: string): void {
     if (action === 'edit') {
-      this.dialogService
-        .openDialog<Member>(
-          EditMemberComponent,
-          {
-            size: 'lg',
-          },
-          structuredClone(member)
-        )
-        .subscribe((changedMember) => {
-          if (!changedMember) return;
-
-          const toRemove = changedMember.roles.filter(
-            (r) => !member.roles.includes(r)
-          );
-          const toAdd = member.roles.filter(
-            (r) => !changedMember.roles.includes(r)
-          );
-
-          this.store.dispatch(
-            new UpdateMemberRoles(changedMember, toAdd, toRemove)
-          );
-          const index = this.members!.findIndex((m) => m.id === member.id);
-          this.members![index] = changedMember;
-
-          this.membersChanged.emit(this.members!);
-        });
+      this.openEditDialog(member);
     } else if (action === 'remove') {
-      this.messages.confirm
-        .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
-        .pipe(first())
-        .subscribe((answer) => {
-          if (answer) {
-            this.store.dispatch(new RemoveMemberFromOrganization(member.id));
-          }
-        });
+      this.openRemoveDialog(member);
     }
   }
 
@@ -151,13 +108,13 @@ export class MemberListComponent implements OnChanges {
         ],
       });
     }
-    if (this.roles.length > 0) {
+    if (this.filteredRoles.length > 0) {
       const roleFilter: CompositeFilterDescriptor = {
         logic: 'or',
         filters: [],
       };
 
-      for (const role of this.roles) {
+      for (const role of this.filteredRoles) {
         roleFilter.filters.push({
           field: 'roleList',
           operator: 'contains',
@@ -171,5 +128,31 @@ export class MemberListComponent implements OnChanges {
       filters,
     };
     this.state.set(state);
+  }
+
+  private openEditDialog(member: Member): void {
+    this.uiService
+      .openEditMemberDialog(this.org, member, this.roles)
+      .subscribe((changedMember) => {
+        if (!changedMember) return;
+
+        const index = this.members.findIndex((m) => m.id === member.id);
+        this.members[index] = changedMember;
+
+        this.membersChanged.emit(this.members);
+      });
+  }
+
+  private openRemoveDialog(member: Member): void {
+    this.uiService
+      .openRemoveMemberDialog(this.org, member.id)
+      .subscribe((answer) => {
+        if (!answer) return;
+
+        const index = this.members.findIndex((m) => m.id === member.id);
+        this.members.splice(index, 1);
+
+        this.membersChanged.emit(this.members);
+      });
   }
 }

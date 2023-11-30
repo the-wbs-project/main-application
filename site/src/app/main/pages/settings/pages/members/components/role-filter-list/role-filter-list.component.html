@@ -1,6 +1,5 @@
 <kendo-multiselect
   kendoMultiSelectSummaryTag
-  *ngIf="roles(); let roles"
   [checkboxes]="true"
   [autoClose]="false"
   [data]="roles"
@@ -8,15 +7,14 @@
   adaptiveMode="auto"
   textField="abbreviation"
   valueField="id"
-  (valueChange)="valueChange($event)"
+  (valueChange)="changed($event)"
 >
   <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
-    <span *ngIf="dataItems.length == roles.length; else notAll">
-      All Roles
-    </span>
-    <ng-template #notAll>
-      {{ dataItems | roleList : true }}
-    </ng-template>
+    @if (dataItems.length == roles.length) {
+    {{ "OrgSettings.AllRoles" | translate }}
+    } @else {
+    {{ dataItems | roleList : true }}
+    }
   </ng-template>
   <ng-template kendoMultiSelectItemTemplate let-dataItem>
     <div class="role-item">

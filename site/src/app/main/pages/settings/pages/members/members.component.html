@@ -31,7 +31,7 @@
                 @if (isLoading()) {
                 <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
                 } @else {
-                {{ invites()?.length ?? 0 }}
+                {{ invites().length }}
                 }
               </h5>
             </div>
@@ -85,7 +85,7 @@
                 @if (isLoading()) {
                 <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
                 } @else {
-                {{ invites()?.length ?? 0 }}
+                {{ invites().length }}
                 }
               </h5>
             </div>
@@ -162,16 +162,14 @@
           </div>
         </div>
         <div class="col-6 tx-right">
-          <button
-            *ngIf="remaining() !== 0"
-            class="btn btn-sm btn-primary"
-            (click)="openInviteDialog()"
-          >
-            <kendo-svg-icon [icon]="plusIcon" />
+          @if (canAdd()) {
+          <button class="btn btn-sm btn-primary" (click)="openInviteDialog()">
+            <fa-icon [icon]="faPlus" />
             <span class="d-none d-sm-inline">
               {{ "OrgSettings.InviteMembers" | translate }}
             </span>
           </button>
+          }
         </div>
       </div>
       <div class="row">
@@ -184,24 +182,32 @@
           />
         </div>
         <div class="col-xl-4 col-lg-5 col-md-12 mg-b-20">
-          <wbs-role-filter-list (valueChanged)="roleFilters.set($event)" />
+          <wbs-role-filter-list
+            [roles]="roleDefinitions()"
+            (valueChanged)="roleFilters.set($event)"
+          />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
+          @if (view() === 'members') {
           <wbs-member-list
-            *ngIf="view() === 'members'"
-            [roles]="roleFilters()"
+            [filteredRoles]="roleFilters()"
+            [roles]="roleDefinitions()"
             [members]="members()"
+            [org]="org"
             [textFilter]="textFilter"
             (membersChanged)="members.set($event)"
           />
+          } @else if (view() === 'invitations') {
           <wbs-invitation-list
-            *ngIf="view() === 'invitations'"
-            [roles]="roleFilters()"
+            [filteredRoles]="roleFilters()"
+            [org]="org"
             [invites]="invites()"
             [textFilter]="textFilter"
+            (invitesChanged)="invites.set($event)"
           />
+          }
         </div>
       </div>
     </div>

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
 import { Invite, InviteBody, Member } from '../models';
 
 export class MembershipDataService {
@@ -24,17 +25,18 @@ export class MembershipDataService {
   }
 
   getInvitesAsync(organization: string): Observable<Invite[]> {
-    return this.http.get<Invite[]>(`api/organizations/${organization}/invites`);
+    return this.http
+      .get<Invite[]>(`api/organizations/${organization}/invites`)
+      .pipe(tap((invites) => this.setRoleList(invites)));
   }
 
   sendInvitesAsync(
     organization: string,
     inviteBody: InviteBody
   ): Observable<Invite> {
-    return this.http.post<Invite>(
-      `api/organizations/${organization}/invites`,
-      inviteBody
-    );
+    return this.http
+      .post<Invite>(`api/organizations/${organization}/invites`, inviteBody)
+      .pipe(tap((invite) => this.setRoleList([invite])));
   }
 
   cancelInviteAsync(organization: string, inviteId: string): Observable<void> {
@@ -83,5 +85,9 @@ export class MembershipDataService {
         body: roles,
       }
     );
+  }
+
+  private setRoleList(invites: Invite[]): void {
+    for (const invite of invites) invite.roleList = invite.roles.join(',');
   }
 }

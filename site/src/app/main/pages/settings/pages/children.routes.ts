@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
-import { importProvidersFrom } from '@angular/core';
-import { NgxsModule } from '@ngxs/store';
 import { orgResolve } from '@wbs/main/services';
-import { verifyInvitationsLoaded } from './children.guards';
-import { MembershipAdminState } from './members/states';
+import {
+  MembershipAdminService,
+  MembershipAdminUiService,
+} from './members/services';
 
 export const routes: Routes = [
   {
@@ -28,12 +28,9 @@ export const routes: Routes = [
     path: 'members',
     loadComponent: () =>
       import('./members/members.component').then((m) => m.MembersComponent),
-    canActivate: [verifyInvitationsLoaded],
     resolve: {
       org: orgResolve,
     },
-    providers: [
-      importProvidersFrom(NgxsModule.forFeature([MembershipAdminState])),
-    ],
+    providers: [MembershipAdminService, MembershipAdminUiService],
   },
 ];

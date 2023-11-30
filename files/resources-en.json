@@ -52,6 +52,7 @@
       "Timeline": "Timeline",
       "Description": "Description",
       "Contacts": "Contacts",
+      "Expired": "Expired",
       "LoginExpired": "Login Expired",
       "UnexpectedServerError": "An unexpected server error occured.",
       "Previous": "Previous",
@@ -539,6 +540,7 @@
       "LastLogin": "Last Login",
       "UsersDescription": "Invite and manage existing users",
       "MemberRemoveConfirm": "Are you sure you want to remove this member from your organization?",
+      "MemberRemoved": "The member has been removed from the organization",
       "MemberRolesUpdated": "The member's roles have been updated.",
       "InviteEmailHint": "Enter the email addresses (seperated by comma) of the people you want to invite.",
       "Invitee": "Invitee",
@@ -563,7 +565,8 @@
       "ResendInviteConfirm": "Are you sure you want to resend the invite? This will cause the previous invite sent to be invalid.",
       "MembershipRollup": "Membership Rollup",
       "Capacity": "Capacity",
-      "Remaining": "Remaining"
+      "Remaining": "Remaining",
+      "EditMember": "Edit Member"
     }
   },
   {

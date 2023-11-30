@@ -1,14 +1,10 @@
-import { CommonModule } from '@angular/common';
+import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
+import { Invite, Member, Role } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { RoleState } from '@wbs/main/states';
-import { SendInvites } from '../../actions';
 import { InviteValidators } from './invite-validators.service';
-import { Member } from '@wbs/core/models';
 
 declare type InviteError = { email?: string; error: string };
 
@@ -17,22 +13,32 @@ declare type InviteError = { email?: string; error: string };
   templateUrl: './invites-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [InviteValidators],
-  imports: [CommonModule, TranslateModule, RoleListPipe],
+  imports: [NgClass, RoleListPipe, TranslateModule],
 })
 export class InvitesFormComponent {
-  readonly roleList = toSignal(this.store.select(RoleState.definitions));
   roles: string[] = [];
   errors: InviteError[] = [];
   members!: Member[];
+  invites!: Invite[];
+  roleDefinitions!: Role[];
 
   constructor(
     readonly modal: NgbActiveModal,
-    private readonly store: Store,
     private readonly validators: InviteValidators
   ) {}
 
-  setup(members: Member[]): void {
+  setup({
+    invites,
+    members,
+    roles,
+  }: {
+    invites: Invite[];
+    members: Member[];
+    roles: Role[];
+  }): void {
+    this.invites = invites;
     this.members = members;
+    this.roleDefinitions = roles;
   }
 
   toggleRole(role: string): void {
@@ -64,14 +70,15 @@ export class InvitesFormComponent {
         errors.push({ email, error: 'OrgSettings.InviteErrorAlreadyMember' });
       }
 
-      for (const email of this.validators.checkIfAnyInvited(emails)) {
+      for (const email of this.validators.checkIfAnyInvited(
+        this.invites,
+        emails
+      )) {
         errors.push({ email, error: 'OrgSettings.InviteErrorAlreadySent' });
       }
     }
     if (errors.length === 0) {
-      this.store.dispatch(new SendInvites(emails, this.roles)).subscribe(() => {
-        this.modal.close();
-      });
+      this.modal.close({ emails, roles: this.roles });
     } else {
       this.errors = errors;
     }

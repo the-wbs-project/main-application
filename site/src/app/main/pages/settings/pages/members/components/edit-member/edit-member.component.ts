@@ -1,31 +1,25 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
+import { NgClass } from '@angular/common';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { Member } from '@wbs/core/models';
-import { RoleListPipe } from '../../../../../../pipes/role-list.pipe';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Store } from '@ngxs/store';
-import { RoleState } from '@wbs/main/states';
+import { Member, Role } from '@wbs/core/models';
 
 @Component({
   standalone: true,
   selector: 'wbs-edit-member',
   templateUrl: './edit-member.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, NgFor, NgIf, TranslateModule, RoleListPipe],
+  imports: [NgClass, TranslateModule],
 })
-export class EditMemberComponent implements OnInit {
-  readonly roles = toSignal(this.store.select(RoleState.definitions));
-
+export class EditMemberComponent {
   member?: Member;
+  roles?: Role[];
 
-  constructor(readonly modal: NgbActiveModal, readonly store: Store) {}
+  constructor(readonly modal: NgbActiveModal) {}
 
-  ngOnInit(): void {}
-
-  setup(member: Member): void {
+  setup({ member, roles }: { member: Member; roles: Role[] }): void {
     this.member = member;
+    this.roles = roles;
   }
 
   toggleRole(role: string): void {
