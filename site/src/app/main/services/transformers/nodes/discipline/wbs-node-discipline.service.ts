@@ -116,7 +116,7 @@ export class WbsDisciplineNodeTransformer {
         nodes.push(pView, ...children);
         phaseCounter++;
       }
-      dView.children = phaseCounter;
+      dView.children = phaseCounter - 1;
     }
 
     this.setSameAs(nodes);

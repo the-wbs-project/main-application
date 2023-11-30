@@ -9,6 +9,7 @@ import {
 } from './project-view.guards';
 import {
   ChecklistDataService,
+  ChecklistTestService,
   ProjectNavigationService,
   ProjectViewService,
   TimelineService,
@@ -41,6 +42,7 @@ export const routes: Routes = [
         ])
       ),
       ChecklistDataService,
+      ChecklistTestService,
       DialogService,
       ProjectNavigationService,
       ProjectViewService,

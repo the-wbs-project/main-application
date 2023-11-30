@@ -1,30 +1,18 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
-import { Project } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
-import { apply } from 'jspath';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { InitiateChecklist, PerformChecks, SetChecklistData } from '../actions';
 import {
-  CHECKLIST_OPERATORS,
   CHECKLIST_RESULTS,
-  ChecklistExistsTest,
+  ChecklistDataModel,
   ChecklistGroup,
   ChecklistGroupResults,
-  ChecklistItemResults,
-  ChecklistValueTest,
 } from '../models';
-import { ChecklistDataService } from '../services';
-
-interface DataModel {
-  project?: Project;
-  disciplines?: WbsNodeView[];
-  phases?: WbsNodeView[];
-}
+import { ChecklistDataService, ChecklistTestService } from '../services';
 
 interface StateModel {
-  data: DataModel;
+  data: ChecklistDataModel;
   canSubmitForApproval: boolean;
   tests?: ChecklistGroup[];
   results?: ChecklistGroupResults[];
@@ -39,7 +27,10 @@ interface StateModel {
   },
 })
 export class ProjectChecklistState {
-  constructor(private readonly data: ChecklistDataService) {}
+  constructor(
+    private readonly data: ChecklistDataService,
+    private readonly test: ChecklistTestService
+  ) {}
 
   @Selector()
   static canSubmitForApproval(state: StateModel): boolean {
@@ -69,11 +60,13 @@ export class ProjectChecklistState {
     const state = ctx.getState();
     const data = state.data;
 
-    data.project = action.project ?? data.project;
-    data.disciplines = action.disciplines ?? data.disciplines;
-    data.phases = action.phases ?? data.phases;
-
-    ctx.patchState({ data });
+    ctx.patchState({
+      data: {
+        project: action.project ?? data.project,
+        disciplines: action.disciplines ?? data.disciplines,
+        phases: action.phases ?? data.phases,
+      },
+    });
 
     return ctx.dispatch(new PerformChecks());
   }
@@ -86,29 +79,7 @@ export class ProjectChecklistState {
     //
     //  Perform checks
     //
-    const results: ChecklistGroupResults[] = [];
-
-    for (const group of state.tests ?? []) {
-      const items: ChecklistItemResults[] = [];
-
-      for (const test of group.items) {
-        if (test.type === 'exists') {
-          items.push(this.performExists(state.data, test));
-        } else {
-          items.push(this.performValue(state.data, test));
-        }
-      }
-
-      results.push({
-        description: group.description,
-        items,
-        result: items.some((x) => x.result === CHECKLIST_RESULTS.FAIL)
-          ? CHECKLIST_RESULTS.FAIL
-          : items.some((x) => x.result === CHECKLIST_RESULTS.WARN)
-          ? CHECKLIST_RESULTS.WARN
-          : CHECKLIST_RESULTS.PASS,
-      });
-    }
+    const results = this.test.performChecks(state.data, state.tests);
 
     ctx.patchState({
       results,
@@ -116,74 +87,5 @@ export class ProjectChecklistState {
         (x) => x.result === CHECKLIST_RESULTS.FAIL
       ),
     });
-  }
-
-  private performExists(
-    data: DataModel,
-    test: ChecklistExistsTest
-  ): ChecklistItemResults {
-    const results = apply(test.path, data)[0];
-    const passes = results != null;
-    return {
-      description: test.description,
-      result: passes ? CHECKLIST_RESULTS.PASS : CHECKLIST_RESULTS.FAIL,
-      message: passes ? undefined : test.failMessage,
-    };
-  }
-
-  private performValue(
-    data: DataModel,
-    test: ChecklistValueTest
-  ): ChecklistItemResults {
-    let arrayResults = apply(test.path, data);
-    let results: number =
-      test.type === 'array' ? arrayResults.length : arrayResults[0];
-
-    let passes = this.perform(results, test.pass.op, test.pass.value);
-
-    if (passes)
-      return {
-        description: test.description,
-        result: CHECKLIST_RESULTS.PASS,
-      };
-
-    if (test.warn) {
-      passes = this.perform(results, test.warn.op, test.warn.value);
-
-      if (passes)
-        return {
-          description: test.description,
-          result: CHECKLIST_RESULTS.WARN,
-          message: test.warnMessage,
-        };
-    }
-
-    return {
-      description: test.description,
-      result: CHECKLIST_RESULTS.FAIL,
-      message: test.failMessage,
-    };
-  }
-
-  private perform(
-    val1: number,
-    op: CHECKLIST_OPERATORS,
-    val2: number
-  ): boolean {
-    switch (op) {
-      case '=':
-        return val1 == val2;
-      case '!=':
-        return val1 != val2;
-      case '>':
-        return val1 > val2;
-      case '>=':
-        return val1 >= val2;
-      case '<':
-        return val1 < val2;
-      case '<=':
-        return val1 <= val2;
-    }
-    return false;
   }
 }
