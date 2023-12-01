@@ -15,7 +15,7 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   PROJECT_CLAIMS,
   RESOURCE_TYPES,
-  RecordResource,
+  ResourceRecord,
 } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
@@ -42,7 +42,7 @@ import { RecordResourceListComponent } from './components/record-resources-list/
   providers: [RecordResourceValidation],
 })
 export class RecordResourcesPageComponent {
-  @Input({ required: true }) list!: RecordResource[];
+  @Input({ required: true }) list!: ResourceRecord[];
   @Input({ required: true }) owner!: string;
   @Input({ required: true }) projectId!: string;
   @Input({ required: true }) claims!: string[];
@@ -111,7 +111,7 @@ export class RecordResourcesPageComponent {
     });
   }
 
-  saveReordered(records: RecordResource[]): void {
+  saveReordered(records: ResourceRecord[]): void {
     let obs: Observable<void>[] = [];
 
     for (const record of records) {
@@ -131,7 +131,7 @@ export class RecordResourcesPageComponent {
 
   private uploadAndSave(
     rawFile: FileInfo,
-    data: Partial<RecordResource>
+    data: Partial<ResourceRecord>
   ): Observable<void> {
     if (!data.id) data.id = IdService.generate();
 
@@ -143,8 +143,8 @@ export class RecordResourcesPageComponent {
     );
   }
 
-  private save(data: Partial<RecordResource>): Observable<void> {
-    const resource: RecordResource = {
+  private save(data: Partial<ResourceRecord>): Observable<void> {
+    const resource: ResourceRecord = {
       id: data.id ?? IdService.generate(),
       createdOn: data.createdOn ?? new Date(),
       lastModified: new Date(),
@@ -152,9 +152,6 @@ export class RecordResourcesPageComponent {
       description: data.description!,
       type: data.type!,
       resource: data.resource,
-
-      ownerId: this.owner,
-      recordId: this.taskId ?? this.projectId,
       order: data.order ?? Math.max(...this.list.map((x) => x.order), 0) + 1,
     };
 

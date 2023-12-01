@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { RecordResource } from '@wbs/core/models';
+import { ResourceRecord } from '@wbs/core/models';
 import { Utils, orgResolve, userIdResolve } from '@wbs/main/services';
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import {
@@ -19,7 +19,7 @@ import {
 } from '../services';
 import { ProjectState, TasksState } from '../states';
 
-export const resourceResolve: ResolveFn<RecordResource[]> = (
+export const resourceResolve: ResolveFn<ResourceRecord[]> = (
   route: ActivatedRouteSnapshot
 ) => {
   const org = Utils.getOrgName(inject(Store), route);
@@ -30,7 +30,7 @@ export const resourceResolve: ResolveFn<RecordResource[]> = (
   return inject(DataServiceFactory).projectResources.getAsync(org, projectId);
 };
 
-export const taskResourceResolve: ResolveFn<RecordResource[]> = (
+export const taskResourceResolve: ResolveFn<ResourceRecord[]> = (
   route: ActivatedRouteSnapshot
 ) => {
   const org = Utils.getOrgName(inject(Store), route);

@@ -8,7 +8,7 @@ import {
   PDFViewerModule,
   PDFViewerTool,
 } from '@progress/kendo-angular-pdfviewer';
-import { RecordResource } from '@wbs/core/models';
+import { ResourceRecord } from '@wbs/core/models';
 import { YouTubeSizerDirective } from '../../directives/youtube-sizer.directive';
 import { ResourceObjectPipe } from '../../pipes/resource-object.pipe';
 
@@ -29,7 +29,7 @@ import { ResourceObjectPipe } from '../../pipes/resource-object.pipe';
 })
 export class ResourceViewLinkComponent {
   @Input({ required: true }) owner!: string;
-  @Input({ required: true }) record!: RecordResource;
+  @Input({ required: true }) record!: ResourceRecord;
 
   readonly faEye = faEye;
   readonly tools: PDFViewerTool[] = [

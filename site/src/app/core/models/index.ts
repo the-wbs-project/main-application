@@ -22,7 +22,7 @@ export * from './project-category-changes.model';
 export * from './project-import-result.model';
 export * from './project-upload-data.model';
 export * from './project.model';
-export * from './record-resource.model';
+export * from './resource-record.model';
 export * from './resource-sections.model';
 export * from './role-ids.model';
 export * from './role.model';

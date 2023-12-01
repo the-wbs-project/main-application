@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { RecordResource } from '../models';
+import { ResourceRecord } from '../models';
 
 export class ProjectResourcesDataService {
   constructor(private readonly http: HttpClient) {}
@@ -10,13 +10,13 @@ export class ProjectResourcesDataService {
     owner: string,
     projectId: string,
     taskId?: string
-  ): Observable<RecordResource[]> {
+  ): Observable<ResourceRecord[]> {
     const url = taskId
       ? `api/projects/owner/${owner}/id/${projectId}/nodes/${taskId}/resources`
       : `api/projects/owner/${owner}/id/${projectId}/resources`;
 
     return this.http
-      .get<RecordResource[]>(url)
+      .get<ResourceRecord[]>(url)
       .pipe(map((list) => this.cleanList(list)));
   }
 
@@ -24,7 +24,7 @@ export class ProjectResourcesDataService {
     ownerId: string,
     projectId: string,
     taskId: string | undefined,
-    resource: RecordResource
+    resource: ResourceRecord
   ): Observable<void> {
     const url = taskId
       ? `api/projects/owner/${ownerId}/id/${projectId}/nodes/${taskId}/resources/${resource.id}`
@@ -33,7 +33,7 @@ export class ProjectResourcesDataService {
     return this.http.put<void>(url, resource);
   }
 
-  private cleanList(nodes: RecordResource[]): RecordResource[] {
+  private cleanList(nodes: ResourceRecord[]): ResourceRecord[] {
     for (const node of nodes) {
       if (typeof node.createdOn === 'string')
         node.createdOn = new Date(node.createdOn);

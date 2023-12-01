@@ -15,16 +15,18 @@ public class ProjectsController : ControllerBase
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
     private readonly ProjectApprovalDataService approvalDataService;
-    private readonly RecordResourceDataService resourceDataService;
+    private readonly ProjectResourceDataService projectResourceDataService;
+    private readonly ProjectNodeResourceDataService nodeResourceDataService;
 
-    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, RecordResourceDataService resourceDataService, ProjectApprovalDataService approvalDataService)
+    public ProjectsController(ILogger<ProjectsController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectApprovalDataService approvalDataService, ProjectResourceDataService projectResourceDataService, ProjectNodeResourceDataService nodeResourceDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
         this.approvalDataService = approvalDataService;
-        this.resourceDataService = resourceDataService;
+        this.projectResourceDataService = projectResourceDataService;
+        this.nodeResourceDataService = nodeResourceDataService;
     }
 
     [Authorize]
@@ -164,7 +166,7 @@ public class ProjectsController : ControllerBase
                 if (!await projectDataService.VerifyAsync(conn, owner, id))
                     return BadRequest("Project not found for the owner provided.");
 
-                return Ok(await resourceDataService.GetListByRecordIdAsync(conn, id));
+                return Ok(await projectResourceDataService.GetListAsync(conn, id));
             }
         }
         catch (Exception ex)
@@ -191,7 +193,7 @@ public class ProjectsController : ControllerBase
                 if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
                     return BadRequest("Node not found for the project provided.");
 
-                return Ok(await resourceDataService.GetListByRecordIdAsync(conn, nodeId));
+                return Ok(await nodeResourceDataService.GetListAsync(conn, projectId, nodeId));
             }
         }
         catch (Exception ex)
@@ -201,7 +203,7 @@ public class ProjectsController : ControllerBase
         }
     }
 
-    [Authorize]
+    /*[Authorize]
     [HttpGet("owner/{owner}/id/{id}/resources/{resourceId}")]
     public async Task<IActionResult> GetProjectResourceById(string owner, string id, string resourceId)
     {
@@ -222,9 +224,9 @@ public class ProjectsController : ControllerBase
             telemetry.TrackException(ex);
             return new StatusCodeResult(500);
         }
-    }
+    }*/
 
-    [Authorize]
+    /*[Authorize]
     [HttpGet("owner/{owner}/id/{projectId}/nodes/{nodeId}/resources/{resourceId}")]
     public async Task<IActionResult> GeTaskResourceById(string owner, string projectId, string nodeId, string resourceId)
     {
@@ -248,20 +250,14 @@ public class ProjectsController : ControllerBase
             telemetry.TrackException(ex);
             return new StatusCodeResult(500);
         }
-    }
+    }*/
 
     [Authorize]
     [HttpPut("owner/{owner}/id/{projectId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutProjectResources(string owner, string projectId, string resourceId, RecordResource resources)
+    public async Task<IActionResult> PutProjectResources(string owner, string projectId, string resourceId, ResourceRecord resource)
     {
         try
         {
-            if (resources.RecordId != projectId)
-                return BadRequest("The project id in the body must match the project id in the url");
-
-            if (resources.Id != resourceId)
-                return BadRequest("The resource id in the body must match the resource id in the url");
-
             using (var conn = projectDataService.CreateConnection())
             {
                 await conn.OpenAsync();
@@ -269,7 +265,7 @@ public class ProjectsController : ControllerBase
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                await resourceDataService.SetAsync(conn, resources);
+                await projectResourceDataService.SetAsync(conn, owner, projectId, resource);
 
                 return NoContent();
             }
@@ -283,16 +279,10 @@ public class ProjectsController : ControllerBase
 
     [Authorize]
     [HttpPut("owner/{owner}/id/{projectId}/nodes/{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutTaskResources(string owner, string projectId, string nodeId, string resourceId, RecordResource model)
+    public async Task<IActionResult> PutTaskResources(string owner, string projectId, string nodeId, string resourceId, ResourceRecord resource)
     {
         try
         {
-            if (model.RecordId != nodeId)
-                return BadRequest("The node id in the body must match the node id in the url");
-
-            if (model.Id != resourceId)
-                return BadRequest("The resource id in the body must match the resource id in the url");
-
             using (var conn = projectDataService.CreateConnection())
             {
                 await conn.OpenAsync();
@@ -303,7 +293,7 @@ public class ProjectsController : ControllerBase
                 if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
                     return BadRequest("Node not found for the project provided.");
 
-                await resourceDataService.SetAsync(conn, model);
+                await nodeResourceDataService.SetAsync(conn, owner, projectId, nodeId, resource);
 
                 return NoContent();
             }

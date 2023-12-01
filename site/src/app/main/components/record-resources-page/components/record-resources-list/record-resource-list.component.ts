@@ -21,7 +21,7 @@ import {
   DropTargetContainerDirective,
   DropTargetEvent,
 } from '@progress/kendo-angular-utils';
-import { PROJECT_CLAIMS, RecordResource } from '@wbs/core/models';
+import { PROJECT_CLAIMS, ResourceRecord } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { DragDropService, TableHelper } from '@wbs/main/services';
@@ -50,8 +50,8 @@ import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-l
 export class RecordResourceListComponent {
   @Input({ required: true }) owner!: string;
   @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) list!: RecordResource[];
-  @Output() readonly save = new EventEmitter<RecordResource[]>();
+  @Input({ required: true }) list!: ResourceRecord[];
+  @Output() readonly save = new EventEmitter<ResourceRecord[]>();
 
   @ViewChild(ListViewComponent) listview!: ListViewComponent;
   @ViewChild('wrapper', { read: DragTargetContainerDirective })
