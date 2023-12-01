@@ -5,11 +5,11 @@ import { ProjectCreateService } from '../services';
 
 @Component({
   standalone: true,
-  template: `<p>
+  template: `<div class="w-100 tx-center pd-t-40">
     <button class="btn btn-primary" (click)="continue()">
       {{ 'General.Continue' | translate }}
     </button>
-  </p> `,
+  </div> `,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
 })

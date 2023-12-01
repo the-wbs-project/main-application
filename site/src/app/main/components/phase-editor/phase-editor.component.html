@@ -1,104 +1,103 @@
-<div class="d-flex flex-flow-col flex-align-stretch">
-  @if (showButtons) {
-  <div class="pd-b-10 text-center">
-    <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
-      <fa-icon [icon]="faPlus" />
-      {{ "General.Add" | translate }}
-    </button>
+@if (showButtons) {
+<div class="pd-b-10 text-center">
+  <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
+    <fa-icon [icon]="faPlus" />
+    {{ "General.Add" | translate }}
+  </button>
 
-    @if (showSave) {
-    <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
-      <fa-icon [icon]="faFloppyDisk" />
-      {{ "General.Save" | translate }}
-    </button>
-    }
-  </div>
+  @if (showSave) {
+  <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
+    <fa-icon [icon]="faFloppyDisk" />
+    {{ "General.Save" | translate }}
+  </button>
   }
-  <div
-    #wrapper
-    kendoDragTargetContainer
-    kendoDropTargetContainer
-    dragTargetFilter=".k-master-row, .k-listview-item"
-    dropTargetFilter=".k-master-row, .k-listview-item"
-    [dragData]="dragDrop.dragData"
-    [hint]="{ hintClass: 'row-hint' }"
-    (onDrop)="onDrop($event)"
-    dragHandle=".k-i-reorder"
+</div>
+}
+<div
+  #wrapper
+  kendoDragTargetContainer
+  kendoDropTargetContainer
+  dragTargetFilter=".k-master-row, .k-listview-item"
+  dropTargetFilter=".k-master-row, .k-listview-item"
+  [dragData]="dragDrop.dragData"
+  [hint]="{ hintClass: 'row-hint' }"
+  (onDrop)="onDrop($event)"
+  dragHandle=".k-i-reorder"
+>
+  <kendo-listview
+    [data]="categories"
+    itemClass="rr-item rr-list-item"
+    containerClass="overflow-hidden"
+    data-kendo-listview-index="0"
   >
-    <kendo-listview
-      [data]="categories"
-      itemClass="rr-item rr-list-item"
-      data-kendo-listview-index="0"
+    <ng-template
+      kendoListViewItemTemplate
+      let-dataItem="dataItem"
+      let-index="index"
     >
-      <ng-template
-        kendoListViewItemTemplate
-        let-dataItem="dataItem"
-        let-index="index"
+      <div
+        class="list-group-item pd-5 flex-align-center d-none d-sm-grid"
+        style="gap: 5px; grid-template-columns: 25px 35px auto 60px"
       >
-        <div
-          class="list-group-item pd-5 flex-align-center d-none d-sm-grid"
-          style="gap: 5px; grid-template-columns: 25px 35px auto 60px"
-        >
-          <div class="tx-center">
-            <span class="k-i-reorder">
-              <fa-icon [icon]="faBars" />
-            </span>
-          </div>
+        <div class="tx-center">
+          <span class="k-i-reorder">
+            <fa-icon [icon]="faBars" />
+          </span>
+        </div>
 
-          <div class="tx-semibold tx-center tx-24">
-            @if(dataItem.selected) {
-            {{ dataItem.number }}. }
+        <div class="tx-semibold tx-center tx-24">
+          @if(dataItem.selected) {
+          {{ dataItem.number }}. }
+        </div>
+        <div>
+          <div class="tx-16">
+            {{ dataItem.label | translate }}
           </div>
-          <div>
-            <div class="tx-16">
-              {{ dataItem.label | translate }}
-            </div>
-            <div class="tx-12 font-italic">
-              {{ dataItem.description | translate }}
-            </div>
+          <div class="tx-12 font-italic">
+            {{ dataItem.description | translate }}
           </div>
-          <div class="tx-center">
+        </div>
+        <div class="tx-center">
+          <wbs-switch
+            [(value)]="dataItem.selected"
+            [confirmMessage]="dataItem.confirm?.label"
+            [confirmData]="dataItem.confirm?.data"
+            (valueChange)="changed()"
+          />
+        </div>
+      </div>
+      <div
+        class="list-group-item pd-5 flex-align-center d-grid d-sm-none"
+        style="gap: 5px; grid-template-columns: 25px 35px auto"
+      >
+        <div class="tx-center">
+          <span class="k-i-reorder">
+            <fa-icon [icon]="faBars" />
+          </span>
+        </div>
+
+        <div class="tx-semibold tx-center tx-24">
+          @if(dataItem.selected) {
+          {{ dataItem.number }}. }
+        </div>
+        <div class="tx-left">
+          <div class="d-flex tx-16 w-100 flex-align-center">
+            {{ dataItem.label | translate }}
+
             <wbs-switch
+              [ngClass]="'pos-absolute r-10'"
+              size="sm"
               [(value)]="dataItem.selected"
               [confirmMessage]="dataItem.confirm?.label"
               [confirmData]="dataItem.confirm?.data"
               (valueChange)="changed()"
             />
           </div>
-        </div>
-        <div
-          class="list-group-item pd-5 flex-align-center d-grid d-sm-none"
-          style="gap: 5px; grid-template-columns: 25px 35px auto"
-        >
-          <div class="tx-center">
-            <span class="k-i-reorder">
-              <fa-icon [icon]="faBars" />
-            </span>
-          </div>
-
-          <div class="tx-semibold tx-center tx-24">
-            @if(dataItem.selected) {
-            {{ dataItem.number }}. }
-          </div>
-          <div class="tx-left">
-            <div class="d-flex tx-16 w-100 flex-align-center">
-              {{ dataItem.label | translate }}
-
-              <wbs-switch
-                [ngClass]="'pos-absolute r-10'"
-                size="sm"
-                [(value)]="dataItem.selected"
-                [confirmMessage]="dataItem.confirm?.label"
-                [confirmData]="dataItem.confirm?.data"
-                (valueChange)="changed()"
-              />
-            </div>
-            <div class="tx-12 font-italic">
-              {{ dataItem.description | translate }}
-            </div>
+          <div class="tx-12 font-italic">
+            {{ dataItem.description | translate }}
           </div>
         </div>
-      </ng-template>
-    </kendo-listview>
-  </div>
+      </div>
+    </ng-template>
+  </kendo-listview>
 </div>

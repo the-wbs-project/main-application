@@ -5,7 +5,7 @@ export const PROJECT_CREATION_PAGES = {
   //LIB_OR_SCRATCH: 'library-or-scratch',
   //NODE_VIEW: 'node-view',
   PHASES: 'phases',
-  DESCIPLINES: 'disciplines',
+  DISCIPLINES: 'disciplines',
   ROLES: 'roles',
   SAVING: 'saving',
 };

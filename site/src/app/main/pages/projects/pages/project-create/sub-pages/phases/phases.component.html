@@ -1,22 +1,13 @@
-<div
-  class="d-flex flex-flow-col flex-align-stretch"
-  appFillElement
-  [paddingBottom]="55"
->
-  <div class="scroll mg-b-10 w-100" style="flex: 1 1 auto">
+<div class="d-flex flex-flow-col h-100">
+  <div class="mg-t-10 w-100 flex-fill scroll">
     @if (categories) {
     <wbs-phase-editor [(categories)]="categories" />
     }
   </div>
-
-  <div class="w-100 text-center" style="flex: 0 1 20px">
-    <div class="wd-600 mx-wd-100p">
-      <wbs-project-create-footer
-        view="bc"
-        [disableContinue]="disable(categories)"
-        (backClicked)="back()"
-        (continueClicked)="continue()"
-      />
-    </div>
-  </div>
+  <wbs-project-create-footer
+    view="bc"
+    [disableContinue]="disable(categories)"
+    (backClicked)="back()"
+    (continueClicked)="continue()"
+  />
 </div>

@@ -129,6 +129,10 @@ export class ProjectCreateState {
       description: '',
       roles: new Map<string, string[]>(),
       title: '',
+      category: undefined,
+      disciplines: undefined,
+      phases: undefined,
+      isSaving: false,
     });
   }
 

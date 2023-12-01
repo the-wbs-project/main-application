@@ -68,7 +68,7 @@ export class RolesComponent implements OnInit {
   }
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.CATEGORY);
+    this.service.nav(this.org, PROJECT_CREATION_PAGES.DISCIPLINES);
   }
 
   continue(): void {

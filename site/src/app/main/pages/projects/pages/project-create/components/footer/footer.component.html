@@ -1,46 +1,22 @@
-<div class="d-ib wd-100p">
-  @if (view === 'b-c') {
-  <div class="wd-100p tx-center">
-    <button
-      [disabled]="disableBack"
-      class="btn btn-warning"
-      (click)="backClicked.emit()"
-    >
-      {{ "General.Back" | translate }}
-    </button>
+<div class="mg-t-10 w-100 tx-center">
+  <div class="d-ib wd-600 mx-wd-100p">
+    <div class="d-ib wd-50p tx-left">
+      <button
+        class="btn btn-warning"
+        [disabled]="disableBack"
+        (click)="backClicked.emit()"
+      >
+        {{ "General.Back" | translate }}
+      </button>
+    </div>
+    <div class="d-ib wd-50p tx-right">
+      <button
+        class="btn btn-primary"
+        [disabled]="disableContinue"
+        (click)="continueClicked.emit()"
+      >
+        {{ "General.Continue" | translate }}
+      </button>
+    </div>
   </div>
-  } @else if (view === 'c-c') {
-  <div class="wd-100p tx-center">
-    <button
-      class="btn btn-primary"
-      [disabled]="disableContinue"
-      (click)="continueClicked.emit()"
-    >
-      {{ "General.Continue" | translate }}
-    </button>
-  </div>
-  } @else {
-  <div class="d-ib wd-50p text-start">
-    @if (view === 'b' || view === 'bc') {
-    <button
-      class="btn btn-warning"
-      [disabled]="disableBack"
-      (click)="backClicked.emit()"
-    >
-      {{ "General.Back" | translate }}
-    </button>
-    }
-  </div>
-  <div class="d-ib wd-50p text-end">
-    @if (view === 'c' || view === 'bc') {
-    <button
-      class="btn btn-primary"
-      [disabled]="disableContinue"
-      (click)="continueClicked.emit()"
-    >
-      {{ "General.Continue" | translate }}
-    </button>
-    }
-  </div>
-  }
 </div>

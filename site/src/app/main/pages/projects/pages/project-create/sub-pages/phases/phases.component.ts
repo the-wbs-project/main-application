@@ -52,7 +52,7 @@ export class PhaseComponent implements OnInit {
     if (phases.length === 0) return;
 
     this.store.dispatch(new PhasesChosen(phases));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.DESCIPLINES);
+    this.service.nav(this.org, PROJECT_CREATION_PAGES.DISCIPLINES);
   }
 
   disable(categories: CategorySelection[] | undefined): boolean {
