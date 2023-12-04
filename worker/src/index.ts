@@ -61,6 +61,9 @@ app.get('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginServic
 app.put('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 
+app.get('api/library/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
+app.put('api/library/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
+
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
 //app.get('api/discussions/:owner/:associationId/:id', verifyJwt, verifyMembership, Http.discussions.getAsync);

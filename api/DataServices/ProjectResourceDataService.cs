@@ -32,7 +32,7 @@ public class ProjectResourceDataService : ResourceRecordDataService
         return await ToList(cmd);
     }
 
-    public async Task SetAsync(ResourceRecord resource, string owner, string projectId)
+    public async Task SetAsync(string owner, string projectId, ResourceRecord resource)
     {
         using (var conn = new SqlConnection(cs))
         {

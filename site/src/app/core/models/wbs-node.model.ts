@@ -11,7 +11,3 @@ export interface WbsNode extends TaggedObject {
   description?: string | null;
   disciplineIds?: string[] | null;
 }
-
-export interface ProjectNode extends WbsNode {
-  projectId: string;
-}

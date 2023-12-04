@@ -118,7 +118,7 @@ public class ProjectsController : ControllerBase
 
     [Authorize]
     [HttpPut("owner/{owner}/id/{id}/nodes")]
-    public async Task<IActionResult> PutNode(string owner, string id, ProjectNodeSaveRecord record)
+    public async Task<IActionResult> PutNode(string owner, string id, BulkSaveRecord<ProjectNode> record)
     {
         try
         {

@@ -63,7 +63,7 @@ public class ProjectNodeDataService : BaseDbService
         return false;
     }
 
-    public async Task SetSaveRecordAsync(string owner, string projectId, ProjectNodeSaveRecord record)
+    public async Task SetSaveRecordAsync(string owner, string projectId, BulkSaveRecord<ProjectNode> record)
     {
         using (var conn = CreateConnection())
         {
@@ -72,7 +72,7 @@ public class ProjectNodeDataService : BaseDbService
         }
     }
 
-    public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string projectId, ProjectNodeSaveRecord record)
+    public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string projectId, BulkSaveRecord<ProjectNode> record)
     {
         foreach (var upsert in record.upserts)
             await SetAsync(conn, owner, upsert);

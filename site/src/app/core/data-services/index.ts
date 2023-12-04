@@ -6,6 +6,10 @@ import { AiChatDataService } from './ai-chat.data-service';
 import { ChatDataService } from './chat.data-service';
 import { ClaimsDataService } from './claims.data-service';
 import { JiraDataService } from './jira.data-service';
+import { LibraryEntryDataService } from './library-entry.data-service';
+import { LibraryEntryNodeDataService } from './library-entry-node.data-service';
+import { LibraryEntryResourcesDataService } from './library-entry-resources.data-service';
+import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
 import { ProjectExportDataService } from './project-export.data-service';
@@ -27,6 +31,12 @@ export class DataServiceFactory {
   readonly chat = new ChatDataService(this.http);
   readonly claims = new ClaimsDataService(this.http);
   readonly jira = new JiraDataService(this.http);
+  readonly libraryEntries = new LibraryEntryDataService(this.http);
+  readonly libraryEntryNodes = new LibraryEntryNodeDataService(this.http);
+  readonly libraryEntryResources = new LibraryEntryResourcesDataService(
+    this.http
+  );
+  readonly libraryEntryVersions = new LibraryEntryVersionDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
   readonly projectApprovals = new ProjectApprovalDataService(this.http);
