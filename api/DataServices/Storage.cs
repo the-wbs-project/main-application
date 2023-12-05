@@ -1,4 +1,5 @@
-﻿using Azure;
+﻿using System.Reflection.Metadata;
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 
@@ -32,7 +33,7 @@ public class Storage
         }
     }
 
-    public async Task SaveFileAsync(string containerName, string fileName, byte[] data, bool snapshot)
+    public async Task<BlobClient> SaveFileAsync(string containerName, string fileName, byte[] data, bool snapshot)
     {
         var container = await GetContainerAsync(containerName);
         var blob = container.GetBlobClient(fileName);
@@ -40,6 +41,8 @@ public class Storage
         if (snapshot && await blob.ExistsAsync()) await blob.CreateSnapshotAsync();
 
         await blob.UploadAsync(new BinaryData(data));
+
+        return blob;
     }
 
     public async Task SaveFileAsync(string containerName, string fileName, string data, bool snapshot)

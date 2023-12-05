@@ -3,7 +3,14 @@ import { Env, Variables } from './config';
 import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 
-export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
+export const ORIGIN_PASSES: string[] = [
+  'api/checklists',
+  'api/import/*',
+  'api/export/*',
+  'api/activities/*',
+  'api/activities',
+  'api/activities/projects',
+];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //
@@ -48,12 +55,6 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('api/checklists', kv.checklists, verifyJwt, OriginService.pass);
-
-app.get('api/activities/*', verifyJwt, OriginService.pass);
-app.put('api/activities', verifyJwt, OriginService.pass);
-app.put('api/activities/projects', verifyJwt, OriginService.pass);
-
 app.get('api/projects/owner/:owner/id/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
 app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);

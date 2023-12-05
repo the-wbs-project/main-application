@@ -8,5 +8,6 @@ public class DocumentProcessResults
     public DateTime timestamp { get; set; }
     public string url { get; set; }
     public AnalyzeResult aiResults { get; set; }
-    public List<object> processResults { get; set; }
+    public List<DocumentNode> processResults { get; set; }
+    public List<string> unusedTexts { get; set; }
 }
