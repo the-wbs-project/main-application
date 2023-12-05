@@ -1,9 +1,9 @@
-using System.Net;
-using System.Net.Http.Headers;
-using System.Text.Json;
 using Auth0.ManagementApi.Models;
 using Auth0.ManagementApi.Paging;
 using Newtonsoft.Json;
+using System.Net;
+using System.Net.Http.Headers;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.Services;
@@ -13,7 +13,7 @@ public class OrganizationDataService : BaseAuthDataService
     private readonly ILogger<OrganizationDataService> logger;
     protected Dictionary<string, string> orgIds = new Dictionary<string, string>();
 
-    public OrganizationDataService(ILogger<OrganizationDataService> logger, IConfiguration config) : base(logger, config)
+    public OrganizationDataService(ILogger<OrganizationDataService> logger, AppConfig config) : base(logger, config)
     {
         this.logger = logger;
     }

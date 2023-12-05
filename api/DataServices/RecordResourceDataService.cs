@@ -1,14 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class RecordResourceDataService : BaseDbService
+public class RecordResourceDataService : BaseSqlDbService
 {
     private readonly ILogger<RecordResourceDataService> _logger;
 
-    public RecordResourceDataService(ILogger<RecordResourceDataService> logger, IConfiguration config) : base(config)
+    public RecordResourceDataService(ILogger<RecordResourceDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

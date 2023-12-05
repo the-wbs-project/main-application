@@ -11,9 +11,9 @@ public class JiraHelpDeskDataService
     protected readonly JiraHelpDeskConfig config;
     private readonly ILogger<JiraHelpDeskDataService> logger;
 
-    public JiraHelpDeskDataService(ILogger<JiraHelpDeskDataService> logger, JiraHelpDeskConfig config)
+    public JiraHelpDeskDataService(ILogger<JiraHelpDeskDataService> logger, AppConfig config)
     {
-        this.config = config;
+        this.config = config.Jira;
         this.logger = logger;
     }
 

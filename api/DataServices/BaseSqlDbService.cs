@@ -1,19 +1,20 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using System.Text.Json;
+using Wbs.Api.Configuration;
 
 namespace Wbs.Api.DataServices;
 
-public abstract class BaseDbService
+public abstract class BaseSqlDbService
 {
-    protected readonly IConfiguration config;
+    protected readonly AppConfig config;
 
-    public BaseDbService(IConfiguration config)
+    public BaseSqlDbService(AppConfig config)
     {
         this.config = config;
     }
 
-    protected string cs { get { return config["DbConnection"]; } }
+    protected string cs { get { return config.Database.SqlConnectionString; } }
 
     public SqlConnection CreateConnection() => new SqlConnection(cs);
 

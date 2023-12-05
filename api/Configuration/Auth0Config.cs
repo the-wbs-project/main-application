@@ -1,21 +1,21 @@
-namespace Wbs.Api.Configurations;
+namespace Wbs.Api.Configuration;
 
 public class Auth0Config
 {
-    public string Domain { get; set; }
-    public string Audience { get; set; }
-    public string ClientId { get; set; }
-    public string Connection { get; set; }
-    public string M2MClientId { get; set; }
-    public string M2MClientSecret { get; set; }
-
-    public Auth0Config(IConfiguration config)
+    public Auth0Config(string domain, string audience, string clientId, string connection, string m2MClientId, string m2MClientSecret)
     {
-        Domain = config["Domain"];
-        Audience = config["Audience"];
-        ClientId = config["ClientId"];
-        Connection = config["Connection"];
-        M2MClientId = config["M2MClientId"];
-        M2MClientSecret = config["M2MClientSecret"];
+        Domain = domain;
+        Audience = audience;
+        ClientId = clientId;
+        Connection = connection;
+        M2MClientId = m2MClientId;
+        M2MClientSecret = m2MClientSecret;
     }
+
+    public string Domain { get; private set; }
+    public string Audience { get; private set; }
+    public string ClientId { get; private set; }
+    public string Connection { get; private set; }
+    public string M2MClientId { get; private set; }
+    public string M2MClientSecret { get; set; }
 }

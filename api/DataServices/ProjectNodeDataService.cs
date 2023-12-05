@@ -1,14 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class ProjectNodeDataService : BaseDbService
+public class ProjectNodeDataService : BaseSqlDbService
 {
     private readonly ILogger<ProjectNodeDataService> _logger;
 
-    public ProjectNodeDataService(ILogger<ProjectNodeDataService> logger, IConfiguration config) : base(config)
+    public ProjectNodeDataService(ILogger<ProjectNodeDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

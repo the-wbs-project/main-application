@@ -42,7 +42,6 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 //  Configurations
 //
 builder.Services.AddSingleton<AppConfig>();
-builder.Services.AddSingleton<JiraHelpDeskConfig>();
 //
 //  Data Services
 //

@@ -5,20 +5,18 @@ using Wbs.Api.Configuration;
 
 namespace Wbs.Api.DataServices;
 
-public class ResourcesDataService
+public class ResourcesDataService : BaseSqlDbService
 {
     private readonly ILogger<ResourcesDataService> _logger;
-    private readonly AppConfig config;
 
-    public ResourcesDataService(ILogger<ResourcesDataService> logger, AppConfig config)
+    public ResourcesDataService(ILogger<ResourcesDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
-        this.config = config;
     }
 
     public async Task<List<string>> GetCategoriesAsync()
     {
-        using (var conn = new SqlConnection(config.sqlConnectionString))
+        using (var conn = new SqlConnection(cs))
         {
             await conn.OpenAsync();
 
@@ -41,7 +39,7 @@ public class ResourcesDataService
 
     public async Task<Dictionary<string, Dictionary<string, string>>> GetAllAsync(string locale)
     {
-        using (var conn = new SqlConnection(config.sqlConnectionString))
+        using (var conn = new SqlConnection(cs))
         {
             await conn.OpenAsync();
 
@@ -74,7 +72,7 @@ public class ResourcesDataService
 
     public async Task<Dictionary<string, string>> GetBySectionAsync(string locale, string section)
     {
-        using (var conn = new SqlConnection(config.sqlConnectionString))
+        using (var conn = new SqlConnection(config.Database.SqlConnectionString))
         {
             await conn.OpenAsync();
 
@@ -105,7 +103,7 @@ public class ResourcesDataService
 
     public async Task SetAsync(string locale, string section, Dictionary<string, string> values)
     {
-        using (var conn = new SqlConnection(config.sqlConnectionString))
+        using (var conn = new SqlConnection(config.Database.SqlConnectionString))
         {
             await conn.OpenAsync();
             await SetAsync(conn, locale, section, values);

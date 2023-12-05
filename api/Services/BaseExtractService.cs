@@ -51,7 +51,7 @@ public abstract class BaseExtractService
 
     protected async Task<Dictionary<string, string>> GetDisciplinesAsync(string culture)
     {
-        using (var conn = new SqlConnection(config.sqlConnectionString))
+        using (var conn = new SqlConnection(config.Database.SqlConnectionString))
         {
             await conn.OpenAsync();
 

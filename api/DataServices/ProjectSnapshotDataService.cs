@@ -1,13 +1,14 @@
 using Microsoft.Data.SqlClient;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class ProjectSnapshotDataService : BaseDbService
+public class ProjectSnapshotDataService : BaseSqlDbService
 {
     private readonly ILogger<ProjectSnapshotDataService> logger;
 
-    public ProjectSnapshotDataService(ILogger<ProjectSnapshotDataService> logger, IConfiguration config) : base(config)
+    public ProjectSnapshotDataService(ILogger<ProjectSnapshotDataService> logger, AppConfig config) : base(config)
     {
         this.logger = logger;
     }

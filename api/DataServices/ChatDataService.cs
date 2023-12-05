@@ -1,14 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class ChatDataService : BaseDbService
+public class ChatDataService : BaseSqlDbService
 {
     private readonly ILogger<ChatDataService> _logger;
 
-    public ChatDataService(ILogger<ChatDataService> logger, IConfiguration config) : base(config)
+    public ChatDataService(ILogger<ChatDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

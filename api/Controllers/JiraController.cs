@@ -10,13 +10,11 @@ namespace Wbs.Api.Controllers;
 public class JiraController : ControllerBase
 {
     private readonly TelemetryClient telemetry;
-    private readonly JiraHelpDeskConfig config;
     private readonly JiraSyncService service;
 
-    public JiraController(TelemetryClient telemetry, JiraHelpDeskConfig config, JiraSyncService service)
+    public JiraController(TelemetryClient telemetry, JiraSyncService service)
     {
         this.telemetry = telemetry;
-        this.config = config;
         this.service = service;
     }
 
