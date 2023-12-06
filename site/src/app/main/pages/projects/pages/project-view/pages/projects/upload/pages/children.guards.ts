@@ -2,12 +2,10 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { Resources } from '@wbs/core/services';
 import { SetBreadcrumbs } from '@wbs/main/actions';
-import { MembershipState } from '@wbs/main/states';
-import { forkJoin, of } from 'rxjs';
+import { of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { SetHeaderInformation } from '../../project-create/actions';
+import { SetHeaderInformation } from '../../../../../project-create/actions';
 import { SetAsStarted } from '../actions';
 import { ProjectUploadState } from '../states';
 

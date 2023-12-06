@@ -52,7 +52,7 @@ export class ProjectViewService {
     if (action === 'download') {
       this.downloadTasks();
     } else if (action === 'upload') {
-      this.nav.toProject(this.projectId, PROJECT_PAGES.UPLOAD);
+      this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
     } else if (taskId) {
       if (action === 'addSub') {
         this.taskCreate.open(this.projectDisciplines).subscribe((results) => {
@@ -84,7 +84,7 @@ export class ProjectViewService {
   }
 
   uploadTasks(): void {
-    this.nav.toProject(this.projectId, PROJECT_PAGES.UPLOAD);
+    this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
   }
 
   downloadTasks(project?: Project, phases?: WbsNodeView[]): void {
