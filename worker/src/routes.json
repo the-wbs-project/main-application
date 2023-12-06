@@ -1,0 +1,22 @@
+{
+    "VERIFY_JWT_GET": [
+        "api/checklists",
+        "api/activities/*",
+        "api/chat/thread/:threadId/comments/:timestamp/count"
+    ],
+    "VERIFY_JWT_POST": [
+        "api/import/*",
+        "api/export/*",
+        "api/activities",
+        "api/activities/projects"
+    ],
+    "VERIFY_JWT_MEMBERSHIP_GET": [
+        "api/projects/owner/:owner",
+        "api/projects/owner/:owner/*"
+    ],
+    "VERIFY_JWT_MEMBERSHIP_POST": [],
+    "VERIFY_JWT_MEMBERSHIP_PUT": [
+        "api/projects/owner/:owner",
+        "api/projects/owner/:owner/*"
+    ]
+}
