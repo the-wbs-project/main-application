@@ -90,13 +90,14 @@ public class ImportController : ControllerBase
 
                 fileName = $"{DateTime.Now:yyyyMMddHHmmss}-${owner}-${fileName}";
 
-                var blob = await storage.SaveFileAsync("ai", fileName, stream.ToArray(), false);
+                var blob = await storage.SaveFileAsync("aistorage", fileName, stream.ToArray(), false);
 
                 return Ok(await aiService.GetResultsAsync(owner, blob.Uri.ToString()));
             }
         }
         catch (Exception ex)
         {
+            logger.LogError(ex, "Error processing AI file");
             telemetry.TrackException(ex);
             return new StatusCodeResult(500);
         }

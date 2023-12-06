@@ -7,7 +7,6 @@ public class DocumentProcessResults
     public string owner { get; set; }
     public DateTime timestamp { get; set; }
     public string url { get; set; }
-    public AnalyzeResult aiResults { get; set; }
-    public List<DocumentNode> processResults { get; set; }
-    public List<string> unusedTexts { get; set; }
+    public List<string> paragraphs { get; set; }
+    public UploadResults results { get; set; }
 }

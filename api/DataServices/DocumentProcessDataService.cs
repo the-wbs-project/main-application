@@ -18,8 +18,11 @@ public class DocumentProcessDataService
         var client = new CosmosClient(config.Database.CosmosConnectionString);
         var container = client.GetContainer(config.DocumentAi.LogDatabase, "Documents");
 
-        var response = await container.CreateItemAsync(document, new PartitionKey("owner"));
+        var response = await container.CreateItemAsync(document, new PartitionKey(document.owner));
 
-        if (response.StatusCode != HttpStatusCode.Created) throw new Exception($"An error occured creating a db object: {response.StatusCode}.");
+        if (response.StatusCode != HttpStatusCode.Created)
+        {
+            throw new Exception($"An error occured creating a db object: {response.StatusCode}.");
+        }
     }
 }

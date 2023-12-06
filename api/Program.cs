@@ -48,6 +48,7 @@ builder.Services.AddSingleton<AppConfig>();
 builder.Services.AddSingleton<ActivityDataService>();
 builder.Services.AddSingleton<ChatDataService>();
 builder.Services.AddSingleton<ChecklistDataService>();
+builder.Services.AddSingleton<DocumentProcessDataService>();
 builder.Services.AddSingleton<InviteDataService>();
 builder.Services.AddSingleton<JiraHelpDeskDataService>();
 builder.Services.AddSingleton<ListDataService>();
@@ -69,6 +70,7 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 //
 //  Services
 //
+builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<JiraSyncService>();
 
 var app = builder.Build();

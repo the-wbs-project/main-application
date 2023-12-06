@@ -17,24 +17,50 @@ public class DocumentAiService
         this.db = db;
     }
 
-    public async Task<DocumentProcessResults> GetResultsAsync(string owner, string uri)
+    public async Task<UploadResults> GetResultsAsync(string owner, string uri)
     {
         var document = await GetAiResultsAsync(uri);
-        var paragraphs = document.Paragraphs.Select(p => p.Content).ToList();
-        var nodes = GetNodes(paragraphs, null);
+        var allPargraphs = document.Paragraphs.Select(p => p.Content).ToList();
+        var paragraphs = CleanList(allPargraphs);
+        var toProcess = GetNodes(paragraphs, null);
         var now = DateTime.UtcNow;
-        var results = new DocumentProcessResults
+        var nodes = new List<ProjectImportResults>();
+
+        foreach (var node in toProcess)
+        {
+            var obj = new ProjectImportResults();
+            var spaceIndex = node.IndexOf(' ');
+            var level = node.Substring(0, spaceIndex).TrimEnd('.');
+
+            obj.levelText = node;
+            obj.title = node;
+
+            nodes.Add(new ProjectImportResults
+            {
+                levelText = level,
+                title = node.Substring(spaceIndex + 1)
+            });
+        }
+
+        var results = new UploadResults
+        {
+            results = nodes,
+            unusedParagraphs = paragraphs.Where(p => !toProcess.Contains(p)).ToList(),
+            errors = new List<string>
+            {
+                System.Text.Json.JsonSerializer.Serialize(allPargraphs)
+            },
+        };
+
+        await db.UpsertAsync(new DocumentProcessResults
         {
             id = now.ToString(),
             owner = owner,
             timestamp = now,
             url = uri,
-            aiResults = document,
-            processResults = nodes,
-            unusedTexts = paragraphs
-        };
-
-        await db.UpsertAsync(results);
+            results = results,
+            paragraphs = document.Paragraphs.Select(p => p.Content).ToList()
+        });
 
         return results;
     }
@@ -46,39 +72,46 @@ public class DocumentAiService
             new AzureKeyCredential(config.Key));
 
         var fileUri = new Uri(uri);
-        var operation = await client.AnalyzeDocumentFromUriAsync(WaitUntil.Completed, "prebuilt-document", fileUri);
+        var operation = await client.AnalyzeDocumentFromUriAsync(WaitUntil.Completed, "prebuilt-read", fileUri);
 
         return operation.Value;
     }
 
-    private List<DocumentNode> GetNodes(List<string> paragraphs, string parentLevel)
+    private List<string> GetNodes(List<string> paragraphs, string parentLevel)
     {
-        var results = new List<DocumentNode>();
+        var results = new List<string>();
         var counter = 1;
 
         while (true)
         {
             var level = parentLevel == null ? counter.ToString() : $"{parentLevel}.{counter}";
-            var startWith = level + " ";
-            var nodeIndex = paragraphs.FindIndex(p => p.StartsWith(startWith));
+            var startWith1 = level + " ";
+            var startWith2 = level + ". ";
+            var nodeIndex = paragraphs.FindIndex(p => p.StartsWith(startWith1) || p.StartsWith(startWith2));
 
             if (nodeIndex == -1) break;
 
-            var paragraph = paragraphs[nodeIndex];
-            var node = new DocumentNode
-            {
-                order = counter,
-                level = level,
-                text = paragraph.Replace(startWith, "").Trim(),
-                children = new List<DocumentNode>()
-            };
+            results.Add(paragraphs[nodeIndex]);
+            results.AddRange(GetNodes(paragraphs, level));
 
-            paragraphs.RemoveAt(nodeIndex);
-
-            node.children = GetNodes(paragraphs, level);
-
-            results.Add(node);
             counter++;
+        }
+
+        return results;
+    }
+
+    private List<string> CleanList(List<string> paragraphs)
+    {
+        var results = new List<string>();
+
+        foreach (var paragraph in paragraphs)
+        {
+            var text = paragraph.Trim();
+
+            if (string.IsNullOrEmpty(text)) continue;
+            if (text.Length == 1 && !char.IsNumber(text[0])) continue;
+
+            results.Add(text);
         }
 
         return results;

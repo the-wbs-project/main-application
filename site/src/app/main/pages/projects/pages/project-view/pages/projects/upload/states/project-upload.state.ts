@@ -184,7 +184,7 @@ export class ProjectUploadState {
 
     return Utils.getFileAsync(state.rawFile).pipe(
       switchMap((body) =>
-        this.data.projectImport.runAsync(body, state.extension!)
+        this.data.projectImport.runAsync(state.extension!, body)
       ),
       switchMap((uploadResults) => {
         ctx.patchState({

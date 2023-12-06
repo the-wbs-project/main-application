@@ -26,9 +26,14 @@ public class AppConfig
             config["Jira:HelpDesk:Domain"],
             config["Jira:HelpDesk:LaunchToken"],
             config["Jira:HelpDesk:AccessToken"]);
+
+        Storage = new StorageConfig(
+            config["Blobs:Uri"],
+            config["Blobs:SasKey"]);
     }
 
     public Auth0Config Auth0 { get; private set; }
+    public StorageConfig Storage { get; private set; }
     public DatabaseConfig Database { get; private set; }
     public JiraHelpDeskConfig Jira { get; private set; }
     public AzureDocumentAiConfig DocumentAi { get; private set; }
