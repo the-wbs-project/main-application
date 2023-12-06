@@ -1,31 +1,36 @@
 import { importProvidersFrom, inject } from '@angular/core';
-import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_CLAIMS } from '@wbs/core/models';
-import { Transformers, Utils } from '@wbs/main/services';
-import { map, switchMap } from 'rxjs/operators';
+import { PROJECT_CLAIMS, Project } from '@wbs/core/models';
+import { Transformers } from '@wbs/main/services';
+import { Observable } from 'rxjs';
+import { first, map, skipWhile, switchMap } from 'rxjs/operators';
+import { ProjectState } from '../../../states';
 import { SetProject } from './actions';
 import { ProjectUploadState } from './states';
 
-const verifyGuard = (route: ActivatedRouteSnapshot) => {
+function getProject(store: Store): Observable<Project> {
+  return store.select(ProjectState.current).pipe(
+    skipWhile((x) => x == undefined),
+    map((x) => x!),
+    first()
+  );
+}
+
+const verifyGuard = () => {
   const store = inject(Store);
   const data = inject(DataServiceFactory);
-  const projectId = route.params['projectId'];
-  const owner = Utils.getOrgName(store, route);
 
-  return data.claims
-    .getProjectClaimsAsync(owner, projectId)
-    .pipe(map((claims) => claims.includes(PROJECT_CLAIMS.TASKS.UPDATE)));
+  return getProject(store).pipe(
+    switchMap((p) => data.claims.getProjectClaimsAsync(p.owner, p.id)),
+    map((claims) => claims.includes(PROJECT_CLAIMS.TASKS.UPDATE))
+  );
 };
 
-const startGuard = (route: ActivatedRouteSnapshot) => {
+const startGuard = () => {
   const store = inject(Store);
-  const data = inject(DataServiceFactory);
-  const projectId = route.params['projectId'];
-  const owner = Utils.getOrgName(store, route);
-
-  return data.projects.getAsync(owner, projectId).pipe(
+  return getProject(store).pipe(
     switchMap((project) => store.dispatch(new SetProject(project))),
     map(() => true)
   );
@@ -33,10 +38,10 @@ const startGuard = (route: ActivatedRouteSnapshot) => {
 
 export const routes: Routes = [
   {
-    path: ':projectId',
+    path: '',
     canActivate: [verifyGuard, startGuard],
     loadComponent: () =>
-      import('./project-upload-layout.component').then(
+      import('./upload-layout.component').then(
         (x) => x.ProjectUploadLayoutComponent
       ),
 

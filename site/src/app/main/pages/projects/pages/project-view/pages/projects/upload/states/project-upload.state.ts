@@ -9,6 +9,8 @@ import { Transformers, Utils } from '@wbs/main/services';
 import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { PROJECT_ACTIONS } from '../../../../../../models';
+import { VerifyTasks } from '../../../../actions';
 import {
   AppendOrOvewriteSelected,
   CreateJiraTicket,
@@ -24,8 +26,6 @@ import {
   SetProject,
 } from '../actions';
 import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
-import { PROJECT_ACTIONS } from '../../../models';
-import { VerifyTasks } from '../../project-view/actions';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -442,6 +442,6 @@ export class ProjectUploadState {
   private urlPrefix(ctx: StateContext<StateModel>): string[] {
     const p = ctx.getState().project!;
 
-    return ['/', p.owner, 'projects', 'upload', p.id];
+    return ['/', p.owner, 'projects', 'view', p.id, 'upload'];
   }
 }
