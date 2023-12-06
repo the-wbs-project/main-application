@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { Resources } from '@wbs/core/services';
 import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
-import { CategoryMatchListComponent } from '../../../../components/category-match-list.component';
+import { CategoryMatchListComponent } from '../../../../../../../components/category-match-list.component';
 import { PhasesCompleted } from '../../actions';
 import { PhaseListItem } from '../../models';
 import { ProjectUploadState } from '../../states';

@@ -18,11 +18,7 @@ export class ProjectNavigationService {
 
   toProject(projectId: string, page = PROJECT_PAGES.ABOUT): void {
     this.store.dispatch(
-      new Navigate(
-        page === PROJECT_PAGES.UPLOAD
-          ? [...this.urlPrefix(), page, projectId]
-          : [...this.urlPrefix(), 'view', projectId, page]
-      )
+      new Navigate([...this.urlPrefix(), 'view', projectId, page])
     );
   }
 

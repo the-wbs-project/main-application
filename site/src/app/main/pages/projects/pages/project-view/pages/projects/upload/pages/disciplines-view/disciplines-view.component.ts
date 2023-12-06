@@ -7,7 +7,7 @@ import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { CategoryMatchListComponent } from '../../../../components/category-match-list.component';
+import { CategoryMatchListComponent } from '../../../../../../../components/category-match-list.component';
 import { PeopleCompleted } from '../../actions';
 import { PeopleListItem } from '../../models';
 import { ProjectUploadState } from '../../states';
