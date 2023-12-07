@@ -37,17 +37,18 @@
     >
       <div
         class="list-group-item pd-5 flex-align-center d-none d-sm-grid"
-        style="gap: 5px; grid-template-columns: 25px 35px auto 60px"
+        style="gap: 5px; grid-template-columns: 30px 20px auto 60px"
       >
-        <div class="tx-center">
+        <div class="tx-semibold tx-20">
+          @if(dataItem.selected) {
+          {{ dataItem.number }}. }
+        </div>
+        <div class="">
+          @if(dataItem.selected) {
           <span class="k-i-reorder">
             <fa-icon [icon]="faBars" />
           </span>
-        </div>
-
-        <div class="tx-semibold tx-center tx-24">
-          @if(dataItem.selected) {
-          {{ dataItem.number }}. }
+          }
         </div>
         <div>
           <div class="tx-16">
