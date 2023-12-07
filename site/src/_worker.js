@@ -55,8 +55,8 @@ export default {
     } catch (e) {
       var plainObject = {};
 
-      for (const key of Object.getOwnPropertyNames(err)) {
-        plainObject[key] = err[key];
+      for (const key of Object.getOwnPropertyNames(e)) {
+        plainObject[key] = e[key];
       }
       return new Response(JSON.stringify(plainObject), {
         status: 500,
