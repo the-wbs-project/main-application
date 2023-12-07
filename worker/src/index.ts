@@ -60,6 +60,7 @@ app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.
 app.get('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
+app.post('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 
 app.get('api/library/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 app.put('api/library/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);

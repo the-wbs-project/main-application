@@ -19,6 +19,25 @@ export class ProjectDataService {
       .pipe(map((node) => this.clean(node)));
   }
 
+  exportToLibraryAsync(
+    owner: string,
+    projectId: string,
+    title: string,
+    description: string,
+    includeResources: boolean,
+    visibility: number
+  ): Observable<string> {
+    return this.http.post<string>(
+      `api/projects/owner/${owner}/id/${projectId}/toLibrary`,
+      {
+        title,
+        description,
+        includeResources,
+        visibility,
+      }
+    );
+  }
+
   getUsersAsync(
     owner: string,
     projectId: string

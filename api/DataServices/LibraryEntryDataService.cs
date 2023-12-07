@@ -105,8 +105,9 @@ public class LibraryEntryDataService : BaseDbService
             CommandType = CommandType.StoredProcedure
         };
         cmd.Parameters.AddWithValue("@Id", libraryEntry.id);
+        cmd.Parameters.AddWithValue("@PublishedVersion", libraryEntry.publishedVersion);
         cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.owner);
-        cmd.Parameters.AddWithValue("@CreatedBy", libraryEntry.createdBy);
+        cmd.Parameters.AddWithValue("@Author", libraryEntry.author);
         cmd.Parameters.AddWithValue("@Title", libraryEntry.title);
         cmd.Parameters.AddWithValue("@Description", DbValue(libraryEntry.description));
         cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.description));
@@ -119,9 +120,9 @@ public class LibraryEntryDataService : BaseDbService
         return new LibraryEntry
         {
             id = DbValue<string>(reader, "Id"),
+            publishedVersion = DbValue<int?>(reader, "PublishedVersion"),
             owner = DbValue<string>(reader, "OwnerId"),
-            createdBy = DbValue<string>(reader, "CreatedBy"),
-            createdOn = DbValue<DateTimeOffset>(reader, "CreatedOn"),
+            author = DbValue<string>(reader, "Author"),
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),

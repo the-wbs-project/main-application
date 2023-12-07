@@ -27,7 +27,7 @@ export class LibraryEntryDataService {
   }
 
   private clean<T extends LibraryEntry | LibraryEntry[]>(obj: T): T {
-    Utils.cleanDates(obj, 'createdOn', 'lastModified');
+    Utils.cleanDates(obj, 'lastModified');
 
     return obj;
   }

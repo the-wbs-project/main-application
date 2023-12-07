@@ -1,9 +1,8 @@
 export interface LibraryEntry {
   id: string;
   owner: string;
-  publishedVersion: number;
-  createdBy: string;
-  createdOn: Date;
+  publishedVersion?: number;
+  author: string;
   lastModified: Date;
   title: string;
   description: string;

@@ -6,7 +6,7 @@ export interface WbsNode extends TaggedObject {
   removed?: boolean;
   parentId: string | null;
   order: number;
-  createdOn: Date;
+  createdOn?: Date;
   lastModified: Date;
   description?: string | null;
   disciplineIds?: string[] | null;
