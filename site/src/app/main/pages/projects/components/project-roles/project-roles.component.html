@@ -6,9 +6,11 @@
           <td class="wd-200 border border-dark tx-center pd-5">
             {{ "General.PMs-Full" | translate }}
           </td>
+          @if (approvalEnabled) {
           <td class="wd-200 border border-dark tx-center pd-5">
             {{ "General.Approvers-Full" | translate }}
           </td>
+          }
           <td class="wd-200 border border-dark tx-center pd-5">
             {{ "General.SMEs-Full" | translate }}
           </td>
@@ -27,6 +29,7 @@
               (selected)="remove(roles()!.pm, $event)"
             />
           </td>
+          @if (approvalEnabled) {
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="minusIcon"
@@ -35,6 +38,7 @@
               (selected)="remove(roles()!.approver, $event)"
             />
           </td>
+          }
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="minusIcon"
@@ -57,6 +61,7 @@
               (selected)="add(roles()!.pm, $event)"
             />
           </td>
+          @if (approvalEnabled) {
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
@@ -64,6 +69,7 @@
               (selected)="add(roles()!.approver, $event)"
             />
           </td>
+          }
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"

@@ -10,7 +10,7 @@ import { Organization } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { DialogService } from '@wbs/main/services';
 import { AuthState, MembershipState } from '@wbs/main/states';
-import { ProfileEditorComponent } from '../../profile-editor/profile-editor.component';
+import { ProfileEditorComponent } from '../../../profile-editor/profile-editor.component';
 import { HeaderProfileHeaderComponent } from '../header-profile-header/header-profile-header.component';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
 

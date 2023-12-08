@@ -16,7 +16,7 @@ import { Member, Project, ROLES, Role } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
 import { RoleState } from '@wbs/main/states';
 import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
-import { ProjectState } from '../../../../states';
+import { ProjectApprovalState, ProjectState } from '../../../../states';
 
 @Component({
   standalone: true,
@@ -38,6 +38,7 @@ import { ProjectState } from '../../../../states';
         [pmIds]="pmIds()"
         [smeIds]="smeIds()"
         [mustConfirm]="true"
+        [approvalEnabled]="approvalEnabled()!"
         (addUserToRole)="add($event.role, $event.user)"
         (removeUserToRole)="remove($event.role, $event.user)"
       />
@@ -55,6 +56,9 @@ export class ProjectSettingsRolesComponent implements OnInit {
   readonly faSpinner = faSpinner;
   readonly isLoading = signal<boolean>(true);
   readonly members = signal<Member[]>([]);
+  readonly approvalEnabled = toSignal(
+    this.store.select(ProjectApprovalState.enabled)
+  );
   readonly approverIds = computed(() =>
     this.getUserIds(ROLES.APPROVER, this.roleIds(), this.project())
   );

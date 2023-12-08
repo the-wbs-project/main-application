@@ -11,5 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [ProjectStatusTileIconComponent, TranslateModule],
 })
 export class ProjectStatusTileComponent {
-  @Input() project!: Project;
+  @Input({ required: true }) approvalEnabled!: boolean;
+  @Input({ required: true }) project!: Project;
 }

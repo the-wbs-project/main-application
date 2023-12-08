@@ -42,7 +42,6 @@ import { ProjectListState } from './states';
   ],
 })
 export class ProjectListComponent {
-  @Input() owner?: string;
   @Input() status?: string;
   @Input() type?: string;
 

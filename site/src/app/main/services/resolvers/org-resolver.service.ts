@@ -17,3 +17,12 @@ export const orgObjResolve: ResolveFn<Organization> = () =>
       map((x) => x!),
       first()
     );
+
+export const orgListResolve: ResolveFn<Organization[]> = () =>
+  inject(Store)
+    .select(MembershipState.organizations)
+    .pipe(
+      skipWhile((x) => x == undefined),
+      map((x) => x ?? []),
+      first()
+    );

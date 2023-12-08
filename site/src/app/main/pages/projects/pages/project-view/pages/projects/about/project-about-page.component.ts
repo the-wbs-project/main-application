@@ -50,6 +50,9 @@ export class ProjectAboutPageComponent {
   readonly project = toSignal(
     this.store.select(ProjectState.current).pipe(map((p) => p!))
   );
+  readonly approvalEnabled = toSignal(
+    this.store.select(ProjectApprovalState.enabled)
+  );
   readonly taskCount = toSignal(this.store.select(TasksState.taskCount));
   readonly users = toSignal(this.store.select(ProjectState.users));
   readonly checklist = toSignal(
