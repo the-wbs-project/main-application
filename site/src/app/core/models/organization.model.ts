@@ -6,7 +6,8 @@ export interface Organization {
     logo_url?: string;
   };
   metadata: {
-    mainProjectType: 'single' | 'multiple';
+    mainProjectType?: 'single' | 'multiple';
+    projectApprovalRequired?: boolean;
     seatCount?: number;
   };
 }

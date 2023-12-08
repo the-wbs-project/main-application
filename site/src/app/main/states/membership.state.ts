@@ -80,6 +80,13 @@ export class MembershipState implements NgxsOnInit {
     ctx: Context,
     { organizations }: InitiateOrganizations
   ): Observable<any> {
+    for (const org of organizations)
+      if (org.metadata == undefined) org.metadata = {};
+      else if (typeof org.metadata.projectApprovalRequired === 'string') {
+        org.metadata.projectApprovalRequired =
+          org.metadata.projectApprovalRequired === 'true';
+      }
+
     ctx.patchState({ loading: true, list: organizations });
 
     return ctx.dispatch(new ChangeOrganization(organizations[0]));

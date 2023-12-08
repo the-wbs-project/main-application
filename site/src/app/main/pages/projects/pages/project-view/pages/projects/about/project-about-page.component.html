@@ -1,6 +1,11 @@
 @if (project(); as project) {
 <div class="about-page-grid pd-20" resizedCss>
-  <div class="card border">
+  <div
+    class="card border"
+    [ngClass]="{
+      'double-item': !approvalEnabled()
+    }"
+  >
     <div class="card-header">
       {{ "General.Disciplines" | translate | uppercase }}
     </div>
@@ -12,15 +17,24 @@
     </div>
   </div>
 
-  <div class="card border">
+  <div
+    class="card border"
+    [ngClass]="{
+      'double-item': !approvalEnabled()
+    }"
+  >
     <div class="card-header">
       {{ "General.Status" | translate | uppercase }}
     </div>
     <div class="card-body">
-      <wbs-project-status-tile [project]="project" />
+      <wbs-project-status-tile
+        [approvalEnabled]="approvalEnabled()!"
+        [project]="project"
+      />
     </div>
   </div>
 
+  @if (approvalEnabled()) {
   <div class="card border double-item">
     <div class="card-header">
       {{ "Projects.ApprovalStatus" | translate }}
@@ -29,6 +43,7 @@
       <wbs-project-approval-tile [stats]="approvalStats()" />
     </div>
   </div>
+  }
 
   <div class="card border full-item">
     <div class="card-header">

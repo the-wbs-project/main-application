@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   Input,
   OnInit,
   signal,
@@ -13,13 +14,14 @@ import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, RoleIds } from '@wbs/core/models';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
-import { AuthState, RoleState } from '@wbs/main/states';
+import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { FooterComponent } from '../../components/footer/footer.component';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   standalone: true,
@@ -41,6 +43,10 @@ export class RolesComponent implements OnInit {
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
   readonly smeIds = signal<string[]>([]);
+  readonly orgObj = toSignal(this.store.select(MembershipState.organization));
+  readonly approvalEnabled = computed(
+    () => this.orgObj()?.metadata?.projectApprovalRequired ?? false
+  );
 
   constructor(
     private readonly data: DataServiceFactory,

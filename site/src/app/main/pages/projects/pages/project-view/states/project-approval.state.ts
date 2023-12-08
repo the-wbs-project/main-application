@@ -16,7 +16,7 @@ import {
   ProjectApprovalSaveRecord,
 } from '@wbs/core/models';
 import { ProjectApprovalStats } from '@wbs/main/models';
-import { AuthState } from '@wbs/main/states';
+import { AuthState, MembershipState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
@@ -31,6 +31,7 @@ import { ProjectState } from './project.state';
 interface StateModel {
   childrenIds?: string[];
   current?: ProjectApproval;
+  enabled: boolean;
   list: ProjectApproval[];
   stats?: ProjectApprovalStats;
   messages?: Message[];
@@ -46,6 +47,7 @@ declare type Context = StateContext<StateModel>;
 @State<StateModel>({
   name: 'projectApproval',
   defaults: {
+    enabled: false,
     list: [],
     started: false,
     view: 'project',
@@ -60,6 +62,11 @@ export class ProjectApprovalState implements NgxsOnInit {
   @Selector()
   static current(state: StateModel): ProjectApproval | undefined {
     return state.current;
+  }
+
+  @Selector()
+  static enabled(state: StateModel): boolean {
+    return state.enabled;
   }
 
   @Selector()
@@ -125,6 +132,15 @@ export class ProjectApprovalState implements NgxsOnInit {
           ctx.dispatch(new InitiateApprovals(project.owner, project.id));
         }
       });
+
+    this.store
+      .select(MembershipState.organization)
+      .pipe(untilDestroyed(this))
+      .subscribe((org) =>
+        ctx.patchState({
+          enabled: org?.metadata?.projectApprovalRequired ?? false,
+        })
+      );
   }
 
   @Action(InitiateApprovals)

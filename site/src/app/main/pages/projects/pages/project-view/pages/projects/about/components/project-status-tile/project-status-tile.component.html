@@ -13,6 +13,7 @@
   {{ "Projects.PlanningPhase" | translate }}
 </div>
 <div class="wd-20 ht-20 tx-center rotate-90">...</div>
+@if (approvalEnabled) {
 <div>
   <span class="d-ib wd-30">
     <wbs-project-status-tile-icon
@@ -30,6 +31,7 @@
   {{ "Projects.ApprovalPhase" | translate }}
 </div>
 <div class="wd-20 ht-20 tx-center rotate-90">...</div>
+}
 <div>
   <span class="d-ib wd-30">
     <wbs-project-status-tile-icon

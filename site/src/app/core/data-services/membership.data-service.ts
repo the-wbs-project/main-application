@@ -1,6 +1,5 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
 import { Invite, InviteBody, Member } from '../models';
 
 export class MembershipDataService {

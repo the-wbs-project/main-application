@@ -46,6 +46,9 @@ export class ProjectViewLayoutComponent {
   @Input({ required: true }) claims!: string[];
   @Input({ required: true }) userId!: string;
 
+  readonly approvalEnabled = toSignal(
+    this.store.select(ProjectApprovalState.enabled)
+  );
   readonly approval = toSignal(this.store.select(ProjectApprovalState.current));
   readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
   readonly approvalView = toSignal(
