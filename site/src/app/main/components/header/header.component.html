@@ -8,15 +8,15 @@
     </div>
   </div>
 </header>
-<nav class="wbs-nav-lg navbar navbar-expand navbar-dark bg-dark">
+<nav class="navbar navbar-expand navbar-dark bg-dark d-none d-sm-flex">
   <div class="container-fluid">
     <span class="navbar-brand">
-      {{ org.display_name }}
+      <wbs-header-organization-list [org]="org" [orgs]="orgs" />
     </span>
     <div class="navbar-collapse">
       <ul class="navbar-nav">
-        @for (parentItem of menu; track parentItem.label) { @if (claims | check
-        : parentItem.claim) {
+        @for (parentItem of menu(); track parentItem.label) { @if (claims |
+        check : parentItem.claim) {
         <li class="nav-item" ngbDropdown>
           <a
             class="nav-link dropdown-toggle tx-uppercase"
@@ -34,11 +34,7 @@
               {{ link.label | translate }}
             </h6>
             } @case ('link') {
-            <a
-              ngbDropdownItem
-              [routerLink]="link.route | orgUrl : org.name"
-              class="lh-5"
-            >
+            <a ngbDropdownItem [routerLink]="link.route" class="lh-5">
               {{ link.label | translate }}
             </a>
             } } }
@@ -50,10 +46,10 @@
   </div>
 </nav>
 
-<nav class="wbs-nav-sm navbar navbar-expand-sm navbar-dark bg-dark">
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark d-flex d-sm-none">
   <div class="container-fluid">
     <span class="navbar-brand">
-      {{ org.display_name }}
+      <wbs-header-organization-list [org]="org" [orgs]="orgs" />
     </span>
     <button
       class="navbar-toggler"
@@ -72,19 +68,16 @@
       id="navbarTogglerDemo01"
     >
       <ul class="navbar-nav">
-        <ng-template ngFor [ngForOf]="menu" let-parentItem>
-          <ng-template ngFor [ngForOf]="parentItem.items" let-link>
-            <li class="nav-item tx-uppercase">
-              <a
-                *ngIf="link.type === 'link'"
-                [routerLink]="link.route | orgUrl : org.name"
-                class="nav-link pd-y-5 pd-x-20"
-              >
-                {{ link.label! | translate }}
-              </a>
-            </li>
-          </ng-template>
-        </ng-template>
+        @for (parentItem of menu(); track $index) { @for (link of
+        parentItem.items; track $index) {
+        <li class="nav-item tx-uppercase">
+          @if (link.type === 'link') {
+          <a [routerLink]="link.route" class="nav-link pd-y-5 pd-x-20">
+            {{ link.label! | translate }}
+          </a>
+          }
+        </li>
+        } }
       </ul>
     </div>
   </div>

@@ -1,25 +1,14 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import {
-  Action,
-  NgxsOnInit,
-  Selector,
-  State,
-  StateContext,
-  Store,
-} from '@ngxs/store';
-import { DataServiceFactory } from '@wbs/core/data-services';
+import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { Organization } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
-import { Observable } from 'rxjs';
 import { ChangeOrganization, InitiateOrganizations } from '../actions';
-import { UserService } from '../services';
 
 interface StateModel {
   loading: boolean;
-  list?: Organization[];
   organization?: Organization;
+  organizations?: Organization[];
   orgRoleList?: Record<string, string[]>;
   roles?: string[];
 }
@@ -35,27 +24,16 @@ declare type Context = StateContext<StateModel>;
   },
 })
 export class MembershipState implements NgxsOnInit {
-  constructor(
-    private readonly auth: AuthService,
-    protected readonly data: DataServiceFactory,
-    protected readonly messages: Messages,
-    protected readonly store: Store,
-    protected readonly userService: UserService
-  ) {}
-
-  @Selector()
-  static list(state: StateModel): Organization[] | undefined {
-    return state.list;
-  }
-
-  @Selector()
-  static loading(state: StateModel): boolean {
-    return state.loading;
-  }
+  constructor(private readonly auth: AuthService) {}
 
   @Selector()
   static organization(state: StateModel): Organization | undefined {
     return state.organization;
+  }
+
+  @Selector()
+  static organizations(state: StateModel): Organization[] | undefined {
+    return state.organizations;
   }
 
   @Selector()
@@ -79,7 +57,7 @@ export class MembershipState implements NgxsOnInit {
   initiateOrganizations(
     ctx: Context,
     { organizations }: InitiateOrganizations
-  ): Observable<any> {
+  ): void {
     for (const org of organizations)
       if (org.metadata == undefined) org.metadata = {};
       else if (typeof org.metadata.projectApprovalRequired === 'string') {
@@ -87,13 +65,14 @@ export class MembershipState implements NgxsOnInit {
           org.metadata.projectApprovalRequired === 'true';
       }
 
-    ctx.patchState({ loading: true, list: organizations });
-
-    return ctx.dispatch(new ChangeOrganization(organizations[0]));
+    ctx.patchState({ organizations });
   }
 
   @Action(ChangeOrganization)
   changeOrganization(ctx: Context, { organization }: ChangeOrganization): void {
-    ctx.patchState({ loading: true, organization });
+    ctx.patchState({
+      organization,
+      roles: ctx.getState().orgRoleList![organization.name],
+    });
   }
 }
