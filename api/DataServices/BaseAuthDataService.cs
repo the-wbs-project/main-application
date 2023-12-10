@@ -2,7 +2,7 @@ using Auth0.ManagementApi;
 using System.Net;
 using System.Text;
 using System.Text.Json;
-using Wbs.Api.Configurations;
+using Wbs.Api.Configuration;
 
 namespace Wbs.Api.Services;
 
@@ -14,9 +14,9 @@ public abstract class BaseAuthDataService
     protected readonly Auth0Config config;
     private readonly ILogger logger;
 
-    public BaseAuthDataService(ILogger logger, IConfiguration config)
+    public BaseAuthDataService(ILogger logger, AppConfig config)
     {
-        this.config = new Auth0Config(config.GetSection("Auth0"));
+        this.config = config.Auth0;
         this.logger = logger;
     }
 

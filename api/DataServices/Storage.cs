@@ -1,6 +1,8 @@
-﻿using Azure;
+﻿using System.Reflection.Metadata;
+using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Wbs.Api.Configuration;
 
 namespace Wbs.Api.DataServices;
 
@@ -8,11 +10,11 @@ public class Storage
 {
     private readonly BlobServiceClient blobClient;
 
-    public Storage(IConfiguration config)
+    public Storage(AppConfig config)
     {
         blobClient = new BlobServiceClient(
-           new Uri(config["Blobs:Uri"]), //"https://<storage-account-name>.blob.core.windows.net"),
-          new AzureSasCredential(config["Blobs:SasKey"]));
+           new Uri(config.Storage.Uri),
+           new AzureSasCredential(config.Storage.Key));
     }
 
     public async Task<byte[]> GetFileAsBytesAsync(string containerName, string fileName)
@@ -32,7 +34,7 @@ public class Storage
         }
     }
 
-    public async Task SaveFileAsync(string containerName, string fileName, byte[] data, bool snapshot)
+    public async Task<BlobClient> SaveFileAsync(string containerName, string fileName, byte[] data, bool snapshot)
     {
         var container = await GetContainerAsync(containerName);
         var blob = container.GetBlobClient(fileName);
@@ -40,6 +42,8 @@ public class Storage
         if (snapshot && await blob.ExistsAsync()) await blob.CreateSnapshotAsync();
 
         await blob.UploadAsync(new BinaryData(data));
+
+        return blob;
     }
 
     public async Task SaveFileAsync(string containerName, string fileName, string data, bool snapshot)

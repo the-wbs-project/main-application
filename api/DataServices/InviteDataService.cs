@@ -1,5 +1,6 @@
 using Auth0.ManagementApi.Models;
 using Auth0.ManagementApi.Paging;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.Services;
@@ -8,7 +9,7 @@ public class InviteDataService : BaseAuthDataService
 {
     private readonly ILogger<InviteDataService> logger;
 
-    public InviteDataService(ILogger<InviteDataService> logger, IConfiguration config) : base(logger, config)
+    public InviteDataService(ILogger<InviteDataService> logger, AppConfig config) : base(logger, config)
     {
         this.logger = logger;
     }

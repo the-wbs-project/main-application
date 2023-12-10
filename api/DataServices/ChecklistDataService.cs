@@ -1,13 +1,14 @@
 using Microsoft.Data.SqlClient;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class ChecklistDataService : BaseDbService
+public class ChecklistDataService : BaseSqlDbService
 {
     private readonly ILogger<ChecklistDataService> _logger;
 
-    public ChecklistDataService(ILogger<ChecklistDataService> logger, IConfiguration config) : base(config)
+    public ChecklistDataService(ILogger<ChecklistDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

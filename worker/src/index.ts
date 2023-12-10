@@ -2,8 +2,13 @@ import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
+import * as ROUTE_FILE from './routes.json';
+import { Routes } from './models';
 
-export const ORIGIN_PASSES: string[] = ['api/import/:type/:culture', 'api/export/:type/:culture'];
+const ROUTES: Routes = ROUTE_FILE;
+
+//export const ORIGIN_PASSES_GET: string[] = ['api/checklists', 'api/activities/*'];
+//export const ORIGIN_PASSES_POST: string[] = ['api/import/*', 'api/export/*', 'api/activities', 'api/activities/projects'];
 
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //
@@ -32,7 +37,7 @@ app.onError((err, ctx) => {
 
 app.options('api/*', cors, (c) => c.text(''));
 
-app.get('api/resources/all/:locale', kv.resources, (ctx) => OriginService.pass(ctx));
+app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
 app.get('api/lists/:type', kv.lists, OriginService.pass);
 app.get('api/roles', async (ctx) => ctx.json(await ctx.get('data').roles.getAsync()));
 
@@ -48,22 +53,7 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('api/checklists', kv.checklists, verifyJwt, OriginService.pass);
-
-app.get('api/activities/*', verifyJwt, OriginService.pass);
-app.put('api/activities', verifyJwt, OriginService.pass);
-app.put('api/activities/projects', verifyJwt, OriginService.pass);
-
 app.get('api/projects/owner/:owner/id/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
-
-app.get('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
-app.get('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
-app.put('api/projects/owner/:owner', verifyJwt, verifyMembership, OriginService.pass);
-app.put('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
-app.post('api/projects/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
-
-app.get('api/library/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
-app.put('api/library/owner/:owner/*', verifyJwt, verifyMembership, OriginService.pass);
 
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
@@ -105,7 +95,6 @@ app.put('api/chat/:model', verifyJwt, Http.aiChat.putAsync);
 app.delete('api/chat/:model', verifyJwt, Http.aiChat.deleteAsync);
 
 app.get('api/chat/thread/:threadId/comments/skip/:skip/take/:take', verifyJwt, Http.chat.getAsync);
-app.get('api/chat/thread/:threadId/comments/:timestamp/count', verifyJwt, OriginService.pass);
 app.post('api/chat/thread/:threadId', verifyJwt, Http.chat.postAsync);
 
 app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
@@ -122,9 +111,12 @@ app.get('api/queue/test', (ctx) => {
   return ctx.text('OK');
 });
 
-for (const path of ORIGIN_PASSES) {
-  app.post(path, verifyJwt, OriginService.pass);
-}
+for (const path of ROUTES.VERIFY_JWT_GET) app.get(path, verifyJwt, OriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_POST) app.post(path, verifyJwt, OriginService.pass);
+
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_GET) app.get(path, verifyJwt, verifyMembership, OriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_POST) app.post(path, verifyJwt, verifyMembership, OriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_PUT) app.put(path, verifyJwt, verifyMembership, OriginService.pass);
 
 export default app;
 /*

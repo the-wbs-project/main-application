@@ -84,8 +84,8 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut]
-    public async Task<IActionResult> Put(Activity[] activities)
+    [HttpPost]
+    public async Task<IActionResult> Post(Activity[] activities)
     {
         try
         {
@@ -107,8 +107,8 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("projects")]
-    public async Task<IActionResult> PutProjects(ProjectActivityRecord[] activities)
+    [HttpPost("projects")]
+    public async Task<IActionResult> PostProjects(ProjectActivityRecord[] activities)
     {
         try
         {

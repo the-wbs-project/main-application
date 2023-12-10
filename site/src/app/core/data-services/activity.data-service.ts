@@ -63,7 +63,7 @@ export class ActivityDataService {
         userId: userId,
       });
     }
-    return this.http.put<void>('api/activities', toSave).pipe(map(() => ids));
+    return this.http.post<void>('api/activities', toSave).pipe(map(() => ids));
   }
 
   saveProjectActivitiesAsync(
@@ -89,7 +89,7 @@ export class ActivityDataService {
       });
     }
     return this.http
-      .put<void>('api/activities/projects', toSave)
+      .post<void>('api/activities/projects', toSave)
       .pipe(map(() => ids));
   }
 }

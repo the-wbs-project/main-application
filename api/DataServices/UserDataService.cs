@@ -1,17 +1,13 @@
 using Auth0.ManagementApi.Models;
 using Auth0.ManagementApi.Paging;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.Services;
 
 public class UserDataService : BaseAuthDataService
 {
-    private readonly ILogger<UserDataService> logger;
-
-    public UserDataService(ILogger<UserDataService> logger, IConfiguration config) : base(logger, config)
-    {
-        this.logger = logger;
-    }
+    public UserDataService(ILogger<UserDataService> logger, AppConfig config) : base(logger, config) { }
 
     public async Task<List<Role>> GetRolesAsync()
     {

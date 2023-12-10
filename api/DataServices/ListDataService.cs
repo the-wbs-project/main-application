@@ -1,14 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class ListDataService : BaseDbService
+public class ListDataService : BaseSqlDbService
 {
     private readonly ILogger<ListDataService> _logger;
 
-    public ListDataService(ILogger<ListDataService> logger, IConfiguration config) : base(config)
+    public ListDataService(ILogger<ListDataService> logger, AppConfig config) : base(config)
     {
         this._logger = logger;
     }
