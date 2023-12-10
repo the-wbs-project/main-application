@@ -53,7 +53,7 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Auth calls
 //
-app.get('api/projects/owner/:owner/id/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
+app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
 //app.get('api/discussions/:owner/:associationId', verifyJwt, verifyMembership, Http.discussions.getAsync);
 //app.get('api/discussions/:owner/:associationId/users', verifyJwt, verifyMembership, Http.discussions.getUsersAsync);
@@ -103,6 +103,8 @@ app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadA
 app.get('api/files/statics/:file', verifyJwt, Http.statics.getAsync);
 app.get('api/files/resources/:owner/:file', verifyJwt, Http.resourceFiles.getAsync);
 app.put('api/files/resources/:owner/:file', verifyJwt, Http.resourceFiles.putAsync);
+
+app.post('api/portfolio/:owner/projects/:projectId/nodes/:nodeId/export/libraryEntry', verifyJwt, OriginService.pass);
 
 app.get('api/queue/test', (ctx) => {
   ctx.env.JIRA_SYNC_QUEUE.send({

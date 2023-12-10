@@ -11,12 +11,12 @@
         "api/activities/projects"
     ],
     "VERIFY_JWT_MEMBERSHIP_GET": [
-        "api/projects/owner/:owner",
-        "api/projects/owner/:owner/*"
+        "api/portfolio/:owner/*"
     ],
-    "VERIFY_JWT_MEMBERSHIP_POST": [],
+    "VERIFY_JWT_MEMBERSHIP_POST": [
+        "api/portfolio/:owner/*"
+    ],
     "VERIFY_JWT_MEMBERSHIP_PUT": [
-        "api/projects/owner/:owner",
-        "api/projects/owner/:owner/*"
+        "api/portfolio/:owner/*"
     ]
 }

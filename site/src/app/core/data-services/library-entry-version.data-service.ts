@@ -10,7 +10,7 @@ export class LibraryEntryVersionDataService {
     entryId: string
   ): Observable<LibraryEntryVersion[]> {
     return this.http.get<LibraryEntryVersion[]>(
-      `api/library/owner/${owner}/entries/${entryId}/versions`
+      `api/portfolio/${owner}/library/entries/${entryId}/versions`
     );
   }
 
@@ -20,13 +20,13 @@ export class LibraryEntryVersionDataService {
     entryVersion: number
   ): Observable<LibraryEntryVersion> {
     return this.http.get<LibraryEntryVersion>(
-      `api/library/owner/${owner}/entries/${entryId}/versions/${entryVersion}`
+      `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}`
     );
   }
 
   putAsync(owner: string, entryVersion: LibraryEntryVersion): Observable<void> {
     return this.http.put<void>(
-      `api/library/owner/${owner}/entries/${entryVersion.entryId}/versions/${entryVersion.version}`,
+      `api/portfolio/${owner}/library/entries/${entryVersion.entryId}/versions/${entryVersion.version}`,
       entryVersion
     );
   }

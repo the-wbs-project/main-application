@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
@@ -8,7 +9,7 @@ public class ProjectResourceDataService : ResourceRecordDataService
 {
     private readonly ILogger<ProjectResourceDataService> _logger;
 
-    public ProjectResourceDataService(ILogger<ProjectResourceDataService> logger, IConfiguration config) : base(config)
+    public ProjectResourceDataService(ILogger<ProjectResourceDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

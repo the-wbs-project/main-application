@@ -1,14 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class LibraryEntryVersionDataService : BaseDbService
+public class LibraryEntryVersionDataService : BaseSqlDbService
 {
     private readonly ILogger<LibraryEntryVersionDataService> _logger;
 
-    public LibraryEntryVersionDataService(ILogger<LibraryEntryVersionDataService> logger, IConfiguration config) : base(config)
+    public LibraryEntryVersionDataService(ILogger<LibraryEntryVersionDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

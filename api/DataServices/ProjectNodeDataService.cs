@@ -40,6 +40,30 @@ public class ProjectNodeDataService : BaseSqlDbService
         return results;
     }
 
+    public async Task<ProjectNode> GetByIdAsync(string nodeId)
+    {
+        using (var conn = CreateConnection())
+        {
+            await conn.OpenAsync();
+
+            return await GetByIdAsync(conn, nodeId);
+        }
+    }
+
+    public async Task<ProjectNode> GetByIdAsync(SqlConnection conn, string nodeId)
+    {
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectNodes] WHERE [Id] = @Id", conn);
+
+        cmd.Parameters.AddWithValue("@Id", nodeId);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read())
+                return ToModel(reader);
+        }
+        return null;
+    }
+
     public async Task<bool> VerifyAsync(string projectId, string nodeId)
     {
         using (var conn = CreateConnection())

@@ -14,7 +14,7 @@ CREATE PROCEDURE [dbo].[LibraryEntryNode_Set]
 AS
 BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
-       EXISTS(SELECT 1 FROM [dbo].[LibraryEntryVersions] WHERE [Id] = @EntryId AND [Version] = @EntryVersion)
+       EXISTS(SELECT 1 FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
         BEGIN
             IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntryNodes] WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion)
                 BEGIN

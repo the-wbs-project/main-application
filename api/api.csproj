@@ -21,6 +21,7 @@
     <PackageReference Include="Microsoft.Azure.AppConfiguration.AspNetCore" Version="6.1.0" />
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.37.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.1.1" />
+    <PackageReference Include="shortid" Version="3.0.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
 		<PackageReference Include="net.sf.mpxj" Version="10.11.0" />
   </ItemGroup>

@@ -26,7 +26,7 @@ IF EXISTS(SELECT * FROM [dbo].[LibraryEntries] WHERE [Id] = @Id)
 ELSE
     BEGIN
         INSERT INTO [dbo].[LibraryEntries]
-        VALUES (@Id, @PublishedVersion, @OwnerId, NULL, @Author, @Title, @Description, GETUTCDATE(), @Visibility)
+        VALUES (@Id, @OwnerId, @PublishedVersion, @Author, @Title, @Description, GETUTCDATE(), @Visibility)
     END
 END
 GO

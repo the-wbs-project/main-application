@@ -77,6 +77,7 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 //  Services
 //
 builder.Services.AddSingleton<DocumentAiService>();
+builder.Services.AddSingleton<ImportLibraryEntryService>();
 builder.Services.AddSingleton<JiraSyncService>();
 
 var app = builder.Build();

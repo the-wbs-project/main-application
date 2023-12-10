@@ -7,18 +7,18 @@ using Wbs.Api.Models;
 namespace Wbs.Api.Controllers;
 
 [ApiController]
-[Route("api/library")]
+[Route("api/portfolio/{owner}/library/entries")]
 public class LibraryEntryController : ControllerBase
 {
     private readonly TelemetryClient telemetry;
-    private readonly ILogger<ProjectsController> logger;
+    private readonly ILogger<LibraryEntryController> logger;
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
     private readonly LibraryEntryResourceDataService resourceDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
 
-    public LibraryEntryController(ILogger<ProjectsController> logger, TelemetryClient telemetry, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService)
+    public LibraryEntryController(ILogger<LibraryEntryController> logger, TelemetryClient telemetry, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
@@ -30,7 +30,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries")]
+    [HttpGet]
     public async Task<IActionResult> GetByOwnerAsync(string owner)
     {
         try
@@ -45,7 +45,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries/{entryId}")]
+    [HttpGet("{entryId}")]
     public async Task<IActionResult> GetByIdAsync(string owner, string entryId)
     {
         try
@@ -60,7 +60,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("owner/{owner}/entries/{entryId}")]
+    [HttpPut("{entryId}")]
     public async Task<IActionResult> Put(string owner, string entryId, LibraryEntry entry)
     {
         try
@@ -80,7 +80,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries/{entryId}/versions")]
+    [HttpGet("{entryId}/versions")]
     public async Task<IActionResult> GetVersionsAsync(string owner, string entryId)
     {
         try
@@ -103,7 +103,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries/{entryId}/versions/{entryVersion}")]
+    [HttpGet("{entryId}/versions/{entryVersion}")]
     public async Task<IActionResult> GetVersionByIdAsync(string owner, string entryId, int entryVersion)
     {
         try
@@ -126,7 +126,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("owner/{owner}/entries/{entryId}/versions/{entryVersion}")]
+    [HttpPut("{entryId}/versions/{entryVersion}")]
     public async Task<IActionResult> PutVersionAsync(string owner, string entryId, int entryVersion, LibraryEntryVersion model)
     {
         try
@@ -154,7 +154,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries/{entryId}/versions/{entryVersion}/nodes")]
+    [HttpGet("{entryId}/versions/{entryVersion}/nodes")]
     public async Task<IActionResult> GetNodesAsync(string owner, string entryId, int entryVersion)
     {
         try
@@ -177,7 +177,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("owner/{owner}/entries/{entryId}/version/{entryVersion}/nodes")]
+    [HttpPut("{entryId}/version/{entryVersion}/nodes")]
     public async Task<IActionResult> PutNode(string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
     {
         try
@@ -218,7 +218,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries/{entryId}/versions/{entryVersion}/resources")]
+    [HttpGet("{entryId}/versions/{entryVersion}/resources")]
     public async Task<IActionResult> GetResourcesAsync(string owner, string entryId, int entryVersion)
     {
         try
@@ -241,7 +241,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("owner/{owner}/entries/{entryId}/versions/{entryVersion}/resources/{resourceId}")]
+    [HttpPut("{entryId}/versions/{entryVersion}/resources/{resourceId}")]
     public async Task<IActionResult> PutResourceAsync(string owner, string entryId, int entryVersion, string resourceId, ResourceRecord model)
     {
         try
@@ -268,7 +268,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("owner/{owner}/entries/{entryId}/versions/{entryVersion}/nodes/{nodeId}/resources")]
+    [HttpGet("{entryId}/versions/{entryVersion}/nodes/{nodeId}/resources")]
     public async Task<IActionResult> GetNodeResourcesAsync(string owner, string entryId, int entryVersion, string nodeId)
     {
         try
@@ -291,7 +291,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("owner/{owner}/entries/{entryId}/versions/{entryVersion}/nodes/{nodeId}/resources/{resourceId}")]
+    [HttpPut("{entryId}/versions/{entryVersion}/nodes/{nodeId}/resources/{resourceId}")]
     public async Task<IActionResult> PutNodeResourceAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, ResourceRecord model)
     {
         try

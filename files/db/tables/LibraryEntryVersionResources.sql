@@ -1,4 +1,4 @@
-CREATE TABLE [dbo].[LibraryEntryResources] (
+CREATE TABLE [dbo].[LibraryEntryVersionResources] (
     [Id] nvarchar(100) NOT NULL,
     [EntryId] nvarchar(100) NOT NULL,
     [EntryVersion] int NOT NULL,
@@ -9,8 +9,8 @@ CREATE TABLE [dbo].[LibraryEntryResources] (
     [LastModified] DateTimeOffset NOT NULL,
     [Resource] nvarchar(MAX) NULL,
     [Description] nvarchar(MAX) NULL,
-    CONSTRAINT [LibraryEntryResources_PK] PRIMARY KEY CLUSTERED ([EntryId] ASC, [EntryVersion] ASC, [Id] ASC),
-    CONSTRAINT [LibraryEntryResources_FK_EntryVersion] FOREIGN KEY ([EntryId], [EntryVersion]) REFERENCES [dbo].[LibraryEntryVersions] ([EntryId], [Version]) ON DELETE CASCADE
+    CONSTRAINT [LibraryEntryVersionResources_PK] PRIMARY KEY CLUSTERED ([EntryId] ASC, [EntryVersion] ASC, [Id] ASC),
+    CONSTRAINT [LibraryEntryVersionResources_FK_EntryVersion] FOREIGN KEY ([EntryId], [EntryVersion]) REFERENCES [dbo].[LibraryEntryVersions] ([EntryId], [Version]) ON DELETE CASCADE
 )
 GO
 

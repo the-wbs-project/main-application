@@ -13,8 +13,8 @@ export class LibraryEntryResourcesDataService {
     taskId?: string
   ): Observable<ResourceRecord[]> {
     const url = taskId
-      ? `api/library/owner/${owner}/entries/${entryId}/versions/${entryVersion}/nodes/${taskId}/resources`
-      : `api/library/owner/${owner}/entries/${entryId}/versions/${entryVersion}/resources`;
+      ? `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/nodes/${taskId}/resources`
+      : `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/resources`;
 
     return this.http
       .get<ResourceRecord[]>(url)
@@ -29,8 +29,8 @@ export class LibraryEntryResourcesDataService {
     resource: ResourceRecord
   ): Observable<void> {
     const url = taskId
-      ? `api/library/owner/${owner}/entries/${entryId}/versions/${entryVersion}/nodes/${taskId}/resources/${resource.id}`
-      : `api/library/owner/${owner}/entries/${entryId}/versions/${entryVersion}/resources/${resource.id}`;
+      ? `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/nodes/${taskId}/resources/${resource.id}`
+      : `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/resources/${resource.id}`;
 
     return this.http.put<void>(url, resource);
   }

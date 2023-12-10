@@ -1,12 +1,11 @@
-DROP PROCEDURE IF EXISTS [dbo].[LibraryEntryResources_Set]
+DROP PROCEDURE IF EXISTS [dbo].[LibraryEntryVersionResource_Set]
 GO
 
-CREATE PROCEDURE [dbo].[LibraryEntryNodeResources_Set]
+CREATE PROCEDURE [dbo].[LibraryEntryVersionResource_Set]
     @Id nvarchar(100),
     @OwnerId nvarchar(100),
     @EntryId nvarchar(100),
     @EntryVersion int,
-    @EntryNodeId nvarchar(100),
     @Name nvarchar(100),
     @Type nvarchar(100),
     @Order int,
@@ -16,11 +15,11 @@ AS
     DECLARE @ts DATETIMEOFFSET = GETUTCDATE();
 BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
-       EXISTS(SELECT 1 FROM [dbo].[LibraryEntryNode] WHERE [Id] = @EntryNodeId AND [EntryId] = @EntryId AND [Version] = @EntryVersion)
+       EXISTS(SELECT 1 FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
         BEGIN
-            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryNodeResources] WHERE [Id] = @Id)
+            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersionResource_Set] WHERE [Id] = @Id)
                 BEGIN
-                    UPDATE [dbo].[LibraryEntryNodeResources]
+                    UPDATE [dbo].[LibraryEntryVersionResource_Set]
                     SET [Name] = @Name,
                         [Type] = @Type,
                         [Order] = @Order,
@@ -31,8 +30,8 @@ BEGIN
                 END
             ELSE
                 BEGIN
-                    INSERT INTO [dbo].[LibraryEntryNodeResources]
-                    VALUES (@Id, @EntryId, @EntryVersion, @EntryId, @Name, @Type, @Order, @ts, @ts, @Resource, @Description)
+                    INSERT INTO [dbo].[LibraryEntryVersionResource_Set]
+                    VALUES (@Id, @EntryId, @EntryVersion, @Name, @Type, @Order, @ts, @ts, @Resource, @Description)
                 END
         END
 END

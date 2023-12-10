@@ -9,13 +9,13 @@ export class ProjectDataService {
 
   getAllAsync(owner: string): Observable<Project[]> {
     return this.http
-      .get<Project[]>(`api/projects/owner/${owner}`)
+      .get<Project[]>(`api/portfolio/${owner}/projects`)
       .pipe(map((list) => this.cleanList(list)));
   }
 
   getAsync(owner: string, projectId: string): Observable<Project> {
     return this.http
-      .get<Project>(`api/projects/owner/${owner}/id/${projectId}`)
+      .get<Project>(`api/portfolio/${owner}/projects/${projectId}`)
       .pipe(map((node) => this.clean(node)));
   }
 
@@ -28,7 +28,7 @@ export class ProjectDataService {
     visibility: number
   ): Observable<string> {
     return this.http.post<string>(
-      `api/projects/owner/${owner}/id/${projectId}/toLibrary`,
+      `api/portfolio/${owner}/projects/${projectId}/toLibrary`,
       {
         title,
         description,
@@ -43,12 +43,15 @@ export class ProjectDataService {
     projectId: string
   ): Observable<UserRolesViewModel[]> {
     return this.http.get<UserRolesViewModel[]>(
-      `api/projects/owner/${owner}/id/${projectId}/users`
+      `api/portfolio/${owner}/projects/${projectId}/users`
     );
   }
 
   putAsync(project: Project): Observable<void> {
-    return this.http.put<void>(`api/projects/owner/${project.owner}`, project);
+    return this.http.put<void>(
+      `api/portfolio/${project.owner}/projects/${project.id}`,
+      project
+    );
   }
 
   private cleanList(projects: Project[]): Project[] {

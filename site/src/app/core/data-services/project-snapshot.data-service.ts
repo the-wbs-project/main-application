@@ -6,12 +6,12 @@ export class ProjectSnapshotDataService {
   constructor(private readonly http: HttpClient) {}
 
   getAsync(
-    organization: string,
+    owner: string,
     projectId: string,
     activityId: string
   ): Observable<Project> {
     return this.http.get<Project>(
-      `api/projects/${organization}/snapshot/${projectId}/${activityId}`
+      `api/portfolio/${owner}/projects/${projectId}/snapshots/${activityId}`
     );
   }
 
@@ -22,7 +22,7 @@ export class ProjectSnapshotDataService {
     nodes: ProjectNode[]
   ): Observable<void> {
     return this.http.put<void>(
-      `api/owner/${owner}/id/${project.id}/snapshot/${activityId}`,
+      `api/portfolio/${owner}/projects/${project.id}/snapshot/${activityId}`,
       { project, nodes }
     );
   }

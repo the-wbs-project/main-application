@@ -9,7 +9,7 @@ export class ProjectNodeDataService {
 
   getAllAsync(owner: string, projectId: string): Observable<ProjectNode[]> {
     return this.http
-      .get<ProjectNode[]>(`api/projects/owner/${owner}/id/${projectId}/nodes`)
+      .get<ProjectNode[]>(`api/portfolio/${owner}/projects/${projectId}/nodes`)
       .pipe(map((list) => this.clean(list)));
   }
 
@@ -20,7 +20,7 @@ export class ProjectNodeDataService {
     removeIds: string[]
   ): Observable<void> {
     return this.http.put<void>(
-      `api/projects/owner/${owner}/id/${projectId}/nodes`,
+      `api/portfolio/${owner}/projects/${projectId}/nodes`,
       {
         upserts,
         removeIds,

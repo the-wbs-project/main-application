@@ -14,7 +14,7 @@ export class LibraryEntryNodeDataService {
   ): Observable<LibraryEntryNode[]> {
     return this.http
       .get<LibraryEntryNode[]>(
-        `api/library/owner/${owner}/entries/${entryId}/versions/${version}/nodes`
+        `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}/nodes`
       )
       .pipe(map((list) => this.clean(list)));
   }
@@ -27,7 +27,7 @@ export class LibraryEntryNodeDataService {
     removeIds: string[]
   ): Observable<void> {
     return this.http.put<void>(
-      `api/library/owner/${owner}/entries/${entryId}/versions/${version}/nodes`,
+      `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}/nodes`,
       {
         upserts,
         removeIds,

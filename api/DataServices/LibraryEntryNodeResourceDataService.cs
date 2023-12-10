@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
@@ -8,7 +9,7 @@ public class LibraryEntryNodeResourceDataService : ResourceRecordDataService
 {
     private readonly ILogger<LibraryEntryNodeResourceDataService> _logger;
 
-    public LibraryEntryNodeResourceDataService(ILogger<LibraryEntryNodeResourceDataService> logger, IConfiguration config) : base(config)
+    public LibraryEntryNodeResourceDataService(ILogger<LibraryEntryNodeResourceDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }

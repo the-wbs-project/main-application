@@ -12,8 +12,8 @@ export class ProjectResourcesDataService {
     taskId?: string
   ): Observable<ResourceRecord[]> {
     const url = taskId
-      ? `api/projects/owner/${owner}/id/${projectId}/nodes/${taskId}/resources`
-      : `api/projects/owner/${owner}/id/${projectId}/resources`;
+      ? `api/portfolio/${owner}/projects/${projectId}/nodes/${taskId}/resources`
+      : `api/portfolio/${owner}/projects/${projectId}/resources`;
 
     return this.http
       .get<ResourceRecord[]>(url)
@@ -27,8 +27,8 @@ export class ProjectResourcesDataService {
     resource: ResourceRecord
   ): Observable<void> {
     const url = taskId
-      ? `api/projects/owner/${ownerId}/id/${projectId}/nodes/${taskId}/resources/${resource.id}`
-      : `api/projects/owner/${ownerId}/id/${projectId}/resources/${resource.id}`;
+      ? `api/portfolio/${ownerId}/projects/${projectId}/nodes/${taskId}/resources/${resource.id}`
+      : `api/portfolio/${ownerId}/projects/${projectId}/resources/${resource.id}`;
 
     return this.http.put<void>(url, resource);
   }

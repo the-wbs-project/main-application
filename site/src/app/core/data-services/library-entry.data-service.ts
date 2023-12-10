@@ -9,19 +9,19 @@ export class LibraryEntryDataService {
 
   getAllAsync(owner: string): Observable<LibraryEntry[]> {
     return this.http
-      .get<LibraryEntry[]>(`api/library/owner/${owner}/entries`)
+      .get<LibraryEntry[]>(`api/portfolio/${owner}/library/entries`)
       .pipe(map((list) => this.clean(list)));
   }
 
   getAsync(owner: string, entryId: string): Observable<LibraryEntry> {
     return this.http
-      .get<LibraryEntry>(`api/library/owner/${owner}/entries/${entryId}`)
+      .get<LibraryEntry>(`api/portfolio/${owner}/library/entries/${entryId}`)
       .pipe(map((node) => this.clean(node)));
   }
 
   putAsync(entry: LibraryEntry): Observable<void> {
     return this.http.put<void>(
-      `api/library/owner/${entry.owner}/entries/${entry.id}`,
+      `api/portfolio/${entry.owner}/library/entries/${entry.id}`,
       entry
     );
   }

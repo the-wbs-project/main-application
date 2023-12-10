@@ -10,6 +10,6 @@ export class ProjectDataService {
   }
 
   async getRolesAsync(owner: string, project: string): Promise<ProjectRole[]> {
-    return (await this.origin.getAsync<ProjectRole[]>(`projects/owner/${owner}/id/${project}/roles`)) ?? [];
+    return (await this.origin.getAsync<ProjectRole[]>(`portfolio/${owner}/projects/${project}/roles`)) ?? [];
   }
 }

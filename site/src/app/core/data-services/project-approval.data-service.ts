@@ -10,7 +10,7 @@ export class ProjectApprovalDataService {
   getAllAsync(owner: string, projectId: string): Observable<ProjectApproval[]> {
     return this.http
       .get<ProjectApproval[]>(
-        `api/projects/owner/${owner}/id/${projectId}/approvals`
+        `api/portfolio/${owner}/projects/${projectId}/approvals`
       )
       .pipe(map((list) => this.clean(list)));
   }
@@ -21,7 +21,7 @@ export class ProjectApprovalDataService {
     approval: ProjectApprovalSaveRecord
   ): Observable<void> {
     return this.http.put<void>(
-      `api/projects/owner/${owner}/id/${projectId}/approvals`,
+      `api/portfolio/${owner}/projects/${projectId}/approvals`,
       approval
     );
   }
