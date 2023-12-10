@@ -2,6 +2,13 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
+import { orgGuard } from './guards';
+import {
+  UserService,
+  orgClaimsResolve,
+  orgListResolve,
+  orgObjResolve,
+} from './services';
 import {
   AiState,
   AuthState,
@@ -10,7 +17,6 @@ import {
   RoleState,
   UiState,
 } from './states';
-import { UserService, orgClaimsResolve, orgObjResolve } from './services';
 
 export const routes: Routes = [
   {
@@ -33,14 +39,13 @@ export const routes: Routes = [
     ],
     children: [
       {
-        path: 'loading',
+        path: '',
         loadComponent: () =>
-          import('./main-loading.component').then(
-            (m) => m.MainLoadingComponent
-          ),
+          import('./main.component').then((m) => m.MainComponent),
       },
       {
         path: ':owner',
+        canActivate: [orgGuard],
         loadComponent: () =>
           import('./main.component').then((m) => m.MainComponent),
         children: [
@@ -58,6 +63,7 @@ export const routes: Routes = [
         resolve: {
           claims: orgClaimsResolve,
           org: orgObjResolve,
+          orgs: orgListResolve,
         },
       },
     ],

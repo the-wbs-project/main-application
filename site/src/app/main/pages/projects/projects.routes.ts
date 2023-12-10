@@ -27,13 +27,6 @@ export const routes: Routes = [
             (x) => x.routes
           ),
       },
-      {
-        path: 'upload',
-        loadChildren: () =>
-          import('./pages/project-upload/project-upload.routes').then(
-            (x) => x.routes
-          ),
-      },
     ],
   },
 ];

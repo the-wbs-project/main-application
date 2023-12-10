@@ -38,6 +38,7 @@ export class ProjectRolesComponent implements OnChanges {
   @Input() approverIds?: string[];
   @Input() pmIds?: string[];
   @Input() smeIds?: string[];
+  @Input({ required: true }) approvalEnabled!: boolean;
   @Output() readonly addUserToRole = new EventEmitter<OutputType>();
   @Output() readonly removeUserToRole = new EventEmitter<OutputType>();
 

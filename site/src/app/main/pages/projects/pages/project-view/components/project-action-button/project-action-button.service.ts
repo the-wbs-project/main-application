@@ -31,7 +31,11 @@ export class ProjectActionButtonService {
     private readonly store: Store
   ) {}
 
-  buildMenu(project: Project, claims: string[]): ProjectAction[] | undefined {
+  buildMenu(
+    project: Project,
+    claims: string[],
+    approvalEnabled: boolean
+  ): ProjectAction[] | undefined {
     const stati = PROJECT_STATI;
     const items: ProjectAction[] = [
       { separator: true },
@@ -52,37 +56,52 @@ export class ProjectActionButtonService {
         text: 'Projects.UploadTasks',
       });
     }
-    items.push({ separator: true });
 
-    if (project.status === stati.PLANNING) {
-      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
-        items.push({
-          text: 'Projects.SubmitForApproval',
-          icon: faCheck,
-          action: this.actionApproval,
-        });
+    if (approvalEnabled) {
+      items.push({ separator: true });
+
+      if (project.status === stati.PLANNING) {
+        if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
+          items.push({
+            text: 'Projects.SubmitForApproval',
+            icon: faCheck,
+            action: this.actionApproval,
+          });
+        }
+      } else if (project.status === stati.APPROVAL) {
+        if (claims.includes(PROJECT_CLAIMS.STATI.CAN_RETURN_TO_PLANNING)) {
+          items.push({
+            text: 'Projects.ReturnToPlanning',
+            icon: faStamp,
+            action: this.actionReturnPlanning,
+          });
+        }
+        if (claims.includes(PROJECT_CLAIMS.STATI.CAN_APPROVE)) {
+          items.push({
+            text: 'Projects.ApproveProject',
+            icon: faStamp,
+            action: this.actionApprove,
+          });
+        }
+        if (claims.includes(PROJECT_CLAIMS.STATI.CAN_REJECT)) {
+          items.push({
+            text: 'Projects.RejectProject',
+            icon: faXmarkToSlot,
+            action: this.actionReject,
+          });
+        }
       }
-    } else if (project.status === stati.APPROVAL) {
-      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_RETURN_TO_PLANNING)) {
-        items.push({
-          text: 'Projects.ReturnToPlanning',
-          icon: faStamp,
-          action: this.actionReturnPlanning,
-        });
-      }
-      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_APPROVE)) {
-        items.push({
-          text: 'Projects.ApproveProject',
-          icon: faStamp,
-          action: this.actionApprove,
-        });
-      }
-      if (claims.includes(PROJECT_CLAIMS.STATI.CAN_REJECT)) {
-        items.push({
-          text: 'Projects.RejectProject',
-          icon: faXmarkToSlot,
-          action: this.actionReject,
-        });
+    } else {
+      if (project.status === stati.PLANNING) {
+        items.push({ separator: true });
+
+        if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
+          items.push({
+            text: 'Projects.SubmitForExecution',
+            icon: faCheck,
+            action: this.actionApprove,
+          });
+        }
       }
     }
 
@@ -97,7 +116,7 @@ export class ProjectActionButtonService {
     return items.length === 0 ? undefined : items;
   }
 
-  handleAction(action: string): void {
+  handleAction(action: string, approvalEnabled: boolean): void {
     switch (action) {
       case this.actionDownload:
         this.actions.downloadTasks();
@@ -124,7 +143,7 @@ export class ProjectActionButtonService {
         break;
 
       case this.actionApprove:
-        this.approve();
+        this.approve(approvalEnabled);
         break;
     }
   }
@@ -174,11 +193,15 @@ export class ProjectActionButtonService {
     );
   }
 
-  private approve(): void {
+  private approve(approvalEnabled: boolean): void {
     this.actions.confirmAndChangeStatus(
       PROJECT_STATI.EXECUTION,
-      'Projects.ApproveProjectConfirm',
-      'Projects.ApproveProjectSuccess'
+      approvalEnabled
+        ? 'Projects.ApproveProjectConfirm'
+        : 'Projects.SubmitForExecutionConfirm',
+      approvalEnabled
+        ? 'Projects.ApproveProjectSuccess'
+        : 'Projects.SubmitForExecutionSuccess'
     );
   }
 }

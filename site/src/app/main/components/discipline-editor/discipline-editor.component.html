@@ -37,15 +37,17 @@
     >
       <div
         class="d-grid list-group-item pd-5 flex-align-center"
-        style="gap: 5px; grid-template-columns: 25px 35px auto 40px"
+        style="gap: 5px; grid-template-columns: 30px 20px auto 40px"
       >
-        <div class="tx-center">
+        <div class="tx-semibold tx-16">
+          @if (dataItem.selected){ {{ dataItem.number }}. }
+        </div>
+        <div>
+          @if (dataItem.selected) {
           <span class="k-i-reorder">
             <fa-icon [icon]="faBars" />
           </span>
-        </div>
-        <div class="tx-semibold tx-center tx-20">
-          @if (dataItem.selected){ {{ dataItem.number }}. }
+          }
         </div>
         <div class="tx-16 tx-left">
           <span class="d-ib tx-center wd-25">
@@ -53,7 +55,7 @@
           </span>
           {{ dataItem.label }}
         </div>
-        <div class="tx-center">
+        <div class="tx-center ht-24 pd-t-4">
           <wbs-switch
             size="sm"
             [(value)]="dataItem.selected"

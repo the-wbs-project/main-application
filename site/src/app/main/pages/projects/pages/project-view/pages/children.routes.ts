@@ -201,12 +201,20 @@ export const routes: Routes = [
     path: 'settings',
     canDeactivate: [closeApprovalWindowGuard],
     data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
       view: PROJECT_PAGES.SETTINGS,
     },
     loadChildren: () =>
       import('./projects/settings/project-settings.routes').then(
         ({ routes }) => routes
       ),
+  },
+  {
+    path: 'upload',
+    canDeactivate: [closeApprovalWindowGuard],
+    data: {
+      view: PROJECT_PAGES.UPLOAD,
+    },
+    loadChildren: () =>
+      import('./projects/upload/upload.routes').then(({ routes }) => routes),
   },
 ];

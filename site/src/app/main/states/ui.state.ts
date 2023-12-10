@@ -120,8 +120,11 @@ export class UiState implements NgxsOnInit {
   }
 
   @Action(MainContentSizeChanged)
-  mainContentSizeChanged(ctx: Context, action: MainContentSizeChanged): void {
-    ctx.patchState(action);
+  mainContentSizeChanged(
+    ctx: Context,
+    { mainContentWidth }: MainContentSizeChanged
+  ): void {
+    ctx.patchState({ mainContentWidth });
   }
 
   @Action(ParseNavigation)

@@ -70,10 +70,12 @@ export class AuthState implements NgxsOnInit {
 
       let organizations: Organization[] = user[ns + '/organizations'] ?? [];
 
-      organizations = organizations.sort((a, b) => sorter(a.name, b.name));
-
       if (organizations.length > 0)
-        ctx.dispatch([new InitiateOrganizations(organizations)]);
+        ctx.dispatch([
+          new InitiateOrganizations(
+            organizations.sort((a, b) => sorter(a.name, b.name))
+          ),
+        ]);
     });
   }
 
