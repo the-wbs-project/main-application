@@ -1,4 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
@@ -42,7 +42,7 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut]
+    [HttpPut("{projectId}")]
     public async Task<IActionResult> Put(string owner, Project project)
     {
         try
