@@ -8,7 +8,12 @@
     </div>
   </div>
 </header>
-<nav class="navbar navbar-expand navbar-dark bg-dark d-none d-sm-flex">
+<nav
+  class="navbar navbar-expand navbar-dark bg-dark d-none d-sm-flex"
+  [ngClass]="{
+    'p-0': orgs.length > 0
+  }"
+>
   <div class="container-fluid">
     <span class="navbar-brand">
       <wbs-header-organization-list [org]="org" [orgs]="orgs" />
@@ -46,7 +51,12 @@
   </div>
 </nav>
 
-<nav class="navbar navbar-expand-sm navbar-dark bg-dark d-flex d-sm-none">
+<nav
+  class="navbar navbar-expand-sm navbar-dark bg-dark d-flex d-sm-none"
+  [ngClass]="{
+    'p-0': orgs.length > 0
+  }"
+>
   <div class="container-fluid">
     <span class="navbar-brand">
       <wbs-header-organization-list [org]="org" [orgs]="orgs" />

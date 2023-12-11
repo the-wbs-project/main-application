@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,6 +27,7 @@ import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from './models';
     CheckPipe,
     HeaderProfileComponent,
     NgbDropdownModule,
+    NgClass,
     OrganizationListComponent,
     RouterModule,
     TranslateModule,
