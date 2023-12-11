@@ -106,7 +106,7 @@ public class LibraryEntryDataService : BaseSqlDbService
             CommandType = CommandType.StoredProcedure
         };
         cmd.Parameters.AddWithValue("@Id", libraryEntry.id);
-        cmd.Parameters.AddWithValue("@PublishedVersion", libraryEntry.publishedVersion);
+        cmd.Parameters.AddWithValue("@PublishedVersion", DbValue(libraryEntry.publishedVersion));
         cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.owner);
         cmd.Parameters.AddWithValue("@Author", libraryEntry.author);
         cmd.Parameters.AddWithValue("@Title", libraryEntry.title);

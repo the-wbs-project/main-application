@@ -116,11 +116,11 @@ public class ProjectNodeController : ControllerBase
 
     [Authorize]
     [HttpPost("{nodeId}/export/libraryEntry")]
-    public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string projectId, string nodeId, [FromBody] string author)
+    public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string projectId, string nodeId, [FromBody] ExportToLibraryOptions options)
     {
         try
         {
-            return Ok(await importLibraryEntryService.ImportFromProjectNodeAsync(owner, projectId, nodeId, author));
+            return Ok(await importLibraryEntryService.ImportFromProjectNodeAsync(owner, projectId, nodeId, options));
         }
         catch (Exception ex)
         {

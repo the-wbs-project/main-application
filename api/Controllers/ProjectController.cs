@@ -1,4 +1,4 @@
-using Microsoft.ApplicationInsights;
+﻿using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
@@ -115,11 +115,11 @@ public class ProjectController : ControllerBase
 
     [Authorize]
     [HttpPost("{projectId}/export/libraryEntry")]
-    public async Task<IActionResult> ExportProjectToLibraryEntry(string owner, string projectId, [FromBody] string author)
+    public async Task<IActionResult> ExportProjectToLibraryEntry(string owner, string projectId, [FromBody] ExportToLibraryOptions options)
     {
         try
         {
-            return Ok(await importLibraryEntryService.ImportFromProjectAsync(owner, projectId, author));
+            return Ok(await importLibraryEntryService.ImportFromProjectAsync(owner, projectId, options));
         }
         catch (Exception ex)
         {

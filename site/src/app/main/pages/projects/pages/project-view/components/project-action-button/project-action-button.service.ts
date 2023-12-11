@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import {
+  faBookArrowRight,
   faCheck,
   faCloudDownload,
   faCloudUpload,
@@ -10,10 +11,11 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { RoleState } from '@wbs/main/states';
+import { AuthState, RoleState } from '@wbs/main/states';
 import { ProjectViewService } from '../../services';
 import { ProjectState } from '../../states';
 import { ProjectAction } from './project-action.model';
+import { DataServiceFactory } from '@wbs/core/data-services';
 
 @Injectable()
 export class ProjectActionButtonService {
@@ -24,9 +26,11 @@ export class ProjectActionButtonService {
   private readonly actionApprove = 'approve';
   private readonly actionDownload = 'download';
   private readonly actionUpload = 'upload';
+  private readonly actionExport = 'export';
 
   constructor(
     private readonly actions: ProjectViewService,
+    private readonly data: DataServiceFactory,
     private readonly messages: Messages,
     private readonly store: Store
   ) {}
@@ -105,6 +109,12 @@ export class ProjectActionButtonService {
       }
     }
 
+    items.push({
+      text: 'Projects.ExportToLibrary',
+      icon: faBookArrowRight,
+      action: this.actionExport,
+    });
+
     if (claims.includes(PROJECT_CLAIMS.STATI.CAN_CANCEL)) {
       if (items.length > 0) items.push({ separator: true });
       items.push({
@@ -145,7 +155,27 @@ export class ProjectActionButtonService {
       case this.actionApprove:
         this.approve(approvalEnabled);
         break;
+
+      case this.actionExport:
+        this.export();
+        break;
     }
+  }
+
+  private export(): void {
+    const proj = this.store.selectSnapshot(ProjectState.current)!;
+    const author = this.store.selectSnapshot(AuthState.userId)!;
+    this.data.projects
+      .exportToLibraryAsync(
+        proj.owner,
+        proj.id,
+        author,
+        undefined,
+        undefined,
+        false,
+        0
+      )
+      .subscribe();
   }
 
   private cancel(): void {

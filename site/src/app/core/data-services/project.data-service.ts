@@ -22,14 +22,16 @@ export class ProjectDataService {
   exportToLibraryAsync(
     owner: string,
     projectId: string,
-    title: string,
-    description: string,
+    author: string,
+    title: string | undefined,
+    description: string | undefined,
     includeResources: boolean,
     visibility: number
   ): Observable<string> {
     return this.http.post<string>(
-      `api/portfolio/${owner}/projects/${projectId}/toLibrary`,
+      `api/portfolio/${owner}/projects/${projectId}/export/libraryEntry`,
       {
+        author,
         title,
         description,
         includeResources,
