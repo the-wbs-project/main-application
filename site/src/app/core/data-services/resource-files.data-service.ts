@@ -5,7 +5,7 @@ export class ResourceFileDataService {
   constructor(private readonly http: HttpClient) {}
 
   getAsync(owner: string, fileId: string): Observable<ArrayBuffer> {
-    return this.http.get(`api/files/resources/${owner}/${fileId}`, {
+    return this.http.get(`api/portfolio/${owner}/files/${fileId}`, {
       responseType: 'arraybuffer',
     });
   }
@@ -15,6 +15,6 @@ export class ResourceFileDataService {
     fileId: string,
     file: ArrayBuffer
   ): Observable<void> {
-    return this.http.put<void>(`api/files/resources/${owner}/${fileId}`, file);
+    return this.http.put<void>(`api/portfolio/${owner}/files/${fileId}`, file);
   }
 }

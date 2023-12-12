@@ -96,31 +96,16 @@ public class ImportLibraryEntryService
                 };
                 nodeIds.Add(n.id, libraryNode.id);
                 libraryEntryNodes.Add(libraryNode);
-
-                if (options.includeResources)
-                {
-                    var nodeResources = await projectNodeResourceDataService.GetListAsync(conn, projectId, n.id);
-
-                    foreach (var nr in nodeResources)
-                    {
-                        var oldId = nr.Id;
-                        var newId = IdService.Create();
-
-                        nr.Id = newId;
-
-                        results.resourceConversions.Add(oldId, newId);
-
-                        libraryEntryNodeResourceSaves.Add(entryNodeResourceDataService.SetAsync(conn, owner, libraryEntry.id, libraryEntryVersion.version, libraryNode.id, nr));
-                    }
-                }
             }
             //
             //  Now loop through the nodes and fix the parent ids.
             //
             foreach (var n in libraryEntryNodes)
             {
-                if (n.parentId != null)
+                if (n.parentId != null && nodeIds.ContainsKey(n.parentId))
                     n.parentId = nodeIds[n.parentId];
+                else
+                    n.parentId = null;
             }
 
             await entryDataService.SetAsync(conn, libraryEntry);
@@ -143,6 +128,24 @@ public class ImportLibraryEntryService
                     })
                     .ToList();
 
+                foreach (var nId in nodeIds.Keys)
+                {
+                    var nodeResources = await projectNodeResourceDataService.GetListAsync(conn, projectId, nId);
+
+                    foreach (var nr in nodeResources)
+                    {
+                        var oldId = nr.Id;
+                        var newId = IdService.Create();
+
+                        nr.Id = newId;
+
+                        results.resourceConversions.Add(oldId, newId);
+
+                        libraryEntryNodeResourceSaves.Add(
+                            entryNodeResourceDataService.SetAsync(conn, owner, libraryEntry.id, libraryEntryVersion.version, nodeIds[nId], nr));
+                    }
+                }
+
                 await Task.WhenAll(libraryEntryResourceSaves);
                 await Task.WhenAll(libraryEntryNodeResourceSaves);
             }
@@ -151,7 +154,7 @@ public class ImportLibraryEntryService
         }
     }
 
-    public async Task<string> ImportFromProjectNodeAsync(string owner, string projectId, string nodeId, ExportToLibraryOptions options)
+    public async Task<LibraryEntryNodeImportResults> ImportFromProjectNodeAsync(string owner, string projectId, string nodeId, ExportToLibraryOptions options)
     {
         using (var conn = projectDataService.CreateConnection())
         {
@@ -178,6 +181,12 @@ public class ImportLibraryEntryService
                 version = 1,
                 categories = new string[] { project.category },
                 status = "draft"
+            };
+
+            var results = new LibraryEntryNodeImportResults
+            {
+                newId = libraryEntry.id,
+                resourceConversions = new Dictionary<string, string>()
             };
 
             var libraryEntryNodes = new List<LibraryEntryNode>();
@@ -234,7 +243,12 @@ public class ImportLibraryEntryService
                 var libraryEntryResourceSaves = (await projectNodeResourceDataService.GetListAsync(conn, projectId, nodeId))
                     .Select(r =>
                     {
-                        r.Id = IdService.Create();
+                        var oldId = r.Id;
+                        var newId = IdService.Create();
+
+                        r.Id = newId;
+
+                        results.resourceConversions.Add(oldId, newId);
 
                         return entryResourceDataService.SetAsync(conn, owner, libraryEntry.id, libraryEntryVersion.version, r);
                     });
@@ -248,7 +262,12 @@ public class ImportLibraryEntryService
 
                     foreach (var nr in nodeResources)
                     {
-                        nr.Id = IdService.Create();
+                        var oldId = nr.Id;
+                        var newId = IdService.Create();
+
+                        nr.Id = newId;
+
+                        results.resourceConversions.Add(oldId, newId);
 
                         libraryEntryNodeResourceSaves.Add(entryNodeResourceDataService.SetAsync(conn, owner, libraryEntry.id, 1, nodeIds[nId], nr));
                     }
@@ -257,7 +276,7 @@ public class ImportLibraryEntryService
                 await Task.WhenAll(libraryEntryNodeResourceSaves);
             }
 
-            return libraryEntry.id;
+            return results;
         }
     }
 

@@ -37,9 +37,9 @@ export class StorageService {
     });
   }
 
-  async putAsync(ctx: Context, fileName: string, folders?: string[]): Promise<void> {
+  async putAsync(body: ReadableStream<any> | null, fileName: string, folders?: string[]): Promise<void> {
     const key = folders ? `${folders.join('/')}/${fileName}` : fileName;
 
-    await this.bucket.put(key, ctx.req.body);
+    await this.bucket.put(key, body);
   }
 }

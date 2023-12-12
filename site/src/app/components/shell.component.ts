@@ -6,4 +6,4 @@ import { RouterModule } from '@angular/router';
   template: '<router-outlet />',
   imports: [RouterModule],
 })
-export class ProjectsComponent {}
+export class ShellComponent {}

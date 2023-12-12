@@ -6,10 +6,6 @@ import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
 
 const ROUTES: Routes = ROUTE_FILE;
-
-//export const ORIGIN_PASSES_GET: string[] = ['api/checklists', 'api/activities/*'];
-//export const ORIGIN_PASSES_POST: string[] = ['api/import/*', 'api/export/*', 'api/activities', 'api/activities/projects'];
-
 const app = new Hono<{ Bindings: Env; Variables: Variables }>();
 //
 //  Dependency Injection
@@ -54,8 +50,8 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //  Auth calls
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
-app.post('api/portfolio/:owner/projects/:projectId/export/libraryEntry', verifyJwt, OriginService.pass);
-app.post('api/portfolio/:owner/projects/:projectId/nodes/:nodeId/export/libraryEntry', verifyJwt, OriginService.pass);
+app.post('api/portfolio/:owner/projects/:projectId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
+app.post('api/portfolio/:owner/projects/:projectId/nodes/:nodeId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
 
 app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
@@ -96,8 +92,9 @@ app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
 app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
 
 app.get('api/files/statics/:file', verifyJwt, Http.statics.getAsync);
-app.get('api/files/resources/:owner/:file', verifyJwt, Http.resourceFiles.getAsync);
-app.put('api/files/resources/:owner/:file', verifyJwt, Http.resourceFiles.putAsync);
+
+app.get('api/portfolio/:owner/files/:file', verifyJwt, Http.resourceFiles.getAsync);
+app.put('api/portfolio/:owner/files/:file', verifyJwt, Http.resourceFiles.putAsync);
 
 app.get('api/queue/test', (ctx) => {
   ctx.env.JIRA_SYNC_QUEUE.send({
