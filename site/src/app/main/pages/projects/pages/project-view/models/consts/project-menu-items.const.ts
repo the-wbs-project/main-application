@@ -1,20 +1,21 @@
+import {
+  faArrowDown,
+  faArrowLeft,
+  faArrowRight,
+  faArrowUp,
+  faBookArrowRight,
+  faCopy,
+  faEye,
+  faPlus,
+  faTrash,
+} from '@fortawesome/pro-solid-svg-icons';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { ContextMenuItem } from '../context-menu-item.model';
-import {
-  arrowDownIcon,
-  arrowLeftIcon,
-  arrowRightIcon,
-  arrowUpIcon,
-  copyIcon,
-  eyeIcon,
-  plusIcon,
-  trashIcon,
-} from '@progress/kendo-svg-icons';
 
 const taskActions: ContextMenuItem[] = [
   {
     action: 'addSub',
-    svgIcon: plusIcon,
+    faIcon: faPlus,
     text: 'Projects.AddSubTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
@@ -23,13 +24,13 @@ const taskActions: ContextMenuItem[] = [
   },
   {
     action: 'viewTask',
-    svgIcon: eyeIcon,
+    faIcon: faEye,
     text: 'Projects.ViewTask',
     claim: PROJECT_CLAIMS.TASKS.READ,
   },
   {
     action: 'cloneTask',
-    svgIcon: copyIcon,
+    faIcon: faCopy,
     text: 'Projects.CloneTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
@@ -38,8 +39,18 @@ const taskActions: ContextMenuItem[] = [
     claim: PROJECT_CLAIMS.TASKS.CREATE,
   },
   {
+    action: 'exportTask',
+    faIcon: faBookArrowRight,
+    text: 'Projects.ExportToLibrary',
+    filters: {
+      //stati: [PROJECT_STATI.PLANNING],
+      //excludeFromCat: true,
+    },
+    claim: PROJECT_CLAIMS.TASKS.CREATE,
+  },
+  {
     action: 'deleteTask',
-    svgIcon: trashIcon,
+    faIcon: faTrash,
     text: 'Projects.DeleteTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
@@ -52,7 +63,7 @@ const taskActions: ContextMenuItem[] = [
 const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveLeft',
-    svgIcon: arrowLeftIcon,
+    faIcon: faArrowLeft,
     text: 'Projects.MoveLeft',
     filters: {
       excludeFromCat: true,
@@ -62,7 +73,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   },
   {
     action: 'moveUp',
-    svgIcon: arrowUpIcon,
+    faIcon: faArrowUp,
     text: 'Projects.MoveUp',
     filters: {
       excludeFromCat: true,
@@ -72,7 +83,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   },
   {
     action: 'moveDown',
-    svgIcon: arrowDownIcon,
+    faIcon: faArrowDown,
     text: 'Projects.MoveDown',
     filters: {
       excludeFromCat: true,
@@ -82,7 +93,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   },
   {
     action: 'moveRight',
-    svgIcon: arrowRightIcon,
+    faIcon: faArrowRight,
     text: 'Projects.MoveRight',
     filters: {
       excludeFromCat: true,

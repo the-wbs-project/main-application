@@ -28,6 +28,28 @@ export class ProjectNodeDataService {
     );
   }
 
+  exportToLibraryAsync(
+    owner: string,
+    projectId: string,
+    nodeId: string,
+    author: string,
+    title: string | undefined,
+    description: string | null | undefined,
+    includeResources: boolean,
+    visibility: number
+  ): Observable<string> {
+    return this.http.post<string>(
+      `api/portfolio/${owner}/projects/${projectId}/nodes/${nodeId}/export/libraryEntry`,
+      {
+        author,
+        title,
+        description,
+        includeResources,
+        visibility,
+      }
+    );
+  }
+
   private clean(nodes: ProjectNode[]): ProjectNode[] {
     Utils.cleanDates(nodes, 'createdOn', 'lastModified');
 

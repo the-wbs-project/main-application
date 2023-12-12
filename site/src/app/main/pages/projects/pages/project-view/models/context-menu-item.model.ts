@@ -1,9 +1,9 @@
-import { SVGIcon } from '@progress/kendo-svg-icons';
+import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 
 export interface ContextMenuItem {
   text: string;
-  svgIcon: SVGIcon;
+  faIcon: IconDefinition;
   action: string;
   filters?: {
     excludeFromCat?: boolean;

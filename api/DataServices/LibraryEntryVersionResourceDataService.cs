@@ -5,11 +5,11 @@ using Wbs.Api.Models;
 
 namespace Wbs.Api.DataServices;
 
-public class LibraryEntryResourceDataService : ResourceRecordDataService
+public class LibraryEntryVersionResourceDataService : ResourceRecordDataService
 {
-    private readonly ILogger<LibraryEntryResourceDataService> _logger;
+    private readonly ILogger<LibraryEntryVersionResourceDataService> _logger;
 
-    public LibraryEntryResourceDataService(ILogger<LibraryEntryResourceDataService> logger, AppConfig config) : base(config)
+    public LibraryEntryVersionResourceDataService(ILogger<LibraryEntryVersionResourceDataService> logger, AppConfig config) : base(config)
     {
         _logger = logger;
     }
@@ -26,7 +26,7 @@ public class LibraryEntryResourceDataService : ResourceRecordDataService
 
     public async Task<List<ResourceRecord>> GetListAsync(SqlConnection conn, string entryId, int entryVersion)
     {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryResources] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion ORDER BY [Order]", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryVersionResources] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion ORDER BY [Order]", conn);
 
         cmd.Parameters.AddWithValue("@EntryId", entryId);
         cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
@@ -45,7 +45,7 @@ public class LibraryEntryResourceDataService : ResourceRecordDataService
 
     public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, ResourceRecord resource)
     {
-        var cmd = new SqlCommand("dbo.LibraryEntryResources_Set", conn)
+        var cmd = new SqlCommand("[dbo].[LibraryEntryVersionResource_Set]", conn)
         {
             CommandType = CommandType.StoredProcedure
         };

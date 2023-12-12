@@ -172,7 +172,7 @@ export class ProjectActionButtonService {
         author,
         undefined,
         undefined,
-        false,
+        true,
         0
       )
       .subscribe();

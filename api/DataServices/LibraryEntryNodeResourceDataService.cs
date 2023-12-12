@@ -46,7 +46,7 @@ public class LibraryEntryNodeResourceDataService : ResourceRecordDataService
 
     public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, string entryNodeId, ResourceRecord resource)
     {
-        var cmd = new SqlCommand("dbo.LibraryEntryNodeResources_Set", conn)
+        var cmd = new SqlCommand("dbo.LibraryEntryNodeResource_Set", conn)
         {
             CommandType = CommandType.StoredProcedure
         };

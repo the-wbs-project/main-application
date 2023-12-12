@@ -87,6 +87,7 @@
       (select)="service.action($event.item.action, taskId()!)"
     >
       <ng-template kendoMenuItemTemplate let-item="item">
+        <fa-icon [icon]="item.faIcon" />&nbsp;
         {{ item.text | translate }}
       </ng-template>
     </kendo-contextmenu>

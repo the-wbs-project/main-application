@@ -8,7 +8,7 @@ public class ImportLibraryEntryService
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryNodeDataService entryNodeDataService;
     private readonly LibraryEntryNodeResourceDataService entryNodeResourceDataService;
-    private readonly LibraryEntryResourceDataService entryResourceDataService;
+    private readonly LibraryEntryVersionResourceDataService entryResourceDataService;
     private readonly LibraryEntryVersionDataService entryVersionDataService;
 
     private readonly ProjectDataService projectDataService;
@@ -20,7 +20,7 @@ public class ImportLibraryEntryService
         LibraryEntryDataService entryDataService,
         LibraryEntryNodeDataService entryNodeDataService,
         LibraryEntryNodeResourceDataService entryNodeResourceDataService,
-        LibraryEntryResourceDataService entryResourceDataService,
+        LibraryEntryVersionResourceDataService entryResourceDataService,
         LibraryEntryVersionDataService entryVersionDataService,
         ProjectDataService projectDataService,
         ProjectNodeDataService projectNodeDataService,
@@ -181,10 +181,15 @@ public class ImportLibraryEntryService
             };
 
             var libraryEntryNodes = new List<LibraryEntryNode>();
-            var libraryEntryNodeResourceSaves = new List<Task>();
             var nodeIds = new Dictionary<string, string>();
+            var nodes = new List<ProjectNode> { projectNode };
+            nodes.AddRange(GetProjectNodes(projectNodes, nodeId));
+            //
+            //  Change the order of the main node to 1.
+            //
+            projectNode.order = 1;
 
-            foreach (var n in GetProjectNodes(projectNodes, nodeId))
+            foreach (var n in nodes)
             {
                 var libraryNode = new LibraryEntryNode
                 {
@@ -201,26 +206,17 @@ public class ImportLibraryEntryService
                     removed = false
                 };
                 nodeIds.Add(n.id, libraryNode.id);
-
-                if (options.includeResources)
-                {
-                    var nodeResources = await projectNodeResourceDataService.GetListAsync(conn, projectId, n.id);
-
-                    foreach (var nr in nodeResources)
-                    {
-                        nr.Id = IdService.Create();
-
-                        libraryEntryNodeResourceSaves.Add(entryNodeResourceDataService.SetAsync(conn, owner, libraryEntry.id, libraryEntryVersion.version, libraryNode.id, nr));
-                    }
-                }
+                libraryEntryNodes.Add(libraryNode);
             }
             //
             //  Now loop through the nodes and fix the parent ids.
             //
             foreach (var n in libraryEntryNodes)
             {
-                if (n.parentId != null)
+                if (n.parentId != null && nodeIds.ContainsKey(n.parentId))
                     n.parentId = nodeIds[n.parentId];
+                else
+                    n.parentId = null;
             }
             libraryEntryVersion.disciplines = GetDisciplinesForNode(project,
                 libraryEntryNodes.SelectMany(x => x.disciplineIds).Distinct());
@@ -233,10 +229,6 @@ public class ImportLibraryEntryService
             if (options.includeResources)
             {
                 //
-                //  Get the node's resources and call it the project's resources.
-                //
-                var projectResources = await projectNodeResourceDataService.GetListAsync(conn, projectId, nodeId);
-                //
                 //  This converts the main node's resources to the library entry's resources
                 //
                 var libraryEntryResourceSaves = (await projectNodeResourceDataService.GetListAsync(conn, projectId, nodeId))
@@ -247,6 +239,20 @@ public class ImportLibraryEntryService
                         return entryResourceDataService.SetAsync(conn, owner, libraryEntry.id, libraryEntryVersion.version, r);
                     });
 
+                var libraryEntryNodeResourceSaves = new List<Task>();
+                foreach (var nId in nodeIds.Keys)
+                {
+                    if (nodeId == nId) continue;
+
+                    var nodeResources = await projectNodeResourceDataService.GetListAsync(conn, projectId, nId);
+
+                    foreach (var nr in nodeResources)
+                    {
+                        nr.Id = IdService.Create();
+
+                        libraryEntryNodeResourceSaves.Add(entryNodeResourceDataService.SetAsync(conn, owner, libraryEntry.id, 1, nodeIds[nId], nr));
+                    }
+                }
                 await Task.WhenAll(libraryEntryResourceSaves);
                 await Task.WhenAll(libraryEntryNodeResourceSaves);
             }
@@ -301,5 +307,4 @@ public class ImportLibraryEntryService
 
         return nodes;
     }
-
 }

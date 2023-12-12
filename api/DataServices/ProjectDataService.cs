@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text.Json;
 using Wbs.Api.Configuration;
 using Wbs.Api.Models;
 
@@ -135,11 +136,32 @@ public class ProjectDataService : BaseSqlDbService
             mainNodeView = DbValue<string>(reader, "MainNodeView"),
             category = DbValue<string>(reader, "Category"),
 
-            phases = DbJson<object[]>(reader, "Phases"),
-            disciplines = DbJson<object[]>(reader, "Disciplines"),
+            phases = GetCategoryList(DbValue<string>(reader, "Phases")),
+            disciplines = GetCategoryList(DbValue<string>(reader, "Disciplines")),
             roles = DbJson<ProjectRole[]>(reader, "Roles"),
 
             approvalStarted = DbValue<bool?>(reader, "ApprovalStarted"),
         };
+    }
+
+    private static object[] GetCategoryList(string value)
+    {
+        if (string.IsNullOrEmpty(value)) return null;
+
+        var results = new List<object>();
+        var jDoc = JsonDocument.Parse(value);
+
+        foreach (var node in jDoc.RootElement.EnumerateArray())
+        {
+            if (node.ValueKind == JsonValueKind.String)
+            {
+                results.Add(node.GetString());
+            }
+            else
+            {
+                results.Add(node.Deserialize<ListItem>());
+            }
+        }
+        return results.ToArray();
     }
 }

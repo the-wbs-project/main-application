@@ -54,7 +54,7 @@ builder.Services.AddSingleton<JiraHelpDeskDataService>();
 builder.Services.AddSingleton<LibraryEntryDataService>();
 builder.Services.AddSingleton<LibraryEntryNodeDataService>();
 builder.Services.AddSingleton<LibraryEntryNodeResourceDataService>();
-builder.Services.AddSingleton<LibraryEntryResourceDataService>();
+builder.Services.AddSingleton<LibraryEntryVersionResourceDataService>();
 builder.Services.AddSingleton<LibraryEntryVersionDataService>();
 builder.Services.AddSingleton<ListDataService>();
 builder.Services.AddSingleton<OrganizationDataService>();

@@ -15,10 +15,10 @@ public class LibraryEntryController : ControllerBase
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
-    private readonly LibraryEntryResourceDataService resourceDataService;
+    private readonly LibraryEntryVersionResourceDataService resourceDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
 
-    public LibraryEntryController(ILogger<LibraryEntryController> logger, TelemetryClient telemetry, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService)
+    public LibraryEntryController(ILogger<LibraryEntryController> logger, TelemetryClient telemetry, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;

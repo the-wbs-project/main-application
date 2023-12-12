@@ -17,9 +17,9 @@ BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
        EXISTS(SELECT 1 FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
         BEGIN
-            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersionResource_Set] WHERE [Id] = @Id)
+            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersionResources] WHERE [Id] = @Id)
                 BEGIN
-                    UPDATE [dbo].[LibraryEntryVersionResource_Set]
+                    UPDATE [dbo].[LibraryEntryVersionResources]
                     SET [Name] = @Name,
                         [Type] = @Type,
                         [Order] = @Order,
@@ -30,7 +30,7 @@ BEGIN
                 END
             ELSE
                 BEGIN
-                    INSERT INTO [dbo].[LibraryEntryVersionResource_Set]
+                    INSERT INTO [dbo].[LibraryEntryVersionResources]
                     VALUES (@Id, @EntryId, @EntryVersion, @Name, @Type, @Order, @ts, @ts, @Resource, @Description)
                 END
         END

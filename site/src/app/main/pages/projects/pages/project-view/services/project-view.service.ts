@@ -27,6 +27,7 @@ import { TaskDeleteComponent } from '../components/task-delete/task-delete.compo
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { ProjectNavigationService } from './project-navigation.service';
+import { AuthState } from '@wbs/main/states';
 
 @Injectable()
 export class ProjectViewService {
@@ -40,8 +41,16 @@ export class ProjectViewService {
     private readonly transformers: Transformers
   ) {}
 
+  private get project(): Project {
+    return this.store.selectSnapshot(ProjectState.current)!;
+  }
+
+  private get owner(): string {
+    return this.project.owner;
+  }
+
   private get projectId(): string {
-    return this.store.selectSnapshot(ProjectState.current)!.id;
+    return this.project.id;
   }
 
   private get projectDisciplines(): ProjectCategory[] {
@@ -79,6 +88,24 @@ export class ProjectViewService {
         this.store.dispatch(new MoveTaskUp(taskId));
       } else if (action === 'moveDown') {
         this.store.dispatch(new MoveTaskDown(taskId));
+      } else if (action === 'exportTask') {
+        const author = this.store.selectSnapshot(AuthState.userId)!;
+        const task = this.store
+          .selectSnapshot(TasksState.nodes)!
+          .find((x) => x.id === taskId)!;
+
+        this.data.projectNodes
+          .exportToLibraryAsync(
+            this.owner,
+            this.projectId,
+            taskId,
+            author,
+            task.title,
+            task.description,
+            true,
+            0
+          )
+          .subscribe();
       }
     }
   }

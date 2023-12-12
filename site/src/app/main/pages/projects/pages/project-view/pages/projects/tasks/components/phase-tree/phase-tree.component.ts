@@ -47,6 +47,7 @@ import {
   TasksState,
 } from '../../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @UntilDestroy()
 @Component({
@@ -63,6 +64,7 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     DisciplineIconListComponent,
     FindByIdPipe,
     FindThemByIdPipe,
+    FontAwesomeModule,
     ProgressBarComponent,
     TranslateModule,
     TreeDisciplineLegendComponent,

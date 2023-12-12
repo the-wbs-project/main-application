@@ -111,7 +111,7 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Author", libraryEntry.author);
         cmd.Parameters.AddWithValue("@Title", libraryEntry.title);
         cmd.Parameters.AddWithValue("@Description", DbValue(libraryEntry.description));
-        cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.description));
+        cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.visibility));
 
         await cmd.ExecuteNonQueryAsync();
     }
