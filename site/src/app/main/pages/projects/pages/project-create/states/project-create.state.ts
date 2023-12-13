@@ -252,7 +252,7 @@ export class ProjectCreateState {
         const cat = catsPhases.find((x) => x.id === phase)!;
 
         nodes.push({
-          description: cat.description,
+          description: cat.description ?? null,
           disciplineIds: [],
           id: cat.id,
           order: i + 1,
@@ -264,7 +264,7 @@ export class ProjectCreateState {
         });
       } else {
         nodes.push({
-          description: phase.description,
+          description: phase.description ?? null,
           disciplineIds: [],
           id: phase.id,
           order: i + 1,
@@ -284,7 +284,7 @@ export class ProjectCreateState {
         const cat = catsDiscipline.find((x) => x.id === discipline)!;
 
         nodes.push({
-          description: cat.description,
+          description: cat.description ?? null,
           id: cat.id,
           order: i + 1,
           parentId: null,
@@ -295,7 +295,7 @@ export class ProjectCreateState {
         });
       } else {
         nodes.push({
-          description: discipline.description,
+          description: discipline.description ?? null,
           id: discipline.id,
           order: i + 1,
           parentId: null,

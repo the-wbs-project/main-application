@@ -11,7 +11,7 @@ export interface WbsNodeView {
 
   children: number;
   childrenIds: string[];
-  description?: string | null;
+  description: string | null;
   disciplines: string[];
   levels: number[];
   levelText: string;

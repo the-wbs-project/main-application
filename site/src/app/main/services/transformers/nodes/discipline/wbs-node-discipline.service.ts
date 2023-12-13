@@ -50,7 +50,7 @@ export class WbsDisciplineNodeTransformer {
       const dView: WbsNodeView = {
         children: 0,
         childrenIds: [],
-        description: dNode?.description,
+        description: dNode?.description ?? null,
         disciplines: [d.id],
         id: d.id,
         treeId: d.id,
@@ -81,7 +81,7 @@ export class WbsDisciplineNodeTransformer {
         const pView: WbsNodeView = {
           children: 0,
           childrenIds: [],
-          description: pNode?.description,
+          description: pNode?.description ?? null,
           disciplines: [d.id],
           id: p.id,
           treeId: `${d.id}-${p.id}`,
