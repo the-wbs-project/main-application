@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Project } from '../models';
+import { Project, ProjectToLibraryOptions } from '../models';
 import { UserRolesViewModel } from '../view-models';
 
 export class ProjectDataService {
@@ -22,21 +22,11 @@ export class ProjectDataService {
   exportToLibraryAsync(
     owner: string,
     projectId: string,
-    author: string,
-    title: string | undefined,
-    description: string | undefined,
-    includeResources: boolean,
-    visibility: number
+    model: ProjectToLibraryOptions
   ): Observable<string> {
     return this.http.post<string>(
       `api/portfolio/${owner}/projects/${projectId}/export/libraryEntry`,
-      {
-        author,
-        title,
-        description,
-        includeResources,
-        visibility,
-      }
+      model
     );
   }
 

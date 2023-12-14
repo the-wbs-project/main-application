@@ -1,4 +1,5 @@
 export * from './actions.enum';
+export * from './library-entry-types.enum';
 export * from './lists.enum';
 export * from './project-filter.enum';
 export * from './project-scope.enum';

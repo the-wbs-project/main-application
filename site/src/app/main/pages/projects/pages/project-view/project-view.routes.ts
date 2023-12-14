@@ -10,6 +10,7 @@ import {
 import {
   ChecklistDataService,
   ChecklistTestService,
+  LibraryEntryExportService,
   ProjectNavigationService,
   ProjectViewService,
   TimelineService,
@@ -44,6 +45,7 @@ export const routes: Routes = [
       ChecklistDataService,
       ChecklistTestService,
       DialogService,
+      LibraryEntryExportService,
       ProjectNavigationService,
       ProjectViewService,
       TaskCreateService,

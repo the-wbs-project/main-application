@@ -101,13 +101,14 @@ public class LibraryEntryDataService : BaseSqlDbService
 
     public async Task SetAsync(SqlConnection conn, LibraryEntry libraryEntry)
     {
-        var cmd = new SqlCommand("dbo.LibraryEntry_Set", conn)
+        var cmd = new SqlCommand("[dbo].[LibraryEntry_Set]", conn)
         {
             CommandType = CommandType.StoredProcedure
         };
         cmd.Parameters.AddWithValue("@Id", libraryEntry.id);
         cmd.Parameters.AddWithValue("@PublishedVersion", DbValue(libraryEntry.publishedVersion));
         cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.owner);
+        cmd.Parameters.AddWithValue("@Type", libraryEntry.type);
         cmd.Parameters.AddWithValue("@Author", libraryEntry.author);
         cmd.Parameters.AddWithValue("@Title", libraryEntry.title);
         cmd.Parameters.AddWithValue("@Description", DbValue(libraryEntry.description));
@@ -123,11 +124,12 @@ public class LibraryEntryDataService : BaseSqlDbService
             id = DbValue<string>(reader, "Id"),
             publishedVersion = DbValue<int?>(reader, "PublishedVersion"),
             owner = DbValue<string>(reader, "OwnerId"),
+            type = DbValue<string>(reader, "Type"),
             author = DbValue<string>(reader, "Author"),
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
-            visibility = DbValue<int>(reader, "Description")
+            visibility = DbValue<string>(reader, "Description")
         };
     }
 }

@@ -13,7 +13,7 @@ AS
 BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId)
         BEGIN
-            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId)
+            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @Version)
                 BEGIN
                     UPDATE [dbo].[LibraryEntryVersions]
                     SET [Status] = @Status,

@@ -116,7 +116,7 @@ public class ProjectNodeController : ControllerBase
 
     [Authorize]
     [HttpPost("{nodeId}/export/libraryEntry")]
-    public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string projectId, string nodeId, [FromBody] ExportToLibraryOptions options)
+    public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string projectId, string nodeId, [FromBody] ProjectNodeToLibraryOptions options)
     {
         try
         {

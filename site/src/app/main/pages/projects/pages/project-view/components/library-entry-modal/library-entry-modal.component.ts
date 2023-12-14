@@ -1,61 +1,110 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  OnInit,
-  ViewChild,
   signal,
+  ViewEncapsulation,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { toSignal } from '@angular/core/rxjs-interop';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { Store } from '@ngxs/store';
+import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { ProjectCategory, PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
-import { CategorySelection } from '@wbs/core/view-models';
+import {
+  CheckBoxModule,
+  SwitchModule,
+  TextBoxModule,
+} from '@progress/kendo-angular-inputs';
+import {
+  LIBRARY_ENTRY_TYPES,
+  LIBRARY_ENTRY_TYPES_TYPE,
+} from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { LibraryEntryModalModel } from '../../models';
+import { MetadataState } from '@wbs/main/states';
+import { LibraryEntryModalModel, LibraryEntryModalResults } from '../../models';
+import { LibraryEntryDescriptionHintPipe } from './pipes/library-entry-description-hint.pipe';
+import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe';
 
 @Component({
   standalone: true,
   templateUrl: './library-entry-modal.component.html',
+  styleUrl: './library-entry-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EditorModule, FormsModule, TranslateModule],
+  encapsulation: ViewEncapsulation.None,
+  imports: [
+    CheckBoxModule,
+    EditorModule,
+    LibraryEntryDescriptionHintPipe,
+    LibraryEntryTitleHintPipe,
+    MultiSelectModule,
+    ReactiveFormsModule,
+    SwitchModule,
+    TextBoxModule,
+    TranslateModule,
+  ],
   providers: [CategorySelectionService],
 })
-export class LibraryEntryModalComponent implements OnInit {
-  @ViewChild('titleTextBox', { static: true }) titleTextBox!: ElementRef;
-
+export class LibraryEntryModalComponent {
+  readonly categories = toSignal(
+    this.store.select(MetadataState.projectCategories)
+  );
+  readonly contentCss = `.k-content { font-family: "Poppins", sans-serif; }`;
   readonly more = signal<boolean>(false);
+  readonly form = new FormGroup({
+    title: new FormControl<string | null>(null, [Validators.required]),
+    description: new FormControl<string | null>(null),
+    includeResources: new FormControl(true),
+    visibility: new FormControl(true),
+    anyCategory: new FormControl(false),
+    categories: new FormControl<string[] | null>(null),
+  });
 
-  title = '';
-  description = '';
-  includeResources = false;
-  visibility = 0;
+  type?: LIBRARY_ENTRY_TYPES_TYPE;
 
-  constructor(readonly modal: NgbActiveModal) {}
-
-  ngOnInit(): void {
-    (<HTMLInputElement>this.titleTextBox.nativeElement).focus();
-  }
+  constructor(readonly modal: NgbActiveModal, private readonly store: Store) {}
 
   setup(data: LibraryEntryModalModel): void {
-    this.title = data.title;
-    this.description = data.description;
-    this.includeResources = data.includeResources;
-    this.visibility = data.visibility;
+    this.type = data.type;
+
+    this.form.setValue({
+      description: data.description,
+      title: data.title,
+      includeResources: true,
+      visibility: true,
+      anyCategory: false,
+      categories: data.categories,
+    });
+
+    this.form.get('categories')?.clearValidators();
+
+    if (data.type === LIBRARY_ENTRY_TYPES.PROJECT) {
+      //this.form.get('categories')?.addValidators(Validators.required);
+    }
+  }
+
+  clearCategories(clear: boolean): void {
+    if (!clear) return;
+
+    this.form.controls.categories.setValue(null);
   }
 
   save(nav: boolean): void {
-    if (!this.title) return;
-
-    const model: LibraryEntryModalModel = {
-      title: this.title,
-      description: this.description,
-      includeResources: this.includeResources,
-      visibility: this.visibility,
+    const form = this.form.getRawValue();
+    const model: LibraryEntryModalResults = {
+      type: this.type!,
+      title: form.title!,
+      description: form.description,
+      includeResources: form.includeResources!,
+      categories: form.anyCategory ? null : form.categories,
       nav,
+      visibility: form.visibility ? 'public' : 'private',
     };
-
     this.modal.close(model);
   }
 }

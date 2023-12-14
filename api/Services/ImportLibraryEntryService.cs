@@ -38,7 +38,7 @@ public class ImportLibraryEntryService
         this.projectResourceDataService = projectResourceDataService;
     }
 
-    public async Task<LibraryEntryNodeImportResults> ImportFromProjectAsync(string owner, string projectId, ExportToLibraryOptions options)
+    public async Task<LibraryEntryNodeImportResults> ImportFromProjectAsync(string owner, string projectId, ProjectToLibraryOptions options)
     {
         using (var conn = projectDataService.CreateConnection())
         {
@@ -49,20 +49,20 @@ public class ImportLibraryEntryService
 
             var libraryEntry = new LibraryEntry
             {
-                author = options.author,
-                description = options.description ?? project.description,
                 id = IdService.Create(),
-                lastModified = DateTimeOffset.Now,
+                type = "project",
                 owner = owner,
+                author = options.author,
                 title = options.title ?? project.title,
-                publishedVersion = null,
+                description = options.description ?? project.description,
+                lastModified = DateTimeOffset.Now,
                 visibility = options.visibility
             };
             var libraryEntryVersion = new LibraryEntryVersion
             {
                 entryId = libraryEntry.id,
                 version = 1,
-                categories = new string[] { project.category },
+                categories = options.categories,
                 disciplines = project.disciplines,
                 phases = project.phases,
                 status = "draft"
@@ -154,7 +154,7 @@ public class ImportLibraryEntryService
         }
     }
 
-    public async Task<LibraryEntryNodeImportResults> ImportFromProjectNodeAsync(string owner, string projectId, string nodeId, ExportToLibraryOptions options)
+    public async Task<LibraryEntryNodeImportResults> ImportFromProjectNodeAsync(string owner, string projectId, string nodeId, ProjectNodeToLibraryOptions options)
     {
         using (var conn = projectDataService.CreateConnection())
         {
@@ -167,20 +167,21 @@ public class ImportLibraryEntryService
             var libraryEntry = new LibraryEntry
             {
                 id = IdService.Create(),
+                owner = owner,
                 author = options.author,
+                type = options.phase != null ? "phase" : "node",
                 title = options.title ?? projectNode.title,
                 description = options.description ?? projectNode.description,
                 lastModified = DateTimeOffset.Now,
-                owner = owner,
-                publishedVersion = null,
                 visibility = options.visibility
             };
             var libraryEntryVersion = new LibraryEntryVersion
             {
-                entryId = libraryEntry.id,
                 version = 1,
-                categories = new string[] { project.category },
-                status = "draft"
+                status = "draft",
+                entryId = libraryEntry.id,
+                categories = options.categories,
+                phases = options.phase != null ? new object[] { options.phase } : null
             };
 
             var results = new LibraryEntryNodeImportResults

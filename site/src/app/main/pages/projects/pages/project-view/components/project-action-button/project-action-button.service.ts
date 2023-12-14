@@ -11,11 +11,10 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { AuthState, RoleState } from '@wbs/main/states';
-import { ProjectViewService } from '../../services';
+import { RoleState } from '@wbs/main/states';
+import { LibraryEntryExportService, ProjectViewService } from '../../services';
 import { ProjectState } from '../../states';
 import { ProjectAction } from './project-action.model';
-import { DataServiceFactory } from '@wbs/core/data-services';
 
 @Injectable()
 export class ProjectActionButtonService {
@@ -30,7 +29,7 @@ export class ProjectActionButtonService {
 
   constructor(
     private readonly actions: ProjectViewService,
-    private readonly data: DataServiceFactory,
+    private readonly exportService: LibraryEntryExportService,
     private readonly messages: Messages,
     private readonly store: Store
   ) {}
@@ -163,19 +162,9 @@ export class ProjectActionButtonService {
   }
 
   private export(): void {
-    const proj = this.store.selectSnapshot(ProjectState.current)!;
-    const author = this.store.selectSnapshot(AuthState.userId)!;
-    this.data.projects
-      .exportToLibraryAsync(
-        proj.owner,
-        proj.id,
-        author,
-        undefined,
-        undefined,
-        true,
-        0
-      )
-      .subscribe();
+    this.exportService.exportProject(
+      this.store.selectSnapshot(ProjectState.current)!
+    );
   }
 
   private cancel(): void {

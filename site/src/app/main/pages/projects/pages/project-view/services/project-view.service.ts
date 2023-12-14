@@ -95,16 +95,15 @@ export class ProjectViewService {
           .find((x) => x.id === taskId)!;
 
         this.data.projectNodes
-          .exportToLibraryAsync(
-            this.owner,
-            this.projectId,
-            taskId,
+          .exportToLibraryAsync(this.owner, this.projectId, taskId, {
             author,
-            task.title,
-            task.description,
-            true,
-            0
-          )
+            title: task.title!,
+            description: task.description!,
+            includeResources: true,
+            visibility: '',
+            categories: [],
+            phase: '',
+          })
           .subscribe();
       }
     }

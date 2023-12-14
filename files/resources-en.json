@@ -20,6 +20,7 @@
       "General": "General",
       "Search": "Search",
       "Type": "Type",
+      "Title": "Title",
       "All": "All",
       "Error": "Error",
       "Success": "Success",
@@ -41,6 +42,7 @@
       "Append": "Append",
       "Select": "Select",
       "Selected": "Selected",
+      "Flags": "Flags",
       "People": "People",
       "Phases": "Phases",
       "Details": "Details",
@@ -288,6 +290,7 @@
       "UploadTaskIntro": "Select the file you want to upload...",
       "UploadTaskErrors": "The following errors found",
       "UploadTaskErrorPrefix": "Please fix and try again.",
+      "ExportToLibrary": "Export To Library",
       "AddSubTask": "Add Sub-Task",
       "EditTask": "Edit Task",
       "CloneTask": "Clone Task",
@@ -643,6 +646,23 @@
       "UrlIsRequired": "Url Is Required",
       "NameIsRequired": "Name Is Required",
       "DescriptionIsRequired": "Description Is Required"
+    }
+  },
+  {
+    "section": "LibraryExport",
+    "locale": "en-US",
+    "values": {
+      "CategoriesHint": "The project categories which this template is relevant for.",
+      "TitleHintProject": "The name of the project template you are storing in the library.",
+      "TitleHintPhase": "The name of the phase template you are storing in the library.",
+      "TitleHintTask": "The name of the task template you are storing in the library.",
+      "DescriptionHintProject": "The name of the project template you are storing in the library.",
+      "DescriptionHintPhase": "The name of the phase template you are storing in the library.",
+      "DescriptionHintTask": "The name of the task template you are storing in the library.",
+      "IncludeResources": "Include Resources",
+      "IncludeResourcesHint": "Do you want to replicate all associated resources to the template?",
+      "Visibility": "Public Visibility",
+      "VisibilityHint": "Will this template be accessible in the larger community?"
     }
   }
 ]
