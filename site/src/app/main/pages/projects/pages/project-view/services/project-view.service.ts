@@ -26,14 +26,15 @@ import {
 import { TaskDeleteComponent } from '../components/task-delete/task-delete.component';
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
+import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
-import { AuthState } from '@wbs/main/states';
 
 @Injectable()
 export class ProjectViewService {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly dialogs: DialogService,
+    private readonly exportService: LibraryEntryExportService,
     private readonly messages: Messages,
     private readonly nav: ProjectNavigationService,
     private readonly store: Store,
@@ -47,10 +48,6 @@ export class ProjectViewService {
 
   private get owner(): string {
     return this.project.owner;
-  }
-
-  private get projectId(): string {
-    return this.project.id;
   }
 
   private get projectDisciplines(): ProjectCategory[] {
@@ -89,22 +86,21 @@ export class ProjectViewService {
       } else if (action === 'moveDown') {
         this.store.dispatch(new MoveTaskDown(taskId));
       } else if (action === 'exportTask') {
-        const author = this.store.selectSnapshot(AuthState.userId)!;
         const task = this.store
           .selectSnapshot(TasksState.nodes)!
           .find((x) => x.id === taskId)!;
+        const phase = this.project.phases.find((p) =>
+          typeof p === 'string' ? p === taskId : p.id === taskId
+        );
 
-        this.data.projectNodes
-          .exportToLibraryAsync(this.owner, this.projectId, taskId, {
-            author,
-            title: task.title!,
-            description: task.description!,
-            includeResources: true,
-            visibility: '',
-            categories: [],
-            phase: '',
-          })
-          .subscribe();
+        if (phase)
+          this.exportService.exportPhase(
+            this.owner,
+            this.project.id,
+            phase,
+            task
+          );
+        else if (task) this.exportService.exportTask(this.owner, task);
       }
     }
   }
