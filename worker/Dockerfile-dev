@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:18.16.1 as node
+FROM node:18.19 as node
 
 WORKDIR /usr/src/app/worker
 
