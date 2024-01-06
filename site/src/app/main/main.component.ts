@@ -100,7 +100,7 @@ export class MainComponent implements AfterContentInit, OnInit {
           this.loading.set(false);
 
           if (!this.owner)
-            this.store.dispatch(new Navigate(['/', orgs![0].name, 'projects']));
+            this.store.dispatch(new Navigate(['/', orgs![0].name, 'library']));
         })
       )
       .subscribe();

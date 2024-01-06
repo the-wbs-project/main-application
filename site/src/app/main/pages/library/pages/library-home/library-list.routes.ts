@@ -1,9 +1,9 @@
-import { importProvidersFrom, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, Routes } from '@angular/router';
-import { NgxsModule, Store } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
 import { SetBreadcrumbs } from '@wbs/main/actions';
-import { Utils } from '@wbs/main/services';
+import { Utils, orgResolve } from '@wbs/main/services';
 import { map } from 'rxjs/operators';
 
 export const loadGuard = (route: ActivatedRouteSnapshot) => {
@@ -31,6 +31,9 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./library-list.component').then((x) => x.LibraryListComponent),
     canActivate: [loadGuard],
+    resolve: {
+      owner: orgResolve,
+    },
     //providers: [importProvidersFrom(NgxsModule.forFeature([ProjectListState]))],
   },
 ];

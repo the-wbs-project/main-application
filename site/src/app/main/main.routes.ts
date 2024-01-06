@@ -50,6 +50,11 @@ export const routes: Routes = [
           import('./main.component').then((m) => m.MainComponent),
         children: [
           {
+            path: 'library',
+            loadChildren: () =>
+              import('./pages/library/library.routes').then((m) => m.routes),
+          },
+          {
             path: 'projects',
             loadChildren: () =>
               import('./pages/projects/projects.routes').then((m) => m.routes),
