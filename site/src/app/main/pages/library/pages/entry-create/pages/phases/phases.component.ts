@@ -8,54 +8,51 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
-import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
-import { DisciplinesChosen } from '../../actions';
-import { PROJECT_CREATION_PAGES } from '../../models';
-import { ProjectCreateService } from '../../services';
+import { PhasesChosen } from '../../actions';
+import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
+import { LibraryEntryCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
 
 @Component({
   standalone: true,
-  templateUrl: './disciplines.component.html',
+  templateUrl: './phases.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [DisciplineEditorComponent, FillElementDirective, WizardFooterComponent],
+  imports: [PhaseEditorComponent, FillElementDirective, WizardFooterComponent],
   providers: [CategorySelectionService],
 })
-export class DisciplinesComponent implements OnInit {
+export class PhaseComponent implements OnInit {
   @Input() org!: string;
 
   categories?: CategorySelection[];
 
   constructor(
     private readonly catService: CategorySelectionService,
-    private readonly service: ProjectCreateService,
+    private readonly service: LibraryEntryCreateService,
     private readonly store: Store
   ) {}
 
   ngOnInit(): void {
-    const selected = this.store.selectSnapshot(ProjectCreateState.disciplines);
+    const selected = this.store.selectSnapshot(ProjectCreateState.phases);
 
-    this.categories = this.catService.build(
-      PROJECT_NODE_VIEW.DISCIPLINE,
-      selected
-    );
+    this.categories = this.catService.build(PROJECT_NODE_VIEW.PHASE, selected);
   }
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.PHASES);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.CATEGORY);
   }
 
   continue(): void {
-    const disciplines = this.catService.extract(this.categories, []).categories;
+    const phases = this.catService.extract(this.categories, []).categories;
 
-    if (disciplines.length === 0) return;
+    if (phases.length === 0) return;
 
-    this.store.dispatch(new DisciplinesChosen(disciplines));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.ROLES);
+    this.store.dispatch(new PhasesChosen(phases));
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.DISCIPLINES);
   }
 
   disable(categories: CategorySelection[] | undefined): boolean {

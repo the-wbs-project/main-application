@@ -6,4 +6,11 @@ export const routes: Routes = [
     loadChildren: () =>
       import('./pages/library-home/library-list.routes').then((x) => x.routes),
   },
+  {
+    path: 'create',
+    loadChildren: () =>
+      import('./pages/entry-create/library-create.routes').then(
+        (x) => x.routes
+      ),
+  },
 ];

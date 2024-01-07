@@ -3,15 +3,15 @@ import { faListTree, faPeopleGroup } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
+import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
 import { NodeViewChosen } from '../../actions';
-import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-create-node-view',
   templateUrl: './node-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FooterComponent, TranslateModule],
+  imports: [TranslateModule, WizardFooterComponent],
 })
 export class NodeViewComponent {
   readonly faListTree = faListTree;

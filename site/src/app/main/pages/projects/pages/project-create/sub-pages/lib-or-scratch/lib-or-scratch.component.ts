@@ -2,15 +2,15 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faBooks, faChalkboardUser } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
+import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
 import { LibOrScratchChosen } from '../../actions';
-import { FooterComponent } from '../../components/footer/footer.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-create-lib-or-scratch',
   templateUrl: './lib-or-scratch.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FooterComponent, TranslateModule],
+  imports: [TranslateModule, WizardFooterComponent],
 })
 export class LibOrScratchComponent {
   readonly faBooks = faBooks;

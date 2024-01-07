@@ -5,8 +5,8 @@ import { ListItem } from '@wbs/core/models';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
 import { CategoryListComponent } from '@wbs/main/pages/projects/components/category-list/category-list.component';
 import { CategoryChosen } from '../../actions';
-import { PROJECT_CREATION_PAGES } from '../../models';
-import { ProjectCreateService } from '../../services';
+import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
+import { LibraryEntryCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
 
 @Component({
@@ -22,16 +22,16 @@ export class CategoriesComponent {
   readonly selected = toSignal(this.store.select(ProjectCreateState.category));
 
   constructor(
-    private readonly service: ProjectCreateService,
+    private readonly service: LibraryEntryCreateService,
     private readonly store: Store
   ) {}
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.BASICS);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.BASICS);
   }
 
   continue(category: string): void {
     this.store.dispatch(new CategoryChosen(category));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.PHASES);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.PHASES);
   }
 }

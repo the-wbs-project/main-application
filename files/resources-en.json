@@ -20,6 +20,7 @@
       "General": "General",
       "Search": "Search",
       "Type": "Type",
+      "Library": "Library",
       "Title": "Title",
       "All": "All",
       "Error": "Error",
@@ -385,7 +386,7 @@
     "locale": "en-US",
     "values": {
       "GettingStarted_Title": "Getting Started",
-      "GettingStarted_Description": "This is some basic information about creating a new project. This page may not be needed but we're going to include it for now.",
+      "GettingStarted_Description": "Let's get started by creating your project.",
       "Basics_Title": "Title & Description",
       "Basics_Description": "Please provide the title for this project.",
       "Category_Title": "Project Category",
@@ -663,6 +664,21 @@
       "IncludeResourcesHint": "Do you want to replicate all associated resources to the template?",
       "Visibility": "Public Visibility",
       "VisibilityHint": "Will this template be accessible in the larger community?"
+    }
+  },
+  {
+    "section": "Library",
+    "locale": "en-US",
+    "values": {}
+  },
+  {
+    "section": "LibraryCreate",
+    "locale": "en-US",
+    "values": {
+      "GettingStarted_Title": "Getting Started",
+      "GettingStarted_Description": "Let's get started creating a new library entry.  Please provide some of the basic information needed for a new library entry",
+      "LibraryEntryTitle": "Library Entry Title",
+      "LibraryEntryDescription": "Library Entry Description"
     }
   }
 ]

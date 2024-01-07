@@ -13,8 +13,8 @@ import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { DisciplinesChosen } from '../../actions';
-import { PROJECT_CREATION_PAGES } from '../../models';
-import { ProjectCreateService } from '../../services';
+import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
+import { LibraryEntryCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
 
 @Component({
@@ -22,7 +22,11 @@ import { ProjectCreateState } from '../../states';
   templateUrl: './disciplines.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
-  imports: [DisciplineEditorComponent, FillElementDirective, WizardFooterComponent],
+  imports: [
+    DisciplineEditorComponent,
+    FillElementDirective,
+    WizardFooterComponent,
+  ],
   providers: [CategorySelectionService],
 })
 export class DisciplinesComponent implements OnInit {
@@ -32,7 +36,7 @@ export class DisciplinesComponent implements OnInit {
 
   constructor(
     private readonly catService: CategorySelectionService,
-    private readonly service: ProjectCreateService,
+    private readonly service: LibraryEntryCreateService,
     private readonly store: Store
   ) {}
 
@@ -46,7 +50,7 @@ export class DisciplinesComponent implements OnInit {
   }
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.PHASES);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.PHASES);
   }
 
   continue(): void {
@@ -55,7 +59,7 @@ export class DisciplinesComponent implements OnInit {
     if (disciplines.length === 0) return;
 
     this.store.dispatch(new DisciplinesChosen(disciplines));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.ROLES);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.ROLES);
   }
 
   disable(categories: CategorySelection[] | undefined): boolean {

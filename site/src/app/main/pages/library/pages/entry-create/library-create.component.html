@@ -1,0 +1,12 @@
+<div class="w-100 h-100 d-flex flex-flow-col pd-12">
+  <div class="w-100">
+    <wbs-page-header />
+  </div>
+  <div class="w-100 tx-center">
+    <p class="tx-24">{{ title() ?? "" | translate }}</p>
+    <p>{{ description() ?? "" | translate }}</p>
+  </div>
+  <div class="flex-fill pd-b-15 scroll">
+    <router-outlet />
+  </div>
+</div>

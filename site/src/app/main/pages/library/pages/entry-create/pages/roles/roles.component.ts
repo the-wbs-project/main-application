@@ -19,8 +19,8 @@ import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/proje
 import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
-import { PROJECT_CREATION_PAGES } from '../../models';
-import { ProjectCreateService } from '../../services';
+import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
+import { LibraryEntryCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
 
 @Component({
@@ -50,7 +50,7 @@ export class RolesComponent implements OnInit {
 
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly service: ProjectCreateService,
+    private readonly service: LibraryEntryCreateService,
     private readonly store: Store
   ) {}
 
@@ -74,7 +74,7 @@ export class RolesComponent implements OnInit {
   }
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.DISCIPLINES);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.DISCIPLINES);
   }
 
   continue(): void {
@@ -85,7 +85,7 @@ export class RolesComponent implements OnInit {
     roles.set(this.ids.sme, this.smeIds());
 
     this.store.dispatch(new RolesChosen(roles));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.SAVING);
+    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.SAVING);
   }
 
   nav(): void {

@@ -1,0 +1,91 @@
+<div class="w-100 tx-center">
+  <div class="d-ib w-100 mx-wd-800 tx-left">
+    <div class="row">
+      <div class="col-12">
+        <label for="titleEditor" class="form-label">
+          {{ "LibraryCreate.LibraryEntryTitle" | translate }}
+        </label>
+        <kendo-textbox #titleEditor [(ngModel)]="title" />
+      </div>
+    </div>
+    <div class="row mg-t-15">
+      <div class="col-12">
+        <label class="form-label"> Library Entry Type </label>
+        <div class="container-fluid border tx-center">
+          <div class="row">
+            <div class="col-4">
+              <div
+                class="card mt-2 mb-2"
+                [ngClass]="{ 'bd-2 border-success': type === 'project' }"
+              >
+                <h5 class="card-header">Project</h5>
+                <div class="card-body">
+                  <fa-icon [icon]="faChartGantt" size="3x" />
+                  <p class="card-text mg-t-10 ht-60">
+                    This WBS will represent an entire project.
+                  </p>
+                  <wbs-select-button
+                    [selected]="type === 'project'"
+                    (clicked)="type = 'project'"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div
+                class="card mt-2 mb-2"
+                [ngClass]="{ 'bd-2 border-success': type === 'phase' }"
+              >
+                <h5 class="card-header">Phase</h5>
+                <div class="card-body">
+                  <fa-icon [icon]="faDiagramSubtask" size="3x" />
+                  <p class="card-text mg-t-10 ht-60">
+                    This WBS is a phase which could apply to multiple projects.
+                  </p>
+                  <wbs-select-button
+                    [selected]="type === 'phase'"
+                    (clicked)="type = 'phase'"
+                  />
+                </div>
+              </div>
+            </div>
+            <div class="col-4">
+              <div
+                class="card mt-2 mb-2"
+                [ngClass]="{ 'bd-2 border-success': type === 'task' }"
+              >
+                <h5 class="card-header">Task</h5>
+                <div class="card-body">
+                  <fa-icon [icon]="faTasks" size="3x" />
+                  <p class="card-text mg-t-10 ht-60">
+                    This WBS is a task (& subtasks) which can be used in
+                    multiple places.
+                  </p>
+                  <wbs-select-button
+                    [selected]="type === 'task'"
+                    (clicked)="type = 'task'"
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row mg-t-15">
+      <div class="col-12">
+        <label for="descriptionEditor" class="form-label">
+          {{ "LibraryCreate.LibraryEntryDescription" | translate }}
+        </label>
+        <kendo-editor #descriptionEditor [(ngModel)]="description" />
+      </div>
+    </div>
+    <br />
+    <br />
+    <wbs-wizard-footer
+      [showBack]="false"
+      [disableContinue]="titleEditor.value === '' && type != undefined"
+      (continueClicked)="continue()"
+    />
+  </div>
+</div>
