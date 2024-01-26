@@ -1,29 +1,41 @@
 import { Routes } from '@angular/router';
-import { orgResolve } from '@wbs/main/services';
+import { orgResolve, projectCategoryResolver } from '@wbs/main/services';
 import {
   redirectGuard,
   setupGuard,
   startWizardGuard,
   verifyWizardGuard,
 } from './children.guards';
-import { descriptionResolver, titleResolver } from './children.resolvers';
+import {
+  categoriesPageDescriptionResolver,
+  categoriesResolver,
+  categoryResolver,
+  titleResolver,
+  typeResolver,
+} from './children.resolvers';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [redirectGuard],
-    loadComponent: () =>
-      import('./getting-started/getting-started.component').then(
-        (x) => x.GettingStartedComponent
-      ),
+    loadComponent: () => import('./basics').then((x) => x.BasicsComponent),
   },
   {
     path: 'getting-started',
     canActivate: [setupGuard, startWizardGuard],
     loadComponent: () =>
-      import('./getting-started/getting-started.component').then(
+      import('./getting-started.component').then(
         (x) => x.GettingStartedComponent
       ),
+    data: {
+      pageTitle: 'LibraryCreate.GettingStarted_Title',
+      pageDescription: 'LibraryCreate.GettingStarted_Description',
+    },
+  },
+  {
+    path: 'basics',
+    canActivate: [setupGuard, startWizardGuard],
+    loadComponent: () => import('./basics').then((x) => x.BasicsComponent),
     data: {
       pageTitle: 'LibraryCreate.GettingStarted_Title',
       pageDescription: 'LibraryCreate.GettingStarted_Description',
@@ -31,25 +43,40 @@ export const routes: Routes = [
     resolve: {
       org: orgResolve,
       title: titleResolver,
-      description: descriptionResolver,
+      categories: projectCategoryResolver,
+      selectedCategories: categoriesResolver,
     },
-  } /*
+  },
   {
     path: 'category',
     canActivate: [setupGuard, verifyWizardGuard],
-    loadComponent: () =>
-      import('./categories/categories.component').then(
-        (x) => x.CategoriesComponent
-      ),
+    loadComponent: () => import('./category').then((x) => x.CategoryComponent),
     data: {
-      title: 'ProjectCreate.Category_Title',
-      description: 'ProjectCreate.Category_Description',
+      pageTitle: 'ProjectCreate.Category_Title',
+      pageDescription: 'ProjectCreate.Category_Description',
     },
     resolve: {
       org: orgResolve,
       categories: projectCategoryResolver,
+      selected: categoryResolver,
     },
   },
+  {
+    path: 'categories',
+    canActivate: [setupGuard, verifyWizardGuard],
+    loadComponent: () =>
+      import('./categories').then((x) => x.CategoriesComponent),
+    data: {
+      pageTitle: 'ProjectCreate.Categories_Title',
+    },
+    resolve: {
+      org: orgResolve,
+      type: typeResolver,
+      pageDescription: categoriesPageDescriptionResolver,
+      categories: projectCategoryResolver,
+      selected: categoriesResolver,
+    },
+  } /*
   {
     path: 'phases',
     canActivate: [setupGuard, verifyWizardGuard],

@@ -7,11 +7,14 @@ import { MembershipState } from '../states';
 
 export class Utils {
   static getOrgName(store: Store, route: ActivatedRouteSnapshot): string {
-    return (
-      route.params['org'] ??
-      route.params['owner'] ??
-      store.selectSnapshot(MembershipState.organization)?.name
-    );
+    const org = route.params['org'];
+    const owner = route.params['owner'];
+    const name = store.selectSnapshot(MembershipState.organization)?.name;
+
+    if (org && org !== 'undefined') return org;
+    if (owner && owner !== 'undefined') return owner;
+
+    return name ?? '';
   }
 
   static getOrgNameAsync(

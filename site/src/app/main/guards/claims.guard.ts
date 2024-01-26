@@ -11,6 +11,7 @@ const claimsGuard = (
   //
   //  We need to wait for the membership state to load before we can check the roles.
   //
+  console.log('test');
   return data.claims.getOrganizationClaimsAsync(org).pipe(
     map((userClaims) => {
       if (!userClaims) return false;

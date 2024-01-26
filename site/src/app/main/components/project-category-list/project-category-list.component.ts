@@ -11,13 +11,12 @@ import { ListItem } from '@wbs/core/models';
 @Component({
   standalone: true,
   selector: 'wbs-project-category-list',
-  templateUrl: './category-list.component.html',
+  templateUrl: './project-category-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
 })
-export class CategoryListComponent {
+export class ProjectCategoryListComponent {
   @Input({ required: true }) categories!: ListItem[];
-  @Input() paddingBottom = 0;
   @Input() selected?: string;
   @Output() readonly categoryChosen = new EventEmitter<string>();
 }

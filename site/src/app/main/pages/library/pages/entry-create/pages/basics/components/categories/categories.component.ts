@@ -3,9 +3,7 @@ import { Store } from '@ngxs/store';
 import { ListItem } from '@wbs/core/models';
 import { ProjectCategoryMultipleListComponent } from '@wbs/main/components/project-category-multiple-list';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { CategoriesChosen } from '../../actions';
-import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
-import { LibraryEntryCreateService } from '../../services';
+import { LIBRARY_ENTRY_CREATION_PAGES } from '../../../../models';
 
 @Component({
   standalone: true,
@@ -19,17 +17,5 @@ export class CategoriesComponent {
   @Input() categories!: ListItem[];
   @Input() selected!: string[];
 
-  constructor(
-    private readonly service: LibraryEntryCreateService,
-    private readonly store: Store
-  ) {}
-
-  back(): void {
-    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.GETTING_STARTED);
-  }
-
-  continue(): void {
-    this.store.dispatch(new CategoriesChosen(this.selected));
-    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.PHASES);
-  }
+  constructor(private readonly store: Store) {}
 }

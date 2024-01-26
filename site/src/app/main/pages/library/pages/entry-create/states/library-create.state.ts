@@ -17,6 +17,7 @@ import { AuthState, MetadataState } from '@wbs/main/states';
 import { Observable, switchMap, tap } from 'rxjs';
 import { LIBRARY_ACTIONS } from '../../../models';
 import {
+  CategoriesChosen,
   CategoryChosen,
   DisciplinesChosen,
   PhasesChosen,
@@ -28,8 +29,8 @@ import {
 } from '../actions';
 
 interface StateModel {
+  categories?: string[];
   category?: string;
-  description: string;
   disciplines?: (string | ListItem)[];
   pageDescription?: string;
   pageTitle?: string;
@@ -47,7 +48,6 @@ interface StateModel {
 @State<StateModel>({
   name: 'libaryCreate',
   defaults: {
-    description: '',
     isSaving: false,
     isWizardActive: false,
     roles: new Map<string, string[]>(),
@@ -66,8 +66,8 @@ export class LibraryCreateState {
   }
 
   @Selector()
-  static description(state: StateModel): string {
-    return state.description;
+  static categories(state: StateModel): string[] | undefined {
+    return state.categories;
   }
 
   @Selector()
@@ -122,12 +122,12 @@ export class LibraryCreateState {
 
   @Action(StartWizard)
   startWizard(ctx: StateContext<StateModel>, { owner }: StartWizard): void {
+    if (ctx.getState().isWizardActive) return;
     ctx.patchState({
       owner,
       isWizardActive: true,
-      description: '',
       roles: new Map<string, string[]>(),
-      title: '',
+      //title: '',
       category: undefined,
       disciplines: undefined,
       phases: undefined,
@@ -149,20 +149,25 @@ export class LibraryCreateState {
   @Action(SubmitBasics)
   submitBasics(
     ctx: StateContext<StateModel>,
-    { title, description, type }: SubmitBasics
+    { title, type }: SubmitBasics
   ): void {
-    ctx.patchState({ title, description, type });
+    ctx.patchState({ title, type });
   }
 
   @Action(CategoryChosen)
-  categoryChosen(ctx: StateContext<StateModel>, action: CategoryChosen): void {
-    ctx.patchState({
-      //
-      //  For now we are going to skip the library page and node view page and go straight to phase first
-      //
-      //page: PAGES.LIB_OR_SCRATCH,
-      category: action.category,
-    });
+  categoryChosen(
+    ctx: StateContext<StateModel>,
+    { category }: CategoryChosen
+  ): void {
+    ctx.patchState({ category });
+  }
+
+  @Action(CategoriesChosen)
+  categoriesChosen(
+    ctx: StateContext<StateModel>,
+    { categories }: CategoriesChosen
+  ): void {
+    ctx.patchState({ categories });
   }
 
   @Action(PhasesChosen)

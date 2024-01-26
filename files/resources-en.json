@@ -35,6 +35,7 @@
       "SaveAndView": "Save & View",
       "View": "View",
       "Status": "Status",
+      "Task": "Task",
       "Tasks": "Tasks",
       "About": "About",
       "Active": "Active",
@@ -45,6 +46,7 @@
       "Selected": "Selected",
       "Flags": "Flags",
       "People": "People",
+      "Phase": "Phase",
       "Phases": "Phases",
       "Details": "Details",
       "Approval": "Approval",
@@ -61,6 +63,7 @@
       "Previous": "Previous",
       "Next": "Next",
       "Actions": "Actions",
+      "Project": "Project",
       "Projects": "Projects",
       "Download": "Download",
       "Upload": "Upload",
@@ -678,7 +681,16 @@
       "GettingStarted_Title": "Getting Started",
       "GettingStarted_Description": "Let's get started creating a new library entry.  Please provide some of the basic information needed for a new library entry",
       "LibraryEntryTitle": "Library Entry Title",
-      "LibraryEntryDescription": "Library Entry Description"
+      "LibraryEntryDescription": "Library Entry Description",
+      "LibraryEntryTypes": "Library Entry Types",
+      "ProjectTypeDescription": "This WBS will represent an entire project.",
+      "PhaseTypeDescription": "This WBS is a phase which could apply to multiple projects.",
+      "TaskTypeDescription": "This WBS is a task (& subtasks) which can be used in multiple places.",
+      "Category_Title": "Project Category",
+      "Category_Description": "Select the category that best describes this project WBS.",
+      "Categories_Title": "Project Categories",
+      "Categories_Description_Phase": "Select the categories which this phase WBS can be applied to. This is not required.",
+      "Categories_Description_Task": "Select the categories which this task WBS can be applied to. This is not required."
     }
   }
 ]

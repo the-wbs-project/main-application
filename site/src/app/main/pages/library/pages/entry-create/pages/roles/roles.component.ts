@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, RoleIds } from '@wbs/core/models';
-import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
+import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
 import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
 import { forkJoin } from 'rxjs';

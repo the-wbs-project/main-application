@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
+import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { SubmitBasics } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';

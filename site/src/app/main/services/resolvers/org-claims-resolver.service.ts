@@ -6,7 +6,10 @@ import { Utils } from '../utils.service';
 
 export const orgClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
-) =>
-  inject(DataServiceFactory).claims.getOrganizationClaimsAsync(
+) => {
+  console.log(Utils.getOrgName(inject(Store), route));
+
+  return inject(DataServiceFactory).claims.getOrganizationClaimsAsync(
     Utils.getOrgName(inject(Store), route)
   );
+};

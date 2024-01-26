@@ -9,7 +9,7 @@ import { Store } from '@ngxs/store';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
-import { WizardFooterComponent } from '@wbs/main/components/wizard-footer/wizard-footer.component';
+import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { PhasesChosen } from '../../actions';

@@ -15,15 +15,13 @@ export class LibraryEntryCreateService {
     );
   }
 
-  setBasics(
-    org: string,
-    title: string,
-    description: string,
-    type: string
-  ): void {
-    this.store.dispatch(
-      new SubmitBasics(title.trim(), description.trim(), type)
+  setBasics(org: string, title: string, type: string): void {
+    this.store.dispatch(new SubmitBasics(title.trim(), type));
+    this.nav(
+      org,
+      type === 'project'
+        ? LIBRARY_ENTRY_CREATION_PAGES.CATEGORY
+        : LIBRARY_ENTRY_CREATION_PAGES.CATEGORIES
     );
-    this.nav(org, LIBRARY_ENTRY_CREATION_PAGES.CATEGORY);
   }
 }
