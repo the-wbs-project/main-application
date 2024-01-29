@@ -1,0 +1,13 @@
+{
+  "name": "pm-empower",
+  "version": "0.0.0",
+  "scripts": {
+    "setup": "npm",
+    "docker:globals": "npm install wrangler -g",
+    "start:server": "wrangler pages dev dist --compatibility-date=2021-09-20 --port 4200 --script-path ../_worker.js --log-level warn --ip \"*\"",
+    "start": "npm run start:server"
+  },
+  "private": true,
+  "dependencies": {},
+  "devDependencies": {}
+}

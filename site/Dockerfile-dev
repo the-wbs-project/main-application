@@ -16,6 +16,6 @@ RUN npm run docker:fa ${FA_TOKEN}
 RUN npm run docker:install
 RUN npm run kendo:auth
 
-EXPOSE 4200
+#EXPOSE 4200
 
 CMD ["npm", "start"]

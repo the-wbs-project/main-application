@@ -74,4 +74,5 @@ AUTH_DOMAIN = "auth.pm-empower.com"
 
 [dev]
 port = 88
-host = "web-api"
+host = "wbs-api"
+ip = "*"

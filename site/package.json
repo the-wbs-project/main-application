@@ -9,13 +9,10 @@
     "deploy": "ng build --configuration production --output-path ../dist",
     "styles": "gulp watch && gulp dark && gulp transparent && gulp skin",
     "kendo:auth": "npx kendo-ui-license activate",
-    "docker:globals": "npm install wrangler concurrently @angular/cli @angular-devkit/build-angular -g",
+    "docker:globals": "npm install @angular/cli @angular-devkit/build-angular -g",
     "docker:fa": "npm config set \"@fortawesome:registry\" https://npm.fontawesome.com/ && npm config set \"//npm.fontawesome.com/:_authToken\"",
     "docker:install": "npm install --force",
-    "start:build": "ng build --watch --configuration development --output-path dist",
-    "start:server": "wrangler pages dev dist --compatibility-date=2021-09-20 --port 4200 --script-path _worker.js --log-level warn",
-    "start-notused": "npm run start:server",
-    "start": "concurrently \"npm run start:build\" \"npm run start:server\""
+    "start": "ng build --watch --configuration development --output-path dist"
   },
   "private": true,
   "dependencies": {

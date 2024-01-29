@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "postinstall": "yarn run s:setup && yarn run w:setup",
-    "build": "docker-compose build --no-cache",
+    "build": "docker-compose build",
+    "rebuild": "docker-compose build --no-cache",
     "start": "docker-compose up",
     "stop": "docker-compose stop",
     "upload": "cd files && yarn run upload:local",
