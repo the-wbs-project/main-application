@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { CategoriesChosen, SubmitBasics } from '../actions';
+import { CategoriesChosen, PhasesChosen, SubmitBasics } from '../actions';
 import { LIBRARY_ENTRY_CREATION_PAGES } from '../models';
 
 @Injectable()
@@ -17,16 +17,16 @@ export class LibraryEntryCreateService {
 
   setBasics(org: string, title: string, type: string): void {
     this.store.dispatch(new SubmitBasics(title.trim() + ' world', type));
-    this.nav(
-      org,
-      type === 'project'
-        ? LIBRARY_ENTRY_CREATION_PAGES.CATEGORY
-        : LIBRARY_ENTRY_CREATION_PAGES.CATEGORIES
-    );
+    this.nav(org, LIBRARY_ENTRY_CREATION_PAGES.CATEGORIES);
   }
 
   setCategories(org: string, type: string, categories: string[]): void {
     this.store.dispatch(new CategoriesChosen(categories));
+    this.nav(org, LIBRARY_ENTRY_CREATION_PAGES.PHASES);
+  }
+
+  setPhases(org: string, phases: string[]): void {
+    this.store.dispatch(new PhasesChosen(phases));
     this.nav(org, LIBRARY_ENTRY_CREATION_PAGES.PHASES);
   }
 }

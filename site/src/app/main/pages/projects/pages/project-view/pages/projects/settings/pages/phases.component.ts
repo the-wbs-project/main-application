@@ -11,6 +11,7 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 import { ChangeProjectCategories } from '../../../../actions';
 import { ProjectState, TasksState } from '../../../../states';
 
@@ -73,7 +74,7 @@ export class ProjectSettingsPhasesComponent implements OnInit, DirtyComponent {
     }
 
     this.categories = this.catService.build(
-      PROJECT_NODE_VIEW.PHASE,
+      this.store.selectSnapshot(MetadataState.phases)!,
       project.phases,
       'Projects.PhaseRemoveConfirm',
       counts

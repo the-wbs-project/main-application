@@ -1,11 +1,21 @@
 <div class="d-flex flex-flow-col h-100">
   <div class="mg-t-10 w-100 flex-fill scroll">
+    {{ type() }}
+    @if (type() === 'project') {
+    <wbs-project-category-list
+      buttonClass="mn-wd-110"
+      [categories]="categories()"
+      [selected]="selected()[0]"
+      (categoryChosen)="continue([$event])"
+    />
+    } @else {
     <wbs-project-category-multiple-list
       buttonClass="mn-wd-110"
       [categories]="categories()"
       [selected]="selected()"
       (selectedChange)="selected.set($event)"
     />
+    }
   </div>
   <wbs-wizard-footer (backClicked)="back()" (continueClicked)="continue()" />
 </div>

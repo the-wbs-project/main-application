@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Output, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -8,11 +8,15 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule],
 })
 export class WizardFooterComponent {
-  @Input() view?: string;
-  @Input() showBack = true;
-  @Input() showContinue = true;
-  @Input() disableBack = false;
-  @Input() disableContinue = false;
   @Output() readonly backClicked = new EventEmitter<void>();
   @Output() readonly continueClicked = new EventEmitter<void>();
+
+  readonly view = input<string>();
+  readonly showBack = input<boolean>(true);
+  readonly disableBack = input<boolean>(true);
+  readonly showContinue = input<boolean>(false);
+  readonly disableContinue = input<boolean>(false);
+
+  readonly backText = input<string>('General.Back');
+  readonly continueText = input<string>('General.Continue');
 }

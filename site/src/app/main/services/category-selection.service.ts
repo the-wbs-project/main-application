@@ -6,6 +6,7 @@ import {
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
   ProjectCategoryChanges,
+  ListItem,
 } from '@wbs/core/models';
 import {
   CategoryCancelConfirm,
@@ -22,24 +23,12 @@ export class CategorySelectionService {
   ) {}
 
   build(
-    categoryType: PROJECT_NODE_VIEW_TYPE,
+    categories: ListItem[],
     selected: ProjectCategory[] | undefined,
     confirmMessage?: string,
     catCounts?: Map<string, number>
   ): CategorySelection[] {
-    const cat =
-      categoryType === PROJECT_NODE_VIEW.DISCIPLINE
-        ? LISTS.DISCIPLINE
-        : categoryType === PROJECT_NODE_VIEW.PHASE
-        ? LISTS.PHASE
-        : null;
-
-    if (cat == null) return [];
-
-    const categories = this.store
-      .selectSnapshot(MetadataState.categoryList)
-      .get(cat)!;
-
+    console.log(categories);
     const cats: CategorySelection[] = [];
 
     for (const cat of categories) {

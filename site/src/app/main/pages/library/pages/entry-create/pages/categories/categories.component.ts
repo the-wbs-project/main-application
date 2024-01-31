@@ -11,12 +11,17 @@ import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
 import { LibraryEntryCreateService } from '../../services';
 import { LibraryCreateState } from '../../states';
+import { ProjectCategoryListComponent } from '@wbs/main/components/project-category-list';
 
 @Component({
   standalone: true,
   templateUrl: './categories.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ProjectCategoryMultipleListComponent, WizardFooterComponent],
+  imports: [
+    ProjectCategoryListComponent,
+    ProjectCategoryMultipleListComponent,
+    WizardFooterComponent,
+  ],
 })
 export class CategoriesComponent {
   readonly org = input.required<string>();
@@ -35,7 +40,7 @@ export class CategoriesComponent {
     this.service.nav(this.org(), LIBRARY_ENTRY_CREATION_PAGES.BASICS);
   }
 
-  continue(): void {
-    this.service.setCategories(this.org(), this.type(), this.selected());
+  continue(selected: string[] = this.selected()): void {
+    this.service.setCategories(this.org(), this.type(), selected);
   }
 }

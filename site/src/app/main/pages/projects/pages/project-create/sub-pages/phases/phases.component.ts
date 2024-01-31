@@ -6,12 +6,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 import { PhasesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
@@ -37,9 +37,10 @@ export class PhaseComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const categories = this.store.selectSnapshot(MetadataState.phases);
     const selected = this.store.selectSnapshot(ProjectCreateState.phases);
 
-    this.categories = this.catService.build(PROJECT_NODE_VIEW.PHASE, selected);
+    this.categories = this.catService.build(categories, selected);
   }
 
   back(): void {

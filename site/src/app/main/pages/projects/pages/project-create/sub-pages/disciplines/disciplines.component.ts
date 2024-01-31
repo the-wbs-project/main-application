@@ -6,12 +6,12 @@ import {
   ViewEncapsulation,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 import { DisciplinesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
@@ -41,12 +41,10 @@ export class DisciplinesComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const categories = this.store.selectSnapshot(MetadataState.disciplines);
     const selected = this.store.selectSnapshot(ProjectCreateState.disciplines);
 
-    this.categories = this.catService.build(
-      PROJECT_NODE_VIEW.DISCIPLINE,
-      selected
-    );
+    this.categories = this.catService.build(categories, selected);
   }
 
   back(): void {
