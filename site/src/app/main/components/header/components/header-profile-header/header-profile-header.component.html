@@ -1,18 +1,18 @@
 <div class="px-3 pt-1 pb-2 border-bottom">
   <div class="d-flex wd-100p">
     <div class="main-img-user mg-t-8">
-      <wbs-header-profile-picture [picture]="user.picture" />
+      <wbs-header-profile-picture [picture]="user().picture" />
     </div>
 
     <div class="ms-3 my-auto">
       <h6 class="tx-15-f font-weight-semibold mb-0">
-        {{ user.name }}
+        {{ user().name }}
       </h6>
       <div class="dropdown-title-text subtext op-6 tx-10 tx-italic">
-        {{ user.email }}
+        {{ user().email }}
       </div>
       <div class="dropdown-title-text subtext op-6 tx-12">
-        {{ roles | roleList : true }}
+        {{ roles() | roleList : true }}
       </div>
     </div>
   </div>

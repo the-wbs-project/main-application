@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
@@ -8,12 +8,12 @@ import { Organization } from '@wbs/core/models';
 @Component({
   standalone: true,
   selector: 'wbs-header-organization-list',
-  template: `@if (orgs.length === 1) { {{ org.display_name }} } @else {
+  template: `@if (orgs().length === 1) { {{ org().display_name }} } @else {
     <kendo-dropdownlist
-      [data]="orgs"
+      [data]="orgs()"
       [textField]="'display_name'"
       [valueField]="'name'"
-      [value]="org"
+      [value]="org()"
       size="small"
       fillMode="outline"
       [ngClass]="'tx-white'"
@@ -25,8 +25,8 @@ import { Organization } from '@wbs/core/models';
   imports: [DropDownListModule, NgClass],
 })
 export class OrganizationListComponent {
-  @Input({ required: true }) org!: Organization;
-  @Input({ required: true }) orgs!: Organization[];
+  readonly org = input.required<Organization>();
+  readonly orgs = input.required<Organization[]>();
 
   constructor(private readonly store: Store) {}
 

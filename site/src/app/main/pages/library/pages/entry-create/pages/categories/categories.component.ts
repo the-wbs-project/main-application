@@ -1,11 +1,16 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Store } from '@ngxs/store';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  signal,
+} from '@angular/core';
 import { ListItem } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { ProjectCategoryMultipleListComponent } from '@wbs/main/components/project-category-multiple-list';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { CategoriesChosen } from '../../actions';
 import { LIBRARY_ENTRY_CREATION_PAGES } from '../../models';
 import { LibraryEntryCreateService } from '../../services';
+import { LibraryCreateState } from '../../states';
 
 @Component({
   standalone: true,
@@ -14,22 +19,23 @@ import { LibraryEntryCreateService } from '../../services';
   imports: [ProjectCategoryMultipleListComponent, WizardFooterComponent],
 })
 export class CategoriesComponent {
-  @Input() org!: string;
-  @Input() type!: string;
-  @Input() categories!: ListItem[];
-  @Input() selected!: string[];
+  readonly org = input.required<string>();
+  readonly type = input.required<string>();
+  readonly categories = input.required<ListItem[]>();
+  readonly selected = this.store.selectSignalSnapshot(
+    LibraryCreateState.categories
+  );
 
   constructor(
     private readonly service: LibraryEntryCreateService,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {}
 
   back(): void {
-    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.GETTING_STARTED);
+    this.service.nav(this.org(), LIBRARY_ENTRY_CREATION_PAGES.BASICS);
   }
 
   continue(): void {
-    this.store.dispatch(new CategoriesChosen(this.selected));
-    this.service.nav(this.org, LIBRARY_ENTRY_CREATION_PAGES.PHASES);
+    this.service.setCategories(this.org(), this.type(), this.selected());
   }
 }

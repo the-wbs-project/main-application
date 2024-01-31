@@ -11,6 +11,8 @@ import { RouterModule } from '@angular/router';
 export class AppComponent implements OnInit {
   ngOnInit(): void {
     //@ts-ignore
+    var i = 0;
+    //@ts-ignore
     Notiflix.Loading.remove();
   }
 }

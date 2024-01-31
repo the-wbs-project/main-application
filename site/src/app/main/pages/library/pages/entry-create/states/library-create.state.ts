@@ -18,7 +18,6 @@ import { Observable, switchMap, tap } from 'rxjs';
 import { LIBRARY_ACTIONS } from '../../../models';
 import {
   CategoriesChosen,
-  CategoryChosen,
   DisciplinesChosen,
   PhasesChosen,
   RolesChosen,
@@ -29,8 +28,7 @@ import {
 } from '../actions';
 
 interface StateModel {
-  categories?: string[];
-  category?: string;
+  categories: string[];
   disciplines?: (string | ListItem)[];
   pageDescription?: string;
   pageTitle?: string;
@@ -48,6 +46,7 @@ interface StateModel {
 @State<StateModel>({
   name: 'libaryCreate',
   defaults: {
+    categories: [],
     isSaving: false,
     isWizardActive: false,
     roles: new Map<string, string[]>(),
@@ -61,12 +60,7 @@ export class LibraryCreateState {
   ) {}
 
   @Selector()
-  static category(state: StateModel): string | undefined {
-    return state.category;
-  }
-
-  @Selector()
-  static categories(state: StateModel): string[] | undefined {
+  static categories(state: StateModel): string[] {
     return state.categories;
   }
 
@@ -128,7 +122,7 @@ export class LibraryCreateState {
       isWizardActive: true,
       roles: new Map<string, string[]>(),
       //title: '',
-      category: undefined,
+      categories: [],
       disciplines: undefined,
       phases: undefined,
       isSaving: false,
@@ -152,14 +146,6 @@ export class LibraryCreateState {
     { title, type }: SubmitBasics
   ): void {
     ctx.patchState({ title, type });
-  }
-
-  @Action(CategoryChosen)
-  categoryChosen(
-    ctx: StateContext<StateModel>,
-    { category }: CategoryChosen
-  ): void {
-    ctx.patchState({ category });
   }
 
   @Action(CategoriesChosen)

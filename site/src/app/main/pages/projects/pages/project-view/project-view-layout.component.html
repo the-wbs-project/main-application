@@ -9,17 +9,19 @@
       <div class="d-ib mg-r-20">
         <wbs-page-header />
       </div>
+      @if (project(); as project){
       <wbs-project-action-button
         [approvalEnabled]="approvalEnabled()!"
-        [project]="project()"
-        [claims]="claims"
+        [project]="project"
+        [claims]="claims()"
       />
+      }
     </div>
   </div>
   <div class="card border border-dark flex-fill">
     <div class="card-header py-0 mg-b-0 bg-dark">
       <wbs-project-navigation
-        [menu]="links | navMenuProcess : claims"
+        [menu]="links | navMenuProcess : claims()"
         (navigate)="navigate($event)"
       />
     </div>
@@ -31,8 +33,8 @@
       approval) {
       <wbs-project-approval-window
         [approval]="approval"
-        [claims]="claims"
-        [userId]="userId"
+        [claims]="claims()"
+        [userId]="userId()"
         [isReadyOnly]="project()?.status !== 'approval'"
         [chat]="chat() ?? []"
         [hasChildren]="approvalHasChildren()!"

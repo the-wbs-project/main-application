@@ -1,15 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   computed,
+  input,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
-import { Store } from '@ngxs/store';
 import { gearIcon } from '@progress/kendo-svg-icons';
-import { TitleService } from '@wbs/core/services';
+import { SignalStore, TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
@@ -43,25 +41,21 @@ import { ProjectNavigationService } from './services';
   ],
 })
 export class ProjectViewLayoutComponent {
-  @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) userId!: string;
+  readonly claims = input.required<string[]>();
+  readonly userId = input.required<string>();
 
-  readonly approvalEnabled = toSignal(
-    this.store.select(ProjectApprovalState.enabled)
-  );
-  readonly approval = toSignal(this.store.select(ProjectApprovalState.current));
-  readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
-  readonly approvalView = toSignal(
-    this.store.select(ProjectApprovalState.view)
-  );
+  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  readonly approval = this.store.select(ProjectApprovalState.current);
+  readonly approvals = this.store.select(ProjectApprovalState.list);
+  readonly approvalView = this.store.select(ProjectApprovalState.view);
   readonly showApproval = computed(
     () => this.approvalView() === 'project' && this.approval() != undefined
   );
-  readonly approvalHasChildren = toSignal(
-    this.store.select(ProjectApprovalState.hasChildren)
+  readonly approvalHasChildren = this.store.select(
+    ProjectApprovalState.hasChildren
   );
-  readonly chat = toSignal(this.store.select(ProjectApprovalState.messages));
-  readonly project = toSignal(this.store.select(ProjectState.current));
+  readonly chat = this.store.select(ProjectApprovalState.messages);
+  readonly project = this.store.select(ProjectState.current);
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
 
@@ -80,7 +74,7 @@ export class ProjectViewLayoutComponent {
   constructor(
     title: TitleService,
     private readonly nav: ProjectNavigationService,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {
     title.setTitle('Project', false);
   }

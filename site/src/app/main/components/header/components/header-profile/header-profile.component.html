@@ -1,13 +1,12 @@
-@if (user(); as user) {
 <div ngbDropdown class="profile-dropdown" container="body">
   <a class="pointer" ngbDropdownToggle>
-    <wbs-header-profile-picture [picture]="user.picture" />
+    <wbs-header-profile-picture [picture]="user().picture" />
   </a>
   <div ngbDropdownMenu class="profile-menu pb-0 profile-shadow">
     <!--<div class="w-100 text-center" *ngIf="org.branding?.logo_url; let logo">
       <img class="logo" [src]="logo" />
     </div>-->
-    <wbs-header-profile-header [user]="user" [roles]="roles()" />
+    <wbs-header-profile-header [user]="user()" [roles]="roles()" />
 
     <a
       ngbDropdownItem
@@ -23,4 +22,3 @@
     </a>
   </div>
 </div>
-}

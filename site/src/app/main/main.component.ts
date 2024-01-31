@@ -2,7 +2,7 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
-  Input,
+  input,
   OnInit,
   ViewChild,
   ViewContainerRef,
@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
-import { Organization } from '@wbs/core/models';
+import { Organization, User } from '@wbs/core/models';
 import { ContainerService } from '@wbs/core/services';
 import { first, skipWhile, tap } from 'rxjs/operators';
 import { ChatWindowComponent } from './components/chat-window/chat-window.component';
@@ -27,9 +27,15 @@ import { AiState, AuthState, MembershipState } from './states';
 
 @Component({
   standalone: true,
-  template: `@if (org) {
+  template: `@if (org()) {
     <div class="d-flex flex-column vh-100">
-      <wbs-header [claims]="claims" [org]="org" [orgs]="orgs" />
+      <wbs-header
+        [claims]="claims()"
+        [org]="org()"
+        [orgs]="orgs()"
+        [user]="user()"
+        [roles]="roles()"
+      />
       <div #body appMainContent class="scroll pd-x-20 flex-fill">
         <router-outlet />
       </div>
@@ -61,13 +67,16 @@ import { AiState, AuthState, MembershipState } from './states';
   ],
 })
 export class MainComponent implements AfterContentInit, OnInit {
-  @Input() owner?: string;
-  @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) org!: Organization;
-  @Input({ required: true }) orgs!: Organization[];
+  readonly owner = input.required<string | string>();
+  readonly roles = input.required<string[]>();
+  readonly claims = input.required<string[]>();
+  readonly org = input.required<Organization>();
+  readonly orgs = input.required<Organization[]>();
+
   @ViewChild('body', { static: true }) body!: ViewContainerRef;
 
   readonly loading = signal<boolean>(true);
+  readonly user = input.required<User>();
   readonly isAiEnabled = toSignal(this.store.select(AiState.isEnabled));
 
   constructor(
@@ -99,7 +108,7 @@ export class MainComponent implements AfterContentInit, OnInit {
         tap((orgs) => {
           this.loading.set(false);
 
-          if (!this.owner)
+          if (!this.owner())
             this.store.dispatch(new Navigate(['/', orgs![0].name, 'library']));
         })
       )

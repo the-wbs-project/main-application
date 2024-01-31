@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
@@ -24,7 +24,7 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   ],
 })
 export class TreeDisciplineLegendComponent {
-  @Input() idsOrCats: (string | ListItem)[] | null | undefined;
+  readonly idsOrCats = input<(string | ListItem)[] | undefined>();
 
   readonly faCircleQuestion = faCircleQuestion;
 }

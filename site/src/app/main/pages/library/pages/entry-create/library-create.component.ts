@@ -1,8 +1,7 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
+import { SignalStore } from '@wbs/core/services';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { LibraryCreateState } from './states';
 
@@ -13,8 +12,8 @@ import { LibraryCreateState } from './states';
   imports: [PageHeaderComponent, RouterModule, TranslateModule],
 })
 export class LibraryCreateComponent {
-  title = toSignal(this.store.select(LibraryCreateState.pageTitle));
-  description = toSignal(this.store.select(LibraryCreateState.pageDescription));
+  title = this.store.select(LibraryCreateState.pageTitle);
+  description = this.store.select(LibraryCreateState.pageDescription);
 
-  constructor(private readonly store: Store) {}
+  constructor(private readonly store: SignalStore) {}
 }

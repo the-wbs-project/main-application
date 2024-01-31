@@ -1,10 +1,10 @@
-<ng-template [ngIf]="position === 'side'">
+<ng-template [ngIf]="position() === 'side'">
   <h4 class="w-100 tx-center pd-t-15">
     {{ "General.ProjectList" | translate }}
   </h4>
   <br />
   <input
-    [(ngModel)]="filters.search"
+    [(ngModel)]="filters().search"
     type="text"
     id="projectSearch"
     autocomplete="off"
@@ -15,14 +15,14 @@
   <label
     class="tx-12 tx-bold"
     for="switch"
-    (click)="changedAssignedToMe(!filters.assignedToMe)"
+    (click)="changedAssignedToMe(!filters().assignedToMe)"
   >
     {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
   </label>
   <wbs-switch
     #switch
     size="sm"
-    [value]="filters.assignedToMe"
+    [value]="filters().assignedToMe"
     (valueChange)="changedAssignedToMe($event)"
   />
   <br />
@@ -37,14 +37,14 @@
         [name]="status"
         kendoCheckbox
         type="checkbox"
-        [ngModel]="filters.stati.indexOf(status) > -1"
-        (change)="changeList(filters.stati, status)"
+        [ngModel]="filters().stati.indexOf(status) > -1"
+        (change)="changeList(filters().stati, status)"
       />
       <label [for]="status" class="mg-l-10">
         {{ status | projectStatus }}
       </label>
     </div>
-    <a class="tx-10 pointer" (click)="filters.stati = [status]">
+    <a class="tx-10 pointer" (click)="filters().stati = [status]">
       {{ "General.Only" | translate }}
     </a>
   </div>
@@ -60,39 +60,39 @@
         [name]="cat.id"
         kendoCheckbox
         type="checkbox"
-        [ngModel]="filters.categories.includes(cat.id)"
-        (change)="changeList(filters.categories, cat.id)"
+        [ngModel]="filters().categories.includes(cat.id)"
+        (change)="changeList(filters().categories, cat.id)"
       />
       <label [for]="cat.id" class="mg-l-10">
         {{ cat.label | translate }}
       </label>
     </div>
-    <a class="tx-10 pointer" (click)="filters.categories = [cat.id]">
+    <a class="tx-10 pointer" (click)="filters().categories = [cat.id]">
       {{ "General.Only" | translate }}
     </a>
   </div>
 </ng-template>
-<ng-template [ngIf]="position === 'top'">
+<ng-template [ngIf]="position() === 'top'">
   <div class="container-fluid">
     <div class="row mg-b-10 d-xs-flex d-sm-none">
       <div class="col-12 tx-center pd-b-10">
         <label
           class="tx-12 tx-bold"
           for="switch"
-          (click)="changedAssignedToMe(!filters.assignedToMe)"
+          (click)="changedAssignedToMe(!filters().assignedToMe)"
         >
           {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
         </label>
         <wbs-switch
           #switch
           size="sm"
-          [value]="filters.assignedToMe"
+          [value]="filters().assignedToMe"
           (valueChange)="changedAssignedToMe($event)"
         />
       </div>
       <div class="col-12">
         <input
-          [(ngModel)]="filters.search"
+          [(ngModel)]="filters().search"
           type="text"
           autocomplete="off"
           class="form-control w-100"
@@ -105,20 +105,20 @@
         <label
           class="tx-12 tx-bold"
           for="switch"
-          (click)="changedAssignedToMe(!filters.assignedToMe)"
+          (click)="changedAssignedToMe(!filters().assignedToMe)"
         >
           {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
         </label>
         <wbs-switch
           #switch
           size="sm"
-          [value]="filters.assignedToMe"
+          [value]="filters().assignedToMe"
           (valueChange)="changedAssignedToMe($event)"
         />
       </div>
       <div class="col-6">
         <input
-          [(ngModel)]="filters.search"
+          [(ngModel)]="filters().search"
           type="text"
           autocomplete="off"
           class="form-control w-100"
@@ -138,14 +138,14 @@
               [name]="status"
               kendoCheckbox
               type="checkbox"
-              [ngModel]="filters.stati.indexOf(status) > -1"
-              (change)="changeList(filters.stati, status)"
+              [ngModel]="filters().stati.indexOf(status) > -1"
+              (change)="changeList(filters().stati, status)"
             />
             <label [for]="status" class="mg-l-10">
               {{ status | projectStatus }}
             </label>
           </div>
-          <a class="tx-10 pointer" (click)="filters.stati = [status]">
+          <a class="tx-10 pointer" (click)="filters().stati = [status]">
             {{ "General.Only" | translate }}
           </a>
         </div>
@@ -161,14 +161,14 @@
               [name]="cat.id"
               kendoCheckbox
               type="checkbox"
-              [ngModel]="filters.categories.includes(cat.id)"
-              (change)="changeList(filters.categories, cat.id)"
+              [ngModel]="filters().categories.includes(cat.id)"
+              (change)="changeList(filters().categories, cat.id)"
             />
             <label [for]="cat.id" class="mg-l-10">
               {{ cat.label | translate }}
             </label>
           </div>
-          <a class="tx-10 pointer" (click)="filters.categories = [cat.id]">
+          <a class="tx-10 pointer" (click)="filters().categories = [cat.id]">
             {{ "General.Only" | translate }}
           </a>
         </div>

@@ -4,7 +4,7 @@ import {
   ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
+  input,
   Output,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -37,8 +37,8 @@ import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
   ],
 })
 export class ProjectListFiltersComponent {
-  @Input({ required: true }) position!: 'side' | 'top';
-  @Input({ required: true }) filters!: ProjectListFilters;
+  readonly position = input.required<'side' | 'top'>();
+  readonly filters = input.required<ProjectListFilters>();
   @Output() readonly filtersChange = new EventEmitter<ProjectListFilters>();
 
   expanded = true;
@@ -65,8 +65,11 @@ export class ProjectListFiltersComponent {
   }
 
   changedAssignedToMe(value: boolean): void {
-    this.filters.assignedToMe = value;
-    this.filtersChange.emit(this.filters);
+    const filters = this.filters();
+
+    filters.assignedToMe = value;
+
+    this.filtersChange.emit(filters);
   }
 
   changeList(list: string[], item: string): void {
@@ -76,6 +79,6 @@ export class ProjectListFiltersComponent {
     } else {
       list.push(item);
     }
-    this.filtersChange.emit(this.filters);
+    this.filtersChange.emit(this.filters());
   }
 }

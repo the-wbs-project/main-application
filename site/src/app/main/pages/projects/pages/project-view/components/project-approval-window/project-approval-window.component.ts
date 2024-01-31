@@ -2,8 +2,8 @@ import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   ViewEncapsulation,
+  input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faX } from '@fortawesome/pro-solid-svg-icons';
@@ -50,14 +50,13 @@ import { TaskNamePipe } from '../../pipes/task-name.pipe';
   ],
 })
 export class ProjectApprovalWindowComponent {
-  @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) userId!: string;
-  @Input({ required: true }) approval!: ProjectApproval;
-  @Input({ required: true }) isReadyOnly!: boolean;
-  @Input({ required: true }) chat!: Message[];
-  @Input({ required: true }) hasChildren!: boolean;
-
   readonly faX = faX;
+  readonly claims = input.required<string[]>();
+  readonly userId = input.required<string>();
+  readonly approval = input.required<ProjectApproval>();
+  readonly isReadyOnly = input.required<boolean>();
+  readonly chat = input.required<Message[]>();
+  readonly hasChildren = input.required<boolean>();
   readonly canApproveClaims = PROJECT_CLAIMS.APPROVAL.CAN_APPROVE;
   readonly canCommentClaims = PROJECT_CLAIMS.APPROVAL.CAN_COMMENT;
 
@@ -72,6 +71,6 @@ export class ProjectApprovalWindowComponent {
   }
 
   sendMessage(e: SendMessageEvent): void {
-    this.store.dispatch(new SendApprovalMessage(this.userId, e.message.text!));
+    this.store.dispatch(new SendApprovalMessage(this.userId(), e.message.text!));
   }
 }

@@ -28,7 +28,7 @@
         [class.k-last]="menu.length === index + 1"
         [attr.aria-label]="item.text! | translate"
         tabindex="-1"
-        (click)="service.handleAction(item.action!, approvalEnabled)"
+        (click)="service.handleAction(item.action!, approvalEnabled())"
       >
         <span role="presentation" class="k-link k-menu-link">
           <fa-icon [icon]="item.icon!" />&nbsp;

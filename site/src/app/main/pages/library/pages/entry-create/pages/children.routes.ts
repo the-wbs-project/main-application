@@ -1,18 +1,15 @@
 import { Routes } from '@angular/router';
 import { orgResolve, projectCategoryResolver } from '@wbs/main/services';
 import {
+  categoriesPageDescriptionResolver,
+  categoriesResolver,
   redirectGuard,
   setupGuard,
   startWizardGuard,
-  verifyWizardGuard,
-} from './children.guards';
-import {
-  categoriesPageDescriptionResolver,
-  categoriesResolver,
-  categoryResolver,
   titleResolver,
   typeResolver,
-} from './children.resolvers';
+  verifyWizardGuard,
+} from '../services';
 
 export const routes: Routes = [
   {
@@ -31,20 +28,22 @@ export const routes: Routes = [
       pageTitle: 'LibraryCreate.GettingStarted_Title',
       pageDescription: 'LibraryCreate.GettingStarted_Description',
     },
+    resolve: {
+      org: orgResolve,
+    },
   },
   {
     path: 'basics',
-    canActivate: [setupGuard, startWizardGuard],
+    canActivate: [setupGuard, verifyWizardGuard],
     loadComponent: () => import('./basics').then((x) => x.BasicsComponent),
     data: {
-      pageTitle: 'LibraryCreate.GettingStarted_Title',
-      pageDescription: 'LibraryCreate.GettingStarted_Description',
+      pageTitle: 'LibraryCreate.Basics_Title',
+      pageDescription: 'LibraryCreate.Basics_Description',
     },
     resolve: {
       org: orgResolve,
       title: titleResolver,
-      categories: projectCategoryResolver,
-      selectedCategories: categoriesResolver,
+      type: typeResolver,
     },
   },
   {
@@ -52,13 +51,14 @@ export const routes: Routes = [
     canActivate: [setupGuard, verifyWizardGuard],
     loadComponent: () => import('./category').then((x) => x.CategoryComponent),
     data: {
-      pageTitle: 'ProjectCreate.Category_Title',
-      pageDescription: 'ProjectCreate.Category_Description',
+      pageTitle: 'LibraryCreate.Category_Title',
+      pageDescription: 'LibraryCreate.Category_Description',
     },
     resolve: {
       org: orgResolve,
+      type: typeResolver,
       categories: projectCategoryResolver,
-      selected: categoryResolver,
+      selected: categoriesResolver,
     },
   },
   {
@@ -67,14 +67,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./categories').then((x) => x.CategoriesComponent),
     data: {
-      pageTitle: 'ProjectCreate.Categories_Title',
+      pageTitle: 'LibraryCreate.Categories_Title',
     },
     resolve: {
       org: orgResolve,
-      type: typeResolver,
       pageDescription: categoriesPageDescriptionResolver,
       categories: projectCategoryResolver,
-      selected: categoriesResolver,
     },
   } /*
   {

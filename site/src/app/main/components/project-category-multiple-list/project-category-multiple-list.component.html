@@ -1,5 +1,5 @@
 <div class="list-group w-100">
-  @for (cat of categories; track cat.id) {
+  @for (cat of categories(); track cat.id) {
   <div
     class="list-group-item pd-l-0 flex-align-center border-primary d-none d-sm-flex"
     style="border-bottom-width: 2px !important"
@@ -17,7 +17,8 @@
     </div>
     <div class="pd-l-10">
       <wbs-select-button
-        [selected]="selected.includes(cat.id)"
+        [buttonClass]="buttonClass()"
+        [selected]="selected().includes(cat.id)"
         (clicked)="toggle(cat.id)"
       />
     </div>
@@ -36,7 +37,8 @@
       {{ cat.description ?? "" | translate }}
     </div>
     <wbs-select-button
-      [selected]="selected.includes(cat.id)"
+      [buttonClass]="buttonClass()"
+      [selected]="selected().includes(cat.id)"
       (clicked)="toggle(cat.id)"
     />
   </div>

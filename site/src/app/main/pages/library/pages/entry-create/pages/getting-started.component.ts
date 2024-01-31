@@ -5,11 +5,12 @@ import { LIBRARY_ENTRY_CREATION_PAGES } from '../models';
 
 @Component({
   standalone: true,
-  template: `<div class="w-100 tx-center pd-t-40">
-    <button class="btn btn-primary" (click)="continue()">
-      {{ 'General.Continue' | translate }}
-    </button>
-  </div> `,
+  template: `<button class="btn btn-primary" (click)="continue()">
+    {{ 'General.Continue' | translate }}
+  </button>`,
+  host: {
+    class: 'd-block w-100 tx-center pd-t-40',
+  },
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [TranslateModule],
 })

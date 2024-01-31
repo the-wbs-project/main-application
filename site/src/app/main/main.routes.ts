@@ -8,6 +8,8 @@ import {
   orgClaimsResolve,
   orgListResolve,
   orgObjResolve,
+  rolesResolve,
+  userResolve,
 } from './services';
 import {
   AiState,
@@ -69,6 +71,8 @@ export const routes: Routes = [
           claims: orgClaimsResolve,
           org: orgObjResolve,
           orgs: orgListResolve,
+          roles: rolesResolve,
+          user: userResolve,
         },
       },
     ],

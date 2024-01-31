@@ -2,16 +2,14 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
-  OnChanges,
-  SimpleChanges,
-  signal,
+  computed,
+  input,
 } from '@angular/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { menuIcon } from '@progress/kendo-svg-icons';
-import { Organization } from '@wbs/core/models';
+import { Organization, User } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { environment } from 'src/environments/environment';
 import { HeaderProfileComponent } from './components/header-profile/header-profile.component';
@@ -33,30 +31,31 @@ import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from './models';
     TranslateModule,
   ],
 })
-export class HeaderComponent implements OnChanges {
-  @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) org!: Organization;
-  @Input({ required: true }) orgs!: Organization[];
-
+export class HeaderComponent {
+  readonly user = input.required<User>();
+  readonly roles = input.required<string[]>();
+  readonly claims = input.required<string[]>();
+  readonly org = input.required<Organization>();
+  readonly orgs = input.required<Organization[]>();
+  readonly menu = computed(() => this.createMenu(this.org()));
   readonly menuIcon = menuIcon;
   readonly appTitle = environment.appTitle;
-  readonly menu = signal<HeaderRouteItem[]>([]);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['org'] && this.org) {
-      const menu2 = structuredClone(HEADER_ROUTE_ITEMS);
+  private createMenu(org: Organization | undefined): HeaderRouteItem[] {
+    if (!org) return [];
 
-      for (const parent of menu2) {
-        for (const item of parent.items) {
-          if (item.type === 'header') continue;
+    const menu2 = structuredClone(HEADER_ROUTE_ITEMS);
 
-          item.route = item.route.map((x) => {
-            if (x === ':orgId') return this.org.name;
-            else return x;
-          });
-        }
+    for (const parent of menu2) {
+      for (const item of parent.items) {
+        if (item.type === 'header') continue;
+
+        item.route = item.route.map((x) => {
+          if (x === ':orgId') return org.name;
+          else return x;
+        });
       }
-      this.menu.set(menu2);
     }
+    return menu2;
   }
 }

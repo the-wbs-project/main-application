@@ -10,9 +10,9 @@
   <fa-duotone-icon [icon]="faCircleQuestion" />
 </a>
 <ng-template #legendContent>
-  @if (idsOrCats){
+  @if (idsOrCats(); as idsOrCats) {
   <ul class="list-group wd-400">
-    @for( idsOrCat of idsOrCats; track $index) {
+    @for (idsOrCat of idsOrCats; track $index) {
     <li class="list-group-item">
       <span class="icon-wrapper">
         <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>

@@ -1,19 +1,13 @@
 import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  Input,
-} from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { PROJECT_STATI } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
@@ -40,14 +34,10 @@ import { ProjectListState } from './states';
   ],
 })
 export class ProjectListComponent {
-  @Input() status?: string;
-  @Input() type?: string;
-
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
 
   filterToggle = false;
-
   filters: ProjectListFilters = {
     assignedToMe:
       this.store.selectSnapshot(ProjectListState.anyAssignedTome) ?? false,
@@ -63,16 +53,9 @@ export class ProjectListComponent {
   };
   expanded = true;
 
-  readonly projects = toSignal(this.store.select(ProjectListState.list));
-  readonly loading = toSignal(this.store.select(ProjectListState.loading));
+  readonly projects = this.store.select(ProjectListState.list);
+  readonly loading = this.store.select(ProjectListState.loading);
   readonly plusIcon = plusIcon;
 
-  constructor(
-    private readonly cd: ChangeDetectorRef,
-    private readonly store: Store
-  ) {}
-
-  force() {
-    this.cd.detectChanges();
-  }
+  constructor(private readonly store: SignalStore) {}
 }

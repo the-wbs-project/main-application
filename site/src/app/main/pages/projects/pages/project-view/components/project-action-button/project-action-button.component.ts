@@ -3,10 +3,10 @@ import {
   Component,
   ElementRef,
   HostListener,
-  Input,
   OnChanges,
   ViewChild,
   ViewEncapsulation,
+  input,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -37,9 +37,10 @@ import { ProjectActionButtonService } from './project-action-button.service';
 export class ProjectActionButtonComponent implements OnChanges {
   @ViewChild('anchor', { read: ElementRef, static: false }) anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef, static: false }) popup!: ElementRef;
-  @Input({ required: true }) project?: Project;
-  @Input({ required: true }) claims?: string[];
-  @Input({ required: true }) approvalEnabled!: boolean;
+
+  readonly project = input.required<Project>();
+  readonly claims = input.required<string[]>();
+  readonly approvalEnabled = input.required<boolean>();
 
   readonly menu = signal<ProjectAction[] | undefined>(undefined);
   readonly faBoltLightning = faBoltLightning;
@@ -51,7 +52,11 @@ export class ProjectActionButtonComponent implements OnChanges {
   ngOnChanges(): void {
     if (this.project && this.claims) {
       this.menu.set(
-        this.service.buildMenu(this.project, this.claims, this.approvalEnabled)
+        this.service.buildMenu(
+          this.project(),
+          this.claims(),
+          this.approvalEnabled()
+        )
       );
     }
   }

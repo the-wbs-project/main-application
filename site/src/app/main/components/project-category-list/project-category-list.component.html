@@ -1,5 +1,5 @@
 <div class="list-group w-100">
-  @for (cat of categories; track cat.id) {
+  @for (cat of categories(); track cat.id) {
   <div
     class="list-group-item pd-l-0 flex-align-center border-primary d-none d-sm-flex"
     style="border-bottom-width: 2px !important"
@@ -18,18 +18,11 @@
       </div>
     </div>
     <div class="pd-l-10">
-      @if( cat.id === selected) {
-      <button class="btn btn-primary" (click)="categoryChosen.emit(cat.id)">
-        {{ "General.Selected" | translate }}
-      </button>
-      } @else {
-      <button
-        class="btn btn-outline-primary"
-        (click)="categoryChosen.emit(cat.id)"
-      >
-        {{ "General.Select" | translate }}
-      </button>
-      }
+      <wbs-select-button
+        [buttonClass]="buttonClass()"
+        [selected]="cat.id === selected()"
+        (clicked)="categoryChosen.emit(cat.id)"
+      />
     </div>
   </div>
   <div
@@ -47,21 +40,11 @@
       {{ cat.description | translate }}
       }
     </div>
-    @if( cat.id === selected) {
-    <button
-      class="btn btn-sm btn-primary w-100"
-      (click)="categoryChosen.emit(cat.id)"
-    >
-      {{ "General.Selected" | translate }}
-    </button>
-    } @else {
-    <button
-      class="btn btn-sm btn-outline-primary w-100"
-      (click)="categoryChosen.emit(cat.id)"
-    >
-      {{ "General.Select" | translate }}
-    </button>
-    }
+    <wbs-select-button
+      [buttonClass]="buttonClass()"
+      [selected]="cat.id === selected()"
+      (clicked)="categoryChosen.emit(cat.id)"
+    />
   </div>
   }
 </div>

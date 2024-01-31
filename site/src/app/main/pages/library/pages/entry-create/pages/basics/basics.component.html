@@ -5,7 +5,11 @@
         <label for="titleEditor" class="form-label">
           {{ "LibraryCreate.LibraryEntryTitle" | translate }}
         </label>
-        <kendo-textbox #titleEditor [(ngModel)]="title" />
+        <kendo-textbox
+          #titleEditor
+          [value]="title()"
+          (valueChange)="title.set($event)"
+        />
       </div>
     </div>
     <div class="row mg-t-15">
@@ -18,7 +22,7 @@
             <div class="col-4">
               <div
                 class="card mt-2 mb-2"
-                [ngClass]="{ 'bd-2 border-success': type === 'project' }"
+                [ngClass]="{ 'bd-2 border-success': type() === 'project' }"
               >
                 <h5 class="card-header">
                   {{ "General.Project" | translate }}
@@ -29,8 +33,8 @@
                     {{ "LibraryCreate.ProjectTypeDescription" | translate }}
                   </p>
                   <wbs-select-button
-                    [selected]="type === 'project'"
-                    (clicked)="type = 'project'"
+                    [selected]="type() === 'project'"
+                    (clicked)="type.set('project')"
                   />
                 </div>
               </div>
@@ -38,7 +42,7 @@
             <div class="col-4">
               <div
                 class="card mt-2 mb-2"
-                [ngClass]="{ 'bd-2 border-success': type === 'phase' }"
+                [ngClass]="{ 'bd-2 border-success': type() === 'phase' }"
               >
                 <h5 class="card-header">
                   {{ "General.Phase" | translate }}
@@ -49,8 +53,8 @@
                     {{ "LibraryCreate.PhaseTypeDescription" | translate }}
                   </p>
                   <wbs-select-button
-                    [selected]="type === 'phase'"
-                    (clicked)="type = 'phase'"
+                    [selected]="type() === 'phase'"
+                    (clicked)="type.set('phase')"
                   />
                 </div>
               </div>
@@ -58,7 +62,7 @@
             <div class="col-4">
               <div
                 class="card mt-2 mb-2"
-                [ngClass]="{ 'bd-2 border-success': type === 'task' }"
+                [ngClass]="{ 'bd-2 border-success': type() === 'task' }"
               >
                 <h5 class="card-header">
                   {{ "General.Task" | translate }}
@@ -69,8 +73,8 @@
                     {{ "LibraryCreate.TaskTypeDescription" | translate }}
                   </p>
                   <wbs-select-button
-                    [selected]="type === 'task'"
-                    (clicked)="type = 'task'"
+                    [selected]="type() === 'task'"
+                    (clicked)="type.set('task')"
                   />
                 </div>
               </div>
@@ -79,23 +83,12 @@
         </div>
       </div>
     </div>
-    <div class="row mg-t-15">
-      <div class="col-12">
-        <label for="descriptionEditor" class="form-label">
-          {{ "LibraryCreate.LibraryEntryDescription" | translate }}
-        </label>
-        <wbs-project-category-multiple-list
-          [categories]="categories"
-          [(selected)]="selectedCategories"
-        />
-      </div>
-    </div>
     <br />
     <br />
     <wbs-wizard-footer
       [showBack]="false"
-      [disableContinue]="titleEditor.value === '' && type != undefined"
-      (continueClicked)="continue()"
+      [disableContinue]="title().trim() === '' || type() === undefined"
+      (continueClicked)="continue(title(), type()!)"
     />
   </div>
 </div>

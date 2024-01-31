@@ -2,8 +2,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
 } from '@angular/core';
 import { MenuModule } from '@progress/kendo-angular-menu';
 import { ProjectNavigationLink } from '../models';
@@ -14,11 +14,11 @@ import { ProjectNavigationLink } from '../models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [MenuModule],
   template: `<nav class="project-nav bg-dark">
-    <kendo-menu [items]="menu" (select)="call($event.item)" />
+    <kendo-menu [items]="menu()" (select)="call($event.item)" />
   </nav> `,
 })
 export class ProjectNavigationComponent {
-  @Input({ required: true }) menu!: ProjectNavigationLink[];
+  readonly menu = input.required<ProjectNavigationLink[]>();
   @Output() readonly navigate = new EventEmitter<string[]>();
 
   call(action: ProjectNavigationLink): void {

@@ -19,11 +19,6 @@ export class SubmitBasics {
   ) {}
 }
 
-export class CategoryChosen {
-  static readonly type = '[Library Creation] Category Chosen';
-  constructor(readonly category: string) {}
-}
-
 export class CategoriesChosen {
   static readonly type = '[Library Creation] Categories Chosen';
   constructor(readonly categories: string[]) {}

@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
+  input,
   Output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,15 +17,18 @@ import { SelectButtonComponent } from '@wbs/main/components/select-button.compon
   imports: [SelectButtonComponent, TranslateModule],
 })
 export class ProjectCategoryMultipleListComponent {
-  @Input({ required: true }) categories!: ListItem[];
-  @Input({ required: true }) selected!: string[];
+  readonly buttonClass = input<string>();
+  readonly categories = input.required<ListItem[]>();
+  readonly selected = input.required<string[]>();
   @Output() readonly selectedChange = new EventEmitter<string[]>();
 
   toggle(category: string): void {
-    if (this.selected.includes(category)) {
-      this.selectedChange.emit(this.selected.filter((c) => c !== category));
+    const selected = this.selected();
+
+    if (selected.includes(category)) {
+      this.selectedChange.emit(selected.filter((c) => c !== category));
     } else {
-      this.selectedChange.emit([...this.selected, category]);
+      this.selectedChange.emit([...selected, category]);
     }
   }
 }

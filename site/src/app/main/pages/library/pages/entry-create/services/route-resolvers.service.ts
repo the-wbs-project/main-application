@@ -2,8 +2,14 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { LibraryCreateState } from '../states';
+
+export const pageTitleResolver: ResolveFn<string | undefined> = () =>
+  inject(Store).selectSnapshot(LibraryCreateState.pageTitle);
+
+export const pageDescriptionResolver: ResolveFn<string | undefined> = () =>
+  inject(Store).selectSnapshot(LibraryCreateState.pageDescription);
 
 export const titleResolver: ResolveFn<string> = () =>
   inject(Store).selectSnapshot(LibraryCreateState.title);
@@ -11,12 +17,8 @@ export const titleResolver: ResolveFn<string> = () =>
 export const typeResolver: ResolveFn<Observable<string | undefined>> = () =>
   inject(Store).selectOnce(LibraryCreateState.type);
 
-export const categoryResolver: ResolveFn<Observable<string | undefined>> = () =>
-  inject(Store).selectOnce(LibraryCreateState.category);
-
-export const categoriesResolver: ResolveFn<
-  Observable<string[] | undefined>
-> = () => inject(Store).selectOnce(LibraryCreateState.categories);
+export const categoriesResolver: ResolveFn<Observable<string[]>> = () =>
+  inject(Store).selectOnce(LibraryCreateState.categories);
 
 export const categoriesPageDescriptionResolver: ResolveFn<
   Observable<string>

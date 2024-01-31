@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faUserCircle } from '@fortawesome/pro-solid-svg-icons';
 
@@ -8,8 +8,8 @@ import { faUserCircle } from '@fortawesome/pro-solid-svg-icons';
   selector: 'wbs-header-profile-picture',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass],
-  template: `@if (picture) {
-    <img [src]="picture" class="profile-img" />
+  template: `@if (picture()) {
+    <img [src]="picture()" class="profile-img" />
     } @else {
     <fa-icon
       [icon]="faUserCircle"
@@ -30,7 +30,6 @@ import { faUserCircle } from '@fortawesome/pro-solid-svg-icons';
   ],
 })
 export class HeaderProfilePictureComponent {
-  @Input() picture?: string;
-
+  readonly picture = input.required<string | undefined>();
   readonly faUserCircle = faUserCircle;
 }

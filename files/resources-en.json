@@ -679,7 +679,9 @@
     "locale": "en-US",
     "values": {
       "GettingStarted_Title": "Getting Started",
-      "GettingStarted_Description": "Let's get started creating a new library entry.  Please provide some of the basic information needed for a new library entry",
+      "GettingStarted_Description": "Let's get started creating a new WBS library entry.  Please provide some of the basic information needed for a new library entry",
+      "Basics_Title": "Basics",
+      "Basics_Description": "Let us know the name of the WBS and what type it is. This will help us guide you through the rest of the creation.",
       "LibraryEntryTitle": "Library Entry Title",
       "LibraryEntryDescription": "Library Entry Description",
       "LibraryEntryTypes": "Library Entry Types",

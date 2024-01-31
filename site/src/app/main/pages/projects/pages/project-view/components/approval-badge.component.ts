@@ -1,5 +1,10 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  input,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faBadge,
@@ -14,7 +19,7 @@ import { SetApproval } from '../actions';
 @Component({
   standalone: true,
   selector: 'wbs-approval-badge',
-  template: `@if (approval) {
+  template: `@if (approval(); as approval) {
     <a
       class="pointer"
       [style.fontSize.px]="fontSize"
@@ -46,9 +51,9 @@ import { SetApproval } from '../actions';
   imports: [FontAwesomeModule, NgClass],
 })
 export class ApprovalBadgeComponent {
-  @Input({ required: true }) approval?: ProjectApproval;
-  @Input() childrenIds?: string[];
-  @Input() fontSize: number = 11;
+  readonly approval = input<ProjectApproval>();
+  readonly childrenIds = input<string[] | undefined>();
+  readonly fontSize = input<number>(11);
 
   readonly faQuestion = faQuestion;
   readonly faX = faX;
@@ -58,6 +63,6 @@ export class ApprovalBadgeComponent {
   constructor(private readonly store: Store) {}
 
   setApproval(): void {
-    this.store.dispatch(new SetApproval(this.approval, this.childrenIds));
+    this.store.dispatch(new SetApproval(this.approval(), this.childrenIds()));
   }
 }

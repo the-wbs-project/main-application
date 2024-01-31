@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { User } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
@@ -11,6 +11,6 @@ import { HeaderProfilePictureComponent } from '../header-profile-picture.compone
   imports: [HeaderProfilePictureComponent, RoleListPipe],
 })
 export class HeaderProfileHeaderComponent {
-  @Input({ required: true }) user!: User;
-  @Input({ required: true }) roles?: string[];
+  readonly user = input.required<User>();
+  readonly roles = input.required<string[]>();
 }
