@@ -6,6 +6,6 @@ export interface LibraryEntry {
   author: string;
   lastModified: Date;
   title: string;
-  description: string;
-  visibility: number;
+  description?: string;
+  visibility: string;
 }

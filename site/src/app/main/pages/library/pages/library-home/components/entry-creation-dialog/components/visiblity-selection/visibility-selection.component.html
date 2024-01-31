@@ -1,0 +1,93 @@
+<div class="container-fluid border tx-center">
+  <div class="row d-none d-lg-flex">
+    <div class="col-6">
+      <div
+        class="card mt-2 mb-2 border bd-1"
+        [ngClass]="{ 'border-success': visibility() === 'public' }"
+      >
+        <h5 class="card-header">
+          <fa-icon [icon]="faEarth" />
+          {{ "General.Public" | translate }}
+        </h5>
+        <div class="card-body pd-10">
+          <p class="card-text mg-t-10 ht-20">
+            {{ "LibraryCreate.VisibilityPublicDescription" | translate }}
+          </p>
+          <wbs-select-button
+            [selected]="visibility() === 'public'"
+            (clicked)="visibilityChange.emit('public')"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-6">
+      <div
+        class="card mt-2 mb-2 border bd-1"
+        [ngClass]="{ 'border-success': visibility() === 'private' }"
+      >
+        <h5 class="card-header">
+          <fa-icon [icon]="faLock" />
+          {{ "General.Private" | translate }}
+        </h5>
+        <div class="card-body pd-10">
+          <p class="card-text mg-t-10 ht-20">
+            {{ "LibraryCreate.VisibilityPrivateDescription" | translate }}
+          </p>
+          <wbs-select-button
+            [selected]="visibility() === 'private'"
+            (clicked)="visibilityChange.emit('private')"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row d-block d-lg-none">
+    <div
+      class="col-12 card mg-y-0 pd-y-8 border-bottom"
+      [ngClass]="{ 'bd-1 border-success': visibility() === 'public' }"
+    >
+      <div class="card-body pd-0">
+        <div class="d-flex flex-1 flex-align-center text-start">
+          <div class="tx-18" style="flex: 0 0 100px">
+            <fa-icon [icon]="faEarth" />
+            {{ "General.Public" | translate }}
+          </div>
+          <div class="flex-grow-1 tx-10 tx-sm-12">
+            {{ "LibraryCreate.VisibilityPublicDescription" | translate }}
+          </div>
+          <div class="text-end" style="flex: 0 0 90px">
+            <wbs-select-button
+              buttonClass="btn-sm"
+              [selected]="visibility() === 'public'"
+              (clicked)="visibilityChange.emit('public')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col-12 card mg-y-0 pd-y-8 border-bottom"
+      [ngClass]="{ 'bd-1 border-success': visibility() === 'private' }"
+    >
+      <div class="card-body pd-0">
+        <div class="d-flex flex-1 flex-align-center text-start">
+          <div class="tx-18" style="flex: 0 0 100px">
+            <fa-icon [icon]="faLock" />
+            {{ "General.Private" | translate }}
+          </div>
+          <div class="flex-grow-1 tx-10 tx-sm-12">
+            {{ "LibraryCreate.VisibilityPrivateDescription" | translate }}
+          </div>
+          <div class="text-end" style="flex: 0 0 90px">
+            <wbs-select-button
+              buttonClass="btn-sm"
+              [selected]="visibility() === 'private'"
+              (clicked)="visibilityChange.emit('private')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

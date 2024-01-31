@@ -17,6 +17,7 @@ import { plusIcon } from '@progress/kendo-svg-icons';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { LibraryEntry } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { EntryCreationService } from './services';
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ import { DataServiceFactory } from '@wbs/core/data-services';
     RouterModule,
     TranslateModule,
   ],
+  providers: [EntryCreationService],
 })
 export class LibraryListComponent implements OnInit {
   @Input() owner!: string;
@@ -45,6 +47,7 @@ export class LibraryListComponent implements OnInit {
   readonly plusIcon = plusIcon;
 
   constructor(
+    readonly creation: EntryCreationService,
     private readonly cd: ChangeDetectorRef,
     private readonly data: DataServiceFactory,
     private readonly store: Store

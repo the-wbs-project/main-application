@@ -101,9 +101,6 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
 
     public async Task SetAsync(SqlConnection conn, string owner, LibraryEntryVersion entryVersion)
     {
-        if (entryVersion.categories != null && entryVersion.categories.Length == 0)
-            entryVersion.categories = null;
-
         var cmd = new SqlCommand("dbo.LibraryEntryVersion_Set", conn)
         {
             CommandType = CommandType.StoredProcedure

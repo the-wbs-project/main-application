@@ -34,7 +34,9 @@
       {{ entries().length }}
       <br />
       <br />
-      <button class="btn btn-default" [routerLink]="['create']">Create</button>
+      <button class="btn btn-default" (click)="creation.start(owner)">
+        Create
+      </button>
     </div>
   </div>
 </div>

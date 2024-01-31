@@ -1,0 +1,135 @@
+<div class="container-fluid border tx-center">
+  <div class="row d-none d-lg-flex">
+    <div class="col-4">
+      <div
+        class="card mt-2 mb-2 border bd-1"
+        [ngClass]="{ 'border-success': type() === 'project' }"
+      >
+        <h5 class="card-header">
+          <fa-icon [icon]="faChartGantt" />
+          {{ "General.Project" | translate }}
+        </h5>
+        <div class="card-body pd-10">
+          <p class="card-text mg-t-10 ht-50">
+            {{ "LibraryCreate.ProjectTypeDescription" | translate }}
+          </p>
+          <wbs-select-button
+            [selected]="type() === 'project'"
+            (clicked)="typeChange.emit('project')"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div
+        class="card mt-2 mb-2 border bd-1"
+        [ngClass]="{ 'border-success': type() === 'phase' }"
+      >
+        <h5 class="card-header">
+          <fa-icon [icon]="faDiagramSubtask" />
+          {{ "General.Phase" | translate }}
+        </h5>
+        <div class="card-body pd-10">
+          <p class="card-text mg-t-10 ht-50">
+            {{ "LibraryCreate.PhaseTypeDescription" | translate }}
+          </p>
+          <wbs-select-button
+            [selected]="type() === 'phase'"
+            (clicked)="typeChange.emit('phase')"
+          />
+        </div>
+      </div>
+    </div>
+    <div class="col-4">
+      <div
+        class="card mt-2 mb-2 border bd-1"
+        [ngClass]="{ 'border-success': type() === 'task' }"
+      >
+        <h5 class="card-header">
+          <fa-icon [icon]="faTasks" />
+          {{ "General.Task" | translate }}
+        </h5>
+        <div class="card-body pd-10">
+          <p class="card-text mg-t-10 ht-50">
+            {{ "LibraryCreate.TaskTypeDescription" | translate }}
+          </p>
+          <wbs-select-button
+            [selected]="type() === 'task'"
+            (clicked)="typeChange.emit('task')"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row d-block d-lg-none">
+    <div
+      class="col-12 card mg-y-0 pd-y-8 border-bottom"
+      [ngClass]="{ 'bd-1 border-success': type() === 'project' }"
+    >
+      <div class="card-body pd-0">
+        <div class="d-flex flex-1 flex-align-center text-start">
+          <div class="tx-18" style="flex: 0 0 100px">
+            <fa-icon [icon]="faChartGantt" />
+            {{ "General.Project" | translate }}
+          </div>
+          <div class="flex-grow-1 tx-10 tx-sm-12">
+            {{ "LibraryCreate.ProjectTypeDescription" | translate }}
+          </div>
+          <div class="text-end" style="flex: 0 0 90px">
+            <wbs-select-button
+              buttonClass="btn-sm"
+              [selected]="type() === 'project'"
+              (clicked)="typeChange.emit('project')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col-12 card mg-y-0 pd-y-8 border-bottom"
+      [ngClass]="{ 'bd-1 border-success': type() === 'phase' }"
+    >
+      <div class="card-body pd-0">
+        <div class="d-flex flex-1 flex-align-center text-start">
+          <div class="tx-18" style="flex: 0 0 100px">
+            <fa-icon [icon]="faDiagramSubtask" />
+            {{ "General.Phase" | translate }}
+          </div>
+          <div class="flex-grow-1 tx-10 tx-sm-12">
+            {{ "LibraryCreate.PhaseTypeDescription" | translate }}
+          </div>
+          <div class="text-end" style="flex: 0 0 90px">
+            <wbs-select-button
+              buttonClass="btn-sm"
+              [selected]="type() === 'phase'"
+              (clicked)="typeChange.emit('phase')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="col-12 card mg-y-0 pd-y-8 border-bottom"
+      [ngClass]="{ 'bd-1 border-success': type() === 'task' }"
+    >
+      <div class="card-body pd-0">
+        <div class="d-flex flex-1 flex-align-center text-start">
+          <div class="tx-18" style="flex: 0 0 100px">
+            <fa-icon [icon]="faTasks" />
+            {{ "General.Task" | translate }}
+          </div>
+          <div class="flex-grow-1 tx-10 tx-sm-12">
+            {{ "LibraryCreate.TaskTypeDescription" | translate }}
+          </div>
+          <div class="text-end" style="flex: 0 0 90px">
+            <wbs-select-button
+              buttonClass="btn-sm"
+              [selected]="type() === 'task'"
+              (clicked)="typeChange.emit('task')"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

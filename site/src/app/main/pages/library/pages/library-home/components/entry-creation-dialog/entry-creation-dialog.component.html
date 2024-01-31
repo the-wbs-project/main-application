@@ -1,0 +1,58 @@
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-title">
+    {{ "LibraryCreate.Title" | translate }}
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="modal.dismiss()"
+  ></button>
+</div>
+<div class="modal-body w-100 tx-center">
+  <div class="d-ib w-100 mx-wd-800 tx-left">
+    <div class="row">
+      <div class="col-12">
+        <label for="titleEditor" class="form-label">
+          {{ "LibraryCreate.LibraryEntryTitle" | translate }}
+        </label>
+        <kendo-textbox #titleEditor name="titleEditor" [(ngModel)]="title" />
+      </div>
+    </div>
+    <div class="row mg-t-15">
+      <div class="col-12">
+        <label class="form-label">
+          {{ "LibraryCreate.LibraryEntryTypes" | translate }}
+        </label>
+
+        <wbs-type-selection [(type)]="type" />
+      </div>
+    </div>
+    <div class="row mg-t-15">
+      <div class="col-12">
+        <label class="form-label">
+          {{ "LibraryCreate.LibraryEntryVisibility" | translate }}
+        </label>
+
+        <wbs-visibility-selection [(visibility)]="visibility" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-footer">
+  <button
+    class="btn btn-primary"
+    [disabled]="title.trim() === '' || !type || !visibility"
+    (click)="modal.close({ title, type, visibility, nav: false })"
+  >
+    {{ "General.Save" | translate }}
+  </button>
+  <button
+    class="btn btn-primary"
+    [disabled]="title.trim() === '' || !type || !visibility"
+    (click)="modal.close({ title, type, visibility, nav: true })"
+  >
+    {{ "General.SaveAndView" | translate }}
+  </button>
+</div>
