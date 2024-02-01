@@ -130,7 +130,7 @@ public class LibraryEntryDataService : BaseSqlDbService
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
-            visibility = DbValue<string>(reader, "Description"),
+            visibility = DbValue<string>(reader, "Visibility"),
             editors = DbJson<string[]>(reader, "Editors")
         };
     }

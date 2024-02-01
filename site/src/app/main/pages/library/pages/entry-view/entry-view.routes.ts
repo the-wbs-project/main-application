@@ -2,7 +2,7 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { DialogService, Transformers, userIdResolve } from '@wbs/main/services';
-import { libraryClaimsResolve, verifyGuard } from './services';
+import { libraryClaimsResolve, redirectGuard, verifyGuard } from './services';
 import { EntryViewState } from './states';
 
 export const routes: Routes = [
@@ -20,6 +20,18 @@ export const routes: Routes = [
       userId: userIdResolve,
       claims: libraryClaimsResolve,
     },
-    children: [],
+    children: [
+      {
+        path: '',
+        canActivate: [redirectGuard],
+        loadComponent: () =>
+          import('./pages/entry/about').then((x) => x.AboutPageComponent),
+      },
+      {
+        path: 'about',
+        loadComponent: () =>
+          import('./pages/entry/about').then((x) => x.AboutPageComponent),
+      },
+    ],
   },
 ];

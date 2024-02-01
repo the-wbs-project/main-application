@@ -4,8 +4,8 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { Messages, Resources } from '@wbs/core/services';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { SetEntry, VerifyEntry } from '../actions';
+import { map, tap } from 'rxjs/operators';
+import { DescriptionChanged, SetEntry, VerifyEntry } from '../actions';
 
 interface StateModel {
   entry?: LibraryEntry;
@@ -56,6 +56,23 @@ export class EntryViewState {
         ctx.patchState({ entry });
       })
       //tap((project) => ctx.dispatch([new VerifyTasks(project)])),
+    );
+  }
+
+  @Action(DescriptionChanged)
+  descriptionChanged(
+    ctx: Context,
+    { description }: DescriptionChanged
+  ): Observable<void> | void {
+    const entry = ctx.getState().entry!;
+
+    if (entry.description === description) return;
+
+    entry.description = description;
+
+    return this.data.libraryEntries.putAsync(entry).pipe(
+      tap(() => this.messaging.notify.success('SAVED!', false)),
+      tap(() => ctx.patchState({ entry }))
     );
   }
 }

@@ -1,0 +1,42 @@
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>
+      {{ "General.Description" | translate | uppercase }}
+    </div>
+
+    <div class="flex-fill tx-right">
+      @if (editMode()) {
+      <span class="mg-r-15 tx-medium">Edit Mode</span>
+      <fa-icon
+        size="lg"
+        class="pointer mg-r-20"
+        [icon]="faFloppyDisk"
+        (click)="save()"
+        [title]="'General.Save' | translate"
+      />
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faXmark"
+        (click)="cancel()"
+        [title]="'General.Cancel' | translate"
+      />
+      } @else {
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faPencil"
+        (click)="edit()"
+        [title]="'General.Edit' | translate"
+      />
+      }
+    </div>
+  </div>
+</div>
+@if (editMode()) {
+<div class="card-body">
+  <kendo-editor class="form-control" [(ngModel)]="editDescription" />
+</div>
+} @else {
+<div class="card-body" [innerHTML]="description() | safeHtml"></div>
+}
