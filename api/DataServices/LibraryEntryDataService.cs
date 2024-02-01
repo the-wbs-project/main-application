@@ -113,6 +113,7 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Title", libraryEntry.title);
         cmd.Parameters.AddWithValue("@Description", DbValue(libraryEntry.description));
         cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.visibility));
+        cmd.Parameters.AddWithValue("@Editors", DbValue(libraryEntry.editors));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -129,7 +130,8 @@ public class LibraryEntryDataService : BaseSqlDbService
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
-            visibility = DbValue<string>(reader, "Description")
+            visibility = DbValue<string>(reader, "Description"),
+            editors = DbJson<string[]>(reader, "Editors")
         };
     }
 }

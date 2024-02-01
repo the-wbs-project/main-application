@@ -1,8 +1,8 @@
 import { PROJECT_CLAIMS } from '@wbs/core/models';
-import { ProjectNavigationLink } from '../project-navigation-link.model';
+import { NavigationLink } from '@wbs/main/models';
 import { TASK_PAGES } from './task-pages.const';
 
-const settings: ProjectNavigationLink[] = [
+const settings: NavigationLink[] = [
   {
     route: ['settings', 'general'],
     text: 'General.General',
@@ -14,7 +14,7 @@ const settings: ProjectNavigationLink[] = [
     claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
 ];
-export const TASK_NAVIGATION: ProjectNavigationLink[] = [
+export const TASK_NAVIGATION: NavigationLink[] = [
   {
     route: [TASK_PAGES.ABOUT],
     text: 'General.About',

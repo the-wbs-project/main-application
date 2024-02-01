@@ -1,5 +1,6 @@
 import { Context } from '../../config';
 import { AiChatDataService } from './ai-chat.data-service';
+import { LibraryEntryDataService } from './library-entry.data-service';
 import { ListDataService } from './list.data-service';
 import { ProjectDataService } from './project.data-service';
 import { ResourcesDataService } from './resources.data-service';
@@ -9,6 +10,7 @@ import { UserDataService } from './user.data-service';
 
 export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
+  readonly entries: LibraryEntryDataService;
   readonly lists: ListDataService;
   readonly projects: ProjectDataService;
   readonly resourceFiles: StorageService;
@@ -19,6 +21,7 @@ export class DataServiceFactory {
 
   constructor(ctx: Context) {
     this.aiChat = new AiChatDataService(ctx);
+    this.entries = new LibraryEntryDataService(ctx);
     this.lists = new ListDataService(ctx);
     this.projects = new ProjectDataService(ctx);
     this.resourceFiles = new StorageService(ctx.env.BUCKET_RESOURCES);

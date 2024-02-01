@@ -1,5 +1,13 @@
 import { Context } from '../../config';
-import { ORGANZIATION_PERMISSIONS, PROJECT_PERMISSIONS, Permissions, ROLES } from '../../models';
+import {
+  LIBRARY_PERMISSIONS,
+  LIBRARY_ROLES,
+  LIBRARY_ROLES_TYPE,
+  ORGANZIATION_PERMISSIONS,
+  PROJECT_PERMISSIONS,
+  Permissions,
+  ROLES,
+} from '../../models';
 
 export class ClaimsHttpService {
   static async getForOrganizationAsync(ctx: Context): Promise<Response> {
@@ -33,6 +41,26 @@ export class ClaimsHttpService {
       if (orgRoleNames.includes(ROLES.ADMIN)) roles.push(ROLES.ADMIN);
 
       return ctx.json(ClaimsHttpService.getClaims(PROJECT_PERMISSIONS, roles));
+    } catch (e) {
+      //@ts-ignore
+      console.log(e.message);
+      ctx.get('logger').trackException('An error occured trying to get claims for an entry.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async getForLibraryEntryAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, entry } = ctx.req.param();
+      const userId = ctx.get('idToken').userId;
+      const model = await ctx.get('data').entries.getByIdAsync(owner, entry);
+      const roles: LIBRARY_ROLES_TYPE[] = [LIBRARY_ROLES.VIEWER];
+
+      if (model?.owner === userId) roles.push(LIBRARY_ROLES.OWNER);
+      if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
+
+      return ctx.json(ClaimsHttpService.getClaims(LIBRARY_PERMISSIONS, roles));
     } catch (e) {
       //@ts-ignore
       console.log(e.message);

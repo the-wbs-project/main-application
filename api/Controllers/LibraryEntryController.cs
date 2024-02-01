@@ -80,6 +80,23 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{entryId}/editors")]
+    public async Task<IActionResult> GetEditorsByIdAsync(string owner, string entryId)
+    {
+        try
+        {
+            var entry = await entryDataService.GetByIdAsync(owner, entryId);
+
+            return Ok(entry.editors ?? new string[] { });
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("{entryId}/versions")]
     public async Task<IActionResult> GetVersionsAsync(string owner, string entryId)
     {

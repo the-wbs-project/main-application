@@ -2,56 +2,35 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
+  EventEmitter,
   HostListener,
-  OnChanges,
+  Output,
   ViewChild,
-  ViewEncapsulation,
   input,
-  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBoltLightning } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupModule } from '@progress/kendo-angular-popup';
-import { Project } from '@wbs/core/models';
-import { ProjectAction } from './project-action.model';
-import { ProjectActionButtonService } from './project-action-button.service';
+import { ActionButtonMenuItem } from '@wbs/main/models';
 
 @Component({
   standalone: true,
-  selector: 'wbs-project-action-button',
-  templateUrl: './project-action-button.component.html',
+  selector: 'wbs-action-button',
+  templateUrl: './action-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   imports: [FontAwesomeModule, PopupModule, RouterModule, TranslateModule],
-  providers: [ProjectActionButtonService],
 })
-export class ProjectActionButtonComponent implements OnChanges {
+export class ActionButtonComponent {
   @ViewChild('anchor', { read: ElementRef, static: false }) anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef, static: false }) popup!: ElementRef;
+  @Output() readonly itemClicked = new EventEmitter<string>();
 
-  readonly project = input.required<Project>();
-  readonly claims = input.required<string[]>();
-  readonly approvalEnabled = input.required<boolean>();
-
-  readonly menu = signal<ProjectAction[] | undefined>(undefined);
+  readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
   readonly faBoltLightning = faBoltLightning;
 
   show = false;
-
-  constructor(readonly service: ProjectActionButtonService) {}
-
-  ngOnChanges(): void {
-    const project = this.project();
-    const claims = this.claims();
-
-    if (project && claims) {
-      this.menu.set(
-        this.service.buildMenu(project, claims, this.approvalEnabled())
-      );
-    }
-  }
 
   @HostListener('document:keydown', ['$event'])
   public keydown(event: KeyboardEvent): void {

@@ -1,74 +1,73 @@
-import { PROJECT_CLAIMS } from '@wbs/core/models';
 import { NavigationLink } from '@wbs/main/models';
-import { PROJECT_PAGES } from './project-pages.const';
+import { ENTRY_PAGES } from './entry-pages.const';
 
 const settings: NavigationLink[] = [
   {
     route: ['settings', 'general'],
     text: 'General.General',
-    claim: PROJECT_CLAIMS.UPDATE,
+    //claim: PROJECT_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'phases'],
     text: 'General.Phases',
-    claim: PROJECT_CLAIMS.UPDATE,
+    //claim: PROJECT_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'disciplines'],
     text: 'General.Disciplines',
-    claim: PROJECT_CLAIMS.UPDATE,
+    //claim: PROJECT_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'roles'],
     text: 'General.Roles',
-    claim: PROJECT_CLAIMS.ROLES.READ,
+    //claim: PROJECT_CLAIMS.ROLES.READ,
   },
 ];
 
-export const PROJECT_NAVIGATION: NavigationLink[] = [
+export const ENTRY_NAVIGATION: NavigationLink[] = [
   {
     cssClass: ['d-sm-inline', 'd-md-none', 'nav-item', 'tx-uppercase'],
     text: 'General.Views',
     items: [
       {
-        route: [PROJECT_PAGES.ABOUT],
+        route: [ENTRY_PAGES.ABOUT],
         text: 'General.About',
         cssClass: ['nav-item', 'tx-uppercase'],
-      },
+      } /*
       {
-        route: [PROJECT_PAGES.TASKS],
+        route: [ENTRY_PAGES.TASKS],
         text: 'General.Tasks',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
       {
-        route: [PROJECT_PAGES.TIMELINE],
+        route: [ENTRY_PAGES.TIMELINE],
         text: 'General.Timeline',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
       {
-        route: [PROJECT_PAGES.RESOURCES],
+        route: [ENTRY_PAGES.RESOURCES],
         text: 'General.Resources',
         cssClass: ['nav-item', 'tx-uppercase'],
-      },
+      },*/,
     ],
   },
   {
-    route: [PROJECT_PAGES.ABOUT],
+    route: [ENTRY_PAGES.ABOUT],
     text: 'General.About',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
-  },
+  } /*
   {
-    route: [PROJECT_PAGES.TASKS],
+    route: [ENTRY_PAGES.TASKS],
     text: 'General.Tasks',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
-    route: [PROJECT_PAGES.TIMELINE],
+    route: [ENTRY_PAGES.TIMELINE],
     text: 'General.Timeline',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
-    route: [PROJECT_PAGES.RESOURCES],
+    route: [ENTRY_PAGES.RESOURCES],
     text: 'General.Resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
@@ -77,5 +76,5 @@ export const PROJECT_NAVIGATION: NavigationLink[] = [
     items: settings,
     claim: PROJECT_CLAIMS.SETTINGS.READ,
     cssClass: ['nav-item', 'tx-uppercase'],
-  },
+  },*/,
 ];

@@ -13,4 +13,9 @@ export const routes: Routes = [
         (x) => x.routes
       ),
   },
+  {
+    path: 'view',
+    loadChildren: () =>
+      import('./pages/entry-view/entry-view.routes').then((x) => x.routes),
+  },
 ];

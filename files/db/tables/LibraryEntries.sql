@@ -8,6 +8,7 @@ CREATE TABLE [dbo].[LibraryEntries] (
     [Description] nvarchar(MAX) NULL,
     [LastModified] datetimeoffset NOT NULL,
     [Visibility] nvarchar(50) NOT NULL,
+    [Editors] nvarchar(MAX) NULL,
     CONSTRAINT [LibraryEntries_PK] PRIMARY KEY CLUSTERED ([Id] ASC),
     INDEX [LibraryEntries_INDX_OwnerId] NONCLUSTERED ([OwnerId] ASC)
 )

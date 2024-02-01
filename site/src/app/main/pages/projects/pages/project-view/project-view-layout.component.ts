@@ -8,17 +8,16 @@ import { RouterModule } from '@angular/router';
 import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { SignalStore, TitleService } from '@wbs/core/services';
-import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
+import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
+import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
-import { ProjectNavigationComponent } from './components/project-navigation.component';
 import { PROJECT_NAVIGATION } from './models';
-import { NavMenuProcessPipe } from './pipes/nav-menu-process.pipe';
 import { ProjectApprovalState, ProjectState } from './states';
 import { ProjectNavigationService } from './services';
 
@@ -27,15 +26,14 @@ import { ProjectNavigationService } from './services';
   templateUrl: './project-view-layout.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ActionIconListComponent,
     ApprovalBadgeComponent,
     FindByIdPipe,
+    NavigationComponent,
     NavMenuProcessPipe,
     PageHeaderComponent,
     ProjectActionButtonComponent,
     ProjectApprovalWindowComponent,
     ProjectChecklistModalComponent,
-    ProjectNavigationComponent,
     ProjectTitleComponent,
     RouterModule,
   ],

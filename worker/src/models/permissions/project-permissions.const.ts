@@ -4,6 +4,9 @@ import { PROJECT_CLAIMS } from './project-claims.const';
 
 const permissions: Permissions = {};
 
+const OWNER = 'owner';
+const VIEWER = 'viewer';
+
 permissions[PROJECT_CLAIMS.READ] = [ROLES.PM, ROLES.ADMIN, ROLES.APPROVER, ROLES.SME];
 permissions[PROJECT_CLAIMS.CREATE] = [ROLES.PM, ROLES.ADMIN];
 permissions[PROJECT_CLAIMS.UPDATE] = [ROLES.PM, ROLES.ADMIN];

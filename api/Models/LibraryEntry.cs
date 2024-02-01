@@ -11,4 +11,5 @@ public class LibraryEntry
     public string title { get; set; }
     public string description { get; set; }
     public string visibility { get; set; }
+    public string[] editors { get; set; }
 }

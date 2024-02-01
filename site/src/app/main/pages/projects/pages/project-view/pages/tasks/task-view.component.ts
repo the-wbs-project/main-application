@@ -10,14 +10,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
+import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
+import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectApprovalWindowComponent } from '../../components/project-approval-window/project-approval-window.component';
-import { ProjectNavigationComponent } from '../../components/project-navigation.component';
 import { TASK_NAVIGATION } from '../../models';
-import { NavMenuProcessPipe } from '../../pipes/nav-menu-process.pipe';
-import { ProjectApprovalState, ProjectState, TasksState } from '../../states';
 import { ProjectNavigationService } from '../../services';
+import { ProjectApprovalState, ProjectState, TasksState } from '../../states';
 
 @Component({
   standalone: true,
@@ -29,9 +29,9 @@ import { ProjectNavigationService } from '../../services';
     ApprovalBadgeComponent,
     FindByIdPipe,
     FontAwesomeModule,
+    NavigationComponent,
     NavMenuProcessPipe,
     ProjectApprovalWindowComponent,
-    ProjectNavigationComponent,
     RouterModule,
   ],
 })

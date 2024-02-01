@@ -9,7 +9,8 @@ CREATE PROCEDURE [dbo].[LibraryEntry_Set]
     @Author nvarchar(100),
     @Title nvarchar(200),
     @Description nvarchar(MAX),
-    @Visibility nvarchar(50)
+    @Visibility nvarchar(50),
+    @Editors nvarchar(MAX)
 AS
 BEGIN
 IF EXISTS(SELECT * FROM [dbo].[LibraryEntries] WHERE [Id] = @Id)
@@ -21,13 +22,14 @@ IF EXISTS(SELECT * FROM [dbo].[LibraryEntries] WHERE [Id] = @Id)
             [LastModified] = GETUTCDATE(),
             [Title] = @Title,
             [Description] = @Description,
-            [Visibility] = @Visibility
+            [Visibility] = @Visibility,
+            [Editors] = @Editors
         WHERE [Id] = @Id
     END
 ELSE
     BEGIN
         INSERT INTO [dbo].[LibraryEntries]
-        VALUES (@Id, @OwnerId, @PublishedVersion, @Type, @Author, @Title, @Description, GETUTCDATE(), @Visibility)
+        VALUES (@Id, @OwnerId, @PublishedVersion, @Type, @Author, @Title, @Description, GETUTCDATE(), @Visibility, @Editors)
     END
 END
 GO
