@@ -33,6 +33,11 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
         route: [ENTRY_PAGES.ABOUT],
         text: 'General.About',
         cssClass: ['nav-item', 'tx-uppercase'],
+      },
+      {
+        route: [ENTRY_PAGES.RESOURCES],
+        text: 'General.Resources',
+        cssClass: ['nav-item', 'tx-uppercase'],
       } /*
       {
         route: [ENTRY_PAGES.TASKS],
@@ -43,17 +48,17 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
         route: [ENTRY_PAGES.TIMELINE],
         text: 'General.Timeline',
         cssClass: ['nav-item', 'tx-uppercase'],
-      },
-      {
-        route: [ENTRY_PAGES.RESOURCES],
-        text: 'General.Resources',
-        cssClass: ['nav-item', 'tx-uppercase'],
-      },*/,
+      },,*/,
     ],
   },
   {
     route: [ENTRY_PAGES.ABOUT],
     text: 'General.About',
+    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
+  },
+  {
+    route: [ENTRY_PAGES.RESOURCES],
+    text: 'General.Resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   } /*
   {
@@ -64,11 +69,6 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
   {
     route: [ENTRY_PAGES.TIMELINE],
     text: 'General.Timeline',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
-  },
-  {
-    route: [ENTRY_PAGES.RESOURCES],
-    text: 'General.Resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {

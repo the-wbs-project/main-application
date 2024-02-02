@@ -18,6 +18,7 @@ import { ENTRY_NAVIGATION } from './models';
 import { EntryViewState } from './states';
 import { TitleChanged } from './actions';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   standalone: true,
@@ -37,6 +38,7 @@ import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 export class EntryViewComponent {
   readonly claims = input.required<string[]>();
   readonly userId = input.required<string>();
+  readonly owner = input.required<string>();
 
   readonly entry = this.store.select(EntryViewState.entry);
   readonly version = this.store.select(EntryViewState.version);
@@ -55,5 +57,17 @@ export class EntryViewComponent {
     this.store.dispatch(new TitleChanged(title));
   }
 
-  navigate(route: string[]) {}
+  navigate(route: string[]) {
+    //acme_engineering/library/view/tpObVhGM8N/1/about
+    this.store.dispatch(
+      new Navigate([
+        '/' + this.owner(),
+        'library',
+        'view',
+        this.entry()!.id,
+        this.version()!.version,
+        ...route,
+      ])
+    );
+  }
 }

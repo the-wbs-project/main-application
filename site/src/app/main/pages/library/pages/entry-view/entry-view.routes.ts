@@ -9,12 +9,12 @@ import {
 } from '@wbs/main/services';
 import {
   entryIdResolve,
-  entryResourceResolve,
   libraryClaimsResolve,
   redirectGuard,
   verifyGuard,
 } from './services';
 import { EntryViewState } from './states';
+import { versionIdResolve } from './services/version-id-resolver.service';
 
 export const routes: Routes = [
   {
@@ -28,6 +28,7 @@ export const routes: Routes = [
       Transformers,
     ],
     resolve: {
+      owner: orgResolve,
       userId: userIdResolve,
       claims: libraryClaimsResolve,
     },
@@ -51,8 +52,8 @@ export const routes: Routes = [
           ),
         resolve: {
           owner: orgResolve,
-          list: entryResourceResolve,
           entryId: entryIdResolve,
+          versionId: versionIdResolve,
           claims: libraryClaimsResolve,
         },
       },

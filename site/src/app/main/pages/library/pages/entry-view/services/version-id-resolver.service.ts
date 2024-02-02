@@ -4,17 +4,17 @@ import { Store } from '@ngxs/store';
 import { first, map, skipWhile } from 'rxjs/operators';
 import { EntryViewState } from '../states';
 
-export const entryIdResolve: ResolveFn<string> = (
+export const versionIdResolve: ResolveFn<number> = (
   route: ActivatedRouteSnapshot
 ) => {
-  const projectId = route.params['entryId'];
+  const versionId = parseInt(route.params['versionId']);
 
-  if (projectId) return projectId;
+  if (versionId && !isNaN(versionId)) return versionId;
   return inject(Store)
-    .select(EntryViewState.entry)
+    .select(EntryViewState.version)
     .pipe(
       skipWhile((x) => x == undefined),
-      map((x) => x!.id),
+      map((x) => x!.version),
       first()
     );
 };
