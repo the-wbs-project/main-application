@@ -1,9 +1,5 @@
-import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, ResolveFn, Routes } from '@angular/router';
-import { Store } from '@ngxs/store';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { ResourceRecord } from '@wbs/core/models';
-import { Utils, orgResolve, userIdResolve } from '@wbs/main/services';
+import { Routes } from '@angular/router';
+import { orgResolve, userIdResolve } from '@wbs/main/services';
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import {
   closeApprovalWindowGuard,
@@ -17,36 +13,6 @@ import {
   projectIdResolve,
   taskIdResolve,
 } from '../services';
-import { ProjectState, TasksState } from '../states';
-
-export const resourceResolve: ResolveFn<ResourceRecord[]> = (
-  route: ActivatedRouteSnapshot
-) => {
-  const org = Utils.getOrgName(inject(Store), route);
-  const projectId =
-    route.params['projectId'] ??
-    inject(Store).selectSnapshot(ProjectState.current)?.id;
-
-  return inject(DataServiceFactory).projectResources.getAsync(org, projectId);
-};
-
-export const taskResourceResolve: ResolveFn<ResourceRecord[]> = (
-  route: ActivatedRouteSnapshot
-) => {
-  const org = Utils.getOrgName(inject(Store), route);
-  const projectId =
-    route.params['projectId'] ??
-    inject(Store).selectSnapshot(ProjectState.current)?.id;
-  const taskId =
-    route.params['taskId'] ??
-    inject(Store).selectSnapshot(TasksState.current)?.id;
-
-  return inject(DataServiceFactory).projectResources.getAsync(
-    org,
-    projectId,
-    taskId
-  );
-};
 
 export const routes: Routes = [
   {
@@ -127,7 +93,6 @@ export const routes: Routes = [
             },
             resolve: {
               owner: orgResolve,
-              list: taskResourceResolve,
               projectId: projectIdResolve,
               taskId: taskIdResolve,
               claims: projectClaimsResolve,
@@ -176,7 +141,6 @@ export const routes: Routes = [
     },
     resolve: {
       owner: orgResolve,
-      list: resourceResolve,
       projectId: projectIdResolve,
       claims: projectClaimsResolve,
     },

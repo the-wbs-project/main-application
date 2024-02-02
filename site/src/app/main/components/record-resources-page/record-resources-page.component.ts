@@ -1,8 +1,9 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  Input,
+  EventEmitter,
+  Output,
+  input,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -17,12 +18,10 @@ import {
   RESOURCE_TYPES,
   ResourceRecord,
 } from '@wbs/core/models';
-import { IdService, Messages } from '@wbs/core/services';
+import { Messages } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
-import { RecordResourceValidation, Utils } from '@wbs/main/services';
-import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { RecordResourceValidation } from '@wbs/main/services';
 import { RecordResourceEditorComponent } from './components/record-resources-editor/record-resource-editor.component';
 import { RecordResourceListComponent } from './components/record-resources-list/record-resource-list.component';
 
@@ -42,11 +41,17 @@ import { RecordResourceListComponent } from './components/record-resources-list/
   providers: [RecordResourceValidation],
 })
 export class RecordResourcesPageComponent {
-  @Input({ required: true }) list!: ResourceRecord[];
-  @Input({ required: true }) owner!: string;
-  @Input({ required: true }) projectId!: string;
-  @Input({ required: true }) claims!: string[];
-  @Input() taskId?: string;
+  @Output() readonly saveRecords = new EventEmitter<
+    Partial<ResourceRecord>[]
+  >();
+  @Output() readonly uploadAndSave = new EventEmitter<{
+    rawFile: FileInfo;
+    data: Partial<ResourceRecord>;
+  }>();
+
+  readonly list = input.required<ResourceRecord[]>();
+  readonly owner = input.required<string>();
+  readonly claims = input.required<string[]>();
 
   private modal?: NgbModalRef;
 
@@ -55,7 +60,6 @@ export class RecordResourcesPageComponent {
   readonly vm = signal<RecordResourceViewModel | undefined>(undefined);
 
   constructor(
-    private readonly cd: ChangeDetectorRef,
     private readonly data: DataServiceFactory,
     private readonly messages: Messages,
     private readonly modalService: NgbModal,
@@ -82,44 +86,49 @@ export class RecordResourcesPageComponent {
     this.vm.set(vm);
 
     if (!valid) return;
-
-    let obs: Observable<void> | undefined;
-
     if (vm.type === RESOURCE_TYPES.LINK) {
-      obs = this.save({
-        id: vm.id,
-        type: vm.type,
-        description: vm.description,
-        name: vm.name,
-        resource: vm.url,
-      });
+      this.saveRecords.emit([
+        {
+          id: vm.id,
+          type: vm.type,
+          description: vm.description,
+          name: vm.name,
+          resource: vm.url,
+        },
+      ]);
     } else {
-      obs = this.uploadAndSave(vm.file!, {
-        id: vm.id,
-        type: vm.type,
-        description: vm.description,
-        name: vm.name,
+      this.uploadAndSave.emit({
+        rawFile: vm.file!,
+        data: {
+          id: vm.id,
+          type: vm.type,
+          description: vm.description,
+          name: vm.name,
+        },
       });
     }
 
+    this.modal?.close();
+    /*
     this.messages.block.show('.resource-editor', 'General.Saving');
 
     obs.subscribe(() => {
       this.messages.block.cancel('.resource-editor');
       this.modal?.close();
       this.messages.notify.success('Resources.ResourceSaved');
-    });
+    });*/
   }
 
+  /*
   saveReordered(records: ResourceRecord[]): void {
     let obs: Observable<void>[] = [];
 
     for (const record of records) {
       obs.push(
         this.data.projectResources.putAsync(
-          this.owner,
-          this.projectId,
-          this.taskId,
+          this.owner(),
+          this.projectId(),
+          this.taskId(),
           record
         )
       );
@@ -137,7 +146,7 @@ export class RecordResourcesPageComponent {
 
     return Utils.getFileAsync(rawFile).pipe(
       switchMap((file) =>
-        this.data.resourceFiles.uploadAsync(this.owner, data.id!, file)
+        this.data.resourceFiles.uploadAsync(this.owner(), data.id!, file)
       ),
       switchMap(() => this.save(data))
     );
@@ -152,18 +161,18 @@ export class RecordResourcesPageComponent {
       description: data.description!,
       type: data.type!,
       resource: data.resource,
-      order: data.order ?? Math.max(...this.list.map((x) => x.order), 0) + 1,
+      order: data.order ?? Math.max(...this.list().map((x) => x.order), 0) + 1,
     };
 
     return this.data.projectResources
-      .putAsync(this.owner, this.projectId, this.taskId, resource)
+      .putAsync(this.owner(), this.projectId(), this.taskId(), resource)
       .pipe(
         map(() => {
           console.log('Saved');
 
-          this.list = structuredClone([...this.list, resource]);
+          this.list = structuredClone([...this.list(), resource]);
           this.cd.detectChanges();
         })
       );
-  }
+  }*/
 }
