@@ -4,8 +4,5 @@ export interface LibraryEntry {
   type: string;
   publishedVersion?: number;
   author: string;
-  lastModified: Date;
-  title: string;
-  description?: string;
   visibility: string;
 }

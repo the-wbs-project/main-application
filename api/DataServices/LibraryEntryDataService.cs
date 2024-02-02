@@ -2,6 +2,7 @@ using Microsoft.Data.SqlClient;
 using System.Data;
 using Wbs.Api.Configuration;
 using Wbs.Api.Models;
+using Wbs.Api.ViewModels;
 
 namespace Wbs.Api.DataServices;
 
@@ -14,7 +15,7 @@ public class LibraryEntryDataService : BaseSqlDbService
         _logger = logger;
     }
 
-    public async Task<List<LibraryEntry>> GetByOwnerAsync(string owner)
+    public async Task<List<LibraryEntryViewModel>> GetByOwnerAsync(string owner)
     {
         using (var conn = new SqlConnection(cs))
         {
@@ -24,18 +25,18 @@ public class LibraryEntryDataService : BaseSqlDbService
         }
     }
 
-    public async Task<List<LibraryEntry>> GetByOwnerAsync(SqlConnection conn, string owner)
+    public async Task<List<LibraryEntryViewModel>> GetByOwnerAsync(SqlConnection conn, string owner)
     {
-        var results = new List<LibraryEntry>();
+        var results = new List<LibraryEntryViewModel>();
 
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @Owner ORDER BY [LastModified] DESC", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryView] WHERE [OwnerId] = @Owner ORDER BY [LastModified] DESC", conn);
 
         cmd.Parameters.AddWithValue("@Owner", owner);
 
         using (var reader = await cmd.ExecuteReaderAsync())
         {
             while (reader.Read())
-                results.Add(ToModel(reader));
+                results.Add(ToViewModel(reader));
         }
         return results;
     }
@@ -110,8 +111,6 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.owner);
         cmd.Parameters.AddWithValue("@Type", libraryEntry.type);
         cmd.Parameters.AddWithValue("@Author", libraryEntry.author);
-        cmd.Parameters.AddWithValue("@Title", libraryEntry.title);
-        cmd.Parameters.AddWithValue("@Description", DbValue(libraryEntry.description));
         cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.visibility));
         cmd.Parameters.AddWithValue("@Editors", DbValue(libraryEntry.editors));
 
@@ -127,11 +126,25 @@ public class LibraryEntryDataService : BaseSqlDbService
             owner = DbValue<string>(reader, "OwnerId"),
             type = DbValue<string>(reader, "Type"),
             author = DbValue<string>(reader, "Author"),
-            lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
-            title = DbValue<string>(reader, "Title"),
-            description = DbValue<string>(reader, "Description"),
             visibility = DbValue<string>(reader, "Visibility"),
             editors = DbJson<string[]>(reader, "Editors")
+        };
+    }
+
+    private LibraryEntryViewModel ToViewModel(SqlDataReader reader)
+    {
+        return new LibraryEntryViewModel
+        {
+            EntryId = DbValue<string>(reader, "EntryId"),
+            Version = DbValue<int>(reader, "Version"),
+            OwnerId = DbValue<string>(reader, "OwnerId"),
+            Type = DbValue<string>(reader, "Type"),
+            Title = DbValue<string>(reader, "Title"),
+            Description = DbValue<string>(reader, "Description"),
+            Status = DbValue<string>(reader, "Status"),
+            Author = DbValue<string>(reader, "Author"),
+            Visibility = DbValue<string>(reader, "Visibility"),
+            LastModified = DbValue<DateTimeOffset>(reader, "LastModified")
         };
     }
 }

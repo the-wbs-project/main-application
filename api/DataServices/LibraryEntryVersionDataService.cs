@@ -108,6 +108,9 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@OwnerId", owner);
         cmd.Parameters.AddWithValue("@EntryId", entryVersion.entryId);
         cmd.Parameters.AddWithValue("@Version", entryVersion.version);
+        cmd.Parameters.AddWithValue("@VersionAlias", DbValue(entryVersion.versionAlias));
+        cmd.Parameters.AddWithValue("@Title", entryVersion.title);
+        cmd.Parameters.AddWithValue("@Description", DbValue(entryVersion.description));
         cmd.Parameters.AddWithValue("@Status", entryVersion.status);
         cmd.Parameters.AddWithValue("@Categories", DbJson(entryVersion.categories));
         cmd.Parameters.AddWithValue("@Phases", DbJson(entryVersion.phases));
@@ -122,10 +125,14 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         {
             entryId = DbValue<string>(reader, "EntryId"),
             version = DbValue<int>(reader, "Version"),
+            versionAlias = DbValue<string>(reader, "VersionAlias"),
+            title = DbValue<string>(reader, "Title"),
+            description = DbValue<string>(reader, "Description"),
             status = DbValue<string>(reader, "Status"),
-            categories = DbValue<string[]>(reader, "Categories"),
+            categories = DbJson<string[]>(reader, "Categories"),
             phases = DbJson<object[]>(reader, "Phases"),
             disciplines = DbJson<object[]>(reader, "Disciplines"),
+            lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
         };
     }
 }

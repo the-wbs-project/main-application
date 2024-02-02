@@ -53,15 +53,15 @@ public class ImportLibraryEntryService
                 type = "project",
                 owner = owner,
                 author = options.author,
-                title = options.title ?? project.title,
-                description = options.description ?? project.description,
-                lastModified = DateTimeOffset.Now,
                 visibility = options.visibility
             };
             var libraryEntryVersion = new LibraryEntryVersion
             {
                 entryId = libraryEntry.id,
                 version = 1,
+                title = options.title ?? project.title,
+                description = options.description ?? project.description,
+                lastModified = DateTimeOffset.Now,
                 categories = options.categories,
                 disciplines = project.disciplines,
                 phases = project.phases,
@@ -170,10 +170,7 @@ public class ImportLibraryEntryService
                 owner = owner,
                 author = options.author,
                 type = options.phase != null ? "phase" : "node",
-                title = options.title ?? projectNode.title,
-                description = options.description ?? projectNode.description,
-                lastModified = DateTimeOffset.Now,
-                visibility = options.visibility
+                visibility = options.visibility,
             };
             var libraryEntryVersion = new LibraryEntryVersion
             {
@@ -181,6 +178,9 @@ public class ImportLibraryEntryService
                 status = "draft",
                 entryId = libraryEntry.id,
                 categories = options.categories,
+                lastModified = DateTimeOffset.Now,
+                title = options.title ?? projectNode.title,
+                description = options.description ?? projectNode.description,
                 phases = options.phase != null ? new object[] { options.phase } : null
             };
 

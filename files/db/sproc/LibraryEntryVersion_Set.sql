@@ -5,6 +5,9 @@ CREATE PROCEDURE [dbo].[LibraryEntryVersion_Set]
     @EntryId nvarchar(100),
     @OwnerId nvarchar(100),
     @Version int,
+    @VersionAlias nvarchar(200),
+    @Title nvarchar(200),
+    @Description nvarchar(MAX),
     @Status nvarchar(50),
     @Categories nvarchar(MAX),
     @Phases nvarchar(MAX),
@@ -16,16 +19,20 @@ BEGIN
             IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @Version)
                 BEGIN
                     UPDATE [dbo].[LibraryEntryVersions]
-                    SET [Status] = @Status,
+                    SET [VersionAlias] = @VersionAlias,
+                        [Title] = @Title,
+                        [Description] = @Description,
+                        [Status] = @Status,
                         [Categories] = @Categories,
                         [Phases] = @Phases,
-                        [Disciplines] = @Disciplines
+                        [Disciplines] = @Disciplines,
+                        [LastModified] = GETUTCDATE()
                     WHERE [EntryId] = @EntryId AND [Version] = @Version
                 END
             ELSE
                 BEGIN
                     INSERT INTO [dbo].[LibraryEntryVersions]
-                    VALUES (@EntryId, @Version, @Status, @Categories, @Phases, @Disciplines)
+                    VALUES (@EntryId, @Version, @VersionAlias, @Title, @Description, @Status, @Categories, @Phases, @Disciplines, GETUTCDATE())
                 END
         END
 END
