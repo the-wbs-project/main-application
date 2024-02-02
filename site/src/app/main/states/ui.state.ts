@@ -10,7 +10,7 @@ import {
   State,
   StateContext,
 } from '@ngxs/store';
-import { RoutedBreadCrumbItem } from '@wbs/core/models';
+import { RoutedBreadcrumbItem } from '@wbs/core/models';
 import { timer } from 'rxjs';
 import {
   MainContentSizeChanged,
@@ -20,7 +20,7 @@ import {
 } from '../actions';
 
 interface StateModel {
-  breadcrumbs?: RoutedBreadCrumbItem[];
+  breadcrumbs?: RoutedBreadcrumbItem[];
   path?: string;
   lastWindowCheck?: number;
   isLoading: boolean;
@@ -47,7 +47,7 @@ export class UiState implements NgxsOnInit {
   constructor(private readonly actions$: Actions) {}
 
   @Selector()
-  static breadcrumbs(state: StateModel): RoutedBreadCrumbItem[] | undefined {
+  static breadcrumbs(state: StateModel): RoutedBreadcrumbItem[] | undefined {
     return state.breadcrumbs;
   }
 

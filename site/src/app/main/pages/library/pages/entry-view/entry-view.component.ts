@@ -10,11 +10,14 @@ import { gearIcon } from '@progress/kendo-svg-icons';
 import { SignalStore, TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
+import { PageHeaderComponent } from '@wbs/main/components/page-header2';
 import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
+import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewState } from './states';
+import { TitleChanged } from './actions';
+import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 
 @Component({
   standalone: true,
@@ -23,6 +26,8 @@ import { EntryViewState } from './states';
   imports: [
     ActionIconListComponent,
     EntryActionButtonComponent,
+    EntryTitleComponent,
+    EntryViewBreadcrumbsPipe,
     NavigationComponent,
     NavMenuProcessPipe,
     PageHeaderComponent,
@@ -35,7 +40,7 @@ export class EntryViewComponent {
 
   readonly entry = this.store.select(EntryViewState.entry);
   readonly version = this.store.select(EntryViewState.version);
-  readonly title = computed(() => this.entry()?.title);
+  readonly title = computed(() => this.version()?.title ?? '');
 
   readonly links = ENTRY_NAVIGATION;
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
@@ -44,6 +49,10 @@ export class EntryViewComponent {
 
   constructor(title: TitleService, private readonly store: SignalStore) {
     title.setTitle('Project', false);
+  }
+
+  titleChanged(title: string): void {
+    this.store.dispatch(new TitleChanged(title));
   }
 
   navigate(route: string[]) {}

@@ -1,4 +1,4 @@
-import { RoutedBreadCrumbItem } from '@wbs/core/models';
+import { RoutedBreadcrumbItem } from '@wbs/core/models';
 
 export class MainContentSizeChanged {
   static readonly type = '[UI] Main Content Size Changed';
@@ -12,7 +12,7 @@ export class ParseNavigation {
 
 export class SetBreadcrumbs {
   static readonly type = '[UI] Set Breadcrumbs';
-  constructor(readonly breadcrumbs: RoutedBreadCrumbItem[]) {}
+  constructor(readonly breadcrumbs: RoutedBreadcrumbItem[]) {}
 }
 
 export class ToggleSidebar {

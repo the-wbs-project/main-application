@@ -1,19 +1,20 @@
 <div class="about-page-grid pd-20" resizedCss>
   <wbs-description-card
     [ngClass]="'card border full-item'"
-    [description]="entry()?.description ?? ''"
+    [description]="version()?.description ?? ''"
     (descriptionChange)="descriptionChange($event)"
   />
-
+</div>
+<!--
   <div class="card border double-item">
     <div class="card-header">
       {{ "General.Disciplines" | translate | uppercase }}
     </div>
     <div class="card-body">
-      <!--<wbs-discipline-list
+    <wbs-discipline-list
         [disciplines]="project.disciplines"
         [projectDisciplines]="project.disciplines"
-      />-->
+      />
     </div>
   </div>
 
@@ -22,10 +23,10 @@
       {{ "General.Status" | translate | uppercase }}
     </div>
     <div class="card-body">
-      <!--<wbs-project-status-tile
+     <wbs-project-status-tile
         [approvalEnabled]="approvalEnabled()!"
         [project]="project"
-      />-->
+      />
     </div>
   </div>
 
@@ -34,7 +35,6 @@
       {{ "Projects.PathToSuccess" | translate }}
     </div>
     <div class="card-body">
-      <!--<wbs-project-checklist [checklist]="checklist()" />-->
+      <wbs-project-checklist [checklist]="checklist()" />
     </div>
-  </div>
-</div>
+  </div>-->

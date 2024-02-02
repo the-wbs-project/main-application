@@ -31,9 +31,7 @@ export class EntryCreationService {
           const entry: LibraryEntry = {
             id: IdService.generate(),
             author: this.store.selectSnapshot(AuthState.userId)!,
-            lastModified: new Date(),
             owner,
-            title,
             type,
             visibility,
           };
@@ -44,6 +42,8 @@ export class EntryCreationService {
             disciplines: [],
             phases: [],
             status: 'draft',
+            title,
+            lastModified: new Date(),
           };
 
           return this.data.libraryEntries.putAsync(entry).pipe(

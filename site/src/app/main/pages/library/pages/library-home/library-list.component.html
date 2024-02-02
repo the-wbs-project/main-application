@@ -32,9 +32,12 @@
       <div class="row mg-b-15">
         <div class="col-12">
           <ul class="list-group">
-            @for (entry of entries(); track entry.id) {
+            @for (entry of entries(); track entry.entryId) {
             <li class="list-group-item">
-              <a class="text-decoration-none" [routerLink]="['view', entry.id]">
+              <a
+                class="text-decoration-none"
+                [routerLink]="['view', entry.entryId, entry.version]"
+              >
                 {{ entry.title }}
               </a>
             </li>

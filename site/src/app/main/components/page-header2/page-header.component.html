@@ -1,0 +1,26 @@
+@if (breadcrumbs(); as crumbs) {
+<div class="w-100 breadcrumb-header tx-right">
+  <div class="d-ib">
+    <ol class="breadcrumb">
+      @for (item of crumbs; let index = $index; track index) {
+      <li
+        class="breadcrumb-item"
+        [ngClass]="{ active: crumbs.length === index + 1 }"
+      >
+        @if (item.route) {
+        <a [routerLink]="item.route">
+          @if (item.isText) { {{ item.text }} } @else {
+          {{ item.text! | translate }} }
+        </a>
+        } @else {
+        <span>
+          @if (item.isText) { {{ item.text }} } @else {
+          {{ item.text! | translate }} }
+        </span>
+        }
+      </li>
+      }
+    </ol>
+  </div>
+</div>
+}

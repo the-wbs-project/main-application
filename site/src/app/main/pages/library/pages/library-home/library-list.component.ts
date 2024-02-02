@@ -14,9 +14,9 @@ import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
-import { LibraryEntry } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
 import { EntryCreationService } from './services';
 
 @Component({
@@ -38,7 +38,7 @@ export class LibraryListComponent implements OnInit {
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
 
-  readonly entries = signal<LibraryEntry[]>([]);
+  readonly entries = signal<LibraryEntryViewModel[]>([]);
 
   filterToggle = false;
 

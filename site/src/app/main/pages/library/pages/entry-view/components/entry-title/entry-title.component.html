@@ -1,0 +1,77 @@
+@if (editMode()) {
+<kendo-textbox class="wd-300" [(ngModel)]="editTitle">
+  <ng-template kendoTextBoxSuffixTemplate>
+    <button kendoButton fillMode="clear" (click)="save()">
+      <fa-icon
+        class="pointer"
+        [icon]="faFloppyDisk"
+        [title]="'General.Save' | translate"
+      />
+    </button>
+    <button kendoButton fillMode="clear" (click)="cancel()">
+      <fa-icon
+        class="pointer"
+        [icon]="faXmark"
+        [title]="'General.Cancel' | translate"
+      />
+    </button>
+  </ng-template>
+</kendo-textbox>
+} @else {
+<div class="d-flex flex-align-start">
+  <span class="tx-20 tx-medium mg-r-10">
+    {{ title() }}
+  </span>
+  <fa-icon
+    size="sm"
+    class="pointer"
+    [icon]="faPencil"
+    (click)="edit()"
+    [title]="'General.Edit' | translate"
+  />
+</div>
+}
+<!--
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>
+      {{ "General.Description" | translate | uppercase }}
+    </div>
+
+    <div class="flex-fill tx-right">
+      @if (editMode()) {
+      <span class="mg-r-15 tx-medium">Edit Mode</span>
+      <fa-icon
+        size="lg"
+        class="pointer mg-r-20"
+        [icon]="faFloppyDisk"
+        (click)="save()"
+        [title]="'General.Save' | translate"
+      />
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faXmark"
+        (click)="cancel()"
+        [title]="'General.Cancel' | translate"
+      />
+      } @else {
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faPencil"
+        (click)="edit()"
+        [title]="'General.Edit' | translate"
+      />
+      }
+    </div>
+  </div>
+</div>
+@if (editMode()) {
+<div class="card-body">
+  <kendo-editor class="form-control" [(ngModel)]="editDescription" />
+</div>
+} @else {
+<div class="card-body" [innerHTML]="description() | safeHtml"></div>
+}
+-->

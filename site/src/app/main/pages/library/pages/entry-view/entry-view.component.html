@@ -1,12 +1,9 @@
 <div class="d-flex flex-column h-100">
-  <div class="d-flex flex-align-center mg-10">
-    <div class="tx-20 tx-medium">
-      {{ title() }}
-    </div>
-
+  <div class="d-flex flex-align-center mg-y-10">
+    <wbs-entry-title [title]="title()" (titleChange)="titleChanged($event)" />
     <div class="flex-fill tx-right">
-      <div class="d-ib">
-        <wbs-page-header />
+      <div class="d-ib mg-r-15">
+        <wbs-page-header [breadcrumbs]="entry() | entryViewBreadcrumbs" />
       </div>
       <wbs-entry-action-button
         [entry]="entry()"
@@ -22,7 +19,9 @@
         (navigate)="navigate($event)"
       />
     </div>
-    <div class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100">
+    <div
+      class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100 bg-light"
+    >
       <div class="flex-fill scroll">
         <router-outlet />
       </div>

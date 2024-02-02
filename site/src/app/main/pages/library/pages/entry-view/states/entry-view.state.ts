@@ -3,9 +3,14 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { Messages, Resources } from '@wbs/core/services';
-import { Observable } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
-import { DescriptionChanged, SetEntry, VerifyEntry } from '../actions';
+import {
+  DescriptionChanged,
+  SetEntry,
+  TitleChanged,
+  VerifyEntry,
+} from '../actions';
 
 interface StateModel {
   entry?: LibraryEntry;
@@ -40,22 +45,50 @@ export class EntryViewState {
   @Action(VerifyEntry)
   verifyEntry(
     ctx: Context,
-    { owner, entryId }: VerifyEntry
+    { owner, entryId, versionId }: VerifyEntry
   ): Observable<void> | void {
     const state = ctx.getState();
 
-    if (state.entry?.id === entryId) return;
+    if (
+      state.entry?.id === entryId &&
+      state.version?.entryId === entryId &&
+      state.version?.version === versionId
+    )
+      return;
 
-    return ctx.dispatch(new SetEntry(owner, entryId));
+    return ctx.dispatch(new SetEntry(owner, entryId, versionId));
   }
 
   @Action(SetEntry)
-  setEntry(ctx: Context, { owner, entryId }: SetEntry): Observable<void> {
-    return this.data.libraryEntries.getAsync(owner, entryId).pipe(
-      map((entry) => {
-        ctx.patchState({ entry });
+  setEntry(
+    ctx: Context,
+    { owner, entryId, versionId }: SetEntry
+  ): Observable<void> {
+    return forkJoin({
+      entry: this.data.libraryEntries.getAsync(owner, entryId),
+      version: this.data.libraryEntryVersions.getAsync(
+        owner,
+        entryId,
+        versionId
+      ),
+    }).pipe(
+      map(({ entry, version }) => {
+        ctx.patchState({ entry, version });
       })
       //tap((project) => ctx.dispatch([new VerifyTasks(project)])),
+    );
+  }
+
+  @Action(TitleChanged)
+  titleChanged(ctx: Context, { title }: TitleChanged): Observable<void> | void {
+    const state = ctx.getState();
+    const entry = state.entry!;
+    const version = structuredClone(state.version!);
+    version.title = title;
+
+    return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
+      tap(() => this.messaging.notify.success('SAVED!', false)),
+      tap(() => ctx.patchState({ version }))
     );
   }
 
@@ -64,15 +97,14 @@ export class EntryViewState {
     ctx: Context,
     { description }: DescriptionChanged
   ): Observable<void> | void {
-    const entry = ctx.getState().entry!;
+    const state = ctx.getState();
+    const entry = state.entry!;
+    const version = structuredClone(state.version!);
+    version.description = description;
 
-    if (entry.description === description) return;
-
-    entry.description = description;
-
-    return this.data.libraryEntries.putAsync(entry).pipe(
+    return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
       tap(() => this.messaging.notify.success('SAVED!', false)),
-      tap(() => ctx.patchState({ entry }))
+      tap(() => ctx.patchState({ version }))
     );
   }
 }
