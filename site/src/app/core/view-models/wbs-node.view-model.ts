@@ -2,22 +2,22 @@ export interface WbsNodeView {
   id: string;
   treeId: string;
 
-  parentId: string | null;
-  treeParentId: string | null;
+  parentId?: string;
+  treeParentId?: string;
 
-  sameAsId?: string | null;
-  sameAsIndex?: number | null;
-  sameAsLevelText?: string | null;
+  sameAsId?: string;
+  sameAsIndex?: number;
+  sameAsLevelText?: string;
 
   children: number;
   childrenIds: string[];
-  description: string | null;
+  description?: string;
   disciplines: string[];
   levels: number[];
   levelText: string;
   depth: number;
   order: number;
-  phaseId: string | undefined;
+  phaseId?: string;
   title: string;
   lastModified?: Date;
 

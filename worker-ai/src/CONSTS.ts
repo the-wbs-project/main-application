@@ -10,6 +10,11 @@ export const TEXT_MODELS = [
 		title: 'OpenAI ChatGPT 4',
 	},
 	{
+		model: 'gpt-4-turbo-preview',
+		type: 'open-ai',
+		title: 'OpenAI ChatGPT 4 Turbo Preview',
+	},
+	{
 		model: '@cf/meta/llama-2-7b-chat-int8',
 		type: 'worker-ai',
 		title: 'Meta Llama 2.7b',

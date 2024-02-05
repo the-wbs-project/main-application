@@ -4,6 +4,7 @@ import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
 import { orgGuard } from './guards';
 import {
+  AiChatService,
   UserService,
   orgClaimsResolve,
   orgListResolve,
@@ -37,6 +38,7 @@ export const routes: Routes = [
           UiState,
         ])
       ),
+      AiChatService,
       UserService,
     ],
     children: [

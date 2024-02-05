@@ -64,8 +64,6 @@ export class WbsNodePhaseProjectImporter {
         id: phaseId,
         order: counter + phaseDelta,
         title: info.title,
-        description: null,
-        parentId: null,
         createdOn: now,
         lastModified: now,
         disciplineIds: this.getDisciplineFromPeople(info, people),
@@ -100,7 +98,6 @@ export class WbsNodePhaseProjectImporter {
         createdOn: now,
         lastModified: now,
         title: info.title,
-        description: null,
         disciplineIds: this.getDisciplineFromPeople(info, people),
       };
 

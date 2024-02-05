@@ -1,3 +1,5 @@
+import { LibraryEntryNode } from '@wbs/core/models';
+
 export class VerifyEntry {
   static readonly type = '[Library Entry] Verify';
   constructor(
@@ -24,4 +26,12 @@ export class TitleChanged {
 export class DescriptionChanged {
   static readonly type = '[Library Entry] Description Changed';
   constructor(readonly description: string) {}
+}
+
+export class NodesChanged {
+  static readonly type = '[Library Entry] Nodes';
+  constructor(
+    readonly upserts: LibraryEntryNode[],
+    readonly removeIds: string[]
+  ) {}
 }

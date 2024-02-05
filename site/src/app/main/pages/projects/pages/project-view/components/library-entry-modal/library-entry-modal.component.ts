@@ -57,12 +57,12 @@ export class LibraryEntryModalComponent {
   readonly contentCss = `.k-content { font-family: "Poppins", sans-serif; }`;
   readonly more = signal<boolean>(false);
   readonly form = new FormGroup({
-    title: new FormControl<string | null>(null, [Validators.required]),
-    description: new FormControl<string | null>(null),
+    title: new FormControl<string>('', [Validators.required]),
+    description: new FormControl<string>(''),
     includeResources: new FormControl(true),
     visibility: new FormControl(true),
     anyCategory: new FormControl(false),
-    categories: new FormControl<string[] | null>(null),
+    categories: new FormControl<string[]>([]),
   });
 
   type?: LIBRARY_ENTRY_TYPES_TYPE;
@@ -73,12 +73,12 @@ export class LibraryEntryModalComponent {
     this.type = data.type;
 
     this.form.setValue({
-      description: data.description,
+      description: data.description ?? '',
       title: data.title,
       includeResources: true,
       visibility: true,
       anyCategory: false,
-      categories: data.categories,
+      categories: data.categories ?? [],
     });
 
     this.form.get('categories')?.clearValidators();
@@ -99,9 +99,12 @@ export class LibraryEntryModalComponent {
     const model: LibraryEntryModalResults = {
       type: this.type!,
       title: form.title!,
-      description: form.description,
+      description: form.description ?? undefined,
       includeResources: form.includeResources!,
-      categories: form.anyCategory ? null : form.categories,
+      categories:
+        form.anyCategory || (form.categories ?? []).length === 0
+          ? undefined
+          : form.categories!,
       nav,
       visibility: form.visibility ? 'public' : 'private',
     };

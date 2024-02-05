@@ -1,8 +1,8 @@
 export interface ProjectToLibraryOptions {
   author: string;
   title: string;
-  description: string | null;
+  description?: string;
   includeResources: boolean;
-  categories: string[] | null;
+  categories?: string[];
   visibility: string;
 }

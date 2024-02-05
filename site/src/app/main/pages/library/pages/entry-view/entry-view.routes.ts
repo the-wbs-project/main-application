@@ -5,6 +5,7 @@ import {
   DialogService,
   Transformers,
   orgResolve,
+  phaseCategoryResolver,
   userIdResolve,
 } from '@wbs/main/services';
 import {
@@ -12,9 +13,9 @@ import {
   libraryClaimsResolve,
   redirectGuard,
   verifyGuard,
+  versionIdResolve,
 } from './services';
 import { EntryViewState } from './states';
-import { versionIdResolve } from './services/version-id-resolver.service';
 
 export const routes: Routes = [
   {
@@ -43,6 +44,15 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () =>
           import('./pages/entry/about').then((x) => x.AboutPageComponent),
+        resolve: {},
+      },
+      {
+        path: 'tasks',
+        loadComponent: () =>
+          import('./pages/entry/tasks').then((x) => x.TasksPageComponent),
+        resolve: {
+          phases: phaseCategoryResolver,
+        },
       },
       {
         path: 'resources',

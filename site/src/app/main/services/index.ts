@@ -1,5 +1,6 @@
 export * from './resolvers';
 export * from './transformers';
+export * from './ai-chat.service';
 export * from './category-selection.service';
 export * from './dialog.service';
 export * from './drag-drop.service';

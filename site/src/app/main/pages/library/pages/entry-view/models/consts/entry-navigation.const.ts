@@ -35,15 +35,15 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
         cssClass: ['nav-item', 'tx-uppercase'],
       },
       {
-        route: [ENTRY_PAGES.RESOURCES],
-        text: 'General.Resources',
-        cssClass: ['nav-item', 'tx-uppercase'],
-      } /*
-      {
         route: [ENTRY_PAGES.TASKS],
         text: 'General.Tasks',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
+      {
+        route: [ENTRY_PAGES.RESOURCES],
+        text: 'General.Resources',
+        cssClass: ['nav-item', 'tx-uppercase'],
+      } /*
       {
         route: [ENTRY_PAGES.TIMELINE],
         text: 'General.Timeline',
@@ -57,15 +57,16 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
-    route: [ENTRY_PAGES.RESOURCES],
-    text: 'General.Resources',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
-  } /*
-  {
     route: [ENTRY_PAGES.TASKS],
     text: 'General.Tasks',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
+  {
+    route: [ENTRY_PAGES.RESOURCES],
+    text: 'General.Resources',
+    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
+  } /*
+
   {
     route: [ENTRY_PAGES.TIMELINE],
     text: 'General.Timeline',

@@ -1,3 +1,4 @@
+export * from './ai-models-resolver.service';
 export * from './org-claims-resolver.service';
 export * from './org-member-resolver.service';
 export * from './org-resolver.service';

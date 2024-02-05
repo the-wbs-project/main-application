@@ -50,7 +50,7 @@ export class WbsDisciplineNodeTransformer {
       const dView: WbsNodeView = {
         children: 0,
         childrenIds: [],
-        description: dNode?.description ?? null,
+        description: dNode?.description,
         disciplines: [d.id],
         id: d.id,
         treeId: d.id,
@@ -58,9 +58,6 @@ export class WbsDisciplineNodeTransformer {
         levelText: (i + 1).toString(),
         depth: 1,
         order: i + 1,
-        parentId: null,
-        treeParentId: null,
-        phaseId: undefined,
         title: this.resources.get(d.label),
         lastModified: dNode?.lastModified,
         canMoveDown: false,
@@ -81,7 +78,7 @@ export class WbsDisciplineNodeTransformer {
         const pView: WbsNodeView = {
           children: 0,
           childrenIds: [],
-          description: pNode?.description ?? null,
+          description: pNode?.description,
           disciplines: [d.id],
           id: p.id,
           treeId: `${d.id}-${p.id}`,

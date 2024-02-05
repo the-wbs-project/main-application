@@ -108,7 +108,6 @@ export class LibraryEntryExportService {
         this.data.projectNodes
           .exportToLibraryAsync(owner, task.projectId, task.id, {
             author: this.author(),
-            phase: null,
             ...results,
           })
           .subscribe();

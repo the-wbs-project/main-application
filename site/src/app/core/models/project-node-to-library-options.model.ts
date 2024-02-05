@@ -3,9 +3,9 @@ import { ProjectCategory } from './project-category.type';
 export interface ProjectNodeToLibraryOptions {
   author: string;
   title: string;
-  description: string | null;
+  description?: string;
   includeResources: boolean;
-  categories: string[] | null;
-  phase: ProjectCategory | null;
+  categories?: string[];
+  phase?: ProjectCategory;
   visibility: string;
 }

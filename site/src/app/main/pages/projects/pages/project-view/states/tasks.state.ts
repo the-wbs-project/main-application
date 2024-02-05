@@ -302,7 +302,7 @@ export class TasksState {
   moveTaskDown(ctx: Context, action: MoveTaskDown): void | Observable<void> {
     const state = ctx.getState();
     const tasks = structuredClone(state.nodes)!;
-    const task = tasks.find((x) => x.id === action.taskId);
+    const task = tasks.find((x) => x.id === action.taskId)!;
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
     const task2 = tasks.find(
       (x) => x.parentId === task?.parentId && x.order === task.order + 1
@@ -406,7 +406,7 @@ export class TasksState {
   moveTaskUp(ctx: Context, action: MoveTaskUp): void | Observable<void> {
     const state = ctx.getState();
     const tasks = structuredClone(state.nodes)!;
-    const task = tasks.find((x) => x.id === action.taskId);
+    const task = tasks.find((x) => x.id === action.taskId)!;
     const taskVm = state.phases!.find((x) => x.id === action.taskId);
     const task2 = tasks.find(
       (x) => x.parentId === task?.parentId && x.order === task.order - 1
@@ -712,8 +712,8 @@ export class TasksState {
       const item = structuredClone(x);
 
       if (item.parentId === taskId) {
-        item.parentId = null;
-        item.treeParentId = null;
+        item.parentId = undefined;
+        item.treeParentId = undefined;
       }
       list.push(item);
     }

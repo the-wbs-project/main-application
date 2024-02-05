@@ -32,7 +32,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class SelectButtonComponent {
   readonly faCheck = faCheck;
-  readonly selected = input.required<boolean>();
+  readonly selected = input<boolean>(false);
   readonly selectText = input<string>('General.Select');
   readonly selectedText = input<string>('General.Selected');
   readonly buttonClass = input<string>();

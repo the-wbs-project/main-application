@@ -62,4 +62,16 @@ export class LibraryListComponent implements OnInit {
   force() {
     this.cd.detectChanges();
   }
+
+  create(): void {
+    this.creation.runAsync(this.owner).subscribe((vm) => {
+      if (vm == undefined) return;
+
+      const list = this.entries();
+
+      list.splice(0, 0, vm);
+
+      this.entries.set(structuredClone(list));
+    });
+  }
 }

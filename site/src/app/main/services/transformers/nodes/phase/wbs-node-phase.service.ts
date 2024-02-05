@@ -57,8 +57,6 @@ export class WbsNodePhaseTransformer {
         levels: [...parentlevel],
         depth: 1,
         levelText: (i + 1).toString(),
-        parentId: null,
-        treeParentId: null,
         phaseId: cat.id,
         order: i + 1,
         title: label,

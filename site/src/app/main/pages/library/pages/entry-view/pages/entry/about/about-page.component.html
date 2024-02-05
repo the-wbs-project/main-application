@@ -1,7 +1,8 @@
 <div class="about-page-grid pd-20" resizedCss>
   <wbs-description-card
     [ngClass]="'card border full-item'"
-    [description]="version()?.description ?? ''"
+    [entry]="entry()!"
+    [version]="version()!"
     (descriptionChange)="descriptionChange($event)"
   />
 </div>
