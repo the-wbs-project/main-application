@@ -15,6 +15,14 @@ export class SignalStore {
     return toSignal(this.store.select(selector));
   }
 
+  selectAsync<T>(
+    selector: (state: any, ...states: any[]) => T
+  ): Observable<T | undefined> {
+    //select<T = any>(selector: string | Type<any>): Observable<T>;
+    //select<T>(selector: StateToken<T>): Observable<T> {
+    return this.store.select(selector);
+  }
+
   selectSnapshot<T>(selector: (state: any, ...states: any[]) => T): T {
     return this.store.selectSnapshot(selector);
   }

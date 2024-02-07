@@ -1,6 +1,12 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
+import { TaskCreateService } from '@wbs/main/components/task-create';
+import {
+  aboutSubSectionGuard,
+  resourcesSubSectionGuard,
+  tasksSubSectionGuard,
+} from '@wbs/main/guards';
 import {
   DialogService,
   Transformers,
@@ -18,7 +24,6 @@ import {
   versionIdResolve,
 } from './services';
 import { EntryViewState } from './states';
-import { TaskCreateService } from '@wbs/main/components/task-create';
 
 export const routes: Routes = [
   {
@@ -49,13 +54,14 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () =>
           import('./pages/entry/about').then((x) => x.AboutPageComponent),
+        canActivate: [aboutSubSectionGuard],
         resolve: {},
       },
       {
         path: 'tasks',
         loadComponent: () =>
           import('./pages/entry/tasks').then((x) => x.TasksPageComponent),
-        canActivate: [tasksVerifyGuard],
+        canActivate: [tasksVerifyGuard, tasksSubSectionGuard],
         resolve: {
           claims: libraryClaimsResolve,
           phases: phaseCategoryResolver,
@@ -67,6 +73,7 @@ export const routes: Routes = [
           import('./pages/entry/resources-page.component').then(
             (x) => x.ResourcesPageComponent
           ),
+        canActivate: [resourcesSubSectionGuard],
         resolve: {
           owner: orgResolve,
           entryId: entryIdResolve,

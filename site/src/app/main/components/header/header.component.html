@@ -23,10 +23,11 @@
     <div class="navbar-collapse">
       <ul class="navbar-nav">
         @for (parentItem of menu(); track parentItem.label) { @if (claims() |
-        check : parentItem.claim) {
+        check : parentItem.claim) { @if (parentItem.type === 'sub') {
         <li class="nav-item" ngbDropdown>
           <a
             class="nav-link dropdown-toggle tx-uppercase"
+            [ngClass]="{ active: parentItem.section === activeSection() }"
             ngbDropdownToggle
             role="button"
           >
@@ -47,7 +48,18 @@
             } } }
           </div>
         </li>
-        } }
+        } @else {
+        <li class="nav-item">
+          <a
+            class="nav-link tx-uppercase"
+            [ngClass]="{ active: parentItem.section === activeSection() }"
+            aria-current="page"
+            [routerLink]="parentItem.route"
+          >
+            {{ parentItem.label | translate }}
+          </a>
+        </li>
+        } } }
       </ul>
     </div>
   </div>
@@ -80,14 +92,20 @@
       id="navbarTogglerDemo01"
     >
       <ul class="navbar-nav">
-        @for (parentItem of menu(); track $index) { @for (link of
-        parentItem.items; track $index) {
+        @for (parentItem of menu(); track $index) { @if (parentItem.type ===
+        'sub') { @for (link of parentItem.items; track $index) {
         <li class="nav-item tx-uppercase">
           @if (link.type === 'link') {
           <a [routerLink]="link.route" class="nav-link pd-y-5 pd-x-20">
             {{ link.label! | translate }}
           </a>
           }
+        </li>
+        } } @else {
+        <li class="nav-item tx-uppercase">
+          <a [routerLink]="parentItem.route" class="nav-link pd-y-5 pd-x-20">
+            {{ parentItem.label! | translate }}
+          </a>
         </li>
         } }
       </ul>

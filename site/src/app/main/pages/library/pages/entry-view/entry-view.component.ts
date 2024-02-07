@@ -19,6 +19,7 @@ import { EntryViewState } from './states';
 import { TitleChanged } from './actions';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 import { Navigate } from '@ngxs/router-plugin';
+import { UiState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -42,6 +43,7 @@ export class EntryViewComponent {
 
   readonly entry = this.store.select(EntryViewState.entry);
   readonly version = this.store.select(EntryViewState.version);
+  readonly activeSubSection = this.store.select(UiState.activeSubSection);
   readonly title = computed(() => this.version()?.title ?? '');
 
   readonly links = ENTRY_NAVIGATION;

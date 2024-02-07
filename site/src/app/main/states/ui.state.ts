@@ -15,11 +15,15 @@ import { timer } from 'rxjs';
 import {
   MainContentSizeChanged,
   ParseNavigation,
+  SetActiveSection,
+  SetActiveSubSection,
   SetBreadcrumbs,
   ToggleSidebar,
 } from '../actions';
 
 interface StateModel {
+  activeSection?: string;
+  activeSubSection?: string;
   breadcrumbs?: RoutedBreadcrumbItem[];
   path?: string;
   lastWindowCheck?: number;
@@ -45,6 +49,16 @@ export class UiState implements NgxsOnInit {
   private readonly menuCutoff = 1000;
 
   constructor(private readonly actions$: Actions) {}
+
+  @Selector()
+  static activeSection(state: StateModel): string | undefined {
+    return state.activeSection;
+  }
+
+  @Selector()
+  static activeSubSection(state: StateModel): string | undefined {
+    return state.activeSubSection;
+  }
 
   @Selector()
   static breadcrumbs(state: StateModel): RoutedBreadcrumbItem[] | undefined {
@@ -129,6 +143,16 @@ export class UiState implements NgxsOnInit {
 
   @Action(ParseNavigation)
   parseNavigation(ctx: Context, action: ParseNavigation): void {
+    ctx.patchState(action);
+  }
+
+  @Action(SetActiveSection)
+  setActiveSection(ctx: Context, action: SetActiveSection): void {
+    ctx.patchState(action);
+  }
+
+  @Action(SetActiveSubSection)
+  setActiveSubSection(ctx: Context, action: SetActiveSubSection): void {
     ctx.patchState(action);
   }
 

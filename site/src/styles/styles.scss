@@ -359,7 +359,6 @@ button:focus:not(:focus-visible) {
     background-color: transparent !important;
 
     li {
-      color: #38cab3 !important;
       font-size: 14px;
       font-weight: 500;
       padding: 5px 20px !important;
@@ -367,6 +366,13 @@ button:focus:not(:focus-visible) {
       .k-menu-link {
         padding-block: 0 !important;
       }
+    }
+
+    li:not(.active) {
+      color: white !important;
+    }
+    li.active {
+      color: #38cab3 !important;
     }
   }
 }

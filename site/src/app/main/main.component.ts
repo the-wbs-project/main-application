@@ -8,14 +8,12 @@ import {
   ViewContainerRef,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { Organization, User } from '@wbs/core/models';
-import { ContainerService } from '@wbs/core/services';
+import { ContainerService, SignalStore } from '@wbs/core/services';
 import { first, skipWhile, tap } from 'rxjs/operators';
 import { ChatWindowComponent } from './components/chat-window/chat-window.component';
 import { FooterComponent } from './components/footer.component';
@@ -23,7 +21,7 @@ import { HeaderComponent } from './components/header/header.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { MainContentDirective } from './directives/main-content.directive';
 import { DialogService } from './services';
-import { AiState, AuthState, MembershipState } from './states';
+import { AiState, AuthState, MembershipState, UiState } from './states';
 
 @Component({
   standalone: true,
@@ -35,6 +33,7 @@ import { AiState, AuthState, MembershipState } from './states';
         [orgs]="orgs()"
         [user]="user()"
         [roles]="roles()"
+        [activeSection]="activeSection()"
       />
       <div #body appMainContent class="scroll pd-x-20 flex-fill">
         <router-outlet />
@@ -77,12 +76,13 @@ export class MainComponent implements AfterContentInit, OnInit {
 
   readonly loading = signal<boolean>(true);
   readonly user = input.required<User>();
-  readonly isAiEnabled = toSignal(this.store.select(AiState.isEnabled));
+  readonly isAiEnabled = this.store.select(AiState.isEnabled);
+  readonly activeSection = this.store.select(UiState.activeSection);
 
   constructor(
     private readonly container: ContainerService,
     private readonly dialog: DialogService,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {}
 
   ngAfterContentInit() {
@@ -101,7 +101,7 @@ export class MainComponent implements AfterContentInit, OnInit {
 
   ngOnInit(): void {
     this.store
-      .select(MembershipState.organizations)
+      .selectAsync(MembershipState.organizations)
       .pipe(
         skipWhile((x) => x == undefined),
         first(),

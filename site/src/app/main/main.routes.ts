@@ -2,7 +2,12 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
-import { orgGuard } from './guards';
+import {
+  librarySectionGuard,
+  orgGuard,
+  projectsSectionGuard,
+  settingsSectionGuard,
+} from './guards';
 import {
   AiChatService,
   UserService,
@@ -55,16 +60,19 @@ export const routes: Routes = [
         children: [
           {
             path: 'library',
+            canActivate: [librarySectionGuard],
             loadChildren: () =>
               import('./pages/library/library.routes').then((m) => m.routes),
           },
           {
             path: 'projects',
+            canActivate: [projectsSectionGuard],
             loadChildren: () =>
               import('./pages/projects/projects.routes').then((m) => m.routes),
           },
           {
             path: 'settings',
+            canActivate: [settingsSectionGuard],
             loadChildren: () =>
               import('./pages/settings/settings.routes').then((m) => m.routes),
           },

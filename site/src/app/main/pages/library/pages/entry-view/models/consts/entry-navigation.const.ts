@@ -3,8 +3,8 @@ import { ENTRY_PAGES } from './entry-pages.const';
 
 const settings: NavigationLink[] = [
   {
-    route: ['settings', 'general'],
     text: 'General.General',
+    route: ['settings', 'general'],
     //claim: PROJECT_CLAIMS.UPDATE,
   },
   {
@@ -54,16 +54,19 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
   {
     route: [ENTRY_PAGES.ABOUT],
     text: 'General.About',
+    section: 'about',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
     route: [ENTRY_PAGES.TASKS],
     text: 'General.Tasks',
+    section: 'tasks',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
     route: [ENTRY_PAGES.RESOURCES],
     text: 'General.Resources',
+    section: 'resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   } /*
 

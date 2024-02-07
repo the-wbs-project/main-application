@@ -1,25 +1,23 @@
-import { ORGANIZATION_CLAIMS, PROJECT_CLAIMS } from '@wbs/core/models';
+import { ORGANIZATION_CLAIMS } from '@wbs/core/models';
 import { HeaderRouteItem } from './header-route-item.model';
 
 export const HEADER_ROUTE_ITEMS: HeaderRouteItem[] = [
   {
-    label: 'General.Projects',
-    items: [
-      {
-        type: 'link',
-        route: ['/', ':orgId', 'projects'],
-        label: 'General.ProjectList',
-      },
-      {
-        type: 'link',
-        route: ['/', ':orgId', 'projects', 'create'],
-        label: 'General.CreateProject',
-        claim: PROJECT_CLAIMS.CREATE,
-      },
-    ],
+    type: 'link',
+    label: 'General.Library',
+    section: 'library',
+    route: ['/', ':orgId', 'library'],
   },
   {
+    type: 'link',
+    label: 'General.Projects',
+    section: 'projects',
+    route: ['/', ':orgId', 'projects'],
+  },
+  {
+    type: 'sub',
     label: 'General.Settings',
+    section: 'settings',
     claim: ORGANIZATION_CLAIMS.SETTINGS.READ,
     items: [
       {

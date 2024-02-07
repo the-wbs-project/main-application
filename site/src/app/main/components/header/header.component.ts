@@ -37,6 +37,7 @@ export class HeaderComponent {
   readonly claims = input.required<string[]>();
   readonly org = input.required<Organization>();
   readonly orgs = input.required<Organization[]>();
+  readonly activeSection = input.required<string | undefined>();
   readonly menu = computed(() => this.createMenu(this.org()));
   readonly menuIcon = menuIcon;
   readonly appTitle = environment.appTitle;
@@ -47,10 +48,17 @@ export class HeaderComponent {
     const menu2 = structuredClone(HEADER_ROUTE_ITEMS);
 
     for (const parent of menu2) {
-      for (const item of parent.items) {
-        if (item.type === 'header') continue;
+      if (parent.type === 'sub') {
+        for (const item of parent.items) {
+          if (item.type === 'header') continue;
 
-        item.route = item.route.map((x) => {
+          item.route = item.route.map((x) => {
+            if (x === ':orgId') return org.name;
+            else return x;
+          });
+        }
+      } else {
+        parent.route = parent.route.map((x) => {
           if (x === ':orgId') return org.name;
           else return x;
         });
