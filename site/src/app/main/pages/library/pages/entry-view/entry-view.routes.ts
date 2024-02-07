@@ -9,13 +9,16 @@ import {
   userIdResolve,
 } from '@wbs/main/services';
 import {
+  EntryTaskService,
   entryIdResolve,
   libraryClaimsResolve,
   redirectGuard,
+  tasksVerifyGuard,
   verifyGuard,
   versionIdResolve,
 } from './services';
 import { EntryViewState } from './states';
+import { TaskCreateService } from '@wbs/main/components/task-create';
 
 export const routes: Routes = [
   {
@@ -26,6 +29,8 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
       DialogService,
+      EntryTaskService,
+      TaskCreateService,
       Transformers,
     ],
     resolve: {
@@ -50,7 +55,9 @@ export const routes: Routes = [
         path: 'tasks',
         loadComponent: () =>
           import('./pages/entry/tasks').then((x) => x.TasksPageComponent),
+        canActivate: [tasksVerifyGuard],
         resolve: {
+          claims: libraryClaimsResolve,
           phases: phaseCategoryResolver,
         },
       },

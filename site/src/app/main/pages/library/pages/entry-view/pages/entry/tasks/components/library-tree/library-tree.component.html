@@ -1,4 +1,4 @@
-@if (phases(); as phases) {
+@if (tree(); as tree) {
 <div class="d-flex flex-column">
   <div class="tx-italic tx-14 pd-b-5">
     {{ "Projects.TreeInstructions" | translate }}
@@ -9,7 +9,7 @@
       class="tx-12"
       kendoTreeListExpandable
       kendoTreeListSelectable
-      [kendoTreeListFlatBinding]="phases"
+      [kendoTreeListFlatBinding]="tree"
       parentIdField="treeParentId"
       idField="treeId"
       [rowReorderable]="claims() | check : canEditClaim"
@@ -18,10 +18,10 @@
       [selectable]="settings"
       [navigable]="true"
       (selectionChange)="taskId.set($event.items[0].dataItem.id)"
-      (dblclick)="navigate.toTaskPage(taskId()!, 'about')"
       (rowReorder)="onRowReordered($event)"
       (cellClick)="onCellClick($event)"
     >
+      <!--(dblclick)="navigate.toTaskPage(taskId()!, 'about')"-->
       @if (claims() | check : canEditClaim) {
       <kendo-treelist-rowreorder-column [width]="40" />
       }
@@ -39,32 +39,7 @@
         class="tx-11"
         headerClass="tx-14"
       />
-      @if (project()?.approvalStarted) {
-      <kendo-treelist-column
-        [width]="175"
-        [title]="'Approval'"
-        headerClass="tx-14"
-      >
-        <ng-template kendoTreeListCellTemplate let-dataItem>
-          <div class="tx-12 w-100 d-flex flex-row flex-align-center">
-            <wbs-approval-badge
-              [fontSize]="11"
-              [childrenIds]="dataItem.childrenIds"
-              [approval]="approvals() | findById : dataItem.id"
-            />
-            @if (approvals() | findThemById : dataItem.childrenIds |
-            childrenApproval; as stats) {
-            <div class="d-ib wd-100 mg-l-10" [title]="stats.totalCount">
-              <wbs-progress-bar
-                [passPercent]="stats.passedPercent"
-                [failPercent]="stats.failedPercent"
-              />
-            </div>
-            }
-          </div>
-        </ng-template>
-      </kendo-treelist-column>
-      } @if ((width() ?? 0) > 800) {
+      @if ((width() ?? 0) > 800) {
       <kendo-treelist-column
         field="disciplines"
         [width]="150"
@@ -72,9 +47,7 @@
         headerClass="discipline-column tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
-          <wbs-tree-discipline-legend
-            [idsOrCats]="project()?.disciplines ?? []"
-          />
+          <wbs-tree-discipline-legend [idsOrCats]="version().disciplines" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
@@ -82,10 +55,7 @@
       </kendo-treelist-column>
       }
     </kendo-treelist>
-    <kendo-contextmenu
-      [items]="menu()"
-      (select)="service.action($event.item.action, taskId()!)"
-    >
+    <kendo-contextmenu [items]="menu()" (select)="onAction($event.item.action)">
       <ng-template kendoMenuItemTemplate let-item="item">
         <fa-icon [icon]="item.faIcon" />&nbsp;
         {{ item.text | translate }}

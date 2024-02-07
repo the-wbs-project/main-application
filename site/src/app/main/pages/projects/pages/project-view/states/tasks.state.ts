@@ -143,7 +143,7 @@ export class TasksState {
       state.nodes
     );
     const phases = this.transformers.nodes.phase.view.run(
-      state.project,
+      state.project.phases,
       state.nodes
     );
     ctx.patchState({ phases });

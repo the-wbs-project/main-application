@@ -1,15 +1,14 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
-import { PROJECT_TREE_MENU_ITEMS } from '../../../../../models';
-import { ProjectState } from '../../../../../states';
+import { LIBRARY_TREE_MENU_ITEMS } from '../models';
+import { EntryViewState } from '../states';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
-export class PhaseTreeMenuService {
+export class EntryTreeMenuService {
   constructor(private readonly store: Store) {}
 
   buildMenu(
@@ -20,15 +19,15 @@ export class PhaseTreeMenuService {
     if (selectedTaskId === undefined) return [];
 
     const task = tasks?.find((x) => x.id === selectedTaskId)!;
-    const status = this.store.selectSnapshot(ProjectState.current)!.status;
+    const status = this.store.selectSnapshot(EntryViewState.version)!.status;
     const navActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
+      LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
       task,
       claims,
       status
     );
     const phaseActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS.taskActions,
+      LIBRARY_TREE_MENU_ITEMS.taskActions,
       task,
       claims,
       status
@@ -37,15 +36,12 @@ export class PhaseTreeMenuService {
     const movers: ContextMenuItem[] = [];
 
     for (const item of navActions) {
-      if (item.action === 'moveLeft') {
-        if (task.canMoveLeft) movers.push(item);
-      } else if (item.action === 'moveRight') {
-        if (task.canMoveRight) movers.push(item);
-      } else if (item.action === 'moveUp') {
-        if (task.canMoveUp) movers.push(item);
-      } else if (item.action === 'moveDown') {
-        if (task.canMoveDown) movers.push(item);
-      }
+      if (item.action === 'moveLeft' && task.canMoveLeft) movers.push(item);
+      else if (item.action === 'moveRight' && task.canMoveRight)
+        movers.push(item);
+      else if (item.action === 'moveUp' && task.canMoveUp) movers.push(item);
+      else if (item.action === 'moveDown' && task.canMoveDown)
+        movers.push(item);
     }
 
     return movers.length === 0
@@ -57,7 +53,7 @@ export class PhaseTreeMenuService {
     actions: ContextMenuItem[],
     task: WbsNodeView | undefined,
     claims: string[],
-    status: PROJECT_STATI_TYPE
+    status: string
   ): ContextMenuItem[] {
     if (!actions || actions.length === 0) return actions;
 
@@ -76,7 +72,7 @@ export class PhaseTreeMenuService {
     link: ContextMenuItem,
     task: WbsNodeView | undefined,
     claims: string[],
-    status: PROJECT_STATI_TYPE
+    status: string
   ): boolean {
     if (!link.filters) return true;
     //

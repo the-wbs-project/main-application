@@ -1,4 +1,4 @@
-import { LibraryEntryNode } from '@wbs/core/models';
+import { LibraryEntryNode, ProjectCategory } from '@wbs/core/models';
 
 export class VerifyEntry {
   static readonly type = '[Library Entry] Verify';
@@ -7,6 +7,10 @@ export class VerifyEntry {
     readonly entryId: string,
     readonly versionId: number
   ) {}
+}
+
+export class VerifyEntryTasks {
+  static readonly type = '[Library Entry] Verify Tasks';
 }
 
 export class SetEntry {
@@ -28,10 +32,15 @@ export class DescriptionChanged {
   constructor(readonly description: string) {}
 }
 
-export class NodesChanged {
-  static readonly type = '[Library Entry] Nodes';
+export class TasksChanged {
+  static readonly type = '[Library Entry] Tasks Changed';
   constructor(
     readonly upserts: LibraryEntryNode[],
     readonly removeIds: string[]
   ) {}
+}
+
+export class PhasesChanged {
+  static readonly type = '[Library Entry] Phases Changed';
+  constructor(readonly phases: ProjectCategory[]) {}
 }

@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { ListItem, Project, WbsNode } from '@wbs/core/models';
+import { ListItem, ProjectCategory, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { WbsNodeService } from '@wbs/main/services';
@@ -15,10 +15,10 @@ export class WbsNodePhaseTransformer {
     return this.store.selectSnapshot(MetadataState.phases);
   }
 
-  run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
+  run(phases: ProjectCategory[], models: WbsNode[]): WbsNodeView[] {
     const nodes: WbsNodeView[] = [];
     const categories = <ListItem[]>(
-      project.phases
+      phases
         .map((x) =>
           typeof x === 'string' ? this.phaseList.find((c) => c.id === x) : x
         )
@@ -27,7 +27,7 @@ export class WbsNodePhaseTransformer {
     for (let i = 0; i < categories.length; i++) {
       const cat = categories[i];
       const parentlevel = [i + 1];
-      const node = projectNodes.find((x) => x.id === cat.id);
+      const node = models.find((x) => x.id === cat.id);
       let label = (node?.title ?? '').trim();
       let description = (node?.description ?? '').trim();
 
@@ -70,7 +70,7 @@ export class WbsNodePhaseTransformer {
         cat.id,
         cat.id,
         parentlevel,
-        projectNodes
+        models
       );
       parent.children = children.length;
       parent.childrenIds = children.map((x) => x.id);

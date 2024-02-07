@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -11,16 +11,19 @@ import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
   DescriptionChanged,
-  NodesChanged,
+  TasksChanged,
+  PhasesChanged,
   SetEntry,
   TitleChanged,
   VerifyEntry,
+  VerifyEntryTasks,
 } from '../actions';
+import { EntryTaskService } from '../services';
 
 interface StateModel {
   entry?: LibraryEntry;
   version?: LibraryEntryVersion;
-  nodes?: LibraryEntryNode[];
+  tasks?: LibraryEntryNode[];
 }
 
 declare type Context = StateContext<StateModel>;
@@ -31,12 +34,11 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class EntryViewState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly messaging: Messages,
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
+  private readonly data = inject(DataServiceFactory);
+  private readonly entryService = inject(EntryTaskService);
+  private readonly messaging = inject(Messages);
+  private readonly resources = inject(Resources);
+  private readonly store: Store = inject(Store);
 
   @Selector()
   static entry(state: StateModel): LibraryEntry | undefined {
@@ -44,8 +46,8 @@ export class EntryViewState {
   }
 
   @Selector()
-  static nodes(state: StateModel): LibraryEntryNode[] | undefined {
-    return state.nodes;
+  static tasks(state: StateModel): LibraryEntryNode[] | undefined {
+    return state.tasks;
   }
 
   @Selector()
@@ -68,6 +70,22 @@ export class EntryViewState {
       return;
 
     return ctx.dispatch(new SetEntry(owner, entryId, versionId));
+  }
+
+  @Action(VerifyEntryTasks)
+  verifyEntryTasks(ctx: Context): Observable<void> | void {
+    const state = ctx.getState();
+
+    if (!state.entry || !state.version || (state.tasks ?? []).length > 0)
+      return;
+
+    return this.data.libraryEntryNodes
+      .getAllAsync(state.entry.owner, state.entry.id, state.version.version)
+      .pipe(
+        map((tasks) => {
+          ctx.patchState({ tasks });
+        })
+      );
   }
 
   @Action(SetEntry)
@@ -113,35 +131,37 @@ export class EntryViewState {
     return this.saveVersion(ctx, entry.owner, version, 'SAVED!');
   }
 
-  @Action(NodesChanged)
-  nodesChanged(
+  @Action(PhasesChanged)
+  phasesChanged(ctx: Context, { phases }: PhasesChanged): Observable<void> {
+    const state = ctx.getState();
+    const entry = state.entry!;
+    const version = structuredClone(state.version!);
+    version.phases = phases;
+
+    return this.saveVersion(ctx, entry.owner, version, 'SAVED!');
+  }
+
+  @Action(TasksChanged)
+  tasksChanged(
     ctx: Context,
-    { upserts, removeIds }: NodesChanged
+    { upserts, removeIds }: TasksChanged
   ): Observable<void> {
     const state = ctx.getState();
     const entry = state.entry!;
     const version = state.version!.version;
 
-    return this.data.libraryEntryNodes
-      .putAsync(entry.owner, entry.id, version, upserts, removeIds)
+    return this.entryService
+      .saveAsync(
+        entry.owner,
+        entry.id,
+        version,
+        state.tasks ?? [],
+        upserts,
+        removeIds
+      )
       .pipe(
-        tap(() => this.messaging.notify.success('Saving!', false)),
-        tap(() => {
-          const nodes = structuredClone(state.nodes!);
-
-          for (const id of removeIds) {
-            const index = nodes.findIndex((x) => x.id === id);
-
-            if (index > -1) nodes.splice(index, 1);
-          }
-
-          for (const node of upserts) {
-            const index = nodes.findIndex((x) => x.id === node.id);
-
-            if (index === -1) nodes.push(node);
-            else nodes[index] = node;
-          }
-          ctx.patchState({ nodes });
+        map((list) => {
+          ctx.patchState({ tasks: list });
         })
       );
   }

@@ -3,13 +3,12 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowUp,
-  faBookArrowRight,
   faCopy,
   faEye,
   faPlus,
   faTrash,
 } from '@fortawesome/pro-solid-svg-icons';
-import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { ContextMenuItem } from '../../../../../../models/context-menu-item.model';
 
 const taskActions: ContextMenuItem[] = [
@@ -18,8 +17,7 @@ const taskActions: ContextMenuItem[] = [
     faIcon: faPlus,
     text: 'Projects.AddSubTask',
     filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
+      claim: LIBRARY_CLAIMS.TASKS.CREATE,
     },
   },
   {
@@ -27,7 +25,7 @@ const taskActions: ContextMenuItem[] = [
     faIcon: faEye,
     text: 'Projects.ViewTask',
     filters: {
-      claim: PROJECT_CLAIMS.TASKS.READ,
+      claim: LIBRARY_CLAIMS.TASKS.READ,
     },
   },
   {
@@ -35,19 +33,8 @@ const taskActions: ContextMenuItem[] = [
     faIcon: faCopy,
     text: 'Projects.CloneTask',
     filters: {
-      stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
-    },
-  },
-  {
-    action: 'exportTask',
-    faIcon: faBookArrowRight,
-    text: 'Projects.ExportToLibrary',
-    filters: {
-      //stati: [PROJECT_STATI.PLANNING],
-      //excludeFromCat: true,
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
+      claim: LIBRARY_CLAIMS.TASKS.CREATE,
     },
   },
   {
@@ -55,9 +42,8 @@ const taskActions: ContextMenuItem[] = [
     faIcon: faTrash,
     text: 'Projects.DeleteTask',
     filters: {
-      stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
-      claim: PROJECT_CLAIMS.TASKS.DELETE,
+      claim: LIBRARY_CLAIMS.TASKS.DELETE,
     },
   },
 ];
@@ -69,8 +55,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveLeft',
     filters: {
       excludeFromCat: true,
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
+      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
   {
@@ -79,8 +64,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveUp',
     filters: {
       excludeFromCat: true,
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
+      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
   {
@@ -89,8 +73,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveDown',
     filters: {
       excludeFromCat: true,
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
+      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
   {
@@ -99,13 +82,12 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveRight',
     filters: {
       excludeFromCat: true,
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
+      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
 ];
 
-export const PROJECT_TREE_MENU_ITEMS = {
+export const LIBRARY_TREE_MENU_ITEMS = {
   taskActions,
   reorderTaskActions,
 };

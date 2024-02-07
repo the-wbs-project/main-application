@@ -194,7 +194,7 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{entryId}/version/{entryVersion}/nodes")]
+    [HttpPut("{entryId}/versions/{entryVersion}/nodes")]
     public async Task<IActionResult> PutNode(string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
     {
         try

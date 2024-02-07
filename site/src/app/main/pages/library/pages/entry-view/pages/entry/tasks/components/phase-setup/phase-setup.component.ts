@@ -11,9 +11,8 @@ import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryVersion, ListItem } from '@wbs/core/models';
-import { Resources, SignalStore } from '@wbs/core/services';
+import { Resources } from '@wbs/core/services';
 import { SelectButtonComponent } from '@wbs/main/components/select-button.component';
 
 @Component({

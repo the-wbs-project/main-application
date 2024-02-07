@@ -6,8 +6,8 @@ export interface ContextMenuItem {
   faIcon: IconDefinition;
   action: string;
   filters?: {
+    claim?: string;
     excludeFromCat?: boolean;
     stati?: PROJECT_STATI_TYPE[];
   };
-  claim?: string;
 }

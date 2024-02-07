@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -21,14 +21,14 @@ import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
   standalone: true,
   selector: 'wbs-action-icon-list',
   template: `<kendo-dropdownbutton
-    [fillMode]="fillMode"
-    [size]="size"
+    [fillMode]="fillMode()"
+    [size]="size()"
     [data]="menuItems"
     buttonClass="tx-8 pd-0-f"
-    [popupSettings]="{ align: align }"
+    [popupSettings]="{ align: align() }"
     (itemClick)="clicked($event)"
   >
-    <fa-icon [icon]="mainIcon" size="xl" />
+    <fa-icon [icon]="mainIcon()" size="xl" />
     <ng-template kendoDropDownButtonItemTemplate let-dataItem>
       <div class="lh-10" [ngClass]="dataItem.cssClasses">
         @if (dataItem.icon) {
@@ -50,12 +50,13 @@ import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
   ],
 })
 export class ActionIconListComponent {
-  @Input() align?: 'left' | 'right' | 'center';
-  @Input({ required: true }) size!: ButtonSize;
-  @Input({ required: true }) fillMode!: ButtonFillMode;
-  @Input({ required: true }) mainIcon!: IconDefinition;
-  @Input({ required: true }) menuItems!: ActionMenuItem[];
   @Output() readonly itemClicked = new EventEmitter<string>();
+
+  readonly align = input<'left' | 'right' | 'center'>();
+  readonly size = input.required<ButtonSize>();
+  readonly fillMode = input.required<ButtonFillMode>();
+  readonly mainIcon = input.required<IconDefinition>();
+  readonly menuItems = input.required<ActionMenuItem[]>();
 
   clicked(item: ActionMenuItem): void {
     if (item.disabled) return;

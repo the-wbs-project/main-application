@@ -1,19 +1,18 @@
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
-  Input,
+  OnChanges,
   OnInit,
+  SimpleChanges,
   ViewChild,
   computed,
+  inject,
   input,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Actions, Store, ofActionSuccessful } from '@ngxs/store';
+import { Actions } from '@ngxs/store';
 import {
   ContextMenuComponent,
   ContextMenuModule,
@@ -25,42 +24,32 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { PROJECT_CLAIMS, PROJECT_NODE_VIEW, Project } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
+import {
+  LIBRARY_CLAIMS,
+  LibraryEntryNode,
+  LibraryEntryVersion,
+} from '@wbs/core/models';
+import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
 import { TreeDisciplineLegendComponent } from '@wbs/main/pages/projects/pages/project-view/components/tree-discipline-legend/tree-discipline-legend.component';
-import { WbsPhaseService } from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
-import { CreateTask, TreeReordered } from '../../../../../actions';
-import { ApprovalBadgeComponent } from '../../../../../components/approval-badge.component';
-import { ChildrenApprovalPipe } from '../../../../../pipes/children-approval.pipe';
-import {
-  ProjectNavigationService,
-  ProjectViewService,
-} from '../../../../../services';
-import {
-  ProjectApprovalState,
-  ProjectState,
-  TasksState,
-} from '../../../../../states';
-import { PhaseTreeMenuService } from './phase-tree-menu.service';
+import { Transformers, WbsPhaseService } from '@wbs/main/services';
+import { UiState } from '@wbs/main/states';
+import { EntryTreeMenuService } from '../../../../../services';
+import { EntryTaskActionsService } from '../../../../../services/entry-task-actions.service';
 
-@UntilDestroy()
 @Component({
   standalone: true,
-  selector: 'wbs-project-phase-tree',
-  templateUrl: './phase-tree.component.html',
+  selector: 'wbs-library-tree',
+  templateUrl: './library-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [PhaseTreeMenuService, WbsPhaseService],
+  providers: [EntryTaskActionsService, EntryTreeMenuService, WbsPhaseService],
   imports: [
-    ApprovalBadgeComponent,
     CheckPipe,
-    ChildrenApprovalPipe,
     ContextMenuModule,
     DisciplineIconListComponent,
     FindByIdPipe,
@@ -72,12 +61,28 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     TreeListModule,
   ],
 })
-export class ProjectPhaseTreeComponent implements OnInit {
+export class LibraryTreeComponent implements OnInit, OnChanges {
+  private readonly menuService = inject(EntryTreeMenuService);
+  private readonly store = inject(SignalStore);
+  private readonly transformer = inject(Transformers);
+  private readonly actions = inject(EntryTaskActionsService);
+
   @ViewChild(ContextMenuComponent) gridContextMenu!: ContextMenuComponent;
   @ViewChild(TreeListComponent) treeList!: TreeListComponent;
 
+  readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
+
   readonly claims = input.required<string[]>();
-  readonly project = input<Project>();
+  readonly tasks = input.required<LibraryEntryNode[]>();
+  readonly version = input.required<LibraryEntryVersion>();
+
+  readonly width = this.store.select(UiState.mainContentWidth);
+
+  readonly tree = signal<WbsNodeView[] | undefined>(undefined);
+  readonly taskId = signal<string | undefined>(undefined);
+  readonly menu = computed(() =>
+    this.menuService.buildMenu(this.tree()!, this.claims(), this.taskId())
+  );
 
   expandedKeys: string[] = [];
   settings: SelectableSettings = {
@@ -88,40 +93,20 @@ export class ProjectPhaseTreeComponent implements OnInit {
     readonly: false,
   };
 
-  readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
-
-  readonly tree = signal<WbsNodeView[] | undefined>(undefined);
-  readonly width = toSignal(this.store.select(UiState.mainContentWidth));
-  readonly phases = toSignal(this.store.select(TasksState.phases));
-  readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
-  readonly taskId = signal<string | undefined>(undefined);
-  readonly menu = computed(() =>
-    this.menuService.buildMenu(this.phases()!, this.claims(), this.taskId())
-  );
-
   constructor(
-    readonly navigate: ProjectNavigationService,
-    readonly service: ProjectViewService,
     private readonly actions$: Actions,
-    private readonly cd: ChangeDetectorRef,
-    private readonly menuService: PhaseTreeMenuService,
     private readonly messages: Messages,
-    private readonly store: Store,
     private readonly wbsService: WbsPhaseService
   ) {}
 
   ngOnInit(): void {
-    this.store
+    /*    this.store
       .select(TasksState.phases)
       .pipe(untilDestroyed(this))
       .subscribe((phases) => {
         this.tree.set(structuredClone(phases));
-      });
-    this.store
-      .select(ProjectApprovalState.list)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => this.cd.detectChanges());
-
+      });*/
+    /*
     this.actions$
       .pipe(ofActionSuccessful(CreateTask), untilDestroyed(this))
       .subscribe(() => {
@@ -135,15 +120,31 @@ export class ProjectPhaseTreeComponent implements OnInit {
           this.treeList.expand(task);
           this.treeList.focusCell(taskIndex, 0);
         }
-      });
+      });*/
+    //this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
+  }
 
-    this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['tasks']) {
+      this.tree.set(
+        this.transformer.nodes.phase.view.run(
+          this.version()!.phases,
+          this.tasks()
+        )
+      );
+    }
   }
 
   onAction(action: string): void {
-    if (action === 'download') {
-      this.service.downloadTasks(this.project()!, this.phases()!);
-    } else this.service.action(action, this.taskId());
+    const version = this.version()!;
+
+    this.actions.run(
+      action,
+      version.entryId,
+      version.version,
+      this.tasks(),
+      this.taskId()
+    );
   }
 
   onCellClick(e: CellClickEvent): void {
@@ -162,8 +163,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
   }
 
-  onRowReordered(e: RowReorderEvent) {
-    const nodes = JSON.parse(
+  onRowReordered(e: RowReorderEvent): void {
+    /*const nodes = JSON.parse(
       JSON.stringify(this.store.selectSnapshot(TasksState.phases)!)
     );
 
@@ -193,6 +194,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
     this.store.dispatch(
       new TreeReordered(dragged.id, PROJECT_NODE_VIEW.PHASE, results)
-    );
+    );*/
   }
 }

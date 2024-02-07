@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
@@ -19,18 +19,19 @@ import { TranslateListPipe } from '@wbs/main/pipes/translate-list.pipe';
   imports: [MultiSelectModule, NgIf, TranslateListPipe, TranslateModule],
 })
 export class CheckboxFilterListComponent {
-  @Input({ required: true }) data!: any[];
-  @Input({ required: true }) values!: string[];
-  @Input({ required: true }) textField!: string;
-  @Input({ required: true }) valueField!: string;
-  @Input({ required: true }) allLabel!: string;
-  @Input({ required: true }) labelWidth!: number;
   @Output() readonly valuesChange = new EventEmitter<string[]>();
+
+  readonly data = input.required<any[]>();
+  readonly values = input.required<string[]>();
+  readonly textField = input.required<string>();
+  readonly valueField = input.required<string>();
+  readonly allLabel = input.required<string>();
+  readonly labelWidth = input.required<number>();
 
   onlyClicked(e: Event, item: any): void {
     e.stopPropagation();
 
-    this.set([item[this.valueField]]);
+    this.set([item[this.valueField()]]);
   }
 
   valueChange(value: string[]): void {
@@ -38,7 +39,6 @@ export class CheckboxFilterListComponent {
   }
 
   private set(values: string[]): void {
-    this.values = values;
     this.valuesChange.emit(values);
   }
 }

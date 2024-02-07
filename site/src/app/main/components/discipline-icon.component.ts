@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
@@ -10,11 +10,11 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   selector: 'wbs-discipline-icon',
   template: `<span
     class="mg-r-5"
-    [ngbTooltip]="id | disciplineLabel | translate"
+    [ngbTooltip]="id() | disciplineLabel | translate"
     placement="top"
     container="body"
   >
-    <i class="fa-solid fa-sm" [ngClass]="[id | disciplineIcon]"></i>
+    <i class="fa-solid fa-sm" [ngClass]="[id() | disciplineIcon]"></i>
   </span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -26,5 +26,5 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   ],
 })
 export class DisciplineIconComponent {
-  @Input() id: string | undefined;
+  readonly id = input.required<string>();
 }

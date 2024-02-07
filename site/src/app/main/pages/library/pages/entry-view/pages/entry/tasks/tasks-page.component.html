@@ -12,4 +12,12 @@
   [version]="version()!"
   (phaseTitleChosen)="phaseTitleChosen($event)"
 />
+} @else {
+<div class="pd-15">
+  <wbs-library-tree
+    [tasks]="tasks()!"
+    [version]="version()!"
+    [claims]="claims()"
+  />
+</div>
 }
