@@ -39,7 +39,7 @@ app.get('api/roles', async (ctx) => ctx.json(await ctx.get('data').roles.getAsyn
 
 app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);
 app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
-app.get('api/claims/libraryEntry/:owner/:entryId', verifyJwt, Http.claims.getForLibraryEntryAsync);
+app.get('api/claims/libraryEntry/:owner/:entry', verifyJwt, Http.claims.getForLibraryEntryAsync);
 
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);

@@ -57,7 +57,7 @@ export class ClaimsHttpService {
       const model = await ctx.get('data').entries.getByIdAsync(owner, entry);
       const roles: LIBRARY_ROLES_TYPE[] = [LIBRARY_ROLES.VIEWER];
 
-      if (model?.owner === userId) roles.push(LIBRARY_ROLES.OWNER);
+      if (model?.author === userId) roles.push(LIBRARY_ROLES.OWNER);
       if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
 
       return ctx.json(ClaimsHttpService.getClaims(LIBRARY_PERMISSIONS, roles));

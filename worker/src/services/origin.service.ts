@@ -23,8 +23,8 @@ export class OriginService {
   static async pass(ctx: Context): Promise<Response> {
     const req = ctx.req;
     const res = await ctx.get('fetcher').fetch(req.url, {
-      body: req.body,
-      headers: req.headers,
+      body: req.raw.body,
+      headers: req.raw.headers,
       method: req.method,
     });
 
