@@ -1,4 +1,4 @@
-import { ListItem, Project, WbsNode } from '@wbs/core/models';
+import { ProjectCategory, WbsNode } from '@wbs/core/models';
 import { WbsNodeService } from '@wbs/main/services';
 
 export class WbsNodePhaseReorderer {
@@ -8,35 +8,27 @@ export class WbsNodePhaseReorderer {
     );
   }
 
-  run(project: Project, nodes: WbsNode[]): string[] {
+  all(phases: ProjectCategory[], nodes: WbsNode[]): string[] {
     const changed: string[] = [];
-    for (let i = 0; i < project.phases.length; i++) {
-      changed.push(
-        ...this.reorder([i + 1], this.getCatId(project.phases[i]), nodes)
-      );
+    for (const phase of phases) {
+      changed.push(...this.run(this.getCatId(phase), nodes));
     }
     return changed;
   }
 
-  private reorder(
-    parentLevels: number[],
-    parentId: string,
-    nodes: WbsNode[]
-  ): string[] {
+  run(parentId: string, nodes: WbsNode[]): string[] {
     const changed: string[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parentId, nodes);
 
     for (var i = 0; i < children.length; i++) {
-      const levels = [...parentLevels, i + 1];
-
       children[i].order = i + 1;
 
-      changed.push(...this.reorder(levels, children[i].id, nodes));
+      changed.push(...this.run(children[i].id, nodes));
     }
     return changed;
   }
 
-  private getCatId(cat: string | ListItem): string {
+  private getCatId(cat: ProjectCategory): string {
     return typeof cat === 'string' ? cat : cat.id;
   }
 }

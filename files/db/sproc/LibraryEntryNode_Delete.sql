@@ -9,9 +9,12 @@ CREATE PROCEDURE [dbo].[LibraryEntryNode_Delete]
 AS
 BEGIN
 -- TO DO FINISH THIS STORED PROCEDURE
-    IF EXISTS(SELECT 1 FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId)
-        UPDATE [dbo].[ProjectNodes]
+    IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [Id] = @EntryId AND [OwnerId] = @OwnerId) AND 
+       EXISTS(SELECT 1 FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
+    BEGIN
+        UPDATE [dbo].[LibraryEntryNodes]
         SET [Removed] = 1
-        WHERE [Id] = @Id AND [ProjectId] = @ProjectId
+        WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion
+    END
 END
 GO

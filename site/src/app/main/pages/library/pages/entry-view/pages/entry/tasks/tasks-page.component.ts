@@ -7,9 +7,9 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { LibraryEntryNode, ListItem, ProjectCategory } from '@wbs/core/models';
-import { IdService, SignalStore } from '@wbs/core/services';
-import { TasksChanged, PhasesChanged } from '../../../actions';
+import { ListItem } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
+import { EntryService } from '../../../services';
 import { EntryViewState } from '../../../states';
 import { LibraryTreeComponent } from './components/library-tree';
 import { PhaseSetupComponent } from './components/phase-setup';
@@ -27,6 +27,7 @@ import { PhaseSetupComponent } from './components/phase-setup';
 })
 export class TasksPageComponent {
   private readonly store = inject(SignalStore);
+  private readonly entryService = inject(EntryService);
 
   readonly claims = input.required<string[]>();
   readonly phases = input.required<ListItem[]>();
@@ -38,26 +39,6 @@ export class TasksPageComponent {
   readonly faSpinner = faSpinner;
 
   phaseTitleChosen(phaseTitle: string): void {
-    const id = IdService.generate();
-
-    const phase: ProjectCategory = {
-      id,
-      label: phaseTitle,
-      order: 1,
-      tags: [],
-      type: 'phase',
-    };
-    const node: LibraryEntryNode = {
-      id,
-      title: phaseTitle,
-      entryId: this.entry()!.id,
-      entryVersion: this.version()!.version,
-      lastModified: new Date(),
-      order: 1,
-    };
-    this.store.dispatch([
-      new TasksChanged([node], []),
-      new PhasesChanged([phase]),
-    ]);
+    this.entryService.setupPhaseTaskAsync(phaseTitle).subscribe();
   }
 }

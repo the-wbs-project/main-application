@@ -16,9 +16,10 @@ export class EntryTreeMenuService {
     claims: string[],
     selectedTaskId: string | undefined
   ): (ContextMenuItem | Seperator)[] {
-    if (selectedTaskId === undefined) return [];
+    const task = tasks?.find((x) => x.id === selectedTaskId);
 
-    const task = tasks?.find((x) => x.id === selectedTaskId)!;
+    if (task === undefined) return [];
+
     const status = this.store.selectSnapshot(EntryViewState.version)!.status;
     const navActions = this.filterList(
       LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,

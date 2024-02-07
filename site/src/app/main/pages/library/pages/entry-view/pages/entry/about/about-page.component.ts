@@ -1,13 +1,12 @@
 import { NgClass, UpperCasePipe } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AiModel } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { DescriptionChanged } from '../../../actions';
+import { EntryService } from '../../../services';
 import { EntryViewState } from '../../../states';
-import { DescriptionCardComponent } from './components/description-card/description-card.component';
+import { DescriptionCardComponent } from './components/description-card';
 
 @Component({
   standalone: true,
@@ -24,12 +23,13 @@ import { DescriptionCardComponent } from './components/description-card/descript
   ],
 })
 export class AboutPageComponent {
+  private readonly store = inject(SignalStore);
+  private readonly entryService = inject(EntryService);
+
   readonly entry = this.store.select(EntryViewState.entry);
   readonly version = this.store.select(EntryViewState.version);
 
-  constructor(private readonly store: SignalStore) {}
-
   descriptionChange(description: string): void {
-    this.store.dispatch(new DescriptionChanged(description));
+    this.entryService.descriptionChangedAsync(description).subscribe();
   }
 }

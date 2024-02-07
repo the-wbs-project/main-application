@@ -176,7 +176,10 @@ export class TasksState {
 
     let changedIds: string[] = [
       action.nodeId,
-      ...this.transformers.nodes.phase.reorderer.run(state.project!, nodes),
+      ...this.transformers.nodes.phase.reorderer.all(
+        state.project!.phases,
+        nodes
+      ),
     ];
 
     const removedIds: string[] = [];

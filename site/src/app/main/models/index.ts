@@ -4,4 +4,5 @@ export * from './dirty-component.interface';
 export * from './navigation-link.model';
 export * from './project-approval-stats.model';
 export * from './resized-event.model';
+export * from './task-creation-results.model';
 export * from './tree-rebuild-results.model';

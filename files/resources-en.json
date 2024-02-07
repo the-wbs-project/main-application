@@ -674,7 +674,9 @@
   {
     "section": "Library",
     "locale": "en-US",
-    "values": {}
+    "values": {
+      "DeleteTask": "Are you sure you want to delete this task?"
+    }
   },
   {
     "section": "LibraryCreate",

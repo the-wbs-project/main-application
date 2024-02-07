@@ -1,24 +1,21 @@
 import { Injectable, inject } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
 } from '@wbs/core/models';
-import { Messages, Resources } from '@wbs/core/services';
+import { Messages } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
-  DescriptionChanged,
   TasksChanged,
-  PhasesChanged,
   SetEntry,
-  TitleChanged,
   VerifyEntry,
   VerifyEntryTasks,
+  VersionChanged,
 } from '../actions';
-import { EntryTaskService } from '../services';
 
 interface StateModel {
   entry?: LibraryEntry;
@@ -35,10 +32,7 @@ declare type Context = StateContext<StateModel>;
 })
 export class EntryViewState {
   private readonly data = inject(DataServiceFactory);
-  private readonly entryService = inject(EntryTaskService);
   private readonly messaging = inject(Messages);
-  private readonly resources = inject(Resources);
-  private readonly store: Store = inject(Store);
 
   @Selector()
   static entry(state: StateModel): LibraryEntry | undefined {
@@ -108,62 +102,30 @@ export class EntryViewState {
     );
   }
 
-  @Action(TitleChanged)
-  titleChanged(ctx: Context, { title }: TitleChanged): Observable<void> {
-    const state = ctx.getState();
-    const entry = state.entry!;
-    const version = structuredClone(state.version!);
-    version.title = title;
-
-    return this.saveVersion(ctx, entry.owner, version, 'SAVED!');
-  }
-
-  @Action(DescriptionChanged)
-  descriptionChanged(
-    ctx: Context,
-    { description }: DescriptionChanged
-  ): Observable<void> {
-    const state = ctx.getState();
-    const entry = state.entry!;
-    const version = structuredClone(state.version!);
-    version.description = description;
-
-    return this.saveVersion(ctx, entry.owner, version, 'SAVED!');
-  }
-
-  @Action(PhasesChanged)
-  phasesChanged(ctx: Context, { phases }: PhasesChanged): Observable<void> {
-    const state = ctx.getState();
-    const entry = state.entry!;
-    const version = structuredClone(state.version!);
-    version.phases = phases;
-
-    return this.saveVersion(ctx, entry.owner, version, 'SAVED!');
+  @Action(VersionChanged)
+  versionChanged(ctx: Context, { version }: VersionChanged): void {
+    ctx.patchState({ version });
   }
 
   @Action(TasksChanged)
-  tasksChanged(
-    ctx: Context,
-    { upserts, removeIds }: TasksChanged
-  ): Observable<void> {
-    const state = ctx.getState();
-    const entry = state.entry!;
-    const version = state.version!.version;
+  tasksChanged(ctx: Context, { upserts, removeIds }: TasksChanged): void {
+    const list = structuredClone(ctx.getState().tasks ?? []);
 
-    return this.entryService
-      .saveAsync(
-        entry.owner,
-        entry.id,
-        version,
-        state.tasks ?? [],
-        upserts,
-        removeIds
-      )
-      .pipe(
-        map((list) => {
-          ctx.patchState({ tasks: list });
-        })
-      );
+    if (removeIds)
+      for (const id of removeIds) {
+        const index = list.findIndex((x) => x.id === id);
+
+        if (index > -1) list.splice(index, 1);
+      }
+
+    for (const node of upserts) {
+      const index = list.findIndex((x) => x.id === node.id);
+
+      if (index === -1) list.push(node);
+      else list[index] = node;
+    }
+
+    ctx.patchState({ tasks: list });
   }
 
   private saveVersion(
