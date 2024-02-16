@@ -151,7 +151,8 @@
       "File": "File",
       "Video": "Video",
       "ConfirmDiscardMessage": "You have unsaved data.  Are you sure you want to discard it?",
-      "ConfirmDiscardTitle": "Confirm Discard"
+      "ConfirmDiscardTitle": "Confirm Discard",
+      "TaskDetails": "Task Details"
     }
   },
   {

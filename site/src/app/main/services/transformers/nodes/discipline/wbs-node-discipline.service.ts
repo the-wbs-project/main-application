@@ -64,6 +64,7 @@ export class WbsDisciplineNodeTransformer {
         canMoveUp: false,
         canMoveLeft: false,
         canMoveRight: false,
+        subTasks: [],
       };
       nodes.push(dView);
 
@@ -95,6 +96,7 @@ export class WbsDisciplineNodeTransformer {
           canMoveUp: false,
           canMoveLeft: false,
           canMoveRight: false,
+          subTasks: [],
         };
 
         const children = this.getPhaseChildren(
@@ -162,6 +164,7 @@ export class WbsDisciplineNodeTransformer {
         canMoveUp: false,
         canMoveLeft: false,
         canMoveRight: false,
+        subTasks: [],
       };
       const myChildren = this.getPhaseChildren(
         disciplineId,

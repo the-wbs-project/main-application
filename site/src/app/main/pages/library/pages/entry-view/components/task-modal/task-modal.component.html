@@ -15,22 +15,18 @@
   </div>
   <div class="modal-footer">
     <div style="flex-grow: 1" class="tx-left">
-      <a
-        class="btn btn-outline-dark"
-        *ngIf="task()?.previousTaskId; let taskId"
-        [routerLink]="[taskId, 'about']"
-      >
+      @if (task()?.previousTaskId; as taskId) {
+      <a class="btn btn-outline-dark" [routerLink]="[taskId, 'about']">
         {{ "General.Previous" | translate }}
       </a>
+      }
     </div>
     <div style="flex-grow: 1" class="tx-right">
-      <a
-        class="btn btn-outline-dark"
-        *ngIf="task()?.nextTaskId; let taskId"
-        [routerLink]="[taskId, 'about']"
-      >
+      @if (task()?.nextTaskId; as taskId) {
+      <a class="btn btn-outline-dark" [routerLink]="[taskId, 'about']">
         {{ "General.Next" | translate }}
       </a>
+      }
     </div>
   </div>
 </ng-template>

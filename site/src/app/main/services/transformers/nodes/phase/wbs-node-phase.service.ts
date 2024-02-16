@@ -65,17 +65,23 @@ export class WbsNodePhaseTransformer {
         canMoveLeft: false,
         canMoveRight: false,
         lastModified: node?.lastModified,
+        subTasks: [],
       };
-      const children = this.getPhaseChildren(
+      parent.subTasks = this.getPhaseChildren(
         cat.id,
         cat.id,
         parentlevel,
         models
       );
-      parent.children = children.length;
-      parent.childrenIds = children.map((x) => x.id);
+      parent.children = parent.subTasks.length;
+      parent.childrenIds = parent.subTasks.map((x) => x.id);
 
-      nodes.push(parent, ...children);
+      nodes.push(parent, ...parent.subTasks);
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i].previousTaskId = i > 0 ? nodes[i - 1].id : undefined;
+      nodes[i].nextTaskId = i < nodes.length - 1 ? nodes[i + 1].id : undefined;
     }
     return nodes;
   }
@@ -112,19 +118,20 @@ export class WbsNodePhaseTransformer {
         canMoveUp: i > 0,
         canMoveRight: i > 0,
         canMoveLeft: childLevel.length > 2,
+        subTasks: [],
       };
 
-      const vmChildren = this.getPhaseChildren(
+      node.subTasks = this.getPhaseChildren(
         phaseId,
         child.id,
         childLevel,
         list
       );
 
-      node.children = vmChildren.length;
-      node.childrenIds = vmChildren.map((x) => x.id);
+      node.children = node.subTasks.length;
+      node.childrenIds = node.subTasks.map((x) => x.id);
 
-      results.push(node, ...vmChildren);
+      results.push(node, ...node.subTasks);
     }
     return results;
   }

@@ -25,4 +25,9 @@ export interface WbsNodeView {
   canMoveDown: boolean;
   canMoveLeft: boolean;
   canMoveRight: boolean;
+
+  parent?: WbsNodeView;
+  subTasks: WbsNodeView[];
+  previousTaskId?: string;
+  nextTaskId?: string;
 }
