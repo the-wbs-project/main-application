@@ -8,6 +8,6 @@ public class Activity
     public string userId { get; set; }
     public string topLevelId { get; set; }
     public string objectId { get; set; }
-    public string versionId { get; set; }
+    public int? versionId { get; set; }
     public Dictionary<string, object> data { get; set; }
 }

@@ -30,7 +30,7 @@ import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
-import { TreeDisciplineLegendComponent } from '@wbs/main/pages/projects/pages/project-view/components/tree-discipline-legend/tree-discipline-legend.component';
+import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';

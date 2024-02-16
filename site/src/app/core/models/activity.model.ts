@@ -1,7 +1,7 @@
 export interface ActivityData {
   topLevelId: string;
   objectId?: string;
-  versionId?: string;
+  versionId?: number;
   action: string;
   data: Record<string, any>;
 }

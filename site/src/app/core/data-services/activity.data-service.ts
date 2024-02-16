@@ -92,4 +92,8 @@ export class ActivityDataService {
       .post<void>('api/activities/projects', toSave)
       .pipe(map(() => ids));
   }
+
+  saveLibraryEntryAsync(data: Activity[]): Observable<void> {
+    return this.http.post<void>('api/activities/library', data);
+  }
 }

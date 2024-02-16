@@ -15,6 +15,10 @@ import {
   userIdResolve,
 } from '@wbs/main/services';
 import {
+  EntryActivityService,
+  EntryService,
+  EntryTaskActivityService,
+  EntryTaskRecorderService,
   EntryTaskService,
   entryIdResolve,
   libraryClaimsResolve,
@@ -34,6 +38,10 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
       DialogService,
+      EntryActivityService,
+      EntryService,
+      EntryTaskActivityService,
+      EntryTaskRecorderService,
       EntryTaskService,
       TaskCreateService,
       Transformers,

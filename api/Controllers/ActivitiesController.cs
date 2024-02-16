@@ -131,5 +131,28 @@ public class ActivitiesController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
+
+    [Authorize]
+    [HttpPost("library")]
+    public async Task<IActionResult> PostLibraryEntry(Activity[] activities)
+    {
+        try
+        {
+            using (var conn = dataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+
+                foreach (var activity in activities)
+                    await dataService.InsertAsync(conn, activity);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
 }
 

@@ -8,8 +8,8 @@ import {
 } from '@progress/kendo-angular-treelist';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
+import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { UiState } from '@wbs/main/states';
-import { TreeDisciplineLegendComponent } from '../../../components/tree-discipline-legend/tree-discipline-legend.component';
 import { ProjectNavigationService } from '../../../services';
 import { ProjectState, TasksState } from '../../../states';
 

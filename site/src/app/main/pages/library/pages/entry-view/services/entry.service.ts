@@ -8,13 +8,15 @@ import {
 } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { TasksChanged, VersionChanged } from '../actions';
 import { EntryViewState } from '../states';
 import { EntryTaskService } from './entry-task.service';
+import { EntryActivityService } from './entry-activity.service';
 
 @Injectable()
 export class EntryService {
+  private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly messaging = inject(Messages);
   private readonly store = inject(Store);
@@ -31,24 +33,37 @@ export class EntryService {
   titleChangedAsync(title: string): Observable<void> {
     const entry = this.entry;
     const version = structuredClone(this.version);
+    const from = version.title;
 
     version.title = title;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
       tap(() => this.messaging.notify.success('Library.TitleChanged')),
-      tap(() => this.store.dispatch(new VersionChanged(version)))
+      switchMap(() => this.store.dispatch(new VersionChanged(version))),
+      switchMap(() =>
+        this.activity.entryTitleChanged(entry.id, version.version, from, title)
+      )
     );
   }
 
   descriptionChangedAsync(description: string): Observable<void> {
     const entry = this.entry;
     const version = structuredClone(this.version);
+    const from = version.description;
 
     version.description = description;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
       tap(() => this.messaging.notify.success('Library.DescriptionChanged')),
-      tap(() => this.store.dispatch(new VersionChanged(version)))
+      switchMap(() => this.store.dispatch(new VersionChanged(version))),
+      switchMap(() =>
+        this.activity.entryTitleChanged(
+          entry.id,
+          version.version,
+          from,
+          description
+        )
+      )
     );
   }
 
@@ -75,17 +90,27 @@ export class EntryService {
       order: 1,
     };
     return forkJoin([
-      this.taskService.saveAsync([node], [], undefined),
+      this.taskService.saveAsync(
+        entry.owner,
+        entry.id,
+        version.version,
+        [node],
+        [],
+        undefined
+      ),
       this.data.libraryEntryVersions.putAsync(entry.owner, version),
     ]).pipe(
       tap(() =>
         this.messaging.notify.success('Library.PhaseSetupSuccess', false)
       ),
-      tap(() =>
+      switchMap(() =>
         this.store.dispatch([
           new VersionChanged(version),
           new TasksChanged([node], []),
         ])
+      ),
+      switchMap(() =>
+        this.activity.phaseTaskSetup(entry.id, version.version, phaseTitle)
       )
     );
     /*

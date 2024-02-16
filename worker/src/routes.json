@@ -8,7 +8,7 @@
         "api/import/*",
         "api/export/*",
         "api/activities",
-        "api/activities/projects"
+        "api/activities/*"
     ],
     "VERIFY_JWT_MEMBERSHIP_GET": [
         "api/portfolio/:owner/*"

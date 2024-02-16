@@ -161,7 +161,7 @@ public class ActivityDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@UserId", item.userId);
         cmd.Parameters.AddWithValue("@TopLevelId", item.topLevelId);
         cmd.Parameters.AddWithValue("@ObjectId", item.objectId);
-        cmd.Parameters.AddWithValue("@VersionId", item.versionId);
+        cmd.Parameters.AddWithValue("@VersionId", DbJson(item.versionId));
         cmd.Parameters.AddWithValue("@Data", DbJson(item.data));
 
         await cmd.ExecuteNonQueryAsync();
@@ -177,7 +177,7 @@ public class ActivityDataService : BaseSqlDbService
             timestamp = DbValue<DateTimeOffset>(reader, "Timestamp"),
             topLevelId = DbValue<string>(reader, "TopLevelId"),
             objectId = DbValue<string>(reader, "ObjectId"),
-            versionId = DbValue<string>(reader, "VersionId"),
+            versionId = DbValue<int?>(reader, "VersionId"),
             data = DbJson<Dictionary<string, object>>(reader, "Data"),
 
             actionDescription = DbValue<string>(reader, "ActionDescription"),

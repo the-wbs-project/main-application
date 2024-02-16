@@ -28,7 +28,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
     {
         var results = new List<LibraryEntryNode>();
 
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryNodes] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryNodes] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [Removed] = 0", conn);
 
         cmd.Parameters.AddWithValue("@EntryId", entryId);
         cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
