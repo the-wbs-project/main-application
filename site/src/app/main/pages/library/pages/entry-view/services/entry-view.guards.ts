@@ -4,11 +4,13 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Utils } from '@wbs/main/services';
 import { map } from 'rxjs/operators';
-import { VerifyEntry, VerifyEntryTasks } from '../actions';
+import { VerifyEntry } from '../actions';
+import { EntryViewState } from '../states';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const owner = Utils.getOrgName(store, route);
+  const tasks = store.selectSnapshot(EntryViewState.tasks) ?? [];
 
   return store
     .dispatch(
@@ -18,7 +20,7 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
         'view',
         route.params['entryId'],
         route.params['versionId'],
-        'about',
+        tasks.length > 0 ? 'about' : 'setup',
       ])
     )
     .pipe(map(() => true));
@@ -36,11 +38,6 @@ export const verifyGuard = (route: ActivatedRouteSnapshot) => {
     .dispatch([new VerifyEntry(owner, entryId, versionId)])
     .pipe(map(() => true));
 };
-
-export const tasksVerifyGuard = () =>
-  inject(Store)
-    .dispatch(new VerifyEntryTasks())
-    .pipe(map(() => true));
 
 export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);

@@ -46,8 +46,6 @@ export class NavigationComponent {
         }
       }
     }
-
-    console.log(menu);
     return menu;
   }
 }

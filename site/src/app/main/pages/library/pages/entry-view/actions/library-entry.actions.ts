@@ -1,8 +1,4 @@
-import {
-  LibraryEntryNode,
-  LibraryEntryVersion,
-  ProjectCategory,
-} from '@wbs/core/models';
+import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
 
 export class VerifyEntry {
   static readonly type = '[Library Entry] Verify';
@@ -11,10 +7,6 @@ export class VerifyEntry {
     readonly entryId: string,
     readonly versionId: number
   ) {}
-}
-
-export class VerifyEntryTasks {
-  static readonly type = '[Library Entry] Verify Tasks';
 }
 
 export class SetEntry {

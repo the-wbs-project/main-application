@@ -48,17 +48,24 @@ export class EntryActivityService {
     );
   }
 
-  phaseTaskSetup(
+  setupPhaseEntry(
     entryId: string,
     version: number,
     phaseTitle: string
   ): Observable<void> {
-    return this.save(
-      entryId,
-      version,
-      LIBRARY_VERSION_ACTIONS.PHASE_TASK_SETUP,
-      { phaseTitle }
-    );
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.SETUP_PHASE, {
+      phaseTitle,
+    });
+  }
+
+  setupTaskEntry(
+    entryId: string,
+    version: number,
+    taskTitle: string
+  ): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.SETUP_TASK, {
+      taskTitle,
+    });
   }
 
   private save(

@@ -15,51 +15,78 @@ export class WbsNodePhaseTransformer {
     return this.store.selectSnapshot(MetadataState.phases);
   }
 
-  run(phases: ProjectCategory[], models: WbsNode[]): WbsNodeView[] {
+  run(models: WbsNode[], phases?: ProjectCategory[]): WbsNodeView[] {
     const nodes: WbsNodeView[] = [];
-    const categories = <ListItem[]>(
-      phases
-        .map((x) =>
-          typeof x === 'string' ? this.phaseList.find((c) => c.id === x) : x
-        )
-        .filter((x) => x)
-    );
-    for (let i = 0; i < categories.length; i++) {
-      const cat = categories[i];
+    let rootNodes: WbsNode[] = [];
+
+    if (phases) {
+      const categories = <ListItem[]>(
+        phases
+          .map((x) =>
+            typeof x === 'string' ? this.phaseList.find((c) => c.id === x) : x
+          )
+          .filter((x) => x)
+      );
+
+      for (let i = 0; i < categories.length; i++) {
+        const cat = categories[i];
+        let node = models.find((x) => x.id === cat.id)!;
+        let label = (node?.title ?? '').trim();
+        let description = (node?.description ?? '').trim();
+
+        const catLabel =
+          !cat.label && (cat.sameAs ?? []).length > 0
+            ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.label
+            : cat.label;
+
+        const catDescription =
+          !cat.description && (cat.sameAs ?? []).length > 0
+            ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.description
+            : cat.description;
+
+        if (label === '' || label === catLabel) {
+          label = this.resources.get(catLabel!);
+        }
+        if (description === '' || description === catDescription) {
+          description = this.resources.get(catDescription!);
+        }
+        if (node) {
+          node.title = label;
+          node.description = description;
+        } else {
+          node = {
+            id: cat.id,
+            title: label,
+            description,
+            order: i + 1,
+            parentId: undefined,
+            disciplineIds: [],
+            lastModified: new Date(),
+          };
+        }
+        rootNodes.push(node);
+      }
+    } else {
+      rootNodes = models
+        .filter((x) => !x.parentId)
+        .sort((a, b) => a.order! - b.order!);
+    }
+    for (let i = 0; i < rootNodes.length; i++) {
       const parentlevel = [i + 1];
-      const node = models.find((x) => x.id === cat.id);
-      let label = (node?.title ?? '').trim();
-      let description = (node?.description ?? '').trim();
-
-      const catLabel =
-        !cat.label && (cat.sameAs ?? []).length > 0
-          ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.label
-          : cat.label;
-
-      const catDescription =
-        !cat.description && (cat.sameAs ?? []).length > 0
-          ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.description
-          : cat.description;
-
-      if (label === '' || label === catLabel) {
-        label = this.resources.get(catLabel!);
-      }
-      if (description === '' || description === catDescription) {
-        description = this.resources.get(catDescription!);
-      }
+      const node = rootNodes[i];
       const parent: WbsNodeView = {
         children: 0,
         childrenIds: [],
-        description,
+        description: node.description,
         disciplines: node?.disciplineIds ?? [],
-        id: cat.id,
-        treeId: cat.id,
+        id: node.id,
+        treeId: node.id,
         levels: [...parentlevel],
         depth: 1,
         levelText: (i + 1).toString(),
-        phaseId: cat.id,
+        phaseId: node.id,
         order: i + 1,
-        title: label,
+        title: node.title,
         canMoveDown: false,
         canMoveUp: false,
         canMoveLeft: false,
@@ -68,8 +95,8 @@ export class WbsNodePhaseTransformer {
         subTasks: [],
       };
       parent.subTasks = this.getPhaseChildren(
-        cat.id,
-        cat.id,
+        node.id,
+        node.id,
         parentlevel,
         models
       );

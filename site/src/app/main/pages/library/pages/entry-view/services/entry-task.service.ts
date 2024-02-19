@@ -239,7 +239,7 @@ export class EntryTaskService {
     taskId: string,
     tasks: LibraryEntryNode[],
     viewModels: WbsNodeView[]
-  ): Observable<void> {
+  ): Observable<string> {
     tasks = structuredClone(tasks);
     const task = tasks.find((x) => x.id === taskId);
     const taskVm = viewModels.find((x) => x.id === taskId);
@@ -284,7 +284,7 @@ export class EntryTaskService {
       toLevel,
       LIBRARY_TASKS_REORDER_WAYS.MOVE_RIGHT,
       [task, ...toSave]
-    );
+    ).pipe(map(() => task.parentId!));
   }
 
   moveTaskDown(

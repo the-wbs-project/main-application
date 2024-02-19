@@ -9,10 +9,10 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListItem } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { EntryService } from '../../../services';
-import { EntryViewState } from '../../../states';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { LibraryTreeComponent } from './components/library-tree';
-import { PhaseSetupComponent } from './components/phase-setup';
+import { TaskModalComponent } from './components/task-modal';
+import { EntryViewState } from '../../states';
 
 @Component({
   standalone: true,
@@ -21,13 +21,12 @@ import { PhaseSetupComponent } from './components/phase-setup';
   imports: [
     FontAwesomeModule,
     LibraryTreeComponent,
-    PhaseSetupComponent,
+    TaskModalComponent,
     TranslateModule,
   ],
 })
 export class TasksPageComponent {
   private readonly store = inject(SignalStore);
-  private readonly entryService = inject(EntryService);
 
   readonly claims = input.required<string[]>();
   readonly phases = input.required<ListItem[]>();
@@ -38,7 +37,5 @@ export class TasksPageComponent {
 
   readonly faSpinner = faSpinner;
 
-  phaseTitleChosen(phaseTitle: string): void {
-    this.entryService.setupPhaseTaskAsync(phaseTitle).subscribe();
-  }
+  selectedTask?: WbsNodeView;
 }

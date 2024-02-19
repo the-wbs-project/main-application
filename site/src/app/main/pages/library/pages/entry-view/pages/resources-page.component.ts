@@ -8,7 +8,7 @@ import {
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { ResourceRecord } from '@wbs/core/models';
 import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page/record-resources-page.component';
-import { EntryResourceService } from '../../services';
+import { EntryResourceService } from '../services';
 
 @Component({
   standalone: true,

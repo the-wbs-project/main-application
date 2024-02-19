@@ -17,13 +17,13 @@ import {
 import {
   EntryActivityService,
   EntryService,
+  EntryTaskActionService,
   EntryTaskActivityService,
   EntryTaskRecorderService,
   EntryTaskService,
   entryIdResolve,
   libraryClaimsResolve,
   redirectGuard,
-  tasksVerifyGuard,
   verifyGuard,
   versionIdResolve,
 } from './services';
@@ -40,6 +40,7 @@ export const routes: Routes = [
       DialogService,
       EntryActivityService,
       EntryService,
+      EntryTaskActionService,
       EntryTaskActivityService,
       EntryTaskRecorderService,
       EntryTaskService,
@@ -56,29 +57,45 @@ export const routes: Routes = [
         path: '',
         canActivate: [redirectGuard],
         loadComponent: () =>
-          import('./pages/entry/about').then((x) => x.AboutPageComponent),
+          import('./pages/about').then((x) => x.AboutPageComponent),
+      },
+      {
+        path: 'setup',
+        loadComponent: () =>
+          import('./pages/setup').then((x) => x.SetupPageComponent),
+        canActivate: [],
       },
       {
         path: 'about',
         loadComponent: () =>
-          import('./pages/entry/about').then((x) => x.AboutPageComponent),
+          import('./pages/about').then((x) => x.AboutPageComponent),
         canActivate: [aboutSubSectionGuard],
-        resolve: {},
       },
       {
         path: 'tasks',
         loadComponent: () =>
-          import('./pages/entry/tasks').then((x) => x.TasksPageComponent),
-        canActivate: [tasksVerifyGuard, tasksSubSectionGuard],
+          import('./pages/tasks').then((x) => x.TasksPageComponent),
+        canActivate: [tasksSubSectionGuard],
         resolve: {
           claims: libraryClaimsResolve,
           phases: phaseCategoryResolver,
         },
+        children: [
+          {
+            path: 'about',
+            loadComponent: () =>
+              import('./pages/tasks/pages/about').then(
+                (x) => x.AboutPageComponent
+              ),
+            canActivate: [],
+            resolve: {},
+          },
+        ],
       },
       {
         path: 'resources',
         loadComponent: () =>
-          import('./pages/entry/resources-page.component').then(
+          import('./pages/resources-page.component').then(
             (x) => x.ResourcesPageComponent
           ),
         canActivate: [resourcesSubSectionGuard],

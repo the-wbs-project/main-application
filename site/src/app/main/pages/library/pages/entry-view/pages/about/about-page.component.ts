@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { SignalStore } from '@wbs/core/services';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { EntryService } from '../../../services';
-import { EntryViewState } from '../../../states';
+import { EntryService } from '../../services';
+import { EntryViewState } from '../../states';
 import { DescriptionCardComponent } from './components/description-card';
 
 @Component({

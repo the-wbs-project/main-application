@@ -5,7 +5,7 @@
   </div>
   <div class="flex-fill">
     <kendo-treelist
-      #treelist
+      #treeList
       class="tx-12"
       kendoTreeListExpandable
       kendoTreeListSelectable
@@ -17,7 +17,7 @@
       [expandedKeys]="expandedKeys()"
       [selectable]="settings"
       [navigable]="true"
-      (selectionChange)="taskId.set($event.items[0].dataItem.id)"
+      (selectionChange)="selectedTaskChange.emit($event.items[0].dataItem)"
       (rowReorder)="onRowReordered($event)"
       (cellClick)="onCellClick($event)"
       (expand)="expand($event.dataItem.id)"
@@ -41,7 +41,7 @@
         headerClass="tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
-          <div class="w-100 d-flex">
+          <div class="w-100 d-flex flex-align-end">
             <div>
               {{ "Projects.Activity_Title" | translate }}
             </div>
@@ -49,7 +49,7 @@
               <div
                 class="btn-group btn-group-sm"
                 role="group"
-                aria-label="Basic example"
+                aria-label="Collapse/Expand Tasks"
               >
                 <button
                   type="button"
@@ -86,7 +86,11 @@
       </kendo-treelist-column>
       }
     </kendo-treelist>
-    <kendo-contextmenu [items]="menu()" (select)="onAction($event.item.action)">
+    <kendo-contextmenu
+      #contextMenu
+      [items]="menu()"
+      (select)="onAction($event.item.action)"
+    >
       <ng-template kendoMenuItemTemplate let-item="item">
         <fa-icon [icon]="item.faIcon" />&nbsp;
         {{ item.text | translate }}

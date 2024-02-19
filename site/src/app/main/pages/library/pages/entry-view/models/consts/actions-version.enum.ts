@@ -3,5 +3,6 @@ export enum LIBRARY_VERSION_ACTIONS {
   CREATED = 'library-version-created',
   TITLE_CHANGED = 'library-version-title-changed',
   DESCRIPTION_CHANGED = 'library-version-description-changed',
-  PHASE_TASK_SETUP = 'library-version-phase-task-setup',
+  SETUP_PHASE = 'library-version-phase-setup',
+  SETUP_TASK = 'library-version-task-task-setup',
 }

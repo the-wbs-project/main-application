@@ -13,7 +13,6 @@ import {
   TasksChanged,
   SetEntry,
   VerifyEntry,
-  VerifyEntryTasks,
   VersionChanged,
 } from '../actions';
 
@@ -59,27 +58,12 @@ export class EntryViewState {
     if (
       state.entry?.id === entryId &&
       state.version?.entryId === entryId &&
-      state.version?.version === versionId
+      state.version?.version === versionId &&
+      (state.tasks?.length ?? 0) > 0
     )
       return;
 
     return ctx.dispatch(new SetEntry(owner, entryId, versionId));
-  }
-
-  @Action(VerifyEntryTasks)
-  verifyEntryTasks(ctx: Context): Observable<void> | void {
-    const state = ctx.getState();
-
-    if (!state.entry || !state.version || (state.tasks ?? []).length > 0)
-      return;
-
-    return this.data.libraryEntryNodes
-      .getAllAsync(state.entry.owner, state.entry.id, state.version.version)
-      .pipe(
-        map((tasks) => {
-          ctx.patchState({ tasks });
-        })
-      );
   }
 
   @Action(SetEntry)
@@ -94,9 +78,10 @@ export class EntryViewState {
         entryId,
         versionId
       ),
+      tasks: this.data.libraryEntryNodes.getAllAsync(owner, entryId, versionId),
     }).pipe(
-      map(({ entry, version }) => {
-        ctx.patchState({ entry, version });
+      map(({ entry, version, tasks }) => {
+        ctx.patchState({ entry, version, tasks });
       })
       //tap((project) => ctx.dispatch([new VerifyTasks(project)])),
     );

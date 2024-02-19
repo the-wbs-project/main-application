@@ -6,18 +6,15 @@
     {{ "General.Loading" | translate }}
   </h3>
 </div>
-} @else if (this.entry()!.type === 'phase' && this.tasks()!.length === 0) {
-<wbs-phase-setup
-  [phases]="phases()"
-  [version]="version()!"
-  (phaseTitleChosen)="phaseTitleChosen($event)"
-/>
 } @else {
 <div class="pd-15">
   <wbs-library-tree
     [entry]="entry()!"
     [version]="version()!"
     [claims]="claims()"
+    [(selectedTask)]="selectedTask"
   />
 </div>
 }
+
+<wbs-entry-task-modal [task]="selectedTask" />

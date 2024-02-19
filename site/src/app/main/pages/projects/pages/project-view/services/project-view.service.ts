@@ -118,7 +118,7 @@ export class ProjectViewService {
     if (!phases) {
       const nodes = this.store.selectSnapshot(TasksState.nodes)!;
 
-      phases = this.transformers.nodes.phase.view.run(project.phases, nodes);
+      phases = this.transformers.nodes.phase.view.run(nodes, project.phases);
     }
     const customDisciplines: ListItem[] = [];
 

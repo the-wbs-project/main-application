@@ -67,7 +67,7 @@ export class EntryService {
     );
   }
 
-  setupPhaseTaskAsync(phaseTitle: string): Observable<void | void[]> {
+  setupPhaseTaskAsync(phaseTitle: string): Observable<void> {
     const id = IdService.generate();
     const entry = this.entry;
     const version = structuredClone(this.version);
@@ -110,16 +110,41 @@ export class EntryService {
         ])
       ),
       switchMap(() =>
-        this.activity.phaseTaskSetup(entry.id, version.version, phaseTitle)
+        this.activity.setupPhaseEntry(entry.id, version.version, phaseTitle)
       )
     );
-    /*
-      tap(() => this.messaging.notify.success(message, false)),
-      tap(() => ctx.patchState({ version }))
+  }
+
+  setupTaskAsync(taskTitle: string): Observable<void> {
+    const id = IdService.generate();
+    const entry = this.entry;
+    const version = this.version;
+
+    const node: LibraryEntryNode = {
+      id,
+      title: taskTitle,
+      entryId: entry.id,
+      entryVersion: version.version,
+      lastModified: new Date(),
+      order: 1,
+    };
+    return forkJoin([
+      this.taskService.saveAsync(
+        entry.owner,
+        entry.id,
+        version.version,
+        [node],
+        [],
+        undefined
+      ),
+    ]).pipe(
+      tap(() =>
+        this.messaging.notify.success('Library.TaskSetupSuccess', false)
+      ),
+      switchMap(() => this.store.dispatch([new TasksChanged([node], [])])),
+      switchMap(() =>
+        this.activity.setupTaskEntry(entry.id, version.version, taskTitle)
+      )
     );
-    this.store
-      .dispatch([new PhasesChanged([phase])])
-      .pipe(switchMap(() => this.taskService.saveAsync([node], [], undefined)))
-      .subscribe();*/
   }
 }

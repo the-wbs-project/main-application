@@ -1,0 +1,24 @@
+@if (isLoading()) {
+<div class="w-100 text-center mg-t-50">
+  <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+  <h3 class="pd-t-20">
+    {{ "General.Loading" | translate }}
+  </h3>
+</div>
+} @else if (isSetup()) {
+<h4>All Setup!</h4>
+<a class="btn btn-primary mg-t-20">
+  {{ "General.Continue" | translate }}
+</a>
+
+} @else if (type() === 'phase') {
+<wbs-phase-setup
+  [phases]="phases()"
+  [version]="version()!"
+  (titleChosen)="setupPhaseEntry($event)"
+/>
+} @else if (type() === 'task') {
+<wbs-task-setup [version]="version()!" (titleChosen)="setupTaskEntry($event)" />
+} @else if (type() === 'project') {
+<wbs-task-setup [version]="version()!" (titleChosen)="setupTaskEntry($event)" />
+}

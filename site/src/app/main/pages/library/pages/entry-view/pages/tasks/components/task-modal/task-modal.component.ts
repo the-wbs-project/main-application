@@ -26,7 +26,7 @@ import { WbsNodeView } from '@wbs/core/view-models';
   encapsulation: ViewEncapsulation.None,
   imports: [RouterModule, TranslateModule],
 })
-export class EntryTaskModalComponent implements AfterContentInit {
+export class TaskModalComponent implements AfterContentInit {
   @ViewChild('taskContent') taskContent!: any;
   @Output() readonly dismissed = new EventEmitter<void>();
 
@@ -57,8 +57,8 @@ export class EntryTaskModalComponent implements AfterContentInit {
             parts.includes(taskId)
           ) {
             if (!this.modal) {
-              this.modal = this.modalService.open(this.taskContent, {
-                modalDialogClass: 'task-modal',
+              this.modal = this.modalService.open(this.taskContent(), {
+                modalDialogClass: 'entry-task-modal',
                 size: 'fullscreen',
               });
               this.modal.dismissed.subscribe(() => {

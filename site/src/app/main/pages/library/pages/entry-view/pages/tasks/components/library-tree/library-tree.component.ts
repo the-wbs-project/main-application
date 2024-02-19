@@ -1,9 +1,10 @@
 import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
+  EventEmitter,
   OnInit,
+  Output,
   ViewChild,
   computed,
   inject,
@@ -11,8 +12,13 @@ import {
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import {
+  faChevronsLeft,
+  faChevronsRight,
+} from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   ContextMenuComponent,
   ContextMenuModule,
@@ -26,6 +32,7 @@ import {
 } from '@progress/kendo-angular-treelist';
 import {
   LIBRARY_CLAIMS,
+  LIBRARY_ENTRY_TYPES,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
@@ -34,26 +41,18 @@ import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
-import { TaskCreateService } from '@wbs/main/components/task-create';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
 import { Transformers, WbsPhaseService } from '@wbs/main/services';
-import { MetadataState, UiState } from '@wbs/main/states';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { UiState } from '@wbs/main/states';
 import {
+  EntryTaskActionService,
   EntryTaskRecorderService,
-  EntryTaskService,
   EntryTreeMenuService,
-} from '../../../../../services';
-import { EntryViewState } from '../../../../../states';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
-import {
-  faChevronsLeft,
-  faChevronsRight,
-  faExpand,
-} from '@fortawesome/pro-solid-svg-icons';
+} from '../../../../services';
+import { EntryViewState } from '../../../../states';
 
 @UntilDestroy()
 @Component({
@@ -80,14 +79,15 @@ import {
 export class LibraryTreeComponent implements OnInit {
   @ViewChild(ContextMenuComponent) gridContextMenu!: ContextMenuComponent;
   @ViewChild(TreeListComponent) treeList!: TreeListComponent;
+  @Output() readonly selectedTaskChange = new EventEmitter<
+    WbsNodeView | undefined
+  >();
 
-  private readonly cd = inject(ChangeDetectorRef);
+  private readonly actions = inject(EntryTaskActionService);
   private readonly menuService = inject(EntryTreeMenuService);
   private readonly store = inject(SignalStore);
   private readonly transformer = inject(Transformers);
   private readonly messages = inject(Messages);
-  private readonly taskService = inject(EntryTaskService);
-  private readonly taskCreateService = inject(TaskCreateService);
   private readonly reorderer = inject(EntryTaskRecorderService);
 
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
@@ -96,19 +96,25 @@ export class LibraryTreeComponent implements OnInit {
   //readonly tasks = input.required<LibraryEntryNode[]>();
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
+  readonly selectedTask = input.required<WbsNodeView | undefined>();
 
   readonly width = this.store.select(UiState.mainContentWidth);
 
   readonly tasks = signal<LibraryEntryNode[] | undefined>(undefined);
-  readonly taskId = signal<string | undefined>(undefined);
   readonly menu = computed(() =>
-    this.menuService.buildMenu(this.tree()!, this.claims(), this.taskId())
+    this.menuService.buildMenu(
+      this.tree()!,
+      this.claims(),
+      this.selectedTask()?.id
+    )
+  );
+  readonly phases = computed(() =>
+    this.entry().type === LIBRARY_ENTRY_TYPES.TASK
+      ? undefined
+      : this.version()!.phases
   );
   readonly tree = computed(() =>
-    this.transformer.nodes.phase.view.run(
-      this.version()!.phases,
-      this.tasks() ?? []
-    )
+    this.transformer.nodes.phase.view.run(this.tasks() ?? [], this.phases())
   );
   readonly faChevronsLeft = faChevronsLeft;
   readonly faChevronsRight = faChevronsRight;
@@ -127,23 +133,10 @@ export class LibraryTreeComponent implements OnInit {
       .selectAsync(EntryViewState.tasks)
       .pipe(untilDestroyed(this))
       .subscribe((tasks) => this.tasks.set(tasks));
-    /* ;*/
-    /*
-    this.actions$
-      .pipe(ofActionSuccessful(CreateTask), untilDestroyed(this))
-      .subscribe(() => {
-        const phases = this.phases() ?? [];
-        const taskIndex = phases.findIndex((x) => x.id === this.taskId());
-        if (!taskIndex) return;
 
-        const task = phases[taskIndex];
-
-        if (task) {
-          this.treeList.expand(task);
-          this.treeList.focusCell(taskIndex, 0);
-        }
-      });*/
-    //this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
+    this.actions.expandedKeysChanged
+      .pipe(untilDestroyed(this))
+      .subscribe((keys) => this.expandedKeys.set(keys));
   }
 
   collapseAll(): void {
@@ -162,97 +155,16 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   onAction(action: string): void {
-    const entry = this.entry();
-    const version = this.version()!;
-    const tasks = this.tasks()!;
-    const taskId = this.taskId();
-    const tree = this.tree();
-    let obs: Observable<any> | undefined;
-
-    if (action === 'addSub') {
-      const disciplines = this.store.selectSnapshot(MetadataState.disciplines);
-
-      obs = this.taskCreateService.open(disciplines).pipe(
-        switchMap((results) =>
-          !results?.model
-            ? of()
-            : this.taskService.createTask(
-                entry.owner,
-                entry.id,
-                version.version,
-                taskId!,
-                results,
-                tasks
-              )
-        ),
-        tap(() => {
-          const keys = structuredClone(this.expandedKeys());
-          if (!keys.includes(taskId!)) {
-            keys.push(taskId!);
-          }
-          this.expandedKeys.set(keys);
-        })
-      );
-    } else if (action === 'moveLeft') {
-      obs = this.taskService.moveTaskLeft(
-        entry.owner,
-        entry.id,
-        version.version,
-        taskId!,
-        tasks,
-        tree
-      );
-    } else if (action === 'moveUp') {
-      obs = this.taskService.moveTaskUp(
-        entry.owner,
-        entry.id,
-        version.version,
-        taskId!,
-        tasks,
-        tree
-      );
-    } else if (action === 'moveRight') {
-      obs = this.taskService.moveTaskRight(
-        entry.owner,
-        entry.id,
-        version.version,
-        taskId!,
-        tasks,
-        tree
-      );
-    } else if (action === 'moveDown') {
-      obs = this.taskService.moveTaskDown(
-        entry.owner,
-        entry.id,
-        version.version,
-        taskId!,
-        tasks,
-        tree
-      );
-    } else if (action === 'deleteTask') {
-      obs = this.taskService.removeTask(
-        entry.owner,
-        entry.id,
-        version.version,
-        taskId!,
-        tasks
-      );
-    } else if (action === 'cloneTask') {
-      obs = this.taskService.cloneTask(
-        entry.owner,
-        entry.id,
-        version.version,
-        taskId!,
-        tasks,
-        tree
-      );
-    }
-    if (obs) obs.subscribe();
+    this.actions.onAction(
+      action,
+      this.selectedTask()!.id,
+      this.expandedKeys(),
+      this.tree()
+    );
   }
 
   onCellClick(e: CellClickEvent): void {
-    this.taskId.set(e.dataItem.id);
-
+    this.selectedTaskChange.emit(e.dataItem);
     if (e.type === 'contextmenu') {
       const originalEvent = e.originalEvent;
       originalEvent.preventDefault();
@@ -261,8 +173,6 @@ export class LibraryTreeComponent implements OnInit {
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });
-    } else {
-      this.taskId.set(e.dataItem.id);
     }
   }
 
@@ -291,7 +201,6 @@ export class LibraryTreeComponent implements OnInit {
 
     if (e.dropPosition === 'forbidden') {
       this.messages.notify.error('You cannot drop a node under itself', false);
-      this.tasks.set(tasks);
       return;
     }
 
