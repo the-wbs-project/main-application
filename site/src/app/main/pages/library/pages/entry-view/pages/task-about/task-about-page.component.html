@@ -1,0 +1,125 @@
+@if (current(); as task) {
+<div class="about-page-grid pd-20" resizedCss>
+  <div class="card border">
+    <div class="card-header tx-uppercase">
+      {{ "Projects.BasicInformation" | translate }}
+    </div>
+    <div class="card-body">
+      <p class="ms-md-4 ms-0 mb-2">
+        <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+          {{ "General.Level" | translate }} :
+        </span>
+        <span>
+          {{ task.levelText }}
+        </span>
+      </p>
+      @if (task.phaseId !== task.id && entry()!.type !== 'task') {
+      <p class="ms-md-4 ms-0 mb-2">
+        <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+          {{ "Wbs.Phase" | translate }} :
+        </span>
+        @if (task.phaseId; as phaseId) {
+        <a
+          class="text-decoration-none"
+          [routerLink]="['../../', phaseId, 'about']"
+        >
+          {{ phaseId | phaseLabel : version()!.phases | translate }}
+        </a>
+        } @else {
+        <span>
+          {{ "General.None" | translate }}
+        </span>
+        }
+      </p>
+      }
+      <p class="ms-md-4 ms-0 mb-2">
+        <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+          {{ "General.Parent" | translate }} :
+        </span>
+        @if (task.parent; as parent) {
+        <a
+          class="text-decoration-none"
+          [routerLink]="['../../', parent.id, 'about']"
+        >
+          {{ parent.title }}
+        </a>
+        } @else {
+        <span>
+          {{ "General.None" | translate }}
+        </span>
+        }
+      </p>
+      <p class="ms-md-4 ms-0 mb-2">
+        <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+          {{ "General.LastModified" | translate }} :
+        </span>
+        <span>
+          {{ task.lastModified | dateText }}
+        </span>
+      </p>
+      <p class="ms-md-4 ms-0 mb-2">
+        <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
+          # of Sub-Tasks:
+        </span>
+        <span>
+          {{ task.subTasks.length }}
+        </span>
+      </p>
+    </div>
+  </div>
+  <div class="card border">
+    <div class="card-header tx-uppercase">
+      {{ "General.Disciplines" | translate }}
+    </div>
+    @if (task.disciplines.length > 0) {
+
+    <div class="card-body">
+      <wbs-discipline-list
+        [disciplines]="task.disciplines"
+        [projectDisciplines]="version()!.disciplines"
+      />
+    </div>
+    } @else {
+    <div class="card-body tx-center">
+      <p class="text-danger">
+        <fa-icon [icon]="faTriangleExclamation" size="2xl" />
+        <br />
+        <br />
+        {{ "Projects.NoDisciplines" | translate }}
+      </p>
+      @if (claims() | check : canEditClaim) {
+      <a class="btn btn-dark" [routerLink]="['../', 'settings', 'disciplines']">
+        <fa-icon [icon]="faTools" />
+        &nbsp;
+        {{ "Projects.Fix" | translate }}
+      </a>
+      }
+    </div>
+    }
+  </div>
+  <div class="card border full-item">
+    <div class="card-header tx-uppercase">
+      {{ "General.Description" | translate }}
+    </div>
+    @if (task.description) {
+    <div class="card-body" [innerHTML]="task.description | safeHtml"></div>
+    } @else {
+    <div class="card-body tx-center">
+      <p class="text-danger">
+        <fa-icon [icon]="faTriangleExclamation" size="2xl" />
+        <br />
+        <br />
+        {{ "Projects.NoDescription" | translate }}
+      </p>
+      @if (claims() | check : canEditClaim) {
+      <a class="btn btn-dark" [routerLink]="['../', 'settings', 'general']">
+        <fa-icon [icon]="faTools" />
+        &nbsp;
+        {{ "Projects.Fix" | translate }}
+      </a>
+      }
+    </div>
+    }
+  </div>
+</div>
+}

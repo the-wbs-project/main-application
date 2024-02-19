@@ -34,7 +34,7 @@ export const routes: Routes = [
     path: ':entryId/:versionId',
     canActivate: [verifyGuard],
     loadComponent: () =>
-      import('./entry-view.component').then((m) => m.EntryViewComponent),
+      import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
       DialogService,
@@ -80,17 +80,7 @@ export const routes: Routes = [
           claims: libraryClaimsResolve,
           phases: phaseCategoryResolver,
         },
-        children: [
-          {
-            path: 'about',
-            loadComponent: () =>
-              import('./pages/tasks/pages/about').then(
-                (x) => x.AboutPageComponent
-              ),
-            canActivate: [],
-            resolve: {},
-          },
-        ],
+        loadChildren: () => import('./task-view.routes').then((x) => x.routes),
       },
       {
         path: 'resources',

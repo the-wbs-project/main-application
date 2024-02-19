@@ -24,7 +24,7 @@ import { EntryViewState } from './states';
 
 @Component({
   standalone: true,
-  templateUrl: './entry-view.component.html',
+  templateUrl: './view-entry.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ActionIconListComponent,

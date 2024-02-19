@@ -53,6 +53,7 @@ import {
   EntryTreeMenuService,
 } from '../../../../services';
 import { EntryViewState } from '../../../../states';
+import { Navigate } from '@ngxs/router-plugin';
 
 @UntilDestroy()
 @Component({
@@ -79,9 +80,6 @@ import { EntryViewState } from '../../../../states';
 export class LibraryTreeComponent implements OnInit {
   @ViewChild(ContextMenuComponent) gridContextMenu!: ContextMenuComponent;
   @ViewChild(TreeListComponent) treeList!: TreeListComponent;
-  @Output() readonly selectedTaskChange = new EventEmitter<
-    WbsNodeView | undefined
-  >();
 
   private readonly actions = inject(EntryTaskActionService);
   private readonly menuService = inject(EntryTreeMenuService);
@@ -96,11 +94,11 @@ export class LibraryTreeComponent implements OnInit {
   //readonly tasks = input.required<LibraryEntryNode[]>();
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
-  readonly selectedTask = input.required<WbsNodeView | undefined>();
 
   readonly width = this.store.select(UiState.mainContentWidth);
 
   readonly tasks = signal<LibraryEntryNode[] | undefined>(undefined);
+  readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
   readonly menu = computed(() =>
     this.menuService.buildMenu(
       this.tree()!,
@@ -164,7 +162,8 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   onCellClick(e: CellClickEvent): void {
-    this.selectedTaskChange.emit(e.dataItem);
+    this.selectedTask.set(e.dataItem);
+
     if (e.type === 'contextmenu') {
       const originalEvent = e.originalEvent;
       originalEvent.preventDefault();
@@ -223,5 +222,22 @@ export class LibraryTreeComponent implements OnInit {
       e.dropPosition
     );
     //this.taskService.reordered(results);
+  }
+
+  navigateToTask(taskId: string): void {
+    const entry = this.entry()!;
+    const version = this.version()!;
+
+    this.store.dispatch(
+      new Navigate([
+        entry.owner,
+        'library',
+        'view',
+        entry.id,
+        version.version,
+        'tasks',
+        taskId,
+      ])
+    );
   }
 }

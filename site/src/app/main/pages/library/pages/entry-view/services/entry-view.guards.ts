@@ -4,7 +4,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Utils } from '@wbs/main/services';
 import { map } from 'rxjs/operators';
-import { VerifyEntry } from '../actions';
+import { VerifyEntry, VerifyTask } from '../actions';
 import { EntryViewState } from '../states';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
@@ -21,6 +21,27 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
         route.params['entryId'],
         route.params['versionId'],
         tasks.length > 0 ? 'about' : 'setup',
+      ])
+    )
+    .pipe(map(() => true));
+};
+
+export const redirectTaskGuard = (route: ActivatedRouteSnapshot) => {
+  const store = inject(Store);
+  const entry = store.selectSnapshot(EntryViewState.entry)!;
+  const version = store.selectSnapshot(EntryViewState.version)!;
+
+  return store
+    .dispatch(
+      new Navigate([
+        entry.owner,
+        'library',
+        'view',
+        entry.id,
+        version.version,
+        'tasks',
+        route.params['taskId'],
+        'about',
       ])
     )
     .pipe(map(() => true));
@@ -45,8 +66,5 @@ export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
 
   if (!taskId) return false;
 
-  return true;
-  //return store
-  //  .dispatch([new VerifyTask(PROJECT_NODE_VIEW.PHASE, taskId)])
-  //  .pipe(map(() => true));
+  return store.dispatch([new VerifyTask(taskId)]).pipe(map(() => true));
 };

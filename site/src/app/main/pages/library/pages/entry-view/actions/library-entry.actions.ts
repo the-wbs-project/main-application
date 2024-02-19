@@ -18,6 +18,16 @@ export class SetEntry {
   ) {}
 }
 
+export class VerifyTask {
+  static readonly type = '[Library Entry] Verify Task';
+  constructor(readonly taskId: string) {}
+}
+
+export class SetTask {
+  static readonly type = '[Library Entry] Set Task';
+  constructor(readonly taskId: string) {}
+}
+
 export class VersionChanged {
   static readonly type = '[Library Entry] Version Changed';
   constructor(readonly version: LibraryEntryVersion) {}

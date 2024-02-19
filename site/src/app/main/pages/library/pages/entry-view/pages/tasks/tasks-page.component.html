@@ -1,5 +1,4 @@
-@if (tasks() === undefined || entry() === undefined || version() === undefined)
-{
+@if (isLoading()) {
 <div class="w-100 text-center mg-t-50">
   <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
   <h3 class="pd-t-20">
@@ -12,9 +11,8 @@
     [entry]="entry()!"
     [version]="version()!"
     [claims]="claims()"
-    [(selectedTask)]="selectedTask"
   />
 </div>
 }
 
-<wbs-entry-task-modal [task]="selectedTask" />
+<wbs-entry-task-modal />

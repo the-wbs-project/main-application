@@ -12,6 +12,7 @@ import { MetadataState } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { EntryViewState } from '../states';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Injectable()
 export class EntryTaskActionService {
@@ -67,6 +68,20 @@ export class EntryTaskActionService {
           }
         })
       );
+    } else if (action === 'viewTask') {
+      obs = this.store.dispatch(
+        new Navigate([
+          entry.owner,
+          'library',
+          'view',
+          entry.id,
+          version.version,
+          'tasks',
+          taskId,
+          'about',
+        ])
+      );
+      //
     } else if (action === 'moveLeft') {
       obs = this.taskService.moveTaskLeft(
         entry.owner,

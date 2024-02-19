@@ -22,7 +22,6 @@ import { ProjectApprovalState, ProjectState, TasksState } from '../../states';
 @Component({
   standalone: true,
   templateUrl: './task-view.component.html',
-  styleUrls: ['./task-view.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [

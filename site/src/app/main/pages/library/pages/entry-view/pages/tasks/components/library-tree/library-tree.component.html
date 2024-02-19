@@ -17,13 +17,13 @@
       [expandedKeys]="expandedKeys()"
       [selectable]="settings"
       [navigable]="true"
-      (selectionChange)="selectedTaskChange.emit($event.items[0].dataItem)"
+      (selectionChange)="selectedTask.set($event.items[0].dataItem)"
       (rowReorder)="onRowReordered($event)"
       (cellClick)="onCellClick($event)"
       (expand)="expand($event.dataItem.id)"
       (collapse)="collapse($event.dataItem.id)"
+      (dblclick)="navigateToTask(selectedTask()!.id)"
     >
-      <!--(dblclick)="navigate.toTaskPage(taskId()!, 'about')"-->
       @if (claims() | check : canEditClaim) {
       <kendo-treelist-rowreorder-column [width]="40" />
       }
