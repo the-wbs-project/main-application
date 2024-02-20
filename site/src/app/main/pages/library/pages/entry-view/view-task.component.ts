@@ -8,6 +8,7 @@ import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
 import { TASK_NAVIGATION } from './models';
 import { EntryViewState } from './states';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   standalone: true,
@@ -23,6 +24,8 @@ import { EntryViewState } from './states';
 })
 export class TaskViewComponent {
   readonly claims = input.required<string[]>();
+  readonly entry = this.store.select(EntryViewState.entry);
+  readonly version = this.store.select(EntryViewState.version);
   readonly task = this.store.select(EntryViewState.task);
   readonly links = TASK_NAVIGATION;
   readonly faDiagramSubtask = faDiagramSubtask;
@@ -32,6 +35,17 @@ export class TaskViewComponent {
   }
 
   navigate(route: string[]) {
-    //this.nav.toTaskPage(this.current()!.id, ...route);
+    this.store.dispatch(
+      new Navigate([
+        '/' + this.entry()!.owner,
+        'library',
+        'view',
+        this.entry()!.id,
+        this.version()!.version,
+        'tasks',
+        this.task()!.id,
+        ...route,
+      ])
+    );
   }
 }

@@ -10,7 +10,7 @@ import {
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
 import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import {
   TasksChanged,
   SetEntry,
@@ -107,12 +107,9 @@ export class EntryViewState {
           entry,
           version,
           tasks,
-          taskVms: this.transformer.nodes.phase.view.run(
-            tasks,
-            entry.type === LIBRARY_ENTRY_TYPES.TASK ? undefined : version.phases
-          ),
         });
-      })
+      }),
+      tap(() => this.rebuildViewModels(ctx))
     );
   }
 
@@ -158,5 +155,20 @@ export class EntryViewState {
     }
 
     ctx.patchState({ tasks: list });
+
+    this.rebuildViewModels(ctx);
+  }
+
+  private rebuildViewModels(ctx: Context): void {
+    const state = ctx.getState();
+
+    ctx.patchState({
+      taskVms: this.transformer.nodes.phase.view.run(
+        state.tasks!,
+        state.entry!.type === LIBRARY_ENTRY_TYPES.TASK
+          ? undefined
+          : state.version!.phases
+      ),
+    });
   }
 }

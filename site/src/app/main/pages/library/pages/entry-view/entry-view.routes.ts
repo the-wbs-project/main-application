@@ -57,18 +57,18 @@ export const routes: Routes = [
         path: '',
         canActivate: [redirectGuard],
         loadComponent: () =>
-          import('./pages/about').then((x) => x.AboutPageComponent),
+          import('./pages/entry-about').then((x) => x.AboutPageComponent),
       },
       {
         path: 'setup',
         loadComponent: () =>
-          import('./pages/setup').then((x) => x.SetupPageComponent),
+          import('./pages/entry-setup').then((x) => x.SetupPageComponent),
         canActivate: [],
       },
       {
         path: 'about',
         loadComponent: () =>
-          import('./pages/about').then((x) => x.AboutPageComponent),
+          import('./pages/entry-about').then((x) => x.AboutPageComponent),
         canActivate: [aboutSubSectionGuard],
       },
       {
@@ -85,7 +85,7 @@ export const routes: Routes = [
       {
         path: 'resources',
         loadComponent: () =>
-          import('./pages/resources-page.component').then(
+          import('./pages/entry-resources-page.component').then(
             (x) => x.ResourcesPageComponent
           ),
         canActivate: [resourcesSubSectionGuard],

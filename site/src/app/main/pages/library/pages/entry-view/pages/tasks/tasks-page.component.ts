@@ -8,22 +8,11 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
-import { Messages, SignalStore } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { ListItem } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { LibraryTreeComponent } from './components/library-tree';
 import { TaskModalComponent } from './components/task-modal';
 import { EntryViewState } from '../../states';
-import {
-  EntryTaskActionService,
-  EntryTaskRecorderService,
-  EntryTreeMenuService,
-} from '../../services';
-import { Transformers } from '@wbs/main/services';
-import {
-  faChevronsLeft,
-  faChevronsRight,
-} from '@fortawesome/pro-solid-svg-icons';
 
 @Component({
   standalone: true,

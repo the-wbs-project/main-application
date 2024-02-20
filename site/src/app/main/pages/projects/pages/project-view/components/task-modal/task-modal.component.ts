@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ViewChild,
-  ViewEncapsulation,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
@@ -22,9 +21,7 @@ import { TasksState } from '../../states';
   standalone: true,
   selector: 'wbs-task-modal',
   templateUrl: './task-modal.component.html',
-  styleUrls: ['./task-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class TaskModalComponent implements AfterContentInit {

@@ -5,7 +5,6 @@ import {
   EventEmitter,
   Output,
   ViewChild,
-  ViewEncapsulation,
   inject,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -22,9 +21,7 @@ import { EntryViewState } from '../../../../states';
   standalone: true,
   selector: 'wbs-entry-task-modal',
   templateUrl: './task-modal.component.html',
-  styleUrls: ['./task-modal.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   imports: [RouterModule, TranslateModule],
 })
 export class TaskModalComponent implements AfterContentInit {

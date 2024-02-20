@@ -2,9 +2,7 @@ import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   ViewChild,
   computed,
   inject,
@@ -18,6 +16,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
+import { Navigate } from '@ngxs/router-plugin';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   ContextMenuComponent,
@@ -53,7 +52,6 @@ import {
   EntryTreeMenuService,
 } from '../../../../services';
 import { EntryViewState } from '../../../../states';
-import { Navigate } from '@ngxs/router-plugin';
 
 @UntilDestroy()
 @Component({
@@ -91,13 +89,12 @@ export class LibraryTreeComponent implements OnInit {
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
   readonly claims = input.required<string[]>();
-  //readonly tasks = input.required<LibraryEntryNode[]>();
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
 
   readonly width = this.store.select(UiState.mainContentWidth);
 
-  readonly tasks = signal<LibraryEntryNode[] | undefined>(undefined);
+  readonly tree = signal<WbsNodeView[]>([]);
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
   readonly menu = computed(() =>
     this.menuService.buildMenu(
@@ -111,9 +108,9 @@ export class LibraryTreeComponent implements OnInit {
       ? undefined
       : this.version()!.phases
   );
-  readonly tree = computed(() =>
-    this.transformer.nodes.phase.view.run(this.tasks() ?? [], this.phases())
-  );
+  //readonly tree = computed(() =>
+  //   this.transformer.nodes.phase.view.run(this.tasks() ?? [], this.phases())
+  // );
   readonly faChevronsLeft = faChevronsLeft;
   readonly faChevronsRight = faChevronsRight;
 
@@ -128,9 +125,9 @@ export class LibraryTreeComponent implements OnInit {
 
   ngOnInit(): void {
     this.store
-      .selectAsync(EntryViewState.tasks)
+      .selectAsync(EntryViewState.taskVms)
       .pipe(untilDestroyed(this))
-      .subscribe((tasks) => this.tasks.set(tasks));
+      .subscribe((tasks) => this.setTree(tasks));
 
     this.actions.expandedKeysChanged
       .pipe(untilDestroyed(this))
@@ -144,7 +141,7 @@ export class LibraryTreeComponent implements OnInit {
   expandAll(): void {
     const ids: string[] = [];
 
-    for (const task of this.tasks() ?? []) {
+    for (const task of this.tree() ?? []) {
       if (task.parentId && !ids.includes(task.parentId)) {
         ids.push(task.parentId);
       }
@@ -195,7 +192,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   onRowReordered(e: RowReorderEvent): void {
-    const tasks = structuredClone(this.tasks()!);
+    //const tasks = structuredClone(this.tasks()!);
     const tree = this.tree()!;
 
     if (e.dropPosition === 'forbidden') {
@@ -211,16 +208,17 @@ export class LibraryTreeComponent implements OnInit {
         'You cannot move a phase from this screen.',
         false
       );
-      this.tasks.set(tasks);
+      this.setTree();
       return;
     }
     const results = this.reorderer.runForPhase(
-      tasks,
+      this.store.selectSnapshot(EntryViewState.tasks)!,
       tree,
       dragged,
       target,
       e.dropPosition
     );
+    console.log(results);
     //this.taskService.reordered(results);
   }
 
@@ -239,5 +237,13 @@ export class LibraryTreeComponent implements OnInit {
         taskId,
       ])
     );
+  }
+
+  private setTree(
+    tree: WbsNodeView[] | undefined = this.store.selectSnapshot(
+      EntryViewState.taskVms
+    )
+  ): void {
+    this.tree.set(tree ?? []);
   }
 }

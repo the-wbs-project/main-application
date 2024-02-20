@@ -10,4 +10,5 @@ export * from './entry-tree-menu.service';
 export * from './entry-view.guards';
 export * from './entry.service';
 export * from './library-claims-resolver.service';
+export * from './task-id-resolver.service';
 export * from './version-id-resolver.service';

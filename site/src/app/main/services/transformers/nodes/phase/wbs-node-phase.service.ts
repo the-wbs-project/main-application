@@ -94,16 +94,22 @@ export class WbsNodePhaseTransformer {
         lastModified: node?.lastModified,
         subTasks: [],
       };
-      parent.subTasks = this.getPhaseChildren(
+      const children = this.getPhaseChildren(
         node.id,
         node.id,
         parentlevel,
         models
       );
-      parent.children = parent.subTasks.length;
-      parent.childrenIds = parent.subTasks.map((x) => x.id);
+      parent.children = children.length;
+      parent.childrenIds = children.map((x) => x.id);
 
-      nodes.push(parent, ...parent.subTasks);
+      parent.subTasks = structuredClone(children);
+
+      for (const task of parent.subTasks) {
+        if (task.treeParentId === parent.id) task.treeParentId = undefined;
+      }
+
+      nodes.push(parent, ...children);
     }
 
     for (let i = 0; i < nodes.length; i++) {
@@ -148,17 +154,22 @@ export class WbsNodePhaseTransformer {
         subTasks: [],
       };
 
-      node.subTasks = this.getPhaseChildren(
+      const taskChildren = this.getPhaseChildren(
         phaseId,
         child.id,
         childLevel,
         list
       );
 
-      node.children = node.subTasks.length;
-      node.childrenIds = node.subTasks.map((x) => x.id);
+      node.children = taskChildren.length;
+      node.childrenIds = taskChildren.map((x) => x.id);
+      node.subTasks = structuredClone(taskChildren);
 
-      results.push(node, ...node.subTasks);
+      for (const task of node.subTasks) {
+        if (task.treeParentId === node.id) task.treeParentId = undefined;
+      }
+
+      results.push(node, ...taskChildren);
     }
     return results;
   }
