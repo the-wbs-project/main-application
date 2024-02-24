@@ -8,12 +8,12 @@ import {
   ProjectCategoryChanges,
   ListItem,
 } from '@wbs/core/models';
+import { Resources } from '@wbs/core/services';
 import {
   CategoryCancelConfirm,
   CategorySelection,
 } from '@wbs/core/view-models';
 import { MetadataState } from '../states';
-import { Resources } from '@wbs/core/services';
 
 @Injectable()
 export class CategorySelectionService {
@@ -28,7 +28,6 @@ export class CategorySelectionService {
     confirmMessage?: string,
     catCounts?: Map<string, number>
   ): CategorySelection[] {
-    console.log(categories);
     const cats: CategorySelection[] = [];
 
     for (const cat of categories) {

@@ -1,5 +1,5 @@
 # Stage 1
-FROM node:20.9.0 as node
+FROM node:20.11.1 as node
 
 WORKDIR /usr/src/app/site
 
@@ -10,6 +10,7 @@ ARG KENDO_UI_LICENSE
 
 ENV FA_TOKEN=${FA_TOKEN}
 ENV KENDO_UI_LICENSE=${KENDO_UI_LICENSE}
+ENV NODE_OPTIONS=--max_old_space_size=8048
 
 RUN npm run docker:globals
 RUN npm run docker:fa ${FA_TOKEN}

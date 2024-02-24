@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -33,25 +32,21 @@ import {
   LIBRARY_CLAIMS,
   LIBRARY_ENTRY_TYPES,
   LibraryEntry,
-  LibraryEntryNode,
   LibraryEntryVersion,
 } from '@wbs/core/models';
 import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
-import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
-import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
-import { Transformers, WbsPhaseService } from '@wbs/main/services';
+import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import {
   EntryTaskActionService,
   EntryTaskRecorderService,
   EntryTreeMenuService,
-} from '../../../../services';
-import { EntryViewState } from '../../../../states';
+} from '../../services';
+import { EntryViewState } from '../../states';
 
 @UntilDestroy()
 @Component({
@@ -65,14 +60,10 @@ import { EntryViewState } from '../../../../states';
     CheckPipe,
     ContextMenuModule,
     DisciplineIconListComponent,
-    FindByIdPipe,
-    FindThemByIdPipe,
     FontAwesomeModule,
-    ProgressBarComponent,
     TranslateModule,
     TreeDisciplineLegendComponent,
     TreeListModule,
-    JsonPipe,
   ],
 })
 export class LibraryTreeComponent implements OnInit {
@@ -82,7 +73,6 @@ export class LibraryTreeComponent implements OnInit {
   private readonly actions = inject(EntryTaskActionService);
   private readonly menuService = inject(EntryTreeMenuService);
   private readonly store = inject(SignalStore);
-  private readonly transformer = inject(Transformers);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(EntryTaskRecorderService);
 
@@ -108,18 +98,15 @@ export class LibraryTreeComponent implements OnInit {
       ? undefined
       : this.version()!.phases
   );
-  //readonly tree = computed(() =>
-  //   this.transformer.nodes.phase.view.run(this.tasks() ?? [], this.phases())
-  // );
   readonly faChevronsLeft = faChevronsLeft;
   readonly faChevronsRight = faChevronsRight;
 
-  expandedKeys = signal<string[]>([]);
+  expandedKeys: string[] = [];
   settings: SelectableSettings = {
     enabled: true,
     mode: 'row',
     multiple: false,
-    drag: false,
+    drag: true,
     readonly: false,
   };
 
@@ -131,29 +118,30 @@ export class LibraryTreeComponent implements OnInit {
 
     this.actions.expandedKeysChanged
       .pipe(untilDestroyed(this))
-      .subscribe((keys) => this.expandedKeys.set(keys));
-  }
-
-  collapseAll(): void {
-    this.expandedKeys.set([]);
+      .subscribe((keys) => this.setKeys(keys));
   }
 
   expandAll(): void {
-    const ids: string[] = [];
-
-    for (const task of this.tree() ?? []) {
-      if (task.parentId && !ids.includes(task.parentId)) {
-        ids.push(task.parentId);
+    for (const node of this.tree()!) {
+      if (node.subTasks.length > 0 && !this.expandedKeys.includes(node.id)) {
+        this.treeList.expand(node);
       }
     }
-    this.expandedKeys.set(ids);
+  }
+
+  collapseAll(): void {
+    for (const node of this.tree()!) {
+      if (this.expandedKeys.includes(node.id)) {
+        this.treeList.collapse(node);
+      }
+    }
   }
 
   onAction(action: string): void {
     this.actions.onAction(
       action,
       this.selectedTask()!.id,
-      this.expandedKeys(),
+      this.expandedKeys,
       this.tree()
     );
   }
@@ -173,25 +161,26 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   expand(taskId: string): void {
-    const keys = this.expandedKeys();
+    const keys = structuredClone(this.expandedKeys);
 
     if (!keys.includes(taskId)) {
       keys.push(taskId);
     }
-    this.expandedKeys.set(keys);
+    this.setKeys(keys);
   }
 
   collapse(taskId: string): void {
-    const keys = this.expandedKeys();
+    const keys = structuredClone(this.expandedKeys);
     const index = keys.indexOf(taskId);
 
     if (index > -1) {
       keys.splice(index, 1);
     }
-    this.expandedKeys.set(keys);
+    this.setKeys(keys);
   }
 
   onRowReordered(e: RowReorderEvent): void {
+    console.log('REORDER');
     //const tasks = structuredClone(this.tasks()!);
     const tree = this.tree()!;
 
@@ -222,7 +211,9 @@ export class LibraryTreeComponent implements OnInit {
     //this.taskService.reordered(results);
   }
 
-  navigateToTask(taskId: string): void {
+  navigateToTask(taskId: string | undefined): void {
+    if (!taskId) return;
+
     const entry = this.entry()!;
     const version = this.version()!;
 
@@ -245,5 +236,11 @@ export class LibraryTreeComponent implements OnInit {
     )
   ): void {
     this.tree.set(tree ?? []);
+  }
+
+  private setKeys(keys: string[]): void {
+    this.expandedKeys = keys;
+    this.setTree(this.tree());
+    // this.cd.detectChanges();
   }
 }

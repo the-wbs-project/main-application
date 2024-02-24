@@ -1,0 +1,99 @@
+<kendo-dialog
+  height="80%"
+  width="80%"
+  [title]="'LibraryCreate.Title' | translate"
+  (close)="dialog.close()"
+>
+  <div class="d-flex flex-column h-100">
+    <kendo-stepper
+      [steps]="steps"
+      stepType="full"
+      [(currentStep)]="view"
+      [linear]="false"
+    >
+      <ng-template kendoStepperIndicatorTemplate let-step>
+        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+      </ng-template>
+      <ng-template kendoStepperLabelTemplate let-step>
+        {{ step.label }}
+        @if (step.isOptional) { <span class="mg-l-5">*</span> }
+      </ng-template>
+    </kendo-stepper>
+    <div class="tx-center flex-fill pd-t-20 pd-x-10">
+      @if (view() === 0) {
+      <div
+        class="d-ib w-100 mx-wd-800 tx-left animate__animated"
+        [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
+      >
+        <wbs-title-form
+          [(mainTaskTitle)]="mainTaskTitle"
+          [(templateTitle)]="templateTitle"
+          [(syncTitles)]="syncTitles"
+        />
+      </div>
+      } @else if (view() === 1) {
+      <div
+        class="d-ib w-100 mx-wd-800 animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <wbs-visibility-selection [(visibility)]="visibility" />
+      </div>
+      } @else if (view() === 2) {
+
+      <div
+        class="d-ib w-100 mx-wd-800 animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <wbs-discipline-editor [(categories)]="disciplines" />
+      </div>
+      } @else if (view() === 3) {
+
+      <div
+        class="d-ib w-100 mx-wd-800 animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <wbs-save-section
+          [disciplines]="disciplines()"
+          [mainTaskTitle]="mainTaskTitle()"
+          [templateTitle]="templateTitle()"
+          [visibility]="visibility!"
+        />
+      </div>
+      }
+    </div>
+  </div>
+
+  <kendo-dialog-actions>
+    <div class="flex-grow-1 text-start">
+      @if (view() > 0) {
+      <button class="btn btn-warning" (click)="back()">
+        {{ "General.Back" | translate }}
+      </button>
+      }
+    </div>
+    <div class="flex-grow-1 tx-10 text-center pd-t-10 tx-italic">
+      * {{ "General.Optional" | translate }}
+    </div>
+
+    <div class="flex-grow-1 text-end">
+      @if (view() < 3) {
+      <button
+        class="btn btn-primary"
+        [disabled]="!canContinue()"
+        (click)="next()"
+      >
+        {{ nextButtonLabel() | translate }}
+      </button>
+      }
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

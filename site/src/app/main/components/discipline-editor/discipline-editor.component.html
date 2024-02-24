@@ -1,70 +1,52 @@
-@if (showButtons) {
+@if (showButtons()) {
 <div class="pd-b-10 text-center">
   <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
     <fa-icon [icon]="faPlus" />
     {{ "General.Add" | translate }}
   </button>
 
-  @if (showSave) {
+  @if (showSave()) {
   <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
     <fa-icon [icon]="faFloppyDisk" />
     {{ "General.Save" | translate }}
   </button>
   }
 </div>
-}
-<div
-  #wrapper
-  kendoDragTargetContainer
-  kendoDropTargetContainer
-  dragTargetFilter=".k-master-row, .k-listview-item"
-  dropTargetFilter=".k-master-row, .k-listview-item"
-  [dragData]="dragDrop.dragData"
-  [hint]="{ hintClass: 'row-hint' }"
-  (onDrop)="onDrop($event)"
-  dragHandle=".k-i-reorder"
->
-  <kendo-listview
-    [data]="categories"
-    itemClass="rr-item rr-list-item"
-    containerClass="overflow-hidden"
-    data-kendo-listview-index="0"
-  >
-    <ng-template
-      kendoListViewItemTemplate
-      let-dataItem="dataItem"
-      let-index="index"
+} @if (categories(); as cats) {
+<div class="overflow-hidden" cdkDropList (cdkDropListDropped)="onDrop($event)">
+  @for (dataItem of cats; track dataItem.id) {
+  <div class="rr-item rr-list-item" cdkDrag>
+    <div
+      class="d-grid list-group-item pd-5 flex-align-center"
+      style="gap: 5px; grid-template-columns: 30px 20px auto 40px"
     >
-      <div
-        class="d-grid list-group-item pd-5 flex-align-center"
-        style="gap: 5px; grid-template-columns: 30px 20px auto 40px"
-      >
-        <div class="tx-semibold tx-16">
-          @if (dataItem.selected){ {{ dataItem.number }}. }
-        </div>
-        <div>
-          @if (dataItem.selected) {
-          <span class="k-i-reorder">
-            <fa-icon [icon]="faBars" />
-          </span>
-          }
-        </div>
-        <div class="tx-16 tx-left">
-          <span class="d-ib tx-center wd-25">
-            <i class="fa-solid" [ngClass]="dataItem.id | disciplineIcon"></i>
-          </span>
-          {{ dataItem.label }}
-        </div>
-        <div class="tx-center ht-24 pd-t-4">
-          <wbs-switch
-            size="sm"
-            [(value)]="dataItem.selected"
-            [confirmMessage]="dataItem.confirm?.label"
-            [confirmData]="dataItem.confirm?.data"
-            (valueChange)="changed()"
-          />
-        </div>
+      <div class="pd-l-3 tx-semibold tx-16">
+        @if (dataItem.selected){ {{ dataItem.number }}. }
       </div>
-    </ng-template>
-  </kendo-listview>
+      <div>
+        @if (dataItem.selected) {
+        <span class="k-i-reorder" cdkDragHandle>
+          <fa-icon [icon]="faBars" />
+        </span>
+        }
+      </div>
+      <div class="tx-16 tx-left">
+        <span class="d-ib tx-center wd-25">
+          <i class="fa-solid" [ngClass]="dataItem.id | disciplineIcon"></i>
+        </span>
+        {{ dataItem.label }}
+      </div>
+      <div class="tx-center ht-24 pd-t-4">
+        <wbs-switch
+          size="sm"
+          [(value)]="dataItem.selected"
+          [confirmMessage]="dataItem.confirm?.label"
+          [confirmData]="dataItem.confirm?.data"
+          (valueChange)="rebuild()"
+        />
+      </div>
+    </div>
+  </div>
+  }
 </div>
+}

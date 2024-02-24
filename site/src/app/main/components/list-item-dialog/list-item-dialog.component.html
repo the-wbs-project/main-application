@@ -1,16 +1,9 @@
-<div class="modal-header">
-  <h5 class="modal-title" id="modal-title">
-    {{ "General.Add" | translate }}
-  </h5>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modal.dismiss()"
-  ></button>
-</div>
-<div class="modal-body">
-  <form [formGroup]="form" (submit)="close()">
+<kendo-dialog
+  minWidth="250px"
+  [title]="'General.Add' | translate"
+  (close)="dialog.close()"
+>
+  <form [formGroup]="form">
     <div class="form-group">
       <label for="title"> {{ "General.Name" | translate }} </label>
       <input
@@ -21,11 +14,13 @@
         class="form-control"
         required
       />
-      @if (controls.title.errors?.['required']) {
-      <div class="invalid-feedback">Error: Name is required</div>
+      @if (form.controls.title.errors?.['required']) {
+      <div class="invalid-feedback">
+        {{ "General.ErrorNameRequired" | translate }}
+      </div>
       }
     </div>
-    @if (showDescription) {
+    @if (showDescription()) {
     <div class="form-group">
       <label for="description"> {{ "General.Description" | translate }} </label>
       <input
@@ -34,20 +29,16 @@
         kendoTextBox
         formControlName="description"
         class="form-control"
-        required
       />
-      @if (controls.description.errors?.['required']) {
-      <div class="invalid-feedback">Error: Description is required</div>
-      }
     </div>
     }
-    <div class="modal-footer">
-      <button class="btn btn-warning" (click)="modal.dismiss()">
-        Nevermind
-      </button>
-      <button type="submit" class="btn btn-success" [disabled]="!form.valid">
-        Add
-      </button>
-    </div>
   </form>
-</div>
+  <kendo-dialog-actions>
+    <button class="btn btn-warning" (click)="dialog.close()">
+      {{ "General.Nevermind" | translate }}
+    </button>
+    <button class="btn btn-success" [disabled]="!form.valid" (click)="close()">
+      {{ "General.Add" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

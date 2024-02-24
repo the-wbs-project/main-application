@@ -1,35 +1,41 @@
-import { Injectable } from '@angular/core';
-import { Navigate } from '@ngxs/router-plugin';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
-import { DialogService } from '@wbs/main/services';
-import { AuthState } from '@wbs/main/states';
-import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
-import { EntryCreationDialogComponent } from '../components/entry-creation-dialog';
-import { EntryCreationModel } from '../models';
+import { Resources } from '@wbs/core/services';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { Observable, of } from 'rxjs';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { EntryTaskCreationComponent } from '../components/entry-task-creation';
+import { EntryCreationModel } from '../models';
 
 @Injectable()
 export class EntryCreationService {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly dialog: DialogService,
-    private readonly store: Store
-  ) {}
+  private readonly data = inject(DataServiceFactory);
+  private readonly dialog = inject(DialogService);
+  private readonly resources = inject(Resources);
+  private readonly store = inject(Store);
 
-  runAsync(owner: string): Observable<LibraryEntryViewModel | void> {
-    return this.dialog
-      .openDialog<EntryCreationModel>(EntryCreationDialogComponent, {
-        size: 'xl',
-        fullscreen: 'sm',
-        scrollable: true,
-      })
-      .pipe(
-        switchMap(({ title, type, visibility, nav }) => {
-          const entry: LibraryEntry = {
+  runAsync(
+    owner: string,
+    type: string
+  ): Observable<LibraryEntryViewModel | void> {
+    const dialogRef = this.dialog.open({
+      content: EntryTaskCreationComponent,
+    });
+
+    //(<CreationDialogComponent>dialogRef.content.instance).type.set(type);
+
+    return dialogRef.result.pipe(
+      filter((x) => !(x instanceof DialogCloseResult)),
+      map((x) => <EntryCreationModel>x),
+      tap((x) => console.log(x)),
+      switchMap((results: EntryCreationModel) => {
+        return of();
+        /* const entry: LibraryEntry = {
             id: IdService.generate(),
             author: this.store.selectSnapshot(AuthState.userId)!,
             owner,
@@ -74,8 +80,8 @@ export class EntryCreationService {
                     visibility: entry.visibility,
                   })
             )
-          );
-        })
-      );
+          );*/
+      })
+    );
   }
 }

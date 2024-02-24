@@ -399,3 +399,13 @@ button:focus:not(:focus-visible) {
     height: 100%;
   }
 }
+
+.row-hint {
+  background-color: #ededed;
+  padding: 5px;
+  pointer-events: none;
+}
+
+.row-hint > td {
+  border: none;
+}

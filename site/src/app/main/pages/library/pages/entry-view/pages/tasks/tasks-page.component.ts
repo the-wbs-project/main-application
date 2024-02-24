@@ -10,9 +10,9 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListItem } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { LibraryTreeComponent } from './components/library-tree';
-import { TaskModalComponent } from './components/task-modal';
+import { LibraryTreeComponent } from '../../components/library-tree';
 import { EntryViewState } from '../../states';
+import { TaskModalComponent } from './components/task-modal';
 
 @Component({
   standalone: true,

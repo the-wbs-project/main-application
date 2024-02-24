@@ -1,6 +1,12 @@
+import {
+  LibraryEntry,
+  LibraryEntryNode,
+  LibraryEntryVersion,
+} from '@wbs/core/models';
+
 export interface EntryCreationModel {
-  title: string;
-  type: string;
-  visibility: string;
-  nav: boolean;
+  entry: LibraryEntry;
+  version: LibraryEntryVersion;
+  nodes: LibraryEntryNode[];
+  action: 'close' | 'view' | 'upload';
 }

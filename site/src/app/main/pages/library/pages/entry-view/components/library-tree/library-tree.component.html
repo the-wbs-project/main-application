@@ -12,17 +12,15 @@
       [kendoTreeListFlatBinding]="tree"
       parentIdField="treeParentId"
       idField="treeId"
-      [rowReorderable]="claims() | check : canEditClaim"
+      [rowReorderable]="true"
       [initiallyExpanded]="false"
-      [expandedKeys]="expandedKeys()"
+      [(expandedKeys)]="expandedKeys"
       [selectable]="settings"
       [navigable]="true"
       (selectionChange)="selectedTask.set($event.items[0].dataItem)"
       (rowReorder)="onRowReordered($event)"
       (cellClick)="onCellClick($event)"
-      (expand)="expand($event.dataItem.id)"
-      (collapse)="collapse($event.dataItem.id)"
-      (dblclick)="navigateToTask(selectedTask()!.id)"
+      (dblclick)="navigateToTask(selectedTask()?.id)"
     >
       @if (claims() | check : canEditClaim) {
       <kendo-treelist-rowreorder-column [width]="40" />

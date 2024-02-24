@@ -4,16 +4,15 @@ import {
   Component,
   input,
   OnInit,
-  ViewChild,
-  ViewContainerRef,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { Organization, User } from '@wbs/core/models';
-import { ContainerService, SignalStore } from '@wbs/core/services';
+import { SignalStore } from '@wbs/core/services';
 import { first, skipWhile, tap } from 'rxjs/operators';
 import { ChatWindowComponent } from './components/chat-window/chat-window.component';
 import { FooterComponent } from './components/footer.component';
@@ -35,7 +34,7 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
         [roles]="roles()"
         [activeSection]="activeSection()"
       />
-      <div #body appMainContent class="scroll pd-x-20 flex-fill">
+      <div appMainContent class="scroll pd-x-20 flex-fill">
         <router-outlet />
       </div>
       <wbs-footer />
@@ -52,11 +51,13 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
       <br />
       <h1>{{ 'General.Loading' | translate }}...</h1>
     </div>
-    }`,
+    }
+    <div kendoDialogContainer></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
   imports: [
     ChatWindowComponent,
+    DialogModule,
     FooterComponent,
     HeaderComponent,
     LoaderModule,
@@ -72,22 +73,17 @@ export class MainComponent implements AfterContentInit, OnInit {
   readonly org = input.required<Organization>();
   readonly orgs = input.required<Organization[]>();
 
-  @ViewChild('body', { static: true }) body!: ViewContainerRef;
-
   readonly loading = signal<boolean>(true);
   readonly user = input.required<User>();
   readonly isAiEnabled = this.store.select(AiState.isEnabled);
   readonly activeSection = this.store.select(UiState.activeSection);
 
   constructor(
-    private readonly container: ContainerService,
     private readonly dialog: DialogService,
     private readonly store: SignalStore
   ) {}
 
   ngAfterContentInit() {
-    this.container.register(this.body);
-
     const profile = this.store.selectSnapshot(AuthState.profile);
 
     if (!profile?.name || profile.name === profile.email) {

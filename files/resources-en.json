@@ -73,6 +73,7 @@
       "Submit": "Submit",
       "Submitting": "Submitting",
       "NoThankYou": "No Thank You",
+      "Nevermind": "Nevermind",
       "Users": "Users",
       "Members": "Members",
       "Views": "Views",
@@ -97,6 +98,8 @@
       "Cancelled": "Cancelled",
       "Remaining": "Remaining",
       "Total": "Total",
+      "Optional": "Optional",
+      "Skip": "Skip",
       "Roles": "Roles",
       "PM": "PM",
       "PM-Full": "Project Manager",
@@ -152,7 +155,8 @@
       "Video": "Video",
       "ConfirmDiscardMessage": "You have unsaved data.  Are you sure you want to discard it?",
       "ConfirmDiscardTitle": "Confirm Discard",
-      "TaskDetails": "Task Details"
+      "TaskDetails": "Task Details",
+      "ErrorNameRequired": "Error: Name is required"
     }
   },
   {
@@ -690,10 +694,14 @@
       "GettingStarted_Description": "Let's get started creating a new WBS library entry.  Please provide some of the basic information needed for a new library entry",
       "Basics_Title": "Basics",
       "Basics_Description": "Let us know the name of the WBS and what type it is. This will help us guide you through the rest of the creation.",
-      "LibraryEntryTitle": "Library Entry Title",
-      "LibraryEntryDescription": "Library Entry Description",
+      "TemplateTitle": "Library Template Title",
+      "TemplateTitleDescription": "This is the name of the template (i.e. \"Public Meeting for Water Works Projects\")",
+      "MainTaskTitle": "Main Task Title",
+      "MainTaskTitleDescription": "This is the name of the main task (i.e. \"Public Meeting\")",
+      "SameAsAbove": "Same As Above",
       "LibraryEntryTypes": "Library Entry Types",
       "LibraryEntryVisibility": "Library Entry Visibility",
+      "Visibility": "Visibility",
       "ProjectTypeDescription": "This WBS will represent an entire project.",
       "PhaseTypeDescription": "This WBS is a phase which could apply to multiple projects.",
       "TaskTypeDescription": "This WBS is a task (& subtasks) which can be used in multiple places.",

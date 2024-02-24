@@ -1,0 +1,42 @@
+<div class="mb-3">
+  <label for="templateTitle" class="form-label">
+    {{ "LibraryCreate.TemplateTitle" | translate }}
+  </label>
+  <input
+    kendoTextBox
+    name="templateTitle"
+    id="templateTitle"
+    [(ngModel)]="templateTitle"
+  />
+  <label class="d-ib tx-12 tx-italic mg-t-5">
+    {{ "LibraryCreate.TemplateTitleDescription" | translate }}
+  </label>
+</div>
+<div class="mb-3">
+  <label for="mainTaskTitle" class="form-label">
+    {{ "LibraryCreate.MainTaskTitle" | translate }}
+    <span class="mg-l-15">
+      <input
+        kendoCheckBox
+        type="checkbox"
+        id="syncTitle"
+        name="syncTitle"
+        [checked]="syncTitles()"
+        (change)="syncTitleChanged()"
+      />
+      <label class="mg-l-10 tx-normal" for="syncTitle">
+        {{ "LibraryCreate.SameAsAbove" | translate }}
+      </label>
+    </span>
+  </label>
+  <input
+    kendoTextBox
+    id="mainTaskTitle"
+    name="mainTaskTitle"
+    [disabled]="syncTitles()"
+    [(ngModel)]="syncTitles() ? templateTitle : mainTaskTitle"
+  />
+  <label class="tx-12 tx-italic mg-t-5">
+    {{ "LibraryCreate.MainTaskTitleDescription" | translate }}
+  </label>
+</div>

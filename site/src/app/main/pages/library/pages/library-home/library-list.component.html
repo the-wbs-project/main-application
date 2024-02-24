@@ -24,7 +24,23 @@
       </div>
       <div class="row mg-b-15">
         <div class="col-12">
-          <button class="btn btn-primary" (click)="create()">Create</button>
+          <kendo-dropdownbutton
+            [data]="createMenu"
+            (itemClick)="create($event.type)"
+          >
+            Create
+            <ng-template kendoDropDownButtonItemTemplate let-dataItem>
+              <div class="d-flex flex-1 flex-align-center text-start">
+                <div class="tx-18" style="flex: 0 0 100px">
+                  <fa-icon [icon]="dataItem.icon" />
+                  {{ dataItem.title | translate }}
+                </div>
+                <div class="flex-grow-1 tx-10 tx-sm-12">
+                  {{ dataItem.description | translate }}
+                </div>
+              </div>
+            </ng-template>
+          </kendo-dropdownbutton>
         </div>
       </div>
       <div class="row mg-b-15">

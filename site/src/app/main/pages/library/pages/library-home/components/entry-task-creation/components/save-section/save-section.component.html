@@ -1,0 +1,36 @@
+<table class="table table-striped table-bordered tx-12 text-start">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">
+        {{ "LibraryCreate.ReviewDetails" | translate }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="row-header tx-semi">
+        {{ "LibraryCreate.TemplateTitle" | translate }}
+      </td>
+      <td>{{ templateTitle() }}</td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi">
+        {{ "LibraryCreate.TemplateTitle" | translate }}
+      </td>
+      <td>{{ mainTaskTitle() }}</td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi">
+        {{ "LibraryCreate.Visibility" | translate }}
+      </td>
+      <td>{{ visibilityReview() }}</td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi">
+        {{ "General.Disciplines" | translate }}
+      </td>
+      <td>{{ disciplineReview() }}</td>
+    </tr>
+  </tbody>
+</table>
+<fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />

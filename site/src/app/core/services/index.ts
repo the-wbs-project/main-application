@@ -1,6 +1,5 @@
 export * from './app-config.service';
 export * from './app-initializer.service';
-export * from './container.service';
 export * from './http-interceptor';
 export * from './id.service';
 export * from './logger.service';
