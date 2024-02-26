@@ -25,7 +25,10 @@
         {{ cat.text }}
       </div>
       <div class="flex-grow-1 text-end tx-10">
-        <wbs-category-match-list [categories]="phases" [(value)]="cat.sameAs" />
+        <wbs-category-match-list
+          [categories]="phases()"
+          [(value)]="cat.sameAs"
+        />
       </div>
       } @else {
       <div style="font-size: 12px">

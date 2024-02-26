@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
 import { ListItem } from '@wbs/core/models';
@@ -16,9 +16,8 @@ import { ProjectCreateState } from '../../states';
   imports: [ProjectCategoryListComponent, WizardFooterComponent],
 })
 export class CategoriesComponent {
-  @Input() org!: string;
-  @Input() categories!: ListItem[];
-
+  readonly org = input.required<string>();
+  readonly categories = input.required<ListItem[]>();
   readonly selected = toSignal(this.store.select(ProjectCreateState.category));
 
   constructor(
@@ -27,11 +26,11 @@ export class CategoriesComponent {
   ) {}
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.BASICS);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.BASICS);
   }
 
   continue(category: string): void {
     this.store.dispatch(new CategoryChosen(category));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.PHASES);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.PHASES);
   }
 }

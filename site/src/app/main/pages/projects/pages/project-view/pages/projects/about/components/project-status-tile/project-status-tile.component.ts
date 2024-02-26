@@ -1,7 +1,7 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { Project } from '@wbs/core/models';
-import { ProjectStatusTileIconComponent } from '../project-status-tile-icon/project-status-tile-icon.component';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { Project } from '@wbs/core/models';
+import { ProjectStatusTileIconComponent } from '../project-status-tile-icon';
 
 @Component({
   standalone: true,
@@ -11,6 +11,6 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [ProjectStatusTileIconComponent, TranslateModule],
 })
 export class ProjectStatusTileComponent {
-  @Input({ required: true }) approvalEnabled!: boolean;
-  @Input({ required: true }) project!: Project;
+  readonly approvalEnabled = input.required<boolean>();
+  readonly project = input.required<Project>();
 }

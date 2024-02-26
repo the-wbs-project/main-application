@@ -1,15 +1,15 @@
-@if (noUsersLabel && users.length === 0) {
+@if (noUsersLabel() && (sortedUsers()).length === 0) {
 <div class="w-100 tx-center tx-italic tx-danger">
-  {{ noUsersLabel | translate }}
+  {{ noUsersLabel()! | translate }}
 </div>
-} @else { @for (user of users | userSort; track user.id) {
+} @else { @for (user of sortedUsers(); track user.id) {
 <div class="d-flex w-100">
   <div class="flex-grow-1">
     {{ user.name }}
   </div>
   <div class="wd-20 tx-center">
     <a class="pointer" (click)="selected.emit(user)">
-      <kendo-svg-icon [icon]="icon" size="small" />
+      <kendo-svg-icon [icon]="icon()" size="small" />
     </a>
   </div>
 </div>

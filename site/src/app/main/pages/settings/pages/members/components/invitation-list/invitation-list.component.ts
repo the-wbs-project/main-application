@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  OnChanges,
-  Output,
+  effect,
+  input,
+  model,
   signal,
 } from '@angular/core';
 import { faGear, faX } from '@fortawesome/pro-solid-svg-icons';
@@ -42,13 +41,11 @@ import { IsExpiredPipe } from './is-expired.pipe';
     TranslateModule,
   ],
 })
-export class InvitationListComponent implements OnChanges {
-  @Input({ required: true }) invites!: InviteViewModel[];
-  @Input({ required: true }) org!: string;
-  @Input() filteredRoles: string[] = [];
-  @Input() textFilter = '';
-  @Output() readonly invitesChanged = new EventEmitter<InviteViewModel[]>();
-
+export class InvitationListComponent {
+  readonly invites = model.required<InviteViewModel[]>();
+  readonly org = input.required<string>();
+  readonly filteredRoles = input<string[]>([]);
+  readonly textFilter = input<string>('');
   readonly state = signal(<State>{
     sort: [{ field: 'name', dir: 'asc' }],
   });
@@ -61,10 +58,8 @@ export class InvitationListComponent implements OnChanges {
     },
   ];
 
-  constructor(private readonly uiService: MembershipAdminUiService) {}
-
-  ngOnChanges(): void {
-    this.updateState();
+  constructor(private readonly uiService: MembershipAdminUiService) {
+    effect(() => this.updateState(this.textFilter(), this.filteredRoles()));
   }
 
   userActionClicked(invite: InviteViewModel, action: string): void {
@@ -73,36 +68,36 @@ export class InvitationListComponent implements OnChanges {
     }
   }
 
-  updateState(): void {
+  updateState(textFilter: string, filteredRoles: string[]): void {
     const state = <State>{
       sort: this.state().sort,
     };
     const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
 
-    if (this.textFilter) {
+    if (textFilter) {
       filters.push(<CompositeFilterDescriptor>{
         logic: 'or',
         filters: [
           {
             field: 'inviter',
             operator: 'contains',
-            value: this.textFilter,
+            value: textFilter,
           },
           {
             field: 'invitee',
             operator: 'contains',
-            value: this.textFilter,
+            value: textFilter,
           },
         ],
       });
     }
-    if (this.filteredRoles.length > 0) {
+    if (filteredRoles.length > 0) {
       const roleFilter: CompositeFilterDescriptor = {
         logic: 'or',
         filters: [],
       };
 
-      for (const role of this.filteredRoles) {
+      for (const role of filteredRoles) {
         roleFilter.filters.push({
           field: 'roleList',
           operator: 'contains',
@@ -120,14 +115,15 @@ export class InvitationListComponent implements OnChanges {
 
   private openCancelDialog(invite: InviteViewModel): void {
     this.uiService
-      .openCancelInviteDialog(this.org, invite.id)
+      .openCancelInviteDialog(this.org(), invite.id)
       .subscribe((answer) => {
         if (!answer) return;
 
-        const index = this.invites.findIndex((i) => i.id === invite.id);
-        this.invites.splice(index, 1);
-
-        this.invitesChanged.emit(this.invites);
+        this.invites.update((invites) => {
+          const index = invites.findIndex((i) => i.id === invite.id);
+          invites.splice(index, 1);
+          return invites;
+        });
       });
   }
 }

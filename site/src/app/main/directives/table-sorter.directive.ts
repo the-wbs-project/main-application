@@ -1,4 +1,4 @@
-import { Directive, Input } from '@angular/core';
+import { Directive, input } from '@angular/core';
 import { State } from '@progress/kendo-data-query';
 import { TableHelper } from '../services';
 
@@ -13,12 +13,12 @@ import { TableHelper } from '../services';
   providers: [TableHelper],
 })
 export class SortableDirective {
-  @Input() state!: State;
-  @Input() sortable!: string;
+  readonly state = input.required<State>();
+  readonly sortable = input.required<string>();
 
   constructor(private readonly service: TableHelper) {}
 
   rotate() {
-    this.service.sort(this.state, this.sortable);
+    this.service.sort(this.state(), this.sortable());
   }
 }

@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
   OnChanges,
-  Output,
+  input,
+  model,
   signal,
 } from '@angular/core';
 import {
@@ -20,6 +19,7 @@ import {
   State,
 } from '@progress/kendo-data-query';
 import { Member, Role } from '@wbs/core/models';
+import { MemberViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
@@ -28,7 +28,6 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
 import { MembershipAdminUiService } from '../../services';
-import { MemberViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -47,13 +46,11 @@ import { MemberViewModel } from '@wbs/core/view-models';
   ],
 })
 export class MemberListComponent implements OnChanges {
-  @Input({ required: true }) members!: MemberViewModel[];
-  @Input({ required: true }) org!: string;
-  @Input({ required: true }) roles!: Role[];
-  @Input() filteredRoles: string[] = [];
-  @Input() textFilter = '';
-  @Output() readonly membersChanged = new EventEmitter<MemberViewModel[]>();
-
+  readonly members = model.required<MemberViewModel[]>();
+  readonly org = input.required<string>();
+  readonly roles = input.required<Role[]>();
+  readonly filteredRoles = input<string[]>([]);
+  readonly textFilter = input<string>('');
   readonly state = signal(<State>{
     sort: [{ field: 'lastLogin', dir: 'desc' }],
   });
@@ -115,7 +112,7 @@ export class MemberListComponent implements OnChanges {
         filters: [],
       };
 
-      for (const role of this.filteredRoles) {
+      for (const role of this.filteredRoles()) {
         roleFilter.filters.push({
           field: 'roleList',
           operator: 'contains',
@@ -134,27 +131,29 @@ export class MemberListComponent implements OnChanges {
 
   private openEditDialog(member: MemberViewModel): void {
     this.uiService
-      .openEditMemberDialog(this.org, member, this.roles)
+      .openEditMemberDialog(this.org(), member, this.roles())
       .subscribe((changedMember) => {
         if (!changedMember) return;
 
-        const index = this.members.findIndex((m) => m.id === member.id);
-        this.members[index] = changedMember;
-
-        this.membersChanged.emit(this.members);
+        this.members.update((members) => {
+          const index = members.findIndex((m) => m.id === member.id);
+          members[index] = changedMember;
+          return members;
+        });
       });
   }
 
   private openRemoveDialog(member: Member): void {
     this.uiService
-      .openRemoveMemberDialog(this.org, member.id)
+      .openRemoveMemberDialog(this.org(), member.id)
       .subscribe((answer) => {
         if (!answer) return;
 
-        const index = this.members.findIndex((m) => m.id === member.id);
-        this.members.splice(index, 1);
-
-        this.membersChanged.emit(this.members);
+        this.members.update((members) => {
+          const index = members.findIndex((m) => m.id === member.id);
+          members.splice(index, 1);
+          return members;
+        });
       });
   }
 }

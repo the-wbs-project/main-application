@@ -1,8 +1,8 @@
 <div ngbAccordion class="checklist-accordion">
-  @for (group of checklist; track $index) {
+  @for (group of checklist(); track $index) {
   <div
     ngbAccordionItem
-    [collapsed]="!expandIfFailed || group.result !== 'fail'"
+    [collapsed]="!expandIfFailed() || group.result !== 'fail'"
   >
     <h2 ngbAccordionHeader>
       <button ngbAccordionButton>

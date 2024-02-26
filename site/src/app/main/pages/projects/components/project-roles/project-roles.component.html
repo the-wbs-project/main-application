@@ -6,7 +6,7 @@
           <td class="wd-200 border border-dark tx-center pd-5">
             {{ "General.PMs-Full" | translate }}
           </td>
-          @if (approvalEnabled) {
+          @if (approvalEnabled()) {
           <td class="wd-200 border border-dark tx-center pd-5">
             {{ "General.Approvers-Full" | translate }}
           </td>
@@ -24,16 +24,16 @@
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="minusIcon"
-              [users]="pms().assigned"
+              [users]="pms()?.assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles()!.pm, $event)"
             />
           </td>
-          @if (approvalEnabled) {
+          @if (approvalEnabled()) {
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="minusIcon"
-              [users]="approvers().assigned"
+              [users]="approvers()?.assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles()!.approver, $event)"
             />
@@ -42,7 +42,7 @@
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="minusIcon"
-              [users]="smes().assigned"
+              [users]="smes()?.assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles()!.sme, $event)"
             />
@@ -57,15 +57,15 @@
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
-              [users]="pms().unassigned"
+              [users]="pms()?.unassigned"
               (selected)="add(roles()!.pm, $event)"
             />
           </td>
-          @if (approvalEnabled) {
+          @if (approvalEnabled()) {
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
-              [users]="approvers().unassigned"
+              [users]="approvers()?.unassigned"
               (selected)="add(roles()!.approver, $event)"
             />
           </td>
@@ -73,7 +73,7 @@
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
-              [users]="smes().unassigned"
+              [users]="smes()?.unassigned"
               (selected)="add(roles()!.sme, $event)"
             />
           </td>

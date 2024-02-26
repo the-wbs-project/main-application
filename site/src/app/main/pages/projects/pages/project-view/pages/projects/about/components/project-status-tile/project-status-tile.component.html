@@ -1,10 +1,11 @@
+@if (project(); as project) { @if (project.status; as status) {
 <div>
   <span class="d-ib wd-30">
     <wbs-project-status-tile-icon
       [status]="
-        project.status === 'cancelled'
+        status === 'cancelled'
           ? 'unstarted'
-          : project.status === 'planning'
+          : status === 'planning'
           ? 'in-progress'
           : 'completed'
       "
@@ -13,16 +14,16 @@
   {{ "Projects.PlanningPhase" | translate }}
 </div>
 <div class="wd-20 ht-20 tx-center rotate-90">...</div>
-@if (approvalEnabled) {
+@if (approvalEnabled()) {
 <div>
   <span class="d-ib wd-30">
     <wbs-project-status-tile-icon
       [status]="
         !project.approvalStarted
           ? 'unstarted'
-          : project.status === 'approval'
+          : status === 'approval'
           ? 'in-progress'
-          : project.status === 'planning'
+          : status === 'planning'
           ? 'rejected'
           : 'completed'
       "
@@ -36,9 +37,9 @@
   <span class="d-ib wd-30">
     <wbs-project-status-tile-icon
       [status]="
-        project.status === 'execution'
+        status === 'execution'
           ? 'in-progress'
-          : project.status === 'planning' || project.status === 'approval'
+          : status === 'planning' || status === 'approval'
           ? 'unstarted'
           : 'completed'
       "
@@ -53,7 +54,7 @@
   </span>
   {{ "Projects.ReviewPhase" | translate }}
 </div>
-@if (project.status === 'cancelled') {
+@if (status === 'cancelled') {
 <div class="wd-30 ht-20 tx-center rotate-90">...</div>
 <div>
   <span class="d-ib wd-30">
@@ -61,4 +62,4 @@
   </span>
   {{ "Projects.ProjectCancelled" | translate }}
 </div>
-}
+} }}

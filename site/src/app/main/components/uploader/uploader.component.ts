@@ -3,9 +3,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
   ViewEncapsulation,
+  input,
 } from '@angular/core';
 import { FileInfo, FileSelectModule } from '@progress/kendo-angular-upload';
 
@@ -19,7 +19,8 @@ import { FileInfo, FileSelectModule } from '@progress/kendo-angular-upload';
   styles: ['.k-dropzone-inner { background-color: #c8dadf; }'],
 })
 export class UploaderComponent {
-  @Input() zoneMessage?: string;
+  readonly zoneMessage = input<string | undefined>();
+
   @Output() readonly removed = new EventEmitter<void>();
   @Output() readonly uploaded = new EventEmitter<FileInfo>();
 }

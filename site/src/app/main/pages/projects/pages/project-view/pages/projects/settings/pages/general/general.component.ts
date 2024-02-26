@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  input,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -28,8 +33,7 @@ import { ProjectState } from '../../../../../states';
   ],
 })
 export class ProjectSettingsGeneralComponent implements DirtyComponent {
-  @Input() readonly categories!: ListItem[];
-
+  readonly categories = input.required<ListItem[]>();
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>(''),

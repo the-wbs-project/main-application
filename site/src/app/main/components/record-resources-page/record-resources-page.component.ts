@@ -4,13 +4,18 @@ import {
   EventEmitter,
   Output,
   input,
+  model,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
-import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -22,8 +27,8 @@ import { Messages } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { RecordResourceValidation } from '@wbs/main/services';
-import { RecordResourceEditorComponent } from './components/record-resources-editor/record-resource-editor.component';
-import { RecordResourceListComponent } from './components/record-resources-list/record-resource-list.component';
+import { RecordResourceEditorComponent } from './components/record-resources-editor';
+import { RecordResourceListComponent } from './components/record-resources-list';
 
 @Component({
   standalone: true,
@@ -32,6 +37,7 @@ import { RecordResourceListComponent } from './components/record-resources-list/
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckPipe,
+    DialogModule,
     FontAwesomeModule,
     RecordResourceEditorComponent,
     RecordResourceListComponent,
@@ -53,16 +59,16 @@ export class RecordResourcesPageComponent {
   readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
 
-  private modal?: NgbModalRef;
+  private modal?: DialogRef;
 
   readonly faPlus = faPlus;
   readonly addClaim = PROJECT_CLAIMS.RESOURCES.CREATE;
-  readonly vm = signal<RecordResourceViewModel | undefined>(undefined);
+  readonly vm = model<RecordResourceViewModel | undefined>(undefined);
 
   constructor(
     private readonly data: DataServiceFactory,
+    private readonly dialogService: DialogService,
     private readonly messages: Messages,
-    private readonly modalService: NgbModal,
     private readonly validator: RecordResourceValidation
   ) {}
 
@@ -73,9 +79,8 @@ export class RecordResourcesPageComponent {
       url: '',
       errors: {},
     });
-    this.modal = this.modalService.open(content, {
-      fullscreen: true,
-      modalDialogClass: 'modal-almost-fullscreen',
+    this.modal = this.dialogService.open({
+      content,
     });
   }
 
@@ -109,35 +114,9 @@ export class RecordResourcesPageComponent {
     }
 
     this.modal?.close();
-    /*
-    this.messages.block.show('.resource-editor', 'General.Saving');
-
-    obs.subscribe(() => {
-      this.messages.block.cancel('.resource-editor');
-      this.modal?.close();
-      this.messages.notify.success('Resources.ResourceSaved');
-    });*/
   }
 
   /*
-  saveReordered(records: ResourceRecord[]): void {
-    let obs: Observable<void>[] = [];
-
-    for (const record of records) {
-      obs.push(
-        this.data.projectResources.putAsync(
-          this.owner(),
-          this.projectId(),
-          this.taskId(),
-          record
-        )
-      );
-    }
-    forkJoin(obs).subscribe(() =>
-      this.messages.notify.success('Resources.ResourceSaved')
-    );
-  }
-
   private uploadAndSave(
     rawFile: FileInfo,
     data: Partial<ResourceRecord>

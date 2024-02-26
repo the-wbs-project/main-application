@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   ViewEncapsulation,
+  input,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { CategorySelection } from '@wbs/core/view-models';
@@ -26,8 +27,7 @@ import { ProjectCreateState } from '../../states';
   providers: [CategorySelectionService],
 })
 export class PhaseComponent implements OnInit {
-  @Input() org!: string;
-
+  readonly org = input.required<string>();
   categories?: CategorySelection[];
 
   constructor(
@@ -44,7 +44,7 @@ export class PhaseComponent implements OnInit {
   }
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.CATEGORY);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.CATEGORY);
   }
 
   continue(): void {
@@ -53,7 +53,7 @@ export class PhaseComponent implements OnInit {
     if (phases.length === 0) return;
 
     this.store.dispatch(new PhasesChosen(phases));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.DISCIPLINES);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.DISCIPLINES);
   }
 
   disable(categories: CategorySelection[] | undefined): boolean {

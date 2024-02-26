@@ -1,44 +1,26 @@
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
   Output,
-  ViewChild,
-  ViewEncapsulation,
+  inject,
+  model,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faBars,
-  faEye,
-  faEyeSlash,
-  faFloppyDisk,
-  faPlus,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faBars, faFloppyDisk, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import {
-  ListViewComponent,
-  ListViewModule,
-} from '@progress/kendo-angular-listview';
-import {
-  DragAndDropModule,
-  DragTargetContainerDirective,
-  DropTargetContainerDirective,
-  DropTargetEvent,
-} from '@progress/kendo-angular-utils';
+  DialogCloseResult,
+  DialogModule,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import {
-  CategorySelectionService,
-  DialogService,
-  DragDropService,
-} from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
-import { ListItemDialogComponent } from '../list-item-dialog/list-item-dialog.component';
+import { CategorySelectionService, DragDropService } from '@wbs/main/services';
+import { filter, map } from 'rxjs/operators';
+import { ListItemDialogComponent } from '../list-item-dialog';
 import { SwitchComponent } from '../switch';
 
 @Component({
@@ -46,65 +28,57 @@ import { SwitchComponent } from '../switch';
   selector: 'wbs-phase-editor',
   templateUrl: './phase-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   providers: [CategorySelectionService, DialogService, DragDropService],
   imports: [
-    DragAndDropModule,
+    DialogModule,
+    DragDropModule,
     FontAwesomeModule,
-    ListViewModule,
     NgClass,
     TranslateModule,
     SwitchComponent,
   ],
 })
 export class PhaseEditorComponent {
-  @Input({ required: true }) categories!: CategorySelection[];
-  @Input() showButtons = true;
-  @Input() showSave = false;
   @Output() readonly saveClicked = new EventEmitter<void>();
-  @Output() readonly categoriesChange = new EventEmitter<CategorySelection[]>();
 
-  @ViewChild(ListViewComponent) listview!: ListViewComponent;
-  @ViewChild('wrapper', { read: DragTargetContainerDirective })
-  dragTargetContainer: any;
-  @ViewChild('wrapper', { read: DropTargetContainerDirective })
-  dropTargetContainer: any;
+  private readonly catService = inject(CategorySelectionService);
+  private readonly dialogService = inject(DialogService);
 
   readonly faBars = faBars;
-  readonly faEye = faEye;
-  readonly faEyeSlash = faEyeSlash;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faPlus = faPlus;
-  readonly isMobile = toSignal(this.store.select(UiState.isMobile));
+  readonly categories = model.required<CategorySelection[]>();
+  readonly showButtons = model<boolean>(true);
+  readonly showSave = model<boolean>(false);
 
-  flip = false;
+  onDrop({ previousIndex, currentIndex }: CdkDragDrop<any, any>): void {
+    this.categories.update((list) => {
+      if (list === undefined) list = [];
 
-  constructor(
-    readonly dragDrop: DragDropService,
-    private readonly cd: ChangeDetectorRef,
-    private readonly catService: CategorySelectionService,
-    private readonly dialogService: DialogService,
-    private readonly store: Store
-  ) {}
+      const toMove = list[previousIndex];
 
-  changed(): void {
-    this.rebuild();
-  }
+      list.splice(previousIndex, 1);
+      list.splice(currentIndex, 0, toMove);
 
-  onDrop(e: DropTargetEvent): void {
-    this.dragDrop.onDrop(e, this.categories);
+      this.catService.renumber(list);
 
-    this.rebuild();
-
-    this.dragTargetContainer.notify();
-    this.dropTargetContainer.notify();
+      return list;
+    });
   }
 
   showCreate() {
-    this.dialogService
-      .openDialog<[string, string] | null>(ListItemDialogComponent, {
-        scrollable: true,
-      })
+    const dialogRef = this.dialogService.open({
+      content: ListItemDialogComponent,
+    });
+
+    (<ListItemDialogComponent>dialogRef.content.instance).showDescription.set(
+      false
+    );
+    dialogRef.result
+      .pipe(
+        filter((x) => !(x instanceof DialogCloseResult)),
+        map((x) => <[string, string]>x)
+      )
       .subscribe((result) => {
         if (result == null) return;
 
@@ -116,18 +90,18 @@ export class PhaseEditorComponent {
           number: null,
           selected: true,
         };
-        this.categories = [item, ...this.categories!];
-
-        this.rebuild();
+        this.categories.update((list) => {
+          list = [item, ...(list ?? [])];
+          this.catService.renumber(list);
+          return list;
+        });
       });
   }
 
-  rebuild() {
-    this.catService.renumber(this.categories!);
-
-    this.categories = [...this.categories!];
-
-    this.categoriesChange.emit(this.categories!);
-    this.cd.detectChanges();
+  rebuild(): void {
+    this.categories.update((list) => {
+      this.catService.renumber(list);
+      return list;
+    });
   }
 }

@@ -1,9 +1,18 @@
-import { AsyncPipe, NgIf } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { AsyncPipe } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  inject,
+  input,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEye } from '@fortawesome/pro-solid-svg-icons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import {
   PDFViewerModule,
   PDFViewerTool,
@@ -11,6 +20,7 @@ import {
 import { ResourceRecord } from '@wbs/core/models';
 import { YouTubeSizerDirective } from '../../directives/youtube-sizer.directive';
 import { ResourceObjectPipe } from '../../pipes/resource-object.pipe';
+import { ResourceImagePipe } from '../../pipes/resource-image.pipe';
 
 @Component({
   standalone: true,
@@ -19,17 +29,21 @@ import { ResourceObjectPipe } from '../../pipes/resource-object.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
+    DialogModule,
     FontAwesomeModule,
-    NgIf,
     PDFViewerModule,
     ResourceObjectPipe,
+    ResourceImagePipe,
     TranslateModule,
     YouTubeSizerDirective,
   ],
 })
 export class ResourceViewLinkComponent {
-  @Input({ required: true }) owner!: string;
-  @Input({ required: true }) record!: ResourceRecord;
+  private readonly dialogService = inject(DialogService);
+  private dialog?: DialogRef;
+
+  readonly owner = input.required<string>();
+  readonly record = input.required<ResourceRecord>();
 
   readonly faEye = faEye;
   readonly tools: PDFViewerTool[] = [
@@ -44,13 +58,13 @@ export class ResourceViewLinkComponent {
     'print',
   ];
 
-  constructor(private modalService: NgbModal) {}
-
   open(content: any) {
-    this.modalService.open(content, {
-      fullscreen: true,
-      ariaLabelledBy: 'modal-basic-title',
-      modalDialogClass: 'modal-almost-fullscreen',
+    this.dialog = this.dialogService.open({
+      content,
     });
+  }
+
+  close() {
+    this.dialog?.close();
   }
 }

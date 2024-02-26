@@ -1,12 +1,10 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
-import { Resources } from '@wbs/core/services';
+import { Resources, SignalStore } from '@wbs/core/services';
 import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
 import { CategoryMatchListComponent } from '../../../../../../../components/category-match-list.component';
 import { PhasesCompleted } from '../../actions';
@@ -26,18 +24,15 @@ import { ProjectUploadState } from '../../states';
   ],
 })
 export class PhaseViewComponent {
-  @Input() phases!: { id: string; label: string }[];
-
   readonly faCircle = faCircle;
   readonly faList = faList;
-  readonly phaseList = toSignal(
-    this.store.select(ProjectUploadState.phaseList)
-  );
-  readonly project = toSignal(this.store.select(ProjectUploadState.current));
+  readonly phases = input.required<{ id: string; label: string }[]>();
+  readonly phaseList = this.store.select(ProjectUploadState.phaseList);
+  readonly project = this.store.select(ProjectUploadState.current);
 
   constructor(
     private readonly resources: Resources,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {}
 
   nav(results: PhaseListItem[]): void {

@@ -5,10 +5,10 @@
     >
       <div class="card border-1 bd-primary">
         <div *ngIf="mode() === 'description'" class="card-body">
-          <p *ngIf="reasonCode === 'other'">
+          <p *ngIf="reasonCode() === 'other'">
             {{ "ProjectUpload.TicketOtherMessage" | translate }}
           </p>
-          <p *ngIf="reasonCode === 'error'">
+          <p *ngIf="reasonCode() === 'error'">
             {{ "ProjectUpload.TicketErrormessage" | translate }}
           </p>
           <div class="mg-t-15 mg-b-5">

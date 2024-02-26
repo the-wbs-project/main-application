@@ -1,18 +1,16 @@
 import { NgClass, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
+import { SignalStore } from '@wbs/core/services';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { map } from 'rxjs/operators';
 import { ApprovalBadgeComponent } from '../../../components/approval-badge.component';
 import { DisciplineListComponent } from '../../../components/discipline-list.component';
-import { ProjectChecklistComponent } from '../../../components/project-checklist/project-checklist.component';
+import { ProjectChecklistComponent } from '../../../components/project-checklist';
 import {
   ProjectApprovalState,
   ProjectChecklistState,
@@ -45,23 +43,15 @@ import { ProjectStatusTileComponent } from './components/project-status-tile/pro
   ],
 })
 export class ProjectAboutPageComponent {
-  private readonly store = inject(Store);
+  private readonly store = inject(SignalStore);
 
-  readonly project = toSignal(
-    this.store.select(ProjectState.current).pipe(map((p) => p!))
-  );
-  readonly approvalEnabled = toSignal(
-    this.store.select(ProjectApprovalState.enabled)
-  );
-  readonly taskCount = toSignal(this.store.select(TasksState.taskCount));
-  readonly users = toSignal(this.store.select(ProjectState.users));
-  readonly checklist = toSignal(
-    this.store.select(ProjectChecklistState.results)
-  );
-  readonly approvalStats = toSignal(
-    this.store.select(ProjectApprovalState.stats)
-  );
-  readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
+  readonly project = this.store.select(ProjectState.current);
+  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  readonly taskCount = this.store.select(TasksState.taskCount);
+  readonly users = this.store.select(ProjectState.users);
+  readonly checklist = this.store.select(ProjectChecklistState.results);
+  readonly approvalStats = this.store.select(ProjectApprovalState.stats);
+  readonly approvals = this.store.select(ProjectApprovalState.list);
 
   test(): void {
     console.log('testing 1243');

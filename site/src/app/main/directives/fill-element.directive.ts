@@ -3,15 +3,15 @@ import {
   Directive,
   ElementRef,
   HostListener,
-  Input,
+  input,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { UiState } from '../states';
 
 @Directive({ selector: '[appFillElement]', standalone: true })
 export class FillElementDirective implements AfterViewChecked {
-  @Input() paddingBottom = 0;
-  @Input() changeDelay = 0;
+  readonly paddingBottom = input<number>(0);
+  readonly changeDelay = input<number>(0);
 
   private readonly footerHeight = 40;
   private readonly elem: HTMLElement;
@@ -44,9 +44,9 @@ export class FillElementDirective implements AfterViewChecked {
       const pos = this.cumulativeOffset();
 
       this.elem.style.height = `${
-        window.innerHeight - pos.top - this.paddingBottom - this.footerHeight
+        window.innerHeight - pos.top - this.paddingBottom() - this.footerHeight
       }px`;
-    }, this.changeDelay);
+    }, this.changeDelay());
   }
 
   private cumulativeOffset(): Position {

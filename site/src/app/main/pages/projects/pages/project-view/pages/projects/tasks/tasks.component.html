@@ -25,11 +25,11 @@
   </div>
 </div>
 <div class="pd-15">
-  @if (view() === 'phases') {
-  <wbs-project-phase-tree [claims]="claims" [project]="project()" />
+  @if (project(); as project) { @if (view() === 'phases') {
+  <wbs-project-phase-tree [claims]="claims()" [project]="project" />
   } @else if (view() === 'disciplines') {
-  <wbs-project-discipline-tree [project]="project()" />
-  }
+  <wbs-project-discipline-tree [project]="project" />
+  } }
 </div>
 
 <wbs-task-modal />

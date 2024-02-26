@@ -1,16 +1,6 @@
-<div
-  #wrapper
-  kendoDragTargetContainer
-  kendoDropTargetContainer
-  dragTargetFilter=".k-master-row, .k-listview-item"
-  dropTargetFilter=".k-master-row, .k-listview-item"
-  [dragData]="dragDrop.dragData"
-  [hint]="{ hintClass: 'row-hint' }"
-  (onDrop)="onDrop($event)"
-  dragHandle=".k-i-reorder"
->
+<div cdkDropList (cdkDropListDropped)="onDrop($event)">
   <div class="rr-item rr-list-header">
-    @if (claims | check : editClaim) {
+    @if (claims() | check : editClaim) {
     <div class="reorder-item">&nbsp;</div>
     }
     <div class="type-item">{{ "General.Type" | translate }} &nbsp;</div>
@@ -20,43 +10,35 @@
       {{ "General.LastModified" | translate }}
     </div>
     <div class="view-item">&nbsp;</div>
-    @if (claims | check : [editClaim, deleteClaim]) {
+    @if (claims() | check : [editClaim, deleteClaim]) {
     <div class="actions-item">&nbsp;</div>
     }
   </div>
-  <kendo-listview
-    [data]="list"
-    itemClass="rr-item rr-list-item"
-    data-kendo-listview-index="0"
-  >
-    <ng-template
-      kendoListViewItemTemplate
-      let-dataItem="dataItem"
-      let-index="index"
-    >
-      @if (claims | check : editClaim) {
-      <div class="reorder-item">
-        <span class="k-i-reorder">
-          <fa-icon [icon]="faBars" />
-        </span>
-      </div>
-      }
-      <div class="type-item">
-        <wbs-resource-type-text [type]="dataItem.type" />
-      </div>
-      <div class="name-item">{{ dataItem.name }}</div>
-      <div class="description-item">{{ dataItem.description }}</div>
-      <div class="modified-item">{{ dataItem.lastModified | dateText }}</div>
-      <div class="view-item">
-        <wbs-resource-view-link [owner]="owner" [record]="dataItem" />
-      </div>
-      @if (claims | check : [editClaim, deleteClaim]) {
-      <div class="actions-item">
-        <a class="pointer text-decoration-none tx-black">
-          <fa-icon [icon]="faGear" />
-        </a>
-      </div>
-      }
-    </ng-template>
-  </kendo-listview>
+  @for (dataItem of list(); track dataItem.id) {
+  <div class="rr-item rr-list-item" cdkDrag>
+    @if (claims() | check : editClaim) {
+    <div class="reorder-item">
+      <span cdkDragHandle style="cursor: grab">
+        <fa-icon [icon]="faBars" />
+      </span>
+    </div>
+    }
+    <div class="type-item">
+      <wbs-resource-type-text [type]="dataItem.type" />
+    </div>
+    <div class="name-item">{{ dataItem.name }}</div>
+    <div class="description-item">{{ dataItem.description }}</div>
+    <div class="modified-item">{{ dataItem.lastModified | dateText }}</div>
+    <div class="view-item">
+      <wbs-resource-view-link [owner]="owner()" [record]="dataItem" />
+    </div>
+    @if (claims() | check : [editClaim, deleteClaim]) {
+    <div class="actions-item">
+      <a class="pointer text-decoration-none tx-black">
+        <fa-icon [icon]="faGear" />
+      </a>
+    </div>
+    }
+  </div>
+  }
 </div>

@@ -1,4 +1,9 @@
-<label [class]="'switch switch-' + size">
-  <input #cb type="checkbox" [checked]="value" (change)="changed($event, cb)" />
+<label [class]="'switch switch-' + size()">
+  <input
+    #cb
+    type="checkbox"
+    [checked]="value()"
+    (change)="changed($event, cb)"
+  />
   <span class="slider round"></span>
 </label>

@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Input,
-  Output,
   ViewEncapsulation,
+  input,
+  model,
 } from '@angular/core';
 import { Messages } from '@wbs/core/services';
 import { first } from 'rxjs/operators';
@@ -18,26 +17,28 @@ import { first } from 'rxjs/operators';
   encapsulation: ViewEncapsulation.None,
 })
 export class SwitchComponent {
-  @Input({ required: true }) value!: boolean;
-  @Input() size: 'lg' | 'sm' = 'lg';
-  @Input() confirmMessage?: string;
-  @Input() confirmData?: Record<string, string>;
-  @Output() valueChange = new EventEmitter<boolean>();
+  readonly value = model.required<boolean>();
+  readonly size = input<'lg' | 'sm'>('lg');
+  readonly confirmMessage = input<string>();
+  readonly confirmData = input<Record<string, string>>();
 
   constructor(private readonly messages: Messages) {}
 
   changed(e: Event, cb: HTMLInputElement): void {
-    if (!this.confirmMessage || cb.checked) {
-      this.valueChange.emit(cb.checked);
+    const confirmMessage = this.confirmMessage();
+    const confirmData = this.confirmData();
+
+    if (!confirmMessage || cb.checked) {
+      this.value.set(cb.checked);
       return;
     }
 
     this.messages.confirm
-      .show('General.Confirmation', this.confirmMessage, this.confirmData)
+      .show('General.Confirmation', confirmMessage, confirmData)
       .pipe(first())
       .subscribe((answer) => {
         if (answer) {
-          this.valueChange.emit(cb.checked);
+          this.value.set(cb.checked);
         } else {
           e.preventDefault();
           cb.checked = !cb.checked;

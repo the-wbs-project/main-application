@@ -2,9 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   OnInit,
   Output,
+  input,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,13 +21,14 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
   imports: [MultiSelectModule, RoleListPipe, TranslateModule],
 })
 export class RoleFilterListComponent implements OnInit {
-  @Input({ required: true }) roles!: Role[];
+  readonly roles = input.required<Role[]>();
+
   @Output() readonly valueChanged = new EventEmitter<string[]>();
 
   readonly values = signal<Role[]>([]);
 
   ngOnInit(): void {
-    this.values.set(structuredClone(this.roles));
+    this.values.set(structuredClone(this.roles()));
   }
 
   onlyRole(e: Event, role: Role): void {

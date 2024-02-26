@@ -2,7 +2,7 @@ import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
+  input,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -20,8 +20,7 @@ import { ProjectUploadState } from '../../states';
   imports: [LoaderModule, NgIf, RouterModule, TextAreaModule, TranslateModule],
 })
 export class TicketViewComponent {
-  @Input() reasonCode!: string;
-
+  readonly reasonCode = input<string>();
   readonly sending = signal<boolean>(false);
   readonly mode = signal<'description' | 'thank-you'>('description');
   readonly project = this.store.selectSnapshot(ProjectUploadState.current)!;

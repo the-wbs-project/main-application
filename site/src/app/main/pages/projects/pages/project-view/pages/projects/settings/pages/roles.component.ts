@@ -1,18 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   OnInit,
   computed,
+  input,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Project, ROLES, Role } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
 import { RoleState } from '@wbs/main/states';
 import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
@@ -48,17 +47,14 @@ import { ProjectApprovalState, ProjectState } from '../../../../states';
   imports: [FontAwesomeModule, ProjectRolesComponent, TranslateModule],
 })
 export class ProjectSettingsRolesComponent implements OnInit {
-  @Input() org!: string;
-
-  private readonly project = toSignal(this.store.select(ProjectState.current));
-  private readonly roleIds = toSignal(this.store.select(RoleState.definitions));
+  private readonly project = this.store.select(ProjectState.current);
+  private readonly roleIds = this.store.select(RoleState.definitions);
 
   readonly faSpinner = faSpinner;
   readonly isLoading = signal<boolean>(true);
   readonly members = signal<Member[]>([]);
-  readonly approvalEnabled = toSignal(
-    this.store.select(ProjectApprovalState.enabled)
-  );
+  readonly org = input.required<string>();
+  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly approverIds = computed(() =>
     this.getUserIds(ROLES.APPROVER, this.roleIds(), this.project())
   );
@@ -71,11 +67,11 @@ export class ProjectSettingsRolesComponent implements OnInit {
 
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {}
 
   ngOnInit(): void {
-    this.data.memberships.getMembershipUsersAsync(this.org).subscribe((m) => {
+    this.data.memberships.getMembershipUsersAsync(this.org()).subscribe((m) => {
       this.members.set(m);
       this.isLoading.set(false);
     });

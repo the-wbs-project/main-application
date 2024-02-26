@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  input,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
@@ -23,8 +28,7 @@ import { ProjectCreateState } from '../../states';
   ],
 })
 export class BasicsComponent {
-  @Input() org!: string;
-
+  readonly org = input.required<string>();
   readonly title = this.store.selectSnapshot(ProjectCreateState.title);
   readonly description = this.store.selectSnapshot(
     ProjectCreateState.description
@@ -36,11 +40,11 @@ export class BasicsComponent {
   ) {}
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.GETTING_STARTED);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.GETTING_STARTED);
   }
 
   continue(title: string, description: string): void {
     this.store.dispatch(new SubmitBasics(title.trim(), description.trim()));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.CATEGORY);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.CATEGORY);
   }
 }

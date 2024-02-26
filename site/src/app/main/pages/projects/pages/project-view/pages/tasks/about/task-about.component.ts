@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   computed,
+  input,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -12,8 +11,8 @@ import {
   faTools,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
@@ -41,16 +40,15 @@ import { ProjectState, TasksState } from '../../../states';
   ],
 })
 export class TaskAboutComponent {
-  @Input({ required: true }) claims!: string[];
-
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
-  readonly project = toSignal(this.store.select(ProjectState.current));
-  readonly current = toSignal(this.store.select(TasksState.current));
+  readonly claims = input.required<string[]>();
+  readonly project = this.store.select(ProjectState.current);
+  readonly current = this.store.select(TasksState.current);
   readonly isPlanning = computed(
     () => this.project()?.status === PROJECT_STATI.PLANNING
   );
 
-  constructor(private readonly store: Store) {}
+  constructor(private readonly store: SignalStore) {}
 }

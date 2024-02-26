@@ -3,13 +3,12 @@ import {
   Component,
   Input,
   ViewEncapsulation,
+  input,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
-import { Store } from '@ngxs/store';
-import { TitleService } from '@wbs/core/services';
+import { SignalStore, TitleService } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
@@ -35,27 +34,24 @@ import { ProjectApprovalState, ProjectState, TasksState } from '../../states';
   ],
 })
 export class TaskViewComponent {
-  @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) userId!: string;
-
-  readonly current = toSignal(this.store.select(TasksState.current));
-  readonly project = toSignal(this.store.select(ProjectState.current));
-  readonly approval = toSignal(this.store.select(ProjectApprovalState.current));
-  readonly approvals = toSignal(this.store.select(ProjectApprovalState.list));
-  readonly approvalView = toSignal(
-    this.store.select(ProjectApprovalState.view)
+  readonly claims = input.required<string[]>();
+  readonly userId = input.required<string>();
+  readonly current = this.store.select(TasksState.current);
+  readonly project = this.store.select(ProjectState.current);
+  readonly approval = this.store.select(ProjectApprovalState.current);
+  readonly approvals = this.store.select(ProjectApprovalState.list);
+  readonly approvalView = this.store.select(ProjectApprovalState.view);
+  readonly approvalHasChildren = this.store.select(
+    ProjectApprovalState.hasChildren
   );
-  readonly approvalHasChildren = toSignal(
-    this.store.select(ProjectApprovalState.hasChildren)
-  );
-  readonly chat = toSignal(this.store.select(ProjectApprovalState.messages));
+  readonly chat = this.store.select(ProjectApprovalState.messages);
   readonly links = TASK_NAVIGATION;
   readonly faDiagramSubtask = faDiagramSubtask;
 
   constructor(
     title: TitleService,
     private readonly nav: ProjectNavigationService,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {
     title.setTitle('Project', false);
   }

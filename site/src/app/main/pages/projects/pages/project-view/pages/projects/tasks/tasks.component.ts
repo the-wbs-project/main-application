@@ -2,17 +2,16 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
+  input,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
+import { SignalStore } from '@wbs/core/services';
 import { WbsPhaseService } from '@wbs/main/services';
 import { TaskModalComponent } from '../../../components/task-modal/task-modal.component';
 import { ProjectState } from '../../../states';
-import { ProjectDisciplinesTreeComponent } from './components/discipline-tree/discipline-tree.component';
-import { ProjectPhaseTreeComponent } from './components/phase-tree/phase-tree.component';
+import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
+import { ProjectPhaseTreeComponent } from './components/phase-tree';
 
 @Component({
   standalone: true,
@@ -28,10 +27,9 @@ import { ProjectPhaseTreeComponent } from './components/phase-tree/phase-tree.co
   ],
 })
 export class ProjectTasksComponent {
-  @Input({ required: true }) claims!: string[];
-
+  readonly claims = input.required<string[]>();
   readonly view = signal<'phases' | 'disciplines'>('phases');
-  readonly project = toSignal(this.store.select(ProjectState.current));
+  readonly project = this.store.select(ProjectState.current);
 
-  constructor(private readonly store: Store) {}
+  constructor(private readonly store: SignalStore) {}
 }

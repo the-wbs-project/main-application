@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { PROJECT_CREATION_PAGES } from '../models';
 import { ProjectCreateService } from '../services';
@@ -14,11 +14,11 @@ import { ProjectCreateService } from '../services';
   imports: [TranslateModule],
 })
 export class GettingStartedComponent {
-  @Input() org!: string;
+  readonly org = input.required<string>();
 
   constructor(private readonly service: ProjectCreateService) {}
 
   continue() {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.BASICS);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.BASICS);
   }
 }

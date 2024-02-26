@@ -59,12 +59,18 @@ export class DisciplineEditorComponent {
   readonly faPlus = faPlus;
 
   onDrop({ previousIndex, currentIndex }: CdkDragDrop<any, any>): void {
-    const list = this.categories() ?? [];
-    const toMove = list[previousIndex];
-    list.splice(previousIndex, 1);
-    list.splice(currentIndex, 0, toMove);
+    this.categories.update((list) => {
+      if (list === undefined) list = [];
 
-    this.rebuild(list);
+      const toMove = list[previousIndex];
+
+      list.splice(previousIndex, 1);
+      list.splice(currentIndex, 0, toMove);
+
+      this.catService.renumber(list);
+
+      return list;
+    });
   }
 
   showCreate() {
@@ -91,15 +97,18 @@ export class DisciplineEditorComponent {
           number: null,
           selected: true,
         };
-        this.categories.set([item, ...(this.categories() ?? [])]);
-
-        this.rebuild();
+        this.categories.update((list) => {
+          list = [item, ...(list ?? [])];
+          this.catService.renumber(list);
+          return list;
+        });
       });
   }
 
-  rebuild(cats: CategorySelection[] = this.categories() ?? []): void {
-    this.catService.renumber(cats);
-
-    this.categories.set(cats);
+  rebuild(): void {
+    this.categories.update((list) => {
+      this.catService.renumber(list);
+      return list;
+    });
   }
 }

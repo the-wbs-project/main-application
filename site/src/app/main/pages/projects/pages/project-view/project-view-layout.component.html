@@ -1,6 +1,6 @@
 <div class="d-flex flex-column h-100">
   <div class="d-flex flex-align-center mg-y-5">
-    <wbs-project-title [category]="category()" [title]="title()" />
+    <wbs-project-title [category]="category()" [title]="title() ?? ''" />
     @if (approvalEnabled()) {
     <wbs-approval-badge [approval]="approvals() | findById : 'project-title'" />
     }

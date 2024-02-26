@@ -7,13 +7,6 @@ export const routes: Routes = [
       import('./pages/library-home/library-list.routes').then((x) => x.routes),
   },
   {
-    path: 'create',
-    loadChildren: () =>
-      import('./pages/entry-create/library-create.routes').then(
-        (x) => x.routes
-      ),
-  },
-  {
     path: 'view',
     loadChildren: () =>
       import('./pages/entry-view/entry-view.routes').then((x) => x.routes),

@@ -3,8 +3,8 @@ import {
   ChangeDetectionStrategy,
   Component,
   EventEmitter,
-  Input,
   Output,
+  input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
@@ -38,15 +38,15 @@ import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
   ],
 })
 export class TimelineComponent {
-  @Input({ required: true }) loading = false;
-  @Input({ required: true }) loaded = false;
-  @Input({ required: true }) length?: number;
-  @Input({ required: true }) timeline?: TimelineViewModel[] | null;
   @Output() loadMoreClicked = new EventEmitter<void>();
   @Output() menuItemClicked = new EventEmitter<TimelineMenuItem>();
 
   readonly faCircleInfo = faCircleInfo;
   readonly faComment = faComment;
+  readonly loading = input.required<boolean>();
+  readonly loaded = input.required<boolean>();
+  readonly length = input<number>();
+  readonly timeline = input<TimelineViewModel[] | null>();
 
   constructor(private readonly messages: Messages) {}
 

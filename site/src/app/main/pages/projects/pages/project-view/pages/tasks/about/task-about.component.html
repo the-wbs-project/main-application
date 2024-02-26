@@ -87,7 +87,7 @@
         <br />
         {{ "Projects.NoDisciplines" | translate }}
       </p>
-      @if (isPlanning() && (claims | check : canEditClaim)){
+      @if (isPlanning() && (claims() | check : canEditClaim)){
       <a class="btn btn-dark" [routerLink]="['../', 'settings', 'disciplines']">
         <fa-icon [icon]="faTools" />
         &nbsp;
@@ -111,7 +111,7 @@
         <br />
         {{ "Projects.NoDescription" | translate }}
       </p>
-      @if (isPlanning() && (claims | check : canEditClaim)){
+      @if (isPlanning() && (claims() | check : canEditClaim)){
       <a class="btn btn-dark" [routerLink]="['../', 'settings', 'general']">
         <fa-icon [icon]="faTools" />
         &nbsp;

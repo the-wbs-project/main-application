@@ -4,6 +4,7 @@ import {
   Input,
   OnInit,
   computed,
+  input,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateModule } from '@ngx-translate/core';
@@ -16,6 +17,7 @@ import { Project } from '@wbs/core/models';
 import { Transformers } from '@wbs/main/services';
 import { TasksState } from '../../../../../states';
 import { DisciplineIdsPipe } from './discipline-ids.pipe';
+import { SignalStore } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -25,8 +27,6 @@ import { DisciplineIdsPipe } from './discipline-ids.pipe';
   imports: [DisciplineIdsPipe, TranslateModule, TreeListModule],
 })
 export class ProjectDisciplinesTreeComponent implements OnInit {
-  @Input({ required: true }) project?: Project;
-
   expandedKeys: string[] = [];
   taskId?: string;
   settings: SelectableSettings = {
@@ -37,19 +37,20 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
     readonly: false,
   };
 
-  readonly nodes = toSignal(this.store.select(TasksState.nodes));
+  readonly project = input.required<Project>();
+  readonly nodes = this.store.select(TasksState.nodes);
   readonly disciplines = computed(() =>
-    this.transformers.nodes.discipline.view.run(this.project!, this.nodes()!)
+    this.transformers.nodes.discipline.view.run(this.project(), this.nodes()!)
   );
 
   constructor(
-    private readonly store: Store,
+    private readonly store: SignalStore,
     private readonly transformers: Transformers
   ) {}
 
   ngOnInit(): void {
     this.expandedKeys =
-      this.project?.disciplines.map((d) => {
+      this.project().disciplines.map((d) => {
         if (typeof d === 'string') return d;
 
         return d.id;

@@ -5,6 +5,7 @@ import {
   Input,
   OnInit,
   computed,
+  input,
   signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -65,7 +66,7 @@ const ROLES = [
   ],
 })
 export class MembersComponent implements OnInit {
-  @Input() org!: string;
+  readonly org = input.required<string>();
 
   private readonly crumbs: Breadcrumb[] = [
     {
@@ -125,9 +126,11 @@ export class MembersComponent implements OnInit {
         this.roles.set(ROLES);
         this.roleDefinitions.set(definitions);
       });
+    const org = this.org();
+
     forkJoin({
-      members: this.data.memberships.getMembershipUsersAsync(this.org),
-      invites: this.data.memberships.getInvitesAsync(this.org),
+      members: this.data.memberships.getMembershipUsersAsync(org),
+      invites: this.data.memberships.getInvitesAsync(org),
     }).subscribe(({ members, invites }) => {
       this.members.set(
         members.map((m) => {
@@ -152,7 +155,7 @@ export class MembersComponent implements OnInit {
   openInviteDialog() {
     this.uiService
       .openNewInviteDialog(
-        this.org,
+        this.org(),
         this.invites(),
         this.members(),
         this.roleDefinitions()

@@ -192,20 +192,18 @@
         <div class="col-12">
           @if (view() === 'members') {
           <wbs-member-list
+            [org]="org()"
             [filteredRoles]="roleFilters()"
             [roles]="roleDefinitions()"
-            [members]="members()"
-            [org]="org"
+            [(members)]="members"
             [textFilter]="textFilter"
-            (membersChanged)="members.set($event)"
           />
           } @else if (view() === 'invitations') {
           <wbs-invitation-list
+            [org]="org()"
             [filteredRoles]="roleFilters()"
-            [org]="org"
-            [invites]="invites()"
+            [(invites)]="invites"
             [textFilter]="textFilter"
-            (invitesChanged)="invites.set($event)"
           />
           }
         </div>

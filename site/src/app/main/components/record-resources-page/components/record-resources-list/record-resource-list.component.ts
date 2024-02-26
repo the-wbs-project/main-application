@@ -1,32 +1,20 @@
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   EventEmitter,
-  Input,
   Output,
-  ViewChild,
-  ViewEncapsulation,
+  input,
+  model,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faGear } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  ListViewComponent,
-  ListViewModule,
-} from '@progress/kendo-angular-listview';
-import {
-  DragAndDropModule,
-  DragTargetContainerDirective,
-  DropTargetContainerDirective,
-  DropTargetEvent,
-} from '@progress/kendo-angular-utils';
 import { PROJECT_CLAIMS, ResourceRecord } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { DragDropService, TableHelper } from '@wbs/main/services';
-import { ResourceTypeTextComponent } from '../record-resources-type-text/resource-type-text.component';
-import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-link.component';
+import { ResourceTypeTextComponent } from '../record-resources-type-text';
+import { ResourceViewLinkComponent } from '../resource-view-link';
 
 @Component({
   standalone: true,
@@ -34,30 +22,21 @@ import { ResourceViewLinkComponent } from '../resource-view-link/resource-view-l
   templateUrl: './record-resource-list.component.html',
   styleUrls: ['./record-resource-list.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
-  providers: [DragDropService, TableHelper],
   imports: [
     CheckPipe,
     DateTextPipe,
-    DragAndDropModule,
+    DragDropModule,
     FontAwesomeModule,
-    ListViewModule,
     ResourceTypeTextComponent,
     ResourceViewLinkComponent,
     TranslateModule,
   ],
 })
 export class RecordResourceListComponent {
-  @Input({ required: true }) owner!: string;
-  @Input({ required: true }) claims!: string[];
-  @Input({ required: true }) list!: ResourceRecord[];
+  readonly owner = input.required<string>();
+  readonly claims = input.required<string[]>();
+  readonly list = model.required<ResourceRecord[]>();
   @Output() readonly save = new EventEmitter<ResourceRecord[]>();
-
-  @ViewChild(ListViewComponent) listview!: ListViewComponent;
-  @ViewChild('wrapper', { read: DragTargetContainerDirective })
-  dragTargetContainer: any;
-  @ViewChild('wrapper', { read: DropTargetContainerDirective })
-  dropTargetContainer: any;
 
   readonly editClaim = PROJECT_CLAIMS.RESOURCES.UPDATE;
   readonly deleteClaim = PROJECT_CLAIMS.RESOURCES.DELETE;
@@ -66,32 +45,25 @@ export class RecordResourceListComponent {
   readonly faGear = faGear;
   readonly menu = [];
 
-  constructor(
-    readonly dragDrop: DragDropService,
-    private readonly cd: ChangeDetectorRef
-  ) {}
+  onDrop({ previousIndex, currentIndex }: CdkDragDrop<any, any>): void {
+    this.list.update((list) => {
+      const originalList = structuredClone(list);
+      const toMove = list[previousIndex];
 
-  onDrop(e: DropTargetEvent): void {
-    const list = structuredClone(this.list);
+      list.splice(previousIndex, 1);
+      list.splice(currentIndex, 0, toMove);
+      list.forEach((x, i) => (x.order = i + 1));
 
-    this.dragDrop.onDrop(e, list);
+      const toSave = [];
 
-    list.forEach((x, i) => (x.order = i + 1));
-
-    const toSave = [];
-
-    for (const item of list) {
-      if (this.list.find((x) => x.id === item.id)!.order !== item.order) {
-        toSave.push(item);
+      for (const item of list) {
+        if (originalList.find((x) => x.id === item.id)!.order !== item.order) {
+          toSave.push(item);
+        }
       }
-    }
-    console.log(toSave);
-    if (toSave.length > 0) this.save.emit(toSave);
+      if (toSave.length > 0) this.save.emit(toSave);
 
-    this.list = list;
-
-    this.dragTargetContainer.notify();
-    this.dropTargetContainer.notify();
-    this.cd.detectChanges();
+      return list;
+    });
   }
 }

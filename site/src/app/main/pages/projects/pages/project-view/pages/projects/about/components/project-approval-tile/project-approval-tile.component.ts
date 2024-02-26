@@ -1,21 +1,16 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
+  input,
   signal,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircle, faList, faPieChart } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { ChartsModule } from '@progress/kendo-angular-charts';
 import { ProjectApprovalStats } from '@wbs/main/models';
 import { ApprovalPieDataPipe } from './approval-pie-data.pipe';
-import { NgClass } from '@angular/common';
-import { TranslateModule } from '@ngx-translate/core';
-import {
-  faCircle,
-  faList,
-  faPieChart,
-  faTable,
-} from '@fortawesome/pro-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   standalone: true,
@@ -32,7 +27,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ],
 })
 export class ProjectApprovalTileComponent {
-  @Input({ required: true }) stats?: ProjectApprovalStats;
+  readonly stats = input.required<ProjectApprovalStats | undefined>();
 
   readonly faList = faList;
   readonly faCircle = faCircle;

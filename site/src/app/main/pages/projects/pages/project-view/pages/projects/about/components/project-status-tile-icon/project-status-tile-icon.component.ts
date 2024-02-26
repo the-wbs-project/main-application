@@ -1,5 +1,10 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Input,
+  input,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCircle,
@@ -15,13 +20,11 @@ import {
   imports: [FontAwesomeModule, NgClass],
 })
 export class ProjectStatusTileIconComponent {
-  @Input({ required: true }) status!:
-    | 'unstarted'
-    | 'in-progress'
-    | 'completed'
-    | 'rejected';
+  readonly status = input.required<
+    'unstarted' | 'in-progress' | 'completed' | 'rejected'
+  >();
 
-  faCircle = faCircle;
-  faCircleCheck = faCircleCheck;
-  faCircleXmark = faCircleXmark;
+  readonly faCircle = faCircle;
+  readonly faCircleCheck = faCircleCheck;
+  readonly faCircleXmark = faCircleXmark;
 }

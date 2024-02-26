@@ -1,6 +1,6 @@
 <div class="pd-15">
   <div class="container-fluid">
-    @if (claims() | check : addClaim) {
+    @if (list().length > 0 && (claims() | check : addClaim)) {
     <div class="row">
       <div class="col-12 tx-right">
         <button class="btn btn-outline-dark" (click)="launchNew(content)">
@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-12 mg-t-40 text-center tx-20">
         <div>{{ "Resources.NoResourcesFound" | translate }}</div>
-
+        @if (claims() | check : addClaim) {
         <button
           class="btn btn-outline-dark mg-t-20"
           (click)="launchNew(content)"
@@ -21,6 +21,7 @@
           <fa-icon [icon]="faPlus" />
           &nbsp; {{ "General.Add" | translate }}
         </button>
+        }
       </div>
     </div>
     } @else {
@@ -39,23 +40,22 @@
 </div>
 
 <ng-template #content let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title">{{ "Resources.AddResource" | translate }}</h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      (click)="modal.dismiss('Cross click')"
-    ></button>
-  </div>
-  <div class="modal-body resource-editor">
-    <wbs-record-resource-editor [vm]="vm()!" />
-  </div>
-  <div class="modal-footer">
-    @if (vm()!.type) {
-    <button type="button" class="btn btn-outline-dark" (click)="saveClicked()">
-      {{ "General.Save" | translate }}
-    </button>
-    }
-  </div>
+  <kendo-dialog
+    width="90%"
+    height="90%"
+    [title]="'Resources.AddResource' | translate"
+  >
+    <wbs-record-resource-editor [(vm)]="vm" />
+    <kendo-dialog-actions>
+      @if (vm()?.type) {
+      <button
+        type="button"
+        class="btn btn-outline-dark"
+        (click)="saveClicked()"
+      >
+        {{ "General.Save" | translate }}
+      </button>
+      }
+    </kendo-dialog-actions>
+  </kendo-dialog>
 </ng-template>

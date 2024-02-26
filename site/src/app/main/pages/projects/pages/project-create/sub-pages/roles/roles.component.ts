@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  input,
   Input,
   OnInit,
   signal,
@@ -22,6 +23,7 @@ import { RolesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
+import { SignalStore } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -35,15 +37,14 @@ import { ProjectCreateState } from '../../states';
   ],
 })
 export class RolesComponent implements OnInit {
-  @Input() org!: string;
-
   readonly faSpinner = faSpinner;
   readonly isLoading = signal<boolean>(true);
   readonly members = signal<Member[]>([]);
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
   readonly smeIds = signal<string[]>([]);
-  readonly orgObj = toSignal(this.store.select(MembershipState.organization));
+  readonly org = input.required<string>();
+  readonly orgObj = this.store.select(MembershipState.organization);
   readonly approvalEnabled = computed(
     () => this.orgObj()?.metadata?.projectApprovalRequired ?? false
   );
@@ -51,7 +52,7 @@ export class RolesComponent implements OnInit {
   constructor(
     private readonly data: DataServiceFactory,
     private readonly service: ProjectCreateService,
-    private readonly store: Store
+    private readonly store: SignalStore
   ) {}
 
   private get ids(): RoleIds {
@@ -60,9 +61,9 @@ export class RolesComponent implements OnInit {
 
   ngOnInit(): void {
     forkJoin({
-      members: this.data.memberships.getMembershipUsersAsync(this.org),
-      roles: this.store.selectOnce(ProjectCreateState.roles),
-      userId: this.store.selectOnce(AuthState.userId),
+      members: this.data.memberships.getMembershipUsersAsync(this.org()),
+      roles: this.store.selectOnceAsync(ProjectCreateState.roles),
+      userId: this.store.selectOnceAsync(AuthState.userId),
     }).subscribe(({ members, roles, userId }) => {
       this.members.set(members);
 
@@ -74,7 +75,7 @@ export class RolesComponent implements OnInit {
   }
 
   back(): void {
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.DISCIPLINES);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.DISCIPLINES);
   }
 
   continue(): void {
@@ -85,7 +86,7 @@ export class RolesComponent implements OnInit {
     roles.set(this.ids.sme, this.smeIds());
 
     this.store.dispatch(new RolesChosen(roles));
-    this.service.nav(this.org, PROJECT_CREATION_PAGES.SAVING);
+    this.service.nav(this.org(), PROJECT_CREATION_PAGES.SAVING);
   }
 
   nav(): void {

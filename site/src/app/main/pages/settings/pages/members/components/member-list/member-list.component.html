@@ -21,7 +21,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (member of members | tableProcess : state(); track member.id) {
+    @for (member of members() | tableProcess : state(); track member.id) {
     <tr>
       <td>
         <wbs-action-icon-list
