@@ -3,9 +3,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
-  inject,
+  input,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -43,8 +42,6 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
   providers: [EntryCreationService],
 })
 export class LibraryListComponent implements OnInit {
-  @Input() owner!: string;
-
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
   readonly createMenu = [
@@ -68,6 +65,7 @@ export class LibraryListComponent implements OnInit {
     },
   ];
 
+  readonly owner = input.required<string>();
   readonly entries = signal<LibraryEntryViewModel[]>([]);
 
   filterToggle = false;
@@ -84,7 +82,7 @@ export class LibraryListComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.data.libraryEntries.getAllAsync(this.owner).subscribe((entries) => {
+    this.data.libraryEntries.getAllAsync(this.owner()).subscribe((entries) => {
       this.entries.set(entries);
     });
   }
@@ -94,7 +92,7 @@ export class LibraryListComponent implements OnInit {
   }
 
   create(type: string): void {
-    this.creation.runAsync(this.owner, type).subscribe((vm) => {
+    this.creation.runAsync(this.owner(), type).subscribe((vm) => {
       if (vm == undefined) return;
 
       const list = this.entries();
