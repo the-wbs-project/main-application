@@ -62,10 +62,12 @@
         }"
       >
         <wbs-save-section
+          [owner]="owner()!"
           [disciplines]="disciplines()"
           [mainTaskTitle]="mainTaskTitle()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility!"
+          (close)="dialog.close($event)"
         />
       </div>
       }

@@ -31,7 +31,6 @@ import {
   ClearAiMessages,
   SendAiMessage,
 } from '@wbs/main/actions';
-import { FaToKendoPipe } from '@wbs/main/pipes/fa-to-kendo.pipe';
 import { TranslateListPipe } from '@wbs/main/pipes/translate-list.pipe';
 import { AiState } from '@wbs/main/states';
 
@@ -49,7 +48,6 @@ import { AiState } from '@wbs/main/states';
     DropDownButtonModule,
     DropDownListModule,
     ExpansionPanelModule,
-    FaToKendoPipe,
     FontAwesomeModule,
     FormsModule,
     NgIf,

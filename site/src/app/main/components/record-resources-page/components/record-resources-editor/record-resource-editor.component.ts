@@ -39,13 +39,15 @@ export class RecordResourceEditorComponent {
   constructor(readonly validator: RecordResourceValidation) {}
 
   setFile(file: FileInfo | undefined): void {
-    const vm = this.vm()!;
+    this.vm.update((vm) => {
+      if (!vm) return;
 
-    vm.file = file;
+      vm.file = file;
 
-    if (vm.errors.started) {
-      this.validator.validateFile(vm);
-    }
-    this.vm.set(vm);
+      if (vm.errors.started) {
+        this.validator.validateFile(vm);
+      }
+      return vm;
+    });
   }
 }

@@ -15,7 +15,7 @@
     </tr>
     <tr>
       <td class="row-header tx-semi">
-        {{ "LibraryCreate.TemplateTitle" | translate }}
+        {{ "LibraryCreate.MainTaskTitle" | translate }}
       </td>
       <td>{{ mainTaskTitle() }}</td>
     </tr>
@@ -33,4 +33,48 @@
     </tr>
   </tbody>
 </table>
+@if (saveState() === undefined) {
+<button class="w-100 btn btn-primary mg-t-10" (click)="save()">
+  {{ "LibraryCreate.CreateTask" | translate }}
+</button>
+
+} @else if (saveState() === "saving") {
 <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+<p class="tx-18 mg-t-10">{{ "General.Saving" | translate }}</p>
+} @else if (saveState() === "saved") {
+<fa-icon [icon]="faCheck" size="5x" />
+<p class="tx-18 mg-t-10">{{ "LibraryCreate.TemplateSaved" | translate }}</p>
+<div class="w-100 d-flex">
+  <div class="flex-1 pd-10">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="actionClicked('view')"
+    >
+      {{ "LibraryCreate.ViewTemplate" | translate }}
+    </button>
+  </div>
+  <div class="flex-1 pd-10">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="actionClicked('upload')"
+    >
+      {{ "LibraryCreate.UploadWbs" | translate }}
+    </button>
+  </div>
+  <div class="flex-1 pd-10">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="actionClicked('close')"
+    >
+      {{ "LibraryCreate.CloseWindow" | translate }}
+    </button>
+  </div>
+</div>
+} @else if (saveState() === "error") {
+<fa-icon [icon]="faExclamationTriangle" size="5x" />
+<p class="tx-18 mg-t-10">{{ "LibraryCreate.ErrorSaving" | translate }}</p>
+
+}

@@ -4,7 +4,7 @@ export interface LibraryEntryViewModel {
   version: number;
   author: string;
   title: string;
-  description: string;
+  description?: string;
   type: string;
   lastModified: Date;
   status: string;

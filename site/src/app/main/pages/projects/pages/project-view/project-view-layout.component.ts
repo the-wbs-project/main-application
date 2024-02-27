@@ -9,7 +9,7 @@ import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { SignalStore, TitleService } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
+import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
 import { ProjectTitleComponent } from '../../components/project-title.component';

@@ -59,6 +59,7 @@ export class EntryTaskCreationComponent extends DialogContentBase {
 
   type?: string;
   visibility?: string;
+  readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
   readonly mainTaskTitle = model<string>('');
   readonly syncTitles = model<boolean>(false);

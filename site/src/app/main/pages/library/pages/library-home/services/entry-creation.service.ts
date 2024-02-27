@@ -19,69 +19,16 @@ export class EntryCreationService {
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);
 
-  runAsync(
-    owner: string,
-    type: string
-  ): Observable<LibraryEntryViewModel | void> {
+  runAsync(owner: string, type: string): Observable<EntryCreationModel> {
     const dialogRef = this.dialog.open({
       content: EntryTaskCreationComponent,
     });
 
-    //(<CreationDialogComponent>dialogRef.content.instance).type.set(type);
+    (<EntryTaskCreationComponent>dialogRef.content.instance).owner.set(owner);
 
     return dialogRef.result.pipe(
       filter((x) => !(x instanceof DialogCloseResult)),
-      map((x) => <EntryCreationModel>x),
-      tap((x) => console.log(x)),
-      switchMap((results: EntryCreationModel) => {
-        return of();
-        /* const entry: LibraryEntry = {
-            id: IdService.generate(),
-            author: this.store.selectSnapshot(AuthState.userId)!,
-            owner,
-            type,
-            visibility,
-          };
-          const version: LibraryEntryVersion = {
-            entryId: entry.id,
-            version: 1,
-            categories: [],
-            disciplines: [],
-            phases: [],
-            status: 'draft',
-            title,
-            lastModified: new Date(),
-          };
-
-          return this.data.libraryEntries.putAsync(entry).pipe(
-            switchMap(() =>
-              this.data.libraryEntryVersions.putAsync(owner, version)
-            ),
-            tap(() =>
-              nav
-                ? this.store.dispatch(
-                    new Navigate([
-                      '/' + owner,
-                      'library',
-                      'view',
-                      entry.id,
-                      version.version,
-                    ])
-                  )
-                : of(<LibraryEntryViewModel>{
-                    author: entry.author,
-                    description: version.description,
-                    entryId: entry.id,
-                    lastModified: version.lastModified,
-                    ownerId: entry.owner,
-                    status: version.status,
-                    title: version.title,
-                    type: entry.type,
-                    visibility: entry.visibility,
-                  })
-            )
-          );*/
-      })
+      map((x) => <EntryCreationModel>x)
     );
   }
 }

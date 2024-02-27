@@ -709,7 +709,14 @@
       "Category_Description": "Select the category that best describes this project WBS.",
       "Categories_Title": "Project Categories",
       "Categories_Description_Phase": "Select the categories which this phase WBS can be applied to. This is not required.",
-      "Categories_Description_Task": "Select the categories which this task WBS can be applied to. This is not required."
+      "Categories_Description_Task": "Select the categories which this task WBS can be applied to. This is not required.",
+      "ReviewDetails": "Review Details",
+      "CreateTask": "Create Task",
+      "TemplateSaved": "Your WBS template has been created!  What do you want to do next?",
+      "ErrorSaving": "An error occured trying to create your WBS template.  Our knomes are working on it.",
+      "ViewTemplate": "View The Template",
+      "UploadWbs": "Upload a WBS",
+      "CloseWindow": "Close Window"
     }
   }
 ]

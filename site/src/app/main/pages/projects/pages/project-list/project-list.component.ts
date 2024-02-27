@@ -8,7 +8,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { PROJECT_STATI } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { PageHeaderComponent } from '@wbs/main/components/page-header/page-header.component';
+import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
 import { MetadataState } from '@wbs/main/states';
