@@ -1,7 +1,7 @@
 <kendo-dialog
   height="80%"
   width="80%"
-  [title]="'LibraryCreate.TitleTask' | translate"
+  [title]="'LibraryCreate.TitleProject' | translate"
   (close)="dialog.close()"
 >
   <div class="d-flex flex-column h-100">
@@ -19,26 +19,61 @@
         @if (step.isOptional) { <span class="mg-l-5">*</span> }
       </ng-template>
     </kendo-stepper>
-    <div class="tx-center flex-fill pd-t-20 pd-x-10">
+    <div #mainView class="tx-center flex-fill pd-t-20 pd-x-10 scroll">
       @if (view() === 0) {
       <div
         class="d-ib w-100 mx-wd-800 tx-left animate__animated"
         [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
       >
-        <div class="pd-x-12">
-          <wbs-title-form
-            [(mainTaskTitle)]="mainTaskTitle"
-            [(templateTitle)]="templateTitle"
-            [(syncTitles)]="syncTitles"
+        <div class="pd-x-12 mb-3">
+          <label for="templateTitle" class="form-label tx-18">
+            {{ "LibraryCreate.TemplateTitle" | translate }}
+          </label>
+          <input
+            kendoTextBox
+            name="templateTitle"
+            id="templateTitle"
+            [(ngModel)]="templateTitle"
           />
-
+          <label class="d-ib tx-12 tx-italic mg-t-5">
+            {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+          </label>
+        </div>
+        <div class="pd-x-12 mb-3">
           <label class="form-label tx-18">
             {{ "LibraryCreate.Visibility" | translate }}
           </label>
           <wbs-visibility-selection [(visibility)]="visibility" />
         </div>
+        <div class="pd-x-12">
+          <label class="form-label tx-18">
+            {{ "LibraryCreate.ProjectCategory" | translate }}
+          </label>
+          @if (categories(); as cats) {
+          <wbs-project-category-dropdown
+            [categories]="cats"
+            [(category)]="category"
+          />
+          }
+        </div>
       </div>
       } @else if (view() === 1) {
+      <div
+        class="d-ib w-100 animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <div class="pd-y-15 pd-x-30 tx-14">
+          {{ "LibraryCreate.DisciplinesHeader" | translate }}
+        </div>
+        <div class="text-start">
+          {{ phases()[0].selected }}
+          <wbs-phase-editor [(categories)]="phases" />
+        </div>
+      </div>
+      } @else if (view() === 2) {
 
       <div
         class="d-ib w-100 mx-wd-800 text-center animate__animated"
@@ -54,7 +89,7 @@
           <wbs-discipline-editor [(categories)]="disciplines" />
         </div>
       </div>
-      } @else if (view() === 2) {
+      } @else if (view() === 3) {
 
       <div
         class="d-ib w-100 mx-wd-800 animate__animated"
@@ -65,8 +100,9 @@
       >
         <wbs-save-section
           [owner]="owner()!"
+          [phases]="phases()"
+          [category]="category()!"
           [disciplines]="disciplines()"
-          [mainTaskTitle]="mainTaskTitle()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility()"
           (close)="dialog.close($event)"
@@ -89,7 +125,7 @@
     </div>
 
     <div class="flex-grow-1 text-end">
-      @if (view() < 2) {
+      @if (view() < 3) {
       <button
         class="btn btn-primary"
         [disabled]="!canContinue()"

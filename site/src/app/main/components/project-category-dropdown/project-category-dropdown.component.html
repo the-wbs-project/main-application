@@ -1,0 +1,31 @@
+<kendo-dropdownlist
+  class="form-control"
+  [data]="categories()"
+  [(ngModel)]="category"
+  textField="label"
+  valueField="id"
+  [listHeight]="300"
+>
+  <ng-template kendoDropDownListValueTemplate let-dataItem>
+    {{ dataItem?.label | translate }}
+  </ng-template>
+  <ng-template kendoDropDownListItemTemplate let-dataItem>
+    <div class="d-flex flex-flow-row w-100">
+      <div class="pd-t-15 mg-r-10">
+        <img
+          class="wd-40 hd-40"
+          [src]="dataItem.icon"
+          [alt]="dataItem.label | translate"
+        />
+      </div>
+      <div class="flex-grow-1 pd-10">
+        <span class="d-block tx-semibold">
+          {{ dataItem.label | translate }}
+        </span>
+        <span class="tx-10">
+          {{ dataItem.description | translate }}
+        </span>
+      </div>
+    </div>
+  </ng-template>
+</kendo-dropdownlist>

@@ -86,20 +86,7 @@ export class EntryTaskCreationComponent extends DialogContentBase {
       .join(', ')
   );
 
-  constructor(dialog: DialogRef) {
-    super(dialog);
-  }
-
-  back(): void {
-    this.dir.set('left');
-    this.view.update((x) => x - 1);
-  }
-
-  next(): void {
-    this.dir.set('right');
-    this.view.update((x) => x + 1);
-  }
-
+  //make a computed one day, but for now it seems arrays in modals dont trigger
   canContinue(): boolean {
     const view = this.view();
 
@@ -114,6 +101,7 @@ export class EntryTaskCreationComponent extends DialogContentBase {
     return templateTitle !== '' && mainTaskTitle !== '';
   }
 
+  //make a computed one day, but for now it seems arrays in modals dont trigger
   nextButtonLabel(): string {
     const view = this.view();
     const hasDisciplines = this.disciplines().some((x) => x.selected);
@@ -121,5 +109,19 @@ export class EntryTaskCreationComponent extends DialogContentBase {
     if (view === 1) return hasDisciplines ? 'General.Next' : 'General.Skip';
 
     return 'General.Next';
+  }
+
+  constructor(dialog: DialogRef) {
+    super(dialog);
+  }
+
+  back(): void {
+    this.dir.set('left');
+    this.view.update((x) => x - 1);
+  }
+
+  next(): void {
+    this.dir.set('right');
+    this.view.update((x) => x + 1);
   }
 }

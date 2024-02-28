@@ -95,9 +95,10 @@ export class LibraryListComponent implements OnInit {
 
   create(type: string): void {
     this.creation.runAsync(this.owner(), type).subscribe((results) => {
+      console.log(results);
       if (results == undefined) return;
 
-      if (results.action === 'view') {
+      if (results.action === 'close') {
         const vm: LibraryEntryViewModel = {
           author: results.entry.author,
           entryId: results.entry.id,

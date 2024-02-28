@@ -21,7 +21,6 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import {
   DialogContentBase,
   DialogModule,
@@ -29,18 +28,20 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { ProjectCategory } from '@wbs/core/models';
+import { ListItem } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
+import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
 import { VisiblitySelectionComponent } from '../visiblity-selection';
-import { PhaseSectionComponent } from './components/phase-section';
 import { SaveSectionComponent } from './components/save-section';
 
 @Component({
   standalone: true,
-  templateUrl: './entry-phase-creation.component.html',
+  templateUrl: './entry-project-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogModule,
@@ -48,7 +49,8 @@ import { SaveSectionComponent } from './components/save-section';
     FontAwesomeModule,
     FormsModule,
     NgClass,
-    PhaseSectionComponent,
+    PhaseEditorComponent,
+    ProjectCategoryDropdownComponent,
     SaveSectionComponent,
     StepperModule,
     TextBoxModule,
@@ -57,17 +59,20 @@ import { SaveSectionComponent } from './components/save-section';
   ],
   providers: [CategorySelectionService],
 })
-export class EntryPhaseCreationComponent extends DialogContentBase {
+export class EntryProjectCreationComponent extends DialogContentBase {
   @Output() readonly done = new EventEmitter<void>();
 
   private readonly catService = inject(CategorySelectionService);
-  private readonly store = inject(Store);
+  private readonly store = inject(SignalStore);
 
   readonly mainView = viewChild<ElementRef<HTMLDivElement>>('mainView');
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
-  readonly phase = model<ProjectCategory | undefined>(undefined);
+  readonly category = model<ListItem | undefined>(undefined);
   readonly visibility = model<'public' | 'private'>('public');
+  readonly phases = model<CategorySelection[]>(
+    this.catService.build(this.store.selectSnapshot(MetadataState.phases), [])
+  );
   readonly disciplines = model<CategorySelection[]>(
     this.catService.build(
       this.store.selectSnapshot(MetadataState.disciplines),
@@ -76,13 +81,14 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   );
   readonly faSpinner = faSpinner;
   readonly view = model<number>(0);
+  readonly categories = this.store.select(MetadataState.projectCategories);
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
   readonly dir = signal<'left' | 'right' | undefined>('left');
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
-    { label: 'General.Phase', icon: faDiagramSubtask },
+    { label: 'General.Phases', icon: faDiagramSubtask },
     { label: 'General.Disciplines', icon: faPeople, isOptional: true },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
@@ -97,15 +103,17 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   //make a computed one day, but for now it seems arrays in modals dont trigger
   canContinue(): boolean {
     const view = this.view();
+    const phases = this.phases();
+    const category = this.category();
+    const title = this.templateTitle();
 
-    if (view === 0) return this.templateTitle().trim() !== '';
+    console.log(view, phases, category, title);
+
+    if (view === 0) {
+      return category !== undefined && title.trim() !== '';
+    }
     if (view === 1) {
-      const phase = this.phase();
-
-      return (
-        phase != undefined &&
-        (typeof phase === 'string' || phase.label.trim() !== '')
-      );
+      return phases.some((x) => x.selected);
     }
     return true;
   }

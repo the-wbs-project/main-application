@@ -75,13 +75,11 @@ export class SaveSectionComponent {
   save(): void {
     this.saveState.set('saving');
 
-    const disciplineIds: string[] = [];
     const disciplines: ProjectCategory[] = [];
 
     for (const discipline of this.disciplines()) {
       if (!discipline.selected) continue;
 
-      disciplineIds.push(discipline.id);
       disciplines.push(
         discipline.isCustom
           ? {
@@ -118,7 +116,6 @@ export class SaveSectionComponent {
       order: 1,
       lastModified: new Date(),
       title: this.mainTaskTitle(),
-      disciplineIds,
     };
 
     this.data.libraryEntries
@@ -136,10 +133,6 @@ export class SaveSectionComponent {
             []
           )
         )
-        /*catchError((err, caught) => {
-          this.saveState.set('error');
-          return caught;
-        })*/
       )
       .subscribe(() => {
         this.saveState.set('saved');

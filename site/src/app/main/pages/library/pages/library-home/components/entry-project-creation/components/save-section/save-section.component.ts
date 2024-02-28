@@ -21,6 +21,7 @@ import {
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
+  ListItem,
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
@@ -44,7 +45,7 @@ export class SaveSectionComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);
-  private savedData?: [LibraryEntry, LibraryEntryVersion, LibraryEntryNode];
+  private savedData?: [LibraryEntry, LibraryEntryVersion, LibraryEntryNode[]];
 
   readonly faCheck = faCheck;
   readonly faSpinner = faSpinner;
@@ -52,7 +53,8 @@ export class SaveSectionComponent {
   readonly owner = input.required<string>();
   readonly templateTitle = input.required<string>();
   readonly visibility = input.required<string>();
-  readonly phase = input.required<ProjectCategory | undefined>();
+  readonly category = input.required<ListItem>();
+  readonly phases = input.required<CategorySelection[]>();
   readonly disciplines = input.required<CategorySelection[]>();
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
@@ -72,17 +74,19 @@ export class SaveSectionComponent {
           .map((x) => x.label)
           .join(', ');
   });
+  readonly phaseReview = computed(() =>
+    this.phases()
+      .filter((x) => x.selected)
+      .map((x) => x.label)
+      .join(', ')
+  );
 
   save(): void {
     this.saveState.set('saving');
 
-    let phase = this.phase()!;
-    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const phases: ProjectCategory[] = [];
     const disciplines: ProjectCategory[] = [];
-
-    if (typeof phase === 'string') {
-      phase = phaseDefinitions.find((x) => x.id === phase)!;
-    }
+    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
 
     for (const discipline of this.disciplines()) {
       if (!discipline.selected) continue;
@@ -99,31 +103,58 @@ export class SaveSectionComponent {
           : discipline.id
       );
     }
+
+    for (const phase of this.phases()) {
+      if (!phase.selected) continue;
+
+      phases.push(
+        phase.isCustom
+          ? {
+              id: phase.id,
+              label: phase.label,
+              order: 0,
+              type: 'custom',
+              tags: [],
+            }
+          : phase.id
+      );
+    }
     const entry: LibraryEntry = {
       author: this.store.selectSnapshot(AuthState.userId)!,
       id: IdService.generate(),
       owner: this.owner(),
-      type: 'phase',
+      type: 'project',
       visibility: this.visibility(),
     };
     const version: LibraryEntryVersion = {
       entryId: entry.id,
       version: 1,
-      phases: [phase],
-      categories: [],
+      categories: [this.category().id],
       status: 'draft',
       lastModified: new Date(),
       title: this.templateTitle(),
+      phases,
       disciplines,
     };
-    const node: LibraryEntryNode = {
-      id: phase.id,
-      entryId: entry.id,
-      entryVersion: 1,
-      order: 1,
-      lastModified: new Date(),
-      title: phase.label,
-    };
+    const nodes: LibraryEntryNode[] = [];
+
+    for (let i = 0; i < phases.length; i++) {
+      const phase = phases[i];
+      const phaseId = typeof phase === 'string' ? phase : phase.id;
+      const phaseLabel =
+        typeof phase === 'string'
+          ? phaseDefinitions.find((x) => x.id === phase)!.label
+          : phase.label;
+
+      nodes.push({
+        id: phaseId,
+        entryId: entry.id,
+        entryVersion: 1,
+        order: 1,
+        lastModified: new Date(),
+        title: phaseLabel,
+      });
+    }
 
     this.data.libraryEntries
       .putAsync(entry)
@@ -136,18 +167,14 @@ export class SaveSectionComponent {
             entry.owner,
             entry.id,
             version.version,
-            [node],
+            nodes,
             []
           )
         )
-        /*catchError((err, caught) => {
-          this.saveState.set('error');
-          return caught;
-        })*/
       )
       .subscribe(() => {
         this.saveState.set('saved');
-        this.savedData = [entry, version, node];
+        this.savedData = [entry, version, nodes];
       });
   }
 
@@ -156,7 +183,7 @@ export class SaveSectionComponent {
       action,
       entry: this.savedData![0],
       version: this.savedData![1],
-      nodes: [this.savedData![2]],
+      nodes: this.savedData![2],
     });
   }
 }

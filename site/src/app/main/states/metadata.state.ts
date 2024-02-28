@@ -9,7 +9,6 @@ interface StateModel {
   categoryList: Map<string, ListItem[]>;
   categoryMap: Map<string, Map<string, ListItem>>;
   categoryNames: Map<string, Map<string, string>>;
-  projectCategories: ListItem[];
 }
 
 @Injectable()
@@ -20,7 +19,6 @@ interface StateModel {
     categoryList: new Map<string, ListItem[]>(),
     categoryMap: new Map<string, Map<string, ListItem>>(),
     categoryNames: new Map<string, Map<string, string>>(),
-    projectCategories: [],
   },
 })
 export class MetadataState implements NgxsOnInit {
