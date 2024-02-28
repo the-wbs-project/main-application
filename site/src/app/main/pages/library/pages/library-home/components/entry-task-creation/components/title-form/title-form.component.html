@@ -1,5 +1,5 @@
 <div class="mb-3">
-  <label for="templateTitle" class="form-label">
+  <label for="templateTitle" class="form-label tx-18">
     {{ "LibraryCreate.TemplateTitle" | translate }}
   </label>
   <input
@@ -9,12 +9,14 @@
     [(ngModel)]="templateTitle"
   />
   <label class="d-ib tx-12 tx-italic mg-t-5">
-    {{ "LibraryCreate.TemplateTitleDescription" | translate }}
+    {{ "LibraryCreate.TemplateTitleDescriptionTask" | translate }}
   </label>
 </div>
 <div class="mb-3">
   <label for="mainTaskTitle" class="form-label">
-    {{ "LibraryCreate.MainTaskTitle" | translate }}
+    <span class="tx-18">
+      {{ "LibraryCreate.MainTaskTitle" | translate }}
+    </span>
     <span class="mg-l-15">
       <input
         kendoCheckBox

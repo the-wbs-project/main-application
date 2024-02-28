@@ -688,14 +688,13 @@
     "locale": "en-US",
     "values": {
       "Title": "Create Library WBS",
-      "VisibilityPublicDescription": "This WBS will be available to the entire community.",
-      "VisibilityPrivateDescription": "This WBS will only be available to your organization.",
-      "GettingStarted_Title": "Getting Started",
-      "GettingStarted_Description": "Let's get started creating a new WBS library entry.  Please provide some of the basic information needed for a new library entry",
+      "VisibilityPublicDescription": "A public WBS will be available to the entire community and is great for templates which would benefit everybody.",
+      "VisibilityPrivateDescription": "A private WBS is only available within your organization and is good for templates which contain proprietary information.",
       "Basics_Title": "Basics",
       "Basics_Description": "Let us know the name of the WBS and what type it is. This will help us guide you through the rest of the creation.",
-      "TemplateTitle": "Library Template Title",
-      "TemplateTitleDescription": "This is the name of the template (i.e. \"Public Meeting for Water Works Projects\")",
+      "TemplateTitle": "WBS Template Title",
+      "TemplateTitleDescriptionPhase": "This is the name of the template (i.e. \"Master Plan Phase for Sewage Treatment Plants\")",
+      "TemplateTitleDescriptionTask": "This is the name of the template (i.e. \"Public Meeting for Water Works Projects\")",
       "MainTaskTitle": "Main Task Title",
       "MainTaskTitleDescription": "This is the name of the main task (i.e. \"Public Meeting\")",
       "SameAsAbove": "Same As Above",
@@ -716,7 +715,13 @@
       "ErrorSaving": "An error occured trying to create your WBS template.  Our knomes are working on it.",
       "ViewTemplate": "View The Template",
       "UploadWbs": "Upload a WBS",
-      "CloseWindow": "Close Window"
+      "CloseWindow": "Close Window",
+      "PredefinedPhase": "Predefined Phase",
+      "PredefinedPhaseDescription": "Our recommend list of phases",
+      "CustomPhase": "Custom Phase",
+      "CustomPhaseDescription": "Define your own phase",
+      "PhaseTitle": "Phase Title",
+      "PhaseTitleDescription": "This is the name of the phase (i.e. \"Master Plan\")"
     }
   }
 ]

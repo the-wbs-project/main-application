@@ -158,8 +158,6 @@ export class AiState implements NgxsOnInit {
 
       return this.data.ai.runWorkerAiAsync(model.model, input).pipe(
         map((response) => {
-          console.log(response);
-
           if (response.success) {
             responseMessage.text = response.result.response;
             responseMessage.typing = false;
@@ -212,8 +210,6 @@ export class AiState implements NgxsOnInit {
 
       return this.data.ai.runOpenAiWorkerAsync(input).pipe(
         map((response) => {
-          console.log(response);
-
           if (response.choices) {
             responseMessage.text = response.choices[0].message.content!;
             responseMessage.typing = false;
@@ -250,8 +246,6 @@ export class AiState implements NgxsOnInit {
           this.saveChat(ctx);
         }),
         catchError((err, caught) => {
-          console.log(err);
-
           message.status = 'Error';
 
           feed.splice(feed.length - 1, 1);

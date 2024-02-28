@@ -147,8 +147,6 @@ export class RecordResourcesPageComponent {
       .putAsync(this.owner(), this.projectId(), this.taskId(), resource)
       .pipe(
         map(() => {
-          console.log('Saved');
-
           this.list = structuredClone([...this.list(), resource]);
           this.cd.detectChanges();
         })

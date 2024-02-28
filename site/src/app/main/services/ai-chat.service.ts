@@ -63,8 +63,6 @@ export class AiChatService {
       this.data.ai
         .runWorkerAiAsync(model.model, input)
         .subscribe((response) => {
-          console.log(response);
-
           if (response.success) {
             responseMessage.text = response.result.response;
             responseMessage.typing = false;
@@ -98,8 +96,6 @@ export class AiChatService {
             });*/
           }
           feed.set(structuredClone(feedArray));
-
-          console.log(feedArray);
           //this.saveChat(ctx);
         });
     } else if (model.type === 'open-ai') {
@@ -150,12 +146,9 @@ export class AiChatService {
           }
           feed.set(structuredClone(feedArray));
 
-          console.log(feedArray);
           //this.saveChat(ctx);
         },
         (err) => {
-          console.log(err);
-
           message.status = 'Error';
 
           feedArray.splice(feedArray.length - 1, 1);

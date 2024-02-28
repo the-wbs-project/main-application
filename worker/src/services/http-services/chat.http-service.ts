@@ -25,8 +25,6 @@ export class ChatHttpService {
       const response = await ctx.get('origin').postAsync(body);
       const record: ChatComment = await response.json();
 
-      console.log(record);
-
       return ctx.json(await convertMessage(ctx, record));
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get chat info', <Error>e);

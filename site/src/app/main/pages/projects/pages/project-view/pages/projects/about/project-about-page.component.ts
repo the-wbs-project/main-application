@@ -53,7 +53,5 @@ export class ProjectAboutPageComponent {
   readonly approvalStats = this.store.select(ProjectApprovalState.stats);
   readonly approvals = this.store.select(ProjectApprovalState.list);
 
-  test(): void {
-    console.log('testing 1243');
-  }
+  test(): void {}
 }

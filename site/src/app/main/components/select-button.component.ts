@@ -7,7 +7,7 @@ import {
   input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck } from '@fortawesome/pro-solid-svg-icons';
+import { IconDefinition, faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'wbs-select-button',
   template: `@if (selected()) {
     <button type="button" class="btn btn-dark" [ngClass]="buttonClass()">
+      @if (prefixIcon(); as icon) { <fa-icon [icon]="icon" /> }
       {{ selectedText() | translate }} &nbsp; <fa-icon [icon]="faCheck" />
     </button>
     } @else {
@@ -24,6 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
       [ngClass]="buttonClass()"
       (click)="clicked.emit()"
     >
+      @if (prefixIcon(); as icon) { <fa-icon [icon]="icon" /> }
       {{ selectText() | translate }}
     </button>
     }`,
@@ -36,5 +38,6 @@ export class SelectButtonComponent {
   readonly selectText = input<string>('General.Select');
   readonly selectedText = input<string>('General.Selected');
   readonly buttonClass = input<string>();
+  readonly prefixIcon = input<IconDefinition>();
   @Output() readonly clicked = new EventEmitter<void>();
 }

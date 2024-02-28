@@ -125,7 +125,6 @@ export class MemberListComponent implements OnChanges {
       logic: 'and',
       filters,
     };
-    console.log(state);
     this.state.set(state);
   }
 

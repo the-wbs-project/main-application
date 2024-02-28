@@ -9,7 +9,7 @@ export class PhaseLabelPipe implements PipeTransform {
 
   transform(
     idsOrCat: ProjectCategory | null | undefined,
-    projectCategories: ProjectCategory[]
+    projectCategories?: ProjectCategory[]
   ): string {
     if (!idsOrCat) return '';
     if (typeof idsOrCat !== 'string') return idsOrCat.label;

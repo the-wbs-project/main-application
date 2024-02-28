@@ -19,19 +19,27 @@
         @if (step.isOptional) { <span class="mg-l-5">*</span> }
       </ng-template>
     </kendo-stepper>
-    <div class="tx-center flex-fill pd-t-20 pd-x-10">
+    <div #mainView class="tx-center flex-fill pd-t-20 pd-x-10 scroll">
       @if (view() === 0) {
       <div
         class="d-ib w-100 mx-wd-800 tx-left animate__animated"
         [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
       >
-        <div class="pd-x-12">
-          <wbs-title-form
-            [(mainTaskTitle)]="mainTaskTitle"
-            [(templateTitle)]="templateTitle"
-            [(syncTitles)]="syncTitles"
+        <div class="pd-x-12 mb-3">
+          <label for="templateTitle" class="form-label tx-18">
+            {{ "LibraryCreate.TemplateTitle" | translate }}
+          </label>
+          <input
+            kendoTextBox
+            name="templateTitle"
+            id="templateTitle"
+            [(ngModel)]="templateTitle"
           />
-
+          <label class="d-ib tx-12 tx-italic mg-t-5">
+            {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+          </label>
+        </div>
+        <div class="pd-x-12">
           <label class="form-label tx-18">
             {{ "LibraryCreate.Visibility" | translate }}
           </label>
@@ -39,6 +47,16 @@
         </div>
       </div>
       } @else if (view() === 1) {
+      <div
+        class="d-ib w-100 mx-wd-800 animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <wbs-phase-section [(phase)]="phase" />
+      </div>
+      } @else if (view() === 2) {
 
       <div
         class="d-ib w-100 mx-wd-800 text-center animate__animated"
@@ -55,7 +73,7 @@
           <wbs-discipline-editor [(categories)]="disciplines" />
         </div>
       </div>
-      } @else if (view() === 2) {
+      } @else if (view() === 3) {
 
       <div
         class="d-ib w-100 mx-wd-800 animate__animated"
@@ -66,8 +84,8 @@
       >
         <wbs-save-section
           [owner]="owner()!"
+          [phase]="phase()"
           [disciplines]="disciplines()"
-          [mainTaskTitle]="mainTaskTitle()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility()"
           (close)="dialog.close($event)"

@@ -445,8 +445,6 @@ export class TasksState {
 
     if (upserts.length === 0) return of();
 
-    console.log(upserts);
-
     return this.saveReordered(
       ctx,
       state.project!,

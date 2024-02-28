@@ -153,7 +153,6 @@ export class ProjectCreateState {
       description: action.description,
       title: action.title,
     });
-    console.log('saved');
   }
 
   @Action(CategoryChosen)

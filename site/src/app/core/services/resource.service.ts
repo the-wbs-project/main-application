@@ -68,7 +68,6 @@ export class Resources extends MissingTranslationHandler {
 
       return resource;
     } catch (e) {
-      console.log(e);
       console.error(`Error trying to retrieve '${resource}' value.`);
       return 'Error';
     }

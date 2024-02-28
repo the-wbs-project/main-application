@@ -19,7 +19,6 @@ export const rolesResolve: ResolveFn<string[]> = () =>
     .select(MembershipState.roles)
     .pipe(
       skipWhile((x) => x == undefined),
-      tap(console.log),
       map((x) => x!),
       first()
     );

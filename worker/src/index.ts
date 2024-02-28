@@ -119,7 +119,6 @@ export default {
     //
   },
   async queue(batch: MessageBatch, env: Env, ctx: ExecutionContext): Promise<void> {
-    console.log(`${batch.queue}: ${batch.messages.length} Messages`);
 
     const datadog = new DataDogService(env);
     const logger = new JobLogger(env, datadog, batch.queue);
@@ -127,8 +126,6 @@ export default {
     try {
       if (batch.queue.startsWith('wbs-jira-sync')) {
         const message = batch.messages[0];
-
-        console.log(res.status, res.statusText, await res.text());
 
         batch.ackAll();
         logger.trackEvent('Executed ' + batch.queue, 'Info', <any>message.body);

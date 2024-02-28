@@ -22,7 +22,6 @@ export class JiraDataService {
     fileName: string,
     file: ArrayBuffer
   ): Observable<void> {
-    console.log(jiraIssueId, fileName, file.byteLength);
     return this.http.post<void>(
       `api/jira/upload/${jiraIssueId}/attachment`,
       file,

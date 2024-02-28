@@ -2,16 +2,20 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  ElementRef,
   EventEmitter,
   Output,
   computed,
   inject,
   model,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
+  faDiagramSubtask,
+  faEye,
   faFloppyDisk,
   faInfo,
   faPeople,
@@ -28,39 +32,43 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { VisiblitySelectionComponent } from '../visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
-import { TitleFormComponent } from './components/title-form';
+import { VisiblitySelectionComponent } from '../visiblity-selection';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { FormsModule } from '@angular/forms';
+import { PhaseSectionComponent } from './components/phase-section';
+import { ProjectCategory } from '@wbs/core/models';
 
 @Component({
   standalone: true,
-  templateUrl: './entry-task-creation.component.html',
+  templateUrl: './entry-phase-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogModule,
     DisciplineEditorComponent,
     FontAwesomeModule,
+    FormsModule,
     NgClass,
+    PhaseSectionComponent,
     SaveSectionComponent,
     StepperModule,
-    TitleFormComponent,
+    TextBoxModule,
     TranslateModule,
     VisiblitySelectionComponent,
   ],
   providers: [CategorySelectionService],
 })
-export class EntryTaskCreationComponent extends DialogContentBase {
+export class EntryPhaseCreationComponent extends DialogContentBase {
   @Output() readonly done = new EventEmitter<void>();
 
   private readonly catService = inject(CategorySelectionService);
   private readonly store = inject(Store);
 
-  type?: string;
+  readonly mainView = viewChild<ElementRef<HTMLDivElement>>('mainView');
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
-  readonly mainTaskTitle = model<string>('');
+  readonly phase = model<ProjectCategory | undefined>(undefined);
   readonly visibility = model<'public' | 'private'>('public');
-  readonly syncTitles = model<boolean>(false);
   readonly disciplines = model<CategorySelection[]>(
     this.catService.build(
       this.store.selectSnapshot(MetadataState.disciplines),
@@ -74,7 +82,8 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   );
   readonly dir = signal<'left' | 'right' | undefined>('left');
   steps = [
-    { label: 'Titles & Visiblity', icon: faInfo },
+    { label: 'Title & Visiblity', icon: faInfo },
+    { label: 'Phase', icon: faDiagramSubtask },
     { label: 'Disciplines', icon: faPeople, isOptional: true },
     { label: 'Review & Save', icon: faFloppyDisk },
   ];
@@ -93,32 +102,37 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   back(): void {
     this.dir.set('left');
     this.view.update((x) => x - 1);
+    this.mainView()?.nativeElement?.scrollTo(0, 0);
   }
 
   next(): void {
     this.dir.set('right');
     this.view.update((x) => x + 1);
+    this.mainView()?.nativeElement?.scrollTo(0, 0);
   }
 
   canContinue(): boolean {
     const view = this.view();
 
-    if (view > 0) return true;
+    if (view === 0) {
+      return this.templateTitle().trim() !== '';
+    }
+    if (view === 1) {
+      const phase = this.phase();
 
-    const synced = this.syncTitles();
-    const templateTitle = this.templateTitle().trim();
-    const mainTaskTitle = this.mainTaskTitle().trim();
-
-    if (synced) return templateTitle !== '';
-
-    return templateTitle !== '' && mainTaskTitle !== '';
+      return (
+        phase != undefined &&
+        (typeof phase === 'string' || phase.label.trim() !== '')
+      );
+    }
+    return true;
   }
 
   nextButtonLabel(): string {
     const view = this.view();
     const hasDisciplines = this.disciplines().some((x) => x.selected);
 
-    if (view === 1) return hasDisciplines ? 'General.Next' : 'General.Skip';
+    if (view === 2) return hasDisciplines ? 'General.Next' : 'General.Skip';
 
     return 'General.Next';
   }
