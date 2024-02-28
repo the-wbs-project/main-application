@@ -74,9 +74,9 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   );
   readonly dir = signal<'left' | 'right' | undefined>('left');
   steps = [
-    { label: 'Titles & Visiblity', icon: faInfo },
-    { label: 'Disciplines', icon: faPeople, isOptional: true },
-    { label: 'Review & Save', icon: faFloppyDisk },
+    { label: 'LibraryCreate.Step_Title', icon: faInfo },
+    { label: 'General.Disciplines', icon: faPeople, isOptional: true },
+    { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
 
   readonly disciplineReview = computed(() =>

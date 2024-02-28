@@ -11,11 +11,11 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
   faDiagramSubtask,
-  faEye,
   faFloppyDisk,
   faInfo,
   faPeople,
@@ -27,17 +27,16 @@ import {
   DialogModule,
   DialogRef,
 } from '@progress/kendo-angular-dialog';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
+import { ProjectCategory } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { SaveSectionComponent } from './components/save-section';
 import { VisiblitySelectionComponent } from '../visiblity-selection';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { FormsModule } from '@angular/forms';
 import { PhaseSectionComponent } from './components/phase-section';
-import { ProjectCategory } from '@wbs/core/models';
+import { SaveSectionComponent } from './components/save-section';
 
 @Component({
   standalone: true,
@@ -82,10 +81,10 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   );
   readonly dir = signal<'left' | 'right' | undefined>('left');
   steps = [
-    { label: 'Title & Visiblity', icon: faInfo },
-    { label: 'Phase', icon: faDiagramSubtask },
-    { label: 'Disciplines', icon: faPeople, isOptional: true },
-    { label: 'Review & Save', icon: faFloppyDisk },
+    { label: 'LibraryCreate.Step_Title', icon: faInfo },
+    { label: 'General.Phase', icon: faDiagramSubtask },
+    { label: 'General.Disciplines', icon: faPeople, isOptional: true },
+    { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
 
   readonly disciplineReview = computed(() =>

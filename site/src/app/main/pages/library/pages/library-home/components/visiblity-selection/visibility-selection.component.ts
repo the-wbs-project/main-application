@@ -3,7 +3,6 @@ import { ChangeDetectionStrategy, Component, model } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faEarth, faLock } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { SelectButtonComponent } from '@wbs/main/components/select-button.component';
 
 @Component({
   standalone: true,

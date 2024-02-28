@@ -721,7 +721,11 @@
       "CustomPhase": "Custom Phase",
       "CustomPhaseDescription": "Define your own phase",
       "PhaseTitle": "Phase Title",
-      "PhaseTitleDescription": "This is the name of the phase (i.e. \"Master Plan\")"
+      "PhaseTitleDescription": "This is the name of the phase (i.e. \"Master Plan\")",
+      "PhaseHeader": "In order to get started, we need to identify the phase you are creating a WBS template for. This is what you would see on the project plan. Do you want to use a...",
+      "DisciplinesHeader": "Optionally, you can define what disciplines are apart of this WBS. This will improve the value and understanding of the WBS.",
+      "Step_Title": "Title & Visibility",
+      "Step_Review": "Review & Save"
     }
   }
 ]
