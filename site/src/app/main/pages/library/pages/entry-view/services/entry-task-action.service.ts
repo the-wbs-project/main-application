@@ -1,5 +1,5 @@
 import { EventEmitter, Injectable, inject } from '@angular/core';
-import { EntryTaskService } from './entry-task.service';
+import { Navigate } from '@ngxs/router-plugin';
 import { SignalStore } from '@wbs/core/services';
 import {
   LibraryEntry,
@@ -7,19 +7,25 @@ import {
   LibraryEntryVersion,
 } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { TaskCreateService } from '@wbs/main/components/task-create';
-import { MetadataState } from '@wbs/main/states';
+import { MembershipState, MetadataState } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { filter, first, switchMap, tap } from 'rxjs/operators';
 import { EntryViewState } from '../states';
-import { Navigate } from '@ngxs/router-plugin';
+import { EntryTaskService } from './entry-task.service';
+import { TaskCreateComponent } from '@wbs/main/components/task-create';
+import { TaskCreationResults } from '@wbs/main/models';
 
 @Injectable()
 export class EntryTaskActionService {
   private readonly store = inject(SignalStore);
-  private readonly taskCreateService = inject(TaskCreateService);
   private readonly taskService = inject(EntryTaskService);
+  private createComponent?: TaskCreateComponent;
+
   readonly expandedKeysChanged = new EventEmitter<string[]>();
+
+  private get org(): string {
+    return this.store.selectSnapshot(MembershipState.organization)!.name;
+  }
 
   private get entry(): LibraryEntry {
     return this.store.selectSnapshot(EntryViewState.entry)!;
@@ -33,6 +39,27 @@ export class EntryTaskActionService {
     return this.store.selectSnapshot(EntryViewState.tasks)!;
   }
 
+  createTask(
+    data: TaskCreationResults,
+    taskId: string,
+    expandedKeys: string[]
+  ): void {
+    const entry = this.entry;
+    const version = this.version;
+    const tasks = this.tasks;
+
+    this.taskService
+      .createTask(entry.owner, entry.id, version.version, taskId!, data, tasks)
+      .subscribe(() => {
+        const keys = structuredClone(expandedKeys);
+        if (!keys.includes(taskId!)) {
+          keys.push(taskId!);
+
+          this.expandedKeysChanged.emit(keys);
+        }
+      });
+  }
+
   onAction(
     action: string,
     taskId: string,
@@ -44,34 +71,10 @@ export class EntryTaskActionService {
     const tasks = this.tasks;
     let obs: Observable<any> | undefined;
 
-    if (action === 'addSub') {
-      const disciplines = this.store.selectSnapshot(MetadataState.disciplines);
-
-      obs = this.taskCreateService.open(disciplines).pipe(
-        switchMap((results) =>
-          !results?.model
-            ? of()
-            : this.taskService.createTask(
-                entry.owner,
-                entry.id,
-                version.version,
-                taskId!,
-                results,
-                tasks
-              )
-        ),
-        tap(() => {
-          const keys = structuredClone(expandedKeys);
-          if (!keys.includes(taskId!)) {
-            keys.push(taskId!);
-            this.expandedKeysChanged.emit(keys);
-          }
-        })
-      );
-    } else if (action === 'viewTask') {
+    if (action === 'viewTask') {
       obs = this.store.dispatch(
         new Navigate([
-          entry.owner,
+          this.org,
           'library',
           'view',
           entry.id,
@@ -81,7 +84,6 @@ export class EntryTaskActionService {
           'about',
         ])
       );
-      //
     } else if (action === 'moveLeft') {
       obs = this.taskService.moveTaskLeft(
         entry.owner,
@@ -101,7 +103,7 @@ export class EntryTaskActionService {
         tree
       );
     } else if (action === 'moveRight') {
-      obs = this.taskService
+      const sub = this.taskService
         .moveTaskRight(
           entry.owner,
           entry.id,

@@ -1,19 +1,13 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { TaskCreateService } from '@wbs/main/components/task-create';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   aboutSubSectionGuard,
   resourcesSubSectionGuard,
   tasksSubSectionGuard,
 } from '@wbs/main/guards';
-import {
-  DialogService,
-  Transformers,
-  orgResolve,
-  phaseCategoryResolver,
-  userIdResolve,
-} from '@wbs/main/services';
+import { Transformers } from '@wbs/main/services';
 import {
   EntryActivityService,
   EntryService,
@@ -22,7 +16,9 @@ import {
   EntryTaskRecorderService,
   EntryTaskService,
   entryIdResolve,
+  entryUrlResolve,
   libraryClaimsResolve,
+  ownerIdResolve,
   redirectGuard,
   verifyGuard,
   versionIdResolve,
@@ -31,25 +27,25 @@ import { EntryViewState } from './states';
 
 export const routes: Routes = [
   {
-    path: ':entryId/:versionId',
+    path: ':ownerId/:entryId/:versionId',
     canActivate: [verifyGuard],
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
-      importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
-      DialogService,
+      importProvidersFrom(
+        DialogModule,
+        NgxsModule.forFeature([EntryViewState])
+      ),
       EntryActivityService,
       EntryService,
       EntryTaskActionService,
       EntryTaskActivityService,
       EntryTaskRecorderService,
       EntryTaskService,
-      TaskCreateService,
       Transformers,
     ],
     resolve: {
-      owner: orgResolve,
-      userId: userIdResolve,
+      entryUrl: entryUrlResolve,
       claims: libraryClaimsResolve,
     },
     children: [
@@ -77,8 +73,8 @@ export const routes: Routes = [
           import('./pages/tasks').then((x) => x.TasksPageComponent),
         canActivate: [tasksSubSectionGuard],
         resolve: {
+          entryUrl: entryUrlResolve,
           claims: libraryClaimsResolve,
-          phases: phaseCategoryResolver,
         },
         loadChildren: () => import('./task-view.routes').then((x) => x.routes),
       },
@@ -90,7 +86,7 @@ export const routes: Routes = [
           ),
         canActivate: [resourcesSubSectionGuard],
         resolve: {
-          owner: orgResolve,
+          owner: ownerIdResolve,
           entryId: entryIdResolve,
           versionId: versionIdResolve,
           claims: libraryClaimsResolve,

@@ -16,7 +16,7 @@
     <div class="card-header py-0 mg-b-0 bg-dark">
       <wbs-navigation
         [activeSubSection]="activeSubSection()"
-        [menu]="links | navMenuProcess : claims()"
+        [menu]="links()"
         (navigate)="navigate($event)"
       />
     </div>

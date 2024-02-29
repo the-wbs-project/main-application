@@ -1,32 +1,30 @@
-<ng-template #taskContent let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">
-      {{ "General.TaskDetails" | translate }}
-    </h4>
-    <button
-      type="button"
-      class="btn-close"
-      aria-label="Close"
-      [routerLink]="['./']"
-    ></button>
-  </div>
-  <div class="modal-body pd-10">
+@if (opened()) {
+<kendo-dialog
+  [width]="dialogWidth()"
+  [height]="dialogHeight()"
+  [title]="'General.TaskDetails' | translate"
+  (close)="closed()"
+>
+  <div class="pd-10">
     <router-outlet />
   </div>
-  <div class="modal-footer">
-    <div style="flex-grow: 1" class="tx-left">
-      @if (task()?.previousTaskId; as taskId) {
-      <a class="btn btn-outline-dark" [routerLink]="[taskId, 'about']">
-        {{ "General.Previous" | translate }}
-      </a>
-      }
+  <kendo-dialog-actions layout="start">
+    <div class="d-flex w-100">
+      <div class="tx-left flex-grow-1">
+        @if (task()?.previousTaskId; as taskId) {
+        <a class="btn btn-outline-dark" [routerLink]="[taskId, 'about']">
+          {{ "General.Previous" | translate }}
+        </a>
+        }
+      </div>
+      <div class="tx-right flex-grow-1">
+        @if (task()?.nextTaskId; as taskId) {
+        <a class="btn btn-outline-dark" [routerLink]="[taskId, 'about']">
+          {{ "General.Next" | translate }}
+        </a>
+        }
+      </div>
     </div>
-    <div style="flex-grow: 1" class="tx-right">
-      @if (task()?.nextTaskId; as taskId) {
-      <a class="btn btn-outline-dark" [routerLink]="[taskId, 'about']">
-        {{ "General.Next" | translate }}
-      </a>
-      }
-    </div>
-  </div>
-</ng-template>
+  </kendo-dialog-actions>
+</kendo-dialog>
+}

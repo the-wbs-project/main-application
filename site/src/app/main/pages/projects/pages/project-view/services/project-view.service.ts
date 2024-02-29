@@ -9,7 +9,6 @@ import {
 } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { TaskCreateService } from '@wbs/main/components/task-create';
 import { DialogService, Transformers } from '@wbs/main/services';
 import { of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -28,9 +27,12 @@ import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
+import { TaskCreateComponent } from '@wbs/main/components/task-create';
 
 @Injectable()
 export class ProjectViewService {
+  private createComponent?: TaskCreateComponent;
+
   constructor(
     private readonly data: DataServiceFactory,
     private readonly dialogs: DialogService,
@@ -38,7 +40,6 @@ export class ProjectViewService {
     private readonly messages: Messages,
     private readonly nav: ProjectNavigationService,
     private readonly store: Store,
-    private readonly taskCreate: TaskCreateService,
     private readonly transformers: Transformers
   ) {}
 
@@ -54,6 +55,10 @@ export class ProjectViewService {
     return this.store.selectSnapshot(ProjectState.current)!.disciplines ?? [];
   }
 
+  registerCreateComponent(createComponent: TaskCreateComponent): void {
+    this.createComponent = createComponent;
+  }
+
   action(action: string, taskId?: string) {
     if (action === 'download') {
       this.downloadTasks();
@@ -61,11 +66,16 @@ export class ProjectViewService {
       this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
     } else if (taskId) {
       if (action === 'addSub') {
-        this.taskCreate.open(this.projectDisciplines).subscribe((results) => {
-          if (results?.model)
-            this.store.dispatch(
+        const sub = this.createComponent!.ready.pipe(
+          switchMap((results) => {
+            if (results == undefined) return of();
+
+            return this.store.dispatch(
               new CreateTask(taskId, results.model, results.nav)
             );
+          })
+        ).subscribe(() => {
+          sub.unsubscribe();
         });
       } else if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(taskId));

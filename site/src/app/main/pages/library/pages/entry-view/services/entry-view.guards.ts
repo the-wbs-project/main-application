@@ -9,15 +9,16 @@ import { EntryViewState } from '../states';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
+  const org = Utils.getOrgName(store, route);
   const tasks = store.selectSnapshot(EntryViewState.tasks) ?? [];
 
   return store
     .dispatch(
       new Navigate([
-        owner,
+        org,
         'library',
         'view',
+        route.params['ownerId'],
         route.params['entryId'],
         route.params['versionId'],
         tasks.length > 0 ? 'about' : 'setup',
@@ -28,15 +29,17 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
 
 export const redirectTaskGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const org = Utils.getOrgName(store, route);
   const entry = store.selectSnapshot(EntryViewState.entry)!;
   const version = store.selectSnapshot(EntryViewState.version)!;
 
   return store
     .dispatch(
       new Navigate([
-        entry.owner,
+        org,
         'library',
         'view',
+        entry.owner,
         entry.id,
         version.version,
         'tasks',

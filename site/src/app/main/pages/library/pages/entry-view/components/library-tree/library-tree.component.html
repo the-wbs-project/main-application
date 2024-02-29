@@ -15,8 +15,8 @@
       [rowReorderable]="true"
       [initiallyExpanded]="false"
       [(expandedKeys)]="expandedKeys"
-      [selectable]="settings"
       [navigable]="true"
+      [selectable]="{ enabled: true, mode: 'row' }"
       (selectionChange)="selectedTask.set($event.items[0].dataItem)"
       (rowReorder)="onRowReordered($event)"
       (cellClick)="onCellClick($event)"
@@ -97,3 +97,5 @@
   </div>
 </div>
 }
+
+<wbs-task-create (ready)="createTask($event)" />

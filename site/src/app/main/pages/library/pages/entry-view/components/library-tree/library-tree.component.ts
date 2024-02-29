@@ -7,6 +7,7 @@ import {
   inject,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -24,7 +25,6 @@ import {
 import {
   CellClickEvent,
   RowReorderEvent,
-  SelectableSettings,
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
@@ -47,6 +47,8 @@ import {
   EntryTreeMenuService,
 } from '../../services';
 import { EntryViewState } from '../../states';
+import { TaskCreateComponent } from '@wbs/main/components/task-create';
+import { TaskCreationResults } from '@wbs/main/models';
 
 @UntilDestroy()
 @Component({
@@ -62,13 +64,18 @@ import { EntryViewState } from '../../states';
     DisciplineIconListComponent,
     FontAwesomeModule,
     TranslateModule,
+    TaskCreateComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
   ],
 })
 export class LibraryTreeComponent implements OnInit {
-  @ViewChild(ContextMenuComponent) gridContextMenu!: ContextMenuComponent;
   @ViewChild(TreeListComponent) treeList!: TreeListComponent;
+
+  protected readonly createModal =
+    viewChild<TaskCreateComponent>(TaskCreateComponent);
+  protected readonly gridContextMenu =
+    viewChild<ContextMenuComponent>(ContextMenuComponent);
 
   private readonly actions = inject(EntryTaskActionService);
   private readonly menuService = inject(EntryTreeMenuService);
@@ -78,6 +85,7 @@ export class LibraryTreeComponent implements OnInit {
 
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
+  readonly entryUrl = input.required<string[]>();
   readonly claims = input.required<string[]>();
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
@@ -102,13 +110,6 @@ export class LibraryTreeComponent implements OnInit {
   readonly faChevronsRight = faChevronsRight;
 
   expandedKeys: string[] = [];
-  settings: SelectableSettings = {
-    enabled: true,
-    mode: 'row',
-    multiple: false,
-    drag: true,
-    readonly: false,
-  };
 
   ngOnInit(): void {
     this.store
@@ -137,13 +138,22 @@ export class LibraryTreeComponent implements OnInit {
     }
   }
 
+  createTask(data: TaskCreationResults | undefined): void {
+    if (!data) return;
+    this.actions.createTask(data, this.selectedTask()!.id, this.expandedKeys);
+  }
+
   onAction(action: string): void {
-    this.actions.onAction(
-      action,
-      this.selectedTask()!.id,
-      this.expandedKeys,
-      this.tree()
-    );
+    if (action === 'addSub') {
+      this.createModal()!.show();
+    } else {
+      this.actions.onAction(
+        action,
+        this.selectedTask()!.id,
+        this.expandedKeys,
+        this.tree()
+      );
+    }
   }
 
   onCellClick(e: CellClickEvent): void {
@@ -153,7 +163,7 @@ export class LibraryTreeComponent implements OnInit {
       const originalEvent = e.originalEvent;
       originalEvent.preventDefault();
 
-      this.gridContextMenu.show({
+      this.gridContextMenu()?.show({
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });
@@ -214,20 +224,7 @@ export class LibraryTreeComponent implements OnInit {
   navigateToTask(taskId: string | undefined): void {
     if (!taskId) return;
 
-    const entry = this.entry()!;
-    const version = this.version()!;
-
-    this.store.dispatch(
-      new Navigate([
-        entry.owner,
-        'library',
-        'view',
-        entry.id,
-        version.version,
-        'tasks',
-        taskId,
-      ])
-    );
+    this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));
   }
 
   private setTree(

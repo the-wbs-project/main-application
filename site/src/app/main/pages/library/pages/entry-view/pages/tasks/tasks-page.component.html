@@ -11,8 +11,9 @@
     [entry]="entry()!"
     [version]="version()!"
     [claims]="claims()"
+    [entryUrl]="entryUrl()"
   />
 </div>
 }
 
-<wbs-entry-task-modal />
+<wbs-entry-task-modal [width]="width() ?? 0" [entryUrl]="entryUrl()" />

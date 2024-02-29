@@ -1,8 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   ViewEncapsulation,
+  computed,
+  inject,
   input,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -11,7 +12,7 @@ import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 import { SignalStore, TitleService } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
+import { NavigationMenuService } from '@wbs/main/services';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectApprovalWindowComponent } from '../../components/project-approval-window/project-approval-window.component';
 import { TASK_NAVIGATION } from '../../models';
@@ -28,12 +29,15 @@ import { ProjectApprovalState, ProjectState, TasksState } from '../../states';
     FindByIdPipe,
     FontAwesomeModule,
     NavigationComponent,
-    NavMenuProcessPipe,
     ProjectApprovalWindowComponent,
     RouterModule,
   ],
 })
 export class TaskViewComponent {
+  private readonly navService = inject(NavigationMenuService);
+  private readonly projectNavService = inject(ProjectNavigationService);
+  private readonly store = inject(SignalStore);
+
   readonly claims = input.required<string[]>();
   readonly userId = input.required<string>();
   readonly current = this.store.select(TasksState.current);
@@ -45,18 +49,16 @@ export class TaskViewComponent {
     ProjectApprovalState.hasChildren
   );
   readonly chat = this.store.select(ProjectApprovalState.messages);
-  readonly links = TASK_NAVIGATION;
+  readonly links = computed(() =>
+    this.navService.processLinks(TASK_NAVIGATION, this.claims())
+  );
   readonly faDiagramSubtask = faDiagramSubtask;
 
-  constructor(
-    title: TitleService,
-    private readonly nav: ProjectNavigationService,
-    private readonly store: SignalStore
-  ) {
+  constructor(title: TitleService) {
     title.setTitle('Project', false);
   }
 
   navigate(route: string[]) {
-    this.nav.toTaskPage(this.current()!.id, ...route);
+    this.projectNavService.toTaskPage(this.current()!.id, ...route);
   }
 }

@@ -1,8 +1,8 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { TaskCreateService } from '@wbs/main/components/task-create';
-import { DialogService, Transformers, userIdResolve } from '@wbs/main/services';
+import { DialogModule } from '@progress/kendo-angular-dialog';
+import { Transformers, userIdResolve } from '@wbs/main/services';
 import {
   closeApprovalWindowGuard,
   projectVerifyGuard,
@@ -35,6 +35,7 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/children.routes').then((m) => m.routes),
     providers: [
       importProvidersFrom(
+        DialogModule,
         NgxsModule.forFeature([
           ProjectApprovalState,
           ProjectChecklistState,
@@ -44,11 +45,9 @@ export const routes: Routes = [
       ),
       ChecklistDataService,
       ChecklistTestService,
-      DialogService,
       LibraryEntryExportService,
       ProjectNavigationService,
       ProjectViewService,
-      TaskCreateService,
       TimelineService,
       Transformers,
     ],

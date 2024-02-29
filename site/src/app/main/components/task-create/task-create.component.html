@@ -1,16 +1,11 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-title">
-    {{ "Projects.CreateTask" | translate }}
-  </h4>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modal.dismiss()"
-  ></button>
-</div>
-<div class="modal-body w-100">
-  <div>
+@if (showDialog()) {
+<kendo-dialog
+  width="80%"
+  maxHeight="90%"
+  [title]="'Projects.CreateTask' | translate"
+  (close)="cancel()"
+>
+  <div class="w-100 scroll">
     <label class="form-label">
       {{ "Projects.TaskTitle" | translate }}
     </label>
@@ -21,43 +16,43 @@
       [(ngModel)]="title"
       (keydown.enter)="save(false)"
     />
+    <br />
+    <br />
+    <div class="wd-100p tx-right">
+      <button class="btn btn-sm btn-primary" (click)="more.set(!more())">
+        {{ (more() ? "General.Less" : "General.More") | translate }}
+      </button>
+    </div>
+    @if (more()) {
+    <label class="form-label">
+      {{ "Projects.TaskDescription" | translate }}
+    </label>
+
+    <kendo-editor [(ngModel)]="description" [resizable]="true" />
+    <br />
+    <br />
+    <label class="form-label">
+      {{ "Projects.TaskDisciplines" | translate }}
+    </label>
+    <wbs-discipline-editor [showButtons]="false" [(categories)]="disciplines" />
+    }
   </div>
-  <br />
-  <br />
-  <div class="wd-100p tx-right">
-    <button class="btn btn-sm btn-primary" (click)="more.set(!more())">
-      {{ (more() ? "General.Less" : "General.More") | translate }}
+
+  <kendo-dialog-actions layout="end">
+    <button
+      class="btn btn-primary"
+      [disabled]="title() === ''"
+      (click)="save(true)"
+    >
+      {{ "General.SaveAndView" | translate }}
     </button>
-  </div>
-  @if (more()) {
-  <label class="form-label">
-    {{ "Projects.TaskDescription" | translate }}
-  </label>
-
-  <kendo-editor [(value)]="description" [resizable]="true" />
-  <br />
-  <br />
-  <label class="form-label">
-    {{ "Projects.TaskDisciplines" | translate }}
-  </label>
-  @if (disciplines) {
-  <wbs-discipline-editor [showButtons]="false" [(categories)]="disciplines" />
-  } }
-</div>
-
-<div class="modal-footer">
-  <button
-    class="btn btn-primary"
-    [disabled]="title === ''"
-    (click)="save(true)"
-  >
-    {{ "General.SaveAndView" | translate }}
-  </button>
-  <button
-    class="btn btn-primary"
-    [disabled]="title === ''"
-    (click)="save(false)"
-  >
-    {{ "General.Save" | translate }}
-  </button>
-</div>
+    <button
+      class="btn btn-primary"
+      [disabled]="title() === ''"
+      (click)="save(false)"
+    >
+      {{ "General.Save" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>
+}

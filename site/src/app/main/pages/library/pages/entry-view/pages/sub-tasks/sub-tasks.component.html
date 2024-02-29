@@ -9,9 +9,9 @@
     parentIdField="treeParentId"
     idField="treeId"
     [initiallyExpanded]="false"
-    [selectable]="settings"
     (dblclick)="navigate()"
     (cellClick)="clickedId = $event.dataItem.id"
+    [selectable]="{ enabled: true, mode: 'row' }"
   >
     <kendo-treelist-column
       field="levelText"

@@ -10,6 +10,7 @@ import {
 } from './guards';
 import {
   AiChatService,
+  NavigationMenuService,
   UserService,
   orgClaimsResolve,
   orgListResolve,
@@ -44,6 +45,7 @@ export const routes: Routes = [
         ])
       ),
       AiChatService,
+      NavigationMenuService,
       UserService,
     ],
     children: [

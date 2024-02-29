@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -11,15 +12,15 @@ import { SignalStore, TitleService } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { NavMenuProcessPipe } from '@wbs/main/pipes/nav-menu-process.pipe';
+import { NavigationMenuService } from '@wbs/main/services';
 import { ProjectTitleComponent } from '../../components/project-title.component';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button/project-action-button.component';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { PROJECT_NAVIGATION } from './models';
-import { ProjectApprovalState, ProjectState } from './states';
 import { ProjectNavigationService } from './services';
+import { ProjectApprovalState, ProjectState } from './states';
 
 @Component({
   standalone: true,
@@ -29,7 +30,6 @@ import { ProjectNavigationService } from './services';
     ApprovalBadgeComponent,
     FindByIdPipe,
     NavigationComponent,
-    NavMenuProcessPipe,
     PageHeaderComponent,
     ProjectActionButtonComponent,
     ProjectApprovalWindowComponent,
@@ -39,6 +39,10 @@ import { ProjectNavigationService } from './services';
   ],
 })
 export class ProjectViewLayoutComponent {
+  private readonly navService = inject(NavigationMenuService);
+  private readonly projectNavService = inject(ProjectNavigationService);
+  private readonly store = inject(SignalStore);
+
   readonly claims = input.required<string[]>();
   readonly userId = input.required<string>();
 
@@ -56,8 +60,10 @@ export class ProjectViewLayoutComponent {
   readonly project = this.store.select(ProjectState.current);
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
+  readonly links = computed(() =>
+    this.navService.processLinks(PROJECT_NAVIGATION, this.claims())
+  );
 
-  readonly links = PROJECT_NAVIGATION;
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
   readonly faX = faX;
   readonly gearIcon = gearIcon;
@@ -69,15 +75,11 @@ export class ProjectViewLayoutComponent {
     },
   ];
 
-  constructor(
-    title: TitleService,
-    private readonly nav: ProjectNavigationService,
-    private readonly store: SignalStore
-  ) {
+  constructor(title: TitleService) {
     title.setTitle('Project', false);
   }
 
   navigate(route: string[]) {
-    this.nav.toProjectPage(...route);
+    this.projectNavService.toProjectPage(...route);
   }
 }

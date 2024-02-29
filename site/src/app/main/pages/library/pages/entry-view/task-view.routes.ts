@@ -1,12 +1,13 @@
 import { Routes } from '@angular/router';
+import { orgResolve } from '@wbs/main/services';
 import {
   entryIdResolve,
+  entryUrlResolve,
   libraryClaimsResolve,
   taskIdResolve,
   taskVerifyGuard,
   versionIdResolve,
 } from './services';
-import { orgResolve } from '@wbs/main/services';
 
 export const routes: Routes = [
   {
@@ -15,6 +16,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./view-task.component').then((m) => m.TaskViewComponent),
     resolve: {
+      entryUrl: entryUrlResolve,
       claims: libraryClaimsResolve,
     },
     children: [
@@ -34,7 +36,7 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/sub-tasks').then((x) => x.SubTasksComponent),
         resolve: {
-          owner: orgResolve,
+          entryUrl: entryUrlResolve,
         },
       },
       {

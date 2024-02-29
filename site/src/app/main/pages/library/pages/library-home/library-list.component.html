@@ -50,7 +50,12 @@
             <li class="list-group-item">
               <a
                 class="text-decoration-none"
-                [routerLink]="['view', entry.entryId, entry.version]"
+                [routerLink]="[
+                  'view',
+                  entry.ownerId,
+                  entry.entryId,
+                  entry.version
+                ]"
               >
                 {{ entry.title }}
               </a>

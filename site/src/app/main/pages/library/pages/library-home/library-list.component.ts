@@ -121,6 +121,7 @@ export class LibraryListComponent implements OnInit {
           '/' + this.owner(),
           'library',
           'view',
+          results.entry.owner,
           results.entry.id,
           results.version.version,
         ];
