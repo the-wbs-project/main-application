@@ -1,7 +1,6 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   aboutSubSectionGuard,
   resourcesSubSectionGuard,
@@ -32,10 +31,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
-      importProvidersFrom(
-        DialogModule,
-        NgxsModule.forFeature([EntryViewState])
-      ),
+      importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
       EntryActivityService,
       EntryService,
       EntryTaskActionService,
@@ -54,12 +50,6 @@ export const routes: Routes = [
         canActivate: [redirectGuard],
         loadComponent: () =>
           import('./pages/entry-about').then((x) => x.AboutPageComponent),
-      },
-      {
-        path: 'setup',
-        loadComponent: () =>
-          import('./pages/entry-setup').then((x) => x.SetupPageComponent),
-        canActivate: [],
       },
       {
         path: 'about',

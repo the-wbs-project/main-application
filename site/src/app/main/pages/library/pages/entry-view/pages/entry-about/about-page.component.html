@@ -1,4 +1,9 @@
 <div class="about-page-grid pd-20" resizedCss>
+  <wbs-details-card
+    [ngClass]="'card border'"
+    [entry]="entry()!"
+    [version]="version()!"
+  />
   <wbs-description-card
     [ngClass]="'card border full-item'"
     [entry]="entry()!"

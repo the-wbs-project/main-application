@@ -49,20 +49,19 @@
 @if (askAi()) {
 <kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
   <wbs-description-ai-dialog
-    [versionTitle]="version()!.title"
-    [description]="version()!.description"
+    [versionTitle]="title()"
+    [description]="description()"
     (descriptionChanged)="save($event)"
   />
 </kendo-dialog>
-} } @else if (version()!.description) {
-<div class="card-body" [innerHTML]="version()!.description | safeHtml"></div>
+} } @else if (description()) {
+<div class="card-body" [innerHTML]="description() | safeHtml"></div>
 } @else {
 <div class="card-body">
   <wbs-alert
     type="warning"
-    message="Projects.NoDescriptionEntry"
+    message="Projects.NoDescriptionTask"
     [dismissible]="false"
   />
 </div>
-
 }

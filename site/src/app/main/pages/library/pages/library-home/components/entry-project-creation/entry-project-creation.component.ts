@@ -107,8 +107,6 @@ export class EntryProjectCreationComponent extends DialogContentBase {
     const category = this.category();
     const title = this.templateTitle();
 
-    console.log(view, phases, category, title);
-
     if (view === 0) {
       return category !== undefined && title.trim() !== '';
     }

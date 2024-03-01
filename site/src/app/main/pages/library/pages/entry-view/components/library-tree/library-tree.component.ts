@@ -159,7 +159,7 @@ export class LibraryTreeComponent implements OnInit {
   cellClick(e: CellClickEvent): void {
     this.selectedTask.set(e.dataItem);
 
-    /*  if (e.type === 'contextmenu') {
+    if (e.type === 'contextmenu') {
       const originalEvent = e.originalEvent;
       originalEvent.preventDefault();
 
@@ -167,7 +167,7 @@ export class LibraryTreeComponent implements OnInit {
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });
-    }*/
+    }
   }
 
   expand(taskId: string): void {
@@ -190,8 +190,6 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   rowReordered(e: RowReorderEvent): void {
-    console.log('REORDER');
-    //const tasks = structuredClone(this.tasks()!);
     const tree = this.tree()!;
     const entryType = this.entry().type;
     const dragged: WbsNodeView = e.draggedRows[0].dataItem;
@@ -255,7 +253,6 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   private resetTree(): void {
-    console.log('RESETTING!!');
     this.tree.set(
       structuredClone(this.store.selectSnapshot(EntryViewState.taskVms)!)
     );

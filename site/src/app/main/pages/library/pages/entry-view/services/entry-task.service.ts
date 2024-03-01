@@ -72,8 +72,8 @@ export class EntryTaskService {
       );
   }
 
-  titleChangedAsync(title: string): Observable<void> {
-    const task = structuredClone(this.task);
+  titleChangedAsync(taskId: string, title: string): Observable<void> {
+    const task = this.getTasks().find((x) => x.id === taskId)!;
     const from = task.title;
 
     task.title = title;
@@ -90,6 +90,29 @@ export class EntryTaskService {
             task.id,
             from,
             title
+          )
+        )
+      );
+  }
+
+  descriptionChangedAsync(taskId: string, description: string): Observable<void> {
+    const task = this.getTasks().find((x) => x.id === taskId)!;
+    const from = task.description;
+
+    task.description = description;
+
+    return this.data.libraryEntryNodes
+      .putAsync(this.owner, this.entryId, this.version, [task], [])
+      .pipe(
+        tap(() => this.messages.notify.success('Library.TitleChanged')),
+        switchMap(() => this.store.dispatch(new TasksChanged([task]))),
+        switchMap(() =>
+          this.activity.taskTitleChanged(
+            this.entryId,
+            this.version,
+            task.id,
+            from,
+            description
           )
         )
       );

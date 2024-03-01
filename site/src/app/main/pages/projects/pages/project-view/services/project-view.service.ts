@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ListItem,
@@ -9,7 +10,7 @@ import {
 } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { DialogService, Transformers } from '@wbs/main/services';
+import { Transformers } from '@wbs/main/services';
 import { of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import {
@@ -82,11 +83,11 @@ export class ProjectViewService {
       } else if (action === 'viewTask') {
         this.nav.toTaskPage(taskId, TASK_PAGES.ABOUT);
       } else if (action === 'deleteTask') {
-        this.dialogs
+        /*this.dialogs
           .openDialog<string>(TaskDeleteComponent)
           .subscribe((reason) => {
             if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));
-          });
+          });*/
       } else if (action === 'moveLeft') {
         this.store.dispatch(new MoveTaskLeft(taskId));
       } else if (action === 'moveRight') {

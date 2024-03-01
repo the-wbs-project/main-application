@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCircleInfo,
   faExclamationTriangle,
+  faThumbsUp,
 } from '@fortawesome/pro-solid-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
@@ -40,11 +41,17 @@ import { TranslateModule } from '@ngx-translate/core';
 export class AlertComponent {
   @Output() readonly closed = new EventEmitter<void>();
 
-  readonly type = input.required<'danger' | 'warning' | 'info'>();
+  readonly type = input.required<'success' | 'danger' | 'warning' | 'info'>();
   readonly message = input.required<string>();
   readonly animation = input<boolean>(true);
   readonly dismissible = input<boolean>(true);
-  readonly icon = computed(() =>
-    this.type() === 'info' ? faCircleInfo : faExclamationTriangle
-  );
+  readonly icon = computed(() => {
+    const type = this.type();
+
+    return type === 'info'
+      ? faCircleInfo
+      : type === 'success'
+      ? faThumbsUp
+      : faExclamationTriangle;
+  });
 }

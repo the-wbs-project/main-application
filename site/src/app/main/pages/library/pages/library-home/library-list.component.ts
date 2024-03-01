@@ -21,12 +21,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { EntryTypeDescriptionPipe } from '../../pipes/entry-type-description.pipe';
+import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
+import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
 import { EntryCreationService } from './services';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 
 @Component({
   standalone: true,
@@ -35,6 +38,9 @@ import { EntryCreationService } from './services';
   imports: [
     DialogModule,
     DropDownButtonModule,
+    EntryTypeDescriptionPipe,
+    EntryTypeIconPipe,
+    EntryTypeTitlePipe,
     FontAwesomeModule,
     NgClass,
     PageHeaderComponent,
@@ -51,26 +57,7 @@ export class LibraryListComponent implements OnInit {
 
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
-  readonly createMenu = [
-    {
-      title: 'General.Project',
-      description: 'LibraryCreate.ProjectTypeDescription',
-      icon: faChartGantt,
-      type: 'project',
-    },
-    {
-      title: 'General.Phase',
-      description: 'LibraryCreate.PhaseTypeDescription',
-      icon: faDiagramSubtask,
-      type: 'phase',
-    },
-    {
-      title: 'General.Task',
-      description: 'LibraryCreate.TaskTypeDescription',
-      icon: faTasks,
-      type: 'task',
-    },
-  ];
+  readonly createMenu = ['project', 'phase', 'task'];
 
   readonly owner = input.required<string>();
   readonly entries = signal<LibraryEntryViewModel[]>([]);

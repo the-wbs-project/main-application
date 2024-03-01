@@ -1,4 +1,4 @@
-@if (current(); as task) {
+@if (task(); as task) {
 <div class="task-about-page-grid pd-20" resizedCss>
   <div class="card border">
     <div class="card-header tx-uppercase">
@@ -97,29 +97,21 @@
     </div>
     }
   </div>
-  <div class="card border full-item">
-    <div class="card-header tx-uppercase">
-      {{ "General.Description" | translate }}
-    </div>
-    @if (task.description) {
-    <div class="card-body" [innerHTML]="task.description | safeHtml"></div>
-    } @else {
-    <div class="card-body tx-center">
-      <p class="text-danger">
-        <fa-icon [icon]="faTriangleExclamation" size="2xl" />
-        <br />
-        <br />
-        {{ "Projects.NoDescription" | translate }}
-      </p>
-      @if (claims() | check : canEditClaim) {
-      <a class="btn btn-dark" [routerLink]="['../', 'settings', 'general']">
-        <fa-icon [icon]="faTools" />
-        &nbsp;
-        {{ "Projects.Fix" | translate }}
-      </a>
-      }
-    </div>
-    }
-  </div>
+  <wbs-description-card
+    [ngClass]="'card border full-item'"
+    [title]="task.title"
+    [description]="task.description"
+    (descriptionChange)="descriptionChange($event)"
+  />
+
+  @if (saveState() === 'saving') {
+  <wbs-saving-alert />
+  } @else if (saveState() === 'saved') {
+  <wbs-alert
+    type="success"
+    message="Library.DescriptionSaved"
+    (closed)="saveState.set(undefined)"
+  />
+  }
 </div>
 }

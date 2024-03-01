@@ -10,7 +10,6 @@ import { EntryViewState } from '../states';
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const org = Utils.getOrgName(store, route);
-  const tasks = store.selectSnapshot(EntryViewState.tasks) ?? [];
 
   return store
     .dispatch(
@@ -21,7 +20,7 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
         route.params['ownerId'],
         route.params['entryId'],
         route.params['versionId'],
-        tasks.length > 0 ? 'about' : 'setup',
+        'about',
       ])
     )
     .pipe(map(() => true));

@@ -1,7 +1,6 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import { Transformers, userIdResolve } from '@wbs/main/services';
 import {
   closeApprovalWindowGuard,
@@ -35,7 +34,6 @@ export const routes: Routes = [
     loadChildren: () => import('./pages/children.routes').then((m) => m.routes),
     providers: [
       importProvidersFrom(
-        DialogModule,
         NgxsModule.forFeature([
           ProjectApprovalState,
           ProjectChecklistState,

@@ -11,12 +11,11 @@ import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { SignalStore, TitleService } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { NavigationMenuService } from '@wbs/main/services';
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
-import { EntryViewState } from './states';
 import { EntryTaskService } from './services';
+import { EntryViewState } from './states';
 
 @Component({
   standalone: true,
@@ -24,7 +23,6 @@ import { EntryTaskService } from './services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     EntryTitleComponent,
-    FindByIdPipe,
     FontAwesomeModule,
     NavigationComponent,
     RouterModule,
@@ -56,7 +54,6 @@ export class TaskViewComponent {
   }
 
   titleChanged(title: string): void {
-    console.log('hi');
-    this.taskService.titleChangedAsync(title).subscribe();
+    this.taskService.titleChangedAsync(this.task()!.id, title).subscribe();
   }
 }

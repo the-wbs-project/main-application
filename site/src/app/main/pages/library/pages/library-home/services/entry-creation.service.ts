@@ -4,7 +4,7 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { Observable } from 'rxjs';
-import { filter, map, tap } from 'rxjs/operators';
+import { filter, map } from 'rxjs/operators';
 import { EntryPhaseCreationComponent } from '../components/entry-phase-creation';
 import { EntryProjectCreationComponent } from '../components/entry-project-creation';
 import { EntryTaskCreationComponent } from '../components/entry-task-creation';
@@ -29,7 +29,6 @@ export class EntryCreationService {
     comp.owner.set(owner);
 
     return dialogRef.result.pipe(
-      tap((x) => console.log(x)),
       filter((x) => !(x instanceof DialogCloseResult)),
       map((x) => <EntryCreationModel>x)
     );

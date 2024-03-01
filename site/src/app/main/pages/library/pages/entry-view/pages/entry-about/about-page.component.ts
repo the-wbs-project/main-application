@@ -7,6 +7,7 @@ import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { EntryService } from '../../services';
 import { EntryViewState } from '../../states';
 import { DescriptionCardComponent } from './components/description-card';
+import { DetailsCardComponent } from './components/details-card';
 
 @Component({
   standalone: true,
@@ -15,6 +16,7 @@ import { DescriptionCardComponent } from './components/description-card';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DescriptionCardComponent,
+    DetailsCardComponent,
     NgClass,
     ResizedCssDirective,
     SafeHtmlPipe,

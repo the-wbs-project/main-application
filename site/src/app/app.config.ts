@@ -22,12 +22,14 @@ import {
   RequestInterceptor,
   Resources,
 } from './core/services';
+import { DialogService } from '@progress/kendo-angular-dialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom([
       AuthModule.forRoot(),
       BrowserAnimationsModule,
+      DialogService,
       HttpClientModule,
       NgxsLoggerPluginModule.forRoot({
         disabled: true, // environment.production,
