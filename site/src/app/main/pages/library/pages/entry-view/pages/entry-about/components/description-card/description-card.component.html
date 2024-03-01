@@ -22,12 +22,13 @@
   <div class="d-ib w-100" style="max-width: 1000px">
     <div class="d-flex w-100 text-end mg-b-15">
       <div class="text-start flex-align-center flex-fill pd-t-10 tx-18">
-        Description Editor
+        {{ "General.DescriptionEditor" | translate }}
       </div>
-      <button class="btn btn-primary mg-l-15" (click)="open()">
-        <fa-icon size="lg" [icon]="faComment" class="mg-r-5" /> Ask AI
+      <button class="btn btn-primary mg-l-15" (click)="askAi.set(true)">
+        <fa-icon size="lg" [icon]="faComment" class="mg-r-5" />
+        {{ "General.AskAi" | translate }}
       </button>
-      <button class="btn btn-success mg-l-15" (click)="save()">
+      <button class="btn btn-success mg-l-15" (click)="save(editDescription)">
         <fa-icon size="lg" [icon]="faFloppyDisk" class="mg-r-5" />
         {{ "General.Save" | translate }}
       </button>
@@ -39,11 +40,29 @@
     <kendo-editor class="form-control" [(ngModel)]="editDescription" />
     <div class="w-100 text-start">
       <label class="tx-italic">
-        A brief (usually 1 paragraph) description of the WBS template.
+        {{ "Library.DescriptionHelpEntry" | translate }}
       </label>
     </div>
   </div>
 </div>
-} @else {
+
+@if (askAi()) {
+<kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
+  <wbs-description-ai-dialog
+    [versionTitle]="version()!.title"
+    [description]="version()!.description"
+    (descriptionChanged)="save($event)"
+  />
+</kendo-dialog>
+} } @else if (version()!.description) {
 <div class="card-body" [innerHTML]="version()!.description | safeHtml"></div>
+} @else {
+<div class="card-body">
+  <wbs-alert
+    type="warning"
+    message="Projects.NoDescription"
+    [dismissible]="false"
+  />
+</div>
+
 }

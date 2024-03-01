@@ -53,6 +53,7 @@ export class WbsNodePhaseTransformer {
         if (node) {
           node.title = label;
           node.description = description;
+          node.order = i + 1;
         } else {
           node = {
             id: cat.id,
@@ -87,10 +88,10 @@ export class WbsNodePhaseTransformer {
         phaseId: node.id,
         order: i + 1,
         title: node.title,
-        canMoveDown: false,
-        canMoveUp: false,
+        canMoveDown: i < rootNodes.length - 1,
+        canMoveUp: i > 0,
         canMoveLeft: false,
-        canMoveRight: false,
+        canMoveRight: i > 0,
         lastModified: node?.lastModified,
         subTasks: [],
       };
@@ -150,7 +151,7 @@ export class WbsNodePhaseTransformer {
         canMoveDown: i !== children.length - 1,
         canMoveUp: i > 0,
         canMoveRight: i > 0,
-        canMoveLeft: childLevel.length > 2,
+        canMoveLeft: true,
         subTasks: [],
       };
 

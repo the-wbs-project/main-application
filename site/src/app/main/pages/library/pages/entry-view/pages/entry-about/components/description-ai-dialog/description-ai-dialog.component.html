@@ -1,90 +1,76 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-basic-title">Ask AI</h4>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modal.dismiss('Cross click')"
-  ></button>
+@if (this.showChat()) {
+<div class="d-flex">
+  <div class="flex-fill">
+    <div class="w-100 border-500">
+      <button kendoButton fillMode="clear" (click)="showChat.set(false)">
+        <fa-icon [icon]="faArrowLeft" />
+      </button>
+      <span class="mg-l-15"> Chat with {{ model?.title }} </span>
+    </div>
+    <kendo-chat
+      [messages]="feed()!"
+      [user]="service.you"
+      class="ai-chat"
+      (sendMessage)="sendMessage($event)"
+      (executeAction)="setProposal($event.action.value === 'append')"
+    />
+  </div>
+  <div class="w-50 pd-l-15 d-flex flex-flow-col">
+    <div class="tx-bold d-flex ht-40 flex-align-center">
+      <span>{{ "General.Description" | translate }}:</span>
+    </div>
+    <kendo-editor class="flex-fill" [(value)]="proposal" />
+    <div class="btn-group w-100" role="group" aria-label="Basic example">
+      <button
+        type="button"
+        class="btn btn-outline-dark pd-8 rounded-0"
+        (click)="proposal = ''"
+      >
+        <fa-icon [icon]="faEraser" />
+        Clear
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-dark pd-8 rounded-0"
+        (click)="revert()"
+      >
+        <fa-icon [icon]="faArrowRotateBack" />
+        Revert
+      </button>
+      <button
+        type="button"
+        class="btn btn-outline-dark pd-8 rounded-0"
+        (click)="descriptionChanged.emit(proposal)"
+      >
+        <fa-icon [icon]="faThumbsUp" />
+        Accept & Close
+      </button>
+    </div>
+  </div>
 </div>
-<div class="modal-body">
-  @if (this.showChat()) {
-  <div class="d-flex">
-    <div class="flex-fill">
-      <div class="w-100 border-500">
-        <button kendoButton fillMode="clear" (click)="showChat.set(false)">
-          <fa-icon [icon]="faArrowLeft" />
-        </button>
-        <span class="mg-l-15"> Chat with {{ model?.title }} </span>
-      </div>
-      <kendo-chat
-        [messages]="feed()!"
-        [user]="service.you"
-        class="ai-chat"
-        (sendMessage)="sendMessage($event)"
-        (executeAction)="setProposal($event.action.value === 'append')"
-      />
-    </div>
-    <div class="w-50 pd-l-15 d-flex flex-flow-col">
-      <div class="tx-bold d-flex ht-40 flex-align-center">
-        <span>Description:</span>
-      </div>
-      <kendo-editor class="flex-fill" [(value)]="proposal" />
-      <!--<textarea class="flex-fill" [(value)]="proposal" kendoTextArea></textarea>-->
-      <div class="btn-group w-100" role="group" aria-label="Basic example">
-        <button
-          type="button"
-          class="btn btn-outline-dark pd-8 rounded-0"
-          (click)="proposal = ''"
-        >
-          <fa-icon [icon]="faEraser" />
-          Clear
-        </button>
-        <button
-          type="button"
-          class="btn btn-outline-dark pd-8 rounded-0"
-          (click)="revert()"
-        >
-          <fa-icon [icon]="faArrowRotateBack" />
-          Revert
-        </button>
-        <button
-          type="button"
-          class="btn btn-outline-dark pd-8 rounded-0"
-          (click)="modal.close(proposal)"
-        >
-          <fa-icon [icon]="faThumbsUp" />
-          Accept & Close
-        </button>
-      </div>
-    </div>
-  </div>
-  } @else {
-  <div class="tx-medium mg-b-10">
-    NOTE: This functionality uses technology which is still in beta.
-  </div>
-  <div class="tx-bold">Models:</div>
-  <kendo-dropdownlist
-    [data]="models()"
-    [(ngModel)]="model"
-    valueField="model"
-    textField="title"
-  />
-  <p class="mg-t-15">
-    Let's use this tool to generate a description for the WBS template. You can
-    keep asking it questions or requests changes to the answer to get what you
-    like. Once it gives you a response you like you can tell the system to use
-    the response or append the response to any existing description.
-  </p>
-  <p class="mg-t-15">
-    <span class="tx-bold">Starting Dialog:</span>
+} @else {
+<div class="tx-medium mg-b-10">
+  NOTE: This functionality uses technology which is still in beta.
+</div>
+<div class="tx-bold">Models:</div>
+<kendo-dropdownlist
+  [data]="models()"
+  [(ngModel)]="model"
+  valueField="model"
+  textField="title"
+/>
+<p class="mg-t-15">
+  Let's use this tool to generate a description for the WBS template. You can
+  keep asking it questions or requests changes to the answer to get what you
+  like. Once it gives you a response you like you can tell the system to use the
+  response or append the response to any existing description.
+</p>
+<p class="mg-t-15">
+  <span class="tx-bold">Starting Dialog:</span>
 
-    <kendo-textarea [rows]="3" [(ngModel)]="startingDialog" />
-  </p>
-  <div class="w-100 text-end">
-    <button kendoButton fillMode="outline" (click)="start()">
-      Get Started
-    </button>
-  </div>
-  }
+  <kendo-textarea [rows]="3" [(ngModel)]="startingDialog" />
+</p>
+<div class="w-100 text-end">
+  <button kendoButton fillMode="outline" (click)="start()">Get Started</button>
 </div>
+}

@@ -42,7 +42,6 @@ const taskActions: ContextMenuItem[] = [
     faIcon: faTrash,
     text: 'Projects.DeleteTask',
     filters: {
-      excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.DELETE,
     },
   },
@@ -63,7 +62,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowUp,
     text: 'Projects.MoveUp',
     filters: {
-      excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
@@ -72,7 +70,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowDown,
     text: 'Projects.MoveDown',
     filters: {
-      excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
@@ -81,7 +78,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowRight,
     text: 'Projects.MoveRight',
     filters: {
-      excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },

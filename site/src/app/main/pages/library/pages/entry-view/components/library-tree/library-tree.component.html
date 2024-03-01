@@ -1,101 +1,108 @@
-@if (tree(); as tree) {
-<div class="d-flex flex-column">
-  <div class="tx-italic tx-14 pd-b-5">
-    {{ "Projects.TreeInstructions" | translate }}
-  </div>
-  <div class="flex-fill">
-    <kendo-treelist
-      #treeList
-      class="tx-12"
-      kendoTreeListExpandable
-      kendoTreeListSelectable
-      [kendoTreeListFlatBinding]="tree"
-      parentIdField="treeParentId"
-      idField="treeId"
-      [rowReorderable]="true"
-      [initiallyExpanded]="false"
-      [(expandedKeys)]="expandedKeys"
-      [navigable]="true"
-      [selectable]="{ enabled: true, mode: 'row' }"
-      (selectionChange)="selectedTask.set($event.items[0].dataItem)"
-      (rowReorder)="onRowReordered($event)"
-      (cellClick)="onCellClick($event)"
-      (dblclick)="navigateToTask(selectedTask()?.id)"
-    >
-      @if (claims() | check : canEditClaim) {
-      <kendo-treelist-rowreorder-column [width]="40" />
-      }
-      <kendo-treelist-column
-        field="levelText"
-        [title]="'Wbs.Level' | translate"
-        [width]="100"
-        class="level-column tx-11"
-        headerClass="level-header-column tx-14"
-      />
-      <kendo-treelist-column
-        [expandable]="true"
-        field="title"
-        class="tx-11"
-        headerClass="tx-14"
-      >
-        <ng-template kendoTreeListHeaderTemplate>
-          <div class="w-100 d-flex flex-align-end">
-            <div>
-              {{ "Projects.Activity_Title" | translate }}
-            </div>
-            <div class="flex-fill text-end">
-              <div
-                class="btn-group btn-group-sm"
-                role="group"
-                aria-label="Collapse/Expand Tasks"
-              >
-                <button
-                  type="button"
-                  class="btn btn-outline-dark"
-                  (click)="collapseAll()"
-                >
-                  <fa-icon [icon]="faChevronsLeft" />
-                </button>
-                <button
-                  type="button"
-                  class="btn btn-outline-dark"
-                  (click)="expandAll()"
-                >
-                  <fa-icon [icon]="faChevronsRight" />
-                </button>
-              </div>
-            </div>
-          </div>
-        </ng-template>
-      </kendo-treelist-column>
-      @if ((width() ?? 0) > 800) {
-      <kendo-treelist-column
-        field="disciplines"
-        [width]="150"
-        class="discipline-column"
-        headerClass="discipline-column tx-14"
-      >
-        <ng-template kendoTreeListHeaderTemplate>
-          <wbs-tree-discipline-legend [idsOrCats]="version().disciplines" />
-        </ng-template>
-        <ng-template kendoTreeListCellTemplate let-dataItem>
-          <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
-        </ng-template>
-      </kendo-treelist-column>
-      }
-    </kendo-treelist>
-    <kendo-contextmenu
-      #contextMenu
-      [items]="menu()"
-      (select)="onAction($event.item.action)"
-    >
-      <ng-template kendoMenuItemTemplate let-item="item">
-        <fa-icon [icon]="item.faIcon" />&nbsp;
-        {{ item.text | translate }}
-      </ng-template>
-    </kendo-contextmenu>
-  </div>
-</div>
+@if (tree(); as tree) { @if (alert(); as alertText) {
+<wbs-alert
+  type="danger"
+  [message]="alertText"
+  (closed)="alert.set(undefined)"
+/>
+} @else {
+<wbs-alert
+  type="info"
+  [dismissible]="false"
+  message="Projects.TreeInstructions"
+/>
 }
-
+<kendo-treelist
+  class="tx-12"
+  kendoTreeListExpandable
+  kendoTreeListSelectable
+  [kendoTreeListFlatBinding]="tree"
+  parentIdField="treeParentId"
+  idField="treeId"
+  [rowReorderable]="true"
+  [initiallyExpanded]="false"
+  [(expandedKeys)]="expandedKeys"
+  [navigable]="true"
+  [selectable]="{ enabled: true, mode: 'row' }"
+  (selectionChange)="selectedTask.set($event.items[0].dataItem)"
+  (rowReorder)="rowReordered($event)"
+  (cellClick)="cellClick($event)"
+  (dblclick)="navigateToTask(selectedTask()?.id)"
+>
+  @if (claims() | check : canEditClaim) {
+  <kendo-treelist-rowreorder-column [width]="40" />
+  }
+  <kendo-treelist-column
+    field="levelText"
+    [title]="'Wbs.Level' | translate"
+    [width]="100"
+    class="level-column tx-11"
+    headerClass="level-header-column tx-14"
+  />
+  <kendo-treelist-column
+    [expandable]="true"
+    field="title"
+    class="tx-11"
+    headerClass="tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <div class="w-100 d-flex flex-align-end">
+        <div>
+          {{ "Projects.Activity_Title" | translate }}
+        </div>
+        <div class="flex-fill text-end">
+          <div
+            class="btn-group btn-group-sm"
+            role="group"
+            aria-label="Collapse/Expand Tasks"
+          >
+            <button
+              type="button"
+              class="btn btn-outline-dark"
+              (click)="collapseAll()"
+            >
+              <fa-icon [icon]="faChevronsLeft" />
+            </button>
+            <button
+              type="button"
+              class="btn btn-outline-dark"
+              (click)="expandAll()"
+            >
+              <fa-icon [icon]="faChevronsRight" />
+            </button>
+          </div>
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-task-title [title]="dataItem.title" />
+    </ng-template>
+  </kendo-treelist-column>
+  @if ((width() ?? 0) > 800) {
+  <kendo-treelist-column
+    field="disciplines"
+    [width]="150"
+    class="discipline-column"
+    headerClass="discipline-column tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <wbs-tree-discipline-legend [idsOrCats]="version().disciplines" />
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
+    </ng-template>
+  </kendo-treelist-column>
+  }
+</kendo-treelist>
+@defer (on idle) {
+<kendo-contextmenu
+  #contextMenu
+  [items]="menu()"
+  (select)="onAction($event.item.action)"
+>
+  <ng-template kendoMenuItemTemplate let-item="item">
+    <fa-icon [icon]="item.faIcon" />&nbsp;
+    {{ item.text | translate }}
+  </ng-template>
+</kendo-contextmenu>
 <wbs-task-create (ready)="createTask($event)" />
+} }

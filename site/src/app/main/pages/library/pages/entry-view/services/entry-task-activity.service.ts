@@ -22,6 +22,25 @@ export class EntryTaskActivityService {
     });
   }
 
+  taskTitleChanged(
+    entryId: string,
+    version: number,
+    taskId: string,
+    from: string | undefined,
+    to: string | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.TITLE_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
   taskCloned(
     entryId: string,
     version: number,

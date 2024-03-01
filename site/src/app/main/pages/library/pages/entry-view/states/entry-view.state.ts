@@ -139,6 +139,7 @@ export class EntryViewState {
   @Action(TasksChanged)
   tasksChanged(ctx: Context, { upserts, removeIds }: TasksChanged): void {
     const list = structuredClone(ctx.getState().tasks ?? []);
+    const task = ctx.getState().task;
 
     if (removeIds)
       for (const id of removeIds) {
@@ -152,6 +153,10 @@ export class EntryViewState {
 
       if (index === -1) list.push(node);
       else list[index] = node;
+
+      if (task?.id === node.id) {
+        ctx.patchState({ task: node });
+      }
     }
 
     ctx.patchState({ tasks: list });
@@ -161,14 +166,15 @@ export class EntryViewState {
 
   private rebuildViewModels(ctx: Context): void {
     const state = ctx.getState();
+    let taskVm = state.taskVm;
+    const taskVms = this.transformer.nodes.phase.view.run(
+      state.tasks!,
+      state.entry!.type === LIBRARY_ENTRY_TYPES.TASK
+        ? undefined
+        : state.version!.phases
+    );
+    if (taskVm) taskVm = taskVms.find((x) => x.id === taskVm!.id);
 
-    ctx.patchState({
-      taskVms: this.transformer.nodes.phase.view.run(
-        state.tasks!,
-        state.entry!.type === LIBRARY_ENTRY_TYPES.TASK
-          ? undefined
-          : state.version!.phases
-      ),
-    });
+    ctx.patchState({ taskVm, taskVms });
   }
 }

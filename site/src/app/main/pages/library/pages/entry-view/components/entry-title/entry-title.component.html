@@ -1,5 +1,9 @@
 @if (editMode()) {
-<kendo-textbox class="wd-300" [(ngModel)]="editTitle">
+<kendo-textbox
+  class="wd-300"
+  [(ngModel)]="editTitle"
+  (keydown)="keydown($event)"
+>
   <ng-template kendoTextBoxSuffixTemplate>
     <button kendoButton fillMode="clear" (click)="save()">
       <fa-icon

@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { ResourceRecord } from '@wbs/core/models';
-import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page/record-resources-page.component';
+import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
 import { EntryResourceService } from '../services';
 
 @Component({
@@ -53,19 +53,19 @@ export class ResourcesPageComponent implements OnInit {
         this.taskId(),
         records
       )
-      .subscribe((newRecords) => {
-        const list = this.list();
-
-        for (const r of newRecords) {
-          const index = list.findIndex((x) => x.id === r.id);
-          if (index >= 0) {
-            list[index] = r;
-          } else {
-            list.push(r);
+      .subscribe((newRecords) =>
+        this.list.update((list) => {
+          for (const r of newRecords) {
+            const index = list.findIndex((x) => x.id === r.id);
+            if (index >= 0) {
+              list[index] = r;
+            } else {
+              list.push(r);
+            }
           }
-        }
-        this.list.set(structuredClone(list));
-      });
+          return list;
+        })
+      );
   }
 
   uploadAndSaveAsync(rawFile: FileInfo, data: Partial<ResourceRecord>): void {
@@ -74,14 +74,12 @@ export class ResourcesPageComponent implements OnInit {
         this.owner(),
         this.entryId(),
         this.versionId(),
-        undefined,
+        this.taskId(),
         rawFile,
         data
       )
-      .subscribe((newRecord) => {
-        const list = this.list();
-        list.push(newRecord);
-        this.list.set(structuredClone(list));
-      });
+      .subscribe((newRecord) =>
+        this.list.update((list) => [...list, newRecord])
+      );
   }
 }

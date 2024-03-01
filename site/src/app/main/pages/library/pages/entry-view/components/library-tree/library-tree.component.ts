@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  ViewChild,
   computed,
   inject,
   input,
@@ -36,19 +35,22 @@ import {
 } from '@wbs/core/models';
 import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { AlertComponent } from '@wbs/main/components/alert.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
+import { TaskCreateComponent } from '@wbs/main/components/task-create';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
+import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import {
   EntryTaskActionService,
   EntryTaskRecorderService,
+  EntryTaskService,
   EntryTreeMenuService,
 } from '../../services';
 import { EntryViewState } from '../../states';
-import { TaskCreateComponent } from '@wbs/main/components/task-create';
-import { TaskCreationResults } from '@wbs/main/models';
+import { TaskTitleComponent } from '../task-title';
 
 @UntilDestroy()
 @Component({
@@ -58,6 +60,7 @@ import { TaskCreationResults } from '@wbs/main/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [EntryTreeMenuService, WbsPhaseService],
   imports: [
+    AlertComponent,
     ButtonModule,
     CheckPipe,
     ContextMenuModule,
@@ -65,13 +68,13 @@ import { TaskCreationResults } from '@wbs/main/models';
     FontAwesomeModule,
     TranslateModule,
     TaskCreateComponent,
+    TaskTitleComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
   ],
 })
 export class LibraryTreeComponent implements OnInit {
-  @ViewChild(TreeListComponent) treeList!: TreeListComponent;
-
+  protected readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
   protected readonly createModal =
     viewChild<TaskCreateComponent>(TaskCreateComponent);
   protected readonly gridContextMenu =
@@ -82,6 +85,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly store = inject(SignalStore);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(EntryTaskRecorderService);
+  private readonly taskService = inject(EntryTaskService);
 
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
@@ -93,12 +97,13 @@ export class LibraryTreeComponent implements OnInit {
   readonly width = this.store.select(UiState.mainContentWidth);
 
   readonly tree = signal<WbsNodeView[]>([]);
+  readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
   readonly menu = computed(() =>
     this.menuService.buildMenu(
-      this.tree()!,
-      this.claims(),
-      this.selectedTask()?.id
+      this.version(),
+      this.selectedTask(),
+      this.claims()
     )
   );
   readonly phases = computed(() =>
@@ -125,7 +130,7 @@ export class LibraryTreeComponent implements OnInit {
   expandAll(): void {
     for (const node of this.tree()!) {
       if (node.subTasks.length > 0 && !this.expandedKeys.includes(node.id)) {
-        this.treeList.expand(node);
+        this.treeList()!.expand(node);
       }
     }
   }
@@ -133,7 +138,7 @@ export class LibraryTreeComponent implements OnInit {
   collapseAll(): void {
     for (const node of this.tree()!) {
       if (this.expandedKeys.includes(node.id)) {
-        this.treeList.collapse(node);
+        this.treeList()!.collapse(node);
       }
     }
   }
@@ -147,19 +152,14 @@ export class LibraryTreeComponent implements OnInit {
     if (action === 'addSub') {
       this.createModal()!.show();
     } else {
-      this.actions.onAction(
-        action,
-        this.selectedTask()!.id,
-        this.expandedKeys,
-        this.tree()
-      );
+      this.actions.onAction(action, this.entryUrl(), this.selectedTask()!.id);
     }
   }
 
-  onCellClick(e: CellClickEvent): void {
+  cellClick(e: CellClickEvent): void {
     this.selectedTask.set(e.dataItem);
 
-    if (e.type === 'contextmenu') {
+    /*  if (e.type === 'contextmenu') {
       const originalEvent = e.originalEvent;
       originalEvent.preventDefault();
 
@@ -167,7 +167,7 @@ export class LibraryTreeComponent implements OnInit {
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });
-    }
+    }*/
   }
 
   expand(taskId: string): void {
@@ -189,36 +189,55 @@ export class LibraryTreeComponent implements OnInit {
     this.setKeys(keys);
   }
 
-  onRowReordered(e: RowReorderEvent): void {
+  rowReordered(e: RowReorderEvent): void {
     console.log('REORDER');
     //const tasks = structuredClone(this.tasks()!);
     const tree = this.tree()!;
-
-    if (e.dropPosition === 'forbidden') {
-      this.messages.notify.error('You cannot drop a node under itself', false);
-      return;
-    }
-
+    const entryType = this.entry().type;
     const dragged: WbsNodeView = e.draggedRows[0].dataItem;
     const target: WbsNodeView = e.dropTargetRow?.dataItem;
-
-    if (dragged.id === dragged.phaseId) {
-      this.messages.notify.error(
-        'You cannot move a phase from this screen.',
-        false
-      );
-      this.setTree();
-      return;
-    }
-    const results = this.reorderer.runForPhase(
-      this.store.selectSnapshot(EntryViewState.tasks)!,
-      tree,
+    const validation = this.reorderer.validate(
+      entryType,
       dragged,
       target,
       e.dropPosition
     );
-    console.log(results);
-    //this.taskService.reordered(results);
+
+    if (!validation.valid) {
+      this.alert.set(validation.errorMessage);
+      this.resetTree();
+      return;
+    } else {
+      this.alert.set(undefined);
+    }
+    if (validation.confirmMessage) {
+      this.messages.confirm
+        .show('General.Confirm', validation.confirmMessage)
+        .subscribe((results) => {
+          if (results) {
+            const results = this.reorderer.run(
+              this.store.selectSnapshot(EntryViewState.tasks)!,
+              tree,
+              dragged,
+              target,
+              e.dropPosition
+            );
+            console.log(results);
+          } else {
+            this.resetTree();
+          }
+        });
+    } else {
+      const results = this.reorderer.run(
+        this.store.selectSnapshot(EntryViewState.tasks)!,
+        tree,
+        dragged,
+        target,
+        e.dropPosition
+      );
+      console.log(results);
+      //this.taskService.reordered();
+    }
   }
 
   navigateToTask(taskId: string | undefined): void {
@@ -232,12 +251,18 @@ export class LibraryTreeComponent implements OnInit {
       EntryViewState.taskVms
     )
   ): void {
-    this.tree.set(tree ?? []);
+    this.tree.set(structuredClone(tree) ?? []);
+  }
+
+  private resetTree(): void {
+    console.log('RESETTING!!');
+    this.tree.set(
+      structuredClone(this.store.selectSnapshot(EntryViewState.taskVms)!)
+    );
   }
 
   private setKeys(keys: string[]): void {
     this.expandedKeys = keys;
     this.setTree(this.tree());
-    // this.cd.detectChanges();
   }
 }

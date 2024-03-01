@@ -1,7 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  EventEmitter,
+  OnInit,
+  Output,
+  effect,
   inject,
+  input,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,7 +17,7 @@ import {
   faEraser,
   faThumbsUp,
 } from '@fortawesome/pro-solid-svg-icons';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   ChatModule,
@@ -22,13 +27,14 @@ import {
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextAreaModule } from '@progress/kendo-angular-inputs';
-import { AiModel, LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
+import { AiModel } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { AiChatService } from '@wbs/main/services';
 import { AiState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
+  selector: 'wbs-description-ai-dialog',
   templateUrl: './description-ai-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
@@ -39,20 +45,21 @@ import { AiState } from '@wbs/main/states';
     FontAwesomeModule,
     FormsModule,
     TextAreaModule,
+    TranslateModule,
   ],
   providers: [AiChatService],
 })
-export class DescriptionAiDialogComponent {
+export class DescriptionAiDialogComponent implements OnInit {
+  @Output() readonly descriptionChanged = new EventEmitter<string>();
+
   private readonly store = inject(SignalStore);
-  public readonly modal = inject(NgbActiveModal);
   public readonly service = inject(AiChatService);
 
-  private version?: LibraryEntryVersion;
-
-  readonly models = this.store.select(AiState.models);
+  readonly versionTitle = input.required<string>();
+  readonly description = input.required<string | undefined>();
   readonly showChat = signal<boolean>(false);
   readonly feed = signal<Message[]>([]);
-  //readonly proposal = signal<string>('');
+  readonly models = this.store.select(AiState.models);
   readonly faArrowLeft = faArrowLeft;
   readonly faEraser = faEraser;
   readonly faArrowRotateBack = faArrowRotateBack;
@@ -62,15 +69,19 @@ export class DescriptionAiDialogComponent {
   startingDialog?: string;
   proposal = '';
 
-  setup(entry: LibraryEntry, version: LibraryEntryVersion): void {
-    this.version = version;
-    this.service.verifyUserId();
-    this.startingDialog = `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${version.title}'?`;
+  constructor() {
+    effect(() => {
+      this.startingDialog = `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${this.versionTitle()}'?`;
+    });
+  }
+
+  ngOnInit(): void {
     this.model = this.models()![0];
+    this.service.verifyUserId();
   }
 
   start(): void {
-    this.proposal = this.version?.description ?? '';
+    this.proposal = this.description() ?? '';
     this.feed.set([]);
     this.service.sendAsync(this.model!, this.feed, {
       author: this.service.you,
@@ -80,7 +91,7 @@ export class DescriptionAiDialogComponent {
   }
 
   revert(): void {
-    this.proposal = this.version!.description ?? '';
+    this.proposal = this.description() ?? '';
   }
 
   setProposal(append: boolean): void {

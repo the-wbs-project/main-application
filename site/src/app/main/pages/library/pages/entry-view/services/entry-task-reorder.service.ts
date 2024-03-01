@@ -1,13 +1,130 @@
 import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
-import { LibraryEntryNode } from '@wbs/core/models';
+import { LIBRARY_ENTRY_TYPES, LibraryEntryNode } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { RebuildResults } from '@wbs/main/models';
 import { WbsNodeService } from '@wbs/main/services';
+import { DragValidationResults } from '../models';
 
 @Injectable()
 export class EntryTaskRecorderService {
-  runForPhase(
+  validate(
+    type: string,
+    dragged: WbsNodeView,
+    target: WbsNodeView,
+    dropPosition: DropPosition
+  ): DragValidationResults {
+    return type === LIBRARY_ENTRY_TYPES.PHASE
+      ? this.validatePhase(dragged, target, dropPosition)
+      : type === LIBRARY_ENTRY_TYPES.PROJECT
+      ? this.validateProject(dragged, target, dropPosition)
+      : this.validateTask(dragged, target, dropPosition);
+  }
+
+  validateProject(
+    dragged: WbsNodeView,
+    target: WbsNodeView,
+    position: DropPosition
+  ): DragValidationResults {
+    if (position === 'forbidden') {
+      return {
+        valid: false,
+        errorMessage: 'ReorderMessages.DragUnderItself',
+      };
+    }
+    //
+    //  Now check to see if they are trying to turn a phase into a task.
+    //    If so they need to confirm this is what they intend.
+    //
+    const wasPhase = dragged.parentId == undefined;
+    const isPhase = position !== 'over' && target.parentId == undefined;
+
+    if (wasPhase && isPhase) {
+      return {
+        valid: true,
+        confirmMessage: 'ReorderMessages.RearrangePhases',
+      };
+    } else if (wasPhase && !isPhase) {
+      return {
+        valid: true,
+        confirmMessage: 'ReorderMessages.PhaseToTask',
+      };
+    } else if (isPhase) {
+      return {
+        valid: true,
+        confirmMessage: 'ReorderMessages.TaskToPhase',
+      };
+    }
+    return { valid: true };
+  }
+
+  validatePhase(
+    dragged: WbsNodeView,
+    target: WbsNodeView,
+    dropPosition: DropPosition
+  ): DragValidationResults {
+    if (dropPosition === 'forbidden') {
+      return {
+        valid: false,
+        errorMessage: 'You cannot drop a node under itself.',
+      };
+    }
+    //
+    //  Check if the dragged item is a root element, if so it's a no go.
+    //
+    if (dragged.parentId == undefined) {
+      return {
+        valid: false,
+        errorMessage: "You cannot reorder the root item for task WBS's.",
+      };
+    }
+    //
+    //  Check if the dragged item is a root element, if so it's a no go.
+    //
+    if (target.parentId == undefined && dropPosition !== 'over') {
+      return {
+        valid: false,
+        errorMessage:
+          'Sorry, but there can only be one root item for this WBS type.',
+      };
+    }
+    return { valid: true };
+  }
+
+  validateTask(
+    dragged: WbsNodeView,
+    target: WbsNodeView,
+    dropPosition: DropPosition
+  ): DragValidationResults {
+    if (dropPosition === 'forbidden') {
+      return {
+        valid: false,
+        errorMessage: 'You cannot drop a node under itself',
+      };
+    }
+    //
+    //  Check if the dragged item is a root element, if so it's a no go.
+    //
+    if (dragged.parentId == undefined) {
+      return {
+        valid: false,
+        errorMessage: "You cannot reorder the root item for task WBS's.",
+      };
+    }
+    //
+    //  Check if the dragged item is a root element, if so it's a no go.
+    //
+    if (target.parentId == undefined && dropPosition !== 'over') {
+      return {
+        valid: false,
+        errorMessage:
+          'Sorry, but there can only be one root item for this WBS type.',
+      };
+    }
+    return { valid: true };
+  }
+
+  run(
     tasks: LibraryEntryNode[],
     tree: WbsNodeView[],
     dragged: WbsNodeView,
@@ -54,7 +171,10 @@ export class EntryTaskRecorderService {
       changedIds: [],
     };
 
-    const rebuild = (parentId: string, parentLevel: number[]): number => {
+    const rebuild = (
+      parentId: string | undefined,
+      parentLevel: number[]
+    ): number => {
       const children = this.getSortedVmChildren(parentId, list);
       let count = 0;
 
@@ -95,21 +215,14 @@ export class EntryTaskRecorderService {
       }
       return count;
     };
-    const categories = list.filter((x) => x.parentId == null);
 
-    for (let i = 0; i < categories.length; i++) {
-      const cat = categories[i];
-      const parentLevel = [i + 1];
+    rebuild(undefined, []);
 
-      results.rows.push(list.find((x) => x.id === cat.id)!);
-
-      rebuild(cat.id, parentLevel);
-    }
     return results;
   }
 
   private getSortedVmChildren(
-    parentId: string,
+    parentId: string | undefined,
     list: WbsNodeView[]
   ): WbsNodeView[] {
     return list

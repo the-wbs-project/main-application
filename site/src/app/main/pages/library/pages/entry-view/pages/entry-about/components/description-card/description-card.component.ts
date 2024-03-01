@@ -7,6 +7,7 @@ import {
   TemplateRef,
   inject,
   input,
+  model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -17,12 +18,13 @@ import {
   faPencil,
   faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
-import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
+import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
+import { AlertComponent } from '@wbs/main/components/alert.component';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { DescriptionAiDialogComponent } from '../description-ai-dialog';
-import { AiModel, LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -30,6 +32,9 @@ import { AiModel, LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
   templateUrl: './description-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AlertComponent,
+    DescriptionAiDialogComponent,
+    DialogModule,
     EditorModule,
     FontAwesomeModule,
     FormsModule,
@@ -42,7 +47,6 @@ import { AiModel, LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 export class DescriptionCardComponent {
   @Output() readonly descriptionChange = new EventEmitter<string>();
 
-  private modalService = inject(NgbModal);
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
@@ -50,6 +54,7 @@ export class DescriptionCardComponent {
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
   readonly editMode = signal<boolean>(false);
+  readonly askAi = model<boolean>(false);
 
   editDescription = '';
 
@@ -58,28 +63,14 @@ export class DescriptionCardComponent {
     this.editMode.set(true);
   }
 
-  save(): void {
-    this.descriptionChange.emit(this.editDescription);
+  save(description: string): void {
+    this.descriptionChange.emit(description);
     this.editMode.set(false);
+    this.askAi.set(false);
   }
 
   cancel(): void {
     this.editDescription = '';
     this.editMode.set(false);
-  }
-
-  open() {
-    const modalRef = this.modalService.open(DescriptionAiDialogComponent, {
-      ariaLabelledBy: 'modal-basic-title',
-      size: 'xl',
-      fullscreen: 'sm',
-    });
-
-    modalRef.componentInstance.setup(this.entry(), this.version());
-
-    modalRef.result.then((value) => {
-      this.descriptionChange.emit(value);
-      this.editMode.set(false);
-    });
   }
 }

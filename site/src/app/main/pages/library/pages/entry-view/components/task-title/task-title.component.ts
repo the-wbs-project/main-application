@@ -20,8 +20,8 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 
 @Component({
   standalone: true,
-  selector: 'wbs-entry-title',
-  templateUrl: './entry-title.component.html',
+  selector: 'wbs-task-title',
+  templateUrl: './task-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonModule,
@@ -33,8 +33,8 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
     UpperCasePipe,
   ],
 })
-export class EntryTitleComponent {
-  @Output() readonly titleChange = new EventEmitter<string>();
+export class TaskTitleComponent {
+  @Output() readonly titleChanged = new EventEmitter<string>();
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
@@ -55,8 +55,9 @@ export class EntryTitleComponent {
   }
 
   save(): void {
-    this.titleChange.emit(this.editTitle);
+    this.titleChanged.emit(this.editTitle);
     this.editMode.set(false);
+    console.log('saved in component');
   }
 
   cancel(): void {

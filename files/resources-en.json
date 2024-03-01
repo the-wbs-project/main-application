@@ -156,7 +156,9 @@
       "ConfirmDiscardMessage": "You have unsaved data.  Are you sure you want to discard it?",
       "ConfirmDiscardTitle": "Confirm Discard",
       "TaskDetails": "Task Details",
-      "ErrorNameRequired": "Error: Name is required"
+      "ErrorNameRequired": "Error: Name is required",
+      "AskAi": "Ask AI",
+      "DescriptionEditor": "Description Editor"
     }
   },
   {
@@ -680,7 +682,11 @@
     "section": "Library",
     "locale": "en-US",
     "values": {
-      "DeleteTask": "Are you sure you want to delete this task?"
+      "DeleteTask": "Are you sure you want to delete this task?",
+      "DescriptionHelpEntry": "A brief (usually 1 paragraph) description of the WBS template.",
+      "DescriptionHelpTask": "A brief (usually 1 paragraph) description of the phase/task.",
+      "NoDescriptionEntry": "No description has been given to this WBS.  A detailed description will help people to better understand your WBS and when is the appropriate time to use it.",
+      "NoDescriptionTask": "No description has been given to this WBS.  A detailed description will help people to better understand your WBS and when is the appropriate time to use it."
     }
   },
   {
@@ -728,6 +734,16 @@
       "DisciplinesHeader": "Optionally, you can define what disciplines are apart of this WBS. This will improve the value and understanding of the WBS.",
       "Step_Title": "Title & Visibility",
       "Step_Review": "Review & Save"
+    }
+  },
+  {
+    "section": "ReorderMessages",
+    "locale": "en-US",
+    "values": {
+      "DragUnderItself": "You cannot drop a task under itself.",
+      "RearrangePhases": "To confirm you are rearranging the phases, correct?",
+      "PhaseToTask": "Are you sure you want to convert this phase into a task underneath another phase? This is an uncommon action to take.",
+      "TaskToPhase": "Are you sure you want to convert this task into a phase? This is an uncommon action to take."
     }
   }
 ]

@@ -18,7 +18,7 @@ import { EntryActivityService } from './entry-activity.service';
 export class EntryService {
   private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
-  private readonly messaging = inject(Messages);
+  private readonly messages = inject(Messages);
   private readonly store = inject(Store);
   private readonly taskService = inject(EntryTaskService);
 
@@ -38,7 +38,7 @@ export class EntryService {
     version.title = title;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.messaging.notify.success('Library.TitleChanged')),
+      tap(() => this.messages.notify.success('Library.TitleChanged')),
       switchMap(() => this.store.dispatch(new VersionChanged(version))),
       switchMap(() =>
         this.activity.entryTitleChanged(entry.id, version.version, from, title)
@@ -54,7 +54,7 @@ export class EntryService {
     version.description = description;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.messaging.notify.success('Library.DescriptionChanged')),
+      tap(() => this.messages.notify.success('Library.DescriptionChanged')),
       switchMap(() => this.store.dispatch(new VersionChanged(version))),
       switchMap(() =>
         this.activity.entryTitleChanged(
@@ -90,18 +90,11 @@ export class EntryService {
       order: 1,
     };
     return forkJoin([
-      this.taskService.saveAsync(
-        entry.owner,
-        entry.id,
-        version.version,
-        [node],
-        [],
-        undefined
-      ),
+      this.taskService.saveAsync([node], [], undefined),
       this.data.libraryEntryVersions.putAsync(entry.owner, version),
     ]).pipe(
       tap(() =>
-        this.messaging.notify.success('Library.PhaseSetupSuccess', false)
+        this.messages.notify.success('Library.PhaseSetupSuccess', false)
       ),
       switchMap(() =>
         this.store.dispatch([
@@ -128,18 +121,9 @@ export class EntryService {
       lastModified: new Date(),
       order: 1,
     };
-    return forkJoin([
-      this.taskService.saveAsync(
-        entry.owner,
-        entry.id,
-        version.version,
-        [node],
-        [],
-        undefined
-      ),
-    ]).pipe(
+    return forkJoin([this.taskService.saveAsync([node], [], undefined)]).pipe(
       tap(() =>
-        this.messaging.notify.success('Library.TaskSetupSuccess', false)
+        this.messages.notify.success('Library.TaskSetupSuccess', false)
       ),
       switchMap(() => this.store.dispatch([new TasksChanged([node], [])])),
       switchMap(() =>

@@ -1,0 +1,42 @@
+@if (editMode()) {
+<kendo-textbox
+  class="w-75"
+  size="small"
+  [(ngModel)]="editTitle"
+  (keydown)="keydown($event)"
+>
+  <ng-template kendoTextBoxSuffixTemplate>
+    <button kendoButton size="small" fillMode="clear" (click)="save()">
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [icon]="faFloppyDisk"
+        [title]="'General.Save' | translate"
+      />
+    </button>
+    <button kendoButton size="small" fillMode="clear" (click)="cancel()">
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [icon]="faXmark"
+        [title]="'General.Cancel' | translate"
+      />
+    </button>
+  </ng-template>
+</kendo-textbox>
+} @else {
+<div class="d-ib">
+  <div class="d-flex flex-align-start ht-20">
+    <span class="mg-r-10 mg-t-6">
+      {{ title() }}
+    </span>
+    <fa-icon
+      size="sm"
+      class="pointer"
+      [icon]="faPencil"
+      (click)="edit()"
+      [title]="'General.Edit' | translate"
+    />
+  </div>
+</div>
+}

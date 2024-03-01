@@ -1,39 +1,32 @@
 import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
-import { EntryViewState } from '../states';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class EntryTreeMenuService {
-  constructor(private readonly store: Store) {}
-
   buildMenu(
-    tasks: WbsNodeView[],
-    claims: string[],
-    selectedTaskId: string | undefined
+    version: LibraryEntryVersion,
+    task: WbsNodeView | undefined,
+    claims: string[]
   ): (ContextMenuItem | Seperator)[] {
-    const task = tasks?.find((x) => x.id === selectedTaskId);
-
     if (task === undefined) return [];
 
-    const status = this.store.selectSnapshot(EntryViewState.version)!.status;
     const navActions = this.filterList(
       LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
       task,
       claims,
-      status
+      version.status
     );
     const phaseActions = this.filterList(
       LIBRARY_TREE_MENU_ITEMS.taskActions,
       task,
       claims,
-      status
+      version.status
     );
-
     const movers: ContextMenuItem[] = [];
 
     for (const item of navActions) {
