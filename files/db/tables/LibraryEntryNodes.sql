@@ -3,6 +3,7 @@ CREATE TABLE [dbo].[LibraryEntryNodes] (
     [EntryId] nvarchar(100) NOT NULL,
     [EntryVersion] int NOT NULL,
     [ParentId] nvarchar(100) NULL,
+    [PhaseIdAssociation] nvarchar(100) NULL,
     [Order] int NOT NULL,
     [CreatedOn] datetimeoffset NOT NULL,
     [LastModified] datetimeoffset NOT NULL,

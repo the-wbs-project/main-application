@@ -14,9 +14,8 @@ import {
   faPencil,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { ListItem, ProjectCategory } from '@wbs/core/models';
+import { ProjectCategory } from '@wbs/core/models';
 import { IdService, SignalStore } from '@wbs/core/services';
 import { SelectButtonComponent } from '@wbs/main/components/select-button.component';
 import { MetadataState } from '@wbs/main/states';
@@ -42,7 +41,7 @@ export class PhaseSectionComponent {
   readonly faPencil = faPencil;
   readonly faExclamationTriangle = faExclamationTriangle;
   readonly phases = this.store.select(MetadataState.phases);
-  readonly phase = model.required<ProjectCategory | undefined>();
+  readonly phase = model.required<string | { label: string } | undefined>();
   readonly phaseText = computed(() => {
     const phase = this.phase();
 
@@ -61,11 +60,7 @@ export class PhaseSectionComponent {
       this.phase.set(undefined);
     } else {
       this.phase.set({
-        id: IdService.generate(),
         label: '',
-        tags: [],
-        type: 'phase',
-        order: 1,
       });
     }
   }

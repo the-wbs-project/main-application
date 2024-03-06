@@ -1,24 +1,30 @@
-<div ngbDropdown class="profile-dropdown" container="body">
-  <a class="pointer" ngbDropdownToggle>
-    <wbs-header-profile-picture [picture]="user().picture" />
-  </a>
-  <div ngbDropdownMenu class="profile-menu pb-0 profile-shadow">
-    <!--<div class="w-100 text-center" *ngIf="org.branding?.logo_url; let logo">
-      <img class="logo" [src]="logo" />
-    </div>-->
-    <wbs-header-profile-header [user]="user()" [roles]="roles()" />
-
-    <a
-      ngbDropdownItem
-      class="bg-light-light pointer"
-      (click)="launchProfileEditor()"
-    >
-      <kendo-svg-icon [icon]="userIcon" /> &nbsp;&nbsp;
-      {{ "ProfileEditor.Title" | translate }}
-    </a>
-    <a ngbDropdownItem routerLink="/logout" class="bg-light-light">
-      <kendo-svg-icon [icon]="logoutIcon" /> &nbsp;&nbsp;
-      {{ "General.LogOut" | translate }}
-    </a>
-  </div>
+<div #target class="pointer">
+  <wbs-header-profile-picture [picture]="user().picture" />
 </div>
+<kendo-contextmenu
+  showOn="click"
+  [target]="target"
+  [alignToAnchor]="true"
+  [anchorAlign]="{ horizontal: 'right', vertical: 'bottom' }"
+  (select)="itemClicked($event)"
+>
+  <kendo-menu-item [disabled]="true" cssClass="opacity-1">
+    <ng-template kendoMenuItemTemplate>
+      <wbs-header-profile-header [user]="user()" [roles]="roles()" />
+    </ng-template>
+  </kendo-menu-item>
+  <kendo-menu-item data="profile">
+    <ng-template kendoMenuItemTemplate>
+      <fa-icon [icon]="faUser" /> &nbsp;&nbsp;
+      {{ "ProfileEditor.Title" | translate }}
+    </ng-template>
+  </kendo-menu-item>
+  <kendo-menu-item url="/logout">
+    <ng-template kendoMenuItemTemplate>
+      <fa-icon [icon]="faRightFromBracket" /> &nbsp;&nbsp;
+      {{ "General.LogOut" | translate }}
+    </ng-template>
+  </kendo-menu-item>
+</kendo-contextmenu>
+
+<wbs-profile-editor [(show)]="showProfileEditor" />

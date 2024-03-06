@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  LIBRARY_ENTRY_TYPES,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
@@ -33,7 +32,7 @@ declare type Context = StateContext<StateModel>;
 
 @Injectable()
 @State<StateModel>({
-  name: 'entryState',
+  name: 'entryView',
   defaults: {},
 })
 export class EntryViewState {
@@ -167,12 +166,11 @@ export class EntryViewState {
   private rebuildViewModels(ctx: Context): void {
     const state = ctx.getState();
     let taskVm = state.taskVm;
-    const taskVms = this.transformer.nodes.phase.view.run(
+    const taskVms = this.transformer.nodes.phase.view.runv2(
       state.tasks!,
-      state.entry!.type === LIBRARY_ENTRY_TYPES.TASK
-        ? undefined
-        : state.version!.phases
+      state.entry!.type
     );
+
     if (taskVm) taskVm = taskVms.find((x) => x.id === taskVm!.id);
 
     ctx.patchState({ taskVm, taskVms });

@@ -15,6 +15,7 @@ export class EntryCreationService {
   private readonly dialog = inject(DialogService);
 
   runAsync(owner: string, type: string): Observable<EntryCreationModel> {
+    console.log(type);
     const dialogRef = this.dialog.open({
       content:
         type === 'task'

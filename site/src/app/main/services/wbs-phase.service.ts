@@ -13,6 +13,7 @@ export class WbsPhaseService {
     position: DropPosition
   ): RebuildResults {
     dragged.phaseId = target.phaseId;
+    dragged.phaseLabel = target.phaseLabel;
 
     if (position === 'over') {
       //

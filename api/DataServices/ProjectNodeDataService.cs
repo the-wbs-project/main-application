@@ -28,7 +28,7 @@ public class ProjectNodeDataService : BaseSqlDbService
     {
         var results = new List<ProjectNode>();
 
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectNodes] WHERE [ProjectId] = @ProjectId ORDER BY [LastModified] DESC", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectNodes] WHERE [Removed] = 0 AND [ProjectId] = @ProjectId ORDER BY [LastModified] DESC", conn);
 
         cmd.Parameters.AddWithValue("@ProjectId", projectId);
 
@@ -76,7 +76,7 @@ public class ProjectNodeDataService : BaseSqlDbService
 
     public async Task<bool> VerifyAsync(SqlConnection conn, string projectId, string nodeId)
     {
-        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ProjectNodes] WHERE [ProjectId] = @ProjectId AND [Id] = @Id", conn);
+        var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ProjectNodes] WHERE [Removed] = 0 AND [ProjectId] = @ProjectId AND [Id] = @Id", conn);
 
         cmd.Parameters.AddWithValue("@ProjectId", projectId);
         cmd.Parameters.AddWithValue("@Id", nodeId);
@@ -127,6 +127,7 @@ public class ProjectNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@ParentId", DbValue(node.parentId));
         cmd.Parameters.AddWithValue("@Title", node.title);
         cmd.Parameters.AddWithValue("@Description", DbValue(node.description));
+        cmd.Parameters.AddWithValue("@PhaseIdAssociation", DbValue(node.phaseIdAssociation));
         cmd.Parameters.AddWithValue("@Order", node.order);
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
 
@@ -172,8 +173,8 @@ public class ProjectNodeDataService : BaseSqlDbService
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
+            phaseIdAssociation = DbValue<string>(reader, "PhaseIdAssociation"),
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
-            removed = DbValue<bool>(reader, "Removed"),
             order = DbValue<int>(reader, "Order"),
         };
     }

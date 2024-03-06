@@ -64,7 +64,6 @@ public class ImportLibraryEntryService
                 lastModified = DateTimeOffset.Now,
                 categories = options.categories,
                 disciplines = project.disciplines,
-                phases = project.phases,
                 status = "draft"
             };
 
@@ -78,13 +77,11 @@ public class ImportLibraryEntryService
             var libraryEntryNodeResourceSaves = new List<Task>();
             var nodeIds = new Dictionary<string, string>();
 
-            foreach (var n in projectNodes.Where(r => !r.removed))
+            foreach (var n in projectNodes)
             {
                 var libraryNode = new LibraryEntryNode
                 {
                     id = IdService.Create(),
-                    entryId = libraryEntry.id,
-                    entryVersion = 1,
                     title = n.title,
                     description = n.description,
                     parentId = n.parentId,
@@ -92,7 +89,6 @@ public class ImportLibraryEntryService
                     disciplineIds = n.disciplineIds,
                     lastModified = DateTimeOffset.Now,
                     order = n.order,
-                    removed = false
                 };
                 nodeIds.Add(n.id, libraryNode.id);
                 libraryEntryNodes.Add(libraryNode);
@@ -110,7 +106,7 @@ public class ImportLibraryEntryService
 
             await entryDataService.SetAsync(conn, libraryEntry);
             await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
-            await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, n)));
+            await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.id, 1, n)));
 
             if (options.includeResources)
             {
@@ -181,7 +177,6 @@ public class ImportLibraryEntryService
                 lastModified = DateTimeOffset.Now,
                 title = options.title ?? projectNode.title,
                 description = options.description ?? projectNode.description,
-                phases = options.phase != null ? new object[] { options.phase } : null
             };
 
             var results = new LibraryEntryNodeImportResults
@@ -204,8 +199,6 @@ public class ImportLibraryEntryService
                 var libraryNode = new LibraryEntryNode
                 {
                     id = IdService.Create(),
-                    entryId = libraryEntry.id,
-                    entryVersion = 1,
                     title = n.title,
                     description = n.description,
                     parentId = n.parentId,
@@ -213,7 +206,6 @@ public class ImportLibraryEntryService
                     disciplineIds = n.disciplineIds,
                     lastModified = DateTimeOffset.Now,
                     order = n.order,
-                    removed = false
                 };
                 nodeIds.Add(n.id, libraryNode.id);
                 libraryEntryNodes.Add(libraryNode);
@@ -234,7 +226,7 @@ public class ImportLibraryEntryService
             await entryDataService.SetAsync(conn, libraryEntry);
             await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
 
-            await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, n)));
+            await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.id, 1, n)));
 
             if (options.includeResources)
             {
@@ -319,7 +311,7 @@ public class ImportLibraryEntryService
     {
         var nodes = new List<ProjectNode>();
 
-        foreach (var child in projectNodes.Where(x => x.parentId == parentNodeId && x.removed == false))
+        foreach (var child in projectNodes.Where(x => x.parentId == parentNodeId))
         {
             nodes.Add(child);
             nodes.AddRange(GetProjectNodes(projectNodes, child.id));

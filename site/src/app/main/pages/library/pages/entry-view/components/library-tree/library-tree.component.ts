@@ -29,7 +29,6 @@ import {
 } from '@progress/kendo-angular-treelist';
 import {
   LIBRARY_CLAIMS,
-  LIBRARY_ENTRY_TYPES,
   LibraryEntry,
   LibraryEntryVersion,
 } from '@wbs/core/models';
@@ -106,11 +105,6 @@ export class LibraryTreeComponent implements OnInit {
       this.claims()
     )
   );
-  readonly phases = computed(() =>
-    this.entry().type === LIBRARY_ENTRY_TYPES.TASK
-      ? undefined
-      : this.version()!.phases
-  );
   readonly faChevronsLeft = faChevronsLeft;
   readonly faChevronsRight = faChevronsRight;
 
@@ -145,7 +139,12 @@ export class LibraryTreeComponent implements OnInit {
 
   createTask(data: TaskCreationResults | undefined): void {
     if (!data) return;
-    this.actions.createTask(data, this.selectedTask()!.id, this.expandedKeys);
+    this.actions.createTask(
+      data,
+      this.selectedTask()!.id,
+      this.entryUrl(),
+      this.expandedKeys
+    );
   }
 
   onAction(action: string): void {
@@ -208,24 +207,7 @@ export class LibraryTreeComponent implements OnInit {
     } else {
       this.alert.set(undefined);
     }
-    if (validation.confirmMessage) {
-      this.messages.confirm
-        .show('General.Confirm', validation.confirmMessage)
-        .subscribe((results) => {
-          if (results) {
-            const results = this.reorderer.run(
-              this.store.selectSnapshot(EntryViewState.tasks)!,
-              tree,
-              dragged,
-              target,
-              e.dropPosition
-            );
-            console.log(results);
-          } else {
-            this.resetTree();
-          }
-        });
-    } else {
+    const run = () => {
       const results = this.reorderer.run(
         this.store.selectSnapshot(EntryViewState.tasks)!,
         tree,
@@ -233,8 +215,22 @@ export class LibraryTreeComponent implements OnInit {
         target,
         e.dropPosition
       );
-      console.log(results);
-      //this.taskService.reordered();
+      this.taskService
+        .saveAsync(results, [], 'Library.TasksReordered')
+        .subscribe();
+    };
+    if (validation.confirmMessage) {
+      this.messages.confirm
+        .show('General.Confirm', validation.confirmMessage)
+        .subscribe((results) => {
+          if (results) {
+            run();
+          } else {
+            this.resetTree();
+          }
+        });
+    } else {
+      run();
     }
   }
 
@@ -242,6 +238,10 @@ export class LibraryTreeComponent implements OnInit {
     if (!taskId) return;
 
     this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));
+  }
+
+  taskTitleChanged(taskId: string, title: string): void {
+    this.taskService.titleChangedAsync(taskId, title).subscribe();
   }
 
   private setTree(

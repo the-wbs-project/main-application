@@ -1,1 +1,1 @@
-export * from '../pages/members/components/invites-form/invite-validators.service';
+export * from '../pages/members/components/invitation-form/invite-validators.service';

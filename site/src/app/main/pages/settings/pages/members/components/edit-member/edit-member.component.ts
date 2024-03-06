@@ -1,33 +1,40 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  input,
+  model,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { Member, Role } from '@wbs/core/models';
+import { DialogModule } from '@progress/kendo-angular-dialog';
+import { Role } from '@wbs/core/models';
+import { MemberViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
   selector: 'wbs-edit-member',
   templateUrl: './edit-member.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgClass, TranslateModule],
+  imports: [DialogModule, NgClass, TranslateModule],
 })
 export class EditMemberComponent {
-  member?: Member;
-  roles?: Role[];
+  @Output() readonly save = new EventEmitter<void>();
 
-  constructor(readonly modal: NgbActiveModal) {}
-
-  setup({ member, roles }: { member: Member; roles: Role[] }): void {
-    this.member = member;
-    this.roles = roles;
-  }
+  readonly member = model.required<MemberViewModel | undefined>();
+  readonly roles = input.required<Role[]>();
 
   toggleRole(role: string): void {
-    if (!this.member) return;
+    this.member.update((member) => {
+      if (!member) return;
 
-    const index = this.member.roles.indexOf(role);
+      const index = member.roles.indexOf(role);
 
-    if (index > -1) this.member.roles.splice(index, 1);
-    else this.member.roles.push(role);
+      if (index > -1) member.roles.splice(index, 1);
+      else member.roles.push(role);
+
+      return member;
+    });
   }
 }

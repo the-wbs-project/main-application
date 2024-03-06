@@ -1,7 +1,13 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  EventEmitter,
+  Output,
+  model,
+} from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { Invite, Member, Role } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { InviteValidators } from './invite-validators.service';
@@ -10,22 +16,27 @@ declare type InviteError = { email?: string; error: string };
 
 @Component({
   standalone: true,
-  templateUrl: './invites-form.component.html',
+  selector: 'wbs-invitation-form',
+  templateUrl: './invitation-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [InviteValidators],
-  imports: [NgClass, RoleListPipe, TranslateModule],
+  imports: [DialogModule, NgClass, RoleListPipe, TranslateModule],
 })
-export class InvitesFormComponent {
+export class InvitationFormComponent {
+  @Output() readonly submitted = new EventEmitter<{
+    roles: string[];
+    emails: string[];
+  }>();
+
+  readonly show = model.required<boolean>();
+
   roles: string[] = [];
   errors: InviteError[] = [];
   members!: Member[];
   invites!: Invite[];
   roleDefinitions!: Role[];
 
-  constructor(
-    readonly modal: NgbActiveModal,
-    private readonly validators: InviteValidators
-  ) {}
+  constructor(private readonly validators: InviteValidators) {}
 
   setup({
     invites,
@@ -78,7 +89,7 @@ export class InvitesFormComponent {
       }
     }
     if (errors.length === 0) {
-      this.modal.close({ emails, roles: this.roles });
+      this.submitted.emit({ emails, roles: this.roles });
     } else {
       this.errors = errors;
     }

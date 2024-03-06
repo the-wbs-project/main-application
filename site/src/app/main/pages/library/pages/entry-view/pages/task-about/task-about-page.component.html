@@ -1,5 +1,5 @@
 @if (task(); as task) {
-<div class="task-about-page-grid pd-20" resizedCss>
+<div class="two-column-grid pd-20" resizedCss>
   <div class="card border">
     <div class="card-header tx-uppercase">
       {{ "Projects.BasicInformation" | translate }}
@@ -13,17 +13,17 @@
           {{ task.levelText }}
         </span>
       </p>
-      @if (task.phaseId !== task.id && entry()!.type !== 'task') {
+      @if ( entry()!.type !== 'task') {
       <p class="ms-md-4 ms-0 mb-2">
         <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
           {{ "Wbs.Phase" | translate }} :
         </span>
-        @if (task.phaseId; as phaseId) {
+        @if (task.phaseId) {
         <a
           class="text-decoration-none"
-          [routerLink]="['../../', phaseId, 'about']"
+          [routerLink]="['../../', task.phaseId, 'about']"
         >
-          {{ phaseId | phaseLabel : version()!.phases | translate }}
+          {{ task.phaseLabel }}
         </a>
         } @else {
         <span>

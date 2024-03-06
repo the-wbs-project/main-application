@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
+  computed,
+  effect,
+  inject,
   input,
   model,
   signal,
@@ -25,35 +27,46 @@ import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
-import { MembershipAdminUiService } from '../../services';
+import { Messages } from '@wbs/core/services';
+import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { MembershipAdminService } from '../../services';
+import { EditMemberComponent } from '../edit-member';
 
 @Component({
   standalone: true,
   selector: 'wbs-member-list',
   templateUrl: './member-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TableHelper],
+  providers: [MembershipAdminService, TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
+    EditMemberComponent,
     RoleListPipe,
     SortableDirective,
     SortArrowComponent,
-    TableProcessPipe,
     TranslateModule,
   ],
 })
-export class MemberListComponent implements OnChanges {
+export class MemberListComponent {
+  private readonly memberService = inject(MembershipAdminService);
+  private readonly messages = inject(Messages);
+  private readonly tableHelper = inject(TableHelper);
+
   readonly members = model.required<MemberViewModel[]>();
   readonly org = input.required<string>();
   readonly roles = input.required<Role[]>();
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
+  readonly editMember = signal<MemberViewModel | undefined>(undefined);
   readonly state = signal(<State>{
     sort: [{ field: 'lastLogin', dir: 'desc' }],
   });
+  readonly data = computed(() =>
+    this.tableHelper.process(this.members(), this.state())
+  );
   readonly faGear = faGear;
   readonly faPlus = faPlus;
   readonly menu = [
@@ -69,82 +82,94 @@ export class MemberListComponent implements OnChanges {
     },
   ];
 
-  constructor(private readonly uiService: MembershipAdminUiService) {}
-
-  ngOnChanges(): void {
-    this.updateState();
+  constructor() {
+    effect(() => this.updateState(this.textFilter(), this.filteredRoles()));
   }
 
   userActionClicked(member: MemberViewModel, action: string): void {
     if (action === 'edit') {
-      this.openEditDialog(member);
+      this.editMember.set(structuredClone(member));
     } else if (action === 'remove') {
       this.openRemoveDialog(member);
     }
   }
 
-  updateState(): void {
-    const state = <State>{
-      sort: this.state().sort,
-    };
-    const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
+  updateState(textFilter: string, filteredRoles: string[]): void {
+    this.state.update((s) => {
+      const state: State = { sort: s.sort };
+      const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
 
-    if (this.textFilter) {
-      filters.push(<CompositeFilterDescriptor>{
-        logic: 'or',
-        filters: [
-          {
-            field: 'name',
-            operator: 'contains',
-            value: this.textFilter,
-          },
-          {
-            field: 'email',
-            operator: 'contains',
-            value: this.textFilter,
-          },
-        ],
-      });
-    }
-    if (this.filteredRoles.length > 0) {
-      const roleFilter: CompositeFilterDescriptor = {
-        logic: 'or',
-        filters: [],
-      };
-
-      for (const role of this.filteredRoles()) {
-        roleFilter.filters.push({
-          field: 'roleList',
-          operator: 'contains',
-          value: role.toString(),
+      if (textFilter) {
+        filters.push(<CompositeFilterDescriptor>{
+          logic: 'or',
+          filters: [
+            {
+              field: 'name',
+              operator: 'contains',
+              value: textFilter,
+            },
+            {
+              field: 'email',
+              operator: 'contains',
+              value: textFilter,
+            },
+          ],
         });
       }
-      filters.push(roleFilter);
-    }
-    state.filter = {
-      logic: 'and',
-      filters,
-    };
-    this.state.set(state);
+      if (filteredRoles.length > 0) {
+        const roleFilter: CompositeFilterDescriptor = {
+          logic: 'or',
+          filters: [],
+        };
+
+        for (const role of filteredRoles) {
+          roleFilter.filters.push({
+            field: 'roleList',
+            operator: 'contains',
+            value: role.toString(),
+          });
+        }
+        filters.push(roleFilter);
+      }
+      state.filter = {
+        logic: 'and',
+        filters,
+      };
+      return state;
+    });
   }
 
-  private openEditDialog(member: MemberViewModel): void {
-    this.uiService
-      .openEditMemberDialog(this.org(), member, this.roles())
-      .subscribe((changedMember) => {
-        if (!changedMember) return;
+  protected saveEditMember(): void {
+    const member = this.editMember()!;
 
+    const toRemove = member.roles.filter((r) => !member.roles.includes(r));
+    const toAdd = member.roles.filter((r) => !member.roles.includes(r));
+
+    member.roleList = member.roles.join(',');
+
+    this.memberService
+      .updateMemberRolesAsync(this.org(), member, toAdd, toRemove)
+      .subscribe(() => {
         this.members.update((members) => {
           const index = members.findIndex((m) => m.id === member.id);
-          members[index] = changedMember;
+          members[index] = member;
           return members;
         });
       });
   }
 
   private openRemoveDialog(member: Member): void {
-    this.uiService
-      .openRemoveMemberDialog(this.org(), member.id)
+    this.messages.confirm
+      .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
+      .pipe(
+        switchMap((answer) => {
+          if (!answer) return of(false);
+
+          return this.memberService
+            .removeMemberAsync(this.org(), member.id)
+            .pipe(map(() => true));
+        })
+      )
       .subscribe((answer) => {
         if (!answer) return;
 

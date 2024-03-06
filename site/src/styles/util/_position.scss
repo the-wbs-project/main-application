@@ -1,5 +1,17 @@
 /* ###### 9.7 Position   ###### */
 
+.child-hoverer {
+  .child-to-show {
+    display: none !important;
+  }
+}
+
+.child-hoverer:hover {
+  .child-to-show {
+    display: block !important;
+  }
+}
+
 .d-ib {
   display: inline-block;
 }

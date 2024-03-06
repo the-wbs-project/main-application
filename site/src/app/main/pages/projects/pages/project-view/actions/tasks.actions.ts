@@ -79,10 +79,7 @@ export class SaveTask {
 
 export class VerifyTask {
   static readonly type = '[Project Task] Verify';
-  constructor(
-    readonly viewNode: PROJECT_NODE_VIEW_TYPE,
-    readonly taskId: string
-  ) {}
+  constructor(readonly taskId: string) {}
 }
 
 export class RemoveDisciplinesFromTasks {

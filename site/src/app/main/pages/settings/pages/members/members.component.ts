@@ -2,30 +2,31 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   OnInit,
   computed,
+  inject,
   input,
+  model,
   signal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { Role } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { MembershipState, RoleState } from '@wbs/main/states';
-import { first, forkJoin, skipWhile } from 'rxjs';
+import { SignalStore } from '@wbs/core/services';
+import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
+import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
+import { forkJoin } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
-import { InvitationListComponent } from './components/invitation-list/invitation-list.component';
-import { MemberListComponent } from './components/member-list/member-list.component';
-import { RoleFilterListComponent } from './components/role-filter-list/role-filter-list.component';
-import { MembershipAdminUiService } from './services';
-import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
+import { InvitationFormComponent } from './components/invitation-form';
+import { InvitationListComponent } from './components/invitation-list';
+import { MemberListComponent } from './components/member-list';
+import { RoleFilterListComponent } from './components/role-filter-list';
+import { MembershipAdminService } from './services';
 
 const ROLES = [
   {
@@ -58,6 +59,7 @@ const ROLES = [
   imports: [
     FontAwesomeModule,
     FormsModule,
+    InvitationFormComponent,
     InvitationListComponent,
     MemberListComponent,
     NgClass,
@@ -66,6 +68,10 @@ const ROLES = [
   ],
 })
 export class MembersComponent implements OnInit {
+  private readonly data = inject(DataServiceFactory);
+  private readonly memberService = inject(MembershipAdminService);
+  private readonly store = inject(SignalStore);
+
   readonly org = input.required<string>();
 
   private readonly crumbs: Breadcrumb[] = [
@@ -74,14 +80,15 @@ export class MembersComponent implements OnInit {
     },
   ];
 
-  readonly organization = toSignal(
-    this.store.select(MembershipState.organization)
-  );
-  readonly isLoading = signal<boolean>(true);
+  readonly isLoading = signal(true);
   readonly members = signal<MemberViewModel[]>([]);
   readonly invites = signal<InviteViewModel[]>([]);
-  readonly roles = signal<any[]>([]);
-  readonly roleDefinitions = signal<Role[]>([]);
+  readonly showInviteDialog = model(false);
+
+  readonly organization = this.store.select(MembershipState.organization);
+  readonly roleDefinitions = this.store.select(RoleState.definitions);
+
+  readonly roles = computed(() => this.processRoles(this.roleDefinitions()));
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
   readonly remaining = computed(() =>
     this.capacity()
@@ -100,32 +107,9 @@ export class MembersComponent implements OnInit {
 
   textFilter = '';
 
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly store: Store,
-    private readonly uiService: MembershipAdminUiService
-  ) {}
-
   ngOnInit(): void {
     this.store.dispatch(new ChangeBreadcrumbs(this.crumbs));
 
-    this.store
-      .select(RoleState.definitions)
-      .pipe(
-        skipWhile((list) => list == undefined),
-        first()
-      )
-      .subscribe((definitions) => {
-        if (!definitions) return;
-
-        for (const role of ROLES) {
-          if (role.name === 'all') continue;
-
-          role.name = definitions.find((x) => x.name === role.name)!.id;
-        }
-        this.roles.set(ROLES);
-        this.roleDefinitions.set(definitions);
-      });
     const org = this.org();
 
     forkJoin({
@@ -152,14 +136,11 @@ export class MembersComponent implements OnInit {
     });
   }
 
-  openInviteDialog() {
-    this.uiService
-      .openNewInviteDialog(
-        this.org(),
-        this.invites(),
-        this.members(),
-        this.roleDefinitions()
-      )
+  sendInvite({ emails, roles }: { roles: string[]; emails: string[] }): void {
+    const name = this.store.selectSnapshot(AuthState.profile)!.name;
+
+    this.memberService
+      .sendInvitesAsync(this.org(), emails, roles, name)
       .subscribe((invites) => {
         if (!invites) return;
 
@@ -173,5 +154,19 @@ export class MembersComponent implements OnInit {
           ...this.invites(),
         ]);
       });
+      //This function is used to send an invite to a user 
+  }
+
+  private processRoles(
+    definitions: Role[] | undefined
+  ): { name: string; text: string }[] {
+    if (!definitions) return ROLES;
+
+    for (const role of ROLES) {
+      if (role.name === 'all') continue;
+
+      role.name = definitions.find((x) => x.name === role.name)!.id;
+    }
+    return ROLES;
   }
 }

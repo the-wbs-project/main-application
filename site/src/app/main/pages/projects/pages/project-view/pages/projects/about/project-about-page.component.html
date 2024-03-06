@@ -44,18 +44,12 @@
     </div>
   </div>
   }
-
-  <div class="card border full-item">
-    <div class="card-header">
-      {{ "General.Description" | translate | uppercase }}
-      &nbsp;
-      <wbs-approval-badge
-        [approval]="approvals() | findById : 'project-description'"
-      />
-    </div>
-    <div class="card-body" [innerHTML]="project.description | safeHtml"></div>
-  </div>
-
+  <wbs-description-card
+    [project]="project"
+    [ngClass]="'card border full-item'"
+    [approval]="approvals() | findById : 'project-description'"
+    (descriptionChange)="descriptionChange($event)"
+  />
   <div class="card border double-item">
     <div class="card-header">
       {{ "General.Contacts" | translate | uppercase }}

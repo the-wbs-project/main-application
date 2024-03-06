@@ -16,7 +16,7 @@ export class WbsNodePhaseReorderer {
     return changed;
   }
 
-  run(parentId: string, nodes: WbsNode[]): string[] {
+  run(parentId: string | undefined, nodes: WbsNode[]): string[] {
     const changed: string[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parentId, nodes);
 

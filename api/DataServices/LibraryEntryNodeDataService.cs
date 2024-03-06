@@ -28,7 +28,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
     {
         var results = new List<LibraryEntryNode>();
 
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryNodes] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [Removed] = 0", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryNodes] WHERE [Removed] = 0 AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion", conn);
 
         cmd.Parameters.AddWithValue("@EntryId", entryId);
         cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
@@ -78,22 +78,22 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
     public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
     {
         foreach (var upsert in record.upserts)
-            await SetAsync(conn, owner, upsert);
+            await SetAsync(conn, owner, entryId, entryVersion, upsert);
 
         foreach (var removeId in record.removeIds)
             await DeleteAsync(conn, owner, entryId, entryVersion, removeId);
     }
 
-    public async Task SetAsync(string owner, LibraryEntryNode node)
+    public async Task SetAsync(string owner, string entryId, int entryVersion, LibraryEntryNode node)
     {
         using (var conn = CreateConnection())
         {
             await conn.OpenAsync();
-            await SetAsync(conn, owner, node);
+            await SetAsync(conn, owner, entryId, entryVersion, node);
         }
     }
 
-    public async Task SetAsync(SqlConnection conn, string owner, LibraryEntryNode node)
+    public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, LibraryEntryNode node)
     {
         var cmd = new SqlCommand("dbo.LibraryEntryNode_Set", conn)
         {
@@ -101,11 +101,12 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         };
         cmd.Parameters.AddWithValue("@Id", node.id);
         cmd.Parameters.AddWithValue("@OwnerId", owner);
-        cmd.Parameters.AddWithValue("@EntryId", node.entryId);
-        cmd.Parameters.AddWithValue("@EntryVersion", node.entryVersion);
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
         cmd.Parameters.AddWithValue("@ParentId", DbValue(node.parentId));
         cmd.Parameters.AddWithValue("@Title", node.title);
         cmd.Parameters.AddWithValue("@Description", DbValue(node.description));
+        cmd.Parameters.AddWithValue("@PhaseIdAssociation", DbValue(node.phaseIdAssociation));
         cmd.Parameters.AddWithValue("@Order", node.order);
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
 
@@ -146,15 +147,13 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         return new LibraryEntryNode
         {
             id = DbValue<string>(reader, "Id"),
-            entryId = DbValue<string>(reader, "EntryId"),
-            entryVersion = DbValue<int>(reader, "EntryVersion"),
             parentId = DbValue<string>(reader, "ParentId"),
             createdOn = DbValue<DateTimeOffset>(reader, "CreatedOn"),
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             title = DbValue<string>(reader, "Title"),
             description = DbValue<string>(reader, "Description"),
+            phaseIdAssociation = DbValue<string>(reader, "PhaseIdAssociation"),
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
-            removed = DbValue<bool>(reader, "Removed"),
             order = DbValue<int>(reader, "Order"),
         };
     }

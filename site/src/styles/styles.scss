@@ -411,17 +411,17 @@ button:focus:not(:focus-visible) {
 }
 
 /*
-  Task Dashboard CSS
+  Two Column Grid
 */
-.task-about-page-grid {
+.two-column-grid {
   display: grid;
   background-color: #f8f9fa;
   grid-template-rows: auto;
   gap: 20px;
 }
 
-.task-about-page-grid.wbs-container-xl,
-.task-about-page-grid.wbs-container-xxl {
+.two-column-grid.wbs-container-xl,
+.two-column-grid.wbs-container-xxl {
   grid-template-columns: 1fr 1fr;
 
   .full-item {
@@ -429,10 +429,50 @@ button:focus:not(:focus-visible) {
   }
 }
 
-.task-about-page-grid.wbs-container-sm {
+.two-column-grid.wbs-container-sm {
   grid-template-columns: 1fr;
 
   .full-item {
+    grid-column: span 1;
+  }
+}
+/* 
+  Four Column Grid
+  */
+.four-column-grid {
+  display: grid;
+  grid-template-rows: auto;
+  gap: 20px;
+}
+
+.four-column-grid.wbs-container-xl,
+.four-column-grid.wbs-container-xxl {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  .double-item {
+    grid-column: span 2;
+  }
+
+  .full-item {
+    grid-column: span 4;
+  }
+}
+
+.four-column-grid.wbs-container-md,
+.four-column-grid.wbs-container-lg {
+  grid-template-columns: 1fr 1fr;
+
+  .double-item,
+  .full-item {
+    grid-column: span 2;
+  }
+}
+
+.about-page-grid.wbs-container-sm {
+  grid-template-columns: 1fr;
+
+  .full-item,
+  .double-item {
     grid-column: span 1;
   }
 }

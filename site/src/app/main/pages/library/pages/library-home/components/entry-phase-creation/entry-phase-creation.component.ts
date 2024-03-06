@@ -29,7 +29,7 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { ProjectCategory } from '@wbs/core/models';
+import { Phase } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
@@ -66,7 +66,7 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   readonly mainView = viewChild<ElementRef<HTMLDivElement>>('mainView');
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
-  readonly phase = model<ProjectCategory | undefined>(undefined);
+  readonly phase = model<string | Phase | undefined>(undefined);
   readonly visibility = model<'public' | 'private'>('public');
   readonly disciplines = model<CategorySelection[]>(
     this.catService.build(

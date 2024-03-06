@@ -13,7 +13,7 @@
           {{ task.levelText }}
         </span>
       </p>
-      @if (task.phaseId !== task.id) {
+      @if (task.phaseId) {
       <p class="ms-md-4 ms-0 mb-2">
         <span class="tx-semibold d-ib wd-120 tx-right mg-r-10">
           {{ "Wbs.Phase" | translate }} :
@@ -23,7 +23,7 @@
           class="text-decoration-none"
           [routerLink]="['../../', phaseId, 'about']"
         >
-          {{ phaseId | phaseLabel : project()!.phases | translate }}
+          {{ task.phaseLabel }}
         </a>
         } @else {
         <span>

@@ -11,6 +11,7 @@ import {
 import {
   projectClaimsResolve,
   projectIdResolve,
+  projectUrlResolve,
   taskIdResolve,
 } from '../services';
 
@@ -47,6 +48,7 @@ export const routes: Routes = [
       ),
     resolve: {
       claims: projectClaimsResolve,
+      projectUrl: projectUrlResolve,
     },
     children: [
       {

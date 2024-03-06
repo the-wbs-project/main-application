@@ -2,7 +2,9 @@ import {
   AfterContentInit,
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
+  model,
   OnInit,
   signal,
 } from '@angular/core';
@@ -19,7 +21,6 @@ import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header/header.component';
 import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
 import { MainContentDirective } from './directives/main-content.directive';
-import { DialogService } from './services';
 import { AiState, AuthState, MembershipState, UiState } from './states';
 
 @Component({
@@ -52,9 +53,9 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
       <h1>{{ 'General.Loading' | translate }}...</h1>
     </div>
     }
-    <div kendoDialogContainer></div>`,
+    <div kendoDialogContainer></div>
+    <wbs-profile-editor [(show)]="showProfileEditor" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService],
   imports: [
     ChatWindowComponent,
     DialogModule,
@@ -62,11 +63,14 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
     HeaderComponent,
     LoaderModule,
     MainContentDirective,
+    ProfileEditorComponent,
     RouterModule,
     TranslateModule,
   ],
 })
 export class MainComponent implements AfterContentInit, OnInit {
+  private readonly store = inject(SignalStore);
+
   readonly owner = input.required<string | string>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
@@ -75,23 +79,15 @@ export class MainComponent implements AfterContentInit, OnInit {
 
   readonly loading = signal<boolean>(true);
   readonly user = input.required<User>();
+  readonly showProfileEditor = model(false);
   readonly isAiEnabled = this.store.select(AiState.isEnabled);
   readonly activeSection = this.store.select(UiState.activeSection);
-
-  constructor(
-    private readonly dialog: DialogService,
-    private readonly store: SignalStore
-  ) {}
 
   ngAfterContentInit() {
     const profile = this.store.selectSnapshot(AuthState.profile);
 
     if (!profile?.name || profile.name === profile.email) {
-      this.dialog
-        .openDialog(ProfileEditorComponent, {
-          size: 'md',
-        })
-        .subscribe();
+      this.showProfileEditor.set(true);
     }
   }
 

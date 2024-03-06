@@ -17,7 +17,6 @@ export interface WbsNodeView {
   levelText: string;
   depth: number;
   order: number;
-  phaseId?: string;
   title: string;
   lastModified?: Date;
 
@@ -26,6 +25,9 @@ export interface WbsNodeView {
   canMoveLeft: boolean;
   canMoveRight: boolean;
 
+  phaseIdAssociation?: string;
+  phaseId?: string;
+  phaseLabel?: string;
   parent?: WbsNodeView;
   subTasks: WbsNodeView[];
   previousTaskId?: string;

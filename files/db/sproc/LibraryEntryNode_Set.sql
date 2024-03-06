@@ -7,6 +7,7 @@ CREATE PROCEDURE [dbo].[LibraryEntryNode_Set]
     @EntryId nvarchar(100),
     @EntryVersion int,
     @ParentId nvarchar(100),
+    @PhaseIdAssociation nvarchar(100),
     @Order int,
     @Title nvarchar(MAX),
     @Description nvarchar(MAX),
@@ -20,6 +21,7 @@ BEGIN
                 BEGIN
                     UPDATE [dbo].[LibraryEntryNodes] SET
                         [ParentId] = @ParentId,
+                        [PhaseIdAssociation] = @PhaseIdAssociation,
                         [Order] = @Order,
                         [Title] = @Title,
                         [Description] = @Description,
@@ -34,6 +36,7 @@ BEGIN
                         [EntryId],
                         [EntryVersion],
                         [ParentId],
+                        [PhaseIdAssociation],
                         [Order],
                         [Title],
                         [Description],
@@ -46,6 +49,7 @@ BEGIN
                         @EntryId,
                         @EntryVersion,
                         @ParentId,
+                        @PhaseIdAssociation,
                         @Order,
                         @Title,
                         @Description,

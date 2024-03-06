@@ -12,7 +12,6 @@ import { DetailsCardComponent } from './components/details-card';
 @Component({
   standalone: true,
   templateUrl: './about-page.component.html',
-  styleUrl: './about-page.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DescriptionCardComponent,

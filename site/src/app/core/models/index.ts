@@ -17,6 +17,7 @@ export * from './member.model';
 export * from './open-ai-request.model';
 export * from './open-ai-results.model';
 export * from './organization.model';
+export * from './phase.model';
 export * from './project-activity-record.model';
 export * from './project-approval-save-record.model';
 export * from './project-approval.model';

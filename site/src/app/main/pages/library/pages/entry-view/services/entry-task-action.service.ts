@@ -2,7 +2,7 @@ import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { SignalStore } from '@wbs/core/services';
 import { TaskCreationResults } from '@wbs/main/models';
-import { Observable } from 'rxjs';
+import { Observable, map, of, switchMap, tap } from 'rxjs';
 import { EntryTaskService } from './entry-task.service';
 
 @Injectable()
@@ -15,16 +15,27 @@ export class EntryTaskActionService {
   createTask(
     data: TaskCreationResults,
     taskId: string,
+    entryUrl: string[],
     expandedKeys: string[]
   ): void {
-    this.taskService.createTask(taskId!, data).subscribe(() => {
-      const keys = structuredClone(expandedKeys);
-      if (!keys.includes(taskId!)) {
-        keys.push(taskId!);
+    this.taskService
+      .createTask(taskId!, data)
+      .pipe(
+        tap(() => {
+          const keys = structuredClone(expandedKeys);
+          if (!keys.includes(taskId!)) {
+            keys.push(taskId!);
 
-        this.expandedKeysChanged.emit(keys);
-      }
-    });
+            this.expandedKeysChanged.emit(keys);
+          }
+        }),
+        switchMap((id) =>
+          data.nav
+            ? this.store.dispatch(new Navigate([...entryUrl, 'tasks', id]))
+            : of()
+        )
+      )
+      .subscribe();
   }
 
   onAction(action: string, urlPrefix: string[], taskId: string): void {

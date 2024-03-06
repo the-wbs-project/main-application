@@ -125,9 +125,8 @@ export class WbsDisciplineNodeTransformer {
 
   private getSortedChildren(parentId: string, list: WbsNode[]): WbsNode[] {
     return list
-      .filter((x) => !x.removed && x.parentId === parentId)
+      .filter((x) => x.parentId === parentId)
       .sort(WbsNodeService.sort);
-    //&& (x.disciplineIds ?? []).indexOf(disciplineId) > -1
   }
 
   private getPhaseChildren(

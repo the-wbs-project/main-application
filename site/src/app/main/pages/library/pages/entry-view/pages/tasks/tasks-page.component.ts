@@ -9,10 +9,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { SignalStore } from '@wbs/core/services';
+import { TaskModalComponent } from '@wbs/main/components/task-modal';
 import { UiState } from '@wbs/main/states';
 import { LibraryTreeComponent } from '../../components/library-tree';
 import { EntryViewState } from '../../states';
-import { TaskModalComponent } from './components/task-modal';
 
 @Component({
   standalone: true,
@@ -36,6 +36,7 @@ export class TasksPageComponent {
   readonly entry = this.store.select(EntryViewState.entry);
   readonly version = this.store.select(EntryViewState.version);
   readonly tasks = this.store.select(EntryViewState.tasks);
+  readonly taskVm = this.store.select(EntryViewState.taskVm);
   readonly width = this.store.select(UiState.mainContentWidth);
 
   readonly isLoading = computed(() => !this.entry() || !this.version());

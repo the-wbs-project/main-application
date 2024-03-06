@@ -201,17 +201,6 @@ public class LibraryEntryController : ControllerBase
         {
             if (record.upserts == null) record.upserts = new LibraryEntryNode[] { };
             if (record.removeIds == null) record.removeIds = new string[] { };
-            //
-            //  Verify records credentails matches the URL
-            //
-            foreach (var upsert in record.upserts)
-            {
-                if (upsert.entryId != entryId)
-                    return BadRequest("All records must have same entry ID as provided in url");
-
-                if (upsert.entryVersion != entryVersion)
-                    return BadRequest("All records must have same entry version as provided in url");
-            }
 
             using (var conn = nodeDataService.CreateConnection())
             {

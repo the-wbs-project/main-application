@@ -41,7 +41,7 @@
   <kendo-treelist-column
     [expandable]="true"
     field="title"
-    class="tx-11"
+    class="tx-11 child-hoverer"
     headerClass="tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
@@ -74,7 +74,10 @@
       </div>
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      <wbs-task-title [title]="dataItem.title" />
+      <wbs-task-title
+        [title]="dataItem.title"
+        (titleChanged)="taskTitleChanged(dataItem.id, $event)"
+      />
     </ng-template>
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {

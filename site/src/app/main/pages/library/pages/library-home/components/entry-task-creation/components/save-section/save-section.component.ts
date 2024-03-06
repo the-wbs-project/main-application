@@ -102,7 +102,6 @@ export class SaveSectionComponent {
     const version: LibraryEntryVersion = {
       entryId: entry.id,
       version: 1,
-      phases: [],
       categories: [],
       status: 'draft',
       lastModified: new Date(),
@@ -111,8 +110,6 @@ export class SaveSectionComponent {
     };
     const node: LibraryEntryNode = {
       id: IdService.generate(),
-      entryId: entry.id,
-      entryVersion: 1,
       order: 1,
       lastModified: new Date(),
       title: this.mainTaskTitle(),

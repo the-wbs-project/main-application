@@ -16,7 +16,6 @@ import { SignalStore } from '@wbs/core/services';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { DisciplineListComponent } from '../../../components/discipline-list.component';
 import { ProjectState, TasksState } from '../../../states';
@@ -32,7 +31,6 @@ import { ProjectState, TasksState } from '../../../states';
     DateTextPipe,
     DisciplineListComponent,
     FontAwesomeModule,
-    PhaseLabelPipe,
     ResizedCssDirective,
     RouterModule,
     SafeHtmlPipe,

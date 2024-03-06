@@ -2,10 +2,10 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
 import { Utils } from '@wbs/main/services';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   SetApproval,
@@ -16,7 +16,6 @@ import {
 } from './actions';
 import { PROJECT_PAGES } from './models';
 import { ProjectState } from './states';
-import { of } from 'rxjs';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store)
@@ -90,9 +89,7 @@ export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
 
   if (!taskId) return false;
 
-  return store
-    .dispatch([new VerifyTask(PROJECT_NODE_VIEW.PHASE, taskId)])
-    .pipe(map(() => true));
+  return store.dispatch([new VerifyTask(taskId)]).pipe(map(() => true));
 };
 
 export const setApprovalViewAsTask = () =>

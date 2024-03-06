@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { ListItem, ProjectCategory, WbsNode } from '@wbs/core/models';
+import { ListItem, Phase, ProjectCategory, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { WbsNodeService } from '@wbs/main/services';
@@ -18,37 +18,37 @@ export class WbsNodePhaseTransformer {
   run(models: WbsNode[], phases?: ProjectCategory[]): WbsNodeView[] {
     const nodes: WbsNodeView[] = [];
     let rootNodes: WbsNode[] = [];
+    const phaseList = this.phaseList;
+    const phaseInfo: { id: string; label: string }[] = [];
 
     if (phases) {
-      const categories = <ListItem[]>(
-        phases
-          .map((x) =>
-            typeof x === 'string' ? this.phaseList.find((c) => c.id === x) : x
-          )
-          .filter((x) => x)
-      );
+      for (let i = 0; i < phases.length; i++) {
+        const phase = phases[i];
+        const phaseId = typeof phase === 'string' ? phase : phase.id;
 
-      for (let i = 0; i < categories.length; i++) {
-        const cat = categories[i];
-        let node = models.find((x) => x.id === cat.id)!;
+        let node = models.find((x) => x.phaseIdAssociation === phaseId)!;
         let label = (node?.title ?? '').trim();
         let description = (node?.description ?? '').trim();
 
         const catLabel =
-          !cat.label && (cat.sameAs ?? []).length > 0
-            ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.label
-            : cat.label;
-
+          label.length > 0
+            ? label
+            : typeof phase === 'string'
+            ? phaseList.find((x) => x.id === phaseId)?.label ?? ''
+            : phase.label;
         const catDescription =
-          !cat.description && (cat.sameAs ?? []).length > 0
-            ? this.phaseList.find((c) => c.id === cat.sameAs![0])?.description
-            : cat.description;
+          description.length > 0
+            ? description
+            : typeof phase === 'string'
+            ? phaseList.find((x) => x.id === phaseId)?.label
+            : phase.description;
 
-        if (label === '' || label === catLabel) {
-          label = this.resources.get(catLabel!);
-        }
-        if (description === '' || description === catDescription) {
-          description = this.resources.get(catDescription!);
+        phaseInfo.push({ id: phaseId, label: catLabel });
+        if (label === '') {
+          label =
+            typeof phase === 'string'
+              ? phaseList.find((x) => x.id === phase)?.label ?? ''
+              : phase.label;
         }
         if (node) {
           node.title = label;
@@ -56,7 +56,7 @@ export class WbsNodePhaseTransformer {
           node.order = i + 1;
         } else {
           node = {
-            id: cat.id,
+            id: phaseId,
             title: label,
             description,
             order: i + 1,
@@ -85,7 +85,9 @@ export class WbsNodePhaseTransformer {
         levels: [...parentlevel],
         depth: 1,
         levelText: (i + 1).toString(),
-        phaseId: node.id,
+        phaseIdAssociation: node.phaseIdAssociation,
+        phaseId: phaseInfo[i].id,
+        phaseLabel: phaseInfo[i].label,
         order: i + 1,
         title: node.title,
         canMoveDown: i < rootNodes.length - 1,
@@ -96,9 +98,11 @@ export class WbsNodePhaseTransformer {
         subTasks: [],
       };
       const children = this.getPhaseChildren(
-        node.id,
+        phaseInfo[i].id,
+        phaseInfo[i].label,
         node.id,
         parentlevel,
+        'project',
         models
       );
       parent.children = children.length;
@@ -120,10 +124,77 @@ export class WbsNodePhaseTransformer {
     return nodes;
   }
 
+  runv2(models: WbsNode[], type: string): WbsNodeView[] {
+    const phases = this.phaseList;
+    const nodes: WbsNodeView[] = [];
+    const rootNodes: WbsNode[] = models
+      .filter((x) => !x.parentId)
+      .sort((a, b) => a.order! - b.order!);
+
+    for (let i = 0; i < rootNodes.length; i++) {
+      const parentlevel = [i + 1];
+      const node = rootNodes[i];
+      const phaseObj = phases.find((x) => x.id === node.phaseIdAssociation);
+      const parent: WbsNodeView = {
+        children: 0,
+        childrenIds: [],
+        description: node.description,
+        disciplines: node?.disciplineIds ?? [],
+        id: node.id,
+        treeId: node.id,
+        levels: [...parentlevel],
+        depth: 1,
+        levelText: (i + 1).toString(),
+        order: i + 1,
+        title: node.title,
+        canMoveLeft: false,
+        canMoveUp: type === 'project' ? i > 0 : false,
+        canMoveRight: type === 'project' ? i > 0 : false,
+        canMoveDown: type === 'project' ? i < rootNodes.length - 1 : false,
+        lastModified: node?.lastModified,
+        subTasks: [],
+        phaseIdAssociation: node.phaseIdAssociation,
+      };
+      if (phaseObj && parent.description === undefined) {
+        parent.description = phaseObj.description;
+      }
+      const phaseId = phaseObj ? phaseObj.id : node.id;
+      const phaseLabel = phaseObj
+        ? this.resources.get(phaseObj.label)
+        : node.title;
+
+      const children = this.getPhaseChildren(
+        phaseId,
+        phaseLabel,
+        node.id,
+        parentlevel,
+        type,
+        models
+      );
+      parent.children = children.length;
+      parent.childrenIds = children.map((x) => x.id);
+      parent.subTasks = structuredClone(children);
+
+      for (const task of parent.subTasks) {
+        if (task.treeParentId === parent.id) task.treeParentId = undefined;
+      }
+
+      nodes.push(parent, ...children);
+    }
+
+    for (let i = 0; i < nodes.length; i++) {
+      nodes[i].previousTaskId = i > 0 ? nodes[i - 1].id : undefined;
+      nodes[i].nextTaskId = i < nodes.length - 1 ? nodes[i + 1].id : undefined;
+    }
+    return nodes;
+  }
+
   private getPhaseChildren(
     phaseId: string,
+    phaseLabel: string,
     parentId: string,
     parentLevel: number[],
+    type: string,
     list: WbsNode[]
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
@@ -145,20 +216,24 @@ export class WbsNodePhaseTransformer {
         order: child.order ?? 0,
         parentId: parentId,
         treeParentId: parentId,
-        phaseId,
         title: child.title ?? '',
         lastModified: child.lastModified,
         canMoveDown: i !== children.length - 1,
         canMoveUp: i > 0,
         canMoveRight: i > 0,
-        canMoveLeft: true,
+        canMoveLeft: type === 'project' || parentLevel.length > 1,
         subTasks: [],
+        phaseIdAssociation: child.phaseIdAssociation,
+        phaseId,
+        phaseLabel,
       };
 
       const taskChildren = this.getPhaseChildren(
         phaseId,
+        phaseLabel,
         child.id,
         childLevel,
+        type,
         list
       );
 

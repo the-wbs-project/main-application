@@ -1,9 +1,6 @@
 import { Routes } from '@angular/router';
 import { orgResolve } from '@wbs/main/services';
-import {
-  MembershipAdminService,
-  MembershipAdminUiService,
-} from './members/services';
+import { MembershipAdminService } from './members/services';
 
 export const routes: Routes = [
   {
@@ -31,6 +28,6 @@ export const routes: Routes = [
     resolve: {
       org: orgResolve,
     },
-    providers: [MembershipAdminService, MembershipAdminUiService],
+    providers: [MembershipAdminService],
   },
 ];

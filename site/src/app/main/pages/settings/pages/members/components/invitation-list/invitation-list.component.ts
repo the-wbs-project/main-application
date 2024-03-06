@@ -1,7 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   effect,
+  inject,
   input,
   model,
   signal,
@@ -13,15 +15,17 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
+import { Messages } from '@wbs/core/services';
 import { InviteViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { TableProcessPipe } from '@wbs/main/pipes/table-process.pipe';
 import { TableHelper } from '@wbs/main/services';
-import { MembershipAdminUiService } from '../../services';
+import { of } from 'rxjs';
+import { map, switchMap } from 'rxjs/operators';
+import { MembershipAdminService } from '../../services';
 import { IsExpiredPipe } from './is-expired.pipe';
 
 @Component({
@@ -29,7 +33,7 @@ import { IsExpiredPipe } from './is-expired.pipe';
   selector: 'wbs-invitation-list',
   templateUrl: './invitation-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TableHelper],
+  providers: [MembershipAdminService, TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
@@ -37,11 +41,14 @@ import { IsExpiredPipe } from './is-expired.pipe';
     RoleListPipe,
     SortableDirective,
     SortArrowComponent,
-    TableProcessPipe,
     TranslateModule,
   ],
 })
 export class InvitationListComponent {
+  private readonly memberService = inject(MembershipAdminService);
+  private readonly messages = inject(Messages);
+  private readonly tableHelper = inject(TableHelper);
+
   readonly invites = model.required<InviteViewModel[]>();
   readonly org = input.required<string>();
   readonly filteredRoles = input<string[]>([]);
@@ -49,6 +56,9 @@ export class InvitationListComponent {
   readonly state = signal(<State>{
     sort: [{ field: 'name', dir: 'asc' }],
   });
+  readonly data = computed(() =>
+    this.tableHelper.process(this.invites(), this.state())
+  );
   readonly faGear = faGear;
   readonly menu = [
     {
@@ -58,7 +68,7 @@ export class InvitationListComponent {
     },
   ];
 
-  constructor(private readonly uiService: MembershipAdminUiService) {
+  constructor() {
     effect(() => this.updateState(this.textFilter(), this.filteredRoles()));
   }
 
@@ -114,8 +124,17 @@ export class InvitationListComponent {
   }
 
   private openCancelDialog(invite: InviteViewModel): void {
-    this.uiService
-      .openCancelInviteDialog(this.org(), invite.id)
+    this.messages.confirm
+      .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
+      .pipe(
+        switchMap((answer) => {
+          if (!answer) return of(false);
+
+          return this.memberService
+            .cancelInviteAsync(this.org(), invite.id)
+            .pipe(map(() => true));
+        })
+      )
       .subscribe((answer) => {
         if (!answer) return;
 

@@ -9,7 +9,8 @@ CREATE PROCEDURE [dbo].[ProjectNode_Set]
     @Order int,
     @Title nvarchar(MAX),
     @Description nvarchar(MAX) = NULL,
-    @DisciplineIds nvarchar(MAX) = NULL
+    @DisciplineIds nvarchar(MAX) = NULL,
+    @PhaseIdAssociation nvarchar(100)
 AS
 BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId)
@@ -23,6 +24,7 @@ BEGIN
                         [Title] = @Title,
                         [Description] = @Description,
                         [DisciplineIds] = @DisciplineIds,
+                        [PhaseIdAssociation] = @PhaseIdAssociation,
                         [LastModified] = GETUTCDATE()
                     WHERE [Id] = @Id AND [ProjectId] = @ProjectId
                 END
@@ -38,6 +40,7 @@ BEGIN
                         [DisciplineIds],
                         [CreatedOn],
                         [LastModified],
+                        [PhaseIdAssociation],
                         [Removed]
                     ) VALUES (
                         @Id,
@@ -47,6 +50,7 @@ BEGIN
                         @Title,
                         @Description,
                         @DisciplineIds,
+                        @PhaseIdAssociation,
                         GETUTCDATE(),
                         GETUTCDATE(),
                         0

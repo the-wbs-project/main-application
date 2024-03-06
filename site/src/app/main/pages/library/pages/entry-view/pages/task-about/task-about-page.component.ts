@@ -4,7 +4,6 @@ import {
   Component,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -17,16 +16,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/main/components/alert.component';
+import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { DisciplineListComponent } from '@wbs/main/pages/projects/pages/project-view/components/discipline-list.component';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
+import { delay, tap } from 'rxjs/operators';
 import { EntryTaskService } from '../../services';
 import { EntryViewState } from '../../states';
 import { DescriptionCardComponent } from './components/description-card';
-import { delay, tap } from 'rxjs';
-import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
 
 @Component({
   standalone: true,
@@ -40,7 +38,6 @@ import { SavingAlertComponent } from '@wbs/main/components/saving-alert.componen
     DisciplineListComponent,
     FontAwesomeModule,
     NgClass,
-    PhaseLabelPipe,
     ResizedCssDirective,
     RouterModule,
     SavingAlertComponent,

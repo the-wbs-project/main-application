@@ -19,6 +19,8 @@ import {
 } from '../../../states';
 import { ProjectApprovalTileComponent } from './components/project-approval-tile/project-approval-tile.component';
 import { ProjectStatusTileComponent } from './components/project-status-tile/project-status-tile.component';
+import { DescriptionCardComponent } from './components/description-card';
+import { ChangeProjectBasics } from '../../../actions';
 
 @Component({
   standalone: true,
@@ -27,6 +29,7 @@ import { ProjectStatusTileComponent } from './components/project-status-tile/pro
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ApprovalBadgeComponent,
+    DescriptionCardComponent,
     DisciplineListComponent,
     EditedDateTextPipe,
     FindByIdPipe,
@@ -54,4 +57,12 @@ export class ProjectAboutPageComponent {
   readonly approvals = this.store.select(ProjectApprovalState.list);
 
   test(): void {}
+
+  descriptionChange(description: string): void {
+    const project = this.project()!;
+
+    this.store.dispatch(
+      new ChangeProjectBasics(project.title, description, project.category)
+    );
+  }
 }

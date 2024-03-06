@@ -1,15 +1,19 @@
-<div class="about-page-grid pd-20" resizedCss>
-  <wbs-details-card
-    [ngClass]="'card border'"
-    [entry]="entry()!"
-    [version]="version()!"
-  />
-  <wbs-description-card
-    [ngClass]="'card border full-item'"
-    [entry]="entry()!"
-    [version]="version()!"
-    (descriptionChange)="descriptionChange($event)"
-  />
+<div class="w-100 text-center">
+  <div class="d-ib text-start w-100" style="max-width: 1200px">
+    <div class="two-column-grid pd-20" resizedCss>
+      <wbs-details-card
+        [ngClass]="'card border'"
+        [entry]="entry()!"
+        [version]="version()!"
+      />
+      <wbs-description-card
+        [ngClass]="'card border full-item'"
+        [entry]="entry()!"
+        [version]="version()!"
+        (descriptionChange)="descriptionChange($event)"
+      />
+    </div>
+  </div>
 </div>
 <!--
   <div class="card border double-item">
@@ -23,24 +27,4 @@
       />
     </div>
   </div>
-
-  <div class="card border double-item">
-    <div class="card-header">
-      {{ "General.Status" | translate | uppercase }}
-    </div>
-    <div class="card-body">
-     <wbs-project-status-tile
-        [approvalEnabled]="approvalEnabled()!"
-        [project]="project"
-      />
-    </div>
-  </div>
-
-  <div class="card border double-item">
-    <div class="card-header">
-      {{ "Projects.PathToSuccess" | translate }}
-    </div>
-    <div class="card-body">
-      <wbs-project-checklist [checklist]="checklist()" />
-    </div>
-  </div>-->
+-->

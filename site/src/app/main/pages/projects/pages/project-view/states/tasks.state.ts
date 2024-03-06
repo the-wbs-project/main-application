@@ -1,13 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  ActivityData,
-  LISTS,
-  Project,
-  PROJECT_NODE_VIEW_TYPE,
-  ProjectNode,
-} from '@wbs/core/models';
+import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
 import {
   IdService,
   Messages,
@@ -15,7 +9,7 @@ import {
   Resources,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Transformers } from '@wbs/main/services';
+import { Transformers, WbsNodeService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
@@ -39,12 +33,10 @@ import {
 } from '../actions';
 import { TASK_PAGES } from '../models';
 import { ProjectNavigationService, TimelineService } from '../services';
-import { TaskDetailsViewModel } from '../view-models';
 
 interface StateModel {
   currentId?: string;
-  currentView?: PROJECT_NODE_VIEW_TYPE;
-  current?: TaskDetailsViewModel;
+  current?: WbsNodeView;
   project?: Project;
   nodes?: ProjectNode[];
   phases?: WbsNodeView[];
@@ -70,7 +62,7 @@ export class TasksState {
   ) {}
 
   @Selector()
-  static current(state: StateModel): TaskDetailsViewModel | undefined {
+  static current(state: StateModel): WbsNodeView | undefined {
     return state.current;
   }
 
@@ -105,31 +97,26 @@ export class TasksState {
     if (state.project?.id === project.id && !force) return;
 
     return this.data.projectNodes.getAllAsync(project.owner, project.id).pipe(
-      tap((nodes) =>
-        ctx.patchState({
-          project,
-          nodes: nodes?.filter((x) => !x.removed) ?? [],
-        })
-      ),
+      tap((nodes) => ctx.patchState({ project, nodes })),
       switchMap(() => ctx.dispatch([new RebuildNodeViews()]))
     );
   }
 
   @Action(VerifyTask)
-  verifyProject(ctx: Context, { taskId, viewNode }: VerifyTask): void {
+  verifyProject(ctx: Context, { taskId }: VerifyTask): void {
     const state = ctx.getState();
 
     if (
       state.current &&
       state.currentId === taskId &&
-      state.current.id === taskId &&
-      state.current.view === viewNode
+      state.current.id === taskId
     )
       return;
 
-    ctx.patchState({ currentId: taskId, currentView: viewNode });
-
-    this.createDetailsVm(ctx, taskId, viewNode);
+    ctx.patchState({
+      currentId: taskId,
+      current: state.phases?.find((x) => x.id === taskId),
+    });
   }
 
   @Action(RebuildNodeViews)
@@ -155,7 +142,7 @@ export class TasksState {
     ];
 
     if (state.currentId !== state.current?.id)
-      actions.push(new VerifyTask(state.current?.view!, state.currentId!));
+      actions.push(new VerifyTask(state.currentId!));
 
     return ctx.dispatch(actions);
   }
@@ -163,34 +150,27 @@ export class TasksState {
   @Action(RemoveTask)
   removeNodeToProject(
     ctx: Context,
-    action: RemoveTask
+    { nodeId, reason, completedAction }: RemoveTask
   ): Observable<any> | void {
     const state = ctx.getState();
     const project = state.project!;
     const nodes = structuredClone(state.nodes)!;
-    const nodeIndex = nodes.findIndex((x) => x.id === action.nodeId);
+    const nodeIndex = nodes.findIndex((x) => x.id === nodeId);
 
     if (nodeIndex === -1) return of();
 
-    nodes[nodeIndex].removed = true;
+    nodes.splice(nodeIndex, 1);
 
-    let changedIds: string[] = [
-      action.nodeId,
-      ...this.transformers.nodes.phase.reorderer.all(
-        state.project!.phases,
-        nodes
-      ),
-    ];
+    const parentId = nodes[nodeIndex].parentId;
+    const childrenIds = WbsNodeService.getChildrenIds(nodes, nodeId);
+    const changedIds = this.transformers.nodes.phase.reorderer.run(
+      parentId,
+      nodes
+    );
+    const upserts = nodes.filter((x) => childrenIds.includes(x.id));
 
-    const removedIds: string[] = [];
-
-    for (const node of nodes) {
-      if (changedIds.indexOf(node.id) === -1) continue;
-
-      removedIds.push(node.id);
-    }
     return this.data.projectNodes
-      .putAsync(project.owner, project.id, [], removedIds)
+      .putAsync(project.owner, project.id, upserts, [nodeId, ...childrenIds])
       .pipe(
         map(() => ctx.patchState({ nodes })),
         tap(() => this.messaging.notify.success('Projects.TaskRemoved')),
@@ -200,14 +180,14 @@ export class TasksState {
             action: TASK_ACTIONS.REMOVED,
             data: {
               title: nodes[nodeIndex].title,
-              reason: action.reason,
+              reason: reason,
             },
             topLevelId: state.project!.id,
-            objectId: action.nodeId,
+            objectId: nodeId,
           })
         ),
         switchMap(() =>
-          action.completedAction ? ctx.dispatch(action.completedAction) : of()
+          completedAction ? ctx.dispatch(completedAction) : of()
         )
       );
   }
@@ -270,7 +250,6 @@ export class TasksState {
       parentId: node.parentId,
       description: node.description,
       disciplineIds: node.disciplineIds,
-      removed: false,
       tags: node.tags,
       title: node.title + ' Clone',
       createdOn: now,
@@ -655,82 +634,5 @@ export class TasksState {
         tap(() => this.messaging.notify.success('Projects.TaskReordered')),
         switchMap(() => ctx.dispatch(new MarkProjectChanged()))
       );
-  }
-
-  private createDetailsVm(
-    ctx: Context,
-    id: string,
-    view: PROJECT_NODE_VIEW_TYPE
-  ): void {
-    const state = ctx.getState();
-    const tasks = state.nodes ?? [];
-    const taskVms = state.phases ?? [];
-
-    if (!state.project || tasks.length === 0 || taskVms.length === 0) {
-      ctx.patchState({
-        current: undefined,
-      });
-      return;
-    }
-
-    const nodeIndex = taskVms.findIndex((x) => x.id === id);
-    const task = taskVms[nodeIndex];
-    const parent = taskVms.find((x) => x.id === task.parentId);
-
-    ctx.patchState({
-      current: {
-        parent,
-        view,
-        id,
-        phaseId: task.phaseId,
-        disciplines: task.disciplines,
-        lastModified: task.lastModified,
-        levels: task.levels,
-        levelText: task.levelText,
-        title: task.title,
-        description: task.description,
-        nextTaskId:
-          nodeIndex + 1 === taskVms.length
-            ? undefined
-            : taskVms[nodeIndex + 1].id,
-        previousTaskId: nodeIndex === 0 ? undefined : taskVms[nodeIndex - 1].id,
-        subTasks: this.getSubTasks(id, taskVms),
-        childrenIds: task.childrenIds,
-      },
-    });
-  }
-
-  private getSubTasks(
-    taskId: string,
-    phaseViews: WbsNodeView[]
-  ): WbsNodeView[] {
-    const list: WbsNodeView[] = [];
-    const subTaskIds = this.getSubTaskIds(taskId, phaseViews);
-
-    for (const x of phaseViews) {
-      if (subTaskIds.indexOf(x.id) === -1) continue;
-
-      const item = structuredClone(x);
-
-      if (item.parentId === taskId) {
-        item.parentId = undefined;
-        item.treeParentId = undefined;
-      }
-      list.push(item);
-    }
-
-    return list;
-  }
-
-  private getSubTaskIds(taskId: string, tasks: WbsNodeView[]): string[] {
-    const ids: string[] = tasks
-      .filter((x) => x.parentId === taskId)
-      .map((x) => x.id);
-
-    for (const id of ids) {
-      ids.push(...this.getSubTaskIds(id, tasks));
-    }
-
-    return ids;
   }
 }

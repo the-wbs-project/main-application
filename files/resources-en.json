@@ -743,8 +743,8 @@
     "values": {
       "DragUnderItself": "You cannot drop a task under itself.",
       "RearrangePhases": "To confirm you are rearranging the phases, correct?",
-      "PhaseToTask": "Are you sure you want to convert this phase into a task underneath another phase? This is an uncommon action to take.",
-      "TaskToPhase": "Are you sure you want to convert this task into a phase? This is an uncommon action to take."
+      "PhaseToTask": "Are you sure you want to convert this phase into a task underneath another phase?",
+      "TaskToPhase": "Are you sure you want to convert this task into a phase?"
     }
   }
 ]

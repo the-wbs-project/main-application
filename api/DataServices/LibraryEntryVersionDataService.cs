@@ -113,7 +113,6 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Description", DbValue(entryVersion.description));
         cmd.Parameters.AddWithValue("@Status", entryVersion.status);
         cmd.Parameters.AddWithValue("@Categories", DbJson(entryVersion.categories));
-        cmd.Parameters.AddWithValue("@Phases", DbJson(entryVersion.phases));
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(entryVersion.disciplines));
 
         await cmd.ExecuteNonQueryAsync();
@@ -130,7 +129,6 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
             description = DbValue<string>(reader, "Description"),
             status = DbValue<string>(reader, "Status"),
             categories = DbJson<string[]>(reader, "Categories"),
-            phases = DbJson<object[]>(reader, "Phases"),
             disciplines = DbJson<object[]>(reader, "Disciplines"),
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
         };

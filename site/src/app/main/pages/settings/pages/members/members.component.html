@@ -163,7 +163,10 @@
         </div>
         <div class="col-6 tx-right">
           @if (canAdd()) {
-          <button class="btn btn-sm btn-primary" (click)="openInviteDialog()">
+          <button
+            class="btn btn-sm btn-primary"
+            (click)="showInviteDialog.set(true)"
+          >
             <fa-icon [icon]="faPlus" />
             <span class="d-none d-sm-inline">
               {{ "OrgSettings.InviteMembers" | translate }}
@@ -182,23 +185,25 @@
           />
         </div>
         <div class="col-xl-4 col-lg-5 col-md-12 mg-b-20">
+          @if (roleDefinitions(); as roles) {
           <wbs-role-filter-list
-            [roles]="roleDefinitions()"
+            [roles]="roles"
             (valueChanged)="roleFilters.set($event)"
           />
+          }
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          @if (view() === 'members') {
+          @if (view() === 'members') { @if (roleDefinitions(); as roles) {
           <wbs-member-list
             [org]="org()"
             [filteredRoles]="roleFilters()"
-            [roles]="roleDefinitions()"
+            [roles]="roles"
             [(members)]="members"
             [textFilter]="textFilter"
           />
-          } @else if (view() === 'invitations') {
+          } } @else if (view() === 'invitations') {
           <wbs-invitation-list
             [org]="org()"
             [filteredRoles]="roleFilters()"

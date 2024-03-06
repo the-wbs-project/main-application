@@ -1,0 +1,56 @@
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>
+      {{ "General.Description" | translate | uppercase }} &nbsp;
+      <wbs-approval-badge [approval]="approval()" />
+    </div>
+
+    @if (!editMode()) {
+    <div class="flex-fill tx-right">
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faPencil"
+        (click)="edit()"
+        [title]="'General.Edit' | translate"
+      />
+    </div>
+    }
+  </div>
+</div>
+@if (editMode()) {
+<div class="card-body text-center">
+  <div class="d-ib w-100" style="max-width: 1000px">
+    <div class="d-flex w-100 text-end mg-b-15">
+      <div class="text-start flex-align-center flex-fill pd-t-10 tx-18">
+        {{ "General.DescriptionEditor" | translate }}
+      </div>
+      <button class="btn btn-success mg-l-15" (click)="save(editDescription)">
+        <fa-icon size="lg" [icon]="faFloppyDisk" class="mg-r-5" />
+        {{ "General.Save" | translate }}
+      </button>
+      <button class="btn btn-danger mg-l-15" (click)="cancel()">
+        <fa-icon size="lg" [icon]="faXmark" class="mg-r-5" />
+        {{ "General.Cancel" | translate }}
+      </button>
+    </div>
+    <kendo-editor class="form-control" [(ngModel)]="editDescription" />
+    <div class="w-100 text-start">
+      <label class="tx-italic">
+        {{ "Library.DescriptionHelpEntry" | translate }}
+      </label>
+    </div>
+  </div>
+</div>
+} @else if (project()!.description) {
+<div class="card-body" [innerHTML]="project()!.description | safeHtml"></div>
+} @else {
+<div class="card-body">
+  <wbs-alert
+    type="warning"
+    message="Projects.NoDescriptionEntry"
+    [dismissible]="false"
+  />
+</div>
+
+}

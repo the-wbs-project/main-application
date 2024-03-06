@@ -11,11 +11,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { SignalStore } from '@wbs/core/services';
-import { EntryViewState } from '../../../../states';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
-  selector: 'wbs-entry-task-modal',
+  selector: 'wbs-task-modal',
   templateUrl: './task-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DialogModule, RouterModule, TranslateModule],
@@ -27,10 +27,10 @@ export class TaskModalComponent {
   //  Inputs
   //
   readonly width = input.required<number>();
-  readonly entryUrl = input.required<string[]>();
+  readonly parentUrl = input.required<string[]>();
+  readonly task = input.required<WbsNodeView | undefined>();
 
   protected readonly faDiagramSubtask = faDiagramSubtask;
-  protected readonly task = this.store.select(EntryViewState.taskVm);
   protected readonly dialogWidth = computed(() =>
     this.width() > 700 ? '90%' : '100%'
   );
@@ -49,6 +49,6 @@ export class TaskModalComponent {
   });
 
   closed(): void {
-    this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks']));
+    this.store.dispatch(new Navigate([...this.parentUrl(), 'tasks']));
   }
 }

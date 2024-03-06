@@ -9,7 +9,6 @@ public class LibraryEntryVersion
     public string description { get; set; }
     public string status { get; set; }
     public string[] categories { get; set; }
-    public object[] phases { get; set; }
     public object[] disciplines { get; set; }
     public DateTimeOffset lastModified { get; set; }
 }

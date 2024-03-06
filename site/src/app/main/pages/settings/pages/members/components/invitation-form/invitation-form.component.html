@@ -1,15 +1,5 @@
-<div class="modal-header">
-  <h4 class="modal-title">
-    {{ "OrgSettings.SendInvite" | translate }}
-  </h4>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modal.dismiss('')"
-  ></button>
-</div>
-<div class="modal-body">
+@if (show()) {
+<kendo-dialog [title]="'OrgSettings.SendInvite' | translate">
   <div class="container-fluid">
     <div class="row mb-3">
       <label for="emails" class="col-sm-2 col-form-label">
@@ -67,16 +57,21 @@
     </div>
     }
   </div>
-</div>
-<div class="modal-footer">
-  <button
-    type="button"
-    class="btn btn-outline-dark"
-    (click)="modal.dismiss('')"
-  >
-    {{ "General.Close" | translate }}
-  </button>
-  <button type="button" class="btn btn-primary" (click)="submit(emails.value)">
-    {{ "OrgSettings.SendInvite" | translate }}
-  </button>
-</div>
+  <kendo-dialog-actions layout="end">
+    <button
+      type="button"
+      class="btn btn-outline-dark"
+      (click)="show.set(false)"
+    >
+      {{ "General.Close" | translate }}
+    </button>
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="submit(emails.value)"
+    >
+      {{ "OrgSettings.SendInvite" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>
+}

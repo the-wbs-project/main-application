@@ -84,7 +84,7 @@ export class SaveSectionComponent {
   save(): void {
     this.saveState.set('saving');
 
-    const phases: ProjectCategory[] = [];
+    const phases = this.phases().filter((x) => x.selected);
     const disciplines: ProjectCategory[] = [];
     const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
 
@@ -104,21 +104,6 @@ export class SaveSectionComponent {
       );
     }
 
-    for (const phase of this.phases()) {
-      if (!phase.selected) continue;
-
-      phases.push(
-        phase.isCustom
-          ? {
-              id: phase.id,
-              label: phase.label,
-              order: 0,
-              type: 'custom',
-              tags: [],
-            }
-          : phase.id
-      );
-    }
     const entry: LibraryEntry = {
       author: this.store.selectSnapshot(AuthState.userId)!,
       id: IdService.generate(),
@@ -133,26 +118,20 @@ export class SaveSectionComponent {
       status: 'draft',
       lastModified: new Date(),
       title: this.templateTitle(),
-      phases,
       disciplines,
     };
     const nodes: LibraryEntryNode[] = [];
 
     for (let i = 0; i < phases.length; i++) {
       const phase = phases[i];
-      const phaseId = typeof phase === 'string' ? phase : phase.id;
-      const phaseLabel =
-        typeof phase === 'string'
-          ? phaseDefinitions.find((x) => x.id === phase)!.label
-          : phase.label;
 
       nodes.push({
-        id: phaseId,
-        entryId: entry.id,
-        entryVersion: 1,
-        order: 1,
+        id: IdService.generate(),
+        phaseIdAssociation: phase.id,
+        order: i + 1,
         lastModified: new Date(),
-        title: phaseLabel,
+        title: phase.label,
+        description: phase.description,
       });
     }
 

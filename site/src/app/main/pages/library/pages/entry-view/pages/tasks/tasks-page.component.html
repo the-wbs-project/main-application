@@ -16,4 +16,8 @@
 </div>
 }
 
-<wbs-entry-task-modal [width]="width() ?? 0" [entryUrl]="entryUrl()" />
+<wbs-task-modal
+  [task]="taskVm()"
+  [width]="width() ?? 0"
+  [parentUrl]="entryUrl()"
+/>

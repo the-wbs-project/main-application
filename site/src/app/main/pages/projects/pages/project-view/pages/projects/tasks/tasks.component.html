@@ -32,4 +32,8 @@
   } }
 </div>
 
-<wbs-task-modal />
+<wbs-task-modal
+  [task]="taskVm()"
+  [width]="width() ?? 0"
+  [parentUrl]="projectUrl()"
+/>

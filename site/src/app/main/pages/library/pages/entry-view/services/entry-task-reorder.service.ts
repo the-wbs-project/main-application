@@ -145,6 +145,12 @@ export class EntryTaskRecorderService {
       dragged.parentId = target.parentId;
       dragged.order = target.order + delta;
     }
+    //
+    //  If the dragged item has a phase association, ID but also now has a parent ID remove the phase association ID
+    //
+    if (dragged.phaseIdAssociation && dragged.parentId) {
+      dragged.phaseIdAssociation = undefined;
+    }
 
     const index = tree.findIndex((x) => x.id === dragged.id);
 
@@ -159,6 +165,7 @@ export class EntryTaskRecorderService {
 
       node.order = vm.order;
       node.parentId = vm.parentId;
+      node.phaseIdAssociation = vm.phaseIdAssociation;
 
       changes.push(node);
     }

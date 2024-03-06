@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { routes } from './app.routes';
 import {
   AppConfig,
@@ -22,17 +23,16 @@ import {
   RequestInterceptor,
   Resources,
 } from './core/services';
-import { DialogService } from '@progress/kendo-angular-dialog';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom([
       AuthModule.forRoot(),
       BrowserAnimationsModule,
-      DialogService,
+      DialogModule,
       HttpClientModule,
       NgxsLoggerPluginModule.forRoot({
-        disabled: true, // environment.production,
+        disabled: false, // environment.production,
       }),
       NgxsModule.forRoot([]),
       NgxsRouterPluginModule.forRoot(),

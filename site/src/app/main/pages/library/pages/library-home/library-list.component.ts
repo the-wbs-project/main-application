@@ -11,16 +11,12 @@ import {
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
-import {
-  faChartGantt,
-  faDiagramSubtask,
-  faFilters,
-  faTasks,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
@@ -29,7 +25,6 @@ import { EntryTypeDescriptionPipe } from '../../pipes/entry-type-description.pip
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
 import { EntryCreationService } from './services';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 
 @Component({
   standalone: true,
