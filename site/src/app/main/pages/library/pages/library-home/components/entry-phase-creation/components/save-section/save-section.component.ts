@@ -116,9 +116,6 @@ export class SaveSectionComponent {
           ? {
               id: discipline.id,
               label: discipline.label,
-              order: 0,
-              type: 'custom',
-              tags: [],
             }
           : discipline.id
       );

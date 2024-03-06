@@ -34,7 +34,7 @@ export const routes: Routes = [
         path: 'sub-tasks',
         data: {},
         loadComponent: () =>
-          import('./pages/sub-tasks').then((x) => x.SubTasksComponent),
+          import('./pages/task-sub-tasks').then((x) => x.SubTasksComponent),
         resolve: {
           entryUrl: entryUrlResolve,
         },

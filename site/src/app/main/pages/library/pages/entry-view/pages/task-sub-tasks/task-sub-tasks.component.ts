@@ -16,7 +16,7 @@ import { EntryViewState } from '../../states';
 
 @Component({
   standalone: true,
-  templateUrl: './sub-tasks.component.html',
+  templateUrl: './task-sub-tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DisciplineIconListComponent,

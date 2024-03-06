@@ -1,6 +1,10 @@
 <div class="d-flex flex-column h-100">
   <div class="d-flex flex-align-center mg-y-10">
-    <wbs-entry-title [title]="title()" (titleChange)="titleChanged($event)" />
+    <wbs-entry-title
+      [title]="title()"
+      [canEdit]="canEditTitle()"
+      (titleChange)="titleChanged($event)"
+    />
     <div class="flex-fill tx-right">
       <div class="d-ib mg-r-15">
         <wbs-page-header [breadcrumbs]="entry() | entryViewBreadcrumbs" />

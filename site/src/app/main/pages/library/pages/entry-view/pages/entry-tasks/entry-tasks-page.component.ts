@@ -16,7 +16,7 @@ import { EntryViewState } from '../../states';
 
 @Component({
   standalone: true,
-  templateUrl: './tasks-page.component.html',
+  templateUrl: './entry-tasks-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FontAwesomeModule,

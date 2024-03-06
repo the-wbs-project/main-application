@@ -17,3 +17,8 @@ export const resourcesSubSectionGuard = () =>
   inject(Store)
     .dispatch(new SetActiveSubSection('resources'))
     .pipe(map(() => true));
+
+export const settingsSubSectionGuard = () =>
+  inject(Store)
+    .dispatch(new SetActiveSubSection('settings'))
+    .pipe(map(() => true));

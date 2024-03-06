@@ -4,7 +4,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { NgbPopoverModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { ListItem } from '@wbs/core/models';
+import { ProjectCategory } from '@wbs/core/models';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
 
@@ -24,7 +24,7 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   ],
 })
 export class TreeDisciplineLegendComponent {
-  readonly idsOrCats = input<(string | ListItem)[] | undefined>();
+  readonly idsOrCats = input<ProjectCategory[] | undefined>();
 
   readonly faCircleQuestion = faCircleQuestion;
 }

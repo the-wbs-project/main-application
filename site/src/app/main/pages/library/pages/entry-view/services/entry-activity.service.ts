@@ -5,6 +5,7 @@ import { IdService } from '@wbs/core/services';
 import { AuthState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { LIBRARY_VERSION_ACTIONS } from '../models';
+import { ProjectCategory } from '@wbs/core/models';
 
 @Injectable()
 export class EntryActivityService {
@@ -45,6 +46,23 @@ export class EntryActivityService {
       version,
       LIBRARY_VERSION_ACTIONS.DESCRIPTION_CHANGED,
       { from, to }
+    );
+  }
+
+  entryDisciplinesChanged(
+    entryId: string,
+    version: number,
+    from: ProjectCategory[] | undefined,
+    to: ProjectCategory[] | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.DISCIPLINES_CHANGED,
+      {
+        from,
+        to,
+      }
     );
   }
 

@@ -28,7 +28,7 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { VisiblitySelectionComponent } from '../visiblity-selection';
+import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { TitleFormComponent } from './components/title-form';
 

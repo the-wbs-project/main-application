@@ -1,3 +1,3 @@
-import { ListItem } from './list-item.model';
-
-export type ProjectCategory = ListItem | string;
+export type ProjectCategory =
+  | string
+  | { id: string; label: string; description?: string; sameAs?: string };

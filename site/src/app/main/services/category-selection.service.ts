@@ -169,10 +169,7 @@ export class CategorySelectionService {
           categories.push({
             id: x.id,
             label: x.label,
-            type: 'Custom',
             description: x.description,
-            tags: [],
-            order: x.number!,
           });
       }
     return { categories, removedIds };

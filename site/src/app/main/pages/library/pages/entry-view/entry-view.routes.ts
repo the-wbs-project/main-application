@@ -4,9 +4,10 @@ import { NgxsModule } from '@ngxs/store';
 import {
   aboutSubSectionGuard,
   resourcesSubSectionGuard,
+  settingsSubSectionGuard,
   tasksSubSectionGuard,
 } from '@wbs/main/guards';
-import { Transformers } from '@wbs/main/services';
+import { Transformers, projectCategoryResolver } from '@wbs/main/services';
 import {
   EntryActivityService,
   EntryService,
@@ -60,7 +61,7 @@ export const routes: Routes = [
       {
         path: 'tasks',
         loadComponent: () =>
-          import('./pages/tasks').then((x) => x.TasksPageComponent),
+          import('./pages/entry-tasks').then((x) => x.TasksPageComponent),
         canActivate: [tasksSubSectionGuard],
         resolve: {
           entryUrl: entryUrlResolve,
@@ -81,6 +82,26 @@ export const routes: Routes = [
           versionId: versionIdResolve,
           claims: libraryClaimsResolve,
         },
+      },
+      {
+        path: 'settings/general',
+        loadComponent: () =>
+          import('./pages/entry-settings-general').then(
+            (x) => x.GeneralComponent
+          ),
+        canActivate: [settingsSubSectionGuard],
+        resolve: {
+          categories: projectCategoryResolver,
+        },
+      },
+      {
+        path: 'settings/disciplines',
+        loadComponent: () =>
+          import('./pages/entry-settings-disciplines.component').then(
+            (x) => x.DisciplinesComponent
+          ),
+        canActivate: [settingsSubSectionGuard],
+        canDeactivate: [],
       },
     ],
   },

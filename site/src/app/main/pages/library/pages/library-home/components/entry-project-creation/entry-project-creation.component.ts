@@ -28,15 +28,15 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { ListItem } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
+import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { VisiblitySelectionComponent } from '../visiblity-selection';
+import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 
 @Component({
@@ -46,6 +46,7 @@ import { SaveSectionComponent } from './components/save-section';
   imports: [
     DialogModule,
     DisciplineEditorComponent,
+    FindByIdPipe,
     FontAwesomeModule,
     FormsModule,
     NgClass,
@@ -68,7 +69,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   readonly mainView = viewChild<ElementRef<HTMLDivElement>>('mainView');
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
-  readonly category = model<ListItem | undefined>(undefined);
+  readonly category = model<string | undefined>(undefined);
   readonly visibility = model<'public' | 'private'>('public');
   readonly phases = model<CategorySelection[]>(
     this.catService.build(this.store.selectSnapshot(MetadataState.phases), [])

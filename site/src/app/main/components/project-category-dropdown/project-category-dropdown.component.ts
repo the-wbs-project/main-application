@@ -18,5 +18,5 @@ import { ListItem } from '@wbs/core/models';
 })
 export class ProjectCategoryDropdownComponent {
   readonly categories = input.required<ListItem[]>();
-  readonly category = model.required<ListItem | undefined>();
+  readonly category = model.required<string | undefined>();
 }

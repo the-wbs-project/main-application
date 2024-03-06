@@ -46,9 +46,6 @@ export class WbsNodePhaseProjectImporter {
         id: phaseId,
         label: info.title,
         sameAs: phases.get(info.title),
-        tags: [],
-        type: PROJECT_NODE_VIEW.PHASE,
-        order: counter,
       });
       //
       //  add the node

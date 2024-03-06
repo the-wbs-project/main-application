@@ -22,17 +22,19 @@
   </ng-template>
 </kendo-textbox>
 } @else {
-<div class="d-flex flex-align-start">
+<div class="d-flex flex-align-start child-hoverer">
   <span class="tx-20 tx-medium mg-r-10">
     {{ title() }}
   </span>
+  @if (canEdit()) {
   <fa-icon
     size="sm"
-    class="pointer"
+    class="pointer child-to-show"
     [icon]="faPencil"
     (click)="edit()"
     [title]="'General.Edit' | translate"
   />
+  }
 </div>
 }
 <!--

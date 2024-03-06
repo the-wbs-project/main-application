@@ -45,23 +45,14 @@
     </div>
   </div>
 </div>
-
-@if (askAi()) {
-<kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
-  <wbs-description-ai-dialog
-    [versionTitle]="version()!.title"
-    [description]="version()!.description"
-    (descriptionChanged)="save($event)"
-  />
-</kendo-dialog>
-} } @else if (version()!.description) {
+} @else if (version()!.description) {
 <div class="card-body" [innerHTML]="version()!.description | safeHtml"></div>
 } @else {
 <div class="card-body">
   <wbs-alert
     type="warning"
-    message="Projects.NoDescriptionEntry"
     [dismissible]="false"
+    [message]="noDescriptionLabel()"
   />
 </div>
 

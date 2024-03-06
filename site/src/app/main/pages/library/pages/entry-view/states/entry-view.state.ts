@@ -17,6 +17,7 @@ import {
   VersionChanged,
   VerifyTask,
   SetTask,
+  EntryChanged,
 } from '../actions';
 
 interface StateModel {
@@ -130,9 +131,14 @@ export class EntryViewState {
     ctx.patchState({ task, taskVm });
   }
 
+  @Action(EntryChanged)
+  entryChanged(ctx: Context, { entry }: EntryChanged): void {
+    ctx.patchState({ entry: structuredClone(entry) });
+  }
+
   @Action(VersionChanged)
   versionChanged(ctx: Context, { version }: VersionChanged): void {
-    ctx.patchState({ version });
+    ctx.patchState({ version: structuredClone(version) });
   }
 
   @Action(TasksChanged)

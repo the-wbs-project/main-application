@@ -11,6 +11,7 @@ import {
   PROJECT_SCOPE_TYPE,
   PROJECT_STATI,
   UserRole,
+  ProjectCategory,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { AuthState, MetadataState } from '@wbs/main/states';
@@ -30,14 +31,14 @@ import {
 interface StateModel {
   category?: string;
   description: string;
-  disciplines?: (string | ListItem)[];
+  disciplines?: ProjectCategory[];
   headerTitle?: string;
   headerDescription?: string;
   isSaving: boolean;
   isWizardActive: boolean;
   nodeView?: PROJECT_NODE_VIEW_TYPE;
   owner?: string;
-  phases?: (string | ListItem)[];
+  phases?: ProjectCategory[];
   roles: Map<string, string[]>;
   scope?: PROJECT_SCOPE_TYPE;
   title: string;
@@ -72,7 +73,7 @@ export class ProjectCreateState {
   }
 
   @Selector()
-  static disciplines(state: StateModel): (string | ListItem)[] | undefined {
+  static disciplines(state: StateModel): ProjectCategory[] | undefined {
     return state.disciplines;
   }
 
@@ -102,7 +103,7 @@ export class ProjectCreateState {
   }
 
   @Selector()
-  static phases(state: StateModel): (string | ListItem)[] | undefined {
+  static phases(state: StateModel): ProjectCategory[] | undefined {
     return state.phases;
   }
 

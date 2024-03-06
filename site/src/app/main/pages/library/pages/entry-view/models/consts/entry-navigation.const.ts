@@ -1,33 +1,38 @@
 import { NavigationLink } from '@wbs/main/models';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { ENTRY_PAGES } from './entry-pages.const';
 
 const settings: NavigationLink[] = [
   {
     text: 'General.General',
+    section: 'general',
     route: ['settings', 'general'],
-    //claim: PROJECT_CLAIMS.UPDATE,
+    claim: LIBRARY_CLAIMS.UPDATE,
+  },
+  {
+    route: ['settings', 'phase'],
+    section: 'phase',
+    text: 'General.Phase',
+    claim: LIBRARY_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'phases'],
+    section: 'phases',
     text: 'General.Phases',
-    //claim: PROJECT_CLAIMS.UPDATE,
+    claim: LIBRARY_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'disciplines'],
+    section: 'disciplines',
     text: 'General.Disciplines',
-    //claim: PROJECT_CLAIMS.UPDATE,
-  },
-  {
-    route: ['settings', 'roles'],
-    text: 'General.Roles',
-    //claim: PROJECT_CLAIMS.ROLES.READ,
+    claim: LIBRARY_CLAIMS.UPDATE,
   },
 ];
 
 export const ENTRY_NAVIGATION: NavigationLink[] = [
   {
-    cssClass: ['d-sm-inline', 'd-md-none', 'nav-item', 'tx-uppercase'],
     text: 'General.Views',
+    cssClass: ['d-sm-inline', 'd-md-none', 'nav-item', 'tx-uppercase'],
     items: [
       {
         route: [ENTRY_PAGES.ABOUT],
@@ -43,12 +48,7 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
         route: [ENTRY_PAGES.RESOURCES],
         text: 'General.Resources',
         cssClass: ['nav-item', 'tx-uppercase'],
-      } /*
-      {
-        route: [ENTRY_PAGES.TIMELINE],
-        text: 'General.Timeline',
-        cssClass: ['nav-item', 'tx-uppercase'],
-      },,*/,
+      },
     ],
   },
   {
@@ -68,17 +68,12 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
     text: 'General.Resources',
     section: 'resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
-  } /*
-
-  {
-    route: [ENTRY_PAGES.TIMELINE],
-    text: 'General.Timeline',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
     text: 'General.Settings',
     items: settings,
-    claim: PROJECT_CLAIMS.SETTINGS.READ,
+    section: 'settings',
+    claim: LIBRARY_CLAIMS.SETTINGS.READ,
     cssClass: ['nav-item', 'tx-uppercase'],
-  },*/,
+  },
 ];

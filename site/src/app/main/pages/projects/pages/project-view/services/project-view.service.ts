@@ -134,7 +134,15 @@ export class ProjectViewService {
     const customDisciplines: ListItem[] = [];
 
     for (const d of project.disciplines)
-      if (typeof d !== 'string') customDisciplines.push(d);
+      if (typeof d !== 'string')
+        customDisciplines.push({
+          id: d.id,
+          label: d.label,
+          description: d.description,
+          order: 0,
+          tags: [],
+          type: 'discipline',
+        });
 
     this.data.projectExport
       .runAsync(project, 'xlsx', customDisciplines, phases)

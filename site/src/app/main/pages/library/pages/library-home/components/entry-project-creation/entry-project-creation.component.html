@@ -101,7 +101,7 @@
         <wbs-save-section
           [owner]="owner()!"
           [phases]="phases()"
-          [category]="category()!"
+          [category]="(categories() | findById : category()!)!"
           [disciplines]="disciplines()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility()"

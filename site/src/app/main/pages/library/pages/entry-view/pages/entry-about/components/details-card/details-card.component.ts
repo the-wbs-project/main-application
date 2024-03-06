@@ -13,6 +13,7 @@ import { EntryTypeTitlePipe } from '../../../../../../pipes/entry-type-title.pip
   selector: 'wbs-details-card',
   templateUrl: './details-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: { class: 'card border' },
   imports: [
     DateTextPipe,
     EntryTypeIconPipe,

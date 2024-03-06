@@ -5,7 +5,6 @@ import {
   Output,
   input,
   model,
-  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -17,13 +16,11 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  PROJECT_CLAIMS,
+  LIBRARY_CLAIMS,
   RESOURCE_TYPES,
   ResourceRecord,
 } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { RecordResourceValidation } from '@wbs/main/services';
@@ -62,13 +59,11 @@ export class RecordResourcesPageComponent {
   private modal?: DialogRef;
 
   readonly faPlus = faPlus;
-  readonly addClaim = PROJECT_CLAIMS.RESOURCES.CREATE;
+  readonly addClaim = LIBRARY_CLAIMS.RESOURCES.CREATE;
   readonly vm = model<RecordResourceViewModel | undefined>(undefined);
 
   constructor(
-    private readonly data: DataServiceFactory,
     private readonly dialogService: DialogService,
-    private readonly messages: Messages,
     private readonly validator: RecordResourceValidation
   ) {}
 
@@ -115,41 +110,4 @@ export class RecordResourcesPageComponent {
 
     this.modal?.close();
   }
-
-  /*
-  private uploadAndSave(
-    rawFile: FileInfo,
-    data: Partial<ResourceRecord>
-  ): Observable<void> {
-    if (!data.id) data.id = IdService.generate();
-
-    return Utils.getFileAsync(rawFile).pipe(
-      switchMap((file) =>
-        this.data.resourceFiles.uploadAsync(this.owner(), data.id!, file)
-      ),
-      switchMap(() => this.save(data))
-    );
-  }
-
-  private save(data: Partial<ResourceRecord>): Observable<void> {
-    const resource: ResourceRecord = {
-      id: data.id ?? IdService.generate(),
-      createdOn: data.createdOn ?? new Date(),
-      lastModified: new Date(),
-      name: data.name!,
-      description: data.description!,
-      type: data.type!,
-      resource: data.resource,
-      order: data.order ?? Math.max(...this.list().map((x) => x.order), 0) + 1,
-    };
-
-    return this.data.projectResources
-      .putAsync(this.owner(), this.projectId(), this.taskId(), resource)
-      .pipe(
-        map(() => {
-          this.list = structuredClone([...this.list(), resource]);
-          this.cd.detectChanges();
-        })
-      );
-  }*/
 }

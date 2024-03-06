@@ -40,6 +40,7 @@ export class EntryTitleComponent {
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly title = input.required<string>();
+  readonly canEdit = input<boolean>(true);
   readonly editMode = signal<boolean>(false);
 
   editTitle = '';

@@ -30,7 +30,15 @@ export class WbsDisciplineNodeTransformer {
         const d2 = dList.find((c) => c.id === d);
 
         if (d2) disciplines.push(d2);
-      } else disciplines.push(d);
+      } else
+        disciplines.push({
+          id: d.id,
+          label: d.label,
+          description: d.description,
+          order: 0,
+          tags: [],
+          type: 'discipline',
+        });
     }
 
     for (const p of project.phases) {
@@ -38,7 +46,15 @@ export class WbsDisciplineNodeTransformer {
         const p2 = pList.find((c) => c.id === p);
 
         if (p2) phases.push(p2);
-      } else phases.push(p);
+      } else
+        phases.push({
+          id: p.id,
+          label: p.label,
+          description: p.description,
+          order: 0,
+          tags: [],
+          type: 'phase',
+        });
     }
 
     const nodes: WbsNodeView[] = [];
