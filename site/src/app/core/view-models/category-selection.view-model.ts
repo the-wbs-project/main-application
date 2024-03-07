@@ -5,6 +5,7 @@ export interface CategorySelection {
   selected: boolean;
   number: number | null;
   isCustom: boolean;
+  originalSelection?: boolean;
   confirm?: CategoryCancelConfirm;
 }
 

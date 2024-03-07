@@ -2,7 +2,9 @@ import {
   ChangeDetectionStrategy,
   Component,
   Input,
+  Signal,
   input,
+  signal,
 } from '@angular/core';
 import {
   FormControl,
@@ -16,6 +18,7 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { ListItem } from '@wbs/core/models';
+import { ProjectCategoryDropdownItemComponent } from '@wbs/main/components/project-category-dropdown-item.component';
 import { DirtyComponent } from '@wbs/main/models';
 import { ChangeProjectBasics } from '../../../../../actions';
 import { ProjectState } from '../../../../../states';
@@ -28,6 +31,7 @@ import { ProjectState } from '../../../../../states';
     DropDownListModule,
     EditorModule,
     FormsModule,
+    ProjectCategoryDropdownItemComponent,
     TextBoxModule,
     TranslateModule,
   ],
@@ -42,8 +46,8 @@ export class ProjectSettingsGeneralComponent implements DirtyComponent {
 
   constructor(private readonly store: Store) {}
 
-  get isDirty(): boolean {
-    return this.form.dirty;
+  get isDirty(): Signal<boolean> {
+    return signal(this.form.dirty);
   }
 
   ngOnInit(): void {

@@ -39,11 +39,12 @@
   </div>
 </div>
 
-<ng-template #content let-modal>
+<ng-template #content>
   <kendo-dialog
     width="90%"
     height="90%"
     [title]="'Resources.AddResource' | translate"
+    (close)="modal!.close()"
   >
     <wbs-record-resource-editor [(vm)]="vm" />
     <kendo-dialog-actions>

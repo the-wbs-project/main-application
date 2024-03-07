@@ -3,11 +3,16 @@ import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import {
   aboutSubSectionGuard,
+  dirtyGuard,
   resourcesSubSectionGuard,
   settingsSubSectionGuard,
   tasksSubSectionGuard,
 } from '@wbs/main/guards';
-import { Transformers, projectCategoryResolver } from '@wbs/main/services';
+import {
+  CategorySelectionService,
+  Transformers,
+  projectCategoryResolver,
+} from '@wbs/main/services';
 import {
   EntryActivityService,
   EntryService,
@@ -33,6 +38,7 @@ export const routes: Routes = [
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
+      CategorySelectionService,
       EntryActivityService,
       EntryService,
       EntryTaskActionService,
@@ -102,6 +108,15 @@ export const routes: Routes = [
           ),
         canActivate: [settingsSubSectionGuard],
         canDeactivate: [],
+      },
+      {
+        path: 'settings/phases',
+        loadComponent: () =>
+          import('./pages/entry-settings-phases.component').then(
+            (x) => x.PhasesComponent
+          ),
+        canActivate: [settingsSubSectionGuard],
+        canDeactivate: [dirtyGuard],
       },
     ],
   },

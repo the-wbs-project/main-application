@@ -10,16 +10,16 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk, faRobot } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { ListItem } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
-import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { EntryService } from '../../services';
 import { EntryViewState } from '../../states';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 
 @Component({
   standalone: true,

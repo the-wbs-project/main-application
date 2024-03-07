@@ -25,6 +25,7 @@ import { EntryTypeDescriptionPipe } from '../../pipes/entry-type-description.pip
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
 import { EntryCreationService } from './services';
+import { TitleService } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -63,7 +64,9 @@ export class LibraryListComponent implements OnInit {
 
   readonly plusIcon = plusIcon;
 
-  constructor() {}
+  constructor(title: TitleService) {
+    title.setTitle('General.Library', true);
+  }
 
   ngOnInit(): void {
     this.data.libraryEntries.getAllAsync(this.owner()).subscribe((entries) => {

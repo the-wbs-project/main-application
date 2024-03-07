@@ -1,24 +1,35 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
-import { IdService, Messages } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import {
+  LibraryEntryNode,
+  LibraryEntryVersion,
+  ProjectCategory,
+} from '@wbs/core/models';
+import { IdService, Messages, Resources } from '@wbs/core/services';
+import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreationResults } from '@wbs/main/models';
-import { Transformers, WbsNodeService } from '@wbs/main/services';
+import {
+  CategorySelectionService,
+  Transformers,
+  WbsNodeService,
+} from '@wbs/main/services';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { TasksChanged, VersionChanged } from '../actions';
+import { TasksChanged } from '../actions';
 import { LIBRARY_TASKS_REORDER_WAYS } from '../models';
 import { EntryViewState } from '../states';
 import { EntryTaskActivityService } from './entry-task-activity.service';
 import { EntryTaskRecorderService } from './entry-task-reorder.service';
+import { MetadataState } from '@wbs/main/states';
 
 @Injectable()
 export class EntryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
+  private readonly categoryService = inject(CategorySelectionService);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
+  private readonly resources = inject(Resources);
   private readonly store = inject(Store);
   private readonly transformers = inject(Transformers);
   private readonly reorder = inject(EntryTaskRecorderService);
@@ -405,5 +416,121 @@ export class EntryTaskService {
           return this.saveAsync(upserts, removedIds, 'Library.TaskRemoved');
         })
       );
+  }
+
+  getPhasesForEdit(): CategorySelection[] {
+    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const tasks = this.store.selectSnapshot(EntryViewState.taskVms)!;
+    const counts = new Map<string, number>();
+    const phases: ProjectCategory[] = [];
+    const taskPhases = tasks
+      .filter((x) => x.parentId == undefined)
+      .sort((a, b) => a.order - b.order);
+
+    for (const phase of taskPhases) {
+      const id = phase.phaseIdAssociation ?? phase.id;
+
+      if (phase.phaseIdAssociation) phases.push(phase.phaseIdAssociation);
+      else {
+        phases.push({
+          id: phase.id,
+          label: phase.title,
+          description: phase.description,
+        });
+      }
+      counts.set(id, phase.children);
+    }
+
+    return this.categoryService.build(
+      phaseDefinitions,
+      phases,
+      'Projects.PhaseRemoveConfirm',
+      counts
+    );
+  }
+
+  savePhaseChangesAsync(phases: CategorySelection[]): Observable<void> {
+    const tasks = this.store.selectSnapshot(EntryViewState.tasks)!;
+    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const existing: ProjectCategory[] = tasks
+      .filter((x) => x.parentId == undefined)
+      .sort((a, b) => a.order - b.order)
+      .map(
+        (x) =>
+          x.phaseIdAssociation ?? {
+            id: x.id,
+            label: x.title,
+            description: x.description,
+          }
+      );
+    const results = this.categoryService.extract(phases, existing);
+    const toRemoveIds: string[] = [];
+    const upserts: LibraryEntryNode[] = [];
+    //
+    //  Now get all ids to remove
+    //
+    for (const id of results.removedIds) {
+      const task = tasks.find(
+        (x) => x.id === id || x.phaseIdAssociation === id
+      );
+
+      if (!task) continue;
+
+      toRemoveIds.push(
+        task.id,
+        ...WbsNodeService.getChildrenIds(tasks, task.id)
+      );
+    }
+    //
+    //  Remove
+    //
+    for (const id of toRemoveIds) {
+      const index = tasks.findIndex((x) => x.id === id);
+
+      if (index > -1) tasks.splice(index, 1);
+    }
+    //
+    //  Now  look through cats
+    //
+    for (let i = 0; i < results.categories.length; i++) {
+      const cat = results.categories[i];
+      const catId = typeof cat === 'string' ? cat : cat.id;
+      let task = tasks.find(
+        (x) => x.id === catId || x.phaseIdAssociation === catId
+      );
+
+      if (task) {
+        if (task.order !== i + 1) {
+          task.order = i + 1;
+          upserts.push(task);
+        }
+      } else if (typeof cat === 'string') {
+        const phase = phaseDefinitions.find((x) => x.id === cat)!;
+
+        task = {
+          id: IdService.generate(),
+          phaseIdAssociation: cat,
+          order: i + 1,
+          lastModified: new Date(),
+          title: this.resources.get(phase.label),
+          description: phase.description
+            ? this.resources.get(phase.description)
+            : undefined,
+        };
+        tasks.push(task);
+        upserts.push(task);
+      } else {
+        task = {
+          id: cat.id,
+          order: i + 1,
+          lastModified: new Date(),
+          title: cat.label,
+          description: cat.description,
+        };
+        tasks.push(task);
+        upserts.push(task);
+      }
+    }
+    return this.saveAsync(upserts, toRemoveIds, 'Library.PhasesUpdated');
   }
 }

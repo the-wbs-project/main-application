@@ -22,6 +22,12 @@ export class CategorySelectionService {
     private readonly store: Store
   ) {}
 
+  isListDirty(list: CategorySelection[] | undefined): boolean {
+    return (
+      list?.some((x) => x.selected !== (x.originalSelection ?? false)) ?? false
+    );
+  }
+
   build(
     categories: ListItem[],
     selected: ProjectCategory[] | undefined,
@@ -37,6 +43,7 @@ export class CategorySelectionService {
         description: cat.description ? this.resources.get(cat.description) : '',
         number: null,
         selected: false,
+        originalSelection: false,
         isCustom: false,
       });
     }
@@ -54,6 +61,7 @@ export class CategorySelectionService {
             description: cat.description ?? '',
             number: null,
             selected: true,
+            originalSelection: true,
             isCustom: false,
             confirm: this.createConfirm(cat.id, confirmMessage, catCounts),
           });
@@ -66,6 +74,7 @@ export class CategorySelectionService {
           description: x.description ?? '',
           number: null,
           selected: true,
+          originalSelection: true,
           isCustom: true,
           confirm: this.createConfirm(x.id, confirmMessage, catCounts),
         });
@@ -82,6 +91,7 @@ export class CategorySelectionService {
         description: cat.description ?? '',
         number: null,
         selected: false,
+        originalSelection: false,
         isCustom: false,
       });
     }
@@ -123,6 +133,7 @@ export class CategorySelectionService {
               : '',
             number: null,
             selected: selected.indexOf(x) > -1,
+            originalSelection: selected.indexOf(x) > -1,
             isCustom: false,
           });
         }
@@ -133,6 +144,7 @@ export class CategorySelectionService {
           description: x.description ?? '',
           number: null,
           selected: selected.indexOf(x.id) > -1,
+          originalSelection: selected.indexOf(x.id) > -1,
           isCustom: true,
         });
       }

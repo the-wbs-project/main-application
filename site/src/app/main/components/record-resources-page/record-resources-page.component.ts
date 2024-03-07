@@ -56,7 +56,7 @@ export class RecordResourcesPageComponent {
   readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
 
-  private modal?: DialogRef;
+  modal?: DialogRef;
 
   readonly faPlus = faPlus;
   readonly addClaim = LIBRARY_CLAIMS.RESOURCES.CREATE;

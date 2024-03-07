@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  Signal,
+  signal,
+} from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -35,8 +40,8 @@ export class TaskSettingsGeneralComponent implements DirtyComponent {
 
   constructor(private readonly store: Store) {}
 
-  get isDirty(): boolean {
-    return this.form.dirty;
+  get isDirty(): Signal<boolean> {
+    return signal(this.form.dirty);
   }
 
   ngOnInit(): void {

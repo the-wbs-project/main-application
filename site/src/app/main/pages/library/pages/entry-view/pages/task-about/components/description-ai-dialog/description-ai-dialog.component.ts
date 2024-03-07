@@ -34,7 +34,7 @@ import { AiState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
-  selector: 'wbs-description-ai-dialog',
+  selector: 'wbs-task-description-ai-dialog',
   templateUrl: './description-ai-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [

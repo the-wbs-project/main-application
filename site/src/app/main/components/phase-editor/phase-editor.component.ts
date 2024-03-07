@@ -101,7 +101,7 @@ export class PhaseEditorComponent {
   rebuild(): void {
     this.categories.update((list) => {
       this.catService.renumber(list);
-      return list;
+      return structuredClone(list);
     });
   }
 }

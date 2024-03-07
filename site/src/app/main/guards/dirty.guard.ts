@@ -6,7 +6,7 @@ import { DirtyComponent } from '../models';
 export const dirtyGuard: CanDeactivateFn<DirtyComponent> = (
   component: DirtyComponent
 ) =>
-  !component.isDirty
+  !component.isDirty()
     ? true
     : inject(Messages).confirm.show(
         'General.ConfirmDiscardTitle',

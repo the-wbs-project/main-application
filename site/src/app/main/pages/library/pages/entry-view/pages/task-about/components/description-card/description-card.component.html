@@ -48,7 +48,7 @@
 
 @if (askAi()) {
 <kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
-  <wbs-description-ai-dialog
+  <wbs-task-description-ai-dialog
     [versionTitle]="title()"
     [description]="description()"
     (descriptionChanged)="save($event)"

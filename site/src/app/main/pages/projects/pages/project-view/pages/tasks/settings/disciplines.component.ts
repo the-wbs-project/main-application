@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -29,7 +30,7 @@ import { ProjectState, TasksState } from '../../../states';
         [(categories)]="categories"
         [showSave]="true"
         (saveClicked)="save()"
-        (categoriesChange)="isDirty = true"
+        (categoriesChange)="isDirty.set(true)"
       />
       }
     </div>`,
@@ -38,7 +39,7 @@ import { ProjectState, TasksState } from '../../../states';
   providers: [CategorySelectionService],
 })
 export class TaskSettingDisciplineComponent implements DirtyComponent, OnInit {
-  isDirty = false;
+  readonly isDirty = signal(false);
   categories?: CategorySelection[];
 
   constructor(
@@ -61,7 +62,7 @@ export class TaskSettingDisciplineComponent implements DirtyComponent, OnInit {
     const results = this.catService.extractIds(this.categories);
 
     this.store.dispatch(new ChangeTaskDisciplines(results));
-    this.isDirty = false;
+    this.isDirty.set(false);
   }
 
   private rebuild(): void {

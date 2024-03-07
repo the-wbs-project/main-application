@@ -3,6 +3,7 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
@@ -27,7 +28,7 @@ import { ProjectState, TasksState } from '../../../../states';
         [(categories)]="categories"
         [showSave]="true"
         (saveClicked)="save()"
-        (categoriesChange)="isDirty = true"
+        (categoriesChange)="isDirty.set(true)"
       />
       }
     </div>`,
@@ -38,7 +39,7 @@ import { ProjectState, TasksState } from '../../../../states';
 export class ProjectSettingsDisciplinesComponent
   implements OnInit, DirtyComponent
 {
-  isDirty = false;
+  isDirty = signal(false);
 
   categories?: CategorySelection[];
 
@@ -62,7 +63,7 @@ export class ProjectSettingsDisciplinesComponent
     this.store.dispatch(
       new ChangeProjectCategories(PROJECT_NODE_VIEW.DISCIPLINE, results)
     );
-    this.isDirty = false;
+    this.isDirty.set(false);
   }
 
   private rebuild(): void {

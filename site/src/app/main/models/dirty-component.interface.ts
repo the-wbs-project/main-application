@@ -1,3 +1,5 @@
+import { Signal } from '@angular/core';
+
 export interface DirtyComponent {
-  readonly isDirty: boolean;
+  readonly isDirty: Signal<boolean>;
 }
