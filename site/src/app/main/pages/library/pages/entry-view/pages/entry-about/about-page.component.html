@@ -2,6 +2,12 @@
   <div class="d-ib text-start w-100" style="max-width: 1200px">
     <div class="two-column-grid pd-20" resizedCss>
       <wbs-details-card [entry]="entry()!" [version]="version()!" />
+      <wbs-discipline-card
+        [fullList]="[]"
+        [selectedList]="[]"
+        noDisciplinesLabel="hi"
+        [canEdit]="claims() | check : UPDATE_CLAIM"
+      />
       <wbs-description-card
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"

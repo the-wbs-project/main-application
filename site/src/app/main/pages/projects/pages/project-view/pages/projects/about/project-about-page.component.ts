@@ -2,6 +2,7 @@ import { NgClass, UpperCasePipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SignalStore } from '@wbs/core/services';
+import { DisciplineListComponent } from '@wbs/main/components/discipline-list.component';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
@@ -9,7 +10,6 @@ import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { ApprovalBadgeComponent } from '../../../components/approval-badge.component';
-import { DisciplineListComponent } from '../../../components/discipline-list.component';
 import { ProjectChecklistComponent } from '../../../components/project-checklist';
 import {
   ProjectApprovalState,

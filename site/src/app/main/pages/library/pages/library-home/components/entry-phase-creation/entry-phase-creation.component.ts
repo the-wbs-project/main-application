@@ -34,8 +34,8 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
+import { PhaseSelectionComponent } from '../../../../components/phase-section';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
-import { PhaseSectionComponent } from './components/phase-section';
 import { SaveSectionComponent } from './components/save-section';
 
 @Component({
@@ -48,7 +48,7 @@ import { SaveSectionComponent } from './components/save-section';
     FontAwesomeModule,
     FormsModule,
     NgClass,
-    PhaseSectionComponent,
+    PhaseSelectionComponent,
     SaveSectionComponent,
     StepperModule,
     TextBoxModule,

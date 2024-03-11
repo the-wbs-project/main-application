@@ -75,8 +75,8 @@
 
     <div class="card-body">
       <wbs-discipline-list
-        [disciplines]="task.disciplines"
-        [projectDisciplines]="project()!.disciplines"
+        [selectedList]="task.disciplines"
+        [fullList]="project()!.disciplines"
       />
     </div>
     } @else {

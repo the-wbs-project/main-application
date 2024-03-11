@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
+  input,
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,14 +16,19 @@ import { EntryService } from '../../services';
 import { EntryViewState } from '../../states';
 import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { DetailsCardComponent } from './components/details-card';
+import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
+import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 
 @Component({
   standalone: true,
   templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    CheckPipe,
     DescriptionCardComponent,
     DescriptionAiDialogComponent,
+    DisciplineCardComponent,
     DetailsCardComponent,
     DialogModule,
     ResizedCssDirective,
@@ -39,6 +45,9 @@ export class AboutPageComponent {
   readonly descriptionEditMode = model(false);
   readonly entry = this.store.select(EntryViewState.entry);
   readonly version = this.store.select(EntryViewState.version);
+  readonly claims = input.required<string[]>();
+
+  readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
 
   descriptionChange(description: string): void {
     this.entryService.descriptionChangedAsync(description).subscribe();

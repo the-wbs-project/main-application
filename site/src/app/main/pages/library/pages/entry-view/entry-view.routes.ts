@@ -110,6 +110,15 @@ export const routes: Routes = [
         canDeactivate: [],
       },
       {
+        path: 'settings/phase',
+        loadComponent: () =>
+          import('./pages/entry-settings-phase.component').then(
+            (x) => x.PhaseComponent
+          ),
+        canActivate: [settingsSubSectionGuard],
+        canDeactivate: [dirtyGuard],
+      },
+      {
         path: 'settings/phases',
         loadComponent: () =>
           import('./pages/entry-settings-phases.component').then(

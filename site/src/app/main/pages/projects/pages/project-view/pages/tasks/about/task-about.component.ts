@@ -13,11 +13,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
+import { DisciplineListComponent } from '@wbs/main/components/discipline-list.component';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { DisciplineListComponent } from '../../../components/discipline-list.component';
 import { ProjectState, TasksState } from '../../../states';
 
 @Component({

@@ -16,55 +16,51 @@ import {
   faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { EditorModule } from '@progress/kendo-angular-editor';
-import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
-import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { ProjectCategory } from '@wbs/core/models';
 import { AlertComponent } from '../alert.component';
+import { DisciplineEditorComponent } from '../discipline-editor';
+import { DisciplineListComponent } from '../discipline-list.component';
 
 @Component({
   standalone: true,
-  selector: 'wbs-description-card',
-  templateUrl: './description-card.component.html',
+  selector: 'wbs-discipline-card',
+  templateUrl: './discipline-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'card border full-item' },
+  host: { class: 'card border' },
   imports: [
     AlertComponent,
-    EditorModule,
+    DisciplineEditorComponent,
+    DisciplineListComponent,
     FontAwesomeModule,
     FormsModule,
     NgClass,
-    SafeHtmlPipe,
     TranslateModule,
   ],
 })
-export class DescriptionCardComponent {
+export class DisciplineCardComponent {
   @Output() readonly descriptionChange = new EventEmitter<string>();
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly faComment = faComment;
-  readonly entry = input.required<LibraryEntry>();
-  readonly version = input.required<LibraryEntryVersion>();
-  readonly noDescriptionLabel = input.required<string>();
-  readonly askAi = model.required<boolean>();
-  readonly editMode = model.required<boolean>();
-
-  editDescription = '';
+  readonly selectedList = model.required<ProjectCategory[]>();
+  readonly fullList = model.required<ProjectCategory[]>();
+  readonly canEdit = input.required<boolean>();
+  readonly alertIfEmpty = input(false);
+  readonly editMode = model(false);
+  readonly noDisciplinesLabel = input.required<string>();
 
   edit(): void {
-    this.editDescription = this.version()!.description ?? '';
     this.editMode.set(true);
   }
 
   save(description: string): void {
     this.descriptionChange.emit(description);
     this.editMode.set(false);
-    this.askAi.set(false);
   }
 
   cancel(): void {
-    this.editDescription = '';
     this.editMode.set(false);
   }
 }

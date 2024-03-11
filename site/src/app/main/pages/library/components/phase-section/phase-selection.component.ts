@@ -4,7 +4,6 @@ import {
   Component,
   computed,
   inject,
-  input,
   model,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,15 +14,14 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { ProjectCategory } from '@wbs/core/models';
 import { IdService, SignalStore } from '@wbs/core/services';
 import { SelectButtonComponent } from '@wbs/main/components/select-button.component';
 import { MetadataState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
-  selector: 'wbs-phase-section',
-  templateUrl: './phase-section.component.html',
+  selector: 'wbs-phase-selection',
+  templateUrl: './phase-selection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FontAwesomeModule,
@@ -34,7 +32,7 @@ import { MetadataState } from '@wbs/main/states';
   ],
   styles: ['.row-header { max-width: 200px; }'],
 })
-export class PhaseSectionComponent {
+export class PhaseSelectionComponent {
   private readonly store = inject(SignalStore);
 
   readonly faList = faList;
