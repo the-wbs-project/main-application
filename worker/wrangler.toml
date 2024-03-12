@@ -49,6 +49,29 @@ MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "auth.pm-empower.com"
 
+[env.demo]
+name = "pm-empower-api-demo"
+usage_model = "unbound"
+workers_dev = false
+routes = [
+	{ pattern = "demo-api.pm-empower.com/*", zone_name = "pm-empower.com" },
+]
+kv_namespaces = [
+  { binding = "KV_DATA", id = "bf14375aa8794440b95cde62a4a68463", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
+]
+r2_buckets = [
+  { binding = "BUCKET_RESOURCES", bucket_name = "record-resources-library-demo" },
+  { binding = "BUCKET_STATICS", bucket_name = "statics-library-demo" }
+]
+
+[env.demo.vars]
+DEBUG = "false"
+DATADOG_ENV = "demo"
+CORS_ORIGINS = "https://library-demo.pm-empower.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+
 [env.prod]
 name = "pm-empower-api-prod"
 usage_model = "unbound"

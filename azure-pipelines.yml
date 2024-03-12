@@ -149,3 +149,24 @@ jobs:
           ArtifactName: "drop"
           publishLocation: "Container"
         displayName: "Publish"
+
+  - job: pages_job
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Pages
+    steps:
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "pages"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Pages.zip"
+          replaceExistingArchive: true
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
