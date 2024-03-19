@@ -1,12 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   effect,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -50,7 +49,7 @@ import { AiState } from '@wbs/main/states';
   providers: [AiChatService],
 })
 export class DescriptionAiDialogComponent implements OnInit {
-  @Output() readonly descriptionChanged = new EventEmitter<string>();
+  readonly descriptionChange = output<string>();
 
   private readonly store = inject(SignalStore);
   public readonly service = inject(AiChatService);
@@ -96,7 +95,7 @@ export class DescriptionAiDialogComponent implements OnInit {
 
   setProposal(append: boolean): void {
     const feed = this.feed();
-    const message = feed[feed.length - 1].text!;
+    const message = feed.at(-1)?.text!;
     const current = this.proposal;
     this.proposal =
       append && current.length > 0 ? `${current}<br/><br/>${message}` : message;

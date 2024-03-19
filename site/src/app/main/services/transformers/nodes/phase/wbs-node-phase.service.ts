@@ -100,8 +100,7 @@ export class WbsNodePhaseTransformer {
       const children = this.getPhaseChildren(
         phaseInfo[i].id,
         phaseInfo[i].label,
-        node.id,
-        parentlevel,
+        parent,
         'project',
         models
       );
@@ -166,8 +165,7 @@ export class WbsNodePhaseTransformer {
       const children = this.getPhaseChildren(
         phaseId,
         phaseLabel,
-        node.id,
-        parentlevel,
+        parent,
         type,
         models
       );
@@ -192,17 +190,16 @@ export class WbsNodePhaseTransformer {
   private getPhaseChildren(
     phaseId: string,
     phaseLabel: string,
-    parentId: string,
-    parentLevel: number[],
+    parent: WbsNodeView,
     type: string,
     list: WbsNode[]
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
-    const children = WbsNodeService.getSortedChildrenForPhase(parentId, list);
+    const children = WbsNodeService.getSortedChildrenForPhase(parent.id, list);
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      const childLevel = [...parentLevel, child.order];
+      const childLevel = [...parent.levels, child.order];
       const node: WbsNodeView = {
         children: 0,
         childrenIds: [],
@@ -214,14 +211,15 @@ export class WbsNodePhaseTransformer {
         levelText: childLevel.join('.'),
         depth: childLevel.length,
         order: child.order ?? 0,
-        parentId: parentId,
-        treeParentId: parentId,
+        parent,
+        parentId: parent.id,
+        treeParentId: parent.id,
         title: child.title ?? '',
         lastModified: child.lastModified,
         canMoveDown: i !== children.length - 1,
         canMoveUp: i > 0,
         canMoveRight: i > 0,
-        canMoveLeft: type === 'project' || parentLevel.length > 1,
+        canMoveLeft: type === 'project' || parent.levelText.length > 1,
         subTasks: [],
         phaseIdAssociation: child.phaseIdAssociation,
         phaseId,
@@ -231,8 +229,7 @@ export class WbsNodePhaseTransformer {
       const taskChildren = this.getPhaseChildren(
         phaseId,
         phaseLabel,
-        child.id,
-        childLevel,
+        node,
         type,
         list
       );

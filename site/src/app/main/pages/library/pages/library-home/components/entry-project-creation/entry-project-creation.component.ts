@@ -3,11 +3,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
   computed,
   inject,
   model,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -61,7 +60,7 @@ import { SaveSectionComponent } from './components/save-section';
   providers: [CategorySelectionService],
 })
 export class EntryProjectCreationComponent extends DialogContentBase {
-  @Output() readonly done = new EventEmitter<void>();
+  readonly done = output<void>();
 
   private readonly catService = inject(CategorySelectionService);
   private readonly store = inject(SignalStore);

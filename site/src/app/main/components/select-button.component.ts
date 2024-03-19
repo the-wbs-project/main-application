@@ -2,9 +2,8 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
+  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition, faCheck } from '@fortawesome/pro-solid-svg-icons';
@@ -39,5 +38,5 @@ export class SelectButtonComponent {
   readonly selectedText = input<string>('General.Selected');
   readonly buttonClass = input<string>();
   readonly prefixIcon = input<IconDefinition>();
-  @Output() readonly clicked = new EventEmitter<void>();
+  readonly clicked = output<void>();
 }

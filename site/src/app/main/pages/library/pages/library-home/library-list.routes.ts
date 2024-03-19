@@ -9,7 +9,6 @@ import { map } from 'rxjs/operators';
 export const loadGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const titleService = inject(TitleService);
-  const owner = Utils.getOrgName(store, route);
 
   titleService.setTitle('Pages.Projects', true);
 

@@ -2,10 +2,9 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
   model,
+  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
@@ -20,7 +19,7 @@ import { MemberViewModel } from '@wbs/core/view-models';
   imports: [DialogModule, NgClass, TranslateModule],
 })
 export class EditMemberComponent {
-  @Output() readonly save = new EventEmitter<void>();
+  readonly save = output<void>();
 
   readonly member = model.required<MemberViewModel | undefined>();
   readonly roles = input.required<Role[]>();

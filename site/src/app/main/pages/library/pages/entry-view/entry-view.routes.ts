@@ -1,6 +1,4 @@
-import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
-import { NgxsModule } from '@ngxs/store';
 import {
   aboutSubSectionGuard,
   dirtyGuard,
@@ -11,11 +9,13 @@ import {
 import {
   CategorySelectionService,
   Transformers,
+  disciplineResolver,
   projectCategoryResolver,
 } from '@wbs/main/services';
 import {
   EntryActivityService,
   EntryService,
+  EntryState,
   EntryTaskActionService,
   EntryTaskActivityService,
   EntryTaskRecorderService,
@@ -24,23 +24,22 @@ import {
   entryUrlResolve,
   libraryClaimsResolve,
   ownerIdResolve,
+  populateGuard,
   redirectGuard,
-  verifyGuard,
   versionIdResolve,
 } from './services';
-import { EntryViewState } from './states';
 
 export const routes: Routes = [
   {
     path: ':ownerId/:entryId/:versionId',
-    canActivate: [verifyGuard],
+    canActivate: [populateGuard],
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
-      importProvidersFrom(NgxsModule.forFeature([EntryViewState])),
       CategorySelectionService,
       EntryActivityService,
       EntryService,
+      EntryState,
       EntryTaskActionService,
       EntryTaskActivityService,
       EntryTaskRecorderService,
@@ -63,6 +62,10 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/entry-about').then((x) => x.AboutPageComponent),
         canActivate: [aboutSubSectionGuard],
+        resolve: {
+          claims: libraryClaimsResolve,
+          disciplines: disciplineResolver,
+        },
       },
       {
         path: 'tasks',

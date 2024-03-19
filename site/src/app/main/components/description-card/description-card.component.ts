@@ -2,10 +2,9 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
   model,
+  output,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -38,7 +37,7 @@ import { AlertComponent } from '../alert.component';
   ],
 })
 export class DescriptionCardComponent {
-  @Output() readonly descriptionChange = new EventEmitter<string>();
+  readonly descriptionChange = output<string>();
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;

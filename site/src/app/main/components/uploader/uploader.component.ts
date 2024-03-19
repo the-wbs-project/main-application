@@ -2,10 +2,9 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   ViewEncapsulation,
   input,
+  output,
 } from '@angular/core';
 import { FileInfo, FileSelectModule } from '@progress/kendo-angular-upload';
 
@@ -21,6 +20,6 @@ import { FileInfo, FileSelectModule } from '@progress/kendo-angular-upload';
 export class UploaderComponent {
   readonly zoneMessage = input<string | undefined>();
 
-  @Output() readonly removed = new EventEmitter<void>();
-  @Output() readonly uploaded = new EventEmitter<FileInfo>();
+  readonly removed = output<void>();
+  readonly uploaded = output<FileInfo>();
 }

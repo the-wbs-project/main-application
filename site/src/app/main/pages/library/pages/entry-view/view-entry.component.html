@@ -1,17 +1,17 @@
 <div class="d-flex flex-column h-100">
   <div class="d-flex flex-align-center mg-y-10">
     <wbs-entry-title
-      [title]="title()"
+      [title]="state.version()?.title ?? ''"
       [canEdit]="canEditTitle()"
       (titleChange)="titleChanged($event)"
     />
     <div class="flex-fill tx-right">
       <div class="d-ib mg-r-15">
-        <wbs-page-header [breadcrumbs]="entry() | entryViewBreadcrumbs" />
+        <wbs-page-header [breadcrumbs]="state.entry() | entryViewBreadcrumbs" />
       </div>
       <wbs-entry-action-button
-        [entry]="entry()"
-        [version]="version()"
+        [entry]="state.entry()"
+        [version]="state.version()"
         [claims]="claims()"
       />
     </div>

@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   computed,
   input,
+  output,
 } from '@angular/core';
 import { MenuModule } from '@progress/kendo-angular-menu';
 import { NavigationLink } from '../models';
@@ -19,7 +18,7 @@ import { NavigationLink } from '../models';
   </nav> `,
 })
 export class NavigationComponent {
-  @Output() readonly navigate = new EventEmitter<string[]>();
+  readonly navigate = output<string[]>();
 
   readonly menu = input.required<NavigationLink[]>();
   readonly activeSubSection = input<string | undefined>();

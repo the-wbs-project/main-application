@@ -2,9 +2,8 @@ import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
+  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
@@ -38,8 +37,8 @@ import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
   ],
 })
 export class TimelineComponent {
-  @Output() loadMoreClicked = new EventEmitter<void>();
-  @Output() menuItemClicked = new EventEmitter<TimelineMenuItem>();
+  loadMoreClicked = output<void>();
+  menuItemClicked = output<TimelineMenuItem>();
 
   readonly faCircleInfo = faCircleInfo;
   readonly faComment = faComment;

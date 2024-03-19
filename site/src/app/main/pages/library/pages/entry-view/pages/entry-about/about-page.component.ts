@@ -12,12 +12,11 @@ import { SignalStore } from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { EntryService } from '../../services';
-import { EntryViewState } from '../../states';
+import { EntryService, EntryState } from '../../services';
 import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { DetailsCardComponent } from './components/details-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 
 @Component({
@@ -38,14 +37,13 @@ import { CheckPipe } from '@wbs/main/pipes/check.pipe';
   ],
 })
 export class AboutPageComponent {
-  private readonly store = inject(SignalStore);
   private readonly entryService = inject(EntryService);
+  readonly state = inject(EntryState);
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
-  readonly entry = this.store.select(EntryViewState.entry);
-  readonly version = this.store.select(EntryViewState.version);
   readonly claims = input.required<string[]>();
+  readonly disciplines = input.required<ListItem[]>();
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
 

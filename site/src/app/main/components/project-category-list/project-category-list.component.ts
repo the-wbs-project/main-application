@@ -1,9 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   input,
-  Output,
+  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListItem } from '@wbs/core/models';
@@ -20,5 +19,5 @@ export class ProjectCategoryListComponent {
   readonly buttonClass = input<string>();
   readonly categories = input.required<ListItem[]>();
   readonly selected = input.required<string | undefined>();
-  @Output() readonly categoryChosen = new EventEmitter<string>();
+  readonly categoryChosen = output<string>();
 }

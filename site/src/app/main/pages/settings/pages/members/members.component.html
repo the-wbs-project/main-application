@@ -71,7 +71,7 @@
                 @if (isLoading()) {
                 <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
                 } @else {
-                {{ members.length }}
+                {{ members().length }}
                 }
               </h5>
             </div>

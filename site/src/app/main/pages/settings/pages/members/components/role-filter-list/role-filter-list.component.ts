@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   OnInit,
-  Output,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,7 +22,7 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 export class RoleFilterListComponent implements OnInit {
   readonly roles = input.required<Role[]>();
 
-  @Output() readonly valueChanged = new EventEmitter<string[]>();
+  readonly valueChanged = output<string[]>();
 
   readonly values = signal<Role[]>([]);
 

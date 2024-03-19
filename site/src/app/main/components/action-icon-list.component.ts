@@ -2,9 +2,8 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
+  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
@@ -50,13 +49,12 @@ import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
   ],
 })
 export class ActionIconListComponent {
-  @Output() readonly itemClicked = new EventEmitter<string>();
-
   readonly align = input<'left' | 'right' | 'center'>();
   readonly size = input.required<ButtonSize>();
   readonly fillMode = input.required<ButtonFillMode>();
   readonly mainIcon = input.required<IconDefinition>();
   readonly menuItems = input.required<ActionMenuItem[]>();
+  readonly itemClicked = output<string>();
 
   clicked(item: ActionMenuItem): void {
     if (item.disabled) return;

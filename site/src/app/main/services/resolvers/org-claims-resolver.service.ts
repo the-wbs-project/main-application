@@ -8,6 +8,6 @@ export const orgClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
 ) => {
   return inject(DataServiceFactory).claims.getOrganizationClaimsAsync(
-    Utils.getOrgName(inject(Store), route)
+    Utils.getParam(route, 'org')
   );
 };

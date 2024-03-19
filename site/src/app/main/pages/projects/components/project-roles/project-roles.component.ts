@@ -1,13 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
+  OutputEmitterRef,
   computed,
-  effect,
   inject,
   input,
-  signal,
+  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
@@ -32,8 +30,8 @@ declare type OutputType = {
   providers: [RoleUsersService],
 })
 export class ProjectRolesComponent {
-  @Output() readonly addUserToRole = new EventEmitter<OutputType>();
-  @Output() readonly removeUserToRole = new EventEmitter<OutputType>();
+  readonly addUserToRole = output<OutputType>();
+  readonly removeUserToRole = output<OutputType>();
 
   private readonly messages = inject(Messages);
   private readonly resources = inject(Resources);
@@ -83,7 +81,7 @@ export class ProjectRolesComponent {
     role: string,
     user: Member,
     message: string,
-    output: EventEmitter<OutputType>
+    output: OutputEmitterRef<OutputType>
   ): void {
     if (!this.mustConfirm()) {
       output.emit({ user, role });

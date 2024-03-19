@@ -2,19 +2,19 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import { Utils } from '@wbs/main/services';
+import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { VerifyEntry, VerifyTask } from '../actions';
-import { EntryViewState } from '../states';
+import { EntryState } from './entry-state.service';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const org = Utils.getOrgName(store, route);
 
   return store
     .dispatch(
       new Navigate([
-        org,
+        '/' + Utils.getParam(route, 'org'),
         'library',
         'view',
         route.params['ownerId'],
@@ -26,47 +26,41 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
     .pipe(map(() => true));
 };
 
-export const redirectTaskGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const org = Utils.getOrgName(store, route);
-  const entry = store.selectSnapshot(EntryViewState.entry)!;
-  const version = store.selectSnapshot(EntryViewState.version)!;
-
-  return store
+export const redirectTaskGuard = (route: ActivatedRouteSnapshot) =>
+  inject(Store)
     .dispatch(
       new Navigate([
-        org,
+        Utils.getParam(route, 'org'),
         'library',
         'view',
-        entry.owner,
-        entry.id,
-        version.version,
+        Utils.getParam(route, 'ownerId'),
+        Utils.getParam(route, 'entryId'),
+        Utils.getParam(route, 'versionId'),
         'tasks',
         route.params['taskId'],
         'about',
       ])
     )
     .pipe(map(() => true));
-};
 
-export const verifyGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
-  const entryId = route.params['entryId'];
-  const versionId = parseInt(route.params['versionId'], 10);
+export const populateGuard = (route: ActivatedRouteSnapshot) => {
+  const data = inject(DataServiceFactory);
+  const state = inject(EntryState);
+  const owner = Utils.getParam(route, 'ownerId');
+  const entryId = Utils.getParam(route, 'entryId');
+  const versionId = parseInt(Utils.getParam(route, 'versionId'), 10);
 
   if (!owner || !entryId || !versionId || isNaN(versionId)) return false;
 
-  return store
-    .dispatch([new VerifyEntry(owner, entryId, versionId)])
-    .pipe(map(() => true));
-};
+  return forkJoin({
+    entry: data.libraryEntries.getAsync(owner, entryId),
+    version: data.libraryEntryVersions.getAsync(owner, entryId, versionId),
+    tasks: data.libraryEntryNodes.getAllAsync(owner, entryId, versionId),
+  }).pipe(
+    map(({ entry, version, tasks }) => {
+      state.setAll(entry, version, tasks);
 
-export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const taskId = route.params['taskId'];
-
-  if (!taskId) return false;
-
-  return store.dispatch([new VerifyTask(taskId)]).pipe(map(() => true));
+      return true;
+    })
+  );
 };

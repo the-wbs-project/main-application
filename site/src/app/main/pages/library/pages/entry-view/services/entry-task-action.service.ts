@@ -2,7 +2,7 @@ import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { SignalStore } from '@wbs/core/services';
 import { TaskCreationResults } from '@wbs/main/models';
-import { Observable, map, of, switchMap, tap } from 'rxjs';
+import { Observable, of, switchMap, tap } from 'rxjs';
 import { EntryTaskService } from './entry-task.service';
 
 @Injectable()

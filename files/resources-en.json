@@ -324,6 +324,7 @@
       "EditTaskTitle": "Edit Task Title",
       "EditTaskDescription": "Edit Task Description",
       "TaskCount": "# of Tasks",
+      "SubTaskCount": "# of Sub-Tasks",
       "ShowUnselected": "Show Unselected",
       "HideUnselected": "Hide Unselected",
       "AddCustomPhases": "Add Custom Phases",
@@ -687,7 +688,9 @@
       "DescriptionHelpEntry": "A brief (usually 1 paragraph) description of the WBS template.",
       "DescriptionHelpTask": "A brief (usually 1 paragraph) description of the phase/task.",
       "NoDescriptionEntry": "No description has been given to this WBS.  A detailed description will help people to better understand your WBS and when is the appropriate time to use it.",
-      "NoDescriptionTask": "No description has been given to this WBS.  A detailed description will help people to better understand your WBS and when is the appropriate time to use it."
+      "NoDescriptionTask": "No description has been given to this WBS.  A detailed description will help people to better understand your WBS and when is the appropriate time to use it.",
+      "TaskUpdated": "Task Updated",
+      "NoDisciplinesEntry": "No disciplines have been specifically setup for this WBS."
     }
   },
   {

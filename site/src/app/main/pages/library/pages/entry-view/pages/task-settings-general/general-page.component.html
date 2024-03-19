@@ -1,0 +1,99 @@
+<div class="card-header tx-medium">
+  {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
+</div>
+@if (task(); as task) {
+<div class="container-fluid pd-15">
+  <div class="row mb-5">
+    <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
+      {{ "General.Title" | translate }}
+    </label>
+    <div class="col-md-10 col-sm-12">
+      <input
+        #title
+        kendoTextBox
+        class="form-control"
+        [(ngModel)]="task.title"
+      />
+      <label class="d-ib tx-12 tx-italic mg-t-5">
+        {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+      </label>
+    </div>
+  </div>
+  <div class="row mb-5">
+    <div class="col-2 d-none d-md-block">
+      <label [for]="description" class="col-form-label">
+        {{ "General.Description" | translate }}
+      </label>
+    </div>
+    <div class="col-12 d-flex d-md-none">
+      <label [for]="description" class="col-form-label">
+        {{ "General.Description" | translate }}
+      </label>
+      <div class="flex-fill text-end">
+        <button class="btn btn-sm btn-outline-dark" (click)="askAi.set(true)">
+          <fa-icon [icon]="faRobot" />
+          <span class="mg-l-5">
+            {{ "General.AskAi" | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+    <div class="col-md-10 col-sm-12">
+      <div class="w-100 mg-b-5 text-end d-none d-md-block">
+        <button class="btn btn-sm btn-outline-dark" (click)="askAi.set(true)">
+          <fa-icon [icon]="faRobot" />
+          <span class="mg-l-5">
+            {{ "General.AskAi" | translate }}
+          </span>
+        </button>
+      </div>
+      <kendo-editor #description [(ngModel)]="task.description" />
+
+      <label class="d-ib tx-12 tx-italic mg-t-5">
+        {{ "Library.DescriptionHelpTask" | translate }}
+      </label>
+      @if (showDescriptionAlert()) {
+      <wbs-alert
+        type="warning"
+        [dismissible]="false"
+        message="Library.NoDescriptionTask"
+      />
+      }
+    </div>
+  </div>
+  <div class="row mb-2">
+    <div class="offset-md-2 col-md-10 col-sm-12 d-flex">
+      <div class="flex-fill pd-r-15">
+        @if (showSaved()) {
+        <wbs-alert
+          type="success"
+          message="Library.TaskUpdated"
+          (closed)="showSaved.set(false)"
+        />
+        }
+      </div>
+      <div>
+        <button
+          class="btn btn-md btn-primary"
+          [disabled]="!canSave()"
+          (click)="save()"
+        >
+          <fa-icon [icon]="faFloppyDisk" />
+          <span class="mg-l-10">
+            {{ "General.Save" | translate }}
+          </span>
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--@if (askAi()) {
+<kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
+  <wbs-description-ai-dialog
+    [versionTitle]="version.title"
+    [description]="version.description"
+    (descriptionChanged)="aiChangeSaved($event)"
+  />
+</kendo-dialog>
+}-->
+}

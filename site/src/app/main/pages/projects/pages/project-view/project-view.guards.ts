@@ -24,7 +24,7 @@ export const closeApprovalWindowGuard = () =>
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   return store
     .dispatch(new LoadDiscussionForum(owner, route.params['projectId']))
@@ -33,7 +33,7 @@ export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   return store
     .dispatch(
@@ -50,7 +50,7 @@ export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   if (!owner) return false;
 

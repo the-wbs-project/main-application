@@ -2,10 +2,9 @@ import { UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
   model,
+  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -41,7 +40,7 @@ import { DescriptionAiDialogComponent } from '../description-ai-dialog';
   ],
 })
 export class DescriptionCardComponent {
-  @Output() readonly descriptionChange = new EventEmitter<string>();
+  readonly descriptionChange = output<string>();
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;

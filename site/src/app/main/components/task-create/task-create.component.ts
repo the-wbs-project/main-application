@@ -6,6 +6,7 @@ import {
   Output,
   inject,
   model,
+  output,
   signal,
   viewChild,
 } from '@angular/core';

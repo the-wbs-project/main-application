@@ -71,10 +71,7 @@ function getProjectClaims(
 ): Observable<string[]> {
   return getProjectId(store, route).pipe(
     switchMap((projectId) =>
-      data.claims.getProjectClaimsAsync(
-        Utils.getOrgName(store, route),
-        projectId
-      )
+      data.claims.getProjectClaimsAsync(Utils.getParam(route, 'org'), projectId)
     )
   );
 }
@@ -85,7 +82,7 @@ function getProjectUrl(
 ): Observable<string[]> {
   return getProjectId(store, route).pipe(
     map((projectId) => [
-      './' + Utils.getOrgName(store, route),
+      './' + Utils.getParam(route, 'org'),
       'projects',
       'view',
       projectId,

@@ -13,9 +13,7 @@ import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
 import { PhaseSelectionComponent } from '../../../components/phase-section';
-import { EntryService, EntryTaskService } from '../services';
-import { EntryViewState } from '../states';
-import { JsonPipe } from '@angular/common';
+import { EntryService, EntryState, EntryTaskService } from '../services';
 
 @Component({
   standalone: true,
@@ -24,21 +22,19 @@ import { JsonPipe } from '@angular/common';
       {{ 'General.Phase' | translate }}
     </div>
     <div class="pd-15">
-      <p>Current: {{ current() | json }}</p>
-      <p>New: {{ phase() | json }}</p>
       <wbs-phase-selection [(phase)]="phase" />
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [JsonPipe, PhaseSelectionComponent, TranslateModule],
+  imports: [PhaseSelectionComponent, TranslateModule],
   providers: [CategorySelectionService, EntryService],
 })
 export class PhaseComponent implements DirtyComponent, OnInit {
   private readonly service = inject(EntryTaskService);
   private readonly store = inject(SignalStore);
+  readonly state = inject(EntryState);
 
   readonly cats = this.store.select(MetadataState.phases);
-  readonly tasks = this.store.select(EntryViewState.tasks);
-  readonly current = computed(() => this.getPhase(this.tasks() ?? []));
+  readonly current = computed(() => this.getPhase(this.state.tasks() ?? []));
   readonly phase = model<string | { label: string } | undefined>();
   readonly isDirty = computed(() => this.current() != this.phase());
 

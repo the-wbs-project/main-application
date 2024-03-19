@@ -1,5 +1,4 @@
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryEntry,
@@ -8,24 +7,23 @@ import {
 } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
-import { EntryChanged, VersionChanged } from '../actions';
-import { EntryViewState } from '../states';
+import { map, switchMap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
+import { EntryState } from './entry-state.service';
 
 @Injectable()
 export class EntryService {
   private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
-  private readonly store = inject(Store);
+  private readonly state = inject(EntryState);
 
   private get entry(): LibraryEntry {
-    return this.store.selectSnapshot(EntryViewState.entry)!;
+    return this.state.entry()!;
   }
 
   private get version(): LibraryEntryVersion {
-    return this.store.selectSnapshot(EntryViewState.version)!;
+    return this.state.version()!;
   }
 
   generalSaveAsync(
@@ -36,13 +34,11 @@ export class EntryService {
       this.data.libraryEntries.putAsync(entry),
       this.data.libraryEntryVersions.putAsync(entry.owner, version),
     ]).pipe(
-      tap(() => this.messages.notify.success('Library.Saved')),
-      switchMap(() =>
-        this.store.dispatch([
-          new EntryChanged(entry),
-          new VersionChanged(version),
-        ])
-      )
+      map(() => {
+        this.messages.notify.success('Library.Saved');
+        this.state.setEntry(entry);
+        this.state.setVersion(version);
+      })
     );
   }
 
@@ -54,8 +50,10 @@ export class EntryService {
     version.title = title;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.messages.notify.success('Library.TitleChanged')),
-      switchMap(() => this.store.dispatch(new VersionChanged(version))),
+      map(() => {
+        this.messages.notify.success('Library.TitleChanged');
+        this.state.setVersion(version);
+      }),
       switchMap(() =>
         this.activity.entryTitleChanged(entry.id, version.version, from, title)
       )
@@ -70,8 +68,10 @@ export class EntryService {
     version.description = description;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.messages.notify.success('Library.DescriptionChanged')),
-      switchMap(() => this.store.dispatch(new VersionChanged(version))),
+      map(() => {
+        this.messages.notify.success('Library.DescriptionChanged');
+        this.state.setVersion(version);
+      }),
       switchMap(() =>
         this.activity.entryTitleChanged(
           entry.id,
@@ -91,8 +91,10 @@ export class EntryService {
     version.disciplines = disciplines;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.messages.notify.success('Library.DisciplinesChanged')),
-      switchMap(() => this.store.dispatch(new VersionChanged(version))),
+      map(() => {
+        this.messages.notify.success('Library.DisciplinesChanged');
+        this.state.setVersion(version);
+      }),
       switchMap(() =>
         this.activity.entryDisciplinesChanged(
           entry.id,

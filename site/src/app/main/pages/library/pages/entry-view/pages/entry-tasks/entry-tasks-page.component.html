@@ -8,16 +8,11 @@
 } @else {
 <div class="pd-15">
   <wbs-library-tree
-    [entry]="entry()!"
-    [version]="version()!"
+    [entry]="state.entry()!"
+    [version]="state.version()!"
     [claims]="claims()"
     [entryUrl]="entryUrl()"
   />
 </div>
 }
-
-<wbs-task-modal
-  [task]="taskVm()"
-  [width]="width() ?? 0"
-  [parentUrl]="entryUrl()"
-/>
+<router-outlet />

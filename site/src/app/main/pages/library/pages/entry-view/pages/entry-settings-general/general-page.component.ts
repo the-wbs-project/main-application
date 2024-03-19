@@ -13,13 +13,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { LabelModule } from '@progress/kendo-angular-label';
 import { ListItem } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
-import { EntryService } from '../../services';
-import { EntryViewState } from '../../states';
+import { EntryService, EntryState } from '../../services';
 
 @Component({
   standalone: true,
@@ -31,6 +30,7 @@ import { EntryViewState } from '../../states';
     EditorModule,
     FontAwesomeModule,
     FormsModule,
+    LabelModule,
     ProjectCategoryDropdownComponent,
     TextBoxModule,
     TranslateModule,
@@ -38,17 +38,15 @@ import { EntryViewState } from '../../states';
   ],
 })
 export class GeneralComponent {
-  private readonly store = inject(SignalStore);
   private readonly service = inject(EntryService);
+  readonly state = inject(EntryState);
 
   readonly faRobot = faRobot;
   readonly faFloppyDisk = faFloppyDisk;
   readonly askAi = model(true);
   readonly categories = input.required<ListItem[]>();
-  readonly entry = this.store.selectSignalSnapshot(EntryViewState.entry);
-  readonly version = this.store.selectSignalSnapshot(EntryViewState.version);
   readonly canSave = computed(() => {
-    const version = this.version();
+    const version = this.state.version();
 
     if ((version?.title ?? '').length === 0) return false;
 
@@ -56,15 +54,8 @@ export class GeneralComponent {
   });
 
   save(): void {
-    this.service.generalSaveAsync(this.entry()!, this.version()!).subscribe();
-  }
-
-  aiChangeSaved(description: string): void {
-    this.askAi.set(false);
-    this.version.update((v) => {
-      v!.description = description;
-
-      return v;
-    });
+    this.service
+      .generalSaveAsync(this.state.entry()!, this.state.version()!)
+      .subscribe();
   }
 }

@@ -1,18 +1,19 @@
 <div class="w-100 text-center">
   <div class="d-ib text-start w-100" style="max-width: 1200px">
     <div class="two-column-grid pd-20" resizedCss>
-      <wbs-details-card [entry]="entry()!" [version]="version()!" />
+      <wbs-details-card [entry]="state.entry()!" [version]="state.version()!" />
       <wbs-discipline-card
-        [fullList]="[]"
-        [selectedList]="[]"
-        noDisciplinesLabel="hi"
+        [fullList]="disciplines()"
+        [selectedList]="state.version()?.disciplines ?? []"
+        noDisciplinesLabel="Library.NoDisciplinesEntry"
         [canEdit]="claims() | check : UPDATE_CLAIM"
+        [editRoute]="[]"
       />
       <wbs-description-card
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"
-        [entry]="entry()!"
-        [version]="version()!"
+        [entry]="state.entry()!"
+        [version]="state.version()!"
         noDescriptionLabel="hi"
         (descriptionChange)="descriptionChange($event)"
       />
@@ -35,9 +36,9 @@
 @if (askAi()) {
 <kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
   <wbs-description-ai-dialog
-    [versionTitle]="version()!.title"
-    [description]="version()!.description"
-    (descriptionChanged)="aiChangeSaved($event)"
+    [versionTitle]="state.version()!.title"
+    [description]="state.version()!.description"
+    (descriptionChange)="aiChangeSaved($event)"
   />
 </kendo-dialog>
 }

@@ -5,14 +5,13 @@ import {
   inject,
   input,
 } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { SignalStore } from '@wbs/core/services';
-import { TaskModalComponent } from '@wbs/main/components/task-modal';
-import { UiState } from '@wbs/main/states';
 import { LibraryTreeComponent } from '../../components/library-tree';
-import { EntryViewState } from '../../states';
+import { EntryState } from '../../services';
 
 @Component({
   standalone: true,
@@ -21,23 +20,19 @@ import { EntryViewState } from '../../states';
   imports: [
     FontAwesomeModule,
     LibraryTreeComponent,
-    TaskModalComponent,
+    RouterModule,
     TranslateModule,
   ],
 })
 export class TasksPageComponent {
-  private readonly store = inject(SignalStore);
+  readonly state = inject(EntryState);
 
   readonly faSpinner = faSpinner;
 
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
 
-  readonly entry = this.store.select(EntryViewState.entry);
-  readonly version = this.store.select(EntryViewState.version);
-  readonly tasks = this.store.select(EntryViewState.tasks);
-  readonly taskVm = this.store.select(EntryViewState.taskVm);
-  readonly width = this.store.select(UiState.mainContentWidth);
-
-  readonly isLoading = computed(() => !this.entry() || !this.version());
+  readonly isLoading = computed(
+    () => !this.state.entry() || !this.state.version()
+  );
 }

@@ -55,7 +55,7 @@ export const routes: Routes = [
           import('./main.component').then((m) => m.MainComponent),
       },
       {
-        path: ':owner',
+        path: ':org',
         canActivate: [orgGuard],
         loadComponent: () =>
           import('./main.component').then((m) => m.MainComponent),
@@ -81,7 +81,6 @@ export const routes: Routes = [
         ],
         resolve: {
           claims: orgClaimsResolve,
-          org: orgObjResolve,
           orgs: orgListResolve,
           roles: rolesResolve,
           user: userResolve,

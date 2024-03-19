@@ -155,7 +155,7 @@ export class ProjectUploadState {
     { file }: FileUploaded
   ): void | Observable<void> {
     const parts = file.name.split('.');
-    const extension = parts[parts.length - 1].toLowerCase();
+    const extension = parts.at(-1)!.toLowerCase();
     const fileType = EXTENSION_PAGES[extension];
 
     ctx.patchState({

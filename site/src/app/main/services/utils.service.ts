@@ -1,35 +1,16 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { Observable, of } from 'rxjs';
-import { first, map, skipWhile } from 'rxjs/operators';
-import { MembershipState } from '../states';
+import { Observable } from 'rxjs';
 
 export class Utils {
-  static getOrgName(store: Store, route: ActivatedRouteSnapshot): string {
-    const org = route.params['org'];
-    const owner = route.params['owner'];
-    const name = store.selectSnapshot(MembershipState.organization)?.name;
+  static getParam(route: ActivatedRouteSnapshot, prop: string): string {
+    let r: ActivatedRouteSnapshot | null = route;
 
-    if (org && org !== 'undefined') return org;
-    if (owner && owner !== 'undefined') return owner;
-
-    return name ?? '';
-  }
-
-  static getOrgNameAsync(
-    store: Store,
-    route: ActivatedRouteSnapshot
-  ): Observable<string> {
-    const id = route.params['org'] ?? route.params['owner'];
-
-    if (id) return of(id);
-
-    return store.select(MembershipState.organization).pipe(
-      skipWhile((x) => x == undefined),
-      map((x) => x!.name),
-      first()
-    );
+    while (r) {
+      if (r.params[prop]) return r.params[prop];
+      r = r.parent;
+    }
+    return '';
   }
 
   static getFileAsync(file: FileInfo): Observable<ArrayBuffer> {

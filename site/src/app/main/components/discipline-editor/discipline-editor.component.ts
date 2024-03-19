@@ -3,11 +3,10 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   inject,
   input,
   model,
+  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faFloppyDisk, faPlus } from '@fortawesome/pro-solid-svg-icons';
@@ -45,7 +44,7 @@ import { SwitchComponent } from '../switch';
   ],
 })
 export class DisciplineEditorComponent {
-  @Output() readonly saveClicked = new EventEmitter<void>();
+  readonly saveClicked = output<void>();
 
   private readonly catService = inject(CategorySelectionService);
   private readonly dialogService = inject(DialogService);

@@ -15,10 +15,11 @@
   <div class="row">
     <div class="col-lg-12">
       <div class="vtimeline">
-        @for (activity of timeline; track activity.id; let i = $index) {
+        @for (activity of timeline; track activity.id; let i = $index; let odd =
+        $odd) {
         <div
           class="timeline-wrapper timeline-wrapper-primary"
-          [ngClass]="{ 'timeline-inverted': i % 2 === 1 }"
+          [ngClass]="{ 'timeline-inverted': odd }"
         >
           <div class="timeline-badge success tx-center pd-t-10">
             <i

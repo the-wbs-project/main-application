@@ -3,9 +3,8 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  EventEmitter,
   input,
-  Output,
+  output,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -39,7 +38,7 @@ import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
 export class ProjectListFiltersComponent {
   readonly position = input.required<'side' | 'top'>();
   readonly filters = input.required<ProjectListFilters>();
-  @Output() readonly filtersChange = new EventEmitter<ProjectListFilters>();
+  readonly filtersChange = output<ProjectListFilters>();
 
   expanded = true;
 

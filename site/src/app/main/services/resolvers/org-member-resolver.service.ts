@@ -9,5 +9,5 @@ export const orgMemberResolve: ResolveFn<Member[]> = (
   route: ActivatedRouteSnapshot
 ) =>
   inject(DataServiceFactory).memberships.getMembershipUsersAsync(
-    Utils.getOrgName(inject(Store), route)
+    Utils.getParam(route, 'org')
   );

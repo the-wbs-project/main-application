@@ -12,7 +12,7 @@ import { SignalStore } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { UiState } from '@wbs/main/states';
-import { EntryViewState } from '../../states';
+import { EntryState } from '../../services';
 
 @Component({
   standalone: true,
@@ -28,12 +28,13 @@ import { EntryViewState } from '../../states';
 export class SubTasksComponent {
   private readonly store = inject(SignalStore);
 
+  readonly state = inject(EntryState);
   readonly entryUrl = input.required<string[]>();
+  readonly taskId = input.required<string>();
 
   readonly phaseView = PROJECT_NODE_VIEW.PHASE;
   readonly width = this.store.select(UiState.mainContentWidth);
-  readonly version = this.store.select(EntryViewState.version);
-  readonly task = this.store.select(EntryViewState.taskVm);
+  readonly task = this.state.getTask(this.taskId);
 
   clickedId?: string;
 

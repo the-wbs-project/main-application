@@ -1,9 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
+  output,
 } from '@angular/core';
 import {
   FormControl,
@@ -22,10 +21,8 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
   imports: [ReactiveFormsModule, TextBoxModule, TranslateModule],
 })
 export class ListItemFormComponent {
-  @Output() readonly dismissed = new EventEmitter<void>();
-  @Output() readonly closed = new EventEmitter<
-    [string, string | undefined | null]
-  >();
+  readonly dismissed = output<void>();
+  readonly closed = output<[string, string | undefined | null]>();
 
   readonly showDescription = input<boolean>(true);
   readonly form = new FormGroup({

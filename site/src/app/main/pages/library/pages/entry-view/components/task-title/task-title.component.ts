@@ -2,9 +2,8 @@ import { NgClass, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -34,7 +33,7 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
   ],
 })
 export class TaskTitleComponent {
-  @Output() readonly titleChanged = new EventEmitter<string>();
+  readonly titleChanged = output<string>();
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;

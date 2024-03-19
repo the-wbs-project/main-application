@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   computed,
+  effect,
   inject,
   input,
   signal,
@@ -43,12 +44,12 @@ import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import {
+  EntryState,
   EntryTaskActionService,
   EntryTaskRecorderService,
   EntryTaskService,
   EntryTreeMenuService,
 } from '../../services';
-import { EntryViewState } from '../../states';
 import { TaskTitleComponent } from '../task-title';
 
 @UntilDestroy()
@@ -85,6 +86,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(EntryTaskRecorderService);
   private readonly taskService = inject(EntryTaskService);
+  readonly state = inject(EntryState);
 
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
@@ -95,7 +97,6 @@ export class LibraryTreeComponent implements OnInit {
 
   readonly width = this.store.select(UiState.mainContentWidth);
 
-  readonly tree = signal<WbsNodeView[]>([]);
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
   readonly menu = computed(() =>
@@ -111,18 +112,13 @@ export class LibraryTreeComponent implements OnInit {
   expandedKeys: string[] = [];
 
   ngOnInit(): void {
-    this.store
-      .selectAsync(EntryViewState.taskVms)
-      .pipe(untilDestroyed(this))
-      .subscribe((tasks) => this.setTree(tasks));
-
     this.actions.expandedKeysChanged
       .pipe(untilDestroyed(this))
       .subscribe((keys) => this.setKeys(keys));
   }
 
   expandAll(): void {
-    for (const node of this.tree()!) {
+    for (const node of this.state.viewModels()!) {
       if (node.subTasks.length > 0 && !this.expandedKeys.includes(node.id)) {
         this.treeList()!.expand(node);
       }
@@ -130,7 +126,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   collapseAll(): void {
-    for (const node of this.tree()!) {
+    for (const node of this.state.viewModels()!) {
       if (this.expandedKeys.includes(node.id)) {
         this.treeList()!.collapse(node);
       }
@@ -189,7 +185,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   rowReordered(e: RowReorderEvent): void {
-    const tree = this.tree()!;
+    const tree = this.state.viewModels()!;
     const entryType = this.entry().type;
     const dragged: WbsNodeView = e.draggedRows[0].dataItem;
     const target: WbsNodeView = e.dropTargetRow?.dataItem;
@@ -209,7 +205,7 @@ export class LibraryTreeComponent implements OnInit {
     }
     const run = () => {
       const results = this.reorderer.run(
-        this.store.selectSnapshot(EntryViewState.tasks)!,
+        this.state.tasks()!,
         tree,
         dragged,
         target,
@@ -244,22 +240,12 @@ export class LibraryTreeComponent implements OnInit {
     this.taskService.titleChangedAsync(taskId, title).subscribe();
   }
 
-  private setTree(
-    tree: WbsNodeView[] | undefined = this.store.selectSnapshot(
-      EntryViewState.taskVms
-    )
-  ): void {
-    this.tree.set(structuredClone(tree) ?? []);
-  }
-
   private resetTree(): void {
-    this.tree.set(
-      structuredClone(this.store.selectSnapshot(EntryViewState.taskVms)!)
-    );
+    this.state.setTasks(structuredClone(this.state.tasks() ?? []));
   }
 
   private setKeys(keys: string[]): void {
     this.expandedKeys = keys;
-    this.setTree(this.tree());
+    this.resetTree();
   }
 }

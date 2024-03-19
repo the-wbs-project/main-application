@@ -1,9 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
   input,
-  Output,
+  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ListItem } from '@wbs/core/models';
@@ -20,7 +19,7 @@ export class ProjectCategoryMultipleListComponent {
   readonly buttonClass = input<string>();
   readonly categories = input.required<ListItem[]>();
   readonly selected = input.required<string[]>();
-  @Output() readonly selectedChange = new EventEmitter<string[]>();
+  readonly selectedChange = output<string[]>();
 
   toggle(category: string): void {
     const selected = this.selected();

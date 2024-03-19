@@ -2,11 +2,10 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   computed,
   inject,
   model,
+  output,
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -50,7 +49,7 @@ import { TitleFormComponent } from './components/title-form';
   providers: [CategorySelectionService],
 })
 export class EntryTaskCreationComponent extends DialogContentBase {
-  @Output() readonly done = new EventEmitter<void>();
+  readonly done = output<void>();
 
   private readonly catService = inject(CategorySelectionService);
   private readonly store = inject(Store);

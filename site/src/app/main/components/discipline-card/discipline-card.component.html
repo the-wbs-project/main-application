@@ -10,7 +10,7 @@
         size="lg"
         class="pointer"
         [icon]="faPencil"
-        (click)="edit()"
+        [routerLink]="editRoute()"
         [title]="'General.Edit' | translate"
       />
     </div>
@@ -20,15 +20,13 @@
 
 @if (selectedList(); as list) {
 <div class="card-body">
-  @if (list.length === 0) { @if (alertIfEmpty()) {
+  @if (list.length === 0) {
   <wbs-alert
-    type="warning"
+    [type]="alertIfEmpty() ? 'warning' : 'info'"
     [dismissible]="false"
     [message]="noDisciplinesLabel()"
   />
   } @else {
-  <div>{{ noDisciplinesLabel() }}</div>
-  } } @else {
   <wbs-discipline-list [fullList]="fullList()" [selectedList]="list" />
   }
 </div>

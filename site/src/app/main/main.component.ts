@@ -25,11 +25,11 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
 
 @Component({
   standalone: true,
-  template: `@if (org()) {
+  template: `@if (org(); as org) {
     <div class="d-flex flex-column vh-100">
       <wbs-header
         [claims]="claims()"
-        [org]="org()"
+        [org]="org"
         [orgs]="orgs()"
         [user]="user()"
         [roles]="roles()"
@@ -71,10 +71,9 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
 export class MainComponent implements AfterContentInit, OnInit {
   private readonly store = inject(SignalStore);
 
-  readonly owner = input.required<string | string>();
+  readonly org = input.required<string>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
-  readonly org = input.required<Organization>();
   readonly orgs = input.required<Organization[]>();
 
   readonly loading = signal<boolean>(true);
@@ -100,7 +99,7 @@ export class MainComponent implements AfterContentInit, OnInit {
         tap((orgs) => {
           this.loading.set(false);
 
-          if (!this.owner())
+          if (!this.org())
             this.store.dispatch(new Navigate(['/', orgs![0].name, 'library']));
         })
       )

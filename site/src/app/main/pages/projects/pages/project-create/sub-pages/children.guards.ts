@@ -11,7 +11,7 @@ import { PROJECT_CREATION_PAGES } from '../models';
 import { ProjectCreateState } from '../states';
 
 function redirect(store: Store, route: ActivatedRouteSnapshot) {
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   return store
     .dispatch(
@@ -30,7 +30,7 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) =>
 
 export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   return (
     store.dispatch([
@@ -55,7 +55,7 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
 
 export const startWizardGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   return store.dispatch(new StartWizard(owner)).pipe(map(() => true));
 };

@@ -3,8 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
+  output,
   computed,
   inject,
   model,
@@ -58,7 +57,7 @@ import { SaveSectionComponent } from './components/save-section';
   providers: [CategorySelectionService],
 })
 export class EntryPhaseCreationComponent extends DialogContentBase {
-  @Output() readonly done = new EventEmitter<void>();
+  readonly done = output<void>();
 
   private readonly catService = inject(CategorySelectionService);
   private readonly store = inject(Store);

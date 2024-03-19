@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   signal,
@@ -14,7 +15,6 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { DisciplineListComponent } from '@wbs/main/components/discipline-list.component';
 import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
@@ -22,9 +22,9 @@ import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { delay, tap } from 'rxjs/operators';
-import { EntryTaskService } from '../../services';
-import { EntryViewState } from '../../states';
+import { EntryState, EntryTaskService } from '../../services';
 import { DescriptionCardComponent } from './components/description-card';
+import { DetailsCardComponent } from './components/details-card';
 
 @Component({
   standalone: true,
@@ -35,6 +35,7 @@ import { DescriptionCardComponent } from './components/description-card';
     CheckPipe,
     DateTextPipe,
     DescriptionCardComponent,
+    DetailsCardComponent,
     DisciplineListComponent,
     FontAwesomeModule,
     NgClass,
@@ -45,8 +46,8 @@ import { DescriptionCardComponent } from './components/description-card';
   ],
 })
 export class TaskAboutPageComponent {
-  private readonly store = inject(SignalStore);
   private readonly taskService = inject(EntryTaskService);
+  readonly state = inject(EntryState);
 
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
@@ -56,12 +57,11 @@ export class TaskAboutPageComponent {
   //  Inputs
   //
   readonly claims = input.required<string[]>();
+  readonly taskId = input.required<string>();
   //
   //  State Items
   //
-  readonly entry = this.store.select(EntryViewState.entry);
-  readonly version = this.store.select(EntryViewState.version);
-  readonly task = this.store.select(EntryViewState.taskVm);
+  readonly task = this.state.getTask(this.taskId);
 
   descriptionChange(description: string): void {
     this.saveState.set('saving');

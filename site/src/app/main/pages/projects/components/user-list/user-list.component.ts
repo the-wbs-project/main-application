@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   computed,
   input,
+  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SVGIconModule, SVGIcon } from '@progress/kendo-angular-icons';
@@ -19,7 +18,7 @@ import { sorter } from '@wbs/core/services';
   imports: [SVGIconModule, TranslateModule],
 })
 export class ProjectUserListComponent {
-  @Output() readonly selected = new EventEmitter<Member>();
+  readonly selected = output<Member>();
 
   readonly icon = input.required<SVGIcon>();
   readonly users = input.required<Member[] | undefined>();

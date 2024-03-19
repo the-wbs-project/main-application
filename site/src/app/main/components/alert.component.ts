@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   computed,
   input,
+  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
@@ -26,7 +25,7 @@ import { TranslateModule } from '@ngx-translate/core';
       (closed)="closed.emit()"
     >
       <div class="d-flex flex-align-center w-100">
-        <div class="wd-40">
+        <div style="min-width: 40px;">
           <fa-icon [icon]="icon()" size="xl" />
         </div>
         <div class="flex-fill">
@@ -39,8 +38,6 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [NgbAlertModule, FontAwesomeModule, TranslateModule],
 })
 export class AlertComponent {
-  @Output() readonly closed = new EventEmitter<void>();
-
   readonly type = input.required<'success' | 'danger' | 'warning' | 'info'>();
   readonly message = input.required<string>();
   readonly animation = input<boolean>(true);
@@ -54,4 +51,5 @@ export class AlertComponent {
       ? faThumbsUp
       : faExclamationTriangle;
   });
+  readonly closed = output<void>();
 }

@@ -36,7 +36,7 @@
     >
       <ng-template kendoTreeListHeaderTemplate>
         <wbs-tree-discipline-legend
-          [idsOrCats]="version()?.disciplines ?? []"
+          [idsOrCats]="state.version()?.disciplines ?? []"
         />
       </ng-template>
       <ng-template kendoTreeListCellTemplate let-dataItem>

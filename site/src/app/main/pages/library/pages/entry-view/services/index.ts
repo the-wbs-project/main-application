@@ -1,5 +1,6 @@
 export * from './entry-action-button.service';
 export * from './entry-activity.service';
+export * from './entry-state.service';
 export * from './entry-task-action.service';
 export * from './entry-task-activity.service';
 export * from './entry-task-reorder.service';

@@ -1,11 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   computed,
   inject,
   input,
+  output,
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -40,7 +39,7 @@ import { EntryCreationModel } from '../../../../models';
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {
-  @Output() readonly close = new EventEmitter<EntryCreationModel | undefined>();
+  readonly close = output<EntryCreationModel | undefined>();
 
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);

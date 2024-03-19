@@ -24,7 +24,9 @@ declare type Context = StateContext<StateModel>;
   },
 })
 export class MembershipState implements NgxsOnInit {
-  constructor(private readonly auth: AuthService) {}
+  constructor(private readonly auth: AuthService) {
+    
+  }
 
   @Selector()
   static organization(state: StateModel): Organization | undefined {

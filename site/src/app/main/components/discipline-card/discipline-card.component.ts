@@ -20,6 +20,7 @@ import { ProjectCategory } from '@wbs/core/models';
 import { AlertComponent } from '../alert.component';
 import { DisciplineEditorComponent } from '../discipline-editor';
 import { DisciplineListComponent } from '../discipline-list.component';
+import { RouterModule } from '@angular/router';
 
 @Component({
   standalone: true,
@@ -34,6 +35,7 @@ import { DisciplineListComponent } from '../discipline-list.component';
     FontAwesomeModule,
     FormsModule,
     NgClass,
+    RouterModule,
     TranslateModule,
   ],
 })
@@ -47,20 +49,7 @@ export class DisciplineCardComponent {
   readonly selectedList = model.required<ProjectCategory[]>();
   readonly fullList = model.required<ProjectCategory[]>();
   readonly canEdit = input.required<boolean>();
+  readonly editRoute = input.required<string[]>();
   readonly alertIfEmpty = input(false);
-  readonly editMode = model(false);
   readonly noDisciplinesLabel = input.required<string>();
-
-  edit(): void {
-    this.editMode.set(true);
-  }
-
-  save(description: string): void {
-    this.descriptionChange.emit(description);
-    this.editMode.set(false);
-  }
-
-  cancel(): void {
-    this.editMode.set(false);
-  }
 }

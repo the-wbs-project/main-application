@@ -19,8 +19,9 @@ export const orgGuard: (
         return of(false);
       }
       const org =
-        list.find((org) => org.name === route.params['owner']) ?? list[0];
+        list.find((org) => org.name === route.params['org']) ?? list[0];
 
+      console.log(org);
       return store.dispatch(new ChangeOrganization(org)).pipe(map(() => true));
     }),
     first()

@@ -63,7 +63,7 @@ export class AppConfig {
           return false;
         }
 
-        return;
+        return true;
       },
     };
   }

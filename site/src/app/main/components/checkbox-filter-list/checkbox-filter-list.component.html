@@ -1,9 +1,9 @@
+@if (data(); as data) {
 <kendo-multiselect
   kendoMultiSelectSummaryTag
-  *ngIf="data"
   [checkboxes]="true"
   [autoClose]="false"
-  [data]="data()"
+  [data]="data"
   [value]="values()"
   adaptiveMode="auto"
   [textField]="textField()"
@@ -12,12 +12,11 @@
   (valueChange)="valueChange($event)"
 >
   <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
-    <span *ngIf="dataItems.length == data.length; else notAll">
-      {{ allLabel() | translate }}
-    </span>
-    <ng-template #notAll>
-      {{ dataItems | translateList : textField() }}
-    </ng-template>
+    @if (dataItems.length == data.length) {
+    {{ allLabel() | translate }}
+    } @else {
+    {{ dataItems | translateList : textField() }}
+    }
   </ng-template>
   <ng-template kendoMultiSelectItemTemplate let-dataItem>
     <div class="checkbox-list-item">
@@ -30,3 +29,4 @@
     </div>
   </ng-template>
 </kendo-multiselect>
+}

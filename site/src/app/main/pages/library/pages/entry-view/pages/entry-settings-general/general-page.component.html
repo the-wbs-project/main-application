@@ -1,17 +1,17 @@
 <div class="card-header tx-medium">
   {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
 </div>
-@if (entry(); as entry) { @if (version(); as version) {
+@if (state.entry(); as entry) { @if (state.version(); as version) {
 <div class="container-fluid pd-15">
   <div class="row mb-5">
-    <label for="templateTitle" class="col-2 col-form-label">
+    <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
       {{ "General.Title" | translate }}
     </label>
-    <div class="col-10">
+    <div class="col-md-10 col-sm-12">
       <input
+        #title
         kendoTextBox
-        name="templateTitle"
-        id="templateTitle"
+        class="form-control"
         [(ngModel)]="version.title"
       />
       <label class="d-ib tx-12 tx-italic mg-t-5">
@@ -20,11 +20,16 @@
     </div>
   </div>
   <div class="row mb-5">
-    <label for="templateTitle" class="col-2 col-form-label">
-      {{ "General.Description" | translate }}
-    </label>
-    <div class="col-10">
-      <div class="w-100 mg-b-5 text-end">
+    <div class="col-2 d-none d-md-block">
+      <label [for]="description" class="col-form-label">
+        {{ "General.Description" | translate }}
+      </label>
+    </div>
+    <div class="col-12 d-flex d-md-none">
+      <label [for]="description" class="col-form-label">
+        {{ "General.Description" | translate }}
+      </label>
+      <div class="flex-fill text-end">
         <button class="btn btn-sm btn-outline-dark" (click)="askAi.set(true)">
           <fa-icon [icon]="faRobot" />
           <span class="mg-l-5">
@@ -32,17 +37,27 @@
           </span>
         </button>
       </div>
-      <kendo-editor [(ngModel)]="version.description" />
+    </div>
+    <div class="col-md-10 col-sm-12">
+      <div class="w-100 mg-b-5 text-end d-none d-md-block">
+        <button class="btn btn-sm btn-outline-dark" (click)="askAi.set(true)">
+          <fa-icon [icon]="faRobot" />
+          <span class="mg-l-5">
+            {{ "General.AskAi" | translate }}
+          </span>
+        </button>
+      </div>
+      <kendo-editor #description [(ngModel)]="version.description" />
       <label class="d-ib tx-12 tx-italic mg-t-5">
         {{ "Library.DescriptionHelpEntry" | translate }}
       </label>
     </div>
   </div>
   <div class="row mb-5">
-    <label class="col-2 col-form-label">
+    <label class="col-md-2 col-sm-12 col-form-label">
       {{ "LibraryCreate.Visibility" | translate }}
     </label>
-    <div class="col-10">
+    <div class="col-md-10 col-sm-12">
       <wbs-visibility-selection [(visibility)]="entry.visibility" />
     </div>
   </div>
@@ -60,10 +75,10 @@
     </div>
   </div>
   }
-  <div class="row mb-5">
+  <div class="row mb-5 text-end">
     <div class="offset-2 col-10">
       <button
-        class="btn btn-lg btn-primary"
+        class="btn btn-md btn-primary"
         [disabled]="!canSave()"
         (click)="save()"
       >
@@ -80,8 +95,8 @@
 <kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
   <wbs-description-ai-dialog
     [versionTitle]="version.title"
-    [description]="version.description"
-    (descriptionChanged)="aiChangeSaved($event)"
+    [(description)]="version.description"
+    (descriptionChanged)="askAi.set(false)"
   />
 </kendo-dialog>
 } } }

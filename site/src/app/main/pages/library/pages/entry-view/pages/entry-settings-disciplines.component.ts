@@ -11,8 +11,7 @@ import { DisciplineEditorComponent } from '@wbs/main/components/discipline-edito
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { EntryService } from '../services';
-import { EntryViewState } from '../states';
+import { EntryService, EntryState } from '../services';
 
 @Component({
   standalone: true,
@@ -40,13 +39,16 @@ export class DisciplinesComponent implements DirtyComponent {
   private readonly catService = inject(CategorySelectionService);
   private readonly service = inject(EntryService);
   private readonly store = inject(SignalStore);
+  readonly state = inject(EntryState);
 
   readonly isDirty = signal(false);
 
   readonly cats = this.store.select(MetadataState.disciplines);
-  readonly version = this.store.select(EntryViewState.version);
   readonly disciplines = computed(() =>
-    this.catService.build(this.cats() ?? [], this.version()?.disciplines ?? [])
+    this.catService.build(
+      this.cats() ?? [],
+      this.state.version()?.disciplines ?? []
+    )
   );
 
   constructor() {}

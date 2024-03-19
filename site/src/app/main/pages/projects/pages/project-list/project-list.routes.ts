@@ -11,7 +11,7 @@ import { ProjectListState } from './states';
 export const loadGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const titleService = inject(TitleService);
-  const owner = Utils.getOrgName(store, route);
+  const owner = Utils.getParam(route, 'org');
 
   titleService.setTitle('Pages.Projects', true);
 

@@ -2,10 +2,9 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
   model,
+  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faGear } from '@fortawesome/pro-solid-svg-icons';
@@ -36,7 +35,7 @@ export class RecordResourceListComponent {
   readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly list = model.required<ResourceRecord[]>();
-  @Output() readonly save = new EventEmitter<ResourceRecord[]>();
+  readonly save = output<ResourceRecord[]>();
 
   readonly editClaim = PROJECT_CLAIMS.RESOURCES.UPDATE;
   readonly deleteClaim = PROJECT_CLAIMS.RESOURCES.DELETE;

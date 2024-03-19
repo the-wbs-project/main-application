@@ -35,14 +35,17 @@ export class HeaderComponent {
   readonly user = input.required<User>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
-  readonly org = input.required<Organization>();
+  readonly org = input.required<string>();
   readonly orgs = input.required<Organization[]>();
   readonly activeSection = input.required<string | undefined>();
   readonly menu = computed(() => this.createMenu(this.org()));
+  readonly orgObj = computed(
+    () => this.orgs().find((x) => x.name === this.org())!
+  );
   readonly menuIcon = menuIcon;
   readonly appTitle = environment.appTitle;
 
-  private createMenu(org: Organization | undefined): HeaderRouteItem[] {
+  private createMenu(org: string | undefined): HeaderRouteItem[] {
     if (!org) return [];
 
     const menu2 = structuredClone(HEADER_ROUTE_ITEMS);
@@ -53,13 +56,13 @@ export class HeaderComponent {
           if (item.type === 'header') continue;
 
           item.route = item.route.map((x) => {
-            if (x === ':orgId') return org.name;
+            if (x === ':orgId') return org;
             else return x;
           });
         }
       } else {
         parent.route = parent.route.map((x) => {
-          if (x === ':orgId') return org.name;
+          if (x === ':orgId') return org;
           else return x;
         });
       }

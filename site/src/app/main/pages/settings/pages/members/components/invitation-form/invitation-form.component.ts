@@ -2,9 +2,8 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   model,
+  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
@@ -23,7 +22,7 @@ declare type InviteError = { email?: string; error: string };
   imports: [DialogModule, NgClass, RoleListPipe, TranslateModule],
 })
 export class InvitationFormComponent {
-  @Output() readonly submitted = new EventEmitter<{
+  readonly submitted = output<{
     roles: string[];
     emails: string[];
   }>();

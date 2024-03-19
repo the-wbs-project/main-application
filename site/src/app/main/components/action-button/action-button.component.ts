@@ -2,11 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
   HostListener,
-  Output,
   ViewChild,
   input,
+  output,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -25,7 +24,7 @@ import { ActionButtonMenuItem } from '@wbs/main/models';
 export class ActionButtonComponent {
   @ViewChild('anchor', { read: ElementRef, static: false }) anchor!: ElementRef;
   @ViewChild('popup', { read: ElementRef, static: false }) popup!: ElementRef;
-  @Output() readonly itemClicked = new EventEmitter<string>();
+  readonly itemClicked = output<string>();
 
   readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
   readonly faBoltLightning = faBoltLightning;

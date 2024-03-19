@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  EventEmitter,
-  Output,
   input,
   model,
+  output,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -44,10 +43,8 @@ import { RecordResourceListComponent } from './components/record-resources-list'
   providers: [RecordResourceValidation],
 })
 export class RecordResourcesPageComponent {
-  @Output() readonly saveRecords = new EventEmitter<
-    Partial<ResourceRecord>[]
-  >();
-  @Output() readonly uploadAndSave = new EventEmitter<{
+  readonly saveRecords = output<Partial<ResourceRecord>[]>();
+  readonly uploadAndSave = output<{
     rawFile: FileInfo;
     data: Partial<ResourceRecord>;
   }>();

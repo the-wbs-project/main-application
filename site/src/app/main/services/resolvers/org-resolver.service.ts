@@ -7,7 +7,7 @@ import { first, map, skipWhile } from 'rxjs/operators';
 import { Utils } from '../utils.service';
 
 export const orgResolve: ResolveFn<string> = (route: ActivatedRouteSnapshot) =>
-  Utils.getOrgName(inject(Store), route);
+  Utils.getParam(route, 'org');
 
 export const orgObjResolve: ResolveFn<Organization> = () =>
   inject(Store)
