@@ -22,6 +22,7 @@ import { StaticFileDataService } from './static-files.data-service';
 import { UserDataService } from './user.data-service';
 import { ProjectApprovalDataService } from './project-approval.data-service';
 import { ResourceFileDataService } from './resource-files.data-service';
+import { OrganizationDataService } from './organization.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -39,6 +40,7 @@ export class DataServiceFactory {
   readonly libraryEntryVersions = new LibraryEntryVersionDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
+  readonly organizations = new OrganizationDataService(this.http);
   readonly projectApprovals = new ProjectApprovalDataService(this.http);
   readonly projectExport = new ProjectExportDataService(this.http);
   readonly projectImport = new ProjectImportDataService(this.http);

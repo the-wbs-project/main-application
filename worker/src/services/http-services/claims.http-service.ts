@@ -58,7 +58,7 @@ export class ClaimsHttpService {
       const roles: LIBRARY_ROLES_TYPE[] = [LIBRARY_ROLES.VIEWER];
 
       if (model?.author === userId) roles.push(LIBRARY_ROLES.OWNER);
-      if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
+      //if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
 
       return ctx.json(ClaimsHttpService.getClaims(LIBRARY_PERMISSIONS, roles));
     } catch (e) {

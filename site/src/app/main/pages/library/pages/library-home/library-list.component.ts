@@ -94,6 +94,7 @@ export class LibraryListComponent implements OnInit {
           lastModified: results.version.lastModified,
           description: results.version.description,
           ownerId: results.entry.owner,
+          ownerName: results.entry.owner,
           status: results.version.status,
         };
 

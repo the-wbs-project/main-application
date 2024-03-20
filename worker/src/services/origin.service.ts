@@ -3,7 +3,7 @@ import { Context } from '../config';
 export class OriginService {
   constructor(private readonly ctx: Context) {}
 
-  async getAsync<T>(suffix?: string): Promise<T | undefined> {
+  async getResponseAsync(suffix?: string): Promise<Response | undefined> {
     const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {
       headers: {
         Authorization: this.ctx.req.header('Authorization') ?? '',
@@ -17,7 +17,15 @@ export class OriginService {
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
-    return <T>await res.json();
+    return res;
+  }
+
+  async getTextAsync(suffix?: string): Promise<string | undefined> {
+    return (await this.getResponseAsync(suffix))?.text();
+  }
+
+  async getAsync<T>(suffix?: string): Promise<T | undefined> {
+    return <T>(await this.getResponseAsync(suffix))?.json();
   }
 
   static async pass(ctx: Context): Promise<Response> {

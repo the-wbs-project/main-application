@@ -5,5 +5,4 @@ export interface LibraryEntry {
   publishedVersion?: number;
   author: string;
   visibility: string;
-  editors?: string[];
 }

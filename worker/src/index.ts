@@ -54,11 +54,14 @@ app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembers
 app.post('api/portfolio/:owner/projects/:projectId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
 app.post('api/portfolio/:owner/projects/:projectId/nodes/:nodeId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
 
+app.get('api/portfolio/:owner/library/entries', verifyJwt, verifyMembership, Http.libraryEntries.getListAsync);
+
 app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
 app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), kvPurgeOrgs, OriginService.pass);
 //app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);
 
+app.get('api/organizations/:organization', verifyJwt, Http.organizations.getByNameAsync);
 app.get('api/organizations/:organization/members', verifyJwt, verifyMembership, kv.members, OriginService.pass);
 app.get('api/organizations/:organization/invites', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);
 app.post('api/organizations/:organization/invites', verifyJwt, verifyMembership, verifyAdminAsync(), OriginService.pass);

@@ -25,6 +25,13 @@ public class OrganizationDataService : BaseAuthDataService
         return await client.Organizations.GetAllAsync(new PaginationInfo(0, 100, false));
     }
 
+    public async Task<Organization> GetOrganizationByNameAsync(string name)
+    {
+        var client = await GetClientAsync();
+
+        return await client.Organizations.GetByNameAsync(name);
+    }
+
     public async Task UpdateOrganizationAsync(Organization organization)
     {
         var client = await GetClientAsync();

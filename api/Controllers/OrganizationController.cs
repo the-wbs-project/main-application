@@ -24,6 +24,21 @@ public class OrganizationsController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{organization}")]
+    public async Task<IActionResult> GetOrganization(string organization)
+    {
+        try
+        {
+            return Ok((await dataService.GetOrganizationByNameAsync(organization))?.DisplayName);
+        }
+        catch (Exception ex)
+        {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("{organization}/members")]
     public async Task<IActionResult> GetOrganizationalUsersAsync(string organization)
     {
