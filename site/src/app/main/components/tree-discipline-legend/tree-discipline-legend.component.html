@@ -1,25 +1,30 @@
 {{ "Wbs.Disciplines" | translate }} &nbsp;
-<a
-  placement="right"
-  popoverClass="legend-popover"
-  [popoverTitle]="'Wbs.DisciplineLegend' | translate"
-  [ngbPopover]="legendContent"
-  container="body"
-  placement="left"
->
+<a #anchor class="anchor content" (click)="toggle()">
   <fa-duotone-icon [icon]="faCircleQuestion" />
 </a>
-<ng-template #legendContent>
-  @if (idsOrCats(); as idsOrCats) {
-  <ul class="list-group wd-400">
-    @for (idsOrCat of idsOrCats; track $index) {
-    <li class="list-group-item">
-      <span class="icon-wrapper">
-        <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>
-      </span>
-      {{ idsOrCat | disciplineLabel | translate }}
-    </li>
-    }
-  </ul>
-  }
-</ng-template>
+@if (show()) {
+<kendo-popup
+  popupClass="rounded border bd-1 border-light"
+  [anchor]="anchor"
+  [anchorAlign]="{ horizontal: 'left', vertical: 'bottom' }"
+  [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
+>
+  <div class="pd-0">
+    <div class="card wd-250 mg-0">
+      <div class="card-header bd-b-0 pd-5 text-center bg-info-light">
+        {{ "Wbs.DisciplineLegend" | translate }}
+      </div>
+      <ul class="list-group tx-12">
+        @for (idsOrCat of idsOrCats(); track $index; let odd = $odd) {
+        <li class="list-group-item pd-y-5" [ngClass]="{ 'bg-gray-200': odd }">
+          <span class="d-ib wd-30">
+            <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>
+          </span>
+          {{ idsOrCat | disciplineLabel | translate }}
+        </li>
+        }
+      </ul>
+    </div>
+  </div>
+</kendo-popup>
+}

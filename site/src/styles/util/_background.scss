@@ -60,6 +60,10 @@ button.bg-success {
   background-color: $info !important;
 }
 
+.bg-info-light {
+  background-color: lighten($info, 30%) !important;
+}
+
 a.bg-info {
   &:hover,
   &:focus {
