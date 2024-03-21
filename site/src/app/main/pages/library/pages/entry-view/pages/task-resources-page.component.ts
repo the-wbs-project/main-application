@@ -9,18 +9,26 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { ResourceRecord } from '@wbs/core/models';
 import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
 import { EntryResourceService } from '../services';
+import { AlertComponent } from '@wbs/main/components/alert.component';
 
 @Component({
   standalone: true,
-  template: `<wbs-record-resources-page
-    [list]="list()"
-    [owner]="owner()"
-    [claims]="claims()"
-    (saveRecords)="saveRecords($event)"
-    (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
-  />`,
+  template: `<div class="pd-15">
+    <wbs-alert
+      type="info"
+      [dismissible]="false"
+      message="Library.ResourceInfoTask"
+    />
+    <wbs-record-resources-page
+      [list]="list()"
+      [owner]="owner()"
+      [claims]="claims()"
+      (saveRecords)="saveRecords($event)"
+      (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
+    />
+  </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RecordResourcesPageComponent],
+  imports: [AlertComponent, RecordResourcesPageComponent],
   providers: [EntryResourceService],
 })
 export class ResourcesPageComponent implements OnInit {

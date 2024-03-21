@@ -14,9 +14,10 @@
         class="form-control"
         [(ngModel)]="version.title"
       />
-      <label class="d-ib tx-12 tx-italic mg-t-5">
-        {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
-      </label>
+      <wbs-info-message
+        cssClass="d-ib mg-t-5"
+        message="LibraryCreate.TemplateTitleDescriptionPhase"
+      />
     </div>
   </div>
   <div class="row mb-5">
@@ -48,9 +49,11 @@
         </button>
       </div>
       <kendo-editor #description [(ngModel)]="version.description" />
-      <label class="d-ib tx-12 tx-italic mg-t-5">
-        {{ "Library.DescriptionHelpEntry" | translate }}
-      </label>
+
+      <wbs-info-message
+        cssClass="d-ib mg-t-5"
+        message="Library.DescriptionHelpEntry"
+      />
     </div>
   </div>
   <div class="row mb-5">

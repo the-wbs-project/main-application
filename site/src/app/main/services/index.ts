@@ -9,6 +9,7 @@ export * from './record-resource-validation.service';
 export * from './script.service';
 export * from './table-helper.service';
 export * from './task-model.service';
+export * from './tree.service';
 export * from './user-id-resolver.service';
 export * from './user.service';
 export * from './utils.service';

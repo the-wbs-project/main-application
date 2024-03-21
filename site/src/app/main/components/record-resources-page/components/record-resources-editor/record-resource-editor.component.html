@@ -14,9 +14,7 @@
           <wbs-resource-type-text [type]="dataItem" />
         </ng-template>
       </kendo-dropdownlist>
-      <span class="tx-italic tx-11">
-        {{ "Resources.ResourceTypeHelper" | translate }}
-      </span>
+      <wbs-info-message message="Resources.ResourceTypeHelper" />
     </div>
   </div>
   @if (vm.type) {
@@ -38,9 +36,7 @@
         {{ "Resources.NameIsRequired" | translate }}
       </div>
       } @else {
-      <span class="tx-italic tx-11">
-        {{ "Resources.ResourceNameHelper" | translate }}
-      </span>
+      <wbs-info-message message="Resources.ResourceNameHelper" />
       }
     </div>
   </div>
@@ -64,9 +60,7 @@
         {{ "Resources.DescriptionIsRequired" | translate }}
       </div>
       } @else {
-      <span class="tx-italic tx-11">
-        {{ "Resources.ResourceDescriptionHelper" | translate }}
-      </span>
+      <wbs-info-message message="Resources.ResourceDescriptionHelper" />
       }
     </div>
   </div>

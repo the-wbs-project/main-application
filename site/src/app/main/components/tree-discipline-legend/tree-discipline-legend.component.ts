@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,8 +12,8 @@ import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupModule } from '@progress/kendo-angular-popup';
 import { ProjectCategory } from '@wbs/core/models';
-import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
-import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
+import { DisciplineListComponent } from '../discipline-list.component';
+import { DisciplineSplitListComponent } from '../discipline-split-list.component';
 
 @Component({
   standalone: true,
@@ -22,10 +21,9 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   templateUrl: './tree-discipline-legend.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DisciplineIconPipe,
-    DisciplineLabelPipe,
+    DisciplineListComponent,
+    DisciplineSplitListComponent,
     FontAwesomeModule,
-    NgClass,
     PopupModule,
     TranslateModule,
   ],
@@ -33,7 +31,7 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
 export class TreeDisciplineLegendComponent {
   readonly faCircleQuestion = faCircleQuestion;
   readonly show = signal(false);
-  readonly idsOrCats = input<ProjectCategory[] | undefined>();
+  readonly list = input.required<ProjectCategory[]>();
   readonly anchor = viewChild<ElementRef>('anchor');
   readonly popup = viewChild<ElementRef>('popup');
 
@@ -44,14 +42,14 @@ export class TreeDisciplineLegendComponent {
   @HostListener('document:keydown', ['$event'])
   public keydown(event: KeyboardEvent): void {
     if (event.code === 'Escape') {
-      this.toggle();
+      this.show.set(false);
     }
   }
 
   @HostListener('document:click', ['$event'])
   public documentClick(event: KeyboardEvent): void {
     if (!this.contains(event.target)) {
-      this.toggle();
+      this.show.set(false);
     }
   }
 

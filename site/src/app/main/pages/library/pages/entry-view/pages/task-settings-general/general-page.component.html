@@ -53,11 +53,13 @@
         {{ "Library.DescriptionHelpTask" | translate }}
       </label>
       @if (showDescriptionAlert()) {
-      <wbs-alert
-        type="warning"
-        [dismissible]="false"
-        message="Library.NoDescriptionTask"
-      />
+      <div class="mg-t-15">
+        <wbs-alert
+          type="warning"
+          [dismissible]="false"
+          message="Library.NoDescriptionTask"
+        />
+      </div>
       }
     </div>
   </div>

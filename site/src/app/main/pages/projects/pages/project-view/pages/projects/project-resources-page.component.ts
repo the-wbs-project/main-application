@@ -12,13 +12,15 @@ import { ProjectResourceService } from '../../services';
 
 @Component({
   standalone: true,
-  template: `<wbs-record-resources-page
-    [list]="list()"
-    [owner]="owner()"
-    [claims]="claims()"
-    (saveRecords)="saveRecords($event)"
-    (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
-  />`,
+  template: `<div class="pd-15">
+    <wbs-record-resources-page
+      [list]="list()"
+      [owner]="owner()"
+      [claims]="claims()"
+      (saveRecords)="saveRecords($event)"
+      (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
+    />
+  </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [RecordResourcesPageComponent],
   providers: [ProjectResourceService],

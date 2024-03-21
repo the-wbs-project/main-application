@@ -16,7 +16,6 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
 import { AlertComponent } from '../alert.component';
 
@@ -25,7 +24,7 @@ import { AlertComponent } from '../alert.component';
   selector: 'wbs-description-card',
   templateUrl: './description-card.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { class: 'card border full-item' },
+  host: { class: 'card dashboard-card full-item' },
   imports: [
     AlertComponent,
     EditorModule,
@@ -43,8 +42,7 @@ export class DescriptionCardComponent {
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly faComment = faComment;
-  readonly entry = input.required<LibraryEntry>();
-  readonly version = input.required<LibraryEntryVersion>();
+  readonly description = input.required<string>();
   readonly noDescriptionLabel = input.required<string>();
   readonly askAi = model.required<boolean>();
   readonly editMode = model.required<boolean>();
@@ -52,7 +50,7 @@ export class DescriptionCardComponent {
   editDescription = '';
 
   edit(): void {
-    this.editDescription = this.version()!.description ?? '';
+    this.editDescription = this.description() ?? '';
     this.editMode.set(true);
   }
 

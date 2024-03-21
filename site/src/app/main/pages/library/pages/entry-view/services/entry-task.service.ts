@@ -572,4 +572,37 @@ export class EntryTaskService {
     }
     return this.saveAsync(upserts, toRemoveIds, 'Library.PhasesUpdated');
   }
+
+  disciplinesChangedAsync(
+    taskId: string,
+    disciplineIds: string[]
+  ): Observable<void> {
+    const entry = this.state.entry()!;
+    const version = this.state.version()!.version;
+    const task = this.getTasks().find((x) => x.id === taskId);
+
+    if (!task) return of();
+
+    const from = task.disciplineIds;
+
+    task.disciplineIds = disciplineIds;
+
+    return this.data.libraryEntryNodes
+      .putAsync(entry.owner, entry.id, version, [task], [])
+      .pipe(
+        map(() => {
+          this.messages.notify.success('Library.DisciplinesChanged');
+          this.state.tasksChanged([task]);
+        }),
+        switchMap(() =>
+          this.activity.entryDisciplinesChanged(
+            entry.id,
+            version,
+            taskId,
+            from,
+            disciplineIds
+          )
+        )
+      );
+  }
 }

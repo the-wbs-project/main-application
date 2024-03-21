@@ -15,9 +15,19 @@ export class EntryState {
   private _version = signal<LibraryEntryVersion | undefined>(undefined);
   private _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
   private _viewModels = signal<WbsNodeView[] | undefined>(undefined);
+  private _navSectionEntry = signal<string | undefined>(undefined);
+  private _navSectionTask = signal<string | undefined>(undefined);
 
   get entry(): Signal<LibraryEntry | undefined> {
     return this._entry;
+  }
+
+  get navSectionEntry(): Signal<string | undefined> {
+    return this._navSectionEntry;
+  }
+
+  get navSectionTask(): Signal<string | undefined> {
+    return this._navSectionTask;
   }
 
   get tasks(): Signal<LibraryEntryNode[] | undefined> {
@@ -45,7 +55,14 @@ export class EntryState {
     this._version.set(version);
     this._tasks.set(tasks);
     this._viewModels.set(this.createViewModels(entry.type, tasks));
-    console.log('set all');
+  }
+
+  setNavSectionEntry(value: string): void {
+    this._navSectionEntry.set(value);
+  }
+
+  setNavSectionTask(value: string): void {
+    this._navSectionTask.set(value);
   }
 
   setEntry(entry: LibraryEntry): void {

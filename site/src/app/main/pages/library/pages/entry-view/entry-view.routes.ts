@@ -1,11 +1,5 @@
 import { Routes } from '@angular/router';
-import {
-  aboutSubSectionGuard,
-  dirtyGuard,
-  resourcesSubSectionGuard,
-  settingsSubSectionGuard,
-  tasksSubSectionGuard,
-} from '@wbs/main/guards';
+import { dirtyGuard } from '@wbs/main/guards';
 import {
   CategorySelectionService,
   Transformers,
@@ -21,6 +15,7 @@ import {
   EntryTaskRecorderService,
   EntryTaskService,
   entryIdResolve,
+  entryNavGuard,
   entryUrlResolve,
   libraryClaimsResolve,
   ownerIdResolve,
@@ -61,7 +56,10 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () =>
           import('./pages/entry-about').then((x) => x.AboutPageComponent),
-        canActivate: [aboutSubSectionGuard],
+        canActivate: [entryNavGuard],
+        data: {
+          section: 'about',
+        },
         resolve: {
           claims: libraryClaimsResolve,
           disciplines: disciplineResolver,
@@ -71,7 +69,10 @@ export const routes: Routes = [
         path: 'tasks',
         loadComponent: () =>
           import('./pages/entry-tasks').then((x) => x.TasksPageComponent),
-        canActivate: [tasksSubSectionGuard],
+        canActivate: [entryNavGuard],
+        data: {
+          section: 'tasks',
+        },
         resolve: {
           entryUrl: entryUrlResolve,
           claims: libraryClaimsResolve,
@@ -84,7 +85,10 @@ export const routes: Routes = [
           import('./pages/entry-resources-page.component').then(
             (x) => x.ResourcesPageComponent
           ),
-        canActivate: [resourcesSubSectionGuard],
+        canActivate: [entryNavGuard],
+        data: {
+          section: 'resources',
+        },
         resolve: {
           owner: ownerIdResolve,
           entryId: entryIdResolve,
@@ -98,7 +102,10 @@ export const routes: Routes = [
           import('./pages/entry-settings-general').then(
             (x) => x.GeneralComponent
           ),
-        canActivate: [settingsSubSectionGuard],
+        canActivate: [entryNavGuard],
+        data: {
+          section: 'settings',
+        },
         resolve: {
           categories: projectCategoryResolver,
         },
@@ -109,8 +116,14 @@ export const routes: Routes = [
           import('./pages/entry-settings-disciplines.component').then(
             (x) => x.DisciplinesComponent
           ),
-        canActivate: [settingsSubSectionGuard],
-        canDeactivate: [],
+        canActivate: [entryNavGuard],
+        canDeactivate: [dirtyGuard],
+        data: {
+          section: 'settings',
+        },
+        resolve: {
+          cats: disciplineResolver,
+        },
       },
       {
         path: 'settings/phase',
@@ -118,8 +131,11 @@ export const routes: Routes = [
           import('./pages/entry-settings-phase.component').then(
             (x) => x.PhaseComponent
           ),
-        canActivate: [settingsSubSectionGuard],
+        canActivate: [entryNavGuard],
         canDeactivate: [dirtyGuard],
+        data: {
+          section: 'settings',
+        },
       },
       {
         path: 'settings/phases',
@@ -127,8 +143,11 @@ export const routes: Routes = [
           import('./pages/entry-settings-phases.component').then(
             (x) => x.PhasesComponent
           ),
-        canActivate: [settingsSubSectionGuard],
+        canActivate: [entryNavGuard],
         canDeactivate: [dirtyGuard],
+        data: {
+          section: 'settings',
+        },
       },
     ],
   },

@@ -21,7 +21,10 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { filter, map } from 'rxjs/operators';
 import { DisciplineIconPipe } from '../../pipes/discipline-icon.pipe';
-import { ListItemDialogComponent } from '../list-item-dialog/list-item-dialog.component';
+import {
+  ListItemDialogComponent,
+  ListItemDialogResults,
+} from '../list-item-dialog';
 import { ListItemFormComponent } from '../list-item-form';
 import { SwitchComponent } from '../switch';
 
@@ -45,12 +48,14 @@ import { SwitchComponent } from '../switch';
 })
 export class DisciplineEditorComponent {
   readonly saveClicked = output<void>();
+  readonly categoryCreated = output<ListItemDialogResults>();
 
   private readonly catService = inject(CategorySelectionService);
   private readonly dialogService = inject(DialogService);
 
   readonly categories = model<CategorySelection[]>();
   readonly showButtons = input<boolean>(true);
+  readonly showAdd = input<boolean>(true);
   readonly showSave = input<boolean>(false);
 
   readonly faBars = faBars;
@@ -83,16 +88,17 @@ export class DisciplineEditorComponent {
     dialogRef.result
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
-        map((x) => <[string, string]>x)
+        map((x) => <ListItemDialogResults>x)
       )
       .subscribe((result) => {
+        this.categoryCreated.emit(result);
         if (result == null) return;
 
         const item: CategorySelection = {
           id: IdService.generate(),
-          description: result[1],
+          description: result.description ?? '',
           isCustom: true,
-          label: result[0],
+          label: result.title,
           number: null,
           selected: true,
         };

@@ -1,12 +1,12 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import {
+  Category,
   LISTS,
-  ProjectCategory,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
+  ProjectCategory,
   ProjectCategoryChanges,
-  ListItem,
 } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import {
@@ -29,7 +29,7 @@ export class CategorySelectionService {
   }
 
   build(
-    categories: ListItem[],
+    categories: Category[],
     selected: ProjectCategory[] | undefined,
     confirmMessage?: string,
     catCounts?: Map<string, number>

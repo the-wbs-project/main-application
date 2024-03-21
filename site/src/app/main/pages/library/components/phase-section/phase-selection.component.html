@@ -1,6 +1,8 @@
-<div class="w-100 text-center pd-y-15 pd-x-30 tx-14">
-  {{ "LibraryCreate.PhaseHeader" | translate }}
-</div>
+<wbs-alert
+  type="info"
+  message="LibraryCreate.PhaseHeader"
+  [dismissible]="false"
+/>
 <div class="w-100 d-flex">
   <div class="flex-grow-1 pd-r-20">
     <button
@@ -12,9 +14,11 @@
       <fa-icon [icon]="faList" />
       {{ "LibraryCreate.PredefinedPhase" | translate }}
     </button>
-    <label class="w-100 text-center d-ib tx-12 tx-italic mg-t-5">
-      {{ "LibraryCreate.PredefinedPhaseDescription" | translate }}
-    </label>
+
+    <wbs-info-message
+      cssClass="w-100 text-center d-ib mg-t-5"
+      message="LibraryCreate.PredefinedPhaseDescription"
+    />
   </div>
   <div class="flex-grow-1 pd-l-20">
     <button
@@ -26,9 +30,10 @@
       <fa-icon [icon]="faPencil" />
       {{ "LibraryCreate.CustomPhase" | translate }}
     </button>
-    <label class="w-100 text-center d-ib tx-12 tx-italic mg-t-5">
-      {{ "LibraryCreate.CustomPhaseDescription" | translate }}
-    </label>
+    <wbs-info-message
+      cssClass="w-100 text-center d-ib mg-t-5"
+      message="LibraryCreate.CustomPhaseDescription"
+    />
   </div>
 </div>
 @if (phaseType() === "predefined") {

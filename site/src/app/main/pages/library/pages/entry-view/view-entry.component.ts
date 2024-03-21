@@ -16,7 +16,6 @@ import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header2';
 import { NavigationLink } from '@wbs/main/models';
 import { NavigationMenuService } from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
 import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
@@ -47,7 +46,6 @@ export class EntryViewComponent {
   readonly entryUrl = input.required<string[]>();
 
   readonly url = this.store.select(RouterState.url);
-  readonly activeSubSection = this.store.select(UiState.activeSubSection);
   readonly links = computed(() =>
     this.filterSettings(
       this.navService.processLinks(ENTRY_NAVIGATION, this.claims()),

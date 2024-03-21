@@ -3,17 +3,12 @@ import {
   Component,
   OnInit,
   computed,
-  effect,
   inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faChevronsLeft,
-  faChevronsRight,
-} from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
@@ -41,7 +36,7 @@ import { TaskCreateComponent } from '@wbs/main/components/task-create';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
-import { WbsPhaseService } from '@wbs/main/services';
+import { TreeService, WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import {
   EntryState,
@@ -51,6 +46,7 @@ import {
   EntryTreeMenuService,
 } from '../../services';
 import { TaskTitleComponent } from '../task-title';
+import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 
 @UntilDestroy()
 @Component({
@@ -71,6 +67,7 @@ import { TaskTitleComponent } from '../task-title';
     TaskTitleComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
+    TreeTogglerComponent,
   ],
 })
 export class LibraryTreeComponent implements OnInit {
@@ -87,6 +84,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly reorderer = inject(EntryTaskRecorderService);
   private readonly taskService = inject(EntryTaskService);
   readonly state = inject(EntryState);
+  readonly treeService = new TreeService();
 
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
@@ -101,36 +99,20 @@ export class LibraryTreeComponent implements OnInit {
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
   readonly menu = computed(() =>
     this.menuService.buildMenu(
+      this.entry().type,
       this.version(),
       this.selectedTask(),
       this.claims()
     )
   );
-  readonly faChevronsLeft = faChevronsLeft;
-  readonly faChevronsRight = faChevronsRight;
-
-  expandedKeys: string[] = [];
 
   ngOnInit(): void {
     this.actions.expandedKeysChanged
       .pipe(untilDestroyed(this))
-      .subscribe((keys) => this.setKeys(keys));
-  }
-
-  expandAll(): void {
-    for (const node of this.state.viewModels()!) {
-      if (node.subTasks.length > 0 && !this.expandedKeys.includes(node.id)) {
-        this.treeList()!.expand(node);
-      }
-    }
-  }
-
-  collapseAll(): void {
-    for (const node of this.state.viewModels()!) {
-      if (this.expandedKeys.includes(node.id)) {
-        this.treeList()!.collapse(node);
-      }
-    }
+      .subscribe((keys) => {
+        this.treeService.expandedKeys = keys;
+        this.resetTree();
+      });
   }
 
   createTask(data: TaskCreationResults | undefined): void {
@@ -139,7 +121,7 @@ export class LibraryTreeComponent implements OnInit {
       data,
       this.selectedTask()!.id,
       this.entryUrl(),
-      this.expandedKeys
+      this.treeService.expandedKeys
     );
   }
 
@@ -166,22 +148,13 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   expand(taskId: string): void {
-    const keys = structuredClone(this.expandedKeys);
-
-    if (!keys.includes(taskId)) {
-      keys.push(taskId);
-    }
-    this.setKeys(keys);
+    this.treeService.expand(taskId);
+    this.resetTree();
   }
 
   collapse(taskId: string): void {
-    const keys = structuredClone(this.expandedKeys);
-    const index = keys.indexOf(taskId);
-
-    if (index > -1) {
-      keys.splice(index, 1);
-    }
-    this.setKeys(keys);
+    this.treeService.collapse(taskId);
+    this.resetTree();
   }
 
   rowReordered(e: RowReorderEvent): void {
@@ -231,6 +204,9 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   navigateToTask(taskId: string | undefined): void {
+    //
+    //  Keep this here in case someone double clicks outside a standard row
+    //
     if (!taskId) return;
 
     this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));
@@ -242,10 +218,5 @@ export class LibraryTreeComponent implements OnInit {
 
   private resetTree(): void {
     this.state.setTasks(structuredClone(this.state.tasks() ?? []));
-  }
-
-  private setKeys(keys: string[]): void {
-    this.expandedKeys = keys;
-    this.resetTree();
   }
 }

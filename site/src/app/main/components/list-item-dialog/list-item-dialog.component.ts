@@ -31,8 +31,6 @@ export class ListItemDialogComponent extends DialogContentBase {
   }
 
   close(): void {
-    const values = this.form.getRawValue();
-
-    this.dialog.close([values.title, values.description]);
+    this.dialog.close(this.form.getRawValue());
   }
 }

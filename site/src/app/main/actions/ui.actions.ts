@@ -5,11 +5,6 @@ export class SetActiveSection {
   constructor(readonly activeSection: string) {}
 }
 
-export class SetActiveSubSection {
-  static readonly type = '[UI] Set Active Sub-Section';
-  constructor(readonly activeSubSection: string) {}
-}
-
 export class MainContentSizeChanged {
   static readonly type = '[UI] Main Content Size Changed';
   constructor(readonly mainContentWidth: number) {}

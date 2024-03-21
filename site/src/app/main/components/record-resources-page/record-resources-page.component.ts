@@ -25,6 +25,7 @@ import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { RecordResourceValidation } from '@wbs/main/services';
 import { RecordResourceEditorComponent } from './components/record-resources-editor';
 import { RecordResourceListComponent } from './components/record-resources-list';
+import { InfoComponent } from '@wbs/components/info/info.component';
 
 @Component({
   standalone: true,
@@ -35,6 +36,7 @@ import { RecordResourceListComponent } from './components/record-resources-list'
     CheckPipe,
     DialogModule,
     FontAwesomeModule,
+    InfoComponent,
     RecordResourceEditorComponent,
     RecordResourceListComponent,
     RouterModule,

@@ -9,33 +9,40 @@ declare type Seperator = { separator: true };
 @Injectable()
 export class EntryTreeMenuService {
   buildMenu(
+    entryType: string,
     version: LibraryEntryVersion,
     task: WbsNodeView | undefined,
     claims: string[]
   ): (ContextMenuItem | Seperator)[] {
     if (task === undefined) return [];
 
-    const navActions = this.filterList(
-      LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
-      task,
-      claims,
-      version.status
-    );
     const phaseActions = this.filterList(
-      LIBRARY_TREE_MENU_ITEMS.taskActions,
+      this.preFilterActions(
+        LIBRARY_TREE_MENU_ITEMS.taskActions,
+        entryType,
+        task
+      ),
       task,
       claims,
       version.status
     );
     const movers: ContextMenuItem[] = [];
 
-    for (const item of navActions) {
-      if (item.action === 'moveLeft' && task.canMoveLeft) movers.push(item);
-      else if (item.action === 'moveRight' && task.canMoveRight)
-        movers.push(item);
-      else if (item.action === 'moveUp' && task.canMoveUp) movers.push(item);
-      else if (item.action === 'moveDown' && task.canMoveDown)
-        movers.push(item);
+    if (this.canHaveNavActions(entryType, task)) {
+      const navActions = this.filterList(
+        LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
+        task,
+        claims,
+        version.status
+      );
+      for (const item of navActions) {
+        if (item.action === 'moveLeft' && task.canMoveLeft) movers.push(item);
+        else if (item.action === 'moveRight' && task.canMoveRight)
+          movers.push(item);
+        else if (item.action === 'moveUp' && task.canMoveUp) movers.push(item);
+        else if (item.action === 'moveDown' && task.canMoveDown)
+          movers.push(item);
+      }
     }
 
     return movers.length === 0
@@ -89,5 +96,23 @@ export class EntryTreeMenuService {
     }
 
     return true;
+  }
+
+  private preFilterActions(
+    items: ContextMenuItem[],
+    entryType: string,
+    task: WbsNodeView
+  ): ContextMenuItem[] {
+    const filter = entryType !== 'project' && task.parentId == undefined;
+
+    if (!filter) return items;
+
+    return items.filter(
+      (x) => x.action !== 'cloneTask' && x.action !== 'deleteTask'
+    );
+  }
+
+  private canHaveNavActions(entryType: string, task: WbsNodeView): boolean {
+    return entryType === 'project' || task.parentId != undefined;
   }
 }

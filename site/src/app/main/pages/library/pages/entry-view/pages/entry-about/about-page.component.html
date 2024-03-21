@@ -1,40 +1,33 @@
-<div class="w-100 text-center">
-  <div class="d-ib text-start w-100" style="max-width: 1200px">
-    <div class="two-column-grid pd-20" resizedCss>
+<div class="w-100 text-center h-100">
+  <div class="d-ib text-start w-100 h-100 mx-w-1200">
+    <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
       <wbs-details-card [entry]="state.entry()!" [version]="state.version()!" />
       <wbs-discipline-card
+        [splitLimit]="650"
         [fullList]="disciplines()"
         [selectedList]="state.version()?.disciplines ?? []"
         noDisciplinesLabel="Library.NoDisciplinesEntry"
         [canEdit]="claims() | check : UPDATE_CLAIM"
-        [editRoute]="[]"
+        [editRoute]="['../', 'settings', 'disciplines']"
       />
       <wbs-description-card
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"
-        [entry]="state.entry()!"
-        [version]="state.version()!"
+        [description]="state.version()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         (descriptionChange)="descriptionChange($event)"
       />
     </div>
   </div>
 </div>
-<!--
-  <div class="card border double-item">
-    <div class="card-header">
-      {{ "General.Disciplines" | translate | uppercase }}
-    </div>
-    <div class="card-body">
-    <wbs-discipline-list
-        [disciplines]="project.disciplines"
-        [projectDisciplines]="project.disciplines"
-      />
-    </div>
-  </div>
--->
+
 @if (askAi()) {
-<kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
+<kendo-dialog
+  height="100%"
+  [title]="'General.AskAi' | translate"
+  [width]="modal.dialogWidth()"
+  (close)="askAi.set(false)"
+>
   <wbs-description-ai-dialog
     [versionTitle]="state.version()!.title"
     [description]="state.version()!.description"

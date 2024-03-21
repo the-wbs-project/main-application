@@ -476,3 +476,7 @@ button:focus:not(:focus-visible) {
     grid-column: span 1;
   }
 }
+
+.dashboard-card {
+  border: solid 1px #bbbbbb;
+}

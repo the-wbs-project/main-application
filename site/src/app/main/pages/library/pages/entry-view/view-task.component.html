@@ -4,7 +4,7 @@
   [title]="'General.TaskDetails' | translate"
   (close)="closed()"
 >
-  <div class="d-flex flex-column h-100">
+  <div class="d-flex flex-column h-100 tx-13">
     <div class="d-flex flex-align-center mg-y-5">
       <div class="wd-50 tx-center mg-r-20">
         <fa-icon [icon]="faDiagramSubtask" size="3x" />
@@ -16,7 +16,11 @@
     </div>
     <div class="card border border-dark flex-fill">
       <div class="card-header py-0 mg-b-0 bg-dark">
-        <wbs-navigation [menu]="links()" (navigate)="navigate($event)" />
+        <wbs-navigation
+          [activeSubSection]="state.navSectionTask()"
+          [menu]="links()"
+          (navigate)="navigate($event)"
+        />
       </div>
       <div class="card-body border-0 p-0 rounded-10 w-100">
         <router-outlet />

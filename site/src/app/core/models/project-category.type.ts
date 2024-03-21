@@ -1,3 +1,3 @@
-export type ProjectCategory =
-  | string
-  | { id: string; label: string; description?: string; sameAs?: string };
+import { Category } from './category.model';
+
+export type ProjectCategory = string | Category;

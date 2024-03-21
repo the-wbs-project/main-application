@@ -12,6 +12,7 @@
 />
 }
 <kendo-treelist
+  #treelist
   class="tx-12"
   kendoTreeListExpandable
   kendoTreeListSelectable
@@ -20,7 +21,7 @@
   idField="treeId"
   [rowReorderable]="true"
   [initiallyExpanded]="false"
-  [(expandedKeys)]="expandedKeys"
+  [(expandedKeys)]="treeService.expandedKeys"
   [navigable]="true"
   [selectable]="{ enabled: true, mode: 'row' }"
   (selectionChange)="selectedTask.set($event.items[0].dataItem)"
@@ -50,26 +51,10 @@
           {{ "Projects.Activity_Title" | translate }}
         </div>
         <div class="flex-fill text-end">
-          <div
-            class="btn-group btn-group-sm"
-            role="group"
-            aria-label="Collapse/Expand Tasks"
-          >
-            <button
-              type="button"
-              class="btn btn-outline-dark"
-              (click)="collapseAll()"
-            >
-              <fa-icon [icon]="faChevronsLeft" />
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-dark"
-              (click)="expandAll()"
-            >
-              <fa-icon [icon]="faChevronsRight" />
-            </button>
-          </div>
+          <wbs-tree-toggler
+            (collapse)="treeService.collapseAll(treelist, tree)"
+            (expand)="treeService.expandAll(treelist, tree)"
+          />
         </div>
       </div>
     </ng-template>
@@ -88,10 +73,13 @@
     headerClass="discipline-column tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
-      <wbs-tree-discipline-legend [idsOrCats]="version().disciplines" />
+      <wbs-tree-discipline-legend [list]="version().disciplines" />
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
+      <wbs-discipline-icon-list
+        [disciplines]="dataItem.disciplines"
+        [fullList]="version().disciplines"
+      />
     </ng-template>
   </kendo-treelist-column>
   }

@@ -72,9 +72,7 @@
         headerClass="discipline-column tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
-          <wbs-tree-discipline-legend
-            [idsOrCats]="project()?.disciplines ?? []"
-          />
+          <wbs-tree-discipline-legend [list]="project()?.disciplines ?? []" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />

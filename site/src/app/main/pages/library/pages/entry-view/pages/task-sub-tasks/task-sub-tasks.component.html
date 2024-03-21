@@ -1,5 +1,5 @@
 @if (task(); as task) {
-<div class="flex-fill">
+<div class="pd-15">
   <kendo-treelist
     #treelist
     class="h-100"
@@ -9,7 +9,8 @@
     parentIdField="treeParentId"
     idField="treeId"
     [initiallyExpanded]="false"
-    (dblclick)="navigate()"
+    (dblclick)="navigate($event)"
+    [(expandedKeys)]="treeService.expandedKeys"
     (cellClick)="clickedId = $event.dataItem.id"
     [selectable]="{ enabled: true, mode: 'row' }"
   >
@@ -26,7 +27,21 @@
       class="tx-11"
       headerClass="tx-14"
       [title]="'Wbs.Task' | translate"
-    />
+    >
+      <ng-template kendoTreeListHeaderTemplate>
+        <div class="w-100 d-flex flex-align-end">
+          <div>
+            {{ "Projects.Activity_Title" | translate }}
+          </div>
+          <div class="flex-fill text-end">
+            <wbs-tree-toggler
+              (collapse)="treeService.collapseAll(treelist, task.subTasks)"
+              (expand)="treeService.expandAll(treelist, task.subTasks)"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </kendo-treelist-column>
     @if ((width() ?? 0) > 800) {
     <kendo-treelist-column
       field="disciplines"
@@ -36,7 +51,7 @@
     >
       <ng-template kendoTreeListHeaderTemplate>
         <wbs-tree-discipline-legend
-          [idsOrCats]="state.version()?.disciplines ?? []"
+          [list]="state.version()?.disciplines ?? []"
         />
       </ng-template>
       <ng-template kendoTreeListCellTemplate let-dataItem>

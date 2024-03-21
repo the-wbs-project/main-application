@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ListItem, LISTS } from '@wbs/core/models';
+import { Category, ListItem, LISTS } from '@wbs/core/models';
 import { forkJoin, map } from 'rxjs';
 
 interface StateModel {
@@ -40,12 +40,12 @@ export class MetadataState implements NgxsOnInit {
   }
 
   @Selector()
-  static disciplines(state: StateModel): ListItem[] {
+  static disciplines(state: StateModel): Category[] {
     return state.categoryList.get(LISTS.DISCIPLINE)!;
   }
 
   @Selector()
-  static phases(state: StateModel): ListItem[] {
+  static phases(state: StateModel): Category[] {
     return state.categoryList.get(LISTS.PHASE)!;
   }
 

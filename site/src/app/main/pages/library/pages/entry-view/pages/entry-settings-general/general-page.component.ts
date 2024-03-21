@@ -15,6 +15,7 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ListItem } from '@wbs/core/models';
+import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
@@ -30,6 +31,7 @@ import { EntryService, EntryState } from '../../services';
     EditorModule,
     FontAwesomeModule,
     FormsModule,
+    InfoMessageComponent,
     LabelModule,
     ProjectCategoryDropdownComponent,
     TextBoxModule,

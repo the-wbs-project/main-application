@@ -10,20 +10,17 @@
   [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
 >
   <div class="pd-0">
-    <div class="card wd-250 mg-0">
+    <div class="card mg-0">
       <div class="card-header bd-b-0 pd-5 text-center bg-info-light">
         {{ "Wbs.DisciplineLegend" | translate }}
       </div>
-      <ul class="list-group tx-12">
-        @for (idsOrCat of idsOrCats(); track $index; let odd = $odd) {
-        <li class="list-group-item pd-y-5" [ngClass]="{ 'bg-gray-200': odd }">
-          <span class="d-ib wd-30">
-            <i class="fa-solid" [ngClass]="idsOrCat | disciplineIcon"></i>
-          </span>
-          {{ idsOrCat | disciplineLabel | translate }}
-        </li>
-        }
-      </ul>
+      <wbs-discipline-split-list
+        altClass="bg-gray-200"
+        itemClass="pd-x-10 tx-10"
+        [selectedList]="list()"
+        [fullList]="list()"
+        [splitLimit]="800"
+      />
     </div>
   </div>
 </kendo-popup>

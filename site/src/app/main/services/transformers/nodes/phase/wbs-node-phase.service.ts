@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { ListItem, Phase, ProjectCategory, WbsNode } from '@wbs/core/models';
+import { Category, ProjectCategory, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { WbsNodeService } from '@wbs/main/services';
@@ -11,7 +11,7 @@ export class WbsNodePhaseTransformer {
     private readonly store: Store
   ) {}
 
-  private get phaseList(): ListItem[] {
+  private get phaseList(): Category[] {
     return this.store.selectSnapshot(MetadataState.phases);
   }
 

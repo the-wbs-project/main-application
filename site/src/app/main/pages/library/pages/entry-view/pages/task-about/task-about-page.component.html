@@ -1,48 +1,20 @@
 @if (task(); as task) {
-{{ taskId() }}
-<div class="two-column-grid pd-20" resizedCss>
-  <div class="card border">
-    <div class="card-header tx-uppercase">
-      {{ "Projects.BasicInformation" | translate }}
-    </div>
-    <div class="card-body">
-      <wbs-task-details-card [entryType]="state.entry()!.type" [task]="task" />
-    </div>
-  </div>
-  <div class="card border">
-    <div class="card-header tx-uppercase">
-      {{ "General.Disciplines" | translate }}
-    </div>
-    @if (task.disciplines.length > 0) {
-
-    <div class="card-body">
-      <wbs-discipline-list
-        [selectedList]="task.disciplines"
-        [fullList]="state.version()!.disciplines"
-      />
-    </div>
-    } @else {
-    <div class="card-body tx-center">
-      <p class="text-danger">
-        <fa-icon [icon]="faTriangleExclamation" size="2xl" />
-        <br />
-        <br />
-        {{ "Projects.NoDisciplines" | translate }}
-      </p>
-      @if (claims() | check : canEditClaim) {
-      <a class="btn btn-dark" [routerLink]="['../', 'settings', 'disciplines']">
-        <fa-icon [icon]="faTools" />
-        &nbsp;
-        {{ "Projects.Fix" | translate }}
-      </a>
-      }
-    </div>
-    }
-  </div>
+<div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
+  <wbs-task-details-card [entry]="state.entry()!" [task]="task" />
+  <wbs-discipline-card
+    [splitLimit]="750"
+    [alertIfEmpty]="true"
+    [fullList]="disciplineFullList()"
+    [selectedList]="task?.disciplines ?? []"
+    noDisciplinesLabel="Library.NoDisciplinesTask"
+    [canEdit]="claims() | check : UPDATE_CLAIM"
+    [editRoute]="['../', 'settings', 'disciplines']"
+  />
   <wbs-description-card
-    [ngClass]="'card border full-item'"
-    [title]="task.title"
-    [description]="task.description"
+    [(askAi)]="askAi"
+    [(editMode)]="descriptionEditMode"
+    [description]="task.description ?? ''"
+    noDescriptionLabel="Library.NoDescriptionTask"
     (descriptionChange)="descriptionChange($event)"
   />
 

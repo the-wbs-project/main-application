@@ -144,6 +144,25 @@ export class EntryTaskActivityService {
     });
   }
 
+  entryDisciplinesChanged(
+    entryId: string,
+    version: number,
+    taskId: string,
+    from: string[] | undefined,
+    to: string[] | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.DISCIPLINES_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
   private save(
     topLevelId: string,
     versionId: number,

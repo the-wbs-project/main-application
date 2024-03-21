@@ -1,8 +1,6 @@
-<div class="card-header">
+<div class="card-header bg-gray-200 text-uppercase tx-medium">
   <div class="d-flex flex-align-center">
-    <div class="text-uppercase">
-      {{ "General.Disciplines" | translate }}
-    </div>
+    <div>{{ "General.Disciplines" | translate }}</div>
 
     @if (canEdit()) {
     <div class="flex-fill tx-right">
@@ -27,7 +25,11 @@
     [message]="noDisciplinesLabel()"
   />
   } @else {
-  <wbs-discipline-list [fullList]="fullList()" [selectedList]="list" />
+  <wbs-discipline-split-list
+    [fullList]="fullList()"
+    [selectedList]="list"
+    [splitLimit]="splitLimit()"
+  />
   }
 </div>
 }

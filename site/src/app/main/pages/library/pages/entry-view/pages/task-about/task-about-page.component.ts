@@ -5,6 +5,7 @@ import {
   computed,
   inject,
   input,
+  model,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
@@ -14,16 +15,17 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
-import { DisciplineListComponent } from '@wbs/main/components/discipline-list.component';
+import { DescriptionCardComponent } from '@wbs/main/components/description-card';
+import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
+import { TaskModalService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { EntryState, EntryTaskService } from '../../services';
-import { DescriptionCardComponent } from './components/description-card';
 import { DetailsCardComponent } from './components/details-card';
 
 @Component({
@@ -36,7 +38,7 @@ import { DetailsCardComponent } from './components/details-card';
     DateTextPipe,
     DescriptionCardComponent,
     DetailsCardComponent,
-    DisciplineListComponent,
+    DisciplineCardComponent,
     FontAwesomeModule,
     NgClass,
     ResizedCssDirective,
@@ -47,17 +49,29 @@ import { DetailsCardComponent } from './components/details-card';
 })
 export class TaskAboutPageComponent {
   private readonly taskService = inject(EntryTaskService);
+  readonly modal = inject(TaskModalService);
   readonly state = inject(EntryState);
 
+  readonly UPDATE_CLAIM = LIBRARY_CLAIMS.TASKS.UPDATE;
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
-  readonly saveState = signal<'saving' | 'saved' | undefined>(undefined);
   //
-  //  Inputs
+  //  Inputs & Models
   //
   readonly claims = input.required<string[]>();
   readonly taskId = input.required<string>();
+  readonly disciplines = input.required<ListItem[]>();
+  readonly saveState = signal<'saving' | 'saved' | undefined>(undefined);
+  readonly askAi = model(false);
+  readonly descriptionEditMode = model(false);
+  readonly disciplineFullList = computed(() => {
+    const disciplines = this.state.version()?.disciplines;
+
+    if (disciplines && disciplines.length > 0) return disciplines;
+
+    return this.disciplines().map((x) => x.id);
+  });
   //
   //  State Items
   //
@@ -69,8 +83,14 @@ export class TaskAboutPageComponent {
       .descriptionChangedAsync(this.task()!.id, description)
       .pipe(
         tap(() => this.saveState.set('saved')),
-        delay(2000)
+        delay(5000)
       )
       .subscribe(() => this.saveState.set(undefined));
+  }
+
+  aiChangeSaved(description: string): void {
+    this.askAi.set(false);
+    this.descriptionEditMode.set(false);
+    this.descriptionChange(description);
   }
 }

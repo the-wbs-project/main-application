@@ -1,4 +1,3 @@
-import { UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -8,21 +7,22 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { SignalStore } from '@wbs/core/services';
-import { DescriptionCardComponent } from '@wbs/main/components/description-card';
-import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
-import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { EntryService, EntryState } from '../../services';
-import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
-import { DetailsCardComponent } from './components/details-card';
-import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
+import { DescriptionCardComponent } from '@wbs/main/components/description-card';
+import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
+import { TaskModalService } from '@wbs/main/services';
+import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
+import { EntryService, EntryState } from '../../services';
+import { DetailsCardComponent } from './components/details-card';
 
 @Component({
   standalone: true,
   templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [TaskModalService],
   imports: [
     CheckPipe,
     DescriptionCardComponent,
@@ -33,11 +33,12 @@ import { CheckPipe } from '@wbs/main/pipes/check.pipe';
     ResizedCssDirective,
     SafeHtmlPipe,
     TranslateModule,
-    UpperCasePipe,
   ],
 })
 export class AboutPageComponent {
   private readonly entryService = inject(EntryService);
+
+  readonly modal = inject(TaskModalService);
   readonly state = inject(EntryState);
 
   readonly askAi = model(false);

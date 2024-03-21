@@ -12,6 +12,7 @@
         kendoTextBox
         formControlName="title"
         class="form-control"
+        autocomplete="off"
         required
       />
       @if (form.controls.title.errors?.['required']) {
@@ -34,10 +35,7 @@
     }
   </form>
   <kendo-dialog-actions>
-    <button class="btn btn-warning" (click)="dialog.close()">
-      {{ "General.Nevermind" | translate }}
-    </button>
-    <button class="btn btn-success" [disabled]="!form.valid" (click)="close()">
+    <button class="btn btn-primary" [disabled]="!form.valid" (click)="close()">
       {{ "General.Add" | translate }}
     </button>
   </kendo-dialog-actions>

@@ -1,12 +1,14 @@
 import { Routes } from '@angular/router';
-import { orgResolve } from '@wbs/main/services';
+import { disciplineResolver, orgResolve } from '@wbs/main/services';
 import {
   entryIdResolve,
+  taskNavGuard,
   entryUrlResolve,
   libraryClaimsResolve,
   taskIdResolve,
   versionIdResolve,
 } from './services';
+import { dirtyGuard } from '@wbs/main/guards';
 
 export const routes: Routes = [
   {
@@ -27,6 +29,10 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () =>
           import('./pages/task-about').then((x) => x.TaskAboutPageComponent),
+        canActivate: [taskNavGuard],
+        data: {
+          section: 'about',
+        },
         resolve: {
           claims: libraryClaimsResolve,
           taskId: taskIdResolve,
@@ -34,9 +40,12 @@ export const routes: Routes = [
       },
       {
         path: 'sub-tasks',
-        data: {},
         loadComponent: () =>
           import('./pages/task-sub-tasks').then((x) => x.SubTasksComponent),
+        canActivate: [taskNavGuard],
+        data: {
+          section: 'sub-tasks',
+        },
         resolve: {
           entryUrl: entryUrlResolve,
           taskId: taskIdResolve,
@@ -48,7 +57,10 @@ export const routes: Routes = [
           import('./pages/task-resources-page.component').then(
             (x) => x.ResourcesPageComponent
           ),
-        canActivate: [],
+        canActivate: [taskNavGuard],
+        data: {
+          section: 'resources',
+        },
         resolve: {
           owner: orgResolve,
           taskId: taskIdResolve,
@@ -58,12 +70,31 @@ export const routes: Routes = [
         },
       },
       {
+        path: 'settings/disciplines',
+        loadComponent: () =>
+          import('./pages/task-settings-disciplines.component').then(
+            (x) => x.DisciplinesComponent
+          ),
+        canActivate: [taskNavGuard],
+        canDeactivate: [dirtyGuard],
+        data: {
+          section: 'settings',
+        },
+        resolve: {
+          taskId: taskIdResolve,
+          cats: disciplineResolver,
+        },
+      },
+      {
         path: 'settings/general',
         loadComponent: () =>
           import('./pages/task-settings-general').then(
             (x) => x.GeneralComponent
           ),
-        canActivate: [],
+        canActivate: [taskNavGuard],
+        data: {
+          section: 'settings',
+        },
         resolve: {
           taskId: taskIdResolve,
         },

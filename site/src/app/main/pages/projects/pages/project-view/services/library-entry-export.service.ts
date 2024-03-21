@@ -3,8 +3,8 @@ import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
+  Category,
   LIBRARY_ENTRY_TYPES,
-  ListItem,
   Project,
   ProjectCategory,
   ProjectNode,
@@ -27,7 +27,7 @@ export class LibraryEntryExportService {
     return this.store.selectSnapshot(AuthState.userId)!;
   }
 
-  private phases(): ListItem[] {
+  private phases(): Category[] {
     return this.store.selectSnapshot(MetadataState.phases);
   }
 

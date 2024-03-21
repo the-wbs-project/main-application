@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,6 +29,7 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { AiModel } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
+import { AlertComponent } from '@wbs/main/components/alert.component';
 import { AiChatService } from '@wbs/main/services';
 import { AiState } from '@wbs/main/states';
 
@@ -37,12 +39,14 @@ import { AiState } from '@wbs/main/states';
   templateUrl: './description-ai-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AlertComponent,
     ButtonModule,
     ChatModule,
     DropDownListModule,
     EditorModule,
     FontAwesomeModule,
     FormsModule,
+    NgClass,
     TextAreaModule,
     TranslateModule,
   ],
@@ -69,6 +73,7 @@ export class DescriptionAiDialogComponent implements OnInit {
   proposal = '';
 
   constructor() {
+    console.log('test 1-2-3');
     effect(() => {
       this.startingDialog = `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${this.versionTitle()}'?`;
     });

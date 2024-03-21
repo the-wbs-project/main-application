@@ -64,3 +64,9 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
     })
   );
 };
+
+export const entryNavGuard = (route: ActivatedRouteSnapshot) =>
+  inject(EntryState).setNavSectionEntry(route.data['section']);
+
+export const taskNavGuard = (route: ActivatedRouteSnapshot) =>
+  inject(EntryState).setNavSectionTask(route.data['section']);

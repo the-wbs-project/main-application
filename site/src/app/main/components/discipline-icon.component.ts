@@ -1,7 +1,8 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { NgbTooltipModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { TooltipModule } from '@progress/kendo-angular-tooltip';
+import { ProjectCategory } from '@wbs/core/models';
 import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
 import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
 
@@ -10,9 +11,8 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   selector: 'wbs-discipline-icon',
   template: `<span
     class="mg-r-5"
-    [ngbTooltip]="id() | disciplineLabel | translate"
-    placement="top"
-    container="body"
+    kendoTooltip
+    [title]="id() | disciplineLabel : fullList() | translate"
   >
     <i class="fa-solid fa-sm" [ngClass]="[id() | disciplineIcon]"></i>
   </span>`,
@@ -20,11 +20,12 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
   imports: [
     DisciplineIconPipe,
     DisciplineLabelPipe,
-    NgbTooltipModule,
     NgClass,
+    TooltipModule,
     TranslateModule,
   ],
 })
 export class DisciplineIconComponent {
   readonly id = input.required<string>();
+  readonly fullList = input<ProjectCategory[]>();
 }

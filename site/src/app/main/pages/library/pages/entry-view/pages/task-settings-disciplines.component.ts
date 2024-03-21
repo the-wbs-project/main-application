@@ -13,10 +13,9 @@ import { AlertComponent } from '@wbs/main/components/alert.component';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { EntryService, EntryState } from '../services';
-import { ListItemDialogResults } from '@wbs/main/components/list-item-dialog';
-import { IdService } from '@wbs/core/services';
+import { EntryService, EntryState, EntryTaskService } from '../services';
 import { CategorySelection } from '@wbs/core/view-models';
+import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
 
 @Component({
   standalone: true,
@@ -29,16 +28,16 @@ import { CategorySelection } from '@wbs/core/view-models';
         <wbs-alert
           type="info"
           [dismissible]="false"
-          message="Library.DisciplineSettingsInfoEntry"
+          message="Library.DisciplineSettingsInfoTask"
         />
       </div>
       <div class="d-ib w-100 text-start" style="max-width: 500px;">
         @if (disciplines(); as disciplines) {
         <wbs-discipline-editor
           [showSave]="true"
+          [showAdd]="false"
           [categories]="disciplines"
           (saveClicked)="save()"
-          (categoryCreated)="created($event)"
           (categoriesChange)="isDirty.set(true)"
         />
         }
@@ -50,46 +49,49 @@ import { CategorySelection } from '@wbs/core/view-models';
 })
 export class DisciplinesComponent implements OnInit, DirtyComponent {
   private readonly catService = inject(CategorySelectionService);
-  private readonly service = inject(EntryService);
+  private readonly service = inject(EntryTaskService);
   readonly state = inject(EntryState);
 
   readonly isDirty = signal(false);
 
+  readonly taskId = input.required<string>();
   readonly cats = input.required<Category[]>();
+
+  readonly task = this.state.getTask(this.taskId);
   readonly disciplines = signal<CategorySelection[] | undefined>(undefined);
 
   ngOnInit(): void {
+    const definitions = this.cats();
+    const versionList = this.state.version()?.disciplines;
+    const cats: Category[] = [];
+
+    if (versionList == undefined) {
+      cats.push(...definitions);
+    } else {
+      for (const x of versionList) {
+        if (typeof x === 'string') {
+          const id = x;
+          const def = definitions.find((x) => x.id === id);
+
+          if (def) cats.push(def);
+        } else {
+          cats.push(x);
+        }
+      }
+    }
     this.disciplines.set(
-      this.catService.build(
-        this.cats() ?? [],
-        this.state.version()?.disciplines ?? []
-      )
+      this.catService.build(cats, this.task()?.disciplines ?? [])
     );
   }
 
-  created(data: ListItemDialogResults) {
-    const item: CategorySelection = {
-      id: IdService.generate(),
-      description: data.description ?? '',
-      isCustom: true,
-      label: data.title,
-      number: null,
-      selected: true,
-    };
-    this.disciplines.update((list) => {
-      list = [item, ...(list ?? [])];
-      this.catService.renumber(list);
-      return list;
-    });
-  }
-
   save(): void {
-    console.log(this.disciplines());
+    console.log('hi');
     this.service
       .disciplinesChangedAsync(
+        this.taskId(),
         this.disciplines()!
           .filter((x) => x.selected)
-          .map((x) => (x.isCustom ? { id: x.id, label: x.label } : x.id))
+          .map((x) => x.id)
       )
       .subscribe(() => this.isDirty.set(false));
   }

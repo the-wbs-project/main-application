@@ -16,14 +16,12 @@ import {
   MainContentSizeChanged,
   ParseNavigation,
   SetActiveSection,
-  SetActiveSubSection,
   SetBreadcrumbs,
   ToggleSidebar,
 } from '../actions';
 
 interface StateModel {
   activeSection?: string;
-  activeSubSection?: string;
   breadcrumbs?: RoutedBreadcrumbItem[];
   path?: string;
   lastWindowCheck?: number;
@@ -53,11 +51,6 @@ export class UiState implements NgxsOnInit {
   @Selector()
   static activeSection(state: StateModel): string | undefined {
     return state.activeSection;
-  }
-
-  @Selector()
-  static activeSubSection(state: StateModel): string | undefined {
-    return state.activeSubSection;
   }
 
   @Selector()
@@ -148,11 +141,6 @@ export class UiState implements NgxsOnInit {
 
   @Action(SetActiveSection)
   setActiveSection(ctx: Context, action: SetActiveSection): void {
-    ctx.patchState(action);
-  }
-
-  @Action(SetActiveSubSection)
-  setActiveSubSection(ctx: Context, action: SetActiveSubSection): void {
     ctx.patchState(action);
   }
 

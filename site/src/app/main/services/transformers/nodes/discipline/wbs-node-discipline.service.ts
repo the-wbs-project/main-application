@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { ListItem, Project, WbsNode } from '@wbs/core/models';
+import { Category, ListItem, Project, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { WbsNodeService } from '@wbs/main/services';
@@ -11,19 +11,19 @@ export class WbsDisciplineNodeTransformer {
     private readonly store: Store
   ) {}
 
-  private get disciplineList(): ListItem[] {
+  private get disciplineList(): Category[] {
     return this.store.selectSnapshot(MetadataState.disciplines);
   }
 
-  private get phaseList(): ListItem[] {
+  private get phaseList(): Category[] {
     return this.store.selectSnapshot(MetadataState.phases);
   }
 
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
     const dList = this.disciplineList;
     const pList = this.phaseList;
-    const disciplines: ListItem[] = [];
-    const phases: ListItem[] = [];
+    const disciplines: Category[] = [];
+    const phases: Category[] = [];
 
     for (const d of project.disciplines) {
       if (typeof d === 'string') {
@@ -35,9 +35,6 @@ export class WbsDisciplineNodeTransformer {
           id: d.id,
           label: d.label,
           description: d.description,
-          order: 0,
-          tags: [],
-          type: 'discipline',
         });
     }
 
@@ -51,9 +48,6 @@ export class WbsDisciplineNodeTransformer {
           id: p.id,
           label: p.label,
           description: p.description,
-          order: 0,
-          tags: [],
-          type: 'phase',
         });
     }
 

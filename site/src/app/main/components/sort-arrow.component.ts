@@ -1,10 +1,4 @@
-import { NgIf } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  Input,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { SVGIconModule } from '@progress/kendo-angular-icons';
 import { State } from '@progress/kendo-data-query';
 import { arrowDownIcon, arrowUpIcon } from '@progress/kendo-svg-icons';
@@ -18,7 +12,7 @@ import { arrowDownIcon, arrowUpIcon } from '@progress/kendo-svg-icons';
     />
     }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [NgIf, SVGIconModule],
+  imports: [SVGIconModule],
 })
 export class SortArrowComponent {
   readonly state = input.required<State>();

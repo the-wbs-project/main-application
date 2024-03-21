@@ -1,12 +1,18 @@
 @if (entry(); as entry) { @if (version(); as version) {
-<div class="card-header">
-  <div>
-    {{ "General.Details" | translate | uppercase }}
-  </div>
+<div class="card-header bg-gray-200 text-uppercase tx-medium">
+  {{ "General.Details" | translate }}
 </div>
 <div class="card-body">
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
+    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+      {{ "General.Owner" | translate }} :
+    </span>
+    <span>
+      {{ owner() }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
       {{ "General.Type" | translate }} :
     </span>
     <span>
@@ -15,68 +21,18 @@
     </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
-      {{ "General.Owner" | translate }} :
-    </span>
-    <span>
-      {{ owner() }}
-    </span>
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
+    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
       {{ "General.Status" | translate }} :
     </span>
     <span> Draft </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
+    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
       {{ "General.LastModified" | translate }} :
     </span>
     <span>
       {{ version.lastModified | dateText }}
     </span>
   </p>
-  <!--
-  @if (task.phaseId !== task.id && entry()!.type !== 'task') {
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
-      {{ "Wbs.Phase" | translate }} :
-    </span>
-    @if (task.phaseId; as phaseId) {
-    <a class="text-decoration-none" [routerLink]="['../../', phaseId, 'about']">
-      {{ phaseId | phaseLabel : version()!.phases | translate }}
-    </a>
-    } @else {
-    <span>
-      {{ "General.None" | translate }}
-    </span>
-    }
-  </p>
-  }
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
-      {{ "General.Parent" | translate }} :
-    </span>
-    @if (task.parent; as parent) {
-    <a
-      class="text-decoration-none"
-      [routerLink]="['../../', parent.id, 'about']"
-    >
-      {{ parent.title }}
-    </a>
-    } @else {
-    <span>
-      {{ "General.None" | translate }}
-    </span>
-    }
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 mg-r-10">
-      # of Sub-Tasks:
-    </span>
-    <span>
-      {{ task.subTasks.length }}
-    </span>
-  </p>-->
 </div>
 } }

@@ -6,6 +6,7 @@ export * from './action-definition.model';
 export * from './activity.model';
 export * from './ai-log.model';
 export * from './ai-model.model';
+export * from './category.model';
 export * from './chat-comment.model';
 export * from './claim-filter.model';
 export * from './invite.model';

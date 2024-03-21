@@ -1,11 +1,11 @@
 @if (showButtons()) {
 <div class="pd-b-10 text-center">
+  @if (showAdd()) {
   <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
     <fa-icon [icon]="faPlus" />
     {{ "General.Add" | translate }}
   </button>
-
-  @if (showSave()) {
+  } @if (showSave()) {
   <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
     <fa-icon [icon]="faFloppyDisk" />
     {{ "General.Save" | translate }}

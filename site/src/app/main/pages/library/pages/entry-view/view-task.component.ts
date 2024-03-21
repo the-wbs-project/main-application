@@ -38,9 +38,9 @@ import { EntryState, EntryTaskService } from './services';
 export class TaskViewComponent {
   readonly modal = inject(TaskModalService);
   private readonly navService = inject(NavigationMenuService);
-  private readonly state = inject(EntryState);
   private readonly store = inject(Store);
   private readonly taskService = inject(EntryTaskService);
+  readonly state = inject(EntryState);
 
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();

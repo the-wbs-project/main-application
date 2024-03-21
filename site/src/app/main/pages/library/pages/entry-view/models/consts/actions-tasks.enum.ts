@@ -1,8 +1,9 @@
 export enum LIBRARY_TASKS_ACTIONS {
   CREATED = 'library-task-created',
   CLONED = 'library-task-cloned',
-  TITLE_CHANGED = 'library-version-title-changed',
-  DESCRIPTION_CHANGED = 'library-version-description-changed',
+  TITLE_CHANGED = 'library-task-title-changed',
+  DESCRIPTION_CHANGED = 'library-task-description-changed',
+  DISCIPLINES_CHANGED = 'library-task-disciplines-changed',
   REORDERED = 'library-task-reordered',
   REMOVED = 'library-task-removed',
 }
