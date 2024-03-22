@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -12,12 +13,15 @@ import {
   Validators,
 } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, fas } from '@fortawesome/pro-solid-svg-icons';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
+
+declare type Icon = { icon: string; name: string };
 
 @Component({
   standalone: true,
@@ -29,24 +33,23 @@ import { LabelModule } from '@progress/kendo-angular-label';
     DropDownListModule,
     FontAwesomeModule,
     LabelModule,
+    NgClass,
     ReactiveFormsModule,
     TextBoxModule,
     TranslateModule,
   ],
 })
 export class CategoryDialogComponent {
-  private readonly iconSource = this.createIconList();
-
   readonly closed = output<undefined | [string, string]>();
 
-  readonly fas = fas;
+  readonly fas: { [key: string]: IconProp } = {};
   readonly check = faCheck;
-  readonly icons = signal(this.iconSource);
+  readonly icons = signal(icons);
   readonly titleText = input<string>('General.Add');
   readonly successText = input<string>('General.Add');
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
-    icon: new FormControl<string>('faQuestion', [Validators.required]),
+    icon: new FormControl<string>('Question', [Validators.required]),
   });
 
   get controls() {
@@ -61,50 +64,28 @@ export class CategoryDialogComponent {
 
   protected handleIconFilter(value: string) {
     this.icons.set(
-      this.iconSource.filter(
+      icons.filter(
         (s) => s.name.toLowerCase().indexOf(value.toLowerCase()) !== -1
       )
     );
   }
-
-  private createIconList(): { icon: string; name: string }[] {
-    return icons
-      .sort((a, b) => (a < b ? -1 : 1))
-      .map((icon) => ({
-        icon,
-        name: transform(icon),
-      }));
-  }
 }
 
-const icons: string[] = [
-  'faUser',
-  'faUserHelmetSafety',
-  'faScrewdriverWrench',
-  'faGear',
-  'faToolbox',
-  'faWrench',
-  'faShovel',
-  'faHelmetSafety',
-  'faQuestion',
-  'faBuilding',
-  'faClipboard',
-  'faBuildingColumns',
-
-  'faUserTie',
-  'faMap',
-  'faChartGantt',
-  'faMapPin',
+const icons: Icon[] = [
+  { icon: 'fa-user', name: 'User' },
+  { icon: 'fa-user-helmet-safety', name: 'User Helmet Safety' },
+  { icon: 'fa-screwdriver-wrench', name: 'Screwdriver Wrench' },
+  { icon: 'fa-gear', name: 'Gear' },
+  { icon: 'fa-toolbox', name: 'Toolbox' },
+  { icon: 'fa-wrench', name: 'Wrench' },
+  { icon: 'fa-shovel', name: 'Shovel' },
+  { icon: 'fa-helmet-safety', name: 'Helmet Safety' },
+  { icon: 'fa-question', name: 'Question' },
+  { icon: 'fa-building', name: 'Building' },
+  { icon: 'fa-clipboard', name: 'Clipboard' },
+  { icon: 'fa-building-columns', name: 'Building Columns' },
+  { icon: 'fa-user-tie', name: 'User Tie' },
+  { icon: 'fa-map', name: 'Map' },
+  { icon: 'fa-chart-gantt', name: 'Chart Gantt' },
+  { icon: 'fa-map-pin', name: 'Map Pin' },
 ];
-
-function transform(key: string): string {
-  const words = key.slice(2).split(/(?=[A-Z])/);
-
-  // Capitalize the first letter of each word
-  for (let i = 0; i < words.length; i++) {
-    words[i] = words[i].charAt(0).toUpperCase() + words[i].slice(1);
-  }
-
-  // Join the words together with spaces
-  return words.join(' ');
-}

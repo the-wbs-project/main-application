@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCircleInfo } from '@fortawesome/pro-solid-svg-icons';
+import { faCircleInfo } from '@fortawesome/pro-light-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({

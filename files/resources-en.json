@@ -162,7 +162,9 @@
       "ErrorNameRequired": "Error: Name is required",
       "AskAi": "Ask AI",
       "DescriptionEditor": "Description Editor",
-      "TaskSaved": "Task Saved"
+      "TaskSaved": "Task Saved",
+      "NameIsRequired": "Name Is Required",
+      "GeneralSettings": "General Settings"
     }
   },
   {
@@ -536,6 +538,7 @@
       "CreateTask": "Create Task",
       "OtherFlags": "Other Flags",
       "TaskDisciplines": "Task Disciplines",
+      "WbsDisciplines": "WBS Disciplines",
       "AddDiscipline": "Add Discipline"
     }
   },
@@ -664,7 +667,6 @@
       "LinkUrl": "Link URL",
       "FileUpload": "File Upload",
       "UrlIsRequired": "Url Is Required",
-      "NameIsRequired": "Name Is Required",
       "DescriptionIsRequired": "Description Is Required"
     }
   },

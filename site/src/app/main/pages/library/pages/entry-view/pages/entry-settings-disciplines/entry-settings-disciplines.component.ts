@@ -74,6 +74,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
   }
 
   save(): void {
+    this.saveState.set('saving');
     this.service
       .disciplinesChangedAsync(
         this.disciplines()!

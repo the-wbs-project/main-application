@@ -15,11 +15,18 @@ export class WbsNodePhaseTransformer {
     return this.store.selectSnapshot(MetadataState.phases);
   }
 
-  run(models: WbsNode[], phases?: ProjectCategory[]): WbsNodeView[] {
+  run(
+    models: WbsNode[],
+    phases: ProjectCategory[],
+    disciplines: ProjectCategory[]
+  ): WbsNodeView[] {
     const nodes: WbsNodeView[] = [];
     let rootNodes: WbsNode[] = [];
     const phaseList = this.phaseList;
     const phaseInfo: { id: string; label: string }[] = [];
+    const wbsDisciplines = disciplines.map((x) =>
+      typeof x === 'string' ? x : x.id
+    );
 
     if (phases) {
       for (let i = 0; i < phases.length; i++) {
@@ -36,12 +43,6 @@ export class WbsNodePhaseTransformer {
             : typeof phase === 'string'
             ? phaseList.find((x) => x.id === phaseId)?.label ?? ''
             : phase.label;
-        const catDescription =
-          description.length > 0
-            ? description
-            : typeof phase === 'string'
-            ? phaseList.find((x) => x.id === phaseId)?.label
-            : phase.description;
 
         phaseInfo.push({ id: phaseId, label: catLabel });
         if (label === '') {
@@ -79,7 +80,7 @@ export class WbsNodePhaseTransformer {
         children: 0,
         childrenIds: [],
         description: node.description,
-        disciplines: node?.disciplineIds ?? [],
+        disciplines: this.getDisciplines(node?.disciplineIds, wbsDisciplines),
         id: node.id,
         treeId: node.id,
         levels: [...parentlevel],
@@ -102,7 +103,8 @@ export class WbsNodePhaseTransformer {
         phaseInfo[i].label,
         parent,
         'project',
-        models
+        models,
+        wbsDisciplines
       );
       parent.children = children.length;
       parent.childrenIds = children.map((x) => x.id);
@@ -123,9 +125,16 @@ export class WbsNodePhaseTransformer {
     return nodes;
   }
 
-  runv2(models: WbsNode[], type: string): WbsNodeView[] {
+  runv2(
+    models: WbsNode[],
+    type: string,
+    disciplines: ProjectCategory[]
+  ): WbsNodeView[] {
     const phases = this.phaseList;
     const nodes: WbsNodeView[] = [];
+    const wbsDisciplines = disciplines.map((x) =>
+      typeof x === 'string' ? x : x.id
+    );
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
       .sort((a, b) => a.order! - b.order!);
@@ -138,7 +147,7 @@ export class WbsNodePhaseTransformer {
         children: 0,
         childrenIds: [],
         description: node.description,
-        disciplines: node?.disciplineIds ?? [],
+        disciplines: this.getDisciplines(node?.disciplineIds, wbsDisciplines),
         id: node.id,
         treeId: node.id,
         levels: [...parentlevel],
@@ -167,7 +176,8 @@ export class WbsNodePhaseTransformer {
         phaseLabel,
         parent,
         type,
-        models
+        models,
+        wbsDisciplines
       );
       parent.children = children.length;
       parent.childrenIds = children.map((x) => x.id);
@@ -192,7 +202,8 @@ export class WbsNodePhaseTransformer {
     phaseLabel: string,
     parent: WbsNodeView,
     type: string,
-    list: WbsNode[]
+    list: WbsNode[],
+    wbsDisciplines: string[]
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parent.id, list);
@@ -204,7 +215,7 @@ export class WbsNodePhaseTransformer {
         children: 0,
         childrenIds: [],
         description: child.description,
-        disciplines: child.disciplineIds ?? [],
+        disciplines: this.getDisciplines(child.disciplineIds, wbsDisciplines),
         id: child.id,
         treeId: child.id,
         levels: childLevel,
@@ -231,7 +242,8 @@ export class WbsNodePhaseTransformer {
         phaseLabel,
         node,
         type,
-        list
+        list,
+        wbsDisciplines
       );
 
       node.children = taskChildren.length;
@@ -245,5 +257,12 @@ export class WbsNodePhaseTransformer {
       results.push(node, ...taskChildren);
     }
     return results;
+  }
+
+  private getDisciplines(
+    taskDisciplines: string[] | undefined,
+    wbsDisciplines: string[]
+  ): string[] {
+    return taskDisciplines?.filter((x) => wbsDisciplines.includes(x)) ?? [];
   }
 }

@@ -35,7 +35,6 @@ export class EntryService {
       this.data.libraryEntryVersions.putAsync(entry.owner, version),
     ]).pipe(
       map(() => {
-        this.messages.notify.success('Library.Saved');
         this.state.setEntry(entry);
         this.state.setVersion(version);
       })

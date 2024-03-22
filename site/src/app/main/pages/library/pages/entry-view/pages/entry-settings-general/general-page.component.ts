@@ -5,6 +5,7 @@ import {
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -20,6 +21,10 @@ import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-c
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { EntryService, EntryState } from '../../services';
+import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
+import { delay, tap } from 'rxjs/operators';
+import { DirtyComponent } from '@wbs/main/models';
+import { NgClass } from '@angular/common';
 
 @Component({
   standalone: true,
@@ -33,13 +38,15 @@ import { EntryService, EntryState } from '../../services';
     FormsModule,
     InfoMessageComponent,
     LabelModule,
+    NgClass,
     ProjectCategoryDropdownComponent,
+    SaveButtonComponent,
     TextBoxModule,
     TranslateModule,
     VisiblitySelectionComponent,
   ],
 })
-export class GeneralComponent {
+export class GeneralComponent implements DirtyComponent {
   private readonly service = inject(EntryService);
   readonly state = inject(EntryState);
 
@@ -54,10 +61,24 @@ export class GeneralComponent {
 
     return true;
   });
+  readonly isDirty = signal(false);
+  readonly saveState = signal<'ready' | 'saving' | 'saved'>('ready');
+  
+  descriptionChangedByAi(description: string): void {
+    this.state.version
+  }
 
   save(): void {
+    this.saveState.set('saving');
     this.service
       .generalSaveAsync(this.state.entry()!, this.state.version()!)
-      .subscribe();
+      .pipe(
+        tap(() => {
+          this.isDirty.set(false);
+          this.saveState.set('saved');
+        }),
+        delay(5000)
+      )
+      .subscribe(() => this.saveState.set('ready'));
   }
 }

@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
   template: `<button
     class="btn btn-success"
     [ngClass]="sizeClass()"
-    [disabled]="state() === 'saving'"
+    [disabled]="disabled() || state() === 'saving'"
   >
     @switch (state()) { @case ('ready') {
     <fa-icon [icon]="faFloppyDisk" />&nbsp; {{ 'General.Save' | translate }}
@@ -35,6 +35,7 @@ export class SaveButtonComponent {
   readonly faCheck = faCheck;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faSpinner = faSpinner;
+  readonly disabled = input(false);
   readonly size = input<'lg' | 'sm' | undefined>(undefined);
   readonly state = input.required<'ready' | 'saving' | 'saved'>();
   readonly click = output<void>();

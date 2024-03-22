@@ -73,7 +73,6 @@ export class DescriptionAiDialogComponent implements OnInit {
   proposal = '';
 
   constructor() {
-    console.log('test 1-2-3');
     effect(() => {
       this.startingDialog = `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${this.versionTitle()}'?`;
     });

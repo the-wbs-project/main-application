@@ -3,6 +3,7 @@ import {
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
+  ProjectCategory,
 } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
@@ -54,7 +55,9 @@ export class EntryState {
     this._entry.set(entry);
     this._version.set(version);
     this._tasks.set(tasks);
-    this._viewModels.set(this.createViewModels(entry.type, tasks));
+    this._viewModels.set(
+      this.createViewModels(entry.type, version.disciplines, tasks)
+    );
   }
 
   setNavSectionEntry(value: string): void {
@@ -77,8 +80,12 @@ export class EntryState {
     this._tasks.set(tasks);
 
     const entry = this._entry();
+    const version = this._version();
 
-    if (entry) this._viewModels.set(this.createViewModels(entry.type, tasks));
+    if (entry && version)
+      this._viewModels.set(
+        this.createViewModels(entry.type, version.disciplines, tasks)
+      );
   }
 
   tasksChanged(upserts: LibraryEntryNode[], removeIds?: string[]): void {
@@ -157,8 +164,13 @@ export class EntryState {
 
   private createViewModels(
     entryType: string,
+    disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
   ): WbsNodeView[] {
-    return this.transformer.nodes.phase.view.runv2(tasks, entryType);
+    return this.transformer.nodes.phase.view.runv2(
+      tasks,
+      entryType,
+      disciplines
+    );
   }
 }

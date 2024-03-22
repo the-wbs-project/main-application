@@ -8,7 +8,10 @@
       <kendo-label [for]="title" [text]="'General.Name' | translate" />
       <input #title kendoTextBox formControlName="title" class="form-control" />
       @if (controls.title.errors?.['required']) {
-      <div class="invalid-feedback">Error: Name is required</div>
+      <div class="invalid-feedback">
+        {{ "General.Error" | translate }}:
+        {{ "General.NameIsRequired" | translate }}
+      </div>
       }
     </div>
     <div class="form-group">
@@ -30,7 +33,7 @@
         >
           @if (dataItem) {
           <span class="d-ib text-center wd-20 mg-r-10">
-            <fa-icon [icon]="fas[dataItem.icon]" />
+            <i class="fa-solid" [ngClass]="dataItem.icon"></i>
           </span>
           {{ dataItem.name }}
           }
