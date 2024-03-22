@@ -1,5 +1,5 @@
-import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { ProjectCategory } from '@wbs/core/models';
@@ -14,13 +14,13 @@ import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
     kendoTooltip
     [title]="id() | disciplineLabel : fullList() | translate"
   >
-    <i class="fa-solid fa-sm" [ngClass]="[id() | disciplineIcon]"></i>
+    <fa-icon [icon]="id() | disciplineIcon : fullList()" size="sm" />
   </span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DisciplineIconPipe,
     DisciplineLabelPipe,
-    NgClass,
+    FontAwesomeModule,
     TooltipModule,
     TranslateModule,
   ],

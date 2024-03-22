@@ -86,7 +86,7 @@
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
         <div class="d-ib w-100" style="max-width: 500px">
-          <wbs-discipline-editor [(categories)]="disciplines" />
+          <wbs-discipline-editor [showAdd]="true" [(categories)]="disciplines" />
         </div>
       </div>
       } @else if (view() === 3) {

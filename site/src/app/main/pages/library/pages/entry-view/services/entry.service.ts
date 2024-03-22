@@ -7,7 +7,7 @@ import {
 } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
 import { EntryState } from './entry-state.service';
 
@@ -91,10 +91,7 @@ export class EntryService {
     version.disciplines = disciplines;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      map(() => {
-        this.messages.notify.success('Library.DisciplinesChanged');
-        this.state.setVersion(version);
-      }),
+      tap(() => this.state.setVersion(version)),
       switchMap(() =>
         this.activity.entryDisciplinesChanged(
           entry.id,

@@ -27,8 +27,9 @@ import { ProjectState, TasksState } from '../../../states';
     <div class="pd-15">
       @if (categories) {
       <wbs-discipline-editor
-        [(categories)]="categories"
+        [showAdd]="true"
         [showSave]="true"
+        [(categories)]="categories"
         (saveClicked)="save()"
         (categoriesChange)="isDirty.set(true)"
       />

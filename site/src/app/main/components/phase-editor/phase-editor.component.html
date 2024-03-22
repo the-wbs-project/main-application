@@ -37,7 +37,7 @@
           {{ dataItem.label | translate }}
         </div>
         <div class="tx-12 font-italic">
-          {{ dataItem.description | translate }}
+          {{ dataItem.description ?? "" | translate }}
         </div>
       </div>
       <div class="tx-center">
@@ -77,7 +77,7 @@
           />
         </div>
         <div class="tx-12 font-italic">
-          {{ dataItem.description | translate }}
+          {{ dataItem.description ?? "" | translate }}
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   model,
@@ -54,9 +55,9 @@ export class DisciplineEditorComponent {
   private readonly dialogService = inject(DialogService);
 
   readonly categories = model<CategorySelection[]>();
-  readonly showButtons = input<boolean>(true);
-  readonly showAdd = input<boolean>(true);
+  readonly showAdd = input<boolean>(false);
   readonly showSave = input<boolean>(false);
+  readonly showButtons = computed(() => this.showAdd() || this.showSave());
 
   readonly faBars = faBars;
   readonly faFloppyDisk = faFloppyDisk;
@@ -96,10 +97,9 @@ export class DisciplineEditorComponent {
 
         const item: CategorySelection = {
           id: IdService.generate(),
-          description: result.description ?? '',
+          description: result.description,
           isCustom: true,
           label: result.title,
-          number: null,
           selected: true,
         };
         this.categories.update((list) => {

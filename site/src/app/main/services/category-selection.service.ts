@@ -40,8 +40,10 @@ export class CategorySelectionService {
       cats.push({
         id: cat.id,
         label: this.resources.get(cat.label),
-        description: cat.description ? this.resources.get(cat.description) : '',
-        number: null,
+        description: cat.description
+          ? this.resources.get(cat.description)
+          : undefined,
+        icon: cat.icon,
         selected: false,
         originalSelection: false,
         isCustom: false,
@@ -58,8 +60,8 @@ export class CategorySelectionService {
           items.push({
             id: cat.id,
             label: cat.label,
-            description: cat.description ?? '',
-            number: null,
+            description: cat.description,
+            icon: cat.icon,
             selected: true,
             originalSelection: true,
             isCustom: false,
@@ -71,8 +73,8 @@ export class CategorySelectionService {
         items.push({
           id: x.id,
           label: x.label,
-          description: x.description ?? '',
-          number: null,
+          description: x.description,
+          icon: x.icon,
           selected: true,
           originalSelection: true,
           isCustom: true,
@@ -88,8 +90,8 @@ export class CategorySelectionService {
       items.push({
         id: cat.id,
         label: cat.label,
-        description: cat.description ?? '',
-        number: null,
+        description: cat.description,
+        icon: cat.icon,
         selected: false,
         originalSelection: false,
         isCustom: false,
@@ -130,8 +132,7 @@ export class CategorySelectionService {
             label: this.resources.get(cat.label),
             description: cat.description
               ? this.resources.get(cat.description)
-              : '',
-            number: null,
+              : undefined,
             selected: selected.indexOf(x) > -1,
             originalSelection: selected.indexOf(x) > -1,
             isCustom: false,
@@ -141,8 +142,7 @@ export class CategorySelectionService {
         cats.push({
           id: x.id,
           label: x.label,
-          description: x.description ?? '',
-          number: null,
+          description: x.description,
           selected: selected.indexOf(x.id) > -1,
           originalSelection: selected.indexOf(x.id) > -1,
           isCustom: true,
@@ -182,6 +182,7 @@ export class CategorySelectionService {
             id: x.id,
             label: x.label,
             description: x.description,
+            icon: x.icon,
           });
       }
     return { categories, removedIds };
@@ -209,7 +210,7 @@ export class CategorySelectionService {
         item.number = i;
         i++;
       } else {
-        item.number = null;
+        item.number = undefined;
       }
     }
   }

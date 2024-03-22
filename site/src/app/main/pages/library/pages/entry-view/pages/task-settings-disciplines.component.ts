@@ -2,20 +2,19 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  computed,
   inject,
   input,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@wbs/core/models';
-import { AlertComponent } from '@wbs/main/components/alert.component';
+import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { EntryService, EntryState, EntryTaskService } from '../services';
-import { CategorySelection } from '@wbs/core/view-models';
-import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
+import { delay, tap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -24,27 +23,33 @@ import isFirstDayOfMonth from 'date-fns/isFirstDayOfMonth';
       {{ 'General.Disciplines' | translate }}
     </div>
     <div class="pd-15 text-center bg-white">
-      <div class="w-100 text-start">
-        <wbs-alert
-          type="info"
-          [dismissible]="false"
-          message="Library.DisciplineSettingsInfoTask"
-        />
-      </div>
-      <div class="d-ib w-100 text-start" style="max-width: 500px;">
-        @if (disciplines(); as disciplines) {
-        <wbs-discipline-editor
-          [showSave]="true"
-          [showAdd]="false"
-          [categories]="disciplines"
-          (saveClicked)="save()"
-          (categoriesChange)="isDirty.set(true)"
-        />
-        }
+      <div class="d-ib w-100 mx-wd-xs-500 text-start card dashboard-card">
+        <div
+          class="d-flex card-header bg-gray-200 text-uppercase tx-medium flex-align-center"
+        >
+          <div class="flex-fill">
+            {{ 'Wbs.TaskDisciplines' | translate }}
+          </div>
+          <div class="text-end">
+            <wbs-save-button size="sm" [state]="saveState()" (click)="save()" />
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="tx-italic text-center pd-b-10 pd-l-10">
+            {{ 'Library.DisciplineSettingsInfoTask' | translate }}
+          </div>
+          @if (disciplines(); as disciplines) {
+          <wbs-discipline-editor
+            [categories]="disciplines"
+            (saveClicked)="save()"
+            (categoriesChange)="isDirty.set(true)"
+          />
+          }
+        </div>
       </div>
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [AlertComponent, DisciplineEditorComponent, TranslateModule],
+  imports: [DisciplineEditorComponent, SaveButtonComponent, TranslateModule],
   providers: [CategorySelectionService, EntryService],
 })
 export class DisciplinesComponent implements OnInit, DirtyComponent {
@@ -53,6 +58,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
   readonly state = inject(EntryState);
 
   readonly isDirty = signal(false);
+  readonly saveState = signal<'ready' | 'saving' | 'saved'>('ready');
 
   readonly taskId = input.required<string>();
   readonly cats = input.required<Category[]>();
@@ -85,7 +91,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
   }
 
   save(): void {
-    console.log('hi');
+    this.saveState.set('saving');
     this.service
       .disciplinesChangedAsync(
         this.taskId(),
@@ -93,6 +99,13 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
           .filter((x) => x.selected)
           .map((x) => x.id)
       )
-      .subscribe(() => this.isDirty.set(false));
+      .pipe(
+        tap(() => {
+          this.isDirty.set(false);
+          this.saveState.set('saved');
+        }),
+        delay(5000)
+      )
+      .subscribe(() => this.saveState.set('ready'));
   }
 }

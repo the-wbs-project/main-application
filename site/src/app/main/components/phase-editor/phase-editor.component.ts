@@ -86,7 +86,6 @@ export class PhaseEditorComponent {
           description: result[1],
           isCustom: true,
           label: result[0],
-          number: null,
           selected: true,
         };
         this.categories.update((list) => {

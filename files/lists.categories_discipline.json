@@ -6,7 +6,7 @@
         "tags": [
             "principal-in-charge"
         ],
-        "icon": "fa-people-roof",
+        "icon": "faPeopleRoof",
         "order": 1
     },
     {
@@ -17,7 +17,7 @@
             "PM",
             "Project Manager"
         ],
-        "icon": "fa-chart-gantt",
+        "icon": "faChartGantt",
         "order": 2
     },
     {
@@ -27,7 +27,7 @@
         "tags": [
             "architect"
         ],
-        "icon": "fa-building",
+        "icon": "faBuilding",
         "order": 3
     },
     {
@@ -38,7 +38,7 @@
             "Civil",
             "Civil Engineer"
         ],
-        "icon": "fa-road-bridge",
+        "icon": "faRoadBridge",
         "order": 4
     },
     {
@@ -49,7 +49,7 @@
             "Environmental",
             "Environmental Engineer"
         ],
-        "icon": "fa-wind-turbine",
+        "icon": "faWindTurbine",
         "order": 5
     },
     {
@@ -60,7 +60,7 @@
             "Structural",
             "Structural Engineer"
         ],
-        "icon": "fa-bridge-suspension",
+        "icon": "faBridgeSuspension",
         "order": 6
     },
     {
@@ -70,7 +70,7 @@
         "tags": [
             "Mechanical"
         ],
-        "icon": "fa-screwdriver-wrench",
+        "icon": "faScrewdriverWrench",
         "order": 7
     },
     {
@@ -81,7 +81,7 @@
             "Electrical",
             "Electrical Engineer"
         ],
-        "icon": "fa-bolt",
+        "icon": "faBolt",
         "order": 8
     },
     {
@@ -92,7 +92,7 @@
             "Plumbing",
             "Plumbing Engineer"
         ],
-        "icon": "fa-pipe-valve",
+        "icon": "faPipeValve",
         "order": 9
     },
     {
@@ -102,7 +102,7 @@
         "tags": [
             "Scientist"
         ],
-        "icon": "fa-flask",
+        "icon": "faFlask",
         "order": 10
     },
     {
@@ -114,7 +114,7 @@
             "Cultural Resource",
             "Cultural Resource Specialist"
         ],
-        "icon": "fa-brush",
+        "icon": "faBrush",
         "order": 11
     },
     {
@@ -125,7 +125,7 @@
             "Landscape",
             "Landscape Architect"
         ],
-        "icon": "fa-flower-tulip",
+        "icon": "faFlowerTulip",
         "order": 12
     },
     {
@@ -136,7 +136,7 @@
             "Interior",
             "Interior Designers"
         ],
-        "icon": "fa-chair",
+        "icon": "faChair",
         "order": 13
     },
     {
@@ -146,7 +146,7 @@
         "tags": [
             "Planner"
         ],
-        "icon": "fa-calendar-days",
+        "icon": "faCalendarDays",
         "order": 14
     },
     {
@@ -156,7 +156,7 @@
         "tags": [
             "Survey"
         ],
-        "icon": "fa-drone-alt",
+        "icon": "faDroneAlt",
         "order": 15
     },
     {
@@ -167,7 +167,7 @@
             "Construction",
             "Construction Manager"
         ],
-        "icon": "fa-user-helmet-safety",
+        "icon": "faUserHelmetSafety",
         "order": 16
     },
     {
@@ -178,7 +178,7 @@
             "Operations",
             "Operation Manager"
         ],
-        "icon": "fa-calculator",
+        "icon": "faCalculator",
         "order": 17
     },
     {
@@ -188,7 +188,7 @@
         "tags": [
             "Accountant"
         ],
-        "icon": "fa-dollar-sign",
+        "icon": "faDollarSign",
         "order": 18
     },
     {
@@ -199,7 +199,7 @@
             "Marketing",
             "Marketing Specialist"
         ],
-        "icon": "fa-megaphone",
+        "icon": "faMegaphone",
         "order": 19
     },
     {
@@ -209,7 +209,7 @@
         "tags": [
             "Intern"
         ],
-        "icon": "fa-graduation-cap",
+        "icon": "faGraduationCap",
         "order": 20
     },
     {
@@ -224,7 +224,7 @@
             "Admin Assistant",
             "Administrative Assistant"
         ],
-        "icon": "fa-notebook",
+        "icon": "faNotebook",
         "order": 21
     }
 ]

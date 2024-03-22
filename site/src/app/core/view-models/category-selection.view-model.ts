@@ -1,10 +1,11 @@
 export interface CategorySelection {
   id: string;
   label: string;
-  description: string;
+  description?: string;
   selected: boolean;
-  number: number | null;
+  number?: number;
   isCustom: boolean;
+  icon?: string;
   originalSelection?: boolean;
   confirm?: CategoryCancelConfirm;
 }

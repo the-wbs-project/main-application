@@ -14,12 +14,12 @@ import {
   Transformers,
   WbsNodeService,
 } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/states';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { LIBRARY_TASKS_REORDER_WAYS } from '../models';
 import { EntryTaskActivityService } from './entry-task-activity.service';
 import { EntryTaskRecorderService } from './entry-task-reorder.service';
-import { MetadataState } from '@wbs/main/states';
 import { EntryState } from './entry-state.service';
 
 @Injectable()
@@ -590,10 +590,7 @@ export class EntryTaskService {
     return this.data.libraryEntryNodes
       .putAsync(entry.owner, entry.id, version, [task], [])
       .pipe(
-        map(() => {
-          this.messages.notify.success('Library.DisciplinesChanged');
-          this.state.tasksChanged([task]);
-        }),
+        tap(() => this.state.tasksChanged([task])),
         switchMap(() =>
           this.activity.entryDisciplinesChanged(
             entry.id,

@@ -31,6 +31,7 @@
       "Confirmation": "Confirmation",
       "Save": "Save",
       "Saving": "Saving",
+      "Saved": "Saved",
       "SavingChanges": "Saving Changes",
       "SaveAndView": "Save & View",
       "View": "View",
@@ -127,6 +128,7 @@
       "EditedHoursAgo": "Edited # hours ago",
       "EditedYesterday": "Edited yesterday",
       "EditedDaysAgo": "Edited # days ago",
+      "Icon": "Icon",
       "Minute": "1 minute",
       "Minutes": "# minutes",
       "Hour": "1 hour",
@@ -159,7 +161,8 @@
       "TaskDetails": "Task Details",
       "ErrorNameRequired": "Error: Name is required",
       "AskAi": "Ask AI",
-      "DescriptionEditor": "Description Editor"
+      "DescriptionEditor": "Description Editor",
+      "TaskSaved": "Task Saved"
     }
   },
   {
@@ -531,7 +534,9 @@
       "SelectPhase": "Select Phase",
       "SelectDisciplines": "Select Disciplines",
       "CreateTask": "Create Task",
-      "OtherFlags": "Other Flags"
+      "OtherFlags": "Other Flags",
+      "TaskDisciplines": "Task Disciplines",
+      "AddDiscipline": "Add Discipline"
     }
   },
   {
@@ -693,6 +698,7 @@
       "NoDisciplinesEntry": "No disciplines have been specifically setup for this WBS.",
       "NoDisciplinesTask": "No disciplines have been specifically setup for this task.",
       "DisciplineSettingsInfoEntry": "What disciplines are associated with this WBS? If you aren't sure don't select any and all disciplines will be available.",
+      "DisciplineSettingsInfoTask": "Who will be performing this task?",
       "ResourceInfoEntry": "Resources are files or links which are associated with this WBS. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly.",
       "ResourceInfoTask": "Resources are files or links which are associated with this task. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly."
     }
