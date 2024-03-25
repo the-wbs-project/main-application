@@ -5,10 +5,10 @@ import { faList } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
+import { ImportPerson } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { CategoryMatchListComponent } from '../../../../../../../components/category-match-list.component';
+import { CategoryMatchListComponent } from '@wbs/main/components/category-match-list.component';
 import { PeopleCompleted } from '../../actions';
-import { PeopleListItem } from '../../models';
 import { ProjectUploadState } from '../../states';
 
 @Component({
@@ -31,7 +31,7 @@ export class DisciplinesViewComponent {
 
   constructor(private readonly store: SignalStore) {}
 
-  nav(results: PeopleListItem[]): void {
+  nav(results: ImportPerson[]): void {
     this.store.dispatch(new PeopleCompleted(results));
   }
 }

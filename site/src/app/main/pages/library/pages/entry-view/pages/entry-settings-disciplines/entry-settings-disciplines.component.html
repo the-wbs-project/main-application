@@ -11,13 +11,18 @@
         {{ "Wbs.WbsDisciplines" | translate }}
       </div>
       <div class="text-end">
+        SHOW SAVED!
         <button
           class="btn btn-sm btn-dark mg-r-10"
           (click)="showAddDialog.set(true)"
         >
           <fa-icon [icon]="plus" />&nbsp; {{ "General.Add" | translate }}
         </button>
-        <wbs-save-button size="sm" [state]="saveState()" (click)="save()" />
+        <wbs-save-button
+          size="sm"
+          [isSaving]="saveState() === 'saving'"
+          (click)="save()"
+        />
       </div>
     </div>
     <div class="card-body">

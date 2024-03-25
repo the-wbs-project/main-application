@@ -1,4 +1,3 @@
-import { NgClass, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -26,10 +25,8 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
     ButtonModule,
     FontAwesomeModule,
     FormsModule,
-    NgClass,
     TextBoxModule,
     TranslateModule,
-    UpperCasePipe,
   ],
 })
 export class EntryTitleComponent {

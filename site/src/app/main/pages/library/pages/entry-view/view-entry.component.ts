@@ -21,6 +21,7 @@ import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 import { EntryService, EntryState } from './services';
+import { UiState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -44,6 +45,7 @@ export class EntryViewComponent {
   readonly state = inject(EntryState);
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
+  readonly breadcrumbs = this.store.select(UiState.breadcrumbs);
 
   readonly url = this.store.select(RouterState.url);
   readonly links = computed(() =>

@@ -32,7 +32,7 @@ export const appConfig: ApplicationConfig = {
       DialogModule,
       HttpClientModule,
       NgxsLoggerPluginModule.forRoot({
-        disabled: true, // environment.production,
+        disabled: false, // environment.production,
       }),
       NgxsModule.forRoot([]),
       NgxsRouterPluginModule.forRoot(),

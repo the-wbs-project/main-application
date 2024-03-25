@@ -72,7 +72,7 @@ export const routes: Routes = [
       {
         path: 'settings/disciplines',
         loadComponent: () =>
-          import('./pages/task-settings-disciplines.component').then(
+          import('./pages/task-settings-disciplines').then(
             (x) => x.DisciplinesComponent
           ),
         canActivate: [taskNavGuard],

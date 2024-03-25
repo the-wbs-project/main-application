@@ -3,14 +3,17 @@ import {
   Component,
   ElementRef,
   HostListener,
-  ViewChild,
+  inject,
   input,
   output,
+  signal,
+  viewChild,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBoltLightning } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
 import { PopupModule } from '@progress/kendo-angular-popup';
 import { ActionButtonMenuItem } from '@wbs/main/models';
 
@@ -19,17 +22,18 @@ import { ActionButtonMenuItem } from '@wbs/main/models';
   selector: 'wbs-action-button',
   templateUrl: './action-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, PopupModule, RouterModule, TranslateModule],
+  imports: [FontAwesomeModule, PopupModule, TranslateModule],
 })
 export class ActionButtonComponent {
-  @ViewChild('anchor', { read: ElementRef, static: false }) anchor!: ElementRef;
-  @ViewChild('popup', { read: ElementRef, static: false }) popup!: ElementRef;
+  private readonly store = inject(Store);
+
+  readonly popup = viewChild<ElementRef>('popup');
+  readonly anchor = viewChild<ElementRef>('anchor');
   readonly itemClicked = output<string>();
+  readonly show = signal(false);
 
   readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
   readonly faBoltLightning = faBoltLightning;
-
-  show = false;
 
   @HostListener('document:keydown', ['$event'])
   public keydown(event: KeyboardEvent): void {
@@ -45,16 +49,21 @@ export class ActionButtonComponent {
     }
   }
 
-  toggle(show?: boolean): void {
-    this.show = show !== undefined ? show : !this.show;
+  toggle(show: boolean = !this.show()): void {
+    this.show.set(show);
+  }
+
+  goto(route: string[]): void {
+    this.store.dispatch(new Navigate(route));
   }
 
   private contains(target: EventTarget | null): boolean {
-    if (!this.anchor?.nativeElement || !this.popup?.nativeElement) return false;
+    const anchor = this.anchor()?.nativeElement;
 
-    return (
-      this.anchor.nativeElement.contains(target) ||
-      (this.popup ? this.popup.nativeElement.contains(target) : false)
-    );
+    if (anchor && anchor.contains(target)) return true;
+
+    const popup = this.popup()?.nativeElement;
+
+    return popup && popup.contains(target);
   }
 }

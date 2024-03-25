@@ -6,4 +6,5 @@ export enum LIBRARY_VERSION_ACTIONS {
   DISCIPLINES_CHANGED = 'library-version-disciplines-changed',
   SETUP_PHASE = 'library-version-phase-setup',
   SETUP_TASK = 'library-version-task-task-setup',
+  UPLOAD = 'library-version-upload',
 }

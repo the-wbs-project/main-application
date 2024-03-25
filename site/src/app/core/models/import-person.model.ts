@@ -1,4 +1,4 @@
-export interface PeopleListItem {
+export interface ImportPerson {
   name: string;
   disciplineId?: string;
 }

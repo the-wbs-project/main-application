@@ -66,6 +66,10 @@ export class EntryActivityService {
     );
   }
 
+  entryUpload(entryId: string, version: number): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UPLOAD);
+  }
+
   setupPhaseEntry(
     entryId: string,
     version: number,

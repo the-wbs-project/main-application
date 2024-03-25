@@ -479,4 +479,11 @@ button:focus:not(:focus-visible) {
 
 .dashboard-card {
   border: solid 1px #bbbbbb;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+  .card-header {
+    font-weight: 500;
+    background-color: $gray-200;
+    text-transform: uppercase;
+  }
 }

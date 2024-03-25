@@ -1,4 +1,6 @@
+import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
 import { dirtyGuard } from '@wbs/main/guards';
 import {
   CategorySelectionService,
@@ -6,6 +8,7 @@ import {
   disciplineResolver,
   projectCategoryResolver,
 } from '@wbs/main/services';
+import { EntryUploadState } from './pages/entry-upload/states';
 import {
   EntryActivityService,
   EntryService,
@@ -21,6 +24,7 @@ import {
   ownerIdResolve,
   populateGuard,
   redirectGuard,
+  verifyTaskUpdateClaimGuard,
   versionIdResolve,
 } from './services';
 
@@ -31,6 +35,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
+      importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
       CategorySelectionService,
       EntryActivityService,
       EntryService,
@@ -59,6 +64,7 @@ export const routes: Routes = [
         canActivate: [entryNavGuard],
         data: {
           section: 'about',
+          crumbs: ['about'],
         },
         resolve: {
           claims: libraryClaimsResolve,
@@ -72,12 +78,28 @@ export const routes: Routes = [
         canActivate: [entryNavGuard],
         data: {
           section: 'tasks',
+          crumbs: ['tasks'],
         },
         resolve: {
           entryUrl: entryUrlResolve,
           claims: libraryClaimsResolve,
         },
         loadChildren: () => import('./task-view.routes').then((x) => x.routes),
+      },
+      {
+        path: 'upload',
+        loadComponent: () =>
+          import('./pages/entry-upload/upload-layout.component').then(
+            (x) => x.ProjectUploadLayoutComponent
+          ),
+        canActivate: [entryNavGuard, verifyTaskUpdateClaimGuard],
+        data: {
+          section: 'tasks',
+        },
+        loadChildren: () =>
+          import('./pages/entry-upload/pages/children.routes').then(
+            (x) => x.routes
+          ),
       },
       {
         path: 'resources',
@@ -88,6 +110,7 @@ export const routes: Routes = [
         canActivate: [entryNavGuard],
         data: {
           section: 'resources',
+          crumbs: ['resources'],
         },
         resolve: {
           owner: ownerIdResolve,
@@ -105,6 +128,7 @@ export const routes: Routes = [
         canActivate: [entryNavGuard],
         data: {
           section: 'settings',
+          crumbs: ['settings', 'general'],
         },
         resolve: {
           categories: projectCategoryResolver,
@@ -120,6 +144,7 @@ export const routes: Routes = [
         canDeactivate: [dirtyGuard],
         data: {
           section: 'settings',
+          crumbs: ['settings', 'disciplines'],
         },
         resolve: {
           cats: disciplineResolver,
@@ -135,6 +160,7 @@ export const routes: Routes = [
         canDeactivate: [dirtyGuard],
         data: {
           section: 'settings',
+          crumbs: ['settings', 'phase'],
         },
       },
       {
@@ -147,6 +173,7 @@ export const routes: Routes = [
         canDeactivate: [dirtyGuard],
         data: {
           section: 'settings',
+          crumbs: ['settings', 'phases'],
         },
       },
     ],

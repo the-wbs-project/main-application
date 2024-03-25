@@ -13,7 +13,7 @@ export class NavigationMenuService {
   processLinks(menu: NavigationLink[], claims: string[]): NavigationLink[] {
     const processed: NavigationLink[] = [];
 
-    for (const item of menu) {
+    for (const item of structuredClone(menu)) {
       const processedItem = this.processLink(item, claims);
       if (processedItem) processed.push(processedItem);
     }

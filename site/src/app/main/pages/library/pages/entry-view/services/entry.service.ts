@@ -10,6 +10,8 @@ import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
 import { EntryState } from './entry-state.service';
+import { Utils } from '@wbs/main/services';
+import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable()
 export class EntryService {
@@ -24,6 +26,18 @@ export class EntryService {
 
   private get version(): LibraryEntryVersion {
     return this.state.version()!;
+  }
+
+  static getEntryUrl(route: ActivatedRouteSnapshot): string[] {
+    return [
+      '/',
+      Utils.getParam(route, 'org'),
+      'library',
+      'view',
+      Utils.getParam(route, 'ownerId'),
+      Utils.getParam(route, 'entryId'),
+      Utils.getParam(route, 'versionId'),
+    ];
   }
 
   generalSaveAsync(

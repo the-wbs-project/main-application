@@ -1,0 +1,40 @@
+<div class="card-header tx-medium">
+  {{ "General.Settings" | translate }} >
+  {{ "General.Disciplines" | translate }}
+</div>
+<div class="pd-15 text-center bg-white">
+  <div class="d-ib w-100 mx-wd-xs-500 text-start card dashboard-card">
+    <div
+      class="d-flex card-header bg-gray-200 text-uppercase tx-medium flex-align-center"
+    >
+      <div>
+        {{ "Wbs.TaskDisciplines" | translate }}
+      </div>
+      <div class="flex-fill text-end">
+        @if (saveState() === 'saved') {
+        <div class="d-ib tx-success tx-12 mg-r-10">
+          <fa-icon [icon]="checkIcon" />&nbsp;
+          {{ "General.Saved" | translate }}
+        </div>
+        }
+        <wbs-save-button
+          size="sm"
+          [isSaving]="saveState() === 'saving'"
+          (click)="save()"
+        />
+      </div>
+    </div>
+    <div class="card-body">
+      <div class="tx-italic text-center pd-b-10 pd-l-10">
+        {{ "Library.DisciplineSettingsInfoTask" | translate }}
+      </div>
+      @if (disciplines(); as disciplines) {
+      <wbs-discipline-editor
+        [categories]="disciplines"
+        (saveClicked)="save()"
+        (categoriesChange)="isDirty.set(true)"
+      />
+      }
+    </div>
+  </div>
+</div>

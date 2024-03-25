@@ -21,7 +21,7 @@ export const routes: Routes = [
     canActivate: [projectRedirectGuard],
     loadComponent: () =>
       import('./projects/about/project-about-page.component').then(
-        ({ ProjectAboutPageComponent }) => ProjectAboutPageComponent
+        (x) => x.ProjectAboutPageComponent
       ),
   },
   {
@@ -33,7 +33,7 @@ export const routes: Routes = [
     },
     loadComponent: () =>
       import('./projects/about/project-about-page.component').then(
-        ({ ProjectAboutPageComponent }) => ProjectAboutPageComponent
+        (x) => x.ProjectAboutPageComponent
       ),
   },
   {
@@ -112,7 +112,7 @@ export const routes: Routes = [
             },
             loadChildren: () =>
               import('./tasks/settings/task-settings.routes').then(
-                ({ routes }) => routes
+                (x) => x.routes
               ),
           },
         ],
@@ -171,7 +171,7 @@ export const routes: Routes = [
     },
     loadChildren: () =>
       import('./projects/settings/project-settings.routes').then(
-        ({ routes }) => routes
+        (x) => x.routes
       ),
   },
   {
@@ -181,6 +181,6 @@ export const routes: Routes = [
       view: PROJECT_PAGES.UPLOAD,
     },
     loadChildren: () =>
-      import('./projects/upload/upload.routes').then(({ routes }) => routes),
+      import('./projects/upload/upload.routes').then((x) => x.routes),
   },
 ];

@@ -1,7 +1,9 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { Utils } from '@wbs/main/services';
 import { Observable } from 'rxjs';
+import { EntryService } from './entry.service';
 
 export const libraryClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
@@ -9,51 +11,30 @@ export const libraryClaimsResolve: ResolveFn<string[]> = (
 
 export const ownerIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => getParam(route, 'ownerId');
+) => Utils.getParam(route, 'ownerId');
 
 export const entryIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => getParam(route, 'entryId');
+) => Utils.getParam(route, 'entryId');
 
 export const versionIdResolve: ResolveFn<number> = (
   route: ActivatedRouteSnapshot
-) => parseInt(getParam(route, 'versionId'));
+) => parseInt(Utils.getParam(route, 'versionId'));
 
 export const taskIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => getParam(route, 'taskId');
+) => Utils.getParam(route, 'taskId');
 
 export const entryUrlResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
-) => getEntryUrl(route);
+) => EntryService.getEntryUrl(route);
 
 function getLibraryClaims(
   data: DataServiceFactory,
   route: ActivatedRouteSnapshot
 ): Observable<string[]> {
   return data.claims.getLibraryEntryClaimsAsync(
-    getParam(route, 'ownerId'),
-    getParam(route, 'entryId')
+    Utils.getParam(route, 'ownerId'),
+    Utils.getParam(route, 'entryId')
   );
-}
-
-function getEntryUrl(route: ActivatedRouteSnapshot): string[] {
-  return [
-    './' + getParam(route, 'org'),
-    'library',
-    'view',
-    getParam(route, 'ownerId'),
-    getParam(route, 'entryId'),
-    getParam(route, 'versionId'),
-  ];
-}
-
-function getParam(route: ActivatedRouteSnapshot, prop: string): string {
-  let r: ActivatedRouteSnapshot | null = route;
-
-  while (r) {
-    if (r.params[prop]) return r.params[prop];
-    r = r.parent;
-  }
-  return '';
 }

@@ -1,0 +1,55 @@
+<div class="pd-15 text-center">
+  <div class="d-ib text-start card dashboard-card wd-400">
+    <div class="card-header">
+      {{ "ProjectUpload.UploadResults" | translate }}
+    </div>
+    <div class="card-body pd-15">
+      @if (loading()) {
+      <div class="w-100 text-center">
+        <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+        <h3 class="pd-t-20">
+          @if (isXlsx()) {
+          {{ "ProjectUpload.LoadingExcel" | translate }}
+          } @else if (isMpp()) {
+          {{ "ProjectUpload.LoadingProject" | translate }}
+          }
+        </h3>
+      </div>
+      } @else if ((errors() ?? []).length > 0) {
+      {{ (errors() ?? []).length }}
+      {{ "ProjectUpload.UploadError" | translate }}
+      } @else { @if (stats(); as stats) {
+
+      <ul class="list-group pd-t-20 w-100 d-ib">
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center border-0"
+        >
+          {{ "General.Tasks" | translate }}
+
+          <span>{{ stats.tasks }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center border-0"
+        >
+          {{ "General.Phases" | translate }}
+
+          <span>{{ stats.phases }}</span>
+        </li>
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center border-0"
+        >
+          {{ "General.People" | translate }}
+
+          <span>{{ stats.people }}</span>
+        </li>
+      </ul>
+      }
+      <div class="w-100 text-center">
+        <a class="btn btn-primary mg-t-20" [routerLink]="'../options'">
+          {{ "General.Continue" | translate }}
+        </a>
+      </div>
+      }
+    </div>
+  </div>
+</div>

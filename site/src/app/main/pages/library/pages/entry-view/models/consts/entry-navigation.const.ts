@@ -4,9 +4,9 @@ import { ENTRY_PAGES } from './entry-pages.const';
 
 const settings: NavigationLink[] = [
   {
+    route: ['settings', 'general'],
     text: 'General.General',
     section: 'general',
-    route: ['settings', 'general'],
     claim: LIBRARY_CLAIMS.UPDATE,
   },
   {

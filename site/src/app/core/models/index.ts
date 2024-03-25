@@ -9,6 +9,8 @@ export * from './ai-model.model';
 export * from './category.model';
 export * from './chat-comment.model';
 export * from './claim-filter.model';
+export * from './import-person.model';
+export * from './import-result-stats.model';
 export * from './invite.model';
 export * from './library-entry-node.model';
 export * from './library-entry-version.model';

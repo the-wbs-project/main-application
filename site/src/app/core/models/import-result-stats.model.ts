@@ -1,4 +1,4 @@
-export interface ResultStats {
+export interface ImportResultStats {
   disciplines: number;
   people: number;
   phases: number;

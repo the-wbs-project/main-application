@@ -3,7 +3,13 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Project, ProjectImportResult, UploadResults } from '@wbs/core/models';
+import {
+  ImportPerson,
+  ImportResultStats,
+  Project,
+  ProjectImportResult,
+  UploadResults,
+} from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { Transformers, Utils } from '@wbs/main/services';
 import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
@@ -25,7 +31,7 @@ import {
   SetPageTitle,
   SetProject,
 } from '../actions';
-import { PeopleListItem, PhaseListItem, ResultStats } from '../models';
+import { PhaseListItem } from '../models';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -38,13 +44,13 @@ interface StateModel {
   fileType?: string;
   loadingFile: boolean;
   pageTitle?: string;
-  peopleList?: PeopleListItem[];
+  peopleList?: ImportPerson[];
   phaseList?: PhaseListItem[];
   project?: Project;
   rawFile?: FileInfo;
   saving: boolean;
   started: boolean;
-  stats?: ResultStats;
+  stats?: ImportResultStats;
   uploadResults?: UploadResults<ProjectImportResult>;
 }
 
@@ -96,7 +102,7 @@ export class ProjectUploadState {
   }
 
   @Selector()
-  static peopleList(state: StateModel): PeopleListItem[] | undefined {
+  static peopleList(state: StateModel): ImportPerson[] | undefined {
     return state.peopleList;
   }
 
@@ -116,7 +122,7 @@ export class ProjectUploadState {
   }
 
   @Selector()
-  static stats(state: StateModel): ResultStats | undefined {
+  static stats(state: StateModel): ImportResultStats | undefined {
     return state.stats;
   }
 
@@ -238,7 +244,7 @@ export class ProjectUploadState {
 
     let phases = 0;
     const disciplines: string[] = [];
-    const peopleList: PeopleListItem[] = [];
+    const peopleList: ImportPerson[] = [];
 
     for (const row of state.uploadResults.results) {
       if (row.resources) {

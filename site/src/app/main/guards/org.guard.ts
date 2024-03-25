@@ -21,7 +21,6 @@ export const orgGuard: (
       const org =
         list.find((org) => org.name === route.params['org']) ?? list[0];
 
-      console.log(org);
       return store.dispatch(new ChangeOrganization(org)).pipe(map(() => true));
     }),
     first()

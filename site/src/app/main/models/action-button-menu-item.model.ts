@@ -4,5 +4,6 @@ export class ActionButtonMenuItem {
   separator?: true;
   text?: string;
   icon?: IconDefinition;
+  route?: string[];
   action?: string;
 }

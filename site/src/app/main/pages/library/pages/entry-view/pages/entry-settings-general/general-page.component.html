@@ -6,14 +6,20 @@
   <div
     class="d-flex card-header bg-gray-200 text-uppercase tx-medium flex-align-center"
   >
-    <div class="flex-fill">
+    <div>
       {{ "General.GeneralSettings" | translate }}
     </div>
-    <div class="text-end">
+    <div class="flex-fill text-end">
+      @if (saveState() === 'saved') {
+      <div class="d-ib tx-success tx-12 mg-r-10">
+        <fa-icon [icon]="checkIcon" />&nbsp;
+        {{ "General.Saved" | translate }}
+      </div>
+      }
       <wbs-save-button
         size="sm"
         [disabled]="!canSave()"
-        [state]="saveState()"
+        [isSaving]="saveState() === 'saving'"
         (click)="save()"
       />
     </div>
@@ -52,7 +58,7 @@
               class="btn btn-sm btn-outline-dark"
               (click)="askAi.set(true)"
             >
-              <fa-icon [icon]="faRobot" />
+              <fa-icon [icon]="aiIcon" />
               <span class="mg-l-5">
                 {{ "General.AskAi" | translate }}
               </span>
@@ -65,7 +71,7 @@
               class="btn btn-sm btn-outline-dark"
               (click)="askAi.set(true)"
             >
-              <fa-icon [icon]="faRobot" />
+              <fa-icon [icon]="aiIcon" />
               <span class="mg-l-5">
                 {{ "General.AskAi" | translate }}
               </span>
@@ -89,10 +95,10 @@
       </div>
       @if (entry.type === 'project') {
       <div class="row">
-        <label class="col-2 col-form-label">
+        <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
           {{ "LibraryCreate.ProjectCategory" | translate }}
         </label>
-        <div class="col-10">
+        <div class="col-md-10 col-sm-12">
           <wbs-project-category-dropdown
             [categories]="categories()"
             [category]="version.categories![0]"

@@ -1,0 +1,23 @@
+<div class="pd-15 text-center">
+  <div class="card dashboard-card d-ib wd-400 text-center">
+    <div class="card-header">
+      {{ "General.Status" | translate }}
+    </div>
+    <div class="card-body pd-15">
+      @if (!setup() || saving()) {
+      <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+      <h3 class="pd-t-20">
+        {{ "General.SavingChanges" | translate }}
+        ...
+      </h3>
+      } @else {
+      <fa-icon [icon]="faCheck" size="5x" />
+      <h3 class="pd-t-20">{{ "General.Done!" | translate }}</h3>
+      <br />
+      <a class="btn btn-primary mg-t-20" [routerLink]="url()">
+        {{ "General.Continue" | translate }}
+      </a>
+      }
+    </div>
+  </div>
+</div>

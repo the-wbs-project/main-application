@@ -1,10 +1,8 @@
-@if (menu()) {
 <button #anchor class="btn btn-sm btn-outline-dark mg-y-4" (click)="toggle()">
   <fa-icon [icon]="faBoltLightning" />
   &nbsp; {{ "General.Actions" | translate }}
 </button>
-
-@if (show) {
+@if (show()) {
 <kendo-popup
   #popup
   [anchor]="anchor"
@@ -21,6 +19,20 @@
       @for (item of menu(); track index; let index = $index) { @if
       (item.separator) {
       <li aria-hidden="true" class="k-separator k-item mg-y-2-f">&nbsp;</li>
+      } @else if (item.route) {
+      <li
+        tabindex="-1"
+        role="menuitem"
+        class="k-item k-menu-item tx-12-f"
+        [class.k-last]="menu.length === index + 1"
+        [attr.aria-label]="item.text! | translate"
+        (click)="goto(item.route!)"
+      >
+        <span role="presentation" class="k-link k-menu-link">
+          <fa-icon [icon]="item.icon!" />&nbsp;
+          {{ item.text! | translate }}
+        </span>
+      </li>
       } @else {
       <li
         tabindex="-1"
@@ -39,4 +51,4 @@
     </ul>
   </div>
 </kendo-popup>
-} }
+}

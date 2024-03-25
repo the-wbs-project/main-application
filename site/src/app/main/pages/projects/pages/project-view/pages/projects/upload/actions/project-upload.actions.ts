@@ -1,6 +1,6 @@
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { Project, ProjectUploadData } from '@wbs/core/models';
-import { PeopleListItem, PhaseListItem } from '../models';
+import { ImportPerson, Project, ProjectUploadData } from '@wbs/core/models';
+import { PhaseListItem } from '../models';
 
 export class SetProject {
   static readonly type = '[Project Upload] Set Project';
@@ -46,7 +46,7 @@ export class PhasesCompleted {
 
 export class PeopleCompleted {
   static readonly type = '[Project Upload] People Completed';
-  constructor(readonly results: PeopleListItem[]) {}
+  constructor(readonly results: ImportPerson[]) {}
 }
 
 export class PrepUploadToSave {

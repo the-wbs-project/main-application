@@ -436,9 +436,11 @@
     "section": "ProjectUpload",
     "locale": "en-US",
     "values": {
+      "FileUpload": "File Upload",
       "PagesUploadProjectPlan": "Upload Project Plan",
       "PagesOptions": "Options",
       "GetStartedMessage": "To get started upload your project plan using the control below. Once uploaded we will guide you through the rest of the process.",
+      "GetStartedMessageLibrary": "To get started upload a work breakdown structure. Once uploaded we will guide you through the rest of the process.",
       "UploadInstruction": "Drag or click to select your project plan",
       "SupportedFiles": "Supported DIY Files",
       "UnsupportedFiles": "Unsupported DIY Files",
@@ -472,7 +474,8 @@
       "LoadingProject": "Loading MS Project File...",
       "LoadedExcel": "Loaded Excel File",
       "LoadedProject": "Loaded MS Project File",
-      "UploadError": "Unexpected errors occured uploading the file. More explanations of these errors at a later time"
+      "UploadError": "Unexpected errors occured uploading the file. More explanations of these errors at a later time",
+      "UploadResults": "Upload Results"
     }
   },
   {

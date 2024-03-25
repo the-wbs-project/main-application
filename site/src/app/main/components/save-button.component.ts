@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
-import { faCheck, faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
+import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -17,27 +17,24 @@ import { TranslateModule } from '@ngx-translate/core';
   template: `<button
     class="btn btn-success"
     [ngClass]="sizeClass()"
-    [disabled]="disabled() || state() === 'saving'"
+    [disabled]="disabled() || isSaving()"
   >
-    @switch (state()) { @case ('ready') {
-    <fa-icon [icon]="faFloppyDisk" />&nbsp; {{ 'General.Save' | translate }}
-    } @case ('saving') {
+    @if (isSaving()) {
     <fa-duotone-icon [icon]="faSpinner" [spin]="true" /> &nbsp;
     {{ 'General.Saving' | translate }}
-    } @case ('saved') {
-    <fa-icon [icon]="faCheck" /> &nbsp; {{ 'General.Saved' | translate }}
-    } }
+    } @else {
+    <fa-icon [icon]="faFloppyDisk" />&nbsp; {{ 'General.Save' | translate }}
+    }
   </button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, TranslateModule],
 })
 export class SaveButtonComponent {
-  readonly faCheck = faCheck;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faSpinner = faSpinner;
   readonly disabled = input(false);
   readonly size = input<'lg' | 'sm' | undefined>(undefined);
-  readonly state = input.required<'ready' | 'saving' | 'saved'>();
+  readonly isSaving = input.required();
   readonly click = output<void>();
 
   protected readonly sizeClass = computed(() => {

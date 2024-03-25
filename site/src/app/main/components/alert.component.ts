@@ -28,6 +28,9 @@ import { TranslateModule } from '@ngx-translate/core';
         <fa-icon [icon]="icon()" size="xl" />
       </div>
       <div class="flex-fill">
+        @if (heading(); as heading) {
+        <h4 class="alert-heading">{{ heading | translate }}</h4>
+        }
         {{ message() | translate }}
       </div>
     </div>
@@ -37,6 +40,7 @@ import { TranslateModule } from '@ngx-translate/core';
 })
 export class AlertComponent {
   readonly type = input.required<'success' | 'danger' | 'warning' | 'info'>();
+  readonly heading = input<string>();
   readonly message = input.required<string>();
   readonly animation = input<boolean>(true);
   readonly dismissible = input<boolean>(true);

@@ -1,13 +1,11 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
+  computed,
+  inject,
   input,
-  signal,
 } from '@angular/core';
-import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { ActionButtonComponent } from '@wbs/main/components/action-button';
-import { ActionButtonMenuItem } from '@wbs/main/models';
 import { EntryActionButtonService } from '../services';
 
 @Component({
@@ -21,23 +19,12 @@ import { EntryActionButtonService } from '../services';
   imports: [ActionButtonComponent],
   providers: [EntryActionButtonService],
 })
-export class EntryActionButtonComponent implements OnChanges {
+export class EntryActionButtonComponent {
+  readonly service = inject(EntryActionButtonService);
+
+  readonly entryUrl = input.required<string[]>();
   readonly claims = input.required<string[]>();
-  readonly entry = input.required<LibraryEntry | undefined>();
-  readonly version = input.required<LibraryEntryVersion | undefined>();
-  readonly menu = signal<ActionButtonMenuItem[] | undefined>(undefined);
-
-  show = false;
-
-  constructor(readonly service: EntryActionButtonService) {}
-
-  ngOnChanges(): void {
-    const entry = this.entry();
-    const claims = this.claims();
-    const version = this.version();
-
-    if (entry && claims && version) {
-      this.menu.set(this.service.buildMenu(entry, version, claims));
-    }
-  }
+  readonly menu = computed(() =>
+    this.service.buildMenu(this.entryUrl(), this.claims())
+  );
 }
