@@ -263,21 +263,16 @@ export class EntryTaskService {
         toSave.push(sibling);
       }
 
+      task.order =
+        Math.max(
+          ...tasks
+            .filter((x) => x.parentId === parent.parentId)
+            .map((x) => x.order)
+        ) + 1;
       task.parentId = parent.parentId;
-      task.order = parent.order + 1;
 
       toSave.push(task);
-      //
-      //  Renumber the new siblings
-      //
-      for (const sibling of tasks.filter(
-        (x) => x.parentId === parent.parentId
-      )) {
-        if (sibling.order <= parent.order || sibling.id === task.id) continue;
 
-        sibling.order++;
-        toSave.push(sibling);
-      }
       const parentVm = this.getTaskViewModel(task?.parentId);
       const tolevel = parentVm ? `${parentVm.levelText}.${taskVm.order}` : '??';
 
