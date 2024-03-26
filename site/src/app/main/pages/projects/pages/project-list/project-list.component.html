@@ -1,7 +1,14 @@
 <div class="d-flex">
   <div class="border-end pd-r-20 d-none d-lg-block">
     <div class="wd-250">
-      <wbs-project-list-filters [(filters)]="filters" position="side" />
+      <wbs-project-list-filters
+        position="side"
+        [(stati)]="stati"
+        [(search)]="search"
+        [(categories)]="categories"
+        [cats]="projectCategories()"
+        [(assignedToMe)]="assignedToMe"
+      />
     </div>
   </div>
   <div class="mg-t-20 mg-b-16 flex-grow-1">
@@ -32,10 +39,17 @@
             animate__slideInUp: filterToggle,
           }"
         >
-          <wbs-project-list-filters [(filters)]="filters" position="top" />
+          <wbs-project-list-filters
+            position="top"
+            [(stati)]="stati"
+            [(search)]="search"
+            [(categories)]="categories"
+            [cats]="projectCategories()"
+            [(assignedToMe)]="assignedToMe"
+          />
         </div>
       </div>
-      @if (projects() | projectFilter : filters; as projects) {
+      @if (filteredList(); as projects) {
       <div class="row">
         @if (!loading() && projects.length === 0) {
         <div class="col-12 pd-t-100 tx-20 tx-center">

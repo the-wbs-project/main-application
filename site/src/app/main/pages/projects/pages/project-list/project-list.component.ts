@@ -1,21 +1,26 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  OnInit,
+  computed,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { PROJECT_STATI } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { ListItem, PROJECT_STATI, Project } from '@wbs/core/models';
+import { ProjectService, sorter } from '@wbs/core/services';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
-import { MetadataState } from '@wbs/main/states';
-import { ProjectListFiltersComponent } from './components/project-list-filters/project-list-filters.component';
-import { ProjectListFilters } from './models';
-import { ProjectFilterPipe } from './pipes/project-filter.pipe';
-import { ProjectListState } from './states';
+import { ProjectListFiltersComponent } from './components/project-list-filters';
 
 @Component({
   standalone: true,
@@ -28,34 +33,78 @@ import { ProjectListState } from './states';
     PageHeaderComponent,
     ProjectCategoryLabelPipe,
     ProjectListFiltersComponent,
-    ProjectFilterPipe,
     RouterModule,
     TranslateModule,
   ],
 })
-export class ProjectListComponent {
+export class ProjectListComponent implements OnInit {
+  private readonly data = inject(DataServiceFactory);
+  private readonly service = inject(ProjectService);
+
+  readonly plusIcon = plusIcon;
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
-
-  filterToggle = false;
-  filters: ProjectListFilters = {
-    assignedToMe:
-      this.store.selectSnapshot(ProjectListState.anyAssignedTome) ?? false,
-    stati: [
-      PROJECT_STATI.PLANNING,
-      PROJECT_STATI.APPROVAL,
-      PROJECT_STATI.EXECUTION,
-      PROJECT_STATI.FOLLOW_UP,
-    ],
-    categories: this.store
-      .selectSnapshot(MetadataState.projectCategories)
-      .map((c) => c.id),
-  };
+  readonly loading = signal(true);
+  readonly projects = signal<Project[]>([]);
+  readonly owner = input.required<string>();
+  readonly userId = input.required<string>();
+  readonly projectCategories = input.required<ListItem[]>();
+  readonly assignedToMe = signal(false);
+  readonly stati = signal([
+    PROJECT_STATI.PLANNING,
+    PROJECT_STATI.APPROVAL,
+    PROJECT_STATI.EXECUTION,
+    PROJECT_STATI.FOLLOW_UP,
+  ]);
+  readonly search = signal<string | undefined>(undefined);
+  readonly categories = signal<string[]>([]);
+  readonly filteredList = computed(() =>
+    this.filter(
+      this.projects(),
+      this.userId(),
+      this.search(),
+      this.assignedToMe(),
+      this.stati(),
+      this.categories()
+    )
+  );
   expanded = true;
+  filterToggle = false;
 
-  readonly projects = this.store.select(ProjectListState.list);
-  readonly loading = this.store.select(ProjectListState.loading);
-  readonly plusIcon = plusIcon;
+  ngOnInit(): void {
+    this.categories.set(this.projectCategories().map((c) => c.id));
 
-  constructor(private readonly store: SignalStore) {}
+    this.data.projects.getAllAsync(this.owner()).subscribe((projects) => {
+      this.projects.set(
+        projects.sort((a, b) => sorter(a.lastModified, b.lastModified, 'desc'))
+      );
+      this.loading.set(false);
+    });
+  }
+
+  private filter(
+    list: Project[],
+    userId: string,
+    search: string | undefined,
+    assignedToMe: boolean,
+    stati: PROJECT_STATI[],
+    categories: string[]
+  ): Project[] {
+    console.log(list);
+    console.log(stati);
+    if (list == null || list.length === 0) return list;
+
+    if (search) list = this.service.filterByName(list, search);
+
+    if (assignedToMe) {
+      list = list.filter(
+        (project) =>
+          project.roles?.some((role) => role.userId === userId) ?? false
+      );
+    }
+    list = this.service.filterByStati(list, stati);
+    list = this.service.filterByCategories(list, categories);
+
+    return list;
+  }
 }

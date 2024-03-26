@@ -1,178 +1,168 @@
-<ng-template [ngIf]="position() === 'side'">
-  <h4 class="w-100 tx-center pd-t-15">
-    {{ "General.ProjectList" | translate }}
-  </h4>
-  <br />
-  <input
-    [(ngModel)]="filters().search"
-    type="text"
-    id="projectSearch"
-    autocomplete="off"
-    class="form-control w-100"
-    [placeholder]="'Projects.SearchProjects' | translate"
-  />
-  <br />
-  <label
-    class="tx-12 tx-bold"
-    for="switch"
-    (click)="changedAssignedToMe(!filters().assignedToMe)"
-  >
-    {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
-  </label>
-  <wbs-switch
-    #switch
-    size="sm"
-    [value]="filters().assignedToMe"
-    (valueChange)="changedAssignedToMe($event)"
-  />
-  <br />
-  <br />
-  <label class="tx-12 tx-bold" for="switch">
-    {{ "General.Status" | translate }}:
-  </label>
+@if (position() === 'side') {
+<h4 class="w-100 tx-center pd-t-15">
+  {{ "General.ProjectList" | translate }}
+</h4>
+<br />
+<input
+  type="text"
+  [(ngModel)]="search"
+  id="projectSearch"
+  autocomplete="off"
+  class="form-control w-100"
+  [placeholder]="'Projects.SearchProjects' | translate"
+/>
+<br />
+<label
+  class="tx-12 tx-bold"
+  for="switch"
+  (click)="assignedToMe.set(!assignedToMe())"
+>
+  {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
+</label>
+<wbs-switch #switch size="sm" [(value)]="assignedToMe" />
+<br />
+<br />
+<label class="tx-12 tx-bold" for="switch">
+  {{ "General.Status" | translate }}:
+</label>
+@for (status of statiList; track $index) {
+<div class="mg-t-10 mg-l-15">
+  <div class="d-ib wd-200 tx-12">
+    <input
+      [name]="status"
+      kendoCheckbox
+      type="checkbox"
+      [ngModel]="stati()!.indexOf(status) > -1"
+      (change)="changeList(stati, status)"
+    />
+    <label [for]="status" class="mg-l-10">
+      {{ status | projectStatus }}
+    </label>
+  </div>
+  <a class="tx-10 pointer" (click)="stati.set([status])">
+    {{ "General.Only" | translate }}
+  </a>
+</div>
+}
 
-  <div *ngFor="let status of stati" class="mg-t-10 mg-l-15">
-    <div class="d-ib wd-200 tx-12">
-      <input
-        [name]="status"
-        kendoCheckbox
-        type="checkbox"
-        [ngModel]="filters().stati.indexOf(status) > -1"
-        (change)="changeList(filters().stati, status)"
-      />
-      <label [for]="status" class="mg-l-10">
-        {{ status | projectStatus }}
+<br />
+<label class="tx-12 tx-bold" for="switch">
+  {{ "General.Categories" | translate }}:
+</label>
+
+@for (cat of cats(); track cat.id) {
+<div class="mg-t-10 mg-l-15">
+  <div class="d-ib wd-200 tx-12">
+    <input
+      [name]="cat.id"
+      kendoCheckbox
+      type="checkbox"
+      [ngModel]="categories()!.includes(cat.id)"
+      (change)="changeList(categories, cat.id)"
+    />
+    <label [for]="cat.id" class="mg-l-10">
+      {{ cat.label | translate }}
+    </label>
+  </div>
+  <a class="tx-10 pointer" (click)="categories.set([cat.id])">
+    {{ "General.Only" | translate }}
+  </a>
+</div>
+} } @if (position() === 'top') {
+<div class="container-fluid">
+  <div class="row mg-b-10 d-xs-flex d-sm-none">
+    <div class="col-12 tx-center pd-b-10">
+      <label
+        class="tx-12 tx-bold"
+        for="switch"
+        (click)="assignedToMe.set(!assignedToMe())"
+      >
+        {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
       </label>
+      <wbs-switch #switch size="sm" [(value)]="assignedToMe" />
     </div>
-    <a class="tx-10 pointer" (click)="filters().stati = [status]">
-      {{ "General.Only" | translate }}
-    </a>
-  </div>
-
-  <br />
-  <label class="tx-12 tx-bold" for="switch">
-    {{ "General.Categories" | translate }}:
-  </label>
-
-  <div *ngFor="let cat of cats()" class="mg-t-10 mg-l-15">
-    <div class="d-ib wd-200 tx-12">
+    <div class="col-12">
       <input
-        [name]="cat.id"
-        kendoCheckbox
-        type="checkbox"
-        [ngModel]="filters().categories.includes(cat.id)"
-        (change)="changeList(filters().categories, cat.id)"
+        [(ngModel)]="search"
+        type="text"
+        autocomplete="off"
+        class="form-control w-100"
+        [placeholder]="'Projects.SearchProjects' | translate"
       />
-      <label [for]="cat.id" class="mg-l-10">
-        {{ cat.label | translate }}
+    </div>
+  </div>
+  <div class="row mg-b-10 d-none d-sm-flex">
+    <div class="col-6 pd-t-7 tx-center">
+      <label
+        class="tx-12 tx-bold"
+        for="switch"
+        (click)="assignedToMe.set(!assignedToMe())"
+      >
+        {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
       </label>
+      <wbs-switch #switch size="sm" [(value)]="assignedToMe" />
     </div>
-    <a class="tx-10 pointer" (click)="filters().categories = [cat.id]">
-      {{ "General.Only" | translate }}
-    </a>
-  </div>
-</ng-template>
-<ng-template [ngIf]="position() === 'top'">
-  <div class="container-fluid">
-    <div class="row mg-b-10 d-xs-flex d-sm-none">
-      <div class="col-12 tx-center pd-b-10">
-        <label
-          class="tx-12 tx-bold"
-          for="switch"
-          (click)="changedAssignedToMe(!filters().assignedToMe)"
-        >
-          {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
-        </label>
-        <wbs-switch
-          #switch
-          size="sm"
-          [value]="filters().assignedToMe"
-          (valueChange)="changedAssignedToMe($event)"
-        />
-      </div>
-      <div class="col-12">
-        <input
-          [(ngModel)]="filters().search"
-          type="text"
-          autocomplete="off"
-          class="form-control w-100"
-          [placeholder]="'Projects.SearchProjects' | translate"
-        />
-      </div>
-    </div>
-    <div class="row mg-b-10 d-none d-sm-flex">
-      <div class="col-6 pd-t-7 tx-center">
-        <label
-          class="tx-12 tx-bold"
-          for="switch"
-          (click)="changedAssignedToMe(!filters().assignedToMe)"
-        >
-          {{ "Projects.OnlyAssignedToMe" | translate }}:&nbsp;&nbsp;
-        </label>
-        <wbs-switch
-          #switch
-          size="sm"
-          [value]="filters().assignedToMe"
-          (valueChange)="changedAssignedToMe($event)"
-        />
-      </div>
-      <div class="col-6">
-        <input
-          [(ngModel)]="filters().search"
-          type="text"
-          autocomplete="off"
-          class="form-control w-100"
-          [placeholder]="'Projects.SearchProjects' | translate"
-        />
-      </div>
-    </div>
-    <div class="row">
-      <div class="col-sm-6 col-xs-12 pd-b-20">
-        <label class="tx-12 tx-bold" for="switch">
-          {{ "General.Status" | translate }}:
-        </label>
-
-        <div *ngFor="let status of stati" class="mg-t-10 mg-l-15">
-          <div class="d-ib wd-120 tx-12">
-            <input
-              [name]="status"
-              kendoCheckbox
-              type="checkbox"
-              [ngModel]="filters().stati.indexOf(status) > -1"
-              (change)="changeList(filters().stati, status)"
-            />
-            <label [for]="status" class="mg-l-10">
-              {{ status | projectStatus }}
-            </label>
-          </div>
-          <a class="tx-10 pointer" (click)="filters().stati = [status]">
-            {{ "General.Only" | translate }}
-          </a>
-        </div>
-      </div>
-
-      <div class="col-sm-6 col-xs-12">
-        <label class="tx-12 tx-bold">
-          {{ "General.Categories" | translate }}:
-        </label>
-        <div *ngFor="let cat of cats()" class="mg-t-10 mg-l-15">
-          <div class="d-ib wd-200 tx-12">
-            <input
-              [name]="cat.id"
-              kendoCheckbox
-              type="checkbox"
-              [ngModel]="filters().categories.includes(cat.id)"
-              (change)="changeList(filters().categories, cat.id)"
-            />
-            <label [for]="cat.id" class="mg-l-10">
-              {{ cat.label | translate }}
-            </label>
-          </div>
-          <a class="tx-10 pointer" (click)="filters().categories = [cat.id]">
-            {{ "General.Only" | translate }}
-          </a>
-        </div>
-      </div>
+    <div class="col-6">
+      <input
+        [(ngModel)]="search"
+        type="text"
+        autocomplete="off"
+        class="form-control w-100"
+        [placeholder]="'Projects.SearchProjects' | translate"
+      />
     </div>
   </div>
-</ng-template>
+  <div class="row">
+    <div class="col-sm-6 col-xs-12 pd-b-20">
+      <label class="tx-12 tx-bold" for="switch">
+        {{ "General.Status" | translate }}:
+      </label>
+
+      @for (status of statiList; track $index) {
+      <div class="mg-t-10 mg-l-15">
+        <div class="d-ib wd-120 tx-12">
+          <input
+            [name]="status"
+            kendoCheckbox
+            type="checkbox"
+            [ngModel]="stati().indexOf(status) > -1"
+            (change)="changeList(stati, status)"
+          />
+          <label [for]="status" class="mg-l-10">
+            {{ status | projectStatus }}
+          </label>
+        </div>
+        <a class="tx-10 pointer" (click)="stati.set([status])">
+          {{ "General.Only" | translate }}
+        </a>
+      </div>
+      }
+    </div>
+
+    <div class="col-sm-6 col-xs-12">
+      <label class="tx-12 tx-bold">
+        {{ "General.Categories" | translate }}:
+      </label>
+      @for (cat of cats(); track cat.id) {
+      <div class="mg-t-10 mg-l-15">
+        <div class="d-ib wd-200 tx-12">
+          <input
+            [name]="cat.id"
+            kendoCheckbox
+            type="checkbox"
+            [ngModel]="categories().includes(cat.id)"
+            (change)="changeList(categories, cat.id)"
+          />
+          <label [for]="cat.id" class="mg-l-10">
+            {{ cat.label | translate }}
+          </label>
+        </div>
+        <a class="tx-10 pointer" (click)="categories.set([cat.id])">
+          {{ "General.Only" | translate }}
+        </a>
+      </div>
+      }
+    </div>
+  </div>
+</div>
+}
