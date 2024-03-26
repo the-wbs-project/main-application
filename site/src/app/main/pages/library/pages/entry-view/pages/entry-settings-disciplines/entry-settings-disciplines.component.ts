@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
@@ -19,6 +19,7 @@ import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { EntryService, EntryState } from '../../services';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 
 @Component({
   standalone: true,
@@ -27,6 +28,7 @@ import { EntryService, EntryState } from '../../services';
   imports: [
     CategoryDialogComponent,
     DisciplineEditorComponent,
+    FadingMessageComponent,
     FontAwesomeModule,
     SaveButtonComponent,
     TranslateModule,
@@ -39,6 +41,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
   readonly state = inject(EntryState);
 
   readonly plus = faPlus;
+  readonly checkIcon = faCheck;
   readonly cats = input.required<Category[]>();
   readonly isDirty = signal(false);
   readonly showAddDialog = signal(false);
@@ -84,6 +87,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
           )
       )
       .pipe(
+        delay(1000),
         tap(() => {
           this.isDirty.set(false);
           this.saveState.set('saved');

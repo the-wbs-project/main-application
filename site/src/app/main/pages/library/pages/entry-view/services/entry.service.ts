@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { ActivatedRouteSnapshot } from '@angular/router';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryEntry,
@@ -6,12 +7,11 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
+import { Utils } from '@wbs/main/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
 import { EntryState } from './entry-state.service';
-import { Utils } from '@wbs/main/services';
-import { ActivatedRouteSnapshot } from '@angular/router';
 
 @Injectable()
 export class EntryService {
@@ -81,10 +81,7 @@ export class EntryService {
     version.description = description;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      map(() => {
-        this.messages.notify.success('Library.DescriptionChanged');
-        this.state.setVersion(version);
-      }),
+      tap(() => this.state.setVersion(version)),
       switchMap(() =>
         this.activity.entryTitleChanged(
           entry.id,

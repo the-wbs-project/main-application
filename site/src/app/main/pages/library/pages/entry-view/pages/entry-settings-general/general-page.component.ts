@@ -18,6 +18,7 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ListItem } from '@wbs/core/models';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
@@ -34,6 +35,7 @@ import { EntryService, EntryState } from '../../services';
     DescriptionAiDialogComponent,
     DialogModule,
     EditorModule,
+    FadingMessageComponent,
     FontAwesomeModule,
     FormsModule,
     InfoMessageComponent,

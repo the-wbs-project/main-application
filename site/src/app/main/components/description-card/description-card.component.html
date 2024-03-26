@@ -4,6 +4,12 @@
 
     @if (!editMode()) {
     <div class="flex-fill tx-right">
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saveState() === 'saved'"
+        cssClass="tx-success tx-12 mg-r-10"
+      />
       <fa-icon
         size="lg"
         class="pointer"
@@ -18,22 +24,27 @@
 @if (editMode()) {
 <div class="card-body text-center">
   <div class="d-ib w-100" style="max-width: 1000px">
-    <div class="d-flex w-100 text-end mg-b-15">
-      <div class="text-start flex-align-center flex-fill pd-t-10 tx-18">
+    <div class="d-flex w-100 text-end mg-b-10">
+      <div class="text-start flex-align-center flex-fill tx-18">
         {{ "General.DescriptionEditor" | translate }}
       </div>
-      <button class="btn btn-primary mg-l-15" (click)="askAi.set(true)">
-        <fa-icon size="lg" [icon]="faComment" class="mg-r-5" />
-        {{ "General.AskAi" | translate }}
-      </button>
-      <button class="btn btn-success mg-l-15" (click)="save(editDescription)">
-        <fa-icon size="lg" [icon]="faFloppyDisk" class="mg-r-5" />
-        {{ "General.Save" | translate }}
-      </button>
-      <button class="btn btn-danger mg-l-15" (click)="cancel()">
-        <fa-icon size="lg" [icon]="faXmark" class="mg-r-5" />
-        {{ "General.Cancel" | translate }}
-      </button>
+      <div>
+        <button class="btn btn-primary tx-12" (click)="askAi.set(true)">
+          <fa-icon [icon]="faComment" class="mg-r-5" />
+          {{ "General.AskAi" | translate }}
+        </button>
+      </div>
+      <wbs-save-button
+        cssClass="mg-l-15 tx-12 "
+        [isSaving]="saveState() === 'saving'"
+        (click)="save(editDescription)"
+      />
+      <div>
+        <button class="btn btn-danger mg-l-15 tx-12" (click)="cancel()">
+          <fa-icon [icon]="faXmark" class="mg-r-5" />
+          {{ "General.Cancel" | translate }}
+        </button>
+      </div>
     </div>
     <kendo-editor class="form-control" [(ngModel)]="editDescription" />
     <div class="w-100 text-start">

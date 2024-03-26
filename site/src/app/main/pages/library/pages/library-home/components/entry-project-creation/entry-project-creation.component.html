@@ -69,7 +69,6 @@
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
         <div class="text-start">
-          {{ phases()[0].selected }}
           <wbs-phase-editor [(categories)]="phases" />
         </div>
       </div>
@@ -86,7 +85,10 @@
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
         <div class="d-ib w-100" style="max-width: 500px">
-          <wbs-discipline-editor [showAdd]="true" [(categories)]="disciplines" />
+          <wbs-discipline-editor
+            [showAdd]="true"
+            [(categories)]="disciplines"
+          />
         </div>
       </div>
       } @else if (view() === 3) {

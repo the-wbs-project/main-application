@@ -4,6 +4,7 @@ import {
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
@@ -17,6 +18,7 @@ import { TaskModalService } from '@wbs/main/services';
 import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { EntryService, EntryState } from '../../services';
 import { DetailsCardComponent } from './components/details-card';
+import { delay, tap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -45,11 +47,24 @@ export class AboutPageComponent {
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
   readonly disciplines = input.required<ListItem[]>();
+  readonly descriptionSaveState = signal<'ready' | 'saving' | 'saved'>('ready');
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
 
   descriptionChange(description: string): void {
-    this.entryService.descriptionChangedAsync(description).subscribe();
+    this.descriptionSaveState.set('saving');
+
+    this.entryService
+      .descriptionChangedAsync(description)
+      .pipe(
+        delay(1000),
+        tap(() => {
+          this.descriptionEditMode.set(false);
+          this.descriptionSaveState.set('saved');
+        }),
+        delay(5000)
+      )
+      .subscribe(() => this.descriptionSaveState.set('ready'));
   }
 
   aiChangeSaved(description: string): void {

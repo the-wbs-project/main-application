@@ -25,7 +25,6 @@ import { EntryTypeDescriptionPipe } from '../../pipes/entry-type-description.pip
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
 import { EntryCreationService } from './services';
-import { TitleService } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -55,21 +54,16 @@ export class LibraryListComponent implements OnInit {
   readonly faFilters = faFilters;
   readonly createMenu = ['project', 'phase', 'task'];
 
-  readonly owner = input.required<string>();
+  readonly org = input.required<string>();
   readonly entries = signal<LibraryEntryViewModel[]>([]);
 
   filterToggle = false;
-
   expanded = true;
 
   readonly plusIcon = plusIcon;
 
-  constructor(title: TitleService) {
-    title.setTitle('General.Library', true);
-  }
-
   ngOnInit(): void {
-    this.data.libraryEntries.getAllAsync(this.owner()).subscribe((entries) => {
+    this.data.libraryEntries.getAllAsync(this.org()).subscribe((entries) => {
       this.entries.set(entries);
     });
   }
@@ -79,7 +73,7 @@ export class LibraryListComponent implements OnInit {
   }
 
   create(type: string): void {
-    this.creation.runAsync(this.owner(), type).subscribe((results) => {
+    this.creation.runAsync(this.org(), type).subscribe((results) => {
       console.log(results);
       if (results == undefined) return;
 
@@ -104,7 +98,7 @@ export class LibraryListComponent implements OnInit {
         });
       } else {
         const url = [
-          '/' + this.owner(),
+          '/' + this.org(),
           'library',
           'view',
           results.entry.owner,

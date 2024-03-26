@@ -10,12 +10,12 @@
       {{ "General.GeneralSettings" | translate }}
     </div>
     <div class="flex-fill text-end">
-      @if (saveState() === 'saved') {
-      <div class="d-ib tx-success tx-12 mg-r-10">
-        <fa-icon [icon]="checkIcon" />&nbsp;
-        {{ "General.Saved" | translate }}
-      </div>
-      }
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saveState() === 'saved'"
+        cssClass="tx-success tx-12 mg-r-10"
+      />
       <wbs-save-button
         size="sm"
         [disabled]="!canSave()"

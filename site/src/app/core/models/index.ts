@@ -36,6 +36,7 @@ export * from './resource-record.model';
 export * from './resource-sections.model';
 export * from './role-ids.model';
 export * from './role.model';
+export * from './save-state.type';
 export * from './threaded-discussion.model';
 export * from './training-material.model';
 export * from './upload-results.model';

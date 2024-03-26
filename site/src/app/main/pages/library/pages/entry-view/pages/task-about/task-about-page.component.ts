@@ -33,7 +33,6 @@ import { DetailsCardComponent } from './components/details-card';
   templateUrl: './task-about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    AlertComponent,
     CheckPipe,
     DateTextPipe,
     DescriptionCardComponent,
@@ -62,9 +61,9 @@ export class TaskAboutPageComponent {
   readonly claims = input.required<string[]>();
   readonly taskId = input.required<string>();
   readonly disciplines = input.required<ListItem[]>();
-  readonly saveState = signal<'saving' | 'saved' | undefined>(undefined);
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
+  readonly descriptionSaveState = signal<'ready' | 'saving' | 'saved'>('ready');
   readonly disciplineFullList = computed(() => {
     const disciplines = this.state.version()?.disciplines;
 
@@ -78,14 +77,19 @@ export class TaskAboutPageComponent {
   readonly task = this.state.getTask(this.taskId);
 
   descriptionChange(description: string): void {
-    this.saveState.set('saving');
+    this.descriptionSaveState.set('saving');
+
     this.taskService
       .descriptionChangedAsync(this.task()!.id, description)
       .pipe(
-        tap(() => this.saveState.set('saved')),
+        delay(1000),
+        tap(() => {
+          this.descriptionEditMode.set(false);
+          this.descriptionSaveState.set('saved');
+        }),
         delay(5000)
       )
-      .subscribe(() => this.saveState.set(undefined));
+      .subscribe(() => this.descriptionSaveState.set('ready'));
   }
 
   aiChangeSaved(description: string): void {

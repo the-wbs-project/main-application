@@ -110,7 +110,6 @@ export class EntryTaskService {
     return this.data.libraryEntryNodes
       .putAsync(this.owner, this.entryId, this.version, [task], [])
       .pipe(
-        tap(() => this.messages.notify.success('Library.TitleChanged')),
         tap(() => this.state.tasksChanged([task])),
         switchMap(() =>
           this.activity.taskTitleChanged(

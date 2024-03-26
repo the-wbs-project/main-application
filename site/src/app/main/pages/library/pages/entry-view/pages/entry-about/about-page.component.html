@@ -13,6 +13,7 @@
       <wbs-description-card
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"
+        [saveState]="descriptionSaveState()"
         [description]="state.version()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         (descriptionChange)="descriptionChange($event)"

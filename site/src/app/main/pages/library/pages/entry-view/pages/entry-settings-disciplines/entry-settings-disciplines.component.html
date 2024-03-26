@@ -11,7 +11,12 @@
         {{ "Wbs.WbsDisciplines" | translate }}
       </div>
       <div class="text-end">
-        SHOW SAVED!
+        <wbs-fading-message
+          [icon]="checkIcon"
+          message="General.Saved"
+          [show]="saveState() === 'saved'"
+          cssClass="tx-success tx-12 mg-r-10"
+        />
         <button
           class="btn btn-sm btn-dark mg-r-10"
           (click)="showAddDialog.set(true)"

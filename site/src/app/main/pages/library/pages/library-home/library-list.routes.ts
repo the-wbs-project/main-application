@@ -1,26 +1,19 @@
 import { inject } from '@angular/core';
-import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { Routes } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
 import { SetBreadcrumbs } from '@wbs/main/actions';
-import { Utils, orgResolve } from '@wbs/main/services';
+import { orgResolve } from '@wbs/main/services';
 import { map } from 'rxjs/operators';
 
-export const loadGuard = (route: ActivatedRouteSnapshot) => {
+export const loadGuard = () => {
   const store = inject(Store);
   const titleService = inject(TitleService);
 
-  titleService.setTitle('Pages.Projects', true);
+  titleService.setTitle('General.Library', true);
 
   return store
-    .dispatch([
-      //new LoadProjects(owner),
-      new SetBreadcrumbs([
-        {
-          text: 'Pages.Projects',
-        },
-      ]),
-    ])
+    .dispatch([new SetBreadcrumbs([{ text: 'General.Library' }])])
     .pipe(map(() => true));
 };
 
@@ -31,8 +24,7 @@ export const routes: Routes = [
       import('./library-list.component').then((x) => x.LibraryListComponent),
     canActivate: [loadGuard],
     resolve: {
-      owner: orgResolve,
+      org: orgResolve,
     },
-    //providers: [importProvidersFrom(NgxsModule.forFeature([ProjectListState]))],
   },
 ];
