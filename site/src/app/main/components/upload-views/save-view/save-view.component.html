@@ -4,7 +4,7 @@
       {{ "General.Status" | translate }}
     </div>
     <div class="card-body pd-15">
-      @if (!setup() || saving()) {
+      @if (saving()) {
       <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
       <h3 class="pd-t-20">
         {{ "General.SavingChanges" | translate }}

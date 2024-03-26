@@ -11,7 +11,7 @@
       />
       <wbs-uploader
         [zoneMessage]="'ProjectUpload.UploadInstruction' | translate"
-        (uploaded)="onSelect($event)"
+        (uploaded)="fileUploaded.emit($event)"
       />
     </div>
   </div>
