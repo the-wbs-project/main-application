@@ -55,16 +55,19 @@ export const PROJECT_NAVIGATION: NavigationLink[] = [
   {
     route: [PROJECT_PAGES.ABOUT],
     text: 'General.About',
+    section: 'about',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
     route: [PROJECT_PAGES.TASKS],
     text: 'General.Tasks',
+    section: 'tasks',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
     route: [PROJECT_PAGES.TIMELINE],
     text: 'General.Timeline',
+    section: 'timeline',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {

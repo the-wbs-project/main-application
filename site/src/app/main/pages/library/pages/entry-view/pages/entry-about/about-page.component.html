@@ -23,16 +23,11 @@
 </div>
 
 @if (askAi()) {
-<kendo-dialog
-  height="100%"
-  [title]="'General.AskAi' | translate"
-  [width]="modal.dialogWidth()"
-  (close)="askAi.set(false)"
->
-  <wbs-description-ai-dialog
-    [versionTitle]="state.version()!.title"
-    [description]="state.version()!.description"
-    (descriptionChange)="aiChangeSaved($event)"
-  />
-</kendo-dialog>
+<wbs-description-ai-dialog
+  [description]="state.version()!.description"
+  getStartedLabel="AI.GetStartedLibraryEntry"
+  [startingDialog]="descriptionAiStartingDialog()"
+  (descriptionChange)="aiChangeSaved($event)"
+  (closed)="askAi.set(false)"
+/>
 }

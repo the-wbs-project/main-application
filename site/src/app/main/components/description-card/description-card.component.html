@@ -1,6 +1,9 @@
 <div class="card-header">
   <div class="d-flex flex-align-center">
-    <div>{{ "General.Description" | translate }}</div>
+    <div>
+      {{ "General.Description" | translate }} &nbsp;
+      <wbs-approval-badge [approval]="approval()" />
+    </div>
 
     @if (!editMode()) {
     <div class="flex-fill tx-right">

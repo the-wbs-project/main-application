@@ -1,5 +1,10 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faBadge,
@@ -7,9 +12,7 @@ import {
   faQuestion,
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
-import { Store } from '@ngxs/store';
 import { ProjectApproval } from '@wbs/core/models';
-import { SetApproval } from '../actions';
 
 @Component({
   standalone: true,
@@ -24,7 +27,7 @@ import { SetApproval } from '../actions';
         'tx-danger-f': approval.isApproved === false
       }"
       [title]="approval.id + ' ' + approval.isApproved"
-      (click)="setApproval()"
+      (click)="setApproval.emit()"
     >
       <fa-layers [fixedWidth]="true" size="2x">
         <fa-icon [icon]="faBadge" />
@@ -49,15 +52,10 @@ export class ApprovalBadgeComponent {
   readonly approval = input<ProjectApproval>();
   readonly childrenIds = input<string[] | undefined>();
   readonly fontSize = input<number>(11);
+  readonly setApproval = output<void>();
 
   readonly faQuestion = faQuestion;
   readonly faX = faX;
   readonly faCheck = faCheck;
   readonly faBadge = faBadge;
-
-  constructor(private readonly store: Store) {}
-
-  setApproval(): void {
-    this.store.dispatch(new SetApproval(this.approval(), this.childrenIds()));
-  }
 }

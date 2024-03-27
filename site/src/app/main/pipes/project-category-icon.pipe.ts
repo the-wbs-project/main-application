@@ -8,6 +8,8 @@ export class ProjectCategoryIconPipe implements PipeTransform {
   constructor(private readonly store: Store) {}
 
   transform(idsOrCat: string | undefined): string {
+    if (!idsOrCat) return '';
+    
     return (
       this.store
         .selectSnapshot(MetadataState.categoryIcons)

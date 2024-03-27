@@ -2,12 +2,7 @@ import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
-import {
-  IdService,
-  Messages,
-  ProjectService,
-  Resources,
-} from '@wbs/core/services';
+import { IdService, Messages, Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers, WbsNodeService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
@@ -32,7 +27,11 @@ import {
   VerifyTasks,
 } from '../actions';
 import { TASK_PAGES } from '../models';
-import { ProjectNavigationService, TimelineService } from '../services';
+import {
+  ProjectNavigationService,
+  ProjectService,
+  TimelineService,
+} from '../services';
 
 interface StateModel {
   currentId?: string;

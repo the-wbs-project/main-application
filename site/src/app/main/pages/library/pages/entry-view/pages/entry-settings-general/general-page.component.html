@@ -112,15 +112,11 @@
 </div>
 
 @if (askAi()) {
-<kendo-dialog
-  [title]="'General.AskAi' | translate"
-  height="90%"
-  (close)="askAi.set(false)"
->
-  <wbs-description-ai-dialog
-    [versionTitle]="version.title"
-    [(description)]="version.description"
-    (descriptionChange)="askAi.set(false)"
-  />
-</kendo-dialog>
+<wbs-description-ai-dialog
+  [(description)]="version.description"
+  getStartedLabel="AI.GetStartedLibraryEntry"
+  [startingDialog]="descriptionAiStartingDialog()"
+  (descriptionChange)="askAi.set(false)"
+  (closed)="askAi.set(false)"
+/>
 } } }

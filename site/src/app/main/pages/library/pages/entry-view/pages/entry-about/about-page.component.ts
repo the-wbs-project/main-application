@@ -1,37 +1,34 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   model,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
-import { TaskModalService } from '@wbs/main/services';
-import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
+import { delay, tap } from 'rxjs/operators';
 import { EntryService, EntryState } from '../../services';
 import { DetailsCardComponent } from './components/details-card';
-import { delay, tap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
   templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [TaskModalService],
   imports: [
     CheckPipe,
     DescriptionCardComponent,
     DescriptionAiDialogComponent,
     DisciplineCardComponent,
     DetailsCardComponent,
-    DialogModule,
     ResizedCssDirective,
     SafeHtmlPipe,
     TranslateModule,
@@ -39,8 +36,6 @@ import { delay, tap } from 'rxjs/operators';
 })
 export class AboutPageComponent {
   private readonly entryService = inject(EntryService);
-
-  readonly modal = inject(TaskModalService);
   readonly state = inject(EntryState);
 
   readonly askAi = model(false);
@@ -48,6 +43,11 @@ export class AboutPageComponent {
   readonly claims = input.required<string[]>();
   readonly disciplines = input.required<ListItem[]>();
   readonly descriptionSaveState = signal<'ready' | 'saving' | 'saved'>('ready');
+  readonly descriptionAiStartingDialog = computed(() => {
+    return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
+      this.state.version()?.title
+    }'?`;
+  });
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
 

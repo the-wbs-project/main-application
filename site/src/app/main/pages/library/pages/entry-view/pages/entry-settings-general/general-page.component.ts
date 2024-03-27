@@ -12,19 +12,18 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faRobot } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ListItem } from '@wbs/core/models';
-import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
+import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
+import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
 import { delay, tap } from 'rxjs/operators';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
-import { DescriptionAiDialogComponent } from '../../components/entry-description-ai-dialog';
 import { EntryService, EntryState } from '../../services';
 
 @Component({
@@ -33,7 +32,6 @@ import { EntryService, EntryState } from '../../services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DescriptionAiDialogComponent,
-    DialogModule,
     EditorModule,
     FadingMessageComponent,
     FontAwesomeModule,
@@ -65,10 +63,11 @@ export class GeneralComponent implements DirtyComponent {
   });
   readonly isDirty = signal(false);
   readonly saveState = signal<'ready' | 'saving' | 'saved'>('ready');
-
-  descriptionChangedByAi(description: string): void {
-    this.state.version;
-  }
+  readonly descriptionAiStartingDialog = computed(() => {
+    return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
+      this.state.version()?.title
+    }'?`;
+  });
 
   save(): void {
     this.saveState.set('saving');

@@ -10,7 +10,7 @@ import {
   PROJECT_STATI,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages, ProjectService, Resources } from '@wbs/core/services';
+import { Messages, Resources } from '@wbs/core/services';
 import { UserRolesViewModel } from '@wbs/core/view-models';
 import { AuthState, MetadataState, RoleState } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
@@ -27,14 +27,16 @@ import {
   RemoveDisciplinesFromTasks,
   RemoveUserToRole,
   SetChecklistData,
+  SetNavSection,
   SetProject,
   VerifyProject,
   VerifyTasks,
 } from '../actions';
-import { TimelineService } from '../services';
+import { ProjectService, TimelineService } from '../services';
 
 interface StateModel {
   current?: Project;
+  navSection?: string;
   roles?: string[];
   users?: UserRolesViewModel[];
 }
@@ -59,6 +61,11 @@ export class ProjectState {
   @Selector()
   static current(state: StateModel): Project | undefined {
     return state.current;
+  }
+
+  @Selector()
+  static navSection(state: StateModel): string | undefined {
+    return state.navSection;
   }
 
   @Selector()
@@ -98,6 +105,11 @@ export class ProjectState {
     return ctx.dispatch(
       new Navigate(['/projects', state.current!.id, 'view', view])
     );
+  }
+
+  @Action(SetNavSection)
+  setNavSection(ctx: Context, { navSection }: SetNavSection): void {
+    ctx.patchState({ navSection });
   }
 
   @Action(SetProject)

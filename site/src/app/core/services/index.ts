@@ -4,8 +4,6 @@ export * from './http-interceptor';
 export * from './id.service';
 export * from './logger.service';
 export * from './messages.service';
-export * from './project.service';
-export * from './project.service';
 export * from './resource.service';
 export * from './signal-store.service';
 export * from './sorter.service';

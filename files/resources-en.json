@@ -164,7 +164,8 @@
       "DescriptionEditor": "Description Editor",
       "TaskSaved": "Task Saved",
       "NameIsRequired": "Name Is Required",
-      "GeneralSettings": "General Settings"
+      "GeneralSettings": "General Settings",
+      "GetStarted": "Get Started"
     }
   },
   {
@@ -365,6 +366,7 @@
       "PhaseRemoveConfirm": "You are about to remove a phase which has {count} task(s) under it. Are you sure?",
       "WaitingApproval": "Waiting For Approval",
       "NoDescription": "No description has been given to this task. This will help people understand and execute each step of the project successfully.",
+      "NoDisciplinesProject": "No disciplines have been setup for this project. This is an important step for in the creation of a project.",
       "NoDisciplines": "No disciplines have been setup for this task. This is an important step for in the creation of a project.",
       "Fix": "Fix",
       "ArchiveProject": "Archive Project",
@@ -652,7 +654,13 @@
     "locale": "en-US",
     "values": {
       "Title": "AI Assistant",
-      "ClearConfirm": "Are you sure you want to clear your AI assist history?"
+      "ClearConfirm": "Are you sure you want to clear your AI assist history?",
+      "BetaNote": "NOTE: This functionality uses technology which is still in beta.",
+      "ChooseModel": "Choose Model",
+      "StartConversation": "Now use the dialog below to get the conversation started with the chat bot",
+      "GetStartedLibraryEntry": "Let's use a large language model to help you generate a description for this WBS!",
+      "GetStartedProjectEntry": "Let's use a large language model to help you generate a description for this project!",
+      "GetStartedTaskEntry": "Let's use a large language model to help you generate a description for this task!"
     }
   },
   {

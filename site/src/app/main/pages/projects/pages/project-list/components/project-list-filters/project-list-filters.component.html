@@ -36,7 +36,7 @@
       (change)="changeList(stati, status)"
     />
     <label [for]="status" class="mg-l-10">
-      {{ status | projectStatus }}
+      {{ status | projectStatus | translate }}
     </label>
   </div>
   <a class="tx-10 pointer" (click)="stati.set([status])">
@@ -129,7 +129,7 @@
             (change)="changeList(stati, status)"
           />
           <label [for]="status" class="mg-l-10">
-            {{ status | projectStatus }}
+            {{ status | projectStatus | translate }}
           </label>
         </div>
         <a class="tx-10 pointer" (click)="stati.set([status])">

@@ -20,6 +20,11 @@ export class NavigateToView {
   constructor(readonly view: string) {}
 }
 
+export class SetNavSection {
+  static readonly type = '[Project] Set Nav Section';
+  constructor(readonly navSection: string | undefined) {}
+}
+
 export class ChangeProjectCategories {
   static readonly type = '[Project] Change Project Categories';
   constructor(

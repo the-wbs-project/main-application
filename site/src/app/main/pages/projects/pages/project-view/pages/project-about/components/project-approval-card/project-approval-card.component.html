@@ -1,0 +1,109 @@
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>{{ "Projects.ApprovalStatus" | translate }}</div>
+  </div>
+</div>
+
+<div class="card-body">
+  @if (stats(); as stats) {
+  <div class="w-100 ht-30 tx-center">
+    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+      <button
+        type="button"
+        class="btn"
+        [ngClass]="{
+          'btn-dark': view() === 'pie',
+          'btn-outline-dark': view() !== 'pie'
+        }"
+        (click)="view.set('pie')"
+      >
+        <fa-icon [icon]="faPieChart" />
+      </button>
+      <button
+        type="button"
+        class="btn"
+        [ngClass]="{
+          'btn-dark': view() === 'list',
+          'btn-outline-dark': view() !== 'list'
+        }"
+        (click)="view.set('list')"
+      >
+        <fa-icon [icon]="faList" />
+      </button>
+    </div>
+  </div>
+  @if (view() === 'pie') {
+  <div class="approve-pie-grid">
+    <div class="tx-center">
+      <kendo-chart [ngClass]="'ht-200'">
+        <kendo-chart-series>
+          <kendo-chart-series-item
+            type="pie"
+            [data]="stats | approvalPieData"
+            field="value"
+            colorField="color"
+            [labels]="{ visible: false }"
+          />
+        </kendo-chart-series>
+      </kendo-chart>
+    </div>
+    <div class="tx-center mg-t-35">
+      <p class="tx-left">
+        <span class="d-ib wd-20">
+          <fa-icon [icon]="faCircle" size="sm" class="tx-success" />
+        </span>
+        <span class="d-ib tx-semibold wd-100">
+          {{ "General.Approved" | translate }}:
+        </span>
+        <span class="d-ib tx-right wd-30">
+          {{ stats.approved }}
+        </span>
+        <span class="d-ib tx-right wd-50">
+          {{ stats.approvedPercent }}&nbsp;%
+        </span>
+      </p>
+      <p class="tx-left">
+        <span class="d-ib wd-20">
+          <fa-icon [icon]="faCircle" size="sm" class="tx-danger" />
+        </span>
+        <span class="d-ib tx-semibold wd-100">
+          {{ "General.Rejected" | translate }}:
+        </span>
+        <span class="d-ib tx-right wd-30">
+          {{ stats.rejected }}
+        </span>
+        <span class="d-ib tx-right wd-50">
+          {{ stats.rejectedPercent }}&nbsp;%
+        </span>
+      </p>
+      <p class="tx-left">
+        <span class="d-ib wd-20">
+          <fa-icon [icon]="faCircle" size="sm" class="tx-gray-400" />
+        </span>
+        <span class="d-ib tx-semibold wd-100">
+          {{ "General.Remaining" | translate }}:
+        </span>
+        <span class="d-ib tx-right wd-30">
+          {{ stats.remaining }}
+        </span>
+        <span class="d-ib tx-right wd-50">
+          {{ stats.remainingPercent }}&nbsp;%
+        </span>
+      </p>
+      <p class="tx-left">
+        <span class="d-ib wd-20"> &nbsp; </span>
+        <span class="d-ib tx-semibold wd-100">
+          {{ "General.Total" | translate }}:
+        </span>
+        <span class="d-ib tx-right wd-30">
+          {{ stats.total }}
+        </span>
+      </p>
+    </div>
+  </div>
+  } @else if (view() === 'list') {
+  <div class="ht-200 tx-center pd-t-30">Coming Soon...</div>
+  } } @else {
+  <div>{{ "Projects.ApprovalNotBegun" | translate }}</div>
+  }
+</div>

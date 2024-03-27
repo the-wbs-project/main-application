@@ -9,6 +9,7 @@ import {
   userIdResolve,
 } from '@wbs/main/services';
 import { map } from 'rxjs/operators';
+import { ProjectListService } from './services';
 
 export const setupGuard = () => {
   const store = inject(Store);
@@ -33,5 +34,6 @@ export const routes: Routes = [
       userId: userIdResolve,
       projectCategories: projectCategoryResolver,
     },
+    providers: [ProjectListService],
   },
 ];

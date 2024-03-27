@@ -13,7 +13,7 @@ import { LibraryEntry } from '@wbs/core/models';
 import { SignalStore, TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { PageHeaderComponent } from '@wbs/main/components/page-header2';
+import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { NavigationLink } from '@wbs/main/models';
 import { NavigationMenuService } from '@wbs/main/services';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
@@ -21,7 +21,6 @@ import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 import { EntryService, EntryState } from './services';
-import { UiState } from '@wbs/main/states';
 
 @Component({
   standalone: true,
@@ -45,7 +44,6 @@ export class EntryViewComponent {
   readonly state = inject(EntryState);
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
-  readonly breadcrumbs = this.store.select(UiState.breadcrumbs);
 
   readonly url = this.store.select(RouterState.url);
   readonly links = computed(() =>
