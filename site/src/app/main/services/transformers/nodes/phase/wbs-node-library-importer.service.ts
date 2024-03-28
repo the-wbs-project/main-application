@@ -1,6 +1,6 @@
 import {
   LibraryEntryVersion,
-  ProjectImportResult,
+  WbsImportResult,
   ProjectUploadData,
   WbsNode,
 } from '@wbs/core/models';
@@ -14,7 +14,7 @@ export class WbsNodeLibraryImporter extends BaseImporter {
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
     people: Map<string, string>,
-    nodes: Map<string, ProjectImportResult>
+    nodes: Map<string, WbsImportResult>
   ): ProjectUploadData {
     const results: ProjectUploadData = {
       disciplines: this.getDisciplines(version.disciplines ?? [], people),

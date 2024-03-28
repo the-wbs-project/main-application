@@ -12,17 +12,17 @@ import { LibraryEntryResourcesDataService } from './library-entry-resources.data
 import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
-import { ProjectExportDataService } from './project-export.data-service';
-import { ProjectImportDataService } from './project-import.data-service';
+import { OrganizationDataService } from './organization.data-service';
+import { ProjectApprovalDataService } from './project-approval.data-service';
 import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectResourcesDataService } from './project-resources.data-service';
 import { ProjectSnapshotDataService } from './project-snapshot.data-service';
 import { ProjectDataService } from './project.data-service';
+import { ResourceFileDataService } from './resource-files.data-service';
 import { StaticFileDataService } from './static-files.data-service';
 import { UserDataService } from './user.data-service';
-import { ProjectApprovalDataService } from './project-approval.data-service';
-import { ResourceFileDataService } from './resource-files.data-service';
-import { OrganizationDataService } from './organization.data-service';
+import { WbsExportDataService } from './wbs-export.data-service';
+import { WbsImportDataService } from './wbs-import.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -42,8 +42,6 @@ export class DataServiceFactory {
   readonly metdata = new MetdataDataService(this.http);
   readonly organizations = new OrganizationDataService(this.http);
   readonly projectApprovals = new ProjectApprovalDataService(this.http);
-  readonly projectExport = new ProjectExportDataService(this.http);
-  readonly projectImport = new ProjectImportDataService(this.http);
   readonly projectNodes = new ProjectNodeDataService(this.http);
   readonly projectResources = new ProjectResourcesDataService(this.http);
   readonly projects = new ProjectDataService(this.http);
@@ -51,6 +49,8 @@ export class DataServiceFactory {
   readonly resourceFiles = new ResourceFileDataService(this.http);
   readonly staticFiles = new StaticFileDataService(this.http);
   readonly users = new UserDataService(this.http);
+  readonly wbsExport = new WbsExportDataService(this.http);
+  readonly wbsImport = new WbsImportDataService(this.http);
 
   public constructor(private readonly http: HttpClient) {}
 }

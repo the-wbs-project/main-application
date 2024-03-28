@@ -148,8 +148,8 @@ export class ProjectViewService {
           type: 'discipline',
         });
 
-    this.data.projectExport
-      .runAsync(project, 'xlsx', customDisciplines, phases)
+    this.data.wbsExport
+      .runAsync(project.title, 'xlsx', customDisciplines, phases)
       .subscribe();
   }
 

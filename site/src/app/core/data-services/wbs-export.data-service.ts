@@ -1,16 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { saveAs } from '@progress/kendo-file-saver';
 import { map, Observable } from 'rxjs';
-import { ListItem, Project } from '../models';
+import { Category } from '../models';
 import { WbsNodeView } from '../view-models';
 
-export class ProjectExportDataService {
+export class WbsExportDataService {
   constructor(private readonly http: HttpClient) {}
 
   runAsync(
-    project: Project,
+    fileName: string,
     extension: 'xlsx' | 'mpp',
-    customDisciplines: ListItem[],
+    customDisciplines: Category[],
     nodes: WbsNodeView[]
   ): Observable<any> {
     return this.http
@@ -25,9 +25,7 @@ export class ProjectExportDataService {
         }
       )
       .pipe(
-        map((response: any) =>
-          saveAs(response, `${project.title}.${extension}`)
-        )
+        map((response: any) => saveAs(response, `${fileName}.${extension}`))
       );
   }
 }

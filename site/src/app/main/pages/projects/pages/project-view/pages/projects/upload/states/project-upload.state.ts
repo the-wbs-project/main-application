@@ -7,7 +7,7 @@ import {
   ImportPerson,
   ImportResultStats,
   Project,
-  ProjectImportResult,
+  WbsImportResult,
   UploadResults,
 } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
@@ -51,7 +51,7 @@ interface StateModel {
   saving: boolean;
   started: boolean;
   stats?: ImportResultStats;
-  uploadResults?: UploadResults<ProjectImportResult>;
+  uploadResults?: UploadResults<WbsImportResult>;
 }
 
 @Injectable()
@@ -129,7 +129,7 @@ export class ProjectUploadState {
   @Selector()
   static uploadResults(
     state: StateModel
-  ): UploadResults<ProjectImportResult> | undefined {
+  ): UploadResults<WbsImportResult> | undefined {
     return state.uploadResults;
   }
 
@@ -189,9 +189,7 @@ export class ProjectUploadState {
     if (!state.rawFile || !state.extension) return;
 
     return Utils.getFileAsync(state.rawFile).pipe(
-      switchMap((body) =>
-        this.data.projectImport.runAsync(state.extension!, body)
-      ),
+      switchMap((body) => this.data.wbsImport.runAsync(state.extension!, body)),
       switchMap((uploadResults) => {
         ctx.patchState({
           uploadResults,
@@ -341,7 +339,7 @@ export class ProjectUploadState {
     const state = ctx.getState();
     const people = new Map<string, string>();
     const phases = new Map<string, string | undefined>();
-    const nodes = new Map<string, ProjectImportResult>();
+    const nodes = new Map<string, WbsImportResult>();
     //
     //  Put people into map
     //

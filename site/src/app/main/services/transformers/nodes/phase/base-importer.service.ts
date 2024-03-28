@@ -1,8 +1,4 @@
-import {
-  ProjectCategory,
-  ProjectImportResult,
-  WbsNode,
-} from '@wbs/core/models';
+import { ProjectCategory, WbsImportResult, WbsNode } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 
 export abstract class BaseImporter {
@@ -10,7 +6,7 @@ export abstract class BaseImporter {
     parentId: string,
     parentLevel: string,
     people: Map<string, string>,
-    nodes: Map<string, ProjectImportResult>
+    nodes: Map<string, WbsImportResult>
   ): WbsNode[] {
     const results: WbsNode[] = [];
     let counter = 1;
@@ -38,7 +34,7 @@ export abstract class BaseImporter {
   }
 
   protected getDisciplineFromPeople(
-    info: ProjectImportResult,
+    info: WbsImportResult,
     people: Map<string, string>
   ): string[] {
     const ids: string[] = [];

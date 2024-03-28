@@ -1,6 +1,6 @@
 import {
   Project,
-  ProjectImportResult,
+  WbsImportResult,
   ProjectUploadData,
   WbsNode,
 } from '@wbs/core/models';
@@ -14,7 +14,7 @@ export class WbsNodePhaseProjectImporter extends BaseImporter {
     action: 'append' | 'overwrite',
     people: Map<string, string>,
     phases: Map<string, string | undefined>,
-    nodes: Map<string, ProjectImportResult>
+    nodes: Map<string, WbsImportResult>
   ): ProjectUploadData {
     const results: ProjectUploadData = {
       disciplines: this.getDisciplines(project.disciplines ?? [], people),
