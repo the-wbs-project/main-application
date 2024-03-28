@@ -1,13 +1,15 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   faCloudDownload,
   faCloudUpload,
 } from '@fortawesome/pro-solid-svg-icons';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { ActionButtonMenuItem } from '@wbs/main/models';
+import { EntryService } from './entry.service';
 
 @Injectable()
 export class EntryActionButtonService {
+  private readonly entryService = inject(EntryService);
   private readonly actionDownload = 'download';
 
   buildMenu(
@@ -34,9 +36,10 @@ export class EntryActionButtonService {
   }
 
   handleAction(action: string): void {
+    console.log(action);
     switch (action) {
       case this.actionDownload:
-        //   this.actions.downloadTasks();
+        this.entryService.downloadTasks();
         break;
     }
   }

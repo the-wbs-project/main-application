@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
+  Category,
   LibraryEntry,
   LibraryEntryVersion,
   ProjectCategory,
@@ -38,6 +39,33 @@ export class EntryService {
       Utils.getParam(route, 'entryId'),
       Utils.getParam(route, 'versionId'),
     ];
+  }
+
+  downloadTasks(): void {
+    this.messages.notify.info('General.RetrievingData');
+
+    const version = this.state.version()!;
+    const customDisciplines: Category[] = [];
+
+    for (const d of version.disciplines) {
+      if (typeof d !== 'string')
+        customDisciplines.push({
+          id: d.id,
+          label: d.label,
+          description: d.description,
+        });
+    }
+    const tasks = structuredClone(this.state.viewModels()!);
+
+    for (const task of tasks) {
+      task.subTasks = [];
+      task.parent = undefined;
+    }
+    console.log(tasks);
+
+    this.data.wbsExport
+      .runAsync(version.title, 'xlsx', customDisciplines, tasks)
+      .subscribe();
   }
 
   generalSaveAsync(
