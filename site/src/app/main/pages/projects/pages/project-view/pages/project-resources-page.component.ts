@@ -2,17 +2,24 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  inject,
   input,
   signal,
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { ResourceRecord } from '@wbs/core/models';
-import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page/record-resources-page.component';
-import { ProjectResourceService } from '../../services';
+import { AlertComponent } from '@wbs/main/components/alert.component';
+import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
+import { ProjectResourceService } from '../services';
 
 @Component({
   standalone: true,
   template: `<div class="pd-15">
+    <wbs-alert
+      type="info"
+      [dismissible]="false"
+      message="Library.ResourceInfoEntry"
+    />
     <wbs-record-resources-page
       [list]="list()"
       [owner]="owner()"
@@ -22,16 +29,16 @@ import { ProjectResourceService } from '../../services';
     />
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RecordResourcesPageComponent],
+  imports: [AlertComponent, RecordResourcesPageComponent],
   providers: [ProjectResourceService],
 })
 export class ProjectResourcesPageComponent implements OnInit {
+  private readonly service = inject(ProjectResourceService);
+
   readonly owner = input.required<string>();
   readonly projectId = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
-
-  constructor(private readonly service: ProjectResourceService) {}
 
   ngOnInit(): void {
     this.service
@@ -66,10 +73,6 @@ export class ProjectResourcesPageComponent implements OnInit {
         rawFile,
         data
       )
-      .subscribe((newRecord) => {
-        const list = this.list();
-        list.push(newRecord);
-        this.list.set(structuredClone(list));
-      });
+      .subscribe((record) => this.list.update((list) => [...list, record]));
   }
 }

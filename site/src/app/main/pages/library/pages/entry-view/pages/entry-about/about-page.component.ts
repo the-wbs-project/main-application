@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
@@ -42,7 +42,7 @@ export class AboutPageComponent {
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
   readonly disciplines = input.required<ListItem[]>();
-  readonly descriptionSaveState = signal<'ready' | 'saving' | 'saved'>('ready');
+  readonly descriptionSaveState = signal<SaveState>('ready');
   readonly descriptionAiStartingDialog = computed(() => {
     return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
       this.state.version()?.title

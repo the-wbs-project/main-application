@@ -4,6 +4,7 @@ import {
   Component,
   inject,
   input,
+  model,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,22 +12,30 @@ import { SignalStore } from '@wbs/core/services';
 import { TaskModalComponent } from '@wbs/main/components/task-modal';
 import { WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
-import { ProjectState, TasksState } from '../../../states';
+import { ProjectState } from '../../states';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';
+import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type-button.component';
 
 @Component({
   standalone: true,
-  templateUrl: './tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [WbsPhaseService],
   imports: [
-    NgClass,
     ProjectDisciplinesTreeComponent,
     ProjectPhaseTreeComponent,
-    TaskModalComponent,
-    TranslateModule,
+    TreeTypeButtonComponent,
   ],
+  template: `<div class="w-100 tx-center pd-t-15">
+      <wbs-tree-type-button [(view)]="view" />
+    </div>
+    <div class="pd-15">
+      @if (view() === 'phases') {
+      <wbs-project-phase-tree [claims]="claims()" [project]="project()!" />
+      } @else if (view() === 'disciplines') {
+      <wbs-project-discipline-tree [project]="project()!" />
+      }
+    </div>`,
 })
 export class ProjectTasksComponent {
   private readonly store = inject(SignalStore);
@@ -35,6 +44,4 @@ export class ProjectTasksComponent {
   readonly projectUrl = input.required<string[]>();
   readonly view = signal<'phases' | 'disciplines'>('phases');
   readonly project = this.store.select(ProjectState.current);
-  readonly taskVm = this.store.select(TasksState.current);
-  readonly width = this.store.select(UiState.mainContentWidth);
 }

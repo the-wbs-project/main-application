@@ -1,12 +1,9 @@
-<div class="card-header tx-medium">
-  {{ "General.Settings" | translate }} >
-  {{ "General.Disciplines" | translate }}
-</div>
 <div class="pd-15 text-center bg-white">
   <div class="d-ib w-100 mx-wd-xs-500 text-start card dashboard-card">
     <div class="d-flex card-header flex-align-center">
       <div class="flex-fill">
-        {{ "Wbs.WbsDisciplines" | translate }}
+        {{ "General.Settings" | translate }} >
+        {{ "General.Disciplines" | translate }}
       </div>
       <div class="text-end">
         <wbs-fading-message
@@ -19,7 +16,7 @@
           class="btn btn-sm btn-dark mg-r-10"
           (click)="showAddDialog.set(true)"
         >
-          <fa-icon [icon]="plus" />&nbsp; {{ "General.Add" | translate }}
+          <fa-icon [icon]="plusIcon" />&nbsp; {{ "General.Add" | translate }}
         </button>
         <wbs-save-button
           size="sm"
@@ -30,7 +27,7 @@
     </div>
     <div class="card-body">
       <div class="tx-italic text-center pd-b-10 pd-l-10">
-        {{ "Library.DisciplineSettingsInfoEntry" | translate }}
+        {{ "Projects.DisciplineSettingsInfoProject" | translate }}
       </div>
       @if (disciplines(); as disciplines) {
       <wbs-discipline-editor

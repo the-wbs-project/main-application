@@ -399,7 +399,9 @@
       "MoveRight": "Move Right",
       "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)",
       "ByPhase": "By Phase",
-      "ByDiscipline": "By Discipline"
+      "ByDiscipline": "By Discipline",
+      "DisciplineSettingsInfoProject": "What disciplines are associated with this project?",
+      "DisciplineSettingsInfoTask": "Who will be performing this task?"
     }
   },
   {

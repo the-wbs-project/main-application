@@ -15,7 +15,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { ListItem } from '@wbs/core/models';
+import { ListItem, SaveState } from '@wbs/core/models';
+import { AiButtonComponent } from '@wbs/main/components/ai-button.component';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
@@ -31,6 +32,7 @@ import { EntryService, EntryState } from '../../services';
   templateUrl: './general-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AiButtonComponent,
     DescriptionAiDialogComponent,
     EditorModule,
     FadingMessageComponent,
@@ -62,7 +64,7 @@ export class GeneralComponent implements DirtyComponent {
     return true;
   });
   readonly isDirty = signal(false);
-  readonly saveState = signal<'ready' | 'saving' | 'saved'>('ready');
+  readonly saveState = signal<SaveState>('ready');
   readonly descriptionAiStartingDialog = computed(() => {
     return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
       this.state.version()?.title

@@ -1,29 +1,27 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   input,
   model,
   output,
-  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
-  faComment,
   faFloppyDisk,
   faPencil,
   faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
+import { ProjectApproval, SaveState } from '@wbs/core/models';
 import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { AiButtonComponent } from '../ai-button.component';
 import { AlertComponent } from '../alert.component';
+import { ApprovalBadgeComponent } from '../approval-badge.component';
 import { FadingMessageComponent } from '../fading-message.component';
 import { SaveButtonComponent } from '../save-button.component';
-import { ProjectApproval } from '@wbs/core/models';
-import { ApprovalBadgeComponent } from '../approval-badge.component';
 
 @Component({
   standalone: true,
@@ -32,13 +30,13 @@ import { ApprovalBadgeComponent } from '../approval-badge.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'card dashboard-card full-item' },
   imports: [
+    AiButtonComponent,
     AlertComponent,
     ApprovalBadgeComponent,
     EditorModule,
     FadingMessageComponent,
     FontAwesomeModule,
     FormsModule,
-    NgClass,
     SafeHtmlPipe,
     SaveButtonComponent,
     TranslateModule,
@@ -51,13 +49,12 @@ export class DescriptionCardComponent {
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
-  readonly faComment = faComment;
-  readonly description = input.required<string>();
-  readonly noDescriptionLabel = input.required<string>();
   readonly askAi = model.required<boolean>();
   readonly editMode = model.required<boolean>();
+  readonly description = input.required<string>();
+  readonly noDescriptionLabel = input.required<string>();
   readonly approval = input<ProjectApproval | undefined>(undefined);
-  readonly saveState = input<'ready' | 'saving' | 'saved'>('ready');
+  readonly saveState = input<SaveState>('ready');
 
   editDescription = '';
 

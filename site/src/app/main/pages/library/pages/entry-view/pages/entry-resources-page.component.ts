@@ -2,14 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  inject,
   input,
   signal,
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { ResourceRecord } from '@wbs/core/models';
+import { AlertComponent } from '@wbs/main/components/alert.component';
 import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
 import { EntryResourceService } from '../services';
-import { AlertComponent } from '@wbs/main/components/alert.component';
 
 @Component({
   standalone: true,
@@ -32,13 +33,13 @@ import { AlertComponent } from '@wbs/main/components/alert.component';
   providers: [EntryResourceService],
 })
 export class ResourcesPageComponent implements OnInit {
+  private readonly service = inject(EntryResourceService);
+
   readonly owner = input.required<string>();
   readonly entryId = input.required<string>();
   readonly versionId = input.required<number>();
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
-
-  constructor(private readonly service: EntryResourceService) {}
 
   ngOnInit(): void {
     this.service
@@ -80,8 +81,6 @@ export class ResourcesPageComponent implements OnInit {
         rawFile,
         data
       )
-      .subscribe((newRecord) =>
-        this.list.update((list) => [...list, newRecord])
-      );
+      .subscribe((record) => this.list.update((list) => [...list, record]));
   }
 }

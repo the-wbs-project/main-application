@@ -27,23 +27,35 @@
 @if (editMode()) {
 <div class="card-body text-center">
   <div class="d-ib w-100" style="max-width: 1000px">
-    <div class="d-flex w-100 text-end mg-b-10">
+    <div class="d-none d-sm-flex w-100 mg-b-10">
       <div class="text-start flex-align-center flex-fill tx-18">
         {{ "General.DescriptionEditor" | translate }}
       </div>
-      <div>
-        <button class="btn btn-primary tx-12" (click)="askAi.set(true)">
-          <fa-icon [icon]="faComment" class="mg-r-5" />
-          {{ "General.AskAi" | translate }}
+      <div class="text-end">
+        <wbs-ai-button buttonCssClass="btn-primary" (click)="askAi.set(true)" />
+        <wbs-save-button
+          cssClass="mg-l-15 tx-12 "
+          [isSaving]="saveState() === 'saving'"
+          (click)="save(editDescription)"
+        />
+        <button class="btn btn-dark mg-l-15 tx-12" (click)="cancel()">
+          <fa-icon [icon]="faXmark" class="mg-r-5" />
+          {{ "General.Cancel" | translate }}
         </button>
       </div>
-      <wbs-save-button
-        cssClass="mg-l-15 tx-12 "
-        [isSaving]="saveState() === 'saving'"
-        (click)="save(editDescription)"
-      />
-      <div>
-        <button class="btn btn-danger mg-l-15 tx-12" (click)="cancel()">
+    </div>
+    <div class="d-sm-none">
+      <div class="tx-18">
+        {{ "General.DescriptionEditor" | translate }}
+      </div>
+      <div class="mg-y-10 tx-12">
+        <wbs-ai-button buttonCssClass="btn-primary" (click)="askAi.set(true)" />
+        <wbs-save-button
+          cssClass="mg-l-15"
+          [isSaving]="saveState() === 'saving'"
+          (click)="save(editDescription)"
+        />
+        <button class="btn btn-dark mg-l-15" (click)="cancel()">
           <fa-icon [icon]="faXmark" class="mg-r-5" />
           {{ "General.Cancel" | translate }}
         </button>

@@ -23,39 +23,34 @@ import { ProjectService } from './project.service';
 import { TitleService } from '@wbs/core/services';
 
 export const closeApprovalWindowGuard = () =>
-  inject(Store)
-    .dispatch(new SetApproval())
-    .pipe(map(() => true));
+  inject(Store).dispatch(new SetApproval());
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const owner = Utils.getParam(route, 'org');
 
-  return store
-    .dispatch(new LoadDiscussionForum(owner, route.params['projectId']))
-    .pipe(map(() => true));
+  return store.dispatch(
+    new LoadDiscussionForum(owner, route.params['projectId'])
+  );
 };
 
 export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
   console.log(ProjectService.getProjectUrl(route));
-  return inject(Store)
-    .dispatch(new Navigate([...ProjectService.getProjectUrl(route), 'about']))
-    .pipe(map(() => true));
+  return inject(Store).dispatch(
+    new Navigate([...ProjectService.getProjectUrl(route), 'about'])
+  );
 };
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const owner = Utils.getParam(route, 'org');
+  const org = Utils.getParam(route, 'org');
 
   inject(TitleService).setTitle('Pages.Projects', true);
-
-  console.log(owner);
-  if (!owner) return false;
 
   return store
     .dispatch([
       new InitiateChecklist(),
-      new VerifyProject(owner, route.params['projectId']),
+      new VerifyProject(org, route.params['projectId']),
     ])
     .pipe(
       switchMap(() => store.selectOnce(ProjectState.current)),
@@ -63,9 +58,7 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
         if (!project) return of(false);
 
         return store.dispatch(new VerifyTasks(project, true));
-      }),
-      tap(() => console.log('hi')),
-      map(() => true)
+      })
     );
 };
 
@@ -76,7 +69,7 @@ export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
 
   store.dispatch(new SetNavSection(section));
 
-  if (!crumbSections) return true;
+  if (!crumbSections) return;
 
   let link: NavigationLink | undefined;
   let currentUrl = [...ProjectService.getProjectUrl(route)];
@@ -119,8 +112,7 @@ export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
 
       return crumbs;
     }),
-    switchMap((crumbs) => store.dispatch(new SetBreadcrumbs(crumbs))),
-    map(() => true)
+    switchMap((crumbs) => store.dispatch(new SetBreadcrumbs(crumbs)))
   );
 };
 
@@ -130,15 +122,11 @@ export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
 
   if (!taskId) return false;
 
-  return store.dispatch([new VerifyTask(taskId)]).pipe(map(() => true));
+  return store.dispatch([new VerifyTask(taskId)]);
 };
 
 export const setApprovalViewAsTask = () =>
-  inject(Store)
-    .dispatch(new SetApprovalView('task'))
-    .pipe(map(() => true));
+  inject(Store).dispatch(new SetApprovalView('task'));
 
 export const setApprovalViewAsProject = () =>
-  inject(Store)
-    .dispatch(new SetApprovalView('project'))
-    .pipe(map(() => true));
+  inject(Store).dispatch(new SetApprovalView('project'));

@@ -2,12 +2,11 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Input,
   OnInit,
-  ViewChild,
   computed,
   input,
   signal,
+  viewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -28,26 +27,28 @@ import {
 import { PROJECT_CLAIMS, PROJECT_NODE_VIEW, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { AlertComponent } from '@wbs/main/components/alert.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
-import { WbsPhaseService } from '@wbs/main/services';
+import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
+import { TreeService, WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
-import { CreateTask, TreeReordered } from '../../../../../actions';
-import { ApprovalBadgeComponent } from '../../../../../components/approval-badge.component';
-import { ChildrenApprovalPipe } from '../../../../../pipes/children-approval.pipe';
+import { CreateTask, TreeReordered } from '../../../../actions';
+import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
+import { ChildrenApprovalPipe } from '../../../../pipes/children-approval.pipe';
 import {
   ProjectNavigationService,
   ProjectViewService,
-} from '../../../../../services';
+} from '../../../../services';
 import {
   ProjectApprovalState,
   ProjectState,
   TasksState,
-} from '../../../../../states';
+} from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
 
 @UntilDestroy()
@@ -58,6 +59,7 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PhaseTreeMenuService, WbsPhaseService],
   imports: [
+    AlertComponent,
     ApprovalBadgeComponent,
     CheckPipe,
     ChildrenApprovalPipe,
@@ -70,16 +72,17 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     TranslateModule,
     TreeDisciplineLegendComponent,
     TreeListModule,
+    TreeTogglerComponent,
   ],
 })
 export class ProjectPhaseTreeComponent implements OnInit {
-  @ViewChild(ContextMenuComponent) gridContextMenu!: ContextMenuComponent;
-  @ViewChild(TreeListComponent) treeList!: TreeListComponent;
-
   readonly claims = input.required<string[]>();
-  readonly project = input<Project>();
+  readonly project = input.required<Project>();
 
-  expandedKeys: string[] = [];
+  readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
+  readonly gridContextMenu =
+    viewChild<ContextMenuComponent>(ContextMenuComponent);
+
   settings: SelectableSettings = {
     enabled: true,
     mode: 'row',
@@ -90,6 +93,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
 
+  readonly treeService = new TreeService();
   readonly tree = signal<WbsNodeView[] | undefined>(undefined);
   readonly width = toSignal(this.store.select(UiState.mainContentWidth));
   readonly phases = toSignal(this.store.select(TasksState.phases));
@@ -132,12 +136,13 @@ export class ProjectPhaseTreeComponent implements OnInit {
         const task = phases[taskIndex];
 
         if (task) {
-          this.treeList.expand(task);
-          this.treeList.focusCell(taskIndex, 0);
+          this.treeList()?.expand(task);
+          this.treeList()?.focusCell(taskIndex, 0);
         }
       });
 
-    this.expandedKeys = this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
+    this.treeService.expandedKeys =
+      this.store.selectSnapshot(ProjectState.phaseIds) ?? [];
   }
 
   onAction(action: string): void {
@@ -153,7 +158,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
       const originalEvent = e.originalEvent;
       originalEvent.preventDefault();
 
-      this.gridContextMenu.show({
+      this.gridContextMenu()?.show({
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });

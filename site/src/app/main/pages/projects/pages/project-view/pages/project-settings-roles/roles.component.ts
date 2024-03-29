@@ -8,53 +8,39 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member, Project, ROLES, Role } from '@wbs/core/models';
+import { Member, Project, ROLES, Role, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { RoleState } from '@wbs/main/states';
-import { AddUserToRole, RemoveUserToRole } from '../../../../actions';
-import { ProjectApprovalState, ProjectState } from '../../../../states';
+import { delay, tap } from 'rxjs/operators';
+import { ProjectRolesComponent } from '../../../../components/project-roles/project-roles.component';
+import { AddUserToRole, RemoveUserToRole } from '../../actions';
+import { ProjectState } from '../../states';
 
 @Component({
   standalone: true,
-  template: `<div class="card-header tx-medium">
-      {{ 'General.Settings' | translate }} > {{ 'General.Roles' | translate }}
-    </div>
-    <div class="pd-15">
-      @if (isLoading()) {
-      <div class="w-100 tx-center mg-t-50">
-        <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
-        <h3 class="pd-t-20">
-          {{ 'General.Loading' | translate }}
-        </h3>
-      </div>
-      } @else {
-      <wbs-project-roles
-        [members]="members()"
-        [approverIds]="approverIds()"
-        [pmIds]="pmIds()"
-        [smeIds]="smeIds()"
-        [mustConfirm]="true"
-        [approvalEnabled]="approvalEnabled()!"
-        (addUserToRole)="add($event.role, $event.user)"
-        (removeUserToRole)="remove($event.role, $event.user)"
-      />
-      }
-    </div>`,
+  templateUrl: './roles.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, ProjectRolesComponent, TranslateModule],
+  imports: [
+    FadingMessageComponent,
+    FontAwesomeModule,
+    ProjectRolesComponent,
+    TranslateModule,
+  ],
 })
-export class ProjectSettingsRolesComponent implements OnInit {
+export class RolesComponent implements OnInit {
   private readonly project = this.store.select(ProjectState.current);
   private readonly roleIds = this.store.select(RoleState.definitions);
 
-  readonly faSpinner = faSpinner;
+  readonly checkIcon = faCheck;
+  readonly spinnerIcon = faSpinner;
   readonly isLoading = signal<boolean>(true);
   readonly members = signal<Member[]>([]);
   readonly org = input.required<string>();
-  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  readonly approvalEnabled = input.required<boolean>();
   readonly approverIds = computed(() =>
     this.getUserIds(ROLES.APPROVER, this.roleIds(), this.project())
   );
@@ -64,6 +50,7 @@ export class ProjectSettingsRolesComponent implements OnInit {
   readonly smeIds = computed(() =>
     this.getUserIds(ROLES.SME, this.roleIds(), this.project())
   );
+  readonly saveState = signal<SaveState>('ready');
 
   constructor(
     private readonly data: DataServiceFactory,
@@ -78,11 +65,11 @@ export class ProjectSettingsRolesComponent implements OnInit {
   }
 
   add(role: string, user: Member) {
-    this.store.dispatch(new AddUserToRole(role, user));
+    this.save(new AddUserToRole(role, user));
   }
 
   remove(role: string, user: Member) {
-    this.store.dispatch(new RemoveUserToRole(role, user));
+    this.save(new RemoveUserToRole(role, user));
   }
 
   private getUserIds(
@@ -94,5 +81,17 @@ export class ProjectSettingsRolesComponent implements OnInit {
     return (
       project?.roles?.filter((r) => r.role === role).map((r) => r.userId) ?? []
     );
+  }
+
+  private save(message: AddUserToRole | RemoveUserToRole): void {
+    this.saveState.set('saving');
+    this.store
+      .dispatch(message)
+      .pipe(
+        delay(1000),
+        tap(() => this.saveState.set('saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.saveState.set('ready'));
   }
 }

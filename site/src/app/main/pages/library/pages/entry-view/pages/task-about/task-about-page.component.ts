@@ -15,8 +15,7 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
-import { AlertComponent } from '@wbs/main/components/alert.component';
+import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
@@ -63,7 +62,7 @@ export class TaskAboutPageComponent {
   readonly disciplines = input.required<ListItem[]>();
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
-  readonly descriptionSaveState = signal<'ready' | 'saving' | 'saved'>('ready');
+  readonly descriptionSaveState = signal<SaveState>('ready');
   readonly disciplineFullList = computed(() => {
     const disciplines = this.state.version()?.disciplines;
 

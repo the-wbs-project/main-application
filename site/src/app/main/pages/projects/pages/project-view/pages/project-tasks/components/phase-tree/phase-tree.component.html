@@ -1,8 +1,10 @@
 @if (phases(); as phases) {
 <div class="d-flex flex-column">
-  <div class="tx-italic tx-14 pd-b-5">
-    {{ "Projects.TreeInstructions" | translate }}
-  </div>
+  <wbs-alert
+    type="info"
+    [dismissible]="false"
+    message="Projects.TreeInstructions"
+  />
   <div class="flex-fill">
     <kendo-treelist
       #treelist
@@ -14,7 +16,7 @@
       idField="treeId"
       [rowReorderable]="claims() | check : canEditClaim"
       [initiallyExpanded]="false"
-      [(expandedKeys)]="expandedKeys"
+      [(expandedKeys)]="treeService.expandedKeys"
       [selectable]="settings"
       [navigable]="true"
       (selectionChange)="taskId.set($event.items[0].dataItem.id)"
@@ -38,8 +40,22 @@
         [title]="'Projects.Activity_Title' | translate"
         class="tx-11"
         headerClass="tx-14"
-      />
-      @if (project()?.approvalStarted) {
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <div class="w-100 d-flex flex-align-end">
+            <div>
+              {{ "Projects.Activity_Title" | translate }}
+            </div>
+            <div class="flex-fill text-end">
+              <wbs-tree-toggler
+                (collapse)="treeService.collapseAll(treelist, phases)"
+                (expand)="treeService.expandAll(treelist, phases)"
+              />
+            </div>
+          </div>
+        </ng-template>
+      </kendo-treelist-column>
+      @if (project().approvalStarted) {
       <kendo-treelist-column
         [width]="175"
         [title]="'Approval'"
@@ -72,7 +88,7 @@
         headerClass="discipline-column tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
-          <wbs-tree-discipline-legend [list]="project()?.disciplines ?? []" />
+          <wbs-tree-discipline-legend [list]="project().disciplines" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />

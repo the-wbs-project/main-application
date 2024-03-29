@@ -36,7 +36,7 @@ import { UiState } from '../states';
     } @else {
     <wbs-discipline-list
       [fullList]="fullList()"
-      [selectedList]="list1()"
+      [selectedList]="selectedList()"
       [altClass]="altClass()"
       [itemClass]="itemClass()"
     />

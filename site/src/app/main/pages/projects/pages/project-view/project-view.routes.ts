@@ -5,6 +5,7 @@ import {
   Transformers,
   disciplineResolver,
   orgResolve,
+  projectCategoryResolver,
   userIdResolve,
 } from '@wbs/main/services';
 import { PROJECT_PAGES } from './models';
@@ -16,6 +17,7 @@ import {
   ProjectService,
   ProjectViewService,
   TimelineService,
+  approvalEnabledResolve,
   closeApprovalWindowGuard,
   projectClaimsResolve,
   projectIdResolve,
@@ -30,6 +32,7 @@ import {
   ProjectState,
   TasksState,
 } from './states';
+import { dirtyGuard } from '@wbs/main/guards';
 
 export const routes: Routes = [
   {
@@ -70,63 +73,69 @@ export const routes: Routes = [
       },
       {
         path: 'about',
+        loadComponent: () =>
+          import('./pages/project-about').then((x) => x.ProjectAboutComponent),
         canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
           navSection: 'about',
           crumbs: ['about'],
-          view: PROJECT_PAGES.ABOUT,
         },
         resolve: {
           claims: projectClaimsResolve,
           disciplines: disciplineResolver,
         },
-        loadComponent: () =>
-          import('./pages/project-about').then((x) => x.ProjectAboutComponent),
       },
       {
         path: 'tasks',
+        loadComponent: () =>
+          import('./pages/project-tasks').then((x) => x.ProjectTasksComponent),
+        loadChildren: () => import('./task-view.routes').then((x) => x.routes),
+        canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
-          title: 'ProjectUpload.PagesUploadProjectPlan',
+          navSection: 'tasks',
+          crumbs: ['tasks'],
         },
-        loadComponent: () =>
-          import('./pages/projects/tasks/tasks.component').then(
-            (x) => x.ProjectTasksComponent
-          ),
         resolve: {
           claims: projectClaimsResolve,
           projectUrl: projectUrlResolve,
         },
-        loadChildren: () => import('./task-view.routes').then((x) => x.routes),
       },
       {
         path: 'timeline',
-        canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: PROJECT_PAGES.TIMELINE,
-        },
         loadComponent: () =>
           import('./pages/project-timeline-page.component').then(
             (x) => x.ProjectTimelinePageComponent
           ),
+        canActivate: [projectNavGuard],
+        canDeactivate: [closeApprovalWindowGuard],
+        data: {
+          navSection: 'timeline',
+          crumbs: ['timeline'],
+        },
+        resolve: {
+          projectId: projectIdResolve,
+          projectUrl: projectUrlResolve,
+        },
       },
       {
         path: 'resources',
+        loadComponent: () =>
+          import('./pages/project-resources-page.component').then(
+            (x) => x.ProjectResourcesPageComponent
+          ),
+        canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
-          view: PROJECT_PAGES.RESOURCES,
+          navSection: 'resources',
+          crumbs: ['resources'],
         },
         resolve: {
           owner: orgResolve,
           projectId: projectIdResolve,
           claims: projectClaimsResolve,
         },
-        loadComponent: () =>
-          import('./pages/projects/project-resources-page.component').then(
-            (x) => x.ProjectResourcesPageComponent
-          ),
       },
       /*{
           path: 'discussions',
@@ -141,24 +150,59 @@ export const routes: Routes = [
             ),
         },*/
       {
-        path: 'settings',
-        canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          view: PROJECT_PAGES.SETTINGS,
-        },
-        loadChildren: () =>
-          import('./pages/projects/settings/project-settings.routes').then(
-            (x) => x.routes
-          ),
-      },
-      {
         path: 'upload',
+        loadChildren: () =>
+          import('./pages/projects/upload/upload.routes').then((x) => x.routes),
+        canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
           view: PROJECT_PAGES.UPLOAD,
         },
-        loadChildren: () =>
-          import('./pages/projects/upload/upload.routes').then((x) => x.routes),
+      },
+      {
+        path: 'settings/general',
+        loadComponent: () =>
+          import('./pages/project-settings-general').then(
+            (x) => x.ProjectSettingsGeneralComponent
+          ),
+        canActivate: [projectNavGuard],
+        canDeactivate: [dirtyGuard],
+        resolve: {
+          categories: projectCategoryResolver,
+        },
+      },
+      {
+        path: 'settings/phases',
+        loadComponent: () =>
+          import('./pages/projects/settings/pages/phases.component').then(
+            (x) => x.ProjectSettingsPhasesComponent
+          ),
+        canActivate: [projectNavGuard],
+        canDeactivate: [dirtyGuard],
+      },
+      {
+        path: 'settings/disciplines',
+        loadComponent: () =>
+          import('./pages/project-settings-disciplines').then(
+            (x) => x.DisciplinesComponent
+          ),
+        canActivate: [projectNavGuard],
+        canDeactivate: [dirtyGuard],
+        resolve: {
+          cats: disciplineResolver,
+        },
+      },
+      {
+        path: 'settings/roles',
+        loadComponent: () =>
+          import('./pages/project-settings-roles').then(
+            (x) => x.RolesComponent
+          ),
+        canActivate: [projectNavGuard],
+        resolve: {
+          org: orgResolve,
+          approvalEnabled: approvalEnabledResolve,
+        },
       },
     ],
   },

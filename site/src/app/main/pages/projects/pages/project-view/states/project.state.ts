@@ -148,7 +148,6 @@ export class ProjectState {
     });
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.notify.success('ProjectSettings.UserAdded')),
       switchMap(() => this.updateUsers(ctx)),
       tap(() => this.clearClaimCache()),
       tap(() =>
@@ -180,7 +179,6 @@ export class ProjectState {
     project.roles.splice(index, 1);
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.notify.success('ProjectSettings.UserRemoved')),
       switchMap(() => this.updateUsers(ctx)),
       tap(() => this.clearClaimCache()),
       tap(() =>
@@ -247,7 +245,6 @@ export class ProjectState {
     project.category = action.category;
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.notify.success('Projects.ProjectUpdated')),
       tap(() => this.saveActivity(...activities))
     );
   }
@@ -292,18 +289,15 @@ export class ProjectState {
     const state = ctx.getState();
     const project = state.current!;
     let originalList: ProjectCategory[];
-    let saveMessage: string;
     let saveAction: string;
 
     if (cType === PROJECT_NODE_VIEW.PHASE) {
-      saveMessage = 'Projects.ProjectPhasesUpdated';
       saveAction = PROJECT_ACTIONS.PHASES_CHANGED;
 
       originalList = [...project.phases];
 
       project.phases = changes.categories;
     } else {
-      saveMessage = 'Projects.ProjectDisciplinesUpdated';
       saveAction = PROJECT_ACTIONS.DISCIPLINES_CHANGED;
 
       originalList = [...project.disciplines];
@@ -312,7 +306,6 @@ export class ProjectState {
     }
 
     return this.saveProject(ctx, project).pipe(
-      tap(() => this.messaging.notify.success(saveMessage)),
       tap(() =>
         ctx.dispatch(
           cType === PROJECT_NODE_VIEW.DISCIPLINE &&

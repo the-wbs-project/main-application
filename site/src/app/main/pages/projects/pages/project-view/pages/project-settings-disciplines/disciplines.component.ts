@@ -9,7 +9,13 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Category, SaveState } from '@wbs/core/models';
+import { Store } from '@ngxs/store';
+import {
+  Category,
+  PROJECT_NODE_VIEW,
+  Project,
+  SaveState,
+} from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
@@ -19,11 +25,12 @@ import { SaveButtonComponent } from '@wbs/main/components/save-button.component'
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
-import { EntryService, EntryState } from '../../services';
+import { ChangeProjectCategories } from '../../actions';
+import { ProjectState } from '../../states';
 
 @Component({
   standalone: true,
-  templateUrl: './entry-settings-disciplines.component.html',
+  templateUrl: './disciplines.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CategoryDialogComponent,
@@ -37,8 +44,7 @@ import { EntryService, EntryState } from '../../services';
 })
 export class DisciplinesComponent implements OnInit, DirtyComponent {
   private readonly catService = inject(CategorySelectionService);
-  private readonly service = inject(EntryService);
-  readonly state = inject(EntryState);
+  private readonly store = inject(Store);
 
   readonly plus = faPlus;
   readonly checkIcon = faCheck;
@@ -52,7 +58,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
     this.disciplines.set(
       this.catService.build(
         this.cats() ?? [],
-        this.state.version()?.disciplines ?? []
+        this.getProject().disciplines ?? []
       )
     );
   }
@@ -78,13 +84,15 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
 
   save(): void {
     this.saveState.set('saving');
-    this.service
-      .disciplinesChangedAsync(
-        this.disciplines()!
-          .filter((x) => x.selected)
-          .map((x) =>
-            x.isCustom ? { id: x.id, label: x.label, icon: x.icon } : x.id
-          )
+
+    const results = this.catService.extract(
+      this.disciplines(),
+      this.getProject().disciplines
+    );
+
+    this.store
+      .dispatch(
+        new ChangeProjectCategories(PROJECT_NODE_VIEW.DISCIPLINE, results)
       )
       .pipe(
         delay(1000),
@@ -95,5 +103,9 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
         delay(5000)
       )
       .subscribe(() => this.saveState.set('ready'));
+  }
+
+  private getProject(): Project {
+    return this.store.selectSnapshot(ProjectState.current)!;
   }
 }

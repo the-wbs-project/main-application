@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,15 +10,14 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Category } from '@wbs/core/models';
+import { Category, SaveState } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { EntryService, EntryState, EntryTaskService } from '../../services';
 import { delay, tap } from 'rxjs/operators';
-import { NgClass } from '@angular/common';
+import { EntryService, EntryState, EntryTaskService } from '../../services';
 
 @Component({
   standalone: true,
@@ -39,9 +39,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
 
   readonly checkIcon = faCheck;
   readonly isDirty = signal(false);
-  readonly saveState = signal<'ready' | 'saving' | 'saved' | undefined>(
-    undefined
-  );
+  readonly saveState = signal<SaveState>('ready');
 
   readonly taskId = input.required<string>();
   readonly cats = input.required<Category[]>();

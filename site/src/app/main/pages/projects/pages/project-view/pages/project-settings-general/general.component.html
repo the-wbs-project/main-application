@@ -1,11 +1,8 @@
-<div class="card-header tx-medium">
-  {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
-</div>
-@if (state.entry(); as entry) { @if (state.version(); as version) {
+@if (project(); as project) {
 <div class="card dashboard-card mg-10">
   <div class="d-flex card-header flex-align-center">
     <div>
-      {{ "General.GeneralSettings" | translate }}
+      {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
     </div>
     <div class="flex-fill text-end">
       <wbs-fading-message
@@ -25,6 +22,21 @@
   <div class="card-body">
     <div class="container-fluid pd-15">
       <div class="row mb-5">
+        <label class="col-md-2 col-sm-12 col-form-label">
+          {{ "ProjectCreate.Category_Title" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <wbs-project-category-dropdown
+            [categories]="categories()"
+            [(category)]="project.category"
+          />
+          <wbs-info-message
+            cssClass="d-ib mg-t-5"
+            message="ProjectCreate.Category_Description"
+          />
+        </div>
+      </div>
+      <div class="row mb-5">
         <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
           {{ "General.Title" | translate }}
         </label>
@@ -33,11 +45,7 @@
             #title
             kendoTextBox
             class="form-control"
-            [(ngModel)]="version.title"
-          />
-          <wbs-info-message
-            cssClass="d-ib mg-t-5"
-            message="LibraryCreate.TemplateTitleDescriptionPhase"
+            [(ngModel)]="project.title"
           />
         </div>
       </div>
@@ -65,46 +73,19 @@
               (click)="askAi.set(true)"
             />
           </div>
-          <kendo-editor #description [(ngModel)]="version.description" />
-
-          <wbs-info-message
-            cssClass="d-ib mg-t-5"
-            message="Library.DescriptionHelpEntry"
-          />
+          <kendo-editor #description [(ngModel)]="project.description" />
         </div>
       </div>
-      <div class="row" [ngClass]="{ 'mb-5': entry.type === 'project' }">
-        <label class="col-md-2 col-sm-12 col-form-label">
-          {{ "LibraryCreate.Visibility" | translate }}
-        </label>
-        <div class="col-md-10 col-sm-12">
-          <wbs-visibility-selection [(visibility)]="entry.visibility" />
-        </div>
-      </div>
-      @if (entry.type === 'project') {
-      <div class="row">
-        <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
-          {{ "LibraryCreate.ProjectCategory" | translate }}
-        </label>
-        <div class="col-md-10 col-sm-12">
-          <wbs-project-category-dropdown
-            [categories]="categories()"
-            [category]="version.categories![0]"
-            (categoryChange)="version.categories = [$event!]"
-          />
-        </div>
-      </div>
-      }
     </div>
   </div>
 </div>
 
 @if (askAi()) {
 <wbs-description-ai-dialog
-  [(description)]="version.description"
-  getStartedLabel="AI.GetStartedLibraryEntry"
+  [(description)]="project.description"
+  getStartedLabel="AI.GetStartedProjectEntry"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="askAi.set(false)"
   (closed)="askAi.set(false)"
 />
-} } }
+} }

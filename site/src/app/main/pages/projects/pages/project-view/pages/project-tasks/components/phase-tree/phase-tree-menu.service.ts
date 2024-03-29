@@ -3,8 +3,8 @@ import { Store } from '@ngxs/store';
 import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
-import { PROJECT_TREE_MENU_ITEMS } from '../../../../../models';
-import { ProjectState } from '../../../../../states';
+import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
+import { ProjectState } from '../../../../states';
 
 declare type Seperator = { separator: true };
 

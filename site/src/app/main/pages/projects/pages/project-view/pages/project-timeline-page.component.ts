@@ -1,17 +1,17 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
+  input,
   OnInit,
   signal,
-  WritableSignal,
 } from '@angular/core';
+import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { TimelineComponent } from '@wbs/main/components/timeline';
 import { TimelineMenuItem } from '@wbs/core/models';
 import { TimelineViewModel } from '@wbs/core/view-models';
-import { ProjectNavigationService, TimelineService } from '../services';
-import { ProjectState } from '../states';
-import { TASK_PAGES } from '../models';
+import { TimelineComponent } from '@wbs/main/components/timeline';
+import { TimelineService } from '../services';
 
 @Component({
   standalone: true,
@@ -27,23 +27,18 @@ import { TASK_PAGES } from '../models';
   imports: [TimelineComponent],
 })
 export class ProjectTimelinePageComponent implements OnInit {
-  readonly timeline: WritableSignal<TimelineViewModel[]> = signal([]);
+  private readonly timelineService = inject(TimelineService);
+  private readonly store = inject(Store);
+
+  readonly projectId = input.required<string>();
+  readonly projectUrl = input.required<string[]>();
   readonly loaded = signal(false);
   readonly loading = signal(false);
+  readonly timeline = signal<TimelineViewModel[]>([]);
   readonly length = signal<number | undefined>(undefined);
 
-  constructor(
-    private readonly nav: ProjectNavigationService,
-    private readonly store: Store,
-    private readonly timelineService: TimelineService
-  ) {}
-
-  private get projectId(): string {
-    return this.store.selectSnapshot(ProjectState.current)!.id;
-  }
-
   ngOnInit(): void {
-    this.timelineService.getCountAsync(this.projectId).subscribe((count) => {
+    this.timelineService.getCountAsync(this.projectId()).subscribe((count) => {
       this.length.set(count);
 
       if (count > 0) {
@@ -54,7 +49,9 @@ export class ProjectTimelinePageComponent implements OnInit {
 
   timelineAction(item: TimelineMenuItem) {
     if (item.action === 'navigate') {
-      this.nav.toTaskPage(item.objectId, TASK_PAGES.ABOUT);
+      this.store.dispatch(
+        new Navigate([...this.projectUrl(), 'tasks', item.objectId])
+      );
     } else if (item.action === 'restore') {
       //this.store.dispatch(new RestoreProject(item.activityId));
     }
@@ -66,7 +63,7 @@ export class ProjectTimelinePageComponent implements OnInit {
     const timeline = this.timeline();
 
     this.timelineService
-      .loadMore(timeline, this.projectId)
+      .loadMore(timeline, this.projectId())
       .subscribe((newTimeline) => {
         this.loading.set(false);
         this.timeline.set([...newTimeline]);

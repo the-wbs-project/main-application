@@ -1,26 +1,29 @@
 import { PROJECT_CLAIMS } from '@wbs/core/models';
 import { NavigationLink } from '@wbs/main/models';
-import { PROJECT_PAGES } from './project-pages.const';
 
 const settings: NavigationLink[] = [
   {
     route: ['settings', 'general'],
     text: 'General.General',
+    section: 'general',
     claim: PROJECT_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'phases'],
     text: 'General.Phases',
+    section: 'phases',
     claim: PROJECT_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'disciplines'],
     text: 'General.Disciplines',
+    section: 'disciplines',
     claim: PROJECT_CLAIMS.UPDATE,
   },
   {
     route: ['settings', 'roles'],
     text: 'General.Roles',
+    section: 'roles',
     claim: PROJECT_CLAIMS.ROLES.READ,
   },
 ];
@@ -31,48 +34,49 @@ export const PROJECT_NAVIGATION: NavigationLink[] = [
     text: 'General.Views',
     items: [
       {
-        route: [PROJECT_PAGES.ABOUT],
+        route: ['about'],
         text: 'General.About',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
       {
-        route: [PROJECT_PAGES.TASKS],
+        route: ['tasks'],
         text: 'General.Tasks',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
       {
-        route: [PROJECT_PAGES.TIMELINE],
+        route: ['timeline'],
         text: 'General.Timeline',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
       {
-        route: [PROJECT_PAGES.RESOURCES],
+        route: ['resources'],
         text: 'General.Resources',
         cssClass: ['nav-item', 'tx-uppercase'],
       },
     ],
   },
   {
-    route: [PROJECT_PAGES.ABOUT],
+    route: ['about'],
     text: 'General.About',
     section: 'about',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
-    route: [PROJECT_PAGES.TASKS],
+    route: ['tasks'],
     text: 'General.Tasks',
     section: 'tasks',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
-    route: [PROJECT_PAGES.TIMELINE],
+    route: ['timeline'],
     text: 'General.Timeline',
     section: 'timeline',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {
-    route: [PROJECT_PAGES.RESOURCES],
+    route: ['resources'],
     text: 'General.Resources',
+    section: 'resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
   {

@@ -4,6 +4,8 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Utils } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { ProjectService } from './project.service';
+import { ProjectApprovalState } from '../states';
+import { Store } from '@ngxs/store';
 
 export const projectClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
@@ -20,6 +22,9 @@ export const taskIdResolve: ResolveFn<string> = (
 export const projectUrlResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
 ) => ProjectService.getProjectUrl(route);
+
+export const approvalEnabledResolve: ResolveFn<boolean> = () =>
+  inject(Store).select(ProjectApprovalState.enabled);
 
 function getProjectClaims(
   data: DataServiceFactory,

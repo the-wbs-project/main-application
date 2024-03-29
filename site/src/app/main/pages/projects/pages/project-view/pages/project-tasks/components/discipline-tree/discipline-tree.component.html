@@ -1,16 +1,17 @@
 <div class="tx-italic tx-10">&nbsp;</div>
 <div class="flex-fill">
+  @if (disciplines(); as disciplines) {
   <kendo-treelist
     #treelist
     class="h-100"
     kendoTreeListExpandable
     kendoTreeListSelectable
-    [kendoTreeListFlatBinding]="disciplines()"
+    [kendoTreeListFlatBinding]="disciplines"
     parentIdField="treeParentId"
     idField="treeId"
-    [initiallyExpanded]="false"
-    [(expandedKeys)]="expandedKeys"
     [selectable]="settings"
+    [initiallyExpanded]="false"
+    [(expandedKeys)]="treeService.expandedKeys"
   >
     <kendo-treelist-column
       field="levelText"
@@ -32,6 +33,21 @@
       class="tx-11"
       headerClass="tx-14"
       [title]="'Wbs.Task' | translate"
-    />
+    >
+      <ng-template kendoTreeListHeaderTemplate>
+        <div class="w-100 d-flex flex-align-end">
+          <div>
+            {{ "Projects.Activity_Title" | translate }}
+          </div>
+          <div class="flex-fill text-end">
+            <wbs-tree-toggler
+              (collapse)="treeService.collapseAll(treelist, disciplines)"
+              (expand)="treeService.expandAll(treelist, disciplines)"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </kendo-treelist-column>
   </kendo-treelist>
+  }
 </div>
