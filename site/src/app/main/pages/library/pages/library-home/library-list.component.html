@@ -2,19 +2,16 @@
   <div class="mg-t-20 mg-b-16 flex-grow-1">
     <div class="container-fluid">
       <div class="row mg-b-15">
-        <div class="col-12">
-          <wbs-page-header />
-        </div>
-      </div>
-      <div class="row mg-b-15">
-        <div class="col-12">
+        <div class="col-6">
           <kendo-dropdownbutton
+            themeColor="dark"
+            size="small"
             [data]="createMenu"
             (itemClick)="create($event)"
           >
-            Create
+            {{ "General.Create" | translate }}
             <ng-template kendoDropDownButtonItemTemplate let-dataItem>
-              <div class="d-flex flex-1 flex-align-center text-start">
+              <div class="d-flex flex-1 flex-align-center text-start pd-4">
                 <div class="tx-18" style="flex: 0 0 100px">
                   <fa-icon [icon]="dataItem | entryTypeIcon" />
                   {{ dataItem | entryTypeTitle | translate }}
@@ -25,6 +22,9 @@
               </div>
             </ng-template>
           </kendo-dropdownbutton>
+        </div>
+        <div class="col-6">
+          <wbs-page-header />
         </div>
       </div>
       <div class="row mg-b-15">

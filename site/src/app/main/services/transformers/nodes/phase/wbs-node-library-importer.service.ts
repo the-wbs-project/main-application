@@ -18,7 +18,6 @@ export class WbsNodeLibraryImporter extends BaseImporter {
   ): ProjectUploadData {
     const results: ProjectUploadData = {
       disciplines: this.getDisciplines(version.disciplines ?? [], people),
-      phases: [],
       removeIds: [],
       upserts: [],
     };

@@ -10,7 +10,7 @@ import {
   PROJECT_STATI,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages, Resources } from '@wbs/core/services';
+import { Resources } from '@wbs/core/services';
 import { UserRolesViewModel } from '@wbs/core/view-models';
 import { AuthState, MetadataState, RoleState } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
@@ -19,7 +19,7 @@ import { PROJECT_ACTIONS } from '../../../models';
 import {
   AddUserToRole,
   ChangeProjectBasics,
-  ChangeProjectCategories,
+  ChangeProjectDiscipines,
   ChangeProjectStatus,
   MarkProjectChanged,
   NavigateToView,
@@ -51,7 +51,6 @@ declare type Context = StateContext<StateModel>;
 export class ProjectState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly messaging: Messages,
     private readonly resources: Resources,
     private readonly services: ProjectService,
     private readonly store: Store,
@@ -66,14 +65,6 @@ export class ProjectState {
   @Selector()
   static navSection(state: StateModel): string | undefined {
     return state.navSection;
-  }
-
-  @Selector()
-  static phaseIds(state: StateModel): string[] {
-    return (
-      state.current?.phases?.map((x) => (typeof x === 'string' ? x : x.id)) ??
-      []
-    );
   }
 
   @Selector()
@@ -281,42 +272,28 @@ export class ProjectState {
     );
   }
 
-  @Action(ChangeProjectCategories)
-  changeProjectCategories(
+  @Action(ChangeProjectDiscipines)
+  changeProjectDiscipines(
     ctx: Context,
-    { cType, changes }: ChangeProjectCategories
+    { changes }: ChangeProjectDiscipines
   ): Observable<any> {
     const state = ctx.getState();
     const project = state.current!;
-    let originalList: ProjectCategory[];
-    let saveAction: string;
+    let originalList = [...project.disciplines];
 
-    if (cType === PROJECT_NODE_VIEW.PHASE) {
-      saveAction = PROJECT_ACTIONS.PHASES_CHANGED;
-
-      originalList = [...project.phases];
-
-      project.phases = changes.categories;
-    } else {
-      saveAction = PROJECT_ACTIONS.DISCIPLINES_CHANGED;
-
-      originalList = [...project.disciplines];
-
-      project.disciplines = changes.categories;
-    }
+    project.disciplines = changes.categories;
 
     return this.saveProject(ctx, project).pipe(
       tap(() =>
         ctx.dispatch(
-          cType === PROJECT_NODE_VIEW.DISCIPLINE &&
-            changes.removedIds.length > 0
+          changes.removedIds.length > 0
             ? new RemoveDisciplinesFromTasks(changes.removedIds)
             : new RebuildNodeViews()
         )
       ),
       tap(() =>
         this.saveActivity({
-          action: saveAction,
+          action: PROJECT_ACTIONS.DISCIPLINES_CHANGED,
           topLevelId: project.id,
           data: {
             from: originalList,

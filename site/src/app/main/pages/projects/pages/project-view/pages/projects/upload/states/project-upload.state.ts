@@ -12,7 +12,7 @@ import {
 } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { Transformers, Utils } from '@wbs/main/services';
-import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
+import { AuthState, MembershipState } from '@wbs/main/states';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../../../../models';
@@ -23,7 +23,6 @@ import {
   FileUploaded,
   LoadProjectFile,
   PeopleCompleted,
-  PhasesCompleted,
   PrepUploadToSave,
   ProcessFile,
   SaveUpload,
@@ -45,7 +44,6 @@ interface StateModel {
   loadingFile: boolean;
   pageTitle?: string;
   peopleList?: ImportPerson[];
-  phaseList?: PhaseListItem[];
   project?: Project;
   rawFile?: FileInfo;
   saving: boolean;
@@ -66,7 +64,6 @@ interface StateModel {
 export class ProjectUploadState {
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly resources: Resources,
     private readonly store: Store,
     private readonly transformer: Transformers
   ) {}
@@ -104,11 +101,6 @@ export class ProjectUploadState {
   @Selector()
   static peopleList(state: StateModel): ImportPerson[] | undefined {
     return state.peopleList;
-  }
-
-  @Selector()
-  static phaseList(state: StateModel): PhaseListItem[] | undefined {
-    return state.phaseList;
   }
 
   @Selector()
@@ -279,44 +271,11 @@ export class ProjectUploadState {
     ctx: StateContext<StateModel>,
     { answer }: AppendOrOvewriteSelected
   ): Observable<void> {
-    const phaseList: PhaseListItem[] = [];
-    const state = ctx.getState();
-
-    if (answer === 'append')
-      for (const idOrCat of state.project!.phases ?? []) {
-        phaseList.push({ idOrCat, isEditable: false });
-      }
-
-    const phaseNames = new Map<string, string>();
-
-    for (const cat of this.store.selectSnapshot(MetadataState.phases)) {
-      phaseNames.set(this.resources.get(cat.label), cat.id);
-    }
-    if (state.uploadResults?.results)
-      for (const row of state.uploadResults.results) {
-        if (row.levelText.split('.').length === 1) {
-          const sameAs = phaseNames.get(row.title);
-
-          phaseList.push({ text: row.title, sameAs, isEditable: true });
-        }
-      }
     ctx.patchState({
       action: answer,
-      phaseList,
     });
-    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'phases']));
-  }
-
-  @Action(PhasesCompleted)
-  phasesCompleted(
-    ctx: StateContext<StateModel>,
-    { results }: PhasesCompleted
-  ): Observable<void> {
-    const fileType = ctx.getState().fileType!;
-    const urlSuffix = fileType === 'excel' ? 'saving' : 'disciplines';
-    ctx.patchState({
-      phaseList: results,
-    });
+    const urlSuffix =
+      ctx.getState().fileType === 'excel' ? 'saving' : 'disciplines';
     return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), urlSuffix]));
   }
 
@@ -338,7 +297,6 @@ export class ProjectUploadState {
     });
     const state = ctx.getState();
     const people = new Map<string, string>();
-    const phases = new Map<string, string | undefined>();
     const nodes = new Map<string, WbsImportResult>();
     //
     //  Put people into map
@@ -347,14 +305,6 @@ export class ProjectUploadState {
       if (person.disciplineId === undefined) continue;
 
       people.set(person.name.toLowerCase(), person.disciplineId);
-    }
-    //
-    //  Put phases into map
-    //
-    for (const phase of state.phaseList ?? []) {
-      if (phase.isEditable) {
-        phases.set(phase.text, phase.sameAs);
-      }
     }
     //
     //  Put nodes into map
@@ -374,7 +324,6 @@ export class ProjectUploadState {
           data.existingNodes,
           state.action!,
           people,
-          phases,
           nodes
         );
         return ctx.dispatch(new SaveUpload(results)).pipe(
@@ -397,7 +346,6 @@ export class ProjectUploadState {
     const state = ctx.getState();
     const project = state.project!;
 
-    project.phases = results.phases;
     project.disciplines = results.disciplines;
 
     const saves: Observable<any>[] = [

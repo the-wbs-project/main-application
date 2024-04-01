@@ -13,8 +13,13 @@
   </div>
   <div class="mg-t-20 mg-b-16 flex-grow-1">
     <div class="container-fluid">
-      <div class="row mg-b-15 d-none d-lg-block">
-        <div class="col-12">
+      <div class="row mg-b-15 d-none d-lg-flex">
+        <div class="col-6">
+          <a class="btn btn-sm btn-dark" [routerLink]="['create']">
+            {{ "General.Create" | translate }}
+          </a>
+        </div>
+        <div class="col-6">
           <wbs-page-header />
         </div>
       </div>
@@ -22,13 +27,13 @@
         <div class="col-6">
           <button
             class="btn btn-dark btn-block"
-            (click)="filterToggle = !filterToggle"
+            (click)="filterToggle.set(!filterToggle())"
           >
             <fa-icon [icon]="faFilters" />
           </button>
 
           <a class="btn btn-dark btn-block mg-l-20" [routerLink]="['create']">
-            <fa-icon [icon]="faPlus" />&nbsp;Create
+            {{ "General.Create" | translate }}
           </a>
         </div>
         <div class="col-6">
@@ -39,8 +44,8 @@
         <div
           class="col-12 animate__animated animate__faster"
           [ngClass]="{
-            'd-none': !filterToggle,
-            animate__slideInUp: filterToggle,
+            'd-none': !filterToggle(),
+            animate__slideInUp: filterToggle(),
           }"
         >
           <wbs-project-list-filters

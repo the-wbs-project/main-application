@@ -3,6 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ProjectNode } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { Utils } from '@wbs/main/services';
 import { RoleState } from '@wbs/main/states';
 
@@ -40,6 +41,10 @@ export class ProjectService {
     return this.resources.get(
       useAbbreviations ? definition.abbreviation : definition.description
     );
+  }
+
+  getPhaseIds(nodes: ProjectNode[] | WbsNodeView[]): string[] {
+    return nodes.filter((x) => x.parentId == null).map((x) => x.id);
   }
 
   createTask(

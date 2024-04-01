@@ -167,10 +167,6 @@ export class EntryState {
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
   ): WbsNodeView[] {
-    return this.transformer.nodes.phase.view.runv2(
-      tasks,
-      entryType,
-      disciplines
-    );
+    return this.transformer.nodes.phase.view.run(tasks, entryType, disciplines);
   }
 }

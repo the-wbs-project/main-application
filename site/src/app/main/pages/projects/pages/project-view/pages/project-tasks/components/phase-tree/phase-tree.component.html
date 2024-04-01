@@ -1,4 +1,4 @@
-@if (phases(); as phases) {
+@if (tasks(); as tasks) {
 <div class="d-flex flex-column">
   <wbs-alert
     type="info"
@@ -11,7 +11,7 @@
       class="tx-12"
       kendoTreeListExpandable
       kendoTreeListSelectable
-      [kendoTreeListFlatBinding]="phases"
+      [kendoTreeListFlatBinding]="tasks"
       parentIdField="treeParentId"
       idField="treeId"
       [rowReorderable]="claims() | check : canEditClaim"
@@ -48,8 +48,8 @@
             </div>
             <div class="flex-fill text-end">
               <wbs-tree-toggler
-                (collapse)="treeService.collapseAll(treelist, phases)"
-                (expand)="treeService.expandAll(treelist, phases)"
+                (collapse)="treeService.collapseAll(treelist, tasks)"
+                (expand)="treeService.expandAll(treelist, tasks)"
               />
             </div>
           </div>

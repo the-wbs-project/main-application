@@ -11,9 +11,8 @@ import {
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
-import { faFilters, faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { plusIcon } from '@progress/kendo-svg-icons';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ListItem, PROJECT_STATI, Project } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
@@ -42,7 +41,6 @@ export class ProjectListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly service = inject(ProjectListService);
 
-  readonly faPlus = faPlus;
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
   readonly loading = signal(true);
@@ -70,7 +68,7 @@ export class ProjectListComponent implements OnInit {
     )
   );
   expanded = true;
-  filterToggle = false;
+  filterToggle = signal(false);
 
   ngOnInit(): void {
     this.categories.set(this.projectCategories().map((c) => c.id));

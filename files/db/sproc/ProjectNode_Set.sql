@@ -50,9 +50,9 @@ BEGIN
                         @Title,
                         @Description,
                         @DisciplineIds,
+                        GETUTCDATE(),
+                        GETUTCDATE(),
                         @PhaseIdAssociation,
-                        GETUTCDATE(),
-                        GETUTCDATE(),
                         0
                     )
                 END

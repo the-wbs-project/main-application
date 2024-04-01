@@ -3,7 +3,7 @@ import { Routes } from '@angular/router';
 import { NgxsModule, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_CLAIMS, Project } from '@wbs/core/models';
-import { Transformers } from '@wbs/main/services';
+import { Transformers, WbsNodeService } from '@wbs/main/services';
 import { Observable } from 'rxjs';
 import { first, map, skipWhile, switchMap } from 'rxjs/operators';
 import { ProjectState } from '../../../states';
@@ -51,6 +51,7 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(NgxsModule.forFeature([ProjectUploadState])),
       Transformers,
+      WbsNodeService,
     ],
   },
 ];

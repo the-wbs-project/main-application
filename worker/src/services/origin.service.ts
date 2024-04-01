@@ -35,6 +35,7 @@ export class OriginService {
       headers: req.raw.headers,
       method: req.method,
     });
+    console.log(res.status);
 
     const body = res.status === 202 || res.status === 204 ? null : await res.arrayBuffer();
 

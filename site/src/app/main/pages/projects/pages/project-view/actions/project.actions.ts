@@ -25,12 +25,9 @@ export class SetNavSection {
   constructor(readonly navSection: string | undefined) {}
 }
 
-export class ChangeProjectCategories {
-  static readonly type = '[Project] Change Project Categories';
-  constructor(
-    readonly cType: PROJECT_NODE_VIEW_TYPE,
-    readonly changes: ProjectCategoryChanges
-  ) {}
+export class ChangeProjectDiscipines {
+  static readonly type = '[Project] Change Project Disciplines';
+  constructor(readonly changes: ProjectCategoryChanges) {}
 }
 
 export class ChangeProjectBasics {

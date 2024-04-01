@@ -12,7 +12,6 @@ public class Project
     public string status { get; set; }
     public string mainNodeView { get; set; }
     public string category { get; set; }
-    public object[] phases { get; set; }
     public object[] disciplines { get; set; }
     public ProjectRole[] roles { get; set; }
     public bool? approvalStarted { get; set; }

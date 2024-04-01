@@ -113,7 +113,6 @@ public class ProjectDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Status", project.status);
         cmd.Parameters.AddWithValue("@MainNodeView", project.mainNodeView);
         cmd.Parameters.AddWithValue("@Category", project.category);
-        cmd.Parameters.AddWithValue("@Phases", DbJson(project.phases));
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(project.disciplines));
         cmd.Parameters.AddWithValue("@Roles", DbJson(project.roles));
         cmd.Parameters.AddWithValue("@ApprovalStarted", DbValue(project.approvalStarted));
@@ -136,7 +135,6 @@ public class ProjectDataService : BaseSqlDbService
             mainNodeView = DbValue<string>(reader, "MainNodeView"),
             category = DbValue<string>(reader, "Category"),
 
-            phases = GetCategoryList(DbValue<string>(reader, "Phases")),
             disciplines = GetCategoryList(DbValue<string>(reader, "Disciplines")),
             roles = DbJson<ProjectRole[]>(reader, "Roles"),
 

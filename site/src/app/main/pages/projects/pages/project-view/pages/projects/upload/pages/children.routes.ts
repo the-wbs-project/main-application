@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { setupGuard, startGuard, verifyStartedGuard } from './children.guards';
-import { disciplineListResolver, phaseListResolver } from '../services';
+import { disciplineListResolver } from '../services';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'start', pathMatch: 'full' },
@@ -36,20 +36,6 @@ export const routes: Routes = [
       import('./options-view/options-view.component').then(
         (x) => x.OptionsViewComponent
       ),
-  },
-  {
-    path: 'phases',
-    canActivate: [verifyStartedGuard, setupGuard],
-    data: {
-      title: 'ProjectUpload.Page_Phases',
-    },
-    loadComponent: () =>
-      import('./phase-view/phase-view.component').then(
-        (x) => x.PhaseViewComponent
-      ),
-    resolve: {
-      phases: phaseListResolver,
-    },
   },
   {
     path: 'disciplines',

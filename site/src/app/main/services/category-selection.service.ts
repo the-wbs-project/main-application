@@ -200,6 +200,14 @@ export class CategorySelectionService {
     return ids;
   }
 
+  add(list: CategorySelection[], item: CategorySelection): CategorySelection[] {
+    list = [item, ...list];
+
+    this.renumber(list);
+
+    return list;
+  }
+
   renumber(categories: CategorySelection[] | undefined): void {
     let i = 1;
 

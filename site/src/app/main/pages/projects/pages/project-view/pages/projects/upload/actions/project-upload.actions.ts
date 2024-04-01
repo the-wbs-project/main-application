@@ -39,11 +39,6 @@ export class AppendOrOvewriteSelected {
   constructor(readonly answer: 'append' | 'overwrite') {}
 }
 
-export class PhasesCompleted {
-  static readonly type = '[Project Upload] Phases Completed';
-  constructor(readonly results: PhaseListItem[]) {}
-}
-
 export class PeopleCompleted {
   static readonly type = '[Project Upload] People Completed';
   constructor(readonly results: ImportPerson[]) {}

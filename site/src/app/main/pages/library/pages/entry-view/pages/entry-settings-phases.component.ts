@@ -4,6 +4,7 @@ import {
   OnInit,
   computed,
   inject,
+  input,
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -11,9 +12,10 @@ import { SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { DirtyComponent } from '@wbs/main/models';
-import { CategorySelectionService } from '@wbs/main/services';
+import { CategorySelectionService, WbsNodeService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { EntryService, EntryTaskService } from '../services';
+import { EntryService, EntryState, EntryTaskService } from '../services';
+import { Category } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -30,14 +32,15 @@ import { EntryService, EntryTaskService } from '../services';
     </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [PhaseEditorComponent, TranslateModule],
-  providers: [CategorySelectionService, EntryService],
+  providers: [CategorySelectionService, EntryService, WbsNodeService],
 })
 export class PhasesComponent implements DirtyComponent, OnInit {
   private readonly catService = inject(CategorySelectionService);
   private readonly service = inject(EntryTaskService);
-  private readonly store = inject(SignalStore);
+  private readonly state = inject(EntryState);
+  private readonly wbsService = inject(WbsNodeService);
 
-  readonly cats = this.store.select(MetadataState.phases);
+  readonly cats = input.required<Category[]>();
   readonly phases = model<CategorySelection[]>([]);
   readonly isDirty = computed(() => this.catService.isListDirty(this.phases()));
 
@@ -52,6 +55,12 @@ export class PhasesComponent implements DirtyComponent, OnInit {
   }
 
   private set(): void {
-    this.phases.set(this.service.getPhasesForEdit());
+    this.phases.set(
+      this.wbsService.getPhasesForEdit(
+        this.cats(),
+        this.state.viewModels()!,
+        'Projects.PhaseRemoveConfirm'
+      )
+    );
   }
 }

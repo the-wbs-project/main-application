@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
+  Category,
   LibraryEntryNode,
   LibraryEntryVersion,
   ProjectCategory,
@@ -449,37 +450,6 @@ export class EntryTaskService {
           return this.saveAsync(upserts, removedIds, 'Library.TaskRemoved');
         })
       );
-  }
-
-  getPhasesForEdit(): CategorySelection[] {
-    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
-    const tasks = this.state.viewModels()!;
-    const counts = new Map<string, number>();
-    const phases: ProjectCategory[] = [];
-    const taskPhases = tasks
-      .filter((x) => x.parentId == undefined)
-      .sort((a, b) => a.order - b.order);
-
-    for (const phase of taskPhases) {
-      const id = phase.phaseIdAssociation ?? phase.id;
-
-      if (phase.phaseIdAssociation) phases.push(phase.phaseIdAssociation);
-      else {
-        phases.push({
-          id: phase.id,
-          label: phase.title,
-          description: phase.description,
-        });
-      }
-      counts.set(id, phase.children);
-    }
-
-    return this.categoryService.build(
-      phaseDefinitions,
-      phases,
-      'Projects.PhaseRemoveConfirm',
-      counts
-    );
   }
 
   savePhaseChangesAsync(phases: CategorySelection[]): Observable<void> {

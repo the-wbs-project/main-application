@@ -85,7 +85,6 @@ export class SaveSectionComponent {
 
     const phases = this.phases().filter((x) => x.selected);
     const disciplines: ProjectCategory[] = [];
-    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
 
     for (const discipline of this.disciplines()) {
       if (!discipline.selected) continue;

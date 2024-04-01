@@ -5,7 +5,9 @@ import { dirtyGuard } from '@wbs/main/guards';
 import {
   CategorySelectionService,
   Transformers,
+  WbsNodeService,
   disciplineResolver,
+  phaseCategoryResolver,
   projectCategoryResolver,
 } from '@wbs/main/services';
 import { EntryUploadState } from './pages/entry-upload/states';
@@ -45,6 +47,7 @@ export const routes: Routes = [
       EntryTaskRecorderService,
       EntryTaskService,
       Transformers,
+      WbsNodeService,
     ],
     resolve: {
       entryUrl: entryUrlResolve,
@@ -174,6 +177,9 @@ export const routes: Routes = [
         data: {
           section: 'settings',
           crumbs: ['settings', 'phases'],
+        },
+        resolve: {
+          cats: phaseCategoryResolver,
         },
       },
     ],

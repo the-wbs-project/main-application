@@ -10,7 +10,6 @@ CREATE PROCEDURE [dbo].[Project_Set]
     @Status nvarchar(50),
     @MainNodeView nvarchar(20),
     @Category nvarchar(50),
-    @Phases nvarchar(MAX),
     @Disciplines nvarchar(MAX),
     @Roles nvarchar(MAX),
     @ApprovalStarted bit = NULL
@@ -27,7 +26,6 @@ IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
             [Status] = @Status,
             [MainNodeView] = @MainNodeView,
             [Category] = @Category,
-            [Phases] = @Phases,
             [Disciplines] = @Disciplines,
             [Roles] = @Roles,
             [ApprovalStarted] = @ApprovalStarted
@@ -36,7 +34,7 @@ IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
 ELSE
     BEGIN
         INSERT INTO [dbo].[Projects]
-        VALUES (@Id, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Phases, @Disciplines, @Roles, @ApprovalStarted)
+        VALUES (@Id, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @Roles, @ApprovalStarted)
     END
 END
 GO

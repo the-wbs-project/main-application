@@ -1,9 +1,8 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  ListItem,
   Project,
   ProjectNode,
   PROJECT_NODE_VIEW,
@@ -13,9 +12,10 @@ import {
   UserRole,
   ProjectCategory,
 } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
+import { IdService, Resources } from '@wbs/core/services';
 import { AuthState, MetadataState } from '@wbs/main/states';
-import { Observable, switchMap, tap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
 import {
   CategoryChosen,
@@ -57,10 +57,9 @@ interface StateModel {
   },
 })
 export class ProjectCreateState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly store: Store
-  ) {}
+  private readonly data = inject(DataServiceFactory);
+  private readonly resources = inject(Resources);
+  private readonly store = inject(Store);
 
   @Selector()
   static category(state: StateModel): string | undefined {
@@ -233,7 +232,6 @@ export class ProjectCreateState {
       owner: state.owner!,
       createdBy: this.getUserId(),
       disciplines,
-      phases,
       category: state.category!,
       description: state.description,
       mainNodeView: state.nodeView!,
@@ -252,14 +250,17 @@ export class ProjectCreateState {
         const cat = catsPhases.find((x) => x.id === phase)!;
 
         nodes.push({
-          description: cat.description,
           disciplineIds: [],
-          id: cat.id,
+          id: IdService.generate(),
           order: i + 1,
           projectId: project.id,
-          title: cat.label,
           createdOn: now,
           lastModified: now,
+          phaseIdAssociation: cat.id,
+          title: this.resources.get(cat.label),
+          description: cat.description
+            ? this.resources.get(cat.description)
+            : '',
         });
       } else {
         nodes.push({
@@ -275,33 +276,6 @@ export class ProjectCreateState {
       }
     }
 
-    for (let i = 0; i < disciplines.length; i++) {
-      const discipline = disciplines[i];
-
-      if (typeof discipline === 'string') {
-        const cat = catsDiscipline.find((x) => x.id === discipline)!;
-
-        nodes.push({
-          description: cat.description,
-          id: cat.id,
-          order: i + 1,
-          projectId: project.id,
-          title: cat.label,
-          createdOn: now,
-          lastModified: now,
-        });
-      } else {
-        nodes.push({
-          description: discipline.description,
-          id: discipline.id,
-          order: i + 1,
-          projectId: project.id,
-          title: discipline.label,
-          createdOn: now,
-          lastModified: now,
-        });
-      }
-    }
     return this.data.projects.putAsync(project).pipe(
       switchMap(() =>
         this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])

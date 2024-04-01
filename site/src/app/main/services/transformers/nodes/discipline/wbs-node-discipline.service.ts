@@ -1,5 +1,5 @@
 import { Store } from '@ngxs/store';
-import { Category, ListItem, Project, WbsNode } from '@wbs/core/models';
+import { Category, Project, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { WbsNodeService } from '@wbs/main/services';
@@ -8,7 +8,8 @@ import { MetadataState } from '@wbs/main/states';
 export class WbsDisciplineNodeTransformer {
   constructor(
     private readonly resources: Resources,
-    private readonly store: Store
+    private readonly store: Store,
+    private readonly wbsService: WbsNodeService
   ) {}
 
   private get disciplineList(): Category[] {
@@ -38,7 +39,7 @@ export class WbsDisciplineNodeTransformer {
         });
     }
 
-    for (const p of project.phases) {
+    for (const p of this.wbsService.getPhases(projectNodes)) {
       if (typeof p === 'string') {
         const p2 = pList.find((c) => c.id === p);
 

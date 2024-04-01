@@ -100,17 +100,9 @@ export class ProjectViewService {
         const task = this.store
           .selectSnapshot(TasksState.nodes)!
           .find((x) => x.id === taskId)!;
-        const phase = this.project.phases.find((p) =>
-          typeof p === 'string' ? p === taskId : p.id === taskId
-        );
 
-        if (phase)
-          this.exportService.exportPhase(
-            this.owner,
-            this.project.id,
-            phase,
-            task
-          );
+        if (task.parentId == null)
+          this.exportService.exportPhase(this.owner, this.project.id, task);
         else if (task) this.exportService.exportTask(this.owner, task);
       }
     }
@@ -131,7 +123,7 @@ export class ProjectViewService {
 
       phases = this.transformers.nodes.phase.view.run(
         nodes,
-        project.phases,
+        'project',
         project.disciplines
       );
     }

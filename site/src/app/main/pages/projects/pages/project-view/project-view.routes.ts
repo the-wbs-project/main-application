@@ -2,7 +2,9 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import {
+  CategorySelectionService,
   Transformers,
+  WbsNodeService,
   disciplineResolver,
   orgResolve,
   projectCategoryResolver,
@@ -55,6 +57,7 @@ export const routes: Routes = [
           TasksState,
         ])
       ),
+      CategorySelectionService,
       ChecklistDataService,
       ChecklistTestService,
       LibraryEntryExportService,
@@ -63,6 +66,7 @@ export const routes: Routes = [
       ProjectViewService,
       TimelineService,
       Transformers,
+      WbsNodeService,
     ],
     children: [
       {

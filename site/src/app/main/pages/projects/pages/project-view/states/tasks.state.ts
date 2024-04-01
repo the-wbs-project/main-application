@@ -77,13 +77,7 @@ export class TasksState {
 
   @Selector()
   static taskCount(state: StateModel): number {
-    if (!state.nodes || !state.project) return 0;
-
-    const phaseIds = state.project.phases.map((x) =>
-      typeof x === 'string' ? x : x.id
-    );
-
-    return state.nodes.filter((x) => phaseIds.indexOf(x.id) === -1).length;
+    return state.nodes?.filter((x) => x.parentId == null).length ?? 0;
   }
 
   @Action(VerifyTasks)
@@ -130,7 +124,7 @@ export class TasksState {
     );
     const phases = this.transformers.nodes.phase.view.run(
       state.nodes,
-      state.project.phases,
+      'project',
       state.project.disciplines
     );
     ctx.patchState({ phases });

@@ -19,6 +19,5 @@ export interface Project {
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;
   disciplines: ProjectCategory[];
-  phases: ProjectCategory[];
   roles: UserRole[];
 }

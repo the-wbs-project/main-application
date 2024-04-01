@@ -13,7 +13,7 @@ import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
-import { ChangeProjectCategories } from '../../../../actions';
+import { ChangeProjectDiscipines } from '../../../../actions';
 import { ProjectState, TasksState } from '../../../../states';
 
 @Component({
@@ -52,11 +52,9 @@ export class ProjectSettingsPhasesComponent implements OnInit, DirtyComponent {
 
   save(): void {
     const project = this.store.selectSnapshot(ProjectState.current)!;
-    const results = this.catService.extract(this.categories, project.phases);
+    const results = this.catService.extract(this.categories, []); // project.phases);
 
-    this.store.dispatch(
-      new ChangeProjectCategories(PROJECT_NODE_VIEW.PHASE, results)
-    );
+    this.store.dispatch(new ChangeProjectDiscipines(results));
     this.isDirty.set(false);
   }
 
@@ -67,7 +65,7 @@ export class ProjectSettingsPhasesComponent implements OnInit, DirtyComponent {
 
     let counts = new Map<string, number>();
     const nodes = this.store.selectSnapshot(TasksState.nodes)!;
-
+    /*
     for (const cat of project.phases) {
       const id = typeof cat === 'string' ? cat : cat.id;
 
@@ -79,7 +77,7 @@ export class ProjectSettingsPhasesComponent implements OnInit, DirtyComponent {
       project.phases,
       'Projects.PhaseRemoveConfirm',
       counts
-    );
+    );*/
     this.cd.detectChanges();
   }
 }

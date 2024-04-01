@@ -25,7 +25,7 @@ import { SaveButtonComponent } from '@wbs/main/components/save-button.component'
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
-import { ChangeProjectCategories } from '../../actions';
+import { ChangeProjectDiscipines } from '../../actions';
 import { ProjectState } from '../../states';
 
 @Component({
@@ -91,9 +91,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
     );
 
     this.store
-      .dispatch(
-        new ChangeProjectCategories(PROJECT_NODE_VIEW.DISCIPLINE, results)
-      )
+      .dispatch(new ChangeProjectDiscipines(results))
       .pipe(
         delay(1000),
         tap(() => {
