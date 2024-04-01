@@ -157,7 +157,7 @@ jobs:
     steps:
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "pages"
+          rootFolderOrFile: "pages/_worker.js"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Pages.zip"
