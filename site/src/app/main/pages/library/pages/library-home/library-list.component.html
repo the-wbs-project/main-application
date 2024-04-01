@@ -1,24 +1,8 @@
 <div class="d-flex">
-  <div class="border-end pd-r-20 d-none d-lg-block">
-    <div class="wd-250"></div>
-  </div>
   <div class="mg-t-20 mg-b-16 flex-grow-1">
     <div class="container-fluid">
-      <div class="row mg-b-15 d-none d-lg-block">
+      <div class="row mg-b-15">
         <div class="col-12">
-          <wbs-page-header />
-        </div>
-      </div>
-      <div class="row mg-b-15 d-lg-none flex-align-center">
-        <div class="col-6">
-          <button
-            class="btn btn-dark btn-block"
-            (click)="filterToggle = !filterToggle"
-          >
-            <fa-icon [icon]="faFilters" />
-          </button>
-        </div>
-        <div class="col-6">
           <wbs-page-header />
         </div>
       </div>
@@ -46,21 +30,48 @@
       <div class="row mg-b-15">
         <div class="col-12">
           <ul class="list-group">
-            @for (entry of entries(); track entry.entryId) {
-            <li class="list-group-item">
-              <a
-                class="text-decoration-none"
-                [routerLink]="[
-                  'view',
-                  entry.ownerId,
-                  entry.entryId,
-                  entry.version
-                ]"
-              >
-                {{ entry.title }}
-              </a>
-            </li>
-            }
+            <table class="table table-hover">
+              <tr>
+                <th>Name</th>
+                <th>Type</th>
+                <th>Last Updated</th>
+              </tr>
+              <tbody>
+                @for (entry of entries(); track entry.entryId) {
+                <tr
+                  class="pointer"
+                  [routerLink]="[
+                    'view',
+                    entry.ownerId,
+                    entry.entryId,
+                    entry.version
+                  ]"
+                >
+                  <td>{{ entry.title }}</td>
+                  <td>
+                    <fa-icon [icon]="entry.type | entryTypeIcon" />
+                    {{ entry.type | entryTypeTitle | translate }}
+                  </td>
+                  <td>{{ entry.lastModified | dateText }}</td>
+                </tr>
+                <!--
+                <li class="list-group-item">
+                  <a
+                    class="text-decoration-none"
+                    [routerLink]="[
+                      'view',
+                      entry.ownerId,
+                      entry.entryId,
+                      entry.version
+                    ]"
+                  >
+                    {{ entry.title }}
+                  </a>
+                </li>
+              -->
+                }
+              </tbody>
+            </table>
           </ul>
         </div>
       </div>

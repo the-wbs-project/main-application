@@ -21,6 +21,7 @@ import { plusIcon } from '@progress/kendo-svg-icons';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { EntryTypeDescriptionPipe } from '../../pipes/entry-type-description.pipe';
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
@@ -31,6 +32,7 @@ import { EntryCreationService } from './services';
   templateUrl: './library-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DateTextPipe,
     DialogModule,
     DropDownButtonModule,
     EntryTypeDescriptionPipe,
