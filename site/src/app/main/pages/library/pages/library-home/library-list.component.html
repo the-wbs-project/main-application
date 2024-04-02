@@ -1,6 +1,6 @@
 <div class="d-flex">
-  <div class="mg-t-20 mg-b-16 flex-grow-1">
-    <div class="container-fluid">
+  <div class="mg-t-20 mg-b-16 flex-grow-1 text-center">
+    <div class="container-fluid text-start" style="max-width: 1200px">
       <div class="row mg-b-15">
         <div class="col-6">
           <kendo-dropdownbutton
@@ -31,10 +31,10 @@
         <div class="col-12">
           <ul class="list-group">
             <table class="table table-hover">
-              <tr>
-                <th>Name</th>
-                <th>Type</th>
-                <th>Last Updated</th>
+              <tr class="bg-dark text-white">
+                <th class="pd-10 fw-normal">Name</th>
+                <th class="pd-10 fw-normal">Type</th>
+                <th class="pd-10 fw-normal">Last Updated</th>
               </tr>
               <tbody>
                 @for (entry of entries(); track entry.entryId) {
