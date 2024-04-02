@@ -22,9 +22,10 @@ import { EntryActionButtonService } from '../services';
 export class EntryActionButtonComponent {
   readonly service = inject(EntryActionButtonService);
 
+  readonly entryType = input.required<string>();
   readonly entryUrl = input.required<string[]>();
   readonly claims = input.required<string[]>();
   readonly menu = computed(() =>
-    this.service.buildMenu(this.entryUrl(), this.claims())
+    this.service.buildMenu(this.entryType(), this.entryUrl(), this.claims())
   );
 }

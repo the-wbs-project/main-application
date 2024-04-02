@@ -2,13 +2,11 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
   output,
   computed,
   inject,
   model,
   signal,
-  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -36,6 +34,7 @@ import { MetadataState } from '@wbs/main/states';
 import { PhaseSelectionComponent } from '../../../../components/phase-section';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
+import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 
 @Component({
   standalone: true,
@@ -49,6 +48,7 @@ import { SaveSectionComponent } from './components/save-section';
     NgClass,
     PhaseSelectionComponent,
     SaveSectionComponent,
+    ScrollToTopDirective,
     StepperModule,
     TextBoxModule,
     TranslateModule,
@@ -62,7 +62,6 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   private readonly catService = inject(CategorySelectionService);
   private readonly store = inject(Store);
 
-  readonly mainView = viewChild<ElementRef<HTMLDivElement>>('mainView');
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
   readonly phase = model<string | Phase | undefined>(undefined);
@@ -126,12 +125,10 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   back(): void {
     this.dir.set('left');
     this.view.update((x) => x - 1);
-    this.mainView()?.nativeElement?.scrollTo(0, 0);
   }
 
   next(): void {
     this.dir.set('right');
     this.view.update((x) => x + 1);
-    this.mainView()?.nativeElement?.scrollTo(0, 0);
   }
 }

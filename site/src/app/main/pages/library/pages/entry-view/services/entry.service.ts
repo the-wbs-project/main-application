@@ -1,5 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Category,
@@ -9,8 +15,10 @@ import {
 } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { Utils } from '@wbs/main/services';
+import { MembershipState } from '@wbs/main/states';
 import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { ProjectCreationComponent } from '../components/project-creation';
 import { EntryActivityService } from './entry-activity.service';
 import { EntryState } from './entry-state.service';
 
@@ -18,8 +26,10 @@ import { EntryState } from './entry-state.service';
 export class EntryService {
   private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
+  private readonly dialogService = inject(DialogService);
   private readonly messages = inject(Messages);
   private readonly state = inject(EntryState);
+  private readonly store = inject(Store);
 
   private get entry(): LibraryEntry {
     return this.state.entry()!;
@@ -61,10 +71,28 @@ export class EntryService {
       task.subTasks = [];
       task.parent = undefined;
     }
-    console.log(tasks);
-
     this.data.wbsExport
       .runAsync(version.title, 'xlsx', customDisciplines, tasks)
+      .subscribe();
+  }
+
+  createProject(): void {
+    const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+    const dialog = this.dialogService.open({
+      content: ProjectCreationComponent,
+    });
+    (dialog.content.instance as ProjectCreationComponent).setup(
+      this.state.version()!,
+      this.state.tasks()!
+    );
+    dialog.result
+      .pipe(
+        filter((x) => !(x instanceof DialogCloseResult)),
+        map((id) => <string>id),
+        switchMap((id) =>
+          this.store.dispatch(new Navigate(['/', org, 'projects', 'view', id]))
+        )
+      )
       .subscribe();
   }
 

@@ -5,16 +5,15 @@ import {
   computed,
   inject,
   model,
-  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
-  faDiagramSubtask,
   faFloppyDisk,
   faInfo,
+  faLock,
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,21 +24,30 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { SignalStore } from '@wbs/core/services';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import {
+  LibraryEntryNode,
+  LibraryEntryVersion,
+  ListItem,
+  Member,
+} from '@wbs/core/models';
+import { IdService, SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
+import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
+import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
+import { forkJoin } from 'rxjs';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { RolesSectionComponent } from './components/roles-section';
 import { SaveSectionComponent } from './components/save-section';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 
 @Component({
   standalone: true,
-  templateUrl: './entry-project-creation.component.html',
+  templateUrl: './project-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogModule,
@@ -50,6 +58,7 @@ import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive
     NgClass,
     PhaseEditorComponent,
     ProjectCategoryDropdownComponent,
+    RolesSectionComponent,
     SaveSectionComponent,
     ScrollToTopDirective,
     StepperModule,
@@ -59,38 +68,39 @@ import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive
   ],
   providers: [CategorySelectionService],
 })
-export class EntryProjectCreationComponent extends DialogContentBase {
-  readonly done = output<void>();
-
+export class ProjectCreationComponent extends DialogContentBase {
+  private readonly data = inject(DataServiceFactory);
   private readonly catService = inject(CategorySelectionService);
   private readonly store = inject(SignalStore);
 
-  readonly owner = signal<string | undefined>(undefined);
-  readonly templateTitle = model<string>('');
-  readonly category = model<string | undefined>(undefined);
-  readonly visibility = model<'public' | 'private'>('public');
-  readonly phases = model<CategorySelection[]>(
-    this.catService.build(this.store.selectSnapshot(MetadataState.phases), [])
-  );
-  readonly disciplines = model<CategorySelection[]>(
-    this.catService.build(
-      this.store.selectSnapshot(MetadataState.disciplines),
-      []
-    )
-  );
   readonly faSpinner = faSpinner;
+  readonly loading = signal(true);
   readonly view = model<number>(0);
-  readonly categories = this.store.select(MetadataState.projectCategories);
+  readonly newId = IdService.generate();
+  readonly owner = signal<string | undefined>(undefined);
+  readonly members = signal<Member[]>([]);
+  readonly approverIds = signal<string[]>([]);
+  readonly pmIds = signal<string[]>([]);
+  readonly smeIds = signal<string[]>([]);
+  readonly categories = signal<ListItem[]>([]);
+  readonly tasks = signal<LibraryEntryNode[]>([]);
+  readonly projectTitle = model<string>('');
+  readonly category = model<string | undefined>(undefined);
+  readonly disciplines = model<CategorySelection[]>([]);
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
   readonly dir = signal<'left' | 'right' | undefined>('left');
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
-    { label: 'General.Phases', icon: faDiagramSubtask },
-    { label: 'General.Disciplines', icon: faPeople, isOptional: true },
+    { label: 'General.Disciplines', icon: faPeople },
+    { label: 'General.Roles', icon: faLock },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
+
+  readonly approvalEnabled =
+    this.store.selectSnapshot(MembershipState.organization)?.metadata
+      ?.projectApprovalRequired ?? false;
 
   readonly disciplineReview = computed(() =>
     this.disciplines()
@@ -99,18 +109,53 @@ export class EntryProjectCreationComponent extends DialogContentBase {
       .join(', ')
   );
 
+  setup(version: LibraryEntryVersion, tasks: LibraryEntryNode[]): void {
+    const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+
+    forkJoin({
+      members: this.data.memberships.getMembershipUsersAsync(org),
+      disciplines: this.store.selectOnceAsync(MetadataState.disciplines),
+      categories: this.store.selectOnceAsync(MetadataState.projectCategories),
+      org: this.store.selectOnceAsync(MembershipState.organization),
+      userId: this.store.selectOnceAsync(AuthState.userId),
+    }).subscribe(({ categories, disciplines, members, org, userId }) => {
+      this.members.set(members);
+      this.tasks.set(tasks);
+      this.pmIds.set([userId!]);
+      this.owner.set(org!.name);
+      this.categories.set(categories);
+      this.disciplines.set(this.catService.build(disciplines, []));
+      this.projectTitle.set(version.title);
+      this.disciplines.update((disciplines) => {
+        for (const x of version.disciplines) {
+          if (typeof x === 'string') {
+            disciplines.find((d) => d.id === x)!.selected = true;
+          } else {
+            disciplines.push({
+              ...x,
+              selected: true,
+              isCustom: true,
+            });
+          }
+        }
+        return [...disciplines];
+      });
+      this.loading.set(false);
+    });
+  }
+
   //make a computed one day, but for now it seems arrays in modals dont trigger
   canContinue(): boolean {
     const view = this.view();
-    const phases = this.phases();
     const category = this.category();
-    const title = this.templateTitle();
+    const title = this.projectTitle();
+    const disciplines = this.disciplines();
 
     if (view === 0) {
       return category !== undefined && title.trim() !== '';
     }
     if (view === 1) {
-      return phases.some((x) => x.selected);
+      return disciplines.some((x) => x.selected);
     }
     return true;
   }

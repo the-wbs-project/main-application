@@ -3,27 +3,24 @@ import {
   Component,
   computed,
   input,
-  Input,
   OnInit,
   signal,
   WritableSignal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, RoleIds } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
+import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { ProjectRolesComponent } from '@wbs/main/pages/projects/components/project-roles/project-roles.component';
 import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
 import { ProjectCreateState } from '../../states';
-import { SignalStore } from '@wbs/core/services';
 
 @Component({
   standalone: true,

@@ -17,9 +17,9 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
+import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { CategorySelectionService, WbsNodeService } from '@wbs/main/services';
-import { ProjectRolesComponent } from '../../../../components/project-roles';
 import { TasksState } from '../../states';
 
 @Component({

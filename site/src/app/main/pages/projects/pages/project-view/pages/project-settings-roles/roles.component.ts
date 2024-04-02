@@ -14,9 +14,9 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, Project, ROLES, Role, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
+import { ProjectRolesComponent } from '@wbs/main/components/project-roles/project-roles.component';
 import { RoleState } from '@wbs/main/states';
 import { delay, tap } from 'rxjs/operators';
-import { ProjectRolesComponent } from '../../../../components/project-roles/project-roles.component';
 import { AddUserToRole, RemoveUserToRole } from '../../actions';
 import { ProjectState } from '../../states';
 

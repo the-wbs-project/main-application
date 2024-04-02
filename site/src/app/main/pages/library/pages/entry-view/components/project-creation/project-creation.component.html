@@ -23,30 +23,31 @@
       [appScrollToTop]="view()"
       class="tx-center flex-fill pd-t-20 pd-x-10 scroll"
     >
-      @if (view() === 0) {
+      @if (loading()) {
+      <div class="w-100 mg-t-50">
+        <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+        <h3 class="pd-t-20">
+          {{ "General.Loading" | translate }}
+        </h3>
+      </div>
+      } @else if (view() === 0) {
       <div
         class="d-ib w-100 mx-wd-800 tx-left animate__animated"
         [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
       >
         <div class="pd-x-12 mb-3">
           <label for="templateTitle" class="form-label tx-18">
-            {{ "LibraryCreate.TemplateTitle" | translate }}
+            Project Title
           </label>
           <input
             kendoTextBox
             name="templateTitle"
             id="templateTitle"
-            [(ngModel)]="templateTitle"
+            [(ngModel)]="projectTitle"
           />
           <label class="d-ib tx-12 tx-italic mg-t-5">
             {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
           </label>
-        </div>
-        <div class="pd-x-12 mb-3">
-          <label class="form-label tx-18">
-            {{ "LibraryCreate.Visibility" | translate }}
-          </label>
-          <wbs-visibility-selection [(visibility)]="visibility" />
         </div>
         <div class="pd-x-12">
           <label class="form-label tx-18">
@@ -61,21 +62,6 @@
         </div>
       </div>
       } @else if (view() === 1) {
-      <div
-        class="d-ib w-100 animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
-        <div class="pd-y-15 pd-x-30 tx-14">
-          {{ "LibraryCreate.DisciplinesHeader" | translate }}
-        </div>
-        <div class="text-start">
-          <wbs-phase-editor [(categories)]="phases" />
-        </div>
-      </div>
-      } @else if (view() === 2) {
 
       <div
         class="d-ib w-100 mx-wd-800 text-center animate__animated"
@@ -94,6 +80,28 @@
           />
         </div>
       </div>
+      } @else if (view() === 2) {
+
+      <div
+        class="d-ib w-100 text-center animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <div class="pd-y-15 pd-x-30 tx-14">
+          {{ "General.Roles" | translate }}
+        </div>
+        <div class="d-ib w-100" style="max-width: 800px">
+          <wbs-roles-section
+            [(pmIds)]="pmIds"
+            [(smeIds)]="smeIds"
+            [(approverIds)]="approverIds"
+            [approvalEnabled]="approvalEnabled"
+            [members]="members()"
+          />
+        </div>
+      </div>
       } @else if (view() === 3) {
 
       <div
@@ -105,12 +113,17 @@
       >
         <wbs-save-section
           [owner]="owner()!"
-          [phases]="phases()"
+          [tasks]="tasks()"
+          [newId]="newId"
+          [pmIds]="pmIds()"
+          [smeIds]="smeIds()"
+          [approverIds]="approverIds()"
+          [members]="members()"
+          [approvalEnabled]="approvalEnabled"
           [category]="(categories() | findById : category()!)!"
           [disciplines]="disciplines()"
-          [templateTitle]="templateTitle()"
-          [visibility]="visibility()"
-          (close)="dialog.close($event)"
+          [templateTitle]="projectTitle()"
+          (done)="dialog.close(newId)"
         />
       </div>
       }
@@ -118,6 +131,7 @@
   </div>
 
   <kendo-dialog-actions>
+    @if (!loading()) {
     <div class="flex-grow-1 text-start">
       @if (view() > 0) {
       <button class="btn btn-warning" (click)="back()">
@@ -125,10 +139,6 @@
       </button>
       }
     </div>
-    <div class="flex-grow-1 tx-10 text-center pd-t-10 tx-italic">
-      * {{ "General.Optional" | translate }}
-    </div>
-
     <div class="flex-grow-1 text-end">
       @if (view() < 3) {
       <button
@@ -140,5 +150,6 @@
       </button>
       }
     </div>
+    }
   </kendo-dialog-actions>
 </kendo-dialog>

@@ -30,6 +30,7 @@ import { MetadataState } from '@wbs/main/states';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { TitleFormComponent } from './components/title-form';
+import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 
 @Component({
   standalone: true,
@@ -41,6 +42,7 @@ import { TitleFormComponent } from './components/title-form';
     FontAwesomeModule,
     NgClass,
     SaveSectionComponent,
+    ScrollToTopDirective,
     StepperModule,
     TitleFormComponent,
     TranslateModule,

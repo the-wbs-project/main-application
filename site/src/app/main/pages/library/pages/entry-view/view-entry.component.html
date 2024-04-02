@@ -9,7 +9,11 @@
       <div class="d-ib mg-r-15">
         <wbs-page-header />
       </div>
-      <wbs-entry-action-button [entryUrl]="entryUrl()" [claims]="claims()" />
+      <wbs-entry-action-button
+        [entryType]="state.entry()!.type"
+        [entryUrl]="entryUrl()"
+        [claims]="claims()"
+      />
     </div>
   </div>
   <div class="card border border-dark flex-fill">
