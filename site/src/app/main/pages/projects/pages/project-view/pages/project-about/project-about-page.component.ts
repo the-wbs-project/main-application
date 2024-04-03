@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { ListItem, PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
+import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
@@ -56,7 +56,6 @@ export class ProjectAboutComponent {
   private readonly store = inject(SignalStore);
 
   readonly claims = input.required<string[]>();
-  readonly disciplines = input.required<ListItem[]>();
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);

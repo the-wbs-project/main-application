@@ -81,6 +81,7 @@ export const PROJECT_NAVIGATION: NavigationLink[] = [
   },
   {
     text: 'General.Settings',
+    section: 'settings',
     items: settings,
     claim: PROJECT_CLAIMS.SETTINGS.READ,
     cssClass: ['nav-item', 'tx-uppercase'],

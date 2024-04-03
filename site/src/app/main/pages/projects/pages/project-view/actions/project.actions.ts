@@ -1,9 +1,4 @@
-import {
-  PROJECT_NODE_VIEW_TYPE,
-  PROJECT_STATI,
-  ProjectCategoryChanges,
-  User,
-} from '@wbs/core/models';
+import { PROJECT_STATI, ProjectCategoryChanges, User } from '@wbs/core/models';
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';
@@ -20,7 +15,7 @@ export class NavigateToView {
   constructor(readonly view: string) {}
 }
 
-export class SetNavSection {
+export class SetProjectNavSection {
   static readonly type = '[Project] Set Nav Section';
   constructor(readonly navSection: string | undefined) {}
 }

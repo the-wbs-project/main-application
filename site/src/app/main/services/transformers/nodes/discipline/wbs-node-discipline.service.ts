@@ -1,23 +1,21 @@
-import { Store } from '@ngxs/store';
 import { Category, Project, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { WbsNodeService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
+import { CategoryState, WbsNodeService } from '@wbs/main/services';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
+    private readonly categories: CategoryState,
     private readonly resources: Resources,
-    private readonly store: Store,
     private readonly wbsService: WbsNodeService
   ) {}
 
   private get disciplineList(): Category[] {
-    return this.store.selectSnapshot(MetadataState.disciplines);
+    return this.categories.disciplines;
   }
 
   private get phaseList(): Category[] {
-    return this.store.selectSnapshot(MetadataState.phases);
+    return this.categories.phases;
   }
 
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {

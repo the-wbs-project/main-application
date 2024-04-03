@@ -1,14 +1,12 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
+import { dirtyGuard } from '@wbs/main/guards';
 import {
   CategorySelectionService,
   Transformers,
   WbsNodeService,
-  disciplineResolver,
   orgResolve,
-  phaseCategoryResolver,
-  projectCategoryResolver,
   userIdResolve,
 } from '@wbs/main/services';
 import { PROJECT_PAGES } from './models';
@@ -25,7 +23,6 @@ import {
   projectClaimsResolve,
   projectIdResolve,
   projectNavGuard,
-  projectRedirectGuard,
   projectUrlResolve,
   projectVerifyGuard,
 } from './services';
@@ -35,7 +32,6 @@ import {
   ProjectState,
   TasksState,
 } from './states';
-import { dirtyGuard } from '@wbs/main/guards';
 
 export const routes: Routes = [
   {
@@ -70,12 +66,7 @@ export const routes: Routes = [
       WbsNodeService,
     ],
     children: [
-      {
-        path: '',
-        canActivate: [projectRedirectGuard],
-        loadComponent: () =>
-          import('./pages/project-about').then((x) => x.ProjectAboutComponent),
-      },
+      { path: '', redirectTo: 'about', pathMatch: 'full' },
       {
         path: 'about',
         loadComponent: () =>
@@ -88,7 +79,6 @@ export const routes: Routes = [
         },
         resolve: {
           claims: projectClaimsResolve,
-          disciplines: disciplineResolver,
         },
       },
       {
@@ -157,7 +147,7 @@ export const routes: Routes = [
       {
         path: 'upload',
         loadChildren: () =>
-          import('./pages/projects/upload/upload.routes').then((x) => x.routes),
+          import('./pages/project-upload/upload.routes').then((x) => x.routes),
         canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
@@ -172,8 +162,9 @@ export const routes: Routes = [
           ),
         canActivate: [projectNavGuard],
         canDeactivate: [dirtyGuard],
-        resolve: {
-          categories: projectCategoryResolver,
+        data: {
+          navSection: 'settings',
+          crumbs: ['settings', 'general'],
         },
       },
       {
@@ -184,8 +175,9 @@ export const routes: Routes = [
           ),
         canActivate: [projectNavGuard],
         canDeactivate: [dirtyGuard],
-        resolve: {
-          cats: phaseCategoryResolver,
+        data: {
+          navSection: 'settings',
+          crumbs: ['settings', 'phases'],
         },
       },
       {
@@ -196,8 +188,9 @@ export const routes: Routes = [
           ),
         canActivate: [projectNavGuard],
         canDeactivate: [dirtyGuard],
-        resolve: {
-          cats: disciplineResolver,
+        data: {
+          navSection: 'settings',
+          crumbs: ['settings', 'disciplines'],
         },
       },
       {
@@ -207,6 +200,10 @@ export const routes: Routes = [
             (x) => x.RolesComponent
           ),
         canActivate: [projectNavGuard],
+        data: {
+          navSection: 'settings',
+          crumbs: ['settings', 'roles'],
+        },
         resolve: {
           org: orgResolve,
           approvalEnabled: approvalEnabledResolve,

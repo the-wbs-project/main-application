@@ -9,11 +9,11 @@
     </div>
     <div class="flex-grow-1">
       <div class="tx-16">
-        {{ cat.label | translate }}
+        {{ cat.label }}
       </div>
       <div class="tx-12 font-italic">
         @if (cat.description){
-        {{ cat.description | translate }}
+        {{ cat.description }}
         }
       </div>
     </div>
@@ -33,11 +33,11 @@
       <img class="wd-40 hd-40" [src]="cat.icon" />
     </div>
     <div class="tx-16">
-      {{ cat.label | translate }}
+      {{ cat.label }}
     </div>
     <div class="tx-12 font-italic mg-b-15">
       @if (cat.description){
-      {{ cat.description | translate }}
+      {{ cat.description }}
       }
     </div>
     <wbs-select-button

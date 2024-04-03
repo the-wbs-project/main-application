@@ -1,56 +1,48 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { TitleService } from '@wbs/core/services';
 import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
 import { Utils } from '@wbs/main/services';
 import { of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   SetApproval,
   SetApprovalView,
-  SetNavSection,
+  SetProjectNavSection,
+  SetTaskNavSection,
   VerifyProject,
   VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { PROJECT_NAVIGATION } from '../models';
 import { ProjectState } from '../states';
-import { NavigationLink } from '@wbs/main/models';
-import { RoutedBreadcrumbItem } from '@wbs/core/models';
 import { ProjectService } from './project.service';
-import { TitleService } from '@wbs/core/services';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store).dispatch(new SetApproval());
 
 export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const owner = Utils.getParam(route, 'org');
-
-  return store.dispatch(
-    new LoadDiscussionForum(owner, route.params['projectId'])
-  );
-};
-
-export const projectRedirectGuard = (route: ActivatedRouteSnapshot) => {
-  console.log(ProjectService.getProjectUrl(route));
   return inject(Store).dispatch(
-    new Navigate([...ProjectService.getProjectUrl(route), 'about'])
+    new LoadDiscussionForum(
+      Utils.getParam(route, 'org'),
+      Utils.getParam(route, 'projectId')
+    )
   );
 };
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const org = Utils.getParam(route, 'org');
 
   inject(TitleService).setTitle('Pages.Projects', true);
 
   return store
     .dispatch([
       new InitiateChecklist(),
-      new VerifyProject(org, route.params['projectId']),
+      new VerifyProject(
+        Utils.getParam(route, 'org'),
+        Utils.getParam(route, 'projectId')
+      ),
     ])
     .pipe(
       switchMap(() => store.selectOnce(ProjectState.current)),
@@ -64,61 +56,46 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
 
 export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const service = inject(ProjectService);
+  const section = route.data['navSection'];
+
+  store.dispatch(new SetProjectNavSection(section));
+
+  if (!route.data['crumbs']) return;
+
+  return service.getProjectBreadcrumbs(route).pipe(
+    switchMap((crumbs) => {
+      crumbs.at(-1)!.route = undefined;
+
+      return store.dispatch(new SetBreadcrumbs(crumbs));
+    })
+  );
+};
+
+export const taskNavGuard = (route: ActivatedRouteSnapshot) => {
+  const store = inject(Store);
+  const service = inject(ProjectService);
   const section = route.data['navSection'];
   const crumbSections = route.data['crumbs'];
 
-  store.dispatch(new SetNavSection(section));
+  store.dispatch(new SetTaskNavSection(section));
 
   if (!crumbSections) return;
 
-  let link: NavigationLink | undefined;
-  let currentUrl = [...ProjectService.getProjectUrl(route)];
+  if (!route.data['crumbs']) return;
 
-  return store.selectOnce(ProjectState.current).pipe(
-    map((project) => {
-      const crumbs: RoutedBreadcrumbItem[] = [
-        {
-          route: ['/', Utils.getParam(route, 'org'), 'projects'],
-          text: 'Pages.Projects',
-        },
-        {
-          route: [...currentUrl],
-          text: project!.title,
-          isText: true,
-        },
-      ];
-
-      for (const section of crumbSections) {
-        link = (link?.items ?? (PROJECT_NAVIGATION as NavigationLink[])).find(
-          (x) => x.section == section
-        );
-
-        if (!link) continue;
-
-        if (link.route) {
-          currentUrl.push(...link.route);
-
-          crumbs.push({
-            route: [...currentUrl],
-            text: link.text,
-          });
-        } else {
-          crumbs.push({
-            text: link.text,
-          });
-        }
-      }
+  return service.getTaskBreadcrumbs(route).pipe(
+    switchMap((crumbs) => {
       crumbs.at(-1)!.route = undefined;
 
-      return crumbs;
-    }),
-    switchMap((crumbs) => store.dispatch(new SetBreadcrumbs(crumbs)))
+      return store.dispatch(new SetBreadcrumbs(crumbs));
+    })
   );
 };
 
 export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const taskId = route.params['taskId'];
+  const taskId = Utils.getParam(route, 'taskId');
 
   if (!taskId) return false;
 

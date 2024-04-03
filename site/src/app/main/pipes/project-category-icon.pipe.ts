@@ -1,20 +1,14 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LISTS } from '@wbs/core/models';
-import { MetadataState } from '../states';
+import { CategoryState } from '../services';
 
 @Pipe({ name: 'projectCategoryIcon', standalone: true })
 export class ProjectCategoryIconPipe implements PipeTransform {
-  constructor(private readonly store: Store) {}
+  private readonly state = inject(CategoryState);
 
-  transform(idsOrCat: string | undefined): string {
-    if (!idsOrCat) return '';
-    
-    return (
-      this.store
-        .selectSnapshot(MetadataState.categoryIcons)
-        .get(LISTS.PROJECT_CATEGORIES)
-        ?.get(idsOrCat ?? '') ?? ''
-    );
+  transform(id: string | null | undefined): string {
+    if (!id) return '';
+
+    return this.state.getIcon(LISTS.PROJECT_CATEGORIES, id) ?? '';
   }
 }

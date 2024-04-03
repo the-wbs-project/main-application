@@ -1,4 +1,4 @@
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
@@ -10,11 +10,11 @@ import {
 } from './guards';
 import {
   AiChatService,
+  CategoryState,
   NavigationMenuService,
   UserService,
   orgClaimsResolve,
   orgListResolve,
-  orgObjResolve,
   rolesResolve,
   userResolve,
 } from './services';
@@ -22,7 +22,6 @@ import {
   AiState,
   AuthState,
   MembershipState,
-  MetadataState,
   RoleState,
   UiState,
 } from './states';
@@ -30,7 +29,7 @@ import {
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuardFn],
+    canActivate: [authGuardFn, () => inject(CategoryState).loadAsync()],
     loadComponent: () =>
       import('./main-wrapper.component').then((m) => m.MainWrapperComponent),
     providers: [
@@ -39,12 +38,12 @@ export const routes: Routes = [
           AiState,
           AuthState,
           MembershipState,
-          MetadataState,
           RoleState,
           UiState,
         ])
       ),
       AiChatService,
+      CategoryState,
       NavigationMenuService,
       UserService,
     ],

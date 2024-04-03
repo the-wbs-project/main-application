@@ -13,7 +13,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
-import { AuthState, MetadataState } from '@wbs/main/states';
+import { AuthState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
@@ -27,6 +27,7 @@ import {
   StartWizard,
   SubmitBasics,
 } from '../actions';
+import { CategoryState } from '@wbs/main/services';
 
 interface StateModel {
   category?: string;
@@ -57,6 +58,7 @@ interface StateModel {
   },
 })
 export class ProjectCreateState {
+  private readonly categoryState = inject(CategoryState);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);
@@ -210,8 +212,7 @@ export class ProjectCreateState {
       isSaving: true,
     });
 
-    const catsPhases = this.store.selectSnapshot(MetadataState.phases);
-    const catsDiscipline = this.store.selectSnapshot(MetadataState.disciplines);
+    const catsPhases = this.categoryState.phases;
     const state = ctx.getState();
     const phases = state.phases!;
     const disciplines = state.disciplines!;

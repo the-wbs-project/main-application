@@ -6,11 +6,13 @@ const settings: NavigationLink[] = [
   {
     route: ['settings', 'general'],
     text: 'General.General',
+    section: 'general',
     claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
   {
     route: ['settings', 'disciplines'],
     text: 'General.Disciplines',
+    section: 'disciplines',
     claim: PROJECT_CLAIMS.TASKS.UPDATE,
   },
 ];
@@ -18,26 +20,26 @@ export const TASK_NAVIGATION: NavigationLink[] = [
   {
     route: [TASK_PAGES.ABOUT],
     text: 'General.About',
+    section: 'about',
+    cssClass: ['nav-item', 'tx-uppercase'],
   },
   {
     route: [TASK_PAGES.SUB_TASKS],
     text: 'General.SubTasks',
+    section: 'sub-tasks',
+    cssClass: ['nav-item', 'tx-uppercase'],
   },
   {
     route: [TASK_PAGES.RESOURCES],
     text: 'General.Resources',
+    section: 'resources',
+    cssClass: ['nav-item', 'tx-uppercase'],
   },
   {
     text: 'General.Settings',
     items: settings,
+    section: 'settings',
     claim: PROJECT_CLAIMS.TASKS.UPDATE,
-  } /*,
-  {
-    fragment: TASK_PAGE_VIEW.TIMELINE,
-    title: 'General.Timeline',
+    cssClass: ['nav-item', 'tx-uppercase'],
   },
-  {
-    fragment: TASK_PAGE_VIEW.RESOURCES,
-    title: 'General.Resources',
-  },*/,
 ];

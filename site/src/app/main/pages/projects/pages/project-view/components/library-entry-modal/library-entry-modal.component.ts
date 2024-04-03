@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   signal,
   ViewEncapsulation,
 } from '@angular/core';
@@ -25,8 +26,7 @@ import {
   LIBRARY_ENTRY_TYPES,
   LIBRARY_ENTRY_TYPES_TYPE,
 } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
+import { CategorySelectionService, CategoryState } from '@wbs/main/services';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../../models';
 import { LibraryEntryDescriptionHintPipe } from './pipes/library-entry-description-hint.pipe';
 import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe';
@@ -51,9 +51,7 @@ import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe
   providers: [CategorySelectionService],
 })
 export class LibraryEntryModalComponent {
-  readonly categories = toSignal(
-    this.store.select(MetadataState.projectCategories)
-  );
+  readonly categories = inject(CategoryState).projectCategories;
   readonly contentCss = `.k-content { font-family: "Poppins", sans-serif; }`;
   readonly more = signal<boolean>(false);
   readonly form = new FormGroup({

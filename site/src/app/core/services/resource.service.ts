@@ -33,6 +33,7 @@ export class Resources extends MissingTranslationHandler {
         this.translate.setTranslation(this.culture, resources);
         this.translate.setDefaultLang(this.culture);
         this.translate.missingTranslationHandler = this;
+        console.log('resources');
       })
     );
   }

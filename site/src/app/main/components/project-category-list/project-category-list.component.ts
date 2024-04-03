@@ -4,7 +4,6 @@ import {
   input,
   output,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { ListItem } from '@wbs/core/models';
 import { SelectButtonComponent } from '../select-button.component';
 
@@ -13,7 +12,7 @@ import { SelectButtonComponent } from '../select-button.component';
   selector: 'wbs-project-category-list',
   templateUrl: './project-category-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [SelectButtonComponent, TranslateModule],
+  imports: [SelectButtonComponent],
 })
 export class ProjectCategoryListComponent {
   readonly buttonClass = input<string>();

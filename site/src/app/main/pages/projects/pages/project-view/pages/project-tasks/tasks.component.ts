@@ -1,17 +1,13 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
+import { RouterModule } from '@angular/router';
 import { SignalStore } from '@wbs/core/services';
-import { TaskModalComponent } from '@wbs/main/components/task-modal';
 import { WbsPhaseService } from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
 import { ProjectState } from '../../states';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';
@@ -24,6 +20,7 @@ import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type
   imports: [
     ProjectDisciplinesTreeComponent,
     ProjectPhaseTreeComponent,
+    RouterModule,
     TreeTypeButtonComponent,
   ],
   template: `<div class="w-100 tx-center pd-t-15">
@@ -31,11 +28,16 @@ import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type
     </div>
     <div class="pd-15">
       @if (view() === 'phases') {
-      <wbs-project-phase-tree [claims]="claims()" [project]="project()!" />
+      <wbs-project-phase-tree
+        [claims]="claims()"
+        [project]="project()!"
+        [projectUrl]="projectUrl()"
+      />
       } @else if (view() === 'disciplines') {
       <wbs-project-discipline-tree [project]="project()!" />
       }
-    </div>`,
+    </div>
+    <router-outlet />`,
 })
 export class ProjectTasksComponent {
   private readonly store = inject(SignalStore);

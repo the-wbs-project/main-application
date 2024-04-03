@@ -1,30 +1,48 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Injectable, inject } from '@angular/core';
 import {
   Category,
-  LISTS,
-  PROJECT_NODE_VIEW,
-  PROJECT_NODE_VIEW_TYPE,
   ProjectCategory,
   ProjectCategoryChanges,
 } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
 import {
   CategoryCancelConfirm,
   CategorySelection,
 } from '@wbs/core/view-models';
-import { MetadataState } from '../states';
+import { CategoryState } from './category-state.service';
 
 @Injectable()
 export class CategorySelectionService {
-  constructor(
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
+  private readonly categoryState = inject(CategoryState);
 
   isListDirty(list: CategorySelection[] | undefined): boolean {
     return (
       list?.some((x) => x.selected !== (x.originalSelection ?? false)) ?? false
+    );
+  }
+
+  buildPhases(
+    selected: ProjectCategory[] | undefined,
+    confirmMessage?: string,
+    catCounts?: Map<string, number>
+  ): CategorySelection[] {
+    return this.build(
+      this.categoryState.phases,
+      selected,
+      confirmMessage,
+      catCounts
+    );
+  }
+
+  buildDisciplines(
+    selected: ProjectCategory[] | undefined,
+    confirmMessage?: string,
+    catCounts?: Map<string, number>
+  ): CategorySelection[] {
+    return this.build(
+      this.categoryState.disciplines,
+      selected,
+      confirmMessage,
+      catCounts
     );
   }
 
@@ -39,10 +57,8 @@ export class CategorySelectionService {
     for (const cat of categories) {
       cats.push({
         id: cat.id,
-        label: this.resources.get(cat.label),
-        description: cat.description
-          ? this.resources.get(cat.description)
-          : undefined,
+        label: cat.label,
+        description: cat.description,
         icon: cat.icon,
         selected: false,
         originalSelection: false,
@@ -102,24 +118,25 @@ export class CategorySelectionService {
     return items;
   }
 
-  buildFromList(
-    categoryType: PROJECT_NODE_VIEW_TYPE,
+  buildDisciplinesFromList(
     list: ProjectCategory[],
     selected: string[]
   ): CategorySelection[] {
-    const cat =
-      categoryType === PROJECT_NODE_VIEW.DISCIPLINE
-        ? LISTS.DISCIPLINE
-        : categoryType === PROJECT_NODE_VIEW.PHASE
-        ? LISTS.PHASE
-        : null;
+    return this.buildFromList(this.categoryState.disciplines, list, selected);
+  }
 
-    if (cat == null) return [];
+  buildPhasesFromList(
+    list: ProjectCategory[],
+    selected: string[]
+  ): CategorySelection[] {
+    return this.buildFromList(this.categoryState.phases, list, selected);
+  }
 
-    const categories = this.store
-      .selectSnapshot(MetadataState.categoryList)
-      .get(cat)!;
-
+  buildFromList(
+    categories: Category[],
+    list: ProjectCategory[],
+    selected: string[]
+  ): CategorySelection[] {
     const cats: CategorySelection[] = [];
 
     for (const x of list) {
@@ -129,10 +146,8 @@ export class CategorySelectionService {
         if (cat) {
           cats.push({
             id: cat.id,
-            label: this.resources.get(cat.label),
-            description: cat.description
-              ? this.resources.get(cat.description)
-              : undefined,
+            label: cat.label,
+            description: cat.description,
             selected: selected.indexOf(x) > -1,
             originalSelection: selected.indexOf(x) > -1,
             isCustom: false,

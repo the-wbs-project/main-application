@@ -16,7 +16,6 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import {
   DialogContentBase,
   DialogModule,
@@ -25,12 +24,11 @@ import {
 import { StepperModule } from '@progress/kendo-angular-layout';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { TitleFormComponent } from './components/title-form';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 
 @Component({
   standalone: true,
@@ -51,10 +49,7 @@ import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive
   providers: [CategorySelectionService],
 })
 export class EntryTaskCreationComponent extends DialogContentBase {
-  readonly done = output<void>();
-
   private readonly catService = inject(CategorySelectionService);
-  private readonly store = inject(Store);
 
   type?: string;
   readonly owner = signal<string | undefined>(undefined);
@@ -63,11 +58,9 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   readonly visibility = model<'public' | 'private'>('public');
   readonly syncTitles = model<boolean>(false);
   readonly disciplines = model<CategorySelection[]>(
-    this.catService.build(
-      this.store.selectSnapshot(MetadataState.disciplines),
-      []
-    )
+    this.catService.buildDisciplines([])
   );
+  readonly done = output<void>();
   readonly faSpinner = faSpinner;
   readonly view = model<number>(0);
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(

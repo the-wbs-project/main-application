@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  Category,
   LibraryEntryNode,
   LibraryEntryVersion,
   ProjectCategory,
@@ -12,10 +11,10 @@ import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreationResults } from '@wbs/main/models';
 import {
   CategorySelectionService,
+  CategoryState,
   Transformers,
   WbsNodeService,
 } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { LIBRARY_TASKS_REORDER_WAYS } from '../models';
@@ -27,6 +26,7 @@ import { EntryState } from './entry-state.service';
 export class EntryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
   private readonly categoryService = inject(CategorySelectionService);
+  private readonly categoryState = inject(CategoryState);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
   private readonly resources = inject(Resources);
@@ -454,7 +454,7 @@ export class EntryTaskService {
 
   savePhaseChangesAsync(phases: CategorySelection[]): Observable<void> {
     const tasks = this.getTasks();
-    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const phaseDefinitions = this.categoryState.phases;
     const existing: ProjectCategory[] = tasks
       .filter((x) => x.parentId == undefined)
       .sort((a, b) => a.order - b.order)

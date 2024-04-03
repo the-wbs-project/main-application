@@ -400,6 +400,7 @@
       "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)",
       "ByPhase": "By Phase",
       "ByDiscipline": "By Discipline",
+      "PhaseSettingsInfo": "What are the phases of this project?",
       "DisciplineSettingsInfoProject": "What disciplines are associated with this project?",
       "DisciplineSettingsInfoTask": "Who will be performing this task?"
     }
@@ -661,8 +662,8 @@
       "ChooseModel": "Choose Model",
       "StartConversation": "Now use the dialog below to get the conversation started with the chat bot",
       "GetStartedLibraryEntry": "Let's use a large language model to help you generate a description for this WBS!",
-      "GetStartedProjectEntry": "Let's use a large language model to help you generate a description for this project!",
-      "GetStartedTaskEntry": "Let's use a large language model to help you generate a description for this task!"
+      "GetStartedProject": "Let's use a large language model to help you generate a description for this project!",
+      "GetStartedTask": "Let's use a large language model to help you generate a description for this task!"
     }
   },
   {

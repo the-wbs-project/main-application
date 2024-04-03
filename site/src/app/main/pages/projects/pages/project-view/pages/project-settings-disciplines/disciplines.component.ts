@@ -4,6 +4,7 @@ import {
   OnInit,
   inject,
   input,
+  model,
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -43,19 +44,13 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
 
   readonly plus = faPlus;
   readonly checkIcon = faCheck;
-  readonly cats = input.required<Category[]>();
-  readonly isDirty = signal(false);
   readonly showAddDialog = signal(false);
   readonly saveState = signal<SaveState>('ready');
-  readonly disciplines = signal<CategorySelection[] | undefined>(undefined);
+  readonly disciplines = model<CategorySelection[]>();
+  readonly isDirty = () => this.catService.isListDirty(this.disciplines());
 
   ngOnInit(): void {
-    this.disciplines.set(
-      this.catService.build(
-        this.cats() ?? [],
-        this.getProject().disciplines ?? []
-      )
-    );
+    this.set();
   }
 
   create(results: CategoryDialogResults | undefined): void {
@@ -91,12 +86,19 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
       .pipe(
         delay(1000),
         tap(() => {
-          this.isDirty.set(false);
+          this.set();
           this.saveState.set('saved');
         }),
         delay(5000)
       )
       .subscribe(() => this.saveState.set('ready'));
+  }
+
+  private set(): void {
+    this.disciplines.set(
+      this.catService.buildDisciplines(this.getProject().disciplines ?? [])
+    );
+    console.log(this.disciplines());
   }
 
   private getProject(): Project {

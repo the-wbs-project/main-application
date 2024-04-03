@@ -1,58 +1,70 @@
 import { Routes } from '@angular/router';
+import { dirtyGuard } from '@wbs/main/guards';
 import { orgResolve, userIdResolve } from '@wbs/main/services';
 import {
   closeApprovalWindowGuard,
   projectClaimsResolve,
   projectIdResolve,
+  projectUrlResolve,
   setApprovalViewAsProject,
   setApprovalViewAsTask,
   taskIdResolve,
+  taskNavGuard,
   taskVerifyGuard,
 } from './services';
-import { TASK_PAGES } from './models';
 
 export const routes: Routes = [
   {
     path: ':taskId',
     canActivate: [taskVerifyGuard, setApprovalViewAsTask],
     canDeactivate: [closeApprovalWindowGuard, setApprovalViewAsProject],
-    data: {
-      title: 'ProjectUpload.PagesUploadProjectPlan',
-    },
     loadComponent: () =>
-      import('./pages/tasks/task-view.component').then(
-        ({ TaskViewComponent }) => TaskViewComponent
-      ),
+      import('./view-task.component').then((x) => x.TaskViewComponent),
+    resolve: {
+      claims: projectClaimsResolve,
+      projectUrl: projectUrlResolve,
+      taskId: taskIdResolve,
+      userId: userIdResolve,
+    },
     children: [
+      { path: '', redirectTo: 'about', pathMatch: 'full' },
       {
         path: 'about',
-        data: {
-          //title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: TASK_PAGES.ABOUT,
-        },
         loadComponent: () =>
-          import('./pages/tasks/about/task-about.component').then(
-            (x) => x.TaskAboutComponent
-          ),
+          import('./pages/task-about').then((x) => x.TaskAboutComponent),
+        canActivate: [taskNavGuard],
+        data: {
+          navSection: 'about',
+          crumbs: ['about'],
+        },
         resolve: {
           claims: projectClaimsResolve,
         },
       },
       {
         path: 'sub-tasks',
-        data: {
-          view: TASK_PAGES.SUB_TASKS,
-        },
         loadComponent: () =>
-          import('./pages/tasks/sub-tasks/task-sub-tasks.component').then(
-            (x) => x.TaskSubTasksComponent
-          ),
+          import('./pages/task-sub-tasks').then((x) => x.SubTasksComponent),
+        canActivate: [taskNavGuard],
+        data: {
+          navSection: 'sub-tasks',
+          crumbs: ['sub-tasks'],
+        },
+        resolve: {
+          projectUrl: projectUrlResolve,
+        },
       },
       {
         path: 'resources',
+        loadComponent: () =>
+          import('./pages/task-resources-page.component').then(
+            (x) => x.TaskResourcesPageComponent
+          ),
+        canActivate: [taskNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
-          view: TASK_PAGES.RESOURCES,
+          navSection: 'resources',
+          crumbs: ['resources'],
         },
         resolve: {
           owner: orgResolve,
@@ -60,26 +72,38 @@ export const routes: Routes = [
           taskId: taskIdResolve,
           claims: projectClaimsResolve,
         },
-        loadComponent: () =>
-          import('./pages/tasks/task-resources-page.component').then(
-            (x) => x.TaskResourcesPageComponent
-          ),
       },
       {
         path: 'settings',
-        data: {
-          title: 'ProjectUpload.PagesUploadProjectPlan',
-          view: TASK_PAGES.SETTINGS,
-        },
-        loadChildren: () =>
-          import('./pages/tasks/settings/task-settings.routes').then(
-            (x) => x.routes
-          ),
+        children: [
+          { path: '', redirectTo: 'general', pathMatch: 'full' },
+
+          {
+            path: 'general',
+            canActivate: [taskNavGuard],
+            canDeactivate: [dirtyGuard],
+            loadComponent: () =>
+              import('./pages/task-settings-general').then(
+                (x) => x.GeneralComponent
+              ),
+            data: {
+              section: 'settings',
+            },
+          },
+          {
+            path: 'disciplines',
+            canActivate: [taskNavGuard],
+            canDeactivate: [dirtyGuard],
+            loadComponent: () =>
+              import('./pages/task-settings-disciplines').then(
+                (x) => x.DisciplinesComponent
+              ),
+            data: {
+              section: 'settings',
+            },
+          },
+        ],
       },
     ],
-    resolve: {
-      claims: projectClaimsResolve,
-      userId: userIdResolve,
-    },
   },
 ];

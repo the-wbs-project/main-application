@@ -12,6 +12,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Navigate } from '@ngxs/router-plugin';
 import { Actions, ofActionSuccessful } from '@ngxs/store';
 import {
   ContextMenuComponent,
@@ -88,6 +89,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //
   readonly claims = input.required<string[]>();
   readonly project = input.required<Project>();
+  readonly projectUrl = input.required<string[]>();
   //
   //  components
   //
@@ -144,6 +146,14 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.treeService.expandedKeys = this.projectService.getPhaseIds(
       this.tasks() ?? []
     );
+  }
+
+  navigateToTask(): void {
+    setTimeout(() => {
+      this.store.dispatch(
+        new Navigate([...this.projectUrl(), 'tasks', this.taskId()!])
+      );
+    }, 150);
   }
 
   onAction(action: string): void {

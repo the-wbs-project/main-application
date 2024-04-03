@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
@@ -6,29 +6,26 @@ import {
   Category,
   LIBRARY_ENTRY_TYPES,
   Project,
-  ProjectCategory,
   ProjectNode,
 } from '@wbs/core/models';
-import { IdService, Resources } from '@wbs/core/services';
-import { AuthState, MetadataState } from '@wbs/main/states';
+import { CategoryState } from '@wbs/main/services';
+import { AuthState } from '@wbs/main/states';
 import { LibraryEntryModalComponent } from '../components/library-entry-modal/library-entry-modal.component';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../models';
 
 @Injectable()
 export class LibraryEntryExportService {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly modalService: NgbModal,
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
+  private readonly categoryState = inject(CategoryState);
+  private readonly data = inject(DataServiceFactory);
+  private readonly modalService = inject(NgbModal);
+  private readonly store = inject(Store);
 
   private author(): string {
     return this.store.selectSnapshot(AuthState.userId)!;
   }
 
   private phases(): Category[] {
-    return this.store.selectSnapshot(MetadataState.phases);
+    return this.categoryState.phases;
   }
 
   exportProject(project: Project): void {

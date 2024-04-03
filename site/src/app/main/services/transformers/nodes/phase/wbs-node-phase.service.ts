@@ -1,18 +1,16 @@
-import { Store } from '@ngxs/store';
 import { Category, ProjectCategory, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { WbsNodeService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
+import { CategoryState, WbsNodeService } from '@wbs/main/services';
 
 export class WbsNodePhaseTransformer {
   constructor(
-    private readonly resources: Resources,
-    private readonly store: Store
+    private readonly categoryState: CategoryState,
+    private readonly resources: Resources
   ) {}
 
   private get phaseList(): Category[] {
-    return this.store.selectSnapshot(MetadataState.phases);
+    return this.categoryState.phases;
   }
 
   run(

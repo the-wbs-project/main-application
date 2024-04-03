@@ -1,6 +1,5 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
 import { DisciplineIconPipe } from '../pipes/discipline-icon.pipe';
 import { DisciplineLabelPipe } from '../pipes/discipline-label.pipe';
@@ -17,12 +16,12 @@ import { DisciplineLabelPipe } from '../pipes/discipline-label.pipe';
       <span class="d-ib wd-30">
         <i class="fa-solid" [ngClass]="disc | disciplineIcon : fullList()"></i>
       </span>
-      {{ disc | disciplineLabel : fullList() | translate }}
+      {{ disc | disciplineLabel : fullList() }}
     </li>
     }
   </ul>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DisciplineIconPipe, DisciplineLabelPipe, NgClass, TranslateModule],
+  imports: [DisciplineIconPipe, DisciplineLabelPipe, NgClass],
 })
 export class DisciplineListComponent {
   readonly selectedList = input.required<ProjectCategory[]>();

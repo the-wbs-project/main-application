@@ -1,11 +1,10 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LISTS, ProjectCategory } from '@wbs/core/models';
-import { MetadataState } from '../states';
+import { CategoryState } from '../services';
 
 @Pipe({ name: 'disciplineLabel', standalone: true })
 export class DisciplineLabelPipe implements PipeTransform {
-  constructor(private readonly store: Store) {}
+  private readonly state = inject(CategoryState);
 
   transform(
     idsOrCat: ProjectCategory | null | undefined,
@@ -14,11 +13,7 @@ export class DisciplineLabelPipe implements PipeTransform {
     if (!idsOrCat) return '';
     if (typeof idsOrCat !== 'string') return idsOrCat.label;
 
-    const cName =
-      this.store
-        .selectSnapshot(MetadataState.categoryNames)
-        .get(LISTS.DISCIPLINE)!
-        .get(idsOrCat) ?? '';
+    const cName = this.state.getName(LISTS.DISCIPLINE, idsOrCat) ?? '';
 
     if (cName) return cName;
 

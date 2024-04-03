@@ -3,6 +3,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
   model,
 } from '@angular/core';
@@ -16,6 +17,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
+import { CategoryState } from '@wbs/main/services';
 import { AlertComponent } from '../alert.component';
 import { DisciplineSplitListComponent } from '../discipline-split-list.component';
 
@@ -35,15 +37,20 @@ import { DisciplineSplitListComponent } from '../discipline-split-list.component
   ],
 })
 export class DisciplineCardComponent {
+  private readonly categoryState = inject(CategoryState);
+
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly faComment = faComment;
   readonly selectedList = model.required<ProjectCategory[]>();
-  readonly fullList = model.required<ProjectCategory[]>();
+  readonly fullList = input<ProjectCategory[]>();
   readonly canEdit = input.required<boolean>();
   readonly editRoute = input.required<string[]>();
   readonly alertIfEmpty = input(false);
   readonly noDisciplinesLabel = input.required<string>();
   readonly splitLimit = input.required<number>();
+  readonly disciplines = computed(
+    () => this.fullList() ?? this.categoryState.disciplines
+  );
 }

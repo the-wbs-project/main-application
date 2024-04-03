@@ -1,11 +1,14 @@
-import { Injectable } from '@angular/core';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Injectable, inject } from '@angular/core';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
-import { IdService, Messages, Resources } from '@wbs/core/services';
-import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
-import { Transformers, WbsNodeService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
+import { IdService, Messages } from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
+import {
+  CategoryState,
+  Transformers,
+  WbsNodeService,
+} from '@wbs/main/services';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';
 import {
@@ -23,6 +26,7 @@ import {
   RemoveDisciplinesFromTasks,
   RemoveTask,
   SetChecklistData,
+  SetTaskNavSection,
   TreeReordered,
   VerifyTask,
   VerifyTasks,
@@ -37,6 +41,7 @@ import {
 interface StateModel {
   currentId?: string;
   current?: WbsNodeView;
+  navSection?: string;
   project?: Project;
   nodes?: ProjectNode[];
   phases?: WbsNodeView[];
@@ -50,20 +55,22 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class TasksState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly messaging: Messages,
-    private readonly nav: ProjectNavigationService,
-    private readonly resources: Resources,
-    private readonly service: ProjectService,
-    private readonly store: Store,
-    private readonly timeline: TimelineService,
-    private readonly transformers: Transformers
-  ) {}
+  private readonly categoryState = inject(CategoryState);
+  private readonly data = inject(DataServiceFactory);
+  private readonly messaging = inject(Messages);
+  private readonly nav = inject(ProjectNavigationService);
+  private readonly service = inject(ProjectService);
+  private readonly timeline = inject(TimelineService);
+  private readonly transformers = inject(Transformers);
 
   @Selector()
   static current(state: StateModel): WbsNodeView | undefined {
     return state.current;
+  }
+
+  @Selector()
+  static navSection(state: StateModel): string | undefined {
+    return state.navSection;
   }
 
   @Selector()
@@ -111,6 +118,11 @@ export class TasksState {
       currentId: taskId,
       current: state.phases?.find((x) => x.id === taskId),
     });
+  }
+
+  @Action(SetTaskNavSection)
+  setNavSection(ctx: Context, { navSection }: SetTaskNavSection): void {
+    ctx.patchState({ navSection });
   }
 
   @Action(RebuildNodeViews)
@@ -498,8 +510,7 @@ export class TasksState {
         });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-      tap(() => this.saveActivity(...activities)),
-      tap(() => this.messaging.notify.success('Projects.TaskUpdated'))
+      tap(() => this.saveActivity(...activities))
     );
   }
 
@@ -519,12 +530,7 @@ export class TasksState {
 
     const taskName =
       model.parentId == undefined
-        ? this.resources.get(
-            this.store
-              .selectSnapshot(MetadataState.categoryNames)
-              .get(LISTS.PHASE)!
-              .get(model.id)!
-          )
+        ? this.categoryState.getName(LISTS.PHASE, model.id)! ?? model.title
         : model.title;
 
     const activityData: ActivityData = {
@@ -540,9 +546,13 @@ export class TasksState {
     model.disciplineIds = disciplines;
     viewModel.disciplines = disciplines;
 
+    const now = new Date();
+
     return this.saveTask(ctx, model).pipe(
-      tap(() => this.messaging.notify.success('Projects.TaskUpdated')),
       map(() => {
+        model.lastModified = now;
+        viewModel.lastModified = now;
+
         ctx.patchState({
           current: viewModel,
           nodes: state.nodes,
@@ -556,7 +566,7 @@ export class TasksState {
   @Action(PhasesChanged)
   phasesChanged(ctx: Context, { results }: PhasesChanged): Observable<void> {
     const state = ctx.getState();
-    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const phaseDefinitions = this.categoryState.phases;
     const projectId = state.project!.id;
     const tasks = state.nodes!;
     const toRemoveIds: string[] = [];
@@ -608,10 +618,8 @@ export class TasksState {
           phaseIdAssociation: cat,
           order: i + 1,
           lastModified: new Date(),
-          title: this.resources.get(phase.label),
-          description: phase.description
-            ? this.resources.get(phase.description)
-            : undefined,
+          title: phase.label,
+          description: phase.description,
         };
         tasks.push(task);
         upserts.push(task);
@@ -623,6 +631,7 @@ export class TasksState {
           lastModified: new Date(),
           title: cat.label,
           description: cat.description,
+          phaseIdAssociation: cat.sameAs,
         };
         tasks.push(task);
         upserts.push(task);

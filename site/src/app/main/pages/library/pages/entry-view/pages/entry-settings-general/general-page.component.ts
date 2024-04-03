@@ -4,7 +4,6 @@ import {
   Component,
   computed,
   inject,
-  input,
   model,
   signal,
 } from '@angular/core';
@@ -15,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { ListItem, SaveState } from '@wbs/core/models';
+import { SaveState } from '@wbs/core/models';
 import { AiButtonComponent } from '@wbs/main/components/ai-button.component';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
@@ -55,7 +54,6 @@ export class GeneralComponent implements DirtyComponent {
   readonly checkIcon = faCheck;
   readonly aiIcon = faRobot;
   readonly askAi = model(true);
-  readonly categories = input.required<ListItem[]>();
   readonly canSave = computed(() => {
     const version = this.state.version();
 

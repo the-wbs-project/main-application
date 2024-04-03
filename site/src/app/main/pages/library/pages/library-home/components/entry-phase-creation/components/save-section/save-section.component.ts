@@ -25,8 +25,8 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
-import { AuthState, MetadataState } from '@wbs/main/states';
+import { CategoryState } from '@wbs/main/services';
+import { AuthState } from '@wbs/main/states';
 import { switchMap } from 'rxjs/operators';
 import { EntryCreationModel } from '../../../../models';
 
@@ -35,12 +35,13 @@ import { EntryCreationModel } from '../../../../models';
   selector: 'wbs-save-section',
   templateUrl: './save-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, PhaseLabelPipe, TranslateModule],
+  imports: [FontAwesomeModule, TranslateModule],
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {
   readonly close = output<EntryCreationModel | undefined>();
 
+  private readonly categoryState = inject(CategoryState);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);
@@ -77,17 +78,13 @@ export class SaveSectionComponent {
 
     return typeof phase !== 'string'
       ? phase.label
-      : this.resources.get(
-          this.store
-            .selectSnapshot(MetadataState.phases)
-            .find((x) => x.id === phase)!.label
-        );
+      : this.categoryState.phases.find((x) => x.id === phase)!.label;
   });
 
   save(): void {
     this.saveState.set('saving');
 
-    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const phaseDefinitions = this.categoryState.phases;
     const phase = this.phase()!;
     let phaseId: string | undefined;
     let phaseLabel: string | undefined;

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
@@ -6,13 +6,11 @@ import {
   ActivityData,
   LISTS,
   Project,
-  PROJECT_NODE_VIEW,
   PROJECT_STATI,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
 import { UserRolesViewModel } from '@wbs/core/view-models';
-import { AuthState, MetadataState, RoleState } from '@wbs/main/states';
+import { AuthState, RoleState } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
@@ -27,12 +25,13 @@ import {
   RemoveDisciplinesFromTasks,
   RemoveUserToRole,
   SetChecklistData,
-  SetNavSection,
+  SetProjectNavSection,
   SetProject,
   VerifyProject,
   VerifyTasks,
 } from '../actions';
 import { ProjectService, TimelineService } from '../services';
+import { CategoryState } from '@wbs/main/services';
 
 interface StateModel {
   current?: Project;
@@ -49,13 +48,11 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class ProjectState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly resources: Resources,
-    private readonly services: ProjectService,
-    private readonly store: Store,
-    private readonly timeline: TimelineService
-  ) {}
+  private readonly categoryState = inject(CategoryState);
+  private readonly data = inject(DataServiceFactory);
+  private readonly services = inject(ProjectService);
+  private readonly store = inject(Store);
+  private readonly timeline = inject(TimelineService);
 
   @Selector()
   static current(state: StateModel): Project | undefined {
@@ -98,8 +95,8 @@ export class ProjectState {
     );
   }
 
-  @Action(SetNavSection)
-  setNavSection(ctx: Context, { navSection }: SetNavSection): void {
+  @Action(SetProjectNavSection)
+  setNavSection(ctx: Context, { navSection }: SetProjectNavSection): void {
     ctx.patchState({ navSection });
   }
 
@@ -356,12 +353,7 @@ export class ProjectState {
   ): string {
     if (!idsOrCat) return '';
     if (typeof idsOrCat === 'string')
-      return this.resources.get(
-        this.store
-          .selectSnapshot(MetadataState.categoryNames)
-          .get(type)!
-          .get(idsOrCat)!
-      );
+      return this.categoryState.getName(type, idsOrCat) ?? '??';
 
     return idsOrCat.label;
   }

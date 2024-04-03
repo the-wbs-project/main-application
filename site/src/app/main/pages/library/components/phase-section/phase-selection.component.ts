@@ -14,11 +14,11 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { IdService, SignalStore } from '@wbs/core/services';
+import { IdService } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { SelectButtonComponent } from '@wbs/main/components/select-button.component';
-import { MetadataState } from '@wbs/main/states';
+import { CategoryState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -37,12 +37,10 @@ import { MetadataState } from '@wbs/main/states';
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class PhaseSelectionComponent {
-  private readonly store = inject(SignalStore);
-
   readonly faList = faList;
   readonly faPencil = faPencil;
   readonly faExclamationTriangle = faExclamationTriangle;
-  readonly phases = this.store.select(MetadataState.phases);
+  readonly phases = inject(CategoryState).phases;
   readonly phase = model.required<string | { label: string } | undefined>();
   readonly phaseText = computed(() => {
     const phase = this.phase();

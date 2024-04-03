@@ -92,7 +92,9 @@ class Confirm {
           subscriber.next(false);
           subscriber.complete();
         },
-        {}
+        {
+          zindex: 10002,
+        }
       );
     });
   }

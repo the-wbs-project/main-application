@@ -52,12 +52,7 @@
           <label class="form-label tx-18">
             {{ "LibraryCreate.ProjectCategory" | translate }}
           </label>
-          @if (categories(); as cats) {
-          <wbs-project-category-dropdown
-            [categories]="cats"
-            [(category)]="category"
-          />
-          }
+          <wbs-project-category-dropdown [(category)]="category" />
         </div>
       </div>
       } @else if (view() === 1) {
@@ -106,7 +101,7 @@
         <wbs-save-section
           [owner]="owner()!"
           [phases]="phases()"
-          [category]="(categories() | findById : category()!)!"
+          [category]="(categories | findById : category()!)!"
           [disciplines]="disciplines()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility()"

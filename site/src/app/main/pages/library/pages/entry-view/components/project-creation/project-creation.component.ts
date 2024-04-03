@@ -28,7 +28,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryEntryNode,
   LibraryEntryVersion,
-  ListItem,
   Member,
 } from '@wbs/core/models';
 import { IdService, SignalStore } from '@wbs/core/services';
@@ -38,8 +37,8 @@ import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { CategorySelectionService } from '@wbs/main/services';
-import { AuthState, MembershipState, MetadataState } from '@wbs/main/states';
+import { CategorySelectionService, CategoryState } from '@wbs/main/services';
+import { AuthState, MembershipState } from '@wbs/main/states';
 import { forkJoin } from 'rxjs';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { RolesSectionComponent } from './components/roles-section';
@@ -69,8 +68,9 @@ import { SaveSectionComponent } from './components/save-section';
   providers: [CategorySelectionService],
 })
 export class ProjectCreationComponent extends DialogContentBase {
-  private readonly data = inject(DataServiceFactory);
+  private readonly categoryState = inject(CategoryState);
   private readonly catService = inject(CategorySelectionService);
+  private readonly data = inject(DataServiceFactory);
   private readonly store = inject(SignalStore);
 
   readonly faSpinner = faSpinner;
@@ -82,7 +82,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
   readonly smeIds = signal<string[]>([]);
-  readonly categories = signal<ListItem[]>([]);
+  readonly categories = this.categoryState.projectCategories;
   readonly tasks = signal<LibraryEntryNode[]>([]);
   readonly projectTitle = model<string>('');
   readonly category = model<string | undefined>(undefined);
@@ -114,17 +114,14 @@ export class ProjectCreationComponent extends DialogContentBase {
 
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(org),
-      disciplines: this.store.selectOnceAsync(MetadataState.disciplines),
-      categories: this.store.selectOnceAsync(MetadataState.projectCategories),
       org: this.store.selectOnceAsync(MembershipState.organization),
       userId: this.store.selectOnceAsync(AuthState.userId),
-    }).subscribe(({ categories, disciplines, members, org, userId }) => {
+    }).subscribe(({ members, org, userId }) => {
       this.members.set(members);
       this.tasks.set(tasks);
       this.pmIds.set([userId!]);
       this.owner.set(org!.name);
-      this.categories.set(categories);
-      this.disciplines.set(this.catService.build(disciplines, []));
+      this.disciplines.set(this.catService.buildDisciplines([]));
       this.projectTitle.set(version.title);
       this.disciplines.update((disciplines) => {
         for (const x of version.disciplines) {

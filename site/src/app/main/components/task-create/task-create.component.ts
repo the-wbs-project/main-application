@@ -6,7 +6,6 @@ import {
   Output,
   inject,
   model,
-  output,
   signal,
   viewChild,
 } from '@angular/core';
@@ -14,12 +13,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { PROJECT_NODE_VIEW, WbsNode } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
+import { WbsNode } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { TaskCreationResults } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { DisciplineEditorComponent } from '../discipline-editor';
 
 @Component({
@@ -42,7 +39,6 @@ export class TaskCreateComponent {
   >();
 
   private readonly catService = inject(CategorySelectionService);
-  private readonly store = inject(SignalStore);
   readonly titleTextBox = viewChild<ElementRef>('titleTextBox');
 
   protected readonly showDialog = signal<boolean>(false);
@@ -50,9 +46,9 @@ export class TaskCreateComponent {
   protected readonly title = model<string>('');
   protected readonly description = model<string>('');
   protected readonly disciplines = signal<CategorySelection[]>(
-    this.catService.buildFromList(
-      PROJECT_NODE_VIEW.DISCIPLINE,
-      this.store.selectSnapshot(MetadataState.disciplines),
+    this.catService.buildDisciplinesFromList(
+      //PROJECT_NODE_VIEW.DISCIPLINE,
+      [],
       []
     )
   );

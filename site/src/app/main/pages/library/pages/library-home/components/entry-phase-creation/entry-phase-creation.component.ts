@@ -18,7 +18,6 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import {
   DialogContentBase,
   DialogModule,
@@ -29,12 +28,11 @@ import { StepperModule } from '@progress/kendo-angular-layout';
 import { Phase } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { PhaseSelectionComponent } from '../../../../components/phase-section';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 
 @Component({
   standalone: true,
@@ -60,17 +58,13 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   readonly done = output<void>();
 
   private readonly catService = inject(CategorySelectionService);
-  private readonly store = inject(Store);
 
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
   readonly phase = model<string | Phase | undefined>(undefined);
   readonly visibility = model<'public' | 'private'>('public');
   readonly disciplines = model<CategorySelection[]>(
-    this.catService.build(
-      this.store.selectSnapshot(MetadataState.disciplines),
-      []
-    )
+    this.catService.buildDisciplines([])
   );
   readonly faSpinner = faSpinner;
   readonly view = model<number>(0);

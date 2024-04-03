@@ -1,0 +1,57 @@
+<kendo-dialog
+  [width]="modal.dialogWidth()"
+  [height]="modal.dialogHeight()"
+  [title]="'General.TaskDetails' | translate"
+  (close)="closed()"
+>
+  <div class="d-flex flex-column h-100 tx-13">
+    <div class="mg-y-10">
+      <div class="d-block d-md-none mg-b-10 w-100 text-end">
+        <wbs-page-header />
+      </div>
+      <div class="d-flex flex-align-center">
+        <div class="wd-50 tx-center mg-r-20">
+          <fa-icon [icon]="faDiagramSubtask" size="3x" />
+        </div>
+        <wbs-project-title
+          [title]="task()?.title ?? ''"
+          (titleChange)="titleChanged($event)"
+        />
+        @if (approvalEnabled()) {
+        <wbs-approval-badge
+          [approval]="approvals() | findById : 'project-title'"
+        />
+        }
+
+        <div class="d-none d-md-block flex-fill tx-right">
+          <wbs-page-header />
+        </div>
+      </div>
+    </div>
+    <div class="card border border-dark flex-fill">
+      <div class="card-header py-0 mg-b-0 bg-dark">
+        <wbs-navigation
+          [menu]="links()"
+          [activeSubSection]="navSection()"
+          (navigate)="navigate($event)"
+        />
+      </div>
+      <div class="card-body border-0 p-0 rounded-10 w-100">
+        <router-outlet />
+        @if (approvalView() === 'task' && approval(); as approval) {
+        <wbs-project-approval-window
+          [approval]="approval"
+          [claims]="claims()"
+          [userId]="userId()"
+          [isReadyOnly]="project()?.status !== 'approval'"
+          [chat]="chat() ?? []"
+          [hasChildren]="approvalHasChildren()!"
+        />
+        }
+      </div>
+    </div>
+  </div>
+  <kendo-dialog-actions layout="start">
+    <wbs-task-modal-footer [task]="task()!" />
+  </kendo-dialog-actions>
+</kendo-dialog>

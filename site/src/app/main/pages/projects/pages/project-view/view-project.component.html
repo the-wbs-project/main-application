@@ -1,30 +1,9 @@
 <div class="d-flex flex-column h-100">
-  <div class="d-none d-md-flex flex-align-center mg-y-10">
-    <wbs-project-title
-      [title]="title() ?? ''"
-      [category]="category()"
-      (titleChange)="titleChanged($event)"
-    />
-    @if (approvalEnabled()) {
-    <wbs-approval-badge [approval]="approvals() | findById : 'project-title'" />
-    }
-
-    <div class="flex-fill tx-right">
-      <div class="d-lg-inline-block mg-r-20">
-        <wbs-page-header />
-      </div>
-      <wbs-project-action-button
-        [claims]="claims()"
-        [project]="project()!"
-        [approvalEnabled]="approvalEnabled()!"
-      />
-    </div>
-  </div>
-  <div class="d-md-none mg-y-10">
-    <div class="w-100 text-end">
+  <div class="mg-y-10">
+    <div class="d-block d-md-none mg-b-10 w-100 text-end">
       <wbs-page-header />
     </div>
-    <div class="d-flex flex-align-center mg-y-10">
+    <div class="d-flex flex-align-center">
       <wbs-project-title
         [title]="title() ?? ''"
         [category]="category()"
@@ -37,6 +16,9 @@
       }
 
       <div class="flex-fill tx-right">
+        <div class="d-none d-md-block d-lg-inline-block mg-r-20">
+          <wbs-page-header />
+        </div>
         <wbs-project-action-button
           [claims]="claims()"
           [project]="project()!"

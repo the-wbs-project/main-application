@@ -8,10 +8,8 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryEntryNode } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { PhaseSelectionComponent } from '../../../components/phase-section';
 import { EntryService, EntryState, EntryTaskService } from '../services';
 
@@ -30,10 +28,8 @@ import { EntryService, EntryState, EntryTaskService } from '../services';
 })
 export class PhaseComponent implements DirtyComponent, OnInit {
   private readonly service = inject(EntryTaskService);
-  private readonly store = inject(SignalStore);
   readonly state = inject(EntryState);
 
-  readonly cats = this.store.select(MetadataState.phases);
   readonly current = computed(() => this.getPhase(this.state.tasks() ?? []));
   readonly phase = model<string | { label: string } | undefined>();
   readonly isDirty = computed(() => this.current() != this.phase());

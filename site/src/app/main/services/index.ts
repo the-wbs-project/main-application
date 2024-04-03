@@ -2,6 +2,7 @@ export * from './resolvers';
 export * from './transformers';
 export * from './ai-chat.service';
 export * from './category-selection.service';
+export * from './category-state.service';
 export * from './drag-drop.service';
 export * from './layout.service';
 export * from './navigation-menu.service';

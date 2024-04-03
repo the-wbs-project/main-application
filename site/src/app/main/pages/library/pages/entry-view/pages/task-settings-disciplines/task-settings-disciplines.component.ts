@@ -38,7 +38,6 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
   readonly state = inject(EntryState);
 
   readonly checkIcon = faCheck;
-  readonly isDirty = signal(false);
   readonly saveState = signal<SaveState>('ready');
 
   readonly taskId = input.required<string>();
@@ -46,29 +45,10 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
 
   readonly task = this.state.getTask(this.taskId);
   readonly disciplines = signal<CategorySelection[] | undefined>(undefined);
+  readonly isDirty = () => this.catService.isListDirty(this.disciplines());
 
   ngOnInit(): void {
-    const definitions = this.cats();
-    const versionList = this.state.version()?.disciplines;
-    const cats: Category[] = [];
-
-    if (versionList == undefined) {
-      cats.push(...definitions);
-    } else {
-      for (const x of versionList) {
-        if (typeof x === 'string') {
-          const id = x;
-          const def = definitions.find((x) => x.id === id);
-
-          if (def) cats.push(def);
-        } else {
-          cats.push(x);
-        }
-      }
-    }
-    this.disciplines.set(
-      this.catService.build(cats, this.task()?.disciplines ?? [])
-    );
+    this.set();
   }
 
   save(): void {
@@ -83,11 +63,21 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
       .pipe(
         delay(1000),
         tap(() => {
-          this.isDirty.set(false);
+          this.set();
           this.saveState.set('saved');
         }),
         delay(5000)
       )
       .subscribe(() => this.saveState.set('ready'));
+  }
+
+  private set(): void {
+    this.disciplines.set(
+      this.catService.buildFromList(
+        this.cats() ?? [],
+        this.state.version()?.disciplines ?? [],
+        this.task()?.disciplines ?? []
+      )
+    );
   }
 }

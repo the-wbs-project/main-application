@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
+  Category,
   LibraryEntryNode,
-  ListItem,
   Member,
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
@@ -28,7 +28,6 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
 import { UserService } from '@wbs/main/services';
 import { AuthState } from '@wbs/main/states';
 import { switchMap } from 'rxjs/operators';
@@ -38,7 +37,7 @@ import { switchMap } from 'rxjs/operators';
   selector: 'wbs-save-section',
   templateUrl: './save-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, PhaseLabelPipe, TranslateModule],
+  imports: [FontAwesomeModule, TranslateModule],
   providers: [UserService],
   styles: ['.row-header { max-width: 200px; }'],
 })
@@ -55,7 +54,7 @@ export class SaveSectionComponent {
   readonly owner = input.required<string>();
   readonly newId = input.required<string>();
   readonly templateTitle = input.required<string>();
-  readonly category = input.required<ListItem>();
+  readonly category = input.required<Category>();
   readonly disciplines = input.required<CategorySelection[]>();
   readonly tasks = input.required<LibraryEntryNode[]>();
   readonly approverIds = input.required<string[]>();

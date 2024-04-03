@@ -2,20 +2,15 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  computed,
   inject,
-  input,
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService, WbsNodeService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { EntryService, EntryState, EntryTaskService } from '../services';
-import { Category } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -40,9 +35,8 @@ export class PhasesComponent implements DirtyComponent, OnInit {
   private readonly state = inject(EntryState);
   private readonly wbsService = inject(WbsNodeService);
 
-  readonly cats = input.required<Category[]>();
   readonly phases = model<CategorySelection[]>([]);
-  readonly isDirty = computed(() => this.catService.isListDirty(this.phases()));
+  readonly isDirty = () => this.catService.isListDirty(this.phases());
 
   ngOnInit(): void {
     this.set();
@@ -57,7 +51,6 @@ export class PhasesComponent implements DirtyComponent, OnInit {
   private set(): void {
     this.phases.set(
       this.wbsService.getPhasesForEdit(
-        this.cats(),
         this.state.viewModels()!,
         'Projects.PhaseRemoveConfirm'
       )

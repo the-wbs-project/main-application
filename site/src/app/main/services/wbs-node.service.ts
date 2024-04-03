@@ -1,10 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  Category,
-  LibraryEntryNode,
-  ProjectCategory,
-  WbsNode,
-} from '@wbs/core/models';
+import { LibraryEntryNode, ProjectCategory, WbsNode } from '@wbs/core/models';
 import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { CategorySelectionService } from './category-selection.service';
 
@@ -35,7 +30,6 @@ export class WbsNodeService {
   }
 
   getPhasesForEdit(
-    definitions: Category[],
     tasks: WbsNodeView[],
     confirmRemovalMessage: string
   ): CategorySelection[] {
@@ -59,8 +53,7 @@ export class WbsNodeService {
       counts.set(id, phase.children);
     }
 
-    return this.categoryService.build(
-      definitions,
+    return this.categoryService.buildPhases(
       phases,
       confirmRemovalMessage,
       counts

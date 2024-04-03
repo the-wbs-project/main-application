@@ -26,6 +26,7 @@ import { TaskModalService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { EntryState, EntryTaskService } from '../../services';
 import { DetailsCardComponent } from './components/details-card';
+import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 
 @Component({
   standalone: true,
@@ -34,6 +35,7 @@ import { DetailsCardComponent } from './components/details-card';
   imports: [
     CheckPipe,
     DateTextPipe,
+    DescriptionAiDialogComponent,
     DescriptionCardComponent,
     DetailsCardComponent,
     DisciplineCardComponent,
@@ -69,6 +71,11 @@ export class TaskAboutPageComponent {
     if (disciplines && disciplines.length > 0) return disciplines;
 
     return this.disciplines().map((x) => x.id);
+  });
+  readonly descriptionAiStartingDialog = computed(() => {
+    const versionTitle = this.state.version()?.title;
+    const taskTitle = this.task()?.title;
+    return `Can you provide me with a one paragraph description of a task titled '${taskTitle}' belonging to a work breakdown structure titled '${versionTitle}'?`;
   });
   //
   //  State Items

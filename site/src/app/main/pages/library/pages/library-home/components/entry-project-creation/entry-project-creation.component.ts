@@ -31,8 +31,7 @@ import { DisciplineEditorComponent } from '@wbs/main/components/discipline-edito
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
+import { CategorySelectionService, CategoryState } from '@wbs/main/services';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
@@ -69,18 +68,13 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   readonly templateTitle = model<string>('');
   readonly category = model<string | undefined>(undefined);
   readonly visibility = model<'public' | 'private'>('public');
-  readonly phases = model<CategorySelection[]>(
-    this.catService.build(this.store.selectSnapshot(MetadataState.phases), [])
-  );
+  readonly phases = model<CategorySelection[]>(this.catService.buildPhases([]));
   readonly disciplines = model<CategorySelection[]>(
-    this.catService.build(
-      this.store.selectSnapshot(MetadataState.disciplines),
-      []
-    )
+    this.catService.buildDisciplines([])
   );
   readonly faSpinner = faSpinner;
   readonly view = model<number>(0);
-  readonly categories = this.store.select(MetadataState.projectCategories);
+  readonly categories = inject(CategoryState).projectCategories;
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );

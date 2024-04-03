@@ -1,7 +1,6 @@
 import {
   PROJECT_NODE_VIEW_TYPE,
   Project,
-  ProjectCategory,
   ProjectCategoryChanges,
   WbsNode,
 } from '@wbs/core/models';
@@ -10,6 +9,11 @@ import { RebuildResults } from '@wbs/main/models';
 export class VerifyTasks {
   static readonly type = '[Tasks] Verify';
   constructor(readonly project: Project, readonly force = false) {}
+}
+
+export class SetTaskNavSection {
+  static readonly type = '[Tasks] Set Nav Section';
+  constructor(readonly navSection: string | undefined) {}
 }
 
 export class RebuildNodeViews {

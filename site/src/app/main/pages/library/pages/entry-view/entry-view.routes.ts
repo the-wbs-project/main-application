@@ -6,9 +6,6 @@ import {
   CategorySelectionService,
   Transformers,
   WbsNodeService,
-  disciplineResolver,
-  phaseCategoryResolver,
-  projectCategoryResolver,
 } from '@wbs/main/services';
 import { EntryUploadState } from './pages/entry-upload/states';
 import {
@@ -71,7 +68,6 @@ export const routes: Routes = [
         },
         resolve: {
           claims: libraryClaimsResolve,
-          disciplines: disciplineResolver,
         },
       },
       {
@@ -133,9 +129,6 @@ export const routes: Routes = [
           section: 'settings',
           crumbs: ['settings', 'general'],
         },
-        resolve: {
-          categories: projectCategoryResolver,
-        },
       },
       {
         path: 'settings/disciplines',
@@ -148,9 +141,6 @@ export const routes: Routes = [
         data: {
           section: 'settings',
           crumbs: ['settings', 'disciplines'],
-        },
-        resolve: {
-          cats: disciplineResolver,
         },
       },
       {
@@ -177,9 +167,6 @@ export const routes: Routes = [
         data: {
           section: 'settings',
           crumbs: ['settings', 'phases'],
-        },
-        resolve: {
-          cats: phaseCategoryResolver,
         },
       },
     ],

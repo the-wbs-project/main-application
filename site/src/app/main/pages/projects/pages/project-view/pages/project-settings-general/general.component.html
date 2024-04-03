@@ -1,4 +1,3 @@
-@if (project(); as project) {
 <div class="card dashboard-card mg-10">
   <div class="d-flex card-header flex-align-center">
     <div>
@@ -26,10 +25,7 @@
           {{ "ProjectCreate.Category_Title" | translate }}
         </label>
         <div class="col-md-10 col-sm-12">
-          <wbs-project-category-dropdown
-            [categories]="categories()"
-            [(category)]="project.category"
-          />
+          <wbs-project-category-dropdown [(category)]="category" />
           <wbs-info-message
             cssClass="d-ib mg-t-5"
             message="ProjectCreate.Category_Description"
@@ -37,26 +33,26 @@
         </div>
       </div>
       <div class="row mb-5">
-        <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
+        <label [for]="titleControl" class="col-md-2 col-sm-12 col-form-label">
           {{ "General.Title" | translate }}
         </label>
         <div class="col-md-10 col-sm-12">
           <input
-            #title
+            #titleControl
             kendoTextBox
             class="form-control"
-            [(ngModel)]="project.title"
+            [(ngModel)]="title"
           />
         </div>
       </div>
       <div class="row mb-5">
         <div class="col-2 d-none d-md-block">
-          <label [for]="description" class="col-form-label">
+          <label [for]="descriptionEditor" class="col-form-label">
             {{ "General.Description" | translate }}
           </label>
         </div>
         <div class="col-12 d-flex d-md-none">
-          <label [for]="description" class="col-form-label">
+          <label [for]="descriptionEditor" class="col-form-label">
             {{ "General.Description" | translate }}
           </label>
           <div class="flex-fill text-end">
@@ -73,7 +69,7 @@
               (click)="askAi.set(true)"
             />
           </div>
-          <kendo-editor #description [(ngModel)]="project.description" />
+          <kendo-editor #descriptionEditor [(ngModel)]="description" />
         </div>
       </div>
     </div>
@@ -82,10 +78,10 @@
 
 @if (askAi()) {
 <wbs-description-ai-dialog
-  [(description)]="project.description"
+  [(description)]="description"
   getStartedLabel="AI.GetStartedProjectEntry"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="askAi.set(false)"
   (closed)="askAi.set(false)"
 />
-} }
+}

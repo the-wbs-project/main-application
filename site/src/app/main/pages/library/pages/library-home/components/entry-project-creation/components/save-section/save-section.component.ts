@@ -17,16 +17,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
+  Category,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
-  ListItem,
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { PhaseLabelPipe } from '@wbs/main/pipes/phase-label.pipe';
-import { AuthState, MetadataState } from '@wbs/main/states';
+import { AuthState } from '@wbs/main/states';
 import { switchMap } from 'rxjs/operators';
 import { EntryCreationModel } from '../../../../models';
 
@@ -35,7 +34,7 @@ import { EntryCreationModel } from '../../../../models';
   selector: 'wbs-save-section',
   templateUrl: './save-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, PhaseLabelPipe, TranslateModule],
+  imports: [FontAwesomeModule, TranslateModule],
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {
@@ -52,7 +51,7 @@ export class SaveSectionComponent {
   readonly owner = input.required<string>();
   readonly templateTitle = input.required<string>();
   readonly visibility = input.required<string>();
-  readonly category = input.required<ListItem>();
+  readonly category = input.required<Category>();
   readonly phases = input.required<CategorySelection[]>();
   readonly disciplines = input.required<CategorySelection[]>();
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(

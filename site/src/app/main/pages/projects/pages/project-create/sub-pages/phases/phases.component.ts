@@ -1,9 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  Input,
   OnInit,
   ViewEncapsulation,
+  inject,
   input,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
@@ -12,7 +12,6 @@ import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
 import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
-import { MetadataState } from '@wbs/main/states';
 import { PhasesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
@@ -27,20 +26,17 @@ import { ProjectCreateState } from '../../states';
   providers: [CategorySelectionService],
 })
 export class PhaseComponent implements OnInit {
+  private readonly catService = inject(CategorySelectionService);
+  private readonly service = inject(ProjectCreateService);
+  private readonly store = inject(Store);
+
   readonly org = input.required<string>();
   categories?: CategorySelection[];
 
-  constructor(
-    private readonly catService: CategorySelectionService,
-    private readonly service: ProjectCreateService,
-    private readonly store: Store
-  ) {}
-
   ngOnInit(): void {
-    const categories = this.store.selectSnapshot(MetadataState.phases);
-    const selected = this.store.selectSnapshot(ProjectCreateState.phases);
-
-    this.categories = this.catService.build(categories, selected);
+    this.categories = this.catService.buildPhases(
+      this.store.selectSnapshot(ProjectCreateState.phases)
+    );
   }
 
   back(): void {
