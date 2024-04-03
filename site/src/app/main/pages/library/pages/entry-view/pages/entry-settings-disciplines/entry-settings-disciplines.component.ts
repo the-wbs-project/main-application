@@ -16,7 +16,7 @@ import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
-import { DirtyComponent } from '@wbs/main/models';
+import { CategoryDialogResults, DirtyComponent } from '@wbs/main/models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { EntryService, EntryState } from '../../services';
@@ -57,7 +57,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
     );
   }
 
-  create(results: [string, string] | undefined): void {
+  create(results: CategoryDialogResults | undefined): void {
     this.showAddDialog.set(false);
 
     if (results == null) return;
@@ -65,8 +65,8 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
     const item: CategorySelection = {
       id: IdService.generate(),
       isCustom: true,
-      label: results[0],
-      icon: results[1],
+      label: results.title,
+      icon: results.icon,
       selected: true,
     };
     this.disciplines.update((list) => {

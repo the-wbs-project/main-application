@@ -13,13 +13,13 @@ import {
   Validators,
 } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
+import { CategoryDialogResults } from '@wbs/main/models';
 
 declare type Icon = { icon: string; name: string };
 
@@ -35,21 +35,27 @@ declare type Icon = { icon: string; name: string };
     LabelModule,
     NgClass,
     ReactiveFormsModule,
+    TextAreaModule,
     TextBoxModule,
     TranslateModule,
   ],
 })
 export class CategoryDialogComponent {
-  readonly closed = output<undefined | [string, string]>();
-
-  readonly fas: { [key: string]: IconProp } = {};
-  readonly check = faCheck;
-  readonly icons = signal(icons);
+  //
+  //  IO
+  //
+  readonly includeIcons = input(true);
+  readonly includeDescription = input(true);
   readonly titleText = input<string>('General.Add');
   readonly successText = input<string>('General.Add');
+  readonly closed = output<CategoryDialogResults | undefined>();
+
+  readonly check = faCheck;
+  readonly icons = signal(icons);
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
-    icon: new FormControl<string>('Question', [Validators.required]),
+    description: new FormControl<string>(''),
+    icon: new FormControl<string>('fa-question'),
   });
 
   get controls() {
@@ -59,7 +65,11 @@ export class CategoryDialogComponent {
   close(): void {
     const values = this.form.getRawValue();
 
-    this.closed.emit([values.title!, values.icon!]);
+    this.closed.emit({
+      title: values.title!,
+      description: values.description ?? undefined,
+      icon: values.icon ?? undefined,
+    });
   }
 
   protected handleIconFilter(value: string) {

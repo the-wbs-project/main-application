@@ -1,9 +1,9 @@
 <div class="pd-15 text-center bg-white">
-  <div class="d-ib w-100 mx-wd-xs-500 text-start card dashboard-card">
+  <div class="d-ib w-100 text-start card dashboard-card">
     <div class="d-flex card-header flex-align-center">
       <div class="flex-fill">
         {{ "General.Settings" | translate }} >
-        {{ "General.Disciplines" | translate }}
+        {{ "General.Phases" | translate }}
       </div>
       <div class="text-end">
         <wbs-fading-message
@@ -30,15 +30,15 @@
         {{ "Projects.DisciplineSettingsInfoProject" | translate }}
       </div>
 
-      <wbs-phase-editor
-        [(categories)]="phases"
-        [showSave]="true"
-        (saveClicked)="save()"
-      />
+      <wbs-phase-editor [(categories)]="phases" />
     </div>
   </div>
 </div>
 
 @if (showAddDialog()) {
-<wbs-category-dialog titleText="Wbs.AddDiscipline" (closed)="create($event)" />
+<wbs-category-dialog
+  titleText="Wbs.AddDiscipline"
+  [includeIcons]="false"
+  (closed)="create($event)"
+/>
 }

@@ -1,4 +1,10 @@
-import { PROJECT_NODE_VIEW_TYPE, Project, WbsNode } from '@wbs/core/models';
+import {
+  PROJECT_NODE_VIEW_TYPE,
+  Project,
+  ProjectCategory,
+  ProjectCategoryChanges,
+  WbsNode,
+} from '@wbs/core/models';
 import { RebuildResults } from '@wbs/main/models';
 
 export class VerifyTasks {
@@ -85,4 +91,9 @@ export class VerifyTask {
 export class RemoveDisciplinesFromTasks {
   static readonly type = '[Project Task] Remove Disciplines';
   constructor(readonly removedIds: string[]) {}
+}
+
+export class PhasesChanged {
+  static readonly type = '[Project Task] Phases Changed';
+  constructor(readonly results: ProjectCategoryChanges) {}
 }

@@ -48,15 +48,19 @@ import { SwitchComponent } from '../switch';
   ],
 })
 export class DisciplineEditorComponent {
-  readonly saveClicked = output<void>();
-  readonly categoryCreated = output<ListItemDialogResults>();
-
   private readonly catService = inject(CategorySelectionService);
   private readonly dialogService = inject(DialogService);
-
-  readonly categories = model<CategorySelection[]>();
+  //
+  //  IO
+  //
   readonly showAdd = input<boolean>(false);
   readonly showSave = input<boolean>(false);
+  readonly saveClicked = output<void>();
+  readonly categoryCreated = output<ListItemDialogResults>();
+  //
+  //  Models and computes
+  //
+  readonly categories = model<CategorySelection[]>();
   readonly showButtons = computed(() => this.showAdd() || this.showSave());
 
   readonly faBars = faBars;

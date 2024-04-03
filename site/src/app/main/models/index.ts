@@ -1,4 +1,5 @@
 export * from './action-button-menu-item.model';
+export * from './category-dialog-results.model';
 export * from './context-menu-item.model';
 export * from './dirty-component.interface';
 export * from './navigation-link.model';

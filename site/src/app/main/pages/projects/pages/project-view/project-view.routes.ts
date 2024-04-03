@@ -7,6 +7,7 @@ import {
   WbsNodeService,
   disciplineResolver,
   orgResolve,
+  phaseCategoryResolver,
   projectCategoryResolver,
   userIdResolve,
 } from '@wbs/main/services';
@@ -178,11 +179,14 @@ export const routes: Routes = [
       {
         path: 'settings/phases',
         loadComponent: () =>
-          import('./pages/projects/settings/pages/phases.component').then(
-            (x) => x.ProjectSettingsPhasesComponent
+          import('./pages/project-settings-phases').then(
+            (x) => x.PhasesComponent
           ),
         canActivate: [projectNavGuard],
         canDeactivate: [dirtyGuard],
+        resolve: {
+          cats: phaseCategoryResolver,
+        },
       },
       {
         path: 'settings/disciplines',

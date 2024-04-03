@@ -11,16 +11,24 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { Category, SaveState } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
+import {
+  Category,
+  ProjectCategory,
+  ProjectNode,
+  SaveState,
+} from '@wbs/core/models';
+import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
+import { CategoryDialogResults } from '@wbs/main/models';
 import { CategorySelectionService, WbsNodeService } from '@wbs/main/services';
-import { TasksState } from '../../states';
+import { ProjectState, TasksState } from '../../states';
+import { MetadataState } from '@wbs/main/states';
+import { PhasesChanged } from '../../actions';
 
 @Component({
   standalone: true,
@@ -39,6 +47,7 @@ import { TasksState } from '../../states';
 })
 export class PhasesComponent implements OnInit {
   private readonly catService = inject(CategorySelectionService);
+  private readonly resources = inject(Resources);
   private readonly store = inject(Store);
   private readonly wbsService = inject(WbsNodeService);
 
@@ -54,23 +63,40 @@ export class PhasesComponent implements OnInit {
     this.set();
   }
 
-  create(results: [string, string] | undefined): void {
+  create(results: CategoryDialogResults | undefined): void {
     this.showAddDialog.set(false);
 
     if (results == null) return;
 
+    console.log(results);
     const item: CategorySelection = {
       id: IdService.generate(),
       isCustom: true,
-      label: results[0],
-      icon: results[1],
+      label: results.title,
+      icon: results.icon,
+      description: results.description,
       selected: true,
     };
     this.phases.update((list) => this.catService.add(list, item));
   }
 
   save(): void {
-    //
+    const phases = this.phases();
+    const tasks = this.store.selectSnapshot(TasksState.nodes)!;
+    const existing: ProjectCategory[] = tasks
+      .filter((x) => x.parentId == undefined)
+      .sort((a, b) => a.order - b.order)
+      .map(
+        (x) =>
+          x.phaseIdAssociation ?? {
+            id: x.id,
+            label: x.title,
+            description: x.description,
+          }
+      );
+    this.store
+      .dispatch(new PhasesChanged(this.catService.extract(phases, existing)))
+      .subscribe(() => this.set());
   }
 
   private set(): void {

@@ -41,5 +41,9 @@
 </div>
 
 @if (showAddDialog()) {
-<wbs-category-dialog titleText="Wbs.AddDiscipline" (closed)="create($event)" />
+<wbs-category-dialog
+  titleText="Wbs.AddDiscipline"
+  [includeDescription]="false"
+  (closed)="create($event)"
+/>
 }

@@ -3,11 +3,11 @@ import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
 import { IdService, Messages, Resources } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { Transformers, WbsNodeService } from '@wbs/main/services';
 import { MetadataState } from '@wbs/main/states';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
-import { TASK_ACTIONS } from '../../../models';
+import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';
 import {
   ChangeTaskBasics,
   ChangeTaskDisciplines,
@@ -18,6 +18,7 @@ import {
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
+  PhasesChanged,
   RebuildNodeViews,
   RemoveDisciplinesFromTasks,
   RemoveTask,
@@ -288,9 +289,7 @@ export class TasksState {
     task.order++;
     task2.order--;
 
-    return this.saveReordered(ctx, state.project!, taskVm!.levelText, task, [
-      task2,
-    ]);
+    return this.saveReordered(ctx, taskVm!.levelText, task, [task2]);
   }
 
   @Action(MoveTaskLeft)
@@ -325,13 +324,7 @@ export class TasksState {
       sibling.order++;
       toSave.push(sibling);
     }
-    return this.saveReordered(
-      ctx,
-      state.project!,
-      taskVm!.levelText,
-      task,
-      toSave
-    );
+    return this.saveReordered(ctx, taskVm!.levelText, task, toSave);
   }
 
   @Action(MoveTaskRight)
@@ -369,13 +362,7 @@ export class TasksState {
         ? 0
         : Math.max(...newSiblings.map((x) => x.order))) + 1;
 
-    return this.saveReordered(
-      ctx,
-      state.project!,
-      taskVm!.levelText,
-      task,
-      toSave
-    );
+    return this.saveReordered(ctx, taskVm!.levelText, task, toSave);
   }
 
   @Action(MoveTaskUp)
@@ -392,9 +379,7 @@ export class TasksState {
     task.order--;
     task2.order++;
 
-    return this.saveReordered(ctx, state.project!, taskVm!.levelText, task, [
-      task2,
-    ]);
+    return this.saveReordered(ctx, taskVm!.levelText, task, [task2]);
   }
 
   @Action(TreeReordered)
@@ -420,7 +405,6 @@ export class TasksState {
 
     return this.saveReordered(
       ctx,
-      state.project!,
       taskVm!.levelText,
       upserts.find((x) => x.id === draggedId)!,
       upserts.filter((x) => x.id !== draggedId)
@@ -569,6 +553,94 @@ export class TasksState {
     );
   }
 
+  @Action(PhasesChanged)
+  phasesChanged(ctx: Context, { results }: PhasesChanged): Observable<void> {
+    const state = ctx.getState();
+    const phaseDefinitions = this.store.selectSnapshot(MetadataState.phases);
+    const projectId = state.project!.id;
+    const tasks = state.nodes!;
+    const toRemoveIds: string[] = [];
+    const upserts: ProjectNode[] = [];
+    //
+    //  Now get all ids to remove
+    //
+    for (const id of results.removedIds) {
+      const task = tasks.find(
+        (x) => x.id === id || x.phaseIdAssociation === id
+      );
+
+      if (!task) continue;
+
+      toRemoveIds.push(
+        task.id,
+        ...WbsNodeService.getChildrenIds(tasks, task.id)
+      );
+    }
+    //
+    //  Remove
+    //
+    for (const id of toRemoveIds) {
+      const index = tasks.findIndex((x) => x.id === id);
+
+      if (index > -1) tasks.splice(index, 1);
+    }
+    //
+    //  Now  look through cats
+    //
+    for (let i = 0; i < results.categories.length; i++) {
+      const cat = results.categories[i];
+      const catId = typeof cat === 'string' ? cat : cat.id;
+      let task = tasks.find(
+        (x) => x.id === catId || x.phaseIdAssociation === catId
+      );
+
+      if (task) {
+        if (task.order !== i + 1) {
+          task.order = i + 1;
+          upserts.push(task);
+        }
+      } else if (typeof cat === 'string') {
+        const phase = phaseDefinitions.find((x) => x.id === cat)!;
+
+        task = {
+          id: IdService.generate(),
+          projectId,
+          phaseIdAssociation: cat,
+          order: i + 1,
+          lastModified: new Date(),
+          title: this.resources.get(phase.label),
+          description: phase.description
+            ? this.resources.get(phase.description)
+            : undefined,
+        };
+        tasks.push(task);
+        upserts.push(task);
+      } else {
+        task = {
+          id: cat.id,
+          projectId,
+          order: i + 1,
+          lastModified: new Date(),
+          title: cat.label,
+          description: cat.description,
+        };
+        tasks.push(task);
+        upserts.push(task);
+      }
+    }
+    return this.bulkSave(ctx, upserts, toRemoveIds).pipe(
+      tap(() => {
+        this.messaging.notify.success('Actions.ProjectPhasesChangedTitle');
+        this.saveActivity({
+          data: results,
+          topLevelId: projectId,
+          action: PROJECT_ACTIONS.PHASES_CHANGED,
+        });
+      }),
+      switchMap(() => ctx.dispatch(new MarkProjectChanged()))
+    );
+  }
+
   private saveActivity(...data: ActivityData[]): void {
     this.timeline.saveProjectActions(
       data.map((x) => this.timeline.createProjectRecord(x))
@@ -587,18 +659,51 @@ export class TasksState {
 
   private saveReordered(
     ctx: Context,
-    project: Project,
     originalLevel: string,
     mainTask: ProjectNode,
     others: ProjectNode[]
   ): Observable<void> {
+    const project = ctx.getState().project!;
+
+    return this.bulkSave(ctx, [mainTask, ...others], []).pipe(
+      tap(() => {
+        const newVm = ctx.getState().phases!.find((x) => x.id === mainTask.id);
+
+        this.saveActivity({
+          data: {
+            title: mainTask.title,
+            from: originalLevel,
+            to: newVm?.levelText,
+          },
+          topLevelId: project.id,
+          objectId: mainTask.id,
+          action: TASK_ACTIONS.REORDERED,
+        });
+      }),
+      tap(() => this.messaging.notify.success('Projects.TaskReordered')),
+      switchMap(() => ctx.dispatch(new MarkProjectChanged()))
+    );
+  }
+
+  private bulkSave(
+    ctx: Context,
+    upserts: ProjectNode[],
+    toRemoveIds: string[]
+  ): Observable<void> {
+    const project = ctx.getState().project!;
+
     return this.data.projectNodes
-      .putAsync(project.owner, project.id, [mainTask, ...others], [])
+      .putAsync(project.owner, project.id, upserts, toRemoveIds)
       .pipe(
         tap(() => {
           const tasks = ctx.getState().nodes!;
 
-          for (const task of [mainTask, ...others]) {
+          for (const id of toRemoveIds) {
+            const index = tasks.findIndex((x) => x.id === id);
+
+            if (index > -1) tasks.splice(index, 1);
+          }
+          for (const task of upserts) {
             const index = tasks.findIndex((x) => x.id === task.id);
 
             if (index > -1) tasks[index] = task;
@@ -608,25 +713,7 @@ export class TasksState {
             nodes: structuredClone(tasks),
           });
         }),
-        switchMap(() => ctx.dispatch(new RebuildNodeViews())),
-        tap(() => {
-          const newVm = ctx
-            .getState()
-            .phases!.find((x) => x.id === mainTask.id);
-
-          this.saveActivity({
-            data: {
-              title: mainTask.title,
-              from: originalLevel,
-              to: newVm?.levelText,
-            },
-            topLevelId: project.id,
-            objectId: mainTask.id,
-            action: TASK_ACTIONS.REORDERED,
-          });
-        }),
-        tap(() => this.messaging.notify.success('Projects.TaskReordered')),
-        switchMap(() => ctx.dispatch(new MarkProjectChanged()))
+        switchMap(() => ctx.dispatch(new RebuildNodeViews()))
       );
   }
 }
