@@ -9,12 +9,6 @@ const settings: NavigationLink[] = [
     claim: PROJECT_CLAIMS.UPDATE,
   },
   {
-    route: ['settings', 'phases'],
-    text: 'General.Phases',
-    section: 'phases',
-    claim: PROJECT_CLAIMS.UPDATE,
-  },
-  {
     route: ['settings', 'disciplines'],
     text: 'General.Disciplines',
     section: 'disciplines',

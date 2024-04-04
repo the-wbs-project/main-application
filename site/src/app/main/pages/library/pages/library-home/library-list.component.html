@@ -32,6 +32,7 @@
           <ul class="list-group">
             <table class="table table-hover">
               <tr class="bg-dark text-white">
+                <th class="pd-10 fw-normal">Owner</th>
                 <th class="pd-10 fw-normal">Name</th>
                 <th class="pd-10 fw-normal">Type</th>
                 <th class="pd-10 fw-normal">Last Updated</th>
@@ -47,6 +48,7 @@
                     entry.version
                   ]"
                 >
+                  <td>{{ entry.ownerName }}</td>
                   <td>{{ entry.title }}</td>
                   <td>
                     <fa-icon [icon]="entry.type | entryTypeIcon" />

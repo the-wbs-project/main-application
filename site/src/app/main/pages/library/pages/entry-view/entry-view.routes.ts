@@ -143,32 +143,6 @@ export const routes: Routes = [
           crumbs: ['settings', 'disciplines'],
         },
       },
-      {
-        path: 'settings/phase',
-        loadComponent: () =>
-          import('./pages/entry-settings-phase.component').then(
-            (x) => x.PhaseComponent
-          ),
-        canActivate: [entryNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          section: 'settings',
-          crumbs: ['settings', 'phase'],
-        },
-      },
-      {
-        path: 'settings/phases',
-        loadComponent: () =>
-          import('./pages/entry-settings-phases.component').then(
-            (x) => x.PhasesComponent
-          ),
-        canActivate: [entryNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          section: 'settings',
-          crumbs: ['settings', 'phases'],
-        },
-      },
     ],
   },
 ];

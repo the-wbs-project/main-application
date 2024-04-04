@@ -11,7 +11,7 @@
       </div>
       <div class="d-flex flex-align-center">
         <div class="wd-50 tx-center mg-r-20">
-          <fa-icon [icon]="faDiagramSubtask" size="3x" />
+          <fa-icon [icon]="taskIcon" size="3x" />
         </div>
         <wbs-project-title
           [title]="task()?.title ?? ''"
@@ -22,6 +22,12 @@
           [approval]="approvals() | findById : 'project-title'"
         />
         }
+        <wbs-fading-message
+          [icon]="checkIcon"
+          message="General.Saved"
+          [show]="titleSaveState() === 'saved'"
+          cssClass="tx-success tx-14"
+        />
 
         <div class="d-none d-md-block flex-fill tx-right">
           <wbs-page-header />

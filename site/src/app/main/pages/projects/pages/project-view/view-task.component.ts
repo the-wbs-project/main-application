@@ -4,25 +4,29 @@ import {
   computed,
   inject,
   input,
+  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck, faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { SaveState } from '@wbs/core/models';
 import { SignalStore, TitleService } from '@wbs/core/services';
-import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
-import { NavigationMenuService, TaskModalService } from '@wbs/main/services';
-import { TASK_NAVIGATION } from './models';
-import { ProjectTitleComponent } from './components/project-title';
-import { ProjectApprovalState, ProjectState, TasksState } from './states';
 import { ApprovalBadgeComponent } from '@wbs/main/components/approval-badge.component';
-import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
+import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
+import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
+import { NavigationMenuService, TaskModalService } from '@wbs/main/services';
+import { delay, tap } from 'rxjs/operators';
+import { ChangeTaskBasics } from './actions';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window';
+import { ProjectTitleComponent } from './components/project-title';
+import { TASK_NAVIGATION } from './models';
+import { ProjectApprovalState, ProjectState, TasksState } from './states';
 
 @Component({
   standalone: true,
@@ -31,6 +35,7 @@ import { ProjectApprovalWindowComponent } from './components/project-approval-wi
   imports: [
     ApprovalBadgeComponent,
     DialogModule,
+    FadingMessageComponent,
     FindByIdPipe,
     FontAwesomeModule,
     NavigationComponent,
@@ -66,6 +71,7 @@ export class TaskViewComponent {
     ProjectApprovalState.hasChildren
   );
   readonly chat = this.store.select(ProjectApprovalState.messages);
+  readonly titleSaveState = signal<SaveState>('ready');
   readonly links = computed(() =>
     this.navService.processLinks(TASK_NAVIGATION, this.claims())
   );
@@ -73,7 +79,8 @@ export class TaskViewComponent {
     this.tasks()?.find((t) => t.id === this.taskId())
   );
 
-  readonly faDiagramSubtask = faDiagramSubtask;
+  readonly checkIcon = faCheck;
+  readonly taskIcon = faDiagramSubtask;
 
   constructor(title: TitleService) {
     title.setTitle('Project', false);
@@ -86,7 +93,17 @@ export class TaskViewComponent {
   }
 
   titleChanged(title: string): void {
-    //  this.taskService.titleChangedAsync(this.task()!.id, title).subscribe();
+    this.titleSaveState.set('saving');
+    const task = this.task()!;
+
+    this.store
+      .dispatch(new ChangeTaskBasics(title, task.description ?? ''))
+      .pipe(
+        delay(500),
+        tap(() => this.titleSaveState.set('saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.titleSaveState.set('ready'));
   }
 
   closed(): void {

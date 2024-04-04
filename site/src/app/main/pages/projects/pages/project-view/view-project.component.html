@@ -14,6 +14,12 @@
         [approval]="approvals() | findById : 'project-title'"
       />
       }
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="titleSaveState() === 'saved'"
+        cssClass="tx-success tx-14"
+      />
 
       <div class="flex-fill tx-right">
         <div class="d-none d-md-block d-lg-inline-block mg-r-20">

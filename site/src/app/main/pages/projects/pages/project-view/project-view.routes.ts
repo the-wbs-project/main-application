@@ -168,19 +168,6 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'settings/phases',
-        loadComponent: () =>
-          import('./pages/project-settings-phases').then(
-            (x) => x.PhasesComponent
-          ),
-        canActivate: [projectNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          navSection: 'settings',
-          crumbs: ['settings', 'phases'],
-        },
-      },
-      {
         path: 'settings/disciplines',
         loadComponent: () =>
           import('./pages/project-settings-disciplines').then(
