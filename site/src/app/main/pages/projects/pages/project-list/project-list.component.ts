@@ -11,29 +11,42 @@ import {
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
-import { faFilters } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faFilters,
+  faGrid,
+  faPlus,
+  faTable,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI, Project } from '@wbs/core/models';
-import { sorter } from '@wbs/core/services';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataState, sorter } from '@wbs/main/services';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
 import { ProjectListService } from './services';
+import { Storage } from '@wbs/core/services';
+import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
+import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
+import { ProjectViewToggleComponent } from './components/project-view-toggle';
+
+declare type ProjectView = 'grid' | 'table';
 
 @Component({
   standalone: true,
   templateUrl: './project-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    DateTextPipe,
     EditedDateTextPipe,
     FontAwesomeModule,
     NgClass,
     PageHeaderComponent,
     ProjectCategoryLabelPipe,
     ProjectListFiltersComponent,
+    ProjectStatusPipe,
+    ProjectViewToggleComponent,
     RouterModule,
     TranslateModule,
   ],
@@ -42,13 +55,16 @@ export class ProjectListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly metadata = inject(MetadataState);
   private readonly service = inject(ProjectListService);
+  private readonly storage = inject(Storage);
 
-  readonly faCactus = faCactus;
-  readonly faFilters = faFilters;
+  readonly cactusIcon = faCactus;
+  readonly filterIcon = faFilters;
+  readonly plusIcon = faPlus;
   readonly loading = signal(true);
   readonly projects = signal<Project[]>([]);
   readonly owner = input.required<string>();
   readonly userId = input.required<string>();
+  readonly view = signal<ProjectView>(this.getView() ?? 'grid');
   readonly assignedToMe = signal(false);
   readonly stati = signal([
     PROJECT_STATI.PLANNING,
@@ -84,6 +100,11 @@ export class ProjectListComponent implements OnInit {
     });
   }
 
+  setView(view: ProjectView): void {
+    this.view.set(view);
+    this.storage.local.set('projectListView', view);
+  }
+
   private filter(
     list: Project[],
     userId: string,
@@ -106,5 +127,9 @@ export class ProjectListComponent implements OnInit {
     list = this.service.filterByCategories(list, categories);
 
     return list;
+  }
+
+  private getView(): ProjectView | undefined {
+    return this.storage.local.get('projectListView') as ProjectView;
   }
 }

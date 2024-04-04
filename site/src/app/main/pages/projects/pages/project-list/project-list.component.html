@@ -13,29 +13,43 @@
   <div class="mg-t-20 mg-b-16 flex-grow-1">
     <div class="container-fluid">
       <div class="row mg-b-15 d-none d-lg-flex">
-        <div class="col-6">
-          <a class="btn btn-sm btn-dark" [routerLink]="['create']">
-            {{ "General.Create" | translate }}
-          </a>
+        <div class="col-8">
+          <div class="d-flex gap-20">
+            <a class="btn btn-dark" [routerLink]="['create']">
+              <fa-icon [icon]="plusIcon" />&nbsp;
+              {{ "General.Create" | translate }}
+            </a>
+            <wbs-project-view-toggle
+              [view]="view()"
+              (changed)="setView($event)"
+            />
+          </div>
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <wbs-page-header />
         </div>
       </div>
       <div class="row mg-b-15 d-lg-none flex-align-center">
-        <div class="col-6">
-          <button
-            class="btn btn-dark btn-block"
-            (click)="filterToggle.set(!filterToggle())"
-          >
-            <fa-icon [icon]="faFilters" />
-          </button>
+        <div class="col-8">
+          <div class="d-flex gap-20">
+            <button
+              class="btn btn-dark btn-block"
+              (click)="filterToggle.set(!filterToggle())"
+            >
+              <fa-icon [icon]="filterIcon" />
+            </button>
 
-          <a class="btn btn-dark btn-block mg-l-20" [routerLink]="['create']">
-            {{ "General.Create" | translate }}
-          </a>
+            <a class="btn btn-dark btn-block" [routerLink]="['create']">
+              <fa-icon [icon]="plusIcon" />&nbsp;
+              {{ "General.Create" | translate }}
+            </a>
+            <wbs-project-view-toggle
+              [view]="view()"
+              (changed)="setView($event)"
+            />
+          </div>
         </div>
-        <div class="col-6">
+        <div class="col-4">
           <wbs-page-header />
         </div>
       </div>
@@ -56,16 +70,19 @@
           />
         </div>
       </div>
-      @if (filteredList(); as projects) {
+      @if (filteredList(); as projects) { @if (!loading() && projects.length ===
+      0) {
       <div class="row">
-        @if (!loading() && projects.length === 0) {
         <div class="col-12 pd-t-100 tx-20 tx-center">
-          <fa-icon [icon]="faCactus" size="2xl" />
+          <fa-icon [icon]="cactusIcon" size="2xl" />
           <br />
           <br />
           {{ "Projects.NoProjectsFound" | translate }}
         </div>
-        } @for (project of projects; track project.id) {
+      </div>
+      } @else if (view() === 'grid') {
+      <div class="row">
+        @for (project of projects; track project.id) {
         <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6">
           <a
             class="tx-black text-decoration-none"
@@ -88,7 +105,34 @@
         </div>
         }
       </div>
-      }
+      } @else {
+      <table class="table table-hover">
+        <tr class="bg-dark text-white">
+          <th class="pd-10 fw-normal">
+            {{ "General.Project" | translate }}
+          </th>
+          <th class="pd-10 fw-normal">
+            {{ "General.Category" | translate }}
+          </th>
+          <th class="pd-10 fw-normal">
+            {{ "General.Status" | translate }}
+          </th>
+          <th class="pd-10 fw-normal">
+            {{ "General.LastUpdated" | translate }}
+          </th>
+        </tr>
+        <tbody>
+          @for (project of projects; track project.id) {
+          <tr class="pointer" [routerLink]="['view', project.id]">
+            <td>{{ project.title }}</td>
+            <td>{{ project.category | projectCategoryLabel }}</td>
+            <td>{{ project.status | projectStatus | translate }}</td>
+            <td>{{ project.lastModified | dateText }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      } }
     </div>
   </div>
 </div>

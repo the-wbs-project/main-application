@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Member, User } from '@wbs/core/models';
-import { sorter } from '@wbs/core/services';
+import { sorter } from '@wbs/main/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { skipWhile, tap } from 'rxjs/operators';
 

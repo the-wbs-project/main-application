@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Member } from '@wbs/core/models';
-import { sorter } from '@wbs/core/services';
+import { sorter } from '@wbs/main/services';
 import { RoleUsersViewModel } from '../view-models';
 
 @Injectable()

@@ -29,34 +29,33 @@
       </div>
       <div class="row mg-b-15">
         <div class="col-12">
-          <ul class="list-group">
-            <table class="table table-hover">
-              <tr class="bg-dark text-white">
-                <th class="pd-10 fw-normal">Owner</th>
-                <th class="pd-10 fw-normal">Name</th>
-                <th class="pd-10 fw-normal">Type</th>
-                <th class="pd-10 fw-normal">Last Updated</th>
+          <table class="table table-hover">
+            <tr class="bg-dark text-white">
+              <th class="pd-10 fw-normal">Owner</th>
+              <th class="pd-10 fw-normal">Name</th>
+              <th class="pd-10 fw-normal">Type</th>
+              <th class="pd-10 fw-normal">Last Updated</th>
+            </tr>
+            <tbody>
+              @for (entry of entries(); track entry.entryId) {
+              <tr
+                class="pointer"
+                [routerLink]="[
+                  'view',
+                  entry.ownerId,
+                  entry.entryId,
+                  entry.version
+                ]"
+              >
+                <td>{{ entry.ownerName }}</td>
+                <td>{{ entry.title }}</td>
+                <td>
+                  <fa-icon [icon]="entry.type | entryTypeIcon" />
+                  {{ entry.type | entryTypeTitle | translate }}
+                </td>
+                <td>{{ entry.lastModified | dateText }}</td>
               </tr>
-              <tbody>
-                @for (entry of entries(); track entry.entryId) {
-                <tr
-                  class="pointer"
-                  [routerLink]="[
-                    'view',
-                    entry.ownerId,
-                    entry.entryId,
-                    entry.version
-                  ]"
-                >
-                  <td>{{ entry.ownerName }}</td>
-                  <td>{{ entry.title }}</td>
-                  <td>
-                    <fa-icon [icon]="entry.type | entryTypeIcon" />
-                    {{ entry.type | entryTypeTitle | translate }}
-                  </td>
-                  <td>{{ entry.lastModified | dateText }}</td>
-                </tr>
-                <!--
+              <!--
                 <li class="list-group-item">
                   <a
                     class="text-decoration-none"
@@ -71,10 +70,9 @@
                   </a>
                 </li>
               -->
-                }
-              </tbody>
-            </table>
-          </ul>
+              }
+            </tbody>
+          </table>
         </div>
       </div>
     </div>
