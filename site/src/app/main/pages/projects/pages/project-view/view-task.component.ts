@@ -97,7 +97,7 @@ export class TaskViewComponent {
     const task = this.task()!;
 
     this.store
-      .dispatch(new ChangeTaskBasics(title, task.description ?? ''))
+      .dispatch(new ChangeTaskBasics(task.id, title, task.description ?? ''))
       .pipe(
         delay(500),
         tap(() => this.titleSaveState.set('saved')),

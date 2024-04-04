@@ -65,12 +65,26 @@ export class MoveTaskRight {
 
 export class ChangeTaskBasics {
   static readonly type = '[Tasks] Change Task Basics';
-  constructor(readonly title: string, readonly description: string) {}
+  constructor(
+    readonly taskId: string,
+    readonly title: string,
+    readonly description: string
+  ) {}
 }
 
 export class ChangeTaskDisciplines {
   static readonly type = '[Tasks] Change Task Disciplines';
   constructor(readonly disciplines: string[]) {}
+}
+
+export class AddDisciplineToTask {
+  static readonly type = '[Tasks] Add Discipline';
+  constructor(readonly taskId: string, readonly disciplineId: string) {}
+}
+
+export class RemoveDisciplineToTask {
+  static readonly type = '[Tasks] Remove Discipline';
+  constructor(readonly taskId: string, readonly disciplineId: string) {}
 }
 
 export class CreateTask {

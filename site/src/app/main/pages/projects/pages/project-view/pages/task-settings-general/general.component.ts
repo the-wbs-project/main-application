@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   Signal,
+  input,
   signal,
 } from '@angular/core';
 import {
@@ -37,6 +38,7 @@ export class GeneralComponent implements DirtyComponent {
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>(''),
   });
+  readonly taskId = input.required<string>();
 
   constructor(private readonly store: Store) {}
 
@@ -59,7 +61,7 @@ export class GeneralComponent implements DirtyComponent {
     const values = this.form.getRawValue();
 
     this.store.dispatch(
-      new ChangeTaskBasics(values.title!, values.description!)
+      new ChangeTaskBasics(this.taskId(), values.title!, values.description!)
     );
     this.form.reset(values);
   }

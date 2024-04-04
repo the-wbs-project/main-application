@@ -11,16 +11,19 @@ import {
 import { Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
-import { of } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import {
+  AddDisciplineToTask,
   ChangeProjectStatus,
+  ChangeTaskDisciplines,
   CloneTask,
   CreateTask,
   MoveTaskDown,
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
+  RemoveDisciplineToTask,
   RemoveTask,
 } from '../actions';
 import { TaskDeleteComponent } from '../components/task-delete/task-delete.component';
@@ -36,7 +39,6 @@ export class ProjectViewService {
 
   constructor(
     private readonly data: DataServiceFactory,
-    private readonly dialogs: DialogService,
     private readonly exportService: LibraryEntryExportService,
     private readonly messages: Messages,
     private readonly nav: ProjectNavigationService,
@@ -52,15 +54,11 @@ export class ProjectViewService {
     return this.project.owner;
   }
 
-  private get projectDisciplines(): ProjectCategory[] {
-    return this.store.selectSnapshot(ProjectState.current)!.disciplines ?? [];
-  }
-
   registerCreateComponent(createComponent: TaskCreateComponent): void {
     this.createComponent = createComponent;
   }
 
-  action(action: string, taskId?: string) {
+  action(action: string, taskId?: string): void | Observable<boolean> {
     if (action === 'download') {
       this.downloadTasks();
     } else if (action === 'upload') {
@@ -104,6 +102,18 @@ export class ProjectViewService {
         if (task.parentId == null)
           this.exportService.exportPhase(this.owner, this.project.id, task);
         else if (task) this.exportService.exportTask(this.owner, task);
+      } else if (action.startsWith('addDiscipline|')) {
+        const discipline = action.split('|')[1];
+
+        return this.store
+          .dispatch(new AddDisciplineToTask(taskId!, discipline))
+          .pipe(map(() => true));
+      } else if (action.startsWith('removeDiscipline|')) {
+        const discipline = action.split('|')[1];
+
+        return this.store
+          .dispatch(new RemoveDisciplineToTask(taskId!, discipline))
+          .pipe(map(() => true));
       }
     }
   }

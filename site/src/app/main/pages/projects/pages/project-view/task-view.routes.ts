@@ -87,7 +87,11 @@ export const routes: Routes = [
                 (x) => x.GeneralComponent
               ),
             data: {
-              section: 'settings',
+              navSection: 'settings',
+              crumbs: ['settings', 'general'],
+            },
+            resolve: {
+              taskId: taskIdResolve,
             },
           },
           {
@@ -99,7 +103,8 @@ export const routes: Routes = [
                 (x) => x.DisciplinesComponent
               ),
             data: {
-              section: 'settings',
+              navSection: 'settings',
+              crumbs: ['settings', 'disciplines'],
             },
           },
         ],

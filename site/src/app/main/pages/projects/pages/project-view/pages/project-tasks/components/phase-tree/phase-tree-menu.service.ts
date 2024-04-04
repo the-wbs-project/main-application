@@ -1,25 +1,25 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { PROJECT_STATI_TYPE } from '@wbs/core/models';
+import { Category, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
 import { ProjectState } from '../../../../states';
+import { MetadataState } from '@wbs/main/services';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class PhaseTreeMenuService {
-  constructor(private readonly store: Store) {}
+  private readonly metadata = inject(MetadataState);
+  private readonly store = inject(Store);
 
   buildMenu(
-    tasks: WbsNodeView[],
-    claims: string[],
-    selectedTaskId: string | undefined
+    project: Project,
+    task: WbsNodeView | undefined,
+    claims: string[]
   ): (ContextMenuItem | Seperator)[] {
-    if (selectedTaskId === undefined) return [];
-
-    const task = tasks?.find((x) => x.id === selectedTaskId)!;
+    if (!task) return [];
     const status = this.store.selectSnapshot(ProjectState.current)!.status;
     const navActions = this.filterList(
       PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
@@ -45,6 +45,27 @@ export class PhaseTreeMenuService {
         if (task.canMoveUp) movers.push(item);
       } else if (item.action === 'moveDown') {
         if (task.canMoveDown) movers.push(item);
+      }
+    }
+    //
+    //  Now add disciplines
+    //
+    const add = phaseActions.find((a) => a.action === 'addDiscipline');
+    const remove = phaseActions.find((a) => a.action === 'removeDiscipline');
+
+    if (add) {
+      add.items = this.getDisciplinesToAdd(project, task);
+
+      if (add.items.length === 0) {
+        phaseActions.splice(phaseActions.indexOf(add), 1);
+      }
+    }
+
+    if (remove) {
+      remove.items = this.getDisciplinesToRemove(task);
+
+      if (remove.items.length === 0) {
+        phaseActions.splice(phaseActions.indexOf(remove), 1);
       }
     }
 
@@ -99,5 +120,53 @@ export class PhaseTreeMenuService {
     }
 
     return true;
+  }
+
+  private getDisciplinesToAdd(
+    project: Project,
+    task: WbsNodeView
+  ): ContextMenuItem[] {
+    const disciplines = this.metadata.categories.disciplines;
+    const results: ContextMenuItem[] = [];
+
+    for (const pDiscipline of project.disciplines) {
+      const id = typeof pDiscipline === 'string' ? pDiscipline : pDiscipline.id;
+
+      if (task.disciplines.includes(id)) continue;
+
+      const discipline =
+        typeof pDiscipline === 'string'
+          ? disciplines.find((x) => x.id === id)
+          : pDiscipline;
+
+      if (discipline)
+        results.push({
+          action: 'addDiscipline|' + id,
+          faIcon: discipline.icon ?? 'fa-question',
+          text: discipline.label,
+          isNotResource: true,
+        });
+    }
+
+    return results;
+  }
+
+  private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
+    const disciplines = this.metadata.categories.disciplines;
+    const results: ContextMenuItem[] = [];
+
+    for (const id of task.disciplines) {
+      const discipline = disciplines.find((x) => x.id === id);
+
+      if (discipline)
+        results.push({
+          action: 'removeDiscipline|' + id,
+          faIcon: discipline.icon ?? 'fa-question',
+          text: discipline.label,
+          isNotResource: true,
+        });
+    }
+
+    return results;
   }
 }

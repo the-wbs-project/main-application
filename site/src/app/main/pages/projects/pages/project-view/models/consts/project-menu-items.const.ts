@@ -8,6 +8,8 @@ import {
   faEye,
   faPlus,
   faTrash,
+  faUserMinus,
+  faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { ContextMenuItem } from '../../../../../../models/context-menu-item.model';
@@ -38,6 +40,24 @@ const taskActions: ContextMenuItem[] = [
       stati: [PROJECT_STATI.PLANNING],
       excludeFromCat: true,
       claim: PROJECT_CLAIMS.TASKS.CREATE,
+    },
+  },
+  {
+    action: 'addDiscipline',
+    faIcon: faUserPlus,
+    text: 'Wbs.AddDiscipline',
+    filters: {
+      stati: [PROJECT_STATI.PLANNING],
+      claim: PROJECT_CLAIMS.TASKS.UPDATE,
+    },
+  },
+  {
+    action: 'removeDiscipline',
+    faIcon: faUserMinus,
+    text: 'Wbs.RemoveDiscipline',
+    filters: {
+      stati: [PROJECT_STATI.PLANNING],
+      claim: PROJECT_CLAIMS.TASKS.UPDATE,
     },
   },
   {

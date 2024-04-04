@@ -3,8 +3,10 @@ import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 
 export interface ContextMenuItem {
   text: string;
-  faIcon: IconDefinition;
+  isNotResource?: boolean;
+  faIcon: IconDefinition | string;
   action: string;
+  items?: ContextMenuItem[];
   filters?: {
     claim?: string;
     excludeFromCat?: boolean;

@@ -69,10 +69,10 @@ export class TaskAboutComponent {
   descriptionChange(description: string): void {
     this.descriptionSaveState.set('saving');
 
-    const project = this.project()!;
+    const task = this.current()!;
 
     this.store
-      .dispatch(new ChangeTaskBasics(project.title, description))
+      .dispatch(new ChangeTaskBasics(task.id, task.title, description))
       .pipe(
         delay(1000),
         tap(() => {

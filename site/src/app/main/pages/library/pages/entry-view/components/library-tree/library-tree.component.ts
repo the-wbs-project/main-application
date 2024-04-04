@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  Signal,
   computed,
   inject,
   input,
@@ -27,13 +28,16 @@ import {
   LIBRARY_CLAIMS,
   LibraryEntry,
   LibraryEntryVersion,
+  SaveState,
 } from '@wbs/core/models';
 import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { TaskCreateComponent } from '@wbs/main/components/task-create';
+import { TaskTitleComponent } from '@wbs/main/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
+import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { TreeService, WbsPhaseService } from '@wbs/main/services';
@@ -45,8 +49,6 @@ import {
   EntryTaskService,
   EntryTreeMenuService,
 } from '../../services';
-import { TaskTitleComponent } from '../task-title';
-import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 
 @UntilDestroy()
 @Component({
@@ -95,6 +97,7 @@ export class LibraryTreeComponent implements OnInit {
 
   readonly width = this.store.select(UiState.mainContentWidth);
 
+  readonly taskSaveStates = signal<Map<string, SaveState>>(new Map());
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
   readonly menu = computed(() =>

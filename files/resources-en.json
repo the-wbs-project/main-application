@@ -548,7 +548,8 @@
       "OtherFlags": "Other Flags",
       "TaskDisciplines": "Task Disciplines",
       "WbsDisciplines": "WBS Disciplines",
-      "AddDiscipline": "Add Discipline"
+      "AddDiscipline": "Add Discipline",
+      "RemoveDiscipline": "Remove Discipline"
     }
   },
   {

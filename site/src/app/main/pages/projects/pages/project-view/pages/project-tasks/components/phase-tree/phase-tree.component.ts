@@ -3,13 +3,13 @@ import {
   ChangeDetectorRef,
   Component,
   OnInit,
+  WritableSignal,
   computed,
   inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Navigate } from '@ngxs/router-plugin';
@@ -25,10 +25,16 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { PROJECT_CLAIMS, PROJECT_NODE_VIEW, Project } from '@wbs/core/models';
+import {
+  PROJECT_CLAIMS,
+  PROJECT_NODE_VIEW,
+  Project,
+  SaveState,
+} from '@wbs/core/models';
 import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
+import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
@@ -38,7 +44,11 @@ import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
-import { CreateTask, TreeReordered } from '../../../../actions';
+import {
+  ChangeTaskBasics,
+  CreateTask,
+  TreeReordered,
+} from '../../../../actions';
 import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
 import { ChildrenApprovalPipe } from '../../../../pipes/children-approval.pipe';
 import {
@@ -48,6 +58,10 @@ import {
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
+import { Observable, delay, tap } from 'rxjs';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
+import { TaskTitleComponent } from '@wbs/main/components/task-title';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 
 @UntilDestroy()
 @Component({
@@ -61,12 +75,14 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     ApprovalBadgeComponent,
     CheckPipe,
     ChildrenApprovalPipe,
+    ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
+    FadingMessageComponent,
     FindByIdPipe,
     FindThemByIdPipe,
-    FontAwesomeModule,
     ProgressBarComponent,
+    TaskTitleComponent,
     TranslateModule,
     TreeDisciplineLegendComponent,
     TreeListModule,
@@ -105,15 +121,20 @@ export class ProjectPhaseTreeComponent implements OnInit {
     readonly: false,
   };
 
+  readonly checkIcon = faCheck;
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
 
+  readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly tree = signal<WbsNodeView[] | undefined>(undefined);
   readonly width = this.store.select(UiState.mainContentWidth);
   readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly taskId = signal<string | undefined>(undefined);
+  readonly task = computed(
+    () => this.tasks()?.find((x) => x.id === this.taskId())!
+  );
   readonly menu = computed(() =>
-    this.menuService.buildMenu(this.tasks()!, this.claims(), this.taskId())
+    this.menuService.buildMenu(this.project(), this.task(), this.claims())
   );
 
   ngOnInit(): void {
@@ -122,6 +143,12 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((phases) => {
         this.tree.set(structuredClone(phases));
+
+        for (const task of phases ?? []) {
+          if (!this.taskSaveStates.has(task.id)) {
+            this.taskSaveStates.set(task.id, signal('ready'));
+          }
+        }
       });
     this.store
       .selectAsync(ProjectApprovalState.list)
@@ -154,12 +181,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
         new Navigate([...this.projectUrl(), 'tasks', this.taskId()!])
       );
     }, 150);
-  }
-
-  onAction(action: string): void {
-    if (action === 'download') {
-      this.service.downloadTasks(this.project()!, this.tasks()!);
-    } else this.service.action(action, this.taskId());
   }
 
   onCellClick(e: CellClickEvent): void {
@@ -210,5 +231,34 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.store.dispatch(
       new TreeReordered(dragged.id, PROJECT_NODE_VIEW.PHASE, results)
     );
+  }
+
+  taskTitleChanged(taskId: string, title: string): void {
+    const task = this.tree()?.find((x) => x.id === taskId);
+
+    if (!task) return;
+
+    this.store.dispatch(
+      new ChangeTaskBasics(taskId, title, task.description ?? '')
+    );
+  }
+
+  menuItemSelected(item: string): void {
+    const taskId = this.taskId()!;
+    const obsOrVoid = this.service.action(item, taskId);
+
+    if (obsOrVoid instanceof Observable) {
+      obsOrVoid
+        .pipe(
+          delay(500),
+          tap(() => this.setSaveState(taskId, 'saved')),
+          delay(5000)
+        )
+        .subscribe(() => this.setSaveState(taskId, 'ready'));
+    }
+  }
+
+  private setSaveState(taskId: string, state: SaveState): void {
+    this.taskSaveStates.get(taskId)?.set(state);
   }
 }

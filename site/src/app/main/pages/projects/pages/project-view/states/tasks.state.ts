@@ -12,6 +12,7 @@ import {
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';
 import {
+  AddDisciplineToTask,
   ChangeTaskBasics,
   ChangeTaskDisciplines,
   CloneTask,
@@ -23,6 +24,7 @@ import {
   MoveTaskUp,
   PhasesChanged,
   RebuildNodeViews,
+  RemoveDisciplineToTask,
   RemoveDisciplinesFromTasks,
   RemoveTask,
   SetChecklistData,
@@ -231,6 +233,58 @@ export class TasksState {
         tap(() => ctx.patchState({ nodes })),
         tap(() => ctx.dispatch(new RebuildNodeViews()))
       );
+  }
+
+  @Action(AddDisciplineToTask)
+  addDisciplineToTask(
+    ctx: Context,
+    { taskId, disciplineId }: AddDisciplineToTask
+  ): void | Observable<void> {
+    const state = ctx.getState();
+    const nodes = structuredClone(state.nodes)!;
+    const phases = structuredClone(state.phases)!;
+    const model = nodes.find((x) => x.id === taskId)!;
+    const viewModel = phases.find((x) => x.id === taskId)!;
+
+    if (!model || !viewModel) return;
+
+    if (model.disciplineIds) {
+      if (model.disciplineIds.indexOf(disciplineId) === -1)
+        model.disciplineIds.push(disciplineId);
+      else return;
+    } else model.disciplineIds = [disciplineId];
+
+    viewModel.disciplines = model.disciplineIds;
+
+    return this.saveTask(ctx, model).pipe(
+      tap(() => ctx.patchState({ nodes, phases }))
+    );
+  }
+
+  @Action(RemoveDisciplineToTask)
+  RemoveDisciplineToTask(
+    ctx: Context,
+    { taskId, disciplineId }: RemoveDisciplineToTask
+  ): void | Observable<void> {
+    const state = ctx.getState();
+    const nodes = structuredClone(state.nodes)!;
+    const phases = structuredClone(state.phases)!;
+    const model = nodes.find((x) => x.id === taskId)!;
+    const viewModel = phases.find((x) => x.id === taskId)!;
+
+    if (!model?.disciplineIds || !viewModel) return;
+
+    const index = model.disciplineIds.indexOf(disciplineId);
+
+    if (index === -1) return;
+
+    model.disciplineIds.splice(index, 1);
+
+    viewModel.disciplines = model.disciplineIds;
+
+    return this.saveTask(ctx, model).pipe(
+      tap(() => ctx.patchState({ nodes, phases }))
+    );
   }
 
   @Action(CloneTask)
@@ -462,11 +516,11 @@ export class TasksState {
   @Action(ChangeTaskBasics)
   changeTaskBasics(
     ctx: Context,
-    { title, description }: ChangeTaskBasics
+    { taskId, title, description }: ChangeTaskBasics
   ): Observable<void> | void {
     const state = ctx.getState();
-    const viewModel = state.current!;
-    const model = state.nodes!.find((x) => x.id === viewModel.id)!;
+    const model = state.nodes!.find((x) => x.id === taskId)!;
+    const viewModel = state.phases!.find((x) => x.id === taskId)!;
     const activities: ActivityData[] = [];
 
     if (model.title !== title) {
@@ -505,9 +559,12 @@ export class TasksState {
     return this.saveTask(ctx, model).pipe(
       map(() => {
         ctx.patchState({
-          current: viewModel,
           nodes: state.nodes,
         });
+        if (state.current?.id === taskId)
+          ctx.patchState({
+            current: viewModel,
+          });
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
       tap(() => this.saveActivity(...activities))

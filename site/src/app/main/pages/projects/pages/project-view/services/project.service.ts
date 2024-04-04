@@ -10,6 +10,7 @@ import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PROJECT_NAVIGATION } from '../models';
 import { ProjectState, TasksState } from '../states';
+import { TASK_NAVIGATION } from '@wbs/main/pages/library/pages/entry-view/models';
 
 @Injectable()
 export class ProjectService {
@@ -155,7 +156,7 @@ export class ProjectService {
         ];
 
         for (const section of crumbSections) {
-          link = (link?.items ?? (PROJECT_NAVIGATION as NavigationLink[])).find(
+          link = (link?.items ?? (TASK_NAVIGATION as NavigationLink[])).find(
             (x) => x.section == section
           );
 

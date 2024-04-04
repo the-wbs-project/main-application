@@ -38,7 +38,7 @@
         [expandable]="true"
         field="title"
         [title]="'Projects.Activity_Title' | translate"
-        class="tx-11"
+        class="tx-11 child-hoverer"
         headerClass="tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
@@ -53,6 +53,18 @@
               />
             </div>
           </div>
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-task-title
+            [title]="dataItem.title"
+            (titleChanged)="taskTitleChanged(dataItem.id, $event)"
+          />
+          <wbs-fading-message
+            [icon]="checkIcon"
+            message="General.Saved"
+            [show]="taskSaveStates.get(dataItem.id)!() === 'saved'"
+            cssClass="tx-success tx-12 mg-l-20"
+          />
         </ng-template>
       </kendo-treelist-column>
       @if (project().approvalStarted) {
@@ -98,11 +110,10 @@
     </kendo-treelist>
     <kendo-contextmenu
       [items]="menu()"
-      (select)="service.action($event.item.action, taskId()!)"
+      (select)="menuItemSelected($event.item.action)"
     >
       <ng-template kendoMenuItemTemplate let-item="item">
-        <fa-icon [icon]="item.faIcon" />&nbsp;
-        {{ item.text | translate }}
+        <wbs-context-menu-item [item]="item" />
       </ng-template>
     </kendo-contextmenu>
   </div>
