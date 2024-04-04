@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
 import { Messages, Resources, SignalStore } from '@wbs/core/services';
-import { RoleState } from '@wbs/main/states';
+import { MetadataState } from '@wbs/main/services';
 import { ProjectUserListComponent } from '../user-list';
 import { RoleUsersService } from './services';
 import { RoleUsersViewModel } from './view-models';
@@ -30,10 +30,8 @@ declare type OutputType = {
   providers: [RoleUsersService],
 })
 export class ProjectRolesComponent {
-  readonly addUserToRole = output<OutputType>();
-  readonly removeUserToRole = output<OutputType>();
-
   private readonly messages = inject(Messages);
+  private readonly metadata = inject(MetadataState);
   private readonly resources = inject(Resources);
   private readonly service = inject(RoleUsersService);
   private readonly store = inject(SignalStore);
@@ -45,15 +43,18 @@ export class ProjectRolesComponent {
   readonly smeIds = input<string[]>();
   readonly approvalEnabled = input.required<boolean>();
 
-  readonly roles = this.store.select(RoleState.ids);
+  readonly addUserToRole = output<OutputType>();
+  readonly removeUserToRole = output<OutputType>();
+
+  readonly roles = this.metadata.roles.ids;
   readonly approvers = computed(() =>
-    this.process(this.roles()!.approver, this.members(), this.approverIds())
+    this.process(this.roles.approver, this.members(), this.approverIds())
   );
   readonly pms = computed(() =>
-    this.process(this.roles()!.pm, this.members(), this.pmIds())
+    this.process(this.roles.pm, this.members(), this.pmIds())
   );
   readonly smes = computed(() =>
-    this.process(this.roles()!.sme, this.members(), this.smeIds())
+    this.process(this.roles.sme, this.members(), this.smeIds())
   );
 
   readonly minusIcon = minusIcon;
@@ -88,9 +89,7 @@ export class ProjectRolesComponent {
       return;
     }
     const roleTitle = this.resources.get(
-      this.store
-        .selectSnapshot(RoleState.definitions)
-        .find((x) => x.id === role)!.description
+      this.metadata.roles.definitions.find((x) => x.id === role)!.description
     );
 
     this.messages.confirm

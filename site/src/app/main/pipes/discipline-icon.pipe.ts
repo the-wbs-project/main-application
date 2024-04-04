@@ -1,12 +1,12 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LISTS, ProjectCategory } from '@wbs/core/models';
-import { CategoryState } from '../services';
+import { MetadataState } from '../services';
 
 const question = 'fa-question';
 
 @Pipe({ name: 'disciplineIcon', standalone: true })
 export class DisciplineIconPipe implements PipeTransform {
-  private readonly state = inject(CategoryState);
+  private readonly state = inject(MetadataState);
 
   transform(
     category: string | { id: string; icon?: string } | undefined,
@@ -29,6 +29,6 @@ export class DisciplineIconPipe implements PipeTransform {
   }
 
   private getIconFromCats(id: string): string {
-    return this.state.getIcon(LISTS.DISCIPLINE, id) ?? question;
+    return this.state.categories.getIcon(LISTS.DISCIPLINE, id) ?? question;
   }
 }

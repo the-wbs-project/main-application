@@ -2,11 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { ProjectNode, RoutedBreadcrumbItem } from '@wbs/core/models';
-import { IdService, Resources } from '@wbs/core/services';
+import { IdService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { NavigationLink } from '@wbs/main/models';
-import { Utils } from '@wbs/main/services';
-import { RoleState } from '@wbs/main/states';
+import { MetadataState, Utils } from '@wbs/main/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PROJECT_NAVIGATION } from '../models';
@@ -14,7 +13,7 @@ import { ProjectState, TasksState } from '../states';
 
 @Injectable()
 export class ProjectService {
-  protected readonly resources = inject(Resources);
+  private readonly metadata = inject(MetadataState);
   protected readonly store = inject(Store);
 
   static getProjectUrl(route: ActivatedRouteSnapshot): string[] {
@@ -35,25 +34,17 @@ export class ProjectService {
     ];
   }
 
-  getTypeText(type: string | undefined): string {
-    if (type === 'assigned') return this.resources.get('General.AssignedToMe');
-    if (type === 'all') return this.resources.get('General.All');
-    return '';
-  }
-
   getRoleTitle(
     role: string | undefined | null,
     useAbbreviations = false
   ): string {
     if (!role) return '';
 
-    const definition = this.store
-      .selectSnapshot(RoleState.definitions)!
-      .find((x) => x.id === role)!;
+    const definition = this.metadata.roles.definitions.find(
+      (x) => x.id === role
+    )!;
 
-    return this.resources.get(
-      useAbbreviations ? definition.abbreviation : definition.description
-    );
+    return useAbbreviations ? definition.abbreviation : definition.description;
   }
 
   getPhaseIds(nodes: ProjectNode[] | WbsNodeView[]): string[] {

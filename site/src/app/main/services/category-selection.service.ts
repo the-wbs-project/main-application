@@ -8,11 +8,11 @@ import {
   CategoryCancelConfirm,
   CategorySelection,
 } from '@wbs/core/view-models';
-import { CategoryState } from './category-state.service';
+import { MetadataState } from './metdata-state.service';
 
 @Injectable()
 export class CategorySelectionService {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
 
   isListDirty(list: CategorySelection[] | undefined): boolean {
     return (
@@ -26,7 +26,7 @@ export class CategorySelectionService {
     catCounts?: Map<string, number>
   ): CategorySelection[] {
     return this.build(
-      this.categoryState.phases,
+      this.metadata.categories.phases,
       selected,
       confirmMessage,
       catCounts
@@ -39,7 +39,7 @@ export class CategorySelectionService {
     catCounts?: Map<string, number>
   ): CategorySelection[] {
     return this.build(
-      this.categoryState.disciplines,
+      this.metadata.categories.disciplines,
       selected,
       confirmMessage,
       catCounts
@@ -122,14 +122,18 @@ export class CategorySelectionService {
     list: ProjectCategory[],
     selected: string[]
   ): CategorySelection[] {
-    return this.buildFromList(this.categoryState.disciplines, list, selected);
+    return this.buildFromList(
+      this.metadata.categories.disciplines,
+      list,
+      selected
+    );
   }
 
   buildPhasesFromList(
     list: ProjectCategory[],
     selected: string[]
   ): CategorySelection[] {
-    return this.buildFromList(this.categoryState.phases, list, selected);
+    return this.buildFromList(this.metadata.categories.phases, list, selected);
   }
 
   buildFromList(

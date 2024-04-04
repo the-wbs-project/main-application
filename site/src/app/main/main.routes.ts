@@ -10,7 +10,7 @@ import {
 } from './guards';
 import {
   AiChatService,
-  CategoryState,
+  MetadataState,
   NavigationMenuService,
   UserService,
   orgClaimsResolve,
@@ -18,32 +18,20 @@ import {
   rolesResolve,
   userResolve,
 } from './services';
-import {
-  AiState,
-  AuthState,
-  MembershipState,
-  RoleState,
-  UiState,
-} from './states';
+import { AiState, AuthState, MembershipState, UiState } from './states';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuardFn, () => inject(CategoryState).loadAsync()],
+    canActivate: [authGuardFn, () => inject(MetadataState).loadAsync()],
     loadComponent: () =>
       import('./main-wrapper.component').then((m) => m.MainWrapperComponent),
     providers: [
       importProvidersFrom(
-        NgxsModule.forFeature([
-          AiState,
-          AuthState,
-          MembershipState,
-          RoleState,
-          UiState,
-        ])
+        NgxsModule.forFeature([AiState, AuthState, MembershipState, UiState])
       ),
       AiChatService,
-      CategoryState,
+      MetadataState,
       NavigationMenuService,
       UserService,
     ],

@@ -14,11 +14,12 @@ import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ListItem, PROJECT_STATI, Project } from '@wbs/core/models';
+import { PROJECT_STATI, Project } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
+import { MetadataState } from '@wbs/main/services';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
 import { ProjectListService } from './services';
 
@@ -39,6 +40,7 @@ import { ProjectListService } from './services';
 })
 export class ProjectListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
+  private readonly metadata = inject(MetadataState);
   private readonly service = inject(ProjectListService);
 
   readonly faCactus = faCactus;
@@ -47,7 +49,6 @@ export class ProjectListComponent implements OnInit {
   readonly projects = signal<Project[]>([]);
   readonly owner = input.required<string>();
   readonly userId = input.required<string>();
-  readonly projectCategories = input.required<ListItem[]>();
   readonly assignedToMe = signal(false);
   readonly stati = signal([
     PROJECT_STATI.PLANNING,
@@ -71,7 +72,9 @@ export class ProjectListComponent implements OnInit {
   filterToggle = signal(false);
 
   ngOnInit(): void {
-    this.categories.set(this.projectCategories().map((c) => c.id));
+    this.categories.set(
+      this.metadata.categories.projectCategories.map((c) => c.id)
+    );
 
     this.data.projects.getAllAsync(this.owner()).subscribe((projects) => {
       this.projects.set(

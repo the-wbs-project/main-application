@@ -20,7 +20,7 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
-import { Member, Role } from '@wbs/core/models';
+import { Member } from '@wbs/core/models';
 import { MemberViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
@@ -57,7 +57,6 @@ export class MemberListComponent {
 
   readonly members = model.required<MemberViewModel[]>();
   readonly org = input.required<string>();
-  readonly roles = input.required<Role[]>();
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
   readonly editMember = signal<MemberViewModel | undefined>(undefined);

@@ -1,11 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
   output,
 } from '@angular/core';
-import { ListItem } from '@wbs/core/models';
 import { SelectButtonComponent } from '../select-button.component';
+import { MetadataState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -15,8 +16,9 @@ import { SelectButtonComponent } from '../select-button.component';
   imports: [SelectButtonComponent],
 })
 export class ProjectCategoryListComponent {
+  readonly categories = inject(MetadataState).categories.projectCategories;
+
   readonly buttonClass = input<string>();
-  readonly categories = input.required<ListItem[]>();
   readonly selected = input.required<string | undefined>();
   readonly categoryChosen = output<string>();
 }

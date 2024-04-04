@@ -26,7 +26,7 @@
               [icon]="minusIcon"
               [users]="pms()?.assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles()!.pm, $event)"
+              (selected)="remove(roles.pm, $event)"
             />
           </td>
           @if (approvalEnabled()) {
@@ -35,7 +35,7 @@
               [icon]="minusIcon"
               [users]="approvers()?.assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles()!.approver, $event)"
+              (selected)="remove(roles.approver, $event)"
             />
           </td>
           }
@@ -44,7 +44,7 @@
               [icon]="minusIcon"
               [users]="smes()?.assigned"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles()!.sme, $event)"
+              (selected)="remove(roles.sme, $event)"
             />
           </td>
         </tr>
@@ -58,7 +58,7 @@
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="pms()?.unassigned"
-              (selected)="add(roles()!.pm, $event)"
+              (selected)="add(roles.pm, $event)"
             />
           </td>
           @if (approvalEnabled()) {
@@ -66,7 +66,7 @@
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="approvers()?.unassigned"
-              (selected)="add(roles()!.approver, $event)"
+              (selected)="add(roles.approver, $event)"
             />
           </td>
           }
@@ -74,7 +74,7 @@
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="smes()?.unassigned"
-              (selected)="add(roles()!.sme, $event)"
+              (selected)="add(roles.sme, $event)"
             />
           </td>
         </tr>

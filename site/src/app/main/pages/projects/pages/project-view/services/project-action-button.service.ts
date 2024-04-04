@@ -11,7 +11,7 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { RoleState } from '@wbs/main/states';
+import { MetadataState } from '@wbs/main/services';
 import { ProjectAction } from '../models';
 import { ProjectState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
@@ -22,6 +22,7 @@ export class ProjectActionButtonService {
   private readonly actions = inject(ProjectViewService);
   private readonly exportService = inject(LibraryEntryExportService);
   private readonly messages = inject(Messages);
+  private readonly metadata = inject(MetadataState);
   private readonly store = inject(Store);
 
   private readonly actionApproval = 'approval';
@@ -175,10 +176,10 @@ export class ProjectActionButtonService {
   }
 
   private approval(): void {
-    const roleIds = this.store.selectSnapshot(RoleState.ids)!;
+    const role = this.metadata.roles.ids.approver;
     const approvals = this.store
       .selectSnapshot(ProjectState.current)!
-      .roles.filter((r) => r.role === roleIds.approver)
+      .roles.filter((r) => r.role === role)
       .map((r) => r.userId);
 
     if (approvals.length === 0) {

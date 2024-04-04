@@ -1,15 +1,11 @@
-import { Pipe, PipeTransform } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { Resources, sorter } from '@wbs/core/services';
-import { RoleState } from '../states';
+import { Pipe, PipeTransform, inject } from '@angular/core';
+import { sorter } from '@wbs/core/services';
 import { Role } from '@wbs/core/models';
+import { MetadataState } from '../services';
 
 @Pipe({ name: 'roleList', standalone: true })
 export class RoleListPipe implements PipeTransform {
-  constructor(
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
+  private readonly metadata = inject(MetadataState);
 
   transform(
     roles: (Role | string)[] | undefined | null,
@@ -18,7 +14,7 @@ export class RoleListPipe implements PipeTransform {
     if (!roles) return '';
 
     const list: string[] = [];
-    const defintions = this.store.selectSnapshot(RoleState.definitions);
+    const defintions = this.metadata.roles.definitions;
 
     for (const role of roles) {
       const roleId = typeof role === 'string' ? role : role.id;
@@ -30,9 +26,7 @@ export class RoleListPipe implements PipeTransform {
       if (!definition) continue;
 
       list.push(
-        this.resources.get(
-          useAbbreviations ? definition.abbreviation : definition.description
-        )
+        useAbbreviations ? definition.abbreviation : definition.description
       );
     }
     return list.sort((a, b) => sorter(a, b)).join(', ');

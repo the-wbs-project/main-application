@@ -25,7 +25,7 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategoryState } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/services';
 import { AuthState } from '@wbs/main/states';
 import { switchMap } from 'rxjs/operators';
 import { EntryCreationModel } from '../../../../models';
@@ -41,7 +41,7 @@ import { EntryCreationModel } from '../../../../models';
 export class SaveSectionComponent {
   readonly close = output<EntryCreationModel | undefined>();
 
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);
@@ -78,13 +78,13 @@ export class SaveSectionComponent {
 
     return typeof phase !== 'string'
       ? phase.label
-      : this.categoryState.phases.find((x) => x.id === phase)!.label;
+      : this.metadata.categories.phases.find((x) => x.id === phase)!.label;
   });
 
   save(): void {
     this.saveState.set('saving');
 
-    const phaseDefinitions = this.categoryState.phases;
+    const phaseDefinitions = this.metadata.categories.phases;
     const phase = this.phase()!;
     let phaseId: string | undefined;
     let phaseLabel: string | undefined;

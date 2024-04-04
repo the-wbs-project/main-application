@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   WritableSignal,
+  inject,
   input,
   model,
 } from '@angular/core';
@@ -9,10 +10,11 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { CheckBoxModule } from '@progress/kendo-angular-inputs';
 import { plusIcon } from '@progress/kendo-svg-icons';
-import { ListItem, PROJECT_STATI } from '@wbs/core/models';
+import { PROJECT_STATI } from '@wbs/core/models';
 import { CheckboxFilterListComponent } from '@wbs/main/components/checkbox-filter-list';
 import { SwitchComponent } from '@wbs/main/components/switch';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
+import { MetadataState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -29,8 +31,9 @@ import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
   ],
 })
 export class ProjectListFiltersComponent {
+  readonly cats = inject(MetadataState).categories.projectCategories;
+
   readonly position = input.required<'side' | 'top'>();
-  readonly cats = input.required<ListItem[]>();
   readonly assignedToMe = model.required<boolean>();
   readonly stati = model.required<PROJECT_STATI[]>();
   readonly search = model.required<string | undefined>();

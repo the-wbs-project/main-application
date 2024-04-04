@@ -50,7 +50,7 @@
   {{ "General.Categories" | translate }}:
 </label>
 
-@for (cat of cats(); track cat.id) {
+@for (cat of cats; track cat.id) {
 <div class="mg-t-10 mg-l-15">
   <div class="d-ib wd-200 tx-12">
     <input
@@ -143,7 +143,7 @@
       <label class="tx-12 tx-bold">
         {{ "General.Categories" | translate }}:
       </label>
-      @for (cat of cats(); track cat.id) {
+      @for (cat of cats; track cat.id) {
       <div class="mg-t-10 mg-l-15">
         <div class="d-ib wd-200 tx-12">
           <input

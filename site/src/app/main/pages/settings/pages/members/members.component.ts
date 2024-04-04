@@ -14,10 +14,10 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Role } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
-import { AuthState, MembershipState, RoleState } from '@wbs/main/states';
+import { MetadataState } from '@wbs/main/services';
+import { AuthState, MembershipState } from '@wbs/main/states';
 import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
 import { forkJoin } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
@@ -70,6 +70,7 @@ const ROLES = [
 export class MembersComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly memberService = inject(MembershipAdminService);
+  private readonly metadata = inject(MetadataState);
   private readonly store = inject(SignalStore);
 
   readonly org = input.required<string>();
@@ -86,9 +87,8 @@ export class MembersComponent implements OnInit {
   readonly showInviteDialog = model(false);
 
   readonly organization = this.store.select(MembershipState.organization);
-  readonly roleDefinitions = this.store.select(RoleState.definitions);
 
-  readonly roles = computed(() => this.processRoles(this.roleDefinitions()));
+  readonly roles = this.processRoles();
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
   readonly remaining = computed(() =>
     this.capacity()
@@ -154,13 +154,11 @@ export class MembersComponent implements OnInit {
           ...this.invites(),
         ]);
       });
-      //This function is used to send an invite to a user 
+    //This function is used to send an invite to a user
   }
 
-  private processRoles(
-    definitions: Role[] | undefined
-  ): { name: string; text: string }[] {
-    if (!definitions) return ROLES;
+  private processRoles(): { name: string; text: string }[] {
+    const definitions = this.metadata.roles.definitions;
 
     for (const role of ROLES) {
       if (role.name === 'all') continue;

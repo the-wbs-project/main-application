@@ -11,7 +11,7 @@ import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreationResults } from '@wbs/main/models';
 import {
   CategorySelectionService,
-  CategoryState,
+  MetadataState,
   Transformers,
   WbsNodeService,
 } from '@wbs/main/services';
@@ -26,7 +26,7 @@ import { EntryState } from './entry-state.service';
 export class EntryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
   private readonly categoryService = inject(CategorySelectionService);
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
   private readonly resources = inject(Resources);
@@ -454,7 +454,7 @@ export class EntryTaskService {
 
   savePhaseChangesAsync(phases: CategorySelection[]): Observable<void> {
     const tasks = this.getTasks();
-    const phaseDefinitions = this.categoryState.phases;
+    const phaseDefinitions = this.metadata.categories.phases;
     const existing: ProjectCategory[] = tasks
       .filter((x) => x.parentId == undefined)
       .sort((a, b) => a.order - b.order)

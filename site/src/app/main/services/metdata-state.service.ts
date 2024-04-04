@@ -1,17 +1,40 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Category, ListItem, LISTS } from '@wbs/core/models';
+import {
+  Category,
+  ListItem,
+  LISTS,
+  Role,
+  RoleIds,
+  ROLES,
+} from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { Observable, forkJoin, map } from 'rxjs';
+import { ROLE_ICONS } from 'src/environments/icons';
 
 @Injectable()
-export class CategoryState {
+export class MetadataState {
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
 
+  readonly categories = new CategoryState(this.data, this.resources);
+  readonly roles = new RolesState(this.data, this.resources);
+
+  loadAsync(): Observable<void> {
+    return forkJoin([this.categories.loadAsync(), this.roles.loadAsync()]).pipe(
+      map(() => {})
+    );
+  }
+}
+
+class CategoryState {
+  constructor(
+    private readonly data: DataServiceFactory,
+    private readonly resources: Resources
+  ) {}
+
   private _icons = new Map<string, Map<string, string>>();
   private _list = new Map<string, ListItem[]>();
-  private _map = new Map<string, Map<string, ListItem>>();
   private _names = new Map<string, Map<string, string>>();
 
   //
@@ -67,7 +90,6 @@ export class CategoryState {
       this.data.metdata.getListAsync<ListItem>(LISTS.PHASE),
     ]).pipe(
       map(([projectCats, discipline, phase]) => {
-        const categoryMap = new Map<string, Map<string, ListItem>>();
         const categoryList = new Map<string, ListItem[]>();
         const categoryIcons = new Map<string, Map<string, string>>();
         const categoryNames = new Map<string, Map<string, string>>();
@@ -88,16 +110,6 @@ export class CategoryState {
         categoryList.set(LISTS.PHASE, phase);
         categoryList.set(LISTS.PROJECT_CATEGORIES, projectCats);
 
-        categoryMap.set(LISTS.DISCIPLINE, this.createMap(discipline));
-        categoryMap.set(LISTS.PHASE, this.createMap(phase));
-        categoryMap.set(LISTS.PROJECT_CATEGORIES, this.createMap(projectCats));
-
-        for (const cat of [...projectCats, ...discipline, ...phase]) {
-          categoryNames.get(cat.type)!.set(cat.id, cat.label);
-
-          if (cat.icon) categoryIcons.get(cat.type)!.set(cat.id, cat.icon);
-        }
-
         for (const cat of categoryList.keys()) {
           for (const item of categoryList.get(cat)!) {
             item.label = this.resources.get(item.label);
@@ -108,19 +120,68 @@ export class CategoryState {
           }
         }
 
+        for (const cat of [...projectCats, ...discipline, ...phase]) {
+          categoryNames.get(cat.type)!.set(cat.id, cat.label);
+
+          if (cat.icon) categoryIcons.get(cat.type)!.set(cat.id, cat.icon);
+        }
+
         this._icons = categoryIcons;
         this._list = categoryList;
-        this._map = categoryMap;
         this._names = categoryNames;
       })
     );
   }
+}
 
-  private createMap(list: ListItem[]): Map<string, ListItem> {
-    var map = new Map<string, ListItem>();
+class RolesState {
+  constructor(
+    private readonly data: DataServiceFactory,
+    private readonly resources: Resources
+  ) {}
 
-    for (const x of list) map.set(x.id, x);
+  private _ids: RoleIds | undefined;
+  private _definitions: Role[] = [];
 
-    return map;
+  get ids(): RoleIds {
+    return this._ids!;
+  }
+
+  get definitions(): Role[] {
+    return this._definitions;
+  }
+
+  loadAsync(): Observable<void> {
+    return this.data.metdata.getRolesAsync().pipe(
+      map((definitions) => {
+        const pm = definitions.find((x) => x.name === ROLES.PM)!;
+        const approver = definitions.find((x) => x.name === ROLES.APPROVER)!;
+        const sme = definitions.find((x) => x.name === ROLES.SME)!;
+        const admin = definitions.find((x) => x.name === ROLES.ADMIN)!;
+
+        admin.description = this.resources.get('General.Admin-Full');
+        admin.abbreviation = this.resources.get('General.Admin');
+
+        approver.description = this.resources.get('General.Approver');
+        approver.abbreviation = this.resources.get('General.Approver');
+        approver.icon = ROLE_ICONS.approver;
+
+        pm.description = this.resources.get('General.PM-Full');
+        pm.abbreviation = this.resources.get('General.PM');
+        pm.icon = ROLE_ICONS.pm;
+
+        sme.description = this.resources.get('General.SME-Full');
+        sme.abbreviation = this.resources.get('General.SME');
+        sme.icon = ROLE_ICONS.sme;
+
+        this._ids = {
+          admin: admin.id,
+          pm: pm.id,
+          approver: approver.id,
+          sme: sme.id,
+        };
+        this._definitions = [pm, approver, sme, admin];
+      })
+    );
   }
 }

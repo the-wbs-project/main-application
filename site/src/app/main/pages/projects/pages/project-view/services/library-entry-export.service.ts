@@ -8,14 +8,14 @@ import {
   Project,
   ProjectNode,
 } from '@wbs/core/models';
-import { CategoryState } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/services';
 import { AuthState } from '@wbs/main/states';
 import { LibraryEntryModalComponent } from '../components/library-entry-modal/library-entry-modal.component';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../models';
 
 @Injectable()
 export class LibraryEntryExportService {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly data = inject(DataServiceFactory);
   private readonly modalService = inject(NgbModal);
   private readonly store = inject(Store);
@@ -25,7 +25,7 @@ export class LibraryEntryExportService {
   }
 
   private phases(): Category[] {
-    return this.categoryState.phases;
+    return this.metadata.categories.phases;
   }
 
   exportProject(project: Project): void {

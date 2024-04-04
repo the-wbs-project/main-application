@@ -5,7 +5,7 @@ import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import {
-  CategoryState,
+  MetadataState,
   Transformers,
   WbsNodeService,
 } from '@wbs/main/services';
@@ -55,7 +55,7 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class TasksState {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly data = inject(DataServiceFactory);
   private readonly messaging = inject(Messages);
   private readonly nav = inject(ProjectNavigationService);
@@ -530,7 +530,8 @@ export class TasksState {
 
     const taskName =
       model.parentId == undefined
-        ? this.categoryState.getName(LISTS.PHASE, model.id)! ?? model.title
+        ? this.metadata.categories.getName(LISTS.PHASE, model.id)! ??
+          model.title
         : model.title;
 
     const activityData: ActivityData = {
@@ -566,7 +567,7 @@ export class TasksState {
   @Action(PhasesChanged)
   phasesChanged(ctx: Context, { results }: PhasesChanged): Observable<void> {
     const state = ctx.getState();
-    const phaseDefinitions = this.categoryState.phases;
+    const phaseDefinitions = this.metadata.categories.phases;
     const projectId = state.project!.id;
     const tasks = state.nodes!;
     const toRemoveIds: string[] = [];

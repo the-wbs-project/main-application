@@ -1,21 +1,21 @@
 import { Category, Project, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { CategoryState, WbsNodeService } from '@wbs/main/services';
+import { MetadataState, WbsNodeService } from '@wbs/main/services';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
-    private readonly categories: CategoryState,
+    private readonly metadata: MetadataState,
     private readonly resources: Resources,
     private readonly wbsService: WbsNodeService
   ) {}
 
   private get disciplineList(): Category[] {
-    return this.categories.disciplines;
+    return this.metadata.categories.disciplines;
   }
 
   private get phaseList(): Category[] {
-    return this.categories.phases;
+    return this.metadata.categories.phases;
   }
 
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {

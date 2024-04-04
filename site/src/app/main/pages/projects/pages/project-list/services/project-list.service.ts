@@ -1,15 +1,11 @@
-import { Injectable } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { RoleState } from '@wbs/main/states';
+import { inject, Injectable } from '@angular/core';
 import { Project, PROJECT_STATI, ProjectNode } from '@wbs/core/models';
-import { IdService, Resources } from '@wbs/core/services';
+import { IdService } from '@wbs/core/services';
+import { MetadataState } from '@wbs/main/services';
 
 @Injectable()
 export class ProjectListService {
-  constructor(
-    private readonly resources: Resources,
-    private readonly store: Store
-  ) {}
+  private readonly metadata = inject(MetadataState);
 
   filterByStati(
     projects: Project[] | null | undefined,
@@ -38,16 +34,6 @@ export class ProjectListService {
     );
   }
 
-  getStatus(status: string | undefined): string {
-    return this.resources.get(this.getStatusResource(status));
-  }
-
-  getTypeText(type: string | undefined): string {
-    if (type === 'assigned') return this.resources.get('General.AssignedToMe');
-    if (type === 'all') return this.resources.get('General.All');
-    return '';
-  }
-
   getStatusResource(status: string | undefined): string {
     if (status === PROJECT_STATI.APPROVAL) return 'Projects.WaitingApproval';
     if (status === PROJECT_STATI.CLOSED) return 'General.Closed';
@@ -64,13 +50,11 @@ export class ProjectListService {
   ): string {
     if (!role) return '';
 
-    const definition = this.store
-      .selectSnapshot(RoleState.definitions)!
-      .find((x) => x.id === role)!;
+    const definition = this.metadata.roles.definitions.find(
+      (x) => x.id === role
+    )!;
 
-    return this.resources.get(
-      useAbbreviations ? definition.abbreviation : definition.description
-    );
+    return useAbbreviations ? definition.abbreviation : definition.description;
   }
 
   createTask(

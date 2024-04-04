@@ -37,7 +37,7 @@ import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { CategorySelectionService, CategoryState } from '@wbs/main/services';
+import { CategorySelectionService, MetadataState } from '@wbs/main/services';
 import { AuthState, MembershipState } from '@wbs/main/states';
 import { forkJoin } from 'rxjs';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
@@ -68,7 +68,7 @@ import { SaveSectionComponent } from './components/save-section';
   providers: [CategorySelectionService],
 })
 export class ProjectCreationComponent extends DialogContentBase {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly catService = inject(CategorySelectionService);
   private readonly data = inject(DataServiceFactory);
   private readonly store = inject(SignalStore);
@@ -82,7 +82,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
   readonly smeIds = signal<string[]>([]);
-  readonly categories = this.categoryState.projectCategories;
+  readonly categories = this.metadata.categories.projectCategories;
   readonly tasks = signal<LibraryEntryNode[]>([]);
   readonly projectTitle = model<string>('');
   readonly category = model<string | undefined>(undefined);

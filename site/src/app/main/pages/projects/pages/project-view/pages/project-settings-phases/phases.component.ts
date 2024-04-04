@@ -21,7 +21,7 @@ import { SaveButtonComponent } from '@wbs/main/components/save-button.component'
 import { CategoryDialogResults } from '@wbs/main/models';
 import {
   CategorySelectionService,
-  CategoryState,
+  MetadataState,
   WbsNodeService,
 } from '@wbs/main/services';
 import { TasksState } from '../../states';
@@ -43,7 +43,7 @@ import { PhasesChanged } from '../../actions';
   providers: [WbsNodeService],
 })
 export class PhasesComponent implements OnInit {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly catService = inject(CategorySelectionService);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);
@@ -78,7 +78,7 @@ export class PhasesComponent implements OnInit {
 
   save(): void {
     const phases = this.phases();
-    const cats = this.categoryState.phases;
+    const cats = this.metadata.categories.phases;
 
     const tasks = this.store.selectSnapshot(TasksState.nodes)!;
     const existing: ProjectCategory[] = tasks

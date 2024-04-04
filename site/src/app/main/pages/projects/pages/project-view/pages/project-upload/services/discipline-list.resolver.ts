@@ -4,14 +4,14 @@ import { Store } from '@ngxs/store';
 import { Resources } from '@wbs/core/services';
 import { map } from 'rxjs';
 import { ProjectUploadState } from '../states';
-import { CategoryState } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/services';
 
 export const disciplineListResolver: ResolveFn<
   { id: string; label: string }[]
 > = () => {
   const store = inject(Store);
   const resources = inject(Resources);
-  const categories = inject(CategoryState).disciplines;
+  const categories = inject(MetadataState).categories.disciplines;
 
   return store.selectOnce(ProjectUploadState.current).pipe(
     map((project) => {

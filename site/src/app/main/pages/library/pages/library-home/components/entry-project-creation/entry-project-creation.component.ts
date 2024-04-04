@@ -25,13 +25,12 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { CategorySelectionService, CategoryState } from '@wbs/main/services';
+import { CategorySelectionService, MetadataState } from '@wbs/main/services';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
@@ -62,7 +61,6 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   readonly done = output<void>();
 
   private readonly catService = inject(CategorySelectionService);
-  private readonly store = inject(SignalStore);
 
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
@@ -74,7 +72,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   );
   readonly faSpinner = faSpinner;
   readonly view = model<number>(0);
-  readonly categories = inject(CategoryState).projectCategories;
+  readonly categories = inject(MetadataState).categories.projectCategories;
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );

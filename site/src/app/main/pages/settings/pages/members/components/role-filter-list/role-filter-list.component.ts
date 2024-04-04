@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  input,
+  inject,
   output,
   signal,
 } from '@angular/core';
@@ -10,6 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { Role } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
+import { MetadataState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -20,14 +21,14 @@ import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
   imports: [MultiSelectModule, RoleListPipe, TranslateModule],
 })
 export class RoleFilterListComponent implements OnInit {
-  readonly roles = input.required<Role[]>();
+  readonly roles = inject(MetadataState).roles.definitions;
 
   readonly valueChanged = output<string[]>();
 
   readonly values = signal<Role[]>([]);
 
   ngOnInit(): void {
-    this.values.set(structuredClone(this.roles()));
+    this.values.set(structuredClone(this.roles));
   }
 
   onlyRole(e: Event, role: Role): void {

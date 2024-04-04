@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { disciplineResolver, orgResolve } from '@wbs/main/services';
+import { orgResolve } from '@wbs/main/services';
 import {
   entryIdResolve,
   taskNavGuard,
@@ -82,7 +82,6 @@ export const routes: Routes = [
         },
         resolve: {
           taskId: taskIdResolve,
-          cats: disciplineResolver,
         },
       },
       {

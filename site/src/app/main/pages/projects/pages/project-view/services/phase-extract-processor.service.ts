@@ -2,13 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { ListItem, WbsNode } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { CategoryState } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/services';
 import { ExtractResults } from '../../../models';
 import { TextCompareService } from './text-compare.service';
 
 @Injectable()
 export class PhaseExtractProcessor {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
   private readonly textComparer = inject(TextCompareService);
   private readonly tolerance = 0.75;
 
@@ -23,7 +23,7 @@ export class PhaseExtractProcessor {
     const upsertVms: (WbsNodeView | WbsNodeView)[] = [];
     const phases: (string | ListItem)[] = [];
     const phaseIds: string[] = [];
-    const cats = this.categoryState.phases;
+    const cats = this.metadata.categories.phases;
     const phaseList = <ListItem[]>projectPhases.map((x) => {
       if (typeof x === 'string') return cats.find((c) => c.id === x);
 

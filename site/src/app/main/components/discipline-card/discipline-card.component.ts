@@ -17,7 +17,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { CategoryState } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/services';
 import { AlertComponent } from '../alert.component';
 import { DisciplineSplitListComponent } from '../discipline-split-list.component';
 
@@ -37,7 +37,7 @@ import { DisciplineSplitListComponent } from '../discipline-split-list.component
   ],
 })
 export class DisciplineCardComponent {
-  private readonly categoryState = inject(CategoryState);
+  private readonly metadata = inject(MetadataState);
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
@@ -51,6 +51,6 @@ export class DisciplineCardComponent {
   readonly noDisciplinesLabel = input.required<string>();
   readonly splitLimit = input.required<number>();
   readonly disciplines = computed(
-    () => this.fullList() ?? this.categoryState.disciplines
+    () => this.fullList() ?? this.metadata.categories.disciplines
   );
 }

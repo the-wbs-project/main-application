@@ -18,7 +18,7 @@ import { IdService } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { SelectButtonComponent } from '@wbs/main/components/select-button.component';
-import { CategoryState } from '@wbs/main/services';
+import { MetadataState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -40,7 +40,7 @@ export class PhaseSelectionComponent {
   readonly faList = faList;
   readonly faPencil = faPencil;
   readonly faExclamationTriangle = faExclamationTriangle;
-  readonly phases = inject(CategoryState).phases;
+  readonly phases = inject(MetadataState).categories.phases;
   readonly phase = model.required<string | { label: string } | undefined>();
   readonly phaseText = computed(() => {
     const phase = this.phase();

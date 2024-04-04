@@ -3,11 +3,7 @@ import { Routes } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
 import { SetBreadcrumbs } from '@wbs/main/actions';
-import {
-  orgResolve,
-  projectCategoryResolver,
-  userIdResolve,
-} from '@wbs/main/services';
+import { orgResolve, userIdResolve } from '@wbs/main/services';
 import { map } from 'rxjs/operators';
 import { ProjectListService } from './services';
 
@@ -32,7 +28,6 @@ export const routes: Routes = [
     resolve: {
       owner: orgResolve,
       userId: userIdResolve,
-      projectCategories: projectCategoryResolver,
     },
     providers: [ProjectListService],
   },

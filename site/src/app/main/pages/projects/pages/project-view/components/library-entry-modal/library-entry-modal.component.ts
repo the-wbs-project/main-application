@@ -26,7 +26,7 @@ import {
   LIBRARY_ENTRY_TYPES,
   LIBRARY_ENTRY_TYPES_TYPE,
 } from '@wbs/core/models';
-import { CategorySelectionService, CategoryState } from '@wbs/main/services';
+import { CategorySelectionService, MetadataState } from '@wbs/main/services';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../../models';
 import { LibraryEntryDescriptionHintPipe } from './pipes/library-entry-description-hint.pipe';
 import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe';
@@ -51,7 +51,7 @@ import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe
   providers: [CategorySelectionService],
 })
 export class LibraryEntryModalComponent {
-  readonly categories = inject(CategoryState).projectCategories;
+  readonly categories = inject(MetadataState).categories.projectCategories;
   readonly contentCss = `.k-content { font-family: "Poppins", sans-serif; }`;
   readonly more = signal<boolean>(false);
   readonly form = new FormGroup({

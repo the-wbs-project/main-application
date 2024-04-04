@@ -2,14 +2,14 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  input,
+  inject,
   model,
   output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { Role } from '@wbs/core/models';
 import { MemberViewModel } from '@wbs/core/view-models';
+import { MetadataState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -22,7 +22,7 @@ export class EditMemberComponent {
   readonly save = output<void>();
 
   readonly member = model.required<MemberViewModel | undefined>();
-  readonly roles = input.required<Role[]>();
+  readonly roles = inject(MetadataState).roles.definitions;
 
   toggleRole(role: string): void {
     this.member.update((member) => {

@@ -185,25 +185,19 @@
           />
         </div>
         <div class="col-xl-4 col-lg-5 col-md-12 mg-b-20">
-          @if (roleDefinitions(); as roles) {
-          <wbs-role-filter-list
-            [roles]="roles"
-            (valueChanged)="roleFilters.set($event)"
-          />
-          }
+          <wbs-role-filter-list (valueChanged)="roleFilters.set($event)" />
         </div>
       </div>
       <div class="row">
         <div class="col-12">
-          @if (view() === 'members') { @if (roleDefinitions(); as roles) {
+          @if (view() === 'members') {
           <wbs-member-list
             [org]="org()"
             [filteredRoles]="roleFilters()"
-            [roles]="roles"
             [(members)]="members"
             [textFilter]="textFilter"
           />
-          } } @else if (view() === 'invitations') {
+          } @else if (view() === 'invitations') {
           <wbs-invitation-list
             [org]="org()"
             [filteredRoles]="roleFilters()"

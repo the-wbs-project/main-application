@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   computed,
+  inject,
   input,
   signal,
 } from '@angular/core';
@@ -11,11 +12,11 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member, Project, ROLES, Role, SaveState } from '@wbs/core/models';
+import { Member, Project, ROLES, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { ProjectRolesComponent } from '@wbs/main/components/project-roles/project-roles.component';
-import { RoleState } from '@wbs/main/states';
+import { MetadataState } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { AddUserToRole, RemoveUserToRole } from '../../actions';
 import { ProjectState } from '../../states';
@@ -33,7 +34,7 @@ import { ProjectState } from '../../states';
 })
 export class RolesComponent implements OnInit {
   private readonly project = this.store.select(ProjectState.current);
-  private readonly roleIds = this.store.select(RoleState.definitions);
+  private readonly roles = inject(MetadataState).roles.definitions;
 
   readonly checkIcon = faCheck;
   readonly spinnerIcon = faSpinner;
@@ -42,14 +43,10 @@ export class RolesComponent implements OnInit {
   readonly org = input.required<string>();
   readonly approvalEnabled = input.required<boolean>();
   readonly approverIds = computed(() =>
-    this.getUserIds(ROLES.APPROVER, this.roleIds(), this.project())
+    this.getIds(ROLES.APPROVER, this.project())
   );
-  readonly pmIds = computed(() =>
-    this.getUserIds(ROLES.PM, this.roleIds(), this.project())
-  );
-  readonly smeIds = computed(() =>
-    this.getUserIds(ROLES.SME, this.roleIds(), this.project())
-  );
+  readonly pmIds = computed(() => this.getIds(ROLES.PM, this.project()));
+  readonly smeIds = computed(() => this.getIds(ROLES.SME, this.project()));
   readonly saveState = signal<SaveState>('ready');
 
   constructor(
@@ -72,12 +69,8 @@ export class RolesComponent implements OnInit {
     this.save(new RemoveUserToRole(role, user));
   }
 
-  private getUserIds(
-    roleName: string,
-    roles: Role[] | undefined,
-    project: Project | undefined
-  ): string[] {
-    const role = roles?.find((r) => r.name === roleName)?.id;
+  private getIds(roleName: string, project: Project | undefined): string[] {
+    const role = this.roles.find((r) => r.name === roleName)?.id;
     return (
       project?.roles?.filter((r) => r.role === role).map((r) => r.userId) ?? []
     );

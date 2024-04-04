@@ -1,13 +1,13 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
+import { MetadataState } from '@wbs/main/services';
 import { EntryState } from '../../../services';
-import { CategoryState } from '@wbs/main/services';
 
 export const disciplineListResolver: ResolveFn<
   { id: string; label: string }[]
 > = () => {
   const state = inject(EntryState);
-  const categories = inject(CategoryState).disciplines;
+  const categories = inject(MetadataState).categories.disciplines;
 
   const items: { id: string; label: string }[] = [];
 
