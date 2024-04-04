@@ -1,5 +1,5 @@
 <div class="container-fluid">
-  @if (list().length > 0 && (claims() | check : addClaim)) {
+  @if (list().length > 0 && (claims() | check : addClaim())) {
   <div class="row">
     <div class="col-12 tx-right">
       <button class="btn btn-outline-dark" (click)="launchNew(content)">
@@ -12,7 +12,7 @@
   <div class="row">
     <div class="col-12 mg-t-40 text-center tx-20">
       <div>{{ "Resources.NoResourcesFound" | translate }}</div>
-      @if (claims() | check : addClaim) {
+      @if (claims() | check : addClaim()) {
       <button class="btn btn-outline-dark mg-t-20" (click)="launchNew(content)">
         <fa-icon [icon]="faPlus" />
         &nbsp; {{ "General.Add" | translate }}

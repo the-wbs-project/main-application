@@ -54,11 +54,11 @@ export class RecordResourcesPageComponent {
   readonly list = input.required<ResourceRecord[]>();
   readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
+  readonly addClaim = input.required<string>();
 
   modal?: DialogRef;
 
   readonly faPlus = faPlus;
-  readonly addClaim = LIBRARY_CLAIMS.RESOURCES.CREATE;
   readonly vm = model<RecordResourceViewModel | undefined>(undefined);
 
   constructor(

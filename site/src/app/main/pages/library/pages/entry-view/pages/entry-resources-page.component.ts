@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { ResourceRecord } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, ResourceRecord } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
 import { EntryResourceService } from '../services';
@@ -24,6 +24,7 @@ import { EntryResourceService } from '../services';
       [list]="list()"
       [owner]="owner()"
       [claims]="claims()"
+      [addClaim]="ADD_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
     />
@@ -40,6 +41,7 @@ export class ResourcesPageComponent implements OnInit {
   readonly versionId = input.required<number>();
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
+  readonly ADD_CLAIM = LIBRARY_CLAIMS.RESOURCES.CREATE;
 
   ngOnInit(): void {
     this.service
