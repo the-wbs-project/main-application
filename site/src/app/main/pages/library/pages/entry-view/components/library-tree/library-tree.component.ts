@@ -2,7 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  Signal,
+  WritableSignal,
   computed,
   inject,
   input,
@@ -33,7 +33,9 @@ import {
 import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
+import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { TaskCreateComponent } from '@wbs/main/components/task-create';
 import { TaskTitleComponent } from '@wbs/main/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
@@ -49,6 +51,10 @@ import {
   EntryTaskService,
   EntryTreeMenuService,
 } from '../../services';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { delay, tap } from 'rxjs/operators';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
+import { Observable } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -61,8 +67,10 @@ import {
     AlertComponent,
     ButtonModule,
     CheckPipe,
+    ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
+    FadingMessageComponent,
     FontAwesomeModule,
     TranslateModule,
     TaskCreateComponent,
@@ -88,6 +96,7 @@ export class LibraryTreeComponent implements OnInit {
   readonly state = inject(EntryState);
   readonly treeService = new TreeService();
 
+  readonly checkIcon = faCheck;
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
   readonly entryUrl = input.required<string[]>();
@@ -97,9 +106,9 @@ export class LibraryTreeComponent implements OnInit {
 
   readonly width = this.store.select(UiState.mainContentWidth);
 
-  readonly taskSaveStates = signal<Map<string, SaveState>>(new Map());
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
+  readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly menu = computed(() =>
     this.menuService.buildMenu(
       this.entry().type,
@@ -108,6 +117,12 @@ export class LibraryTreeComponent implements OnInit {
       this.claims()
     )
   );
+
+  constructor() {
+    toObservable(this.state.viewModels)
+      .pipe(untilDestroyed(this))
+      .subscribe((tasks) => this.updateState(tasks ?? []));
+  }
 
   ngOnInit(): void {
     this.actions.expandedKeysChanged
@@ -129,10 +144,21 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   onAction(action: string): void {
+    const taskId = this.selectedTask()!.id;
     if (action === 'addSub') {
       this.createModal()!.show();
     } else {
-      this.actions.onAction(action, this.entryUrl(), this.selectedTask()!.id);
+      const obsOrVoid = this.actions.onAction(action, this.entryUrl(), taskId);
+
+      if (obsOrVoid instanceof Observable) {
+        obsOrVoid
+          .pipe(
+            delay(500),
+            tap(() => this.setSaveState(taskId, 'saved')),
+            delay(5000)
+          )
+          .subscribe(() => this.setSaveState(taskId, 'ready'));
+      }
     }
   }
 
@@ -216,10 +242,29 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   taskTitleChanged(taskId: string, title: string): void {
-    this.taskService.titleChangedAsync(taskId, title).subscribe();
+    this.taskService
+      .titleChangedAsync(taskId, title)
+      .pipe(
+        delay(500),
+        tap(() => this.setSaveState(taskId, 'saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 
   private resetTree(): void {
     this.state.setTasks(structuredClone(this.state.tasks() ?? []));
+  }
+
+  private setSaveState(taskId: string, state: SaveState): void {
+    this.taskSaveStates.get(taskId)?.set(state);
+  }
+
+  private updateState(tasks: WbsNodeView[]): void {
+    for (const task of tasks ?? []) {
+      if (!this.taskSaveStates.has(task.id)) {
+        this.taskSaveStates.set(task.id, signal('ready'));
+      }
+    }
   }
 }

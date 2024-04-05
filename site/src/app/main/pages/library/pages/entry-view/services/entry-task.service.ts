@@ -64,7 +64,7 @@ export class EntryTaskService {
   saveAsync(
     upserts: LibraryEntryNode[],
     removeIds: string[],
-    saveMessage: string | undefined
+    saveMessage?: string
   ): Observable<void> {
     return this.data.libraryEntryNodes
       .putAsync(this.owner, this.entryId, this.version, upserts, removeIds)
@@ -85,7 +85,6 @@ export class EntryTaskService {
     return this.data.libraryEntryNodes
       .putAsync(this.owner, this.entryId, this.version, [task], [])
       .pipe(
-        tap(() => this.messages.notify.success('Library.TitleChanged')),
         tap(() => this.state.tasksChanged([task])),
         switchMap(() =>
           this.activity.taskTitleChanged(
@@ -201,6 +200,67 @@ export class EntryTaskService {
         )
       ),
       map(() => task.id)
+    );
+  }
+
+  addDisciplineAsync(taskId: string, disciplineId: string): Observable<void> {
+    const tasks = this.getTasks();
+    const task = tasks.find((x) => x.id === taskId)!;
+    const taskVm = this.getTaskViewModel(taskId)!;
+
+    const from = [...(task.disciplineIds ?? [])];
+
+    if (task.disciplineIds) {
+      if (task.disciplineIds.indexOf(disciplineId) === -1)
+        task.disciplineIds.push(disciplineId);
+      else return of();
+    } else task.disciplineIds = [disciplineId];
+
+    taskVm.disciplines = task.disciplineIds;
+
+    return this.saveAsync([task], []).pipe(
+      tap(() =>
+        this.activity.entryDisciplinesChanged(
+          this.entryId,
+          this.version,
+          taskId,
+          from,
+          task.disciplineIds
+        )
+      )
+    );
+  }
+
+  removeDisciplineAsync(
+    taskId: string,
+    disciplineId: string
+  ): Observable<void> {
+    const tasks = this.getTasks();
+    const task = tasks.find((x) => x.id === taskId)!;
+    const taskVm = this.getTaskViewModel(taskId)!;
+
+    if (!task.disciplineIds) task.disciplineIds = [];
+
+    const from = [...task.disciplineIds];
+
+    const index = task.disciplineIds.indexOf(disciplineId);
+
+    if (index === -1) return of();
+
+    task.disciplineIds.splice(index, 1);
+
+    taskVm.disciplines = task.disciplineIds;
+
+    return this.saveAsync([task], []).pipe(
+      tap(() =>
+        this.activity.entryDisciplinesChanged(
+          this.entryId,
+          this.version,
+          taskId,
+          from,
+          task.disciplineIds
+        )
+      )
     );
   }
 

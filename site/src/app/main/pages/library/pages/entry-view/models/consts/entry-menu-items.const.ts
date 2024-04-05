@@ -7,6 +7,8 @@ import {
   faEye,
   faPlus,
   faTrash,
+  faUserMinus,
+  faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { ContextMenuItem } from '../../../../../../models/context-menu-item.model';
@@ -35,6 +37,22 @@ const taskActions: ContextMenuItem[] = [
     filters: {
       excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
+    },
+  },
+  {
+    action: 'addDiscipline',
+    faIcon: faUserPlus,
+    text: 'Wbs.AddDiscipline',
+    filters: {
+      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+    },
+  },
+  {
+    action: 'removeDiscipline',
+    faIcon: faUserMinus,
+    text: 'Wbs.RemoveDiscipline',
+    filters: {
+      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },
   {

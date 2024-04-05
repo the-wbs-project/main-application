@@ -10,6 +10,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Navigate } from '@ngxs/router-plugin';
@@ -36,7 +37,9 @@ import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
+import { TaskTitleComponent } from '@wbs/main/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 import { TreeService, WbsPhaseService } from '@wbs/main/services';
@@ -44,6 +47,7 @@ import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/main/pipes/find-them-by-id.pipe';
+import { Observable, delay, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
   CreateTask,
@@ -58,10 +62,6 @@ import {
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
-import { Observable, delay, tap } from 'rxjs';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
-import { TaskTitleComponent } from '@wbs/main/components/task-title';
-import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 
 @UntilDestroy()
 @Component({

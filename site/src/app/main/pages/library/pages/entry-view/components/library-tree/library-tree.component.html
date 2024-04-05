@@ -63,6 +63,14 @@
         [title]="dataItem.title"
         (titleChanged)="taskTitleChanged(dataItem.id, $event)"
       />
+      @if (taskSaveStates.get(dataItem.id); as saveState) {
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saveState() === 'saved'"
+        cssClass="tx-success tx-12 mg-l-20"
+      />
+      }
     </ng-template>
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
@@ -91,8 +99,7 @@
   (select)="onAction($event.item.action)"
 >
   <ng-template kendoMenuItemTemplate let-item="item">
-    <fa-icon [icon]="item.faIcon" />&nbsp;
-    {{ item.text | translate }}
+    <wbs-context-menu-item [item]="item" />
   </ng-template>
 </kendo-contextmenu>
 <wbs-task-create (ready)="createTask($event)" />

@@ -1,13 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
+import { MetadataState } from '@wbs/main/services';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class EntryTreeMenuService {
+  private readonly metadata = inject(MetadataState);
+
   buildMenu(
     entryType: string,
     version: LibraryEntryVersion,
@@ -42,6 +45,30 @@ export class EntryTreeMenuService {
         else if (item.action === 'moveUp' && task.canMoveUp) movers.push(item);
         else if (item.action === 'moveDown' && task.canMoveDown)
           movers.push(item);
+      }
+    }
+    console.log(phaseActions);
+    //
+    //  Now add disciplines
+    //
+    const add = phaseActions.find((a) => a.action === 'addDiscipline');
+    const remove = phaseActions.find((a) => a.action === 'removeDiscipline');
+
+    if (add) {
+      add.items = this.getDisciplinesToAdd(version, task);
+
+      console.log(add.items);
+      if (add.items.length === 0) {
+        phaseActions.splice(phaseActions.indexOf(add), 1);
+      }
+    }
+
+    if (remove) {
+      remove.items = this.getDisciplinesToRemove(task);
+
+      console.log(remove.items);
+      if (remove.items.length === 0) {
+        phaseActions.splice(phaseActions.indexOf(remove), 1);
       }
     }
 
@@ -114,5 +141,53 @@ export class EntryTreeMenuService {
 
   private canHaveNavActions(entryType: string, task: WbsNodeView): boolean {
     return entryType === 'project' || task.parentId != undefined;
+  }
+
+  private getDisciplinesToAdd(
+    version: LibraryEntryVersion,
+    task: WbsNodeView
+  ): ContextMenuItem[] {
+    const disciplines = this.metadata.categories.disciplines;
+    const results: ContextMenuItem[] = [];
+
+    for (const vDiscipline of version.disciplines) {
+      const id = typeof vDiscipline === 'string' ? vDiscipline : vDiscipline.id;
+
+      if (task.disciplines.includes(id)) continue;
+
+      const discipline =
+        typeof vDiscipline === 'string'
+          ? disciplines.find((x) => x.id === id)
+          : vDiscipline;
+
+      if (discipline)
+        results.push({
+          action: 'addDiscipline|' + id,
+          faIcon: discipline.icon ?? 'fa-question',
+          text: discipline.label,
+          isNotResource: true,
+        });
+    }
+
+    return results;
+  }
+
+  private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
+    const disciplines = this.metadata.categories.disciplines;
+    const results: ContextMenuItem[] = [];
+
+    for (const id of task.disciplines) {
+      const discipline = disciplines.find((x) => x.id === id);
+
+      if (discipline)
+        results.push({
+          action: 'removeDiscipline|' + id,
+          faIcon: discipline.icon ?? 'fa-question',
+          text: discipline.label,
+          isNotResource: true,
+        });
+    }
+
+    return results;
   }
 }

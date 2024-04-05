@@ -38,26 +38,34 @@ export class EntryTaskActionService {
       .subscribe();
   }
 
-  onAction(action: string, urlPrefix: string[], taskId: string): void {
-    let obs: Observable<any> | undefined;
-
+  onAction(
+    action: string,
+    urlPrefix: string[],
+    taskId: string
+  ): Observable<any> | void {
     if (action === 'viewTask') {
-      obs = this.store.dispatch(
+      return this.store.dispatch(
         new Navigate([...urlPrefix, 'tasks', taskId, 'about'])
       );
     } else if (action === 'moveLeft') {
-      obs = this.taskService.moveTaskLeft(taskId!);
+      return this.taskService.moveTaskLeft(taskId!);
     } else if (action === 'moveUp') {
-      obs = this.taskService.moveTaskUp(taskId!);
+      return this.taskService.moveTaskUp(taskId!);
     } else if (action === 'moveRight') {
-      obs = this.taskService.moveTaskRight(taskId!);
+      return this.taskService.moveTaskRight(taskId!);
     } else if (action === 'moveDown') {
-      obs = this.taskService.moveTaskDown(taskId!);
+      return this.taskService.moveTaskDown(taskId!);
     } else if (action === 'deleteTask') {
-      obs = this.taskService.removeTask(taskId!);
+      return this.taskService.removeTask(taskId!);
     } else if (action === 'cloneTask') {
-      obs = this.taskService.cloneTask(taskId!);
+      return this.taskService.cloneTask(taskId!);
+    } else if (action.startsWith('addDiscipline|')) {
+      const discipline = action.split('|')[1];
+      return this.taskService.addDisciplineAsync(taskId!, discipline);
+    } else if (action.startsWith('removeDiscipline|')) {
+      const discipline = action.split('|')[1];
+      console.log('test');
+      return this.taskService.removeDisciplineAsync(taskId!, discipline);
     }
-    if (obs) obs.subscribe();
   }
 }
