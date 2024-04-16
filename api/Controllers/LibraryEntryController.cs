@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Api.DataServices;
 using Wbs.Api.Models;
+using Wbs.Api.Models.Search;
+using Wbs.Api.Services;
 
 namespace Wbs.Api.Controllers;
 
@@ -12,16 +14,18 @@ public class LibraryEntryController : ControllerBase
 {
     private readonly TelemetryClient telemetry;
     private readonly ILogger<LibraryEntryController> logger;
+    private readonly LibrarySearchService searchService;
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
     private readonly LibraryEntryVersionResourceDataService resourceDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
 
-    public LibraryEntryController(ILogger<LibraryEntryController> logger, TelemetryClient telemetry, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService)
+    public LibraryEntryController(ILogger<LibraryEntryController> logger, TelemetryClient telemetry, LibrarySearchService searchService, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService)
     {
         this.logger = logger;
         this.telemetry = telemetry;
+        this.searchService = searchService;
         this.entryDataService = entryDataService;
         this.versionDataService = versionDataService;
         this.nodeDataService = nodeDataService;
@@ -39,6 +43,24 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("search")]
+    public async Task<IActionResult> Search(string owner, LibraryFilters filters)
+    {
+        try
+        {
+            await searchService.RunQueryAsync(owner, filters);
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.ToString());
             telemetry.TrackException(ex);
             return new StatusCodeResult(500);
         }
@@ -74,6 +96,24 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
+            telemetry.TrackException(ex);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("{entryId}/searchIndex")]
+    public async Task<IActionResult> IndexToSearch(string owner, string entryId)
+    {
+        try
+        {
+            await searchService.PushToSearchAsync(owner, entryId);
+
+            return NoContent();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex.ToString());
             telemetry.TrackException(ex);
             return new StatusCodeResult(500);
         }

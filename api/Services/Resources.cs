@@ -10,6 +10,12 @@ public class Resources
         resc = new List<Dictionary<string, Dictionary<string, string>>>();
         backup = new List<Dictionary<string, Dictionary<string, string>>>();
     }
+
+    public Resources(Dictionary<string, Dictionary<string, string>> resc) : this()
+    {
+        this.resc.Add(resc);
+    }
+
     public void Add(Dictionary<string, Dictionary<string, string>> resc, Dictionary<string, Dictionary<string, string>> backup = null)
     {
         this.resc.Add(resc);

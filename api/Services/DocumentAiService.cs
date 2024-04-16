@@ -8,7 +8,7 @@ namespace Wbs.Api.Services;
 
 public class DocumentAiService
 {
-    private readonly AzureDocumentAiConfig config;
+    private readonly AzureAiDocumentConfig config;
     private readonly DocumentProcessDataService db;
 
     public DocumentAiService(AppConfig config, DocumentProcessDataService db)

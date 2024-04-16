@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
+import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, indexLibrary } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -55,6 +55,9 @@ app.post('api/portfolio/:owner/projects/:projectId/export/libraryEntry', verifyJ
 app.post('api/portfolio/:owner/projects/:projectId/nodes/:nodeId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
 
 app.get('api/portfolio/:owner/library/entries', verifyJwt, verifyMembership, Http.libraryEntries.getListAsync);
+
+app.put('api/portfolio/:owner/library/entries/:entryId', verifyJwt, verifyMembership, indexLibrary, OriginService.pass);
+app.put('api/portfolio/:owner/library/entries/:entryId/*', verifyJwt, verifyMembership, indexLibrary, OriginService.pass);
 
 app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);

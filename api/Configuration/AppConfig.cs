@@ -17,10 +17,16 @@ public class AppConfig
             config["Db:ConnectionString:Sql"],
             config["Db:ConnectionString:Cosmos"]);
 
-        DocumentAi = new AzureDocumentAiConfig(
+        DocumentAi = new AzureAiDocumentConfig(
             config["Azure:AI:Document:Endpoint"],
             config["Azure:AI:Document:Key"],
             config["Azure:AI:Document:LogDatabase"]);
+
+        SearchAi = new AzureAiSearchConfig(
+            config["Azure:AI:Search:Url"],
+            config["Azure:AI:Search:Key"],
+            config["Azure:AI:Search:LibraryIndex"],
+            config["Azure:AI:Search:ProjectIndex"]);
 
         Jira = new JiraHelpDeskConfig(
             config["Jira:HelpDesk:Domain"],
@@ -36,5 +42,6 @@ public class AppConfig
     public StorageConfig Storage { get; private set; }
     public DatabaseConfig Database { get; private set; }
     public JiraHelpDeskConfig Jira { get; private set; }
-    public AzureDocumentAiConfig DocumentAi { get; private set; }
+    public AzureAiDocumentConfig DocumentAi { get; private set; }
+    public AzureAiSearchConfig SearchAi { get; private set; }
 }

@@ -52,6 +52,21 @@ public class ListDataService : BaseSqlDbService
         return results;
     }
 
+    public async Task<Dictionary<string, string>> GetLabelsAsync(SqlConnection conn, string type)
+    {
+        var results = new Dictionary<string, string>();
+
+        var cmd = new SqlCommand("SELECT [Id], [Label] FROM [dbo].[Lists] WHERE [Type] = @Type", conn);
+        cmd.Parameters.AddWithValue("@Type", type);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            while (reader.Read())
+                results.Add(DbValue<string>(reader, "Id"), DbValue<string>(reader, "Label"));
+        }
+        return results;
+    }
+
     public async Task SetAsync(ListItem item)
     {
         using (var conn = new SqlConnection(cs))

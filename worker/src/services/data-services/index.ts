@@ -12,6 +12,7 @@ import { UserDataService } from './user.data-service';
 export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
   readonly entries: LibraryEntryDataService;
+  readonly libraryEntries: LibraryEntryDataService;
   readonly lists: ListDataService;
   readonly organizations: OrganizationDataService;
   readonly projects: ProjectDataService;
@@ -24,6 +25,7 @@ export class DataServiceFactory {
   constructor(ctx: Context) {
     this.aiChat = new AiChatDataService(ctx);
     this.entries = new LibraryEntryDataService(ctx);
+    this.libraryEntries = new LibraryEntryDataService(ctx);
     this.lists = new ListDataService(ctx);
     this.organizations = new OrganizationDataService(ctx);
     this.projects = new ProjectDataService(ctx);

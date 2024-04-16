@@ -41,6 +41,32 @@ public class LibraryEntryDataService : BaseSqlDbService
         return results;
     }
 
+    public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(string owner, string entryId)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await GetViewModelByIdAsync(conn, owner, entryId);
+        }
+    }
+
+    public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(SqlConnection conn, string owner, string entryId)
+    {
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryView] WHERE [OwnerId] = @Owner AND [EntryId] = @EntryId", conn);
+
+        cmd.Parameters.AddWithValue("@Owner", owner);
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            if (reader.Read())
+                return ToViewModel(reader);
+            else
+                return null;
+        }
+    }
+
     public async Task<LibraryEntry> GetByIdAsync(string owner, string id)
     {
         using (var conn = new SqlConnection(cs))
