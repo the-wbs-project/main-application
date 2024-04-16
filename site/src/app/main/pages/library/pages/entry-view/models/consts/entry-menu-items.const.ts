@@ -3,6 +3,7 @@ import {
   faArrowLeft,
   faArrowRight,
   faArrowUp,
+  faBookArrowRight,
   faCopy,
   faEye,
   faPlus,
@@ -53,6 +54,14 @@ const taskActions: ContextMenuItem[] = [
     text: 'Wbs.RemoveDiscipline',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+    },
+  },
+  {
+    action: 'export',
+    faIcon: faBookArrowRight,
+    text: 'Wbs.CreateLibraryEntry',
+    filters: {
+      claim: LIBRARY_CLAIMS.CREATE,
     },
   },
   {
