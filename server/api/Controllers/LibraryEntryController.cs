@@ -256,7 +256,7 @@ public class LibraryEntryController : ControllerBase
         }
         finally
         {
-            await queueService.AddAsync("library", $"{owner}|{entryId}");
+            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{owner}|{entryId}");
         }
     }
 

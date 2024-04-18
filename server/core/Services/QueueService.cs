@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Azure.Storage.Queues;
 using Wbs.Core.Configuration;
 
 namespace Wbs.Core.Services;
@@ -22,7 +21,10 @@ public class QueueService
     {
         try
         {
-            var queue = new QueueClient(config.QueueConnectionString, queueName);
+            var queue = new QueueClient(config.QueueConnectionString, queueName, new QueueClientOptions
+            {
+                MessageEncoding = QueueMessageEncoding.Base64
+            });
 
             await queue.SendMessageAsync(message);
         }
