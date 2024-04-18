@@ -40,15 +40,15 @@ jobs:
         inputs:
           command: "publish"
           publishWebProjects: false
-          projects: "./api/api.csproj"
-          arguments: "-o ./api/dist"
+          projects: "./server/api/api.csproj"
+          arguments: "-o ./server/api/dist"
           zipAfterPublish: false
           modifyOutputPath: true
         displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "api/dist/api"
+          rootFolderOrFile: "server/api/dist/api"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"

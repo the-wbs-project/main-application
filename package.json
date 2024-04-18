@@ -5,7 +5,9 @@
   "scripts": {
     "postinstall": "yarn run s:setup && yarn run w:setup",
     "build": "docker-compose build",
+    "build:functions": "docker-compose build wbs-functions",
     "rebuild": "docker-compose build --no-cache",
+    "rebuild:functions": "docker-compose build wbs-functions --no-cache",
     "start": "docker-compose up",
     "stop": "docker-compose stop",
     "upload": "cd files && yarn run upload:local",

@@ -16,8 +16,4 @@ export class LibraryEntryDataService {
   async getEditorsAsync(owner: string, entry: string): Promise<string[]> {
     return (await this.origin.getAsync<string[]>(`portfolio/${owner}/library/entries/${entry}/editors`)) ?? [];
   }
-
-  async indexAsync(owner: string, entry: string): Promise<void> {
-    const res = await this.origin.postAsync(null, `portfolio/${owner}/library/entries/${entry}/searchIndex`);
-  }
 }

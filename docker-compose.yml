@@ -1,14 +1,14 @@
-version: '3.7'
 services:
   wbs-api:
     container_name: wbs-api
     build:
-      context: ./api
+      context: ./server/api
       dockerfile: Dockerfile-dev
     ports:
       - 5216:5216
     volumes:
-      - './api:/usr/src/app/api'
+      - './server/core:/usr/src/app/core'
+      - './server/api:/usr/src/app/api'
   
   wbs-worker:
     container_name: wbs-worker

@@ -5,8 +5,10 @@ WORKDIR /usr/src/app/worker
 
 COPY . .
 
-RUN yarn global add wrangler@latest && yarn
+RUN npm install -g wrangler --unsafe-perm true
+RUN npm install
+#RUN yarn global add wrangler@latest && yarn
 
 EXPOSE 88
 
-CMD ["yarn", "start"]
+CMD ["npm", "start"]
