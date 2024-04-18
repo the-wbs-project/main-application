@@ -1,6 +1,7 @@
 ﻿using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Wbs.Core;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
@@ -103,7 +104,7 @@ public class LibraryEntryController : ControllerBase
         }
         finally
         {
-            await queueService.AddAsync("library", $"{owner}|{entryId}");
+            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{owner}|{entryId}");
         }
     }
 
@@ -198,7 +199,7 @@ public class LibraryEntryController : ControllerBase
         }
         finally
         {
-            await queueService.AddAsync("library", $"{owner}|{entryId}");
+            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{owner}|{entryId}");
         }
     }
 
