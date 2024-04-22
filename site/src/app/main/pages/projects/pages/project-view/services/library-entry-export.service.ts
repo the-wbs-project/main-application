@@ -1,32 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  Category,
-  LIBRARY_ENTRY_TYPES,
-  Project,
-  ProjectNode,
-} from '@wbs/core/models';
-import { AuthState } from '@wbs/main/states';
-import { MetadataStore } from '@wbs/store';
-import { LibraryEntryModalComponent } from '../components/library-entry-modal/library-entry-modal.component';
+import { LIBRARY_ENTRY_TYPES, Project, ProjectNode } from '@wbs/core/models';
+import { UserStore } from '@wbs/store';
+import { LibraryEntryModalComponent } from '../components/library-entry-modal';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../models';
 
 @Injectable()
 export class LibraryEntryExportService {
-  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly modalService = inject(NgbModal);
-  private readonly store = inject(Store);
-
-  private author(): string {
-    return this.store.selectSnapshot(AuthState.userId)!;
-  }
-
-  private phases(): Category[] {
-    return this.metadata.categories.phases;
-  }
+  private readonly userId = inject(UserStore).userId;
 
   exportProject(project: Project): void {
     this.getDialog({
@@ -41,7 +25,7 @@ export class LibraryEntryExportService {
 
         this.data.projects
           .exportToLibraryAsync(project.owner, project.id, {
-            author: this.author(),
+            author: this.userId()!,
             ...results,
           })
           .subscribe();
@@ -61,7 +45,7 @@ export class LibraryEntryExportService {
 
         this.data.projectNodes
           .exportToLibraryAsync(owner, projectId, task.id, {
-            author: this.author(),
+            author: this.userId()!,
             phase: task.phaseIdAssociation,
             ...results,
           })
@@ -82,7 +66,7 @@ export class LibraryEntryExportService {
 
         this.data.projectNodes
           .exportToLibraryAsync(owner, task.projectId, task.id, {
-            author: this.author(),
+            author: this.userId()!,
             ...results,
           })
           .subscribe();

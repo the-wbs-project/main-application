@@ -1,16 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
+import { ProjectCategory } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { IdService } from '@wbs/core/services';
-import { AuthState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { LIBRARY_VERSION_ACTIONS } from '../models';
-import { ProjectCategory } from '@wbs/core/models';
 
 @Injectable()
 export class EntryActivityService {
   private readonly data = inject(DataServiceFactory);
-  private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
 
   entryCreated(entryId: string, type: string, title: string): Observable<void> {
     return this.save(entryId, 1, LIBRARY_VERSION_ACTIONS.ENTRY_CREATED, {
@@ -104,7 +103,7 @@ export class EntryActivityService {
         data,
         topLevelId,
         versionId,
-        userId: this.store.selectSnapshot(AuthState.userId)!,
+        userId: this.userId()!,
       },
     ]);
   }

@@ -10,6 +10,7 @@ import { LibraryEntryDataService } from './library-entry.data-service';
 import { LibraryEntryNodeDataService } from './library-entry-node.data-service';
 import { LibraryEntryResourcesDataService } from './library-entry-resources.data-service';
 import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
+import { LibraryEntryWatcherDataService } from './library-entry-watcher.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
 import { OrganizationDataService } from './organization.data-service';
@@ -38,6 +39,7 @@ export class DataServiceFactory {
     this.http
   );
   readonly libraryEntryVersions = new LibraryEntryVersionDataService(this.http);
+  readonly libraryEntryWatchers = new LibraryEntryWatcherDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
   readonly organizations = new OrganizationDataService(this.http);

@@ -14,7 +14,6 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Category,
@@ -25,7 +24,7 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { AuthState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { switchMap } from 'rxjs/operators';
 import { EntryCreationModel } from '../../../../models';
 
@@ -42,7 +41,7 @@ export class SaveSectionComponent {
 
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
-  private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
   private savedData?: [LibraryEntry, LibraryEntryVersion, LibraryEntryNode[]];
 
   readonly faCheck = faCheck;
@@ -99,7 +98,7 @@ export class SaveSectionComponent {
     }
 
     const entry: LibraryEntry = {
-      author: this.store.selectSnapshot(AuthState.userId)!,
+      author: this.userId()!,
       id: IdService.generate(),
       owner: this.owner(),
       type: 'project',

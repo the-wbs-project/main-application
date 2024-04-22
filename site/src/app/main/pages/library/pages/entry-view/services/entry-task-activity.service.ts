@@ -1,15 +1,14 @@
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { IdService } from '@wbs/core/services';
-import { AuthState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { LIBRARY_TASKS_ACTIONS } from '../models';
 
 @Injectable()
 export class EntryTaskActivityService {
   private readonly data = inject(DataServiceFactory);
-  private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
 
   taskCreated(
     entryId: string,
@@ -179,7 +178,7 @@ export class EntryTaskActivityService {
         topLevelId,
         objectId,
         versionId,
-        userId: this.store.selectSnapshot(AuthState.userId)!,
+        userId: this.userId()!,
       },
     ]);
   }

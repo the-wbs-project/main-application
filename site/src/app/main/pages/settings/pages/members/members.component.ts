@@ -17,8 +17,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
 import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
-import { AuthState, MembershipState } from '@wbs/main/states';
-import { MetadataStore } from '@wbs/store';
+import { MembershipState } from '@wbs/main/states';
+import { MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
@@ -72,6 +72,7 @@ export class MembersComponent implements OnInit {
   private readonly memberService = inject(MembershipAdminService);
   private readonly metadata = inject(MetadataStore);
   private readonly store = inject(SignalStore);
+  private readonly profile = inject(UserStore).profile;
 
   readonly org = input.required<string>();
 
@@ -137,7 +138,7 @@ export class MembersComponent implements OnInit {
   }
 
   sendInvite({ emails, roles }: { roles: string[]; emails: string[] }): void {
-    const name = this.store.selectSnapshot(AuthState.profile)!.name;
+    const name = this.profile()!.name;
 
     this.memberService
       .sendInvitesAsync(this.org(), emails, roles, name)

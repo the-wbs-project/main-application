@@ -13,12 +13,12 @@ import {
   WorkerAiMessage,
   WorkerAiRequest,
 } from '@wbs/core/models';
-import { AuthState } from '../states';
+import { UserStore } from '@wbs/store';
 
 @Injectable()
 export class AiChatService {
   private readonly data = inject(DataServiceFactory);
-  private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
 
   readonly you: User = {
     id: 1,
@@ -31,7 +31,7 @@ export class AiChatService {
 
   verifyUserId(): void {
     if (this.you.id === 1) {
-      this.you.id = this.store.selectSnapshot(AuthState.userId)!;
+      this.you.id = this.userId()!;
     }
   }
 

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Project,
@@ -13,8 +13,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
-import { AuthState } from '@wbs/main/states';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore, UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
@@ -61,7 +60,7 @@ export class ProjectCreateState {
   private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
-  private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
 
   @Selector()
   static category(state: StateModel): string | undefined {
@@ -231,7 +230,7 @@ export class ProjectCreateState {
     const project: Project = {
       id: IdService.generate(),
       owner: state.owner!,
-      createdBy: this.getUserId(),
+      createdBy: this.userId()!,
       disciplines,
       category: state.category!,
       description: state.description,
@@ -282,7 +281,7 @@ export class ProjectCreateState {
         this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
       ),
       switchMap(() =>
-        this.data.activities.saveProjectActivitiesAsync(this.getUserId(), [
+        this.data.activities.saveProjectActivitiesAsync(this.userId()!, [
           {
             data: {
               action: PROJECT_ACTIONS.CREATED,
@@ -316,9 +315,5 @@ export class ProjectCreateState {
         )
       )
     );
-  }
-
-  private getUserId(): string {
-    return this.store.selectSnapshot(AuthState.userId)!;
   }
 }

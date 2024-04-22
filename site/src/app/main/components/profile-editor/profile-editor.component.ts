@@ -8,9 +8,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { SignalStore } from '@wbs/core/services';
-import { ChangeProfileName } from '@wbs/main/actions';
-import { AuthState } from '@wbs/main/states';
+import { Auth0Service } from '@wbs/core/services';
+import { UserStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -20,16 +19,16 @@ import { AuthState } from '@wbs/main/states';
   imports: [DialogModule, FontAwesomeModule, TranslateModule],
 })
 export class ProfileEditorComponent {
-  private readonly store = inject(SignalStore);
+  private readonly service = inject(Auth0Service);
+  private readonly store = inject(UserStore);
 
   readonly show = model.required<boolean>();
-  readonly profile = this.store.select(AuthState.profile);
+  readonly profile = this.store.profile;
   readonly faFloppyDisk = faFloppyDisk;
 
   changeName(name: string): void {
     if ((name ?? '').trim().length === 0) return;
 
-    this.store.dispatch(new ChangeProfileName(name));
-    this.show.set(false);
+    this.service.changeProfileName(name).subscribe(() => this.show.set(false));
   }
 }

@@ -14,7 +14,6 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Category,
@@ -29,7 +28,7 @@ import {
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { UserService } from '@wbs/main/services';
-import { AuthState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -44,8 +43,8 @@ import { switchMap } from 'rxjs/operators';
 export class SaveSectionComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
-  private readonly store = inject(Store);
   private readonly userService = inject(UserService);
+  private readonly userId = inject(UserStore).userId;
 
   readonly faCheck = faCheck;
   readonly faSpinner = faSpinner;
@@ -114,7 +113,7 @@ export class SaveSectionComponent {
       roles: [],
       status: PROJECT_STATI.PLANNING,
       description: '',
-      createdBy: this.store.selectSnapshot(AuthState.userId)!,
+      createdBy: this.userId()!,
     };
     const tasks: ProjectNode[] = [];
     const parentIdConversion = new Map<string, string>();

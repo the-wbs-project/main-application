@@ -4,7 +4,9 @@ import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
 import { MetadataStore } from '@wbs/store';
 import {
+  authGuard,
   librarySectionGuard,
+  navToOrgGuard,
   orgGuard,
   projectsSectionGuard,
   settingsSectionGuard,
@@ -16,19 +18,20 @@ import {
   orgClaimsResolve,
   orgListResolve,
   rolesResolve,
-  userResolve,
 } from './services';
-import { AiState, AuthState, MembershipState, UiState } from './states';
+import { AiState, MembershipState, UiState } from './states';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuardFn, () => inject(MetadataStore).loadAsync()],
-    loadComponent: () =>
-      import('../pages/wrapper.component').then((m) => m.WrapperComponent),
+    canActivate: [
+      authGuardFn,
+      () => inject(MetadataStore).loadAsync(),
+      authGuard,
+    ],
     providers: [
       importProvidersFrom(
-        NgxsModule.forFeature([AiState, AuthState, MembershipState, UiState])
+        NgxsModule.forFeature([AiState, MembershipState, UiState])
       ),
       AiChatService,
       NavigationMenuService,
@@ -37,8 +40,9 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        canActivate: [navToOrgGuard],
         loadComponent: () =>
-          import('./main.component').then((m) => m.MainComponent),
+          import('@angular/router').then((m) => m.ɵEmptyOutletComponent),
       },
       {
         path: ':org',
@@ -69,7 +73,6 @@ export const routes: Routes = [
           claims: orgClaimsResolve,
           orgs: orgListResolve,
           roles: rolesResolve,
-          user: userResolve,
         },
       },
     ],

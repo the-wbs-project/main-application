@@ -16,8 +16,8 @@ import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { AuthState, MembershipState } from '@wbs/main/states';
-import { MetadataStore } from '@wbs/store';
+import { MembershipState } from '@wbs/main/states';
+import { MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
@@ -37,6 +37,7 @@ import { ProjectCreateState } from '../../states';
 })
 export class RolesComponent implements OnInit {
   private readonly ids = inject(MetadataStore).roles.ids;
+  private readonly userId = inject(UserStore).userId;
 
   readonly faSpinner = faSpinner;
   readonly isLoading = signal<boolean>(true);
@@ -60,11 +61,10 @@ export class RolesComponent implements OnInit {
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(this.org()),
       roles: this.store.selectOnceAsync(ProjectCreateState.roles),
-      userId: this.store.selectOnceAsync(AuthState.userId),
-    }).subscribe(({ members, roles, userId }) => {
+    }).subscribe(({ members, roles }) => {
       this.members.set(members);
 
-      this.pmIds.set(roles.get(this.ids.pm) ?? [userId!]);
+      this.pmIds.set(roles.get(this.ids.pm) ?? [this.userId()!]);
       this.smeIds.set(roles.get(this.ids.sme) ?? []);
       this.approverIds.set(roles.get(this.ids.approver) ?? []);
       this.isLoading.set(false);

@@ -31,6 +31,7 @@
         <div class="col-12">
           <table class="table table-hover">
             <tr class="bg-dark text-white">
+              <th class="pd-10 fw-normal">&nbsp;</th>
               <th class="pd-10 fw-normal">Owner</th>
               <th class="pd-10 fw-normal">Name</th>
               <th class="pd-10 fw-normal">Type</th>
@@ -47,6 +48,14 @@
                   entry.version
                 ]"
               >
+                <td class="tx-16">
+                  <wbs-watch-indicator
+                    source="library"
+                    [alwaysShow]="false"
+                    [owner]="entry.ownerId"
+                    [entityId]="entry.entryId"
+                  />
+                </td>
                 <td>{{ entry.ownerName }}</td>
                 <td>{{ entry.title }}</td>
                 <td>

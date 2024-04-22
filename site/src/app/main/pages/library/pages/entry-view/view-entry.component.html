@@ -1,5 +1,12 @@
 <div class="d-flex flex-column h-100">
   <div class="d-flex flex-align-center mg-y-10">
+    <span class="tx-24 mg-r-15">
+      <wbs-watch-indicator
+        source="library"
+        [owner]="owner()"
+        [entityId]="entryId()"
+      />
+    </span>
     <wbs-entry-title
       [title]="state.version()?.title ?? ''"
       [canEdit]="canEditTitle()"

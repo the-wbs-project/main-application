@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { gearIcon } from '@progress/kendo-svg-icons';
+import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { LibraryEntry } from '@wbs/core/models';
 import { SignalStore, TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
@@ -34,6 +35,7 @@ import { EntryService, EntryState } from './services';
     NavigationComponent,
     PageHeaderComponent,
     RouterModule,
+    WatchIndicatorComponent,
   ],
 })
 export class EntryViewComponent {
@@ -42,6 +44,8 @@ export class EntryViewComponent {
   private readonly store = inject(SignalStore);
 
   readonly state = inject(EntryState);
+  readonly owner = input.required<string>();
+  readonly entryId = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
 

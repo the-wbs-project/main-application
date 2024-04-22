@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -9,20 +9,18 @@ import {
 } from '@wbs/core/models';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { Transformers } from '@wbs/main/services';
-import { AuthState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectState, TasksState } from '../states';
 
 @Injectable()
 export class TimelineService {
+  private readonly data = inject(DataServiceFactory);
+  private readonly store = inject(Store);
+  private readonly transformer = inject(Transformers);
+  private readonly userId = inject(UserStore).userId;
   private readonly take = 50;
-
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly store: Store,
-    private readonly transformer: Transformers
-  ) {}
 
   createProjectRecord(
     data: ActivityData,
@@ -89,8 +87,8 @@ export class TimelineService {
   }
 
   saveProjectActions(data: ProjectActivityRecord[]): void {
-    const user = this.store.selectSnapshot(AuthState.profile)!;
-
-    this.data.activities.saveProjectActivitiesAsync(user.id, data).subscribe();
+    this.data.activities
+      .saveProjectActivitiesAsync(this.userId()!, data)
+      .subscribe();
   }
 }

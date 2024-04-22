@@ -6,14 +6,14 @@ import {
   EditThread,
   LoadDiscussionForum,
   LoadPosts,
-} from '@wbs/main/states';
+} from '@wbs/main/actions';
 import { IdService, Messages } from '@wbs/core/services';
 import { sorter } from '@wbs/main/services';
-import { AuthState } from '@wbs/main/states';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Discussion } from '../models';
 import { DiscussionDataService } from '../services';
+import { UserStore } from '@wbs/store';
 
 interface StateModel {
   organization?: string;
@@ -34,11 +34,11 @@ export class DiscussionForumState {
   constructor(
     private readonly data: DiscussionDataService,
     private readonly messages: Messages,
-    private readonly store: Store
+    private readonly store: UserStore
   ) {}
 
   private get userId(): string {
-    return this.store.selectSnapshot(AuthState.profile)!.id;
+    return this.store.userId()!;
   }
 
   @Selector()
@@ -143,8 +143,8 @@ export class DiscussionForumState {
     };
 
     return this.data.putAsync(state.organization, thread).pipe(
-      tap(() => ctx.patchState({ threads: [thread, ...state.threads] })),
-      tap(() => this.messages.success('General.ThreadCreated'))
+      tap(() => ctx.patchState({ threads: [thread, ...state.threads] }))
+      //tap(() => this.messages.success('General.ThreadCreated'))
     );
   }
 

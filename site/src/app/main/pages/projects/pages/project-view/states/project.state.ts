@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
@@ -10,8 +10,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { UserRolesViewModel } from '@wbs/core/view-models';
-import { AuthState } from '@wbs/main/states';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore, UserStore } from '@wbs/store';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
@@ -51,8 +50,8 @@ export class ProjectState {
   private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly services = inject(ProjectService);
-  private readonly store = inject(Store);
   private readonly timeline = inject(TimelineService);
+  private readonly userId = inject(UserStore).userId;
 
   @Selector()
   static current(state: StateModel): Project | undefined {
@@ -102,7 +101,7 @@ export class ProjectState {
 
   @Action(SetProject)
   setProject(ctx: Context, { owner, projectId }: SetProject): Observable<any> {
-    const userId = this.store.selectSnapshot(AuthState.userId);
+    const userId = this.userId()!;
     const roles: string[] = [];
 
     return this.data.projects.getAsync(owner, projectId).pipe(

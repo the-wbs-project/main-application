@@ -38,8 +38,8 @@ import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-c
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { CategorySelectionService } from '@wbs/main/services';
-import { AuthState, MembershipState } from '@wbs/main/states';
-import { MetadataStore } from '@wbs/store';
+import { MembershipState } from '@wbs/main/states';
+import { MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { RolesSectionComponent } from './components/roles-section';
@@ -73,6 +73,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   private readonly catService = inject(CategorySelectionService);
   private readonly data = inject(DataServiceFactory);
   private readonly store = inject(SignalStore);
+  private readonly userId = inject(UserStore).userId;
 
   readonly faSpinner = faSpinner;
   readonly loading = signal(true);
@@ -116,11 +117,10 @@ export class ProjectCreationComponent extends DialogContentBase {
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(org),
       org: this.store.selectOnceAsync(MembershipState.organization),
-      userId: this.store.selectOnceAsync(AuthState.userId),
-    }).subscribe(({ members, org, userId }) => {
+    }).subscribe(({ members, org }) => {
       this.members.set(members);
       this.tasks.set(tasks);
-      this.pmIds.set([userId!]);
+      this.pmIds.set([this.userId()!]);
       this.owner.set(org!.name);
       this.disciplines.set(this.catService.buildDisciplines([]));
       this.projectTitle.set(version.title);

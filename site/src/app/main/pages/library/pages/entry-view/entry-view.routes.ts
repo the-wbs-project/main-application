@@ -47,6 +47,8 @@ export const routes: Routes = [
       WbsNodeService,
     ],
     resolve: {
+      owner: ownerIdResolve,
+      entryId: entryIdResolve,
       entryUrl: entryUrlResolve,
       claims: libraryClaimsResolve,
     },

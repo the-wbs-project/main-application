@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   Action,
@@ -16,7 +16,7 @@ import {
   ProjectApprovalSaveRecord,
 } from '@wbs/core/models';
 import { ProjectApprovalStats } from '@wbs/main/models';
-import { AuthState, MembershipState } from '@wbs/main/states';
+import { MembershipState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
@@ -27,6 +27,7 @@ import {
   SetApprovalView,
 } from '../actions';
 import { ProjectState } from './project.state';
+import { UserStore } from '@wbs/store';
 
 interface StateModel {
   childrenIds?: string[];
@@ -54,10 +55,9 @@ declare type Context = StateContext<StateModel>;
   },
 })
 export class ProjectApprovalState implements NgxsOnInit {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly store: Store
-  ) {}
+  private readonly data = inject(DataServiceFactory);
+  private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
 
   @Selector()
   static current(state: StateModel): ProjectApproval | undefined {
@@ -189,7 +189,7 @@ export class ProjectApprovalState implements NgxsOnInit {
       isApproved,
       projectId: state.projectId!,
       ids: [state.current!.id],
-      approvedBy: this.store.selectSnapshot(AuthState.userId)!,
+      approvedBy: this.userId()!,
       approvedOn: new Date(),
     };
 

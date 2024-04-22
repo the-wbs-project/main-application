@@ -10,7 +10,8 @@ import {
   UploadResults,
 } from '@wbs/core/models';
 import { Transformers, Utils } from '@wbs/main/services';
-import { AuthState, MembershipState } from '@wbs/main/states';
+import { MembershipState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -61,6 +62,7 @@ export class EntryUploadState {
   private readonly state = inject(EntryState);
   private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
+  private readonly profile = inject(UserStore).profile;
 
   @Selector()
   static isOverwrite(state: StateModel): boolean {
@@ -192,7 +194,7 @@ export class EntryUploadState {
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
         this.store.selectSnapshot(MembershipState.organization)!.display_name,
-        this.store.selectSnapshot(AuthState.profile)!
+        this.profile()!
       ),
     }).pipe(
       switchMap(({ body, jiraIssueId }) =>

@@ -1,14 +1,12 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { Observable, of } from 'rxjs';
+import { of } from 'rxjs';
 import { first, map, skipWhile, switchMap } from 'rxjs/operators';
 import { ChangeOrganization } from '../actions';
 import { MembershipState } from '../states';
 
-export const orgGuard: (
-  route: ActivatedRouteSnapshot
-) => Observable<boolean> = (route) => {
+export const orgGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
 
   return store.select(MembershipState.organizations).pipe(

@@ -1,4 +1,5 @@
 export * from './app-config.service';
+export * from './auth0.service';
 export * from './id.service';
 export * from './logger.service';
 export * from './messages.service';

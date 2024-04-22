@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Wbs.Core.Configuration;
+using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
@@ -32,6 +33,31 @@ public class WatcherLibraryEntryDataService : BaseSqlDbService
         {
             while (reader.Read())
                 results.Add(reader.GetString(0));
+        }
+        return results;
+    }
+
+    public async Task<List<EntityId>> GetEntriesAsync(string watcherId)
+    {
+        using (var conn = new SqlConnection(cs))
+        {
+            await conn.OpenAsync();
+
+            return await GetEntriesAsync(conn, watcherId);
+        }
+    }
+
+    public async Task<List<EntityId>> GetEntriesAsync(SqlConnection conn, string watcherId)
+    {
+        var results = new List<EntityId>();
+
+        var cmd = new SqlCommand("SELECT [OwnerId], [EntryId] FROM [dbo].[WatchersLibraryEntries] WHERE [WatcherId] = @WatcherId", conn);
+        cmd.Parameters.AddWithValue("@WatcherId", watcherId);
+
+        using (var reader = await cmd.ExecuteReaderAsync())
+        {
+            while (reader.Read())
+                results.Add(new EntityId(reader.GetString(0), reader.GetString(1)));
         }
         return results;
     }

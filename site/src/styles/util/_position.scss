@@ -12,6 +12,26 @@
   }
 }
 
+.hover-visible:hover {
+  .child-to-show {
+    visibility: visible;
+  }
+}
+
+.hover-visible {
+  .child-to-show {
+    visibility: hidden;
+  }
+}
+
+.hoverer {
+  display: none !important;
+}
+
+.hoverer:hover {
+  display: block !important;
+}
+
 .d-ib {
   display: inline-block;
 }

@@ -1,51 +1,34 @@
 import { Injectable } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Action, NgxsOnInit, Selector, State, StateContext } from '@ngxs/store';
+import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Organization, User } from '@wbs/core/models';
 import { Logger, Messages } from '@wbs/core/services';
+import { InitiateOrganizations } from '@wbs/main/actions';
 import { sorter } from '@wbs/main/services';
-import { Observable } from 'rxjs';
+import { UserStore } from '@wbs/store';
+import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
-import { ChangeProfileName, InitiateOrganizations } from '../actions';
-
-interface AuthBucket {
-  profile?: User;
-}
-
-declare type Context = StateContext<AuthBucket>;
 
 @UntilDestroy()
-@Injectable()
-@State<AuthBucket>({
-  name: 'auth',
-  defaults: {},
-})
-export class AuthState implements NgxsOnInit {
+@Injectable({ providedIn: 'root' })
+export class Auth0Service {
+  private readonly _isInitiated = new BehaviorSubject<boolean>(false);
   constructor(
     private readonly auth: AuthService,
     private readonly data: DataServiceFactory,
     private readonly logger: Logger,
-    private readonly messages: Messages
+    private readonly messages: Messages,
+    private readonly store: Store,
+    private readonly userStore: UserStore
   ) {}
 
-  @Selector()
-  static displayName(state: AuthBucket): string | undefined {
-    return state.profile?.name ?? state.profile?.email;
+  get isInitiated(): Observable<boolean> {
+    return this._isInitiated.asObservable();
   }
 
-  @Selector()
-  static profile(state: AuthBucket): User | undefined {
-    return state.profile;
-  }
-
-  @Selector()
-  static userId(state: AuthBucket): string | undefined {
-    return state?.profile?.id;
-  }
-
-  ngxsOnInit(ctx: Context): void {
+  initiate(): void {
     this.auth.user$.pipe(untilDestroyed(this)).subscribe((user) => {
       if (!user) return;
 
@@ -61,8 +44,7 @@ export class AuthState implements NgxsOnInit {
         profile.name = '';
       }
 
-      ctx.patchState({ profile });
-
+      this.userStore.set(profile);
       this.logger.setGlobalContext({
         'usr.id': profile.id,
         'usr.name': profile.name,
@@ -72,28 +54,24 @@ export class AuthState implements NgxsOnInit {
       let organizations: Organization[] = user[ns + '/organizations'] ?? [];
 
       if (organizations.length > 0)
-        ctx.dispatch([
+        this.store.dispatch([
           new InitiateOrganizations(
             organizations.sort((a, b) => sorter(a.name, b.name))
           ),
         ]);
+      this._isInitiated.next(true);
     });
   }
 
-  @Action(ChangeProfileName)
-  ChangeProfileName(
-    ctx: Context,
-    { name }: ChangeProfileName
-  ): Observable<any> {
-    const state = ctx.getState();
-    const originalProfile = state.profile!;
+  changeProfileName(name: string): Observable<any> {
+    const originalProfile = this.userStore.profile()!;
     const originalName = originalProfile.name;
 
     const profile = { ...originalProfile, name };
 
     return this.data.users.putAsync(profile).pipe(
       tap(() => this.messages.notify.success('ProfileEditor.ProfileUpdated')),
-      tap(() => ctx.patchState({ profile })),
+      tap(() => this.userStore.set(profile)),
       switchMap(() =>
         this.data.activities.saveAsync(profile.id, [
           {

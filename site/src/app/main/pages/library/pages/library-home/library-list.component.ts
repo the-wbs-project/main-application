@@ -18,6 +18,7 @@ import { Store } from '@ngxs/store';
 import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { plusIcon } from '@progress/kendo-svg-icons';
+import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
@@ -43,6 +44,7 @@ import { EntryCreationService } from './services';
     PageHeaderComponent,
     RouterModule,
     TranslateModule,
+    WatchIndicatorComponent,
   ],
   providers: [EntryCreationService],
 })

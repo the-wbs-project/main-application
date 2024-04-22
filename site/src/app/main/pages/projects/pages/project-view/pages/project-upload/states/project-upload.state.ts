@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
@@ -10,9 +10,9 @@ import {
   WbsImportResult,
   UploadResults,
 } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
 import { Transformers, Utils } from '@wbs/main/services';
-import { AuthState, MembershipState } from '@wbs/main/states';
+import { MembershipState } from '@wbs/main/states';
+import { UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../../../models';
@@ -30,7 +30,6 @@ import {
   SetPageTitle,
   SetProject,
 } from '../actions';
-import { PhaseListItem } from '../models';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -62,11 +61,10 @@ interface StateModel {
   },
 })
 export class ProjectUploadState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly store: Store,
-    private readonly transformer: Transformers
-  ) {}
+  private readonly data = inject(DataServiceFactory);
+  private readonly store = inject(Store);
+  private readonly transformer = inject(Transformers);
+  private readonly userStore = inject(UserStore);
 
   @Selector()
   static current(state: StateModel): Project | undefined {
@@ -212,7 +210,7 @@ export class ProjectUploadState {
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
         this.store.selectSnapshot(MembershipState.organization)!.display_name,
-        this.store.selectSnapshot(AuthState.profile)!
+        this.userStore.profile()!
       ),
     }).pipe(
       switchMap(({ body, jiraIssueId }) =>
@@ -373,7 +371,7 @@ export class ProjectUploadState {
       ),
       switchMap((nodes) =>
         this.data.activities.saveProjectActivitiesAsync(
-          this.store.selectSnapshot(AuthState.userId)!,
+          this.userStore.userId()!,
           [
             {
               data: {

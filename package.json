@@ -3,7 +3,6 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "postinstall": "yarn run s:setup && yarn run w:setup",
     "build": "docker-compose build",
     "build:functions": "docker-compose build wbs-functions",
     "rebuild": "docker-compose build --no-cache",
