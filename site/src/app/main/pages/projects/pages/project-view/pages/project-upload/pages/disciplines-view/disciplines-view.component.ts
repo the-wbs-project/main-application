@@ -7,7 +7,7 @@ import { NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImportPerson } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { CategoryMatchListComponent } from '@wbs/main/components/category-match-list.component';
+import { CategoryMatchListComponent } from '@wbs/dummy_components/category-match-list.component';
 import { PeopleCompleted } from '../../actions';
 import { ProjectUploadState } from '../../states';
 

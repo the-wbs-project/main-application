@@ -2,14 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class PhaseTreeMenuService {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
 
   buildMenu(
     project: Project,

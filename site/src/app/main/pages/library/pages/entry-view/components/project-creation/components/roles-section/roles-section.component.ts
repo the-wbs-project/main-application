@@ -10,7 +10,7 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -21,7 +21,7 @@ import { MetadataState } from '@wbs/main/services';
 })
 export class RolesSectionComponent {
   private readonly store = inject(SignalStore);
-  private readonly ids = inject(MetadataState).roles.ids;
+  private readonly ids = inject(MetadataStore).roles.ids;
 
   readonly faSpinner = faSpinner;
   readonly approverIds = model.required<string[]>();

@@ -11,10 +11,10 @@ import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreationResults } from '@wbs/main/models';
 import {
   CategorySelectionService,
-  MetadataState,
   Transformers,
   WbsNodeService,
 } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { LIBRARY_TASKS_REORDER_WAYS } from '../models';
@@ -26,7 +26,7 @@ import { EntryState } from './entry-state.service';
 export class EntryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
   private readonly categoryService = inject(CategorySelectionService);
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
   private readonly resources = inject(Resources);

@@ -8,14 +8,14 @@ import {
   Project,
   ProjectNode,
 } from '@wbs/core/models';
-import { MetadataState } from '@wbs/main/services';
 import { AuthState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { LibraryEntryModalComponent } from '../components/library-entry-modal/library-entry-modal.component';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../models';
 
 @Injectable()
 export class LibraryEntryExportService {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly modalService = inject(NgbModal);
   private readonly store = inject(Store);

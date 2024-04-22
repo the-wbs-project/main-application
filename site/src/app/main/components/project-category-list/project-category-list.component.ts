@@ -5,8 +5,8 @@ import {
   input,
   output,
 } from '@angular/core';
+import { MetadataStore } from '@wbs/store';
 import { SelectButtonComponent } from '../select-button.component';
-import { MetadataState } from '@wbs/main/services';
 
 @Component({
   standalone: true,
@@ -16,7 +16,7 @@ import { MetadataState } from '@wbs/main/services';
   imports: [SelectButtonComponent],
 })
 export class ProjectCategoryListComponent {
-  readonly categories = inject(MetadataState).categories.projectCategories;
+  readonly categories = inject(MetadataStore).categories.projectCategories;
 
   readonly buttonClass = input<string>();
   readonly selected = input.required<string | undefined>();

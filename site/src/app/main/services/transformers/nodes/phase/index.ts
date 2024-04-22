@@ -1,5 +1,5 @@
 import { Resources } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { WbsNodePhaseProjectImporter } from './wbs-node-phase-project-importer.service';
 import { WbsNodePhaseReorderer } from './wbs-node-phase-reorderer.service';
 import { WbsNodePhaseTransformer } from './wbs-node-phase.service';
@@ -12,7 +12,7 @@ export class WbsPhaseNodeTransformers {
   readonly libraryImporter = new WbsNodeLibraryImporter();
 
   constructor(
-    private readonly metadata: MetadataState,
+    private readonly metadata: MetadataStore,
     private readonly resources: Resources
   ) {}
 }

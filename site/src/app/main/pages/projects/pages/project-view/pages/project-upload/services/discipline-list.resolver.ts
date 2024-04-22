@@ -2,16 +2,16 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Resources } from '@wbs/core/services';
+import { MetadataStore } from '@wbs/store';
 import { map } from 'rxjs';
 import { ProjectUploadState } from '../states';
-import { MetadataState } from '@wbs/main/services';
 
 export const disciplineListResolver: ResolveFn<
   { id: string; label: string }[]
 > = () => {
   const store = inject(Store);
   const resources = inject(Resources);
-  const categories = inject(MetadataState).categories.disciplines;
+  const categories = inject(MetadataStore).categories.disciplines;
 
   return store.selectOnce(ProjectUploadState.current).pipe(
     map((project) => {

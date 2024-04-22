@@ -10,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { Role } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -21,7 +21,7 @@ import { MetadataState } from '@wbs/main/services';
   imports: [MultiSelectModule, RoleListPipe, TranslateModule],
 })
 export class RoleFilterListComponent implements OnInit {
-  readonly roles = inject(MetadataState).roles.definitions;
+  readonly roles = inject(MetadataStore).roles.definitions;
 
   readonly valueChanged = output<string[]>();
 

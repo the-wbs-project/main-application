@@ -2,14 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { ContextMenuItem } from '@wbs/main/models';
+import { MetadataStore } from '@wbs/store';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
-import { MetadataState } from '@wbs/main/services';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class EntryTreeMenuService {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
 
   buildMenu(
     entryType: string,

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resources } from '@wbs/core/services';
-import { MetadataState } from '../metdata-state.service';
+import { MetadataStore } from '@wbs/store';
 import { WbsNodeService } from '../wbs-node.service';
 import { ActivityTransformer } from './activity.transformer';
 import { WbsNodeTransformers } from './nodes';
@@ -15,7 +15,7 @@ export class Transformers {
   readonly activities = ActivityTransformer;
 
   constructor(
-    private readonly metadata: MetadataState,
+    private readonly metadata: MetadataStore,
     private readonly resources: Resources,
     private readonly wbsService: WbsNodeService
   ) {}

@@ -25,8 +25,8 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { MetadataState } from '@wbs/main/services';
 import { AuthState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { switchMap } from 'rxjs/operators';
 import { EntryCreationModel } from '../../../../models';
 
@@ -41,7 +41,7 @@ import { EntryCreationModel } from '../../../../models';
 export class SaveSectionComponent {
   readonly close = output<EntryCreationModel | undefined>();
 
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);

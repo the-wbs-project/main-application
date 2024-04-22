@@ -1,5 +1,6 @@
 import { Resources } from '@wbs/core/services/resource.service';
-import { MetadataState, WbsNodeService } from '@wbs/main/services';
+import { WbsNodeService } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { WbsDisciplineNodeTransformer } from './wbs-node-discipline.service';
 
 export class WbsDisciplineNodeTransformers {
@@ -10,7 +11,7 @@ export class WbsDisciplineNodeTransformers {
   );
 
   constructor(
-    private readonly categories: MetadataState,
+    private readonly categories: MetadataStore,
     private readonly resources: Resources,
     private readonly wbsService: WbsNodeService
   ) {}

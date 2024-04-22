@@ -8,11 +8,11 @@ import {
   CategoryCancelConfirm,
   CategorySelection,
 } from '@wbs/core/view-models';
-import { MetadataState } from './metdata-state.service';
+import { MetadataStore } from '@wbs/store';
 
 @Injectable()
 export class CategorySelectionService {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
 
   isListDirty(list: CategorySelection[] | undefined): boolean {
     return (

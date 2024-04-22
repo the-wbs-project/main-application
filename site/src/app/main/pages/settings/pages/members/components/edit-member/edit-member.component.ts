@@ -9,7 +9,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { MemberViewModel } from '@wbs/core/view-models';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -22,7 +22,7 @@ export class EditMemberComponent {
   readonly save = output<void>();
 
   readonly member = model.required<MemberViewModel | undefined>();
-  readonly roles = inject(MetadataState).roles.definitions;
+  readonly roles = inject(MetadataStore).roles.definitions;
 
   toggleRole(role: string): void {
     this.member.update((member) => {

@@ -14,6 +14,7 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { AuthState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
@@ -27,7 +28,6 @@ import {
   StartWizard,
   SubmitBasics,
 } from '../actions';
-import { MetadataState } from '@wbs/main/services';
 
 interface StateModel {
   category?: string;
@@ -58,7 +58,7 @@ interface StateModel {
   },
 })
 export class ProjectCreateState {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly store = inject(Store);

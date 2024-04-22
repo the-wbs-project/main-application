@@ -16,8 +16,8 @@ import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { MetadataState } from '@wbs/main/services';
 import { AuthState, MembershipState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
@@ -36,7 +36,7 @@ import { ProjectCreateState } from '../../states';
   ],
 })
 export class RolesComponent implements OnInit {
-  private readonly ids = inject(MetadataState).roles.ids;
+  private readonly ids = inject(MetadataStore).roles.ids;
 
   readonly faSpinner = faSpinner;
   readonly isLoading = signal<boolean>(true);

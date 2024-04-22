@@ -17,12 +17,8 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { routes } from './app.routes';
-import {
-  AppConfig,
-  AppInitializerFactory,
-  RequestInterceptor,
-  Resources,
-} from './core/services';
+import { AppConfig, Resources } from './core/services';
+import { AppInitializerFactory, RequestInterceptor } from './setup';
 
 export const appConfig: ApplicationConfig = {
   providers: [

@@ -4,11 +4,8 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import {
-  MetadataState,
-  Transformers,
-  WbsNodeService,
-} from '@wbs/main/services';
+import { Transformers, WbsNodeService } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';
 import {
@@ -57,7 +54,7 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class TasksState {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly messaging = inject(Messages);
   private readonly nav = inject(ProjectNavigationService);

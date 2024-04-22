@@ -23,7 +23,8 @@ import { PROJECT_STATI, Project } from '@wbs/core/models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/main/pipes/project-category-label.pipe';
-import { MetadataState, sorter } from '@wbs/main/services';
+import { sorter } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
 import { ProjectListService } from './services';
 import { Storage } from '@wbs/core/services';
@@ -53,7 +54,7 @@ declare type ProjectView = 'grid' | 'table';
 })
 export class ProjectListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly service = inject(ProjectListService);
   private readonly storage = inject(Storage);
 

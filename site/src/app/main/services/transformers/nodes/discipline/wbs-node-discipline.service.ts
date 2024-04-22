@@ -1,11 +1,12 @@
 import { Category, Project, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataState, WbsNodeService } from '@wbs/main/services';
+import { WbsNodeService } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
-    private readonly metadata: MetadataState,
+    private readonly metadata: MetadataStore,
     private readonly resources: Resources,
     private readonly wbsService: WbsNodeService
   ) {}

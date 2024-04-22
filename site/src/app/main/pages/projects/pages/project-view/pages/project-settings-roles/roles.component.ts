@@ -16,7 +16,7 @@ import { Member, Project, ROLES, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { ProjectRolesComponent } from '@wbs/main/components/project-roles/project-roles.component';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 import { AddUserToRole, RemoveUserToRole } from '../../actions';
 import { ProjectState } from '../../states';
@@ -34,7 +34,7 @@ import { ProjectState } from '../../states';
 })
 export class RolesComponent implements OnInit {
   private readonly project = this.store.select(ProjectState.current);
-  private readonly roles = inject(MetadataState).roles.definitions;
+  private readonly roles = inject(MetadataStore).roles.definitions;
 
   readonly checkIcon = faCheck;
   readonly spinnerIcon = faSpinner;

@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LISTS, ProjectCategory } from '@wbs/core/models';
-import { MetadataState } from '../services';
+import { MetadataStore } from '@wbs/store';
 
 @Pipe({ name: 'disciplineLabel', standalone: true })
 export class DisciplineLabelPipe implements PipeTransform {
-  private readonly state = inject(MetadataState);
+  private readonly state = inject(MetadataStore);
 
   transform(
     idsOrCat: ProjectCategory | null | undefined,

@@ -2,6 +2,7 @@ import { importProvidersFrom, inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import { NgxsModule } from '@ngxs/store';
+import { MetadataStore } from '@wbs/store';
 import {
   librarySectionGuard,
   orgGuard,
@@ -10,7 +11,6 @@ import {
 } from './guards';
 import {
   AiChatService,
-  MetadataState,
   NavigationMenuService,
   UserService,
   orgClaimsResolve,
@@ -23,15 +23,14 @@ import { AiState, AuthState, MembershipState, UiState } from './states';
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [authGuardFn, () => inject(MetadataState).loadAsync()],
+    canActivate: [authGuardFn, () => inject(MetadataStore).loadAsync()],
     loadComponent: () =>
-      import('./main-wrapper.component').then((m) => m.MainWrapperComponent),
+      import('../pages/wrapper.component').then((m) => m.WrapperComponent),
     providers: [
       importProvidersFrom(
         NgxsModule.forFeature([AiState, AuthState, MembershipState, UiState])
       ),
       AiChatService,
-      MetadataState,
       NavigationMenuService,
       UserService,
     ],

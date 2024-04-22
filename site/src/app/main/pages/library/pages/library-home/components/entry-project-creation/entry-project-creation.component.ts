@@ -30,7 +30,8 @@ import { DisciplineEditorComponent } from '@wbs/main/components/discipline-edito
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { CategorySelectionService, MetadataState } from '@wbs/main/services';
+import { CategorySelectionService } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
@@ -72,7 +73,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   );
   readonly faSpinner = faSpinner;
   readonly view = model<number>(0);
-  readonly categories = inject(MetadataState).categories.projectCategories;
+  readonly categories = inject(MetadataStore).categories.projectCategories;
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );

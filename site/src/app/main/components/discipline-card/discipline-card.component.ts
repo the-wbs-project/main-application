@@ -17,7 +17,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { AlertComponent } from '../alert.component';
 import { DisciplineSplitListComponent } from '../discipline-split-list.component';
 
@@ -37,7 +37,7 @@ import { DisciplineSplitListComponent } from '../discipline-split-list.component
   ],
 })
 export class DisciplineCardComponent {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
 
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;

@@ -16,9 +16,9 @@ import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/services';
-import { AuthState, MembershipState } from '@wbs/main/states';
 import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
+import { AuthState, MembershipState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
@@ -70,7 +70,7 @@ const ROLES = [
 export class MembersComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly memberService = inject(MembershipAdminService);
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly store = inject(SignalStore);
 
   readonly org = input.required<string>();

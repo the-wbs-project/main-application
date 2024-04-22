@@ -10,9 +10,9 @@ import {
 import { Injectable } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AppConfig } from './app-config.service';
-import { Logger } from './logger.service';
-import { Messages } from './messages.service';
+import { AppConfig } from '../core/services/app-config.service';
+import { Logger } from '../core/services/logger.service';
+import { Messages } from '../core/services/messages.service';
 
 const noErrorUrls = ['logger/activity', 'logger/activities'];
 

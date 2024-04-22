@@ -2,13 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { ListItem, WbsNode } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { ExtractResults } from '../../../models';
 import { TextCompareService } from './text-compare.service';
 
 @Injectable()
 export class PhaseExtractProcessor {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly textComparer = inject(TextCompareService);
   private readonly tolerance = 0.75;
 

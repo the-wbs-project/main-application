@@ -12,8 +12,8 @@ import { Resources } from '@wbs/core/services';
 import { Observable, forkJoin, map } from 'rxjs';
 import { ROLE_ICONS } from 'src/environments/icons';
 
-@Injectable()
-export class MetadataState {
+@Injectable({ providedIn: 'root' })
+export class MetadataStore {
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
 

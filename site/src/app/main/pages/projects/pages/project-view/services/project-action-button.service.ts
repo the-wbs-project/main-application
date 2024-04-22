@@ -11,7 +11,7 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { ProjectAction } from '../models';
 import { ProjectState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
@@ -22,7 +22,7 @@ export class ProjectActionButtonService {
   private readonly actions = inject(ProjectViewService);
   private readonly exportService = inject(LibraryEntryExportService);
   private readonly messages = inject(Messages);
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly store = inject(Store);
 
   private readonly actionApproval = 'approval';

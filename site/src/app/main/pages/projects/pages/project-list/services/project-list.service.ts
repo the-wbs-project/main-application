@@ -1,11 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { Project, PROJECT_STATI, ProjectNode } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 @Injectable()
 export class ProjectListService {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
 
   filterByStati(
     projects: Project[] | null | undefined,

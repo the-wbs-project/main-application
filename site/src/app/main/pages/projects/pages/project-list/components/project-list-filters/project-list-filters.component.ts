@@ -14,7 +14,7 @@ import { PROJECT_STATI } from '@wbs/core/models';
 import { CheckboxFilterListComponent } from '@wbs/main/components/checkbox-filter-list';
 import { SwitchComponent } from '@wbs/main/components/switch';
 import { ProjectStatusPipe } from '@wbs/main/pipes/project-status.pipe';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -31,7 +31,7 @@ import { MetadataState } from '@wbs/main/services';
   ],
 })
 export class ProjectListFiltersComponent {
-  readonly cats = inject(MetadataState).categories.projectCategories;
+  readonly cats = inject(MetadataStore).categories.projectCategories;
 
   readonly position = input.required<'side' | 'top'>();
   readonly assignedToMe = model.required<boolean>();

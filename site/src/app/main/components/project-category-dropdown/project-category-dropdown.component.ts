@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -16,6 +16,6 @@ import { MetadataState } from '@wbs/main/services';
   imports: [DropDownListModule, FormsModule],
 })
 export class ProjectCategoryDropdownComponent {
-  readonly categories = inject(MetadataState).categories.projectCategories;
+  readonly categories = inject(MetadataStore).categories.projectCategories;
   readonly category = model.required<string | undefined>();
 }

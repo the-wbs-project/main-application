@@ -37,8 +37,9 @@ import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
-import { CategorySelectionService, MetadataState } from '@wbs/main/services';
+import { CategorySelectionService } from '@wbs/main/services';
 import { AuthState, MembershipState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { RolesSectionComponent } from './components/roles-section';
@@ -68,7 +69,7 @@ import { SaveSectionComponent } from './components/save-section';
   providers: [CategorySelectionService],
 })
 export class ProjectCreationComponent extends DialogContentBase {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly catService = inject(CategorySelectionService);
   private readonly data = inject(DataServiceFactory);
   private readonly store = inject(SignalStore);

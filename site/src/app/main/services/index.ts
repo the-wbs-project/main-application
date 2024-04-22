@@ -4,7 +4,6 @@ export * from './ai-chat.service';
 export * from './category-selection.service';
 export * from './drag-drop.service';
 export * from './layout.service';
-export * from './metdata-state.service';
 export * from './navigation-menu.service';
 export * from './record-resource-validation.service';
 export * from './script.service';

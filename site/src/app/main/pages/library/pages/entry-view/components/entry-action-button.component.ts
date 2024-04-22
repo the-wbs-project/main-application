@@ -5,7 +5,7 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { ActionButtonComponent } from '@wbs/main/components/action-button';
+import { ActionButtonComponent } from '@wbs/components/action-button';
 import { EntryActionButtonService } from '../services';
 
 @Component({

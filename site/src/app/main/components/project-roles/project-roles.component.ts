@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
 import { Messages, Resources, SignalStore } from '@wbs/core/services';
-import { MetadataState } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { ProjectUserListComponent } from '../user-list';
 import { RoleUsersService } from './services';
 import { RoleUsersViewModel } from './view-models';
@@ -31,7 +31,7 @@ declare type OutputType = {
 })
 export class ProjectRolesComponent {
   private readonly messages = inject(Messages);
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly resources = inject(Resources);
   private readonly service = inject(RoleUsersService);
   private readonly store = inject(SignalStore);

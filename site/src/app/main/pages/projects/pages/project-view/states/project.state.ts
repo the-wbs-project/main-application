@@ -11,6 +11,7 @@ import {
 } from '@wbs/core/models';
 import { UserRolesViewModel } from '@wbs/core/view-models';
 import { AuthState } from '@wbs/main/states';
+import { MetadataStore } from '@wbs/store';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
@@ -31,7 +32,6 @@ import {
   VerifyTasks,
 } from '../actions';
 import { ProjectService, TimelineService } from '../services';
-import { MetadataState } from '@wbs/main/services';
 
 interface StateModel {
   current?: Project;
@@ -48,7 +48,7 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class ProjectState {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly services = inject(ProjectService);
   private readonly store = inject(Store);

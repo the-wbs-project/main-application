@@ -5,7 +5,8 @@ import { ProjectNode, RoutedBreadcrumbItem } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { NavigationLink } from '@wbs/main/models';
-import { MetadataState, Utils } from '@wbs/main/services';
+import { Utils } from '@wbs/main/services';
+import { MetadataStore } from '@wbs/store';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PROJECT_NAVIGATION, TASK_NAVIGATION } from '../models';
@@ -13,7 +14,7 @@ import { ProjectState, TasksState } from '../states';
 
 @Injectable()
 export class ProjectService {
-  private readonly metadata = inject(MetadataState);
+  private readonly metadata = inject(MetadataStore);
   protected readonly store = inject(Store);
 
   static getProjectUrl(route: ActivatedRouteSnapshot): string[] {

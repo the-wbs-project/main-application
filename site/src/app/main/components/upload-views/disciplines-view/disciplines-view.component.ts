@@ -11,7 +11,7 @@ import { faList } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImportPerson } from '@wbs/core/models';
-import { CategoryMatchListComponent } from '@wbs/main/components/category-match-list.component';
+import { CategoryMatchListComponent } from '@wbs/dummy_components/category-match-list.component';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 
 @Component({
