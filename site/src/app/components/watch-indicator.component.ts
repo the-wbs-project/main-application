@@ -42,8 +42,6 @@ export class WatchIndicatorComponent {
   readonly alwaysShow = input(true);
 
   private watchSource = computed(() => {
-    console.log(this.userStore.watchers.library.items());
-
     return this.source() === 'library'
       ? this.userStore.watchers.library
       : this.userStore.watchers.projects;
@@ -62,13 +60,12 @@ export class WatchIndicatorComponent {
   protected changed(event: Event): void {
     event.preventDefault();
     event.stopPropagation();
+
     const watch = !this.watched();
     const ownerId = this.owner();
     const id = this.entityId();
     const watcherId = this.userStore.userId()!;
     const source = this.watchSource();
-
-    console.log(watch);
 
     if (watch) {
       this.data.libraryEntryWatchers
