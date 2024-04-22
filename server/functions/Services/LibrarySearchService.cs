@@ -1,21 +1,19 @@
 using System.Text.Json;
 using Azure;
-using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
-using Azure.Search.Documents.Models;
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
+using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
+using Wbs.Core.Services;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Functions.Services;
 
 public class LibrarySearchService
 {
     private readonly IAzureAiSearchConfig config;
-    private readonly ILogger<LibrarySearchService> logger;
     private readonly ResourcesDataService resourceDataService;
     private readonly UserDataService userDataService;
     private readonly ListDataService listDataService;
@@ -23,12 +21,10 @@ public class LibrarySearchService
     private readonly LibraryEntryDataService libraryEntryDataService;
     private readonly LibraryEntryNodeDataService libraryEntryNodeDataService;
     private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
+    private readonly WatcherLibraryEntryDataService watcherDataService;
 
-
-
-    public LibrarySearchService(IAzureAiSearchConfig config, ILogger<LibrarySearchService> logger, ListDataService listDataService, UserDataService userDataService, OrganizationDataService organizationDataService, ResourcesDataService resourceDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService)
+    public LibrarySearchService(IAzureAiSearchConfig config, ListDataService listDataService, UserDataService userDataService, OrganizationDataService organizationDataService, ResourcesDataService resourceDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService)
     {
-        this.logger = logger;
         this.config = config;
         this.listDataService = listDataService;
         this.userDataService = userDataService;
@@ -37,38 +33,22 @@ public class LibrarySearchService
         this.libraryEntryDataService = libraryEntryDataService;
         this.libraryEntryNodeDataService = libraryEntryNodeDataService;
         this.libraryEntryVersionDataService = libraryEntryVersionDataService;
+        this.watcherDataService = watcherDataService;
     }
 
-    public async Task<SearchResults<LibrarySearchDocument>> RunQueryAsync(string owner, LibraryFilters filters)
-    {
-        var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
-        var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
-        var options = new SearchOptions()
-        {
-            IncludeTotalCount = true,
-            Filter = filters.ToFilterString(owner)
-        };
-
-        // Enter Hotel property names into this list so only these values will be returned.
-        // If Select is empty, all values will be returned, which can be inefficient.
-        //options.Select.Add("HotelName");
-        //options.Select.Add("Description");
-
-        // For efficiency, the search call should be asynchronous, so use SearchAsync rather than Search.
-        return await searchClient.SearchAsync<LibrarySearchDocument>(filters.searchText, options);
-    }
-
-    public async Task PushToSearchAsync(SqlConnection conn, string owner, string entryId)
+    public async Task PushToSearchAsync(SqlConnection conn, string owner, string entryId, Dictionary<string, UserDocument> userCache = null)
     {
         var resourceObj = await resourceDataService.GetAllAsync(conn, "en-US");
         var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
         var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
         var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
         var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
+        var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
 
         var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
         var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
         var resources = new Resources(resourceObj);
+        var users = await GetUsersAsync(watcherIds.Concat([entry.Author]), userCache);
         //
         //  Get discipline labels
         //
@@ -98,8 +78,6 @@ public class LibrarySearchService
             Version = entry.Version,
             OwnerId = entry.OwnerId,
             OwnerName = (await organizationDataService.GetOrganizationByNameAsync(entry.OwnerId))?.DisplayName,
-            AuthorId = entry.Author,
-            AuthorName = (await userDataService.GetUserAsync(entry.Author))?.Name,
             Title_En = entry.Title,
             Description_En = entry.Description,
             TypeId = entry.Type,
@@ -107,7 +85,12 @@ public class LibrarySearchService
             LastModified = entry.LastModified,
             StatusId = entry.Status,
             Visibility = entry.Visibility,
-            Tags = []
+            Tags = [],
+            //
+            //  Users
+            //
+            Author = users.ContainsKey(entry.Author) ? users[entry.Author] : null,
+            Watchers = watcherIds.Where(x => users.ContainsKey(x)).Select(x => users[x]).ToArray(),
         };
 
         var tasks = new List<TaskSearchDocument>();
@@ -170,5 +153,49 @@ public class LibrarySearchService
         if (type == "task") return resources.Get("General.Task");
 
         return "";
+    }
+
+    private async Task<Dictionary<string, UserDocument>> GetUsersAsync(IEnumerable<string> userIds, Dictionary<string, UserDocument> userCache = null)
+    {
+        var users = new Dictionary<string, UserDocument>();
+        var calls = new List<Task<Member>>();
+
+        foreach (var userId in userIds)
+        {
+            if (userCache != null && userCache.ContainsKey(userId))
+            {
+                users.Add(userId, userCache[userId]);
+                continue;
+            }
+            calls.Add(userDataService.GetUserAsync(userId));
+
+            if (calls.Count == 25)
+            {
+                var results = await Task.WhenAll(calls);
+
+                foreach (var result in results)
+                {
+                    var model = new UserDocument(result.Id, result.Name);
+                    users.Add(result.Id, model);
+
+                    if (userCache != null) userCache.Add(result.Id, model);
+                }
+                calls.Clear();
+            }
+        }
+        if (calls.Count > 0)
+        {
+            var results = await Task.WhenAll(calls);
+
+            foreach (var result in results)
+            {
+                var model = new UserDocument(result.Id, result.Name);
+                users.Add(result.Id, model);
+
+                if (userCache != null) userCache.Add(result.Id, model);
+            }
+        }
+
+        return users;
     }
 }

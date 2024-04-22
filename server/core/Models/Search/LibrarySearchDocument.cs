@@ -17,12 +17,6 @@ public partial class LibrarySearchDocument
     [SearchableField(IsSortable = true, IsFilterable = true, IsFacetable = true)]
     public string OwnerName { get; set; }
 
-    [SimpleField(IsFilterable = true)]
-    public string AuthorId { get; set; }
-
-    [SearchableField(IsSortable = true, IsFilterable = true, IsFacetable = true)]
-    public string AuthorName { get; set; }
-
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string Title_En { get; set; }
 
@@ -47,5 +41,7 @@ public partial class LibrarySearchDocument
     [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
     public string Visibility { get; set; }
 
+    public UserDocument Author { get; set; }
+    public UserDocument[] Watchers { get; set; }
     public TaskSearchDocument[] Tasks { get; set; }
 }

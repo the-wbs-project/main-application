@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Wbs.Api.Configuration;
+using Wbs.Api.Services;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Services;
@@ -71,6 +72,7 @@ builder.Services.AddSingleton<ProjectResourceDataService>();
 builder.Services.AddSingleton<ProjectSnapshotDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
 builder.Services.AddSingleton<Storage>();
+builder.Services.AddSingleton<WatcherLibraryEntryDataService>();
 builder.Services.AddSingleton<UserDataService>();
 //
 //  Importers and Exporters

@@ -3,7 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
-using Wbs.Core.Services;
+using Wbs.Functions.Services;
 
 namespace functions
 {
@@ -22,7 +22,7 @@ namespace functions
             this.searchService = searchService;
         }
 
-        [Function(nameof(LibraryIndexQueue))]
+        [Function("LibraryIndex-Item")]
         public async Task RunItem([QueueTrigger("search-library-item", Connection = "")] string message)
         {
             try

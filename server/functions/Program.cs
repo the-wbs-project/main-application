@@ -7,7 +7,7 @@ using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Services;
 using Wbs.Functions.Configuration;
-using Microsoft.Extensions.Azure;
+using Wbs.Functions.Services;
 
 var host = new HostBuilder()
         .ConfigureAppConfiguration(builder =>

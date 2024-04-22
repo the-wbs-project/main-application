@@ -12,7 +12,7 @@ public class ListDataService : BaseSqlDbService
 
     public ListDataService(ILogger<ListDataService> logger, IDatabaseConfig config) : base(config)
     {
-        this._logger = logger;
+        _logger = logger;
     }
 
     public async Task<List<ListItem>> GetAsync(string type)
