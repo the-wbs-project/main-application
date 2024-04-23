@@ -28,6 +28,7 @@ public class LibrarySearchService
             IncludeTotalCount = true,
             Filter = filters.ToFilterString(owner),
             OrderBy = { "LastModified desc" },
+            SearchFields = { "EntryId", "Version", "OwnerId", "OwnerName", "Title_En", "TypeId", "LastModified", "Visibility", "Author" }
         };
 
         logger.LogInformation($"Search text: {filters.searchText}");

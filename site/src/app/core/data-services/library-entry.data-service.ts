@@ -1,7 +1,11 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LibraryEntry, LibrarySearchFilters } from '../models';
+import {
+  LibraryEntry,
+  LibrarySearchDocument,
+  LibrarySearchFilters,
+} from '../models';
 import { Utils } from '../services';
 import { LibraryEntryViewModel } from '../view-models';
 
@@ -17,10 +21,10 @@ export class LibraryEntryDataService {
   searchAsync(
     owner: string,
     options: LibrarySearchFilters
-  ): Observable<LibraryEntryViewModel[]> {
+  ): Observable<LibrarySearchDocument[]> {
     return this.http
-      .post<LibraryEntryViewModel[]>(this.url(owner), options)
-      .pipe(map((list) => this.clean(list)));
+      .post<LibrarySearchDocument[]>(this.url(owner), options)
+      .pipe(map((list) => this.cleanSearch(list)));
   }
 
   getAsync(owner: string, entryId: string): Observable<LibraryEntry> {
@@ -40,6 +44,12 @@ export class LibraryEntryDataService {
   private clean<T extends LibraryEntryViewModel | LibraryEntryViewModel[]>(
     obj: T
   ): T {
+    Utils.cleanDates(obj, 'lastModified');
+
+    return obj;
+  }
+
+  private cleanSearch(obj: LibrarySearchDocument[]): LibrarySearchDocument[] {
     Utils.cleanDates(obj, 'lastModified');
 
     return obj;

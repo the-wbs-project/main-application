@@ -44,6 +44,7 @@ public class LibrarySearchService
         var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
         var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
         var users = await GetUsersAsync(watcherIds.Concat([entry.Author]).Distinct(), userCache);
+        var disciplines = new List<string>();
 
         foreach (var discipline in version.disciplines)
         {
@@ -51,10 +52,13 @@ public class LibrarySearchService
 
             if (obj.ToString()[0] == '{')
             {
-                var id = obj.GetProperty("id").GetString();
                 var label = obj.GetProperty("label").GetString();
 
-                disciplineLabels.Add(id, label);
+                disciplines.Add(label);
+            }
+            else
+            {
+                disciplines.Add(disciplineLabels[obj.ToString()]);
             }
         }
 
@@ -71,6 +75,7 @@ public class LibrarySearchService
             LastModified = entry.LastModified,
             StatusId = entry.Status,
             Visibility = entry.Visibility,
+            Disciplines_En = disciplines.ToArray(),
             //
             //  Users
             //
@@ -85,26 +90,12 @@ public class LibrarySearchService
 
         foreach (var entryTask in entryTasks)
         {
-            var task = new TaskSearchDocument
+            tasks.Add(new TaskSearchDocument
             {
                 TaskId = entryTask.id,
                 Title_En = entryTask.title,
                 Description_En = entryTask.description,
-                CreatedOn = entryTask.createdOn,
-                LastModified = entryTask.lastModified,
-            };
-
-            var disciplines = new List<string>();
-            if (entryTask.disciplineIds != null)
-            {
-                foreach (var discipline in entryTask.disciplineIds)
-                {
-                    if (disciplineLabels.ContainsKey(discipline))
-                        disciplines.Add(disciplineLabels[discipline]);
-                }
-            }
-            task.Disciplines_En = disciplines.ToArray();
-            tasks.Add(task);
+            });
         }
 
         doc.Tasks = tasks.ToArray();

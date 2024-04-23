@@ -13,13 +13,4 @@ public partial class TaskSearchDocument
 
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string Description_En { get; set; }
-
-    [SimpleField]
-    public DateTimeOffset? CreatedOn { get; set; }
-
-    [SimpleField]
-    public DateTimeOffset? LastModified { get; set; }
-
-    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
-    public string[] Disciplines_En { get; set; }
 }
