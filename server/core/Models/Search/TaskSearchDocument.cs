@@ -14,9 +14,6 @@ public partial class TaskSearchDocument
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string Description_En { get; set; }
 
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public string[] Tags { get; set; }
-
     [SimpleField]
     public DateTimeOffset? CreatedOn { get; set; }
 

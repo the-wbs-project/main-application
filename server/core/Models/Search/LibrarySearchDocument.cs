@@ -29,9 +29,6 @@ public partial class LibrarySearchDocument
     [SearchableField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
     public string TypeName { get; set; }
 
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
-    public string[] Tags { get; set; }
-
     [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
     public DateTimeOffset LastModified { get; set; }
 

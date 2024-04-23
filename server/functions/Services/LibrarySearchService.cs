@@ -1,5 +1,6 @@
 using System.Text.Json;
 using Azure;
+using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Microsoft.Data.SqlClient;
@@ -13,22 +14,16 @@ namespace Wbs.Functions.Services;
 
 public class LibrarySearchService
 {
-    private readonly IAzureAiSearchConfig config;
-    private readonly ResourcesDataService resourceDataService;
     private readonly UserDataService userDataService;
-    private readonly ListDataService listDataService;
     private readonly OrganizationDataService organizationDataService;
     private readonly LibraryEntryDataService libraryEntryDataService;
     private readonly LibraryEntryNodeDataService libraryEntryNodeDataService;
     private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
     private readonly WatcherLibraryEntryDataService watcherDataService;
 
-    public LibrarySearchService(IAzureAiSearchConfig config, ListDataService listDataService, UserDataService userDataService, OrganizationDataService organizationDataService, ResourcesDataService resourceDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService)
+    public LibrarySearchService(UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService)
     {
-        this.config = config;
-        this.listDataService = listDataService;
         this.userDataService = userDataService;
-        this.resourceDataService = resourceDataService;
         this.organizationDataService = organizationDataService;
         this.libraryEntryDataService = libraryEntryDataService;
         this.libraryEntryNodeDataService = libraryEntryNodeDataService;
@@ -36,18 +31,20 @@ public class LibrarySearchService
         this.watcherDataService = watcherDataService;
     }
 
-    public async Task PushToSearchAsync(SqlConnection conn, string owner, string entryId, Dictionary<string, UserDocument> userCache = null)
+    public async Task PushToSearchAsync(
+        SqlConnection conn,
+        string owner,
+        string entryId,
+        Resources resources,
+        SearchClient searchClient,
+        Dictionary<string, string> disciplineLabels,
+        Dictionary<string, UserDocument> userCache = null)
     {
-        var resourceObj = await resourceDataService.GetAllAsync(conn, "en-US");
         var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
         var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
-        var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
         var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
         var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
 
-        var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
-        var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
-        var resources = new Resources(resourceObj);
         var users = await GetUsersAsync(watcherIds.Concat([entry.Author]).Distinct(), userCache);
         //
         //  Get discipline labels
@@ -70,7 +67,6 @@ public class LibrarySearchService
             }
         }
 
-        await VerifyIndexAsync(indexClient);
 
         var doc = new LibrarySearchDocument
         {
@@ -85,7 +81,6 @@ public class LibrarySearchService
             LastModified = entry.LastModified,
             StatusId = entry.Status,
             Visibility = entry.Visibility,
-            Tags = [],
             //
             //  Users
             //
@@ -107,7 +102,6 @@ public class LibrarySearchService
                 Description_En = entryTask.description,
                 CreatedOn = entryTask.createdOn,
                 LastModified = entryTask.lastModified,
-                Tags = []
             };
 
             var disciplines = new List<string>();
@@ -129,9 +123,8 @@ public class LibrarySearchService
             new List<LibrarySearchDocument> { doc });
     }
 
-    private async Task VerifyIndexAsync(SearchIndexClient indexClient)
+    public async Task VerifyIndexAsync(SearchIndexClient indexClient, string indexName)
     {
-        var indexName = config.LibraryIndex;
         try
         {
             var index = await indexClient.GetIndexAsync(indexName);
