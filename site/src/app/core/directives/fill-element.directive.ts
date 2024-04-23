@@ -6,7 +6,7 @@ import {
   input,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { UiState } from '../states';
+import { UiState } from '../../main/states';
 
 @Directive({ selector: '[appFillElement]', standalone: true })
 export class FillElementDirective implements AfterViewChecked {

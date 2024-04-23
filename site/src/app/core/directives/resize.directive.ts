@@ -7,7 +7,7 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { ResizedEvent } from '../models';
+import { ResizedEvent } from '../../main/models';
 
 @Directive({ selector: '[resized]', standalone: true })
 export class ResizedDirective implements OnInit, OnDestroy {

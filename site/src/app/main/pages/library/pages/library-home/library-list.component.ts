@@ -15,7 +15,6 @@ import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
@@ -23,10 +22,11 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { EntryTypeDescriptionPipe } from '../../pipes/entry-type-description.pipe';
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
+import { EntryCreateButtonComponent } from './components/entry-create-button/entry-create-button.component';
 import { EntryCreationService } from './services';
+import { EntryLibraryChooserComponent } from './components/entry-library-chooser/entry-library-chooser.component';
 
 @Component({
   standalone: true,
@@ -35,8 +35,8 @@ import { EntryCreationService } from './services';
   imports: [
     DateTextPipe,
     DialogModule,
-    DropDownButtonModule,
-    EntryTypeDescriptionPipe,
+    EntryCreateButtonComponent,
+    EntryLibraryChooserComponent,
     EntryTypeIconPipe,
     EntryTypeTitlePipe,
     FontAwesomeModule,
@@ -56,9 +56,9 @@ export class LibraryListComponent implements OnInit {
 
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
-  readonly createMenu = ['project', 'phase', 'task'];
 
   readonly org = input.required<string>();
+  readonly library = signal<string>('organizational');
   readonly entries = signal<LibraryEntryViewModel[]>([]);
 
   filterToggle = false;

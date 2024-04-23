@@ -8,11 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
-import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { SafeHtmlPipe } from '@wbs/main/pipes/safe-html.pipe';
 import { delay, tap } from 'rxjs/operators';

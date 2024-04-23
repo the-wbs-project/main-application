@@ -8,11 +8,11 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
-import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { EditedDateTextPipe } from '@wbs/main/pipes/edited-date-text.pipe';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';

@@ -1,7 +1,7 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { settingsReadGuard } from '@wbs/main/guards';
+import { settingsReadGuard } from '@wbs/core/guards';
 import { SettingsState } from './states';
 
 export const routes: Routes = [

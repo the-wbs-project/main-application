@@ -25,6 +25,7 @@ import {
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import {
   LibraryEntryNode,
   LibraryEntryVersion,
@@ -35,7 +36,6 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { FindByIdPipe } from '@wbs/main/pipes/find-by-id.pipe';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MembershipState } from '@wbs/main/states';

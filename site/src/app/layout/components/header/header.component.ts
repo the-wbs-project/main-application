@@ -12,9 +12,9 @@ import { menuIcon } from '@progress/kendo-svg-icons';
 import { Organization, User } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { environment } from 'src/environments/environment';
-import { HeaderProfileComponent } from './components/header-profile/header-profile.component';
-import { OrganizationListComponent } from './components/organization-list.component';
-import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from './models';
+import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from '../../models';
+import { HeaderProfileComponent } from '../header-profile';
+import { OrganizationListComponent } from '../organization-list.component';
 
 @Component({
   standalone: true,

@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { dirtyGuard } from '@wbs/main/guards';
+import { dirtyGuard } from '@wbs/core/guards';
 import { orgResolve, userIdResolve } from '@wbs/main/services';
 import {
   closeApprovalWindowGuard,

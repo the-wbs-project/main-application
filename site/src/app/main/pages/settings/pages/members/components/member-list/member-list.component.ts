@@ -20,11 +20,11 @@ import {
   FilterDescriptor,
   State,
 } from '@progress/kendo-data-query';
+import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
 import { Member } from '@wbs/core/models';
 import { MemberViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
-import { SortableDirective } from '@wbs/main/directives/table-sorter.directive';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
 import { TableHelper } from '@wbs/main/services';

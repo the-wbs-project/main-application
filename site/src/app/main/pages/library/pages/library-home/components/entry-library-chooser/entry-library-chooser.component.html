@@ -1,0 +1,29 @@
+<kendo-buttongroup selection="single">
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'organizational'"
+    (click)="library.set('organizational')"
+  >
+    Organizational Library
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'personal'"
+    (click)="library.set('personal')"
+  >
+    Personal Library
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'both'"
+    (click)="library.set('both')"
+  >
+    Both
+  </button>
+</kendo-buttongroup>

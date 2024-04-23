@@ -25,10 +25,10 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { Phase } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { PhaseSelectionComponent } from '../../../../components/phase-section';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';

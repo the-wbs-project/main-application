@@ -3,8 +3,8 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { of } from 'rxjs';
 import { first, map, skipWhile, switchMap } from 'rxjs/operators';
-import { ChangeOrganization } from '../actions';
-import { MembershipState } from '../states';
+import { ChangeOrganization } from '../../main/actions';
+import { MembershipState } from '../../main/states';
 
 export const orgGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);

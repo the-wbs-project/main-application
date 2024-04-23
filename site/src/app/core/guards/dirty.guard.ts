@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { CanDeactivateFn } from '@angular/router';
 import { Messages } from '@wbs/core/services';
-import { DirtyComponent } from '../models';
+import { DirtyComponent } from '../../main/models';
 
 export const dirtyGuard: CanDeactivateFn<DirtyComponent> = (
   component: DirtyComponent

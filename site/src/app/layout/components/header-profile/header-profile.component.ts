@@ -11,9 +11,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { User } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
-import { ProfileEditorComponent } from '../../../profile-editor/profile-editor.component';
-import { HeaderProfileHeaderComponent } from '../header-profile-header/header-profile-header.component';
+import { HeaderProfileHeaderComponent } from '../header-profile-header';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
+import { ProfileEditorComponent } from '../profile-editor';
 
 @Component({
   standalone: true,

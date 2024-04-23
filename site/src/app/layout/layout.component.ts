@@ -9,15 +9,15 @@ import {
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { ChatWindowComponent } from '@wbs/components/chat-window';
 import { Organization } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { UserStore } from '@wbs/store';
-import { ChatWindowComponent } from './components/chat-window/chat-window.component';
 import { FooterComponent } from './components/footer.component';
-import { HeaderComponent } from './components/header/header.component';
-import { ProfileEditorComponent } from './components/profile-editor/profile-editor.component';
-import { MainContentDirective } from './directives/main-content.directive';
-import { AiState, UiState } from './states';
+import { HeaderComponent } from './components/header';
+import { ProfileEditorComponent } from './components/profile-editor';
+import { MainContentDirective } from '../core/directives/main-content.directive';
+import { AiState, UiState } from '../main/states';
 
 @Component({
   standalone: true,
@@ -56,7 +56,7 @@ import { AiState, UiState } from './states';
     TranslateModule,
   ],
 })
-export class MainComponent implements AfterContentInit {
+export class LayoutComponent implements AfterContentInit {
   private readonly store = inject(SignalStore);
   private readonly userStore = inject(UserStore);
 

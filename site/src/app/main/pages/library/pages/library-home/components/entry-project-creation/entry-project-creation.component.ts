@@ -25,6 +25,7 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
@@ -34,7 +35,6 @@ import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataStore } from '@wbs/store';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 
 @Component({
   standalone: true,

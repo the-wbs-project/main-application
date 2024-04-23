@@ -15,18 +15,18 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
-import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
 import { TaskModalService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { EntryState, EntryTaskService } from '../../services';
 import { DetailsCardComponent } from './components/details-card';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 
 @Component({
   standalone: true,

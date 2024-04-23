@@ -7,10 +7,10 @@ import {
   input,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { FillElementDirective } from '@wbs/core/directives/fill-element.directive';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { FillElementDirective } from '@wbs/main/directives/fill-element.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { DisciplinesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';

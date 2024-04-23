@@ -1,3 +1,4 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -11,18 +12,17 @@ import {
   faTriangleExclamation,
   faTools,
 } from '@fortawesome/pro-solid-svg-icons';
+import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { PROJECT_CLAIMS, PROJECT_STATI, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { ResizedCssDirective } from '@wbs/main/directives/resize-css.directive';
+import { DescriptionCardComponent } from '@wbs/main/components/description-card';
+import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { delay, tap } from 'rxjs/operators';
+import { ChangeTaskBasics } from '../../actions';
 import { ProjectState, TasksState } from '../../states';
 import { DetailsCardComponent } from './components/details-card';
-import { NgClass } from '@angular/common';
-import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
-import { DescriptionCardComponent } from '@wbs/main/components/description-card';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
-import { ChangeTaskBasics } from '../../actions';
-import { delay, tap } from 'rxjs/operators';
 
 @Component({
   standalone: true,

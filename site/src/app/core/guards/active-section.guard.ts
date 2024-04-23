@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { map } from 'rxjs/operators';
-import { SetActiveSection } from '../actions';
+import { SetActiveSection } from '../../main/actions';
 
 export const librarySectionGuard = () =>
   inject(Store)

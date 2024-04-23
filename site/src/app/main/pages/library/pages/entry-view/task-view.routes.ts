@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { dirtyGuard } from '@wbs/core/guards';
 import { orgResolve } from '@wbs/main/services';
 import {
   entryIdResolve,
@@ -8,7 +9,6 @@ import {
   taskIdResolve,
   versionIdResolve,
 } from './services';
-import { dirtyGuard } from '@wbs/main/guards';
 
 export const routes: Routes = [
   {

@@ -22,9 +22,9 @@ import {
   DialogRef,
 } from '@progress/kendo-angular-dialog';
 import { StepperModule } from '@progress/kendo-angular-layout';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
-import { ScrollToTopDirective } from '@wbs/main/directives/scrollToTop.directive';
 import { CategorySelectionService } from '@wbs/main/services';
 import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';

@@ -1,7 +1,7 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { dirtyGuard } from '@wbs/main/guards';
+import { dirtyGuard } from '@wbs/core/guards';
 import {
   CategorySelectionService,
   Transformers,
