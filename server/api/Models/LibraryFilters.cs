@@ -1,9 +1,9 @@
-namespace Wbs.Core.Models.Search;
+namespace Wbs.Api.Models;
 
 public class LibraryFilters
 {
     public string searchText { get; set; }
-    public string ownership { get; set; }
+    public string library { get; set; }
     public string[] typeFilters { get; set; }
 
     public string ToFilterString(string owner)
@@ -12,11 +12,11 @@ public class LibraryFilters
         //
         //  Ownership filter
         //
-        if (ownership == "owner")
+        if (library == "organizational")
         {
             filterParts.Add($"OwnerId eq '{owner}'");
         }
-        else if (ownership == "public")
+        else if (library == "personal")
         {
             filterParts.Add($"Visibility eq 'public'");
         }

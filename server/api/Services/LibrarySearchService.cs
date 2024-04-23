@@ -2,6 +2,7 @@ using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Models;
+using Wbs.Api.Models;
 using Wbs.Core.Configuration;
 using Wbs.Core.Models.Search;
 
@@ -9,11 +10,13 @@ namespace Wbs.Api.Services;
 
 public class LibrarySearchService
 {
+    private readonly ILogger logger;
     private readonly IAzureAiSearchConfig config;
 
-    public LibrarySearchService(IAzureAiSearchConfig config)
+    public LibrarySearchService(IAzureAiSearchConfig config, ILoggerFactory loggerFactory)
     {
         this.config = config;
+        logger = loggerFactory.CreateLogger<LibrarySearchService>();
     }
 
     public async Task<SearchResults<LibrarySearchDocument>> RunQueryAsync(string owner, LibraryFilters filters)
@@ -25,6 +28,8 @@ public class LibrarySearchService
             IncludeTotalCount = true,
             Filter = filters.ToFilterString(owner)
         };
+
+        logger.LogInformation($"Search text: {filters.searchText}");
 
         // Enter Hotel property names into this list so only these values will be returned.
         // If Select is empty, all values will be returned, which can be inefficient.

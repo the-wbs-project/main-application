@@ -3,6 +3,7 @@ using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
+using Wbs.Core.Models.Search;
 using Wbs.Functions.Services;
 
 namespace functions
@@ -56,10 +57,11 @@ namespace functions
                     await conn.OpenAsync();
 
                     var entries = await dataService.GetByOwnerAsync(conn, owner);
+                    var userCache = new Dictionary<string, UserDocument>();
 
                     foreach (var entry in entries)
                     {
-                        await searchService.PushToSearchAsync(conn, owner, entry.EntryId);
+                        await searchService.PushToSearchAsync(conn, owner, entry.EntryId, userCache);
                     }
                 }
             }

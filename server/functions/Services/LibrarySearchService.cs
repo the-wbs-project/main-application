@@ -48,7 +48,7 @@ public class LibrarySearchService
         var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
         var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
         var resources = new Resources(resourceObj);
-        var users = await GetUsersAsync(watcherIds.Concat([entry.Author]), userCache);
+        var users = await GetUsersAsync(watcherIds.Concat([entry.Author]).Distinct(), userCache);
         //
         //  Get discipline labels
         //
