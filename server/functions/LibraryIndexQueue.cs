@@ -45,9 +45,9 @@ namespace functions
                     var parts = message.Split('|');
                     var owner = parts[0];
                     var entryId = parts[1];
-                    var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
-                    var resourceObj = await resourceDataService.GetAllAsync(conn, "en-US");
-                    var resources = new Resources(resourceObj);
+                    var resources = await GetResourcesAsync(conn);
+                    var disciplineLabels = await GetDisciplineLabelsAsync(conn, resources);
+
                     var indexClient = new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
                     var searchClient = indexClient.GetSearchClient(searchConfig.LibraryIndex);
 
@@ -74,9 +74,9 @@ namespace functions
 
                     var entries = await dataService.GetByOwnerAsync(conn, owner);
                     var userCache = new Dictionary<string, UserDocument>();
-                    var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
-                    var resourceObj = await resourceDataService.GetAllAsync(conn, "en-US");
-                    var resources = new Resources(resourceObj); var indexClient = new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
+                    var resources = await GetResourcesAsync(conn);
+                    var disciplineLabels = await GetDisciplineLabelsAsync(conn, resources);
+                    var indexClient = new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
                     var searchClient = indexClient.GetSearchClient(searchConfig.LibraryIndex);
 
                     await searchService.VerifyIndexAsync(indexClient, searchConfig.LibraryIndex);
@@ -92,6 +92,25 @@ namespace functions
                 _logger.LogError(ex, "Error processing all library entries by owner " + owner);
                 throw;
             }
+        }
+
+        private async Task<Resources> GetResourcesAsync(SqlConnection conn)
+        {
+            var resourceObj = await resourceDataService.GetAllAsync(conn, "en-US");
+
+            return new Resources(resourceObj);
+        }
+        private async Task<Dictionary<string, string>> GetDisciplineLabelsAsync(SqlConnection conn, Resources resources)
+        {
+            var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
+
+            //
+            //  Get discipline labels
+            //
+            foreach (var discipline in disciplineLabels.Keys)
+                disciplineLabels[discipline] = resources.Get(disciplineLabels[discipline]);
+
+            return disciplineLabels;
         }
     }
 }

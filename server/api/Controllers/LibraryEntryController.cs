@@ -58,7 +58,10 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            await searchService.RunQueryAsync(owner, filters);
+            var results = await searchService.RunQueryAsync(owner, filters);
+            //
+            //  For not remove the tasks
+            //
 
             return NoContent();
         }

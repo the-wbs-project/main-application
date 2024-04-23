@@ -4,7 +4,6 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Microsoft.Data.SqlClient;
-using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
@@ -44,15 +43,7 @@ public class LibrarySearchService
         var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
         var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
         var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
-
         var users = await GetUsersAsync(watcherIds.Concat([entry.Author]).Distinct(), userCache);
-        //
-        //  Get discipline labels
-        //
-        foreach (var discipline in disciplineLabels.Keys)
-        {
-            disciplineLabels[discipline] = resources.Get(disciplineLabels[discipline]);
-        }
 
         foreach (var discipline in version.disciplines)
         {
@@ -66,7 +57,6 @@ public class LibrarySearchService
                 disciplineLabels.Add(id, label);
             }
         }
-
 
         var doc = new LibrarySearchDocument
         {

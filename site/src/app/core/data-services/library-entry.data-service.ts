@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LibraryEntry } from '../models';
+import { LibraryEntry, LibrarySearchFilters } from '../models';
 import { Utils } from '../services';
 import { LibraryEntryViewModel } from '../view-models';
 
@@ -11,6 +11,15 @@ export class LibraryEntryDataService {
   getAllAsync(owner: string): Observable<LibraryEntryViewModel[]> {
     return this.http
       .get<LibraryEntryViewModel[]>(this.url(owner))
+      .pipe(map((list) => this.clean(list)));
+  }
+
+  searchAsync(
+    owner: string,
+    options: LibrarySearchFilters
+  ): Observable<LibraryEntryViewModel[]> {
+    return this.http
+      .post<LibraryEntryViewModel[]>(this.url(owner), options)
       .pipe(map((list) => this.clean(list)));
   }
 

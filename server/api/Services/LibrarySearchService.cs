@@ -26,7 +26,8 @@ public class LibrarySearchService
         var options = new SearchOptions()
         {
             IncludeTotalCount = true,
-            Filter = filters.ToFilterString(owner)
+            Filter = filters.ToFilterString(owner),
+            OrderBy = { "LastModified desc" },
         };
 
         logger.LogInformation($"Search text: {filters.searchText}");
