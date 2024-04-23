@@ -17,6 +17,29 @@ public partial class UserDocument
     [SimpleField(IsFilterable = true)]
     public string Id { get; set; }
 
+    [SearchableField(IsFilterable = true, IsFacetable = true)]
+    public string Name { get; set; }
+}
+
+public partial class SortableUserDocument
+{
+    public SortableUserDocument()
+    {
+    }
+    public SortableUserDocument(string id, string name)
+    {
+        Id = id;
+        Name = name;
+    }
+    public SortableUserDocument(UserDocument user)
+    {
+        Id = user.Id;
+        Name = user.Name;
+    }
+
+    [SimpleField(IsFilterable = true)]
+    public string Id { get; set; }
+
     [SearchableField(IsSortable = true, IsFilterable = true, IsFacetable = true)]
     public string Name { get; set; }
 }

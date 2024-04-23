@@ -89,8 +89,11 @@ public class LibrarySearchService
             //
             //  Users
             //
-            Author = users.ContainsKey(entry.Author) ? users[entry.Author] : null,
-            Watchers = watcherIds.Where(x => users.ContainsKey(x)).Select(x => users[x]).ToArray(),
+            Author = users.ContainsKey(entry.Author) ? new SortableUserDocument(users[entry.Author]) : null,
+            Watchers = watcherIds
+                .Where(x => users.ContainsKey(x))
+                .Select(x => users[x])
+                .ToArray(),
         };
 
         var tasks = new List<TaskSearchDocument>();
