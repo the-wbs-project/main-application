@@ -1,8 +1,8 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { DisciplineIconPipe } from '../pipes/discipline-icon.pipe';
-import { DisciplineLabelPipe } from '../pipes/discipline-label.pipe';
+import { DisciplineIconPipe } from '../../pipes/discipline-icon.pipe';
+import { DisciplineLabelPipe } from '../../pipes/discipline-label.pipe';
 
 @Component({
   standalone: true,

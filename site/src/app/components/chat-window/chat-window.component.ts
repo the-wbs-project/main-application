@@ -31,7 +31,7 @@ import {
   ClearAiMessages,
   SendAiMessage,
 } from '@wbs/main/actions';
-import { TranslateListPipe } from '@wbs/main/pipes/translate-list.pipe';
+import { TranslateListPipe } from '@wbs/pipes/translate-list.pipe';
 import { AiState } from '@wbs/main/states';
 
 @UntilDestroy()

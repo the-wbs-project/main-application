@@ -3,7 +3,8 @@ export interface LibraryEntryViewModel {
   ownerName: string;
   entryId: string;
   version: number;
-  author: string;
+  authorId: string;
+  authorName: string;
   title: string;
   description?: string;
   type: string;

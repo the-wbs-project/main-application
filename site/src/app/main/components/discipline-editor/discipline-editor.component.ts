@@ -21,7 +21,7 @@ import { IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategorySelectionService } from '@wbs/main/services';
 import { filter, map } from 'rxjs/operators';
-import { DisciplineIconPipe } from '../../pipes/discipline-icon.pipe';
+import { DisciplineIconPipe } from '../../../pipes/discipline-icon.pipe';
 import {
   ListItemDialogComponent,
   ListItemDialogResults,

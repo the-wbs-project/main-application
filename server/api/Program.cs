@@ -72,8 +72,8 @@ builder.Services.AddSingleton<ProjectResourceDataService>();
 builder.Services.AddSingleton<ProjectSnapshotDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
 builder.Services.AddSingleton<Storage>();
-builder.Services.AddSingleton<WatcherLibraryEntryDataService>();
 builder.Services.AddSingleton<UserDataService>();
+builder.Services.AddSingleton<WatcherLibraryEntryDataService>();
 //
 //  Importers and Exporters
 //

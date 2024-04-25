@@ -38,21 +38,6 @@ public class LibraryEntryController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet]
-    public async Task<IActionResult> GetByOwnerAsync(string owner)
-    {
-        try
-        {
-            return Ok(await entryDataService.GetByOwnerAsync(owner));
-        }
-        catch (Exception ex)
-        {
-            telemetry.TrackException(ex);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
     [HttpPost("search")]
     public async Task<IActionResult> Search(string owner, LibraryFilters filters)
     {
@@ -62,8 +47,7 @@ public class LibraryEntryController : ControllerBase
             //
             //  For not remove the tasks
             //
-
-            return NoContent();
+            return Ok(results);
         }
         catch (Exception ex)
         {

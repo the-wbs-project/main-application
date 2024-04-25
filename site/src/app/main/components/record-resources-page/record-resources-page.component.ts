@@ -21,7 +21,7 @@ import {
   ResourceRecord,
 } from '@wbs/core/models';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
-import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { RecordResourceValidation } from '@wbs/main/services';
 import { RecordResourceEditorComponent } from './components/record-resources-editor';
 import { RecordResourceListComponent } from './components/record-resources-list';

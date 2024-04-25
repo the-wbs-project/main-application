@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { User } from '@wbs/core/models';
-import { RoleListPipe } from '@wbs/main/pipes/role-list.pipe';
+import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
 
 @Component({

@@ -6,8 +6,8 @@ public class AzureAiSearchConfig : IAzureAiSearchConfig
 {
     public AzureAiSearchConfig(IConfiguration config)
     {
-        Key = config["Azure:AI:Search:Url"];
-        Url = config["Azure:AI:Search:Key"];
+        Key = config["Azure:AI:Search:Key"];
+        Url = config["Azure:AI:Search:Url"];
         LibraryIndex = config["Azure:AI:Search:LibraryIndex"];
         ProjectIndex = config["Azure:AI:Search:ProjectIndex"];
     }

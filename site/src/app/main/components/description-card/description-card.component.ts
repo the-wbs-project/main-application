@@ -16,7 +16,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectApproval, SaveState } from '@wbs/core/models';
-import { SafeHtmlPipe } from '../../pipes/safe-html.pipe';
+import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { AiButtonComponent } from '../ai-button.component';
 import { AlertComponent } from '../alert.component';
 import { ApprovalBadgeComponent } from '../approval-badge.component';

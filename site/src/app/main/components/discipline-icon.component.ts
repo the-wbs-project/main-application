@@ -2,8 +2,8 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { ProjectCategory } from '@wbs/core/models';
-import { DisciplineIconPipe } from '@wbs/main/pipes/discipline-icon.pipe';
-import { DisciplineLabelPipe } from '@wbs/main/pipes/discipline-label.pipe';
+import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
+import { DisciplineLabelPipe } from '@wbs/pipes/discipline-label.pipe';
 
 @Component({
   standalone: true,

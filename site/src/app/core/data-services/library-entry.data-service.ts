@@ -1,30 +1,26 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import {
-  LibraryEntry,
-  LibrarySearchDocument,
-  LibrarySearchFilters,
-} from '../models';
+import { LibraryEntry, LibrarySearchFilters } from '../models';
 import { Utils } from '../services';
 import { LibraryEntryViewModel } from '../view-models';
 
 export class LibraryEntryDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAllAsync(owner: string): Observable<LibraryEntryViewModel[]> {
-    return this.http
-      .get<LibraryEntryViewModel[]>(this.url(owner))
-      .pipe(map((list) => this.clean(list)));
-  }
-
   searchAsync(
     owner: string,
     options: LibrarySearchFilters
-  ): Observable<LibrarySearchDocument[]> {
+  ): Observable<LibraryEntryViewModel[]> {
     return this.http
-      .post<LibrarySearchDocument[]>(this.url(owner), options)
-      .pipe(map((list) => this.cleanSearch(list)));
+      .post<{ document: LibraryEntryViewModel }[]>(
+        this.url(owner) + '/search',
+        options
+      )
+      .pipe(
+        map((list) => list.map((x) => x.document)),
+        map((list) => this.clean(list))
+      );
   }
 
   getAsync(owner: string, entryId: string): Observable<LibraryEntry> {
@@ -44,12 +40,6 @@ export class LibraryEntryDataService {
   private clean<T extends LibraryEntryViewModel | LibraryEntryViewModel[]>(
     obj: T
   ): T {
-    Utils.cleanDates(obj, 'lastModified');
-
-    return obj;
-  }
-
-  private cleanSearch(obj: LibrarySearchDocument[]): LibrarySearchDocument[] {
     Utils.cleanDates(obj, 'lastModified');
 
     return obj;

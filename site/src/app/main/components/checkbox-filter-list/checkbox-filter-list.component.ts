@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
-import { TranslateListPipe } from '@wbs/main/pipes/translate-list.pipe';
+import { TranslateListPipe } from '@wbs/pipes/translate-list.pipe';
 
 @Component({
   standalone: true,

@@ -169,7 +169,7 @@ public class LibraryEntryDataService : BaseSqlDbService
             Title = DbValue<string>(reader, "Title"),
             Description = DbValue<string>(reader, "Description"),
             Status = DbValue<string>(reader, "Status"),
-            Author = DbValue<string>(reader, "Author"),
+            AuthorId = DbValue<string>(reader, "Author"),
             Visibility = DbValue<string>(reader, "Visibility"),
             LastModified = DbValue<DateTimeOffset>(reader, "LastModified")
         };

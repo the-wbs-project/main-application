@@ -107,16 +107,16 @@ jobs:
         displayName: "Install ES Build"
 
       - script: npm install
-        workingDirectory: "worker"
+        workingDirectory: "server/worker"
         displayName: "Install"
 
       - script: npm run build
-        workingDirectory: "worker"
+        workingDirectory: "server/worker"
         displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "worker"
+          rootFolderOrFile: "server/worker"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"

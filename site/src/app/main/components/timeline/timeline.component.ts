@@ -13,9 +13,9 @@ import { WaitNotifyDirective } from '@wbs/core/directives/wait-notify.directive'
 import { TimelineMenuItem } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
-import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
-import { TextTransformPipe } from '@wbs/main/pipes/text-transform.pipe';
-import { UserNamePipe } from '@wbs/main/pipes/user-name.pipe';
+import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
+import { TextTransformPipe } from '@wbs/pipes/text-transform.pipe';
+import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
 
 @Component({
   standalone: true,

@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { menuIcon } from '@progress/kendo-svg-icons';
 import { Organization, User } from '@wbs/core/models';
-import { CheckPipe } from '@wbs/main/pipes/check.pipe';
+import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { environment } from 'src/environments/environment';
 import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from '../../models';
 import { HeaderProfileComponent } from '../header-profile';

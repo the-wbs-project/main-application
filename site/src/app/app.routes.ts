@@ -64,25 +64,19 @@ export const routes: Routes = [
             path: 'library',
             canActivate: [librarySectionGuard],
             loadChildren: () =>
-              import('./main/pages/library/library.routes').then(
-                (m) => m.routes
-              ),
+              import('./pages/library/library.routes').then((m) => m.routes),
           },
           {
             path: 'projects',
             canActivate: [projectsSectionGuard],
             loadChildren: () =>
-              import('./main/pages/projects/projects.routes').then(
-                (m) => m.routes
-              ),
+              import('./pages/projects/projects.routes').then((m) => m.routes),
           },
           {
             path: 'settings',
             canActivate: [settingsSectionGuard],
             loadChildren: () =>
-              import('./main/pages/settings/settings.routes').then(
-                (m) => m.routes
-              ),
+              import('./pages/settings/settings.routes').then((m) => m.routes),
           },
         ],
         resolve: {

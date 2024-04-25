@@ -10,8 +10,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faGear } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { PROJECT_CLAIMS, ResourceRecord } from '@wbs/core/models';
-import { CheckPipe } from '@wbs/main/pipes/check.pipe';
-import { DateTextPipe } from '@wbs/main/pipes/date-text.pipe';
+import { CheckPipe } from '@wbs/pipes/check.pipe';
+import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../record-resources-type-text';
 import { ResourceViewLinkComponent } from '../resource-view-link';
 

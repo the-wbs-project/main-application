@@ -14,7 +14,7 @@ import {
   DropDownButtonModule,
 } from '@progress/kendo-angular-buttons';
 import { ActionMenuItem } from '@wbs/core/models';
-import { KendoToFaSizePipe } from '../pipes/kendo-to-fa-size.pipe';
+import { KendoToFaSizePipe } from '../../pipes/kendo-to-fa-size.pipe';
 
 @Component({
   standalone: true,
