@@ -1,14 +1,12 @@
 using Azure;
 using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
-using Azure.Search.Documents.Models;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Wbs.Api.Models;
+using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.Models.Search;
 using Wbs.Core.ViewModels;
 
-namespace Wbs.Api.Services;
+namespace Wbs.Core.Services;
 
 public class LibrarySearchService
 {
@@ -29,9 +27,11 @@ public class LibrarySearchService
         {
             IncludeTotalCount = true,
             Filter = filters.ToFilterString(owner),
-            OrderBy = { "LastModified desc" },
             Select = { "EntryId", "Version", "OwnerId", "OwnerName", "Title_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En" }
         };
+
+        if (filters.searchText == "")
+            options.OrderBy.Add("LastModified desc");
 
         //throw new Exception(filters.ToFilterString(owner));
         logger.LogError($"Search text: {filters.searchText}");

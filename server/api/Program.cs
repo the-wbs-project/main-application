@@ -3,7 +3,6 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Wbs.Api.Configuration;
-using Wbs.Api.Services;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Services;
@@ -86,6 +85,7 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
 builder.Services.AddSingleton<JiraSyncService>();
+builder.Services.AddSingleton<LibrarySearchIndexService>();
 builder.Services.AddSingleton<LibrarySearchService>();
 builder.Services.AddSingleton<QueueService>();
 

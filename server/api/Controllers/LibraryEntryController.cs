@@ -1,12 +1,10 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Wbs.Api.Models;
-using Wbs.Core;
+using Microsoft.Data.SqlClient;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
+using Wbs.Core.Models.Search;
 using Wbs.Core.Services;
-using Wbs.Api.Services;
 
 namespace Wbs.Api.Controllers;
 
@@ -14,26 +12,24 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/library/entries")]
 public class LibraryEntryController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
     private readonly ILogger<LibraryEntryController> logger;
-    private readonly QueueService queueService;
     private readonly LibrarySearchService searchService;
+    private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
-    private readonly LibraryEntryVersionResourceDataService resourceDataService;
+    private readonly LibraryEntryVersionResourceDataService entryResourceDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
 
-    public LibraryEntryController(ILogger<LibraryEntryController> logger, TelemetryClient telemetry, LibrarySearchService searchService, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService resourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, QueueService queueService)
+    public LibraryEntryController(ILogger<LibraryEntryController> logger, LibrarySearchService searchService, LibraryEntryDataService entryDataService, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService entryResourceDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, LibrarySearchIndexService searchIndexService)
     {
         this.logger = logger;
-        this.telemetry = telemetry;
-        this.queueService = queueService;
         this.searchService = searchService;
+        this.nodeDataService = nodeDataService;
         this.entryDataService = entryDataService;
         this.versionDataService = versionDataService;
-        this.nodeDataService = nodeDataService;
-        this.resourceDataService = resourceDataService;
+        this.searchIndexService = searchIndexService;
+        this.entryResourceDataService = entryResourceDataService;
         this.nodeResourceDataService = nodeResourceDataService;
     }
 
@@ -51,8 +47,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            logger.LogError(ex.ToString());
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error searching library entries");
             return new StatusCodeResult(500);
         }
     }
@@ -67,7 +62,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving library entry by id");
             return new StatusCodeResult(500);
         }
     }
@@ -81,18 +76,18 @@ public class LibraryEntryController : ControllerBase
             if (entry.owner != owner) return BadRequest("Owner in url must match owner in body");
             if (entry.id != entryId) return BadRequest("Id in url must match owner in body");
 
-            await entryDataService.SetAsync(entry);
-
+            using (var conn = entryDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+                await entryDataService.SetAsync(conn, entry);
+                await IndexLibraryEntryAsync(conn, owner, entryId);
+            }
             return Accepted();
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving library entry");
             return new StatusCodeResult(500);
-        }
-        finally
-        {
-            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{owner}|{entryId}");
         }
     }
 
@@ -108,7 +103,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting library entry editors");
             return new StatusCodeResult(500);
         }
     }
@@ -131,7 +126,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting library entry versions");
             return new StatusCodeResult(500);
         }
     }
@@ -154,7 +149,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting library entry version by id");
             return new StatusCodeResult(500);
         }
     }
@@ -176,18 +171,15 @@ public class LibraryEntryController : ControllerBase
                     return BadRequest("Library Entry not found for the credentials provided.");
 
                 await versionDataService.SetAsync(conn, owner, model);
+                await IndexLibraryEntryAsync(conn, owner, entryId);
 
                 return NoContent();
             }
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving library entry versions");
             return new StatusCodeResult(500);
-        }
-        finally
-        {
-            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{owner}|{entryId}");
         }
     }
 
@@ -209,7 +201,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting library entry version tasks");
             return new StatusCodeResult(500);
         }
     }
@@ -233,18 +225,15 @@ public class LibraryEntryController : ControllerBase
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
                 await nodeDataService.SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
+                await IndexLibraryEntryAsync(conn, owner, entryId);
 
                 return NoContent();
             }
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving library entry version tasks");
             return new StatusCodeResult(500);
-        }
-        finally
-        {
-            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{owner}|{entryId}");
         }
     }
 
@@ -254,19 +243,19 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            using (var conn = resourceDataService.CreateConnection())
+            using (var conn = entryResourceDataService.CreateConnection())
             {
                 await conn.OpenAsync();
 
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Entry Version not found for the owner provided.");
 
-                return Ok(await resourceDataService.GetListAsync(conn, entryId, entryVersion));
+                return Ok(await entryResourceDataService.GetListAsync(conn, entryId, entryVersion));
             }
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting library entry version resources");
             return new StatusCodeResult(500);
         }
     }
@@ -279,21 +268,21 @@ public class LibraryEntryController : ControllerBase
         {
             if (model.Id != resourceId) return BadRequest("Id in body must match ResourceId in url");
 
-            using (var conn = resourceDataService.CreateConnection())
+            using (var conn = entryResourceDataService.CreateConnection())
             {
                 await conn.OpenAsync();
 
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Entry Version not found for the owner provided.");
 
-                await resourceDataService.SetAsync(conn, owner, entryId, entryVersion, model);
+                await entryResourceDataService.SetAsync(conn, owner, entryId, entryVersion, model);
 
                 return NoContent();
             }
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving library entry version resources");
             return new StatusCodeResult(500);
         }
     }
@@ -304,7 +293,7 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            using (var conn = resourceDataService.CreateConnection())
+            using (var conn = entryResourceDataService.CreateConnection())
             {
                 await conn.OpenAsync();
 
@@ -316,7 +305,7 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting library entry version task resources");
             return new StatusCodeResult(500);
         }
     }
@@ -329,7 +318,7 @@ public class LibraryEntryController : ControllerBase
         {
             if (model.Id != resourceId) return BadRequest("Id in body must match ResourceId in url");
 
-            using (var conn = resourceDataService.CreateConnection())
+            using (var conn = entryResourceDataService.CreateConnection())
             {
                 await conn.OpenAsync();
 
@@ -343,9 +332,17 @@ public class LibraryEntryController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving library entry version task resources");
             return new StatusCodeResult(500);
         }
     }
+
+
+    private async Task IndexLibraryEntryAsync(SqlConnection conn, string owner, string entryId)
+    {
+        await searchIndexService.VerifyIndexAsync();
+        await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
+    }
+
 }
 

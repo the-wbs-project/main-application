@@ -11,14 +11,14 @@ namespace Wbs.Api.Controllers;
 public class WatchersController : ControllerBase
 {
     private readonly ILogger logger;
-    private readonly QueueService queueService;
+    private readonly LibrarySearchIndexService searchIndexService;
     private readonly WatcherLibraryEntryDataService libraryDataService;
 
-    public WatchersController(ILoggerFactory loggerFactory, WatcherLibraryEntryDataService libraryDataService, QueueService queueService)
+    public WatchersController(ILoggerFactory loggerFactory, WatcherLibraryEntryDataService libraryDataService, LibrarySearchIndexService searchIndexService)
     {
         logger = loggerFactory.CreateLogger<WatchersController>();
         this.libraryDataService = libraryDataService;
-        this.queueService = queueService;
+        this.searchIndexService = searchIndexService;
     }
 
     [Authorize]
@@ -57,24 +57,27 @@ public class WatchersController : ControllerBase
     {
         try
         {
-            //
-            //  Delete not using delete verb because it technically doesn't supports a body, so put and delete would look too different
-            //
-            if (data.action == "add")
-                await libraryDataService.SetAsync(data.ownerId, data.entryId, data.watcherId);
-            else if (data.action == "delete")
-                await libraryDataService.DeleteAsync(data.ownerId, data.entryId, data.watcherId);
 
+            using (var conn = libraryDataService.CreateConnection())
+            {
+                await conn.OpenAsync();
+                //
+                //  Delete not using delete verb because it technically doesn't supports a body, so put and delete would look too different
+                //
+                if (data.action == "add")
+                    await libraryDataService.SetAsync(data.ownerId, data.entryId, data.watcherId);
+                else if (data.action == "delete")
+                    await libraryDataService.DeleteAsync(data.ownerId, data.entryId, data.watcherId);
+
+                await searchIndexService.VerifyIndexAsync();
+                await searchIndexService.PushToSearchAsync(conn, data.ownerId, [data.entryId]);
+            }
             return NoContent();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error setting library watcher");
             return new StatusCodeResult(500);
-        }
-        finally
-        {
-            await queueService.AddAsync(QUEUES.LIBRARY_SEARCH_ITEM, $"{data.ownerId}|{data.entryId}");
         }
     }
 

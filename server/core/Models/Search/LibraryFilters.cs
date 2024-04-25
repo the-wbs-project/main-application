@@ -1,7 +1,8 @@
-namespace Wbs.Api.Models;
+namespace Wbs.Core.Models.Search;
 
 public class LibraryFilters
 {
+    public string userId { get; set; }
     public string searchText { get; set; }
     public string library { get; set; }
     public string[] typeFilters { get; set; }
@@ -12,18 +13,10 @@ public class LibraryFilters
         //
         //  Ownership filter
         //
-        if (library == "organizational")
-        {
-            filterParts.Add($"OwnerId eq '{owner}'");
-        }
-        else if (library == "personal")
-        {
-            filterParts.Add($"Visibility eq 'public'");
-        }
-        else
-        {
-            filterParts.Add($"(OwnerId eq '{owner}') or (Visibility eq 'public')");
-        }
+        if (library == "organizational") filterParts.Add($"OwnerId eq '{owner}'");
+        else if (library == "personal") filterParts.Add($"(OwnerId eq '{owner}' and Author/Id eq '{userId}')");
+        else if (library == "watched") filterParts.Add($"Watchers/any(person: person/Id eq '{userId}')");
+        else filterParts.Add($"(OwnerId eq '{owner}') or (Visibility eq 'public')");
         //
         //  Type filter
         //
@@ -38,7 +31,7 @@ public class LibraryFilters
             filterParts.Add(string.Join(" or ", Wrap(typeParts)));
         }
 
-        return filterParts.Count > 0 ? string.Join(" and ", Wrap(filterParts)) : null;
+        return filterParts.Count == 0 ? null : string.Join(" and ", Wrap(filterParts));
     }
     // "filter": "TypeId eq 'project' and (OwnerId eq 'acme_engineering' or Visibility eq 'public')"
 

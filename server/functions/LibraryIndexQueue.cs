@@ -1,14 +1,9 @@
-using Azure;
-using Azure.Search.Documents.Indexes;
-using com.sun.tools.@internal.jxc.gen.config;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
-using Wbs.Core.Models.Search;
 using Wbs.Core.Services;
-using Wbs.Functions.Services;
 
 namespace functions
 {
@@ -16,21 +11,15 @@ namespace functions
     {
         private readonly ILogger _logger;
         private readonly IDatabaseConfig dbConfig;
-        private readonly IAzureAiSearchConfig searchConfig;
-        private readonly ListDataService listDataService;
-        private readonly LibrarySearchService searchService;
+        private readonly LibrarySearchIndexService searchService;
         private readonly LibraryEntryDataService dataService;
-        private readonly ResourcesDataService resourceDataService;
 
-        public LibraryIndexQueue(ILoggerFactory loggerFactory, IDatabaseConfig dbConfig, IAzureAiSearchConfig searchConfig, LibrarySearchService searchService, LibraryEntryDataService dataService, ListDataService listDataService, ResourcesDataService resourceDataService)
+        public LibraryIndexQueue(ILoggerFactory loggerFactory, IDatabaseConfig dbConfig, LibrarySearchIndexService searchService, LibraryEntryDataService dataService)
         {
             _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
             this.dbConfig = dbConfig;
-            this.searchConfig = searchConfig;
             this.dataService = dataService;
             this.searchService = searchService;
-            this.listDataService = listDataService;
-            this.resourceDataService = resourceDataService;
         }
 
         [Function("LibraryIndex-Item")]
@@ -45,14 +34,8 @@ namespace functions
                     var parts = message.Split('|');
                     var owner = parts[0];
                     var entryId = parts[1];
-                    var resources = await GetResourcesAsync(conn);
-                    var disciplineLabels = await GetDisciplineLabelsAsync(conn, resources);
-
-                    var indexClient = new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
-                    var searchClient = indexClient.GetSearchClient(searchConfig.LibraryIndex);
-
-                    await searchService.VerifyIndexAsync(indexClient, searchConfig.LibraryIndex);
-                    await searchService.PushToSearchAsync(conn, owner, entryId, resources, searchClient, disciplineLabels);
+                    await searchService.VerifyIndexAsync();
+                    await searchService.PushToSearchAsync(conn, owner, [entryId]);
                 }
             }
             catch (Exception ex)
@@ -73,18 +56,9 @@ namespace functions
                     await conn.OpenAsync();
 
                     var entries = await dataService.GetByOwnerAsync(conn, owner);
-                    var userCache = new Dictionary<string, UserDocument>();
-                    var resources = await GetResourcesAsync(conn);
-                    var disciplineLabels = await GetDisciplineLabelsAsync(conn, resources);
-                    var indexClient = new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
-                    var searchClient = indexClient.GetSearchClient(searchConfig.LibraryIndex);
 
-                    await searchService.VerifyIndexAsync(indexClient, searchConfig.LibraryIndex);
-
-                    foreach (var entry in entries)
-                    {
-                        await searchService.PushToSearchAsync(conn, entry.OwnerId, entry.EntryId, resources, searchClient, disciplineLabels, userCache);
-                    }
+                    await searchService.VerifyIndexAsync();
+                    await searchService.PushToSearchAsync(conn, owner, entries.Select(e => e.EntryId).ToArray());
                 }
             }
             catch (Exception ex)
@@ -92,25 +66,6 @@ namespace functions
                 _logger.LogError(ex, "Error processing all library entries by owner " + owner);
                 throw;
             }
-        }
-
-        private async Task<Resources> GetResourcesAsync(SqlConnection conn)
-        {
-            var resourceObj = await resourceDataService.GetAllAsync(conn, "en-US");
-
-            return new Resources(resourceObj);
-        }
-        private async Task<Dictionary<string, string>> GetDisciplineLabelsAsync(SqlConnection conn, Resources resources)
-        {
-            var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
-
-            //
-            //  Get discipline labels
-            //
-            foreach (var discipline in disciplineLabels.Keys)
-                disciplineLabels[discipline] = resources.Get(disciplineLabels[discipline]);
-
-            return disciplineLabels;
         }
     }
 }

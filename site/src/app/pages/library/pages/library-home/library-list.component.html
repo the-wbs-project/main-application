@@ -1,61 +1,66 @@
 <div class="d-flex">
   <div class="mg-t-20 mg-b-16 flex-grow-1 text-center">
-    <div class="container-fluid text-start" style="max-width: 1200px">
-      <div class="row mg-b-15">
-        <div class="col-12">
-          <wbs-page-header />
-        </div>
+    <div class="text-start" style="max-width: 1200px">
+      <div class="mg-b-15">
+        <wbs-page-header />
       </div>
-      <div class="row mg-b-15">
-        <div class="col-12">
+      <div class="d-flex mg-b-15" style="gap: 50px; align-items: end">
+        <div>
           <wbs-entry-create-button (typeChosen)="create($event)" />
-          &nbsp;
+        </div>
+        <div class="text-center">
+          <div class="fw-bold mg-b-5 fs-6">Library</div>
           <wbs-entry-library-chooser
             [library]="library()"
             (libraryChange)="libraryChanged($event)"
           />
         </div>
+        <div class="flex-fill">&nbsp;</div>
       </div>
-      <div class="row mg-b-15">
-        <div class="col-12">
-          <table class="table table-hover">
-            <tr class="bg-dark text-white">
-              <th class="pd-10 fw-normal">&nbsp;</th>
-              <th class="pd-10 fw-normal">Owner</th>
-              <th class="pd-10 fw-normal">Name</th>
-              <th class="pd-10 fw-normal">Type</th>
-              <th class="pd-10 fw-normal">Last Updated</th>
-              <th class="pd-10 fw-normal">Author</th>
-            </tr>
-            <tbody>
-              @for (entry of entries(); track entry.entryId) {
-              <tr
-                class="pointer"
-                [routerLink]="[
-                  'view',
-                  entry.ownerId,
-                  entry.entryId,
-                  entry.version
-                ]"
-              >
-                <td class="tx-16">
-                  <wbs-watch-indicator
-                    source="library"
-                    [alwaysShow]="false"
-                    [owner]="entry.ownerId"
-                    [entityId]="entry.entryId"
-                  />
-                </td>
-                <td>{{ entry.ownerName }}</td>
-                <td>{{ entry.title }}</td>
-                <td>
-                  <fa-icon [icon]="entry.type | entryTypeIcon" />
-                  {{ entry.type | entryTypeTitle | translate }}
-                </td>
-                <td>{{ entry.lastModified | dateText }}</td>
-                <td>{{ entry.authorName }}</td>
-              </tr>
-              <!--
+      <div class="mg-b-15">
+        <input
+          kendoTextBox
+          appDelayedInput
+          type="text"
+          class="w-100"
+          [value]="searchText()!"
+          (delayedInput)="searchText.set($event)"
+          [delayTime]="400"
+        />
+      </div>
+      <table class="table table-hover">
+        <tr class="bg-dark text-white">
+          <th class="pd-10 fw-normal">&nbsp;</th>
+          <th class="pd-10 fw-normal">Owner</th>
+          <th class="pd-10 fw-normal">Name</th>
+          <th class="pd-10 fw-normal">Type</th>
+          <th class="pd-10 fw-normal">Last Updated</th>
+          <th class="pd-10 fw-normal">Author</th>
+        </tr>
+        <tbody>
+          @for (entry of entries(); track entry.entryId) {
+          <tr
+            class="pointer"
+            [routerLink]="['view', entry.ownerId, entry.entryId, entry.version]"
+          >
+            <td class="tx-16">
+              <wbs-watch-indicator
+                source="library"
+                [alwaysShow]="false"
+                [owner]="entry.ownerId"
+                [entityId]="entry.entryId"
+              />
+            </td>
+            <td>{{ entry.ownerName }}</td>
+            <td>{{ entry.title }}</td>
+            <td>
+              <fa-icon [icon]="entry.type | entryTypeIcon" />
+              {{ entry.type | entryTypeTitle | translate }}
+            </td>
+            <td>{{ entry.lastModified | dateText }}</td>
+            <td>{{ entry.authorName }}</td>
+          </tr>
+          <!--
                 <li class="list-group-item">
                   <a
                     class="text-decoration-none"
@@ -70,11 +75,9 @@
                   </a>
                 </li>
               -->
-              }
-            </tbody>
-          </table>
-        </div>
-      </div>
+          }
+        </tbody>
+      </table>
     </div>
   </div>
 </div>

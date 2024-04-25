@@ -3,19 +3,28 @@
     kendoButton
     size="small"
     [toggleable]="true"
-    [selected]="library() === 'organizational'"
-    (click)="library.set('organizational')"
+    [selected]="library() === 'personal'"
+    (click)="library.set('personal')"
   >
-    Organizational Library
+    Personal
   </button>
   <button
     kendoButton
     size="small"
     [toggleable]="true"
-    [selected]="library() === 'personal'"
-    (click)="library.set('personal')"
+    [selected]="library() === 'watched'"
+    (click)="library.set('watched')"
   >
-    Personal Library
+    Watched
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'organizational'"
+    (click)="library.set('organizational')"
+  >
+    Organizational
   </button>
   <button
     kendoButton
@@ -24,6 +33,6 @@
     [selected]="library() === 'both'"
     (click)="library.set('both')"
   >
-    Both
+    All
   </button>
 </kendo-buttongroup>

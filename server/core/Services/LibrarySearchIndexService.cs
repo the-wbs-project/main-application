@@ -4,46 +4,72 @@ using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Microsoft.Data.SqlClient;
+using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
-using Wbs.Core.Services;
+using Wbs.Core.ViewModels;
 
-namespace Wbs.Functions.Services;
+namespace Wbs.Core.Services;
 
-public class LibrarySearchService
+public class LibrarySearchIndexService
 {
+    private readonly IAzureAiSearchConfig searchConfig;
     private readonly UserDataService userDataService;
     private readonly OrganizationDataService organizationDataService;
     private readonly LibraryEntryDataService libraryEntryDataService;
     private readonly LibraryEntryNodeDataService libraryEntryNodeDataService;
     private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
     private readonly WatcherLibraryEntryDataService watcherDataService;
+    private readonly ResourcesDataService resourcesDataService;
+    private readonly ListDataService listDataService;
 
-    public LibrarySearchService(UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService)
     {
+        this.searchConfig = searchConfig;
         this.userDataService = userDataService;
         this.organizationDataService = organizationDataService;
         this.libraryEntryDataService = libraryEntryDataService;
         this.libraryEntryNodeDataService = libraryEntryNodeDataService;
         this.libraryEntryVersionDataService = libraryEntryVersionDataService;
         this.watcherDataService = watcherDataService;
+        this.resourcesDataService = resourcesDataService;
+        this.listDataService = listDataService;
+    }
+
+    public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)
+    {
+        var userCache = new Dictionary<string, UserDocument>();
+        var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
+        var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
+        var resources = new Resources(resourceObj);
+        //
+        //  Get discipline labels
+        //
+        foreach (var discipline in disciplineLabels.Keys)
+            disciplineLabels[discipline] = resources.Get(disciplineLabels[discipline]);
+
+        foreach (var entryId in entryIds)
+        {
+            var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
+            var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
+            var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
+            var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
+
+            await PushToSearchAsync(resources, entry, version, entryTasks, watcherIds, disciplineLabels, userCache);
+        }
     }
 
     public async Task PushToSearchAsync(
-        SqlConnection conn,
-        string owner,
-        string entryId,
         Resources resources,
-        SearchClient searchClient,
+        LibraryEntryViewModel entry,
+        LibraryEntryVersion version,
+        IEnumerable<LibraryEntryNode> entryTasks,
+        IEnumerable<string> watcherIds,
         Dictionary<string, string> disciplineLabels,
         Dictionary<string, UserDocument> userCache = null)
     {
-        var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
-        var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
-        var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
-        var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
-        var users = await GetUsersAsync(watcherIds.Concat([entry.Author]).Distinct(), userCache);
+        var users = await GetUsersAsync(watcherIds.Concat([entry.AuthorId]).Distinct(), userCache);
         var disciplines = new List<string>();
 
         foreach (var discipline in version.disciplines)
@@ -79,7 +105,7 @@ public class LibrarySearchService
             //
             //  Users
             //
-            Author = users.ContainsKey(entry.Author) ? new SortableUserDocument(users[entry.Author]) : null,
+            Author = users.ContainsKey(entry.AuthorId) ? new SortableUserDocument(users[entry.AuthorId]) : null,
             Watchers = watcherIds
                 .Where(x => users.ContainsKey(x))
                 .Select(x => users[x])
@@ -100,12 +126,14 @@ public class LibrarySearchService
 
         doc.Tasks = tasks.ToArray();
 
-        var results = await searchClient.MergeOrUploadDocumentsAsync(
+        var results = await GetSearchClient(searchConfig.LibraryIndex).MergeOrUploadDocumentsAsync(
             new List<LibrarySearchDocument> { doc });
     }
 
-    public async Task VerifyIndexAsync(SearchIndexClient indexClient, string indexName)
+    public async Task VerifyIndexAsync()
     {
+        var indexName = searchConfig.LibraryIndex;
+        var indexClient = GetIndexClient();
         try
         {
             var index = await indexClient.GetIndexAsync(indexName);
@@ -174,5 +202,15 @@ public class LibrarySearchService
         }
 
         return users;
+    }
+
+    private SearchIndexClient GetIndexClient()
+    {
+        return new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
+    }
+
+    private SearchClient GetSearchClient(string indexName)
+    {
+        return GetIndexClient().GetSearchClient(indexName);
     }
 }

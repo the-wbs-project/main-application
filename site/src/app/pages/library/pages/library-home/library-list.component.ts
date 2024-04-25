@@ -1,13 +1,14 @@
 import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
-  ChangeDetectorRef,
   Component,
   OnInit,
   inject,
   input,
+  model,
   signal,
 } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
@@ -16,17 +17,20 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.directive';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
+import { UserStore } from '@wbs/store';
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
 import { EntryCreateButtonComponent } from './components/entry-create-button/entry-create-button.component';
-import { EntryCreationService } from './services';
 import { EntryLibraryChooserComponent } from './components/entry-library-chooser/entry-library-chooser.component';
+import { EntryCreationService } from './services';
 
 @Component({
   standalone: true,
@@ -40,9 +44,12 @@ import { EntryLibraryChooserComponent } from './components/entry-library-chooser
     EntryTypeIconPipe,
     EntryTypeTitlePipe,
     FontAwesomeModule,
+    FormsModule,
+    DelayedInputDirective,
     NgClass,
     PageHeaderComponent,
     RouterModule,
+    TextBoxModule,
     TranslateModule,
     WatchIndicatorComponent,
   ],
@@ -51,13 +58,15 @@ import { EntryLibraryChooserComponent } from './components/entry-library-chooser
 export class LibraryListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly store = inject(Store);
+  private readonly userId = inject(UserStore).userId;
   public readonly creation = inject(EntryCreationService);
 
   readonly faCactus = faCactus;
   readonly faFilters = faFilters;
 
+  readonly searchText = model<string>();
   readonly org = input.required<string>();
-  readonly library = signal<string>('organizational');
+  readonly library = signal<string>('personal');
   readonly entries = signal<LibraryEntryViewModel[]>([]);
 
   filterToggle = false;
@@ -65,8 +74,13 @@ export class LibraryListComponent implements OnInit {
 
   readonly plusIcon = plusIcon;
 
+  test(e: any) {
+    console.log(e);
+  }
+
   ngOnInit(): void {
-    this.retrieve();
+    this.searchText.subscribe(() => this.retrieve());
+    this.searchText.set('');
   }
 
   create(type: string): void {
@@ -117,9 +131,12 @@ export class LibraryListComponent implements OnInit {
 
   private retrieve(): void {
     this.data.libraryEntries
-      .searchAsync(this.org(), { library: this.library() })
+      .searchAsync(this.org(), {
+        userId: this.userId()!,
+        library: this.library(),
+        searchText: this.searchText(),
+      })
       .subscribe((entries) => {
-        console.log(entries);
         this.entries.set(entries);
       });
   }

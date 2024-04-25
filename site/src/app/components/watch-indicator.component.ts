@@ -5,6 +5,7 @@ import {
   computed,
   inject,
   input,
+  signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faStar as faStarRegular } from '@fortawesome/pro-regular-svg-icons';
@@ -25,7 +26,7 @@ import { UserStore } from '@wbs/store';
     (click)="changed($event)"
   >
     <span class="child-to-show">
-      <fa-icon [icon]="icon()" />
+      <fa-icon [icon]="icon()" [spin]="saving()" />
     </span>
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -40,6 +41,7 @@ export class WatchIndicatorComponent {
   readonly owner = input.required<string>();
   readonly entityId = input.required<string>();
   readonly alwaysShow = input(true);
+  readonly saving = signal(false);
 
   private watchSource = computed(() => {
     return this.source() === 'library'
@@ -67,14 +69,21 @@ export class WatchIndicatorComponent {
     const watcherId = this.userStore.userId()!;
     const source = this.watchSource();
 
+    this.saving.set(true);
     if (watch) {
       this.data.libraryEntryWatchers
         .addAsync(ownerId, id, watcherId)
-        .subscribe(() => source.add({ ownerId, id }));
+        .subscribe(() => {
+          source.add({ ownerId, id });
+          this.saving.set(false);
+        });
     } else {
       this.data.libraryEntryWatchers
         .deleteAsync(ownerId, id, watcherId)
-        .subscribe(() => source.remove({ ownerId, id }));
+        .subscribe(() => {
+          source.remove({ ownerId, id });
+          this.saving.set(false);
+        });
     }
   }
 }
