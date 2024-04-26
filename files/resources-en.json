@@ -549,7 +549,8 @@
       "TaskDisciplines": "Task Disciplines",
       "WbsDisciplines": "WBS Disciplines",
       "AddDiscipline": "Add Discipline",
-      "RemoveDiscipline": "Remove Discipline"
+      "RemoveDiscipline": "Remove Discipline",
+      "ExportToLibrary": "Export To Library"
     }
   },
   {

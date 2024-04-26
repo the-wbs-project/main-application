@@ -1,6 +1,6 @@
 export const LIBRARY_CLAIMS = {
   READ: 'read:library',
-  CREATE: 'create:library',
+  //CREATE: 'create:library',
   UPDATE: 'update:library',
   DELETE: 'delete:library',
 

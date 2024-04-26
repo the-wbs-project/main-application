@@ -33,15 +33,6 @@ public class LibrarySearchService
         if (filters.searchText == "")
             options.OrderBy.Add("LastModified desc");
 
-        //throw new Exception(filters.ToFilterString(owner));
-        logger.LogError($"Search text: {filters.searchText}");
-
-        // Enter Hotel property names into this list so only these values will be returned.
-        // If Select is empty, all values will be returned, which can be inefficient.
-        //options.Select.Add("HotelName");
-        //options.Select.Add("Description");
-
-        // For efficiency, the search call should be asynchronous, so use SearchAsync rather than Search.
         var results = await searchClient.SearchAsync<LibrarySearchDocument>(filters.searchText, options);
         var viewModels = new List<ApiSearchResult<LibraryEntryViewModel>>();
 

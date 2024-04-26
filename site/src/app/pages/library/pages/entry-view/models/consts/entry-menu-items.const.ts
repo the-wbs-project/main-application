@@ -59,10 +59,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'export',
     faIcon: faBookArrowRight,
-    text: 'Wbs.CreateLibraryEntry',
-    filters: {
-      claim: LIBRARY_CLAIMS.CREATE,
-    },
+    text: 'Wbs.ExportToLibrary',
   },
   {
     action: 'deleteTask',

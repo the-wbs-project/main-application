@@ -61,10 +61,11 @@ export class EntryTaskActionService {
       return this.taskService.cloneTask(taskId!);
     } else if (action.startsWith('addDiscipline|')) {
       const discipline = action.split('|')[1];
+
       return this.taskService.addDisciplineAsync(taskId!, discipline);
     } else if (action.startsWith('removeDiscipline|')) {
       const discipline = action.split('|')[1];
-      console.log('test');
+
       return this.taskService.removeDisciplineAsync(taskId!, discipline);
     }
   }

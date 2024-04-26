@@ -57,7 +57,6 @@ export class EntryTreeMenuService {
     if (add) {
       add.items = this.getDisciplinesToAdd(version, task);
 
-      console.log(add.items);
       if (add.items.length === 0) {
         phaseActions.splice(phaseActions.indexOf(add), 1);
       }
@@ -66,7 +65,6 @@ export class EntryTreeMenuService {
     if (remove) {
       remove.items = this.getDisciplinesToRemove(task);
 
-      console.log(remove.items);
       if (remove.items.length === 0) {
         phaseActions.splice(phaseActions.indexOf(remove), 1);
       }
