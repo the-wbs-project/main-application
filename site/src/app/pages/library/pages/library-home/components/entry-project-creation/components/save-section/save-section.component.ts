@@ -71,6 +71,9 @@ export class SaveSectionComponent {
           .map((x) => x.label)
           .join(', ');
   });
+  readonly phaseCount = computed(
+    () => this.phases().filter((x) => x.selected).length
+  );
   readonly phaseReview = computed(() =>
     this.phases()
       .filter((x) => x.selected)

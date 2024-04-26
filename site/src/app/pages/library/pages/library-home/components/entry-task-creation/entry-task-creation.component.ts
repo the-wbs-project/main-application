@@ -26,7 +26,7 @@ import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
-import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 import { TitleFormComponent } from './components/title-form';
 
@@ -44,7 +44,7 @@ import { TitleFormComponent } from './components/title-form';
     StepperModule,
     TitleFormComponent,
     TranslateModule,
-    VisiblitySelectionComponent,
+    VisibilitySelectionComponent,
   ],
   providers: [CategorySelectionService],
 })
@@ -66,7 +66,7 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>('left');
+  readonly dir = signal<'left' | 'right' | undefined>(undefined);
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Disciplines', icon: faPeople, isOptional: true },

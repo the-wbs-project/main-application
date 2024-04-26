@@ -13,6 +13,14 @@
   </p>
   <p class="ms-md-4 ms-0 mb-2">
     <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+      {{ "General.Visibility" | translate }} :
+    </span>
+    <span>
+      <wbs-visibility-text [visibility]="entry.visibility" />
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
       {{ "General.Type" | translate }} :
     </span>
     <span>

@@ -74,7 +74,9 @@ export class SaveSectionComponent {
   readonly phaseLabel = computed(() => {
     const phase = this.phase();
 
-    return typeof phase !== 'string'
+    return !phase
+      ? ''
+      : typeof phase !== 'string'
       ? phase.label
       : this.metadata.categories.phases.find((x) => x.id === phase)!.label;
   });

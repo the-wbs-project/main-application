@@ -57,6 +57,7 @@
       "Disciplines": "Disciplines",
       "Timeline": "Timeline",
       "Description": "Description",
+      "Required": "Required",
       "Contacts": "Contacts",
       "Expired": "Expired",
       "LoginExpired": "Login Expired",
@@ -166,7 +167,8 @@
       "NameIsRequired": "Name Is Required",
       "GeneralSettings": "General Settings",
       "GetStarted": "Get Started",
-      "LastUpdated": "Last Updated"
+      "LastUpdated": "Last Updated",
+      "Visibility": "Visibility"
     }
   },
   {
@@ -741,7 +743,6 @@
       "SameAsAbove": "Same As Above",
       "LibraryEntryTypes": "Library Entry Types",
       "LibraryEntryVisibility": "Library Entry Visibility",
-      "Visibility": "Visibility",
       "ProjectTypeDescription": "This WBS will represent an entire project.",
       "PhaseTypeDescription": "This WBS is a phase which could apply to multiple projects.",
       "TaskTypeDescription": "This WBS is a task (& subtasks) which can be used in multiple places.",

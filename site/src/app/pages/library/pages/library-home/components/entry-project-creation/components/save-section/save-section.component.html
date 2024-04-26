@@ -11,19 +11,43 @@
       <td class="row-header tx-semi wd-150">
         {{ "LibraryCreate.TemplateTitle" | translate }}
       </td>
-      <td>{{ templateTitle() }}</td>
+      <td>
+        @if (templateTitle(); as title) { {{ title }} } @else {
+        <span class="tx-danger fw-bold">
+          {{ "General.Required" | translate }}
+        </span>
+        }
+      </td>
     </tr>
     <tr>
       <td class="row-header tx-semi wd-150">
-        {{ "LibraryCreate.Visibility" | translate }}
+        {{ "General.Visibility" | translate }}
       </td>
       <td>{{ visibilityReview() }}</td>
     </tr>
     <tr>
       <td class="row-header tx-semi wd-150">
+        {{ "LibraryCreate.ProjectCategory" | translate }}
+      </td>
+      <td>
+        @if (category(); as category) { {{ category.label }} } @else {
+        <span class="tx-danger fw-bold">
+          {{ "General.Required" | translate }}
+        </span>
+        }
+      </td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
         {{ "General.Phases" | translate }}
       </td>
-      <td>{{ phaseReview() }}</td>
+      <td>
+        @if (phaseCount() > 0) { {{ phaseReview() }} } @else {
+        <span class="tx-danger fw-bold">
+          {{ "General.Required" | translate }}
+        </span>
+        }
+      </td>
     </tr>
     <tr>
       <td class="row-header tx-semi wd-150">
@@ -34,7 +58,11 @@
   </tbody>
 </table>
 @if (saveState() === undefined) {
-<button class="w-100 btn btn-primary mg-t-10" (click)="save()">
+<button
+  (click)="save()"
+  class="w-100 btn btn-primary mg-t-10"
+  [disabled]="!templateTitle() || !category() || phaseCount() === 0"
+>
   {{ "LibraryCreate.CreateTask" | translate }}
 </button>
 

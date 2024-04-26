@@ -6,8 +6,7 @@
       [ngClass]="visibility() === 'public' ? 'btn-dark' : 'btn-outline-dark'"
       (click)="visibility.set('public')"
     >
-      <fa-icon [icon]="faEarth" />
-      {{ "General.Public" | translate }}
+      <wbs-visibility-text visibility="public" />
     </button>
     <label class="w-100 text-center d-ib tx-12 tx-italic mg-t-5">
       {{ "LibraryCreate.VisibilityPublicDescription" | translate }}
@@ -20,8 +19,7 @@
       [ngClass]="visibility() === 'private' ? 'btn-dark' : 'btn-outline-dark'"
       (click)="visibility.set('private')"
     >
-      <fa-icon [icon]="faLock" />
-      {{ "General.Private" | translate }}
+      <wbs-visibility-text visibility="private" />
     </button>
     <label class="w-100 text-center d-ib tx-12 tx-italic mg-t-5">
       {{ "LibraryCreate.VisibilityPrivateDescription" | translate }}
@@ -36,8 +34,7 @@
       [ngClass]="visibility() === 'public' ? 'btn-dark' : 'btn-outline-dark'"
       (click)="visibility.set('public')"
     >
-      <fa-icon [icon]="faEarth" />
-      {{ "General.Public" | translate }}
+      <wbs-visibility-text visibility="public" />
     </button>
     <label class="w-100 text-center d-ib tx-12 tx-italic mg-t-5">
       {{ "LibraryCreate.VisibilityPublicDescription" | translate }}
@@ -50,8 +47,7 @@
       [ngClass]="visibility() === 'private' ? 'btn-dark' : 'btn-outline-dark'"
       (click)="visibility.set('private')"
     >
-      <fa-icon [icon]="faLock" />
-      {{ "General.Private" | translate }}
+      <wbs-visibility-text visibility="private" />
     </button>
     <label class="w-100 text-center d-ib tx-12 tx-italic mg-t-5">
       {{ "LibraryCreate.VisibilityPrivateDescription" | translate }}

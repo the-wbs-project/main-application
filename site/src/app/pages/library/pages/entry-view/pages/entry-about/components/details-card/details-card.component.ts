@@ -11,6 +11,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
+import { VisibilityTextComponent } from '@wbs/dummy_components/visibility-text.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '../../../../../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../../../../../pipes/entry-type-title.pipe';
@@ -28,6 +29,7 @@ import { EntryTypeTitlePipe } from '../../../../../../pipes/entry-type-title.pip
     FontAwesomeModule,
     FormsModule,
     TranslateModule,
+    VisibilityTextComponent,
   ],
 })
 export class DetailsCardComponent implements OnInit {

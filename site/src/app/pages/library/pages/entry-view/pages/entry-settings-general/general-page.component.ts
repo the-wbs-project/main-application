@@ -23,7 +23,7 @@ import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-c
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
 import { delay, tap } from 'rxjs/operators';
-import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
 import { EntryService, EntryState } from '../../services';
 
 @Component({
@@ -44,7 +44,7 @@ import { EntryService, EntryState } from '../../services';
     SaveButtonComponent,
     TextBoxModule,
     TranslateModule,
-    VisiblitySelectionComponent,
+    VisibilitySelectionComponent,
   ],
 })
 export class GeneralComponent implements DirtyComponent {

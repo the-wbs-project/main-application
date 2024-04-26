@@ -41,7 +41,7 @@ import { CategorySelectionService } from '@wbs/main/services';
 import { MembershipState } from '@wbs/main/states';
 import { MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
-import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
 import { RolesSectionComponent } from './components/roles-section';
 import { SaveSectionComponent } from './components/save-section';
 
@@ -64,7 +64,7 @@ import { SaveSectionComponent } from './components/save-section';
     StepperModule,
     TextBoxModule,
     TranslateModule,
-    VisiblitySelectionComponent,
+    VisibilitySelectionComponent,
   ],
   providers: [CategorySelectionService],
 })

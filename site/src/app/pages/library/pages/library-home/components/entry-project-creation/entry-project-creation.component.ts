@@ -33,7 +33,7 @@ import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-c
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { CategorySelectionService } from '@wbs/main/services';
 import { MetadataStore } from '@wbs/store';
-import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 
 @Component({
@@ -54,7 +54,7 @@ import { SaveSectionComponent } from './components/save-section';
     StepperModule,
     TextBoxModule,
     TranslateModule,
-    VisiblitySelectionComponent,
+    VisibilitySelectionComponent,
   ],
   providers: [CategorySelectionService],
 })
@@ -77,7 +77,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>('left');
+  readonly dir = signal<'left' | 'right' | undefined>(undefined);
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Phases', icon: faDiagramSubtask },

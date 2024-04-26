@@ -31,7 +31,7 @@ import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { CategorySelectionService } from '@wbs/main/services';
 import { PhaseSelectionComponent } from '../../../../components/phase-section';
-import { VisiblitySelectionComponent } from '../../../../components/visiblity-selection';
+import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
 import { SaveSectionComponent } from './components/save-section';
 
 @Component({
@@ -50,7 +50,7 @@ import { SaveSectionComponent } from './components/save-section';
     StepperModule,
     TextBoxModule,
     TranslateModule,
-    VisiblitySelectionComponent,
+    VisibilitySelectionComponent,
   ],
   providers: [CategorySelectionService],
 })
@@ -71,7 +71,7 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>('left');
+  readonly dir = signal<'left' | 'right' | undefined>(undefined);
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Phase', icon: faDiagramSubtask },
