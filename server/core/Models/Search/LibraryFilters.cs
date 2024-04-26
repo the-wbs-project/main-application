@@ -16,7 +16,7 @@ public class LibraryFilters
         if (library == "organizational") filterParts.Add($"OwnerId eq '{owner}'");
         else if (library == "personal") filterParts.Add($"(OwnerId eq '{owner}' and Author/Id eq '{userId}')");
         else if (library == "watched") filterParts.Add($"Watchers/any(person: person/Id eq '{userId}')");
-        else filterParts.Add($"(OwnerId eq '{owner}') or (Visibility eq 'public')");
+        else if (library == "public") filterParts.Add($"Visibility eq 'public'");
         //
         //  Type filter
         //
