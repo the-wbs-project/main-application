@@ -30,6 +30,6 @@
   },
   "dependencies": {
     "@cfworker/jwt": "^4.0.4",
-    "hono": "^3.7.6"
+    "hono": "^3.11.7"
   }
 }
