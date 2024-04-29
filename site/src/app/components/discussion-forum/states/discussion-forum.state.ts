@@ -7,8 +7,7 @@ import {
   LoadDiscussionForum,
   LoadPosts,
 } from '@wbs/main/actions';
-import { IdService, Messages } from '@wbs/core/services';
-import { sorter } from '@wbs/main/services';
+import { IdService, Messages, sorter } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Discussion } from '../models';

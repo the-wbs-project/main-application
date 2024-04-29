@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LibraryEntryNode } from '../models';
+import { LibraryEntryNode, ProjectNodeToLibraryOptions } from '../models';
 import { Utils } from '../services';
 
 export class LibraryEntryNodeDataService {
@@ -32,6 +32,19 @@ export class LibraryEntryNodeDataService {
         upserts,
         removeIds,
       }
+    );
+  }
+
+  exportAsync(
+    owner: string,
+    entryId: string,
+    version: number,
+    nodeId: string,
+    model: ProjectNodeToLibraryOptions
+  ): Observable<string> {
+    return this.http.post<string>(
+      `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}/nodes/${nodeId}/export`,
+      model
     );
   }
 

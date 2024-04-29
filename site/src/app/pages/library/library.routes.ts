@@ -5,8 +5,7 @@ import {
   EntryTaskActivityService,
   EntryTaskService,
 } from '@wbs/core/services';
-import { watcherGuard } from './services';
-import { EntryStore } from '@wbs/store';
+import { EntryCreationService, watcherGuard } from './services';
 
 export const routes: Routes = [
   {
@@ -14,8 +13,8 @@ export const routes: Routes = [
     canActivate: [watcherGuard],
     providers: [
       EntryActivityService,
+      EntryCreationService,
       EntryService,
-      EntryStore,
       EntryTaskActivityService,
       EntryTaskService,
     ],

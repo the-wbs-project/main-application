@@ -1,20 +1,35 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
+  inject,
   model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { Router, RouterModule } from '@angular/router';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { Navigate } from '@ngxs/router-plugin';
 import {
   DialogContentBase,
   DialogModule,
   DialogRef,
 } from '@progress/kendo-angular-dialog';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import {
+  EntryActivityService,
+  EntryService,
+  SignalStore,
+} from '@wbs/core/services';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
-import { Observable } from 'rxjs';
-
-declare type SaveCall = (name: string, visibility: string) => Observable<void>;
+import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
+import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
+import { MembershipState } from '@wbs/main/states';
+import { EntryStore, UserStore } from '@wbs/store';
+import { delay, tap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -22,15 +37,26 @@ declare type SaveCall = (name: string, visibility: string) => Observable<void>;
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogModule,
+    FadingMessageComponent,
     FormsModule,
+    RouterModule,
+    SaveButtonComponent,
+    TextBoxModule,
     TranslateModule,
     VisibilitySelectionComponent,
   ],
+  providers: [EntryActivityService, EntryService],
 })
 export class NameVisibilityComponent extends DialogContentBase {
-  private saveCall?: SaveCall;
+  private readonly activities = inject(EntryActivityService);
+  private readonly data = inject(DataServiceFactory);
+  private readonly entryStore = inject(EntryStore);
+  private readonly store = inject(SignalStore);
+  private readonly userId = inject(UserStore).userId;
+  private task: WbsNodeView | undefined;
 
-  readonly owner = signal<string | undefined>(undefined);
+  readonly checkIcon = faCheck;
+  readonly newEntryId = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
   readonly visibility = model<'public' | 'private'>('public');
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
@@ -41,8 +67,55 @@ export class NameVisibilityComponent extends DialogContentBase {
     super(dialog);
   }
 
-  setup(startingTitle: string, saveCall: SaveCall): void {
-    this.templateTitle.set(startingTitle);
-    this.saveCall = saveCall;
+  setup(taskId: string): void {
+    this.task = this.entryStore.viewModels()?.find((x) => x.id === taskId);
+    this.templateTitle.set(this.task?.title ?? '');
+  }
+
+  save(): void {
+    if (!this.task) {
+      return;
+    }
+
+    this.saveState.set('saving');
+
+    const entry = this.entryStore.entry()!;
+    const version = this.entryStore.version()!;
+
+    this.data.libraryEntryNodes
+      .exportAsync(entry.owner, entry.id, version.version, this.task.id, {
+        author: this.userId()!,
+        includeResources: true,
+        title: this.templateTitle(),
+        visibility: this.visibility(),
+      })
+      .pipe(
+        delay(1000),
+        tap((newEntryId) => {
+          this.newEntryId.set(newEntryId);
+          this.saveState.set('saved');
+        }),
+        tap((newEntryId) =>
+          this.activities.entryCreated(newEntryId, 'task', this.templateTitle())
+        ),
+        delay(5000)
+      )
+      .subscribe(() => this.saveState.set(undefined));
+  }
+
+  nav(): void {
+    this.store
+      .dispatch(
+        new Navigate([
+          '/',
+          this.store.selectSnapshot(MembershipState.organization)!.name,
+          'library',
+          'view',
+          this.entryStore.entry()?.owner,
+          this.newEntryId(),
+          1,
+        ])
+      )
+      .subscribe(() => this.dialog.close());
   }
 }

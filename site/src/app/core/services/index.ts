@@ -9,6 +9,7 @@ export * from './logger.service';
 export * from './messages.service';
 export * from './resource.service';
 export * from './signal-store.service';
+export * from './sorter.service';
 export * from './storage.service';
 export * from './title.service';
 export * from './utils.service';

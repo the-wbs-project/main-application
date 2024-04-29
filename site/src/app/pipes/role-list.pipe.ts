@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { Role } from '@wbs/core/models';
-import { sorter } from '@wbs/main/services';
+import { sorter } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/store';
 
 @Pipe({ name: 'roleList', standalone: true })

@@ -11,26 +11,20 @@ import {
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
-import {
-  faFilters,
-  faGrid,
-  faPlus,
-  faTable,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faFilters, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI, Project } from '@wbs/core/models';
+import { sorter, Storage } from '@wbs/core/services';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
-import { sorter } from '@wbs/main/services';
+import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
 import { MetadataStore } from '@wbs/store';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
-import { ProjectListService } from './services';
-import { Storage } from '@wbs/core/services';
-import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
-import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ProjectViewToggleComponent } from './components/project-view-toggle';
+import { ProjectListService } from './services';
 
 declare type ProjectView = 'grid' | 'table';
 

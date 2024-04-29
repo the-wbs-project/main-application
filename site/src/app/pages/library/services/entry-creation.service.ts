@@ -7,7 +7,7 @@ import { NameVisibilityComponent } from '@wbs/components/entry-creation/name-vis
 import { EntryPhaseCreationComponent } from '@wbs/components/entry-creation/phase';
 import { EntryProjectCreationComponent } from '@wbs/components/entry-creation/project';
 import { EntryTaskCreationComponent } from '@wbs/components/entry-creation/task';
-import { EntryCreationModel } from '@wbs/core/models';
+import { EntryCreationModel, LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { filter, map } from 'rxjs/operators';
@@ -36,17 +36,10 @@ export class EntryCreationService {
     );
   }
 
-  exportTaskToEntryAsync(
-    owner: string,
-    entryId: string,
-    version: number,
-    task: WbsNodeView
-  ): void {
+  exportTaskToEntryAsync(taskId: string): void {
     const dialogRef = this.dialog.open({ content: NameVisibilityComponent });
     const comp: NameVisibilityComponent = dialogRef.content.instance;
 
-    comp.setup('', (name, visibility) => {
-      return of();
-    });
+    comp.setup(taskId);
   }
 }

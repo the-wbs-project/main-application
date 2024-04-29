@@ -8,7 +8,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { SVGIconModule, SVGIcon } from '@progress/kendo-angular-icons';
 import { Member } from '@wbs/core/models';
-import { sorter } from '@wbs/main/services';
+import { sorter } from '@wbs/core/services';
 
 @Component({
   standalone: true,

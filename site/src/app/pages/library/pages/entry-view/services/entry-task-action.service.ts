@@ -1,14 +1,15 @@
 import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { SignalStore } from '@wbs/core/services';
+import { EntryTaskService, SignalStore } from '@wbs/core/services';
 import { TaskCreationResults } from '@wbs/main/models';
 import { Observable, of, switchMap, tap } from 'rxjs';
-import { EntryTaskService } from '../../../../../core/services/library/entry-task.service';
+import { EntryCreationService } from '../../../services';
 
 @Injectable()
 export class EntryTaskActionService {
   private readonly store = inject(SignalStore);
   private readonly taskService = inject(EntryTaskService);
+  private readonly creation = inject(EntryCreationService);
 
   readonly expandedKeysChanged = new EventEmitter<string[]>();
 
@@ -67,6 +68,8 @@ export class EntryTaskActionService {
       const discipline = action.split('|')[1];
 
       return this.taskService.removeDisciplineAsync(taskId!, discipline);
+    } else if (action === 'export') {
+      this.creation.exportTaskToEntryAsync(taskId!);
     }
   }
 }

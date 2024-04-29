@@ -11,17 +11,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects/{projectId}/nodes")]
 public class ProjectNodeController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
     private readonly ILogger<ProjectNodeController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
     private readonly ProjectNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
 
-    public ProjectNodeController(ILogger<ProjectNodeController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService)
+    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ProjectNodeController>();
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
         this.nodeResourceDataService = nodeResourceDataService;
@@ -46,7 +44,7 @@ public class ProjectNodeController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting project nodes");
             return new StatusCodeResult(500);
         }
     }
@@ -82,7 +80,7 @@ public class ProjectNodeController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving project nodes");
             return new StatusCodeResult(500);
         }
     }
@@ -109,7 +107,7 @@ public class ProjectNodeController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting project node resources");
             return new StatusCodeResult(500);
         }
     }
@@ -124,7 +122,7 @@ public class ProjectNodeController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error exporting project node to library entry");
             return new StatusCodeResult(500);
         }
     }
@@ -152,7 +150,7 @@ public class ProjectNodeController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving project node resources");
             return new StatusCodeResult(500);
         }
     }

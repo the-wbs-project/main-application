@@ -8,7 +8,7 @@ import {
 import { Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class EntryStore {
   private transformer = inject(Transformers);
 
