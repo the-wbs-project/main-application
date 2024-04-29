@@ -9,9 +9,10 @@ import {
   WbsImportResult,
   UploadResults,
 } from '@wbs/core/models';
-import { Transformers, Utils } from '@wbs/main/services';
+import { EntryActivityService, Transformers } from '@wbs/core/services';
+import { Utils } from '@wbs/main/services';
 import { MembershipState } from '@wbs/main/states';
-import { UserStore } from '@wbs/store';
+import { EntryStore, UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -26,7 +27,6 @@ import {
   SetAsStarted,
   SetPageTitle,
 } from '../actions';
-import { EntryActivityService, EntryState } from '../../../services';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -59,7 +59,7 @@ interface StateModel {
 export class EntryUploadState {
   private readonly activities = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
-  private readonly state = inject(EntryState);
+  private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
   private readonly profile = inject(UserStore).profile;
@@ -292,8 +292,8 @@ export class EntryUploadState {
     for (const node of state.uploadResults?.results ?? []) {
       nodes.set(node.levelText, node);
     }
-    const entry = this.state.entry()!;
-    const version = this.state.version()!;
+    const entry = this.entryStore.entry()!;
+    const version = this.entryStore.version()!;
 
     return forkJoin({
       version: this.data.libraryEntryVersions.getAsync(
@@ -333,15 +333,15 @@ export class EntryUploadState {
     ctx: StateContext<StateModel>,
     { results }: SaveUpload
   ): void | Observable<any> {
-    const entry = this.state.entry()!;
-    const version = this.state.version()!;
+    const entry = this.entryStore.entry()!;
+    const version = this.entryStore.version()!;
 
     version.disciplines = results.disciplines;
 
     const saves: Observable<any>[] = [
       this.data.libraryEntryVersions
         .putAsync(entry.owner, version)
-        .pipe(tap(() => this.state.setVersion(version))),
+        .pipe(tap(() => this.entryStore.setVersion(version))),
     ];
 
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
@@ -366,7 +366,7 @@ export class EntryUploadState {
           version.version
         )
       ),
-      tap((tasks) => this.state.setTasks(tasks)),
+      tap((tasks) => this.entryStore.setTasks(tasks)),
       tap(() => this.activities.entryUpload(entry.id, version.version)),
       tap(() => ctx.patchState({ saving: false }))
     );
@@ -377,8 +377,8 @@ export class EntryUploadState {
     pages: string[]
   ): Observable<void> {
     const org = this.store.selectSnapshot(MembershipState.organization)!.name;
-    const entry = this.state.entry()!;
-    const version = this.state.version()!;
+    const entry = this.entryStore.entry()!;
+    const version = this.entryStore.version()!;
 
     return ctx.dispatch(
       new Navigate([

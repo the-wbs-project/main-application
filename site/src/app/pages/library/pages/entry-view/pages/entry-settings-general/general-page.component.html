@@ -1,7 +1,7 @@
 <div class="card-header tx-medium">
   {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
 </div>
-@if (state.entry(); as entry) { @if (state.version(); as version) {
+@if (entryStore.entry(); as entry) { @if (entryStore.version(); as version) {
 <div class="card dashboard-card mg-10">
   <div class="d-flex card-header flex-align-center">
     <div>

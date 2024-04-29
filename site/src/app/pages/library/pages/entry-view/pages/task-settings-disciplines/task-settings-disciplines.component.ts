@@ -11,13 +11,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Category, SaveState } from '@wbs/core/models';
+import { CategorySelectionService, EntryTaskService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
-import { CategorySelectionService } from '@wbs/main/services';
+import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
-import { EntryService, EntryState, EntryTaskService } from '../../services';
 
 @Component({
   standalone: true,
@@ -30,12 +30,11 @@ import { EntryService, EntryState, EntryTaskService } from '../../services';
     SaveButtonComponent,
     TranslateModule,
   ],
-  providers: [CategorySelectionService, EntryService],
 })
 export class DisciplinesComponent implements OnInit, DirtyComponent {
   private readonly catService = inject(CategorySelectionService);
   private readonly service = inject(EntryTaskService);
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
 
   readonly checkIcon = faCheck;
   readonly saveState = signal<SaveState>('ready');
@@ -43,7 +42,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
   readonly taskId = input.required<string>();
   readonly cats = input.required<Category[]>();
 
-  readonly task = this.state.getTask(this.taskId);
+  readonly task = this.entryStore.getTask(this.taskId);
   readonly disciplines = signal<CategorySelection[] | undefined>(undefined);
   readonly isDirty = () => this.catService.isListDirty(this.disciplines());
 
@@ -75,7 +74,7 @@ export class DisciplinesComponent implements OnInit, DirtyComponent {
     this.disciplines.set(
       this.catService.buildFromList(
         this.cats() ?? [],
-        this.state.version()?.disciplines ?? [],
+        this.entryStore.version()?.disciplines ?? [],
         this.task()?.disciplines ?? []
       )
     );

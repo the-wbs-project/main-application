@@ -28,9 +28,9 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { UserStore } from '@wbs/store';
 import { EntryTypeIconPipe } from '../../pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '../../pipes/entry-type-title.pipe';
+import { EntryCreationService } from '../../services';
 import { EntryCreateButtonComponent } from './components/entry-create-button/entry-create-button.component';
 import { EntryLibraryChooserComponent } from './components/entry-library-chooser/entry-library-chooser.component';
-import { EntryCreationService } from './services';
 
 @Component({
   standalone: true,

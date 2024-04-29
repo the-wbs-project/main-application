@@ -3,12 +3,12 @@ import {
   Component,
   OnInit,
   inject,
-  input,
   signal,
 } from '@angular/core';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
+import { CategorySelectionService } from '@wbs/core/services';
 import { Project, SaveState } from '@wbs/core/models';
 import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
 import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
@@ -16,7 +16,6 @@ import { DisciplineEditorComponent } from '@wbs/main/components/discipline-edito
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
-import { CategorySelectionService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { ChangeTaskDisciplines } from '../../actions';
 import { ProjectState, TasksState } from '../../states';
@@ -32,7 +31,6 @@ import { ProjectState, TasksState } from '../../states';
     SaveButtonComponent,
     TranslateModule,
   ],
-  providers: [CategorySelectionService],
 })
 export class DisciplinesComponent implements OnInit, DirtyComponent {
   private readonly catService = inject(CategorySelectionService);

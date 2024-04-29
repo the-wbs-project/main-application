@@ -8,8 +8,8 @@
 } @else {
 <div class="pd-15">
   <wbs-library-tree
-    [entry]="state.entry()!"
-    [version]="state.version()!"
+    [entry]="entryStore.entry()!"
+    [version]="entryStore.version()!"
     [claims]="claims()"
     [entryUrl]="entryUrl()"
   />

@@ -2,9 +2,13 @@ import { Injectable, inject } from '@angular/core';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
-import { IdService, Messages } from '@wbs/core/services';
+import {
+  IdService,
+  Messages,
+  Transformers,
+  WbsNodeService,
+} from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Transformers, WbsNodeService } from '@wbs/main/services';
 import { MetadataStore } from '@wbs/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';

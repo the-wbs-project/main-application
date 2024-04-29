@@ -31,17 +31,20 @@ import {
   LibraryEntryVersion,
   Member,
 } from '@wbs/core/models';
-import { IdService, SignalStore } from '@wbs/core/services';
+import {
+  CategorySelectionService,
+  IdService,
+  SignalStore,
+} from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { CategorySelectionService } from '@wbs/main/services';
 import { MembershipState } from '@wbs/main/states';
 import { MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
-import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
 import { RolesSectionComponent } from './components/roles-section';
 import { SaveSectionComponent } from './components/save-section';
 
@@ -66,7 +69,6 @@ import { SaveSectionComponent } from './components/save-section';
     TranslateModule,
     VisibilitySelectionComponent,
   ],
-  providers: [CategorySelectionService],
 })
 export class ProjectCreationComponent extends DialogContentBase {
   private readonly metadata = inject(MetadataStore);

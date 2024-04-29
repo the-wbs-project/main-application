@@ -7,8 +7,8 @@ import {
   ProjectActivityRecord,
   ProjectNode,
 } from '@wbs/core/models';
+import { Transformers } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
-import { Transformers } from '@wbs/main/services';
 import { UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

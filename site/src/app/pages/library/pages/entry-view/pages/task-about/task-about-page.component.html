@@ -1,6 +1,6 @@
 @if (task(); as task) {
 <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
-  <wbs-task-details-card [entry]="state.entry()!" [task]="task" />
+  <wbs-task-details-card [entry]="entryStore.entry()!" [task]="task" />
   <wbs-discipline-card
     [splitLimit]="750"
     [alertIfEmpty]="true"

@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FillElementDirective } from '@wbs/core/directives/fill-element.directive';
+import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { CategorySelectionService } from '@wbs/main/services';
 import { DisciplinesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
@@ -27,7 +27,6 @@ import { ProjectCreateState } from '../../states';
     FillElementDirective,
     WizardFooterComponent,
   ],
-  providers: [CategorySelectionService],
 })
 export class DisciplinesComponent implements OnInit {
   private readonly catService = inject(CategorySelectionService);

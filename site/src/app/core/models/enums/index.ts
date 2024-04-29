@@ -1,3 +1,5 @@
+export * from './actions-library-tasks.enum';
+export * from './actions-library-version.enum';
 export * from './actions.enum';
 export * from './library-entry-types.enum';
 export * from './lists.enum';

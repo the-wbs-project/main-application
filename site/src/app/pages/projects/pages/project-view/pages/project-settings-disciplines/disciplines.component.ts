@@ -11,15 +11,14 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { Category, Project, SaveState } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
+import { Project, SaveState } from '@wbs/core/models';
+import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
 import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { CategoryDialogResults, DirtyComponent } from '@wbs/main/models';
-import { CategorySelectionService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { ChangeProjectDiscipines } from '../../actions';
 import { ProjectState } from '../../states';
@@ -36,7 +35,6 @@ import { ProjectState } from '../../states';
     SaveButtonComponent,
     TranslateModule,
   ],
-  providers: [CategorySelectionService],
 })
 export class DisciplinesComponent implements OnInit, DirtyComponent {
   private readonly catService = inject(CategorySelectionService);

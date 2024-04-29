@@ -10,10 +10,10 @@ import {
   SelectableSettings,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { SignalStore } from '@wbs/core/services';
+import { SignalStore, Transformers } from '@wbs/core/services';
 import { Project } from '@wbs/core/models';
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
-import { Transformers, TreeService } from '@wbs/main/services';
+import { TreeService } from '@wbs/main/services';
 import { TasksState } from '../../../../states';
 import { DisciplineIdsPipe } from './discipline-ids.pipe';
 

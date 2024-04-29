@@ -3,7 +3,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { SignalStore } from '@wbs/core/services';
 import { TaskCreationResults } from '@wbs/main/models';
 import { Observable, of, switchMap, tap } from 'rxjs';
-import { EntryTaskService } from './entry-task.service';
+import { EntryTaskService } from '../../../../../core/services/library/entry-task.service';
 
 @Injectable()
 export class EntryTaskActionService {

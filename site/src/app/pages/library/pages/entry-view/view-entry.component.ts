@@ -11,17 +11,17 @@ import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { LibraryEntry } from '@wbs/core/models';
-import { SignalStore, TitleService } from '@wbs/core/services';
+import { EntryService, SignalStore, TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { NavigationLink } from '@wbs/main/models';
 import { NavigationMenuService } from '@wbs/main/services';
+import { EntryStore } from '@wbs/store';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
 import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
-import { EntryService, EntryState } from './services';
 
 @Component({
   standalone: true,
@@ -43,7 +43,7 @@ export class EntryViewComponent {
   private readonly entryService = inject(EntryService);
   private readonly store = inject(SignalStore);
 
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
   readonly owner = input.required<string>();
   readonly entryId = input.required<string>();
   readonly claims = input.required<string[]>();
@@ -53,7 +53,7 @@ export class EntryViewComponent {
   readonly links = computed(() =>
     this.filterSettings(
       this.navService.processLinks(ENTRY_NAVIGATION, this.claims()),
-      this.state.entry()
+      this.entryStore.entry()
     )
   );
   readonly canEditTitle = computed(

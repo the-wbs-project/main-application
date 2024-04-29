@@ -1,11 +1,14 @@
 <div class="w-100 text-center h-100">
   <div class="d-ib text-start w-100 h-100 mx-wd-1200">
     <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
-      <wbs-details-card [entry]="state.entry()!" [version]="state.version()!" />
+      <wbs-details-card
+        [entry]="entryStore.entry()!"
+        [version]="entryStore.version()!"
+      />
       <wbs-discipline-card
         [splitLimit]="650"
         [fullList]="disciplines()"
-        [selectedList]="state.version()?.disciplines ?? []"
+        [selectedList]="entryStore.version()?.disciplines ?? []"
         noDisciplinesLabel="Library.NoDisciplinesEntry"
         [canEdit]="claims() | check : UPDATE_CLAIM"
         [editRoute]="['../', 'settings', 'disciplines']"
@@ -14,7 +17,7 @@
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"
         [saveState]="descriptionSaveState()"
-        [description]="state.version()?.description ?? ''"
+        [description]="entryStore.version()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         (descriptionChange)="descriptionChange($event)"
       />
@@ -24,7 +27,7 @@
 
 @if (askAi()) {
 <wbs-description-ai-dialog
-  [description]="state.version()!.description"
+  [description]="entryStore.version()!.description"
   getStartedLabel="AI.GetStartedLibraryEntry"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="aiChangeSaved($event)"

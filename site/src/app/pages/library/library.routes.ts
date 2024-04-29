@@ -1,10 +1,24 @@
 import { Routes } from '@angular/router';
+import {
+  EntryActivityService,
+  EntryService,
+  EntryTaskActivityService,
+  EntryTaskService,
+} from '@wbs/core/services';
 import { watcherGuard } from './services';
+import { EntryStore } from '@wbs/store';
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [watcherGuard],
+    providers: [
+      EntryActivityService,
+      EntryService,
+      EntryStore,
+      EntryTaskActivityService,
+      EntryTaskService,
+    ],
     children: [
       {
         path: '',

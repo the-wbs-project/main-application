@@ -6,9 +6,9 @@ import { SetBreadcrumbs } from '@wbs/main/actions';
 import { Utils } from '@wbs/main/services';
 import { of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { EntryState } from '../../../services';
 import { SetAsStarted } from '../actions';
 import { EntryUploadState } from '../states';
+import { EntryStore } from '@wbs/store';
 
 function getEntryUrl(route: ActivatedRouteSnapshot): string[] {
   return [
@@ -44,9 +44,9 @@ export const startGuard = () => {
 
 export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
-  const state = inject(EntryState);
+  const entryStore = inject(EntryStore);
   const entryUrl = getEntryUrl(route);
-  const title = state.version()!.title;
+  const title = entryStore.version()!.title;
 
   return (
     store.dispatch([

@@ -12,13 +12,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { TitleService } from '@wbs/core/services';
+import { EntryTaskService, TitleService } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
 import { NavigationMenuService, TaskModalService } from '@wbs/main/services';
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
-import { EntryState, EntryTaskService } from './services';
+import { EntryStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -40,7 +40,7 @@ export class TaskViewComponent {
   private readonly navService = inject(NavigationMenuService);
   private readonly store = inject(Store);
   private readonly taskService = inject(EntryTaskService);
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
 
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
@@ -50,7 +50,7 @@ export class TaskViewComponent {
     this.navService.processLinks(TASK_NAVIGATION, this.claims())
   );
   readonly task = computed(() =>
-    this.state.viewModels()?.find((t) => t.id === this.taskId())
+    this.entryStore.viewModels()?.find((t) => t.id === this.taskId())
   );
 
   readonly faDiagramSubtask = faDiagramSubtask;

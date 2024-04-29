@@ -8,10 +8,10 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FillElementDirective } from '@wbs/core/directives/fill-element.directive';
+import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
 import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
-import { CategorySelectionService } from '@wbs/main/services';
 import { PhasesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';
@@ -23,7 +23,6 @@ import { ProjectCreateState } from '../../states';
   changeDetection: ChangeDetectionStrategy.OnPush,
   encapsulation: ViewEncapsulation.None,
   imports: [PhaseEditorComponent, FillElementDirective, WizardFooterComponent],
-  providers: [CategorySelectionService],
 })
 export class PhaseComponent implements OnInit {
   private readonly catService = inject(CategorySelectionService);

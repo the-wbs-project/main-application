@@ -15,6 +15,7 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SaveState } from '@wbs/core/models';
+import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
 import { AiButtonComponent } from '@wbs/main/components/ai-button.component';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
@@ -23,8 +24,8 @@ import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-c
 import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
 import { delay, tap } from 'rxjs/operators';
-import { VisibilitySelectionComponent } from '../../../../components/visiblity-selection';
-import { EntryService, EntryState } from '../../services';
+import { EntryService } from '@wbs/core/services';
+import { EntryStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -49,13 +50,13 @@ import { EntryService, EntryState } from '../../services';
 })
 export class GeneralComponent implements DirtyComponent {
   private readonly service = inject(EntryService);
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
 
   readonly checkIcon = faCheck;
   readonly aiIcon = faRobot;
   readonly askAi = model(true);
   readonly canSave = computed(() => {
-    const version = this.state.version();
+    const version = this.entryStore.version();
 
     if ((version?.title ?? '').length === 0) return false;
 
@@ -65,14 +66,14 @@ export class GeneralComponent implements DirtyComponent {
   readonly saveState = signal<SaveState>('ready');
   readonly descriptionAiStartingDialog = computed(() => {
     return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
-      this.state.version()?.title
+      this.entryStore.version()?.title
     }'?`;
   });
 
   save(): void {
     this.saveState.set('saving');
     this.service
-      .generalSaveAsync(this.state.entry()!, this.state.version()!)
+      .generalSaveAsync(this.entryStore.entry()!, this.entryStore.version()!)
       .pipe(
         delay(1000),
         tap(() => {

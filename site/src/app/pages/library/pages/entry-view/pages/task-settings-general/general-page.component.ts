@@ -13,9 +13,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { SignalStore } from '@wbs/core/services';
+import { EntryTaskService } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/main/components/alert.component';
-import { EntryState, EntryTaskService } from '../../services';
+import { EntryStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -32,9 +32,8 @@ import { EntryState, EntryTaskService } from '../../services';
   ],
 })
 export class GeneralComponent {
-  private readonly store = inject(SignalStore);
   private readonly service = inject(EntryTaskService);
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
 
   readonly taskId = input.required<string>();
 
@@ -42,7 +41,7 @@ export class GeneralComponent {
   readonly faFloppyDisk = faFloppyDisk;
   readonly askAi = signal(true);
   readonly showSaved = signal(false);
-  readonly task = this.state.getTask(this.taskId);
+  readonly task = this.entryStore.getTask(this.taskId);
   readonly canSave = computed(() => {
     const task = this.task();
 

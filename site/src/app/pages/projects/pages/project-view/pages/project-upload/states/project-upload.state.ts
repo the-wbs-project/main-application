@@ -10,7 +10,8 @@ import {
   WbsImportResult,
   UploadResults,
 } from '@wbs/core/models';
-import { Transformers, Utils } from '@wbs/main/services';
+import { Transformers } from '@wbs/core/services';
+import { Utils } from '@wbs/main/services';
 import { MembershipState } from '@wbs/main/states';
 import { UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';

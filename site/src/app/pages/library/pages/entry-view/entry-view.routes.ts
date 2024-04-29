@@ -2,20 +2,10 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { dirtyGuard } from '@wbs/core/guards';
-import {
-  CategorySelectionService,
-  Transformers,
-  WbsNodeService,
-} from '@wbs/main/services';
 import { EntryUploadState } from './pages/entry-upload/states';
 import {
-  EntryActivityService,
-  EntryService,
-  EntryState,
   EntryTaskActionService,
-  EntryTaskActivityService,
   EntryTaskRecorderService,
-  EntryTaskService,
   entryIdResolve,
   entryNavGuard,
   entryUrlResolve,
@@ -35,16 +25,8 @@ export const routes: Routes = [
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
-      CategorySelectionService,
-      EntryActivityService,
-      EntryService,
-      EntryState,
       EntryTaskActionService,
-      EntryTaskActivityService,
       EntryTaskRecorderService,
-      EntryTaskService,
-      Transformers,
-      WbsNodeService,
     ],
     resolve: {
       owner: ownerIdResolve,

@@ -1,17 +1,16 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { MetadataStore } from '@wbs/store';
-import { EntryState } from '../../../services';
+import { EntryStore, MetadataStore } from '@wbs/store';
 
 export const disciplineListResolver: ResolveFn<
   { id: string; label: string }[]
 > = () => {
-  const state = inject(EntryState);
+  const entryStore = inject(EntryStore);
   const categories = inject(MetadataStore).categories.disciplines;
 
   const items: { id: string; label: string }[] = [];
 
-  for (const category of state.version()?.disciplines ?? []) {
+  for (const category of entryStore.version()?.disciplines ?? []) {
     if (typeof category !== 'string') {
       items.push({
         id: category.id,

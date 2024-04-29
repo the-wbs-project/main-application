@@ -14,7 +14,7 @@ import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipl
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 import { TreeService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
-import { EntryState } from '../../services';
+import { EntryStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -31,7 +31,7 @@ import { EntryState } from '../../services';
 export class SubTasksComponent {
   private readonly store = inject(SignalStore);
 
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
   readonly treeService = new TreeService();
 
   readonly entryUrl = input.required<string[]>();
@@ -39,7 +39,7 @@ export class SubTasksComponent {
 
   readonly phaseView = PROJECT_NODE_VIEW.PHASE;
   readonly width = this.store.select(UiState.mainContentWidth);
-  readonly task = this.state.getTask(this.taskId);
+  readonly task = this.entryStore.getTask(this.taskId);
 
   clickedId?: string;
 

@@ -9,9 +9,8 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { SignalStore } from '@wbs/core/services';
 import { LibraryTreeComponent } from '../../components/library-tree';
-import { EntryState } from '../../services';
+import { EntryStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -25,7 +24,7 @@ import { EntryState } from '../../services';
   ],
 })
 export class TasksPageComponent {
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
 
   readonly faSpinner = faSpinner;
 
@@ -33,6 +32,6 @@ export class TasksPageComponent {
   readonly entryUrl = input.required<string[]>();
 
   readonly isLoading = computed(
-    () => !this.state.entry() || !this.state.version()
+    () => !this.entryStore.entry() || !this.entryStore.version()
   );
 }

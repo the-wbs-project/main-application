@@ -25,8 +25,9 @@ import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { TaskModalService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
-import { EntryState, EntryTaskService } from '../../services';
 import { DetailsCardComponent } from './components/details-card';
+import { EntryTaskService } from '@wbs/core/services';
+import { EntryStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -50,7 +51,7 @@ import { DetailsCardComponent } from './components/details-card';
 export class TaskAboutPageComponent {
   private readonly taskService = inject(EntryTaskService);
   readonly modal = inject(TaskModalService);
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.TASKS.UPDATE;
   readonly faTools = faTools;
@@ -66,21 +67,21 @@ export class TaskAboutPageComponent {
   readonly descriptionEditMode = model(false);
   readonly descriptionSaveState = signal<SaveState>('ready');
   readonly disciplineFullList = computed(() => {
-    const disciplines = this.state.version()?.disciplines;
+    const disciplines = this.entryStore.version()?.disciplines;
 
     if (disciplines && disciplines.length > 0) return disciplines;
 
     return this.disciplines().map((x) => x.id);
   });
   readonly descriptionAiStartingDialog = computed(() => {
-    const versionTitle = this.state.version()?.title;
+    const versionTitle = this.entryStore.version()?.title;
     const taskTitle = this.task()?.title;
     return `Can you provide me with a one paragraph description of a task titled '${taskTitle}' belonging to a work breakdown structure titled '${versionTitle}'?`;
   });
   //
   //  State Items
   //
-  readonly task = this.state.getTask(this.taskId);
+  readonly task = this.entryStore.getTask(this.taskId);
 
   descriptionChange(description: string): void {
     this.descriptionSaveState.set('saving');

@@ -17,9 +17,8 @@ import {
   DialogModule,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { IdService } from '@wbs/core/services';
+import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategorySelectionService } from '@wbs/main/services';
 import { filter, map } from 'rxjs/operators';
 import { DisciplineIconPipe } from '../../../pipes/discipline-icon.pipe';
 import {
@@ -35,7 +34,7 @@ import { SwitchComponent } from '../switch';
   templateUrl: './discipline-editor.component.html',
   styleUrl: './discipline-editor.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [CategorySelectionService, DialogService],
+  providers: [DialogService],
   imports: [
     DialogModule,
     DisciplineIconPipe,

@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { ActionButtonMenuItem } from '@wbs/main/models';
-import { EntryService } from './entry.service';
+import { EntryService } from '../../../../../core/services/library/entry.service';
 
 @Injectable()
 export class EntryActionButtonService {

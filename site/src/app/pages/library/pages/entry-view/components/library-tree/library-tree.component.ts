@@ -9,7 +9,9 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
@@ -30,7 +32,7 @@ import {
   LibraryEntryVersion,
   SaveState,
 } from '@wbs/core/models';
-import { Messages, SignalStore } from '@wbs/core/services';
+import { EntryTaskService, Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
@@ -44,17 +46,14 @@ import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { TreeService, WbsPhaseService } from '@wbs/main/services';
 import { UiState } from '@wbs/main/states';
+import { EntryStore } from '@wbs/store';
 import {
-  EntryState,
   EntryTaskActionService,
   EntryTaskRecorderService,
-  EntryTaskService,
   EntryTreeMenuService,
 } from '../../services';
-import { toObservable } from '@angular/core/rxjs-interop';
-import { delay, tap } from 'rxjs/operators';
-import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { Observable } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -93,7 +92,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(EntryTaskRecorderService);
   private readonly taskService = inject(EntryTaskService);
-  readonly state = inject(EntryState);
+  readonly entryStore = inject(EntryStore);
   readonly treeService = new TreeService();
 
   readonly checkIcon = faCheck;
@@ -119,7 +118,7 @@ export class LibraryTreeComponent implements OnInit {
   );
 
   constructor() {
-    toObservable(this.state.viewModels)
+    toObservable(this.entryStore.viewModels)
       .pipe(untilDestroyed(this))
       .subscribe((tasks) => this.updateState(tasks ?? []));
   }
@@ -187,7 +186,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   rowReordered(e: RowReorderEvent): void {
-    const tree = this.state.viewModels()!;
+    const tree = this.entryStore.viewModels()!;
     const entryType = this.entry().type;
     const dragged: WbsNodeView = e.draggedRows[0].dataItem;
     const target: WbsNodeView = e.dropTargetRow?.dataItem;
@@ -207,7 +206,7 @@ export class LibraryTreeComponent implements OnInit {
     }
     const run = () => {
       const results = this.reorderer.run(
-        this.state.tasks()!,
+        this.entryStore.tasks()!,
         tree,
         dragged,
         target,
@@ -253,7 +252,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   private resetTree(): void {
-    this.state.setTasks(structuredClone(this.state.tasks() ?? []));
+    this.entryStore.setTasks(structuredClone(this.entryStore.tasks() ?? []));
   }
 
   private setSaveState(taskId: string, state: SaveState): void {

@@ -3,55 +3,51 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { LIBRARY_CLAIMS, RoutedBreadcrumbItem } from '@wbs/core/models';
+import { SetBreadcrumbs } from '@wbs/main/actions';
+import { NavigationLink } from '@wbs/main/models';
 import { Utils } from '@wbs/main/services';
+import { EntryStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EntryState } from './entry-state.service';
-import { LIBRARY_CLAIMS, RoutedBreadcrumbItem } from '@wbs/core/models';
+import { EntryService } from '../../../../../core/services/library/entry.service';
 import { ENTRY_NAVIGATION } from '../models';
-import { NavigationLink } from '@wbs/main/models';
-import { EntryService } from './entry.service';
-import { SetBreadcrumbs } from '@wbs/main/actions';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
 
-  return store
-    .dispatch(
-      new Navigate([
-        '/',
-        Utils.getParam(route, 'org'),
-        'library',
-        'view',
-        Utils.getParam(route, 'ownerId'),
-        Utils.getParam(route, 'entryId'),
-        Utils.getParam(route, 'versionId'),
-        'about',
-      ])
-    )
-    .pipe(map(() => true));
+  return store.dispatch(
+    new Navigate([
+      '/',
+      Utils.getParam(route, 'org'),
+      'library',
+      'view',
+      Utils.getParam(route, 'ownerId'),
+      Utils.getParam(route, 'entryId'),
+      Utils.getParam(route, 'versionId'),
+      'about',
+    ])
+  );
 };
 
 export const redirectTaskGuard = (route: ActivatedRouteSnapshot) =>
-  inject(Store)
-    .dispatch(
-      new Navigate([
-        Utils.getParam(route, 'org'),
-        'library',
-        'view',
-        Utils.getParam(route, 'ownerId'),
-        Utils.getParam(route, 'entryId'),
-        Utils.getParam(route, 'versionId'),
-        'tasks',
-        route.params['taskId'],
-        'about',
-      ])
-    )
-    .pipe(map(() => true));
+  inject(Store).dispatch(
+    new Navigate([
+      Utils.getParam(route, 'org'),
+      'library',
+      'view',
+      Utils.getParam(route, 'ownerId'),
+      Utils.getParam(route, 'entryId'),
+      Utils.getParam(route, 'versionId'),
+      'tasks',
+      route.params['taskId'],
+      'about',
+    ])
+  );
 
 export const populateGuard = (route: ActivatedRouteSnapshot) => {
   const data = inject(DataServiceFactory);
-  const state = inject(EntryState);
+  const store = inject(EntryStore);
   const owner = Utils.getParam(route, 'ownerId');
   const entryId = Utils.getParam(route, 'entryId');
   const versionId = parseInt(Utils.getParam(route, 'versionId'), 10);
@@ -64,19 +60,17 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
     tasks: data.libraryEntryNodes.getAllAsync(owner, entryId, versionId),
   }).pipe(
     map(({ entry, version, tasks }) => {
-      state.setAll(entry, version, tasks);
-
-      return true;
+      store.setAll(entry, version, tasks);
     })
   );
 };
 
 export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
-  const state = inject(EntryState);
+  const store = inject(EntryStore);
   const section = route.data['section'];
   const crumbSections = route.data['crumbs'];
 
-  if (section) state.setNavSectionEntry(section);
+  if (section) store.setNavSectionEntry(section);
   if (!crumbSections) return;
 
   let link: NavigationLink | undefined;
@@ -88,7 +82,7 @@ export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
     },
     {
       route: [...currentUrl],
-      text: state.version()!.title,
+      text: store.version()!.title,
       isText: true,
     },
   ];
@@ -119,7 +113,7 @@ export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
 };
 
 export const taskNavGuard = (route: ActivatedRouteSnapshot) =>
-  inject(EntryState).setNavSectionTask(route.data['section']);
+  inject(EntryStore).setNavSectionTask(route.data['section']);
 
 export const verifyTaskUpdateClaimGuard = (route: ActivatedRouteSnapshot) => {
   const data = inject(DataServiceFactory);

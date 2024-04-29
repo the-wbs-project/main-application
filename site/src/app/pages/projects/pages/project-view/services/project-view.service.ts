@@ -1,22 +1,15 @@
 import { Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { DialogService } from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  ListItem,
-  PROJECT_STATI_TYPE,
-  Project,
-  ProjectCategory,
-} from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
+import { ListItem, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
+import { Messages, Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { Transformers } from '@wbs/main/services';
+import { TaskCreateComponent } from '@wbs/main/components/task-create';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AddDisciplineToTask,
   ChangeProjectStatus,
-  ChangeTaskDisciplines,
   CloneTask,
   CreateTask,
   MoveTaskDown,
@@ -24,14 +17,11 @@ import {
   MoveTaskRight,
   MoveTaskUp,
   RemoveDisciplineToTask,
-  RemoveTask,
 } from '../actions';
-import { TaskDeleteComponent } from '../components/task-delete/task-delete.component';
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
-import { TaskCreateComponent } from '@wbs/main/components/task-create';
 
 @Injectable()
 export class ProjectViewService {
