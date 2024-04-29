@@ -1,16 +1,16 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Store } from '@ngxs/store';
-import { MainContentSizeChanged } from '@wbs/main/actions';
+import { UiStore } from '@wbs/store';
 import { timer } from 'rxjs';
 
 @UntilDestroy()
 @Directive({ selector: '[appMainContent]', standalone: true })
 export class MainContentDirective {
+  private readonly uiStore = inject(UiStore);
   private lastSize = 0;
   private elem: HTMLElement;
 
-  constructor(ref: ElementRef, private readonly store: Store) {
+  constructor(ref: ElementRef) {
     this.elem = ref.nativeElement;
 
     timer(0, 500)
@@ -21,7 +21,7 @@ export class MainContentDirective {
         if (this.lastSize === width) return;
 
         this.lastSize = width;
-        this.store.dispatch(new MainContentSizeChanged(width));
+        this.uiStore.setMainContentWidth(width);
       });
   }
 }

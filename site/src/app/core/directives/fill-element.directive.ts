@@ -3,13 +3,16 @@ import {
   Directive,
   ElementRef,
   HostListener,
+  inject,
   input,
 } from '@angular/core';
 import { Store } from '@ngxs/store';
-import { UiState } from '../../main/states';
+import { UiStore } from '@wbs/store';
 
 @Directive({ selector: '[appFillElement]', standalone: true })
 export class FillElementDirective implements AfterViewChecked {
+  private readonly uiStore = inject(UiStore);
+
   readonly paddingBottom = input<number>(0);
   readonly changeDelay = input<number>(0);
 
@@ -17,12 +20,12 @@ export class FillElementDirective implements AfterViewChecked {
   private readonly elem: HTMLElement;
   private delayNumber = 0;
 
-  constructor(ref: ElementRef, private readonly store: Store) {
+  constructor(ref: ElementRef) {
     this.elem = ref.nativeElement;
   }
 
   private get disabled(): boolean {
-    return this.store.selectSnapshot(UiState.isMobile);
+    return this.uiStore.isMobile;
   }
 
   ngAfterViewChecked() {

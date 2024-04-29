@@ -1,20 +1,12 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
-import { SetBreadcrumbs } from '@wbs/main/actions';
 import { orgResolve } from '@wbs/main/services';
-import { map } from 'rxjs/operators';
+import { UiStore } from '@wbs/store';
 
 export const loadGuard = () => {
-  const store = inject(Store);
-  const titleService = inject(TitleService);
-
-  titleService.setTitle('General.Library', true);
-
-  return store
-    .dispatch([new SetBreadcrumbs([{ text: 'General.Library' }])])
-    .pipe(map(() => true));
+  inject(TitleService).setTitle('General.Library', true);
+  inject(UiStore).setBreadcrumbs([{ text: 'General.Library' }]);
 };
 
 export const routes: Routes = [

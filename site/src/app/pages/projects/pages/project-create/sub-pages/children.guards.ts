@@ -2,8 +2,8 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { SetBreadcrumbs } from '@wbs/main/actions';
 import { Utils } from '@wbs/main/services';
+import { UiStore } from '@wbs/store';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SetHeaderInformation, StartWizard } from '../actions';
@@ -32,24 +32,21 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const owner = Utils.getParam(route, 'org');
 
-  return (
-    store.dispatch([
-      new SetHeaderInformation(route.data['title'], route.data['description']),
-      new SetBreadcrumbs([
-        {
-          route: ['/', owner, 'projects'],
-          text: 'General.Projects',
-        },
-        {
-          route: ['/', owner, 'projects', 'create'],
-          text: 'General.Create',
-        },
-        {
-          text: route.data['title'],
-        },
-      ]),
-    ]),
-    map(() => true)
+  inject(UiStore).setBreadcrumbs([
+    {
+      route: ['/', owner, 'projects'],
+      text: 'General.Projects',
+    },
+    {
+      route: ['/', owner, 'projects', 'create'],
+      text: 'General.Create',
+    },
+    {
+      text: route.data['title'],
+    },
+  ]);
+  return store.dispatch(
+    new SetHeaderInformation(route.data['title'], route.data['description'])
   );
 };
 

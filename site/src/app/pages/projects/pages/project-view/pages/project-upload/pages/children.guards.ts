@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { SetBreadcrumbs } from '@wbs/main/actions';
+import { UiStore } from '@wbs/store';
 import { of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { SetHeaderInformation } from '../../../../project-create/actions';
@@ -41,33 +41,30 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
   return store.selectOnce(ProjectUploadState.current).pipe(
     map((p) => p!),
     tap((project) => {
-      return (
-        store.dispatch([
-          new SetHeaderInformation(
-            route.data['title'],
-            route.data['description']
-          ),
-          new SetBreadcrumbs([
-            {
-              route: ['/', project.owner, 'projects'],
-              text: 'General.Projects',
-            },
-            {
-              route: ['/', project.owner, 'projects', 'view', project.id],
-              text: project.title,
-              isText: true,
-            },
-            {
-              route: ['/', project.owner, 'projects', 'upload', project.id],
-              text: 'General.Upload',
-            },
-            {
-              text: route.data['title'],
-            },
-          ]),
-        ]),
-        map(() => true)
-      );
+      inject(UiStore).setBreadcrumbs([
+        {
+          route: ['/', project.owner, 'projects'],
+          text: 'General.Projects',
+        },
+        {
+          route: ['/', project.owner, 'projects', 'view', project.id],
+          text: project.title,
+          isText: true,
+        },
+        {
+          route: ['/', project.owner, 'projects', 'upload', project.id],
+          text: 'General.Upload',
+        },
+        {
+          text: route.data['title'],
+        },
+      ]);
+      return store.dispatch([
+        new SetHeaderInformation(
+          route.data['title'],
+          route.data['description']
+        ),
+      ]);
     })
   );
 };

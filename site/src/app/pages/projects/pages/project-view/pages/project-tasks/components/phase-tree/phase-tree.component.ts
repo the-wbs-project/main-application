@@ -43,10 +43,10 @@ import { TaskTitleComponent } from '@wbs/main/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 import { TreeService, WbsPhaseService } from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
+import { UiStore } from '@wbs/store';
 import { Observable, delay, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
@@ -126,7 +126,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly tree = signal<WbsNodeView[] | undefined>(undefined);
-  readonly width = this.store.select(UiState.mainContentWidth);
+  readonly width = inject(UiStore).mainContentWidth;
   readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly taskId = signal<string | undefined>(undefined);

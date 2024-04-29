@@ -4,10 +4,9 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LIBRARY_CLAIMS, RoutedBreadcrumbItem } from '@wbs/core/models';
-import { SetBreadcrumbs } from '@wbs/main/actions';
 import { NavigationLink } from '@wbs/main/models';
 import { Utils } from '@wbs/main/services';
-import { EntryStore } from '@wbs/store';
+import { EntryStore, UiStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { EntryService } from '../../../../../core/services/library/entry.service';
@@ -109,7 +108,7 @@ export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
   }
   crumbs.at(-1)!.route = undefined;
 
-  return inject(Store).dispatch(new SetBreadcrumbs(crumbs));
+  inject(UiStore).setBreadcrumbs(crumbs);
 };
 
 export const taskNavGuard = (route: ActivatedRouteSnapshot) =>

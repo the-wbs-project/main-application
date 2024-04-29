@@ -2,10 +2,10 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
-import { LoadDiscussionForum, SetBreadcrumbs } from '@wbs/main/actions';
 import { Utils } from '@wbs/main/services';
+import { UiStore } from '@wbs/store';
 import { of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   SetApproval,
@@ -21,15 +21,6 @@ import { ProjectService } from './project.service';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store).dispatch(new SetApproval());
-
-export const projectDiscussionGuard = (route: ActivatedRouteSnapshot) => {
-  return inject(Store).dispatch(
-    new LoadDiscussionForum(
-      Utils.getParam(route, 'org'),
-      Utils.getParam(route, 'projectId')
-    )
-  );
-};
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
@@ -64,10 +55,10 @@ export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
   if (!route.data['crumbs']) return;
 
   return service.getProjectBreadcrumbs(route).pipe(
-    switchMap((crumbs) => {
+    map((crumbs) => {
       crumbs.at(-1)!.route = undefined;
 
-      return store.dispatch(new SetBreadcrumbs(crumbs));
+      inject(UiStore).setBreadcrumbs(crumbs);
     })
   );
 };
@@ -85,10 +76,10 @@ export const taskNavGuard = (route: ActivatedRouteSnapshot) => {
   if (!route.data['crumbs']) return;
 
   return service.getTaskBreadcrumbs(route).pipe(
-    switchMap((crumbs) => {
+    map((crumbs) => {
       crumbs.at(-1)!.route = undefined;
 
-      return store.dispatch(new SetBreadcrumbs(crumbs));
+      inject(UiStore).setBreadcrumbs(crumbs);
     })
   );
 };

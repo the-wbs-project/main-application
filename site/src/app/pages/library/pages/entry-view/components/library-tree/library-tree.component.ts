@@ -45,8 +45,7 @@ import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.componen
 import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { TreeService, WbsPhaseService } from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
-import { EntryStore } from '@wbs/store';
+import { EntryStore, UiStore } from '@wbs/store';
 import {
   EntryTaskActionService,
   EntryTaskRecorderService,
@@ -103,7 +102,7 @@ export class LibraryTreeComponent implements OnInit {
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
 
-  readonly width = this.store.select(UiState.mainContentWidth);
+  readonly width = inject(UiStore).mainContentWidth;
 
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<WbsNodeView | undefined>(undefined);

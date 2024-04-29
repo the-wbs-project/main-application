@@ -7,9 +7,8 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
+import { UiStore } from '@wbs/store';
 import { DisciplineListComponent } from './discipline-list.component';
-import { SignalStore } from '@wbs/core/services';
-import { UiState } from '../states';
 
 @Component({
   standalone: true,
@@ -45,9 +44,7 @@ import { UiState } from '../states';
   imports: [DisciplineListComponent, TranslateModule],
 })
 export class DisciplineSplitListComponent {
-  private readonly store = inject(SignalStore);
-
-  readonly width = this.store.select(UiState.mainContentWidth);
+  readonly width = inject(UiStore).mainContentWidth;
 
   readonly selectedList = input.required<ProjectCategory[]>();
   readonly fullList = input.required<ProjectCategory[]>();

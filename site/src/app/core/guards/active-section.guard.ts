@@ -1,19 +1,11 @@
 import { inject } from '@angular/core';
-import { Store } from '@ngxs/store';
-import { map } from 'rxjs/operators';
-import { SetActiveSection } from '../../main/actions';
+import { UiStore } from '@wbs/store';
 
 export const librarySectionGuard = () =>
-  inject(Store)
-    .dispatch(new SetActiveSection('library'))
-    .pipe(map(() => true));
+  inject(UiStore).setActiveSection('library');
 
 export const projectsSectionGuard = () =>
-  inject(Store)
-    .dispatch(new SetActiveSection('projects'))
-    .pipe(map(() => true));
+  inject(UiStore).setActiveSection('projects');
 
 export const settingsSectionGuard = () =>
-  inject(Store)
-    .dispatch(new SetActiveSection('settings'))
-    .pipe(map(() => true));
+  inject(UiStore).setActiveSection('settings');

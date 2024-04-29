@@ -2,10 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import {
-  DialogCloseResult,
-  DialogService,
-} from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Category,
@@ -27,7 +23,6 @@ import { EntryActivityService } from './entry-activity.service';
 export class EntryService {
   private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
-  private readonly dialogService = inject(DialogService);
   private readonly messages = inject(Messages);
   private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
@@ -101,7 +96,7 @@ export class EntryService {
 
   createProject(): void {
     const org = this.store.selectSnapshot(MembershipState.organization)!.name;
-    const dialog = this.dialogService.open({
+    /*const dialog = this.dialogService.open({
       content: ProjectCreationComponent,
     });
     (dialog.content.instance as ProjectCreationComponent).setup(
@@ -116,7 +111,7 @@ export class EntryService {
           this.store.dispatch(new Navigate(['/', org, 'projects', 'view', id]))
         )
       )
-      .subscribe();
+      .subscribe();*/
   }
 
   generalSaveAsync(

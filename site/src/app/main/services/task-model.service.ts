@@ -1,11 +1,9 @@
 import { Injectable, computed, inject } from '@angular/core';
-import { SignalStore } from '@wbs/core/services';
-import { UiState } from '../states';
+import { UiStore } from '@wbs/store';
 
 @Injectable()
 export class TaskModalService {
-  private readonly store = inject(SignalStore);
-  private readonly width = this.store.select(UiState.mainContentWidth);
+  private readonly width = inject(UiStore).mainContentWidth;
 
   readonly dialogWidth = computed(() => (this.width()! > 700 ? '90%' : '100%'));
   readonly dialogHeight = computed(() =>

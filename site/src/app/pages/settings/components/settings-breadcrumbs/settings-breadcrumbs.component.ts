@@ -1,12 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Select } from '@ngxs/store';
-import { UiState } from '@wbs/main/states';
-import { Observable } from 'rxjs';
-import { Breadcrumb } from '../../models';
-import { SettingsState } from '../../states';
+import { UiStore } from '@wbs/store';
 
 @Component({
   standalone: true,
@@ -15,7 +11,6 @@ import { SettingsState } from '../../states';
   imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class BreadcrumbsComponent {
+  readonly uiStore = inject(UiStore);
   readonly root = '/settings';
-  @Select(UiState.path) path$!: Observable<string | undefined>;
-  @Select(SettingsState.crumbs) crumbs$!: Observable<Breadcrumb[]>;
 }

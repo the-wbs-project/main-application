@@ -12,7 +12,7 @@ import { DisciplineIconListComponent } from '@wbs/main/components/discipline-ico
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 import { TreeService } from '@wbs/main/services';
-import { UiState } from '@wbs/main/states';
+import { UiStore } from '@wbs/store';
 import { ProjectState, TasksState } from '../../states';
 
 @Component({
@@ -34,7 +34,7 @@ export class SubTasksComponent {
 
   readonly projectUrl = input.required<string[]>();
 
-  readonly width = this.store.select(UiState.mainContentWidth);
+  readonly width = inject(UiStore).mainContentWidth;
   readonly project = this.store.select(ProjectState.current);
   readonly task = this.store.select(TasksState.current);
 
