@@ -1,15 +1,12 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
 import { orgResolve, userIdResolve } from '@wbs/main/services';
 import { UiStore } from '@wbs/store';
 import { ProjectListService } from './services';
 
 export const setupGuard = () => {
-  const store = inject(Store);
-
-  inject(TitleService).setTitle('Pages.Projects', true);
+  inject(TitleService).setTitle([{ text: 'Pages.Projects' }]);
   inject(UiStore).setBreadcrumbs([{ text: 'Pages.Projects' }]);
 };
 

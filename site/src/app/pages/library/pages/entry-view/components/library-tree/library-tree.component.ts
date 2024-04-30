@@ -26,6 +26,7 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
+import { SaveMessageComponent } from '@wbs/components/save-message.component';
 import {
   LIBRARY_CLAIMS,
   LibraryEntry,
@@ -37,7 +38,6 @@ import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { TaskCreateComponent } from '@wbs/main/components/task-create';
 import { TaskTitleComponent } from '@wbs/main/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
@@ -46,13 +46,13 @@ import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { TreeService, WbsPhaseService } from '@wbs/main/services';
 import { EntryStore, UiStore } from '@wbs/store';
+import { Observable } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 import {
   EntryTaskActionService,
   EntryTaskRecorderService,
   EntryTreeMenuService,
 } from '../../services';
-import { Observable } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
 
 @UntilDestroy()
 @Component({
@@ -68,8 +68,8 @@ import { delay, tap } from 'rxjs/operators';
     ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
-    FadingMessageComponent,
     FontAwesomeModule,
+    SaveMessageComponent,
     TranslateModule,
     TaskCreateComponent,
     TaskTitleComponent,
@@ -149,9 +149,9 @@ export class LibraryTreeComponent implements OnInit {
       const obsOrVoid = this.actions.onAction(action, this.entryUrl(), taskId);
 
       if (obsOrVoid instanceof Observable) {
+        this.setSaveState(taskId, 'saving');
         obsOrVoid
           .pipe(
-            delay(500),
             tap(() => this.setSaveState(taskId, 'saved')),
             delay(5000)
           )
@@ -240,10 +240,11 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   taskTitleChanged(taskId: string, title: string): void {
+    this.setSaveState(taskId, 'saving');
+
     this.taskService
       .titleChangedAsync(taskId, title)
       .pipe(
-        delay(500),
         tap(() => this.setSaveState(taskId, 'saved')),
         delay(5000)
       )

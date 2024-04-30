@@ -64,28 +64,18 @@
     </div>
   </div>
   <div class="row mb-2">
-    <div class="offset-md-2 col-md-10 col-sm-12 d-flex">
-      <div class="flex-fill pd-r-15">
-        @if (showSaved()) {
-        <wbs-alert
-          type="success"
-          message="Library.TaskUpdated"
-          (closed)="showSaved.set(false)"
-        />
-        }
-      </div>
-      <div>
-        <button
-          class="btn btn-md btn-primary"
-          [disabled]="!canSave()"
-          (click)="save()"
-        >
-          <fa-icon [icon]="faFloppyDisk" />
-          <span class="mg-l-10">
-            {{ "General.Save" | translate }}
-          </span>
-        </button>
-      </div>
+    <div class="offset-md-2 col-md-10 col-sm-12 text-end">
+      <wbs-save-message [state]="saved.state()" class="mg-r-10" />
+      <button
+        class="btn btn-md btn-primary"
+        [disabled]="!canSave() || saved.state() === 'saving'"
+        (click)="save()"
+      >
+        <fa-icon [icon]="faFloppyDisk" />
+        <span class="mg-l-10">
+          {{ "General.Save" | translate }}
+        </span>
+      </button>
     </div>
   </div>
 </div>

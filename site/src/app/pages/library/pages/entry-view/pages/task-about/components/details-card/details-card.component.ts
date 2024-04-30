@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
+  effect,
   inject,
   input,
   signal,
@@ -9,7 +9,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LibraryEntry } from '@wbs/core/models';
+import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 
@@ -21,17 +21,23 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DateTextPipe, RouterModule, TranslateModule],
 })
-export class DetailsCardComponent implements OnInit {
+export class DetailsCardComponent {
   private readonly data = inject(DataServiceFactory);
 
   readonly entry = input.required<LibraryEntry>();
+  readonly version = input.required<LibraryEntryVersion>();
   readonly task = input.required<WbsNodeView>();
 
-  readonly owner = signal<string>('');
+  readonly owner = signal<string | undefined>(undefined);
 
-  ngOnInit(): void {
-    this.data.organizations
-      .getNameAsync(this.entry().owner)
-      .subscribe((name) => this.owner.set(name));
+  constructor() {
+    effect(() => {
+      const id = this.entry().owner;
+
+      if (id)
+        this.data.organizations
+          .getNameAsync(id)
+          .subscribe((name) => this.owner.set(name));
+    });
   }
 }

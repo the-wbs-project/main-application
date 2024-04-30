@@ -25,7 +25,7 @@ export const closeApprovalWindowGuard = () =>
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
 
-  inject(TitleService).setTitle('Pages.Projects', true);
+  inject(TitleService).setTitle([{ text: 'Pages.Projects' }]);
 
   return store
     .dispatch([
@@ -49,6 +49,7 @@ export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const service = inject(ProjectService);
   const section = route.data['navSection'];
+  const uiStore = inject(UiStore);
 
   store.dispatch(new SetProjectNavSection(section));
 
@@ -58,7 +59,7 @@ export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
     map((crumbs) => {
       crumbs.at(-1)!.route = undefined;
 
-      inject(UiStore).setBreadcrumbs(crumbs);
+      uiStore.setBreadcrumbs(crumbs);
     })
   );
 };
@@ -66,6 +67,7 @@ export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
 export const taskNavGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const service = inject(ProjectService);
+  const uiStore = inject(UiStore);
   const section = route.data['navSection'];
   const crumbSections = route.data['crumbs'];
 
@@ -79,7 +81,7 @@ export const taskNavGuard = (route: ActivatedRouteSnapshot) => {
     map((crumbs) => {
       crumbs.at(-1)!.route = undefined;
 
-      inject(UiStore).setBreadcrumbs(crumbs);
+      uiStore.setBreadcrumbs(crumbs);
     })
   );
 };

@@ -2,9 +2,9 @@ import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
-import { EntryTypeDescriptionPipe } from '../../../../pipes/entry-type-description.pipe';
-import { EntryTypeIconPipe } from '../../../../pipes/entry-type-icon.pipe';
-import { EntryTypeTitlePipe } from '../../../../pipes/entry-type-title.pipe';
+import { EntryTypeDescriptionPipe } from '@wbs/pipes/entry-type-description.pipe';
+import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
+import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 
 @Component({
   standalone: true,

@@ -83,7 +83,7 @@ export class TaskViewComponent {
   readonly taskIcon = faDiagramSubtask;
 
   constructor(title: TitleService) {
-    title.setTitle('Project', false);
+    title.setTitle(['Project']);
   }
 
   navigate(route: string[]) {

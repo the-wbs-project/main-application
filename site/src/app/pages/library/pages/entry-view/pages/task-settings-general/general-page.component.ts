@@ -13,7 +13,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { EntryTaskService } from '@wbs/core/services';
+import { SaveMessageComponent } from '@wbs/components/save-message.component';
+import { EntryTaskService, SaveService } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/main/components/alert.component';
 import { EntryStore } from '@wbs/store';
 
@@ -27,6 +28,7 @@ import { EntryStore } from '@wbs/store';
     FontAwesomeModule,
     FormsModule,
     LabelModule,
+    SaveMessageComponent,
     TextBoxModule,
     TranslateModule,
   ],
@@ -40,7 +42,6 @@ export class GeneralComponent {
   readonly faRobot = faRobot;
   readonly faFloppyDisk = faFloppyDisk;
   readonly askAi = signal(true);
-  readonly showSaved = signal(false);
   readonly task = this.entryStore.getTask(this.taskId);
   readonly canSave = computed(() => {
     const task = this.task();
@@ -52,12 +53,23 @@ export class GeneralComponent {
   readonly showDescriptionAlert = computed(
     () => (this.task()?.description ?? '').length === 0
   );
+  readonly saved = new SaveService();
 
   save(): void {
     const task = this.task()!;
-    this.service
-      .generalSaveAsync(task.id, task.title, task.description)
-      .subscribe(() => this.showSaved.set(true));
+    const changes = this.service.verifyChanges(
+      task.id,
+      task.title,
+      task.description
+    );
+
+    if (!changes) return;
+
+    this.saved
+      .call(
+        this.service.generalSaveAsync(task.id, task.title, task.description)
+      )
+      .subscribe();
   }
 
   aiChangeSaved(description: string): void {

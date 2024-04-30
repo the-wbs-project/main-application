@@ -2,15 +2,21 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
+  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { faArrowUpFromBracket, faX } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faArrowUpFromBracket,
+  faCheck,
+  faX,
+} from '@fortawesome/pro-solid-svg-icons';
 import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { LibraryEntry } from '@wbs/core/models';
+import { LibraryEntry, SaveState } from '@wbs/core/models';
 import { EntryService, SignalStore, TitleService } from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
@@ -22,6 +28,8 @@ import { EntryActionButtonComponent } from './components/entry-action-button.com
 import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
+import { delay, tap } from 'rxjs/operators';
+import { SaveMessageComponent } from '@wbs/components/save-message.component';
 
 @Component({
   standalone: true,
@@ -34,6 +42,7 @@ import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
     EntryViewBreadcrumbsPipe,
     NavigationComponent,
     PageHeaderComponent,
+    SaveMessageComponent,
     RouterModule,
     WatchIndicatorComponent,
   ],
@@ -50,6 +59,7 @@ export class EntryViewComponent {
   readonly entryUrl = input.required<string[]>();
 
   readonly url = this.store.select(RouterState.url);
+  readonly titleSaveState = signal<SaveState>('ready');
   readonly links = computed(() =>
     this.filterSettings(
       this.navService.processLinks(ENTRY_NAVIGATION, this.claims()),
@@ -63,13 +73,29 @@ export class EntryViewComponent {
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
   readonly faX = faX;
   readonly gearIcon = gearIcon;
+  readonly checkIcon = faCheck;
 
   constructor(title: TitleService) {
-    title.setTitle('Project', false);
+    effect(() => {
+      const version = this.entryStore.version();
+
+      title.setTitle([
+        { text: 'General.Library' },
+        ...(version ? [version.title] : []),
+      ]);
+    });
   }
 
   titleChanged(title: string): void {
-    this.entryService.titleChangedAsync(title).subscribe();
+    this.titleSaveState.set('saving');
+
+    this.entryService
+      .titleChangedAsync(title)
+      .pipe(
+        tap(() => this.titleSaveState.set('saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.titleSaveState.set('ready'));
   }
 
   navigate(route: string[]) {

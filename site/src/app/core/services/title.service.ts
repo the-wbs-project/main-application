@@ -7,7 +7,6 @@ import { Resources } from './resource.service';
 @Injectable({ providedIn: 'root' })
 export class TitleService {
   private readonly _title$ = new BehaviorSubject<string | null>(null);
-  private readonly _subTitle$ = new BehaviorSubject<string | null>(null);
 
   constructor(
     private readonly title: Title,
@@ -18,28 +17,19 @@ export class TitleService {
     return this._title$;
   }
 
-  get subTitle$(): Observable<string | null> {
-    return this._subTitle$;
-  }
+  setTitle(parts: (string | { text: string })[]) {
+    for (let i = 0; i < parts.length; i++) {
+      const piece = parts[i];
 
-  setTitle(title: string, isResource: boolean) {
-    if (isResource) {
-      this.titleText(this.resources.get(title));
-    } else {
-      this.titleText(title);
+      if (typeof piece !== 'string') {
+        parts[i] = this.resources.get(piece.text);
+      }
     }
+    this.titleText(<string[]>parts);
   }
 
-  setSubTitle(subTitle: string, isResource: boolean) {
-    if (isResource) {
-      this._subTitle$.next(this.resources.get(subTitle));
-    } else {
-      this._subTitle$.next(subTitle);
-    }
-  }
-
-  private titleText(text: string) {
-    const title = `${environment.appTitle} - ${text}`;
+  private titleText(texts: string[]) {
+    const title = [environment.appTitle, ...texts].join(' - ');
     this.title.setTitle(title);
     this._title$.next(title);
   }

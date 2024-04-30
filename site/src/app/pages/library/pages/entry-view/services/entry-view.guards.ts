@@ -74,6 +74,8 @@ export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
 
   let link: NavigationLink | undefined;
   let currentUrl = [...EntryService.getEntryUrl(route)];
+
+  const version = store.version()!;
   const crumbs: RoutedBreadcrumbItem[] = [
     {
       route: ['/', Utils.getParam(route, 'org'), 'library'],
@@ -81,7 +83,7 @@ export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
     },
     {
       route: [...currentUrl],
-      text: store.version()!.title,
+      text: version.title,
       isText: true,
     },
   ];

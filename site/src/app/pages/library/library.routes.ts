@@ -22,7 +22,7 @@ export const routes: Routes = [
       {
         path: '',
         loadChildren: () =>
-          import('./pages/library-home/library-list.routes').then(
+          import('./pages/library-home/library-home.routes').then(
             (x) => x.routes
           ),
       },

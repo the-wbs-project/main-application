@@ -6,19 +6,29 @@ import {
   faBookArrowRight,
   faCopy,
   faEye,
+  faFileImport,
   faPlus,
   faTrash,
   faUserMinus,
   faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
-import { ContextMenuItem } from '../../../../../../main/models/context-menu-item.model';
+import { ContextMenuItem } from '@wbs/main/models';
 
 const taskActions: ContextMenuItem[] = [
   {
     action: 'addSub',
     faIcon: faPlus,
     text: 'Projects.AddSubTask',
+    filters: {
+      stati: [PROJECT_STATI.PLANNING],
+      claim: PROJECT_CLAIMS.TASKS.CREATE,
+    },
+  },
+  {
+    action: 'importSub',
+    faIcon: faFileImport,
+    text: 'Projects.ImportSubTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,

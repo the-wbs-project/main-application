@@ -9,22 +9,23 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, faRobot } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faCheck,
+  faFloppyDisk,
+  faRobot,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { SaveState } from '@wbs/core/models';
+import { SaveMessageComponent } from '@wbs/components/save-message.component';
+import { EntryService, SaveService } from '@wbs/core/services';
 import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
 import { AiButtonComponent } from '@wbs/main/components/ai-button.component';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
-import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
 import { DirtyComponent } from '@wbs/main/models';
-import { delay, tap } from 'rxjs/operators';
-import { EntryService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/store';
 
 @Component({
@@ -35,14 +36,13 @@ import { EntryStore } from '@wbs/store';
     AiButtonComponent,
     DescriptionAiDialogComponent,
     EditorModule,
-    FadingMessageComponent,
     FontAwesomeModule,
     FormsModule,
     InfoMessageComponent,
     LabelModule,
     NgClass,
     ProjectCategoryDropdownComponent,
-    SaveButtonComponent,
+    SaveMessageComponent,
     TextBoxModule,
     TranslateModule,
     VisibilitySelectionComponent,
@@ -52,6 +52,7 @@ export class GeneralComponent implements DirtyComponent {
   private readonly service = inject(EntryService);
   readonly entryStore = inject(EntryStore);
 
+  readonly saveIcon = faFloppyDisk;
   readonly checkIcon = faCheck;
   readonly aiIcon = faRobot;
   readonly askAi = model(true);
@@ -63,7 +64,7 @@ export class GeneralComponent implements DirtyComponent {
     return true;
   });
   readonly isDirty = signal(false);
-  readonly saveState = signal<SaveState>('ready');
+  readonly saved = new SaveService();
   readonly descriptionAiStartingDialog = computed(() => {
     return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
       this.entryStore.version()?.title
@@ -71,17 +72,13 @@ export class GeneralComponent implements DirtyComponent {
   });
 
   save(): void {
-    this.saveState.set('saving');
-    this.service
-      .generalSaveAsync(this.entryStore.entry()!, this.entryStore.version()!)
-      .pipe(
-        delay(1000),
-        tap(() => {
-          this.isDirty.set(false);
-          this.saveState.set('saved');
-        }),
-        delay(5000)
+    this.saved
+      .call(
+        this.service.generalSaveAsync(
+          this.entryStore.entry()!,
+          this.entryStore.version()!
+        )
       )
-      .subscribe(() => this.saveState.set('ready'));
+      .subscribe();
   }
 }

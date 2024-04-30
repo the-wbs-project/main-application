@@ -12,7 +12,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { EntryTaskService, TitleService } from '@wbs/core/services';
+import { SaveMessageComponent } from '@wbs/components/save-message.component';
+import {
+  EntryTaskService,
+  SaveService,
+  TitleService,
+} from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
 import { NavigationMenuService, TaskModalService } from '@wbs/main/services';
@@ -30,6 +35,7 @@ import { EntryStore } from '@wbs/store';
     FontAwesomeModule,
     NavigationComponent,
     RouterModule,
+    SaveMessageComponent,
     TaskModalFooterComponent,
     TranslateModule,
   ],
@@ -45,6 +51,7 @@ export class TaskViewComponent {
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
   readonly taskId = input.required<string>();
+  readonly titleSave = new SaveService();
 
   readonly links = computed(() =>
     this.navService.processLinks(TASK_NAVIGATION, this.claims())
@@ -56,7 +63,7 @@ export class TaskViewComponent {
   readonly faDiagramSubtask = faDiagramSubtask;
 
   constructor(title: TitleService) {
-    title.setTitle('Project', false);
+    title.setTitle(['Project']);
   }
 
   navigate(route: string[]) {
@@ -66,7 +73,9 @@ export class TaskViewComponent {
   }
 
   titleChanged(title: string): void {
-    this.taskService.titleChangedAsync(this.task()!.id, title).subscribe();
+    this.titleSave
+      .call(this.taskService.titleChangedAsync(this.task()!.id, title))
+      .subscribe();
   }
 
   closed(): void {

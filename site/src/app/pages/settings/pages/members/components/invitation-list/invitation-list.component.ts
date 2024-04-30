@@ -69,7 +69,9 @@ export class InvitationListComponent {
   ];
 
   constructor() {
-    effect(() => this.updateState(this.textFilter(), this.filteredRoles()));
+    effect(() => this.updateState(this.textFilter(), this.filteredRoles()), {
+      allowSignalWrites: true,
+    });
   }
 
   userActionClicked(invite: InviteViewModel, action: string): void {

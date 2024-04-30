@@ -82,7 +82,9 @@ export class MemberListComponent {
   ];
 
   constructor() {
-    effect(() => this.updateState(this.textFilter(), this.filteredRoles()));
+    effect(() => this.updateState(this.textFilter(), this.filteredRoles()), {
+      allowSignalWrites: true,
+    });
   }
 
   userActionClicked(member: MemberViewModel, action: string): void {
@@ -93,7 +95,7 @@ export class MemberListComponent {
     }
   }
 
-  updateState(textFilter: string, filteredRoles: string[]): void {
+  private updateState(textFilter: string, filteredRoles: string[]): void {
     this.state.update((s) => {
       const state: State = { sort: s.sort };
       const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];

@@ -137,10 +137,7 @@ export class EntryService {
     version.title = title;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      map(() => {
-        this.messages.notify.success('Library.TitleChanged');
-        this.entryStore.setVersion(version);
-      }),
+      tap(() => this.entryStore.setVersion(version)),
       switchMap(() =>
         this.activity.entryTitleChanged(entry.id, version.version, from, title)
       )

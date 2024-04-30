@@ -120,6 +120,16 @@ export class EntryTaskService {
       );
   }
 
+  verifyChanges(
+    taskId: string,
+    title: string,
+    description: string | undefined
+  ): boolean {
+    const task = this.getTasks().find((x) => x.id === taskId)!;
+
+    return task.title !== title || task.description !== description;
+  }
+
   generalSaveAsync(
     taskId: string,
     title: string,

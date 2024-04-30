@@ -13,7 +13,7 @@ export class WaitNotifyDirective {
   readonly message = input<string | undefined>();
 
   constructor(ref: ElementRef, private readonly messages: Messages) {
-    this.className = IdService.generate();
+    this.className = IdService.generate().toLowerCase();
 
     this.elem = ref.nativeElement;
     this.elem.classList.add(this.className);

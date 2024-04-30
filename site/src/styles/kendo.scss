@@ -4,7 +4,31 @@ $theme-type: light;
 $kendo-menu-font-family: "Poppins", sans-serif;
 $kendo-window-titlebar-padding-y: 0.5rem;
 
-@import "@progress/kendo-theme-bootstrap/scss/all.scss";
+@import "@progress/kendo-theme-bootstrap/scss/dialog";
+@import "@progress/kendo-theme-bootstrap/scss/menu";
+@import "@progress/kendo-theme-bootstrap/scss/upload";
+@import "@progress/kendo-theme-bootstrap/scss/dropdownlist";
+@import "@progress/kendo-theme-bootstrap/scss/popup";
+@import "@progress/kendo-theme-bootstrap/scss/tooltip";
+@import "@progress/kendo-theme-bootstrap/scss/button";
+@import "@progress/kendo-theme-bootstrap/scss/editor";
+@import "@progress/kendo-theme-bootstrap/scss/input";
+@import "@progress/kendo-theme-bootstrap/scss/stepper";
+@import "@progress/kendo-theme-bootstrap/scss/breadcrumb";
+@import "@progress/kendo-theme-bootstrap/scss/combobox";
+@import "@progress/kendo-theme-bootstrap/scss/icons";
+@import "@progress/kendo-theme-bootstrap/scss/forms";
+@import "@progress/kendo-theme-bootstrap/scss/loader";
+@import "@progress/kendo-theme-bootstrap/scss/checkbox";
+@import "@progress/kendo-theme-bootstrap/scss/textbox";
+@import "@progress/kendo-theme-bootstrap/scss/textarea";
+@import "@progress/kendo-theme-bootstrap/scss/pdf-viewer";
+@import "@progress/kendo-theme-bootstrap/scss/treelist";
+@import "@progress/kendo-theme-bootstrap/scss/switch";
+@import "@progress/kendo-theme-bootstrap/scss/dataviz";
+@import "@progress/kendo-theme-bootstrap/scss/chat";
+@import "@progress/kendo-theme-bootstrap/scss/timeline";
+@import "@progress/kendo-theme-bootstrap/scss/expansion-panel";
 
 .k-popover-body {
   padding: 0;

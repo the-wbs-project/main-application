@@ -5,7 +5,7 @@ import { orgResolve } from '@wbs/main/services';
 import { UiStore } from '@wbs/store';
 
 export const loadGuard = () => {
-  inject(TitleService).setTitle('General.Library', true);
+  inject(TitleService).setTitle([{ text: 'General.Library' }]);
   inject(UiStore).setBreadcrumbs([{ text: 'General.Library' }]);
 };
 
@@ -13,7 +13,7 @@ export const routes: Routes = [
   {
     path: '',
     loadComponent: () =>
-      import('./library-list.component').then((x) => x.LibraryListComponent),
+      import('./library-home.component').then((x) => x.LibraryHomeComponent),
     canActivate: [loadGuard],
     resolve: {
       org: orgResolve,

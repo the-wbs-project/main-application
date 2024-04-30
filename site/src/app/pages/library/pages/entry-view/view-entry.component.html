@@ -16,6 +16,7 @@
         [canEdit]="canEditTitle()"
         (titleChange)="titleChanged($event)"
       />
+      <wbs-save-message [state]="titleSaveState()" cssClass="tx-12" />
       <div class="flex-fill tx-right">
         <div class="d-none d-lg-inline-block mg-r-15">
           <wbs-page-header />
@@ -36,12 +37,8 @@
         (navigate)="navigate($event)"
       />
     </div>
-    <div
-      class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100 bg-light"
-    >
-      <div class="flex-fill">
-        <router-outlet />
-      </div>
+    <div class="card-body border-0 p-0 rounded-10 w-100">
+      <router-outlet />
     </div>
   </div>
 </div>

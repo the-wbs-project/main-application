@@ -13,8 +13,8 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { VisibilityTextComponent } from '@wbs/dummy_components/visibility-text.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryTypeIconPipe } from '../../../../../../pipes/entry-type-icon.pipe';
-import { EntryTypeTitlePipe } from '../../../../../../pipes/entry-type-title.pipe';
+import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
+import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 
 @Component({
   standalone: true,
