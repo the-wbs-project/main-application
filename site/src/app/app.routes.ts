@@ -13,7 +13,7 @@ import { MetadataStore } from './store';
 import { NgxsModule } from '@ngxs/store';
 import { AiState, MembershipState } from './main/states';
 import {
-  AiChatService,
+  AiChatServiceFactory,
   NavigationMenuService,
   UserService,
   orgClaimsResolve,
@@ -41,7 +41,7 @@ export const routes: Routes = [
     ],
     providers: [
       importProvidersFrom(NgxsModule.forFeature([AiState, MembershipState])),
-      AiChatService,
+      AiChatServiceFactory,
       NavigationMenuService,
       UserService,
     ],

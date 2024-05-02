@@ -1,5 +1,10 @@
-import { Injectable, WritableSignal, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
+import {
+  FactoryProvider,
+  Injectable,
+  Signal,
+  inject,
+  signal,
+} from '@angular/core';
 import {
   Action,
   Message,
@@ -17,8 +22,11 @@ import { UserStore } from '@wbs/store';
 
 @Injectable()
 export class AiChatService {
+  private readonly _feed = signal<Message[]>([]);
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
+  private model?: AiModel;
+  private _started = false;
 
   readonly you: User = {
     id: 1,
@@ -29,26 +37,42 @@ export class AiChatService {
     name: 'Bot',
   };
 
+  get feed(): Signal<Message[]> {
+    return this._feed;
+  }
+
+  get started(): boolean {
+    return this._started;
+  }
+
+  setModel(model: AiModel): void {
+    this.model = model;
+  }
+
+  getLastMessage(): string {
+    return this._feed().at(-1)?.text!;
+  }
+
   verifyUserId(): void {
     if (this.you.id === 1) {
       this.you.id = this.userId()!;
     }
   }
 
-  sendAsync(
-    model: AiModel,
-    feed: WritableSignal<Message[]>,
-    message: Message
-  ): void {
+  send(message: Message): void {
+    if (!this.model) return;
+
     const responseMessage: Message = {
       author: this.bot,
       typing: true,
     };
-    let feedArray: Message[] = [...feed(), message, responseMessage];
+    let feedArray: Message[] = [...this._feed(), message, responseMessage];
 
-    feed.set(structuredClone(feedArray));
+    this._feed.set(structuredClone(feedArray));
 
-    if (model.type === 'worker-ai') {
+    this._started = true;
+
+    if (this.model.type === 'worker-ai') {
       const messages: WorkerAiMessage[] = feedArray
         .filter((x) => x.text)
         .map((x) => ({
@@ -61,7 +85,7 @@ export class AiChatService {
       };
 
       this.data.ai
-        .runWorkerAiAsync(model.model, input)
+        .runWorkerAiAsync(this.model.model, input)
         .subscribe((response) => {
           if (response.success) {
             responseMessage.text = response.result.response;
@@ -95,10 +119,10 @@ export class AiChatService {
               fullOutput: response,
             });*/
           }
-          feed.set(structuredClone(feedArray));
+          this._feed.set(structuredClone(feedArray));
           //this.saveChat(ctx);
         });
-    } else if (model.type === 'open-ai') {
+    } else if (this.model.type === 'open-ai') {
       const messages: OpenAiMessage[] = feedArray
         .filter((x) => x.text)
         .map((x) => ({
@@ -106,7 +130,7 @@ export class AiChatService {
           content: x.text!,
         }));
       const input: OpenAiRequest = {
-        model: model.model,
+        model: this.model.model,
         user: this.you.id,
         messages,
       };
@@ -144,7 +168,7 @@ export class AiChatService {
             fullOutput: response,
           });*/
           }
-          feed.set(structuredClone(feedArray));
+          this._feed.set(structuredClone(feedArray));
 
           //this.saveChat(ctx);
         },
@@ -153,7 +177,7 @@ export class AiChatService {
 
           feedArray.splice(feedArray.length - 1, 1);
 
-          feed.set(structuredClone(feedArray));
+          this._feed.set(structuredClone(feedArray));
 
           /*this.saveLog({
             input: message.text!,
@@ -184,3 +208,8 @@ export class AiChatService {
     ];
   }
 }
+
+export const AiChatServiceFactory: FactoryProvider = {
+  provide: AiChatService,
+  useFactory: () => new AiChatService(),
+};

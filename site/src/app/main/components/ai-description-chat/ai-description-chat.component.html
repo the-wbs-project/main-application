@@ -8,12 +8,11 @@
         <span class="mg-l-15"> Chat with {{ model().title }} </span>
       </div>
       <div class="flex-fill">
-        <kendo-chat
-          [messages]="feed()!"
-          [user]="service.you"
-          class="h-100"
-          (sendMessage)="sendMessage($event)"
-          (executeAction)="setProposal($event.action.value === 'append')"
+        <wbs-ai-chat
+          [model]="model()"
+          [actions]="actions"
+          [startingDialog]="startingDialog()"
+          (actionSelected)="setProposal($event.action, $event.message)"
         />
       </div>
     </div>
@@ -27,7 +26,7 @@
       <button
         type="button"
         class="btn btn-outline-dark pd-8 rounded-0"
-        (click)="proposal = ''"
+        (click)="proposal.set('')"
       >
         <fa-icon [icon]="faEraser" />
         Clear
@@ -43,7 +42,7 @@
       <button
         type="button"
         class="btn btn-outline-dark pd-8 rounded-0"
-        (click)="descriptionChange.emit(proposal)"
+        (click)="descriptionChange.emit(proposal())"
       >
         <fa-icon [icon]="faThumbsUp" />
         Accept & Close
