@@ -1,23 +1,5 @@
 @import "./variables";
-@import "../assets/scss/variables";
-
-@import "../assets/css/style.css";
-@import "../assets/css/style-dark.css";
-@import "../assets/css/style-transparent.css";
-
-// animate css
-@import "animate.css/animate.min.css";
-
-@import "../assets/css/style.css";
-@import "../assets/css/style-dark.css";
-@import "../assets/css/style-transparent.css";
-
-@import "../assets/css/skin-modes.css";
-@import "../assets/css/animate.css";
-@import "../assets/plugins/sidebar/sidebar.css";
-
-//@import "../assets/switcher/css/switcher.css";
-//@import "../assets/switcher/demo.css";
+@import "./variables2";
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap");
 @import url("https://fonts.googleapis.com/icon?family=Material+Icons");

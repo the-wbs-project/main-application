@@ -1,4 +1,12 @@
-@import "./variables.scss";
+@import "variables";
+
+$theme-type: light;
+$kendo-menu-font-family: "Poppins", sans-serif;
+$kendo-window-titlebar-padding-y: 0.5rem;
+$kendo-button-border-width: 1;
+$kendo-input-border-width: 1;
+
+@import "@progress/kendo-theme-bootstrap/scss/all.scss";
 
 .k-popover-body {
   padding: 0;

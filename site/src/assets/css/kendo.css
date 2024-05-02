@@ -49800,4 +49800,42 @@ kendo-scrollview.k-scrollview .k-scrollview-nav {
   border-bottom-color: rgba(78, 194, 240, 0.24);
 }
 
+.k-popover-body {
+  padding: 0;
+}
+
+.k-notification-group {
+  top: 50px !important;
+}
+
+.k-chip-solid-base {
+  border-color: #bcbebf !important;
+  color: #212529 !important;
+  background-color: #edeeee !important;
+}
+
+.k-icon {
+  width: 1em;
+  height: 1em;
+  outline: 0;
+  font-size: 16px;
+  font-family: WebComponentsIcons;
+  font-style: normal;
+  font-variant: normal;
+  font-weight: 400;
+  line-height: 1;
+  speak: none;
+  text-transform: none;
+  text-decoration: none;
+  flex-shrink: 0;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  vertical-align: middle;
+  position: relative;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+
 /*# sourceMappingURL=kendo.css.map */

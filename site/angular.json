@@ -37,8 +37,8 @@
               "src/assets"
             ],
             "styles": [
+              "animate.css/animate.css",
               "src/styles/bootstrap.scss",
-              "src/styles/kendo.scss",
               "src/styles/styles.scss"
             ],
             "scripts": [],
