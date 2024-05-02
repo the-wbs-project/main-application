@@ -70,7 +70,6 @@ export class AiDescriptionChatComponent implements OnInit {
   }
 
   setProposal(action: string, message: string): void {
-    console.log(action, message);
     const append = action === 'append';
     const current = this.proposal();
     this.proposal.set(

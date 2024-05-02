@@ -57,4 +57,12 @@ gulp.task("skin", function () {
     .pipe(gulp.dest("src/assets/css"));
 });
 
+//_______task for skinmodes
+gulp.task("kendo", function () {
+  return gulp
+    .src("src/assets/scss/kendo.scss")
+    .pipe(sass())
+    .pipe(gulp.dest("src/assets/css"));
+});
+
 //gulp.task("sass", ["watch", "dark", "transparent", "skin"]);
