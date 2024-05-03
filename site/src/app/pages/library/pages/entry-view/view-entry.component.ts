@@ -17,12 +17,16 @@ import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { LibraryEntry, SaveState } from '@wbs/core/models';
-import { EntryService, SignalStore, TitleService } from '@wbs/core/services';
+import {
+  EntryService,
+  NavigationMenuService,
+  SignalStore,
+  TitleService,
+} from '@wbs/core/services';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { NavigationLink } from '@wbs/main/models';
-import { NavigationMenuService } from '@wbs/main/services';
 import { EntryStore } from '@wbs/store';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
 import { EntryTitleComponent } from './components/entry-title';

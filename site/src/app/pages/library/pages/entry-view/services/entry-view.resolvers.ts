@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Utils } from '@wbs/main/services';
+import { Utils } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { EntryService } from '../../../../../core/services/library/entry.service';
 

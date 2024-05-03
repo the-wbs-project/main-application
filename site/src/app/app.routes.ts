@@ -11,7 +11,6 @@ import {
 import { importProvidersFrom, inject } from '@angular/core';
 import { MetadataStore } from './store';
 import { NgxsModule } from '@ngxs/store';
-import { MembershipState } from './main/states';
 import {
   AiChatServiceFactory,
   NavigationMenuService,
@@ -19,7 +18,8 @@ import {
   orgClaimsResolve,
   orgListResolve,
   rolesResolve,
-} from './main/services';
+} from './core/services';
+import { MembershipState } from './main/states';
 
 export const routes: Routes = [
   {

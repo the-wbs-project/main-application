@@ -6,8 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { SignalStore } from '@wbs/core/services';
-import { WbsPhaseService } from '@wbs/main/services';
+import { SignalStore, WbsPhaseService } from '@wbs/core/services';
 import { ProjectState } from '../../states';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';

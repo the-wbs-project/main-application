@@ -2,12 +2,12 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { Utils } from '@wbs/main/services';
+import { Utils } from '@wbs/core/services';
+import { EntryStore, UiStore } from '@wbs/store';
 import { of } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { SetAsStarted } from '../actions';
 import { EntryUploadState } from '../states';
-import { EntryStore, UiStore } from '@wbs/store';
 
 function getEntryUrl(route: ActivatedRouteSnapshot): string[] {
   return [

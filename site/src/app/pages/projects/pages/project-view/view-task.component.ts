@@ -13,14 +13,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { SaveState } from '@wbs/core/models';
-import { SignalStore, TitleService } from '@wbs/core/services';
+import {
+  NavigationMenuService,
+  SignalStore,
+  TitleService,
+  TaskModalService,
+} from '@wbs/core/services';
 import { ApprovalBadgeComponent } from '@wbs/main/components/approval-badge.component';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { NavigationMenuService, TaskModalService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { ChangeTaskBasics } from './actions';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window';

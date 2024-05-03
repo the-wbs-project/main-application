@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { PROJECT_PAGES } from '../models';
 import { ProjectState } from '../states';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Utils } from '@wbs/main/services';
+import { Utils } from '@wbs/core/services';
 
 @Injectable()
 export class ProjectNavigationService {

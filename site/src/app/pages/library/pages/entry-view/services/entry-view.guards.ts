@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LIBRARY_CLAIMS, RoutedBreadcrumbItem } from '@wbs/core/models';
 import { NavigationLink } from '@wbs/main/models';
-import { Utils } from '@wbs/main/services';
+import { Utils } from '@wbs/core/services';
 import { EntryStore, UiStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';

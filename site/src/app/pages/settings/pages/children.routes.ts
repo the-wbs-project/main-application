@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { orgResolve } from '@wbs/main/services';
+import { orgResolve } from '@wbs/core/services';
 import { MembershipAdminService } from './members/services';
 
 export const routes: Routes = [

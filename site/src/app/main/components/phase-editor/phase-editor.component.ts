@@ -19,7 +19,6 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { DragDropService } from '@wbs/main/services';
 import { filter, map } from 'rxjs/operators';
 import { ListItemDialogComponent } from '../list-item-dialog';
 import { SwitchComponent } from '../switch';
@@ -29,7 +28,7 @@ import { SwitchComponent } from '../switch';
   selector: 'wbs-phase-editor',
   templateUrl: './phase-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [DialogService, DragDropService],
+  providers: [DialogService],
   imports: [
     DialogModule,
     DragDropModule,

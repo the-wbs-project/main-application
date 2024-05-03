@@ -5,10 +5,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { RESOURCE_TYPES } from '@wbs/core/models';
+import { RecordResourceValidation } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { UploaderComponent } from '@wbs/main/components/uploader';
-import { RecordResourceValidation } from '@wbs/main/services';
 import { ResourceTypeTextComponent } from '../record-resources-type-text';
 import { RestrictionsPipe } from './pipes/restrictions.pipe';
 

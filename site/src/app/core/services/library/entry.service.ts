@@ -1,6 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -10,13 +9,11 @@ import {
   LibraryEntryVersion,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
-import { Utils } from '@wbs/main/services';
+import { Messages, Utils } from '@wbs/core/services';
 import { MembershipState } from '@wbs/main/states';
 import { EntryStore } from '@wbs/store';
 import { Observable, forkJoin } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
-import { ProjectCreationComponent } from '../../../pages/library/pages/entry-view/components/project-creation';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
 
 @Injectable()

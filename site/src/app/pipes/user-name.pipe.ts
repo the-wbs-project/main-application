@@ -1,7 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { Resources } from '@wbs/core/services';
+import { Resources, UserService } from '@wbs/core/services';
 import { Observable, map, of } from 'rxjs';
-import { UserService } from '../main/services';
 
 @Pipe({ name: 'userName', standalone: true })
 export class UserNamePipe implements PipeTransform {

@@ -22,13 +22,12 @@ import {
 } from '@progress/kendo-data-query';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
 import { Member } from '@wbs/core/models';
+import { Messages, TableHelper } from '@wbs/core/services';
 import { MemberViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/main/components/sort-arrow.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { TableHelper } from '@wbs/main/services';
-import { Messages } from '@wbs/core/services';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { MembershipAdminService } from '../../services';

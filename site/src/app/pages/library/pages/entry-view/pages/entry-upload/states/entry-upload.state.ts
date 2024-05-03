@@ -9,8 +9,7 @@ import {
   WbsImportResult,
   UploadResults,
 } from '@wbs/core/models';
-import { EntryActivityService, Transformers } from '@wbs/core/services';
-import { Utils } from '@wbs/main/services';
+import { EntryActivityService, Transformers, Utils } from '@wbs/core/services';
 import { MembershipState } from '@wbs/main/states';
 import { EntryStore, UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';

@@ -32,7 +32,12 @@ import {
   Project,
   SaveState,
 } from '@wbs/core/models';
-import { Messages, SignalStore } from '@wbs/core/services';
+import {
+  Messages,
+  SignalStore,
+  TreeService,
+  WbsPhaseService,
+} from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/dummy_components/alert.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
@@ -42,7 +47,6 @@ import { ProgressBarComponent } from '@wbs/main/components/progress-bar.componen
 import { TaskTitleComponent } from '@wbs/main/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
-import { TreeService, WbsPhaseService } from '@wbs/main/services';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';

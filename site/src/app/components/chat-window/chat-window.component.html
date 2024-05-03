@@ -7,7 +7,7 @@
   <div class="d-flex">
     <kendo-dropdownlist
       [data]="store.models()"
-      [(ngModel)]="model"
+      [(value)]="model"
       valueField="model"
       textField="title"
       (selectionChange)="changeModel($event)"

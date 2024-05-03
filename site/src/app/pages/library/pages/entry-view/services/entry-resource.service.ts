@@ -2,8 +2,7 @@ import { Injectable } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ResourceRecord } from '@wbs/core/models';
-import { IdService, Messages } from '@wbs/core/services';
-import { Utils } from '@wbs/main/services';
+import { IdService, Messages, Utils } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 

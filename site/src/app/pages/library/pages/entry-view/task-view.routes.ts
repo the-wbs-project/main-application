@@ -1,6 +1,6 @@
 import { Routes } from '@angular/router';
 import { dirtyGuard } from '@wbs/core/guards';
-import { orgResolve } from '@wbs/main/services';
+import { orgResolve } from '@wbs/core/services';
 import {
   entryIdResolve,
   taskNavGuard,

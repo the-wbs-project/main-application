@@ -25,9 +25,8 @@ import {
   ProjectCategory,
   ProjectNode,
 } from '@wbs/core/models';
-import { IdService, Resources } from '@wbs/core/services';
+import { IdService, Resources, UserService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { UserService } from '@wbs/main/services';
 import { UserStore } from '@wbs/store';
 import { switchMap } from 'rxjs/operators';
 

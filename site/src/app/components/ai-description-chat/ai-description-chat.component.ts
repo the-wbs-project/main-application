@@ -9,13 +9,13 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { AiModel } from '@wbs/core/models';
-import { AiChatComponent } from '../../dummy_components/ai-chat.component';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { AiDescriptionEditorComponent } from '../../dummy_components/ai-description-editor';
 import { TabStripModule } from '@progress/kendo-angular-layout';
+import { AiModel } from '@wbs/core/models';
+import { AiChatService } from '@wbs/core/services';
+import { AiChatComponent } from '@wbs/dummy_components/ai-chat.component';
+import { AiDescriptionEditorComponent } from '@wbs/dummy_components/ai-description-editor';
 import { AiStore } from '@wbs/store';
-import { AiChatService } from '@wbs/main/services';
 
 @Component({
   standalone: true,

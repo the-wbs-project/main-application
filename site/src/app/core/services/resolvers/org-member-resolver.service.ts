@@ -1,13 +1,12 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { Member } from '@wbs/core/models';
 import { Utils } from '../utils.service';
 
-export const orgClaimsResolve: ResolveFn<string[]> = (
+export const orgMemberResolve: ResolveFn<Member[]> = (
   route: ActivatedRouteSnapshot
-) => {
-  return inject(DataServiceFactory).claims.getOrganizationClaimsAsync(
+) =>
+  inject(DataServiceFactory).memberships.getMembershipUsersAsync(
     Utils.getParam(route, 'org')
   );
-};

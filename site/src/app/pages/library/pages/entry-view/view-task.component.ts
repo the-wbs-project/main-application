@@ -15,12 +15,13 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import { SaveMessageComponent } from '@wbs/components/save-message.component';
 import {
   EntryTaskService,
+  NavigationMenuService,
   SaveService,
+  TaskModalService,
   TitleService,
 } from '@wbs/core/services';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
-import { NavigationMenuService, TaskModalService } from '@wbs/main/services';
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
 import { EntryStore } from '@wbs/store';

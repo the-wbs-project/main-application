@@ -1,7 +1,6 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { TitleService } from '@wbs/core/services';
-import { orgResolve } from '@wbs/main/services';
+import { TitleService, orgResolve } from '@wbs/core/services';
 import { UiStore } from '@wbs/store';
 
 export const loadGuard = () => {

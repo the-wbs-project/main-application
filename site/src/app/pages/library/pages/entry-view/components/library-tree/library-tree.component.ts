@@ -33,7 +33,13 @@ import {
   LibraryEntryVersion,
   SaveState,
 } from '@wbs/core/models';
-import { EntryTaskService, Messages, SignalStore } from '@wbs/core/services';
+import {
+  EntryTaskService,
+  Messages,
+  SignalStore,
+  TreeService,
+  WbsPhaseService,
+} from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/dummy_components/alert.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
@@ -44,7 +50,6 @@ import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipl
 import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
 import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { TreeService, WbsPhaseService } from '@wbs/main/services';
 import { EntryStore, UiStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';

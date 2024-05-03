@@ -9,7 +9,7 @@ import {
   Message,
   User,
 } from '@progress/kendo-angular-conversational-ui';
-import { AiChatService } from '@wbs/main/services';
+import { AiChatService } from '@wbs/core/services';
 
 @Component({
   standalone: true,

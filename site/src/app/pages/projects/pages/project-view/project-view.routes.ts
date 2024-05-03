@@ -2,7 +2,7 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { dirtyGuard } from '@wbs/core/guards';
-import { orgResolve, userIdResolve } from '@wbs/main/services';
+import { orgResolve, userIdResolve } from '@wbs/core/services';
 import { PROJECT_PAGES } from './models';
 import {
   ChecklistDataService,

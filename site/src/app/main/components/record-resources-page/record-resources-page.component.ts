@@ -15,17 +15,13 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { FileInfo } from '@progress/kendo-angular-upload';
-import {
-  LIBRARY_CLAIMS,
-  RESOURCE_TYPES,
-  ResourceRecord,
-} from '@wbs/core/models';
+import { InfoComponent } from '@wbs/components/info/info.component';
+import { RESOURCE_TYPES, ResourceRecord } from '@wbs/core/models';
+import { RecordResourceValidation } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { RecordResourceValidation } from '@wbs/main/services';
 import { RecordResourceEditorComponent } from './components/record-resources-editor';
 import { RecordResourceListComponent } from './components/record-resources-list';
-import { InfoComponent } from '@wbs/components/info/info.component';
 
 @Component({
   standalone: true,

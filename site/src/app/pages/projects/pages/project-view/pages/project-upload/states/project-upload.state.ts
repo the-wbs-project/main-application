@@ -11,7 +11,7 @@ import {
   UploadResults,
 } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
-import { Utils } from '@wbs/main/services';
+import { Utils } from '@wbs/core/services';
 import { MembershipState } from '@wbs/main/states';
 import { UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';

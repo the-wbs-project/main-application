@@ -1,8 +1,8 @@
 import { TestBed, async } from '@angular/core/testing';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { Utils } from './utils.service';
-import { MembershipState } from '../states';
+import { Utils } from '../../main/services/utils.service';
+import { MembershipState } from '../../main/states';
 import { inject } from '@angular/core';
 
 /*
