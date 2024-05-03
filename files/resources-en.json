@@ -664,7 +664,7 @@
       "Title": "AI Assistant",
       "ClearConfirm": "Are you sure you want to clear your AI assist history?",
       "BetaNote": "NOTE: This functionality uses technology which is still in beta.",
-      "ChooseModel": "Choose Model",
+      "SelectModels": "Select Models",
       "StartConversation": "Now use the dialog below to get the conversation started with the chat bot",
       "GetStartedLibraryEntry": "Let's use a large language model to help you generate a description for this WBS!",
       "GetStartedProject": "Let's use a large language model to help you generate a description for this project!",

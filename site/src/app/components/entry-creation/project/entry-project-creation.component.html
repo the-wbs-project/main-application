@@ -25,7 +25,7 @@
     >
       @if (view() === 0) {
       <div
-        class="d-ib w-100 mx-wd-800 tx-left animate__animated"
+        class="d-inline-block w-100 mx-wd-800 tx-left animate__animated"
         [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
       >
         <div class="pd-x-12 mb-3">
@@ -38,7 +38,7 @@
             id="templateTitle"
             [(ngModel)]="templateTitle"
           />
-          <label class="d-ib tx-12 tx-italic mg-t-5">
+          <label class="d-inline-block tx-12 tx-italic mg-t-5">
             {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
           </label>
         </div>
@@ -57,7 +57,7 @@
       </div>
       } @else if (view() === 1) {
       <div
-        class="d-ib w-100 animate__animated"
+        class="d-inline-block w-100 animate__animated"
         [ngClass]="{
           animate__slideInLeft: dir() === 'left',
           animate__slideInRight: dir() === 'right'
@@ -73,7 +73,7 @@
       } @else if (view() === 2) {
 
       <div
-        class="d-ib w-100 mx-wd-800 text-center animate__animated"
+        class="d-inline-block w-100 mx-wd-800 text-center animate__animated"
         [ngClass]="{
           animate__slideInLeft: dir() === 'left',
           animate__slideInRight: dir() === 'right'
@@ -82,7 +82,7 @@
         <div class="pd-y-15 pd-x-30 tx-14">
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
-        <div class="d-ib w-100" style="max-width: 500px">
+        <div class="d-inline-block w-100" style="max-width: 500px">
           <wbs-discipline-editor
             [showAdd]="true"
             [(categories)]="disciplines"
@@ -92,7 +92,7 @@
       } @else if (view() === 3) {
 
       <div
-        class="d-ib w-100 mx-wd-800 animate__animated"
+        class="d-inline-block w-100 mx-wd-800 animate__animated"
         [ngClass]="{
           animate__slideInLeft: dir() === 'left',
           animate__slideInRight: dir() === 'right'

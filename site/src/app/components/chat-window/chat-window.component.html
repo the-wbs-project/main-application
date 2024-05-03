@@ -6,7 +6,7 @@
 >
   <div class="d-flex">
     <kendo-dropdownlist
-      [data]="models()"
+      [data]="store.models()"
       [(ngModel)]="model"
       valueField="model"
       textField="title"
@@ -18,8 +18,8 @@
   </div>
   <div class="content">
     <kendo-chat
-      [messages]="feed()!"
-      [user]="you()!"
+      [messages]="service.feed()"
+      [user]="store.you"
       class="ai-chat"
       (sendMessage)="sendMessage($event)"
     />

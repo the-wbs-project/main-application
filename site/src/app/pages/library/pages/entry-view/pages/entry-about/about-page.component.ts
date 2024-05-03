@@ -8,12 +8,12 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
-import { EntryService } from '@wbs/core/services';
+import { AiPromptService, EntryService } from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { EntryStore } from '@wbs/store';
@@ -44,11 +44,13 @@ export class AboutPageComponent {
   readonly claims = input.required<string[]>();
   readonly disciplines = input.required<ListItem[]>();
   readonly descriptionSaveState = signal<SaveState>('ready');
-  readonly descriptionAiStartingDialog = computed(() => {
-    return `Can you provide me with a one paragraph description of a phase of a work breakdown structure titled '${
-      this.entryStore.version()?.title
-    }'?`;
-  });
+  readonly descriptionAiStartingDialog = computed(() =>
+    AiPromptService.libraryEntryDescription(
+      this.entryStore.entry(),
+      this.entryStore.version(),
+      this.entryStore.viewModels()
+    )
+  );
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
 

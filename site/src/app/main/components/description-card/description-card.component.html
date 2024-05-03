@@ -7,12 +7,7 @@
 
     @if (!editMode()) {
     <div class="flex-fill tx-right">
-      <wbs-fading-message
-        [icon]="checkIcon"
-        message="General.Saved"
-        [show]="saveState() === 'saved'"
-        cssClass="tx-success tx-12 mg-r-10"
-      />
+      <wbs-save-message [state]="saveState()" cssClass="mg-r-10" />
       <fa-icon
         size="lg"
         class="pointer"
@@ -26,7 +21,7 @@
 </div>
 @if (editMode()) {
 <div class="card-body text-center">
-  <div class="d-ib w-100" style="max-width: 1000px">
+  <div class="d-inline-block w-100" style="max-width: 1000px">
     <div class="d-none d-sm-flex w-100 mg-b-10">
       <div class="text-start flex-align-center flex-fill tx-18">
         {{ "General.DescriptionEditor" | translate }}

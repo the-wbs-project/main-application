@@ -82,7 +82,10 @@
             />
             @if (approvals() | findThemById : dataItem.childrenIds |
             childrenApproval; as stats) {
-            <div class="d-ib wd-100 mg-l-10" [title]="stats.totalCount">
+            <div
+              class="d-inline-block wd-100 mg-l-10"
+              [title]="stats.totalCount"
+            >
               <wbs-progress-bar
                 [passPercent]="stats.passedPercent"
                 [failPercent]="stats.failedPercent"

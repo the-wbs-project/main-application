@@ -7,7 +7,7 @@
 <div class="card-body">
   @if (project(); as project) { @if (project.status; as status) {
   <div>
-    <span class="d-ib wd-30">
+    <span class="d-inline-block wd-30">
       <wbs-project-status-tile-icon
         [status]="
           status === 'cancelled'
@@ -23,7 +23,7 @@
   <div class="wd-20 ht-20 tx-center rotate-90">...</div>
   @if (approvalEnabled()) {
   <div>
-    <span class="d-ib wd-30">
+    <span class="d-inline-block wd-30">
       <wbs-project-status-tile-icon
         [status]="
           !project.approvalStarted
@@ -41,7 +41,7 @@
   <div class="wd-20 ht-20 tx-center rotate-90">...</div>
   }
   <div>
-    <span class="d-ib wd-30">
+    <span class="d-inline-block wd-30">
       <wbs-project-status-tile-icon
         [status]="
           status === 'execution'
@@ -56,7 +56,7 @@
   </div>
   <div class="wd-20 ht-20 tx-center rotate-90">...</div>
   <div>
-    <span class="d-ib wd-30">
+    <span class="d-inline-block wd-30">
       <wbs-project-status-tile-icon status="unstarted" />
     </span>
     {{ "Projects.ReviewPhase" | translate }}
@@ -64,7 +64,7 @@
   @if (status === 'cancelled') {
   <div class="wd-30 ht-20 tx-center rotate-90">...</div>
   <div>
-    <span class="d-ib wd-30">
+    <span class="d-inline-block wd-30">
       <wbs-project-status-tile-icon status="in-progress" />
     </span>
     {{ "Projects.ProjectCancelled" | translate }}

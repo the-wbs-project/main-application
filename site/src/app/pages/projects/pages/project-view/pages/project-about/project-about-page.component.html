@@ -1,5 +1,5 @@
 <div class="w-100 text-center h-100">
-  <div class="d-ib text-start w-100 h-100 mx-wd-1200">
+  <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
     <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
       <wbs-discipline-card
         [splitLimit]="650"
@@ -58,7 +58,7 @@
         <ul class="list-group">
           @for (user of users(); track user.id) {
           <li class="list-group-item bd-gray-400 bd-t-1-f">
-            <div class="d-ib wd-40">
+            <div class="d-inline-block wd-40">
               @if (user.picture){
               <img
                 class="rounded-circle wd-30 ht-30 object-fit-cover"

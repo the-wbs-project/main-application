@@ -19,14 +19,14 @@ import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { TaskModalService } from '@wbs/main/services';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
-import { EntryTaskService } from '@wbs/core/services';
+import { AiPromptService, EntryTaskService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/store';
 
 @Component({
@@ -73,11 +73,14 @@ export class TaskAboutPageComponent {
 
     return this.disciplines().map((x) => x.id);
   });
-  readonly descriptionAiStartingDialog = computed(() => {
-    const versionTitle = this.entryStore.version()?.title;
-    const taskTitle = this.task()?.title;
-    return `Can you provide me with a one paragraph description of a task titled '${taskTitle}' belonging to a work breakdown structure titled '${versionTitle}'?`;
-  });
+  readonly descriptionAiStartingDialog = computed(() =>
+    AiPromptService.libraryEntryTaskDescription(
+      this.entryStore.entry(),
+      this.entryStore.version(),
+      this.taskId(),
+      this.entryStore.viewModels()
+    )
+  );
   //
   //  State Items
   //

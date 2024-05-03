@@ -12,12 +12,11 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import { ChatWindowComponent } from '@wbs/components/chat-window';
 import { Organization } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { UiStore, UserStore } from '@wbs/store';
+import { AiStore, UiStore, UserStore } from '@wbs/store';
 import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header';
 import { ProfileEditorComponent } from './components/profile-editor';
 import { MainContentDirective } from '../core/directives/main-content.directive';
-import { AiState } from '../main/states';
 
 @Component({
   standalone: true,
@@ -65,9 +64,10 @@ export class LayoutComponent implements AfterContentInit {
   readonly claims = input.required<string[]>();
   readonly orgs = input.required<Organization[]>();
 
-  readonly user = inject(UserStore).profile;
   readonly showProfileEditor = model(false);
-  readonly isAiEnabled = this.store.select(AiState.isEnabled);
+
+  readonly user = inject(UserStore).profile;
+  readonly isAiEnabled = inject(AiStore).isEnabled;
   readonly activeSection = inject(UiStore).activeSection;
 
   ngAfterContentInit() {

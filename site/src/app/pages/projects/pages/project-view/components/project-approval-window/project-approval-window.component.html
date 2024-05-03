@@ -21,7 +21,7 @@
     } @if (claims() | check : canApproveClaims) {
     <div class="ht-40 align-center">
       @if (hasChildren()) {
-      <div ngbDropdown class="d-ib wd-50p tx-center pd-t-5">
+      <div ngbDropdown class="d-inline-block wd-50p tx-center pd-t-5">
         <button
           ngbDropdownToggle
           type="button"
@@ -46,7 +46,7 @@
           </button>
         </div>
       </div>
-      <div ngbDropdown class="d-ib wd-50p tx-center pd-t-5">
+      <div ngbDropdown class="d-inline-block wd-50p tx-center pd-t-5">
         <button
           ngbDropdownToggle
           type="button"
@@ -72,7 +72,7 @@
         </div>
       </div>
       } @else {
-      <div class="d-ib wd-50p tx-center pd-t-5">
+      <div class="d-inline-block wd-50p tx-center pd-t-5">
         <button
           class="btn btn-sm"
           [disabled]="isReadyOnly"
@@ -87,7 +87,7 @@
           }}
         </button>
       </div>
-      <div class="d-ib wd-50p tx-center pd-t-5">
+      <div class="d-inline-block wd-50p tx-center pd-t-5">
         <button
           class="btn btn-sm"
           [disabled]="isReadyOnly"

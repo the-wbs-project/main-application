@@ -14,7 +14,7 @@
         class="form-control"
         [(ngModel)]="task.title"
       />
-      <label class="d-ib tx-12 tx-italic mg-t-5">
+      <label class="d-inline-block tx-12 tx-italic mg-t-5">
         {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
       </label>
     </div>
@@ -49,7 +49,7 @@
       </div>
       <kendo-editor #description [(ngModel)]="task.description" />
 
-      <label class="d-ib tx-12 tx-italic mg-t-5">
+      <label class="d-inline-block tx-12 tx-italic mg-t-5">
         {{ "Library.DescriptionHelpTask" | translate }}
       </label>
       @if (showDescriptionAlert()) {

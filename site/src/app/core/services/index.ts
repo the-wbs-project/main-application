@@ -1,6 +1,7 @@
 export * from './library';
 export * from './transformers';
 
+export * from './ai-prompt.service';
 export * from './app-config.service';
 export * from './auth0.service';
 export * from './category-selection.service';

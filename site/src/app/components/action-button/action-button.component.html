@@ -29,7 +29,7 @@
         (click)="goto(item.route!)"
       >
         <span role="presentation" class="k-link k-menu-link">
-          <div class="d-ib wd-20 text-center">
+          <div class="d-inline-block wd-20 text-center">
             <fa-icon [icon]="item.icon!" />
           </div>
           {{ item.text! | translate }}
@@ -45,7 +45,7 @@
         (click)="itemClicked.emit(item.action!)"
       >
         <span role="presentation" class="k-link k-menu-link">
-          <div class="d-ib wd-20 text-center">
+          <div class="d-inline-block wd-20 text-center">
             <fa-icon [icon]="item.icon!" />
           </div>
           {{ item.text! | translate }}

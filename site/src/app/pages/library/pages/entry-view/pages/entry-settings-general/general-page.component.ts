@@ -23,7 +23,7 @@ import { EntryService, SaveService } from '@wbs/core/services';
 import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
 import { AiButtonComponent } from '@wbs/main/components/ai-button.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
 import { DirtyComponent } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';

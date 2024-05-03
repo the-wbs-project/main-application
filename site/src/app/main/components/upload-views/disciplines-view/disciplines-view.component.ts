@@ -12,7 +12,7 @@ import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ImportPerson } from '@wbs/core/models';
 import { CategoryMatchListComponent } from '@wbs/dummy_components/category-match-list.component';
-import { AlertComponent } from '@wbs/main/components/alert.component';
+import { AlertComponent } from '@wbs/dummy_components/alert.component';
 
 @Component({
   standalone: true,

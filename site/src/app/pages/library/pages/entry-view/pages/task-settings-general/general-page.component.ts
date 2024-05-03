@@ -15,7 +15,7 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SaveMessageComponent } from '@wbs/components/save-message.component';
 import { EntryTaskService, SaveService } from '@wbs/core/services';
-import { AlertComponent } from '@wbs/main/components/alert.component';
+import { AlertComponent } from '@wbs/dummy_components/alert.component';
 import { EntryStore } from '@wbs/store';
 
 @Component({

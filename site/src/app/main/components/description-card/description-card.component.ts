@@ -18,10 +18,10 @@ import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectApproval, SaveState } from '@wbs/core/models';
 import { SafeHtmlPipe } from '../../../pipes/safe-html.pipe';
 import { AiButtonComponent } from '../ai-button.component';
-import { AlertComponent } from '../alert.component';
+import { AlertComponent } from '../../../dummy_components/alert.component';
 import { ApprovalBadgeComponent } from '../approval-badge.component';
-import { FadingMessageComponent } from '../fading-message.component';
 import { SaveButtonComponent } from '../save-button.component';
+import { SaveMessageComponent } from '@wbs/components/save-message.component';
 
 @Component({
   standalone: true,
@@ -34,11 +34,11 @@ import { SaveButtonComponent } from '../save-button.component';
     AlertComponent,
     ApprovalBadgeComponent,
     EditorModule,
-    FadingMessageComponent,
     FontAwesomeModule,
     FormsModule,
     SafeHtmlPipe,
     SaveButtonComponent,
+    SaveMessageComponent,
     TranslateModule,
   ],
 })
@@ -52,9 +52,9 @@ export class DescriptionCardComponent {
   readonly askAi = model.required<boolean>();
   readonly editMode = model.required<boolean>();
   readonly description = input.required<string>();
+  readonly saveState = input.required<SaveState>();
   readonly noDescriptionLabel = input.required<string>();
   readonly approval = input<ProjectApproval | undefined>(undefined);
-  readonly saveState = input<SaveState>('ready');
 
   editDescription = '';
 

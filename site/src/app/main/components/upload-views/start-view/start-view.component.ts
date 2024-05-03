@@ -13,7 +13,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { AlertComponent } from '@wbs/main/components/alert.component';
+import { AlertComponent } from '@wbs/dummy_components/alert.component';
 import { UploaderComponent } from '@wbs/main/components/uploader/uploader.component';
 
 @Component({

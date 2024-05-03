@@ -11,7 +11,7 @@ import {
 import { importProvidersFrom, inject } from '@angular/core';
 import { MetadataStore } from './store';
 import { NgxsModule } from '@ngxs/store';
-import { AiState, MembershipState } from './main/states';
+import { MembershipState } from './main/states';
 import {
   AiChatServiceFactory,
   NavigationMenuService,
@@ -40,7 +40,7 @@ export const routes: Routes = [
       authGuard,
     ],
     providers: [
-      importProvidersFrom(NgxsModule.forFeature([AiState, MembershipState])),
+      importProvidersFrom(NgxsModule.forFeature([MembershipState])),
       AiChatServiceFactory,
       NavigationMenuService,
       UserService,

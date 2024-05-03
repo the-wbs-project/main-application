@@ -27,7 +27,7 @@
 </label>
 @for (status of statiList; track $index) {
 <div class="mg-t-10 mg-l-15">
-  <div class="d-ib wd-200 tx-12">
+  <div class="d-inline-block wd-200 tx-12">
     <input
       [name]="status"
       kendoCheckbox
@@ -52,7 +52,7 @@
 
 @for (cat of cats; track cat.id) {
 <div class="mg-t-10 mg-l-15">
-  <div class="d-ib wd-200 tx-12">
+  <div class="d-inline-block wd-200 tx-12">
     <input
       [name]="cat.id"
       kendoCheckbox
@@ -120,7 +120,7 @@
 
       @for (status of statiList; track $index) {
       <div class="mg-t-10 mg-l-15">
-        <div class="d-ib wd-120 tx-12">
+        <div class="d-inline-block wd-120 tx-12">
           <input
             [name]="status"
             kendoCheckbox
@@ -145,7 +145,7 @@
       </label>
       @for (cat of cats; track cat.id) {
       <div class="mg-t-10 mg-l-15">
-        <div class="d-ib wd-200 tx-12">
+        <div class="d-inline-block wd-200 tx-12">
           <input
             [name]="cat.id"
             kendoCheckbox

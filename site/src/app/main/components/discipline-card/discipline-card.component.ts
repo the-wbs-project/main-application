@@ -18,7 +18,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/store';
-import { AlertComponent } from '../alert.component';
+import { AlertComponent } from '../../../dummy_components/alert.component';
 import { DisciplineSplitListComponent } from '../discipline-split-list.component';
 
 @Component({

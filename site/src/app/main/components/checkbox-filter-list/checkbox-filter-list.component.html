@@ -20,7 +20,7 @@
   </ng-template>
   <ng-template kendoMultiSelectItemTemplate let-dataItem>
     <div class="checkbox-list-item">
-      <span class="d-ib" [style.width.px]="labelWidth">
+      <span class="d-inline-block" [style.width.px]="labelWidth">
         {{ dataItem[textField()] | translate }}
       </span>
       <a class="tx-10" (click)="onlyClicked($event, dataItem)">

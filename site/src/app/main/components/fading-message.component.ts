@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, TranslateModule],
   template: `<div
-    class="d-ib"
+    class="d-inline-block"
     [ngClass]="cssClass() ?? ''"
     [@fade]="show() ? 'in' : 'out'"
   >

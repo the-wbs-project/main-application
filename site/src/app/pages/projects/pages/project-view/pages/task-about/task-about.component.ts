@@ -17,7 +17,7 @@ import { PROJECT_CLAIMS, PROJECT_STATI, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { delay, tap } from 'rxjs/operators';
 import { ChangeTaskBasics } from '../../actions';

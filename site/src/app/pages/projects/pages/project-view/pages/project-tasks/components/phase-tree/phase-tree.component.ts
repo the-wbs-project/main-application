@@ -34,7 +34,7 @@ import {
 } from '@wbs/core/models';
 import { Messages, SignalStore } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { AlertComponent } from '@wbs/main/components/alert.component';
+import { AlertComponent } from '@wbs/dummy_components/alert.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';

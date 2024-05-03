@@ -19,6 +19,7 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import { routes } from './app.routes';
 import { AppConfig, Resources } from './core/services';
 import { AppInitializerFactory, RequestInterceptor } from './setup';
+import { AiStore, UiStore } from './store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -38,7 +39,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [Resources, AuthClientConfig, AppConfig],
+      deps: [Resources, AuthClientConfig, AppConfig, UiStore, AiStore],
       multi: true,
     },
     {

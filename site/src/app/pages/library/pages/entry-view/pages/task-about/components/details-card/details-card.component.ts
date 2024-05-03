@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
+  OnChanges,
+  SimpleChanges,
   inject,
   input,
   signal,
@@ -21,7 +22,7 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DateTextPipe, RouterModule, TranslateModule],
 })
-export class DetailsCardComponent {
+export class DetailsCardComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);
 
   readonly entry = input.required<LibraryEntry>();
@@ -30,14 +31,11 @@ export class DetailsCardComponent {
 
   readonly owner = signal<string | undefined>(undefined);
 
-  constructor() {
-    effect(() => {
-      const id = this.entry().owner;
-
-      if (id)
-        this.data.organizations
-          .getNameAsync(id)
-          .subscribe((name) => this.owner.set(name));
-    });
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['entry'] && this.entry()) {
+      this.data.organizations
+        .getNameAsync(this.entry().owner)
+        .subscribe((name) => this.owner.set(name));
+    }
   }
 }

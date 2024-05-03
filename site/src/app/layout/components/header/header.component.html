@@ -3,7 +3,7 @@
     {{ appTitle }}
   </div>
   <div class="tx-right pd-r-10 flex-1">
-    <div class="d-ib wd-60 mg-t-8 mg-r-20">
+    <div class="d-inline-block wd-60 mg-t-8 mg-r-20">
       @if (user(); as user) {
       <wbs-header-profile [user]="user" [roles]="roles()" />
       }

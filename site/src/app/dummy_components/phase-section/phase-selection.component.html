@@ -16,7 +16,7 @@
     </button>
 
     <wbs-info-message
-      cssClass="w-100 text-center d-ib mg-t-5"
+      cssClass="w-100 text-center d-inline-block mg-t-5"
       message="LibraryCreate.PredefinedPhaseDescription"
     />
   </div>
@@ -31,7 +31,7 @@
       {{ "LibraryCreate.CustomPhase" | translate }}
     </button>
     <wbs-info-message
-      cssClass="w-100 text-center d-ib mg-t-5"
+      cssClass="w-100 text-center d-inline-block mg-t-5"
       message="LibraryCreate.CustomPhaseDescription"
     />
   </div>
@@ -99,7 +99,7 @@
     [value]="phaseText()"
     (change)="textChanged(customTitle.value)"
   />
-  <label class="d-ib tx-12 tx-italic mg-t-5">
+  <label class="d-inline-block tx-12 tx-italic mg-t-5">
     {{ "LibraryCreate.PhaseTitleDescription" | translate }}
   </label>
 </div>

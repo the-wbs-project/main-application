@@ -18,14 +18,17 @@ import {
   WorkerAiMessage,
   WorkerAiRequest,
 } from '@wbs/core/models';
+import { Resources } from '@wbs/core/services';
 import { UserStore } from '@wbs/store';
 
 @Injectable()
 export class AiChatService {
-  private readonly _feed = signal<Message[]>([]);
   private readonly data = inject(DataServiceFactory);
+  private readonly resources = inject(Resources);
   private readonly userId = inject(UserStore).userId;
+  private readonly _feed = signal<Message[]>([]);
   private model?: AiModel;
+  private _actions: Action[] = [];
   private _started = false;
 
   readonly you: User = {
@@ -45,8 +48,15 @@ export class AiChatService {
     return this._started;
   }
 
-  setModel(model: AiModel): void {
-    this.model = model;
+  setActions(actions: Action[]): void {
+    //
+    //  TODO handle resources
+    //
+    this._actions = actions;
+  }
+
+  reset(): void {
+    this._feed.set([]);
   }
 
   getLastMessage(): string {
@@ -59,8 +69,19 @@ export class AiChatService {
     }
   }
 
-  send(message: Message): void {
-    if (!this.model) return;
+  start(model: AiModel, startingDialog?: string): void {
+    this._feed.set([]);
+    this.model = model;
+    this.send(startingDialog);
+  }
+
+  send(messageOrText: Message | string | undefined): void {
+    if (!this.model || !messageOrText) return;
+
+    const message =
+      typeof messageOrText !== 'string'
+        ? messageOrText
+        : { author: this.you, text: messageOrText };
 
     const responseMessage: Message = {
       author: this.bot,
@@ -91,7 +112,7 @@ export class AiChatService {
             responseMessage.text = response.result.response;
             responseMessage.typing = false;
             responseMessage.timestamp = new Date();
-            responseMessage.suggestedActions = this.getActions();
+            responseMessage.suggestedActions = this._actions;
 
             /*this.saveLog({
               input: message.text!,
@@ -141,7 +162,7 @@ export class AiChatService {
             responseMessage.text = response.choices[0].message.content!;
             responseMessage.typing = false;
             responseMessage.timestamp = new Date();
-            responseMessage.suggestedActions = this.getActions();
+            responseMessage.suggestedActions = this._actions;
 
             /*this.saveLog({
             input: message.text!,
@@ -191,21 +212,6 @@ export class AiChatService {
         }
       );
     }
-  }
-
-  private getActions(): Action[] {
-    return [
-      {
-        type: 'action',
-        title: 'Append',
-        value: 'append',
-      },
-      {
-        type: 'action',
-        title: 'Set/Replace',
-        value: 'set',
-      },
-    ];
   }
 }
 

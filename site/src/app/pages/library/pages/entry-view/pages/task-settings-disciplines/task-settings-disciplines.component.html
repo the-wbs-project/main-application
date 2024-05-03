@@ -3,14 +3,14 @@
   {{ "General.Disciplines" | translate }}
 </div>
 <div class="pd-15 text-center bg-white">
-  <div class="d-ib w-100 mx-wd-xs-500 text-start card dashboard-card">
+  <div class="d-inline-block w-100 mx-wd-xs-500 text-start card dashboard-card">
     <div class="d-flex card-header flex-align-center">
       <div>
         {{ "Wbs.TaskDisciplines" | translate }}
       </div>
       <div class="flex-fill text-end">
         @if (saveState() === 'saved') {
-        <div class="d-ib tx-success tx-12 mg-r-10">
+        <div class="d-inline-block tx-success tx-12 mg-r-10">
           <fa-icon [icon]="checkIcon" />&nbsp;
           {{ "General.Saved" | translate }}
         </div>

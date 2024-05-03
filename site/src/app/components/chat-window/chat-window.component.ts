@@ -5,6 +5,8 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
+  inject,
+  model,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -31,8 +33,9 @@ import {
   ClearAiMessages,
   SendAiMessage,
 } from '@wbs/main/actions';
+import { AiChatService } from '@wbs/main/services';
 import { TranslateListPipe } from '@wbs/pipes/translate-list.pipe';
-import { AiState } from '@wbs/main/states';
+import { AiStore } from '@wbs/store';
 
 @UntilDestroy()
 @Component({
@@ -56,43 +59,26 @@ import { AiState } from '@wbs/main/states';
   ],
 })
 export class ChatWindowComponent implements OnInit {
-  readonly bot = toSignal(this.store.select(AiState.bot));
-  readonly you = toSignal(this.store.select(AiState.you));
-  readonly feed = toSignal(this.store.select(AiState.feed));
-  readonly models = toSignal(this.store.select(AiState.models));
+  readonly store = inject(AiStore);
+  readonly service = inject(AiChatService);
   readonly iconUp = arrowUpIcon;
   readonly iconDown = arrowDownIcon;
   readonly iconBolt = faBoltLightning;
-  model?: AiModel;
+  readonly model = model<AiModel>();
 
-  constructor(
-    private readonly cd: ChangeDetectorRef,
-    private readonly messages: Messages,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly messages: Messages) {}
 
   ngOnInit(): void {
-    this.store
-      .select(AiState.feed)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => this.cd.detectChanges());
-
-    this.store
-      .select(AiState.model)
-      .pipe(untilDestroyed(this))
-      .subscribe((model) => {
-        this.model = model;
-        this.cd.detectChanges();
-      });
+    this.changeModel(this.store.model()!);
   }
 
   changeModel(model: AiModel): void {
-    console.log(model);
-    this.store.dispatch(new ChangeAiModel(model));
+    this.model.set(model);
+    this.service.start(model);
   }
 
   sendMessage(e: SendMessageEvent): void {
-    this.store.dispatch(new SendAiMessage(e.message));
+    this.service.send(e.message);
   }
 
   clear(): void {
@@ -100,7 +86,7 @@ export class ChatWindowComponent implements OnInit {
       .show('General.Confirm', 'AI.ClearConfirm')
       .subscribe((result) => {
         if (result) {
-          this.store.dispatch(new ClearAiMessages());
+          this.service.reset();
         }
       });
   }

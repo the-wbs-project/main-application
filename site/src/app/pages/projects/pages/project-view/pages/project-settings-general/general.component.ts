@@ -17,7 +17,7 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { AiButtonComponent } from '@wbs/main/components/ai-button.component';
-import { DescriptionAiDialogComponent } from '@wbs/main/components/entry-description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
 import { InfoMessageComponent } from '@wbs/main/components/info-message.component';
 import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';

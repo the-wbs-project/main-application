@@ -13,7 +13,7 @@ import { DisciplineLabelPipe } from '../../pipes/discipline-label.pipe';
       class="list-group-item pd-y-5 pd-x-0 border-0"
       [ngClass]="[odd && altClass() ? altClass() : '', itemClass() ?? '']"
     >
-      <span class="d-ib wd-30">
+      <span class="d-inline-block wd-20 text-center mg-r-10">
         <i class="fa-solid" [ngClass]="disc | disciplineIcon : fullList()"></i>
       </span>
       {{ disc | disciplineLabel : fullList() }}

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
@@ -6,22 +6,22 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Organization, User } from '@wbs/core/models';
 import { Logger, Messages, sorter } from '@wbs/core/services';
 import { InitiateOrganizations } from '@wbs/main/actions';
-import { UserStore } from '@wbs/store';
+import { AiStore, UserStore } from '@wbs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 @UntilDestroy()
 @Injectable({ providedIn: 'root' })
 export class Auth0Service {
+  private readonly aiStore = inject(AiStore);
+  private readonly auth = inject(AuthService);
+  private readonly data = inject(DataServiceFactory);
+  private readonly logger = inject(Logger);
+  private readonly messages = inject(Messages);
+  private readonly store = inject(Store);
+  private readonly userStore = inject(UserStore);
+
   private readonly _isInitiated = new BehaviorSubject<boolean>(false);
-  constructor(
-    private readonly auth: AuthService,
-    private readonly data: DataServiceFactory,
-    private readonly logger: Logger,
-    private readonly messages: Messages,
-    private readonly store: Store,
-    private readonly userStore: UserStore
-  ) {}
 
   get isInitiated(): Observable<boolean> {
     return this._isInitiated.asObservable();
@@ -43,6 +43,7 @@ export class Auth0Service {
         profile.name = '';
       }
 
+      this.aiStore.setUserInfo(profile);
       this.userStore.set(profile);
       this.logger.setGlobalContext({
         'usr.id': profile.id,

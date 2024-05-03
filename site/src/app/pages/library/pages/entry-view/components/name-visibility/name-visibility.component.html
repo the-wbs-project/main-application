@@ -5,7 +5,7 @@
   (close)="dialog.close()"
 >
   <div class="d-flex flex-column h-100">
-    <div class="d-ib w-100 mx-wd-800 tx-left">
+    <div class="d-inline-block w-100 mx-wd-800 tx-left">
       <div class="pd-x-12 mb-3">
         <label for="templateTitle" class="form-label tx-18">
           {{ "LibraryCreate.TemplateTitle" | translate }}
@@ -16,7 +16,7 @@
           id="templateTitle"
           [(ngModel)]="templateTitle"
         />
-        <label class="d-ib tx-12 tx-italic mg-t-5">
+        <label class="d-inline-block tx-12 tx-italic mg-t-5">
           {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
         </label>
       </div>

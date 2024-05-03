@@ -4,7 +4,7 @@
 </div>
 <div class="card-body">
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "General.Owner" | translate }}:
     </span>
     <span>
@@ -12,13 +12,15 @@
     </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10"> WBS: </span>
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      WBS:
+    </span>
     <span>
       {{ version().title }}
     </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "General.Level" | translate }}:
     </span>
     <span>
@@ -27,7 +29,7 @@
   </p>
   @if (entry().type !== 'task') {
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "Wbs.Phase" | translate }}:
     </span>
     @if (task.phaseId) {
@@ -45,7 +47,7 @@
   </p>
   }
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "General.Parent" | translate }}:
     </span>
     @if (task.parent; as parent) {
@@ -62,7 +64,7 @@
     }
   </p>
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "General.LastModified" | translate }}:
     </span>
     <span>
@@ -70,7 +72,7 @@
     </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-ib wd-100 tx-right mg-r-10">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "Projects.SubTaskCount" | translate }}:
     </span>
     <span>

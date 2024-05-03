@@ -11,7 +11,7 @@
   <div class="list-group text-start w-100 pd-t-20">
     @for (person of people; track i; let i = $index) {
     <div class="list-group-item d-flex flex-row-f">
-      <div class="pd-t-1 wd-60 d-ib">
+      <div class="pd-t-1 wd-60 d-inline-block">
         <fa-layers [fixedWidth]="true">
           <fa-icon size="2x" [icon]="faCircle" />
           <fa-layers-text [content]="(i + 1).toString()" transform="right-6" />

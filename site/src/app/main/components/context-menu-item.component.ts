@@ -13,7 +13,7 @@ import { ContextMenuItem } from '../models';
   standalone: true,
   selector: 'wbs-context-menu-item',
   template: `@if (item(); as item) {
-    <span class="d-ib wd-30">
+    <span class="d-inline-block wd-30">
       @if (item.faIcon) { @if (stringIcon(); as icon) {
       <i class="fa-solid fa-sm" [ngClass]="icon"></i>
       } @if (objIcon(); as icon) {
