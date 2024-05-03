@@ -19,7 +19,7 @@
     ngClass="card dashboard-card"
     [(askAi)]="askAi"
     [(editMode)]="descriptionEditMode"
-    [saveState]="descriptionSaveState()"
+    [saveState]="descriptionSave.state()"
     [description]="task.description ?? ''"
     noDescriptionLabel="Library.NoDescriptionTask"
     (descriptionChange)="descriptionChange($event)"
@@ -29,7 +29,6 @@
 @if (askAi()) {
 <wbs-description-ai-dialog
   [description]="task.description"
-  getStartedLabel="AI.GetStartedTask"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="aiChangeSaved($event)"
   (closed)="askAi.set(false)"

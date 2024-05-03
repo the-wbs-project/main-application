@@ -79,7 +79,6 @@
 @if (askAi()) {
 <wbs-description-ai-dialog
   [(description)]="description"
-  getStartedLabel="AI.GetStartedProjectEntry"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="askAi.set(false)"
   (closed)="askAi.set(false)"

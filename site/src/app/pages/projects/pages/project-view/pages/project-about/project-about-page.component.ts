@@ -2,15 +2,16 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   model,
-  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
+import { PROJECT_CLAIMS } from '@wbs/core/models';
+import { AiPromptService, SaveService, SignalStore } from '@wbs/core/services';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
@@ -18,7 +19,7 @@ import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
-import { delay, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { ChangeProjectBasics } from '../../actions';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectChecklistComponent } from '../../components/project-checklist';
@@ -38,6 +39,7 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
   imports: [
     ApprovalBadgeComponent,
     CheckPipe,
+    DescriptionAiDialogComponent,
     DescriptionCardComponent,
     DisciplineCardComponent,
     EditedDateTextPipe,
@@ -51,18 +53,23 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
     SafeHtmlPipe,
     TranslateModule,
   ],
+  providers: [AiPromptService],
 })
 export class ProjectAboutComponent {
+  private readonly prompt = inject(AiPromptService);
   private readonly store = inject(SignalStore);
 
   readonly claims = input.required<string[]>();
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
-  readonly descriptionSaveState = signal<SaveState>('ready');
-
+  readonly descriptionSave = new SaveService();
+  readonly descriptionAiStartingDialog = computed(() =>
+    this.prompt.projectDescription(this.project(), this.tasks())
+  );
   readonly project = this.store.select(ProjectState.current);
   readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  readonly tasks = this.store.select(TasksState.phases);
   readonly taskCount = this.store.select(TasksState.taskCount);
   readonly users = this.store.select(ProjectState.users);
   readonly checklist = this.store.select(ProjectChecklistState.results);
@@ -72,23 +79,21 @@ export class ProjectAboutComponent {
   readonly UPDATE_CLAIM = PROJECT_CLAIMS.UPDATE;
 
   descriptionChange(description: string): void {
-    this.descriptionSaveState.set('saving');
-
     const project = this.project()!;
 
-    this.store
-      .dispatch(
-        new ChangeProjectBasics(project.title, description, project.category)
+    this.descriptionSave
+      .call(
+        this.store
+          .dispatch(
+            new ChangeProjectBasics(
+              project.title,
+              description,
+              project.category
+            )
+          )
+          .pipe(tap(() => this.descriptionEditMode.set(false)))
       )
-      .pipe(
-        delay(1000),
-        tap(() => {
-          this.descriptionEditMode.set(false);
-          this.descriptionSaveState.set('saved');
-        }),
-        delay(5000)
-      )
-      .subscribe(() => this.descriptionSaveState.set('ready'));
+      .subscribe();
   }
 
   aiChangeSaved(description: string): void {

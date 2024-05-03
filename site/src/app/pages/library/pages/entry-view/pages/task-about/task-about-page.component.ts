@@ -47,8 +47,10 @@ import { EntryStore } from '@wbs/store';
     SavingAlertComponent,
     TranslateModule,
   ],
+  providers: [AiPromptService],
 })
 export class TaskAboutPageComponent {
+  private readonly prompt = inject(AiPromptService);
   private readonly taskService = inject(EntryTaskService);
   readonly modal = inject(TaskModalService);
   readonly entryStore = inject(EntryStore);
@@ -74,7 +76,7 @@ export class TaskAboutPageComponent {
     return this.disciplines().map((x) => x.id);
   });
   readonly descriptionAiStartingDialog = computed(() =>
-    AiPromptService.libraryEntryTaskDescription(
+    this.prompt.libraryEntryTaskDescription(
       this.entryStore.entry(),
       this.entryStore.version(),
       this.taskId(),

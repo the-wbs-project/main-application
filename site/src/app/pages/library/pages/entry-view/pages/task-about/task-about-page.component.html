@@ -27,7 +27,6 @@
 @if (askAi()) {
 <wbs-description-ai-dialog
   [description]="task.description"
-  getStartedLabel="AI.GetStartedTask"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="aiChangeSaved($event)"
   (closed)="askAi.set(false)"

@@ -5,13 +5,12 @@ import {
   inject,
   input,
   model,
-  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
-import { AiPromptService, EntryService } from '@wbs/core/services';
+import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
+import { AiPromptService, EntryService, SaveService } from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/main/components/description-card';
 import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
@@ -34,40 +33,37 @@ import { DetailsCardComponent } from './components/details-card';
     SafeHtmlPipe,
     TranslateModule,
   ],
+  providers: [AiPromptService],
 })
 export class AboutPageComponent {
+  private readonly prompt = inject(AiPromptService);
   private readonly entryService = inject(EntryService);
-  readonly entryStore = inject(EntryStore);
+  readonly store = inject(EntryStore);
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
   readonly disciplines = input.required<ListItem[]>();
-  readonly descriptionSaveState = signal<SaveState>('ready');
+  readonly descriptionSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>
-    AiPromptService.libraryEntryDescription(
-      this.entryStore.entry(),
-      this.entryStore.version(),
-      this.entryStore.viewModels()
+    this.prompt.libraryEntryDescription(
+      this.store.entry(),
+      this.store.version(),
+      this.store.viewModels()
     )
   );
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
 
   descriptionChange(description: string): void {
-    this.descriptionSaveState.set('saving');
-
-    this.entryService
-      .descriptionChangedAsync(description)
-      .pipe(
-        delay(1000),
-        tap(() => {
-          this.descriptionEditMode.set(false);
-          this.descriptionSaveState.set('saved');
-        }),
-        delay(5000)
+    this.descriptionSave
+      .call(
+        this.entryService.descriptionChangedAsync(description).pipe(
+          delay(1000),
+          tap(() => this.descriptionEditMode.set(false))
+        )
       )
-      .subscribe(() => this.descriptionSaveState.set('ready'));
+      .subscribe();
   }
 
   aiChangeSaved(description: string): void {

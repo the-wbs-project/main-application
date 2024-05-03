@@ -19,23 +19,24 @@
       <wbs-description-card
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"
-        [saveState]="descriptionSaveState()"
+        [saveState]="descriptionSave.state()"
         [description]="project()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         [approval]="approvals() | findById : 'project-description'"
         (descriptionChange)="descriptionChange($event)"
       />
-      <!--   <wbs-description-card
-        [(askAi)]="askAi"
-        [(editMode)]="descriptionEditMode"
-        [saveState]="descriptionSaveState()"
-        [description]="state.version()?.description ?? ''"
-        noDescriptionLabel="Library.NoDescriptionEntry"
-        (descriptionChange)="descriptionChange($event)"
-      />-->
     </div>
   </div>
 </div>
+
+@if (askAi()) {
+<wbs-description-ai-dialog
+  [description]="project()!.description"
+  [startingDialog]="descriptionAiStartingDialog()"
+  (descriptionChange)="aiChangeSaved($event)"
+  (closed)="askAi.set(false)"
+/>
+}
 <!--
 @if (project(); as project) {
 <div class="about-page-grid pd-20" resizedCss>
