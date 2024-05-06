@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ListItem, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
@@ -22,9 +22,14 @@ import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
+import { LibraryListModalComponent } from '@wbs/components/library-list-modal/library-list-modal.component';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { MembershipState } from '@wbs/main/states';
 
 @Injectable()
 export class ProjectViewService {
+  private readonly dialogService = inject(DialogService);
+
   private createComponent?: TaskCreateComponent;
 
   constructor(
@@ -104,6 +109,31 @@ export class ProjectViewService {
         return this.store
           .dispatch(new RemoveDisciplineToTask(taskId!, discipline))
           .pipe(map(() => true));
+      } else if (action.startsWith('import|')) {
+        const direction = action.split('|')[1];
+        const org = this.store.selectSnapshot(
+          MembershipState.organization
+        )!.name;
+        const task = this.store
+          .selectSnapshot(TasksState.nodes)!
+          .find((x) => x.id === taskId)!;
+        const types: string[] =
+          direction === 'right' || task.parentId != null
+            ? ['task']
+            : ['phase', 'task'];
+
+        return LibraryListModalComponent.launchAsync(
+          this.dialogService,
+          org,
+          'personal',
+          types
+        ).pipe(
+          map((entry) => {
+            console.log(entry);
+
+            return true;
+          })
+        );
       }
     }
   }

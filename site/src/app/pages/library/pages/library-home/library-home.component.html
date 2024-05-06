@@ -14,10 +14,14 @@
         </div>
         <div class="flex-fill">&nbsp;</div>
       </div>
+      <div class="mg-b-15">
+        <wbs-library-search [(searchText)]="searchText" />
+      </div>
       <wbs-library-list
-        [library]="library()"
         [org]="org()"
-        (selected)="nav($event)"
+        [library]="library()"
+        [searchText]="searchText()"
+        (selectedChange)="nav($event)"
       />
     </div>
   </div>

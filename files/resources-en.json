@@ -19,7 +19,9 @@
       "Delete": "Delete",
       "General": "General",
       "Search": "Search",
+      "Review": "Review",
       "Type": "Type",
+      "Types": "Types",
       "Library": "Library",
       "Title": "Title",
       "All": "All",
@@ -34,6 +36,7 @@
       "Saved": "Saved",
       "SavingChanges": "Saving Changes",
       "SaveAndView": "Save & View",
+      "Import": "Import",
       "View": "View",
       "Status": "Status",
       "Task": "Task",
@@ -52,6 +55,7 @@
       "Details": "Details",
       "Approval": "Approval",
       "Statistics": "Statistics",
+      "SubTask": "Sub Task",
       "SubTasks": "Sub Tasks",
       "Resources": "Resources",
       "Disciplines": "Disciplines",
@@ -168,7 +172,11 @@
       "GeneralSettings": "General Settings",
       "GetStarted": "Get Started",
       "LastUpdated": "Last Updated",
-      "Visibility": "Visibility"
+      "Visibility": "Visibility",
+      "Left": "Left",
+      "Right": "Right",
+      "Above": "Above",
+      "Below": "Below"
     }
   },
   {
@@ -552,7 +560,11 @@
       "WbsDisciplines": "WBS Disciplines",
       "AddDiscipline": "Add Discipline",
       "RemoveDiscipline": "Remove Discipline",
-      "ExportToLibrary": "Export To Library"
+      "ExportToLibrary": "Export To Library",
+      "ImportFromLibrary": "Import From Library",
+      "SearchLibrary": "Search Library",
+      "SearchContinue": "Select Library Entry To Continue",
+      "LibraryFilters": "Library Filters"
     }
   },
   {

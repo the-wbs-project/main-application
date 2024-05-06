@@ -1,22 +1,19 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   OnChanges,
-  OnInit,
   SimpleChanges,
   inject,
   input,
   model,
-  output,
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.directive';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
@@ -33,30 +30,31 @@ import { UserStore } from '@wbs/store';
     EntryTypeIconPipe,
     EntryTypeTitlePipe,
     FontAwesomeModule,
-    DelayedInputDirective,
+    NgClass,
     RouterModule,
-    TextBoxModule,
     TranslateModule,
     WatchIndicatorComponent,
   ],
 })
-export class LibraryListComponent implements OnInit, OnChanges {
+export class LibraryListComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
 
-  readonly searchText = model<string>('');
   readonly org = input.required<string>();
+  readonly typeFilters = input<string[]>();
   readonly library = input.required<string>();
+  readonly searchText = input.required<string>();
+  readonly showWatchedColumn = input(true);
+  readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
   readonly entries = signal<LibraryEntryViewModel[]>([]);
-  readonly selected = output<LibraryEntryViewModel>();
-
-  ngOnInit(): void {
-    this.searchText.subscribe(() => this.retrieve());
-    this.searchText.set('');
-  }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['library'] || changes['org']) {
+    if (
+      changes['searchText'] ||
+      changes['library'] ||
+      changes['typeFilters'] ||
+      changes['org']
+    ) {
       this.retrieve();
     }
   }
@@ -67,6 +65,7 @@ export class LibraryListComponent implements OnInit, OnChanges {
         userId: this.userId()!,
         library: this.library(),
         searchText: this.searchText(),
+        typeFilters: this.typeFilters(),
       })
       .subscribe((entries) => {
         this.entries.set(entries);

@@ -26,13 +26,30 @@ const taskActions: ContextMenuItem[] = [
     },
   },
   {
-    action: 'importSub',
+    action: 'import',
     faIcon: faFileImport,
-    text: 'Projects.ImportSubTask',
+    text: 'General.Import',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
     },
+    items: [
+      {
+        action: 'import|above',
+        faIcon: faArrowUp,
+        text: 'General.Above',
+      },
+      {
+        action: 'import|right',
+        faIcon: faArrowRight,
+        text: 'General.SubTask',
+      },
+      {
+        action: 'import|below',
+        faIcon: faArrowDown,
+        text: 'General.Below',
+      },
+    ],
   },
   {
     action: 'viewTask',

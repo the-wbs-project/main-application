@@ -1,17 +1,8 @@
-<div class="mg-b-15">
-  <input
-    kendoTextBox
-    appDelayedInput
-    type="text"
-    class="w-100"
-    [value]="searchText()!"
-    (delayedInput)="searchText.set($event)"
-    [delayTime]="400"
-  />
-</div>
 <table class="table table-hover">
   <tr class="bg-dark text-white">
+    @if (showWatchedColumn()) {
     <th class="pd-10 fw-normal">&nbsp;</th>
+    }
     <th class="pd-10 fw-normal">Owner</th>
     <th class="pd-10 fw-normal">Name</th>
     <th class="pd-10 fw-normal">Type</th>
@@ -20,7 +11,12 @@
   </tr>
   <tbody>
     @for (entry of entries(); track entry.entryId) {
-    <tr class="pointer" (click)="selected.emit(entry)">
+    <tr
+      class="pointer"
+      [ngClass]="{ 'bg-gray-300': selected()?.entryId === entry.entryId }"
+      (click)="selected.set(entry)"
+    >
+      @if (showWatchedColumn()){
       <td class="tx-16">
         <wbs-watch-indicator
           source="library"
@@ -29,6 +25,7 @@
           [entityId]="entry.entryId"
         />
       </td>
+      }
       <td>{{ entry.ownerName }}</td>
       <td>{{ entry.title }}</td>
       <td>

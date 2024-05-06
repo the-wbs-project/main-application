@@ -26,7 +26,7 @@ public class LibraryFilters
 
             foreach (var type in typeFilters)
             {
-                filterParts.Add($"TypeId eq '{type}'");
+                typeParts.Add($"TypeId eq '{type}'");
             }
             filterParts.Add(string.Join(" or ", Wrap(typeParts)));
         }

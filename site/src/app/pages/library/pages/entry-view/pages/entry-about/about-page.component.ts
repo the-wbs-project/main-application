@@ -1,10 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnInit,
   computed,
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
@@ -18,6 +20,7 @@ import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -35,7 +38,7 @@ import { DetailsCardComponent } from './components/details-card';
   ],
   providers: [AiPromptService],
 })
-export class AboutPageComponent {
+export class AboutPageComponent implements OnInit {
   private readonly prompt = inject(AiPromptService);
   private readonly entryService = inject(EntryService);
   readonly store = inject(EntryStore);
@@ -54,6 +57,7 @@ export class AboutPageComponent {
   );
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
+  readonly test = signal('');
 
   descriptionChange(description: string): void {
     this.descriptionSave
@@ -70,5 +74,18 @@ export class AboutPageComponent {
     this.askAi.set(false);
     this.descriptionEditMode.set(false);
     this.descriptionChange(description);
+  }
+
+  ngOnInit(): void {
+    let tasks = this.store.viewModels();
+    let text = '';
+
+    for (const task of tasks ?? []) {
+      for (var part of task.levels ?? []) text += '  ';
+      text += `${task.levelText}: ${task.title}\n`;
+    }
+    console.log(text);
+
+    this.test.set(text);
   }
 }

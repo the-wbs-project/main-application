@@ -11,16 +11,13 @@ import {
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCactus } from '@fortawesome/pro-thin-svg-icons';
-import { faFilters } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { plusIcon } from '@progress/kendo-svg-icons';
+import { LibraryListComponent } from '@wbs/components/library-list/library-list.component';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.directive';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { EntryCreateButtonComponent } from '@wbs/dummy_components/entry-create-button/entry-create-button.component';
@@ -29,9 +26,8 @@ import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
-import { UserStore } from '@wbs/store';
 import { EntryCreationService } from '../../services';
-import { LibraryListComponent } from '@wbs/components/library-list/library-list.component';
+import { LibrarySearchComponent } from '@wbs/dummy_components/library-search.component';
 
 @Component({
   standalone: true,
@@ -48,6 +44,7 @@ import { LibraryListComponent } from '@wbs/components/library-list/library-list.
     FormsModule,
     DelayedInputDirective,
     LibraryListComponent,
+    LibrarySearchComponent,
     NgClass,
     PageHeaderComponent,
     RouterModule,
@@ -61,6 +58,7 @@ export class LibraryHomeComponent implements OnInit {
   private readonly store = inject(Store);
   public readonly creation = inject(EntryCreationService);
 
+  readonly searchText = model<string>('');
   readonly org = input.required<string>();
   readonly library = model<string>('');
 
@@ -101,7 +99,9 @@ export class LibraryHomeComponent implements OnInit {
     });
   }
 
-  nav(vm: LibraryEntryViewModel, action?: string): void {
+  nav(vm: LibraryEntryViewModel | undefined, action?: string): void {
+    if (!vm) return;
+
     this.store.dispatch(
       new Navigate([
         '/' + this.org(),
