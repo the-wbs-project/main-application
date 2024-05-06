@@ -26,7 +26,6 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { SaveMessageComponent } from '@wbs/components/save-message.component';
 import {
   LIBRARY_CLAIMS,
   LibraryEntry,
@@ -42,6 +41,7 @@ import {
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/dummy_components/alert.component';
+import { SaveMessageComponent } from '@wbs/dummy_components/save-message.component';
 import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/main/components/discipline-icon-list.component';
 import { TaskCreateComponent } from '@wbs/main/components/task-create';

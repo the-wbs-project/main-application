@@ -12,7 +12,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { SaveMessageComponent } from '@wbs/components/save-message.component';
 import {
   EntryTaskService,
   NavigationMenuService,
@@ -20,6 +19,7 @@ import {
   TaskModalService,
   TitleService,
 } from '@wbs/core/services';
+import { SaveMessageComponent } from '@wbs/dummy_components/save-message.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
 import { EntryTitleComponent } from './components/entry-title';

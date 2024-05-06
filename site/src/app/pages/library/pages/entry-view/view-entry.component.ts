@@ -23,17 +23,17 @@ import {
   SignalStore,
   TitleService,
 } from '@wbs/core/services';
+import { SaveMessageComponent } from '@wbs/dummy_components/save-message.component';
 import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
 import { NavigationComponent } from '@wbs/main/components/navigation.component';
 import { PageHeaderComponent } from '@wbs/main/components/page-header';
 import { NavigationLink } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
+import { delay, tap } from 'rxjs/operators';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
 import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
-import { delay, tap } from 'rxjs/operators';
-import { SaveMessageComponent } from '@wbs/components/save-message.component';
 
 @Component({
   standalone: true,
