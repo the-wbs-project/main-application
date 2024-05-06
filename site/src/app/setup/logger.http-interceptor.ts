@@ -5,7 +5,6 @@ import {
   HttpHeaders,
   HttpInterceptor,
   HttpRequest,
-  HttpResponse,
 } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
@@ -16,31 +15,14 @@ import { Messages } from '../core/services/messages.service';
 const noErrorUrls = ['logger/activity', 'logger/activities'];
 
 @Injectable()
-export class RequestInterceptor implements HttpInterceptor {
+export class LoggerRequestInterceptor implements HttpInterceptor {
   private readonly logger = inject(Logger);
   private readonly messages = inject(Messages);
-  private readonly apiDomain: string;
-
-  constructor() {
-    const config = JSON.parse(
-      document.getElementById('edge_config')!.innerHTML
-    );
-
-    this.apiDomain = config['api_prefix'];
-  }
 
   intercept(
     request: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (request.url === 'uploadSaveUrl')
-      return of(new HttpResponse({ status: 200 }));
-
-    if (request.url.indexOf('api/') === 0) {
-      request = request.clone({
-        url: `${this.apiDomain}/${request.url}`,
-      });
-    }
     //@ts-ignore
     return next
       .handle(request)

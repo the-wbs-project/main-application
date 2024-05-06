@@ -14,7 +14,7 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { AUTH_CONFIG } from 'src/environments/auth.config';
 import { routes } from './app.routes';
 import { Resources } from './core/services';
-import { AppInitializerFactory, RequestInterceptor } from './setup';
+import { AppInitializerFactory, ApiRequestInterceptor } from './setup';
 import { AiStore, UiStore } from './store';
 
 export const appConfig: ApplicationConfig = {
@@ -39,7 +39,7 @@ export const appConfig: ApplicationConfig = {
     },
     {
       provide: HTTP_INTERCEPTORS,
-      useClass: RequestInterceptor,
+      useClass: ApiRequestInterceptor,
       multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },

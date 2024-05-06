@@ -1,3 +1,4 @@
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { importProvidersFrom, inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
@@ -12,6 +13,8 @@ import {
 } from '@wbs/core/guards';
 import {
   AiChatServiceFactory,
+  Auth0Service,
+  Logger,
   NavigationMenuService,
   UserService,
   orgClaimsResolve,
@@ -19,6 +22,7 @@ import {
   rolesResolve,
 } from '@wbs/core/services';
 import { MembershipState } from '@wbs/main/states';
+import { LoggerRequestInterceptor } from '@wbs/setup/logger.http-interceptor';
 import { MetadataStore } from '@wbs/store';
 
 export const routes: Routes = [
@@ -31,6 +35,13 @@ export const routes: Routes = [
     ],
     providers: [
       importProvidersFrom(NgxsModule.forFeature([MembershipState])),
+      Auth0Service,
+      Logger,
+      {
+        provide: HTTP_INTERCEPTORS,
+        useClass: LoggerRequestInterceptor,
+        multi: true,
+      },
       AiChatServiceFactory,
       NavigationMenuService,
       UserService,

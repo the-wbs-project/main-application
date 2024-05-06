@@ -1,4 +1,6 @@
+import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   EntryActivityService,
   EntryService,
@@ -12,6 +14,7 @@ export const routes: Routes = [
     path: '',
     canActivate: [watcherGuard],
     providers: [
+      importProvidersFrom([DialogModule]),
       EntryActivityService,
       EntryCreationService,
       EntryService,

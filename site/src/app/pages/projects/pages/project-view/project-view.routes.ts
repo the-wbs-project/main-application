@@ -1,6 +1,7 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { dirtyGuard } from '@wbs/core/guards';
 import { orgResolve, userIdResolve } from '@wbs/core/services';
 import { PROJECT_PAGES } from './models';
@@ -40,14 +41,15 @@ export const routes: Routes = [
       projectUrl: projectUrlResolve,
     },
     providers: [
-      importProvidersFrom(
+      importProvidersFrom([
+        DialogModule,
         NgxsModule.forFeature([
           ProjectApprovalState,
           ProjectChecklistState,
           ProjectState,
           TasksState,
-        ])
-      ),
+        ]),
+      ]),
       ChecklistDataService,
       ChecklistTestService,
       LibraryEntryExportService,

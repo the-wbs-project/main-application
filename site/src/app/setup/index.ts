@@ -1,2 +1,2 @@
 export * from './app-initializer.service';
-export * from './http-interceptor';
+export * from './api.http-interceptor';

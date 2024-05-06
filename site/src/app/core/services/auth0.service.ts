@@ -11,7 +11,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
 @UntilDestroy()
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class Auth0Service {
   private readonly aiStore = inject(AiStore);
   private readonly auth = inject(AuthService);

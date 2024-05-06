@@ -4,7 +4,7 @@ import { DD_CONFIG, DD_CONTEXT } from 'src/environments/DATADOG_CONFIG.const';
 
 declare type Context = { [x: string]: any };
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class Logger {
   constructor() {
     datadogLogs.init(DD_CONFIG);
