@@ -90,7 +90,6 @@
     "ngxtension": "^0.7.1",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0",
-    "webpack-bundle-analyzer": "^4.5.0",
     "zone.js": "^0.14.0"
   },
   "devDependencies": {
@@ -108,6 +107,7 @@
     "autoprefixer": "^10.4.4",
     "browser-sync": "^2.27.9",
     "codelyzer": "^6.0.2",
+    "esbuild-visualizer": "^0.6.0",
     "jasmine-core": "^5.1.2",
     "karma": "^6.3.17",
     "karma-chrome-launcher": "^3.1.1",

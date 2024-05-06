@@ -1,10 +1,8 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
-import { AppConfig } from '@wbs/core/services';
 
 @Pipe({ name: 'resourceImage', standalone: true })
 export class ResourceImagePipe implements PipeTransform {
-  private readonly config = inject(AppConfig);
   private readonly domSanitizer = inject(DomSanitizer);
 
   transform(buffer: ArrayBuffer): SafeUrl {

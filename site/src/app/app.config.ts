@@ -6,27 +6,22 @@ import {
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { provideRouter, withComponentInputBinding } from '@angular/router';
-import {
-  AuthClientConfig,
-  AuthHttpInterceptor,
-  AuthModule,
-} from '@auth0/auth0-angular';
+import { AuthHttpInterceptor, AuthModule } from '@auth0/auth0-angular';
 import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { DialogModule } from '@progress/kendo-angular-dialog';
+import { AUTH_CONFIG } from 'src/environments/auth.config';
 import { routes } from './app.routes';
-import { AppConfig, Resources } from './core/services';
+import { Resources } from './core/services';
 import { AppInitializerFactory, RequestInterceptor } from './setup';
 import { AiStore, UiStore } from './store';
 
 export const appConfig: ApplicationConfig = {
   providers: [
     importProvidersFrom([
-      AuthModule.forRoot(),
+      AuthModule.forRoot(AUTH_CONFIG),
       BrowserAnimationsModule,
-      DialogModule,
       HttpClientModule,
       NgxsLoggerPluginModule.forRoot({
         disabled: true, // environment.production,
@@ -39,7 +34,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [Resources, AuthClientConfig, AppConfig, UiStore, AiStore],
+      deps: [Resources, UiStore, AiStore],
       multi: true,
     },
     {

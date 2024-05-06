@@ -7,7 +7,6 @@ import {
 } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Logger } from './logger.service';
 
 declare type ResourceType = Record<string, Record<string, string>>;
 
@@ -20,7 +19,6 @@ export class Resources extends MissingTranslationHandler {
 
   constructor(
     private readonly http: HttpClient,
-    private readonly logger: Logger,
     private readonly translate: TranslateService
   ) {
     super();
@@ -64,7 +62,7 @@ export class Resources extends MissingTranslationHandler {
 
       if (result) return result;
 
-      this.logger.error('No resource found for ' + resource);
+      console.error('No resource found for ' + resource);
 
       return resource;
     } catch (e) {

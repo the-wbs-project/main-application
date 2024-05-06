@@ -7,10 +7,9 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Observable, throwError, of } from 'rxjs';
 import { catchError } from 'rxjs/operators';
-import { AppConfig } from '../core/services/app-config.service';
 import { Logger } from '../core/services/logger.service';
 import { Messages } from '../core/services/messages.service';
 
@@ -18,11 +17,17 @@ const noErrorUrls = ['logger/activity', 'logger/activities'];
 
 @Injectable()
 export class RequestInterceptor implements HttpInterceptor {
-  constructor(
-    private readonly config: AppConfig,
-    private readonly logger: Logger,
-    private readonly messages: Messages
-  ) {}
+  private readonly logger = inject(Logger);
+  private readonly messages = inject(Messages);
+  private readonly apiDomain: string;
+
+  constructor() {
+    const config = JSON.parse(
+      document.getElementById('edge_config')!.innerHTML
+    );
+
+    this.apiDomain = config['api_prefix'];
+  }
 
   intercept(
     request: HttpRequest<any>,
@@ -33,7 +38,7 @@ export class RequestInterceptor implements HttpInterceptor {
 
     if (request.url.indexOf('api/') === 0) {
       request = request.clone({
-        url: `${this.config.apiDomain}/${request.url}`,
+        url: `${this.apiDomain}/${request.url}`,
       });
     }
     //@ts-ignore
