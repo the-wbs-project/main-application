@@ -39,6 +39,8 @@ export class HeaderProfileComponent {
   readonly faUser = faUser;
 
   itemClicked(e: any): void {
-    console.log(e);
+    if (e.item.data === 'profile') {
+      this.showProfileEditor.set(true);
+    }
   }
 }
