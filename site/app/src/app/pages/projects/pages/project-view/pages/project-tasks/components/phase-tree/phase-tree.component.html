@@ -1,0 +1,124 @@
+@if (tasks(); as tasks) {
+<div class="d-flex flex-column">
+  <wbs-alert
+    type="info"
+    [dismissible]="false"
+    message="Projects.TreeInstructions"
+  />
+  <div class="flex-fill">
+    <kendo-treelist
+      #treelist
+      class="tx-12"
+      kendoTreeListExpandable
+      kendoTreeListSelectable
+      [kendoTreeListFlatBinding]="tasks"
+      parentIdField="treeParentId"
+      idField="treeId"
+      [navigable]="true"
+      [selectable]="settings"
+      [initiallyExpanded]="false"
+      [(expandedKeys)]="treeService.expandedKeys"
+      [rowReorderable]="claims() | check : canEditClaim"
+      (selectionChange)="taskId.set($event.items[0].dataItem.id)"
+      (dblclick)="navigateToTask()"
+      (rowReorder)="onRowReordered($event)"
+      (cellClick)="onCellClick($event)"
+    >
+      @if (claims() | check : canEditClaim) {
+      <kendo-treelist-rowreorder-column [width]="40" />
+      }
+      <kendo-treelist-column
+        field="levelText"
+        [title]="'Wbs.Level' | translate"
+        [width]="100"
+        class="level-column tx-11"
+        headerClass="level-header-column tx-14"
+      />
+      <kendo-treelist-column
+        [expandable]="true"
+        field="title"
+        [title]="'Projects.Activity_Title' | translate"
+        class="tx-11 child-hoverer"
+        headerClass="tx-14"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <div class="w-100 d-flex flex-align-end">
+            <div>
+              {{ "Projects.Activity_Title" | translate }}
+            </div>
+            <div class="flex-fill text-end">
+              <wbs-tree-toggler
+                (collapse)="treeService.collapseAll(treelist, tasks)"
+                (expand)="treeService.expandAll(treelist, tasks)"
+              />
+            </div>
+          </div>
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-task-title
+            [title]="dataItem.title"
+            (titleChange)="taskTitleChanged(dataItem.id, $event)"
+          />
+          <wbs-fading-message
+            [icon]="checkIcon"
+            message="General.Saved"
+            [show]="taskSaveStates.get(dataItem.id)!() === 'saved'"
+            cssClass="tx-success tx-12 mg-l-20"
+          />
+        </ng-template>
+      </kendo-treelist-column>
+      @if (project().approvalStarted) {
+      <kendo-treelist-column
+        [width]="175"
+        [title]="'Approval'"
+        headerClass="tx-14"
+      >
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <div class="tx-12 w-100 d-flex flex-row flex-align-center">
+            <wbs-approval-badge
+              [fontSize]="11"
+              [childrenIds]="dataItem.childrenIds"
+              [approval]="approvals() | findById : dataItem.id"
+            />
+            @if (approvals() | findThemById : dataItem.childrenIds |
+            childrenApproval; as stats) {
+            <div
+              class="d-inline-block wd-100 mg-l-10"
+              [title]="stats.totalCount"
+            >
+              <wbs-progress-bar
+                [passPercent]="stats.passedPercent"
+                [failPercent]="stats.failedPercent"
+              />
+            </div>
+            }
+          </div>
+        </ng-template>
+      </kendo-treelist-column>
+      } @if ((width() ?? 0) > 800) {
+      <kendo-treelist-column
+        field="disciplines"
+        [width]="150"
+        class="discipline-column"
+        headerClass="discipline-column tx-14"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <wbs-tree-discipline-legend [list]="project().disciplines" />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
+        </ng-template>
+      </kendo-treelist-column>
+      }
+    </kendo-treelist>
+    <kendo-contextmenu
+      [items]="menu()"
+      (select)="menuItemSelected($event.item.action)"
+    >
+      <ng-template kendoMenuItemTemplate let-item="item">
+        <wbs-context-menu-item [item]="item" />
+      </ng-template>
+    </kendo-contextmenu>
+  </div>
+</div>
+}

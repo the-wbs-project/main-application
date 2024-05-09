@@ -1,0 +1,55 @@
+<kendo-treelist
+  #treelist
+  class="h-100"
+  kendoTreeListSelectable
+  [kendoTreeListFlatBinding]="viewModels()"
+  parentIdField="treeParentId"
+  idField="treeId"
+  [selectable]="{ enabled: true, mode: 'row' }"
+>
+  <kendo-treelist-column
+    field="levelText"
+    [title]="'Wbs.Level' | translate"
+    [width]="100"
+    class="level-column tx-11"
+    headerClass="level-header-column tx-14"
+  />
+  <kendo-treelist-column
+    [expandable]="true"
+    field="title"
+    class="tx-11"
+    headerClass="tx-14"
+    [title]="'Wbs.Task' | translate"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <div class="w-100 d-flex flex-align-end">
+        <div>
+          {{ "Projects.Activity_Title" | translate }}
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-task-title
+        [showRemove]="dataItem.parentId != null"
+        [title]="dataItem.title"
+        (titleChange)="titleChanged(dataItem.id, $event)"
+        (remove)="removeTask(dataItem.id)"
+      />
+    </ng-template>
+  </kendo-treelist-column>
+  @if ((width() ?? 0) > 800) {
+  <kendo-treelist-column
+    field="disciplines"
+    [width]="150"
+    class="discipline-column"
+    headerClass="discipline-column tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <wbs-tree-discipline-legend [list]="version().disciplines" />
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-discipline-icon-list [disciplines]="dataItem.disciplines" />
+    </ng-template>
+  </kendo-treelist-column>
+  }
+</kendo-treelist>

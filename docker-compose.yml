@@ -23,7 +23,7 @@ services:
   wbs-site:
     container_name: wbs-site
     build:
-      context: ./site
+      context: ./site/app
       dockerfile: Dockerfile-dev
       args:
           FA_TOKEN: $FA_TOKEN
@@ -31,19 +31,19 @@ services:
     #ports:
     #  - 4200:4200
     volumes:
-       - ./site:/usr/src/app/site
+       - ./site/app:/usr/src/app/site
        - /usr/src/app/site/node_modules
        - shared-volume:/usr/src/app/site/dist
 
   wbs-pages:
     container_name: wbs-pages
     build:
-      context: ./pages
+      context: ./site/pages
       dockerfile: Dockerfile-dev
     ports:
       - 4200:4200
     volumes:
-       - ./pages:/usr/src/app/pages
+       - ./site/pages:/usr/src/app/pages
        - shared-volume:/usr/src/app/pages/dist
 
 volumes:

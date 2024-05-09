@@ -1,0 +1,108 @@
+<kendo-dialog
+  width="95%"
+  height="95%"
+  [title]="'Wbs.ImportFromLibrary' | translate"
+  (close)="dialog.close()"
+>
+  <div class="fs-6">
+    @if (ready()) {
+    <div>
+      <wbs-stepper [steps]="steps" [(step)]="view" />
+    </div>
+    @if (view() === 0) {
+    <div class="card border border-1 bd-gray-400 mg-t-15">
+      <div class="card-header pd-y-8 pd-x-10 bg-gray-200">
+        {{ "Wbs.LibraryFilters" | translate }}
+      </div>
+      <div class="card-body pd-10">
+        <div class="d-flex mg-b-15" style="gap: 50px; align-items: end">
+          <div class="flex-1 text-center">
+            <div class="fw-bold mg-b-5 fs-6">
+              {{ "General.Library" | translate }}
+            </div>
+            <wbs-library-selector [(library)]="library" />
+          </div>
+          <div class="flex-1 text-center">
+            <div class="fw-bold mg-b-5 fs-6">
+              {{ "General.Types" | translate }}
+            </div>
+            <wbs-library-item-type-selector [(types)]="typeFilters" />
+          </div>
+        </div>
+        <wbs-library-search [(searchText)]="searchText" />
+      </div>
+    </div>
+    <wbs-library-list
+      [org]="org()!"
+      [library]="library()!"
+      [searchText]="searchText()"
+      [typeFilters]="typeFilters()"
+      [showWatchedColumn]="false"
+      [(selected)]="selected"
+      (dblClick)="loadTree()"
+    />
+    } @else if (view() === 1) {
+    <div class="pd-15">
+      <wbs-alert
+        type="info"
+        [dismissible]="false"
+        message="Review and modify as needed before adding. The levels will adjust properly once added to your WBS."
+      />
+      @if (loadingTree()) {
+      <div class="w-100 text-center pd-b-15">
+        <kendo-loader
+          type="infinite-spinner"
+          themeColor="primary"
+          size="large"
+        />
+        <div class="mg-t-50">{{ "General.Loading" | translate }}...</div>
+      </div>
+      } @else {
+      <div class="w-100 text-end pd-b-15">
+        <button kendoButton (click)="loadTree()">Reload</button>
+      </div>
+      <wbs-library-import-tree
+        [entryType]="selected()!.type"
+        [version]="version()!"
+        [tasks]="tasks()!"
+      />
+      }
+    </div>
+    } }
+  </div>
+  <kendo-dialog-actions>
+    <div class="ht-40">
+      @if (view() === 0) { @if (selected() == undefined) {
+      <div class="w-100 text-center">
+        <h4 class="mg-t-5">{{ "Wbs.SearchContinue" | translate }}</h4>
+      </div>
+      } @else {
+      <div class="w-100 text-end">
+        <button kendoButton themeColor="primary" (click)="loadTree()">
+          {{ "General.Next" | translate }}
+        </button>
+      </div>
+      } } @else {
+      <div class="d-flex">
+        <div class="flex-1">
+          <button kendoButton themeColor="primary" (click)="view.set(0)">
+            {{ "General.Back" | translate }}
+          </button>
+        </div>
+        <div class="flex-1 text-end">
+          @if (!loadingTree()) {
+          <button
+            kendoButton
+            class="mg-l-15"
+            themeColor="primary"
+            (click)="save()"
+          >
+            {{ "General.Import" | translate }}
+          </button>
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>
