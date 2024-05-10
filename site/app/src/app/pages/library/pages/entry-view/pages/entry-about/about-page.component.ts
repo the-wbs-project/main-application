@@ -81,7 +81,7 @@ export class AboutPageComponent implements OnInit {
     let text = '';
 
     for (const task of tasks ?? []) {
-      for (var part of task.levels ?? []) text += '  ';
+      for (let part of task.levels ?? []) text += '  ';
       text += `${task.levelText}: ${task.title}\n`;
     }
     console.log(text);

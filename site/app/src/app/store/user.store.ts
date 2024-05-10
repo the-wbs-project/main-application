@@ -46,7 +46,7 @@ export class WatcherByItemStore {
 
   remove(item: EntityId): void {
     this._items.update((list) => {
-      var index = list.findIndex(
+      let index = list.findIndex(
         (x) => x.id === item.id && x.ownerId === item.ownerId
       );
 

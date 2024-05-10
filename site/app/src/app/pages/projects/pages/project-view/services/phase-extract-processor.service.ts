@@ -38,7 +38,7 @@ export class PhaseExtractProcessor {
     //
     const removeIds = originals.map((x) => x.id);
 
-    for (var node of fromExtract) {
+    for (let node of fromExtract) {
       let match = viewModels.find((x) => x.levelText === node.levelText);
 
       if (match && !this.compare(match.title, node.title)) match = undefined;
@@ -66,10 +66,10 @@ export class PhaseExtractProcessor {
     //
     //  Now let's tackle the categories and verifying the parent IDs are setup properly
     //
-    var cat = 1;
+    let cat = 1;
 
     while (true) {
-      var phaseNode = fromExtractMap.get(cat.toString());
+      let phaseNode = fromExtractMap.get(cat.toString());
 
       if (!phaseNode) break;
 
@@ -97,11 +97,11 @@ export class PhaseExtractProcessor {
     //
     //  Now let's look through the rows and find out what tasks has been changed
     //
-    for (var node of fromExtract) {
-      var match = viewModels.find((x) => x.id === node.id);
+    for (let node of fromExtract) {
+      let match = viewModels.find((x) => x.id === node.id);
 
       if (match) {
-        var changed = false;
+        let changed = false;
 
         if (match.title != node.title) {
           match.title = node.title;
@@ -172,11 +172,11 @@ export class PhaseExtractProcessor {
     parentId: string,
     parentLevel: string
   ): void {
-    var order = 1;
+    let order = 1;
 
     while (true) {
-      var level = `${parentLevel}.${order}`;
-      var node = fromExtractMap.get(level);
+      let level = `${parentLevel}.${order}`;
+      let node = fromExtractMap.get(level);
 
       if (node == undefined) return;
 
@@ -190,8 +190,8 @@ export class PhaseExtractProcessor {
   }
 
   private inheritDisciplines(rows: WbsNodeView[]) {
-    var byId = new Map<string, WbsNodeView>();
-    var depths = new Map<number, WbsNodeView[]>();
+    let byId = new Map<string, WbsNodeView>();
+    let depths = new Map<number, WbsNodeView[]>();
 
     for (const row of rows) {
       byId.set(row.id, row);
@@ -201,7 +201,7 @@ export class PhaseExtractProcessor {
       if (depths.has(depth)) depths.get(depth)!.push(row);
       else depths.set(depth, [row]);
     }
-    var level = Math.max(...depths.keys());
+    let level = Math.max(...depths.keys());
 
     for (let i = level; i > 0; i--) {
       for (const row of depths.get(i)!) {

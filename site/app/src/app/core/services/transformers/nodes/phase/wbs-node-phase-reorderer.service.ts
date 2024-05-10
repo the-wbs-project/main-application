@@ -20,7 +20,7 @@ export class WbsNodePhaseReorderer {
     const changed: string[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parentId, nodes);
 
-    for (var i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       children[i].order = i + 1;
 
       changed.push(...this.run(children[i].id, nodes));

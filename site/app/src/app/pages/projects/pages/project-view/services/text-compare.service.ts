@@ -27,7 +27,7 @@ export class TextCompareService {
   private editDistance(s1: string, s2: string): number {
     const costs: number[] = [];
     for (let i = 0; i <= s1.length; i++) {
-      var lastValue = i;
+      let lastValue = i;
       for (let j = 0; j <= s2.length; j++) {
         if (i === 0) costs[j] = j;
         else {

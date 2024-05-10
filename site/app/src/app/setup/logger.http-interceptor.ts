@@ -85,7 +85,7 @@ export class LoggerRequestInterceptor implements HttpInterceptor {
 
   private stringifyError(err: Error) {
     if (!err) return null;
-    var plainObject: Record<string, string> = {};
+    let plainObject: Record<string, string> = {};
 
     for (const key of Object.getOwnPropertyNames(err)) {
       //@ts-ignore

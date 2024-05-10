@@ -45,7 +45,7 @@ export class WbsPhaseService {
       const children = this.getSortedVmChildren(parentId, list);
       let count = 0;
 
-      for (var i = 0; i < children.length; i++) {
+      for (let i = 0; i < children.length; i++) {
         let changed = false;
         const child = children[i];
 
