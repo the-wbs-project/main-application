@@ -1,41 +1,40 @@
 import { Injectable, inject } from '@angular/core';
+import { LibraryEntryNode, LibraryImportResults } from '@wbs/core/models';
 import {
-  LibraryEntryNode,
-  LibraryImportResults,
-  ProjectNode,
-} from '@wbs/core/models';
-import { IdService, SignalStore, sorter } from '@wbs/core/services';
-import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { SaveProject, SaveTasks } from '../actions';
-import { ProjectState, TasksState } from '../states';
-import { TimelineService } from './timeline.service';
+  EntryService,
+  EntryTaskService,
+  IdService,
+  sorter,
+} from '@wbs/core/services';
+import { EntryStore } from '@wbs/store';
+import { Observable, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
-export class ProjectImportProcessorService {
-  private readonly store = inject(SignalStore);
-  private readonly timeline = inject(TimelineService);
+export class LibraryImportProcessorService {
+  private readonly entryService = inject(EntryService);
+  private readonly store = inject(EntryStore);
+  private readonly taskService = inject(EntryTaskService);
 
   importAsync(
     taskId: string,
     dir: string,
     results: LibraryImportResults
   ): Observable<void> {
-    const project = this.store.selectSnapshot(ProjectState.current)!;
-    const tasks = this.store.selectSnapshot(TasksState.nodes)!;
+    const entry = this.store.entry()!;
+    const version = this.store.version()!;
+    const tasks = this.store.tasks()!;
     const fromTask = tasks.find((t) => t.id === taskId)!;
     const allSiblings = tasks
       .filter((x) => x.parentId === fromTask.parentId)
       .sort((a, b) => sorter(a.order, b.order));
-    const upserts: ProjectNode[] = [];
+    const upserts: LibraryEntryNode[] = [];
     let startOrder =
       dir === 'right'
         ? tasks.filter((x) => x.parentId === fromTask.id).length + 1
         : fromTask.order + (dir === 'above' ? -1 : 1);
 
     if (startOrder < 1) startOrder = 1;
-
     if (dir != 'right') {
       //
       //    Let's start by reordering the sibling sure to subtract by 1 for index purposes
@@ -52,14 +51,14 @@ export class ProjectImportProcessorService {
       //
       for (const discipline of results.version.disciplines) {
         if (typeof discipline === 'string') {
-          if (!project.disciplines.includes(discipline)) {
-            project.disciplines.push(discipline);
+          if (!version.disciplines.includes(discipline)) {
+            version.disciplines.push(discipline);
           }
         } else {
           let name = discipline.label;
           let found = false;
 
-          for (const pDiscipline of project.disciplines) {
+          for (const pDiscipline of version.disciplines) {
             if (typeof pDiscipline === 'string') continue;
 
             if (pDiscipline.label === name) {
@@ -68,7 +67,7 @@ export class ProjectImportProcessorService {
             }
           }
           if (!found) {
-            project.disciplines.push(discipline);
+            version.disciplines.push(discipline);
           }
         }
       }
@@ -80,12 +79,11 @@ export class ProjectImportProcessorService {
       order: number,
       addLink: boolean
     ) => {
-      const pTask: ProjectNode = {
+      const newTask: LibraryEntryNode = {
         id: IdService.generate(),
         parentId,
         order: order,
         title: task.title,
-        projectId: project.id,
         description: task.description,
         disciplineIds: task.disciplineIds,
         phaseIdAssociation: task.phaseIdAssociation,
@@ -98,12 +96,12 @@ export class ProjectImportProcessorService {
             }
           : undefined,
       };
-      upserts.push(pTask);
+      upserts.push(newTask);
 
       const children = results.tasks.filter((t) => t.parentId === task.id);
 
       for (let i = 0; i < children.length; i++) {
-        run(children[i], pTask.id, i + 1, false);
+        run(children[i], newTask.id, i + 1, false);
       }
     };
 
@@ -116,25 +114,9 @@ export class ProjectImportProcessorService {
       true
     );
 
-    return this.store
-      .dispatch([new SaveProject(project), new SaveTasks(upserts)])
-      .pipe(
-        tap(() => {
-          const record = this.timeline.createProjectRecord({
-            action: PROJECT_ACTIONS.IMPORTED_NODE_FROM_LIBRARY,
-            topLevelId: project.id,
-            objectId: taskId,
-            data: {
-              direction: dir,
-              libraryInfo: {
-                owner: results.owner,
-                entryId: results.version.entryId,
-                version: results.version.version,
-              },
-            },
-          });
-          this.timeline.saveProjectActions([record]);
-        })
-      );
+    return forkJoin([
+      this.entryService.generalSaveAsync(entry, version),
+      this.taskService.saveAsync(upserts, []),
+    ]).pipe(map(() => {}));
   }
 }

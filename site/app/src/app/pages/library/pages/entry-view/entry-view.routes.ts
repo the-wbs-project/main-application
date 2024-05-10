@@ -6,6 +6,7 @@ import { EntryUploadState } from './pages/entry-upload/states';
 import {
   EntryTaskActionService,
   EntryTaskRecorderService,
+  LibraryImportProcessorService,
   entryIdResolve,
   entryNavGuard,
   entryUrlResolve,
@@ -27,6 +28,7 @@ export const routes: Routes = [
       importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
       EntryTaskActionService,
       EntryTaskRecorderService,
+      LibraryImportProcessorService,
     ],
     resolve: {
       owner: ownerIdResolve,

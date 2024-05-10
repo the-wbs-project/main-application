@@ -1,15 +1,25 @@
 import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
+import { LibraryImportResults } from '@wbs/core/models';
 import { EntryTaskService, SignalStore } from '@wbs/core/services';
 import { TaskCreationResults } from '@wbs/main/models';
-import { Observable, of, switchMap, tap } from 'rxjs';
+import { MembershipState } from '@wbs/main/states';
+import { EntryStore } from '@wbs/store';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryCreationService } from '../../../services';
+import { LibraryImportProcessorService } from './library-import-processor.service';
 
 @Injectable()
 export class EntryTaskActionService {
+  private readonly creation = inject(EntryCreationService);
+  private readonly dialogService = inject(DialogService);
+  private readonly importProcessor = inject(LibraryImportProcessorService);
+  private readonly libraryStore = inject(EntryStore);
   private readonly store = inject(SignalStore);
   private readonly taskService = inject(EntryTaskService);
-  private readonly creation = inject(EntryCreationService);
 
   readonly expandedKeysChanged = new EventEmitter<string[]>();
 
@@ -70,6 +80,29 @@ export class EntryTaskActionService {
       return this.taskService.removeDisciplineAsync(taskId!, discipline);
     } else if (action === 'export') {
       this.creation.exportTaskToEntryAsync(taskId!);
+    } else if (action.startsWith('import|')) {
+      const direction = action.split('|')[1]!;
+      const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+      const task = this.libraryStore.tasks()!.find((x) => x.id === taskId)!;
+      const types: string[] =
+        direction === 'right' || task.parentId != null
+          ? ['task']
+          : ['phase', 'task'];
+
+      return LibraryListModalComponent.launchAsync(
+        this.dialogService,
+        org,
+        'personal',
+        types
+      ).pipe(
+        switchMap((results: LibraryImportResults | undefined) =>
+          !results
+            ? of(false)
+            : this.importProcessor
+                .importAsync(taskId, direction, results)
+                .pipe(map(() => true))
+        )
+      );
     }
   }
 }

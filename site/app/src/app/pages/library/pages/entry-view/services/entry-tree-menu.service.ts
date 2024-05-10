@@ -47,7 +47,6 @@ export class EntryTreeMenuService {
           movers.push(item);
       }
     }
-    console.log(phaseActions);
     //
     //  Now add disciplines
     //

@@ -6,6 +6,7 @@ import {
   faBookArrowRight,
   faCopy,
   faEye,
+  faFileImport,
   faPlus,
   faTrash,
   faUserMinus,
@@ -22,6 +23,31 @@ const taskActions: ContextMenuItem[] = [
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
     },
+  },
+  {
+    action: 'import',
+    faIcon: faFileImport,
+    text: 'General.Import',
+    filters: {
+      claim: LIBRARY_CLAIMS.TASKS.CREATE,
+    },
+    items: [
+      {
+        action: 'import|above',
+        faIcon: faArrowUp,
+        text: 'General.Above',
+      },
+      {
+        action: 'import|right',
+        faIcon: faArrowRight,
+        text: 'General.SubTask',
+      },
+      {
+        action: 'import|below',
+        faIcon: faArrowDown,
+        text: 'General.Below',
+      },
+    ],
   },
   {
     action: 'viewTask',
