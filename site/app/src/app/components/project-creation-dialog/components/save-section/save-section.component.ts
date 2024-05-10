@@ -36,7 +36,6 @@ import { switchMap } from 'rxjs/operators';
   templateUrl: './save-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, TranslateModule],
-  providers: [UserService],
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {

@@ -43,7 +43,7 @@
 </table>
 @if (saveState() === undefined) {
 <button class="w-100 btn btn-primary mg-t-10" (click)="save()">
-  {{ "LibraryCreate.CreateTask" | translate }}
+  Create Project
 </button>
 
 } @else if (saveState() === "saving") {
@@ -54,7 +54,7 @@
 <p class="tx-18 mg-t-10">{{ "LibraryCreate.TemplateSaved" | translate }}</p>
 <div class="w-100 text-center">
   <button type="button" class="btn btn-primary" (click)="done.emit()">
-    View
+    {{ "General.View" | translate }}
   </button>
 </div>
 } @else if (saveState() === "error") {

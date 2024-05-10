@@ -5,7 +5,7 @@ import { sorter } from '@wbs/core/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { skipWhile, tap } from 'rxjs/operators';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class UserService {
   private readonly users = new Map<string, BehaviorSubject<User | undefined>>();
 

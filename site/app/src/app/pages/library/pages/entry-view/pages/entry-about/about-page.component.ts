@@ -6,7 +6,6 @@ import {
   inject,
   input,
   model,
-  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
@@ -20,7 +19,6 @@ import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
-import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -57,7 +55,6 @@ export class AboutPageComponent implements OnInit {
   );
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
-  readonly test = signal('');
 
   descriptionChange(description: string): void {
     this.descriptionSave
@@ -84,8 +81,6 @@ export class AboutPageComponent implements OnInit {
       for (let part of task.levels ?? []) text += '  ';
       text += `${task.levelText}: ${task.title}\n`;
     }
-    console.log(text);
-
-    this.test.set(text);
+    //console.log(text);
   }
 }

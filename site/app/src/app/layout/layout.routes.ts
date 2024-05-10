@@ -16,7 +16,6 @@ import {
   Auth0Service,
   Logger,
   NavigationMenuService,
-  UserService,
   orgClaimsResolve,
   orgListResolve,
   rolesResolve,
@@ -44,7 +43,6 @@ export const routes: Routes = [
       },
       AiChatServiceFactory,
       NavigationMenuService,
-      UserService,
     ],
     children: [
       {

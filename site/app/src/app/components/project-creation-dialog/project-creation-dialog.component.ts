@@ -18,9 +18,11 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import {
+  DialogCloseResult,
   DialogContentBase,
   DialogModule,
   DialogRef,
+  DialogService,
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
@@ -44,13 +46,14 @@ import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-c
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { MembershipState } from '@wbs/main/states';
 import { MetadataStore, UserStore } from '@wbs/store';
-import { forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { RolesSectionComponent } from './components/roles-section';
 import { SaveSectionComponent } from './components/save-section';
 
 @Component({
   standalone: true,
-  templateUrl: './project-creation.component.html',
+  templateUrl: './project-creation-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DialogModule,
@@ -113,20 +116,42 @@ export class ProjectCreationComponent extends DialogContentBase {
       .join(', ')
   );
 
-  setup(version: LibraryEntryVersion, tasks: LibraryEntryNode[]): void {
-    const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+  constructor(dialog: DialogRef) {
+    super(dialog);
+  }
 
-    forkJoin({
-      members: this.data.memberships.getMembershipUsersAsync(org),
-      org: this.store.selectOnceAsync(MembershipState.organization),
-    }).subscribe(({ members, org }) => {
+  static launchAsync(
+    dialog: DialogService,
+    org: string,
+    version: LibraryEntryVersion,
+    tasks: LibraryEntryNode[]
+  ): Observable<any | undefined> {
+    const ref = dialog.open({
+      content: ProjectCreationComponent,
+    });
+    const component = ref.content.instance as ProjectCreationComponent;
+
+    component.setup(org, version, tasks);
+
+    return ref.result.pipe(
+      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
+    );
+  }
+
+  setup(
+    org: string,
+    version: LibraryEntryVersion,
+    tasks: LibraryEntryNode[]
+  ): void {
+    this.data.memberships.getMembershipUsersAsync(org).subscribe((members) => {
       this.members.set(members);
       this.tasks.set(tasks);
       this.pmIds.set([this.userId()!]);
-      this.owner.set(org!.name);
-      this.disciplines.set(this.catService.buildDisciplines([]));
+      this.owner.set(org);
       this.projectTitle.set(version.title);
       this.disciplines.update((disciplines) => {
+        disciplines = this.catService.buildDisciplines([]);
+
         for (const x of version.disciplines) {
           if (typeof x === 'string') {
             disciplines.find((d) => d.id === x)!.selected = true;
@@ -138,6 +163,7 @@ export class ProjectCreationComponent extends DialogContentBase {
             });
           }
         }
+        this.catService.renumber(disciplines);
         return [...disciplines];
       });
       this.loading.set(false);
@@ -168,10 +194,6 @@ export class ProjectCreationComponent extends DialogContentBase {
     if (view === 2) return hasDisciplines ? 'General.Next' : 'General.Skip';
 
     return 'General.Next';
-  }
-
-  constructor(dialog: DialogRef) {
-    super(dialog);
   }
 
   back(): void {

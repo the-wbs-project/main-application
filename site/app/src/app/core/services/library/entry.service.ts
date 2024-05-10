@@ -1,6 +1,11 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
+import { ProjectCreationComponent } from '@wbs/components/project-creation-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Category,
@@ -13,13 +18,15 @@ import { Messages, Utils } from '@wbs/core/services';
 import { MembershipState } from '@wbs/main/states';
 import { EntryStore } from '@wbs/store';
 import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Injectable()
 export class EntryService {
   private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
+  private readonly dialogService = inject(DialogService);
   private readonly messages = inject(Messages);
   private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
@@ -93,14 +100,13 @@ export class EntryService {
 
   createProject(): void {
     const org = this.store.selectSnapshot(MembershipState.organization)!.name;
-    /*const dialog = this.dialogService.open({
-      content: ProjectCreationComponent,
-    });
-    (dialog.content.instance as ProjectCreationComponent).setup(
+
+    ProjectCreationComponent.launchAsync(
+      this.dialogService,
+      org,
       this.entryStore.version()!,
       this.entryStore.tasks()!
-    );
-    dialog.result
+    )
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
         map((id) => <string>id),
@@ -108,7 +114,7 @@ export class EntryService {
           this.store.dispatch(new Navigate(['/', org, 'projects', 'view', id]))
         )
       )
-      .subscribe();*/
+      .subscribe();
   }
 
   generalSaveAsync(
