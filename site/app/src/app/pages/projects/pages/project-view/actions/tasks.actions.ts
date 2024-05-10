@@ -1,7 +1,9 @@
 import {
+  ActivityData,
   PROJECT_NODE_VIEW_TYPE,
   Project,
   ProjectCategoryChanges,
+  ProjectNode,
   WbsNode,
 } from '@wbs/core/models';
 import { RebuildResults } from '@wbs/main/models';
@@ -18,6 +20,14 @@ export class SetTaskNavSection {
 
 export class RebuildNodeViews {
   static readonly type = '[Tasks] Rebuild Node Views';
+}
+
+export class SaveTasks {
+  static readonly type = '[Tasks] Save';
+  constructor(
+    readonly tasks: ProjectNode[],
+    readonly activityInfo?: ActivityData
+  ) {}
 }
 
 export class TreeReordered {

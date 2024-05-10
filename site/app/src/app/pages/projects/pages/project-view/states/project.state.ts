@@ -29,6 +29,7 @@ import {
   SetProject,
   VerifyProject,
   VerifyTasks,
+  SaveProject,
 } from '../actions';
 import { ProjectService, TimelineService } from '../services';
 
@@ -77,12 +78,12 @@ export class ProjectState {
   verifyProject(
     ctx: Context,
     { owner, projectId }: VerifyProject
-  ): Observable<void> {
+  ): Observable<void> | void {
     const state = ctx.getState();
 
-    return state.current?.id !== projectId
-      ? ctx.dispatch(new SetProject(owner, projectId))
-      : of(); //.pipe(tap(() => ctx.dispatch(new VerifyTasks(state.current!))));
+    if (state.current?.id === projectId) return;
+
+    return ctx.dispatch(new SetProject(owner, projectId));
   }
 
   @Action(NavigateToView)
@@ -122,6 +123,11 @@ export class ProjectState {
       switchMap(() => this.updateUsers(ctx)),
       tap(() => this.clearClaimCache())
     );
+  }
+
+  @Action(SaveProject)
+  saveProjectAction(ctx: Context, { project }: SaveProject): Observable<void> {
+    return this.saveProject(ctx, project);
   }
 
   @Action(AddUserToRole)

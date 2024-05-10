@@ -1,4 +1,5 @@
 import { TaggedObject } from './app-models';
+import { LibraryLink } from './library-link.model';
 
 export interface WbsNode extends TaggedObject {
   id: string;
@@ -10,4 +11,5 @@ export interface WbsNode extends TaggedObject {
   description?: string;
   disciplineIds?: string[];
   phaseIdAssociation?: string;
+  libraryLink?: LibraryLink;
 }

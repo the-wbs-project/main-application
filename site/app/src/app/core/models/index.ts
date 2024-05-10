@@ -18,6 +18,7 @@ export * from './library-entry-node.model';
 export * from './library-entry-version.model';
 export * from './library-entry.model';
 export * from './library-import-results.model';
+export * from './library-link.model';
 export * from './library-search-filters.model';
 export * from './list-item.model';
 export * from './member.model';

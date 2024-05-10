@@ -131,6 +131,7 @@ public class ProjectNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@PhaseIdAssociation", DbValue(node.phaseIdAssociation));
         cmd.Parameters.AddWithValue("@Order", node.order);
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
+        cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -176,6 +177,7 @@ public class ProjectNodeDataService : BaseSqlDbService
             description = DbValue<string>(reader, "Description"),
             phaseIdAssociation = DbValue<string>(reader, "PhaseIdAssociation"),
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
+            libraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
             order = DbValue<int>(reader, "Order"),
         };
     }

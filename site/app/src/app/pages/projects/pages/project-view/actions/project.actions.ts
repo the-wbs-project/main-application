@@ -1,4 +1,9 @@
-import { PROJECT_STATI, ProjectCategoryChanges, User } from '@wbs/core/models';
+import {
+  PROJECT_STATI,
+  Project,
+  ProjectCategoryChanges,
+  User,
+} from '@wbs/core/models';
 
 export class VerifyProject {
   static readonly type = '[Project] Verify';
@@ -51,6 +56,11 @@ export class MarkProjectChanged {
 export class ChangeProjectStatus {
   static readonly type = '[Project] Change Status';
   constructor(readonly status: PROJECT_STATI) {}
+}
+
+export class SaveProject {
+  static readonly type = '[Project] Save';
+  constructor(readonly project: Project) {}
 }
 
 export class ArchiveProject {

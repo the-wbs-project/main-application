@@ -9,6 +9,7 @@ export enum PROJECT_ACTIONS {
   ADDED_USER = 'project-added-user',
   REMOVED_USER = 'project-removed-user',
   STATUS_CHANGED = 'project-status-changed',
+  IMPORTED_NODE_FROM_LIBRARY = 'project-imported-from-library',
   RESOURCE_ADDED = 'project-resource-added',
   RESOURCE_UPDATED = 'project-resource-updated',
   RESOURCE_REMOVED = 'project-resource-removed',

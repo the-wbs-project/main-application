@@ -1,7 +1,9 @@
-import { LibraryEntryViewModel } from '../view-models';
 import { LibraryEntryNode } from './library-entry-node.model';
+import { LibraryEntryVersion } from './library-entry-version.model';
 
 export interface LibraryImportResults {
-  vm: LibraryEntryViewModel;
+  owner: string;
+  version: LibraryEntryVersion;
   tasks: LibraryEntryNode[];
+  importDisciplines: boolean;
 }

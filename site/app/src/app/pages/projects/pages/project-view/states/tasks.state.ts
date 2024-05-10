@@ -28,6 +28,7 @@ import {
   RemoveDisciplineToTask,
   RemoveDisciplinesFromTasks,
   RemoveTask,
+  SaveTasks,
   SetChecklistData,
   SetTaskNavSection,
   TreeReordered,
@@ -706,6 +707,31 @@ export class TasksState {
         });
       }),
       switchMap(() => ctx.dispatch(new MarkProjectChanged()))
+    );
+  }
+
+  @Action(SaveTasks)
+  saveTasks(
+    ctx: Context,
+    { tasks, activityInfo }: SaveTasks
+  ): void | Observable<void> {
+    return this.bulkSave(ctx, tasks, []).pipe(
+      tap(() => {
+        const list = ctx.getState().nodes!;
+
+        for (const task of tasks) {
+          const index = list.findIndex((x) => x.id === task.id);
+
+          if (index > -1) list[index] = task;
+          else list.push(task);
+        }
+        ctx.patchState({ nodes: structuredClone(list) });
+
+        if (activityInfo) this.saveActivity(activityInfo);
+      }),
+      switchMap(() =>
+        ctx.dispatch([new MarkProjectChanged(), new RebuildNodeViews()])
+      )
     );
   }
 

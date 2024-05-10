@@ -11,4 +11,5 @@ public abstract class BaseNode
     public string description { get; set; }
     public string phaseIdAssociation { get; set; }
     public string[] disciplineIds { get; set; }
+    public LibraryLink libraryLink { get; set; }
 }

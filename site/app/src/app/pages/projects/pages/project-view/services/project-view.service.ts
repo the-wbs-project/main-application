@@ -1,10 +1,18 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ListItem, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
+import {
+  LibraryImportResults,
+  ListItem,
+  PROJECT_STATI_TYPE,
+  Project,
+} from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { TaskCreateComponent } from '@wbs/main/components/task-create';
+import { MembershipState } from '@wbs/main/states';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -22,24 +30,20 @@ import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
-import { LibraryListModalComponent } from '@wbs/components/library-list-modal/library-list-modal.component';
-import { DialogService } from '@progress/kendo-angular-dialog';
-import { MembershipState } from '@wbs/main/states';
+import { ProjectImportProcessorService } from './project-import-processor.service';
 
 @Injectable()
 export class ProjectViewService {
+  private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
+  private readonly exportService = inject(LibraryEntryExportService);
+  private readonly importProcessor = inject(ProjectImportProcessorService);
+  private readonly messages = inject(Messages);
+  private readonly nav = inject(ProjectNavigationService);
+  private readonly store = inject(Store);
+  private readonly transformers = inject(Transformers);
 
   private createComponent?: TaskCreateComponent;
-
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly exportService: LibraryEntryExportService,
-    private readonly messages: Messages,
-    private readonly nav: ProjectNavigationService,
-    private readonly store: Store,
-    private readonly transformers: Transformers
-  ) {}
 
   private get project(): Project {
     return this.store.selectSnapshot(ProjectState.current)!;
@@ -110,7 +114,7 @@ export class ProjectViewService {
           .dispatch(new RemoveDisciplineToTask(taskId!, discipline))
           .pipe(map(() => true));
       } else if (action.startsWith('import|')) {
-        const direction = action.split('|')[1];
+        const direction = action.split('|')[1]!;
         const org = this.store.selectSnapshot(
           MembershipState.organization
         )!.name;
@@ -128,11 +132,13 @@ export class ProjectViewService {
           'personal',
           types
         ).pipe(
-          map((entry) => {
-            console.log(entry);
-
-            return true;
-          })
+          switchMap((results: LibraryImportResults | undefined) =>
+            !results
+              ? of(false)
+              : this.importProcessor
+                  .importAsync(taskId, direction, results)
+                  .pipe(map(() => true))
+          )
         );
       }
     }

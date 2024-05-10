@@ -51,7 +51,7 @@ import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
 import { UiStore } from '@wbs/store';
-import { Observable, delay, tap } from 'rxjs';
+import { Observable, delay, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
   CreateTask,
@@ -254,11 +254,20 @@ export class ProjectPhaseTreeComponent implements OnInit {
     if (obsOrVoid instanceof Observable) {
       obsOrVoid
         .pipe(
-          delay(500),
-          tap(() => this.setSaveState(taskId, 'saved')),
-          delay(5000)
+          switchMap((results) => {
+            let obs = of('hello');
+            if (results)
+              obs = obs.pipe(
+                delay(500),
+                tap(() => this.setSaveState(taskId, 'saved')),
+                delay(5000),
+                tap(() => this.setSaveState(taskId, 'ready'))
+              );
+
+            return obs;
+          })
         )
-        .subscribe(() => this.setSaveState(taskId, 'ready'));
+        .subscribe();
     }
   }
 

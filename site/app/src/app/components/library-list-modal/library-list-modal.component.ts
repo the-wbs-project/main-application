@@ -16,6 +16,7 @@ import {
 import { faSearch, faStamp } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryEntryNode,
@@ -24,17 +25,16 @@ import {
   StepperItem,
 } from '@wbs/core/models';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { AlertComponent } from '@wbs/dummy_components/alert.component';
 import { LibrarySelectorComponent } from '@wbs/dummy_components/library-selector';
 import { LibraryItemTypeSelectorComponent } from '@wbs/dummy_components/library-item-type-selector';
 import { LibrarySearchComponent } from '@wbs/dummy_components/library-search.component';
+import { SaveMessageComponent } from '@wbs/dummy_components/save-message.component';
 import { StepperComponent } from '@wbs/dummy_components/stepper.component';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../library-list';
-import { LibraryImportTreeComponent } from './components/library-import-tree';
-import { AlertComponent } from '@wbs/dummy_components/alert.component';
-import { LoaderModule } from '@progress/kendo-angular-indicators';
-import { SaveMessageComponent } from '@wbs/dummy_components/save-message.component';
+import { LibraryImportTreeComponent } from './components';
 
 @Component({
   standalone: true,
@@ -110,7 +110,9 @@ export class LibraryListModalComponent extends DialogContentBase {
   save(): void {
     this.dialog.close(<LibraryImportResults>{
       tasks: this.tasks(),
-      vm: this.selected()!,
+      owner: this.selected()!.ownerId,
+      version: this.version()!,
+      importDisciplines: true,
     });
   }
 

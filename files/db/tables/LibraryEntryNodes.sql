@@ -11,6 +11,7 @@ CREATE TABLE [dbo].[LibraryEntryNodes] (
     [Description] nvarchar(MAX) NULL,
     [Removed] bit NOT NULL,
     [DisciplineIds] nvarchar(MAX) NULL,
+    [LibraryLink] nvarchar(MAX) NULL,
     CONSTRAINT [LibraryEntryNodes_PK] PRIMARY KEY CLUSTERED ([EntryId] ASC, [EntryVersion] ASC, [Id] ASC),
     CONSTRAINT [LibraryEntryNodes_FK_EntryVersion] FOREIGN KEY ([EntryId], [EntryVersion]) REFERENCES [dbo].[LibraryEntryVersions] ([EntryId], [Version]) ON DELETE CASCADE
 )
