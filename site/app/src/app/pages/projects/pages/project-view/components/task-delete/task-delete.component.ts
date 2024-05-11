@@ -3,27 +3,55 @@ import {
   Component,
   OnInit,
   ViewEncapsulation,
-  signal,
+  computed,
+  inject,
+  model,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { NgbActiveModal, NgbModalModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ListItem } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { Observable, map } from 'rxjs';
+import {
+  DialogCloseResult,
+  DialogContentBase,
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { LabelModule } from '@progress/kendo-angular-label';
 
 @Component({
   standalone: true,
   templateUrl: './task-delete.component.html',
   encapsulation: ViewEncapsulation.None,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FormsModule, NgbModalModule, TranslateModule],
+  imports: [
+    ButtonModule,
+    DialogModule,
+    DropDownListModule,
+    FormsModule,
+    LabelModule,
+    TranslateModule,
+  ],
 })
-export class TaskDeleteComponent {
-  reason = 'none';
-  dOtherId = 'delete_other';
+export class TaskDeleteComponent extends DialogContentBase implements OnInit {
+  private readonly data = inject(DataServiceFactory);
+  private readonly resources = inject(Resources);
+
+  readonly dOtherId = 'delete_other';
+  readonly reason = model<string>();
+  readonly other = model<string>();
+  readonly showReason = computed(() => this.reason() === this.dOtherId);
+  readonly disableSubmit = computed(() => {
+    const reason = this.reason();
+
+    return !reason || (reason === this.dOtherId && !this.other());
+  });
 
   readonly reasons = toSignal(
     this.data.metdata
@@ -31,20 +59,35 @@ export class TaskDeleteComponent {
       .pipe(map((list) => list.sort((a, b) => a.order - b.order)))
   );
 
-  constructor(
-    readonly modal: NgbActiveModal,
-    private readonly data: DataServiceFactory,
-    private readonly resources: Resources
-  ) {}
+  constructor(dialog: DialogRef) {
+    super(dialog);
+  }
 
-  finishDelete(dReasonId: string, otherReasonText: string) {
+  ngOnInit(): void {
+    this.other.set('');
+  }
+
+  static launchAsync(dialog: DialogService): Observable<string | undefined> {
+    const ref = dialog.open({
+      content: TaskDeleteComponent,
+    });
+
+    return ref.result.pipe(
+      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
+    );
+  }
+
+  finishDelete() {
+    const dReasonId = this.reason();
+    const otherReasonText = this.other()!;
+
     if (dReasonId)
       if (dReasonId === this.dOtherId) {
-        this.modal.close(otherReasonText.trim());
+        this.dialog.close(otherReasonText.trim());
       } else {
         const dReason = this.reasons()!.find((x) => x.id === dReasonId)!;
 
-        this.modal.close(this.resources.get(dReason.label));
+        this.dialog.close(this.resources.get(dReason.label));
       }
   }
 }

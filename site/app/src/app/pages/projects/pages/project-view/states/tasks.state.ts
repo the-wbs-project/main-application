@@ -167,18 +167,19 @@ export class TasksState {
     const project = state.project!;
     const nodes = structuredClone(state.nodes)!;
     const nodeIndex = nodes.findIndex((x) => x.id === nodeId);
+    const node = nodes[nodeIndex];
 
     if (nodeIndex === -1) return of();
 
     nodes.splice(nodeIndex, 1);
 
-    const parentId = nodes[nodeIndex].parentId;
     const childrenIds = WbsNodeService.getChildrenIds(nodes, nodeId);
     const changedIds = this.transformers.nodes.phase.reorderer.run(
-      parentId,
+      node.parentId,
       nodes
     );
-    const upserts = nodes.filter((x) => childrenIds.includes(x.id));
+
+    const upserts = nodes.filter((x) => changedIds.includes(x.id));
 
     return this.data.projectNodes
       .putAsync(project.owner, project.id, upserts, [nodeId, ...childrenIds])
@@ -190,7 +191,7 @@ export class TasksState {
           this.saveActivity({
             action: TASK_ACTIONS.REMOVED,
             data: {
-              title: nodes[nodeIndex].title,
+              title: node.title,
               reason: reason,
             },
             topLevelId: state.project!.id,

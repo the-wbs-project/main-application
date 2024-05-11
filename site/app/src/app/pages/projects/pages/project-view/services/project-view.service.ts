@@ -25,7 +25,9 @@ import {
   MoveTaskRight,
   MoveTaskUp,
   RemoveDisciplineToTask,
+  RemoveTask,
 } from '../actions';
+import { TaskDeleteComponent } from '../components/task-delete';
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
 import { ProjectState, TasksState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
@@ -80,11 +82,15 @@ export class ProjectViewService {
       } else if (action === 'viewTask') {
         this.nav.toTaskPage(taskId, TASK_PAGES.ABOUT);
       } else if (action === 'deleteTask') {
-        /*this.dialogs
-          .openDialog<string>(TaskDeleteComponent)
-          .subscribe((reason) => {
-            if (reason) this.store.dispatch(new RemoveTask(taskId!, reason));
-          });*/
+        return TaskDeleteComponent.launchAsync(this.dialogService).pipe(
+          switchMap((reason) =>
+            reason
+              ? this.store
+                  .dispatch(new RemoveTask(taskId, reason))
+                  .pipe(map(() => true))
+              : of(false)
+          )
+        );
       } else if (action === 'moveLeft') {
         this.store.dispatch(new MoveTaskLeft(taskId));
       } else if (action === 'moveRight') {

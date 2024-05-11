@@ -29,6 +29,13 @@ export class WbsNodeService {
     return children;
   }
 
+  static getSiblings(tasks: WbsNode[], taskId: string): WbsNode[] {
+    const task = tasks.find((x) => x.id === taskId);
+    return tasks
+      .filter((x) => x.parentId === task?.parentId)
+      .sort(WbsNodeService.sort);
+  }
+
   getPhasesForEdit(
     tasks: WbsNodeView[],
     confirmRemovalMessage: string
