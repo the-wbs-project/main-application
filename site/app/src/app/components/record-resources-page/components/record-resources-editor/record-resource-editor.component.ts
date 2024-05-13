@@ -1,5 +1,10 @@
 import { NgClass } from '@angular/common';
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  model,
+  output,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
@@ -30,6 +35,8 @@ import { RestrictionsPipe } from './pipes/restrictions.pipe';
 })
 export class RecordResourceEditorComponent {
   readonly vm = model.required<RecordResourceViewModel | undefined>();
+  readonly cancelClicked = output<void>();
+  readonly saveClicked = output<void>();
 
   readonly typeList = [
     RESOURCE_TYPES.PDF,

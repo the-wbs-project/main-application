@@ -1,8 +1,9 @@
 <div class="container-fluid">
-  @if (list().length > 0 && (claims() | check : addClaim())) {
+  @if (view() === 'list') { @if (list().length > 0 && (claims() | check :
+  addClaim())) {
   <div class="row">
     <div class="col-12 tx-right">
-      <button class="btn btn-outline-dark" (click)="launchNew(content)">
+      <button class="btn btn-outline-dark" (click)="launchEditor()">
         <fa-icon [icon]="faPlus" />
         &nbsp; {{ "Resources.AddResource" | translate }}
       </button>
@@ -13,7 +14,7 @@
     <div class="col-12 mg-t-40 text-center tx-20">
       <div>{{ "Resources.NoResourcesFound" | translate }}</div>
       @if (claims() | check : addClaim()) {
-      <button class="btn btn-outline-dark mg-t-20" (click)="launchNew(content)">
+      <button class="btn btn-outline-dark mg-t-20" (click)="launchEditor()">
         <fa-icon [icon]="faPlus" />
         &nbsp; {{ "General.Add" | translate }}
       </button>
@@ -28,30 +29,19 @@
         [claims]="claims()"
         [list]="list()"
         (save)="saveRecords.emit($event)"
+        (edit)="launchEditor($event)"
+      />
+    </div>
+  </div>
+  } } @else {
+  <div class="row">
+    <div class="offset-1 col-10">
+      <wbs-record-resource-editor
+        [(vm)]="vm"
+        (saveClicked)="saveClicked()"
+        (cancelClicked)="cancelEditor()"
       />
     </div>
   </div>
   }
 </div>
-
-<ng-template #content>
-  <kendo-dialog
-    width="90%"
-    height="90%"
-    [title]="'Resources.AddResource' | translate"
-    (close)="modal!.close()"
-  >
-    <wbs-record-resource-editor [(vm)]="vm" />
-    <kendo-dialog-actions>
-      @if (vm()?.type) {
-      <button
-        type="button"
-        class="btn btn-outline-dark"
-        (click)="saveClicked()"
-      >
-        {{ "General.Save" | translate }}
-      </button>
-      }
-    </kendo-dialog-actions>
-  </kendo-dialog>
-</ng-template>

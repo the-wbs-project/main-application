@@ -34,7 +34,10 @@
     </div>
     @if (claims() | check : [editClaim, deleteClaim]) {
     <div class="actions-item">
-      <a class="pointer text-decoration-none tx-black">
+      <a
+        class="pointer text-decoration-none tx-black"
+        (click)="edit.emit(dataItem)"
+      >
         <fa-icon [icon]="faGear" />
       </a>
     </div>

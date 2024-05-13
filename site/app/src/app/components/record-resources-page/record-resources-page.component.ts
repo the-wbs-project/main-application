@@ -4,16 +4,12 @@ import {
   input,
   model,
   output,
+  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import {
-  DialogModule,
-  DialogRef,
-  DialogService,
-} from '@progress/kendo-angular-dialog';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoComponent } from '@wbs/components/info/info.component';
 import { RESOURCE_TYPES, ResourceRecord } from '@wbs/core/models';
@@ -30,7 +26,6 @@ import { RecordResourceListComponent } from './components/record-resources-list'
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckPipe,
-    DialogModule,
     FontAwesomeModule,
     InfoComponent,
     RecordResourceEditorComponent,
@@ -51,27 +46,28 @@ export class RecordResourcesPageComponent {
   readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly addClaim = input.required<string>();
-
-  modal?: DialogRef;
+  readonly view = signal<'list' | 'editor'>('list');
 
   readonly faPlus = faPlus;
   readonly vm = model<RecordResourceViewModel | undefined>(undefined);
 
-  constructor(
-    private readonly dialogService: DialogService,
-    private readonly validator: RecordResourceValidation
-  ) {}
+  constructor(private readonly validator: RecordResourceValidation) {}
 
-  launchNew(content: any): void {
+  launchEditor(vm?: ResourceRecord): void {
     this.vm.set({
-      description: '',
-      name: '',
-      url: '',
+      id: vm?.id,
+      type: vm?.type,
+      description: vm?.description ?? '',
+      name: vm?.name ?? '',
+      url: vm?.resource ?? '',
       errors: {},
     });
-    this.modal = this.dialogService.open({
-      content,
-    });
+    this.view.set('editor');
+  }
+
+  cancelEditor(): void {
+    this.view.set('list');
+    this.vm.set(undefined);
   }
 
   saveClicked(): void {
@@ -102,7 +98,6 @@ export class RecordResourcesPageComponent {
         },
       });
     }
-
-    this.modal?.close();
+    this.view.set('list');
   }
 }

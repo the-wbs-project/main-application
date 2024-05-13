@@ -35,6 +35,7 @@ export class RecordResourceListComponent {
   readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly list = model.required<ResourceRecord[]>();
+  readonly edit = output<ResourceRecord>();
   readonly save = output<ResourceRecord[]>();
 
   readonly editClaim = PROJECT_CLAIMS.RESOURCES.UPDATE;

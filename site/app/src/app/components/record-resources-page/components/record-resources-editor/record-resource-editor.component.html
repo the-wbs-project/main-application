@@ -1,117 +1,153 @@
 @if (vm(); as vm) {
-<div class="container-fluid">
-  <div class="row">
-    <span class="col-3 pd-t-10">
-      {{ "Resources.ResourceType" | translate }} *
-    </span>
-    <div class="col-9">
-      <kendo-dropdownlist [data]="typeList" [(value)]="vm.type">
-        <ng-template
-          kendoDropDownListItemTemplate
-          kendoDropDownListValueTemplate
-          let-dataItem
-        >
-          <wbs-resource-type-text [type]="dataItem" />
-        </ng-template>
-      </kendo-dropdownlist>
-      <wbs-info-message message="Resources.ResourceTypeHelper" />
+<div class="card">
+  <div class="card-header">{{ "Resources.AddResource" | translate }}</div>
+  <div class="card-body">
+    <div class="container-fluid">
+      <div class="row mb-4">
+        <span class="col-3 pd-t-10">
+          {{ "Resources.ResourceType" | translate }} *
+        </span>
+        <div class="col-9">
+          <kendo-dropdownlist [data]="typeList" [(value)]="vm.type">
+            <ng-template
+              kendoDropDownListItemTemplate
+              kendoDropDownListValueTemplate
+              let-dataItem
+            >
+              <wbs-resource-type-text [type]="dataItem" />
+            </ng-template>
+          </kendo-dropdownlist>
+          <wbs-info-message
+            cssClass="mt-1"
+            message="Resources.ResourceTypeHelper"
+          />
+        </div>
+      </div>
+      @if (vm.type) {
+      <div class="row mb-4">
+        <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
+        <div class="col-9">
+          <input
+            type="text"
+            [(ngModel)]="vm.name"
+            class="form-control w-100"
+            [ngClass]="{
+              'is-valid': vm.errors.nameRequired === false,
+              'is-invalid': vm.errors.nameRequired
+            }"
+            (blur)="validator.validateName(vm)"
+          />
+          @if (vm.errors.nameRequired) {
+          <div class="invalid-feedback">
+            {{ "General.NameIsRequired" | translate }}
+          </div>
+          } @else {
+          <wbs-info-message
+            cssClass="mt-1"
+            message="Resources.ResourceNameHelper"
+          />
+          }
+        </div>
+      </div>
+      <div class="row mb-4">
+        <span class="col-3 pd-t-10">
+          {{ "General.Description" | translate }} *
+        </span>
+        <div class="col-9">
+          <textarea
+            [(ngModel)]="vm.description"
+            class="form-control w-100"
+            rows="5"
+            [ngClass]="{
+              'is-valid': vm.errors.descriptionRequired === false,
+              'is-invalid': vm.errors.descriptionRequired
+            }"
+            (blur)="validator.validateDescription(vm)"
+          ></textarea>
+          @if (vm.errors.descriptionRequired) {
+          <div class="invalid-feedback">
+            {{ "Resources.DescriptionIsRequired" | translate }}
+          </div>
+          } @else {
+          <wbs-info-message
+            cssClass="mt-1"
+            message="Resources.ResourceDescriptionHelper"
+          />
+          }
+        </div>
+      </div>
+      @switch (vm.type) { @case ('link') {
+      <div class="row mb-4">
+        <span class="col-3 pd-t-10">
+          {{ "Resources.LinkUrl" | translate }} *
+        </span>
+        <div class="col-9">
+          <input
+            type="text"
+            [(ngModel)]="vm.url"
+            class="form-control w-100"
+            [ngClass]="{
+              'is-valid': vm.errors.urlRequired === false,
+              'is-invalid': vm.errors.urlRequired
+            }"
+            (blur)="validator.validateUrl(vm)"
+          />
+          <div
+            [ngClass]="{
+              'tx-italic tx-11': vm.errors.urlRequired,
+              'invalid-feedback': !vm.errors.urlRequired
+            }"
+          >
+            {{ "Resources.UrlIsRequired" | translate }}
+          </div>
+        </div>
+      </div>
+      } @case ('youtube') { } @default {
+      <div class="row mb-4">
+        <span class="col-3 pd-t-10">
+          {{ "Resources.FileUpload" | translate }}
+        </span>
+        <div class="col-9">
+          <div
+            [ngClass]="{
+              'is-valid border border-success':
+                vm.errors.fileRequired === false,
+              'is-invalid border border-danger': vm.errors.fileRequired
+            }"
+          >
+            <wbs-uploader
+              (removed)="setFile(undefined)"
+              (uploaded)="setFile($event)"
+            />
+          </div>
+          @if (vm.errors.fileRequired) {
+          <div class="invalid-feedback">
+            {{ "Resources.UrlIsRequired" | translate }}
+          </div>
+          }
+        </div>
+      </div>
+      } } }
+      <div class="row">
+        <div class="col-12 text-end">
+          <button
+            type="button"
+            class="btn btn-outline-dark me-2"
+            (click)="cancelClicked.emit()"
+          >
+            {{ "General.Cancel" | translate }}
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            [disabled]="vm.type == null"
+            (click)="saveClicked.emit()"
+          >
+            {{ "General.Save" | translate }}
+          </button>
+        </div>
+      </div>
     </div>
   </div>
-  @if (vm.type) {
-  <div class="row mg-t-20">
-    <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
-    <div class="col-9">
-      <input
-        type="text"
-        [(ngModel)]="vm.name"
-        class="form-control w-100"
-        [ngClass]="{
-          'is-valid': vm.errors.nameRequired === false,
-          'is-invalid': vm.errors.nameRequired
-        }"
-        (blur)="validator.validateName(vm)"
-      />
-      @if (vm.errors.nameRequired) {
-      <div class="invalid-feedback">
-        {{ "General.NameIsRequired" | translate }}
-      </div>
-      } @else {
-      <wbs-info-message message="Resources.ResourceNameHelper" />
-      }
-    </div>
-  </div>
-  <div class="row mg-t-20">
-    <span class="col-3 pd-t-10">
-      {{ "General.Description" | translate }} *
-    </span>
-    <div class="col-9">
-      <textarea
-        [(ngModel)]="vm.description"
-        class="form-control w-100"
-        rows="5"
-        [ngClass]="{
-          'is-valid': vm.errors.descriptionRequired === false,
-          'is-invalid': vm.errors.descriptionRequired
-        }"
-        (blur)="validator.validateDescription(vm)"
-      ></textarea>
-      @if (vm.errors.descriptionRequired) {
-      <div class="invalid-feedback">
-        {{ "Resources.DescriptionIsRequired" | translate }}
-      </div>
-      } @else {
-      <wbs-info-message message="Resources.ResourceDescriptionHelper" />
-      }
-    </div>
-  </div>
-  @switch (vm.type) { @case ('link') {
-  <div class="row mg-t-20">
-    <span class="col-3 pd-t-10"> {{ "Resources.LinkUrl" | translate }} * </span>
-    <div class="col-9">
-      <input
-        type="text"
-        [(ngModel)]="vm.url"
-        class="form-control w-100"
-        [ngClass]="{
-          'is-valid': vm.errors.urlRequired === false,
-          'is-invalid': vm.errors.urlRequired
-        }"
-        (blur)="validator.validateUrl(vm)"
-      />
-      <div
-        [ngClass]="{
-          'tx-italic tx-11': vm.errors.urlRequired,
-          'invalid-feedback': !vm.errors.urlRequired
-        }"
-      >
-        {{ "Resources.UrlIsRequired" | translate }}
-      </div>
-    </div>
-  </div>
-  } @case ('youtube') { } @default {
-  <div class="row mg-t-20">
-    <span class="col-3 pd-t-10">
-      {{ "Resources.FileUpload" | translate }}
-    </span>
-    <div class="col-9">
-      <div
-        [ngClass]="{
-          'is-valid border border-success': vm.errors.fileRequired === false,
-          'is-invalid border border-danger': vm.errors.fileRequired
-        }"
-      >
-        <wbs-uploader
-          (removed)="setFile(undefined)"
-          (uploaded)="setFile($event)"
-        />
-      </div>
-      @if (vm.errors.fileRequired) {
-      <div class="invalid-feedback">
-        {{ "Resources.UrlIsRequired" | translate }}
-      </div>
-      }
-    </div>
-  </div>
-  } } }
 </div>
 }
