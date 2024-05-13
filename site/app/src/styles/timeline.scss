@@ -1,4 +1,4 @@
-@import "../../../styles/variables.scss";
+@import "./variables.scss";
 
 .vtimeline {
   list-style: none;
@@ -6,7 +6,6 @@
   position: relative;
   margin-bottom: 20px;
 }
-//hello
 
 .vtimeline:before {
   top: 0;

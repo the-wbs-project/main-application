@@ -21,7 +21,6 @@ import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
   standalone: true,
   selector: 'wbs-timeline',
   templateUrl: './timeline.component.html',
-  styleUrls: ['./timeline.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,

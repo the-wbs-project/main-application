@@ -39,6 +39,7 @@
             "styles": [
               "animate.css/animate.css",
               "src/styles/bootstrap.scss",
+              "src/styles/timeline.scss",
               "src/styles/styles.scss"
             ],
             "scripts": [],
