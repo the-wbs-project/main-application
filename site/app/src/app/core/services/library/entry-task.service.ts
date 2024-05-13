@@ -5,6 +5,7 @@ import {
   LibraryEntryNode,
   LibraryEntryVersion,
   ProjectCategory,
+  TaskCreationResults,
 } from '@wbs/core/models';
 import {
   CategorySelectionService,
@@ -15,7 +16,6 @@ import {
   WbsNodeService,
 } from '@wbs/core/services';
 import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
-import { TaskCreationResults } from '@wbs/main/models';
 import { EntryStore, MetadataStore } from '@wbs/store';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';

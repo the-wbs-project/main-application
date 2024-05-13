@@ -1,5 +1,4 @@
-import { PROJECT_CLAIMS } from '@wbs/core/models';
-import { NavigationLink } from '@wbs/main/models';
+import { NavigationLink, PROJECT_CLAIMS } from '@wbs/core/models';
 
 const settings: NavigationLink[] = [
   {

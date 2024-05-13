@@ -1,4 +1,5 @@
 import { Injectable, inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   Action,
@@ -14,9 +15,8 @@ import {
   ChatComment,
   ProjectApproval,
   ProjectApprovalSaveRecord,
+  ProjectApprovalStats,
 } from '@wbs/core/models';
-import { ProjectApprovalStats } from '@wbs/main/models';
-import { MembershipState } from '@wbs/main/states';
 import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import {
@@ -27,7 +27,7 @@ import {
   SetApprovalView,
 } from '../actions';
 import { ProjectState } from './project.state';
-import { UserStore } from '@wbs/store';
+import { MembershipStore, UserStore } from '@wbs/store';
 
 interface StateModel {
   childrenIds?: string[];
@@ -58,6 +58,7 @@ export class ProjectApprovalState implements NgxsOnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly store = inject(Store);
   private readonly userId = inject(UserStore).userId;
+  private readonly membership = inject(MembershipStore);
 
   @Selector()
   static current(state: StateModel): ProjectApproval | undefined {
@@ -100,6 +101,14 @@ export class ProjectApprovalState implements NgxsOnInit {
   }
 
   ngxsOnInit(ctx: Context): void {
+    toObservable(this.membership.projectApprovalRequired)
+      .pipe(untilDestroyed(this))
+      .subscribe((enabled) =>
+        ctx.patchState({
+          enabled,
+        })
+      );
+
     this.store
       .select(ProjectState.current)
       .pipe(untilDestroyed(this))
@@ -132,15 +141,6 @@ export class ProjectApprovalState implements NgxsOnInit {
           ctx.dispatch(new InitiateApprovals(project.owner, project.id));
         }
       });
-
-    this.store
-      .select(MembershipState.organization)
-      .pipe(untilDestroyed(this))
-      .subscribe((org) =>
-        ctx.patchState({
-          enabled: org?.metadata?.projectApprovalRequired ?? false,
-        })
-      );
   }
 
   @Action(InitiateApprovals)

@@ -1,5 +1,4 @@
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
-import { NavigationLink } from '@wbs/main/models';
+import { LIBRARY_CLAIMS, NavigationLink } from '@wbs/core/models';
 import { TASK_PAGES } from './task-pages.const';
 
 export const TASK_NAVIGATION: NavigationLink[] = [

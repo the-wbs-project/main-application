@@ -2,12 +2,10 @@ import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
-import { LibraryImportResults } from '@wbs/core/models';
+import { LibraryImportResults, TaskCreationResults } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
-import { TaskCreationResults } from '@wbs/main/models';
-import { MembershipState } from '@wbs/main/states';
-import { EntryStore } from '@wbs/store';
+import { EntryStore, MembershipStore } from '@wbs/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryCreationService } from '../../../services';
@@ -19,6 +17,7 @@ export class EntryTaskActionService {
   private readonly dialogService = inject(DialogService);
   private readonly importProcessor = inject(LibraryImportProcessorService);
   private readonly libraryStore = inject(EntryStore);
+  private readonly membership = inject(MembershipStore);
   private readonly store = inject(SignalStore);
   private readonly taskService = inject(EntryTaskService);
 
@@ -83,7 +82,7 @@ export class EntryTaskActionService {
       this.creation.exportTaskToEntryAsync(taskId!);
     } else if (action.startsWith('import|')) {
       const direction = action.split('|')[1]!;
-      const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+      const org = this.membership.organization()!.name;
       const task = this.libraryStore.tasks()!.find((x) => x.id === taskId)!;
       const types: string[] =
         direction === 'right' || task.parentId != null

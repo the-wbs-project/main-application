@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { DirtyComponent } from '@wbs/main/models';
+import { DirtyComponent } from '@wbs/core/models';
 import { ChangeTaskBasics } from '../../actions';
 import { TasksState } from '../../states';
 

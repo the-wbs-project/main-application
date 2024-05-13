@@ -1,8 +1,7 @@
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { importProvidersFrom, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
-import { NgxsModule } from '@ngxs/store';
 import {
   authGuard,
   librarySectionGuard,
@@ -20,7 +19,6 @@ import {
   orgListResolve,
   rolesResolve,
 } from '@wbs/core/services';
-import { MembershipState } from '@wbs/main/states';
 import { LoggerRequestInterceptor } from '@wbs/setup/logger.http-interceptor';
 import { MetadataStore } from '@wbs/store';
 
@@ -33,7 +31,6 @@ export const routes: Routes = [
       authGuard,
     ],
     providers: [
-      importProvidersFrom(NgxsModule.forFeature([MembershipState])),
       Auth0Service,
       Logger,
       {

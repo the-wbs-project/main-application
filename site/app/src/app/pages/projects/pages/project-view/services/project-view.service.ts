@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
+import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryImportResults,
@@ -11,8 +12,7 @@ import {
 } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { TaskCreateComponent } from '@wbs/components/task-create';
-import { MembershipState } from '@wbs/main/states';
+import { MembershipStore } from '@wbs/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -40,6 +40,7 @@ export class ProjectViewService {
   private readonly dialogService = inject(DialogService);
   private readonly exportService = inject(LibraryEntryExportService);
   private readonly importProcessor = inject(ProjectImportProcessorService);
+  private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
   private readonly nav = inject(ProjectNavigationService);
   private readonly store = inject(Store);
@@ -121,9 +122,7 @@ export class ProjectViewService {
           .pipe(map(() => true));
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
-        const org = this.store.selectSnapshot(
-          MembershipState.organization
-        )!.name;
+        const org = this.membership.organization()!.name;
         const task = this.store
           .selectSnapshot(TasksState.nodes)!
           .find((x) => x.id === taskId)!;

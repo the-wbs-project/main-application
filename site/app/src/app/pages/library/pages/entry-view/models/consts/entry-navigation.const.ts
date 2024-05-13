@@ -1,5 +1,4 @@
-import { NavigationLink } from '@wbs/main/models';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, NavigationLink } from '@wbs/core/models';
 import { ENTRY_PAGES } from './entry-pages.const';
 
 const settings: NavigationLink[] = [

@@ -14,7 +14,7 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { SaveState } from '@wbs/core/models';
+import { DirtyComponent, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
@@ -22,7 +22,6 @@ import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.co
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
-import { DirtyComponent } from '@wbs/main/models';
 import { delay, tap } from 'rxjs/operators';
 import { ChangeProjectBasics } from '../../actions';
 import { ProjectState } from '../../states';

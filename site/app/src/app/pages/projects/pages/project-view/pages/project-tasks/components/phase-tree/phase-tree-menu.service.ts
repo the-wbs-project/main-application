@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
+import { ContextMenuItem, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { ContextMenuItem } from '@wbs/main/models';
 import { MetadataStore } from '@wbs/store';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
 

@@ -9,7 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircle, faList, faPieChart } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ChartsModule } from '@progress/kendo-angular-charts';
-import { ProjectApprovalStats } from '@wbs/main/models';
+import { ProjectApprovalStats } from '@wbs/core/models';
 import { ApprovalPieDataPipe } from './approval-pie-data.pipe';
 
 @Component({

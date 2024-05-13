@@ -92,7 +92,7 @@
             [(pmIds)]="pmIds"
             [(smeIds)]="smeIds"
             [(approverIds)]="approverIds"
-            [approvalEnabled]="approvalEnabled"
+            [approvalEnabled]="approvalEnabled()"
             [members]="members()"
           />
         </div>
@@ -114,7 +114,7 @@
           [smeIds]="smeIds()"
           [approverIds]="approverIds()"
           [members]="members()"
-          [approvalEnabled]="approvalEnabled"
+          [approvalEnabled]="approvalEnabled()"
           [category]="(categories | findById : category()!)!"
           [disciplines]="disciplines()"
           [templateTitle]="projectTitle()"

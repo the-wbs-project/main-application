@@ -12,8 +12,7 @@ import {
   faUserMinus,
   faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
-import { ContextMenuItem } from '../../../../../../main/models/context-menu-item.model';
+import { ContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
 
 const taskActions: ContextMenuItem[] = [
   {

@@ -17,8 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
 import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
-import { MembershipState } from '@wbs/main/states';
-import { MetadataStore, UserStore } from '@wbs/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
@@ -73,6 +72,7 @@ export class MembersComponent implements OnInit {
   private readonly metadata = inject(MetadataStore);
   private readonly store = inject(SignalStore);
   private readonly profile = inject(UserStore).profile;
+  private readonly organization = inject(MembershipStore).organization;
 
   readonly org = input.required<string>();
 
@@ -86,8 +86,6 @@ export class MembersComponent implements OnInit {
   readonly members = signal<MemberViewModel[]>([]);
   readonly invites = signal<InviteViewModel[]>([]);
   readonly showInviteDialog = model(false);
-
-  readonly organization = this.store.select(MembershipState.organization);
 
   readonly roles = this.processRoles();
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);

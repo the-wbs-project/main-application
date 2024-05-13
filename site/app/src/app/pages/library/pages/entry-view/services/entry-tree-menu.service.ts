@@ -1,7 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { LibraryEntryVersion } from '@wbs/core/models';
+import { ContextMenuItem, LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { ContextMenuItem } from '@wbs/main/models';
 import { MetadataStore } from '@wbs/store';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
 

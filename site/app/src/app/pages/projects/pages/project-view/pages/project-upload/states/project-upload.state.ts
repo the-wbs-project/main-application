@@ -12,8 +12,7 @@ import {
 } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
-import { MembershipState } from '@wbs/main/states';
-import { UserStore } from '@wbs/store';
+import { MembershipStore, UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../../../models';
@@ -63,6 +62,7 @@ interface StateModel {
 })
 export class ProjectUploadState {
   private readonly data = inject(DataServiceFactory);
+  private readonly membership = inject(MembershipStore);
   private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
   private readonly userStore = inject(UserStore);
@@ -210,7 +210,7 @@ export class ProjectUploadState {
       body: Utils.getFileAsync(state.rawFile),
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
-        this.store.selectSnapshot(MembershipState.organization)!.display_name,
+        this.membership.organization()!.display_name,
         this.userStore.profile()!
       ),
     }).pipe(

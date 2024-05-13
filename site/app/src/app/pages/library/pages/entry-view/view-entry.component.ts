@@ -16,7 +16,7 @@ import {
 import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { LibraryEntry, SaveState } from '@wbs/core/models';
+import { LibraryEntry, NavigationLink, SaveState } from '@wbs/core/models';
 import {
   NavigationMenuService,
   SignalStore,
@@ -27,7 +27,6 @@ import { SaveMessageComponent } from '@wbs/components/_utils/save-message.compon
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
 import { PageHeaderComponent } from '@wbs/components/page-header';
-import { NavigationLink } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';

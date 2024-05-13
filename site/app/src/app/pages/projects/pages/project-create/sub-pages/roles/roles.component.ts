@@ -16,8 +16,7 @@ import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
 import { WizardFooterComponent } from '@wbs/components/wizard-footer';
-import { MembershipState } from '@wbs/main/states';
-import { MetadataStore, UserStore } from '@wbs/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
@@ -46,10 +45,7 @@ export class RolesComponent implements OnInit {
   readonly pmIds = signal<string[]>([]);
   readonly smeIds = signal<string[]>([]);
   readonly org = input.required<string>();
-  readonly orgObj = this.store.select(MembershipState.organization);
-  readonly approvalEnabled = computed(
-    () => this.orgObj()?.metadata?.projectApprovalRequired ?? false
-  );
+  readonly approvalEnabled = inject(MembershipStore).projectApprovalRequired;
 
   constructor(
     private readonly data: DataServiceFactory,

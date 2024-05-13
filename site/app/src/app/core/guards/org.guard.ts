@@ -1,25 +1,26 @@
 import { inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Store } from '@ngxs/store';
+import { MembershipStore } from '@wbs/store';
 import { of } from 'rxjs';
-import { first, map, skipWhile, switchMap } from 'rxjs/operators';
-import { ChangeOrganization } from '../../main/actions';
-import { MembershipState } from '../../main/states';
+import { first, map, skipWhile } from 'rxjs/operators';
 
 export const orgGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
+  const store = inject(MembershipStore);
 
-  return store.select(MembershipState.organizations).pipe(
+  return toObservable(store.organizations).pipe(
     skipWhile((list) => list == undefined),
     map((list) => list!),
-    switchMap((list) => {
+    map((list) => {
       if (list.length === 0) {
         return of(false);
       }
       const org =
         list.find((org) => org.name === route.params['org']) ?? list[0];
 
-      return store.dispatch(new ChangeOrganization(org)).pipe(map(() => true));
+      store.setOrganization(org);
+
+      return true;
     }),
     first()
   );

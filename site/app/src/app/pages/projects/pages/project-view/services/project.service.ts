@@ -1,10 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { ProjectNode, RoutedBreadcrumbItem } from '@wbs/core/models';
+import {
+  NavigationLink,
+  ProjectNode,
+  RoutedBreadcrumbItem,
+} from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { NavigationLink } from '@wbs/main/models';
 import { MetadataStore } from '@wbs/store';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';

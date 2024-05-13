@@ -19,7 +19,7 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { CategoryDialogResults } from '@wbs/main/models';
+import { CategoryDialogResults } from '@wbs/core/models';
 
 declare type Icon = { icon: string; name: string };
 

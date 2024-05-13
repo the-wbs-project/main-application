@@ -1,5 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
-import { ProjectApprovalStats } from '@wbs/main/models';
+import { ProjectApprovalStats } from '@wbs/core/models';
 
 @Pipe({ name: 'approvalPieData', standalone: true })
 export class ApprovalPieDataPipe implements PipeTransform {

@@ -3,13 +3,16 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LIBRARY_CLAIMS, RoutedBreadcrumbItem } from '@wbs/core/models';
-import { NavigationLink } from '@wbs/main/models';
+import {
+  LIBRARY_CLAIMS,
+  NavigationLink,
+  RoutedBreadcrumbItem,
+} from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
+import { EntryService } from '@wbs/core/services/library';
 import { EntryStore, UiStore } from '@wbs/store';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { EntryService } from '../../../../../core/services/library/entry.service';
 import { ENTRY_NAVIGATION } from '../models';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {

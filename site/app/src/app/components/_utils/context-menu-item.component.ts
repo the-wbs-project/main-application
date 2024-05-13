@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { ContextMenuItem } from '@wbs/main/models';
+import { ContextMenuItem } from '@wbs/core/models';
 
 @Component({
   standalone: true,

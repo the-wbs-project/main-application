@@ -24,8 +24,7 @@ import { WbsNodeView } from '@wbs/core/view-models';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
-import { MembershipState } from '@wbs/main/states';
-import { EntryStore, UserStore } from '@wbs/store';
+import { EntryStore, MembershipStore, UserStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 
 @Component({
@@ -48,6 +47,7 @@ export class NameVisibilityComponent extends DialogContentBase {
   private readonly activities = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly entryStore = inject(EntryStore);
+  private readonly membership = inject(MembershipStore);
   private readonly store = inject(SignalStore);
   private readonly userId = inject(UserStore).userId;
   private task: WbsNodeView | undefined;
@@ -105,7 +105,7 @@ export class NameVisibilityComponent extends DialogContentBase {
       .dispatch(
         new Navigate([
           '/',
-          this.store.selectSnapshot(MembershipState.organization)!.name,
+          this.membership.organization()!.name,
           'library',
           'view',
           this.entryStore.entry()?.owner,

@@ -4,9 +4,9 @@ import {
   Project,
   ProjectCategoryChanges,
   ProjectNode,
+  RebuildResults,
   WbsNode,
 } from '@wbs/core/models';
-import { RebuildResults } from '@wbs/main/models';
 
 export class VerifyTasks {
   static readonly type = '[Tasks] Verify';

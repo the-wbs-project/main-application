@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
+import { NavigationLink } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
-import { NavigationLink } from '@wbs/main/models';
 
 @Injectable()
 export class NavigationMenuService {

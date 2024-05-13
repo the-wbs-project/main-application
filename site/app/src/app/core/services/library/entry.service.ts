@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
+import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import {
   DialogCloseResult,
@@ -15,18 +16,17 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { Messages, Utils } from '@wbs/core/services';
-import { MembershipState } from '@wbs/main/states';
-import { EntryStore } from '@wbs/store';
+import { EntryStore, MembershipStore } from '@wbs/store';
 import { Observable, forkJoin } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
-import { Navigate } from '@ngxs/router-plugin';
 
 @Injectable()
 export class EntryService {
   private readonly activity = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
+  private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
   private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
@@ -99,7 +99,7 @@ export class EntryService {
   }
 
   createProject(): void {
-    const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+    const org = this.membership.organization()!.name;
 
     ProjectCreationComponent.launchAsync(
       this.dialogService,

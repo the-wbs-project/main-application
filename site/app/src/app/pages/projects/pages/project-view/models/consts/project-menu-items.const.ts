@@ -12,8 +12,11 @@ import {
   faUserMinus,
   faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
-import { ContextMenuItem } from '@wbs/main/models';
+import {
+  ContextMenuItem,
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
+} from '@wbs/core/models';
 
 const taskActions: ContextMenuItem[] = [
   {

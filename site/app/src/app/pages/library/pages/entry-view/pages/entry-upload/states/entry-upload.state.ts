@@ -11,8 +11,7 @@ import {
 } from '@wbs/core/models';
 import { Transformers, Utils } from '@wbs/core/services';
 import { EntryActivityService } from '@wbs/core/services/library';
-import { MembershipState } from '@wbs/main/states';
-import { EntryStore, UserStore } from '@wbs/store';
+import { EntryStore, MembershipStore, UserStore } from '@wbs/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -60,6 +59,7 @@ export class EntryUploadState {
   private readonly activities = inject(EntryActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly entryStore = inject(EntryStore);
+  private readonly membership = inject(MembershipStore);
   private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
   private readonly profile = inject(UserStore).profile;
@@ -193,7 +193,7 @@ export class EntryUploadState {
       body: Utils.getFileAsync(state.rawFile),
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
-        this.store.selectSnapshot(MembershipState.organization)!.display_name,
+        this.membership.organization()!.display_name,
         this.profile()!
       ),
     }).pipe(
@@ -376,7 +376,7 @@ export class EntryUploadState {
     ctx: StateContext<StateModel>,
     pages: string[]
   ): Observable<void> {
-    const org = this.store.selectSnapshot(MembershipState.organization)!.name;
+    const org = this.membership.organization()!.name;
     const entry = this.entryStore.entry()!;
     const version = this.entryStore.version()!;
 

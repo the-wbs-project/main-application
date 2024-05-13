@@ -8,7 +8,11 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { SaveState } from '@wbs/core/models';
+import {
+  CategoryDialogResults,
+  DirtyComponent,
+  SaveState,
+} from '@wbs/core/models';
 import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { CategorySelection } from '@wbs/core/view-models';
@@ -16,7 +20,6 @@ import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.co
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { CategoryDialogComponent } from '@wbs/components/category-dialog';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
-import { CategoryDialogResults, DirtyComponent } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 

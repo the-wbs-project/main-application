@@ -18,6 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
+import { DirtyComponent } from '@wbs/core/models';
 import { SaveService } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
@@ -26,7 +27,6 @@ import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
-import { DirtyComponent } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
 
 @Component({

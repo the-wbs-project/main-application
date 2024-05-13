@@ -4,9 +4,8 @@ import {
   faCloudUpload,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
-import { ActionButtonMenuItem } from '@wbs/main/models';
-import { EntryService } from '../../../../../core/services/library/entry.service';
+import { ActionButtonMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
+import { EntryService } from '@wbs/core/services/library';
 
 @Injectable()
 export class EntryActionButtonService {

@@ -10,13 +10,12 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Category, SaveState } from '@wbs/core/models';
+import { Category, DirtyComponent, SaveState } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
-import { DirtyComponent } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';
 

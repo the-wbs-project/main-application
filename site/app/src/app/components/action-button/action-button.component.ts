@@ -15,7 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { PopupModule } from '@progress/kendo-angular-popup';
-import { ActionButtonMenuItem } from '@wbs/main/models';
+import { ActionButtonMenuItem } from '@wbs/core/models';
 
 @Component({
   standalone: true,

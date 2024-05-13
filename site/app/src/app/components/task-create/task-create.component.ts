@@ -13,10 +13,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { WbsNode } from '@wbs/core/models';
+import { TaskCreationResults, WbsNode } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { TaskCreationResults } from '@wbs/main/models';
 import { DisciplineEditorComponent } from '../discipline-editor';
 
 @Component({

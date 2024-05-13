@@ -26,11 +26,20 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
+import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
+import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { TaskCreateComponent } from '@wbs/components/task-create';
+import { TaskTitleComponent } from '@wbs/components/task-title';
+import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
   LIBRARY_CLAIMS,
   LibraryEntry,
   LibraryEntryVersion,
   SaveState,
+  TaskCreationResults,
 } from '@wbs/core/models';
 import {
   Messages,
@@ -40,15 +49,6 @@ import {
 } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
-import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
-import { TaskCreateComponent } from '@wbs/components/task-create';
-import { TaskTitleComponent } from '@wbs/components/task-title';
-import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TaskCreationResults } from '@wbs/main/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { EntryStore, UiStore } from '@wbs/store';
 import { Observable } from 'rxjs';

@@ -28,24 +28,19 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
+import { PhaseEditorComponent } from '@wbs/components/phase-editor';
+import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import {
   LibraryEntryNode,
   LibraryEntryVersion,
   Member,
 } from '@wbs/core/models';
-import {
-  CategorySelectionService,
-  IdService,
-  SignalStore,
-} from '@wbs/core/services';
+import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
-import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
-import { PhaseEditorComponent } from '@wbs/components/phase-editor';
-import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { MembershipState } from '@wbs/main/states';
-import { MetadataStore, UserStore } from '@wbs/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RolesSectionComponent } from './components/roles-section';
@@ -77,7 +72,6 @@ export class ProjectCreationComponent extends DialogContentBase {
   private readonly metadata = inject(MetadataStore);
   private readonly catService = inject(CategorySelectionService);
   private readonly data = inject(DataServiceFactory);
-  private readonly store = inject(SignalStore);
   private readonly userId = inject(UserStore).userId;
 
   readonly faSpinner = faSpinner;
@@ -93,6 +87,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly tasks = signal<LibraryEntryNode[]>([]);
   readonly projectTitle = model<string>('');
   readonly category = model<string | undefined>(undefined);
+  readonly approvalEnabled = inject(MembershipStore).projectApprovalRequired;
   readonly disciplines = model<CategorySelection[]>([]);
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
@@ -104,10 +99,6 @@ export class ProjectCreationComponent extends DialogContentBase {
     { label: 'General.Roles', icon: faLock },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
-
-  readonly approvalEnabled =
-    this.store.selectSnapshot(MembershipState.organization)?.metadata
-      ?.projectApprovalRequired ?? false;
 
   readonly disciplineReview = computed(() =>
     this.disciplines()

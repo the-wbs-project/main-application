@@ -6,7 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { MenuModule } from '@progress/kendo-angular-menu';
-import { NavigationLink } from '../../main/models';
+import { NavigationLink } from '@wbs/core/models';
 
 @Component({
   standalone: true,

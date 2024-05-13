@@ -3,10 +3,9 @@ import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Organization, User } from '@wbs/core/models';
-import { Logger, Messages, sorter } from '@wbs/core/services';
-import { InitiateOrganizations } from '@wbs/main/actions';
-import { AiStore, UserStore } from '@wbs/store';
+import { User } from '@wbs/core/models';
+import { Logger, Messages } from '@wbs/core/services';
+import { AiStore, MembershipStore, UserStore } from '@wbs/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
@@ -17,6 +16,7 @@ export class Auth0Service {
   private readonly auth = inject(AuthService);
   private readonly data = inject(DataServiceFactory);
   private readonly logger = inject(Logger);
+  private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
   private readonly store = inject(Store);
   private readonly userStore = inject(UserStore);
@@ -51,14 +51,10 @@ export class Auth0Service {
         'usr.email': profile.email,
       });
 
-      let organizations: Organization[] = user[ns + '/organizations'] ?? [];
-
-      if (organizations.length > 0)
-        this.store.dispatch([
-          new InitiateOrganizations(
-            organizations.sort((a, b) => sorter(a.name, b.name))
-          ),
-        ]);
+      this.membership.initialize(
+        user[ns + '/organizations'] ?? [],
+        user[ns + '/organizations-roles']!
+      );
       this._isInitiated.next(true);
     });
   }
