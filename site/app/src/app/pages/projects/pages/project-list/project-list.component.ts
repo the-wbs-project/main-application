@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI, Project } from '@wbs/core/models';
 import { sorter, Storage } from '@wbs/core/services';
-import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';

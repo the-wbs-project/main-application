@@ -9,9 +9,9 @@ import { Navigate } from '@ngxs/router-plugin';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { SignalStore, TreeService } from '@wbs/core/services';
-import { DisciplineIconListComponent } from '@wbs/dummy_components/discipline-icon-list.component';
-import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
-import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
+import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
+import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
 import { EntryStore, UiStore } from '@wbs/store';
 
 @Component({

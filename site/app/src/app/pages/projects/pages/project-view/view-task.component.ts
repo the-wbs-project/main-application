@@ -19,11 +19,11 @@ import {
   TitleService,
   TaskModalService,
 } from '@wbs/core/services';
-import { ApprovalBadgeComponent } from '@wbs/main/components/approval-badge.component';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
-import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { PageHeaderComponent } from '@wbs/main/components/page-header';
-import { TaskModalFooterComponent } from '@wbs/main/components/task-modal-footer.component';
+import { ApprovalBadgeComponent } from '@wbs/components/_utils/approval-badge.component';
+import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
+import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
+import { TaskModalFooterComponent } from '@wbs/components/_utils/task-modal-footer.component';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { delay, tap } from 'rxjs/operators';
 import { ChangeTaskBasics } from './actions';

@@ -14,8 +14,8 @@ import {
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { AiPromptService, SaveService, SignalStore } from '@wbs/core/services';
-import { DescriptionCardComponent } from '@wbs/main/components/description-card';
-import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { DescriptionCardComponent } from '@wbs/components/description-card';
+import { DisciplineCardComponent } from '@wbs/components/discipline-card';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { tap } from 'rxjs/operators';

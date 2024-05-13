@@ -17,15 +17,12 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
-import {
-  AiPromptService,
-  EntryTaskService,
-  TaskModalService,
-} from '@wbs/core/services';
-import { DescriptionCardComponent } from '@wbs/main/components/description-card';
-import { DisciplineCardComponent } from '@wbs/main/components/discipline-card';
+import { AiPromptService, TaskModalService } from '@wbs/core/services';
+import { EntryTaskService } from '@wbs/core/services/library';
+import { DescriptionCardComponent } from '@wbs/components/description-card';
+import { DisciplineCardComponent } from '@wbs/components/discipline-card';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
-import { SavingAlertComponent } from '@wbs/main/components/saving-alert.component';
+import { SavingAlertComponent } from '@wbs/components/_utils/saving-alert.component';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryStore } from '@wbs/store';

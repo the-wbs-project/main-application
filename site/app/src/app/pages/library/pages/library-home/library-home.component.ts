@@ -17,17 +17,17 @@ import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LibraryListComponent } from '@wbs/components/library-list/library-list.component';
+import { LibrarySearchComponent } from '@wbs/components/_utils/library-search.component';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.directive';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
-import { EntryCreateButtonComponent } from '@wbs/dummy_components/entry-create-button/entry-create-button.component';
-import { LibrarySearchComponent } from '@wbs/dummy_components/library-search.component';
-import { LibrarySelectorComponent } from '@wbs/dummy_components/library-selector';
-import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { LibrarySelectorComponent } from '@wbs/components/library-selector';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 import { EntryCreationService } from '../../services';
+import { EntryCreateButtonComponent } from './components';
 
 @Component({
   standalone: true,

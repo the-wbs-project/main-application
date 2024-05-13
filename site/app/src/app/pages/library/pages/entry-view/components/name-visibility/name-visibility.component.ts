@@ -13,7 +13,7 @@ import {
   DialogRef,
 } from '@progress/kendo-angular-dialog';
 import { EntryService, EntryTaskService } from '@wbs/core/services';
-import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { Observable } from 'rxjs';
 
 declare type SaveCall = (name: string, visibility: string) => Observable<void>;

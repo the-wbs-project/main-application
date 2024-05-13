@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { UploaderComponent } from '@wbs/main/components/uploader/uploader.component';
+import { UploaderComponent } from '@wbs/components/uploader/uploader.component';
 import { FileUploaded } from '../../actions';
 
 @Component({

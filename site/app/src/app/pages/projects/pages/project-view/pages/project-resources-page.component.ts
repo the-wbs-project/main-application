@@ -8,8 +8,8 @@ import {
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { PROJECT_CLAIMS, ResourceRecord } from '@wbs/core/models';
-import { AlertComponent } from '@wbs/dummy_components/alert.component';
-import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
+import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { RecordResourcesPageComponent } from '@wbs/components/record-resources-page';
 import { ProjectResourceService } from '../services';
 
 @Component({

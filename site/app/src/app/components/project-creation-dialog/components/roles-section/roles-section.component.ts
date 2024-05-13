@@ -9,7 +9,7 @@ import {
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { ProjectRolesComponent } from '@wbs/main/components/project-roles';
+import { ProjectRolesComponent } from '@wbs/components/project-roles';
 import { MetadataStore } from '@wbs/store';
 
 @Component({

@@ -1,11 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { LibraryEntryNode, LibraryImportResults } from '@wbs/core/models';
-import {
-  EntryService,
-  EntryTaskService,
-  IdService,
-  sorter,
-} from '@wbs/core/services';
+import { IdService, sorter } from '@wbs/core/services';
+import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/store';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';

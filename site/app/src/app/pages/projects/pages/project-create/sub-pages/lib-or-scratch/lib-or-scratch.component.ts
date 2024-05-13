@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { faBooks, faChalkboardUser } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
+import { WizardFooterComponent } from '@wbs/components/wizard-footer';
 import { LibOrScratchChosen } from '../../actions';
 
 @Component({

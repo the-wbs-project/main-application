@@ -5,7 +5,7 @@ import {
   inject,
 } from '@angular/core';
 import { SignalStore } from '@wbs/core/services';
-import { UploadResultsViewComponent } from '@wbs/main/components/upload-views/results-view';
+import { UploadResultsViewComponent } from '@wbs/components/upload-views/results-view';
 import { LoadProjectFile } from '../actions';
 import { EntryUploadState } from '../states';
 

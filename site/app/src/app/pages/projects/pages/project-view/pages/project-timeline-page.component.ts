@@ -10,7 +10,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { TimelineMenuItem } from '@wbs/core/models';
 import { TimelineViewModel } from '@wbs/core/view-models';
-import { TimelineComponent } from '@wbs/main/components/timeline';
+import { TimelineComponent } from '@wbs/components/timeline';
 import { TimelineService } from '../services';
 
 @Component({

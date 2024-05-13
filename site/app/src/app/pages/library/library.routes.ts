@@ -6,7 +6,7 @@ import {
   EntryService,
   EntryTaskActivityService,
   EntryTaskService,
-} from '@wbs/core/services';
+} from '@wbs/core/services/library';
 import { EntryCreationService, watcherGuard } from './services';
 
 export const routes: Routes = [

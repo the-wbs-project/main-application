@@ -39,10 +39,10 @@ import {
   SignalStore,
 } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
-import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
-import { PhaseEditorComponent } from '@wbs/main/components/phase-editor';
-import { ProjectCategoryDropdownComponent } from '@wbs/main/components/project-category-dropdown';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
+import { PhaseEditorComponent } from '@wbs/components/phase-editor';
+import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { MembershipState } from '@wbs/main/states';
 import { MetadataStore, UserStore } from '@wbs/store';

@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { LIBRARY_CLAIMS, ResourceRecord } from '@wbs/core/models';
-import { RecordResourcesPageComponent } from '@wbs/main/components/record-resources-page';
+import { RecordResourcesPageComponent } from '@wbs/components/record-resources-page';
 import { EntryResourceService } from '../services';
-import { AlertComponent } from '@wbs/dummy_components/alert.component';
+import { AlertComponent } from '@wbs/components/_utils/alert.component';
 
 @Component({
   standalone: true,

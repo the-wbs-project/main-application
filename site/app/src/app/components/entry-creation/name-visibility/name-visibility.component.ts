@@ -18,15 +18,12 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  EntryActivityService,
-  EntryService,
-  SignalStore,
-} from '@wbs/core/services';
+import { SignalStore } from '@wbs/core/services';
+import { EntryActivityService, EntryService } from '@wbs/core/services/library';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
-import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
+import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { MembershipState } from '@wbs/main/states';
 import { EntryStore, UserStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';

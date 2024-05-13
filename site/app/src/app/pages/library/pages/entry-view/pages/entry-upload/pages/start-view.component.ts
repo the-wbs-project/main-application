@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { UploadStartViewComponent } from '@wbs/main/components/upload-views/start-view';
+import { UploadStartViewComponent } from '@wbs/components/upload-views/start-view';
 import { FileUploaded } from '../actions';
 
 @Component({

@@ -6,7 +6,7 @@ import {
 } from '@angular/core';
 import { ImportPerson } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { UploadDisciplinesViewComponent } from '@wbs/main/components/upload-views/disciplines-view';
+import { UploadDisciplinesViewComponent } from '@wbs/components/upload-views/disciplines-view';
 import { PeopleCompleted } from '../actions';
 import { EntryUploadState } from '../states';
 

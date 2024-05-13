@@ -8,7 +8,7 @@ import {
   signal,
 } from '@angular/core';
 import { SignalStore } from '@wbs/core/services';
-import { UploadSaveViewComponent } from '@wbs/main/components/upload-views/save-view';
+import { UploadSaveViewComponent } from '@wbs/components/upload-views/save-view';
 import { PrepUploadToSave } from '../actions';
 import { EntryUploadState } from '../states';
 

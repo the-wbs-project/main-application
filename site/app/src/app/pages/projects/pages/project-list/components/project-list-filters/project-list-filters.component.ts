@@ -11,8 +11,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { CheckBoxModule } from '@progress/kendo-angular-inputs';
 import { plusIcon } from '@progress/kendo-svg-icons';
 import { PROJECT_STATI } from '@wbs/core/models';
-import { CheckboxFilterListComponent } from '@wbs/main/components/checkbox-filter-list';
-import { SwitchComponent } from '@wbs/main/components/switch';
+import { CheckboxFilterListComponent } from '@wbs/components/checkbox-filter-list';
+import { SwitchComponent } from '@wbs/components/switch';
 import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
 import { MetadataStore } from '@wbs/store';
 

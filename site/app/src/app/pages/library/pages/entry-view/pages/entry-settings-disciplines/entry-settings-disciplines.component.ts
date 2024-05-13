@@ -9,16 +9,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { SaveState } from '@wbs/core/models';
-import {
-  CategorySelectionService,
-  EntryService,
-  IdService,
-} from '@wbs/core/services';
+import { CategorySelectionService, IdService } from '@wbs/core/services';
+import { EntryService } from '@wbs/core/services/library';
 import { CategorySelection } from '@wbs/core/view-models';
-import { CategoryDialogComponent } from '@wbs/main/components/category-dialog';
-import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
-import { SaveButtonComponent } from '@wbs/main/components/save-button.component';
+import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
+import { CategoryDialogComponent } from '@wbs/components/category-dialog';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { CategoryDialogResults, DirtyComponent } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';

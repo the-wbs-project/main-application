@@ -12,7 +12,7 @@ import {
 } from '@progress/kendo-angular-treelist';
 import { Project } from '@wbs/core/models';
 import { SignalStore, Transformers, TreeService } from '@wbs/core/services';
-import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
+import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
 import { TasksState } from '../../../../states';
 import { DisciplineIdsPipe } from './discipline-ids.pipe';
 

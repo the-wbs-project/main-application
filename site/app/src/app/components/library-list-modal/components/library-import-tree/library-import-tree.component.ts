@@ -11,10 +11,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
 import { Messages, Transformers, TreeService } from '@wbs/core/services';
-import { DisciplineIconListComponent } from '@wbs/dummy_components/discipline-icon-list.component';
-import { TaskTitleComponent } from '@wbs/main/components/task-title';
-import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
-import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
+import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { TaskTitleComponent } from '@wbs/components/task-title';
+import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/store';
 
 @Component({

@@ -29,9 +29,9 @@ import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive
 import { Phase } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { PhaseSelectionComponent } from '@wbs/dummy_components/phase-section';
-import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
-import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { PhaseSelectionComponent } from '@wbs/components/_utils/phase-section';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { SaveSectionComponent } from './save-section';
 
 @Component({

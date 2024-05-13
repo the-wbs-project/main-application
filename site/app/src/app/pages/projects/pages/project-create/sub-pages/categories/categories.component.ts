@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngxs/store';
-import { ProjectCategoryListComponent } from '@wbs/main/components/project-category-list';
-import { WizardFooterComponent } from '@wbs/main/components/wizard-footer';
+import { ProjectCategoryListComponent } from '@wbs/components/project-category-list';
+import { WizardFooterComponent } from '@wbs/components/wizard-footer';
 import { CategoryChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';
 import { ProjectCreateService } from '../../services';

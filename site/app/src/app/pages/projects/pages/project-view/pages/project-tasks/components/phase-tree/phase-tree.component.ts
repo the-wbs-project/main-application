@@ -39,14 +39,14 @@ import {
   WbsPhaseService,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { AlertComponent } from '@wbs/dummy_components/alert.component';
-import { DisciplineIconListComponent } from '@wbs/dummy_components/discipline-icon-list.component';
-import { ContextMenuItemComponent } from '@wbs/main/components/context-menu-item.component';
-import { FadingMessageComponent } from '@wbs/main/components/fading-message.component';
-import { ProgressBarComponent } from '@wbs/main/components/progress-bar.component';
-import { TaskTitleComponent } from '@wbs/main/components/task-title';
-import { TreeDisciplineLegendComponent } from '@wbs/main/components/tree-discipline-legend';
-import { TreeTogglerComponent } from '@wbs/main/components/tree-toggler.component';
+import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
+import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
+import { ProgressBarComponent } from '@wbs/components/_utils/progress-bar.component';
+import { TaskTitleComponent } from '@wbs/components/task-title';
+import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
+import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';

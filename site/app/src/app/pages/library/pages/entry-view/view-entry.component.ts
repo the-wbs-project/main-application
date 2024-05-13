@@ -18,15 +18,15 @@ import { gearIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { LibraryEntry, SaveState } from '@wbs/core/models';
 import {
-  EntryService,
   NavigationMenuService,
   SignalStore,
   TitleService,
 } from '@wbs/core/services';
-import { SaveMessageComponent } from '@wbs/dummy_components/save-message.component';
-import { ActionIconListComponent } from '@wbs/main/components/action-icon-list.component';
-import { NavigationComponent } from '@wbs/main/components/navigation.component';
-import { PageHeaderComponent } from '@wbs/main/components/page-header';
+import { EntryService } from '@wbs/core/services/library';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
+import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { NavigationLink } from '@wbs/main/models';
 import { EntryStore } from '@wbs/store';
 import { delay, tap } from 'rxjs/operators';

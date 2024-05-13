@@ -25,8 +25,8 @@ import { StepperModule } from '@progress/kendo-angular-layout';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { VisibilitySelectionComponent } from '@wbs/dummy_components/visiblity-selection';
-import { DisciplineEditorComponent } from '@wbs/main/components/discipline-editor';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { SaveSectionComponent } from './components/save-section';
 import { TitleFormComponent } from './components/title-form';
 
