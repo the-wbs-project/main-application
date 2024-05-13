@@ -9,6 +9,7 @@ import {
   taskIdResolve,
   versionIdResolve,
 } from './services';
+import { disciplineListResolver } from './pages/entry-upload/services';
 
 export const routes: Routes = [
   {
@@ -72,7 +73,7 @@ export const routes: Routes = [
       {
         path: 'settings/disciplines',
         loadComponent: () =>
-          import('./pages/task-settings-disciplines').then(
+          import('./pages/task-settings-disciplines.component').then(
             (x) => x.DisciplinesComponent
           ),
         canActivate: [taskNavGuard],
@@ -82,6 +83,7 @@ export const routes: Routes = [
         },
         resolve: {
           taskId: taskIdResolve,
+          cats: disciplineListResolver,
         },
       },
       {

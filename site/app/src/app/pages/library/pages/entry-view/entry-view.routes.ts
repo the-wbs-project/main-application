@@ -119,7 +119,7 @@ export const routes: Routes = [
       {
         path: 'settings/disciplines',
         loadComponent: () =>
-          import('./pages/entry-settings-disciplines').then(
+          import('./pages/entry-settings-disciplines.component').then(
             (x) => x.DisciplinesComponent
           ),
         canActivate: [entryNavGuard],

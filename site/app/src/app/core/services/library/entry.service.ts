@@ -175,7 +175,7 @@ export class EntryService {
     version.disciplines = disciplines;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.entryStore.setVersion(version)),
+      tap(() => this.entryStore.setVersion({ ...version })),
       switchMap(() =>
         this.activity.entryDisciplinesChanged(
           entry.id,

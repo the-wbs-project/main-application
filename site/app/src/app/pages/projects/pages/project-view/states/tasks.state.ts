@@ -615,7 +615,7 @@ export class TasksState {
         viewModel.lastModified = now;
 
         ctx.patchState({
-          current: viewModel,
+          current: { ...viewModel },
           nodes: state.nodes,
         });
       }),

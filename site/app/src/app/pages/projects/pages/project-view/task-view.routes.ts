@@ -99,7 +99,7 @@ export const routes: Routes = [
             canActivate: [taskNavGuard],
             canDeactivate: [dirtyGuard],
             loadComponent: () =>
-              import('./pages/task-settings-disciplines').then(
+              import('./pages/task-settings-disciplines.component').then(
                 (x) => x.DisciplinesComponent
               ),
             data: {

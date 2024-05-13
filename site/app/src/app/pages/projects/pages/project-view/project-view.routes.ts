@@ -165,7 +165,7 @@ export const routes: Routes = [
       {
         path: 'settings/disciplines',
         loadComponent: () =>
-          import('./pages/project-settings-disciplines').then(
+          import('./pages/project-settings-disciplines.component').then(
             (x) => x.DisciplinesComponent
           ),
         canActivate: [projectNavGuard],
