@@ -17,7 +17,7 @@ import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
 

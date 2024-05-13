@@ -27,7 +27,7 @@ import {
   SetApprovalView,
 } from '../actions';
 import { ProjectState } from './project.state';
-import { MembershipStore, UserStore } from '@wbs/store';
+import { MembershipStore, UserStore } from '@wbs/core/store';
 
 interface StateModel {
   childrenIds?: string[];

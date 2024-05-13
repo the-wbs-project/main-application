@@ -19,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { DisciplineSplitListComponent } from '@wbs/components/_utils/discipline-split-list.component';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

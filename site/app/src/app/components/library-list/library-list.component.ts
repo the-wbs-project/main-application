@@ -19,7 +19,7 @@ import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

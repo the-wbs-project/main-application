@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { SetHeaderInformation } from '../../../../project-create/actions';

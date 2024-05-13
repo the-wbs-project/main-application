@@ -20,7 +20,7 @@ import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.co
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { CategoryDialogComponent } from '@wbs/components/category-dialog';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 
 @Component({

@@ -27,7 +27,7 @@ import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

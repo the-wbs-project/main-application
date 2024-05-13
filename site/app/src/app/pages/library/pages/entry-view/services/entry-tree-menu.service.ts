@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ContextMenuItem, LibraryEntryVersion } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
 
 declare type Seperator = { separator: true };

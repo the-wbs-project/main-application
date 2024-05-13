@@ -5,7 +5,7 @@ import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
 import { LibraryImportResults, TaskCreationResults } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
-import { EntryStore, MembershipStore } from '@wbs/store';
+import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryCreationService } from '../../../services';

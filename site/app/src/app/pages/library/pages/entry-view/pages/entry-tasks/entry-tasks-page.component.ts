@@ -10,7 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryTreeComponent } from '../../components/library-tree';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

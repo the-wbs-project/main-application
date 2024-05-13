@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LIBRARY_TASKS_ACTIONS } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 
 @Injectable()

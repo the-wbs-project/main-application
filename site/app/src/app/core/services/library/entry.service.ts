@@ -16,7 +16,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { Messages, Utils } from '@wbs/core/services';
-import { EntryStore, MembershipStore } from '@wbs/store';
+import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { Observable, forkJoin } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';

@@ -9,7 +9,7 @@ import {
   WbsNodeService,
 } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';
 import {

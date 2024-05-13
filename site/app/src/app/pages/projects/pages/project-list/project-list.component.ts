@@ -21,7 +21,7 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
 import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
 import { ProjectViewToggleComponent } from './components/project-view-toggle';
 import { ProjectListService } from './services';

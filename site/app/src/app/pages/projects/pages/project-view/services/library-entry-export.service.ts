@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { NgbModal, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LIBRARY_ENTRY_TYPES, Project, ProjectNode } from '@wbs/core/models';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 import { LibraryEntryModalComponent } from '../components/library-entry-modal';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../models';
 

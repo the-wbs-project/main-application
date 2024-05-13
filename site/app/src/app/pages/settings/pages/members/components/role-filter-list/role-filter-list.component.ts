@@ -10,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
 import { Role } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

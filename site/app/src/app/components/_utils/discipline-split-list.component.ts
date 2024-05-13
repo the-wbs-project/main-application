@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { DisciplineListComponent } from './discipline-list.component';
 
 @Component({

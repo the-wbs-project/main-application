@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ListItem, WbsNode } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { ExtractResults } from '../../../models';
 import { TextCompareService } from './text-compare.service';
 

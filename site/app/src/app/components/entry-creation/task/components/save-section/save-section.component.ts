@@ -24,7 +24,7 @@ import {
 import { IdService, Resources } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { CategorySelection } from '@wbs/core/view-models';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

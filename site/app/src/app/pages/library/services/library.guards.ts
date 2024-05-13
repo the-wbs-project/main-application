@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 import { map } from 'rxjs/operators';
 
 export const watcherGuard = () => {

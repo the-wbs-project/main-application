@@ -26,21 +26,21 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import {
   LibraryEntryNode,
   LibraryEntryVersion,
   Member,
 } from '@wbs/core/models';
 import { CategorySelectionService, IdService } from '@wbs/core/services';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { MembershipStore, MetadataStore, UserStore } from '@wbs/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { RolesSectionComponent } from './components/roles-section';

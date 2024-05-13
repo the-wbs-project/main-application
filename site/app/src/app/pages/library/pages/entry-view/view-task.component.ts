@@ -24,7 +24,7 @@ import { NavigationComponent } from '@wbs/components/_utils/navigation.component
 import { TaskModalFooterComponent } from '@wbs/components/_utils/task-modal-footer.component';
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

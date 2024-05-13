@@ -1,6 +1,6 @@
 import { Directive, ElementRef, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { timer } from 'rxjs';
 
 @UntilDestroy()

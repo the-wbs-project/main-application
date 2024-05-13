@@ -10,7 +10,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { UserRolesViewModel } from '@wbs/core/view-models';
-import { MetadataStore, UserStore } from '@wbs/store';
+import { MetadataStore, UserStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';

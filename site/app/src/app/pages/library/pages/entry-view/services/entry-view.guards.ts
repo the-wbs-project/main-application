@@ -10,7 +10,7 @@ import {
 } from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
-import { EntryStore, UiStore } from '@wbs/store';
+import { EntryStore, UiStore } from '@wbs/core/store';
 import { forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ENTRY_NAVIGATION } from '../models';

@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { TitleService, orgResolve, userIdResolve } from '@wbs/core/services';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { ProjectListService } from './services';
 
 export const setupGuard = () => {

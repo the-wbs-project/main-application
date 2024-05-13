@@ -11,7 +11,7 @@ import { SignalStore, TreeService } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { ProjectState, TasksState } from '../../states';
 
 @Component({

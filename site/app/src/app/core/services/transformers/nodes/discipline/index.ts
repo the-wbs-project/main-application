@@ -1,5 +1,5 @@
 import { Resources } from '@wbs/core/services/resource.service';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { WbsNodeService } from '../../../wbs-node.service';
 import { WbsDisciplineNodeTransformer } from './wbs-node-discipline.service';
 

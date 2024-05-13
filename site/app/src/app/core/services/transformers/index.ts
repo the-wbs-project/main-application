@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Resources } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { WbsNodeService } from '../wbs-node.service';
 import { ActivityTransformer } from './activity.transformer';
 import { WbsNodeTransformers } from './nodes';

@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { Project, PROJECT_STATI, ProjectNode } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Injectable()
 export class ProjectListService {

@@ -5,7 +5,7 @@ import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { User } from '@wbs/core/models';
 import { Logger, Messages } from '@wbs/core/services';
-import { AiStore, MembershipStore, UserStore } from '@wbs/store';
+import { AiStore, MembershipStore, UserStore } from '@wbs/core/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 

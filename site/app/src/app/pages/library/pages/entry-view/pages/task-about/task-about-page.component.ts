@@ -25,7 +25,7 @@ import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dia
 import { SavingAlertComponent } from '@wbs/components/_utils/saving-alert.component';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
 

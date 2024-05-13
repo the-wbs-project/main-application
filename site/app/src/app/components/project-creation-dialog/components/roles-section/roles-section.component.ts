@@ -10,7 +10,7 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

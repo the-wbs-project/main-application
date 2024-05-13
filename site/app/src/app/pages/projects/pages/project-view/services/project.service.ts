@@ -8,7 +8,7 @@ import {
 } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { PROJECT_NAVIGATION, TASK_NAVIGATION } from '../models';

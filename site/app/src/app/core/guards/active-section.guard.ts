@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 
 export const librarySectionGuard = () =>
   inject(UiStore).setActiveSection('library');

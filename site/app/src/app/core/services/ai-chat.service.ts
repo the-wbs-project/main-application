@@ -19,7 +19,7 @@ import {
   WorkerAiRequest,
 } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 
 @Injectable()
 export class AiChatService {

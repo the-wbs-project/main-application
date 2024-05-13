@@ -27,7 +27,7 @@ import { SaveMessageComponent } from '@wbs/components/_utils/save-message.compon
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
 import { PageHeaderComponent } from '@wbs/components/page-header';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 import { EntryActionButtonComponent } from './components/entry-action-button.component';
 import { EntryTitleComponent } from './components/entry-title';

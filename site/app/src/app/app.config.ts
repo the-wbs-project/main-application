@@ -15,7 +15,7 @@ import { AUTH_CONFIG } from 'src/environments/auth.config';
 import { routes } from './app.routes';
 import { Resources } from './core/services';
 import { AppInitializerFactory, ApiRequestInterceptor } from './setup';
-import { AiStore, UiStore } from './store';
+import { AiStore, UiStore } from './core/store';
 
 export const appConfig: ApplicationConfig = {
   providers: [

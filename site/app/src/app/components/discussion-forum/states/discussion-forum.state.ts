@@ -1,18 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
-import {
-  AddUsers,
-  CreateThread,
-  EditThread,
-  LoadDiscussionForum,
-  LoadPosts,
-} from '@wbs/main/actions';
 import { IdService, Messages, sorter } from '@wbs/core/services';
 import { Observable, forkJoin } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 import { Discussion } from '../models';
 import { DiscussionDataService } from '../services';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 
 interface StateModel {
   organization?: string;

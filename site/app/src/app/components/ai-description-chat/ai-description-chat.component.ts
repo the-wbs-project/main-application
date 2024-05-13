@@ -11,11 +11,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TabStripModule } from '@progress/kendo-angular-layout';
-import { AiModel } from '@wbs/core/models';
-import { AiChatService } from '@wbs/core/services';
 import { AiChatComponent } from '@wbs/components/_utils/ai-chat.component';
 import { AiDescriptionEditorComponent } from '@wbs/components/ai-description-editor';
-import { AiStore } from '@wbs/store';
+import { AiModel } from '@wbs/core/models';
+import { AiChatService } from '@wbs/core/services';
+import { AiStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

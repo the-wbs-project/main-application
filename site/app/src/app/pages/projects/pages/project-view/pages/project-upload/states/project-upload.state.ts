@@ -12,7 +12,7 @@ import {
 } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
-import { MembershipStore, UserStore } from '@wbs/store';
+import { MembershipStore, UserStore } from '@wbs/core/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../../../models';

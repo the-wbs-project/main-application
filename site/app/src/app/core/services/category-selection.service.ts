@@ -4,11 +4,11 @@ import {
   ProjectCategory,
   ProjectCategoryChanges,
 } from '@wbs/core/models';
+import { MetadataStore } from '@wbs/core/store';
 import {
   CategoryCancelConfirm,
   CategorySelection,
 } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/store';
 
 @Injectable({ providedIn: 'root' })
 export class CategorySelectionService {

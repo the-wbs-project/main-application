@@ -15,7 +15,7 @@ import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-i
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
 import { TaskTitleComponent } from '@wbs/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

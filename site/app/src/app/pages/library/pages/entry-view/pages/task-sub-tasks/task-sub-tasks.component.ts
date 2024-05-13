@@ -12,7 +12,7 @@ import { SignalStore, TreeService } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
-import { EntryStore, UiStore } from '@wbs/store';
+import { EntryStore, UiStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

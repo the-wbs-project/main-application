@@ -11,7 +11,7 @@ import {
 } from '@wbs/core/models';
 import { Transformers, Utils } from '@wbs/core/services';
 import { EntryActivityService } from '@wbs/core/services/library';
-import { EntryStore, MembershipStore, UserStore } from '@wbs/store';
+import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {

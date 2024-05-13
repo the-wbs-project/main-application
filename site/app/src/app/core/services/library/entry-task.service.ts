@@ -15,8 +15,8 @@ import {
   Transformers,
   WbsNodeService,
 } from '@wbs/core/services';
+import { EntryStore, MetadataStore } from '@wbs/core/store';
 import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
-import { EntryStore, MetadataStore } from '@wbs/store';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryTaskActivityService } from './entry-task-activity.service';

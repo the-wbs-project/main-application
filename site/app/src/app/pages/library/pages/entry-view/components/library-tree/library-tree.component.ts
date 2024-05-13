@@ -50,7 +50,7 @@ import {
 import { EntryTaskService } from '@wbs/core/services/library';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { EntryStore, UiStore } from '@wbs/store';
+import { EntryStore, UiStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import {

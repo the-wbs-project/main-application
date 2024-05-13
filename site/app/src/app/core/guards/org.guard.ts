@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { MembershipStore } from '@wbs/store';
+import { MembershipStore } from '@wbs/core/store';
 import { of } from 'rxjs';
 import { first, map, skipWhile } from 'rxjs/operators';
 

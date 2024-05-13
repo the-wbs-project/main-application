@@ -1,5 +1,5 @@
 import { Injectable, computed, inject } from '@angular/core';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 
 @Injectable()
 export class TaskModalService {

@@ -50,7 +50,7 @@ import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.compon
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { Observable, delay, of, switchMap, tap } from 'rxjs';
 import {
   ChangeTaskBasics,

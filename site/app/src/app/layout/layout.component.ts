@@ -12,7 +12,7 @@ import { DialogModule } from '@progress/kendo-angular-dialog';
 import { ChatWindowComponent } from '@wbs/components/chat-window';
 import { Organization } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
-import { AiStore, UiStore, UserStore } from '@wbs/store';
+import { AiStore, UiStore, UserStore } from '@wbs/core/store';
 import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header';
 import { ProfileEditorComponent } from './components/profile-editor';

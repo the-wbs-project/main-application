@@ -9,7 +9,7 @@ import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { Auth0Service } from '@wbs/core/services';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

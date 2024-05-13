@@ -16,7 +16,7 @@ import { Member, Project, ROLES, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 import { AddUserToRole, RemoveUserToRole } from '../../actions';
 import { ProjectState } from '../../states';

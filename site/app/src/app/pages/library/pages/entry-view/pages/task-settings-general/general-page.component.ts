@@ -17,7 +17,7 @@ import { SaveService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

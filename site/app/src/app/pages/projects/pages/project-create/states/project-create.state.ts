@@ -13,7 +13,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
-import { MetadataStore, UserStore } from '@wbs/store';
+import { MetadataStore, UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';

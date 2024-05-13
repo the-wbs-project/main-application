@@ -11,7 +11,7 @@ import {
 import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { ProjectAction } from '../models';
 import { ProjectState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';

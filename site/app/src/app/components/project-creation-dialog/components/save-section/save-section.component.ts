@@ -27,7 +27,7 @@ import {
 } from '@wbs/core/models';
 import { IdService, Resources, UserService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 import { switchMap } from 'rxjs/operators';
 
 @Component({

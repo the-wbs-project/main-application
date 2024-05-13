@@ -14,7 +14,7 @@ import { PROJECT_STATI } from '@wbs/core/models';
 import { CheckboxFilterListComponent } from '@wbs/components/checkbox-filter-list';
 import { SwitchComponent } from '@wbs/components/switch';
 import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

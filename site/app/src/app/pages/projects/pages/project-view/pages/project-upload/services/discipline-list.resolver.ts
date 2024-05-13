@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { Resources } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { map } from 'rxjs';
 import { ProjectUploadState } from '../states';
 

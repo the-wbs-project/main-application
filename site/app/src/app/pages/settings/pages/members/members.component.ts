@@ -17,7 +17,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
 import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
-import { MembershipStore, MetadataStore, UserStore } from '@wbs/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { forkJoin } from 'rxjs';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';

@@ -16,7 +16,7 @@ import { Member } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
 import { WizardFooterComponent } from '@wbs/components/wizard-footer';
-import { MembershipStore, MetadataStore, UserStore } from '@wbs/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { forkJoin } from 'rxjs';
 import { RolesChosen } from '../../actions';
 import { PROJECT_CREATION_PAGES } from '../../models';

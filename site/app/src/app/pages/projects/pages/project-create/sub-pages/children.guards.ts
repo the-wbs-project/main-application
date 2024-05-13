@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Utils } from '@wbs/core/services';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SetHeaderInformation, StartWizard } from '../actions';

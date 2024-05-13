@@ -1,6 +1,6 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LISTS } from '@wbs/core/models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Pipe({ name: 'projectCategoryLabel', standalone: true })
 export class ProjectCategoryLabelPipe implements PipeTransform {

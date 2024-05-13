@@ -16,7 +16,7 @@ import { EntryTaskService } from '@wbs/core/services/library';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
-import { EntryStore } from '@wbs/store';
+import { EntryStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 
 @Component({

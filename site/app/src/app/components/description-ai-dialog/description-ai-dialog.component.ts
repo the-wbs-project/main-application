@@ -8,7 +8,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { AiDescriptionChatComponent } from '@wbs/components/ai-description-chat';
-import { AiStore } from '@wbs/store';
+import { AiStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

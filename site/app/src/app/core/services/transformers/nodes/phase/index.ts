@@ -1,5 +1,5 @@
 import { Resources } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { WbsNodePhaseProjectImporter } from './wbs-node-phase-project-importer.service';
 import { WbsNodePhaseReorderer } from './wbs-node-phase-reorderer.service';
 import { WbsNodePhaseTransformer } from './wbs-node-phase.service';

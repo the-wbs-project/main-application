@@ -11,7 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
 import { Member } from '@wbs/core/models';
 import { Messages, Resources } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { ProjectUserListComponent } from '../user-list';
 import { RoleUsersService } from './services';
 import { RoleUsersViewModel } from './view-models';

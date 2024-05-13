@@ -2,7 +2,7 @@ import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { UiStore } from '@wbs/store';
+import { UiStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

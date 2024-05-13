@@ -26,7 +26,7 @@ import {
   LIBRARY_ENTRY_TYPES,
   LIBRARY_ENTRY_TYPES_TYPE,
 } from '@wbs/core/models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../../models';
 import { LibraryEntryDescriptionHintPipe } from './pipes/library-entry-description-hint.pipe';
 import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe';

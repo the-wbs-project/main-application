@@ -6,7 +6,7 @@ import {
   output,
 } from '@angular/core';
 import { SelectButtonComponent } from '@wbs/components/_utils/select-button.component';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { MembershipStore } from '@wbs/store';
+import { MembershipStore } from '@wbs/core/store';
 import { first, skipWhile, tap } from 'rxjs/operators';
 
 export const navToOrgGuard = () => {

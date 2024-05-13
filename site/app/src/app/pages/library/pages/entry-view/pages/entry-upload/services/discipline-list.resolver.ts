@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { EntryStore, MetadataStore } from '@wbs/store';
+import { EntryStore, MetadataStore } from '@wbs/core/store';
 
 export const disciplineListResolver: ResolveFn<
   { id: string; label: string }[]

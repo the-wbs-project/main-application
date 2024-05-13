@@ -12,7 +12,7 @@ import {
 } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MembershipStore } from '@wbs/store';
+import { MembershipStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {

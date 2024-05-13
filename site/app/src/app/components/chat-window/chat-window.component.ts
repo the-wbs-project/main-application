@@ -18,7 +18,7 @@ import { ExpansionPanelModule } from '@progress/kendo-angular-layout';
 import { arrowDownIcon, arrowUpIcon } from '@progress/kendo-svg-icons';
 import { AiModel } from '@wbs/core/models';
 import { AiChatService, Messages } from '@wbs/core/services';
-import { AiStore } from '@wbs/store';
+import { AiStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

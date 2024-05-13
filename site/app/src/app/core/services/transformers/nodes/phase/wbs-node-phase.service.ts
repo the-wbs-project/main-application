@@ -1,7 +1,7 @@
 import { Category, ProjectCategory, WbsNode } from '@wbs/core/models';
 import { Resources } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {

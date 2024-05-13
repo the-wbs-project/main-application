@@ -12,7 +12,7 @@ import { faStar as faStarRegular } from '@fortawesome/pro-regular-svg-icons';
 import { faStar as faStarSolid } from '@fortawesome/pro-solid-svg-icons';
 import { Position, TooltipModule } from '@progress/kendo-angular-tooltip';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { UserStore } from '@wbs/store';
+import { UserStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,

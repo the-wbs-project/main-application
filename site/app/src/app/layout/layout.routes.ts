@@ -20,7 +20,7 @@ import {
   rolesResolve,
 } from '@wbs/core/services';
 import { LoggerRequestInterceptor } from '@wbs/setup/logger.http-interceptor';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 
 export const routes: Routes = [
   {

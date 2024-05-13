@@ -1,5 +1,5 @@
 import { inject } from '@angular/core';
-import { MetadataStore } from '@wbs/store';
+import { MetadataStore } from '@wbs/core/store';
 import { LISTS, LibraryEntry, LibraryEntryVersion, Project } from '../models';
 import { WbsNodeView } from '../view-models';
 import { sorter } from './sorter.service';
