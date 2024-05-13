@@ -8,7 +8,6 @@ import {
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
   faFloppyDisk,
@@ -18,15 +17,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
+import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
+import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
+import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { DirtyComponent } from '@wbs/core/models';
 import { SaveService } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
-import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
-import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
-import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
-import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { EntryStore } from '@wbs/core/store';
 
 @Component({
@@ -37,13 +37,13 @@ import { EntryStore } from '@wbs/core/store';
     AiButtonComponent,
     DescriptionAiDialogComponent,
     EditorModule,
-    FontAwesomeModule,
+    FadingMessageComponent,
     FormsModule,
     InfoMessageComponent,
     LabelModule,
     NgClass,
     ProjectCategoryDropdownComponent,
-    SaveMessageComponent,
+    SaveButtonComponent,
     TextBoxModule,
     TranslateModule,
     VisibilitySelectionComponent,

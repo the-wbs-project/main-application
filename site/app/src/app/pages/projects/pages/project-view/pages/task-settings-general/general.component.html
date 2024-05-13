@@ -1,44 +1,50 @@
-<div class="card-header tx-medium">
-  {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
-</div>
-<div class="pd-15">
-  <form #generalForm [formGroup]="form" (ngSubmit)="save()">
-    <div class="row mb-3">
-      <label for="inputEmail3" class="col-sm-2 col-form-label">
-        {{ "Projects.TaskTitle" | translate }}
-      </label>
-      <div class="col-sm-10">
-        <kendo-textbox
-          class="form-control"
-          formControlName="title"
-          [placeholder]="'Projects.TaskTitle' | translate"
-        />
-      </div>
+<div class="card dashboard-card mg-10">
+  <div class="d-flex card-header flex-align-center">
+    <div>
+      {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
     </div>
-    <div class="row mb-3">
-      <label for="inputEmail3" class="col-sm-2 col-form-label">
-        {{ "Projects.TaskDescription" | translate }}
-      </label>
-      <div class="col-sm-10">
-        <kendo-editor
-          #editor
-          class="form-control"
-          formControlName="description"
-          [iframeCss]="{ content: contentCss }"
-          [placeholder]="'Projects.TaskDescription' | translate"
-        />
-      </div>
+    <div class="flex-fill text-end">
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saveService.state() === 'saved'"
+        cssClass="tx-success tx-12 mg-r-10"
+      />
+      <wbs-save-button
+        size="sm"
+        [isSaving]="saveService.state() === 'saving'"
+        (click)="save()"
+      />
     </div>
-    <div class="row md-3">
-      <div class="offset-sm-2 col-sm-10">
-        <button
-          class="btn btn-primary mg-r-10"
-          [disabled]="!form.valid"
-          type="submit"
-        >
-          {{ "General.Save" | translate }}
-        </button>
+  </div>
+  <div class="card-body">
+    <form #generalForm [formGroup]="form" (ngSubmit)="save()">
+      <div class="row mb-3">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">
+          {{ "Projects.TaskTitle" | translate }}
+        </label>
+        <div class="col-sm-10">
+          <kendo-textbox
+            class="form-control"
+            formControlName="title"
+            [placeholder]="'Projects.TaskTitle' | translate"
+          />
+        </div>
       </div>
-    </div>
-  </form>
+      <div class="row mb-3">
+        <label for="inputEmail3" class="col-sm-2 col-form-label">
+          {{ "Projects.TaskDescription" | translate }}
+        </label>
+        <div class="col-sm-10">
+          <kendo-editor
+            #editor
+            class="form-control"
+            formControlName="description"
+            [iframeCss]="{ content: contentCss }"
+            [placeholder]="'Projects.TaskDescription' | translate"
+          />
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

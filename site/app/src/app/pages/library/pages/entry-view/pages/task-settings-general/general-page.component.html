@@ -1,85 +1,94 @@
-<div class="card-header tx-medium">
-  {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
-</div>
-@if (task(); as task) {
-<div class="container-fluid pd-15">
-  <div class="row mb-5">
-    <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
-      {{ "General.Title" | translate }}
-    </label>
-    <div class="col-md-10 col-sm-12">
-      <input
-        #title
-        kendoTextBox
-        class="form-control"
-        [(ngModel)]="task.title"
+<div class="card dashboard-card mg-10">
+  <div class="d-flex card-header flex-align-center">
+    <div>
+      {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
+    </div>
+    <div class="flex-fill text-end">
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saved.state() === 'saved'"
+        cssClass="tx-success tx-12 mg-r-10"
       />
-      <label class="d-inline-block tx-12 tx-italic mg-t-5">
-        {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
-      </label>
-    </div>
-  </div>
-  <div class="row mb-5">
-    <div class="col-2 d-none d-md-block">
-      <label [for]="description" class="col-form-label">
-        {{ "General.Description" | translate }}
-      </label>
-    </div>
-    <div class="col-12 d-flex d-md-none">
-      <label [for]="description" class="col-form-label">
-        {{ "General.Description" | translate }}
-      </label>
-      <div class="flex-fill text-end">
-        <button class="btn btn-sm btn-outline-dark" (click)="askAi.set(true)">
-          <fa-icon [icon]="faRobot" />
-          <span class="mg-l-5">
-            {{ "General.AskAi" | translate }}
-          </span>
-        </button>
-      </div>
-    </div>
-    <div class="col-md-10 col-sm-12">
-      <div class="w-100 mg-b-5 text-end d-none d-md-block">
-        <button class="btn btn-sm btn-outline-dark" (click)="askAi.set(true)">
-          <fa-icon [icon]="faRobot" />
-          <span class="mg-l-5">
-            {{ "General.AskAi" | translate }}
-          </span>
-        </button>
-      </div>
-      <kendo-editor #description [(ngModel)]="task.description" />
-
-      <label class="d-inline-block tx-12 tx-italic mg-t-5">
-        {{ "Library.DescriptionHelpTask" | translate }}
-      </label>
-      @if (showDescriptionAlert()) {
-      <div class="mg-t-15">
-        <wbs-alert
-          type="warning"
-          [dismissible]="false"
-          message="Library.NoDescriptionTask"
-        />
-      </div>
-      }
-    </div>
-  </div>
-  <div class="row mb-2">
-    <div class="offset-md-2 col-md-10 col-sm-12 text-end">
-      <wbs-save-message [state]="saved.state()" class="mg-r-10" />
-      <button
-        class="btn btn-md btn-primary"
-        [disabled]="!canSave() || saved.state() === 'saving'"
+      <wbs-save-button
+        size="sm"
+        [disabled]="!canSave()"
+        [isSaving]="saved.state() === 'saving'"
         (click)="save()"
-      >
-        <fa-icon [icon]="faFloppyDisk" />
-        <span class="mg-l-10">
-          {{ "General.Save" | translate }}
-        </span>
-      </button>
+      />
     </div>
   </div>
-</div>
-<!--@if (askAi()) {
+  <div class="card-body">
+    @if (task(); as task) {
+    <div class="container-fluid pd-15">
+      <div class="row mb-5">
+        <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
+          {{ "General.Title" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <input
+            #title
+            kendoTextBox
+            class="form-control"
+            [(ngModel)]="task.title"
+          />
+          <label class="d-inline-block tx-12 tx-italic mg-t-5">
+            {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+          </label>
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-2 d-none d-md-block">
+          <label [for]="description" class="col-form-label">
+            {{ "General.Description" | translate }}
+          </label>
+        </div>
+        <div class="col-12 d-flex d-md-none">
+          <label [for]="description" class="col-form-label">
+            {{ "General.Description" | translate }}
+          </label>
+          <div class="flex-fill text-end">
+            <button
+              class="btn btn-sm btn-outline-dark"
+              (click)="askAi.set(true)"
+            >
+              <fa-icon [icon]="faRobot" />
+              <span class="mg-l-5">
+                {{ "General.AskAi" | translate }}
+              </span>
+            </button>
+          </div>
+        </div>
+        <div class="col-md-10 col-sm-12">
+          <div class="w-100 mg-b-5 text-end d-none d-md-block">
+            <button
+              class="btn btn-sm btn-outline-dark"
+              (click)="askAi.set(true)"
+            >
+              <fa-icon [icon]="faRobot" />
+              <span class="mg-l-5">
+                {{ "General.AskAi" | translate }}
+              </span>
+            </button>
+          </div>
+          <kendo-editor #description [(ngModel)]="task.description" />
+
+          <label class="d-inline-block tx-12 tx-italic mg-t-5">
+            {{ "Library.DescriptionHelpTask" | translate }}
+          </label>
+          @if (showDescriptionAlert()) {
+          <div class="mg-t-15">
+            <wbs-alert
+              type="warning"
+              [dismissible]="false"
+              message="Library.NoDescriptionTask"
+            />
+          </div>
+          }
+        </div>
+      </div>
+    </div>
+    <!--@if (askAi()) {
 <kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
   <wbs-description-ai-dialog
     [versionTitle]="version.title"
@@ -88,4 +97,6 @@
   />
 </kendo-dialog>
 }-->
-}
+    }
+  </div>
+</div>

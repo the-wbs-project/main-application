@@ -8,15 +8,19 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFloppyDisk, faRobot } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faCheck,
+  faFloppyDisk,
+  faRobot,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { LabelModule } from '@progress/kendo-angular-label';
+import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { SaveService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
-import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { EntryStore } from '@wbs/core/store';
 
 @Component({
@@ -26,10 +30,10 @@ import { EntryStore } from '@wbs/core/store';
   imports: [
     AlertComponent,
     EditorModule,
+    FadingMessageComponent,
     FontAwesomeModule,
     FormsModule,
-    LabelModule,
-    SaveMessageComponent,
+    SaveButtonComponent,
     TextBoxModule,
     TranslateModule,
   ],
@@ -40,6 +44,7 @@ export class GeneralComponent {
 
   readonly taskId = input.required<string>();
 
+  readonly checkIcon = faCheck;
   readonly faRobot = faRobot;
   readonly faFloppyDisk = faFloppyDisk;
   readonly askAi = signal(true);
