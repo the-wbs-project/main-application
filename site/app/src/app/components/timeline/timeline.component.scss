@@ -1,5 +1,303 @@
 @import "../../../styles/variables.scss";
 
+.vtimeline {
+  list-style: none;
+  padding: 0;
+  position: relative;
+  margin-bottom: 20px;
+}
+//hello
+
+.vtimeline:before {
+  top: 0;
+  bottom: 0;
+  position: absolute;
+  content: " ";
+  width: 3px;
+  background-color: #ededf5;
+  left: 50%;
+  margin-left: -1.5px;
+}
+
+.vtimeline .timeline-wrapper {
+  display: block;
+  margin-bottom: 20px;
+  position: relative;
+  width: 100%;
+  padding-right: 90px;
+}
+
+.vtimeline .timeline-wrapper:before {
+  content: " ";
+  display: table;
+}
+
+.vtimeline .timeline-wrapper:after {
+  content: " ";
+  display: table;
+  clear: both;
+}
+
+.vtimeline .timeline-wrapper .timeline-panel {
+  border-radius: 2px;
+  padding: 20px;
+  position: relative;
+  background: #f9f9fb;
+  border-radius: 0px;
+  box-shadow: none;
+  width: 35%;
+  margin-left: 15%;
+}
+
+.vtimeline .timeline-wrapper .timeline-panel:before {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 2px;
+  content: "";
+  left: 0;
+  right: 0;
+}
+
+.vtimeline .timeline-wrapper .timeline-panel:after {
+  position: absolute;
+  top: 25px;
+  right: -14px;
+  display: inline-block;
+  border-top: 14px solid transparent;
+  border-left: 14px solid #f9f9fb;
+  border-right: 0 solid #f9f9fb;
+  border-bottom: 14px solid transparent;
+  content: " ";
+}
+
+.vtimeline .timeline-wrapper .timeline-panel .timeline-title {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 0.625rem;
+}
+
+.vtimeline .timeline-wrapper .timeline-panel .timeline-body p + p {
+  margin-top: 5px;
+}
+
+.timeline-body img {
+  max-width: 100%;
+}
+
+.vtimeline .timeline-wrapper .timeline-panel .timeline-body ul {
+  margin-bottom: 0;
+}
+
+.vtimeline
+  .timeline-wrapper
+  .timeline-panel
+  .timeline-footer
+  .timeline-footer-date {
+  font-size: 0.6875rem;
+}
+
+.vtimeline .timeline-wrapper .timeline-badge {
+  width: 45px;
+  height: 45px;
+  position: absolute;
+  top: 16px;
+  left: calc(50% - 23px);
+  z-index: 0;
+  border-top-right-radius: 50%;
+  border-top-left-radius: 50%;
+  border-bottom-right-radius: 50%;
+  border-bottom-left-radius: 50%;
+  border: 0px solid #fff;
+  border-radius: 50%;
+}
+
+.vtimeline .timeline-wrapper .timeline-badge i {
+  color: #fff;
+  text-align: center;
+  font-size: 25px;
+  line-height: 1.75;
+  display: flex;
+  margin: 0 auto;
+  justify-content: center;
+  left: 0;
+  right: 0;
+  padding: 1px 9px;
+}
+
+.vtimeline .timeline-wrapper.timeline-inverted {
+  padding-right: 0;
+  padding-left: 90px;
+}
+
+.vtimeline .timeline-wrapper.timeline-inverted .timeline-panel {
+  margin-left: auto;
+  margin-right: 15%;
+}
+
+.vtimeline .timeline-wrapper.timeline-inverted .timeline-panel:after {
+  border-left-width: 0;
+  border-right-width: 14px;
+  left: -14px;
+  right: auto;
+}
+
+.timeline-wrapper-primary .timeline-panel:before,
+.timeline-wrapper-primary .timeline-badge {
+  background: #38cab3;
+}
+
+.timeline-wrapper-secondary .timeline-panel:before,
+.timeline-wrapper-secondary .timeline-badge {
+  background: #eb6f33;
+}
+
+.timeline-wrapper-success .timeline-panel:before,
+.timeline-wrapper-success .timeline-badge {
+  background: #016a59;
+}
+
+.timeline-wrapper-info .timeline-panel:before,
+.timeline-wrapper-info .timeline-badge {
+  background: #01b8ff;
+}
+
+.timeline-wrapper-warning .timeline-panel:before,
+.timeline-wrapper-warning .timeline-badge {
+  background: #ffbd5a;
+}
+
+.timeline-wrapper-danger .timeline-panel:before,
+.timeline-wrapper-danger .timeline-badge {
+  background: #f34343;
+}
+
+.timeline-wrapper-light .timeline-panel:before,
+.timeline-wrapper-light .timeline-badge {
+  background: #f1f2f9;
+}
+
+.timeline-wrapper-dark .timeline-panel:before,
+.timeline-wrapper-dark .timeline-badge {
+  background: #323251;
+}
+
+@media (max-width: 992px) {
+  .timeline .btn {
+    font-size: 12px;
+  }
+
+  .vtimeline:before {
+    left: 26px !important;
+  }
+
+  .vtimeline .timeline-wrapper {
+    padding-right: 0 !important;
+  }
+
+  .vtimeline .timeline-wrapper .timeline-badge {
+    left: 0 !important;
+  }
+
+  .vtimeline .timeline-wrapper .timeline-panel {
+    width: auto !important;
+    margin-left: 16% !important;
+  }
+
+  .vtimeline .timeline-wrapper .timeline-panel:after {
+    border-right: 14px solid #f9f9fb !important;
+    border-left: 0 solid #f9f9fb !important;
+    left: -14px !important;
+    right: auto !important;
+    top: 25px;
+  }
+
+  .vtimeline .timeline-wrapper.timeline-inverted {
+    padding-left: 0 !important;
+  }
+
+  .vtimeline .timeline-wrapper.timeline-inverted .timeline-panel {
+    margin-right: 0 !important;
+    width: auto !important;
+  }
+
+  .profile-user .p-text {
+    display: none;
+  }
+}
+
+/*latetes news timeline */
+.latest-timeline-1 ul.timeline-1 {
+  list-style-type: none;
+  position: relative;
+}
+
+.latest-timeline-1 ul.timeline-1:before {
+  content: " ";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 20px;
+  border-left: 2px dotted #c0ccda;
+}
+
+.latest-timeline-1 ul.timeline-1 > li {
+  margin: 25px 0;
+  padding-left: 0.9rem;
+}
+
+.latest-timeline-1 ul.timeline-1 > li a {
+  color: #000;
+}
+
+.latest-timeline-1 ul.timeline-1 > li .date {
+  font-size: 10px;
+}
+
+.latest-timeline-1 ul.timeline-1 > li p {
+  font-size: 13px;
+}
+
+.latest-timeline-1 ul.timeline-1 > li .product-icon {
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  border-radius: 50%;
+  position: absolute;
+  left: 1px;
+  background-color: #f3f6f7;
+  font-size: 20px;
+  line-height: 37px;
+  font-size: 21px;
+}
+
+.latest-timeline-1 ul.timeline-1 > li:nth-child(2):before {
+  border: 3px solid #fb1c52;
+}
+
+.latest-timeline-1 ul.timeline-1 > li:nth-child(3):before {
+  border: 3px solid #e9b307;
+}
+
+.latest-timeline-1 ul.timeline-1 > li:nth-child(4):before {
+  border: 3px solid #4481eb;
+}
+
+.latest-timeline-1 ul.timeline-1 > li:last-child:before {
+  border: 3px solid #27af06;
+}
+
+.timeline-image {
+  border-radius: 50%;
+}
+
+@media (max-width: 576px) {
+  .vtimeline .timeline-wrapper .timeline-panel {
+    width: auto !important;
+    margin-left: 24% !important;
+  }
+}
+
 .comment-count {
   color: $white;
 }
