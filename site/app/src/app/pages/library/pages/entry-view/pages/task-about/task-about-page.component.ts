@@ -17,7 +17,11 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
-import { AiPromptService, TaskModalService } from '@wbs/core/services';
+import {
+  AiPromptService,
+  SaveService,
+  TaskModalService,
+} from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
@@ -67,7 +71,7 @@ export class TaskAboutPageComponent {
   readonly disciplines = input.required<ListItem[]>();
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
-  readonly descriptionSaveState = signal<SaveState>('ready');
+  readonly descriptionSave = new SaveService();
   readonly disciplineFullList = computed(() => {
     const disciplines = this.entryStore.version()?.disciplines;
 
@@ -89,19 +93,16 @@ export class TaskAboutPageComponent {
   readonly task = this.entryStore.getTask(this.taskId);
 
   descriptionChange(description: string): void {
-    this.descriptionSaveState.set('saving');
-
-    this.taskService
-      .descriptionChangedAsync(this.task()!.id, description)
-      .pipe(
-        delay(1000),
-        tap(() => {
-          this.descriptionEditMode.set(false);
-          this.descriptionSaveState.set('saved');
-        }),
-        delay(5000)
+    this.descriptionSave
+      .call(
+        this.taskService
+          .descriptionChangedAsync(this.task()!.id, description)
+          .pipe(
+            delay(1000),
+            tap(() => this.descriptionEditMode.set(false))
+          )
       )
-      .subscribe(() => this.descriptionSaveState.set('ready'));
+      .subscribe();
   }
 
   aiChangeSaved(description: string): void {

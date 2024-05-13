@@ -88,15 +88,14 @@
         </div>
       </div>
     </div>
-    <!--@if (askAi()) {
-<kendo-dialog [title]="'General.AskAi' | translate" (close)="askAi.set(false)">
-  <wbs-description-ai-dialog
-    [versionTitle]="version.title"
-    [description]="version.description"
-    (descriptionChanged)="aiChangeSaved($event)"
-  />
-</kendo-dialog>
-}-->
-    }
+
+    @if (askAi()) {
+    <wbs-description-ai-dialog
+      [description]="task.description"
+      [startingDialog]="descriptionAiStartingDialog()"
+      (descriptionChange)="aiChangeSaved($event)"
+      (closed)="askAi.set(false)"
+    />
+    } }
   </div>
 </div>

@@ -17,7 +17,7 @@
   <wbs-description-card
     [(askAi)]="askAi"
     [(editMode)]="descriptionEditMode"
-    [saveState]="descriptionSaveState()"
+    [saveState]="descriptionSave.state()"
     [description]="task.description ?? ''"
     noDescriptionLabel="Library.NoDescriptionTask"
     (descriptionChange)="descriptionChange($event)"

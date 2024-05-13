@@ -19,7 +19,8 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
-import { SaveService } from '@wbs/core/services';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { AiPromptService, SaveService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
 
@@ -30,6 +31,7 @@ import { EntryStore } from '@wbs/core/store';
   imports: [
     AlertComponent,
     EditorModule,
+    DescriptionAiDialogComponent,
     FadingMessageComponent,
     FontAwesomeModule,
     FormsModule,
@@ -37,9 +39,11 @@ import { EntryStore } from '@wbs/core/store';
     TextBoxModule,
     TranslateModule,
   ],
+  providers: [AiPromptService],
 })
 export class GeneralComponent {
   private readonly service = inject(EntryTaskService);
+  private readonly prompt = inject(AiPromptService);
   readonly entryStore = inject(EntryStore);
 
   readonly taskId = input.required<string>();
@@ -47,7 +51,7 @@ export class GeneralComponent {
   readonly checkIcon = faCheck;
   readonly faRobot = faRobot;
   readonly faFloppyDisk = faFloppyDisk;
-  readonly askAi = signal(true);
+  readonly askAi = signal(false);
   readonly task = this.entryStore.getTask(this.taskId);
   readonly canSave = computed(() => {
     const task = this.task();
@@ -58,6 +62,14 @@ export class GeneralComponent {
   });
   readonly showDescriptionAlert = computed(
     () => (this.task()?.description ?? '').length === 0
+  );
+  readonly descriptionAiStartingDialog = computed(() =>
+    this.prompt.libraryEntryTaskDescription(
+      this.entryStore.entry(),
+      this.entryStore.version(),
+      this.taskId(),
+      this.entryStore.viewModels()
+    )
   );
   readonly saved = new SaveService();
 
@@ -80,10 +92,9 @@ export class GeneralComponent {
 
   aiChangeSaved(description: string): void {
     this.askAi.set(false);
-    /*this.task.update((v) => {
-      v!.description = description;
 
-      return v;
-    });*/
+    this.saved
+      .call(this.service.descriptionChangedAsync(this.task()!.id, description))
+      .subscribe();
   }
 }
