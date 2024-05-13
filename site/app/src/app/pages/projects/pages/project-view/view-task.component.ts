@@ -8,7 +8,11 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faCheck,
+  faDiagramSubtask,
+  faX,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
@@ -31,6 +35,7 @@ import { ProjectApprovalWindowComponent } from './components/project-approval-wi
 import { ProjectTitleComponent } from './components/project-title';
 import { TASK_NAVIGATION } from './models';
 import { ProjectApprovalState, ProjectState, TasksState } from './states';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 
 @Component({
   standalone: true,
@@ -38,6 +43,7 @@ import { ProjectApprovalState, ProjectState, TasksState } from './states';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ApprovalBadgeComponent,
+    ButtonModule,
     DialogModule,
     FadingMessageComponent,
     FindByIdPipe,
@@ -83,6 +89,7 @@ export class TaskViewComponent {
     this.tasks()?.find((t) => t.id === this.taskId())
   );
 
+  readonly closeIcon = faX;
   readonly checkIcon = faCheck;
   readonly taskIcon = faDiagramSubtask;
 

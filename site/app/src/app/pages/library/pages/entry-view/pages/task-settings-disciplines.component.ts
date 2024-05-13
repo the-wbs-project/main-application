@@ -30,7 +30,6 @@ export class DisciplinesComponent implements DirtyComponent {
   readonly entryStore = inject(EntryStore);
 
   readonly taskId = input.required<string>();
-  readonly cats = input.required<Category[]>();
 
   readonly saveService = new SaveService();
   readonly disciplines = signal<CategorySelection[] | undefined>(undefined);
@@ -40,10 +39,10 @@ export class DisciplinesComponent implements DirtyComponent {
     effect(
       () =>
         this.disciplines.set(
-          this.catService.buildFromList(
-            this.cats() ?? [],
+          this.catService.buildDisciplinesFromList(
             this.entryStore.version()?.disciplines ?? [],
-            this.entryStore.getTask(this.taskId)()?.disciplines ?? []
+            this.entryStore.getTask(this.taskId)()?.disciplines ?? [],
+            true
           )
         ),
       { allowSignalWrites: true }

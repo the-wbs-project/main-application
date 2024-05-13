@@ -7,7 +7,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faDiagramSubtask } from '@fortawesome/pro-solid-svg-icons';
+import { faDiagramSubtask, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
@@ -25,12 +25,15 @@ import { TaskModalFooterComponent } from '@wbs/components/_utils/task-modal-foot
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
 import { EntryStore } from '@wbs/core/store';
+import {} from '@fortawesome/pro-thin-svg-icons';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 
 @Component({
   standalone: true,
   templateUrl: './view-task.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     EntryTitleComponent,
     FontAwesomeModule,
@@ -49,6 +52,7 @@ export class TaskViewComponent {
   private readonly taskService = inject(EntryTaskService);
   readonly entryStore = inject(EntryStore);
 
+  readonly closeIcon = faX;
   readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
   readonly taskId = input.required<string>();

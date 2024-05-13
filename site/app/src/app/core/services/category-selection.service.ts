@@ -120,11 +120,14 @@ export class CategorySelectionService {
 
   buildDisciplinesFromList(
     list: ProjectCategory[],
-    selected: string[]
+    selected: string[],
+    defaultToAll = false
   ): CategorySelection[] {
+    const cats = this.metadata.categories.disciplines;
+
     return this.buildFromList(
-      this.metadata.categories.disciplines,
-      list,
+      cats,
+      list.length > 0 ? list : defaultToAll ? cats : [],
       selected
     );
   }

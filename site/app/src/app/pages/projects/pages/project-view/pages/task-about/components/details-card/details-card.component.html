@@ -5,10 +5,26 @@
 <div class="card-body">
   <p class="ms-md-4 ms-0 mb-2">
     <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
+      {{ "General.Title" | translate }}:
+    </span>
+    <span>
+      {{ task.title }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
       {{ "General.Owner" | translate }}:
     </span>
     <span>
       {{ owner() }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
+      {{ "General.Project" | translate }}:
+    </span>
+    <span>
+      {{ project().title }}
     </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">

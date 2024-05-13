@@ -17,6 +17,7 @@ import {
   verifyTaskUpdateClaimGuard,
   versionIdResolve,
 } from './services';
+import { disciplineListResolver } from './pages/entry-upload/services';
 
 export const routes: Routes = [
   {

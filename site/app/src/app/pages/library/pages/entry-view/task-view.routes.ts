@@ -9,7 +9,6 @@ import {
   taskIdResolve,
   versionIdResolve,
 } from './services';
-import { disciplineListResolver } from './pages/entry-upload/services';
 
 export const routes: Routes = [
   {
@@ -83,7 +82,6 @@ export const routes: Routes = [
         },
         resolve: {
           taskId: taskIdResolve,
-          cats: disciplineListResolver,
         },
       },
       {

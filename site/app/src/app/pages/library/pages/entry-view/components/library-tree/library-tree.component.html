@@ -24,6 +24,7 @@
   [(expandedKeys)]="treeService.expandedKeys"
   [navigable]="true"
   [selectable]="{ enabled: true, mode: 'row' }"
+  [rowReorderable]="claims() | check : canEditClaim"
   (selectionChange)="selectedTask.set($event.items[0].dataItem)"
   (rowReorder)="rowReordered($event)"
   (cellClick)="cellClick($event)"

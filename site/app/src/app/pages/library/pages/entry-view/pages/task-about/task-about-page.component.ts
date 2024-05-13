@@ -16,7 +16,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { LIBRARY_CLAIMS, ListItem, SaveState } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
 import {
   AiPromptService,
   SaveService,
@@ -29,7 +29,7 @@ import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dia
 import { SavingAlertComponent } from '@wbs/components/_utils/saving-alert.component';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryStore } from '@wbs/core/store';
+import { EntryStore, MetadataStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
 
@@ -56,6 +56,7 @@ import { DetailsCardComponent } from './components/details-card';
 export class TaskAboutPageComponent {
   private readonly prompt = inject(AiPromptService);
   private readonly taskService = inject(EntryTaskService);
+  private readonly metadata = inject(MetadataStore);
   readonly modal = inject(TaskModalService);
   readonly entryStore = inject(EntryStore);
 
@@ -68,7 +69,6 @@ export class TaskAboutPageComponent {
   //
   readonly claims = input.required<string[]>();
   readonly taskId = input.required<string>();
-  readonly disciplines = input.required<ListItem[]>();
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly descriptionSave = new SaveService();
@@ -77,7 +77,7 @@ export class TaskAboutPageComponent {
 
     if (disciplines && disciplines.length > 0) return disciplines;
 
-    return this.disciplines().map((x) => x.id);
+    return this.metadata.categories.disciplines.map((x) => x.id);
   });
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryTaskDescription(

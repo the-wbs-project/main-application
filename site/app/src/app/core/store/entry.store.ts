@@ -7,10 +7,12 @@ import {
 } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { MetadataStore } from './metdata.store';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
   private transformer = inject(Transformers);
+  private metadata = inject(MetadataStore);
 
   private _entry = signal<LibraryEntry | undefined>(undefined);
   private _version = signal<LibraryEntryVersion | undefined>(undefined);
@@ -107,66 +109,14 @@ export class EntryStore {
     this.setTasks(list);
   }
 
-  /* setEntry(
-    owner: string,
-    entryId: string,
-    versionId: number
-  ): Observable<void> {
-    return forkJoin({
-      entry: this.data.libraryEntries.getAsync(owner, entryId),
-      version: this.data.libraryEntryVersions.getAsync(
-        owner,
-        entryId,
-        versionId
-      ),
-      tasks: this.data.libraryEntryNodes.getAllAsync(owner, entryId, versionId),
-    }).pipe(
-      map(({ entry, version, tasks }) => {
-        this._entry.set(entry);
-        this._version.set(version);
-        this._tasks.set(tasks);
-        this._viewModels.set(this.createViewModels(entry.type, tasks));
-      })
-    );
-  }
-
-  entryChanged(entry }: EntryChanged): void {
-    ctx.patchState({ entry: structuredClone(entry) });
-  }
-
-  @Action(VersionChanged)
-  versionChanged(ctx: Context, { version }: VersionChanged): void {
-    ctx.patchState({ version: structuredClone(version) });
-  }
-
-  @Action(TasksChanged)
-  tasksChanged(ctx: Context, { upserts, removeIds }: TasksChanged): void {
-    const list = structuredClone(ctx.getState().tasks ?? []);
-
-    if (removeIds)
-      for (const id of removeIds) {
-        const index = list.findIndex((x) => x.id === id);
-
-        if (index > -1) list.splice(index, 1);
-      }
-
-    for (const node of upserts) {
-      const index = list.findIndex((x) => x.id === node.id);
-
-      if (index === -1) list.push(node);
-      else list[index] = node;
-    }
-
-    ctx.patchState({ tasks: list });
-
-    this.rebuildViewModels(ctx);
-  }*/
-
   private createViewModels(
     entryType: string,
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
   ): WbsNodeView[] {
+    if (disciplines.length === 0)
+      disciplines = this.metadata.categories.disciplines;
+
     return this.transformer.nodes.phase.view.run(tasks, entryType, disciplines);
   }
 }

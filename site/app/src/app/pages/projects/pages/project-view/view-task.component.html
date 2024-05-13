@@ -1,17 +1,14 @@
 <kendo-dialog
+  #dialog
   [width]="modal.dialogWidth()"
   [height]="modal.dialogHeight()"
-  [title]="'General.TaskDetails' | translate"
   (close)="closed()"
 >
-  <div class="d-flex flex-column h-100 tx-13">
-    <div class="w-100 text-end">
-      <wbs-page-header />
-    </div>
-    <div class="mg-y-10">
+  <div class="card mb-0 tx-13">
+    <div class="card-header pd-l-5 pd-t-0 pd-b-5 pd-r-0">
       <div class="d-flex flex-align-center">
-        <div class="wd-50 tx-center mg-r-20">
-          <fa-icon [icon]="taskIcon" size="3x" />
+        <div class="wd-30 fs-4">
+          <fa-icon [icon]="taskIcon" />
         </div>
         <wbs-project-title
           [title]="task()?.title ?? ''"
@@ -28,29 +25,32 @@
           [show]="titleSaveState() === 'saved'"
           cssClass="tx-success tx-14"
         />
+        <div class="flex-fill text-end">
+          <button kendoButton fillMode="flat" (click)="dialog.close.emit()">
+            <fa-icon [icon]="closeIcon" />
+          </button>
+        </div>
       </div>
     </div>
-    <div class="card border border-dark flex-fill">
-      <div class="card-header py-0 mg-b-0 bg-dark">
-        <wbs-navigation
-          [menu]="links()"
-          [activeSubSection]="navSection()"
-          (navigate)="navigate($event)"
-        />
-      </div>
-      <div class="card-body border-0 p-0 rounded-10 w-100 bg-light">
-        <router-outlet />
-        @if (approvalView() === 'task' && approval(); as approval) {
-        <wbs-project-approval-window
-          [approval]="approval"
-          [claims]="claims()"
-          [userId]="userId()"
-          [isReadyOnly]="project()?.status !== 'approval'"
-          [chat]="chat() ?? []"
-          [hasChildren]="approvalHasChildren()!"
-        />
-        }
-      </div>
+    <div class="card-header py-0 mg-b-0 bg-dark">
+      <wbs-navigation
+        [menu]="links()"
+        [activeSubSection]="navSection()"
+        (navigate)="navigate($event)"
+      />
+    </div>
+    <div class="card-body border bd-gray-500 p-0 rounded-10 w-100 bg-light">
+      <router-outlet />
+      @if (approvalView() === 'task' && approval(); as approval) {
+      <wbs-project-approval-window
+        [approval]="approval"
+        [claims]="claims()"
+        [userId]="userId()"
+        [isReadyOnly]="project()?.status !== 'approval'"
+        [chat]="chat() ?? []"
+        [hasChildren]="approvalHasChildren()!"
+      />
+      }
     </div>
   </div>
   <kendo-dialog-actions layout="start">

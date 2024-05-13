@@ -66,6 +66,7 @@ import {
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 
 @UntilDestroy()
 @Component({
@@ -82,10 +83,10 @@ import { PhaseTreeMenuService } from './phase-tree-menu.service';
     ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
-    FadingMessageComponent,
     FindByIdPipe,
     FindThemByIdPipe,
     ProgressBarComponent,
+    SaveMessageComponent,
     TaskTitleComponent,
     TranslateModule,
     TreeDisciplineLegendComponent,
@@ -147,12 +148,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .pipe(untilDestroyed(this))
       .subscribe((phases) => {
         this.tree.set(structuredClone(phases));
-
-        for (const task of phases ?? []) {
-          if (!this.taskSaveStates.has(task.id)) {
-            this.taskSaveStates.set(task.id, signal('ready'));
-          }
-        }
+        this.updateState(phases ?? []);
       });
     this.store
       .selectAsync(ProjectApprovalState.list)
@@ -242,9 +238,15 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
     if (!task) return;
 
-    this.store.dispatch(
-      new ChangeTaskBasics(taskId, title, task.description ?? '')
-    );
+    this.setSaveState(taskId, 'saving');
+
+    this.store
+      .dispatch(new ChangeTaskBasics(taskId, title, task.description ?? ''))
+      .pipe(
+        tap(() => this.setSaveState(taskId, 'saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 
   menuItemSelected(item: string): void {
@@ -273,5 +275,13 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   private setSaveState(taskId: string, state: SaveState): void {
     this.taskSaveStates.get(taskId)?.set(state);
+  }
+
+  private updateState(tasks: WbsNodeView[]): void {
+    for (const task of tasks ?? []) {
+      if (!this.taskSaveStates.has(task.id)) {
+        this.taskSaveStates.set(task.id, signal('ready'));
+      }
+    }
   }
 }

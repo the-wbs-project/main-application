@@ -59,12 +59,9 @@
             [title]="dataItem.title"
             (titleChange)="taskTitleChanged(dataItem.id, $event)"
           />
-          <wbs-fading-message
-            [icon]="checkIcon"
-            message="General.Saved"
-            [show]="taskSaveStates.get(dataItem.id)!() === 'saved'"
-            cssClass="tx-success tx-12 mg-l-20"
-          />
+          @if (taskSaveStates.get(dataItem.id); as saveState) {
+          <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+          }
         </ng-template>
       </kendo-treelist-column>
       @if (project().approvalStarted) {
