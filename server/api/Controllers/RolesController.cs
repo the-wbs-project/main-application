@@ -10,18 +10,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class RolesController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
     private readonly ILogger<RolesController> logger;
     private readonly UserDataService dataService;
 
-    public RolesController(TelemetryClient telemetry, ILogger<RolesController> logger, UserDataService dataService)
+    public RolesController(ILoggerFactory loggerFactory, UserDataService dataService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<RolesController>();
         this.dataService = dataService;
     }
 
-    [Authorize]
     [HttpGet]
     public async Task<IActionResult> GetRolesAsync()
     {
@@ -31,7 +28,7 @@ public class RolesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Failed to get roles");
             return new StatusCodeResult(500);
         }
     }
