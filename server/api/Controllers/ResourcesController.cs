@@ -10,14 +10,12 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ResourcesController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
     private readonly ILogger<ResourcesController> logger;
     private readonly ResourcesDataService dataService;
 
-    public ResourcesController(TelemetryClient telemetry, ILogger<ResourcesController> logger, ResourcesDataService dataService)
+    public ResourcesController(ILoggerFactory loggerFactory, ResourcesDataService dataService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ResourcesController>();
         this.dataService = dataService;
     }
 
@@ -30,7 +28,7 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving resources");
             return new StatusCodeResult(500);
         }
     }
@@ -44,7 +42,7 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving resources");
             return new StatusCodeResult(500);
         }
     }
@@ -60,7 +58,7 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving resources");
             return new StatusCodeResult(500);
         }
     }
@@ -76,7 +74,7 @@ public class ResourcesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving resources");
             return new StatusCodeResult(500);
         }
     }

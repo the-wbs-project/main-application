@@ -9,14 +9,12 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ListsController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
     private readonly ILogger<ListsController> logger;
     private readonly ListDataService dataService;
 
-    public ListsController(TelemetryClient telemetry, ILogger<ListsController> logger, ListDataService dataService)
+    public ListsController(ILoggerFactory loggerFactory, ListDataService dataService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ListsController>();
         this.dataService = dataService;
     }
 
@@ -29,7 +27,7 @@ public class ListsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving lists");
             return new StatusCodeResult(500);
         }
     }
@@ -45,7 +43,7 @@ public class ListsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving lists");
             return new StatusCodeResult(500);
         }
     }
@@ -61,7 +59,7 @@ public class ListsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error deleting lists");
             return new StatusCodeResult(500);
         }
     }
