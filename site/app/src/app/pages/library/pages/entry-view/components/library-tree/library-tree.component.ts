@@ -154,13 +154,7 @@ export class LibraryTreeComponent implements OnInit {
       const obsOrVoid = this.actions.onAction(action, this.entryUrl(), taskId);
 
       if (obsOrVoid instanceof Observable) {
-        this.setSaveState(taskId, 'saving');
-        obsOrVoid
-          .pipe(
-            tap(() => this.setSaveState(taskId, 'saved')),
-            delay(5000)
-          )
-          .subscribe(() => this.setSaveState(taskId, 'ready'));
+        this.callSave(taskId, obsOrVoid);
       }
     }
   }
@@ -216,9 +210,10 @@ export class LibraryTreeComponent implements OnInit {
         target,
         e.dropPosition
       );
-      this.taskService
-        .saveAsync(results, [], 'Library.TasksReordered')
-        .subscribe();
+      this.callSave(
+        dragged.id,
+        this.taskService.saveAsync(results, [], 'Library.TasksReordered')
+      );
     };
     if (validation.confirmMessage) {
       this.messages.confirm
@@ -245,15 +240,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   taskTitleChanged(taskId: string, title: string): void {
-    this.setSaveState(taskId, 'saving');
-
-    this.taskService
-      .titleChangedAsync(taskId, title)
-      .pipe(
-        tap(() => this.setSaveState(taskId, 'saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
+    this.callSave(taskId, this.taskService.titleChangedAsync(taskId, title));
   }
 
   private resetTree(): void {
@@ -270,5 +257,16 @@ export class LibraryTreeComponent implements OnInit {
         this.taskSaveStates.set(task.id, signal('ready'));
       }
     }
+  }
+
+  private callSave(taskId: string, obs: Observable<any>): void {
+    this.setSaveState(taskId, 'saving');
+
+    obs
+      .pipe(
+        tap(() => this.setSaveState(taskId, 'saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 }

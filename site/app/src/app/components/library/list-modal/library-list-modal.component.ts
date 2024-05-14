@@ -26,14 +26,14 @@ import {
 } from '@wbs/core/models';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { LibrarySelectorComponent } from '@wbs/components/library-selector';
-import { LibraryItemTypeSelectorComponent } from '@wbs/components/library-item-type-selector';
-import { LibrarySearchComponent } from '@wbs/components/_utils/library-search.component';
+import { LibrarySelectorComponent } from '@wbs/components/library/selector';
+import { LibraryItemTypeSelectorComponent } from '@wbs/components/library/item-type-selector';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { StepperComponent } from '@wbs/components/_utils/stepper.component';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LibraryListComponent } from '../library-list';
+import { LibraryListComponent } from '../list';
+import { LibrarySearchComponent } from '../search.component';
 import { LibraryImportTreeComponent } from './components';
 
 @Component({

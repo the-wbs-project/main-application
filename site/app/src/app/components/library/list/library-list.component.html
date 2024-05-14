@@ -6,8 +6,8 @@
     <th class="pd-10 fw-normal">Owner</th>
     <th class="pd-10 fw-normal">Name</th>
     <th class="pd-10 fw-normal">Type</th>
-    <th class="pd-10 fw-normal">Last Updated</th>
-    <th class="pd-10 fw-normal">Author</th>
+    <th class="pd-10 fw-normal d-none d-md-table-cell">Last Updated</th>
+    <th class="pd-10 fw-normal d-none d-md-table-cell">Author</th>
   </tr>
   <tbody>
     @for (entry of entries(); track entry.entryId) {
@@ -17,7 +17,7 @@
       (click)="selected.set(entry)"
       (dblclick)="dblClick.emit()"
     >
-      @if (showWatchedColumn()){
+      @if (showWatchedColumn()) {
       <td class="tx-16">
         <wbs-watch-indicator
           source="library"
@@ -33,8 +33,10 @@
         <fa-icon [icon]="entry.type | entryTypeIcon" />
         {{ entry.type | entryTypeTitle | translate }}
       </td>
-      <td>{{ entry.lastModified | dateText }}</td>
-      <td>{{ entry.authorName }}</td>
+      <td class="d-none d-md-table-cell">
+        {{ entry.lastModified | dateText }}
+      </td>
+      <td class="d-none d-md-table-cell">{{ entry.authorName }}</td>
     </tr>
     }
   </tbody>

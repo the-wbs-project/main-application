@@ -126,10 +126,12 @@ export class ProjectImportProcessorService {
             objectId: taskId,
             data: {
               direction: dir,
+              title: results.version.title,
               libraryInfo: {
                 owner: results.owner,
                 entryId: results.version.entryId,
                 version: results.version.version,
+                title: results.version.title,
               },
             },
           });

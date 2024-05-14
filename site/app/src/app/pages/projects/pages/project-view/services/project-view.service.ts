@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
+import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
 import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {

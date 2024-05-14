@@ -35,7 +35,7 @@
                     {{ activity.actionTitle ?? "" | translate }}
                   </h6>
                 </div>
-                @if (activity.menu && activity.menu.length > 0) {
+                <!--@if (activity.menu && activity.menu.length > 0) {
                 <div ngbDropdown class="d-inline-block">
                   <button
                     type="button"
@@ -58,7 +58,7 @@
                     }
                   </div>
                 </div>
-                }
+                }-->
               </div>
               <label class="tx-italic tx-10">
                 {{ activity.userId | userName | async }}
@@ -89,13 +89,13 @@
               </fa-layers>
               <span class="timeline-footer-date ms-auto">
                 {{ activity.timestamp | dateText }}
-                &nbsp;
+                <!--&nbsp;
                 <fa-icon
                   size="1x"
                   [icon]="faCircleInfo"
                   [ngClass]="'pointer'"
                   [title]="(activity.timestamp | date : 'short') ?? ''"
-                />
+                />-->
               </span>
             </div>
           </div>

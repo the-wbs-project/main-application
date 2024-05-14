@@ -8,6 +8,7 @@ import { IdService, Messages } from '@wbs/core/services';
 export class WaitNotifyDirective {
   private readonly elem: HTMLElement;
   private readonly className: string;
+  private wasBlocked = false;
 
   readonly show = input<boolean | undefined>();
   readonly message = input<string | undefined>();
@@ -22,9 +23,15 @@ export class WaitNotifyDirective {
       try {
         const show = this.show();
 
-        if (show && this.elem)
+        if (show && this.elem) {
           this.messages.block.show('.' + this.className, this.message());
-        else this.messages.block.cancel('.' + this.className);
+          this.wasBlocked = true;
+        } else if (this.wasBlocked) {
+          try {
+            this.messages.block.cancel('.' + this.className);
+            this.wasBlocked = false;
+          } catch {}
+        }
       } catch (e: any) {
         console.log('Message: ' + e.message);
       }

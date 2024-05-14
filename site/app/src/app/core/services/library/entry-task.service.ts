@@ -63,6 +63,8 @@ export class EntryTaskService {
     removeIds: string[],
     saveMessage?: string
   ): Observable<void> {
+    for (const t of upserts) t.lastModified = new Date();
+
     return this.data.libraryEntryNodes
       .putAsync(this.owner, this.entryId, this.version, upserts, removeIds)
       .pipe(
@@ -78,6 +80,7 @@ export class EntryTaskService {
     const from = task.title;
 
     task.title = title;
+    task.lastModified = new Date();
 
     return this.data.libraryEntryNodes
       .putAsync(this.owner, this.entryId, this.version, [task], [])
@@ -103,6 +106,7 @@ export class EntryTaskService {
     const from = task.description;
 
     task.description = description;
+    task.lastModified = new Date();
 
     return this.data.libraryEntryNodes
       .putAsync(this.owner, this.entryId, this.version, [task], [])
@@ -151,6 +155,7 @@ export class EntryTaskService {
       );
 
       task.title = title;
+      task.lastModified = new Date();
     }
     if (task.description !== description) {
       const from = task.description;
@@ -165,6 +170,7 @@ export class EntryTaskService {
       );
 
       task.description = description;
+      task.lastModified = new Date();
     }
     if (activities.length === 0) return of();
 
@@ -225,6 +231,9 @@ export class EntryTaskService {
 
     taskVm.disciplines = task.disciplineIds;
 
+    task.lastModified = new Date();
+    taskVm.lastModified = new Date();
+
     return this.saveAsync([task], []).pipe(
       tap(() =>
         this.activity.entryDisciplinesChanged(
@@ -257,6 +266,9 @@ export class EntryTaskService {
     task.disciplineIds.splice(index, 1);
 
     taskVm.disciplines = task.disciplineIds;
+
+    task.lastModified = new Date();
+    taskVm.lastModified = new Date();
 
     return this.saveAsync([task], []).pipe(
       tap(() =>
@@ -296,7 +308,7 @@ export class EntryTaskService {
       lastModified: now,
     };
 
-    return this.saveAsync([newNode], [], 'Library.TaskCloned').pipe(
+    return this.saveAsync([newNode], []).pipe(
       tap(() =>
         this.activity.taskCloned(
           this.entryId,
@@ -475,7 +487,9 @@ export class EntryTaskService {
     how: string,
     tasks: LibraryEntryNode[]
   ): Observable<void> {
-    return this.saveAsync(tasks, [], 'Library.TaskReordered').pipe(
+    for (const t of tasks) t.lastModified = new Date();
+
+    return this.saveAsync(tasks, []).pipe(
       switchMap(() =>
         this.activity.taskReordered(
           this.entryId,
@@ -617,6 +631,7 @@ export class EntryTaskService {
     const from = task.disciplineIds;
 
     task.disciplineIds = disciplineIds;
+    task.lastModified = new Date();
 
     return this.data.libraryEntryNodes
       .putAsync(entry.owner, entry.id, version, [task], [])

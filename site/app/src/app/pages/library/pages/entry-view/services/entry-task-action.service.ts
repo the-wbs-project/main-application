@@ -1,7 +1,7 @@
 import { EventEmitter, Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LibraryListModalComponent } from '@wbs/components/library-list-modal';
+import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
 import { LibraryImportResults, TaskCreationResults } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';

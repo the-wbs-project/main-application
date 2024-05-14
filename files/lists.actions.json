@@ -131,5 +131,13 @@
         "description": "Actions.TaskDisciplinesChangedDescription",
         "icon": "fa-user-helmet-safety",
         "order": 0
+    },
+    {
+        "id": "project-imported-from-library",
+        "type": "actions",
+        "label": "Actions.ProjectImportedFromLibraryTitle",
+        "description": "Actions.ProjectImportedFromLibraryDescription",
+        "icon": "fa-file-import",
+        "order": 0
     }
 ]

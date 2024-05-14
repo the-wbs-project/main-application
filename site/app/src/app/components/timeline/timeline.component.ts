@@ -1,4 +1,4 @@
-import { AsyncPipe, DatePipe, NgClass } from '@angular/common';
+import { AsyncPipe, NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,7 +7,6 @@ import {
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
-import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { WaitNotifyDirective } from '@wbs/core/directives/wait-notify.directive';
 import { TimelineMenuItem } from '@wbs/core/models';
@@ -24,10 +23,8 @@ import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
-    DatePipe,
     DateTextPipe,
     FontAwesomeModule,
-    NgbDropdownModule,
     NgClass,
     TextTransformPipe,
     TranslateModule,

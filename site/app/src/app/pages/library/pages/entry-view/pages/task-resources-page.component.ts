@@ -73,7 +73,7 @@ export class ResourcesPageComponent implements OnInit {
               list.push(r);
             }
           }
-          return list;
+          return [...list];
         })
       );
   }

@@ -14,7 +14,6 @@ import {
   DropDownButtonModule,
 } from '@progress/kendo-angular-buttons';
 import { ActionMenuItem } from '@wbs/core/models';
-import { KendoToFaSizePipe } from '@wbs/pipes/kendo-to-fa-size.pipe';
 
 @Component({
   standalone: true,
@@ -40,13 +39,7 @@ import { KendoToFaSizePipe } from '@wbs/pipes/kendo-to-fa-size.pipe';
     </ng-template>
   </kendo-dropdownbutton>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    DropDownButtonModule,
-    FontAwesomeModule,
-    KendoToFaSizePipe,
-    NgClass,
-    TranslateModule,
-  ],
+  imports: [DropDownButtonModule, FontAwesomeModule, NgClass, TranslateModule],
 })
 export class ActionIconListComponent {
   readonly align = input<'left' | 'right' | 'center'>();

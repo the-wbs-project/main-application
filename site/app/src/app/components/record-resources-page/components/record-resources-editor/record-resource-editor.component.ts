@@ -42,7 +42,7 @@ export class RecordResourceEditorComponent {
     RESOURCE_TYPES.PDF,
     RESOURCE_TYPES.LINK,
     RESOURCE_TYPES.IMAGE,
-    RESOURCE_TYPES.YOUTUBE,
+    //RESOURCE_TYPES.YOUTUBE,
   ];
 
   constructor(readonly validator: RecordResourceValidation) {}

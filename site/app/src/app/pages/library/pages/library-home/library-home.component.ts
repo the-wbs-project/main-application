@@ -6,7 +6,6 @@ import {
   inject,
   input,
   model,
-  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -16,13 +15,13 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { LibraryListComponent } from '@wbs/components/library-list/library-list.component';
-import { LibrarySearchComponent } from '@wbs/components/_utils/library-search.component';
+import { LibraryListComponent } from '@wbs/components/library/list';
+import { LibrarySelectorComponent } from '@wbs/components/library/selector';
+import { LibrarySearchComponent } from '@wbs/components/library/search.component';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.directive';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
-import { LibrarySelectorComponent } from '@wbs/components/library-selector';
-import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
@@ -110,7 +109,7 @@ export class LibraryHomeComponent implements OnInit {
         vm.ownerId,
         vm.entryId,
         vm.version,
-        ...(action ? [action] : []),
+        ...(action === 'upload' ? [action] : []), // Don't send the view since 'view' should actually go to 'about'
       ])
     );
   }

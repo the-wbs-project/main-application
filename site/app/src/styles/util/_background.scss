@@ -9,10 +9,6 @@ a.bg-primary {
   }
 }
 
-.bg-transparent {
-  background-color: transaprent !important;
-}
-
 button.bg-primary {
   &:hover,
   &:focus {
@@ -179,10 +175,6 @@ button.bg-dark {
   background-color: $white !important;
 }
 
-.bg-transparent {
-  background-color: transparent !important;
-}
-
 .bg-gray + .select2-container--default .select2-selection--single {
   background-color: #455473;
 
@@ -192,10 +184,6 @@ button.bg-dark {
 }
 
 /* ###### 9.1 Background  ###### */
-.bg-transparent {
-  background-color: transparent;
-}
-
 .bg-gray-100 {
   background-color: $gray-100;
 }
@@ -326,10 +314,6 @@ button.bg-dark {
 
 .bg-purple-dark {
   background: #59339d;
-}
-
-.bg-transparent {
-  background: transparent;
 }
 
 /* ###### 4.8 transparent colors ###### */
