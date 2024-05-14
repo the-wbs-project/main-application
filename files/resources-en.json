@@ -20,6 +20,8 @@
       "General": "General",
       "Search": "Search",
       "Review": "Review",
+      "Personal": "Personal",
+      "Watched": "Watched",
       "Type": "Type",
       "Types": "Types",
       "Library": "Library",
@@ -176,7 +178,8 @@
       "Left": "Left",
       "Right": "Right",
       "Above": "Above",
-      "Below": "Below"
+      "Below": "Below",
+      "Author": "Author"
     }
   },
   {

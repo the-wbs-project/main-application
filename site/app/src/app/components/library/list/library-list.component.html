@@ -1,14 +1,26 @@
 <table class="table table-hover">
-  <tr class="bg-dark text-white">
-    @if (showWatchedColumn()) {
-    <th class="pd-10 fw-normal">&nbsp;</th>
-    }
-    <th class="pd-10 fw-normal">Owner</th>
-    <th class="pd-10 fw-normal">Name</th>
-    <th class="pd-10 fw-normal">Type</th>
-    <th class="pd-10 fw-normal d-none d-md-table-cell">Last Updated</th>
-    <th class="pd-10 fw-normal d-none d-md-table-cell">Author</th>
-  </tr>
+  <thead>
+    <tr class="bg-dark text-white">
+      @if (showWatchedColumn()) {
+      <th class="bg-dark text-white pd-10 fw-normal">&nbsp;</th>
+      }
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Owner" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Title" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Type" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
+        {{ "General.LastUpdated" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
+        {{ "General.Author" | translate }}
+      </th>
+    </tr>
+  </thead>
   <tbody>
     @for (entry of entries(); track entry.entryId) {
     <tr

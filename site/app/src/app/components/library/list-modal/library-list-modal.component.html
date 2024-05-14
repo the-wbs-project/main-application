@@ -4,18 +4,28 @@
   [title]="'Wbs.ImportFromLibrary' | translate"
   (close)="dialog.close()"
 >
-  <div class="fs-6">
-    @if (ready()) {
-    <div>
-      <wbs-stepper [steps]="steps" [(step)]="view" />
-    </div>
-    @if (view() === 0) {
+  <div class="d-flex h-100 flex-column fs-6">
+    @if (ready()) { @if (view() === 0) {
     <div class="card border border-1 bd-gray-400 mg-t-15">
       <div class="card-header pd-y-8 pd-x-10 bg-gray-200">
         {{ "Wbs.LibraryFilters" | translate }}
       </div>
       <div class="card-body pd-10">
-        <div class="d-flex mg-b-15" style="gap: 50px; align-items: end">
+        <div class="d-md-none mg-b-15">
+          <div class="d-flex flex-align-center mb-2">
+            <span class="d-inline-block wd-60 fw-bold">
+              {{ "General.Library" | translate }}
+            </span>
+            <wbs-library-selector [(library)]="library" />
+          </div>
+          <div class="d-flex flex-align-center">
+            <span class="d-inline-block wd-60 fw-bold">
+              {{ "General.Types" | translate }}
+            </span>
+            <wbs-library-item-type-selector [(types)]="typeFilters" />
+          </div>
+        </div>
+        <div class="d-none d-md-flex mg-b-15 flex-align-end" style="gap: 50px">
           <div class="flex-1 text-center">
             <div class="fw-bold mg-b-5 fs-6">
               {{ "General.Library" | translate }}

@@ -25,7 +25,11 @@ import { UserStore } from '@wbs/core/store';
   standalone: true,
   selector: 'wbs-library-list',
   templateUrl: './library-list.component.html',
+  styleUrl: './library-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  host: {
+    class: 'd-block overflow-auto flex-fill',
+  },
   imports: [
     DateTextPipe,
     EntryTypeIconPipe,
