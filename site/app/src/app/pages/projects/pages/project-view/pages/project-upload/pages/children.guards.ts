@@ -29,19 +29,19 @@ export const verifyStartedGuard = () => {
     .pipe(switchMap((started) => (started ? of(true) : redirect(store))));
 };
 
-export const startGuard = () => {
-  const store = inject(Store);
-
-  return store.dispatch(new SetAsStarted()).pipe(map(() => true));
-};
+export const startGuard = () =>
+  inject(Store)
+    .dispatch(new SetAsStarted())
+    .pipe(map(() => true));
 
 export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
+  const uiStore = inject(UiStore);
 
   return store.selectOnce(ProjectUploadState.current).pipe(
     map((p) => p!),
     tap((project) => {
-      inject(UiStore).setBreadcrumbs([
+      uiStore.setBreadcrumbs([
         {
           route: ['/', project.owner, 'projects'],
           text: 'General.Projects',
