@@ -1,6 +1,6 @@
 name = "pm-empower-api"
 account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
-compatibility_date = "2023-11-08"
+compatibility_date = "2024-05-02"
 main = "src/index.ts"
 logpush = true
 
