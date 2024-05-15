@@ -22,6 +22,21 @@ namespace functions
             this.searchService = searchService;
         }
 
+        [Function("LibraryIndex-Build")]
+        public async Task RunBuild([QueueTrigger("search-library-build", Connection = "")] string message)
+        {
+            try
+            {
+                await searchService.VerifyIndexAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error processing library entry");
+                throw;
+            }
+        }
+
+
         [Function("LibraryIndex-Item")]
         public async Task RunItem([QueueTrigger("search-library-item", Connection = "")] string message)
         {
