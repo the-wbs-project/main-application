@@ -27,8 +27,8 @@ export const routes: Routes = [
     path: '',
     canActivate: [
       authGuardFn,
-      () => inject(MetadataStore).loadAsync(),
       authGuard,
+      () => inject(MetadataStore).loadAsync(),
     ],
     providers: [
       Auth0Service,

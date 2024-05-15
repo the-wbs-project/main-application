@@ -20,6 +20,7 @@ public class RolesController : ControllerBase
     }
 
     [HttpGet]
+    [Authorize]
     public async Task<IActionResult> GetRolesAsync()
     {
         try

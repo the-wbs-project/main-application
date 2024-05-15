@@ -5,10 +5,6 @@ import { Invite, InviteBody, Member } from '../models';
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getRolesAsync(userId: string): Observable<string[]> {
-    return this.http.get<string[]>(`api/users/${userId}/roles`);
-  }
-
   getMembershipUsersAsync(
     organization: string,
     forceRefresh = false
