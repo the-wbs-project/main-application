@@ -52,6 +52,7 @@ export class DisciplineEditorComponent {
   //
   //  IO
   //
+  readonly sizeCss = input('tx-16');
   readonly showAdd = input<boolean>(false);
   readonly showSave = input<boolean>(false);
   readonly saveClicked = output<void>();

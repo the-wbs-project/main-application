@@ -66,6 +66,7 @@
       "Required": "Required",
       "Contacts": "Contacts",
       "Expired": "Expired",
+      "Basics": "Basics",
       "LoginExpired": "Login Expired",
       "UnexpectedServerError": "An unexpected server error occured.",
       "Previous": "Previous",

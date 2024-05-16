@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   WritableSignal,
   computed,
   inject,
@@ -31,7 +30,6 @@ import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-i
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
-import { TaskCreateComponent } from '@wbs/components/task-create';
 import { TaskTitleComponent } from '@wbs/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
@@ -39,7 +37,6 @@ import {
   LibraryEntry,
   LibraryEntryVersion,
   SaveState,
-  TaskCreationResults,
 } from '@wbs/core/models';
 import {
   Messages,
@@ -48,9 +45,9 @@ import {
   WbsPhaseService,
 } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
+import { EntryStore, UiStore } from '@wbs/core/store';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { EntryStore, UiStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import {
@@ -76,17 +73,14 @@ import {
     FontAwesomeModule,
     SaveMessageComponent,
     TranslateModule,
-    TaskCreateComponent,
     TaskTitleComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
     TreeTogglerComponent,
   ],
 })
-export class LibraryTreeComponent implements OnInit {
+export class LibraryTreeComponent {
   protected readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
-  protected readonly createModal =
-    viewChild<TaskCreateComponent>(TaskCreateComponent);
   protected readonly gridContextMenu =
     viewChild<ContextMenuComponent>(ContextMenuComponent);
 
@@ -127,35 +121,17 @@ export class LibraryTreeComponent implements OnInit {
       .subscribe((tasks) => this.updateState(tasks ?? []));
   }
 
-  ngOnInit(): void {
-    this.actions.expandedKeysChanged
-      .pipe(untilDestroyed(this))
-      .subscribe((keys) => {
-        this.treeService.expandedKeys = keys;
-        this.resetTree();
-      });
-  }
-
-  createTask(data: TaskCreationResults | undefined): void {
-    if (!data) return;
-    this.actions.createTask(
-      data,
-      this.selectedTask()!.id,
-      this.entryUrl(),
-      this.treeService.expandedKeys
-    );
-  }
-
   onAction(action: string): void {
     const taskId = this.selectedTask()!.id;
-    if (action === 'addSub') {
-      this.createModal()!.show();
-    } else {
-      const obsOrVoid = this.actions.onAction(action, this.entryUrl(), taskId);
+    const obsOrVoid = this.actions.onAction(
+      action,
+      this.entryUrl(),
+      taskId,
+      this.treeService
+    );
 
-      if (obsOrVoid instanceof Observable) {
-        this.callSave(taskId, obsOrVoid);
-      }
+    if (obsOrVoid instanceof Observable) {
+      this.callSave(taskId, obsOrVoid);
     }
   }
 

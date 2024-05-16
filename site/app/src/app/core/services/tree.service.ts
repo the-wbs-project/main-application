@@ -6,6 +6,12 @@ import { WbsNodeView } from '@wbs/core/view-models';
 export class TreeService {
   expandedKeys: string[] = [];
 
+  verifyExpanded(taskId: string): void {
+    if (!this.expandedKeys.includes(taskId)) {
+      this.expand(taskId);
+    }
+  }
+
   expand(taskId: string): void {
     const keys = structuredClone(this.expandedKeys);
 

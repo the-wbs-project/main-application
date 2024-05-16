@@ -3,13 +3,14 @@ import { Navigate } from '@ngxs/router-plugin';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
 import { LibraryImportResults, TaskCreationResults } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
+import { SignalStore, TreeService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryCreationService } from '../../../services';
 import { LibraryImportProcessorService } from './library-import-processor.service';
+import { TaskCreateComponent } from '@wbs/components/task-create';
 
 @Injectable()
 export class EntryTaskActionService {
@@ -21,39 +22,13 @@ export class EntryTaskActionService {
   private readonly store = inject(SignalStore);
   private readonly taskService = inject(EntryTaskService);
 
-  readonly expandedKeysChanged = new EventEmitter<string[]>();
-
-  createTask(
-    data: TaskCreationResults,
-    taskId: string,
-    entryUrl: string[],
-    expandedKeys: string[]
-  ): void {
-    this.taskService
-      .createTask(taskId!, data)
-      .pipe(
-        tap(() => {
-          const keys = structuredClone(expandedKeys);
-          if (!keys.includes(taskId!)) {
-            keys.push(taskId!);
-
-            this.expandedKeysChanged.emit(keys);
-          }
-        }),
-        switchMap((id) =>
-          data.nav
-            ? this.store.dispatch(new Navigate([...entryUrl, 'tasks', id]))
-            : of()
-        )
-      )
-      .subscribe();
-  }
-
   onAction(
     action: string,
     urlPrefix: string[],
-    taskId: string
+    taskId: string,
+    treeService: TreeService
   ): Observable<any> | void {
+    console.log(action);
     if (action === 'viewTask') {
       return this.store.dispatch(
         new Navigate([...urlPrefix, 'tasks', taskId, 'about'])
@@ -80,6 +55,19 @@ export class EntryTaskActionService {
       return this.taskService.removeDisciplineAsync(taskId!, discipline);
     } else if (action === 'export') {
       this.creation.exportTaskToEntryAsync(taskId!);
+    } else if (action === 'addSub') {
+      const disciplines = this.libraryStore.version()!.disciplines;
+
+      return TaskCreateComponent.launchAsync(
+        this.dialogService,
+        disciplines
+      ).pipe(
+        switchMap((results: TaskCreationResults | undefined) =>
+          !results
+            ? of(false)
+            : this.createTask(results, taskId, urlPrefix, treeService)
+        )
+      );
     } else if (action.startsWith('import|')) {
       const direction = action.split('|')[1]!;
       const org = this.membership.organization()!.name;
@@ -104,5 +92,23 @@ export class EntryTaskActionService {
         )
       );
     }
+  }
+
+  private createTask(
+    data: TaskCreationResults,
+    taskId: string,
+    entryUrl: string[],
+    treeService: TreeService
+  ): Observable<boolean> {
+    return this.taskService.createTask(taskId!, data).pipe(
+      tap(() => treeService.verifyExpanded(taskId)),
+      switchMap((id) =>
+        data.nav
+          ? this.store
+              .dispatch(new Navigate([...entryUrl, 'tasks', id]))
+              .pipe(map(() => false))
+          : of(true)
+      )
+    );
   }
 }

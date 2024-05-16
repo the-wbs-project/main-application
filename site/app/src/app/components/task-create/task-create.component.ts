@@ -2,8 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   ElementRef,
-  EventEmitter,
-  Output,
   inject,
   model,
   signal,
@@ -11,11 +9,20 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { DialogModule } from '@progress/kendo-angular-dialog';
+import {
+  DialogCloseResult,
+  DialogContentBase,
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { TaskCreationResults, WbsNode } from '@wbs/core/models';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { ProjectCategory, TaskCreationResults } from '@wbs/core/models';
 import { CategorySelectionService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { DisciplineEditorComponent } from '../discipline-editor';
 
 @Component({
@@ -28,66 +35,58 @@ import { DisciplineEditorComponent } from '../discipline-editor';
     DisciplineEditorComponent,
     EditorModule,
     FormsModule,
+    TextBoxModule,
     TranslateModule,
   ],
 })
-export class TaskCreateComponent {
-  @Output() readonly ready = new EventEmitter<
-    TaskCreationResults | undefined
-  >();
-
+export class TaskCreateComponent extends DialogContentBase {
   private readonly catService = inject(CategorySelectionService);
   readonly titleTextBox = viewChild<ElementRef>('titleTextBox');
 
-  protected readonly showDialog = signal<boolean>(false);
-  protected readonly more = signal<boolean>(false);
   protected readonly title = model<string>('');
   protected readonly description = model<string>('');
-  protected readonly disciplines = signal<CategorySelection[]>(
-    this.catService.buildDisciplinesFromList(
-      //PROJECT_NODE_VIEW.DISCIPLINE,
-      [],
-      []
-    )
-  );
+  protected readonly disciplines = signal<CategorySelection[]>([]);
 
-  show(): void {
-    this.title.set('');
-    this.description.set('');
-    this.disciplines.update((list) => {
-      for (const cat of list) cat.selected = false;
-
-      return list;
-    });
-    this.showDialog.set(true);
-    this.titleTextBox()?.nativeElement.focus();
+  constructor(x: DialogRef) {
+    super(x);
   }
 
-  protected cancel(): void {
-    this.ready.emit(undefined);
-    this.showDialog.set(false);
+  static launchAsync(
+    dialog: DialogService,
+    disciplines: ProjectCategory[]
+  ): Observable<TaskCreationResults | undefined> {
+    const ref = dialog.open({
+      content: TaskCreateComponent,
+      cssClass: 'bg-light',
+    });
+    const comp = ref.content.instance as TaskCreateComponent;
+
+    comp.title.set('');
+    comp.description.set('');
+    comp.disciplines.set(
+      comp.catService.buildDisciplinesFromList(disciplines, [])
+    );
+    comp.titleTextBox()?.nativeElement.focus();
+
+    return ref.result.pipe(
+      map((x: unknown) =>
+        x instanceof DialogCloseResult ? undefined : <TaskCreationResults>x
+      )
+    );
   }
 
   protected save(nav: boolean): void {
     if (!this.title) return;
 
-    const model: Partial<WbsNode> = {
-      title: this.title().trim(),
-    };
-
-    if (this.more()) {
-      const description = this.description()?.trim();
-
-      if (description !== '') model.description = description;
-
-      const disciplines: string[] = [];
-
-      for (const cat of this.disciplines()) {
-        if (cat.selected) disciplines.push(cat.id);
-      }
-      if (disciplines.length > 0) model.disciplineIds = disciplines;
-    }
-    this.ready.emit({ model, nav });
-    this.showDialog.set(false);
+    this.dialog.close({
+      model: {
+        title: this.title().trim(),
+        description: this.description()?.trim(),
+        disciplineIds: this.disciplines()
+          .filter((x) => x.selected)
+          .map((x) => x.id),
+      },
+      nav,
+    });
   }
 }

@@ -46,18 +46,12 @@ export class ProjectViewService {
   private readonly store = inject(Store);
   private readonly transformers = inject(Transformers);
 
-  private createComponent?: TaskCreateComponent;
-
   private get project(): Project {
     return this.store.selectSnapshot(ProjectState.current)!;
   }
 
   private get owner(): string {
     return this.project.owner;
-  }
-
-  registerCreateComponent(createComponent: TaskCreateComponent): void {
-    this.createComponent = createComponent;
   }
 
   action(action: string, taskId?: string): void | Observable<boolean> {
@@ -67,17 +61,22 @@ export class ProjectViewService {
       this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
     } else if (taskId) {
       if (action === 'addSub') {
-        const sub = this.createComponent!.ready.pipe(
-          switchMap((results) => {
-            if (results == undefined) return of();
-
-            return this.store.dispatch(
-              new CreateTask(taskId, results.model, results.nav)
-            );
-          })
-        ).subscribe(() => {
-          sub.unsubscribe();
-        });
+        const sub = TaskCreateComponent.launchAsync(
+          this.dialogService,
+          this.project.disciplines
+        )
+          .pipe(
+            switchMap((results) =>
+              results
+                ? this.store.dispatch(
+                    new CreateTask(taskId, results.model, results.nav)
+                  )
+                : of()
+            )
+          )
+          .subscribe(() => {
+            sub.unsubscribe();
+          });
       } else if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(taskId));
       } else if (action === 'viewTask') {
