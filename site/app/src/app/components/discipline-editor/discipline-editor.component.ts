@@ -24,8 +24,8 @@ import {
 import { ListItemFormComponent } from '@wbs/components/list-item-form';
 import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { filter, map } from 'rxjs/operators';
 import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
+import { filter, map } from 'rxjs/operators';
 import { SwitchComponent } from '../switch';
 
 @Component({

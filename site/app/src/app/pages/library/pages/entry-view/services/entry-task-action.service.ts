@@ -1,7 +1,8 @@
-import { EventEmitter, Injectable, inject } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
+import { TaskCreateComponent } from '@wbs/components/task-create';
 import { LibraryImportResults, TaskCreationResults } from '@wbs/core/models';
 import { SignalStore, TreeService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
@@ -10,7 +11,6 @@ import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryCreationService } from '../../../services';
 import { LibraryImportProcessorService } from './library-import-processor.service';
-import { TaskCreateComponent } from '@wbs/components/task-create';
 
 @Injectable()
 export class EntryTaskActionService {
