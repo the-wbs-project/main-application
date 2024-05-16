@@ -82,6 +82,7 @@
         "id": "project-description-changed",
         "type": "actions",
         "label": "Actions.ProjectDescriptionChangedTitle",
+        "description": "Actions.ProjectDescriptionChangedDescription",
         "icon": "fa-pencil",
         "order": 0
     },
@@ -121,6 +122,7 @@
         "id": "task-description-changed",
         "type": "actions",
         "label": "Actions.TaskDescriptionChangedTitle",
+        "description": "Actions.TaskDescriptionChangedDescription",
         "icon": "fa-pencil",
         "order": 0
     },

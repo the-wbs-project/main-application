@@ -1,18 +1,10 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import {
-  NavigationLink,
-  ProjectNode,
-  RoutedBreadcrumbItem,
-} from '@wbs/core/models';
+import { ProjectNode } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { PROJECT_NAVIGATION, TASK_NAVIGATION } from '../models';
-import { ProjectState, TasksState } from '../states';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Injectable()
 export class ProjectService {
@@ -78,106 +70,5 @@ export class ProjectService {
       createdOn: ts,
       lastModified: ts,
     };
-  }
-
-  getProjectBreadcrumbs(
-    route: ActivatedRouteSnapshot
-  ): Observable<RoutedBreadcrumbItem[]> {
-    const currentUrl = ProjectService.getProjectUrl(route);
-    const crumbSections = route.data['crumbs'];
-    let link: NavigationLink | undefined;
-
-    return this.store.selectOnce(ProjectState.current).pipe(
-      map((project) => {
-        const crumbs: RoutedBreadcrumbItem[] = [
-          {
-            route: ['/', Utils.getParam(route, 'org'), 'projects'],
-            text: 'Pages.Projects',
-          },
-          {
-            route: [...currentUrl],
-            text: project!.title,
-            isText: true,
-          },
-        ];
-
-        for (const section of crumbSections) {
-          link = (link?.items ?? (PROJECT_NAVIGATION as NavigationLink[])).find(
-            (x) => x.section == section
-          );
-
-          if (!link) continue;
-
-          if (link.route) {
-            currentUrl.push(...link.route);
-
-            crumbs.push({
-              route: [...currentUrl],
-              text: link.text,
-            });
-          } else {
-            crumbs.push({
-              text: link.text,
-            });
-          }
-        }
-        return crumbs;
-      })
-    );
-  }
-
-  getTaskBreadcrumbs(
-    route: ActivatedRouteSnapshot
-  ): Observable<RoutedBreadcrumbItem[]> {
-    const projectUrl = ProjectService.getProjectUrl(route);
-    const taskUrl = ProjectService.getTaskUrl(route);
-
-    const crumbSections = route.data['crumbs'];
-    let link: NavigationLink | undefined;
-
-    return forkJoin({
-      project: this.store.selectOnce(ProjectState.current),
-      task: this.store.selectOnce(TasksState.current),
-    }).pipe(
-      map(({ project, task }) => {
-        const crumbs: RoutedBreadcrumbItem[] = [
-          {
-            route: ['/', Utils.getParam(route, 'org'), 'projects'],
-            text: 'Pages.Projects',
-          },
-          {
-            route: [...projectUrl],
-            text: project!.title,
-            isText: true,
-          },
-          {
-            route: [...taskUrl],
-            text: task!.title,
-            isText: true,
-          },
-        ];
-
-        for (const section of crumbSections) {
-          link = (link?.items ?? (TASK_NAVIGATION as NavigationLink[])).find(
-            (x) => x.section == section
-          );
-          if (!link) continue;
-
-          if (link.route) {
-            taskUrl.push(...link.route);
-
-            crumbs.push({
-              route: [...taskUrl],
-              text: link.text,
-            });
-          } else {
-            crumbs.push({
-              text: link.text,
-            });
-          }
-        }
-        return crumbs;
-      })
-    );
   }
 }

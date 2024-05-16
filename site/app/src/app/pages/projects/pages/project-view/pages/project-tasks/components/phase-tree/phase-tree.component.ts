@@ -254,6 +254,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
     const obsOrVoid = this.service.action(item, taskId);
 
     if (obsOrVoid instanceof Observable) {
+      this.setSaveState(taskId, 'saving');
+
       obsOrVoid
         .pipe(
           switchMap((results) => {

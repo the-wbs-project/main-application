@@ -248,6 +248,7 @@ export class TasksState {
     const phases = structuredClone(state.phases)!;
     const model = nodes.find((x) => x.id === taskId)!;
     const viewModel = phases.find((x) => x.id === taskId)!;
+    const from = [...(model.disciplineIds ?? [])];
 
     if (!model || !viewModel) return;
 
@@ -258,14 +259,28 @@ export class TasksState {
     } else model.disciplineIds = [disciplineId];
 
     viewModel.disciplines = model.disciplineIds;
+    model.lastModified = new Date();
+    viewModel.lastModified = model.lastModified;
+
+    const activityData: ActivityData = {
+      action: TASK_ACTIONS.DISCIPLINES_CHANGED,
+      objectId: model.id,
+      topLevelId: state.project!.id,
+      data: {
+        title: model.title,
+        from,
+        to: model.disciplineIds,
+      },
+    };
 
     return this.saveTask(ctx, model).pipe(
-      tap(() => ctx.patchState({ nodes, phases }))
+      tap(() => ctx.patchState({ nodes, phases })),
+      tap(() => this.saveActivity(activityData))
     );
   }
 
   @Action(RemoveDisciplineToTask)
-  RemoveDisciplineToTask(
+  removeDisciplineToTask(
     ctx: Context,
     { taskId, disciplineId }: RemoveDisciplineToTask
   ): void | Observable<void> {
@@ -274,6 +289,7 @@ export class TasksState {
     const phases = structuredClone(state.phases)!;
     const model = nodes.find((x) => x.id === taskId)!;
     const viewModel = phases.find((x) => x.id === taskId)!;
+    const from = [...(model.disciplineIds ?? [])];
 
     if (!model?.disciplineIds || !viewModel) return;
 
@@ -282,11 +298,25 @@ export class TasksState {
     if (index === -1) return;
 
     model.disciplineIds.splice(index, 1);
-
     viewModel.disciplines = model.disciplineIds;
 
+    model.lastModified = new Date();
+    viewModel.lastModified = model.lastModified;
+
+    const activityData: ActivityData = {
+      action: TASK_ACTIONS.DISCIPLINES_CHANGED,
+      objectId: model.id,
+      topLevelId: state.project!.id,
+      data: {
+        title: model.title,
+        from,
+        to: model.disciplineIds,
+      },
+    };
+
     return this.saveTask(ctx, model).pipe(
-      tap(() => ctx.patchState({ nodes, phases }))
+      tap(() => ctx.patchState({ nodes, phases })),
+      tap(() => this.saveActivity(activityData))
     );
   }
 

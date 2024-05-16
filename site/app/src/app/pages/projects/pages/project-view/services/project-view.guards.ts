@@ -3,9 +3,8 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
-import { UiStore } from '@wbs/core/store';
 import { of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
+import { switchMap } from 'rxjs/operators';
 import {
   InitiateChecklist,
   SetApproval,
@@ -17,7 +16,7 @@ import {
   VerifyTasks,
 } from '../actions';
 import { ProjectState } from '../states';
-import { ProjectService } from './project.service';
+import { ProjectBreadcrumbsService } from './project-breadcrumbs.service';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store).dispatch(new SetApproval());
@@ -46,44 +45,20 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
 };
 
 export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const service = inject(ProjectService);
-  const section = route.data['navSection'];
-  const uiStore = inject(UiStore);
-
-  store.dispatch(new SetProjectNavSection(section));
+  inject(Store).dispatch(new SetProjectNavSection(route.data['navSection']));
 
   if (!route.data['crumbs']) return;
 
-  return service.getProjectBreadcrumbs(route).pipe(
-    map((crumbs) => {
-      crumbs.at(-1)!.route = undefined;
-
-      uiStore.setBreadcrumbs(crumbs);
-    })
-  );
+  inject(ProjectBreadcrumbsService).setProjectCrumbs(route);
 };
 
 export const taskNavGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const service = inject(ProjectService);
-  const uiStore = inject(UiStore);
-  const section = route.data['navSection'];
-  const crumbSections = route.data['crumbs'];
-
-  store.dispatch(new SetTaskNavSection(section));
-
-  if (!crumbSections) return;
-
-  if (!route.data['crumbs']) return;
-
-  return service.getTaskBreadcrumbs(route).pipe(
-    map((crumbs) => {
-      crumbs.at(-1)!.route = undefined;
-
-      uiStore.setBreadcrumbs(crumbs);
-    })
-  );
+  inject(Store).dispatch(new SetTaskNavSection(route.data['navSection']));
+  //
+  //  At the moment breadcrumbs aren't being shown in the task dialog, so don't call
+  //
+  //if (!route.data['crumbs']) return;
+  //inject(ProjectBreadcrumbsService).setTaskCrumbs(route);
 };
 
 export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {

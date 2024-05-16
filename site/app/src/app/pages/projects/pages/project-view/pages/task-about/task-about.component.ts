@@ -70,11 +70,13 @@ export class TaskAboutComponent {
   descriptionChange(description: string): void {
     const task = this.current()!;
 
-    this.descriptionSave.call(
-      this.store
-        .dispatch(new ChangeTaskBasics(task.id, task.title, description))
-        .pipe(tap(() => this.descriptionEditMode.set(false)))
-    );
+    this.descriptionSave
+      .call(
+        this.store
+          .dispatch(new ChangeTaskBasics(task.id, task.title, description))
+          .pipe(tap(() => this.descriptionEditMode.set(false)))
+      )
+      .subscribe();
   }
 
   aiChangeSaved(description: string): void {

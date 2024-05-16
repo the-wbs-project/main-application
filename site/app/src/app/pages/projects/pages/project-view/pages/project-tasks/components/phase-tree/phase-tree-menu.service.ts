@@ -1,5 +1,10 @@
 import { Injectable, inject } from '@angular/core';
-import { ContextMenuItem, PROJECT_STATI_TYPE, Project } from '@wbs/core/models';
+import {
+  Category,
+  ContextMenuItem,
+  PROJECT_STATI_TYPE,
+  Project,
+} from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
@@ -58,7 +63,7 @@ export class PhaseTreeMenuService {
     }
 
     if (remove) {
-      remove.items = this.getDisciplinesToRemove(task);
+      remove.items = this.getDisciplinesToRemove(project, task);
 
       if (remove.items.length === 0) {
         phaseActions.splice(phaseActions.indexOf(remove), 1);
@@ -147,12 +152,21 @@ export class PhaseTreeMenuService {
     return results;
   }
 
-  private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
+  private getDisciplinesToRemove(
+    project: Project,
+    task: WbsNodeView
+  ): ContextMenuItem[] {
     const disciplines = this.metadata.categories.disciplines;
     const results: ContextMenuItem[] = [];
 
     for (const id of task.disciplines) {
-      const discipline = disciplines.find((x) => x.id === id);
+      const discipline =
+        disciplines.find((x) => x.id === id) ??
+        <Category | undefined>(
+          project.disciplines.find((x) =>
+            typeof x === 'string' ? false : x.id === id
+          )
+        );
 
       if (discipline)
         results.push({
