@@ -92,10 +92,8 @@ export class SaveSectionComponent {
     if (typeof phase === 'string') {
       const phaseDef = phaseDefinitions.find((x) => x.id === phase)!;
       phaseId = phaseDef.id;
-      phaseLabel = this.resources.get(phaseDef.label);
-      phaseDescription = phaseDef.description
-        ? this.resources.get(phaseDef.description)
-        : undefined;
+      phaseLabel = phaseDef.label;
+      phaseDescription = phaseDef.description;
     } else {
       phaseLabel = phase.label;
       phaseDescription = phase.description;

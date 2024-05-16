@@ -1,17 +1,22 @@
 import { ChangeDetectionStrategy, Component, output } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
+import {
+  ButtonsModule,
+  DropDownButtonModule,
+} from '@progress/kendo-angular-buttons';
 import { EntryTypeDescriptionPipe } from '@wbs/pipes/entry-type-description.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 
 @Component({
   standalone: true,
-  selector: 'wbs-entry-create-button',
-  templateUrl: './entry-create-button.component.html',
+  selector: 'wbs-library-create-button',
+  templateUrl: './library-create-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonsModule,
     DropDownButtonModule,
     EntryTypeDescriptionPipe,
     EntryTypeIconPipe,
@@ -20,7 +25,8 @@ import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
     TranslateModule,
   ],
 })
-export class EntryCreateButtonComponent {
+export class LibraryCreateButtonComponent {
   readonly typeChosen = output<string>();
   readonly createMenu = ['project', 'phase', 'task'];
+  readonly plusIcon = faPlus;
 }

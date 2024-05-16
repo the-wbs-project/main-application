@@ -12,7 +12,7 @@ import {
   UserRole,
   ProjectCategory,
 } from '@wbs/core/models';
-import { IdService, Resources } from '@wbs/core/services';
+import { IdService } from '@wbs/core/services';
 import { MetadataStore, UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -59,7 +59,6 @@ interface StateModel {
 export class ProjectCreateState {
   private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
-  private readonly resources = inject(Resources);
   private readonly userId = inject(UserStore).userId;
 
   @Selector()
@@ -257,10 +256,8 @@ export class ProjectCreateState {
           createdOn: now,
           lastModified: now,
           phaseIdAssociation: cat.id,
-          title: this.resources.get(cat.label),
-          description: cat.description
-            ? this.resources.get(cat.description)
-            : '',
+          title: cat.label,
+          description: cat.description,
         });
       } else {
         nodes.push({

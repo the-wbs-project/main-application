@@ -1,1 +1,1 @@
-export * from './entry-create-button/entry-create-button.component';
+export * from '../../../../../components/library/create-button/library-create-button.component';

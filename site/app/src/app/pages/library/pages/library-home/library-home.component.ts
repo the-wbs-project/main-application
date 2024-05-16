@@ -7,72 +7,45 @@ import {
   input,
   model,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { RouterModule } from '@angular/router';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { DialogModule } from '@progress/kendo-angular-dialog';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LibraryListComponent } from '@wbs/components/library/list';
-import { LibrarySelectorComponent } from '@wbs/components/library/selector';
-import { LibrarySearchComponent } from '@wbs/components/library/search.component';
-import { PageHeaderComponent } from '@wbs/components/page-header';
-import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.directive';
+import { LibraryListFiltersComponent } from '@wbs/components/library/list-filters';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
-import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
-import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 import { EntryCreationService } from '../../services';
-import { EntryCreateButtonComponent } from './components';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,
   templateUrl: './library-home.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [
-    DateTextPipe,
-    DialogModule,
-    EntryCreateButtonComponent,
-    EntryTypeIconPipe,
-    EntryTypeTitlePipe,
-    FontAwesomeModule,
-    FormsModule,
-    DelayedInputDirective,
-    LibraryListComponent,
-    LibrarySearchComponent,
-    LibrarySelectorComponent,
-    NgClass,
-    PageHeaderComponent,
-    RouterModule,
-    TextBoxModule,
-    TranslateModule,
-    WatchIndicatorComponent,
-  ],
+  imports: [LibraryListFiltersComponent, LibraryListComponent],
   providers: [EntryCreationService],
 })
 export class LibraryHomeComponent implements OnInit {
   private readonly store = inject(Store);
+  private readonly profile = inject(UserStore).profile;
+  private readonly organization = inject(MembershipStore).organization;
   public readonly creation = inject(EntryCreationService);
 
   readonly searchText = model<string>('');
+  readonly typeFilters = model<string[]>([]);
   readonly org = input.required<string>();
   readonly library = model<string>('');
 
   ngOnInit(): void {
     this.library.set('personal');
+    this.typeFilters.set([]);
   }
 
-  create(type: string): void {
+  create(type: string, list: LibraryListComponent): void {
     this.creation.runAsync(this.org(), type).subscribe((results) => {
       console.log(results);
       if (results == undefined) return;
 
       const vm: LibraryEntryViewModel = {
-        authorId: '',
-        authorName: results.entry.author,
+        authorId: results.entry.author,
+        authorName: this.profile()!.name,
         entryId: results.entry.id,
         title: results.version.title,
         type: results.entry.type,
@@ -81,17 +54,11 @@ export class LibraryHomeComponent implements OnInit {
         lastModified: results.version.lastModified,
         description: results.version.description,
         ownerId: results.entry.owner,
-        ownerName: results.entry.owner,
+        ownerName: this.organization()!.display_name,
         status: results.version.status,
       };
       if (results.action === 'close') {
-        //
-        //  Figure out how to refresh the list
-        //
-        /*this.entries.update((list) => {
-          list.splice(0, 0, vm);
-          return list;
-        });*/
+        list.entryAdded(vm);
       } else {
         this.nav(vm, results.action);
       }

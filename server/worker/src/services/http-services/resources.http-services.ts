@@ -9,8 +9,9 @@ export class ResourceFileHttpService {
 
   static async putAsync(ctx: Context): Promise<Response> {
     const { file, owner } = ctx.req.param();
+    const req = ctx.req.raw.clone();
 
-    await ctx.var.data.resourceFiles.putAsync(ctx.req.raw.body, file, [owner]);
+    await ctx.var.data.resourceFiles.putAsync(req.body, file, [owner]);
 
     return ctx.newResponse(null, { status: 204 });
   }

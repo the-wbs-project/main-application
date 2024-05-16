@@ -17,6 +17,11 @@ public class Storage
            new AzureSasCredential(config.BlobKey));
     }
 
+    public async Task<byte[]> GetFileAsBytesAsync(string containerName, IEnumerable<string> folders, string fileName)
+    {
+        return await GetFileAsBytesAsync(containerName, string.Join('/', folders, fileName));
+    }
+
     public async Task<byte[]> GetFileAsBytesAsync(string containerName, string fileName)
     {
         var container = await GetContainerAsync(containerName);

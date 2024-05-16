@@ -26,14 +26,11 @@ import {
 } from '@wbs/core/models';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { LibrarySelectorComponent } from '@wbs/components/library/selector';
-import { LibraryItemTypeSelectorComponent } from '@wbs/components/library/item-type-selector';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { StepperComponent } from '@wbs/components/_utils/stepper.component';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../list';
-import { LibrarySearchComponent } from '../search.component';
+import { LibraryListFiltersComponent } from '../list-filters';
 import { LibraryImportTreeComponent } from './components';
 
 @Component({
@@ -44,14 +41,11 @@ import { LibraryImportTreeComponent } from './components';
     ButtonModule,
     DialogModule,
     FontAwesomeModule,
+    LibraryListFiltersComponent,
     LibraryImportTreeComponent,
-    LibraryItemTypeSelectorComponent,
     LibraryListComponent,
-    LibrarySearchComponent,
-    LibrarySelectorComponent,
     LoaderModule,
     SaveMessageComponent,
-    StepperComponent,
     TranslateModule,
     AlertComponent,
   ],

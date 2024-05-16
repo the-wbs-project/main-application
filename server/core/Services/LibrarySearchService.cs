@@ -27,11 +27,9 @@ public class LibrarySearchService
         {
             IncludeTotalCount = true,
             Filter = filters.ToFilterString(owner),
-            Select = { "EntryId", "Version", "OwnerId", "OwnerName", "Title_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En" }
+            Select = { "EntryId", "Version", "OwnerId", "OwnerName", "Title_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En" },
+            OrderBy = { "LastModified desc" }
         };
-
-        if (filters.searchText == "")
-            options.OrderBy.Add("LastModified desc");
 
         var results = await searchClient.SearchAsync<LibrarySearchDocument>(filters.searchText, options);
         var viewModels = new List<ApiSearchResult<LibraryEntryViewModel>>();

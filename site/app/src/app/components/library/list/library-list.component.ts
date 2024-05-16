@@ -65,6 +65,10 @@ export class LibraryListComponent implements OnChanges {
     }
   }
 
+  entryAdded(vm: LibraryEntryViewModel): void {
+    this.entries.set([vm, ...this.entries()]);
+  }
+
   private retrieve(): void {
     this.data.libraryEntries
       .searchAsync(this.org(), {
