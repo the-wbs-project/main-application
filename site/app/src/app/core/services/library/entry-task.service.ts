@@ -7,7 +7,7 @@ import {
   TaskCreationResults,
 } from '@wbs/core/models';
 import {
-  CategorySelectionService,
+  CategoryService,
   IdService,
   Messages,
   Resources,
@@ -23,7 +23,7 @@ import { EntryTaskActivityService } from './entry-task-activity.service';
 @Injectable()
 export class EntryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
-  private readonly categoryService = inject(CategorySelectionService);
+  private readonly categoryService = inject(CategoryService);
   private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
@@ -218,8 +218,6 @@ export class EntryTaskService {
   addDisciplineAsync(taskId: string, disciplineId: string): Observable<void> {
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
-    const taskVm = this.getTaskViewModel(taskId)!;
-
     const from = [...(task.disciplineIds ?? [])];
 
     if (task.disciplineIds) {
@@ -228,10 +226,7 @@ export class EntryTaskService {
       else return of();
     } else task.disciplineIds = [disciplineId];
 
-    taskVm.disciplines = task.disciplineIds;
-
     task.lastModified = new Date();
-    taskVm.lastModified = new Date();
 
     return this.saveAsync([task], []).pipe(
       tap(() =>
@@ -252,7 +247,6 @@ export class EntryTaskService {
   ): Observable<void> {
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
-    const taskVm = this.getTaskViewModel(taskId)!;
 
     if (!task.disciplineIds) task.disciplineIds = [];
 
@@ -263,11 +257,7 @@ export class EntryTaskService {
     if (index === -1) return of();
 
     task.disciplineIds.splice(index, 1);
-
-    taskVm.disciplines = task.disciplineIds;
-
     task.lastModified = new Date();
-    taskVm.lastModified = new Date();
 
     return this.saveAsync([task], []).pipe(
       tap(() =>
@@ -280,6 +270,28 @@ export class EntryTaskService {
         )
       )
     );
+  }
+
+  removeDisciplinesFromAllTasksAsync(disciplineId: string[]): Observable<any> {
+    const tasks = this.getTasks();
+    const toSave: LibraryEntryNode[] = [];
+
+    for (const task of tasks) {
+      if (!task.disciplineIds) continue;
+
+      const newList = task.disciplineIds.filter(
+        (x) => !disciplineId.includes(x)
+      );
+
+      if (newList.length === task.disciplineIds.length) continue;
+
+      task.disciplineIds = newList;
+      toSave.push(task);
+    }
+
+    if (toSave.length === 0) return of('hello');
+
+    return this.saveAsync(toSave, []).pipe();
   }
 
   cloneTask(taskId: string): Observable<void> {

@@ -1,3 +1,5 @@
+import { CategoryViewModel } from './category.view-model';
+
 export interface WbsNodeView {
   id: string;
   treeId: string;
@@ -12,7 +14,7 @@ export interface WbsNodeView {
   children: number;
   childrenIds: string[];
   description?: string;
-  disciplines: string[];
+  disciplines: CategoryViewModel[];
   levels: number[];
   levelText: string;
   depth: number;

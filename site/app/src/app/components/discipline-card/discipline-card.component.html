@@ -16,7 +16,7 @@
   </div>
 </div>
 
-@if (selectedList(); as list) {
+@if (items(); as list) {
 <div class="card-body">
   @if (list.length === 0) {
   <wbs-alert
@@ -25,11 +25,7 @@
     [message]="noDisciplinesLabel()"
   />
   } @else {
-  <wbs-discipline-split-list
-    [fullList]="fullList()"
-    [selectedList]="list"
-    [splitLimit]="splitLimit()"
-  />
+  <wbs-discipline-split-list [items]="list" [splitLimit]="splitLimit()" />
   }
 </div>
 }

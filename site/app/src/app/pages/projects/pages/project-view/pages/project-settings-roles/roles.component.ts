@@ -12,11 +12,12 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member, Project, ROLES, SaveState } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
+import { Member, ROLES, SaveState } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { delay, tap } from 'rxjs/operators';
 import { AddUserToRole, RemoveUserToRole } from '../../actions';
 import { ProjectState } from '../../states';
@@ -69,7 +70,10 @@ export class RolesComponent implements OnInit {
     this.save(new RemoveUserToRole(role, user));
   }
 
-  private getIds(roleName: string, project: Project | undefined): string[] {
+  private getIds(
+    roleName: string,
+    project: ProjectViewModel | undefined
+  ): string[] {
     const role = this.roles.find((r) => r.name === roleName)?.id;
     return (
       project?.roles?.filter((r) => r.role === role).map((r) => r.userId) ?? []

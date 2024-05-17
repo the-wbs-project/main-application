@@ -1,22 +1,14 @@
-import { Injectable, inject } from '@angular/core';
-import {
-  Category,
-  ContextMenuItem,
-  PROJECT_STATI_TYPE,
-  Project,
-} from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/core/store';
+import { Injectable } from '@angular/core';
+import { ContextMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
+import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class PhaseTreeMenuService {
-  private readonly metadata = inject(MetadataStore);
-
   buildMenu(
-    project: Project,
+    project: ProjectViewModel,
     task: WbsNodeView | undefined,
     claims: string[]
   ): (ContextMenuItem | Seperator)[] {
@@ -63,7 +55,7 @@ export class PhaseTreeMenuService {
     }
 
     if (remove) {
-      remove.items = this.getDisciplinesToRemove(project, task);
+      remove.items = this.getDisciplinesToRemove(task);
 
       if (remove.items.length === 0) {
         phaseActions.splice(phaseActions.indexOf(remove), 1);
@@ -107,7 +99,7 @@ export class PhaseTreeMenuService {
     if (
       task &&
       link.filters.excludeFromCat &&
-      (task.id === task.phaseId || task.id === task.disciplines[0])
+      (task.id === task.phaseId || task.id === task.disciplines[0].id)
     )
       return false;
 
@@ -124,54 +116,36 @@ export class PhaseTreeMenuService {
   }
 
   private getDisciplinesToAdd(
-    project: Project,
+    project: ProjectViewModel,
     task: WbsNodeView
   ): ContextMenuItem[] {
-    const disciplines = this.metadata.categories.disciplines;
+    const existing = task.disciplines.map((x) => x.id);
     const results: ContextMenuItem[] = [];
 
-    for (const pDiscipline of project.disciplines) {
-      if (task.disciplines.includes(pDiscipline.id)) continue;
+    for (const discipline of project.disciplines) {
+      if (existing.includes(discipline.id)) continue;
 
-      const discipline = pDiscipline.isCustom
-        ? pDiscipline
-        : disciplines.find((x) => x.id === pDiscipline.id);
-
-      if (discipline)
-        results.push({
-          action: 'addDiscipline|' + discipline.id,
-          faIcon: discipline.icon ?? 'fa-question',
-          text: discipline.label,
-          isNotResource: true,
-        });
+      results.push({
+        action: 'addDiscipline|' + discipline.id,
+        faIcon: discipline.icon ?? 'fa-question',
+        text: discipline.label,
+        isNotResource: true,
+      });
     }
 
     return results;
   }
 
-  private getDisciplinesToRemove(
-    project: Project,
-    task: WbsNodeView
-  ): ContextMenuItem[] {
-    const disciplines = this.metadata.categories.disciplines;
+  private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
     const results: ContextMenuItem[] = [];
 
-    for (const id of task.disciplines) {
-      const discipline =
-        disciplines.find((x) => x.id === id) ??
-        <Category | undefined>(
-          project.disciplines.find((x) =>
-            typeof x === 'string' ? false : x.id === id
-          )
-        );
-
-      if (discipline)
-        results.push({
-          action: 'removeDiscipline|' + id,
-          faIcon: discipline.icon ?? 'fa-question',
-          text: discipline.label,
-          isNotResource: true,
-        });
+    for (const discipline of task.disciplines) {
+      results.push({
+        action: 'removeDiscipline|' + discipline.id,
+        faIcon: discipline.icon,
+        text: discipline.label,
+        isNotResource: true,
+      });
     }
 
     return results;

@@ -4,13 +4,9 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
 import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  LibraryImportResults,
-  PROJECT_STATI_TYPE,
-  Project,
-} from '@wbs/core/models';
+import { LibraryImportResults, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { MembershipStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -45,7 +41,7 @@ export class ProjectViewService {
   private readonly store = inject(Store);
   private readonly transformers = inject(Transformers);
 
-  private get project(): Project {
+  private get project(): ProjectViewModel {
     return this.store.selectSnapshot(ProjectState.current)!;
   }
 
@@ -151,7 +147,7 @@ export class ProjectViewService {
     this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
   }
 
-  downloadTasks(project?: Project, phases?: WbsNodeView[]): void {
+  downloadTasks(project?: ProjectViewModel, phases?: WbsNodeView[]): void {
     this.messages.notify.info('General.RetrievingData');
 
     if (!project) {

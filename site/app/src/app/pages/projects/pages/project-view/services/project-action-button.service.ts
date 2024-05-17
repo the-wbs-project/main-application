@@ -9,9 +9,10 @@ import {
   faXmarkToSlot,
 } from '@fortawesome/pro-solid-svg-icons';
 import { Store } from '@ngxs/store';
-import { PROJECT_CLAIMS, PROJECT_STATI, Project } from '@wbs/core/models';
+import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { ProjectAction } from '../models';
 import { ProjectState } from '../states';
 import { LibraryEntryExportService } from './library-entry-export.service';
@@ -35,7 +36,7 @@ export class ProjectActionButtonService {
   private readonly actionExport = 'export';
 
   buildMenu(
-    project: Project,
+    project: ProjectViewModel,
     claims: string[],
     approvalEnabled: boolean
   ): ProjectAction[] | undefined {

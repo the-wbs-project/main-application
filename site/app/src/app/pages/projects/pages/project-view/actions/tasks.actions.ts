@@ -1,8 +1,6 @@
 import {
   ActivityData,
   PROJECT_NODE_VIEW_TYPE,
-  Project,
-  ProjectCategoryChanges,
   ProjectNode,
   RebuildResults,
   WbsNode,
@@ -10,7 +8,7 @@ import {
 
 export class VerifyTasks {
   static readonly type = '[Tasks] Verify';
-  constructor(readonly project: Project, readonly force = false) {}
+  constructor(readonly force = false) {}
 }
 
 export class SetTaskNavSection {

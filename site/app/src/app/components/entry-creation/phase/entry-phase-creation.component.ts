@@ -27,7 +27,7 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { Phase } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
+import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseSelectionComponent } from '@wbs/components/_utils/phase-section';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
@@ -56,7 +56,7 @@ import { SaveSectionComponent } from './save-section';
 export class EntryPhaseCreationComponent extends DialogContentBase {
   readonly done = output<void>();
 
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
 
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');

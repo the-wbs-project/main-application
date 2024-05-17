@@ -103,10 +103,7 @@
           <wbs-tree-discipline-legend [list]="project().disciplines" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
-          <wbs-discipline-icon-list
-            [disciplines]="dataItem.disciplines"
-            [fullList]="project().disciplines"
-          />
+          <wbs-discipline-icon-list [items]="dataItem.disciplines" />
         </ng-template>
       </kendo-treelist-column>
       }

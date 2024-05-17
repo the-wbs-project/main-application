@@ -51,14 +51,20 @@ export class ProjectImportProcessorService {
       //
       //  Let's make sure all disciplines added to the task are now in the project.
       //
-      for (const discipline of results.version.disciplines) {
+      for (const discipline of results.disciplines) {
         if (discipline.isCustom) {
           let name = discipline.label;
           let index = project.disciplines.findIndex(
             (x) => x.isCustom && x.label === name
           );
 
-          if (index === -1) project.disciplines.push(discipline);
+          if (index === -1)
+            project.disciplines.push({
+              id: IdService.generate(),
+              label: name,
+              isCustom: true,
+              icon: discipline.icon!,
+            });
         } else if (!project.disciplines.find((x) => x.id === discipline.id)) {
           project.disciplines.push(discipline);
         }

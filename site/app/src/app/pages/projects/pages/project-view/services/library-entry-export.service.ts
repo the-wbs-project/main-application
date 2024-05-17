@@ -4,8 +4,9 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LIBRARY_ENTRY_TYPES, Project, ProjectNode } from '@wbs/core/models';
+import { LIBRARY_ENTRY_TYPES, ProjectNode } from '@wbs/core/models';
 import { UserStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { filter, switchMap } from 'rxjs/operators';
 import { LibraryEntryModalComponent } from '../components/library-entry-modal';
 import { LibraryEntryModalResults } from '../models';
@@ -16,7 +17,7 @@ export class LibraryEntryExportService {
   private readonly dialog = inject(DialogService);
   private readonly userId = inject(UserStore).userId;
 
-  exportProject(project: Project): void {
+  exportProject(project: ProjectViewModel): void {
     LibraryEntryModalComponent.launchAsync(this.dialog, {
       type: LIBRARY_ENTRY_TYPES.PROJECT,
       description: project.description,

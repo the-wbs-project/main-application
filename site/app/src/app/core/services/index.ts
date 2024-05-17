@@ -4,7 +4,7 @@ export * from './transformers';
 export * from './ai-chat.service';
 export * from './ai-prompt.service';
 export * from './auth0.service';
-export * from './category-selection.service';
+export * from './category.service';
 export * from './id.service';
 export * from './logger.service';
 export * from './messages.service';

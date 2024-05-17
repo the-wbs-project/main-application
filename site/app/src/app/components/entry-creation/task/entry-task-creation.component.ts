@@ -23,7 +23,7 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { StepperModule } from '@progress/kendo-angular-layout';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
-import { CategorySelectionService } from '@wbs/core/services';
+import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
@@ -48,7 +48,7 @@ import { TitleFormComponent } from './components/title-form';
   ],
 })
 export class EntryTaskCreationComponent extends DialogContentBase {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
 
   type?: string;
   readonly owner = signal<string | undefined>(undefined);

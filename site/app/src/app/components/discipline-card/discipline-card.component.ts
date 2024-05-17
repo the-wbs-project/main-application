@@ -2,8 +2,6 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
-  inject,
   input,
   model,
 } from '@angular/core';
@@ -16,10 +14,9 @@ import {
   faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { ProjectCategory } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { DisciplineSplitListComponent } from '@wbs/components/_utils/discipline-split-list.component';
-import { MetadataStore } from '@wbs/core/store';
+import { CategoryViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -37,14 +34,11 @@ import { MetadataStore } from '@wbs/core/store';
   ],
 })
 export class DisciplineCardComponent {
-  private readonly metadata = inject(MetadataStore);
-
   readonly faPencil = faPencil;
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly faComment = faComment;
-  readonly selectedList = model.required<ProjectCategory[] | string[]>();
-  readonly fullList = input<ProjectCategory[]>();
+  readonly items = model.required<CategoryViewModel[]>();
   readonly canEdit = input.required<boolean>();
   readonly editRoute = input.required<string[]>();
   readonly alertIfEmpty = input(false);

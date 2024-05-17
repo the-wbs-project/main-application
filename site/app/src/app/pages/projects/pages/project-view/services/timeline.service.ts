@@ -8,7 +8,7 @@ import {
   ProjectNode,
 } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
-import { TimelineViewModel } from '@wbs/core/view-models';
+import { ProjectViewModel, TimelineViewModel } from '@wbs/core/view-models';
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -24,7 +24,7 @@ export class TimelineService {
 
   createProjectRecord(
     data: ActivityData,
-    project?: Project,
+    project?: ProjectViewModel,
     nodes?: ProjectNode[]
   ): ProjectActivityRecord {
     return {

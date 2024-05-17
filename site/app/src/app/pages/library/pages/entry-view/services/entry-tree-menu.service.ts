@@ -105,7 +105,7 @@ export class EntryTreeMenuService {
     if (
       task &&
       link.filters.excludeFromCat &&
-      (task.id === task.phaseId || task.id === task.disciplines[0])
+      (task.id === task.phaseId || task.id === task.disciplines[0].id)
     )
       return false;
 
@@ -144,10 +144,11 @@ export class EntryTreeMenuService {
     task: WbsNodeView
   ): ContextMenuItem[] {
     const disciplines = this.metadata.categories.disciplines;
+    const existing = task.disciplines.map((x) => x.id);
     const results: ContextMenuItem[] = [];
 
     for (const vDiscipline of version.disciplines) {
-      if (task.disciplines.includes(vDiscipline.id)) continue;
+      if (existing.includes(vDiscipline.id)) continue;
 
       const discipline = vDiscipline.isCustom
         ? vDiscipline
@@ -166,19 +167,15 @@ export class EntryTreeMenuService {
   }
 
   private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
-    const disciplines = this.metadata.categories.disciplines;
     const results: ContextMenuItem[] = [];
 
-    for (const id of task.disciplines) {
-      const discipline = disciplines.find((x) => x.id === id);
-
-      if (discipline)
-        results.push({
-          action: 'removeDiscipline|' + id,
-          faIcon: discipline.icon ?? 'fa-question',
-          text: discipline.label,
-          isNotResource: true,
-        });
+    for (const discipline of task.disciplines) {
+      results.push({
+        action: 'removeDiscipline|' + discipline.id,
+        faIcon: discipline.icon ?? 'fa-question',
+        text: discipline.label,
+        isNotResource: true,
+      });
     }
 
     return results;

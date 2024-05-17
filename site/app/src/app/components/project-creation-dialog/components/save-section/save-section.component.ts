@@ -25,7 +25,7 @@ import {
   ProjectNode,
 } from '@wbs/core/models';
 import {
-  CategorySelectionService,
+  CategoryService,
   IdService,
   Resources,
   UserService,
@@ -43,7 +43,7 @@ import { switchMap } from 'rxjs/operators';
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {
-  private readonly categoryService = inject(CategorySelectionService);
+  private readonly categoryService = inject(CategoryService);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly userService = inject(UserService);

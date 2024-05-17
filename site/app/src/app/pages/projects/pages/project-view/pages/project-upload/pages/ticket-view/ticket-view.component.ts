@@ -11,7 +11,7 @@ import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { CreateJiraTicket } from '../../actions';
-import { ProjectUploadState } from '../../states';
+import { ProjectState } from '../../../../states';
 
 @Component({
   standalone: true,
@@ -23,7 +23,7 @@ export class TicketViewComponent {
   readonly reasonCode = input<string>();
   readonly sending = signal<boolean>(false);
   readonly mode = signal<'description' | 'thank-you'>('description');
-  readonly project = this.store.selectSnapshot(ProjectUploadState.current)!;
+  readonly project = this.store.selectSnapshot(ProjectState.current)!;
 
   constructor(private readonly store: Store) {}
 

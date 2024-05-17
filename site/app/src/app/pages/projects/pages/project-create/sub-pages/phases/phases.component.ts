@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { FillElementDirective } from '@wbs/core/directives/fill-element.directive';
-import { CategorySelectionService } from '@wbs/core/services';
+import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { PhaseEditorComponent } from '@wbs/components/phase-editor';
 import { WizardFooterComponent } from '@wbs/components/wizard-footer';
@@ -25,7 +25,7 @@ import { ProjectCreateState } from '../../states';
   imports: [PhaseEditorComponent, FillElementDirective, WizardFooterComponent],
 })
 export class PhaseComponent implements OnInit {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly service = inject(ProjectCreateService);
   private readonly store = inject(Store);
 

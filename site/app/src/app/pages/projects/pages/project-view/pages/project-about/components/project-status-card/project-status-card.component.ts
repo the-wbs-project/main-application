@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { Project } from '@wbs/core/models';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { ProjectStatusTileIconComponent } from '../project-status-tile-icon';
 
 @Component({
@@ -13,5 +13,5 @@ import { ProjectStatusTileIconComponent } from '../project-status-tile-icon';
 })
 export class ProjectStatusCardComponent {
   readonly approvalEnabled = input.required<boolean>();
-  readonly project = input.required<Project>();
+  readonly project = input.required<ProjectViewModel>();
 }

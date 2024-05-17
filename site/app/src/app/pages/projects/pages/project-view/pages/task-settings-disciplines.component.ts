@@ -6,11 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { DisciplineSettingsPageComponent } from '@wbs/components/discipline-settings-page';
-import {
-  CategorySelectionService,
-  SaveService,
-  SignalStore,
-} from '@wbs/core/services';
+import { CategoryService, SaveService, SignalStore } from '@wbs/core/services';
 import { DirtyComponent } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
 import { ChangeTaskDisciplines } from '../actions';
@@ -28,7 +24,7 @@ import { ProjectState, TasksState } from '../states';
   imports: [DisciplineSettingsPageComponent],
 })
 export class DisciplinesComponent implements DirtyComponent {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly store = inject(SignalStore);
   private readonly project = this.store.select(ProjectState.current);
   private readonly task = this.store.select(TasksState.current);
@@ -43,7 +39,7 @@ export class DisciplinesComponent implements DirtyComponent {
         this.disciplines.set(
           this.catService.buildDisciplinesFromList(
             this.project()?.disciplines ?? [],
-            this.task()?.disciplines ?? []
+            this.task()?.disciplines?.map((x) => x.id) ?? []
           )
         ),
       { allowSignalWrites: true }

@@ -28,7 +28,6 @@ export class EntryTaskActionService {
     taskId: string,
     treeService: TreeService
   ): Observable<any> | void {
-    console.log(action);
     if (action === 'viewTask') {
       return this.store.dispatch(
         new Navigate([...urlPrefix, 'tasks', taskId, 'about'])

@@ -77,13 +77,10 @@
     headerClass="discipline-column tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
-      <wbs-tree-discipline-legend [list]="version().disciplines" />
+      <wbs-tree-discipline-legend [list]="disciplines()" />
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      <wbs-discipline-icon-list
-        [disciplines]="dataItem.disciplines"
-        [fullList]="version().disciplines"
-      />
+      <wbs-discipline-icon-list [items]="dataItem.disciplines" />
     </ng-template>
   </kendo-treelist-column>
   }

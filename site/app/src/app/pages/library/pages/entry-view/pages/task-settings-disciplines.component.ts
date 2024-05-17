@@ -8,7 +8,7 @@ import {
 } from '@angular/core';
 import { DisciplineSettingsPageComponent } from '@wbs/components/discipline-settings-page';
 import { Category, DirtyComponent } from '@wbs/core/models';
-import { CategorySelectionService, SaveService } from '@wbs/core/services';
+import { CategoryService, SaveService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
@@ -25,7 +25,7 @@ import { CategorySelection } from '@wbs/core/view-models';
   imports: [DisciplineSettingsPageComponent],
 })
 export class DisciplinesComponent implements DirtyComponent {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly service = inject(EntryTaskService);
   readonly entryStore = inject(EntryStore);
 
@@ -41,7 +41,9 @@ export class DisciplinesComponent implements DirtyComponent {
         this.disciplines.set(
           this.catService.buildDisciplinesFromList(
             this.entryStore.version()?.disciplines ?? [],
-            this.entryStore.getTask(this.taskId)()?.disciplines ?? [],
+            this.entryStore
+              .getTask(this.taskId)()
+              ?.disciplines.map((x) => x.id) ?? [],
             true
           )
         ),

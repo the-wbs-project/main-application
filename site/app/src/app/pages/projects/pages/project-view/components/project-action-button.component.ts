@@ -6,8 +6,8 @@ import {
   input,
 } from '@angular/core';
 import { ActionButtonComponent } from '@wbs/components/action-button';
-import { Project } from '@wbs/core/models';
 import { ProjectActionButtonService } from '../services';
+import { ProjectViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -24,7 +24,7 @@ export class ProjectActionButtonComponent {
   readonly service = inject(ProjectActionButtonService);
 
   readonly claims = input.required<string[]>();
-  readonly project = input.required<Project>();
+  readonly project = input.required<ProjectViewModel>();
   readonly approvalEnabled = input.required<boolean>();
   readonly menu = computed(() =>
     this.service.buildMenu(

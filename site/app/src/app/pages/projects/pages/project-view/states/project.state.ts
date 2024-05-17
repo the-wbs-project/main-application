@@ -2,8 +2,14 @@ import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ActivityData, Project, PROJECT_STATI } from '@wbs/core/models';
-import { UserRolesViewModel } from '@wbs/core/view-models';
+import {
+  ActivityData,
+  Project,
+  PROJECT_NODE_VIEW,
+  PROJECT_STATI,
+} from '@wbs/core/models';
+import { CategoryService } from '@wbs/core/services';
+import { ProjectViewModel, UserRolesViewModel } from '@wbs/core/view-models';
 import { MetadataStore, UserStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -28,7 +34,8 @@ import {
 import { ProjectService, TimelineService } from '../services';
 
 interface StateModel {
-  current?: Project;
+  model?: Project;
+  current?: ProjectViewModel;
   navSection?: string;
   roles?: string[];
   users?: UserRolesViewModel[];
@@ -42,6 +49,7 @@ declare type Context = StateContext<StateModel>;
   defaults: {},
 })
 export class ProjectState {
+  private readonly categoryService = inject(CategoryService);
   private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly services = inject(ProjectService);
@@ -49,7 +57,7 @@ export class ProjectState {
   private readonly userId = inject(UserStore).userId;
 
   @Selector()
-  static current(state: StateModel): Project | undefined {
+  static current(state: StateModel): ProjectViewModel | undefined {
     return state.current;
   }
 
@@ -105,12 +113,10 @@ export class ProjectState {
         for (const role of project!.roles.filter((x) => x.userId === userId)) {
           roles.push(role.role);
         }
-        ctx.patchState({
-          current: project,
-          roles,
-        });
+        ctx.patchState({ model: project, roles });
       }),
-      tap((project) => ctx.dispatch([new VerifyTasks(project)])),
+      tap(() => this.setVm(ctx)),
+      tap(() => ctx.dispatch([new VerifyTasks()])),
       tap((project) =>
         ctx.dispatch(new SetChecklistData(project, undefined, undefined))
       ),
@@ -121,18 +127,15 @@ export class ProjectState {
 
   @Action(SaveProject)
   saveProjectAction(ctx: Context, { project }: SaveProject): Observable<void> {
-    return this.saveProject(ctx, project);
+    return this.saveProject(ctx, this.fromVm(project));
   }
 
   @Action(AddUserToRole)
   addUserToRole(ctx: Context, { role, user }: AddUserToRole): Observable<void> {
-    const project = ctx.getState().current!;
+    const project = ctx.getState().model!;
     const roleTitle = this.services.getRoleTitle(role, false);
 
-    project.roles.push({
-      role,
-      userId: user.id,
-    });
+    project.roles.push({ role, userId: user.id });
 
     return this.saveProject(ctx, project).pipe(
       switchMap(() => this.updateUsers(ctx)),
@@ -155,7 +158,7 @@ export class ProjectState {
     ctx: Context,
     { role, user }: RemoveUserToRole
   ): Observable<void> {
-    const project = ctx.getState().current!;
+    const project = ctx.getState().model!;
     const roleTitle = this.services.getRoleTitle(role, false);
     const index = project.roles.findIndex(
       (x) => x.role === role && x.userId === user.id
@@ -187,7 +190,7 @@ export class ProjectState {
     action: ChangeProjectBasics
   ): Observable<void> | void {
     const state = ctx.getState();
-    const project = state.current!;
+    const project = state.model!;
     const activities: ActivityData[] = [];
 
     if (project.title !== action.title) {
@@ -239,12 +242,12 @@ export class ProjectState {
   }
 
   @Action(ChangeProjectStatus)
-  ChangeProjectStatus(
+  changeProjectStatus(
     ctx: Context,
     { status }: ChangeProjectStatus
   ): Observable<void> {
     const state = ctx.getState();
-    const project = state.current!;
+    const project = state.model!;
     const original = project.status;
 
     project.status = status;
@@ -276,7 +279,7 @@ export class ProjectState {
     { changes }: ChangeProjectDiscipines
   ): Observable<any> {
     const state = ctx.getState();
-    const project = state.current!;
+    const project = state.model!;
     let originalList = [...project.disciplines];
 
     project.disciplines = changes.categories;
@@ -316,7 +319,8 @@ export class ProjectState {
 
   private saveProject(ctx: Context, project: Project): Observable<void> {
     return this.data.projects.putAsync(project).pipe(
-      tap(() => ctx.patchState({ current: structuredClone(project) })),
+      tap(() => ctx.patchState({ model: structuredClone(project) })),
+      tap(() => this.setVm(ctx)),
       tap(() => this.projectChanged(ctx)),
       tap(() =>
         ctx.dispatch(new SetChecklistData(project, undefined, undefined))
@@ -333,7 +337,7 @@ export class ProjectState {
       current: project,
     });
 
-    return ctx.dispatch(new VerifyTasks(project, true));
+    return ctx.dispatch(new VerifyTasks(true));
   }
 
   private clearClaimCache(): void {
@@ -364,5 +368,47 @@ export class ProjectState {
         continue;
       }
     }
+  }
+
+  private fromVm(vm: ProjectViewModel): Project {
+    return {
+      approvalStarted: vm.approvalStarted,
+      category: vm.category,
+      createdOn: vm.createdOn,
+      createdBy: vm.createdBy,
+      description: vm.description,
+      disciplines: this.categoryService.fromViewModels(vm.disciplines),
+      id: vm.id,
+      lastModified: vm.lastModified,
+      owner: vm.owner,
+      roles: vm.roles,
+      status: vm.status,
+      title: vm.title,
+      mainNodeView: PROJECT_NODE_VIEW.PHASE,
+    };
+  }
+
+  private setVm(ctx: Context): void {
+    const project = ctx.getState().model!;
+    const disciplines = this.categoryService.buildViewModels(
+      project.disciplines
+    );
+
+    ctx.patchState({
+      current: {
+        approvalStarted: project.approvalStarted,
+        category: project.category,
+        createdOn: project.createdOn,
+        createdBy: project.createdBy,
+        description: project.description,
+        disciplines,
+        id: project.id,
+        lastModified: project.lastModified,
+        owner: project.owner,
+        roles: project.roles,
+        status: project.status,
+        title: project.title,
+      },
+    });
   }
 }

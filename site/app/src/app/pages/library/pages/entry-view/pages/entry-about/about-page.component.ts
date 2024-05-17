@@ -11,7 +11,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { Category, LIBRARY_CLAIMS } from '@wbs/core/models';
-import { AiPromptService, SaveService } from '@wbs/core/services';
+import {
+  AiPromptService,
+  CategoryService,
+  SaveService,
+} from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
@@ -38,6 +42,7 @@ import { DetailsCardComponent } from './components/details-card';
   providers: [AiPromptService],
 })
 export class AboutPageComponent implements OnInit {
+  private readonly category = inject(CategoryService);
   private readonly prompt = inject(AiPromptService);
   private readonly entryService = inject(EntryService);
   readonly store = inject(EntryStore);
@@ -52,6 +57,9 @@ export class AboutPageComponent implements OnInit {
       this.store.version(),
       this.store.viewModels()
     )
+  );
+  readonly disciplines = computed(() =>
+    this.category.buildViewModels(this.store.version()!.disciplines)
   );
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;

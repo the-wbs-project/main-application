@@ -18,11 +18,7 @@ import { SaveButtonComponent } from '@wbs/components/_utils/save-button.componen
 import { CategoryDialogComponent } from '@wbs/components/category-dialog';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { CategoryDialogResults } from '@wbs/core/models';
-import {
-  CategorySelectionService,
-  IdService,
-  SaveService,
-} from '@wbs/core/services';
+import { CategoryService, IdService, SaveService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { filter, map } from 'rxjs/operators';
 
@@ -41,7 +37,7 @@ import { filter, map } from 'rxjs/operators';
   ],
 })
 export class DisciplineSettingsPageComponent {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly dialog = inject(DialogService);
 
   readonly plus = faPlus;

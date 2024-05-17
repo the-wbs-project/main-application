@@ -26,27 +26,22 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import {
-  PROJECT_CLAIMS,
-  PROJECT_NODE_VIEW,
-  Project,
-  SaveState,
-} from '@wbs/core/models';
+import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
+import { ProgressBarComponent } from '@wbs/components/_utils/progress-bar.component';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { TaskTitleComponent } from '@wbs/components/task-title';
+import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
+import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { PROJECT_CLAIMS, PROJECT_NODE_VIEW, SaveState } from '@wbs/core/models';
 import {
   Messages,
   SignalStore,
   TreeService,
   WbsPhaseService,
 } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
-import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
-import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
-import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
-import { ProgressBarComponent } from '@wbs/components/_utils/progress-bar.component';
-import { TaskTitleComponent } from '@wbs/components/task-title';
-import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
@@ -66,7 +61,6 @@ import {
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 
 @UntilDestroy()
 @Component({
@@ -109,7 +103,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  Inputs
   //
   readonly claims = input.required<string[]>();
-  readonly project = input.required<Project>();
+  readonly project = input.required<ProjectViewModel>();
   readonly projectUrl = input.required<string[]>();
   //
   //  components

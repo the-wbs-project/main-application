@@ -1,13 +1,13 @@
-import { Category, ProjectCategory, WbsNode } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { Category, WbsNode } from '@wbs/core/models';
+import { CategoryService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
+import { CategoryViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {
   constructor(
-    private readonly metadata: MetadataStore,
-    private readonly resources: Resources
+    private readonly categoryService: CategoryService,
+    private readonly metadata: MetadataStore
   ) {}
 
   private get phaseList(): Category[] {
@@ -17,11 +17,10 @@ export class WbsNodePhaseTransformer {
   run(
     models: WbsNode[],
     type: string,
-    disciplines: ProjectCategory[] | Category[]
+    disciplines: CategoryViewModel[]
   ): WbsNodeView[] {
     const phases = this.phaseList;
     const nodes: WbsNodeView[] = [];
-    const wbsDisciplines = disciplines.map((x) => x.id);
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
       .sort((a, b) => a.order! - b.order!);
@@ -29,12 +28,14 @@ export class WbsNodePhaseTransformer {
     for (let i = 0; i < rootNodes.length; i++) {
       const parentlevel = [i + 1];
       const node = rootNodes[i];
-      const phaseObj = phases.find((x) => x.id === node.phaseIdAssociation);
       const parent: WbsNodeView = {
         children: 0,
         childrenIds: [],
         description: node.description,
-        disciplines: this.getDisciplines(node?.disciplineIds, wbsDisciplines),
+        disciplines: this.categoryService.buildTaskViewModels(
+          disciplines,
+          node?.disciplineIds
+        ),
         id: node.id,
         treeId: node.id,
         levels: [...parentlevel],
@@ -50,21 +51,19 @@ export class WbsNodePhaseTransformer {
         subTasks: [],
         phaseIdAssociation: node.phaseIdAssociation,
       };
-      if (phaseObj && parent.description === undefined) {
-        parent.description = phaseObj.description;
+      if (parent.description === undefined && parent.phaseIdAssociation) {
+        parent.description = phases.find(
+          (x) => x.id === node.phaseIdAssociation
+        )?.description;
       }
-      const phaseId = phaseObj ? phaseObj.id : node.id;
-      const phaseLabel = phaseObj
-        ? this.resources.get(phaseObj.label)
-        : node.title;
 
       const children = this.getPhaseChildren(
-        phaseId,
-        phaseLabel,
+        disciplines,
+        node.id,
+        node.title,
         parent,
         type,
-        models,
-        wbsDisciplines
+        models
       );
       parent.children = children.length;
       parent.childrenIds = children.map((x) => x.id);
@@ -85,12 +84,12 @@ export class WbsNodePhaseTransformer {
   }
 
   private getPhaseChildren(
+    disciplines: CategoryViewModel[],
     phaseId: string,
     phaseLabel: string,
     parent: WbsNodeView,
     type: string,
-    list: WbsNode[],
-    wbsDisciplines: string[]
+    list: WbsNode[]
   ): WbsNodeView[] {
     const results: WbsNodeView[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parent.id, list);
@@ -102,7 +101,10 @@ export class WbsNodePhaseTransformer {
         children: 0,
         childrenIds: [],
         description: child.description,
-        disciplines: this.getDisciplines(child.disciplineIds, wbsDisciplines),
+        disciplines: this.categoryService.buildTaskViewModels(
+          disciplines,
+          child?.disciplineIds
+        ),
         id: child.id,
         treeId: child.id,
         levels: childLevel,
@@ -125,12 +127,12 @@ export class WbsNodePhaseTransformer {
       };
 
       const taskChildren = this.getPhaseChildren(
+        disciplines,
         phaseId,
         phaseLabel,
         node,
         type,
-        list,
-        wbsDisciplines
+        list
       );
 
       node.children = taskChildren.length;
@@ -144,12 +146,5 @@ export class WbsNodePhaseTransformer {
       results.push(node, ...taskChildren);
     }
     return results;
-  }
-
-  private getDisciplines(
-    taskDisciplines: string[] | undefined,
-    wbsDisciplines: string[]
-  ): string[] {
-    return taskDisciplines?.filter((x) => wbsDisciplines.includes(x)) ?? [];
   }
 }

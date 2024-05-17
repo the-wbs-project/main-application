@@ -14,6 +14,7 @@ import { PopupModule } from '@progress/kendo-angular-popup';
 import { DisciplineListComponent } from '@wbs/components/_utils/discipline-list.component';
 import { DisciplineSplitListComponent } from '@wbs/components/_utils/discipline-split-list.component';
 import { ProjectCategory } from '@wbs/core/models';
+import { CategoryViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -31,7 +32,7 @@ import { ProjectCategory } from '@wbs/core/models';
 export class TreeDisciplineLegendComponent {
   readonly faCircleQuestion = faCircleQuestion;
   readonly show = signal(false);
-  readonly list = input.required<ProjectCategory[]>();
+  readonly list = input.required<CategoryViewModel[]>();
   readonly anchor = viewChild<ElementRef>('anchor');
   readonly popup = viewChild<ElementRef>('popup');
 

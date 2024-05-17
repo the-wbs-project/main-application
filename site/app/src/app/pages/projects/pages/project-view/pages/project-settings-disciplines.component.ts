@@ -7,11 +7,7 @@ import {
 } from '@angular/core';
 import { DisciplineSettingsPageComponent } from '@wbs/components/discipline-settings-page';
 import { DirtyComponent } from '@wbs/core/models';
-import {
-  CategorySelectionService,
-  SaveService,
-  SignalStore,
-} from '@wbs/core/services';
+import { CategoryService, SaveService, SignalStore } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { ChangeProjectDiscipines } from '../actions';
 import { ProjectState } from '../states';
@@ -28,7 +24,7 @@ import { ProjectState } from '../states';
   imports: [DisciplineSettingsPageComponent],
 })
 export class DisciplinesComponent implements DirtyComponent {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly store = inject(SignalStore);
   private readonly project = this.store.select(ProjectState.current);
 
@@ -53,7 +49,7 @@ export class DisciplinesComponent implements DirtyComponent {
     );
 
     this.saveService
-      .call(this.store.dispatch(new ChangeProjectDiscipines(results)))
+      .call(this.store.dispatch(new ChangeProjectDiscipines(results)), 250)
       .subscribe();
   }
 }

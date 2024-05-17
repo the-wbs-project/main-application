@@ -8,11 +8,102 @@ import { MetadataStore } from '@wbs/core/store';
 import {
   CategoryCancelConfirm,
   CategorySelection,
+  CategoryViewModel,
 } from '@wbs/core/view-models';
 
+const question = 'fa-question';
+
 @Injectable({ providedIn: 'root' })
-export class CategorySelectionService {
+export class CategoryService {
   private readonly metadata = inject(MetadataStore);
+
+  buildViewModels(disciplines: ProjectCategory[]): CategoryViewModel[] {
+    const results: CategoryViewModel[] = [];
+
+    for (const discipline of disciplines) {
+      if (discipline.isCustom) {
+        results.push({
+          id: discipline.id,
+          label: discipline.label,
+          icon: discipline.icon ?? question,
+          isCustom: true,
+        });
+      } else {
+        const cat = this.metadata.categories.disciplines.find(
+          (x) => x.id === discipline.id
+        );
+
+        if (cat) {
+          results.push({
+            id: cat.id,
+            label: cat.label,
+            icon: cat.icon ?? question,
+            isCustom: false,
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  buildViewModelsFromDefinitions(): CategoryViewModel[] {
+    const results: CategoryViewModel[] = [];
+
+    for (const cat of this.metadata.categories.disciplines) {
+      results.push({
+        id: cat.id,
+        label: cat.label,
+        icon: cat.icon ?? question,
+        isCustom: false,
+      });
+    }
+
+    return results;
+  }
+
+  buildTaskViewModels(
+    disciplines: ProjectCategory[],
+    selected: string[] | undefined
+  ): CategoryViewModel[] {
+    const results: CategoryViewModel[] = [];
+
+    for (const discipline of disciplines) {
+      if (!selected?.includes(discipline.id)) continue;
+
+      if (discipline.isCustom) {
+        results.push({
+          id: discipline.id,
+          label: discipline.label,
+          icon: discipline.icon ?? question,
+          isCustom: true,
+        });
+      } else {
+        const cat = this.metadata.categories.disciplines.find(
+          (x) => x.id === discipline.id
+        );
+
+        if (cat) {
+          results.push({
+            id: cat.id,
+            label: cat.label,
+            icon: cat.icon ?? question,
+            isCustom: false,
+          });
+        }
+      }
+    }
+
+    return results;
+  }
+
+  fromViewModels(list: CategoryViewModel[]): ProjectCategory[] {
+    return list.map((x) => {
+      if (x.isCustom)
+        return { id: x.id, isCustom: true, label: x.label, icon: x.icon };
+      else return { id: x.id, isCustom: false };
+    });
+  }
 
   isListDirty(list: CategorySelection[] | undefined): boolean {
     return (

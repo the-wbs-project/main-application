@@ -10,7 +10,12 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
-import { Messages, Transformers, TreeService } from '@wbs/core/services';
+import {
+  CategoryService,
+  Messages,
+  Transformers,
+  TreeService,
+} from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
 import { TaskTitleComponent } from '@wbs/components/task-title';
@@ -32,6 +37,7 @@ import { UiStore } from '@wbs/core/store';
   ],
 })
 export class LibraryImportTreeComponent {
+  private readonly categoryService = inject(CategoryService);
   private readonly messages = inject(Messages);
   private readonly transformer = inject(Transformers);
   readonly treeService = new TreeService();
@@ -40,11 +46,14 @@ export class LibraryImportTreeComponent {
   readonly version = input.required<LibraryEntryVersion>();
   readonly tasks = model.required<LibraryEntryNode[]>();
   readonly width = inject(UiStore).mainContentWidth;
+  readonly disciplines = computed(() =>
+    this.categoryService.buildViewModels(this.version()!.disciplines)
+  );
   readonly viewModels = computed(() =>
     this.transformer.nodes.phase.view.run(
       this.tasks(),
       this.entryType(),
-      this.version().disciplines
+      this.disciplines()
     )
   );
 

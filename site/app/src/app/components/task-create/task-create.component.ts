@@ -19,7 +19,7 @@ import {
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { ProjectCategory, TaskCreationResults } from '@wbs/core/models';
-import { CategorySelectionService } from '@wbs/core/services';
+import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -40,7 +40,7 @@ import { DisciplineEditorComponent } from '../discipline-editor';
   ],
 })
 export class TaskCreateComponent extends DialogContentBase {
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   readonly titleTextBox = viewChild<ElementRef>('titleTextBox');
 
   protected readonly title = model<string>('');

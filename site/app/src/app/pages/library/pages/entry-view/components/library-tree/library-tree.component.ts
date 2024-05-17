@@ -39,6 +39,7 @@ import {
   SaveState,
 } from '@wbs/core/models';
 import {
+  CategoryService,
   Messages,
   SignalStore,
   TreeService,
@@ -85,6 +86,7 @@ export class LibraryTreeComponent {
     viewChild<ContextMenuComponent>(ContextMenuComponent);
 
   private readonly actions = inject(EntryTaskActionService);
+  private readonly category = inject(CategoryService);
   private readonly menuService = inject(EntryTreeMenuService);
   private readonly store = inject(SignalStore);
   private readonly messages = inject(Messages);
@@ -113,6 +115,9 @@ export class LibraryTreeComponent {
       this.selectedTask(),
       this.claims()
     )
+  );
+  readonly disciplines = computed(() =>
+    this.category.buildViewModels(this.version().disciplines)
   );
 
   constructor() {

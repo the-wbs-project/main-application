@@ -18,7 +18,7 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { CategoryDialogResults } from '@wbs/core/models';
-import { CategorySelectionService, IdService } from '@wbs/core/services';
+import { CategoryService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { filter, map } from 'rxjs/operators';
 import { CategoryDialogComponent } from '../category-dialog';
@@ -42,7 +42,7 @@ import { SwitchComponent } from '../switch';
 export class PhaseEditorComponent {
   readonly saveClicked = output<void>();
 
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly dialogService = inject(DialogService);
 
   readonly faBars = faBars;

@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { TitleService } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
-import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import {
   InitiateChecklist,
@@ -15,7 +14,6 @@ import {
   VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { ProjectState } from '../states';
 import { ProjectBreadcrumbsService } from './project-breadcrumbs.service';
 
 export const closeApprovalWindowGuard = () =>
@@ -34,14 +32,7 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
         Utils.getParam(route, 'projectId')
       ),
     ])
-    .pipe(
-      switchMap(() => store.selectOnce(ProjectState.current)),
-      switchMap((project) => {
-        if (!project) return of(false);
-
-        return store.dispatch(new VerifyTasks(project, true));
-      })
-    );
+    .pipe(switchMap(() => store.dispatch(new VerifyTasks(true))));
 };
 
 export const projectNavGuard = (route: ActivatedRouteSnapshot) => {

@@ -1,14 +1,14 @@
 import { Injectable, inject } from '@angular/core';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ActivityData, LISTS, Project, ProjectNode } from '@wbs/core/models';
+import { ActivityData, LISTS, ProjectNode } from '@wbs/core/models';
 import {
   IdService,
   Messages,
   Transformers,
   WbsNodeService,
 } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
@@ -40,14 +40,15 @@ import {
   ProjectService,
   TimelineService,
 } from '../services';
+import { ProjectState } from './project.state';
 
 interface StateModel {
   currentId?: string;
   current?: WbsNodeView;
   navSection?: string;
-  project?: Project;
   nodes?: ProjectNode[];
   phases?: WbsNodeView[];
+  projectId?: string;
 }
 
 declare type Context = StateContext<StateModel>;
@@ -63,6 +64,7 @@ export class TasksState {
   private readonly messaging = inject(Messages);
   private readonly nav = inject(ProjectNavigationService);
   private readonly service = inject(ProjectService);
+  private readonly store = inject(Store);
   private readonly timeline = inject(TimelineService);
   private readonly transformers = inject(Transformers);
 
@@ -86,23 +88,25 @@ export class TasksState {
     return state.phases;
   }
 
+  private get project(): ProjectViewModel {
+    return this.store.selectSnapshot(ProjectState.current)!;
+  }
+
   @Selector()
   static taskCount(state: StateModel): number {
     return state.nodes?.filter((x) => x.parentId == null).length ?? 0;
   }
 
   @Action(VerifyTasks)
-  verifyTasks(
-    ctx: Context,
-    { project, force }: VerifyTasks
-  ): Observable<void> | void {
+  verifyTasks(ctx: Context, { force }: VerifyTasks): Observable<void> | void {
     const state = ctx.getState();
+    const project = this.project;
 
-    if (state.project?.id === project.id && !force) return;
+    if (project.id === state.projectId && !force) return;
 
     return this.data.projectNodes.getAllAsync(project.owner, project.id).pipe(
-      tap((nodes) => ctx.patchState({ project, nodes })),
-      switchMap(() => ctx.dispatch([new RebuildNodeViews()]))
+      tap((nodes) => ctx.patchState({ nodes })),
+      switchMap(() => this.rebuildNodeViews(ctx))
     );
   }
 
@@ -129,19 +133,20 @@ export class TasksState {
   }
 
   @Action(RebuildNodeViews)
-  rebuildNodeViews(ctx: Context): Observable<void> | void {
+  rebuildNodeViews(ctx: Context): Observable<void> {
     let state = ctx.getState();
+    const project = this.project;
 
-    if (!state.project || !state.nodes) return;
+    if (!project || !state.nodes) return of();
 
     const disciplines = this.transformers.nodes.discipline.view.run(
-      state.project,
+      project.disciplines,
       state.nodes
     );
     const phases = this.transformers.nodes.phase.view.run(
       state.nodes,
       'project',
-      state.project.disciplines
+      project.disciplines
     );
     ctx.patchState({ phases });
 
@@ -163,7 +168,7 @@ export class TasksState {
     { nodeId, reason, completedAction }: RemoveTask
   ): Observable<any> | void {
     const state = ctx.getState();
-    const project = state.project!;
+    const project = this.project;
     const nodes = structuredClone(state.nodes)!;
     const nodeIndex = nodes.findIndex((x) => x.id === nodeId);
     const node = nodes[nodeIndex];
@@ -185,7 +190,7 @@ export class TasksState {
       .pipe(
         map(() => ctx.patchState({ nodes })),
         tap(() => this.messaging.notify.success('Projects.TaskRemoved')),
-        switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+        switchMap(() => this.rebuildNodeViews(ctx)),
         tap(() =>
           this.saveActivity({
             action: TASK_ACTIONS.REMOVED,
@@ -193,7 +198,7 @@ export class TasksState {
               title: node.title,
               reason: reason,
             },
-            topLevelId: state.project!.id,
+            topLevelId: project.id,
             objectId: nodeId,
           })
         ),
@@ -209,31 +214,26 @@ export class TasksState {
     { removedIds }: RemoveDisciplinesFromTasks
   ): Observable<any> | void {
     const state = ctx.getState();
+    const project = this.project;
     const nodes = structuredClone(state.nodes)!;
     const toSave: ProjectNode[] = [];
 
     for (const node of nodes) {
       if (!node.disciplineIds) continue;
 
-      let save = false;
+      let newList = node.disciplineIds.filter((x) => !removedIds.includes(x));
 
-      for (let i = 0; i < node.disciplineIds.length; i++) {
-        const id = node.disciplineIds[i];
+      if (node.disciplineIds.length === newList.length) continue;
 
-        if (removedIds.indexOf(id) === -1) continue;
-
-        node.disciplineIds.splice(i, 1);
-        i--;
-        save = true;
-      }
-      if (save) toSave.push(node);
+      node.disciplineIds = newList;
+      toSave.push(node);
     }
 
     return this.data.projectNodes
-      .putAsync(state.project!.owner, state.project!.id, toSave, [])
+      .putAsync(project.owner, project.id, toSave, [])
       .pipe(
         tap(() => ctx.patchState({ nodes })),
-        tap(() => ctx.dispatch(new RebuildNodeViews()))
+        switchMap(() => this.rebuildNodeViews(ctx))
       );
   }
 
@@ -243,13 +243,12 @@ export class TasksState {
     { taskId, disciplineId }: AddDisciplineToTask
   ): void | Observable<void> {
     const state = ctx.getState();
+    const project = this.project;
     const nodes = structuredClone(state.nodes)!;
-    const phases = structuredClone(state.phases)!;
     const model = nodes.find((x) => x.id === taskId)!;
-    const viewModel = phases.find((x) => x.id === taskId)!;
     const from = [...(model.disciplineIds ?? [])];
 
-    if (!model || !viewModel) return;
+    if (!model) return;
 
     if (model.disciplineIds) {
       if (model.disciplineIds.indexOf(disciplineId) === -1)
@@ -257,14 +256,12 @@ export class TasksState {
       else return;
     } else model.disciplineIds = [disciplineId];
 
-    viewModel.disciplines = model.disciplineIds;
     model.lastModified = new Date();
-    viewModel.lastModified = model.lastModified;
 
     const activityData: ActivityData = {
       action: TASK_ACTIONS.DISCIPLINES_CHANGED,
       objectId: model.id,
-      topLevelId: state.project!.id,
+      topLevelId: project.id,
       data: {
         title: model.title,
         from,
@@ -273,8 +270,9 @@ export class TasksState {
     };
 
     return this.saveTask(ctx, model).pipe(
-      tap(() => ctx.patchState({ nodes, phases })),
-      tap(() => this.saveActivity(activityData))
+      tap(() => ctx.patchState({ nodes })),
+      tap(() => this.saveActivity(activityData)),
+      switchMap(() => this.rebuildNodeViews(ctx))
     );
   }
 
@@ -284,28 +282,24 @@ export class TasksState {
     { taskId, disciplineId }: RemoveDisciplineToTask
   ): void | Observable<void> {
     const state = ctx.getState();
+    const project = this.project;
     const nodes = structuredClone(state.nodes)!;
-    const phases = structuredClone(state.phases)!;
     const model = nodes.find((x) => x.id === taskId)!;
-    const viewModel = phases.find((x) => x.id === taskId)!;
     const from = [...(model.disciplineIds ?? [])];
 
-    if (!model?.disciplineIds || !viewModel) return;
+    if (!model?.disciplineIds) return;
 
     const index = model.disciplineIds.indexOf(disciplineId);
 
     if (index === -1) return;
 
     model.disciplineIds.splice(index, 1);
-    viewModel.disciplines = model.disciplineIds;
-
     model.lastModified = new Date();
-    viewModel.lastModified = model.lastModified;
 
     const activityData: ActivityData = {
       action: TASK_ACTIONS.DISCIPLINES_CHANGED,
       objectId: model.id,
-      topLevelId: state.project!.id,
+      topLevelId: project.id,
       data: {
         title: model.title,
         from,
@@ -314,14 +308,16 @@ export class TasksState {
     };
 
     return this.saveTask(ctx, model).pipe(
-      tap(() => ctx.patchState({ nodes, phases })),
-      tap(() => this.saveActivity(activityData))
+      tap(() => ctx.patchState({ nodes })),
+      tap(() => this.saveActivity(activityData)),
+      switchMap(() => this.rebuildNodeViews(ctx))
     );
   }
 
   @Action(CloneTask)
   cloneTask(ctx: Context, action: CloneTask): void | Observable<void> {
     const state = ctx.getState();
+    const project = this.project;
     const nodes = state.nodes ?? [];
     const node = nodes.find((x) => x.id === action.nodeId);
     const nodeVm = state.phases!.find((x) => x.id === action.nodeId);
@@ -357,19 +353,18 @@ export class TasksState {
           nodes,
         });
       }),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
       tap(() =>
         this.saveActivity({
           data: {
             title: node.title,
             level: nodeVm!.levelText,
           },
-          topLevelId: state.project!.id,
+          topLevelId: project.id,
           objectId: newNode.id,
           action: TASK_ACTIONS.CLONED,
         })
       ),
-      tap(() => this.messaging.notify.success('Projects.TaskCloned'))
+      switchMap(() => this.rebuildNodeViews(ctx))
     );
   }
 
@@ -514,7 +509,7 @@ export class TasksState {
     const state = ctx.getState();
     const nodes = state.nodes!;
     const model = this.service.createTask(
-      state.project!.id,
+      this.project.id,
       action.parentId,
       action.model,
       nodes
@@ -528,14 +523,14 @@ export class TasksState {
           nodes,
         });
       }),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() => this.rebuildNodeViews(ctx)),
       tap(() => {
         this.messaging.notify.success('Projects.TaskCreated');
         this.saveActivity({
           data: {
             title: model.title,
           },
-          topLevelId: state.project!.id,
+          topLevelId: this.project.id,
           objectId: model.id,
           action: TASK_ACTIONS.CREATED,
         });
@@ -558,7 +553,7 @@ export class TasksState {
     if (model.title !== title) {
       activities.push({
         action: TASK_ACTIONS.TITLE_CHANGED,
-        topLevelId: state.project!.id,
+        topLevelId: this.project.id,
         objectId: model.id,
         data: {
           from: viewModel.title,
@@ -573,7 +568,7 @@ export class TasksState {
       activities.push({
         action: TASK_ACTIONS.DESCRIPTION_CHANGED,
         objectId: model.id,
-        topLevelId: state.project!.id,
+        topLevelId: this.project.id,
         data: {
           title: model.title,
           from: model.description,
@@ -598,7 +593,7 @@ export class TasksState {
             current: viewModel,
           });
       }),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() => this.rebuildNodeViews(ctx)),
       tap(() => this.saveActivity(...activities))
     );
   }
@@ -626,7 +621,7 @@ export class TasksState {
     const activityData: ActivityData = {
       action: TASK_ACTIONS.DISCIPLINES_CHANGED,
       objectId: model.id,
-      topLevelId: state.project!.id,
+      topLevelId: this.project.id,
       data: {
         taskName,
         from: model.disciplineIds,
@@ -634,7 +629,6 @@ export class TasksState {
       },
     };
     model.disciplineIds = disciplines;
-    viewModel.disciplines = disciplines;
 
     const now = new Date();
 
@@ -648,7 +642,7 @@ export class TasksState {
           nodes: state.nodes,
         });
       }),
-      switchMap(() => ctx.dispatch(new RebuildNodeViews())),
+      switchMap(() => this.rebuildNodeViews(ctx)),
       tap(() => this.saveActivity(activityData))
     );
   }
@@ -672,9 +666,8 @@ export class TasksState {
 
         if (activityInfo) this.saveActivity(activityInfo);
       }),
-      switchMap(() =>
-        ctx.dispatch([new MarkProjectChanged(), new RebuildNodeViews()])
-      )
+      switchMap(() => ctx.dispatch(new MarkProjectChanged())),
+      switchMap(() => this.rebuildNodeViews(ctx))
     );
   }
 
@@ -685,7 +678,7 @@ export class TasksState {
   }
 
   private saveTask(ctx: Context, task: ProjectNode): Observable<void> {
-    const project = ctx.getState().project!;
+    const project = this.project;
 
     task.lastModified = new Date();
 
@@ -700,7 +693,7 @@ export class TasksState {
     mainTask: ProjectNode,
     others: ProjectNode[]
   ): Observable<void> {
-    const project = ctx.getState().project!;
+    const project = this.project;
 
     return this.bulkSave(ctx, [mainTask, ...others], []).pipe(
       tap(() => {
@@ -727,7 +720,7 @@ export class TasksState {
     upserts: ProjectNode[],
     toRemoveIds: string[]
   ): Observable<void> {
-    const project = ctx.getState().project!;
+    const project = this.project;
 
     return this.data.projectNodes
       .putAsync(project.owner, project.id, upserts, toRemoveIds)
@@ -750,7 +743,7 @@ export class TasksState {
             nodes: structuredClone(tasks),
           });
         }),
-        switchMap(() => ctx.dispatch(new RebuildNodeViews()))
+        switchMap(() => this.rebuildNodeViews(ctx))
       );
   }
 }

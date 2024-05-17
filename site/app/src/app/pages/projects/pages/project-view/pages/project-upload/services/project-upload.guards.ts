@@ -3,15 +3,16 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_CLAIMS, Project } from '@wbs/core/models';
+import { PROJECT_CLAIMS } from '@wbs/core/models';
 import { UiStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { first, map, skipWhile, switchMap, tap } from 'rxjs/operators';
 import { ProjectState } from '../../../states';
 import { SetAsStarted, SetProject } from '../actions';
 import { ProjectUploadState } from '../states';
 
-function getProject(store: Store): Observable<Project> {
+function getProject(store: Store): Observable<ProjectViewModel> {
   return store.select(ProjectState.current).pipe(
     skipWhile((x) => x == undefined),
     map((x) => x!),
@@ -20,7 +21,7 @@ function getProject(store: Store): Observable<Project> {
 }
 
 function redirect(store: Store) {
-  return store.selectOnce(ProjectUploadState.current).pipe(
+  return store.selectOnce(ProjectState.current).pipe(
     map((p) => p!),
     tap((p) =>
       store.dispatch(
@@ -73,7 +74,7 @@ export const setupGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
   const uiStore = inject(UiStore);
 
-  return store.selectOnce(ProjectUploadState.current).pipe(
+  return store.selectOnce(ProjectState.current).pipe(
     map((p) => p!),
     tap((project) => {
       uiStore.setBreadcrumbs([

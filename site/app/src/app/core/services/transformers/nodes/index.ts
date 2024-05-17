@@ -1,4 +1,4 @@
-import { Resources } from '@wbs/core/services';
+import { CategoryService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { WbsNodeService } from '../../wbs-node.service';
 import { WbsDisciplineNodeTransformers } from './discipline';
@@ -6,14 +6,17 @@ import { WbsPhaseNodeTransformers } from './phase';
 
 export class WbsNodeTransformers {
   readonly discipline = new WbsDisciplineNodeTransformers(
-    this.metadata,
+    this.categoryService,
     this.wbsService
   );
-  readonly phase = new WbsPhaseNodeTransformers(this.metadata, this.resources);
+  readonly phase = new WbsPhaseNodeTransformers(
+    this.categoryService,
+    this.metadata
+  );
 
   constructor(
+    private readonly categoryService: CategoryService,
     private readonly metadata: MetadataStore,
-    private readonly resources: Resources,
     private readonly wbsService: WbsNodeService
   ) {}
 }

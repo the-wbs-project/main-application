@@ -1,23 +1,24 @@
 import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext } from '@ngxs/store';
+import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ImportPerson,
   ImportResultStats,
-  Project,
   WbsImportResult,
   UploadResults,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Transformers } from '@wbs/core/services';
+import { CategoryService, Transformers } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { catchError, map, switchMap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../../../models';
-import { VerifyTasks } from '../../../actions';
+import { SaveProject, VerifyTasks } from '../../../actions';
+import { ProjectState } from '../../../states';
 import {
   AppendOrOvewriteSelected,
   CreateJiraTicket,
@@ -29,7 +30,6 @@ import {
   SaveUpload,
   SetAsStarted,
   SetPageTitle,
-  SetProject,
 } from '../actions';
 
 const EXTENSION_PAGES: Record<string, string> = {
@@ -44,7 +44,6 @@ interface StateModel {
   loadingFile: boolean;
   pageTitle?: string;
   peopleList?: ImportPerson[];
-  project?: Project;
   rawFile?: FileInfo;
   saving: boolean;
   started: boolean;
@@ -62,16 +61,13 @@ interface StateModel {
   },
 })
 export class ProjectUploadState {
+  private readonly categoryService = inject(CategoryService);
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
+  private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
   private readonly userStore = inject(UserStore);
-
-  @Selector()
-  static current(state: StateModel): Project | undefined {
-    return state.project;
-  }
 
   @Selector()
   static isOverwrite(state: StateModel): boolean {
@@ -125,16 +121,15 @@ export class ProjectUploadState {
     return state.uploadResults;
   }
 
+  private get project(): ProjectViewModel {
+    return this.store.selectSnapshot(ProjectState.current)!;
+  }
+
   @Action(SetAsStarted)
   setAsStarted(ctx: StateContext<StateModel>): void {
     ctx.patchState({
       started: true,
     });
-  }
-
-  @Action(SetProject)
-  setProject(ctx: StateContext<StateModel>, { project }: SetProject): void {
-    ctx.patchState({ project });
   }
 
   @Action(SetPageTitle)
@@ -164,14 +159,14 @@ export class ProjectUploadState {
 
     if (!fileType) {
       return ctx.dispatch(
-        new Navigate([...this.urlPrefix(ctx), 'ticket', 'other'])
+        new Navigate([...this.urlPrefix(), 'ticket', 'other'])
       );
     }
     ctx.patchState({
       loadingFile: true,
     });
 
-    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'results']));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(), 'results']));
   }
 
   @Action(LoadProjectFile)
@@ -193,7 +188,7 @@ export class ProjectUploadState {
           : of();
       }),
       catchError((err, caught) =>
-        ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'ticket', 'error']))
+        ctx.dispatch(new Navigate([...this.urlPrefix(), 'ticket', 'error']))
       )
     );
   }
@@ -276,7 +271,7 @@ export class ProjectUploadState {
     });
     const urlSuffix =
       ctx.getState().fileType === 'excel' ? 'saving' : 'disciplines';
-    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), urlSuffix]));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(), urlSuffix]));
   }
 
   @Action(PeopleCompleted)
@@ -287,7 +282,7 @@ export class ProjectUploadState {
     ctx.patchState({
       peopleList: results,
     });
-    return ctx.dispatch(new Navigate([...this.urlPrefix(ctx), 'saving']));
+    return ctx.dispatch(new Navigate([...this.urlPrefix(), 'saving']));
   }
 
   @Action(PrepUploadToSave)
@@ -301,7 +296,7 @@ export class ProjectUploadState {
     //
     //  Put people into map
     //
-    const pDisciplines = state.project?.disciplines ?? [];
+    const pDisciplines = this.project.disciplines;
     const cDisciplines = this.metadata.categories.disciplines;
 
     for (const person of state.peopleList ?? []) {
@@ -327,7 +322,7 @@ export class ProjectUploadState {
     for (const node of state.uploadResults?.results ?? []) {
       nodes.set(node.levelText, node);
     }
-    const proj = state.project!;
+    const proj = this.project;
 
     return forkJoin({
       project: this.data.projects.getAsync(proj.owner, proj.id),
@@ -358,16 +353,13 @@ export class ProjectUploadState {
     ctx: StateContext<StateModel>,
     { results }: SaveUpload
   ): void | Observable<any> {
-    const state = ctx.getState();
-    const project = state.project!;
+    const project = this.project;
 
-    project.disciplines = results.disciplines;
+    project.disciplines = this.categoryService.buildViewModels(
+      results.disciplines
+    );
 
-    const saves: Observable<any>[] = [
-      this.data.projects
-        .putAsync(project)
-        .pipe(tap(() => ctx.patchState({ project }))),
-    ];
+    const saves: Observable<any>[] = [ctx.dispatch(new SaveProject(project))];
 
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
@@ -402,12 +394,12 @@ export class ProjectUploadState {
           ]
         )
       ),
-      switchMap(() => ctx.dispatch(new VerifyTasks(project, true)))
+      switchMap(() => ctx.dispatch(new VerifyTasks(true)))
     );
   }
 
-  private urlPrefix(ctx: StateContext<StateModel>): string[] {
-    const p = ctx.getState().project!;
+  private urlPrefix(): string[] {
+    const p = this.project;
 
     return ['/', p.owner, 'projects', 'view', p.id, 'upload'];
   }

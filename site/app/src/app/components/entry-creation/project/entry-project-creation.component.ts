@@ -30,7 +30,7 @@ import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { PhaseEditorComponent } from '@wbs/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
-import { CategorySelectionService } from '@wbs/core/services';
+import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { MetadataStore } from '@wbs/core/store';
@@ -60,7 +60,7 @@ import { SaveSectionComponent } from './save-section';
 export class EntryProjectCreationComponent extends DialogContentBase {
   readonly done = output<void>();
 
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
 
   readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');

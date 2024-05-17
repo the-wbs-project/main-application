@@ -10,9 +10,9 @@ import {
   SelectableSettings,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { Project } from '@wbs/core/models';
-import { SignalStore, Transformers, TreeService } from '@wbs/core/services';
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { SignalStore, Transformers, TreeService } from '@wbs/core/services';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { TasksState } from '../../../../states';
 import { DisciplineIdsPipe } from './discipline-ids.pipe';
 
@@ -39,10 +39,13 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   };
 
   readonly treeService = new TreeService();
-  readonly project = input.required<Project>();
+  readonly project = input.required<ProjectViewModel>();
   readonly nodes = this.store.select(TasksState.nodes);
   readonly disciplines = computed(() =>
-    this.transformers.nodes.discipline.view.run(this.project(), this.nodes()!)
+    this.transformers.nodes.discipline.view.run(
+      this.project().disciplines,
+      this.nodes()!
+    )
   );
 
   constructor(

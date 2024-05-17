@@ -1,17 +1,18 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
-import { PROJECT_NODE_VIEW } from '@wbs/core/models';
-import { SignalStore, TreeService } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { PROJECT_NODE_VIEW } from '@wbs/core/models';
+import { CategoryService, SignalStore, TreeService } from '@wbs/core/services';
 import { EntryStore, UiStore } from '@wbs/core/store';
 
 @Component({
@@ -27,6 +28,7 @@ import { EntryStore, UiStore } from '@wbs/core/store';
   ],
 })
 export class SubTasksComponent {
+  private readonly categoryService = inject(CategoryService);
   private readonly store = inject(SignalStore);
 
   readonly entryStore = inject(EntryStore);
@@ -38,6 +40,9 @@ export class SubTasksComponent {
   readonly phaseView = PROJECT_NODE_VIEW.PHASE;
   readonly width = inject(UiStore).mainContentWidth;
   readonly task = this.entryStore.getTask(this.taskId);
+  readonly disciplines = computed(() =>
+    this.categoryService.buildViewModels(this.entryStore.version()!.disciplines)
+  );
 
   clickedId?: string;
 

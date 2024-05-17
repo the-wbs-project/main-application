@@ -8,8 +8,7 @@
   <wbs-discipline-card
     [splitLimit]="750"
     [alertIfEmpty]="true"
-    [fullList]="disciplines()"
-    [selectedList]="task?.disciplines ?? []"
+    [items]="task?.disciplines ?? []"
     noDisciplinesLabel="Library.NoDisciplinesTask"
     [canEdit]="claims() | check : UPDATE_CLAIM"
     [editRoute]="['../', 'settings', 'disciplines']"

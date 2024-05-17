@@ -9,7 +9,7 @@ import {
   RoutedBreadcrumbItem,
 } from '@wbs/core/models';
 import { UiStore } from '@wbs/core/store';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { Subscription } from 'rxjs';
 import { PROJECT_NAVIGATION, TASK_NAVIGATION } from '../models';
 import { ProjectState, TasksState } from '../states';
@@ -52,7 +52,7 @@ export class ProjectBreadcrumbsService {
       });
   }
 
-  private getProject(): Project {
+  private getProject(): ProjectViewModel {
     return this.store.selectSnapshot(ProjectState.current)!;
   }
 
@@ -60,7 +60,10 @@ export class ProjectBreadcrumbsService {
     return this.store.selectSnapshot(TasksState.current)!;
   }
 
-  private project(project: Project, route: ActivatedRouteSnapshot): void {
+  private project(
+    project: ProjectViewModel,
+    route: ActivatedRouteSnapshot
+  ): void {
     const currentUrl = ProjectService.getProjectUrl(route);
     const crumbSections = route.data['crumbs'];
     let link: NavigationLink | undefined;
@@ -101,7 +104,7 @@ export class ProjectBreadcrumbsService {
   }
 
   private task(
-    project: Project,
+    project: ProjectViewModel,
     task: WbsNodeView,
     route: ActivatedRouteSnapshot
   ): void {

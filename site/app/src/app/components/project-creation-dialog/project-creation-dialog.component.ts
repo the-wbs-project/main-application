@@ -37,7 +37,7 @@ import {
   LibraryEntryVersion,
   Member,
 } from '@wbs/core/models';
-import { CategorySelectionService, IdService } from '@wbs/core/services';
+import { CategoryService, IdService } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
@@ -70,7 +70,7 @@ import { SaveSectionComponent } from './components/save-section';
 })
 export class ProjectCreationComponent extends DialogContentBase {
   private readonly metadata = inject(MetadataStore);
-  private readonly catService = inject(CategorySelectionService);
+  private readonly catService = inject(CategoryService);
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
 

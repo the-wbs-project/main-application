@@ -3,24 +3,24 @@ import {
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
-  Category,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Transformers } from '@wbs/core/services';
+import { CategoryService, Transformers } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from './metdata.store';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
-  private transformer = inject(Transformers);
-  private metadata = inject(MetadataStore);
+  private readonly categoryService = inject(CategoryService);
+  private readonly transformer = inject(Transformers);
 
-  private _entry = signal<LibraryEntry | undefined>(undefined);
-  private _version = signal<LibraryEntryVersion | undefined>(undefined);
-  private _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
-  private _viewModels = signal<WbsNodeView[] | undefined>(undefined);
-  private _navSectionEntry = signal<string | undefined>(undefined);
-  private _navSectionTask = signal<string | undefined>(undefined);
+  private readonly _entry = signal<LibraryEntry | undefined>(undefined);
+  private readonly _version = signal<LibraryEntryVersion | undefined>(
+    undefined
+  );
+  private readonly _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
+  private readonly _viewModels = signal<WbsNodeView[] | undefined>(undefined);
+  private readonly _navSectionEntry = signal<string | undefined>(undefined);
+  private readonly _navSectionTask = signal<string | undefined>(undefined);
 
   get entry(): Signal<LibraryEntry | undefined> {
     return this._entry;
@@ -118,9 +118,9 @@ export class EntryStore {
     return this.transformer.nodes.phase.view.run(
       tasks,
       entryType,
-      disciplines.length === 0
-        ? this.metadata.categories.disciplines
-        : disciplines
+      disciplines.length > 0
+        ? this.categoryService.buildViewModels(disciplines)
+        : this.categoryService.buildViewModelsFromDefinitions()
     );
   }
 }
