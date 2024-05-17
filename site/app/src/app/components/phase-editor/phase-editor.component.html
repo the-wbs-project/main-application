@@ -1,7 +1,7 @@
 @if (showButtons()) {
 <div class="pd-b-10 text-center">
   @if (showAdd()) {
-  <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
+  <button class="btn btn-outline-dark mg-x-10" (click)="add()">
     <fa-icon [icon]="faPlus" />
     {{ "General.Add" | translate }}
   </button>

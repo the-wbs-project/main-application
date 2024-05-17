@@ -17,16 +17,13 @@ import {
   DialogModule,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import {
-  ListItemDialogComponent,
-  ListItemDialogResults,
-} from '@wbs/components/list-item-dialog';
-import { ListItemFormComponent } from '@wbs/components/list-item-form';
+import { CategoryDialogResults } from '@wbs/core/models';
 import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
 import { filter, map } from 'rxjs/operators';
 import { SwitchComponent } from '../switch';
+import { CategoryDialogComponent } from '../category-dialog';
 
 @Component({
   standalone: true,
@@ -40,7 +37,6 @@ import { SwitchComponent } from '../switch';
     DisciplineIconPipe,
     DragDropModule,
     FontAwesomeModule,
-    ListItemFormComponent,
     NgClass,
     TranslateModule,
     SwitchComponent,
@@ -56,7 +52,7 @@ export class DisciplineEditorComponent {
   readonly showAdd = input<boolean>(false);
   readonly showSave = input<boolean>(false);
   readonly saveClicked = output<void>();
-  readonly categoryCreated = output<ListItemDialogResults>();
+  readonly categoryCreated = output<CategoryDialogResults>();
   //
   //  Models and computes
   //
@@ -83,17 +79,10 @@ export class DisciplineEditorComponent {
   }
 
   showCreate() {
-    const dialogRef = this.dialogService.open({
-      content: ListItemDialogComponent,
-    });
-
-    (<ListItemDialogComponent>dialogRef.content.instance).showDescription.set(
-      false
-    );
-    dialogRef.result
+    CategoryDialogComponent.launchAsync(this.dialogService, false, true)
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
-        map((x) => <ListItemDialogResults>x)
+        map((x) => <CategoryDialogResults>x)
       )
       .subscribe((result) => {
         this.categoryCreated.emit(result);

@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
-import { Action, Selector, State, StateContext, Store } from '@ngxs/store';
+import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
@@ -8,10 +8,16 @@ import {
   ImportResultStats,
   WbsImportResult,
   UploadResults,
+  ProjectCategory,
 } from '@wbs/core/models';
 import { Transformers, Utils } from '@wbs/core/services';
 import { EntryActivityService } from '@wbs/core/services/library';
-import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
+import {
+  EntryStore,
+  MembershipStore,
+  MetadataStore,
+  UserStore,
+} from '@wbs/core/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
@@ -60,7 +66,7 @@ export class EntryUploadState {
   private readonly data = inject(DataServiceFactory);
   private readonly entryStore = inject(EntryStore);
   private readonly membership = inject(MembershipStore);
-  private readonly store = inject(Store);
+  private readonly metadata = inject(MetadataStore);
   private readonly transformer = inject(Transformers);
   private readonly profile = inject(UserStore).profile;
 
@@ -275,17 +281,31 @@ export class EntryUploadState {
       saving: true,
     });
     const state = ctx.getState();
-    const people = new Map<string, string>();
+    const people = new Map<string, ProjectCategory>();
     const nodes = new Map<string, WbsImportResult>();
     //
     //  Put people into map
     //
+    const pDisciplines = this.entryStore.version()?.disciplines ?? [];
+    const cDisciplines = this.metadata.categories.disciplines;
+
     for (const person of state.peopleList ?? []) {
-      if (person.disciplineId === undefined) continue;
+      if (person.discipline === undefined) continue;
 
-      people.set(person.name.toLowerCase(), person.disciplineId);
+      const p = pDisciplines.find(
+        (x) => x.isCustom == true && x.id === person.discipline
+      );
+
+      if (p) {
+        people.set(person.name.toLowerCase(), p);
+        continue;
+      }
+
+      const d = cDisciplines.find((x) => x.id === person.discipline);
+
+      if (d)
+        people.set(person.name.toLowerCase(), { id: d.id, isCustom: false });
     }
-
     //
     //  Put nodes into map
     //

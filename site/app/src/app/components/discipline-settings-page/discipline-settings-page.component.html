@@ -13,10 +13,7 @@
           cssClass="tx-success tx-12 mg-r-10"
         />
         @if (canAdd()) {
-        <button
-          class="btn btn-sm btn-dark mg-r-10"
-          (click)="showAddDialog.set(true)"
-        >
+        <button class="btn btn-sm btn-dark mg-r-10" (click)="add()">
           <fa-icon [icon]="plus" />&nbsp; {{ "General.Add" | translate }}
         </button>
         }
@@ -35,11 +32,3 @@
     </div>
   </div>
 </div>
-
-@if (showAddDialog()) {
-<wbs-category-dialog
-  titleText="Wbs.AddDiscipline"
-  [includeDescription]="false"
-  (closed)="create($event)"
-/>
-}

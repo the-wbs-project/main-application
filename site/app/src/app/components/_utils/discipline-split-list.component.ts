@@ -46,8 +46,8 @@ import { DisciplineListComponent } from './discipline-list.component';
 export class DisciplineSplitListComponent {
   readonly width = inject(UiStore).mainContentWidth;
 
-  readonly selectedList = input.required<ProjectCategory[]>();
-  readonly fullList = input.required<ProjectCategory[]>();
+  readonly selectedList = input.required<ProjectCategory[] | string[]>();
+  readonly fullList = input<ProjectCategory[]>();
   readonly splitLimit = input.required<number>();
   readonly altClass = input<string>();
   readonly itemClass = input<string>();

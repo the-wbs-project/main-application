@@ -5,11 +5,14 @@ import {
   input,
   model,
   output,
-  signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  DialogCloseResult,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { CategoryDialogComponent } from '@wbs/components/category-dialog';
@@ -21,6 +24,7 @@ import {
   SaveService,
 } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { filter, map } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -38,6 +42,7 @@ import { CategorySelection } from '@wbs/core/view-models';
 })
 export class DisciplineSettingsPageComponent {
   private readonly catService = inject(CategorySelectionService);
+  private readonly dialog = inject(DialogService);
 
   readonly plus = faPlus;
   readonly checkIcon = faCheck;
@@ -46,25 +51,31 @@ export class DisciplineSettingsPageComponent {
   readonly disciplines = model.required<CategorySelection[] | undefined>();
   readonly saveClicked = output<void>();
 
-  readonly showAddDialog = signal(false);
-
-  create(results: CategoryDialogResults | undefined): void {
-    this.showAddDialog.set(false);
-
-    if (results == null) return;
-
-    const item: CategorySelection = {
-      id: IdService.generate(),
-      isCustom: true,
-      label: results.title,
-      icon: results.icon,
-      description: results.description,
-      selected: true,
-    };
-    this.disciplines.update((list) => {
-      list = [item, ...(list ?? [])];
-      this.catService.renumber(list);
-      return list;
-    });
+  add(): void {
+    CategoryDialogComponent.launchAsync(
+      this.dialog,
+      false,
+      true,
+      'Wbs.AddDiscipline'
+    )
+      .pipe(
+        filter((x) => !(x instanceof DialogCloseResult)),
+        map((x) => <CategoryDialogResults>x)
+      )
+      .subscribe((results) => {
+        const item: CategorySelection = {
+          id: IdService.generate(),
+          isCustom: true,
+          label: results.title,
+          icon: results.icon,
+          description: results.description,
+          selected: true,
+        };
+        this.disciplines.update((list) => {
+          list = [item, ...(list ?? [])];
+          this.catService.renumber(list);
+          return list;
+        });
+      });
   }
 }

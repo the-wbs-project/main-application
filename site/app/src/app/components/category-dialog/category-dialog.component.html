@@ -1,7 +1,7 @@
 <kendo-dialog
   width="500px"
   [title]="titleText() | translate"
-  (close)="closed.emit(undefined)"
+  (close)="dialog.close()"
 >
   <form [formGroup]="form" (submit)="close()">
     <div class="form-group">

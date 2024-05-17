@@ -1,54 +1,106 @@
-import { importProvidersFrom, inject } from '@angular/core';
-import { Routes } from '@angular/router';
-import { NgxsModule, Store } from '@ngxs/store';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_CLAIMS, Project } from '@wbs/core/models';
-import { Observable } from 'rxjs';
-import { first, map, skipWhile, switchMap } from 'rxjs/operators';
-import { ProjectState } from '../../states';
-import { SetProject } from './actions';
+import { Component, importProvidersFrom } from '@angular/core';
+import { RouterModule, Routes } from '@angular/router';
+import { NgxsModule } from '@ngxs/store';
+import {
+  disciplineListResolver,
+  setupGuard,
+  startGuard,
+  startPageGuard,
+  verifyGuard,
+  verifyStartedGuard,
+} from './services';
 import { ProjectUploadState } from './states';
+import { projectUrlResolve } from '../../services';
 
-function getProject(store: Store): Observable<Project> {
-  return store.select(ProjectState.current).pipe(
-    skipWhile((x) => x == undefined),
-    map((x) => x!),
-    first()
-  );
-}
-
-const verifyGuard = () => {
-  const store = inject(Store);
-  const data = inject(DataServiceFactory);
-
-  return getProject(store).pipe(
-    switchMap((p) => data.claims.getProjectClaimsAsync(p.owner, p.id)),
-    map((claims) => claims.includes(PROJECT_CLAIMS.TASKS.UPDATE))
-  );
-};
-
-const startGuard = () => {
-  const store = inject(Store);
-  return getProject(store).pipe(
-    switchMap((project) => store.dispatch(new SetProject(project))),
-    map(() => true)
-  );
-};
+@Component({
+  standalone: true,
+  template: '<router-outlet />',
+  imports: [RouterModule],
+})
+export class LayoutComponent {}
 
 export const routes: Routes = [
   {
     path: '',
     canActivate: [verifyGuard, startGuard],
-    loadComponent: () =>
-      import('./upload-layout.component').then(
-        (x) => x.ProjectUploadLayoutComponent
-      ),
-
-    loadChildren: () =>
-      import('./pages/children.routes').then(({ routes }) => routes),
-
+    component: LayoutComponent,
     providers: [
       importProvidersFrom(NgxsModule.forFeature([ProjectUploadState])),
+    ],
+    children: [
+      { path: '', redirectTo: 'start', pathMatch: 'full' },
+      {
+        path: 'start',
+        canActivate: [startPageGuard, setupGuard],
+        data: {
+          title: 'ProjectUpload.Page_LetsGetStarted',
+        },
+        loadComponent: () =>
+          import('./pages/start-view.component').then(
+            (x) => x.StartViewComponent
+          ),
+      },
+      {
+        path: 'results',
+        canActivate: [verifyStartedGuard, setupGuard],
+        data: {
+          title: 'ProjectUpload.Page_UploadResults',
+        },
+        loadComponent: () =>
+          import('./pages/results-view.component').then(
+            (x) => x.ResultsViewComponent
+          ),
+      },
+      {
+        path: 'options',
+        canActivate: [verifyStartedGuard, setupGuard],
+        data: {
+          title: 'ProjectUpload.Page_Options',
+        },
+        loadComponent: () =>
+          import('./pages/options-view.component').then(
+            (x) => x.OptionsViewComponent
+          ),
+      },
+      {
+        path: 'disciplines',
+        canActivate: [verifyStartedGuard, setupGuard],
+        data: {
+          title: 'ProjectUpload.Page_Disciplines',
+        },
+        resolve: {
+          disciplines: disciplineListResolver,
+        },
+        loadComponent: () =>
+          import('./pages/disciplines-view.component').then(
+            (x) => x.DisciplinesViewComponent
+          ),
+      },
+      {
+        path: 'saving',
+        canActivate: [verifyStartedGuard, setupGuard],
+        data: {
+          title: 'ProjectUpload.Page_Saving',
+        },
+        loadComponent: () =>
+          import('./pages/save-view.component').then(
+            (x) => x.SaveViewComponent
+          ),
+        resolve: {
+          projectUrl: projectUrlResolve,
+        },
+      },
+      {
+        path: 'ticket/:reasonCode',
+        canActivate: [verifyStartedGuard, setupGuard],
+        data: {
+          title: 'ProjectUpload.Page_Ticket',
+        },
+        loadComponent: () =>
+          import('./pages/ticket-view/ticket-view.component').then(
+            (x) => x.TicketViewComponent
+          ),
+      },
     ],
   },
 ];

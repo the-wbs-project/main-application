@@ -5,7 +5,7 @@ export abstract class BaseImporter {
   protected getChildren(
     parentId: string,
     parentLevel: string,
-    people: Map<string, string>,
+    people: Map<string, ProjectCategory>,
     nodes: Map<string, WbsImportResult>
   ): WbsNode[] {
     const results: WbsNode[] = [];
@@ -35,16 +35,17 @@ export abstract class BaseImporter {
 
   protected getDisciplineFromPeople(
     info: WbsImportResult,
-    people: Map<string, string>
+    people: Map<string, ProjectCategory>
   ): string[] {
     const ids: string[] = [];
 
     for (const person of info.resources ?? []) {
       if (!person) continue;
 
-      const id = people.get(person.toLowerCase());
+      const discipline = people.get(person.toLowerCase());
 
-      if (id && ids.indexOf(id) === -1) ids.push(id);
+      if (discipline && ids.indexOf(discipline.id) === -1)
+        ids.push(discipline.id);
     }
     return ids;
   }
@@ -58,13 +59,12 @@ export abstract class BaseImporter {
     //  Process disciplines
     //
     for (const person of people.keys()) {
-      if (person) {
-        const discipline = people.get(person)!;
-        const index = results.findIndex((x) =>
-          typeof x === 'string' ? x === discipline : x.id === discipline
-        );
-        if (index === -1) results.push(discipline);
-      }
+      if (!person) continue;
+
+      const discipline = people.get(person)!;
+
+      if (!results.find((x) => x.id === discipline.id))
+        results.push(discipline);
     }
     return results;
   }

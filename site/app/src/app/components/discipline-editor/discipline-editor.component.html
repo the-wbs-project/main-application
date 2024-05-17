@@ -32,7 +32,10 @@
       </div>
       <div class="tx-left" [ngClass]="sizeCss()">
         <span class="d-inline-block tx-center wd-25">
-          <i class="fa-solid" [ngClass]="dataItem | disciplineIcon"></i>
+          <i
+            class="fa-solid"
+            [ngClass]="dataItem.id | disciplineIcon : categories()"
+          ></i>
         </span>
         {{ dataItem.label }}
       </div>

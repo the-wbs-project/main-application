@@ -9,14 +9,13 @@ import {
 import { ProjectCreationComponent } from '@wbs/components/project-creation-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  Category,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
   ProjectCategory,
 } from '@wbs/core/models';
 import { Messages, Utils } from '@wbs/core/services';
-import { EntryStore, MembershipStore } from '@wbs/core/store';
+import { EntryStore, MembershipStore, MetadataStore } from '@wbs/core/store';
 import { Observable, forkJoin } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
@@ -27,6 +26,7 @@ export class EntryService {
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
   private readonly membership = inject(MembershipStore);
+  private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
   private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
@@ -77,16 +77,6 @@ export class EntryService {
     this.messages.notify.info('General.RetrievingData');
 
     const version = this.entryStore.version()!;
-    const customDisciplines: Category[] = [];
-
-    for (const d of version.disciplines) {
-      if (typeof d !== 'string')
-        customDisciplines.push({
-          id: d.id,
-          label: d.label,
-          description: d.description,
-        });
-    }
     const tasks = structuredClone(this.entryStore.viewModels()!);
 
     for (const task of tasks) {
@@ -94,7 +84,7 @@ export class EntryService {
       task.parent = undefined;
     }
     this.data.wbsExport
-      .runAsync(version.title, 'xlsx', customDisciplines, tasks)
+      .runAsync(version.title, 'xlsx', version.disciplines, tasks)
       .subscribe();
   }
 

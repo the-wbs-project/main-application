@@ -11,16 +11,14 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects")]
 public class ProjectController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
     private readonly ILogger<ProjectController> logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectResourceDataService projectResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
 
-    public ProjectController(ILogger<ProjectController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService)
+    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ProjectController>();
         this.projectDataService = projectDataService;
         this.projectResourceDataService = projectResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
@@ -36,7 +34,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting projects for owner {owner}", owner);
             return new StatusCodeResult(500);
         }
     }
@@ -55,7 +53,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error setting project {projectId} for owner {owner}", project.id, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -70,7 +68,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -85,7 +83,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting roles for project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -108,7 +106,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting resources for project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -123,7 +121,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error exporting project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -148,7 +146,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
             return new StatusCodeResult(500);
         }
     }

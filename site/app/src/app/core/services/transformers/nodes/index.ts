@@ -7,7 +7,6 @@ import { WbsPhaseNodeTransformers } from './phase';
 export class WbsNodeTransformers {
   readonly discipline = new WbsDisciplineNodeTransformers(
     this.metadata,
-    this.resources,
     this.wbsService
   );
   readonly phase = new WbsPhaseNodeTransformers(this.metadata, this.resources);

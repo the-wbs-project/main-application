@@ -4,7 +4,6 @@ import {
   LIBRARY_TASKS_REORDER_WAYS,
   LibraryEntryNode,
   LibraryEntryVersion,
-  ProjectCategory,
   TaskCreationResults,
 } from '@wbs/core/models';
 import {
@@ -531,91 +530,6 @@ export class EntryTaskService {
           return this.saveAsync(upserts, removedIds, 'Library.TaskRemoved');
         })
       );
-  }
-
-  savePhaseChangesAsync(phases: CategorySelection[]): Observable<void> {
-    const tasks = this.getTasks();
-    const phaseDefinitions = this.metadata.categories.phases;
-    const existing: ProjectCategory[] = tasks
-      .filter((x) => x.parentId == undefined)
-      .sort((a, b) => a.order - b.order)
-      .map(
-        (x) =>
-          x.phaseIdAssociation ?? {
-            id: x.id,
-            label: x.title,
-            description: x.description,
-          }
-      );
-    const results = this.categoryService.extract(phases, existing);
-    const toRemoveIds: string[] = [];
-    const upserts: LibraryEntryNode[] = [];
-    //
-    //  Now get all ids to remove
-    //
-    for (const id of results.removedIds) {
-      const task = tasks.find(
-        (x) => x.id === id || x.phaseIdAssociation === id
-      );
-
-      if (!task) continue;
-
-      toRemoveIds.push(
-        task.id,
-        ...WbsNodeService.getChildrenIds(tasks, task.id)
-      );
-    }
-    //
-    //  Remove
-    //
-    for (const id of toRemoveIds) {
-      const index = tasks.findIndex((x) => x.id === id);
-
-      if (index > -1) tasks.splice(index, 1);
-    }
-    //
-    //  Now  look through cats
-    //
-    for (let i = 0; i < results.categories.length; i++) {
-      const cat = results.categories[i];
-      const catId = typeof cat === 'string' ? cat : cat.id;
-      let task = tasks.find(
-        (x) => x.id === catId || x.phaseIdAssociation === catId
-      );
-
-      if (task) {
-        if (task.order !== i + 1) {
-          task.order = i + 1;
-          upserts.push(task);
-        }
-      } else if (typeof cat === 'string') {
-        const phase = phaseDefinitions.find((x) => x.id === cat)!;
-
-        task = {
-          id: IdService.generate(),
-          phaseIdAssociation: cat,
-          order: i + 1,
-          lastModified: new Date(),
-          title: this.resources.get(phase.label),
-          description: phase.description
-            ? this.resources.get(phase.description)
-            : undefined,
-        };
-        tasks.push(task);
-        upserts.push(task);
-      } else {
-        task = {
-          id: cat.id,
-          order: i + 1,
-          lastModified: new Date(),
-          title: cat.label,
-          description: cat.description,
-        };
-        tasks.push(task);
-        upserts.push(task);
-      }
-    }
-    return this.saveAsync(upserts, toRemoveIds, 'Library.PhasesUpdated');
   }
 
   disciplinesChangedAsync(

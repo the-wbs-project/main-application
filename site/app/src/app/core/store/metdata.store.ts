@@ -1,14 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  Category,
-  ListItem,
-  LISTS,
-  Role,
-  RoleIds,
-  ROLES,
-} from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
+import { Category, LISTS, Role, RoleIds, ROLES } from '@wbs/core/models';
+import { Resources, sorter } from '@wbs/core/services';
 import { Observable, forkJoin, map } from 'rxjs';
 import { ROLE_ICONS } from 'src/environments/icons';
 
@@ -34,7 +27,7 @@ class CategoryState {
   ) {}
 
   private _icons = new Map<string, Map<string, string>>();
-  private _list = new Map<string, ListItem[]>();
+  private _list = new Map<string, Category[]>();
   private _names = new Map<string, Map<string, string>>();
 
   //
@@ -85,18 +78,22 @@ class CategoryState {
 
   loadAsync(): Observable<void> {
     return forkJoin([
-      this.data.metdata.getListAsync<ListItem>(LISTS.PROJECT_CATEGORIES),
-      this.data.metdata.getListAsync<ListItem>(LISTS.DISCIPLINE),
-      this.data.metdata.getListAsync<ListItem>(LISTS.PHASE),
+      this.data.metdata.getListAsync<Category>(LISTS.PROJECT_CATEGORIES),
+      this.data.metdata.getListAsync<Category>(LISTS.DISCIPLINE),
+      this.data.metdata.getListAsync<Category>(LISTS.PHASE),
     ]).pipe(
       map(([projectCats, discipline, phase]) => {
-        const categoryList = new Map<string, ListItem[]>();
+        const categoryList = new Map<string, Category[]>();
         const categoryIcons = new Map<string, Map<string, string>>();
         const categoryNames = new Map<string, Map<string, string>>();
 
-        discipline = discipline.sort((a, b) => a.order - b.order);
-        phase = phase.sort((a, b) => a.order - b.order);
-        projectCats = projectCats.sort((a, b) => a.order - b.order);
+        discipline = discipline.sort((a, b) =>
+          sorter(a.order ?? 0, b.order ?? 0)
+        );
+        phase = phase.sort((a, b) => sorter(a.order ?? 0, b.order ?? 0));
+        projectCats = projectCats.sort((a, b) =>
+          sorter(a.order ?? 0, b.order ?? 0)
+        );
 
         categoryIcons.set(LISTS.DISCIPLINE, new Map<string, string>());
         categoryIcons.set(LISTS.PHASE, new Map<string, string>());
@@ -120,10 +117,28 @@ class CategoryState {
           }
         }
 
-        for (const cat of [...projectCats, ...discipline, ...phase]) {
-          categoryNames.get(cat.type)!.set(cat.id, cat.label);
+        for (const cat of projectCats) {
+          const type = LISTS.PROJECT_CATEGORIES;
 
-          if (cat.icon) categoryIcons.get(cat.type)!.set(cat.id, cat.icon);
+          categoryNames.get(type)!.set(cat.id, cat.label);
+
+          if (cat.icon) categoryIcons.get(type)!.set(cat.id, cat.icon);
+        }
+
+        for (const cat of discipline) {
+          const type = LISTS.DISCIPLINE;
+
+          categoryNames.get(type)!.set(cat.id, cat.label);
+
+          if (cat.icon) categoryIcons.get(type)!.set(cat.id, cat.icon);
+        }
+
+        for (const cat of phase) {
+          const type = LISTS.PHASE;
+
+          categoryNames.get(type)!.set(cat.id, cat.label);
+
+          if (cat.icon) categoryIcons.get(type)!.set(cat.id, cat.icon);
         }
 
         this._icons = categoryIcons;

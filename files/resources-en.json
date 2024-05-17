@@ -471,7 +471,7 @@
       "ProjectFileExtensions": "Extensions: .mpp, .mppx",
       "OtherFileExtensions": "Extensions: .pdf, .docx, etc.",
       "OtherFileDescription": "This file will be submitted for a manual upload.",
-      "DownloadTemplate": "Download Template",
+      "DownloadTemplate": "Download Excel Template",
       "Page_LetsGetStarted": "Lets Get Started",
       "Page_UploadResults": "Upload Results",
       "Page_Options": "Upload Options",

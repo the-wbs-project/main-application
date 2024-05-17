@@ -147,18 +147,15 @@ export class EntryTreeMenuService {
     const results: ContextMenuItem[] = [];
 
     for (const vDiscipline of version.disciplines) {
-      const id = typeof vDiscipline === 'string' ? vDiscipline : vDiscipline.id;
+      if (task.disciplines.includes(vDiscipline.id)) continue;
 
-      if (task.disciplines.includes(id)) continue;
-
-      const discipline =
-        typeof vDiscipline === 'string'
-          ? disciplines.find((x) => x.id === id)
-          : vDiscipline;
+      const discipline = vDiscipline.isCustom
+        ? vDiscipline
+        : disciplines.find((x) => x.id === vDiscipline.id);
 
       if (discipline)
         results.push({
-          action: 'addDiscipline|' + id,
+          action: 'addDiscipline|' + vDiscipline.id,
           faIcon: discipline.icon ?? 'fa-question',
           text: discipline.label,
           isNotResource: true,

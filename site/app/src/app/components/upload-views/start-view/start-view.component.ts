@@ -5,11 +5,7 @@ import {
   output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faChartGantt,
-  faFile,
-  faTable,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faFileExcel } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { DataServiceFactory } from '@wbs/core/data-services';
@@ -31,9 +27,7 @@ import { UploaderComponent } from '@wbs/components/uploader/uploader.component';
 export class UploadStartViewComponent {
   private readonly data = inject(DataServiceFactory);
 
-  readonly faChartGantt = faChartGantt;
-  readonly faFile = faFile;
-  readonly faTable = faTable;
+  readonly excelIcon = faFileExcel;
   readonly fileUploaded = output<FileInfo>();
 
   downloadTemplate() {

@@ -4,7 +4,6 @@
       <wbs-details-card [entry]="store.entry()!" [version]="store.version()!" />
       <wbs-discipline-card
         [splitLimit]="650"
-        [fullList]="disciplines()"
         [selectedList]="store.version()?.disciplines ?? []"
         noDisciplinesLabel="Library.NoDisciplinesEntry"
         [canEdit]="claims() | check : UPDATE_CLAIM"

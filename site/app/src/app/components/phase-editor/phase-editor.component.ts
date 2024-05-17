@@ -17,10 +17,11 @@ import {
   DialogModule,
   DialogService,
 } from '@progress/kendo-angular-dialog';
+import { CategoryDialogResults } from '@wbs/core/models';
 import { CategorySelectionService, IdService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { filter, map } from 'rxjs/operators';
-import { ListItemDialogComponent } from '@wbs/components/list-item-dialog';
+import { CategoryDialogComponent } from '../category-dialog';
 import { SwitchComponent } from '../switch';
 
 @Component({
@@ -68,27 +69,23 @@ export class PhaseEditorComponent {
     });
   }
 
-  showCreate() {
-    const dialogRef = this.dialogService.open({
-      content: ListItemDialogComponent,
-    });
-
-    (<ListItemDialogComponent>dialogRef.content.instance).showDescription.set(
-      false
-    );
-    dialogRef.result
+  add(): void {
+    CategoryDialogComponent.launchAsync(
+      this.dialogService,
+      false,
+      true,
+      'Wbs.AddPhase'
+    )
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
-        map((x) => <[string, string]>x)
+        map((x) => <CategoryDialogResults>x)
       )
       .subscribe((result) => {
-        if (result == null) return;
-
         const item: CategorySelection = {
           id: IdService.generate(),
-          description: result[1],
+          description: result.description,
           isCustom: true,
-          label: result[0],
+          label: result.title,
           selected: true,
         };
         this.categories.update((list) => {

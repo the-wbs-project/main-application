@@ -16,7 +16,7 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {
   AiPromptService,
   SaveService,
@@ -72,13 +72,7 @@ export class TaskAboutPageComponent {
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly descriptionSave = new SaveService();
-  readonly disciplineFullList = computed(() => {
-    const disciplines = this.entryStore.version()?.disciplines;
-
-    if (disciplines && disciplines.length > 0) return disciplines;
-
-    return this.metadata.categories.disciplines.map((x) => x.id);
-  });
+  readonly disciplines = computed(() => this.entryStore.version()?.disciplines);
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryTaskDescription(
       this.entryStore.entry(),

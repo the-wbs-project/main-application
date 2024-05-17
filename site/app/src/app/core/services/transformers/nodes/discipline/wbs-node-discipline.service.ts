@@ -1,66 +1,29 @@
-import { Category, Project, WbsNode } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
+import { Project, WbsNode } from '@wbs/core/models';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { MetadataStore } from '@wbs/core/store';
 import { WbsNodeService } from '../../../wbs-node.service';
+import { MetadataStore } from '@wbs/core/store';
 
 export class WbsDisciplineNodeTransformer {
   constructor(
     private readonly metadata: MetadataStore,
-    private readonly resources: Resources,
     private readonly wbsService: WbsNodeService
   ) {}
 
-  private get disciplineList(): Category[] {
-    return this.metadata.categories.disciplines;
-  }
-
-  private get phaseList(): Category[] {
-    return this.metadata.categories.phases;
-  }
-
   run(project: Project, projectNodes: WbsNode[]): WbsNodeView[] {
-    const dList = this.disciplineList;
-    const pList = this.phaseList;
-    const disciplines: Category[] = [];
-    const phases: Category[] = [];
-
-    for (const d of project.disciplines) {
-      if (typeof d === 'string') {
-        const d2 = dList.find((c) => c.id === d);
-
-        if (d2) disciplines.push(d2);
-      } else
-        disciplines.push({
-          id: d.id,
-          label: d.label,
-          description: d.description,
-        });
-    }
-
-    for (const p of this.wbsService.getPhases(projectNodes)) {
-      if (typeof p === 'string') {
-        const p2 = pList.find((c) => c.id === p);
-
-        if (p2) phases.push(p2);
-      } else
-        phases.push({
-          id: p.id,
-          label: p.label,
-          description: p.description,
-        });
-    }
-
+    const disciplineList = this.metadata.categories.disciplines;
+    const disciplines = project.disciplines;
+    const phases = this.wbsService.getPhases(projectNodes);
     const nodes: WbsNodeView[] = [];
 
     for (let i = 0; i < disciplines.length; i++) {
       const d = disciplines[i];
 
-      const dNode = projectNodes.find((x) => x.id === d.id);
+      let dNode = d.isCustom ? d : disciplineList.find((x) => x.id === d.id)!;
+
       const dView: WbsNodeView = {
         children: 0,
         childrenIds: [],
-        description: dNode?.description,
+        description: dNode.description,
         disciplines: [d.id],
         id: d.id,
         treeId: d.id,
@@ -68,8 +31,8 @@ export class WbsDisciplineNodeTransformer {
         levelText: (i + 1).toString(),
         depth: 1,
         order: i + 1,
-        title: this.resources.get(d.label),
-        lastModified: dNode?.lastModified,
+        title: dNode.label,
+        lastModified: undefined,
         canMoveDown: false,
         canMoveUp: false,
         canMoveLeft: false,
@@ -81,7 +44,7 @@ export class WbsDisciplineNodeTransformer {
       let phaseCounter = 1;
 
       for (const p of phases) {
-        const pNode = projectNodes.find((x) => x.id === p.id);
+        const pNode = projectNodes.find((x) => x.id === p.id)!;
         const pLevel = [i + 1, phaseCounter];
 
         //if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
@@ -89,7 +52,7 @@ export class WbsDisciplineNodeTransformer {
         const pView: WbsNodeView = {
           children: 0,
           childrenIds: [],
-          description: pNode?.description,
+          description: pNode.description,
           disciplines: [d.id],
           id: p.id,
           treeId: `${d.id}-${p.id}`,
@@ -100,7 +63,7 @@ export class WbsDisciplineNodeTransformer {
           parentId: d.id,
           treeParentId: d.id,
           phaseId: p.id,
-          title: this.resources.get(p.label),
+          title: pNode.title,
           lastModified: pNode?.lastModified,
           canMoveDown: false,
           canMoveUp: false,

@@ -7,21 +7,19 @@ export class DisciplineLabelPipe implements PipeTransform {
   private readonly state = inject(MetadataStore);
 
   transform(
-    idsOrCat: ProjectCategory | null | undefined,
-    projectCategories?: ProjectCategory[]
+    category: ProjectCategory | string | undefined,
+    categories?: ProjectCategory[] | undefined
   ): string {
-    if (!idsOrCat) return '';
-    if (typeof idsOrCat !== 'string') return idsOrCat.label;
+    if (category == null) return '';
+    if (typeof category !== 'string' && category.isCustom)
+      return category.label;
 
-    const cName =
-      this.state.categories.getName(LISTS.DISCIPLINE, idsOrCat) ?? '';
+    const id = typeof category === 'string' ? category : category.id;
 
-    if (cName) return cName;
+    category = categories?.find((x) => x.id === id);
 
-    if (projectCategories)
-      for (const cat of projectCategories) {
-        if (typeof cat !== 'string' && cat.id === idsOrCat) return cat.label;
-      }
-    return '??';
+    if (category?.isCustom) return category.icon ?? '';
+
+    return this.state.categories.getName(LISTS.DISCIPLINE, id) ?? '';
   }
 }

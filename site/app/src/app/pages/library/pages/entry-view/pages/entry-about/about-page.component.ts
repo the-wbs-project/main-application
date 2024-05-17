@@ -10,7 +10,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { LIBRARY_CLAIMS, ListItem } from '@wbs/core/models';
+import { Category, LIBRARY_CLAIMS } from '@wbs/core/models';
 import { AiPromptService, SaveService } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
@@ -45,7 +45,6 @@ export class AboutPageComponent implements OnInit {
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
-  readonly disciplines = input.required<ListItem[]>();
   readonly descriptionSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryDescription(

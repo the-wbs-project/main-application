@@ -1,7 +1,6 @@
 export * from './checklist-test.service';
 export * from './checklists.data-service';
 export * from './library-entry-export.service';
-export * from './phase-extract-processor.service';
 export * from './project-action-button.service';
 export * from './project-breadcrumbs.service';
 export * from './project-import-processor.service';

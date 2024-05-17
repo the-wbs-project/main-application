@@ -9,11 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { ListItem } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
-import { toSignal } from '@angular/core/rxjs-interop';
-import { Observable, map } from 'rxjs';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogCloseResult,
   DialogContentBase,
@@ -21,9 +17,14 @@ import {
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { LabelModule } from '@progress/kendo-angular-label';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { Resources, sorter } from '@wbs/core/services';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { Observable, map } from 'rxjs';
+
+declare type Item = { id: string; label: string; order: number };
 
 @Component({
   standalone: true,
@@ -55,8 +56,8 @@ export class TaskDeleteComponent extends DialogContentBase implements OnInit {
 
   readonly reasons = toSignal(
     this.data.metdata
-      .getListAsync<ListItem>('delete_reasons')
-      .pipe(map((list) => list.sort((a, b) => a.order - b.order)))
+      .getListAsync<Item>('delete_reasons')
+      .pipe(map((list) => list.sort((a, b) => sorter(a.order, b.order))))
   );
 
   constructor(dialog: DialogRef) {

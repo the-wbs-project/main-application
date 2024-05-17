@@ -1,3 +1,13 @@
-import { Category } from './category.model';
-
-export type ProjectCategory = string | Category;
+export type ProjectCategory =
+  | {
+      id: string;
+      isCustom: true;
+      label: string;
+      description?: string;
+      icon?: string;
+      sameAs?: string;
+    }
+  | {
+      id: string;
+      isCustom: false;
+    };

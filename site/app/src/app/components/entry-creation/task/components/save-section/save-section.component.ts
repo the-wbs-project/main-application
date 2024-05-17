@@ -19,6 +19,7 @@ import {
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
+  Category,
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
@@ -81,9 +82,10 @@ export class SaveSectionComponent {
         discipline.isCustom
           ? {
               id: discipline.id,
+              isCustom: true,
               label: discipline.label,
             }
-          : discipline.id
+          : { id: discipline.id, isCustom: false }
       );
     }
     const entry: LibraryEntry = {

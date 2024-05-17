@@ -3,54 +3,50 @@ import {
   Component,
   inject,
   signal,
-  ViewEncapsulation,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
-import { Store } from '@ngxs/store';
-import { MultiSelectModule } from '@progress/kendo-angular-dropdowns';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
+import {
+  DialogCloseResult,
+  DialogContentBase,
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import {
-  CheckBoxModule,
-  SwitchModule,
-  TextBoxModule,
-} from '@progress/kendo-angular-inputs';
-import {
-  LIBRARY_ENTRY_TYPES,
-  LIBRARY_ENTRY_TYPES_TYPE,
-} from '@wbs/core/models';
-import { MetadataStore } from '@wbs/core/store';
+import { SwitchModule, TextBoxModule } from '@progress/kendo-angular-inputs';
+import { LIBRARY_ENTRY_TYPES_TYPE } from '@wbs/core/models';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../../models';
-import { LibraryEntryDescriptionHintPipe } from './pipes/library-entry-description-hint.pipe';
-import { LibraryEntryTitleHintPipe } from './pipes/library-entry-title-hint.pipe';
+import {
+  LibraryEntryDescriptionHintPipe,
+  LibraryEntryTitleHintPipe,
+} from './pipes';
 
 @Component({
   standalone: true,
   templateUrl: './library-entry-modal.component.html',
-  styleUrl: './library-entry-modal.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  encapsulation: ViewEncapsulation.None,
   imports: [
-    CheckBoxModule,
+    ButtonModule,
+    DialogModule,
     EditorModule,
     LibraryEntryDescriptionHintPipe,
     LibraryEntryTitleHintPipe,
-    MultiSelectModule,
     ReactiveFormsModule,
     SwitchModule,
     TextBoxModule,
     TranslateModule,
   ],
 })
-export class LibraryEntryModalComponent {
-  readonly categories = inject(MetadataStore).categories.projectCategories;
+export class LibraryEntryModalComponent extends DialogContentBase {
   readonly contentCss = `.k-content { font-family: "Poppins", sans-serif; }`;
   readonly more = signal<boolean>(false);
   readonly form = new FormGroup({
@@ -59,36 +55,37 @@ export class LibraryEntryModalComponent {
     includeResources: new FormControl(true),
     visibility: new FormControl(true),
     anyCategory: new FormControl(false),
-    categories: new FormControl<string[]>([]),
   });
 
   type?: LIBRARY_ENTRY_TYPES_TYPE;
 
-  constructor(readonly modal: NgbActiveModal, private readonly store: Store) {}
+  constructor(x: DialogRef) {
+    super(x);
+  }
 
-  setup(data: LibraryEntryModalModel): void {
-    this.type = data.type;
+  static launchAsync(
+    dialog: DialogService,
+    data: LibraryEntryModalModel
+  ): Observable<any | undefined> {
+    const ref = dialog.open({
+      content: LibraryEntryModalComponent,
+    });
+    const comp = ref.content.instance as LibraryEntryModalComponent;
+    comp.type = data.type;
 
-    this.form.setValue({
+    comp.form.setValue({
       description: data.description ?? '',
       title: data.title,
       includeResources: true,
       visibility: true,
       anyCategory: false,
-      categories: data.categories ?? [],
     });
 
-    this.form.get('categories')?.clearValidators();
+    comp.form.get('categories')?.clearValidators();
 
-    if (data.type === LIBRARY_ENTRY_TYPES.PROJECT) {
-      //this.form.get('categories')?.addValidators(Validators.required);
-    }
-  }
-
-  clearCategories(clear: boolean): void {
-    if (!clear) return;
-
-    this.form.controls.categories.setValue(null);
+    return ref.result.pipe(
+      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
+    );
   }
 
   save(nav: boolean): void {
@@ -98,13 +95,9 @@ export class LibraryEntryModalComponent {
       title: form.title!,
       description: form.description ?? undefined,
       includeResources: form.includeResources!,
-      categories:
-        form.anyCategory || (form.categories ?? []).length === 0
-          ? undefined
-          : form.categories!,
       nav,
       visibility: form.visibility ? 'public' : 'private',
     };
-    this.modal.close(model);
+    this.dialog.close(model);
   }
 }

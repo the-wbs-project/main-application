@@ -69,8 +69,20 @@ export class CategorySelectionService {
     const items: CategorySelection[] = [];
 
     for (const x of selected ?? []) {
-      if (typeof x === 'string') {
-        const cat = cats.find((c) => c.id === x);
+      if (x.isCustom) {
+        items.push({
+          id: x.id,
+          label: x.label,
+          description: x.description,
+          icon: x.icon,
+          selected: true,
+          originalSelection: true,
+          isCustom: true,
+          confirm: this.createConfirm(x.id, confirmMessage, catCounts),
+        });
+        usedIds.push(x.id);
+      } else {
+        const cat = cats.find((c) => c.id === x.id);
 
         if (cat) {
           items.push({
@@ -83,20 +95,8 @@ export class CategorySelectionService {
             isCustom: false,
             confirm: this.createConfirm(cat.id, confirmMessage, catCounts),
           });
-          usedIds.push(x);
+          usedIds.push(x.id);
         }
-      } else {
-        items.push({
-          id: x.id,
-          label: x.label,
-          description: x.description,
-          icon: x.icon,
-          selected: true,
-          originalSelection: true,
-          isCustom: true,
-          confirm: this.createConfirm(x.id, confirmMessage, catCounts),
-        });
-        usedIds.push(x.id);
       }
     }
 
@@ -125,11 +125,11 @@ export class CategorySelectionService {
   ): CategorySelection[] {
     const cats = this.metadata.categories.disciplines;
 
-    return this.buildFromList(
-      cats,
-      list.length > 0 ? list : defaultToAll ? cats : [],
-      selected
-    );
+    if (list.length === 0 && defaultToAll) {
+      list = cats.map((x) => ({ isCustom: false, ...x }));
+    }
+
+    return this.buildFromList(cats, list, selected);
   }
 
   buildPhasesFromList(
@@ -147,20 +147,7 @@ export class CategorySelectionService {
     const cats: CategorySelection[] = [];
 
     for (const x of list) {
-      if (typeof x === 'string') {
-        const cat = categories.find((c) => c.id === x);
-
-        if (cat) {
-          cats.push({
-            id: cat.id,
-            label: cat.label,
-            description: cat.description,
-            selected: selected.indexOf(x) > -1,
-            originalSelection: selected.indexOf(x) > -1,
-            isCustom: false,
-          });
-        }
-      } else {
+      if (x.isCustom) {
         cats.push({
           id: x.id,
           label: x.label,
@@ -169,6 +156,19 @@ export class CategorySelectionService {
           originalSelection: selected.indexOf(x.id) > -1,
           isCustom: true,
         });
+      } else {
+        const cat = categories.find((c) => c.id === x.id);
+
+        if (cat) {
+          cats.push({
+            id: cat.id,
+            label: cat.label,
+            description: cat.description,
+            selected: selected.indexOf(x.id) > -1,
+            originalSelection: selected.indexOf(x.id) > -1,
+            isCustom: false,
+          });
+        }
       }
     }
     this.renumber(cats);
@@ -189,23 +189,25 @@ export class CategorySelectionService {
           //
           //  If this item was in the originals, add to removed Ids list
           //
-          if (
-            originals.some(
-              (cat) => x.id === (typeof cat === 'string' ? cat : cat.id)
-            )
-          ) {
+          if (originals.some((cat) => x.id === cat.id)) {
             removedIds.push(x.id);
           }
           continue;
         }
-        if (!x.isCustom) categories.push(x.id);
-        else
+        if (x.isCustom) {
           categories.push({
             id: x.id,
+            isCustom: true,
             label: x.label,
             description: x.description,
             icon: x.icon,
           });
+        } else {
+          categories.push({
+            id: x.id,
+            isCustom: false,
+          });
+        }
       }
     return { categories, removedIds };
   }

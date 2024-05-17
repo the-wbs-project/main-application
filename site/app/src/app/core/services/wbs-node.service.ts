@@ -1,12 +1,9 @@
-import { Injectable, inject } from '@angular/core';
-import { LibraryEntryNode, ProjectCategory, WbsNode } from '@wbs/core/models';
-import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
-import { CategorySelectionService } from './category-selection.service';
+import { Injectable } from '@angular/core';
+import { LibraryEntryNode, WbsNode, ProjectCategory } from '@wbs/core/models';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class WbsNodeService {
-  private readonly categoryService = inject(CategorySelectionService);
-
   static sort = (a: WbsNode | WbsNodeView, b: WbsNode | WbsNodeView) =>
     (a.order ?? 0) < (b.order ?? 0) ? -1 : 1;
 
@@ -36,37 +33,6 @@ export class WbsNodeService {
       .sort(WbsNodeService.sort);
   }
 
-  getPhasesForEdit(
-    tasks: WbsNodeView[],
-    confirmRemovalMessage: string
-  ): CategorySelection[] {
-    const counts = new Map<string, number>();
-    const phases: ProjectCategory[] = [];
-    const taskPhases = tasks
-      .filter((x) => x.parentId == undefined)
-      .sort((a, b) => a.order - b.order);
-
-    for (const phase of taskPhases) {
-      const id = phase.phaseIdAssociation ?? phase.id;
-
-      if (phase.phaseIdAssociation) phases.push(phase.phaseIdAssociation);
-      else {
-        phases.push({
-          id: phase.id,
-          label: phase.title,
-          description: phase.description,
-        });
-      }
-      counts.set(id, phase.children);
-    }
-
-    return this.categoryService.buildPhases(
-      phases,
-      confirmRemovalMessage,
-      counts
-    );
-  }
-
   getPhases(tasks: WbsNode[]): ProjectCategory[] {
     const phases: ProjectCategory[] = [];
     const taskPhases = tasks
@@ -74,16 +40,12 @@ export class WbsNodeService {
       .sort((a, b) => a.order - b.order);
 
     for (const phase of taskPhases) {
-      const id = phase.phaseIdAssociation ?? phase.id;
-
-      if (phase.phaseIdAssociation) phases.push(phase.phaseIdAssociation);
-      else {
-        phases.push({
-          id: phase.id,
-          label: phase.title,
-          description: phase.description,
-        });
-      }
+      phases.push({
+        id: phase.id,
+        isCustom: true,
+        label: phase.title,
+        description: phase.description,
+      });
     }
     return phases;
   }

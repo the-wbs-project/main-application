@@ -1,6 +1,5 @@
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { ImportPerson, Project, ProjectUploadData } from '@wbs/core/models';
-import { PhaseListItem } from '../models';
 
 export class SetProject {
   static readonly type = '[Project Upload] Set Project';

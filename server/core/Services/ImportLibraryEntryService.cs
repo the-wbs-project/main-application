@@ -63,7 +63,6 @@ public class ImportLibraryEntryService
                 title = options.title ?? project.title,
                 description = options.description ?? project.description,
                 lastModified = DateTimeOffset.Now,
-                categories = options.categories,
                 disciplines = project.disciplines,
                 status = "draft"
             };
@@ -174,7 +173,6 @@ public class ImportLibraryEntryService
                 version = 1,
                 status = "draft",
                 entryId = libraryEntry.id,
-                categories = options.categories,
                 lastModified = DateTimeOffset.Now,
                 title = options.title ?? projectNode.title,
                 description = options.description ?? projectNode.description,
@@ -297,7 +295,6 @@ public class ImportLibraryEntryService
                 version = 1,
                 status = "draft",
                 entryId = libraryEntry.id,
-                categories = [],
                 lastModified = DateTimeOffset.Now,
                 title = options.title,
                 description = task.description,
@@ -397,50 +394,9 @@ public class ImportLibraryEntryService
         }
     }
 
-    private object[] GetDisciplinesForNode(object[] disciplines, IEnumerable<string> disciplineIds)
+    private Category[] GetDisciplinesForNode(Category[] disciplines, IEnumerable<string> disciplineIds)
     {
-        var projDisciplineIds = new List<string>();
-        var projDisciplineItems = new Dictionary<string, Category>();
-
-        if (disciplineIds == null || disciplineIds == null) return null;
-
-        foreach (var d in disciplines)
-        {
-            var obj = (JsonElement)d;
-
-            if (obj.ToString()[0] == '{')
-            {
-                var id = obj.GetProperty("id").GetString();
-                var label = obj.GetProperty("label").GetString();
-                var icon = obj.GetProperty("icon").GetString();
-
-                projDisciplineItems.Add(id, new Category
-                {
-                    id = id,
-                    label = label,
-                    icon = icon
-                });
-            }
-            else
-            {
-                projDisciplineIds.Add(obj.ToString());
-            }
-        }
-        var nodeDisciplines = new List<object>();
-
-        foreach (var d in disciplineIds)
-        {
-            if (projDisciplineIds.Contains(d))
-            {
-                nodeDisciplines.Add(d);
-            }
-            else if (projDisciplineItems.ContainsKey(d))
-            {
-                nodeDisciplines.Add(projDisciplineItems[d]);
-            }
-
-        }
-        return nodeDisciplines.ToArray();
+        return disciplines.Where(x => disciplineIds.Contains(x.id)).ToArray();
     }
 
     private List<ProjectNode> GetProjectNodes(List<ProjectNode> projectNodes, string parentNodeId)

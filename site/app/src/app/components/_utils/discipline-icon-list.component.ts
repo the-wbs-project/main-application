@@ -5,13 +5,13 @@ import { DisciplineIconComponent } from './discipline-icon.component';
 @Component({
   standalone: true,
   selector: 'wbs-discipline-icon-list',
-  template: `@for (id of disciplines(); track id) {
-    <wbs-discipline-icon [id]="id" [fullList]="fullList()" />
+  template: `@for (cat of disciplines(); track $index) {
+    <wbs-discipline-icon [cat]="cat" [fullList]="fullList()" />
     }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DisciplineIconComponent],
 })
 export class DisciplineIconListComponent {
-  readonly disciplines = input.required<string[] | undefined>();
+  readonly disciplines = input.required<ProjectCategory[] | string[]>();
   readonly fullList = input<ProjectCategory[]>();
 }

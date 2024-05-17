@@ -11,9 +11,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopupModule } from '@progress/kendo-angular-popup';
-import { ProjectCategory } from '@wbs/core/models';
 import { DisciplineListComponent } from '@wbs/components/_utils/discipline-list.component';
 import { DisciplineSplitListComponent } from '@wbs/components/_utils/discipline-split-list.component';
+import { ProjectCategory } from '@wbs/core/models';
 
 @Component({
   standalone: true,

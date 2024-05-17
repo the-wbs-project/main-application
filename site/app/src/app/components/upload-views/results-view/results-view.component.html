@@ -1,5 +1,5 @@
-<div class="pd-15 text-center">
-  <div class="d-inline-block text-start card dashboard-card wd-400">
+<div class="d-flex justify-content-center">
+  <div class="card dashboard-card wd-400 mg-15">
     <div class="card-header">
       {{ "ProjectUpload.UploadResults" | translate }}
     </div>
@@ -21,27 +21,15 @@
       } @else { @if (stats(); as stats) {
 
       <ul class="list-group pd-t-20 w-100 d-inline-block">
+        @for (line of lines(); track $index) {
         <li
-          class="list-group-item d-flex justify-content-between align-items-center border-0"
+          class="list-group-item d-flex justify-content-between align-items-center border-0 bg-transparent"
         >
-          {{ "General.Tasks" | translate }}
+          {{ line.text | translate }}
 
-          <span>{{ stats.tasks }}</span>
+          <span>{{ line.value }}</span>
         </li>
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center border-0"
-        >
-          {{ "General.Phases" | translate }}
-
-          <span>{{ stats.phases }}</span>
-        </li>
-        <li
-          class="list-group-item d-flex justify-content-between align-items-center border-0"
-        >
-          {{ "General.People" | translate }}
-
-          <span>{{ stats.people }}</span>
-        </li>
+        }
       </ul>
       }
       <div class="w-100 text-center">

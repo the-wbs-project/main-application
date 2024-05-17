@@ -2,13 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  ActivityData,
-  LISTS,
-  Project,
-  PROJECT_STATI,
-  ProjectCategory,
-} from '@wbs/core/models';
+import { ActivityData, Project, PROJECT_STATI } from '@wbs/core/models';
 import { UserRolesViewModel } from '@wbs/core/view-models';
 import { MetadataStore, UserStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
@@ -219,12 +213,14 @@ export class ProjectState {
     }
 
     if (project.category !== action.category) {
+      const cats = this.metadata.categories.projectCategories;
+
       activities.push({
         action: PROJECT_ACTIONS.CATEGORY_CHANGED,
         topLevelId: project.id,
         data: {
-          from: this.getCatName(project.category, LISTS.PROJECT_CATEGORIES),
-          to: this.getCatName(action.category, LISTS.PROJECT_CATEGORIES),
+          from: cats.find((x) => x.id == project.category)?.label,
+          to: cats.find((x) => x.id == action.category)?.label,
         },
       });
     }
@@ -350,17 +346,6 @@ export class ProjectState {
     return this.data.projects
       .getUsersAsync(project.owner, project.id)
       .pipe(tap((users) => ctx.patchState({ users })));
-  }
-
-  private getCatName(
-    idsOrCat: ProjectCategory | null | undefined,
-    type: string
-  ): string {
-    if (!idsOrCat) return '';
-    if (typeof idsOrCat === 'string')
-      return this.metadata.categories.getName(type, idsOrCat) ?? '??';
-
-    return idsOrCat.label;
   }
 
   private verifyRoles(project: Project): void {

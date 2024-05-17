@@ -3,6 +3,7 @@ import {
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
+  Category,
   ProjectCategory,
 } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
@@ -114,9 +115,12 @@ export class EntryStore {
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
   ): WbsNodeView[] {
-    if (disciplines.length === 0)
-      disciplines = this.metadata.categories.disciplines;
-
-    return this.transformer.nodes.phase.view.run(tasks, entryType, disciplines);
+    return this.transformer.nodes.phase.view.run(
+      tasks,
+      entryType,
+      disciplines.length === 0
+        ? this.metadata.categories.disciplines
+        : disciplines
+    );
   }
 }

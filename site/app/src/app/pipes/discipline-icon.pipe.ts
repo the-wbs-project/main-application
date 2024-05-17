@@ -9,26 +9,19 @@ export class DisciplineIconPipe implements PipeTransform {
   private readonly state = inject(MetadataStore);
 
   transform(
-    category: string | { id: string; icon?: string } | undefined,
-    categories?: ProjectCategory[]
+    category: ProjectCategory | string | undefined,
+    categories: ProjectCategory[] | undefined
   ): string {
     if (category == null) return question;
-    if (typeof category !== 'string') {
-      return category.icon ?? this.getIconFromCats(category.id);
-    }
-    if (categories) {
-      for (const cat of categories) {
-        if (typeof cat === 'string') continue;
+    if (typeof category !== 'string' && category.isCustom)
+      return category.icon ?? question;
 
-        if (cat.id === category) {
-          return cat.icon ?? this.getIconFromCats(cat.id);
-        }
-      }
-    }
-    return this.getIconFromCats(category);
-  }
+    const id = typeof category === 'string' ? category : category.id;
 
-  private getIconFromCats(id: string): string {
+    category = categories?.find((x) => x.id === id);
+
+    if (category?.isCustom) return category.icon ?? question;
+
     return this.state.categories.getIcon(LISTS.DISCIPLINE, id) ?? question;
   }
 }

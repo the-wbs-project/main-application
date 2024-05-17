@@ -6,7 +6,6 @@ import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryImportResults,
-  ListItem,
   PROJECT_STATI_TYPE,
   Project,
 } from '@wbs/core/models';
@@ -167,21 +166,8 @@ export class ProjectViewService {
         project.disciplines
       );
     }
-    const customDisciplines: ListItem[] = [];
-
-    for (const d of project.disciplines)
-      if (typeof d !== 'string')
-        customDisciplines.push({
-          id: d.id,
-          label: d.label,
-          description: d.description,
-          order: 0,
-          tags: [],
-          type: 'discipline',
-        });
-
     this.data.wbsExport
-      .runAsync(project.title, 'xlsx', customDisciplines, phases)
+      .runAsync(project.title, 'xlsx', project.disciplines, phases)
       .subscribe();
   }
 

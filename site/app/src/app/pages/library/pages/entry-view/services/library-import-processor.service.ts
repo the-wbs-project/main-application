@@ -46,17 +46,12 @@ export class LibraryImportProcessorService {
       //  Let's make sure all disciplines added to the task are now in the project.
       //
       for (const discipline of results.version.disciplines) {
-        if (typeof discipline === 'string') {
-          if (!version.disciplines.includes(discipline)) {
-            version.disciplines.push(discipline);
-          }
-        } else {
+        if (discipline.isCustom) {
           let name = discipline.label;
           let found = false;
 
           for (const pDiscipline of version.disciplines) {
-            if (typeof pDiscipline === 'string') continue;
-
+            if (!pDiscipline.isCustom) continue;
             if (pDiscipline.label === name) {
               found = true;
               break;
@@ -65,6 +60,8 @@ export class LibraryImportProcessorService {
           if (!found) {
             version.disciplines.push(discipline);
           }
+        } else if (!version.disciplines.find((x) => x.id === discipline.id)) {
+          version.disciplines.push(discipline);
         }
       }
     }

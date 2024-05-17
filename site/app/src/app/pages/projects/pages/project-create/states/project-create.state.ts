@@ -4,13 +4,13 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Project,
+  ProjectCategory,
   ProjectNode,
   PROJECT_NODE_VIEW,
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_SCOPE_TYPE,
   PROJECT_STATI,
   UserRole,
-  ProjectCategory,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { MetadataStore, UserStore } from '@wbs/core/store';
@@ -245,8 +245,19 @@ export class ProjectCreateState {
     for (let i = 0; i < phases.length; i++) {
       const phase = phases[i];
 
-      if (typeof phase === 'string') {
-        const cat = catsPhases.find((x) => x.id === phase)!;
+      if (phase.isCustom) {
+        nodes.push({
+          description: phase.description,
+          disciplineIds: [],
+          id: phase.id,
+          order: i + 1,
+          projectId: project.id,
+          title: phase.label,
+          createdOn: now,
+          lastModified: now,
+        });
+      } else {
+        const cat = catsPhases.find((x) => x.id === phase.id)!;
 
         nodes.push({
           disciplineIds: [],
@@ -258,17 +269,6 @@ export class ProjectCreateState {
           phaseIdAssociation: cat.id,
           title: cat.label,
           description: cat.description,
-        });
-      } else {
-        nodes.push({
-          description: phase.description,
-          disciplineIds: [],
-          id: phase.id,
-          order: i + 1,
-          projectId: project.id,
-          title: phase.label,
-          createdOn: now,
-          lastModified: now,
         });
       }
     }

@@ -43,14 +43,11 @@ export class DisciplineCardComponent {
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly faComment = faComment;
-  readonly selectedList = model.required<ProjectCategory[]>();
+  readonly selectedList = model.required<ProjectCategory[] | string[]>();
   readonly fullList = input<ProjectCategory[]>();
   readonly canEdit = input.required<boolean>();
   readonly editRoute = input.required<string[]>();
   readonly alertIfEmpty = input(false);
   readonly noDisciplinesLabel = input.required<string>();
   readonly splitLimit = input.required<number>();
-  readonly disciplines = computed(
-    () => this.fullList() ?? this.metadata.categories.disciplines
-  );
 }

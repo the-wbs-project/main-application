@@ -130,7 +130,7 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
             description = DbValue<string>(reader, "Description"),
             status = DbValue<string>(reader, "Status"),
             categories = DbJson<string[]>(reader, "Categories"),
-            disciplines = DbJson<object[]>(reader, "Disciplines"),
+            disciplines = DbJson<Category[]>(reader, "Disciplines"),
             lastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
         };
     }

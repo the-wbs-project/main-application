@@ -77,18 +77,7 @@ public class LibrarySearchIndexService
 
         foreach (var discipline in version.disciplines)
         {
-            var obj = (JsonElement)discipline;
-
-            if (obj.ToString()[0] == '{')
-            {
-                var label = obj.GetProperty("label").GetString();
-
-                disciplines.Add(label);
-            }
-            else
-            {
-                disciplines.Add(disciplineLabels[obj.ToString()]);
-            }
+            disciplines.Add(discipline.isCustom ? discipline.label : disciplineLabels[discipline.id]);
         }
 
         var doc = new LibrarySearchDocument

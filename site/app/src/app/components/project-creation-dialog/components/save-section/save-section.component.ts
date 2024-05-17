@@ -22,10 +22,14 @@ import {
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
   Project,
-  ProjectCategory,
   ProjectNode,
 } from '@wbs/core/models';
-import { IdService, Resources, UserService } from '@wbs/core/services';
+import {
+  CategorySelectionService,
+  IdService,
+  Resources,
+  UserService,
+} from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { UserStore } from '@wbs/core/store';
 import { switchMap } from 'rxjs/operators';
@@ -39,6 +43,7 @@ import { switchMap } from 'rxjs/operators';
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {
+  private readonly categoryService = inject(CategorySelectionService);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
   private readonly userService = inject(UserService);
@@ -83,20 +88,10 @@ export class SaveSectionComponent {
   save(): void {
     this.saveState.set('saving');
 
-    const disciplines: ProjectCategory[] = [];
-
-    for (const discipline of this.disciplines()) {
-      if (!discipline.selected) continue;
-
-      disciplines.push(
-        discipline.isCustom
-          ? {
-              id: discipline.id,
-              label: discipline.label,
-            }
-          : discipline.id
-      );
-    }
+    const disciplines = this.categoryService.extract(
+      this.disciplines(),
+      []
+    ).categories;
 
     const now = new Date();
     const project: Project = {

@@ -11,7 +11,7 @@ import {
 import { WbsNodeView } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
-import { PROJECT_ACTIONS, TASK_ACTIONS } from '../../../models';
+import { TASK_ACTIONS } from '../../../models';
 import {
   AddDisciplineToTask,
   ChangeTaskBasics,
@@ -23,7 +23,6 @@ import {
   MoveTaskLeft,
   MoveTaskRight,
   MoveTaskUp,
-  PhasesChanged,
   RebuildNodeViews,
   RemoveDisciplineToTask,
   RemoveDisciplinesFromTasks,
@@ -651,93 +650,6 @@ export class TasksState {
       }),
       switchMap(() => ctx.dispatch(new RebuildNodeViews())),
       tap(() => this.saveActivity(activityData))
-    );
-  }
-
-  @Action(PhasesChanged)
-  phasesChanged(ctx: Context, { results }: PhasesChanged): Observable<void> {
-    const state = ctx.getState();
-    const phaseDefinitions = this.metadata.categories.phases;
-    const projectId = state.project!.id;
-    const tasks = state.nodes!;
-    const toRemoveIds: string[] = [];
-    const upserts: ProjectNode[] = [];
-    //
-    //  Now get all ids to remove
-    //
-    for (const id of results.removedIds) {
-      const task = tasks.find(
-        (x) => x.id === id || x.phaseIdAssociation === id
-      );
-
-      if (!task) continue;
-
-      toRemoveIds.push(
-        task.id,
-        ...WbsNodeService.getChildrenIds(tasks, task.id)
-      );
-    }
-    //
-    //  Remove
-    //
-    for (const id of toRemoveIds) {
-      const index = tasks.findIndex((x) => x.id === id);
-
-      if (index > -1) tasks.splice(index, 1);
-    }
-    //
-    //  Now  look through cats
-    //
-    for (let i = 0; i < results.categories.length; i++) {
-      const cat = results.categories[i];
-      const catId = typeof cat === 'string' ? cat : cat.id;
-      let task = tasks.find(
-        (x) => x.id === catId || x.phaseIdAssociation === catId
-      );
-
-      if (task) {
-        if (task.order !== i + 1) {
-          task.order = i + 1;
-          upserts.push(task);
-        }
-      } else if (typeof cat === 'string') {
-        const phase = phaseDefinitions.find((x) => x.id === cat)!;
-
-        task = {
-          id: IdService.generate(),
-          projectId,
-          phaseIdAssociation: cat,
-          order: i + 1,
-          lastModified: new Date(),
-          title: phase.label,
-          description: phase.description,
-        };
-        tasks.push(task);
-        upserts.push(task);
-      } else {
-        task = {
-          id: cat.id,
-          projectId,
-          order: i + 1,
-          lastModified: new Date(),
-          title: cat.label,
-          description: cat.description,
-          phaseIdAssociation: cat.sameAs,
-        };
-        tasks.push(task);
-        upserts.push(task);
-      }
-    }
-    return this.bulkSave(ctx, upserts, toRemoveIds).pipe(
-      tap(() => {
-        this.messaging.notify.success('Actions.ProjectPhasesChangedTitle');
-        this.saveActivity({
-          data: results,
-          topLevelId: projectId,
-          action: PROJECT_ACTIONS.PHASES_CHANGED,
-        });
-      }),
-      switchMap(() => ctx.dispatch(new MarkProjectChanged()))
     );
   }
 

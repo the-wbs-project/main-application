@@ -6,6 +6,6 @@ export interface ProjectNodeToLibraryOptions {
   description?: string;
   includeResources: boolean;
   categories?: string[];
-  phase?: ProjectCategory;
+  phase?: string;
   visibility: string;
 }

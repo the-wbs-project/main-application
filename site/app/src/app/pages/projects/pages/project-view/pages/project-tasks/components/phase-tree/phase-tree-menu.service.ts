@@ -131,18 +131,15 @@ export class PhaseTreeMenuService {
     const results: ContextMenuItem[] = [];
 
     for (const pDiscipline of project.disciplines) {
-      const id = typeof pDiscipline === 'string' ? pDiscipline : pDiscipline.id;
+      if (task.disciplines.includes(pDiscipline.id)) continue;
 
-      if (task.disciplines.includes(id)) continue;
-
-      const discipline =
-        typeof pDiscipline === 'string'
-          ? disciplines.find((x) => x.id === id)
-          : pDiscipline;
+      const discipline = pDiscipline.isCustom
+        ? pDiscipline
+        : disciplines.find((x) => x.id === pDiscipline.id);
 
       if (discipline)
         results.push({
-          action: 'addDiscipline|' + id,
+          action: 'addDiscipline|' + discipline.id,
           faIcon: discipline.icon ?? 'fa-question',
           text: discipline.label,
           isNotResource: true,

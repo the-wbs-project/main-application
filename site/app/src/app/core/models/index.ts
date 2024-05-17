@@ -3,7 +3,6 @@ export * from './claims';
 export * from './enums';
 
 export * from './action-button-menu-item.model';
-export * from './action-definition.model';
 export * from './activity.model';
 export * from './ai-log.model';
 export * from './ai-model.model';
@@ -24,7 +23,6 @@ export * from './library-entry.model';
 export * from './library-import-results.model';
 export * from './library-link.model';
 export * from './library-search-filters.model';
-export * from './list-item.model';
 export * from './member.model';
 export * from './navigation-link.model';
 export * from './open-ai-request.model';

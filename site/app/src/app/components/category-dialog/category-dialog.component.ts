@@ -1,11 +1,5 @@
 import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  input,
-  output,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -15,11 +9,18 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { DialogModule } from '@progress/kendo-angular-dialog';
+import {
+  DialogCloseResult,
+  DialogContentBase,
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
-import { CategoryDialogResults } from '@wbs/core/models';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 declare type Icon = { icon: string; name: string };
 
@@ -40,15 +41,11 @@ declare type Icon = { icon: string; name: string };
     TranslateModule,
   ],
 })
-export class CategoryDialogComponent {
-  //
-  //  IO
-  //
-  readonly includeIcons = input(true);
-  readonly includeDescription = input(true);
-  readonly titleText = input<string>('General.Add');
-  readonly successText = input<string>('General.Add');
-  readonly closed = output<CategoryDialogResults | undefined>();
+export class CategoryDialogComponent extends DialogContentBase {
+  readonly includeIcons = signal(true);
+  readonly includeDescription = signal(true);
+  readonly titleText = signal<string>('General.Add');
+  readonly successText = signal<string>('General.Add');
 
   readonly check = faCheck;
   readonly icons = signal(icons);
@@ -58,6 +55,10 @@ export class CategoryDialogComponent {
     icon: new FormControl<string>('fa-question'),
   });
 
+  constructor(dialog: DialogRef) {
+    super(dialog);
+  }
+
   get controls() {
     return this.form.controls;
   }
@@ -65,11 +66,33 @@ export class CategoryDialogComponent {
   close(): void {
     const values = this.form.getRawValue();
 
-    this.closed.emit({
+    this.dialog.close({
       title: values.title!,
       description: values.description ?? undefined,
       icon: values.icon ?? undefined,
     });
+  }
+
+  static launchAsync(
+    dialog: DialogService,
+    includeDescription: boolean,
+    includeIcons: boolean,
+    titleText?: string,
+    successText?: string
+  ): Observable<any | undefined> {
+    const ref = dialog.open({
+      content: CategoryDialogComponent,
+    });
+    const component = ref.content.instance as CategoryDialogComponent;
+
+    component.includeDescription.set(includeDescription);
+    component.includeIcons.set(includeIcons);
+    component.titleText.set(titleText ?? 'General.Add');
+    component.successText.set(successText ?? 'General.Add');
+
+    return ref.result.pipe(
+      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
+    );
   }
 
   protected handleIconFilter(value: string) {

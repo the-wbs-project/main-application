@@ -3,6 +3,7 @@ import {
   WbsImportResult,
   ProjectUploadData,
   WbsNode,
+  ProjectCategory,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { BaseImporter } from './base-importer.service';
@@ -16,7 +17,7 @@ export class WbsNodePhaseProjectImporter extends BaseImporter {
     project: Project,
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
-    people: Map<string, string>,
+    people: Map<string, ProjectCategory>,
     nodes: Map<string, WbsImportResult>
   ): ProjectUploadData {
     const results: ProjectUploadData = {

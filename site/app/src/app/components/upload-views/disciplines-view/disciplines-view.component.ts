@@ -10,7 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faList } from '@fortawesome/pro-solid-svg-icons';
 import { faCircle } from '@fortawesome/pro-thin-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { ImportPerson } from '@wbs/core/models';
+import { ImportPerson, ProjectCategory } from '@wbs/core/models';
 import { CategoryMatchListComponent } from '@wbs/components/_utils/category-match-list.component';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 
@@ -31,6 +31,6 @@ export class UploadDisciplinesViewComponent {
   readonly faList = faList;
   readonly faCircle = faCircle;
   readonly continue = output<void>();
-  readonly disciplines = input.required<{ id: string; label: string }[]>();
+  readonly disciplines = input.required<ProjectCategory[]>();
   readonly peopleList = model.required<ImportPerson[]>();
 }

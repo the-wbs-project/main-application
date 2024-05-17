@@ -24,8 +24,8 @@ import { DisciplineLabelPipe } from '@wbs/pipes/discipline-label.pipe';
   imports: [DisciplineIconPipe, DisciplineLabelPipe, NgClass],
 })
 export class DisciplineListComponent {
-  readonly selectedList = input.required<ProjectCategory[]>();
-  readonly fullList = input.required<ProjectCategory[]>();
+  readonly selectedList = input.required<ProjectCategory[] | string[]>();
+  readonly fullList = input<ProjectCategory[]>();
   readonly altClass = input<string>();
   readonly itemClass = input<string>();
 }

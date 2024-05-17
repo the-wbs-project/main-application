@@ -11,17 +11,17 @@ import { DisciplineLabelPipe } from '@wbs/pipes/discipline-label.pipe';
   template: `<span
     class="mg-r-5"
     kendoTooltip
-    [title]="id() | disciplineLabel : fullList()"
+    [title]="cat() | disciplineLabel : fullList()"
   >
     <i
       class="fa-solid fa-sm"
-      [ngClass]="id() | disciplineIcon : fullList()"
+      [ngClass]="cat() | disciplineIcon : fullList()"
     ></i>
   </span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DisciplineIconPipe, DisciplineLabelPipe, NgClass, TooltipModule],
 })
 export class DisciplineIconComponent {
-  readonly id = input.required<string>();
+  readonly cat = input.required<ProjectCategory | string>();
   readonly fullList = input<ProjectCategory[]>();
 }

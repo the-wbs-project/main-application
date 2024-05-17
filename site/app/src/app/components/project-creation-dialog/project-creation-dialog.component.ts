@@ -141,19 +141,8 @@ export class ProjectCreationComponent extends DialogContentBase {
       this.owner.set(org);
       this.projectTitle.set(version.title);
       this.disciplines.update((disciplines) => {
-        disciplines = this.catService.buildDisciplines([]);
+        disciplines = this.catService.buildDisciplines(version.disciplines);
 
-        for (const x of version.disciplines) {
-          if (typeof x === 'string') {
-            disciplines.find((d) => d.id === x)!.selected = true;
-          } else {
-            disciplines.push({
-              ...x,
-              selected: true,
-              isCustom: true,
-            });
-          }
-        }
         this.catService.renumber(disciplines);
         return [...disciplines];
       });

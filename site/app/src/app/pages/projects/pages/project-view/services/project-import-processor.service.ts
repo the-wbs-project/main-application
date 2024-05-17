@@ -2,6 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   LibraryEntryNode,
   LibraryImportResults,
+  ProjectCategory,
   ProjectNode,
 } from '@wbs/core/models';
 import { IdService, SignalStore, sorter } from '@wbs/core/services';
@@ -51,25 +52,15 @@ export class ProjectImportProcessorService {
       //  Let's make sure all disciplines added to the task are now in the project.
       //
       for (const discipline of results.version.disciplines) {
-        if (typeof discipline === 'string') {
-          if (!project.disciplines.includes(discipline)) {
-            project.disciplines.push(discipline);
-          }
-        } else {
+        if (discipline.isCustom) {
           let name = discipline.label;
-          let found = false;
+          let index = project.disciplines.findIndex(
+            (x) => x.isCustom && x.label === name
+          );
 
-          for (const pDiscipline of project.disciplines) {
-            if (typeof pDiscipline === 'string') continue;
-
-            if (pDiscipline.label === name) {
-              found = true;
-              break;
-            }
-          }
-          if (!found) {
-            project.disciplines.push(discipline);
-          }
+          if (index === -1) project.disciplines.push(discipline);
+        } else if (!project.disciplines.find((x) => x.id === discipline.id)) {
+          project.disciplines.push(discipline);
         }
       }
     }

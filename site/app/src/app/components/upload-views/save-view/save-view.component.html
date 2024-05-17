@@ -1,9 +1,9 @@
-<div class="pd-15 text-center">
-  <div class="card dashboard-card d-inline-block wd-400 text-center">
+<div class="d-flex justify-content-center">
+  <div class="card dashboard-card wd-400 mg-15">
     <div class="card-header">
       {{ "General.Status" | translate }}
     </div>
-    <div class="card-body pd-15">
+    <div class="card-body pd-15 text-center">
       @if (saving()) {
       <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
       <h3 class="pd-t-20">

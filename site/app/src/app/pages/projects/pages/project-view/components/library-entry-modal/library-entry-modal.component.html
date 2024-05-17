@@ -1,175 +1,106 @@
-<div class="modal-header">
-  <h4 class="modal-title" id="modal-title">
-    {{ "Projects.ExportToLibrary" | translate }}
-  </h4>
-  <button
-    type="button"
-    class="btn-close"
-    aria-label="Close"
-    (click)="modal.dismiss()"
-  ></button>
-</div>
-<div class="modal-body w-100">
-  <form #generalForm [formGroup]="form">
-    <div class="row mg-b-30">
-      <div class="col-md-2 col-sm-12">
-        <label for="categories" class="col-form-label tx-md-normal tx-bold">
-          {{ "General.Categories" | translate }}
-        </label>
-        <div class="d-md-none d-inline-block mg-l-15">
-          <input
-            #anyCategory
-            kendoCheckBox
-            type="checkbox"
-            id="anyCategorySmall"
-            formControlName="anyCategory"
-            (change)="clearCategories(anyCategory.checked)"
-          />
-          <label class="k-checkbox-label" for="anyCategorySmall">
-            Any/All Category
-          </label>
-        </div>
-      </div>
-      <div class="col-md-10 col-sm-12">
-        <div class="mg-b-10 d-md-block d-none">
-          <input
-            #anyCategory
-            kendoCheckBox
-            type="checkbox"
-            id="anyCategoryLarge"
-            formControlName="anyCategory"
-            (change)="clearCategories(anyCategory.checked)"
-          />
-          <label class="k-checkbox-label" for="anyCategoryLarge">
-            Any/All Category
-          </label>
-        </div>
-        @if (!form.controls.anyCategory.value) {
-        <kendo-multiselect
-          id="categories"
-          formControlName="categories"
-          name="gender"
-          [data]="categories"
-          textField="label"
-          valueField="id"
-          [autoClose]="false"
-          [valuePrimitive]="true"
-          [attr.aria-describedby]="'categoriesHelp'"
+<kendo-dialog
+  width="90%"
+  height="90%"
+  [title]="'Projects.ExportToLibrary' | translate"
+>
+  <div class="w-100">
+    <form #generalForm [formGroup]="form">
+      <div class="row mg-b-30">
+        <label
+          for="title"
+          class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
         >
-          <ng-template kendoMultiSelectItemTemplate let-dataItem>
-            <div class="d-flex pd-l-0 flex-align-center w-100">
-              <div class="wd-20 tx-center" style="flex: 0 0 20px">
-                <img class="wd-20 hd-20" [src]="dataItem.icon" />
-              </div>
-              <div class="flex-grow-1 pd-l-15">
-                {{ dataItem.label | translate }}
-              </div>
+          {{ "General.Title" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <input
+            id="title"
+            kendoTextBox
+            class="form-control"
+            formControlName="title"
+            aria-describedby="titleHelp"
+          />
+          <div id="titleHelp" class="form-text">
+            {{ type | libraryEntryTitleHint | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="row mg-b-30">
+        <label
+          for="description"
+          class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+        >
+          {{ "General.Description" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <kendo-editor
+            class="form-control"
+            id="description"
+            formControlName="description"
+            aria-describedby="descriptionHelp"
+            [iframeCss]="{ content: contentCss }"
+          />
+
+          <div id="descriptionHelp" class="form-text">
+            {{ type | libraryEntryDescriptionHint | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="row mg-b-30">
+        <label class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold">
+          {{ "General.Flags" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <div class="mg-b-10 form-check form-switch">
+            <input
+              type="checkbox"
+              id="includeResources"
+              class="form-check-input"
+              formControlName="includeResources"
+              aria-describedby="includeResourcesHelp"
+            />
+            <label class="form-check-label" for="includeResources">
+              {{ "LibraryExport.IncludeResources" | translate }}
+            </label>
+            <div id="includeResourcesHelp" class="form-text">
+              {{ "LibraryExport.IncludeResourcesHint" | translate }}
             </div>
-          </ng-template>
-          <ng-template kendoMultiSelectTagTemplate let-dataItem>
-            {{ dataItem.label | translate }}
-          </ng-template>
-        </kendo-multiselect>
-        }
-        <div id="categoriesHelp" class="form-text">
-          {{ "LibraryExport.CategoriesHint" | translate }}
-        </div>
-      </div>
-    </div>
-    <div class="row mg-b-30">
-      <label
-        for="title"
-        class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
-      >
-        {{ "General.Title" | translate }}
-      </label>
-      <div class="col-md-10 col-sm-12">
-        <input
-          id="title"
-          kendoTextBox
-          class="form-control"
-          formControlName="title"
-          aria-describedby="titleHelp"
-        />
-        <div id="titleHelp" class="form-text">
-          {{ type | libraryEntryTitleHint | translate }}
-        </div>
-      </div>
-    </div>
-    <div class="row mg-b-30">
-      <label
-        for="description"
-        class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
-      >
-        {{ "General.Description" | translate }}
-      </label>
-      <div class="col-md-10 col-sm-12">
-        <kendo-editor
-          class="form-control"
-          id="description"
-          formControlName="description"
-          aria-describedby="descriptionHelp"
-          [iframeCss]="{ content: contentCss }"
-        />
-
-        <div id="descriptionHelp" class="form-text">
-          {{ type | libraryEntryDescriptionHint | translate }}
-        </div>
-      </div>
-    </div>
-    <div class="row mg-b-30">
-      <label class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold">
-        {{ "General.Flags" | translate }}
-      </label>
-      <div class="col-md-10 col-sm-12">
-        <div class="mg-b-10 form-check form-switch">
-          <input
-            type="checkbox"
-            id="includeResources"
-            class="form-check-input"
-            formControlName="includeResources"
-            aria-describedby="includeResourcesHelp"
-          />
-          <label class="form-check-label" for="includeResources">
-            {{ "LibraryExport.IncludeResources" | translate }}
-          </label>
-          <div id="includeResourcesHelp" class="form-text">
-            {{ "LibraryExport.IncludeResourcesHint" | translate }}
           </div>
-        </div>
-        <div class="form-check form-switch">
-          <input
-            type="checkbox"
-            id="visibility"
-            class="form-check-input"
-            formControlName="visibility"
-            aria-describedby="visibilityHelp"
-          />
-          <label class="form-check-label" for="visibility">
-            {{ "LibraryExport.Visibility" | translate }}
-          </label>
-          <div id="visibilityHelp" class="form-text">
-            {{ "LibraryExport.VisibilityHint" | translate }}
+          <div class="form-check form-switch">
+            <input
+              type="checkbox"
+              id="visibility"
+              class="form-check-input"
+              formControlName="visibility"
+              aria-describedby="visibilityHelp"
+            />
+            <label class="form-check-label" for="visibility">
+              {{ "LibraryExport.Visibility" | translate }}
+            </label>
+            <div id="visibilityHelp" class="form-text">
+              {{ "LibraryExport.VisibilityHint" | translate }}
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </form>
-</div>
-
-<div class="modal-footer">
-  <button
-    class="btn btn-primary"
-    [disabled]="form.invalid"
-    (click)="save(true)"
-  >
-    {{ "General.SaveAndView" | translate }}
-  </button>
-  <button
-    class="btn btn-primary"
-    [disabled]="form.invalid"
-    (click)="save(false)"
-  >
-    {{ "General.Save" | translate }}
-  </button>
-</div>
+    </form>
+  </div>
+  <kendo-dialog-actions>
+    <button
+      kendoButton
+      [themeColor]="'primary'"
+      [disabled]="form.invalid"
+      (click)="save(true)"
+    >
+      {{ "General.SaveAndView" | translate }}
+    </button>
+    <button
+      kendoButton
+      [themeColor]="'primary'"
+      [disabled]="form.invalid"
+      (click)="save(false)"
+    >
+      {{ "General.Save" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

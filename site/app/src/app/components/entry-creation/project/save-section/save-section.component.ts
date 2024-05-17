@@ -94,9 +94,10 @@ export class SaveSectionComponent {
         discipline.isCustom
           ? {
               id: discipline.id,
+              isCustom: true,
               label: discipline.label,
             }
-          : discipline.id
+          : { id: discipline.id, isCustom: false }
       );
     }
 

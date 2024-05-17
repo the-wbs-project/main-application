@@ -120,8 +120,3 @@ export class RemoveDisciplinesFromTasks {
   static readonly type = '[Project Task] Remove Disciplines';
   constructor(readonly removedIds: string[]) {}
 }
-
-export class PhasesChanged {
-  static readonly type = '[Project Task] Phases Changed';
-  constructor(readonly results: ProjectCategoryChanges) {}
-}

@@ -10,5 +10,4 @@ export interface LibraryEntryVersion {
   status: string;
   categories: string[];
   disciplines: ProjectCategory[];
-  //phases: ProjectCategory[];
 }

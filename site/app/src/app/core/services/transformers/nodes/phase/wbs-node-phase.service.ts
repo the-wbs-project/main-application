@@ -17,13 +17,11 @@ export class WbsNodePhaseTransformer {
   run(
     models: WbsNode[],
     type: string,
-    disciplines: ProjectCategory[]
+    disciplines: ProjectCategory[] | Category[]
   ): WbsNodeView[] {
     const phases = this.phaseList;
     const nodes: WbsNodeView[] = [];
-    const wbsDisciplines = disciplines.map((x) =>
-      typeof x === 'string' ? x : x.id
-    );
+    const wbsDisciplines = disciplines.map((x) => x.id);
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
       .sort((a, b) => a.order! - b.order!);
