@@ -10,10 +10,6 @@ usage_model = "unbound"
 kv_namespaces = [
   { binding = "KV_DATA", id = "123" },
 ]
-r2_buckets = [
-  { binding = "BUCKET_RESOURCES", bucket_name = "123" },
-  { binding = "BUCKET_STATICS", bucket_name = "789" }
-]
 
 [env.dev.vars]
 DEBUG = "true"
@@ -36,38 +32,11 @@ routes = [
 kv_namespaces = [
   { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
-r2_buckets = [
-  { binding = "BUCKET_RESOURCES", bucket_name = "record-resources-qa" },
-  { binding = "BUCKET_STATICS", bucket_name = "statics-qa" }
-]
 
 [env.test.vars]
 DEBUG = "false"
 DATADOG_ENV = "test"
 CORS_ORIGINS = "https://test.pm-empower.com"
-MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
-AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
-AUTH_DOMAIN = "auth.pm-empower.com"
-
-[env.demo]
-name = "pm-empower-api-demo"
-usage_model = "unbound"
-workers_dev = false
-routes = [
-	{ pattern = "demo-api.pm-empower.com/*", zone_name = "pm-empower.com" },
-]
-kv_namespaces = [
-  { binding = "KV_DATA", id = "bf14375aa8794440b95cde62a4a68463", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
-]
-r2_buckets = [
-  { binding = "BUCKET_RESOURCES", bucket_name = "record-resources-library-demo" },
-  { binding = "BUCKET_STATICS", bucket_name = "statics-library-demo" }
-]
-
-[env.demo.vars]
-DEBUG = "false"
-DATADOG_ENV = "demo"
-CORS_ORIGINS = "https://library-demo.pm-empower.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "auth.pm-empower.com"
@@ -81,10 +50,6 @@ routes = [
 ]
 kv_namespaces = [
   { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
-]
-r2_buckets = [
-  { binding = "BUCKET_RESOURCES", bucket_name = "record-resources-prod" },
-  { binding = "BUCKET_STATICS", bucket_name = "statics-prod" }
 ]
 
 [env.prod.vars]

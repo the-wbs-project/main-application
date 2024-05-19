@@ -51,13 +51,6 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //  Auth calls
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
-app.post('api/portfolio/:owner/projects/:projectId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
-app.post('api/portfolio/:owner/projects/:projectId/nodes/:nodeId/export/libraryEntry', verifyJwt, Http.libraryExport.postAsync);
-app.post(
-  'api/portfolio/:owner/library/entries/:entryId/versions/:entryVersion/nodes/:nodeId/export',
-  verifyJwt,
-  Http.libraryExport.postAsync,
-);
 
 app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);

@@ -1,7 +1,5 @@
 export type Env = {
   readonly KV_DATA: KVNamespace;
-  readonly BUCKET_RESOURCES: R2Bucket;
-  readonly BUCKET_STATICS: R2Bucket;
 
   readonly AUTH_URL: string;
   readonly AUTH_AUDIENCE: string;
