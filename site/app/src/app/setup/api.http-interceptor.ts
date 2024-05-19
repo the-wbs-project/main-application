@@ -7,18 +7,11 @@ import {
 } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, of } from 'rxjs';
+import { API_PREFIX } from 'src/environments/app.config';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
-  private readonly apiDomain: string;
-
-  constructor() {
-    const config = JSON.parse(
-      document.getElementById('edge_config')!.innerHTML
-    );
-
-    this.apiDomain = config['api_prefix'];
-  }
+  private readonly apiDomain = API_PREFIX;
 
   intercept(
     request: HttpRequest<any>,

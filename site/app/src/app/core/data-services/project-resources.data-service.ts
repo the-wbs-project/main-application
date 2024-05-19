@@ -11,26 +11,38 @@ export class ProjectResourcesDataService {
     projectId: string,
     taskId?: string
   ): Observable<ResourceRecord[]> {
-    const url = taskId
-      ? `api/portfolio/${owner}/projects/${projectId}/nodes/${taskId}/resources`
-      : `api/portfolio/${owner}/projects/${projectId}/resources`;
-
     return this.http
-      .get<ResourceRecord[]>(url)
+      .get<ResourceRecord[]>(this.getUrl(owner, projectId, taskId))
       .pipe(map((list) => this.cleanList(list)));
   }
 
   putAsync(
-    ownerId: string,
+    owner: string,
     projectId: string,
     taskId: string | undefined,
     resource: ResourceRecord
   ): Observable<void> {
-    const url = taskId
-      ? `api/portfolio/${ownerId}/projects/${projectId}/nodes/${taskId}/resources/${resource.id}`
-      : `api/portfolio/${ownerId}/projects/${projectId}/resources/${resource.id}`;
+    return this.http.put<void>(
+      this.getIdUrl(resource.id, owner, projectId, taskId),
+      resource
+    );
+  }
 
-    return this.http.put<void>(url, resource);
+  putFileAsync(
+    owner: string,
+    projectId: string,
+    taskId: string | undefined,
+    resourceId: string,
+    file: ArrayBuffer
+  ): Observable<void> {
+    const formData = new FormData();
+
+    formData.append('file', new Blob([file]));
+
+    return this.http.put<void>(
+      this.getIdUrl(resourceId, owner, projectId, taskId) + '/file',
+      formData
+    );
   }
 
   private cleanList(nodes: ResourceRecord[]): ResourceRecord[] {
@@ -42,5 +54,22 @@ export class ProjectResourcesDataService {
         node.lastModified = new Date(node.lastModified);
     }
     return nodes;
+  }
+
+  private getUrl(owner: string, projectId: string, taskId?: string): string {
+    let url = `api/portfolio/${owner}/projects/${projectId}`;
+
+    if (taskId) url += `/nodes/${taskId}`;
+
+    return url + '/resources';
+  }
+
+  private getIdUrl(
+    resourceId: string,
+    owner: string,
+    projectId: string,
+    taskId?: string
+  ): string {
+    return `${this.getUrl(owner, projectId, taskId)}/${resourceId}`;
   }
 }

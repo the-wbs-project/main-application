@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class LibraryEntryNodeResourceDataService : ResourceRecordDataService
 {
-    private readonly ILogger<LibraryEntryNodeResourceDataService> _logger;
-
-    public LibraryEntryNodeResourceDataService(ILogger<LibraryEntryNodeResourceDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ResourceRecord>> GetListAsync(string entryId, int entryVersion, string entryNodeId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetListAsync(conn, entryId, entryVersion, entryNodeId);
-        }
-    }
-
     public async Task<List<ResourceRecord>> GetListAsync(SqlConnection conn, string entryId, int entryVersion, string entryNodeId)
     {
         var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryNodeResources] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [EntryNodeId] = @EntryNodeId ORDER BY [Order]", conn);
@@ -36,13 +17,20 @@ public class LibraryEntryNodeResourceDataService : ResourceRecordDataService
         return await ToList(cmd);
     }
 
-    public async Task SetAsync(string owner, string entryId, int entryVersion, string entryNodeId, ResourceRecord resource)
+    public async Task<ResourceRecord> GetAsync(SqlConnection conn, string entryId, int entryVersion, string entryNodeId, string resourceId)
     {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, entryId, entryVersion, entryNodeId, resource);
-        }
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryNodeResources] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [EntryNodeId] = @EntryNodeId AND [Id] = @ResourceId", conn);
+
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
+        cmd.Parameters.AddWithValue("@EntryNodeId", entryNodeId);
+        cmd.Parameters.AddWithValue("@ResourceId", resourceId);
+
+        var reader = await cmd.ExecuteReaderAsync();
+
+        if (reader.Read()) return ToModel(reader);
+
+        return null;
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, string entryNodeId, ResourceRecord resource)

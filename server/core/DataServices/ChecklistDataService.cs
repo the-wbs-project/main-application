@@ -1,29 +1,10 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ChecklistDataService : BaseSqlDbService
 {
-    private readonly ILogger<ChecklistDataService> _logger;
-
-    public ChecklistDataService(ILogger<ChecklistDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ChecklistGroup>> GetAsync()
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetAsync(conn);
-        }
-    }
-
     public async Task<List<ChecklistGroup>> GetAsync(SqlConnection conn)
     {
         var results = new List<ChecklistGroup>();
@@ -51,15 +32,6 @@ public class ChecklistDataService : BaseSqlDbService
             group.items = await GetAllItemsAsync(conn, group.id);
         }
         return results;
-    }
-
-    public async Task SetAsync(ChecklistGroup[] groups)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, groups);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, ChecklistGroup[] groups)

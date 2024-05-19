@@ -12,17 +12,19 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/library/entries")]
 public class LibraryEntryController : ControllerBase
 {
+    private readonly DbService db;
     private readonly ILogger logger;
     private readonly LibrarySearchService searchService;
     private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryDataService entryDataService;
 
-    public LibraryEntryController(ILoggerFactory loggerFactory, LibrarySearchService searchService, LibraryEntryDataService entryDataService, LibrarySearchIndexService searchIndexService)
+    public LibraryEntryController(ILoggerFactory loggerFactory, LibrarySearchService searchService, LibraryEntryDataService entryDataService, LibrarySearchIndexService searchIndexService, DbService db)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryController>();
         this.searchService = searchService;
         this.entryDataService = entryDataService;
         this.searchIndexService = searchIndexService;
+        this.db = db;
     }
 
     [Authorize]
@@ -31,11 +33,7 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            var results = await searchService.RunQueryAsync(owner, filters);
-            //
-            //  For not remove the tasks
-            //
-            return Ok(results);
+            return Ok(await searchService.RunQueryAsync(owner, filters));
         }
         catch (Exception ex)
         {
@@ -50,7 +48,8 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            return Ok(await entryDataService.GetByIdAsync(owner, entryId));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await entryDataService.GetByIdAsync(conn, owner, entryId));
         }
         catch (Exception ex)
         {
@@ -68,9 +67,8 @@ public class LibraryEntryController : ControllerBase
             if (entry.owner != owner) return BadRequest("Owner in url must match owner in body");
             if (entry.id != entryId) return BadRequest("Id in url must match owner in body");
 
-            using (var conn = entryDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
                 await entryDataService.SetAsync(conn, entry);
                 await IndexLibraryEntryAsync(conn, owner, entryId);
             }
@@ -89,9 +87,12 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            var entry = await entryDataService.GetByIdAsync(owner, entryId);
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                var entry = await entryDataService.GetByIdAsync(conn, owner, entryId);
 
-            return Ok(entry.editors ?? []);
+                return Ok(entry.editors ?? []);
+            }
         }
         catch (Exception ex)
         {

@@ -8,6 +8,7 @@ import {
   libraryClaimsResolve,
   taskIdResolve,
   versionIdResolve,
+  taskApiUrlResolve,
 } from './services';
 
 export const routes: Routes = [
@@ -65,6 +66,7 @@ export const routes: Routes = [
           owner: orgResolve,
           taskId: taskIdResolve,
           entryId: entryIdResolve,
+          apiUrlPrefix: taskApiUrlResolve,
           versionId: versionIdResolve,
           claims: libraryClaimsResolve,
         },

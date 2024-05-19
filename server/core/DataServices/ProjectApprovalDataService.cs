@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ProjectApprovalDataService : BaseSqlDbService
 {
-    private readonly ILogger<ProjectApprovalDataService> _logger;
-
-    public ProjectApprovalDataService(ILogger<ProjectApprovalDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ProjectApproval>> GetByProjectAsync(string projectId)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-
-            return await GetByProjectAsync(conn, projectId);
-        }
-    }
-
     public async Task<List<ProjectApproval>> GetByProjectAsync(SqlConnection conn, string projectId)
     {
         var results = new List<ProjectApproval>();
@@ -42,15 +23,6 @@ public class ProjectApprovalDataService : BaseSqlDbService
                 results.Add(ToModel(reader));
         }
         return results;
-    }
-
-    public async Task SetAsync(string owner, ProjectApprovalSaveRecord record)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, record);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, ProjectApprovalSaveRecord record)

@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
@@ -11,17 +10,17 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects/{projectId}/approvals")]
 public class ProjectApprovalController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<ProjectApprovalController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectApprovalDataService approvalDataService;
 
-    public ProjectApprovalController(ILogger<ProjectApprovalController> logger, TelemetryClient telemetry, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectApprovalDataService approvalDataService, ProjectResourceDataService projectResourceDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService)
+    public ProjectApprovalController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectApprovalDataService approvalDataService, ProjectResourceDataService projectResourceDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ProjectApprovalController>();
         this.projectDataService = projectDataService;
         this.approvalDataService = approvalDataService;
+        this.db = db;
     }
 
     [Authorize]
@@ -30,10 +29,8 @@ public class ProjectApprovalController : ControllerBase
     {
         try
         {
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -42,7 +39,7 @@ public class ProjectApprovalController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting project approvals");
             return new StatusCodeResult(500);
         }
     }
@@ -56,10 +53,8 @@ public class ProjectApprovalController : ControllerBase
             if (approval.projectId != projectId)
                 return BadRequest("The project id in the body must match the project id in the url");
 
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -70,7 +65,7 @@ public class ProjectApprovalController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error setting project approvals");
             return new StatusCodeResult(500);
         }
     }

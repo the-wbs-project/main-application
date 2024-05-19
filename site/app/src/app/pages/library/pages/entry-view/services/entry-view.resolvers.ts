@@ -29,6 +29,14 @@ export const entryUrlResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
 ) => EntryService.getEntryUrl(route);
 
+export const entryApiUrlResolve: ResolveFn<string> = (
+  route: ActivatedRouteSnapshot
+) => EntryService.getEntryApiUrl(route);
+
+export const taskApiUrlResolve: ResolveFn<string> = (
+  route: ActivatedRouteSnapshot
+) => EntryService.getTaskApiUrl(route);
+
 function getLibraryClaims(
   data: DataServiceFactory,
   route: ActivatedRouteSnapshot

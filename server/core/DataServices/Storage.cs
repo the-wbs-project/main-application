@@ -1,7 +1,7 @@
-﻿using System.Reflection.Metadata;
-using Azure;
+﻿using Azure;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
+using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 
 namespace Wbs.Core.DataServices;
@@ -9,17 +9,19 @@ namespace Wbs.Core.DataServices;
 public class Storage
 {
     private readonly BlobServiceClient blobClient;
+    private readonly ILogger logger;
 
-    public Storage(IStorageConfig config)
+    public Storage(ILoggerFactory loggerFactory, IStorageConfig config)
     {
+        logger = loggerFactory.CreateLogger<Storage>();
         blobClient = new BlobServiceClient(
            new Uri(config.BlobUri),
            new AzureSasCredential(config.BlobKey));
     }
 
-    public async Task<byte[]> GetFileAsBytesAsync(string containerName, IEnumerable<string> folders, string fileName)
+    public Task<byte[]> GetFileAsBytesAsync(string containerName, string[] folders, string fileName)
     {
-        return await GetFileAsBytesAsync(containerName, string.Join('/', folders, fileName));
+        return GetFileAsBytesAsync(containerName, string.Join('/', folders, fileName));
     }
 
     public async Task<byte[]> GetFileAsBytesAsync(string containerName, string fileName)
@@ -39,6 +41,11 @@ public class Storage
         }
     }
 
+    public Task<BlobClient> SaveFileAsync(string containerName, string[] folders, string fileName, byte[] data, bool snapshot)
+    {
+        return SaveFileAsync(containerName, string.Join('/', folders) + "/" + fileName, data, snapshot);
+    }
+
     public async Task<BlobClient> SaveFileAsync(string containerName, string fileName, byte[] data, bool snapshot)
     {
         var container = await GetContainerAsync(containerName);
@@ -53,6 +60,8 @@ public class Storage
 
     public async Task SaveFileAsync(string containerName, string fileName, string data, bool snapshot)
     {
+        logger.LogWarning($"Saving file {fileName} to container {containerName}");
+
         var container = await GetContainerAsync(containerName);
         var blob = container.GetBlobClient(fileName);
 

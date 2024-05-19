@@ -1,6 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 
@@ -10,21 +8,24 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ResourcesController : ControllerBase
 {
-    private readonly ILogger<ResourcesController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ResourcesDataService dataService;
 
-    public ResourcesController(ILoggerFactory loggerFactory, ResourcesDataService dataService)
+    public ResourcesController(ILoggerFactory loggerFactory, ResourcesDataService dataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ResourcesController>();
         this.dataService = dataService;
+        this.db = db;
     }
 
-    [HttpGet("categories")] //,Name = "Resources-GetCategories")]
+    [HttpGet("categories")]
     public async Task<ActionResult<IEnumerable<string[]>>> GetCategories()
     {
         try
         {
-            return Ok(await dataService.GetCategoriesAsync());
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetCategoriesAsync(conn));
         }
         catch (Exception ex)
         {
@@ -38,7 +39,8 @@ public class ResourcesController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetAllAsync(locale));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetAllAsync(conn, locale));
         }
         catch (Exception ex)
         {
@@ -54,7 +56,8 @@ public class ResourcesController : ControllerBase
         {
             logger.LogInformation($"GetBySection: {section}, {locale}");
 
-            return Ok(await dataService.GetBySectionAsync(locale, section));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetBySectionAsync(conn, locale, section));
         }
         catch (Exception ex)
         {
@@ -68,7 +71,8 @@ public class ResourcesController : ControllerBase
     {
         try
         {
-            await dataService.SetAsync(resource.locale, resource.section, resource.values); ;
+            using (var conn = await db.CreateConnectionAsync())
+                await dataService.SetAsync(conn, resource.locale, resource.section, resource.values); ;
 
             return NoContent();
         }

@@ -23,6 +23,14 @@ export const projectUrlResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
 ) => ProjectService.getProjectUrl(route);
 
+export const projectApiUrlResolve: ResolveFn<string> = (
+  route: ActivatedRouteSnapshot
+) => ProjectService.getProjectApiUrl(route);
+
+export const taskApiUrlResolve: ResolveFn<string> = (
+  route: ActivatedRouteSnapshot
+) => ProjectService.getTaskApiUrl(route);
+
 export const approvalEnabledResolve: ResolveFn<boolean> = () =>
   inject(Store).select(ProjectApprovalState.enabled);
 

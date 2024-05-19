@@ -1,26 +1,11 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class WatcherLibraryEntryDataService : BaseSqlDbService
 {
-    public WatcherLibraryEntryDataService(IDatabaseConfig config) : base(config)
-    {
-    }
-
-    public async Task<List<string>> GetUsersAsync(string ownerId, string entryId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetUsersAsync(conn, ownerId, entryId);
-        }
-    }
-
     public async Task<List<string>> GetUsersAsync(SqlConnection conn, string ownerId, string entryId)
     {
         var results = new List<string>();
@@ -35,16 +20,6 @@ public class WatcherLibraryEntryDataService : BaseSqlDbService
                 results.Add(reader.GetString(0));
         }
         return results;
-    }
-
-    public async Task<List<EntityId>> GetEntriesAsync(string watcherId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetEntriesAsync(conn, watcherId);
-        }
     }
 
     public async Task<List<EntityId>> GetEntriesAsync(SqlConnection conn, string watcherId)
@@ -62,16 +37,6 @@ public class WatcherLibraryEntryDataService : BaseSqlDbService
         return results;
     }
 
-    public async Task<int> GetCountAsync(string ownerId, string entryId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetCountAsync(conn, ownerId, entryId);
-        }
-    }
-
     public async Task<int> GetCountAsync(SqlConnection conn, string ownerId, string entryId)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[WatchersLibraryEntries] WHERE [OwnerId] = @OwnerId AND [EntryId] = @EntryId", conn);
@@ -81,15 +46,6 @@ public class WatcherLibraryEntryDataService : BaseSqlDbService
         using (var reader = await cmd.ExecuteReaderAsync())
         {
             return reader.Read() ? reader.GetInt32(0) : 0;
-        }
-    }
-
-    public async Task SetAsync(string ownerId, string entryId, string watcherId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, ownerId, entryId, watcherId);
         }
     }
 
@@ -106,15 +62,6 @@ public class WatcherLibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@EntryId", entryId);
 
         await cmd.ExecuteNonQueryAsync();
-    }
-
-    public async Task DeleteAsync(string ownerId, string entryId, string watcherId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await DeleteAsync(conn, ownerId, entryId, watcherId);
-        }
     }
 
     public async Task DeleteAsync(SqlConnection conn, string ownerId, string entryId, string watcherId)

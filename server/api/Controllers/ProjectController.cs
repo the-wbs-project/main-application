@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
@@ -11,17 +10,21 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects")]
 public class ProjectController : ControllerBase
 {
-    private readonly ILogger<ProjectController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectResourceDataService projectResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
+    private readonly ResourceFileStorageService resourceService;
 
-    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService)
+    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectController>();
         this.projectDataService = projectDataService;
         this.projectResourceDataService = projectResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
+        this.resourceService = resourceService;
+        this.db = db;
     }
 
     [Authorize]
@@ -30,7 +33,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            return Ok(await projectDataService.GetByOwnerAsync(owner));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await projectDataService.GetByOwnerAsync(conn, owner));
         }
         catch (Exception ex)
         {
@@ -47,7 +51,8 @@ public class ProjectController : ControllerBase
         {
             if (project.owner != owner) return BadRequest("Owner in url must match owner in body");
 
-            await projectDataService.SetAsync(project);
+            using (var conn = await db.CreateConnectionAsync())
+                await projectDataService.SetAsync(conn, project);
 
             return Accepted();
         }
@@ -64,7 +69,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            return Ok(await projectDataService.GetByIdAsync(projectId));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await projectDataService.GetByIdAsync(conn, projectId));
         }
         catch (Exception ex)
         {
@@ -79,7 +85,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            return Ok((await projectDataService.GetByIdAsync(projectId)).roles ?? new ProjectRole[] { });
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok((await projectDataService.GetByIdAsync(conn, projectId)).roles ?? new ProjectRole[] { });
         }
         catch (Exception ex)
         {
@@ -94,10 +101,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -132,10 +137,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -147,6 +150,62 @@ public class ProjectController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{projectId}/resources/{resourceId}/file")]
+    public async Task<IActionResult> GetResourceFileAsync(string owner, string projectId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                var record = await projectResourceDataService.GetAsync(conn, projectId, resourceId);
+                var file = await resourceService.GetProjectResourceAsync(owner, projectId, resourceId);
+
+                return File(file, "application/octet-stream", record.Resource);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version task resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{projectId}/resources/{resourceId}/file")]
+    public async Task<IActionResult> PutResourceFileAsync(string owner, string projectId, string resourceId, IFormFile file)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                var record = await projectResourceDataService.GetAsync(conn, projectId, resourceId);
+                var bytes = new byte[] { };
+
+                using (var stream = file.OpenReadStream())
+                {
+                    bytes = new byte[stream.Length];
+                    await stream.ReadAsync(bytes, 0, bytes.Length);
+                }
+
+                await resourceService.SaveProjectResourceAsync(owner, projectId, resourceId, bytes);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version task resources");
             return new StatusCodeResult(500);
         }
     }

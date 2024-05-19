@@ -16,6 +16,7 @@ public class ImportLibraryEntryService
     private readonly ProjectNodeDataService projectNodeDataService;
     private readonly ProjectNodeResourceDataService projectNodeResourceDataService;
     private readonly ProjectResourceDataService projectResourceDataService;
+    private readonly DbService db;
 
     public ImportLibraryEntryService(
         LibraryEntryDataService entryDataService,
@@ -26,7 +27,8 @@ public class ImportLibraryEntryService
         ProjectDataService projectDataService,
         ProjectNodeDataService projectNodeDataService,
         ProjectNodeResourceDataService projectNodeResourceDataService,
-        ProjectResourceDataService projectResourceDataService)
+        ProjectResourceDataService projectResourceDataService,
+        DbService db)
     {
         this.entryDataService = entryDataService;
         this.entryNodeDataService = entryNodeDataService;
@@ -37,14 +39,13 @@ public class ImportLibraryEntryService
         this.projectNodeDataService = projectNodeDataService;
         this.projectNodeResourceDataService = projectNodeResourceDataService;
         this.projectResourceDataService = projectResourceDataService;
+        this.db = db;
     }
 
     public async Task<LibraryEntryNodeImportResults> ImportFromProjectAsync(string owner, string projectId, ProjectToLibraryOptions options)
     {
-        using (var conn = projectDataService.CreateConnection())
+        using (var conn = await db.CreateConnectionAsync())
         {
-            await conn.OpenAsync();
-
             var project = await projectDataService.GetByIdAsync(conn, projectId);
             var projectNodes = await projectNodeDataService.GetByProjectAsync(conn, projectId);
 
@@ -152,10 +153,8 @@ public class ImportLibraryEntryService
 
     public async Task<LibraryEntryNodeImportResults> ImportFromProjectNodeAsync(string owner, string projectId, string nodeId, ProjectNodeToLibraryOptions options)
     {
-        using (var conn = projectDataService.CreateConnection())
+        using (var conn = await db.CreateConnectionAsync())
         {
-            await conn.OpenAsync();
-
             var project = await projectDataService.GetByIdAsync(conn, projectId);
             var projectNodes = await projectNodeDataService.GetByProjectAsync(conn, projectId);
             var projectNode = projectNodes.SingleOrDefault(x => x.id == nodeId);
@@ -274,10 +273,8 @@ public class ImportLibraryEntryService
 
     public async Task<LibraryEntryNodeImportResults> ImportFromEntryNodeAsync(string owner, string entryId, int versionId, string nodeId, ProjectNodeToLibraryOptions options)
     {
-        using (var conn = projectDataService.CreateConnection())
+        using (var conn = await db.CreateConnectionAsync())
         {
-            await conn.OpenAsync();
-
             var currentVersion = await entryVersionDataService.GetByIdAsync(conn, entryId, versionId);
             var currentTasks = await entryNodeDataService.GetListAsync(conn, entryId, versionId);
             var task = currentTasks.SingleOrDefault(x => x.id == nodeId);

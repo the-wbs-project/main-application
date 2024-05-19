@@ -1,29 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class LibraryEntryVersionResourceDataService : ResourceRecordDataService
 {
-    private readonly ILogger<LibraryEntryVersionResourceDataService> _logger;
-
-    public LibraryEntryVersionResourceDataService(ILogger<LibraryEntryVersionResourceDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ResourceRecord>> GetListAsync(string entryId, int entryVersion)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetListAsync(conn, entryId, entryVersion);
-        }
-    }
 
     public async Task<List<ResourceRecord>> GetListAsync(SqlConnection conn, string entryId, int entryVersion)
     {
@@ -35,13 +17,19 @@ public class LibraryEntryVersionResourceDataService : ResourceRecordDataService
         return await ToList(cmd);
     }
 
-    public async Task SetAsync(string owner, string entryId, int entryVersion, ResourceRecord resource)
+    public async Task<ResourceRecord> GetAsync(SqlConnection conn, string entryId, int entryVersion, string resourceId)
     {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, entryId, entryVersion, resource);
-        }
+        var cmd = new SqlCommand("SELECT TOP 1 * FROM [dbo].[LibraryEntryVersionResources] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [Id] = @ResourceId", conn);
+
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
+        cmd.Parameters.AddWithValue("@ResourceId", resourceId);
+
+        var reader = await cmd.ExecuteReaderAsync();
+
+        if (reader.Read()) return ToModel(reader);
+
+        return null;
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, ResourceRecord resource)

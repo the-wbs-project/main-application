@@ -21,8 +21,8 @@ import { AlertComponent } from '@wbs/components/_utils/alert.component';
     />
     <wbs-record-resources-page
       [list]="list()"
-      [owner]="owner()"
       [claims]="claims()"
+      [apiUrlPrefix]="apiUrlPrefix()"
       [addClaim]="ADD_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
@@ -39,6 +39,7 @@ export class ResourcesPageComponent implements OnInit {
   readonly taskId = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
+  readonly apiUrlPrefix = input.required<string>();
   readonly ADD_CLAIM = LIBRARY_CLAIMS.RESOURCES.CREATE;
 
   constructor(private readonly service: EntryResourceService) {}

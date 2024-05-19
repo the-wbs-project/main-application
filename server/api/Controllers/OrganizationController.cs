@@ -1,4 +1,3 @@
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.Models;
@@ -10,15 +9,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class OrganizationsController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<OrganizationsController> logger;
+    private readonly ILogger logger;
     private readonly OrganizationDataService dataService;
     private readonly InviteDataService inviteDataService;
 
-    public OrganizationsController(TelemetryClient telemetry, ILogger<OrganizationsController> logger, OrganizationDataService dataService, InviteDataService inviteDataService)
+    public OrganizationsController(ILoggerFactory loggerFactory, OrganizationDataService dataService, InviteDataService inviteDataService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<OrganizationsController>();
         this.dataService = dataService;
         this.inviteDataService = inviteDataService;
     }
@@ -33,7 +30,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving organization");
             return new StatusCodeResult(500);
         }
     }
@@ -70,7 +67,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving organization members");
             return new StatusCodeResult(500);
         }
     }
@@ -87,7 +84,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving user organizational roles");
             return new StatusCodeResult(500);
         }
     }
@@ -106,7 +103,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error removing user from organization");
             return new StatusCodeResult(500);
         }
     }
@@ -125,7 +122,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error adding user organizational roles");
             return new StatusCodeResult(500);
         }
     }
@@ -144,7 +141,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error removing user organizational roles");
             return new StatusCodeResult(500);
         }
     }
@@ -161,7 +158,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving organization invites");
             return new StatusCodeResult(500);
         }
     }
@@ -178,7 +175,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error sending organization invite");
             return new StatusCodeResult(500);
         }
     }
@@ -197,7 +194,7 @@ public class OrganizationsController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error canceling organization invite");
             return new StatusCodeResult(500);
         }
     }

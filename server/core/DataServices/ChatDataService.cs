@@ -1,30 +1,10 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
-using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ChatDataService : BaseSqlDbService
 {
-    private readonly ILogger<ChatDataService> _logger;
-
-    public ChatDataService(ILogger<ChatDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<int> GetNewCommentCount(string threadId, DateTimeOffset timestamp)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetNewCommentCount(conn, threadId, timestamp);
-        }
-    }
-
     public async Task<int> GetNewCommentCount(SqlConnection conn, string threadId, DateTimeOffset timestamp)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ChatComment] WHERE [ThreadId] = @ThreadId AND [Timestamp] > @Timestamp", conn);
@@ -35,16 +15,6 @@ public class ChatDataService : BaseSqlDbService
         using (var reader = await cmd.ExecuteReaderAsync())
         {
             return (await reader.ReadAsync()) ? reader.GetInt32(0) : 0;
-        }
-    }
-
-    public async Task<List<ChatComment>> GetPageAsync(string threadId, int skip, int take)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetPageAsync(conn, threadId, skip, take);
         }
     }
 
@@ -63,15 +33,6 @@ public class ChatDataService : BaseSqlDbService
                 results.Add(ToModel(reader));
         }
         return results;
-    }
-
-    public async Task InsertAsync(ChatComment comment)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await InsertAsync(conn, comment);
-        }
     }
 
     public async Task InsertAsync(SqlConnection conn, ChatComment comment)

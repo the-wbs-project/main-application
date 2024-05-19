@@ -1,3 +1,4 @@
+{{ apiUrlPrefix() }}
 <div cdkDropList (cdkDropListDropped)="onDrop($event)">
   <div class="rr-item rr-list-header">
     @if (claims() | check : editClaim) {
@@ -30,7 +31,10 @@
     <div class="description-item">{{ dataItem.description }}</div>
     <div class="modified-item">{{ dataItem.lastModified | dateText }}</div>
     <div class="view-item">
-      <wbs-resource-view-link [owner]="owner()" [record]="dataItem" />
+      <wbs-resource-view-link
+        [record]="dataItem"
+        [apiUrlPrefix]="apiUrlPrefix()"
+      />
     </div>
     @if (claims() | check : [editClaim, deleteClaim]) {
     <div class="actions-item">

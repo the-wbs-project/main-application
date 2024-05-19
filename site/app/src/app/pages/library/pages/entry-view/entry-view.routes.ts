@@ -7,6 +7,7 @@ import {
   EntryTaskActionService,
   EntryTaskRecorderService,
   LibraryImportProcessorService,
+  entryApiUrlResolve,
   entryIdResolve,
   entryNavGuard,
   entryUrlResolve,
@@ -17,7 +18,6 @@ import {
   verifyTaskUpdateClaimGuard,
   versionIdResolve,
 } from './services';
-import { disciplineListResolver } from './pages/entry-upload/services';
 
 export const routes: Routes = [
   {
@@ -103,6 +103,7 @@ export const routes: Routes = [
           entryId: entryIdResolve,
           versionId: versionIdResolve,
           claims: libraryClaimsResolve,
+          apiUrlPrefix: entryApiUrlResolve,
         },
       },
       {

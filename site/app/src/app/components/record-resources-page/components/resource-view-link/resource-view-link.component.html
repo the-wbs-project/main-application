@@ -21,25 +21,18 @@
     @if (record.type === 'image') {
     <img
       class="w-100"
-      [src]="([owner(), record.id] | resourceObject | async)! | resourceImage"
+      [src]="
+        ([apiUrlPrefix(), record.id] | resourceObject | async)! | resourceImage
+      "
     />
     } @else if (record.type === 'pdf') {
     <div class="modal-body">
-      @if (record.resource) {
       <kendo-pdfviewer
         style="height: 100%"
         [tools]="tools"
-        [url]="record.resource"
+        [arrayBuffer]="([apiUrlPrefix(), record.id] | resourceObject | async)!"
         [saveFileName]="record.name + '.pdf'"
       />
-      } @else {
-      <kendo-pdfviewer
-        style="height: 100%"
-        [tools]="tools"
-        [arrayBuffer]="([owner(), record.id] | resourceObject | async)!"
-        [saveFileName]="record.name + '.pdf'"
-      />
-      }
     </div>
     } @else if (record.type === 'youtube') {
     <div class="modal-body tx-center">

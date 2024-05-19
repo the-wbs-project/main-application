@@ -8,6 +8,7 @@ import {
   projectUrlResolve,
   setApprovalViewAsProject,
   setApprovalViewAsTask,
+  taskApiUrlResolve,
   taskIdResolve,
   taskNavGuard,
   taskVerifyGuard,
@@ -71,6 +72,7 @@ export const routes: Routes = [
           projectId: projectIdResolve,
           taskId: taskIdResolve,
           claims: projectClaimsResolve,
+          apiUrlPrefix: taskApiUrlResolve,
         },
       },
       {

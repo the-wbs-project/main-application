@@ -25,9 +25,9 @@
   <div class="row">
     <div class="col-12 mg-t-10">
       <wbs-record-resource-list
-        [owner]="owner()"
         [claims]="claims()"
         [list]="list()"
+        [apiUrlPrefix]="apiUrlPrefix()"
         (save)="saveRecords.emit($event)"
         (edit)="launchEditor($event)"
       />

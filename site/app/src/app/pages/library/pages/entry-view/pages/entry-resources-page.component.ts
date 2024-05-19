@@ -22,8 +22,8 @@ import { EntryResourceService } from '../services';
     />
     <wbs-record-resources-page
       [list]="list()"
-      [owner]="owner()"
       [claims]="claims()"
+      [apiUrlPrefix]="apiUrlPrefix()"
       [addClaim]="ADD_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
@@ -41,6 +41,7 @@ export class ResourcesPageComponent implements OnInit {
   readonly versionId = input.required<number>();
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
+  readonly apiUrlPrefix = input.required<string>();
   readonly ADD_CLAIM = LIBRARY_CLAIMS.RESOURCES.CREATE;
 
   ngOnInit(): void {

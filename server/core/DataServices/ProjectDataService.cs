@@ -1,31 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using System.Text.Json;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ProjectDataService : BaseSqlDbService
 {
-    private readonly ILogger<ProjectDataService> _logger;
-
-    public ProjectDataService(ILogger<ProjectDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<Project>> GetByOwnerAsync(string owner)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetByOwnerAsync(conn, owner);
-        }
-    }
-
     public async Task<List<Project>> GetByOwnerAsync(SqlConnection conn, string owner)
     {
         var results = new List<Project>();
@@ -40,16 +20,6 @@ public class ProjectDataService : BaseSqlDbService
                 results.Add(ToModel(reader));
         }
         return results;
-    }
-
-    public async Task<Project> GetByIdAsync(string id)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetByIdAsync(conn, id);
-        }
     }
 
     public async Task<Project> GetByIdAsync(SqlConnection conn, string id)
@@ -67,16 +37,6 @@ public class ProjectDataService : BaseSqlDbService
         }
     }
 
-    public async Task<bool> VerifyAsync(string owner, string id)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await VerifyAsync(conn, owner, id);
-        }
-    }
-
     public async Task<bool> VerifyAsync(SqlConnection conn, string owner, string id)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId", conn);
@@ -89,15 +49,6 @@ public class ProjectDataService : BaseSqlDbService
             if (reader.Read()) return reader.GetInt32(0) == 1;
         }
         return false;
-    }
-
-    public async Task SetAsync(Project project)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, project);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, Project project)

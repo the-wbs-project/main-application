@@ -1,7 +1,5 @@
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Wbs.Core.Models;
 using Wbs.Core.Services;
 
 namespace Wbs.Api.Controllers;
@@ -10,7 +8,7 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class RolesController : ControllerBase
 {
-    private readonly ILogger<RolesController> logger;
+    private readonly ILogger logger;
     private readonly UserDataService dataService;
 
     public RolesController(ILoggerFactory loggerFactory, UserDataService dataService)

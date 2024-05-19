@@ -32,7 +32,7 @@ import { ResourceViewLinkComponent } from '../resource-view-link';
   ],
 })
 export class RecordResourceListComponent {
-  readonly owner = input.required<string>();
+  readonly apiUrlPrefix = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly list = model.required<ResourceRecord[]>();
   readonly edit = output<ResourceRecord>();

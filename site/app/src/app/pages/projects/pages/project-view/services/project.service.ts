@@ -5,6 +5,7 @@ import { ProjectNode } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { WbsNodeView } from '@wbs/core/view-models';
+import { API_PREFIX } from 'src/environments/app.config';
 
 @Injectable()
 export class ProjectService {
@@ -21,12 +22,36 @@ export class ProjectService {
     ];
   }
 
+  static getProjectApiUrl(route: ActivatedRouteSnapshot): string {
+    return [
+      API_PREFIX,
+      'api',
+      'portfolio',
+      Utils.getParam(route, 'org'),
+      'projects',
+      Utils.getParam(route, 'projectId'),
+    ].join('/');
+  }
+
   static getTaskUrl(route: ActivatedRouteSnapshot): string[] {
     return [
       ...ProjectService.getProjectUrl(route),
       'tasks',
       Utils.getParam(route, 'taskId'),
     ];
+  }
+
+  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
+    return [
+      API_PREFIX,
+      'api',
+      'portfolio',
+      Utils.getParam(route, 'org'),
+      'projects',
+      Utils.getParam(route, 'projectId'),
+      'nodes',
+      Utils.getParam(route, 'taskId'),
+    ].join('/');
   }
 
   getRoleTitle(

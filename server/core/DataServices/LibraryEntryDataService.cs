@@ -1,7 +1,5 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 using Wbs.Core.ViewModels;
 
@@ -9,23 +7,6 @@ namespace Wbs.Core.DataServices;
 
 public class LibraryEntryDataService : BaseSqlDbService
 {
-    private readonly ILogger<LibraryEntryDataService> _logger;
-
-    public LibraryEntryDataService(ILogger<LibraryEntryDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<LibraryEntryViewModel>> GetByOwnerAsync(string owner)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetByOwnerAsync(conn, owner);
-        }
-    }
-
     public async Task<List<LibraryEntryViewModel>> GetByOwnerAsync(SqlConnection conn, string owner)
     {
         var results = new List<LibraryEntryViewModel>();
@@ -42,16 +23,6 @@ public class LibraryEntryDataService : BaseSqlDbService
         return results;
     }
 
-    public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(string owner, string entryId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetViewModelByIdAsync(conn, owner, entryId);
-        }
-    }
-
     public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(SqlConnection conn, string owner, string entryId)
     {
         var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryView] WHERE [OwnerId] = @Owner AND [EntryId] = @EntryId", conn);
@@ -65,16 +36,6 @@ public class LibraryEntryDataService : BaseSqlDbService
                 return ToViewModel(reader);
             else
                 return null;
-        }
-    }
-
-    public async Task<LibraryEntry> GetByIdAsync(string owner, string id)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetByIdAsync(conn, owner, id);
         }
     }
 
@@ -94,15 +55,6 @@ public class LibraryEntryDataService : BaseSqlDbService
         }
     }
 
-    public async Task<bool> VerifyAsync(string owner, string id)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await VerifyAsync(conn, owner, id);
-        }
-    }
 
     public async Task<bool> VerifyAsync(SqlConnection conn, string owner, string id)
     {
@@ -116,15 +68,6 @@ public class LibraryEntryDataService : BaseSqlDbService
             if (reader.Read()) return reader.GetInt32(0) == 1;
         }
         return false;
-    }
-
-    public async Task SetAsync(LibraryEntry project)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, project);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, LibraryEntry libraryEntry)

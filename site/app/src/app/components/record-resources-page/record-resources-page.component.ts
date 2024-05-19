@@ -43,9 +43,9 @@ export class RecordResourcesPageComponent {
   }>();
 
   readonly list = input.required<ResourceRecord[]>();
-  readonly owner = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly addClaim = input.required<string>();
+  readonly apiUrlPrefix = input.required<string>();
   readonly view = signal<'list' | 'editor'>('list');
 
   readonly faPlus = faPlus;

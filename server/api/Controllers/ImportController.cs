@@ -12,21 +12,21 @@ namespace Wbs.Api.Controllers;
 [Route("api/import")]
 public class ImportController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<ImportController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ProjectFileImporter mppImporter;
     private readonly ExcelFileImporter xlsxImporter;
     private readonly DocumentAiService aiService;
     private readonly Storage storage;
 
-    public ImportController(TelemetryClient telemetry, ILogger<ImportController> logger, ProjectFileImporter mppImporter, ExcelFileImporter xlsxImporter, DocumentAiService aiService, Storage storage)
+    public ImportController(ILoggerFactory loggerFactory, ProjectFileImporter mppImporter, ExcelFileImporter xlsxImporter, DocumentAiService aiService, Storage storage, DbService db)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ImportController>();
         this.mppImporter = mppImporter;
         this.xlsxImporter = xlsxImporter;
         this.aiService = aiService;
         this.storage = storage;
+        this.db = db;
     }
 
     [Authorize]
@@ -47,7 +47,7 @@ public class ImportController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error processing MPP file");
             return new StatusCodeResult(500);
         }
     }
@@ -71,7 +71,7 @@ public class ImportController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error processing XLSX file");
             return new StatusCodeResult(500);
         }
     }
@@ -99,7 +99,6 @@ public class ImportController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error processing AI file");
-            telemetry.TrackException(ex);
             return new StatusCodeResult(500);
         }
     }

@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
 using System.Text.Json;
-using Wbs.Core.Configuration;
 
 namespace Wbs.Core.DataServices;
 
 public class ResourcesDataService : BaseSqlDbService
 {
-    private readonly ILogger<ResourcesDataService> _logger;
-
-    public ResourcesDataService(ILogger<ResourcesDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<string>> GetCategoriesAsync()
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetCategoriesAsync(conn);
-        }
-    }
-
     public async Task<List<string>> GetCategoriesAsync(SqlConnection conn)
     {
         var results = new List<string>();
@@ -36,16 +17,6 @@ public class ResourcesDataService : BaseSqlDbService
             while (reader.Read()) results.Add(reader.GetString(0));
         }
         return results;
-    }
-
-    public async Task<Dictionary<string, Dictionary<string, string>>> GetAllAsync(string locale)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetAllAsync(conn, locale);
-        }
     }
 
     public async Task<Dictionary<string, Dictionary<string, string>>> GetAllAsync(SqlConnection conn, string locale)
@@ -71,16 +42,6 @@ public class ResourcesDataService : BaseSqlDbService
         return results;
     }
 
-    public async Task<Dictionary<string, string>> GetBySectionAsync(string locale, string section)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetBySectionAsync(conn, locale, section);
-        }
-    }
-
     public async Task<Dictionary<string, string>> GetBySectionAsync(SqlConnection conn, string locale, string section)
     {
         var results = new Dictionary<string, string>();
@@ -100,15 +61,6 @@ public class ResourcesDataService : BaseSqlDbService
             }
         }
         return results;
-    }
-
-    public async Task SetAsync(string locale, string section, Dictionary<string, string> values)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, locale, section, values);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, string locale, string section, Dictionary<string, string> values)

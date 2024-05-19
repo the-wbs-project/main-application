@@ -15,10 +15,11 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { Messages, Utils } from '@wbs/core/services';
-import { EntryStore, MembershipStore, MetadataStore } from '@wbs/core/store';
+import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { Observable, forkJoin } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
+import { API_PREFIX } from 'src/environments/app.config';
 
 @Injectable()
 export class EntryService {
@@ -26,7 +27,6 @@ export class EntryService {
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
   private readonly membership = inject(MembershipStore);
-  private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
   private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
@@ -49,6 +49,36 @@ export class EntryService {
       Utils.getParam(route, 'entryId'),
       Utils.getParam(route, 'versionId'),
     ];
+  }
+
+  static getEntryApiUrl(route: ActivatedRouteSnapshot): string {
+    return [
+      API_PREFIX,
+      'api',
+      'portfolio',
+      Utils.getParam(route, 'org'),
+      'library',
+      'entries',
+      Utils.getParam(route, 'entryId'),
+      'versions',
+      Utils.getParam(route, 'versionId'),
+    ].join('/');
+  }
+
+  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
+    return [
+      API_PREFIX,
+      'api',
+      'portfolio',
+      Utils.getParam(route, 'org'),
+      'library',
+      'entries',
+      Utils.getParam(route, 'entryId'),
+      'versions',
+      Utils.getParam(route, 'versionId'),
+      'nodes',
+      Utils.getParam(route, 'taskId'),
+    ].join('/');
   }
 
   createAsync(

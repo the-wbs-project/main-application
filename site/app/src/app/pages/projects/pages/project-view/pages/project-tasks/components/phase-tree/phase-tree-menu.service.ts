@@ -99,7 +99,7 @@ export class PhaseTreeMenuService {
     if (
       task &&
       link.filters.excludeFromCat &&
-      (task.id === task.phaseId || task.id === task.disciplines[0].id)
+      (task.id === task.phaseId || task.id === task.disciplines[0]?.id)
     )
       return false;
 

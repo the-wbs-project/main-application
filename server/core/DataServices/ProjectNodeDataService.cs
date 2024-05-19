@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ProjectNodeDataService : BaseSqlDbService
 {
-    private readonly ILogger<ProjectNodeDataService> _logger;
-
-    public ProjectNodeDataService(ILogger<ProjectNodeDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ProjectNode>> GetByProjectAsync(string projectId)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-
-            return await GetByProjectAsync(conn, projectId);
-        }
-    }
-
     public async Task<List<ProjectNode>> GetByProjectAsync(SqlConnection conn, string projectId)
     {
         var results = new List<ProjectNode>();
@@ -41,16 +22,6 @@ public class ProjectNodeDataService : BaseSqlDbService
         return results;
     }
 
-    public async Task<ProjectNode> GetByIdAsync(string nodeId)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-
-            return await GetByIdAsync(conn, nodeId);
-        }
-    }
-
     public async Task<ProjectNode> GetByIdAsync(SqlConnection conn, string nodeId)
     {
         var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectNodes] WHERE [Id] = @Id", conn);
@@ -63,16 +34,6 @@ public class ProjectNodeDataService : BaseSqlDbService
                 return ToModel(reader);
         }
         return null;
-    }
-
-    public async Task<bool> VerifyAsync(string projectId, string nodeId)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-
-            return await VerifyAsync(conn, projectId, nodeId);
-        }
     }
 
     public async Task<bool> VerifyAsync(SqlConnection conn, string projectId, string nodeId)
@@ -89,15 +50,6 @@ public class ProjectNodeDataService : BaseSqlDbService
         return false;
     }
 
-    public async Task SetSaveRecordAsync(string owner, string projectId, BulkSaveRecord<ProjectNode> record)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await SetSaveRecordAsync(conn, owner, projectId, record);
-        }
-    }
-
     public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string projectId, BulkSaveRecord<ProjectNode> record)
     {
         foreach (var upsert in record.upserts)
@@ -105,15 +57,6 @@ public class ProjectNodeDataService : BaseSqlDbService
 
         foreach (var removeId in record.removeIds)
             await DeleteAsync(conn, owner, projectId, removeId);
-    }
-
-    public async Task SetAsync(string owner, ProjectNode node)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, node);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, ProjectNode node)
@@ -134,15 +77,6 @@ public class ProjectNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
 
         await cmd.ExecuteNonQueryAsync();
-    }
-
-    public async Task DeleteAsync(string ownerId, string projectId, string id)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await DeleteAsync(conn, ownerId, projectId, id);
-        }
     }
 
     /// <summary>

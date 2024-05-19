@@ -11,14 +11,16 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/library/entries/{entryId}/versions/{entryVersion}/nodes")]
 public class LibraryEntryNodeController : ControllerBase
 {
+    private readonly DbService db;
     private readonly ILogger logger;
     private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
+    private readonly ResourceFileStorageService resourceService;
 
-    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, LibrarySearchIndexService searchIndexService, ImportLibraryEntryService importLibraryEntryService)
+    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, LibrarySearchIndexService searchIndexService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryNodeController>();
         this.nodeDataService = nodeDataService;
@@ -26,6 +28,8 @@ public class LibraryEntryNodeController : ControllerBase
         this.searchIndexService = searchIndexService;
         this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
+        this.resourceService = resourceService;
+        this.db = db;
     }
 
     [Authorize]
@@ -34,10 +38,8 @@ public class LibraryEntryNodeController : ControllerBase
     {
         try
         {
-            using (var conn = nodeDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
@@ -60,9 +62,8 @@ public class LibraryEntryNodeController : ControllerBase
             if (record.upserts == null) record.upserts = new LibraryEntryNode[] { };
             if (record.removeIds == null) record.removeIds = new string[] { };
 
-            using (var conn = nodeDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
                 //
                 //  Make the version actually exists
                 //
@@ -88,10 +89,8 @@ public class LibraryEntryNodeController : ControllerBase
     {
         try
         {
-            using (var conn = nodeResourceDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
                     return BadRequest("Entry Node not found for the credentails provided.");
 
@@ -113,14 +112,68 @@ public class LibraryEntryNodeController : ControllerBase
         {
             if (model.Id != resourceId) return BadRequest("Id in body must match ResourceId in url");
 
-            using (var conn = nodeResourceDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
                     return BadRequest("Entry Node not found for the credentails provided.");
 
                 await nodeResourceDataService.SetAsync(conn, owner, entryId, entryVersion, nodeId, model);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version task resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{nodeId}/resources/{resourceId}/file")]
+    public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
+                    return BadRequest("Entry Node not found for the credentails provided.");
+
+                var record = await nodeResourceDataService.GetAsync(conn, entryId, entryVersion, nodeId, resourceId);
+                var file = await resourceService.GetLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId);
+
+                return File(file, "application/octet-stream", record.Resource);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version task resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{nodeId}/resources/{resourceId}/file")]
+    public async Task<IActionResult> PutNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile file)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
+                    return BadRequest("Entry Node not found for the credentails provided.");
+
+                var record = await nodeResourceDataService.GetAsync(conn, entryId, entryVersion, nodeId, resourceId);
+                var bytes = new byte[] { };
+
+                using (var stream = file.OpenReadStream())
+                {
+                    bytes = new byte[stream.Length];
+                    await stream.ReadAsync(bytes, 0, bytes.Length);
+                }
+
+                await resourceService.SaveLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId, bytes);
 
                 return NoContent();
             }
@@ -138,10 +191,8 @@ public class LibraryEntryNodeController : ControllerBase
     {
         try
         {
-            using (var conn = nodeResourceDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 var results = await importLibraryEntryService.ImportFromEntryNodeAsync(owner, entryId, entryVersion, nodeId, options);
 
                 await IndexLibraryEntryAsync(conn, owner, results.newId);

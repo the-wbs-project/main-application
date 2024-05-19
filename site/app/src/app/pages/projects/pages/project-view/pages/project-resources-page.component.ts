@@ -22,8 +22,8 @@ import { ProjectResourceService } from '../services';
     />
     <wbs-record-resources-page
       [list]="list()"
-      [owner]="owner()"
       [claims]="claims()"
+      [apiUrlPrefix]="apiUrlPrefix()"
       [addClaim]="ADD_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
@@ -38,6 +38,7 @@ export class ProjectResourcesPageComponent implements OnInit {
 
   readonly owner = input.required<string>();
   readonly projectId = input.required<string>();
+  readonly apiUrlPrefix = input.required<string>();
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
   readonly ADD_CLAIM = PROJECT_CLAIMS.RESOURCES.CREATE;

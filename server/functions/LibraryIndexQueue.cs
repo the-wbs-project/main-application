@@ -1,7 +1,5 @@
 using Microsoft.Azure.Functions.Worker;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Services;
 
@@ -9,17 +7,17 @@ namespace functions
 {
     public class LibraryIndexQueue
     {
+        private readonly DbService db;
         private readonly ILogger _logger;
-        private readonly IDatabaseConfig dbConfig;
         private readonly LibrarySearchIndexService searchService;
         private readonly LibraryEntryDataService dataService;
 
-        public LibraryIndexQueue(ILoggerFactory loggerFactory, IDatabaseConfig dbConfig, LibrarySearchIndexService searchService, LibraryEntryDataService dataService)
+        public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchService, LibraryEntryDataService dataService, DbService db)
         {
             _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
-            this.dbConfig = dbConfig;
             this.dataService = dataService;
             this.searchService = searchService;
+            this.db = db;
         }
 
         [Function("LibraryIndex-Build")]
@@ -42,10 +40,8 @@ namespace functions
         {
             try
             {
-                using (var conn = new SqlConnection(dbConfig.SqlConnectionString))
+                using (var conn = await db.CreateConnectionAsync())
                 {
-                    await conn.OpenAsync();
-
                     var parts = message.Split('|');
                     var owner = parts[0];
                     var entryId = parts[1];
@@ -66,10 +62,8 @@ namespace functions
         {
             try
             {
-                using (var conn = new SqlConnection(dbConfig.SqlConnectionString))
+                using (var conn = await db.CreateConnectionAsync())
                 {
-                    await conn.OpenAsync();
-
                     var entries = await dataService.GetByOwnerAsync(conn, owner);
 
                     await searchService.VerifyIndexAsync();

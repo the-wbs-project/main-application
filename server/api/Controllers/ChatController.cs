@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
@@ -10,15 +9,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ChatController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<ChatController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ChatDataService dataService;
 
-    public ChatController(TelemetryClient telemetry, ILogger<ChatController> logger, ChatDataService dataService)
+    public ChatController(ILoggerFactory loggerFactory, ChatDataService dataService, DbService db)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ChatController>();
         this.dataService = dataService;
+        this.db = db;
     }
 
     [Authorize]
@@ -27,11 +26,12 @@ public class ChatController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetPageAsync(threadId, skip, take));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetPageAsync(conn, threadId, skip, take));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving chat comments");
             return new StatusCodeResult(500);
         }
     }
@@ -42,11 +42,12 @@ public class ChatController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetNewCommentCount(threadId, timestamp));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetNewCommentCount(conn, threadId, timestamp));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving chat comments");
             return new StatusCodeResult(500);
         }
     }
@@ -60,14 +61,17 @@ public class ChatController : ControllerBase
             if (threadId != comment.threadId)
                 return BadRequest();
 
-            await dataService.InsertAsync(comment);
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                await dataService.InsertAsync(conn, comment);
 
-            comment.timestamp = DateTimeOffset.UtcNow;
-            return Ok(comment);
+                comment.timestamp = DateTimeOffset.UtcNow;
+                return Ok(comment);
+            }
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving chat comment");
             return new StatusCodeResult(500);
         }
     }

@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class LibraryEntryVersionDataService : BaseSqlDbService
 {
-    private readonly ILogger<LibraryEntryVersionDataService> _logger;
-
-    public LibraryEntryVersionDataService(ILogger<LibraryEntryVersionDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<LibraryEntryVersion>> GetListAsync(string entryId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetListAsync(conn, entryId);
-        }
-    }
-
     public async Task<List<LibraryEntryVersion>> GetListAsync(SqlConnection conn, string entryId)
     {
         var results = new List<LibraryEntryVersion>();
@@ -39,16 +20,6 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
                 results.Add(ToModel(reader));
         }
         return results;
-    }
-
-    public async Task<LibraryEntryVersion> GetByIdAsync(string entryId, int entryVersion)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetByIdAsync(conn, entryId, entryVersion);
-        }
     }
 
     public async Task<LibraryEntryVersion> GetByIdAsync(SqlConnection conn, string entryId, int entryVersion)
@@ -67,16 +38,6 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         }
     }
 
-    public async Task<bool> VerifyAsync(string owner, string entryId, int entryVersion)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await VerifyAsync(conn, owner, entryId, entryVersion);
-        }
-    }
-
     public async Task<bool> VerifyAsync(SqlConnection conn, string owner, string entryId, int entryVersion)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion", conn);
@@ -89,15 +50,6 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
             if (reader.Read()) return reader.GetInt32(0) == 1;
         }
         return false;
-    }
-
-    public async Task SetAsync(string owner, LibraryEntryVersion entryVersion)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, entryVersion);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, LibraryEntryVersion entryVersion)

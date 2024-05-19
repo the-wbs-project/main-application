@@ -56,13 +56,18 @@ export class EntryResourceService {
   ): Observable<ResourceRecord> {
     if (!data.id) data.id = IdService.generate();
 
-    //this.messages.block.show('.resource-editor', 'General.Saving');
+    data.resource = rawFile.name;
 
     return Utils.getFileAsync(rawFile).pipe(
-      switchMap((file) =>
-        this.data.resourceFiles.uploadAsync(owner, data.id!, file)
-      ),
-      switchMap(() => this.save(owner, entryId, versionId, taskId, data)),
+      switchMap((file) => {
+        return this.save(owner, entryId, versionId, taskId, data).pipe(
+          switchMap((record) =>
+            this.data.libraryEntryResources
+              .putFileAsync(owner, entryId, versionId, taskId, data.id!, file)
+              .pipe(map(() => record))
+          )
+        );
+      }),
       tap(() => this.messages.notify.success('Resources.ResourceSaved'))
     );
   }

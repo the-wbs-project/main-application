@@ -9,15 +9,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ChecklistsController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<ChecklistsController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ChecklistDataService dataService;
 
-    public ChecklistsController(TelemetryClient telemetry, ILogger<ChecklistsController> logger, ChecklistDataService dataService)
+    public ChecklistsController(ILoggerFactory loggerFactory, ChecklistDataService dataService, DbService db)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ChecklistsController>();
         this.dataService = dataService;
+        this.db = db;
     }
 
     [HttpGet]
@@ -25,11 +25,12 @@ public class ChecklistsController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetAsync());
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetAsync(conn));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving checklists");
             return new StatusCodeResult(500);
         }
     }
@@ -39,13 +40,16 @@ public class ChecklistsController : ControllerBase
     {
         try
         {
-            await dataService.SetAsync(groups);
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                await dataService.SetAsync(conn, groups);
 
-            return NoContent();
+                return NoContent();
+            }
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving checklists");
             return new StatusCodeResult(500);
         }
     }

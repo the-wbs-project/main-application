@@ -98,11 +98,6 @@ app.post('api/chat/thread/:threadId', verifyJwt, Http.chat.postAsync);
 app.post('api/jira/upload/create', verifyJwt, Http.jira.createUploadIssueAsync);
 app.post('api/jira/upload/:jiraIssueId/attachment', verifyJwt, Http.jira.uploadAttachmentAsync);
 
-app.get('api/files/statics/:file', verifyJwt, Http.statics.getAsync);
-
-app.get('api/portfolio/:owner/files/:file', verifyJwt, Http.resourceFiles.getAsync);
-app.put('api/portfolio/:owner/files/:file', verifyJwt, (ctx) => ctx.newResponse('', { status: 204 })); //, Http.resourceFiles.putAsync);
-
 app.get('api/queue/test', (ctx) => {
   ctx.env.JIRA_SYNC_QUEUE.send({
     message: 'Hello World!',

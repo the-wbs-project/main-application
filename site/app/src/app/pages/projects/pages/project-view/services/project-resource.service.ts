@@ -53,7 +53,13 @@ export class ProjectResourceService {
 
     return Utils.getFileAsync(rawFile).pipe(
       switchMap((file) =>
-        this.data.resourceFiles.uploadAsync(owner, data.id!, file)
+        this.data.projectResources.putFileAsync(
+          owner,
+          projectId,
+          taskId,
+          data.id!,
+          file
+        )
       ),
       switchMap(() => this.save(owner, projectId, taskId, data)),
       tap(() => this.messages.notify.success('Resources.ResourceSaved'))

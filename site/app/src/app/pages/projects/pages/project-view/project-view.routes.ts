@@ -17,6 +17,7 @@ import {
   TimelineService,
   approvalEnabledResolve,
   closeApprovalWindowGuard,
+  projectApiUrlResolve,
   projectClaimsResolve,
   projectIdResolve,
   projectNavGuard,
@@ -127,6 +128,7 @@ export const routes: Routes = [
           owner: orgResolve,
           projectId: projectIdResolve,
           claims: projectClaimsResolve,
+          apiUrlPrefix: projectApiUrlResolve,
         },
       },
       /*{

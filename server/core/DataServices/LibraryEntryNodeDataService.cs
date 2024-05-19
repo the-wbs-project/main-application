@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class LibraryEntryNodeDataService : BaseSqlDbService
 {
-    private readonly ILogger<LibraryEntryNodeDataService> _logger;
-
-    public LibraryEntryNodeDataService(ILogger<LibraryEntryNodeDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<LibraryEntryNode>> GetListAsync(string entryId, int entryVersion)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-
-            return await GetListAsync(conn, entryId, entryVersion);
-        }
-    }
-
     public async Task<List<LibraryEntryNode>> GetListAsync(SqlConnection conn, string entryId, int entryVersion)
     {
         var results = new List<LibraryEntryNode>();
@@ -42,16 +23,6 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         return results;
     }
 
-    public async Task<bool> VerifyAsync(string owner, string entryId, int entryVersion, string nodeId)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-
-            return await VerifyAsync(conn, owner, entryId, entryVersion, nodeId);
-        }
-    }
-
     public async Task<bool> VerifyAsync(SqlConnection conn, string owner, string entryId, int entryVersion, string nodeId)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[LibraryEntryNodes] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [Id] = @Id", conn);
@@ -67,15 +38,6 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         return false;
     }
 
-    public async Task SetSaveRecordAsync(string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
-        }
-    }
-
     public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
     {
         foreach (var upsert in record.upserts)
@@ -83,15 +45,6 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
 
         foreach (var removeId in record.removeIds)
             await DeleteAsync(conn, owner, entryId, entryVersion, removeId);
-    }
-
-    public async Task SetAsync(string owner, string entryId, int entryVersion, LibraryEntryNode node)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, entryId, entryVersion, node);
-        }
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, LibraryEntryNode node)
@@ -113,15 +66,6 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
 
         await cmd.ExecuteNonQueryAsync();
-    }
-
-    public async Task DeleteAsync(string owner, string entryId, int entryVersion, string id)
-    {
-        using (var conn = CreateConnection())
-        {
-            await conn.OpenAsync();
-            await DeleteAsync(conn, owner, entryId, entryVersion, id);
-        }
     }
 
     /// <summary>

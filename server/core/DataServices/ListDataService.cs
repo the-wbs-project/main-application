@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ListDataService : BaseSqlDbService
 {
-    private readonly ILogger<ListDataService> _logger;
-
-    public ListDataService(ILogger<ListDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ListItem>> GetAsync(string type)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetAsync(conn, type);
-        }
-    }
-
     public async Task<List<ListItem>> GetAsync(SqlConnection conn, string type)
     {
         var results = new List<ListItem>();
@@ -68,15 +49,6 @@ public class ListDataService : BaseSqlDbService
         return results;
     }
 
-    public async Task SetAsync(ListItem item)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, item);
-        }
-    }
-
     public async Task SetAsync(SqlConnection conn, ListItem item)
     {
         var cmd = new SqlCommand("dbo.List_Set", conn)
@@ -93,15 +65,6 @@ public class ListDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Tags", DbJson(item.tags));
 
         await cmd.ExecuteNonQueryAsync();
-    }
-
-    public async Task DeleteAsync(string id, string type)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await DeleteAsync(conn, id, type);
-        }
     }
 
     public async Task DeleteAsync(SqlConnection conn, string id, string type)

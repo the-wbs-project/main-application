@@ -10,14 +10,12 @@ namespace Wbs.Api.Controllers;
 [Route("api/export")]
 public class ExportController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<ExportController> logger;
+    private readonly ILogger logger;
     private readonly ExcelFileExporter xlsxExporter;
 
-    public ExportController(TelemetryClient telemetry, ILogger<ExportController> logger, ExcelFileExporter xlsxExporter)
+    public ExportController(ILoggerFactory loggerFactory, ExcelFileExporter xlsxExporter)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ExportController>();
         this.xlsxExporter = xlsxExporter;
     }
 
@@ -33,7 +31,7 @@ public class ExportController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error exporting data to Excel");
             return new StatusCodeResult(500);
         }
     }

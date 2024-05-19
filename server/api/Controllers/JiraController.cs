@@ -9,16 +9,17 @@ namespace Wbs.Api.Controllers;
 [Route("api/jira")]
 public class JiraController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly JiraSyncService service;
 
-    public JiraController(TelemetryClient telemetry, JiraSyncService service)
+
+    /*  private readonly JiraSyncService service;
+
+    public JiraController(TelemetryClient telemetry, JiraSyncService service, DbService db)
     {
         this.telemetry = telemetry;
         this.service = service;
+        this.db = db;
     }
-
-    /*[HttpPut("sync/customers")]
+[HttpPut("sync/customers")]
     public async Task<ActionResult> SyncCustomers()
     {
         try

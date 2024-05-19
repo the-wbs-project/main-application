@@ -42,7 +42,7 @@ export class ResourceViewLinkComponent {
   private readonly dialogService = inject(DialogService);
   private dialog?: DialogRef;
 
-  readonly owner = input.required<string>();
+  readonly apiUrlPrefix = input.required<string>();
   readonly record = input.required<ResourceRecord>();
 
   readonly faEye = faEye;

@@ -1,5 +1,4 @@
 using Auth0.Core.Exceptions;
-using Microsoft.ApplicationInsights;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.Models;
@@ -11,14 +10,12 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class UsersController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<UsersController> logger;
+    private readonly ILogger logger;
     private readonly UserDataService dataService;
 
-    public UsersController(TelemetryClient telemetry, ILogger<UsersController> logger, UserDataService dataService)
+    public UsersController(ILoggerFactory loggerFactory, UserDataService dataService)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<UsersController>();
         this.dataService = dataService;
     }
 
@@ -35,12 +32,12 @@ public class UsersController : ControllerBase
             if (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
                 return NotFound();
 
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting user");
             return new StatusCodeResult(500);
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting user");
             return new StatusCodeResult(500);
         }
     }
@@ -55,7 +52,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception e)
         {
-            telemetry.TrackException(e);
+            logger.LogError(e, "Error getting user roles");
             return new StatusCodeResult(500);
         }
     }
@@ -70,7 +67,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error getting user memberships");
             return new StatusCodeResult(500);
         }
     }
@@ -90,7 +87,7 @@ public class UsersController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error updating user");
             return new StatusCodeResult(500);
         }
     }

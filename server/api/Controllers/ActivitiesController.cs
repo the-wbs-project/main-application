@@ -10,17 +10,17 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ActivitiesController : ControllerBase
 {
-    private readonly TelemetryClient telemetry;
-    private readonly ILogger<ActivitiesController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ActivityDataService dataService;
     private readonly ProjectSnapshotDataService snapshotDataService;
 
-    public ActivitiesController(TelemetryClient telemetry, ILogger<ActivitiesController> logger, ActivityDataService dataService, ProjectSnapshotDataService snapshotDataService)
+    public ActivitiesController(ILoggerFactory loggerFactory, ActivityDataService dataService, ProjectSnapshotDataService snapshotDataService, DbService db)
     {
-        this.logger = logger;
-        this.telemetry = telemetry;
+        logger = loggerFactory.CreateLogger<ActivitiesController>();
         this.dataService = dataService;
         this.snapshotDataService = snapshotDataService;
+        this.db = db;
     }
 
     [Authorize]
@@ -29,11 +29,12 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetCountForTopLevelAsync(topLevel));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetCountForTopLevelAsync(conn, topLevel));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving count for activities of top level");
             return new StatusCodeResult(500);
         }
     }
@@ -44,11 +45,12 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetForTopLevelAsync(topLevel, skip, take));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetForTopLevelAsync(conn, topLevel, skip, take));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving activities for top level");
             return new StatusCodeResult(500);
         }
     }
@@ -59,11 +61,12 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetCountForChildAsync(topLevel, child));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetCountForChildAsync(conn, topLevel, child));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving count for activities of child");
             return new StatusCodeResult(500);
         }
     }
@@ -74,11 +77,12 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetForChildAsync(topLevel, child, skip, take));
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await dataService.GetForChildAsync(conn, topLevel, child, skip, take));
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error retrieving activities for child");
             return new StatusCodeResult(500);
         }
     }
@@ -89,10 +93,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = dataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 foreach (var data in activities)
                     await dataService.InsertAsync(conn, data);
 
@@ -101,7 +103,7 @@ public class ActivitiesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving activities");
             return new StatusCodeResult(500);
         }
     }
@@ -112,10 +114,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = dataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 foreach (var data in activities)
                 {
                     await dataService.InsertAsync(conn, data.activity);
@@ -127,7 +127,7 @@ public class ActivitiesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving project activities");
             return new StatusCodeResult(500);
         }
     }
@@ -138,10 +138,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = dataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 foreach (var activity in activities)
                     await dataService.InsertAsync(conn, activity);
 
@@ -150,7 +148,7 @@ public class ActivitiesController : ControllerBase
         }
         catch (Exception ex)
         {
-            telemetry.TrackException(ex);
+            logger.LogError(ex, "Error saving library activities");
             return new StatusCodeResult(500);
         }
     }

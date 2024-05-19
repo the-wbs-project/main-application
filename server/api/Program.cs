@@ -14,6 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //
 builder.Services.AddControllers();
+builder.Services.AddApplicationInsightsTelemetry();
 builder.Configuration.AddAzureAppConfiguration(options =>
 {
     options.Connect(builder.Configuration["AppConfig:ConnectionString"])
@@ -27,7 +28,6 @@ builder.Configuration.AddAzureAppConfiguration(options =>
 //
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddApplicationInsightsTelemetry();
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 .AddJwtBearer(options =>
 {
@@ -50,6 +50,7 @@ builder.Services.AddSingleton<IStorageConfig, AzureStorageConfig>();
 //
 //  Data Services
 //
+builder.Services.AddSingleton<DbService>();
 builder.Services.AddSingleton<ActivityDataService>();
 builder.Services.AddSingleton<ChatDataService>();
 builder.Services.AddSingleton<ChecklistDataService>();
@@ -70,6 +71,7 @@ builder.Services.AddSingleton<ProjectNodeResourceDataService>();
 builder.Services.AddSingleton<ProjectResourceDataService>();
 builder.Services.AddSingleton<ProjectSnapshotDataService>();
 builder.Services.AddSingleton<ResourcesDataService>();
+builder.Services.AddSingleton<ResourceFileStorageService>();
 builder.Services.AddSingleton<Storage>();
 builder.Services.AddSingleton<UserDataService>();
 builder.Services.AddSingleton<WatcherLibraryEntryDataService>();

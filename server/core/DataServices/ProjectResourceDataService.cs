@@ -1,30 +1,11 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using System.Data;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ProjectResourceDataService : ResourceRecordDataService
 {
-    private readonly ILogger<ProjectResourceDataService> _logger;
-
-    public ProjectResourceDataService(ILogger<ProjectResourceDataService> logger, IDatabaseConfig config) : base(config)
-    {
-        _logger = logger;
-    }
-
-    public async Task<List<ResourceRecord>> GetListAsync(string projectId)
-    {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-
-            return await GetListAsync(conn, projectId);
-        }
-    }
-
     public async Task<List<ResourceRecord>> GetListAsync(SqlConnection conn, string projectId)
     {
         var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectResources] WHERE [ProjectId] = @ProjectId ORDER BY [Order]", conn);
@@ -34,13 +15,18 @@ public class ProjectResourceDataService : ResourceRecordDataService
         return await ToList(cmd);
     }
 
-    public async Task SetAsync(string owner, string projectId, ResourceRecord resource)
+    public async Task<ResourceRecord> GetAsync(SqlConnection conn, string projectId, string resourceId)
     {
-        using (var conn = new SqlConnection(cs))
-        {
-            await conn.OpenAsync();
-            await SetAsync(conn, owner, projectId, resource);
-        }
+        var cmd = new SqlCommand("SELECT TOP 1 * FROM [dbo].[ProjectResources] WHERE [ProjectId] = @ProjectId AND [Id] = @ResourceId", conn);
+
+        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+        cmd.Parameters.AddWithValue("@ResourceId", resourceId);
+
+        var reader = await cmd.ExecuteReaderAsync();
+
+        if (reader.Read()) return ToModel(reader);
+
+        return null;
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, string projectId, ResourceRecord resource)

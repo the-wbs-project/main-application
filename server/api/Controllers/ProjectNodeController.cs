@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
@@ -11,19 +10,23 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects/{projectId}/nodes")]
 public class ProjectNodeController : ControllerBase
 {
-    private readonly ILogger<ProjectNodeController> logger;
+    private readonly DbService db;
+    private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
     private readonly ProjectNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
+    private readonly ResourceFileStorageService resourceService;
 
-    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService)
+    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectNodeController>();
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
         this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
+        this.resourceService = resourceService;
+        this.db = db;
     }
 
     [Authorize]
@@ -32,10 +35,8 @@ public class ProjectNodeController : ControllerBase
     {
         try
         {
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -66,10 +67,8 @@ public class ProjectNodeController : ControllerBase
                     return BadRequest("All records must have same project id as provided in url");
             }
 
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -92,10 +91,8 @@ public class ProjectNodeController : ControllerBase
     {
         try
         {
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -129,14 +126,12 @@ public class ProjectNodeController : ControllerBase
 
     [Authorize]
     [HttpPut("{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutTaskResources(string owner, string projectId, string nodeId, string resourceId, ResourceRecord resource)
+    public async Task<IActionResult> PutTaskResource(string owner, string projectId, string nodeId, string resourceId, ResourceRecord resource)
     {
         try
         {
-            using (var conn = projectDataService.CreateConnection())
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await conn.OpenAsync();
-
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
@@ -151,6 +146,68 @@ public class ProjectNodeController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving project node resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{nodeId}/resources/{resourceId}/file")]
+    public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string projectId, string nodeId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
+                    return BadRequest("Node not found for the project provided.");
+
+                var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
+                var file = await resourceService.GetProjectTaskResourceAsync(owner, projectId, nodeId, resourceId);
+
+                return File(file, "application/octet-stream", record.Resource);
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version task resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{nodeId}/resources/{resourceId}/file")]
+    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId, IFormFile file)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
+                    return BadRequest("Node not found for the project provided.");
+
+                var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
+                var bytes = new byte[] { };
+
+                using (var stream = file.OpenReadStream())
+                {
+                    bytes = new byte[stream.Length];
+                    await stream.ReadAsync(bytes, 0, bytes.Length);
+                }
+
+                await resourceService.SaveProjectTaskResourceAsync(owner, projectId, nodeId, resourceId, bytes);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version task resources");
             return new StatusCodeResult(500);
         }
     }

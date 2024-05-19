@@ -1,13 +1,10 @@
 using Microsoft.Data.SqlClient;
-using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class ResourceRecordDataService : BaseSqlDbService
 {
-    public ResourceRecordDataService(IDatabaseConfig config) : base(config) { }
-
     protected async Task<List<ResourceRecord>> ToList(SqlCommand cmd)
     {
         var results = new List<ResourceRecord>();

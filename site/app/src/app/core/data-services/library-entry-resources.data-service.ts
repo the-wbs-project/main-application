@@ -12,12 +12,8 @@ export class LibraryEntryResourcesDataService {
     entryVersion: number,
     taskId?: string
   ): Observable<ResourceRecord[]> {
-    const url = taskId
-      ? `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/nodes/${taskId}/resources`
-      : `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/resources`;
-
     return this.http
-      .get<ResourceRecord[]>(url)
+      .get<ResourceRecord[]>(this.getUrl(owner, entryId, entryVersion, taskId))
       .pipe(map((list) => this.cleanList(list)));
   }
 
@@ -28,11 +24,28 @@ export class LibraryEntryResourcesDataService {
     taskId: string | undefined,
     resource: ResourceRecord
   ): Observable<void> {
-    const url = taskId
-      ? `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/nodes/${taskId}/resources/${resource.id}`
-      : `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}/resources/${resource.id}`;
+    return this.http.put<void>(
+      this.getIdUrl(resource.id, owner, entryId, entryVersion, taskId),
+      resource
+    );
+  }
 
-    return this.http.put<void>(url, resource);
+  putFileAsync(
+    owner: string,
+    entryId: string,
+    entryVersion: number,
+    taskId: string | undefined,
+    resourceId: string,
+    file: ArrayBuffer
+  ): Observable<void> {
+    const formData = new FormData();
+
+    formData.append('file', new Blob([file]));
+
+    return this.http.put<void>(
+      this.getIdUrl(resourceId, owner, entryId, entryVersion, taskId) + '/file',
+      formData
+    );
   }
 
   private cleanList(nodes: ResourceRecord[]): ResourceRecord[] {
@@ -44,5 +57,28 @@ export class LibraryEntryResourcesDataService {
         node.lastModified = new Date(node.lastModified);
     }
     return nodes;
+  }
+
+  private getUrl(
+    owner: string,
+    entryId: string,
+    entryVersion: number,
+    taskId?: string
+  ): string {
+    let url = `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}`;
+
+    if (taskId) url += `/nodes/${taskId}`;
+
+    return url + '/resources';
+  }
+
+  private getIdUrl(
+    resourceId: string,
+    owner: string,
+    entryId: string,
+    entryVersion: number,
+    taskId?: string
+  ): string {
+    return `${this.getUrl(owner, entryId, entryVersion, taskId)}/${resourceId}`;
   }
 }
