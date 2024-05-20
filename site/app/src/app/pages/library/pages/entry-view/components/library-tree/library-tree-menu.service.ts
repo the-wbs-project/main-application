@@ -1,13 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { ContextMenuItem, LibraryEntryVersion } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
-import { LIBRARY_TREE_MENU_ITEMS } from '../models';
+import { WbsNodeView } from '@wbs/core/view-models';
+import { LIBRARY_TREE_MENU_ITEMS } from '../../models';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
-export class EntryTreeMenuService {
+export class LibraryTreeMenuService {
   private readonly metadata = inject(MetadataStore);
 
   buildMenu(
@@ -24,7 +24,6 @@ export class EntryTreeMenuService {
         entryType,
         task
       ),
-      task,
       claims,
       version.status
     );
@@ -33,7 +32,6 @@ export class EntryTreeMenuService {
     if (this.canHaveNavActions(entryType, task)) {
       const navActions = this.filterList(
         LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
-        task,
         claims,
         version.status
       );
@@ -75,7 +73,6 @@ export class EntryTreeMenuService {
 
   private filterList(
     actions: ContextMenuItem[],
-    task: WbsNodeView | undefined,
     claims: string[],
     status: string
   ): ContextMenuItem[] {
@@ -84,7 +81,7 @@ export class EntryTreeMenuService {
     const results: ContextMenuItem[] = [];
 
     for (const action of actions) {
-      if (this.filterItem(action, task, claims, status)) {
+      if (this.filterItem(action, claims, status)) {
         results.push(action);
       }
     }
@@ -94,21 +91,10 @@ export class EntryTreeMenuService {
 
   private filterItem(
     link: ContextMenuItem,
-    task: WbsNodeView | undefined,
     claims: string[],
     status: string
   ): boolean {
     if (!link.filters) return true;
-    //
-    //  Perform cat check
-    //
-    if (
-      task &&
-      link.filters.excludeFromCat &&
-      (task.id === task.phaseId || task.id === task.disciplines[0].id)
-    )
-      return false;
-
     if (link.filters.claim && !claims.includes(link.filters.claim))
       return false;
 

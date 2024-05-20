@@ -68,7 +68,6 @@ const taskActions: ContextMenuItem[] = [
     text: 'Projects.CloneTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
-      excludeFromCat: true,
       claim: PROJECT_CLAIMS.TASKS.CREATE,
     },
   },
@@ -106,7 +105,6 @@ const taskActions: ContextMenuItem[] = [
     text: 'Projects.DeleteTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
-      excludeFromCat: true,
       claim: PROJECT_CLAIMS.TASKS.DELETE,
     },
   },
@@ -118,7 +116,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowLeft,
     text: 'Projects.MoveLeft',
     filters: {
-      excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
     },
@@ -128,7 +125,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowUp,
     text: 'Projects.MoveUp',
     filters: {
-      excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
     },
@@ -138,7 +134,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowDown,
     text: 'Projects.MoveDown',
     filters: {
-      excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
     },
@@ -148,7 +143,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowRight,
     text: 'Projects.MoveRight',
     filters: {
-      excludeFromCat: true,
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
     },

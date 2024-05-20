@@ -10,15 +10,19 @@ export class WbsExportDataService {
   runAsync(
     fileName: string,
     extension: 'xlsx' | 'mpp',
-    customDisciplines: ProjectCategory[],
-    nodes: WbsNodeView[]
+    disciplines: ProjectCategory[],
+    tasks: WbsNodeView[]
   ): Observable<any> {
     return this.http
       .post(
         `api/export/${extension}/en-US`,
         {
-          customDisciplines,
-          nodes,
+          customDisciplines: disciplines,
+          tasks: tasks.map((t) => ({
+            level: t.levelText,
+            title: t.title,
+            disciplines: t.disciplines.map((d) => d.label),
+          })),
         },
         {
           responseType: 'blob' as 'json',

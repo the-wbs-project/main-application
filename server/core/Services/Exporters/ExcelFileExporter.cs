@@ -14,7 +14,7 @@ public class ExcelFileExporter : BaseExtractService
         this.storage = storage;
     }
 
-    public async Task<byte[]> RunAsync(IEnumerable<WbsPhaseView> nodes, List<ListItem> customDisciplines, string culture)
+    public async Task<byte[]> RunAsync(IEnumerable<ExportDataTask> nodes, List<Category> customDisciplines, string culture)
     {
         var wbFile = await storage.GetFileAsBytesAsync("templates", "phase-extract.xlsx");
         var disciplines = await GetDisciplinesAsync(culture);
@@ -47,21 +47,17 @@ public class ExcelFileExporter : BaseExtractService
 
             foreach (var node in nodes)
             {
-                wbsSheet.SetValue(row, 1, node.levelText);
-                wbsSheet.SetValue(row, node.levelText.Split('.').Length + 1, node.title);
+                wbsSheet.SetValue(row, 1, node.level);
+                wbsSheet.SetValue(row, node.level.Split('.').Length + 1, node.title);
 
                 var col = 12;
 
                 if (node.disciplines != null)
-                {
-                    foreach (var id in node.disciplines)
+                    foreach (var discipline in node.disciplines.Where(x => x != null))
                     {
-                        if (id == null) continue;
-
-                        wbsSheet.SetValue(row, col, disciplines[id]);
+                        wbsSheet.SetValue(row, col, discipline);
                         col++;
                     }
-                }
                 row++;
             }
 

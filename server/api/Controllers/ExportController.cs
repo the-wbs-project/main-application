@@ -1,5 +1,4 @@
-﻿using Microsoft.ApplicationInsights;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.Models;
 using Wbs.Core.Services.Exporters;
@@ -25,7 +24,7 @@ public class ExportController : ControllerBase
     {
         try
         {
-            var bytes = await xlsxExporter.RunAsync(data.nodes, data.customDisciplines, culture);
+            var bytes = await xlsxExporter.RunAsync(data.tasks, data.customDisciplines, culture);
 
             return File(bytes, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
         }

@@ -9,7 +9,6 @@ export interface ContextMenuItem {
   items?: ContextMenuItem[];
   filters?: {
     claim?: string;
-    excludeFromCat?: boolean;
     stati?: PROJECT_STATI_TYPE[];
   };
 }

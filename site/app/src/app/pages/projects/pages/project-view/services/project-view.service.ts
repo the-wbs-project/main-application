@@ -8,7 +8,7 @@ import { LibraryImportResults, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
 import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { MembershipStore } from '@wbs/core/store';
-import { Observable, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AddDisciplineToTask,
@@ -147,23 +147,30 @@ export class ProjectViewService {
     this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
   }
 
-  downloadTasks(project?: ProjectViewModel, phases?: WbsNodeView[]): void {
+  downloadTasks(): void {
     this.messages.notify.info('General.RetrievingData');
 
-    if (!project) {
-      project = this.store.selectSnapshot(ProjectState.current)!;
-    }
-    if (!phases) {
-      const nodes = this.store.selectSnapshot(TasksState.nodes)!;
+    forkJoin([
+      this.store.selectOnce(ProjectState.current),
+      this.store.selectOnce(TasksState.nodes),
+    ])
+      .pipe(
+        map(([project, nodes]) => ({ project: project!, nodes: nodes! })),
+        switchMap(({ project, nodes }) => {
+          const tasks = this.transformers.nodes.phase.view.run(
+            nodes,
+            'project',
+            project.disciplines
+          );
 
-      phases = this.transformers.nodes.phase.view.run(
-        nodes,
-        'project',
-        project.disciplines
-      );
-    }
-    this.data.wbsExport
-      .runAsync(project.title, 'xlsx', project.disciplines, phases)
+          return this.data.wbsExport.runAsync(
+            project.title,
+            'xlsx',
+            project.disciplines.filter((x) => x.isCustom),
+            tasks
+          );
+        })
+      )
       .subscribe();
   }
 

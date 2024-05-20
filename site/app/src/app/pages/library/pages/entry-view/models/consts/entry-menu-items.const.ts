@@ -61,7 +61,6 @@ const taskActions: ContextMenuItem[] = [
     faIcon: faCopy,
     text: 'Projects.CloneTask',
     filters: {
-      excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
     },
   },
@@ -102,7 +101,6 @@ const reorderTaskActions: ContextMenuItem[] = [
     faIcon: faArrowLeft,
     text: 'Projects.MoveLeft',
     filters: {
-      excludeFromCat: true,
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
     },
   },

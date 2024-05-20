@@ -114,7 +114,12 @@ export class EntryService {
       task.parent = undefined;
     }
     this.data.wbsExport
-      .runAsync(version.title, 'xlsx', version.disciplines, tasks)
+      .runAsync(
+        version.title,
+        'xlsx',
+        version.disciplines.filter((x) => x.isCustom),
+        tasks
+      )
       .subscribe();
   }
 

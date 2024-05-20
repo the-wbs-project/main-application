@@ -16,13 +16,11 @@ export class PhaseTreeMenuService {
     const status = project.status;
     const navActions = this.filterList(
       PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
-      task,
       claims,
       status
     );
     const phaseActions = this.filterList(
       PROJECT_TREE_MENU_ITEMS.taskActions,
-      task,
       claims,
       status
     );
@@ -69,7 +67,6 @@ export class PhaseTreeMenuService {
 
   private filterList(
     actions: ContextMenuItem[],
-    task: WbsNodeView | undefined,
     claims: string[],
     status: PROJECT_STATI_TYPE
   ): ContextMenuItem[] {
@@ -78,7 +75,7 @@ export class PhaseTreeMenuService {
     const results: ContextMenuItem[] = [];
 
     for (const action of actions) {
-      if (this.filterItem(action, task, claims, status)) {
+      if (this.filterItem(action, claims, status)) {
         results.push(action);
       }
     }
@@ -88,21 +85,10 @@ export class PhaseTreeMenuService {
 
   private filterItem(
     link: ContextMenuItem,
-    task: WbsNodeView | undefined,
     claims: string[],
     status: PROJECT_STATI_TYPE
   ): boolean {
     if (!link.filters) return true;
-    //
-    //  Perform cat check
-    //
-    if (
-      task &&
-      link.filters.excludeFromCat &&
-      (task.id === task.phaseId || task.id === task.disciplines[0]?.id)
-    )
-      return false;
-
     if (link.filters.claim && !claims.includes(link.filters.claim))
       return false;
 

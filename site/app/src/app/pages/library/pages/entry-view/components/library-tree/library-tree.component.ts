@@ -54,8 +54,8 @@ import { delay, tap } from 'rxjs/operators';
 import {
   EntryTaskActionService,
   EntryTaskRecorderService,
-  EntryTreeMenuService,
 } from '../../services';
+import { LibraryTreeMenuService } from './library-tree-menu.service';
 
 @UntilDestroy()
 @Component({
@@ -63,7 +63,7 @@ import {
   selector: 'wbs-library-tree',
   templateUrl: './library-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [EntryTreeMenuService, WbsPhaseService],
+  providers: [LibraryTreeMenuService, WbsPhaseService],
   imports: [
     AlertComponent,
     ButtonModule,
@@ -87,7 +87,7 @@ export class LibraryTreeComponent {
 
   private readonly actions = inject(EntryTaskActionService);
   private readonly category = inject(CategoryService);
-  private readonly menuService = inject(EntryTreeMenuService);
+  private readonly menuService = inject(LibraryTreeMenuService);
   private readonly store = inject(SignalStore);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(EntryTaskRecorderService);
