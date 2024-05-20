@@ -2,38 +2,43 @@
   <thead class="thead-light">
     <tr>
       <th scope="col" class="wd-40">&nbsp;</th>
-      <th scope="col" class="pointer" [sortable]="'invitee'" [state]="state()">
+      <th
+        scope="col"
+        class="pointer"
+        [sortable]="'invitee'"
+        [(sortColumns)]="sort"
+      >
         {{ "OrgSettings.Invitee" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="invitee" />
+        <wbs-sort-arrow [sort]="sort()" field="invitee" />
       </th>
       <th
         scope="col"
         class="pointer d-md-none d-lg-table-cell"
         [sortable]="'inviter'"
-        [state]="state()"
+        [(sortColumns)]="sort"
       >
         {{ "OrgSettings.Inviter" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="inviter" />
+        <wbs-sort-arrow [sort]="sort()" field="inviter" />
       </th>
 
       <th
         scope="col"
         class="pointer d-md-none d-lg-table-cell"
         [sortable]="'createdAt'"
-        [state]="state()"
+        [(sortColumns)]="sort"
       >
         {{ "OrgSettings.TimeSent" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="createdAt" />
+        <wbs-sort-arrow [sort]="sort()" field="createdAt" />
       </th>
 
       <th
         scope="col"
         class="pointer d-md-none d-lg-table-cell"
         [sortable]="'expiredAt'"
-        [state]="state()"
+        [(sortColumns)]="sort"
       >
         {{ "OrgSettings.TimeTilExpires" | translate }} &nbsp;
-        <wbs-sort-arrow [state]="state()" field="expiredAt" />
+        <wbs-sort-arrow [sort]="sort()" field="expiredAt" />
       </th>
 
       <th scope="col">{{ "General.Roles" | translate }}</th>

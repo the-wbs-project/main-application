@@ -74,12 +74,4 @@ export class MembershipAdminService {
       tap(() => this.messages.notify.success('OrgSettings.InvitesSent'))
     );
   }
-
-  cancelInviteAsync(org: string, inviteId: string): Observable<void> {
-    return this.data.memberships
-      .cancelInviteAsync(org, inviteId)
-      .pipe(
-        tap(() => this.messages.notify.success('OrgSettings.InviteCancelled'))
-      );
-  }
 }

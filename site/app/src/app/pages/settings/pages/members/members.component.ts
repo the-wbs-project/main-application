@@ -14,17 +14,23 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
-import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
-import { forkJoin } from 'rxjs';
+import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
+import { forkJoin, of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 import { ChangeBreadcrumbs } from '../../actions';
 import { Breadcrumb } from '../../models';
-import { InvitationFormComponent } from './components/invitation-form';
-import { InvitationListComponent } from './components/invitation-list';
-import { MemberListComponent } from './components/member-list';
-import { RoleFilterListComponent } from './components/role-filter-list';
+import {
+  InvitationFormComponent,
+  InvitationListComponent,
+  MemberListComponent,
+  MembershipRollupComponent,
+  RoleFilterListComponent,
+} from './components';
 import { MembershipAdminService } from './services';
 
 const ROLES = [
@@ -56,25 +62,29 @@ const ROLES = [
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [],
   imports: [
+    DialogModule,
     FontAwesomeModule,
     FormsModule,
     InvitationFormComponent,
     InvitationListComponent,
     MemberListComponent,
+    MembershipRollupComponent,
     NgClass,
     RoleFilterListComponent,
+    TextBoxModule,
     TranslateModule,
   ],
 })
 export class MembersComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
+  private readonly dialog = inject(DialogService);
   private readonly memberService = inject(MembershipAdminService);
   private readonly metadata = inject(MetadataStore);
   private readonly store = inject(SignalStore);
   private readonly profile = inject(UserStore).profile;
-  private readonly organization = inject(MembershipStore).organization;
 
   readonly org = input.required<string>();
+  readonly organization = inject(MembershipStore).organization;
 
   private readonly crumbs: Breadcrumb[] = [
     {
@@ -83,15 +93,16 @@ export class MembersComponent implements OnInit {
   ];
 
   readonly isLoading = signal(true);
-  readonly members = signal<MemberViewModel[]>([]);
-  readonly invites = signal<InviteViewModel[]>([]);
-  readonly showInviteDialog = model(false);
+  readonly members = model<MemberViewModel[]>();
+  readonly invites = model<InviteViewModel[]>();
 
   readonly roles = this.processRoles();
   readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
   readonly remaining = computed(() =>
     this.capacity()
-      ? (this.capacity() ?? 0) - this.members().length - this.invites().length
+      ? (this.capacity() ?? 0) -
+        (this.members()?.length ?? 0) -
+        (this.invites()?.length ?? 0)
       : undefined
   );
   readonly canAdd = computed(() => {
@@ -135,25 +146,38 @@ export class MembersComponent implements OnInit {
     });
   }
 
-  sendInvite({ emails, roles }: { roles: string[]; emails: string[] }): void {
-    const name = this.profile()!.name;
+  startInvite(): void {
+    InvitationFormComponent.launchAsync(
+      this.dialog,
+      this.invites() ?? [],
+      this.members() ?? [],
+      this.metadata.roles.definitions
+    )
+      .pipe(
+        switchMap((results) => {
+          if (!results) return of(undefined);
 
-    this.memberService
-      .sendInvitesAsync(this.org(), emails, roles, name)
+          const name = this.profile()!.name;
+
+          return this.memberService.sendInvitesAsync(
+            this.org(),
+            results.emails,
+            results.roles,
+            name
+          );
+        })
+      )
       .subscribe((invites) => {
         if (!invites) return;
 
-        this.invites.set([
-          ...invites.map((i) => {
-            return {
-              ...i,
-              roleList: i.roles.join(','),
-            };
-          }),
-          ...this.invites(),
+        this.invites.update((list) => [
+          ...invites.map((i) => ({
+            ...i,
+            roleList: i.roles.join(','),
+          })),
+          ...(list ?? []),
         ]);
       });
-    //This function is used to send an invite to a user
   }
 
   private processRoles(): { name: string; text: string }[] {

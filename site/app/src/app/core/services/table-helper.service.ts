@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { State, process } from '@progress/kendo-data-query';
+import { SortDescriptor, State, process } from '@progress/kendo-data-query';
 
 @Injectable()
 export class TableHelper {
@@ -22,6 +22,14 @@ export class TableHelper {
       return;
     }
     state.sort[0].dir = state.sort[0].dir === 'asc' ? 'desc' : 'asc';
+  }
+
+  sort2(list: SortDescriptor[], column: string): void {
+    if (list.length === 0 || list[0].field !== column) {
+      list.splice(0, 0, { field: column, dir: 'asc' });
+      return;
+    }
+    list[0].dir = list[0].dir === 'asc' ? 'desc' : 'asc';
   }
 
   process<T>(data: T[], state: State): T[] {

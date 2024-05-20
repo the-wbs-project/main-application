@@ -21,7 +21,7 @@ import { ActionMenuItem } from '@wbs/core/models';
   template: `<kendo-dropdownbutton
     [fillMode]="fillMode()"
     [size]="size()"
-    [data]="menuItems"
+    [data]="menuItems()"
     buttonClass="tx-8 pd-0-f"
     [popupSettings]="{ align: align() }"
     (itemClick)="clicked($event)"

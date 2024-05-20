@@ -2,13 +2,21 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  model,
-  output,
+  inject,
+  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { DialogModule } from '@progress/kendo-angular-dialog';
+import {
+  DialogCloseResult,
+  DialogContentBase,
+  DialogModule,
+  DialogRef,
+  DialogService,
+} from '@progress/kendo-angular-dialog';
 import { Invite, Member, Role } from '@wbs/core/models';
-import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+import { InviteFormResults } from './invite-form-results.model';
 import { InviteValidators } from './invite-validators.service';
 
 declare type InviteError = { email?: string; error: string };
@@ -19,49 +27,58 @@ declare type InviteError = { email?: string; error: string };
   templateUrl: './invitation-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [InviteValidators],
-  imports: [DialogModule, NgClass, RoleListPipe, TranslateModule],
+  imports: [DialogModule, NgClass, TranslateModule],
 })
-export class InvitationFormComponent {
-  readonly submitted = output<{
-    roles: string[];
-    emails: string[];
-  }>();
+export class InvitationFormComponent extends DialogContentBase {
+  private readonly validators = inject(InviteValidators);
 
-  readonly show = model.required<boolean>();
-
-  roles: string[] = [];
+  readonly roles = signal<string[]>([]);
   errors: InviteError[] = [];
   members!: Member[];
   invites!: Invite[];
   roleDefinitions!: Role[];
 
-  constructor(private readonly validators: InviteValidators) {}
+  constructor(dialog: DialogRef) {
+    super(dialog);
+  }
 
-  setup({
-    invites,
-    members,
-    roles,
-  }: {
-    invites: Invite[];
-    members: Member[];
-    roles: Role[];
-  }): void {
-    this.invites = invites;
-    this.members = members;
-    this.roleDefinitions = roles;
+  static launchAsync(
+    dialog: DialogService,
+    invites: Invite[],
+    members: Member[],
+    roles: Role[]
+  ): Observable<InviteFormResults | undefined> {
+    const ref = dialog.open({
+      content: InvitationFormComponent,
+    });
+    const component = ref.content.instance as InvitationFormComponent;
+
+    component.invites = invites;
+    component.members = members;
+    component.roleDefinitions = roles;
+
+    return ref.result.pipe(
+      map((x: unknown) =>
+        x instanceof DialogCloseResult ? undefined : <InviteFormResults>x
+      )
+    );
   }
 
   toggleRole(role: string): void {
-    const index = this.roles.indexOf(role);
+    this.roles.update((roles) => {
+      const index = roles.indexOf(role);
 
-    if (index > -1) this.roles.splice(index, 1);
-    else this.roles.push(role);
+      if (index > -1) roles.splice(index, 1);
+      else roles.push(role);
+
+      return [...roles];
+    });
   }
 
   submit(emailText: string) {
     const emails = emailText.split(',').map((e) => e.trim());
     const errors: InviteError[] = [];
-    const hasRoles = this.roles.length > 0;
+    const hasRoles = this.roles().length > 0;
     const hasEmails = emails.length > 0;
 
     if (!hasRoles) errors.push({ error: 'OrgSettings.InviteErrorNoRoles' });
@@ -88,7 +105,7 @@ export class InvitationFormComponent {
       }
     }
     if (errors.length === 0) {
-      this.submitted.emit({ emails, roles: this.roles });
+      this.dialog.close({ emails, roles: this.roles() });
     } else {
       this.errors = errors;
     }

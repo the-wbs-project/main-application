@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   model,
@@ -15,10 +14,11 @@ import {
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import {
   CompositeFilterDescriptor,
   FilterDescriptor,
-  State,
+  SortDescriptor,
 } from '@progress/kendo-data-query';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
 import { Member } from '@wbs/core/models';
@@ -42,6 +42,7 @@ import { EditMemberComponent } from '../edit-member';
   imports: [
     ActionIconListComponent,
     DateTextPipe,
+    DialogModule,
     EditMemberComponent,
     RoleListPipe,
     SortableDirective,
@@ -50,20 +51,26 @@ import { EditMemberComponent } from '../edit-member';
   ],
 })
 export class MemberListComponent {
+  private readonly dialog = inject(DialogService);
   private readonly memberService = inject(MembershipAdminService);
   private readonly messages = inject(Messages);
   private readonly tableHelper = inject(TableHelper);
 
-  readonly members = model.required<MemberViewModel[]>();
+  readonly members = model.required<MemberViewModel[] | undefined>();
   readonly org = input.required<string>();
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
-  readonly editMember = signal<MemberViewModel | undefined>(undefined);
-  readonly state = signal(<State>{
-    sort: [{ field: 'lastLogin', dir: 'desc' }],
-  });
+  readonly sort = signal<SortDescriptor[]>([
+    { field: 'lastLogin', dir: 'desc' },
+  ]);
+  readonly filter = computed(() =>
+    this.createFilter(this.textFilter(), this.filteredRoles())
+  );
   readonly data = computed(() =>
-    this.tableHelper.process(this.members(), this.state())
+    this.tableHelper.process(this.members() ?? [], {
+      sort: this.sort(),
+      filter: this.filter(),
+    })
   );
   readonly faGear = faGear;
   readonly faPlus = faPlus;
@@ -80,80 +87,89 @@ export class MemberListComponent {
     },
   ];
 
-  constructor() {
-    effect(() => this.updateState(this.textFilter(), this.filteredRoles()), {
-      allowSignalWrites: true,
-    });
-  }
-
   userActionClicked(member: MemberViewModel, action: string): void {
     if (action === 'edit') {
-      this.editMember.set(structuredClone(member));
+      this.launchEdit(member);
     } else if (action === 'remove') {
       this.openRemoveDialog(member);
     }
   }
 
-  private updateState(textFilter: string, filteredRoles: string[]): void {
-    this.state.update((s) => {
-      const state: State = { sort: s.sort };
-      const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
+  private createFilter(
+    textFilter: string,
+    filteredRoles: string[]
+  ): CompositeFilterDescriptor {
+    const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
 
-      if (textFilter) {
-        filters.push(<CompositeFilterDescriptor>{
-          logic: 'or',
-          filters: [
-            {
-              field: 'name',
-              operator: 'contains',
-              value: textFilter,
-            },
-            {
-              field: 'email',
-              operator: 'contains',
-              value: textFilter,
-            },
-          ],
+    if (textFilter) {
+      filters.push(<CompositeFilterDescriptor>{
+        logic: 'or',
+        filters: [
+          {
+            field: 'name',
+            operator: 'contains',
+            value: textFilter,
+          },
+          {
+            field: 'email',
+            operator: 'contains',
+            value: textFilter,
+          },
+        ],
+      });
+    }
+    if (filteredRoles.length > 0) {
+      const roleFilter: CompositeFilterDescriptor = {
+        logic: 'or',
+        filters: [],
+      };
+
+      for (const role of filteredRoles) {
+        roleFilter.filters.push({
+          field: 'roleList',
+          operator: 'contains',
+          value: role.toString(),
         });
       }
-      if (filteredRoles.length > 0) {
-        const roleFilter: CompositeFilterDescriptor = {
-          logic: 'or',
-          filters: [],
-        };
-
-        for (const role of filteredRoles) {
-          roleFilter.filters.push({
-            field: 'roleList',
-            operator: 'contains',
-            value: role.toString(),
-          });
-        }
-        filters.push(roleFilter);
-      }
-      state.filter = {
-        logic: 'and',
-        filters,
-      };
-      return state;
-    });
+      filters.push(roleFilter);
+    }
+    return {
+      logic: 'and',
+      filters,
+    };
   }
 
-  protected saveEditMember(): void {
-    const member = this.editMember()!;
+  launchEdit(member: MemberViewModel): void {
+    EditMemberComponent.launchAsync(this.dialog, structuredClone(member))
+      .pipe(
+        switchMap((results) => {
+          if (results == undefined) return of(undefined);
 
-    const toRemove = member.roles.filter((r) => !member.roles.includes(r));
-    const toAdd = member.roles.filter((r) => !member.roles.includes(r));
+          const toRemove = member.roles.filter(
+            (r) => !results.roles.includes(r)
+          );
+          const toAdd = results.roles.filter((r) => !member.roles.includes(r));
 
-    member.roleList = member.roles.join(',');
+          member.roleList = member.roles.join(',');
 
-    this.memberService
-      .updateMemberRolesAsync(this.org(), member, toAdd, toRemove)
-      .subscribe(() => {
+          console.log('member', member);
+          console.log('toRemove', toRemove);
+          console.log('toAdd', toAdd);
+
+          return this.memberService
+            .updateMemberRolesAsync(this.org(), member, toAdd, toRemove)
+            .pipe(map(() => results));
+        })
+      )
+      .subscribe((result) => {
+        if (!result) return;
+
         this.members.update((members) => {
-          const index = members.findIndex((m) => m.id === member.id);
-          members[index] = member;
-          return members;
+          if (!members) return [];
+
+          const index = members.findIndex((m) => m.id === result.id);
+          members[index] = result;
+          return [...members];
         });
       });
   }
@@ -174,9 +190,11 @@ export class MemberListComponent {
         if (!answer) return;
 
         this.members.update((members) => {
+          if (!members) return [];
+
           const index = members.findIndex((m) => m.id === member.id);
           members.splice(index, 1);
-          return members;
+          return [...members];
         });
       });
   }

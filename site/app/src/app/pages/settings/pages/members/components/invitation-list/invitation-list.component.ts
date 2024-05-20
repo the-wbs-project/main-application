@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  effect,
   inject,
   input,
   model,
@@ -13,18 +12,16 @@ import { TranslateModule } from '@ngx-translate/core';
 import {
   CompositeFilterDescriptor,
   FilterDescriptor,
-  State,
+  SortDescriptor,
 } from '@progress/kendo-data-query';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
-import { Messages, TableHelper } from '@wbs/core/services';
+import { TableHelper } from '@wbs/core/services';
 import { InviteViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { MembershipAdminService } from '../../services';
+import { InvitesService } from '../../services';
 import { IsExpiredPipe } from './is-expired.pipe';
 
 @Component({
@@ -32,7 +29,7 @@ import { IsExpiredPipe } from './is-expired.pipe';
   selector: 'wbs-invitation-list',
   templateUrl: './invitation-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MembershipAdminService, TableHelper],
+  providers: [InvitesService, TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
@@ -44,19 +41,22 @@ import { IsExpiredPipe } from './is-expired.pipe';
   ],
 })
 export class InvitationListComponent {
-  private readonly memberService = inject(MembershipAdminService);
-  private readonly messages = inject(Messages);
+  private readonly inviteService = inject(InvitesService);
   private readonly tableHelper = inject(TableHelper);
 
-  readonly invites = model.required<InviteViewModel[]>();
+  readonly invites = model.required<InviteViewModel[] | undefined>();
   readonly org = input.required<string>();
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
-  readonly state = signal(<State>{
-    sort: [{ field: 'name', dir: 'asc' }],
-  });
+  readonly sort = signal<SortDescriptor[]>([{ field: 'name', dir: 'asc' }]);
+  readonly filter = computed(() =>
+    this.createFilter(this.textFilter(), this.filteredRoles())
+  );
   readonly data = computed(() =>
-    this.tableHelper.process(this.invites(), this.state())
+    this.tableHelper.process(this.invites() ?? [], {
+      sort: this.sort(),
+      filter: this.filter(),
+    })
   );
   readonly faGear = faGear;
   readonly menu = [
@@ -67,22 +67,28 @@ export class InvitationListComponent {
     },
   ];
 
-  constructor() {
-    effect(() => this.updateState(this.textFilter(), this.filteredRoles()), {
-      allowSignalWrites: true,
-    });
-  }
-
   userActionClicked(invite: InviteViewModel, action: string): void {
     if (action === 'cancel') {
-      this.openCancelDialog(invite);
+      this.inviteService
+        .cancelInviteAsync(this.org(), invite)
+        .subscribe((answer) => {
+          if (!answer) return;
+
+          this.invites.update((invites) => {
+            if (!invites) return;
+
+            const index = invites.findIndex((i) => i.id === invite.id);
+            invites.splice(index, 1);
+            return [...invites];
+          });
+        });
     }
   }
 
-  updateState(textFilter: string, filteredRoles: string[]): void {
-    const state = <State>{
-      sort: this.state().sort,
-    };
+  createFilter(
+    textFilter: string,
+    filteredRoles: string[]
+  ): CompositeFilterDescriptor {
     const filters: (CompositeFilterDescriptor | FilterDescriptor)[] = [];
 
     if (textFilter) {
@@ -117,33 +123,9 @@ export class InvitationListComponent {
       }
       filters.push(roleFilter);
     }
-    state.filter = {
+    return {
       logic: 'and',
       filters,
     };
-    this.state.set(state);
-  }
-
-  private openCancelDialog(invite: InviteViewModel): void {
-    this.messages.confirm
-      .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
-      .pipe(
-        switchMap((answer) => {
-          if (!answer) return of(false);
-
-          return this.memberService
-            .cancelInviteAsync(this.org(), invite.id)
-            .pipe(map(() => true));
-        })
-      )
-      .subscribe((answer) => {
-        if (!answer) return;
-
-        this.invites.update((invites) => {
-          const index = invites.findIndex((i) => i.id === invite.id);
-          invites.splice(index, 1);
-          return invites;
-        });
-      });
   }
 }

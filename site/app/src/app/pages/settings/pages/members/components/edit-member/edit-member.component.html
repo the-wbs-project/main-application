@@ -1,6 +1,5 @@
-@if (member()) {
+@if (member(); as member) {
 <kendo-dialog [title]="'OrgSettings.EditMember' | translate">
-  @if (member(); as member) {
   <div class="container-fluid">
     <div class="row mb-3">
       <label for="inputEmail3" class="col-sm-2 col-form-label">
@@ -50,16 +49,16 @@
       </div>
     </div>
   </div>
-  }
+
   <kendo-dialog-actions layout="end">
-    <button
-      type="button"
-      class="btn btn-outline-dark"
-      (click)="member.set(undefined)"
-    >
+    <button type="button" class="btn btn-outline-dark" (click)="dialog.close()">
       {{ "General.Close" | translate }}
     </button>
-    <button type="button" class="btn btn-primary" (click)="save.emit()">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="dialog.close(member)"
+    >
       {{ "General.Save" | translate }}
     </button>
   </kendo-dialog-actions>

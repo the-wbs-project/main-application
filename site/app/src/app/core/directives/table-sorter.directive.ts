@@ -1,5 +1,5 @@
-import { Directive, input } from '@angular/core';
-import { State } from '@progress/kendo-data-query';
+import { Directive, input, model } from '@angular/core';
+import { SortDescriptor, State } from '@progress/kendo-data-query';
 import { TableHelper } from '@wbs/core/services';
 
 @Directive({
@@ -13,12 +13,16 @@ import { TableHelper } from '@wbs/core/services';
   providers: [TableHelper],
 })
 export class SortableDirective {
-  readonly state = input.required<State>();
+  readonly sortColumns = model.required<SortDescriptor[]>();
   readonly sortable = input.required<string>();
 
   constructor(private readonly service: TableHelper) {}
 
   rotate() {
-    this.service.sort(this.state(), this.sortable());
+    this.sortColumns.update((list) => {
+      this.service.sort2(list, this.sortable());
+
+      return [...list];
+    });
   }
 }

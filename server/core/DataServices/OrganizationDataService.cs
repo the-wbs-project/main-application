@@ -132,7 +132,7 @@ public class OrganizationDataService : BaseAuthDataService
         await client.Organizations.DeleteMemberRolesAsync(organization, userId, new OrganizationDeleteMemberRolesRequest { Roles = roles });
     }
 
-    public Task RemoveUserFromOrganizationAsync(string organization, string user) => RemoveUserFromOrganizationAsync(organization, new string[] { user });
+    public Task RemoveUserFromOrganizationAsync(string organization, string user) => RemoveUserFromOrganizationAsync(organization, [user]);
 
     public async Task RemoveUserFromOrganizationAsync(string organization, string[] users)
     {

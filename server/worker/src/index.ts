@@ -79,7 +79,7 @@ app.delete(
   OriginService.pass,
 );
 
-app.delete('api/organizations/:organization/members', kv.membersClear, (ctx) => ctx.newResponse('', { status: 204 }));
+app.delete('api/organizations/:organization/members/*', kv.membersClear, OriginService.pass);
 
 app.get('api/chat/:model', verifyJwt, Http.aiChat.getAsync);
 app.put('api/chat/:model', verifyJwt, Http.aiChat.putAsync);

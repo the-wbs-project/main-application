@@ -3,123 +3,14 @@
     <div
       class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1"
     >
-      <div class="card overflow-hidden">
-        <div class="card-header pd-b-0 border-bottom-0">
-          <h4 class="card-title tx-center">
-            {{ "OrgSettings.MembershipRollup" | translate }}
-          </h4>
-        </div>
-        <div class="card-body tx-center d-none d-sm-block">
-          <div class="row mb-2">
-            <div class="col-3">
-              <p class="mb-1">
-                {{ "General.Members" | translate }}
-              </p>
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ members().length }}
-                }
-              </h5>
-            </div>
-            <div class="col-3">
-              <p class="mb-1">
-                {{ "OrgSettings.Invitations" | translate }}
-              </p>
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ invites().length }}
-                }
-              </h5>
-            </div>
-            <div class="col-3">
-              <p class="mb-1">
-                {{ "OrgSettings.Capacity" | translate }}
-              </p>
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
-                }
-              </h5>
-            </div>
-            <div class="col-3">
-              <p class="mb-1">
-                {{ "OrgSettings.Remaining" | translate }}
-              </p>
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
-                }
-              </h5>
-            </div>
-          </div>
-        </div>
-        <div class="card-body d-xs-block d-sm-none">
-          <div class="row mb-2">
-            <div class="col-6">
-              {{ "General.Members" | translate }}
-            </div>
-            <div class="col-6 tx-center">
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ members().length }}
-                }
-              </h5>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-6">
-              {{ "OrgSettings.Invitations" | translate }}
-            </div>
-            <div class="col-6 tx-center">
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ invites().length }}
-                }
-              </h5>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-6">
-              {{ "OrgSettings.Capacity" | translate }}
-            </div>
-            <div class="col-6 tx-center">
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
-                }
-              </h5>
-            </div>
-          </div>
-          <div class="row mb-2">
-            <div class="col-6">
-              {{ "OrgSettings.Remaining" | translate }}
-            </div>
-            <div class="col-6 tx-center">
-              <h5>
-                @if (isLoading()) {
-                <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
-                } @else {
-                {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
-                }
-              </h5>
-            </div>
-          </div>
-        </div>
-      </div>
+      <wbs-membership-rollup
+        [isLoading]="isLoading()"
+        [organization]="organization()"
+        [memberCount]="members()?.length ?? 0"
+        [inviteCount]="invites()?.length ?? 0"
+        [capacity]="capacity()"
+        [remaining]="remaining()"
+      />
     </div>
   </div>
   @if (isLoading()) {
@@ -163,10 +54,7 @@
         </div>
         <div class="col-6 tx-right">
           @if (canAdd()) {
-          <button
-            class="btn btn-sm btn-primary"
-            (click)="showInviteDialog.set(true)"
-          >
+          <button class="btn btn-sm btn-primary" (click)="startInvite()">
             <fa-icon [icon]="faPlus" />
             <span class="d-none d-sm-inline">
               {{ "OrgSettings.InviteMembers" | translate }}
@@ -177,10 +65,9 @@
       </div>
       <div class="row">
         <div class="col-xl-8 col-lg-7 col-md-12 mg-b-20">
-          <input
-            type="text"
+          <kendo-textbox
+            class="w-100"
             [(ngModel)]="textFilter"
-            class="form-control w-100"
             placeholder="Search by name or email"
           />
         </div>
