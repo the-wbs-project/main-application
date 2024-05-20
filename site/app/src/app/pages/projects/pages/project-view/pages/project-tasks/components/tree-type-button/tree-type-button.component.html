@@ -1,0 +1,24 @@
+<div class="btn-group btn-group-sm" role="group">
+  <button
+    type="button"
+    class="btn"
+    [ngClass]="{
+      'btn-dark': view() === 'phases',
+      'btn-outline-dark': view() !== 'phases'
+    }"
+    (click)="view.set('phases')"
+  >
+    {{ "Projects.ByPhase" | translate }}
+  </button>
+  <button
+    type="button"
+    class="btn"
+    [ngClass]="{
+      'btn-dark': view() === 'disciplines',
+      'btn-outline-dark': view() !== 'disciplines'
+    }"
+    (click)="view.set('disciplines')"
+  >
+    {{ "Projects.ByDiscipline" | translate }}
+  </button>
+</div>

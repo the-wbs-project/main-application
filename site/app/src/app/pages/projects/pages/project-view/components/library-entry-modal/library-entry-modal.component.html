@@ -1,0 +1,106 @@
+<kendo-dialog
+  width="90%"
+  height="90%"
+  [title]="'Projects.ExportToLibrary' | translate"
+>
+  <div class="w-100">
+    <form #generalForm [formGroup]="form">
+      <div class="row mg-b-30">
+        <label
+          for="title"
+          class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+        >
+          {{ "General.Title" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <input
+            id="title"
+            kendoTextBox
+            class="form-control"
+            formControlName="title"
+            aria-describedby="titleHelp"
+          />
+          <div id="titleHelp" class="form-text">
+            {{ type | libraryEntryTitleHint | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="row mg-b-30">
+        <label
+          for="description"
+          class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+        >
+          {{ "General.Description" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <kendo-editor
+            class="form-control"
+            id="description"
+            formControlName="description"
+            aria-describedby="descriptionHelp"
+            [iframeCss]="{ content: contentCss }"
+          />
+
+          <div id="descriptionHelp" class="form-text">
+            {{ type | libraryEntryDescriptionHint | translate }}
+          </div>
+        </div>
+      </div>
+      <div class="row mg-b-30">
+        <label class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold">
+          {{ "General.Flags" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <div class="mg-b-10 form-check form-switch">
+            <input
+              type="checkbox"
+              id="includeResources"
+              class="form-check-input"
+              formControlName="includeResources"
+              aria-describedby="includeResourcesHelp"
+            />
+            <label class="form-check-label" for="includeResources">
+              {{ "LibraryExport.IncludeResources" | translate }}
+            </label>
+            <div id="includeResourcesHelp" class="form-text">
+              {{ "LibraryExport.IncludeResourcesHint" | translate }}
+            </div>
+          </div>
+          <div class="form-check form-switch">
+            <input
+              type="checkbox"
+              id="visibility"
+              class="form-check-input"
+              formControlName="visibility"
+              aria-describedby="visibilityHelp"
+            />
+            <label class="form-check-label" for="visibility">
+              {{ "LibraryExport.Visibility" | translate }}
+            </label>
+            <div id="visibilityHelp" class="form-text">
+              {{ "LibraryExport.VisibilityHint" | translate }}
+            </div>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+  <kendo-dialog-actions>
+    <button
+      kendoButton
+      [themeColor]="'primary'"
+      [disabled]="form.invalid"
+      (click)="save(true)"
+    >
+      {{ "General.SaveAndView" | translate }}
+    </button>
+    <button
+      kendoButton
+      [themeColor]="'primary'"
+      [disabled]="form.invalid"
+      (click)="save(false)"
+    >
+      {{ "General.Save" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

@@ -1,0 +1,73 @@
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" class="wd-40">&nbsp;</th>
+      <th
+        scope="col"
+        class="pointer"
+        [sortable]="'invitee'"
+        [(sortColumns)]="sort"
+      >
+        {{ "OrgSettings.Invitee" | translate }} &nbsp;
+        <wbs-sort-arrow [sort]="sort()" field="invitee" />
+      </th>
+      <th
+        scope="col"
+        class="pointer d-md-none d-lg-table-cell"
+        [sortable]="'inviter'"
+        [(sortColumns)]="sort"
+      >
+        {{ "OrgSettings.Inviter" | translate }} &nbsp;
+        <wbs-sort-arrow [sort]="sort()" field="inviter" />
+      </th>
+
+      <th
+        scope="col"
+        class="pointer d-md-none d-lg-table-cell"
+        [sortable]="'createdAt'"
+        [(sortColumns)]="sort"
+      >
+        {{ "OrgSettings.TimeSent" | translate }} &nbsp;
+        <wbs-sort-arrow [sort]="sort()" field="createdAt" />
+      </th>
+
+      <th
+        scope="col"
+        class="pointer d-md-none d-lg-table-cell"
+        [sortable]="'expiredAt'"
+        [(sortColumns)]="sort"
+      >
+        {{ "OrgSettings.TimeTilExpires" | translate }} &nbsp;
+        <wbs-sort-arrow [sort]="sort()" field="expiredAt" />
+      </th>
+
+      <th scope="col">{{ "General.Roles" | translate }}</th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (invite of data(); track invite.id) {
+    <tr>
+      <td>
+        <wbs-action-icon-list
+          size="small"
+          fillMode="link"
+          [mainIcon]="faGear"
+          [menuItems]="menu"
+        />
+      </td>
+      <td class="d-md-none d-lg-table-cell">{{ invite.invitee }}</td>
+      <td class="d-md-none d-lg-table-cell">{{ invite.inviter }}</td>
+      <td>{{ invite.createdAt | dateText }}</td>
+
+      @if (invite.expiresAt | isExpired) {
+      <td class="tx-danger-f">{{ "General.Expired" | translate }}</td>
+      } @else {
+      <td>
+        {{ invite.expiresAt | dateText : true }}
+      </td>
+      }
+      <td>{{ invite.roles | roleList : true }}</td>
+    </tr>
+    }
+  </tbody>
+</table>

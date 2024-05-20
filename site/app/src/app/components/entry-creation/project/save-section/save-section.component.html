@@ -1,0 +1,109 @@
+@if (saveState() !== "saved") {
+<table class="table table-striped table-bordered tx-12 text-start">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">
+        {{ "LibraryCreate.ReviewDetails" | translate }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "LibraryCreate.TemplateTitle" | translate }}
+      </td>
+      <td>
+        @if (templateTitle(); as title) { {{ title }} } @else {
+        <span class="tx-danger fw-bold">
+          {{ "General.Required" | translate }}
+        </span>
+        }
+      </td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.Visibility" | translate }}
+      </td>
+      <td>{{ visibilityReview() }}</td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "LibraryCreate.ProjectCategory" | translate }}
+      </td>
+      <td>
+        @if (category(); as category) { {{ category.label }} } @else {
+        <span class="tx-danger fw-bold">
+          {{ "General.Required" | translate }}
+        </span>
+        }
+      </td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.Phases" | translate }}
+      </td>
+      <td>
+        @if (phaseCount() > 0) { {{ phaseReview() }} } @else {
+        <span class="tx-danger fw-bold">
+          {{ "General.Required" | translate }}
+        </span>
+        }
+      </td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.Disciplines" | translate }}
+      </td>
+      <td>{{ disciplineReview() }}</td>
+    </tr>
+  </tbody>
+</table>
+} @if (saveState() === undefined) {
+<button
+  (click)="save()"
+  class="w-100 btn btn-primary mg-t-10"
+  [disabled]="!templateTitle() || !category() || phaseCount() === 0"
+>
+  {{ "LibraryCreate.CreateTask" | translate }}
+</button>
+
+} @else if (saveState() === "saving") {
+<fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+<p class="tx-18 mg-t-10">{{ "General.Saving" | translate }}</p>
+} @else if (saveState() === "saved") {
+<fa-icon [icon]="faCheck" size="5x" />
+<p class="tx-18 mg-t-10">{{ "LibraryCreate.TemplateSaved" | translate }}</p>
+<div class="w-100 d-flex">
+  <div class="flex-1 pd-10">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="actionClicked('view')"
+    >
+      {{ "LibraryCreate.ViewTemplate" | translate }}
+    </button>
+  </div>
+  <div class="flex-1 pd-10">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="actionClicked('upload')"
+    >
+      {{ "LibraryCreate.UploadWbs" | translate }}
+    </button>
+  </div>
+  <div class="flex-1 pd-10">
+    <button
+      type="button"
+      class="btn btn-primary"
+      (click)="actionClicked('close')"
+    >
+      {{ "LibraryCreate.CloseWindow" | translate }}
+    </button>
+  </div>
+</div>
+} @else if (saveState() === "error") {
+<fa-icon [icon]="faExclamationTriangle" size="5x" />
+<p class="tx-18 mg-t-10">{{ "LibraryCreate.ErrorSaving" | translate }}</p>
+
+}

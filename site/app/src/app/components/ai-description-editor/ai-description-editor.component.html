@@ -1,0 +1,32 @@
+<div class="pd-l-15 d-flex flex-flow-col w-100 h-100">
+  <div class="tx-bold d-flex ht-40 flex-align-center">
+    <span>{{ "General.Description" | translate }}:</span>
+  </div>
+  <wbs-editor class="flex-fill" cssClass="h-100" [(value)]="proposal" />
+  <div class="btn-group w-100" role="group" aria-label="Basic example">
+    <button
+      type="button"
+      class="btn btn-outline-dark pd-8 rounded-0"
+      (click)="actionSelected.emit('clear')"
+    >
+      <fa-icon [icon]="faEraser" />
+      Clear
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-dark pd-8 rounded-0"
+      (click)="actionSelected.emit('revert')"
+    >
+      <fa-icon [icon]="faArrowRotateBack" />
+      Revert
+    </button>
+    <button
+      type="button"
+      class="btn btn-outline-dark pd-8 rounded-0"
+      (click)="actionSelected.emit('accept')"
+    >
+      <fa-icon [icon]="faThumbsUp" />
+      Accept & Close
+    </button>
+  </div>
+</div>

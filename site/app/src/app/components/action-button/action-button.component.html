@@ -1,0 +1,58 @@
+<button #anchor class="btn btn-sm btn-outline-dark mg-y-4" (click)="toggle()">
+  <fa-icon [icon]="faBoltLightning" />
+  &nbsp; {{ "General.Actions" | translate }}
+</button>
+@if (show()) {
+<kendo-popup
+  #popup
+  [anchor]="anchor"
+  (anchorViewportLeave)="toggle()"
+  [anchorAlign]="{ horizontal: 'right', vertical: 'bottom' }"
+  [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
+>
+  <div class="wd-200">
+    <ul
+      role="menu"
+      aria-orientation="vertical"
+      class="k-context-menu k-menu-group k-menu-group-md"
+    >
+      @for (item of menu(); track index; let index = $index) { @if
+      (item.separator) {
+      <li aria-hidden="true" class="k-separator k-item mg-y-2-f">&nbsp;</li>
+      } @else if (item.route) {
+      <li
+        tabindex="-1"
+        role="menuitem"
+        class="k-item k-menu-item tx-12-f"
+        [class.k-last]="menu.length === index + 1"
+        [attr.aria-label]="item.text! | translate"
+        (click)="goto(item.route!)"
+      >
+        <span role="presentation" class="k-link k-menu-link">
+          <div class="d-inline-block wd-20 text-center">
+            <fa-icon [icon]="item.icon!" />
+          </div>
+          {{ item.text! | translate }}
+        </span>
+      </li>
+      } @else {
+      <li
+        tabindex="-1"
+        role="menuitem"
+        class="k-item k-menu-item tx-12-f"
+        [class.k-last]="menu.length === index + 1"
+        [attr.aria-label]="item.text! | translate"
+        (click)="itemClicked.emit(item.action!)"
+      >
+        <span role="presentation" class="k-link k-menu-link">
+          <div class="d-inline-block wd-20 text-center">
+            <fa-icon [icon]="item.icon!" />
+          </div>
+          {{ item.text! | translate }}
+        </span>
+      </li>
+      } }
+    </ul>
+  </div>
+</kendo-popup>
+}

@@ -1,0 +1,114 @@
+<header class="w-100 d-flex bg-white ht-55">
+  <div class="header-title mg-l-20 wd-240 tx-24 tx-semibold lh-15">
+    {{ appTitle }}
+  </div>
+  <div class="tx-right pd-r-10 flex-1">
+    <div class="d-inline-block wd-60 mg-t-8 mg-r-20">
+      @if (user(); as user) {
+      <wbs-header-profile [user]="user" [roles]="roles()" />
+      }
+    </div>
+  </div>
+</header>
+<nav
+  class="navbar navbar-expand navbar-dark bg-dark d-none d-sm-flex"
+  [ngClass]="{
+    'p-0': orgs().length > 0
+  }"
+>
+  <div class="container-fluid">
+    <span class="navbar-brand">
+      <wbs-header-organization-list [org]="orgObj()" [orgs]="orgs()" />
+    </span>
+    <div class="navbar-collapse">
+      <ul class="navbar-nav">
+        @for (parentItem of menu(); track parentItem.label) { @if (claims() |
+        check : parentItem.claim) { @if (parentItem.type === 'sub') {
+        <li class="nav-item" ngbDropdown>
+          <a
+            class="nav-link dropdown-toggle tx-uppercase"
+            [ngClass]="{ active: parentItem.section === activeSection() }"
+            ngbDropdownToggle
+            role="button"
+          >
+            {{ parentItem.label | translate }}
+          </a>
+          <div ngbDropdownMenu class="py-0">
+            @for (link of parentItem.items; track link.label) { @switch
+            (link.type) { @case ('header') {
+            <h6
+              class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
+            >
+              {{ link.label | translate }}
+            </h6>
+            } @case ('link') {
+            <a ngbDropdownItem [routerLink]="link.route" class="lh-5">
+              {{ link.label | translate }}
+            </a>
+            } } }
+          </div>
+        </li>
+        } @else {
+        <li class="nav-item">
+          <a
+            class="nav-link tx-uppercase"
+            [ngClass]="{ active: parentItem.section === activeSection() }"
+            aria-current="page"
+            [routerLink]="parentItem.route"
+          >
+            {{ parentItem.label | translate }}
+          </a>
+        </li>
+        } } }
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<nav
+  class="navbar navbar-expand-sm navbar-dark bg-dark d-flex d-sm-none"
+  [ngClass]="{
+    'p-0': orgs.length > 0
+  }"
+>
+  <div class="container-fluid">
+    <span class="navbar-brand">
+      <wbs-header-organization-list [org]="orgObj()" [orgs]="orgs()" />
+    </span>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarTogglerDemo01"
+      aria-controls="navbarTogglerDemo01"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse d-sm-none d-md-flex"
+      name="navbarTogglerDemo01"
+      id="navbarTogglerDemo01"
+    >
+      <ul class="navbar-nav">
+        @for (parentItem of menu(); track $index) { @if (parentItem.type ===
+        'sub') { @for (link of parentItem.items; track $index) {
+        <li class="nav-item tx-uppercase">
+          @if (link.type === 'link') {
+          <a [routerLink]="link.route" class="nav-link pd-y-5 pd-x-20">
+            {{ link.label! | translate }}
+          </a>
+          }
+        </li>
+        } } @else {
+        <li class="nav-item tx-uppercase">
+          <a [routerLink]="parentItem.route" class="nav-link pd-y-5 pd-x-20">
+            {{ parentItem.label! | translate }}
+          </a>
+        </li>
+        } }
+      </ul>
+    </div>
+  </div>
+</nav>

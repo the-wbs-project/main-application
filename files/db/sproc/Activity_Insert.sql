@@ -7,7 +7,7 @@ CREATE PROCEDURE [dbo].[Activity_Insert]
 	@UserId [nvarchar](100),
 	@TopLevelId [nvarchar](100),
 	@ObjectId [nvarchar](100) = NULL,
-	@VersionId [nvarchar](100) = NULL,
+	@VersionId [int] = NULL,
 	@Data [nvarchar](MAX) = NULL
 AS
 BEGIN

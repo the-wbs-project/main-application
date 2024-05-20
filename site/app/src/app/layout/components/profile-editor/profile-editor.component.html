@@ -1,0 +1,30 @@
+@if (show()) {
+<kendo-dialog
+  [title]="'ProfileEditor.Title' | translate"
+  (close)="show.set(false)"
+>
+  <div class="text-start">
+    <label class="form-label">
+      {{ "General.Name" | translate }}
+    </label>
+
+    <div class="input-group mb-3">
+      <input
+        #name
+        type="text"
+        class="form-control"
+        [value]="profile()?.name"
+        (keydown.enter)="changeName(name.value)"
+      />
+      <button
+        type="button"
+        class="btn btn-outline-primary"
+        (click)="changeName(name.value)"
+      >
+        <fa-icon [icon]="faFloppyDisk" /> &nbsp;
+        {{ "General.Save" | translate }}
+      </button>
+    </div>
+  </div>
+</kendo-dialog>
+}

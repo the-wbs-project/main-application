@@ -1,0 +1,7 @@
+export enum LIBRARY_ROLES {
+  OWNER = 'owner',
+  EDITOR = 'editor',
+  VIEWER = 'viewer',
+}
+
+export type LIBRARY_ROLES_TYPE = LIBRARY_ROLES.OWNER | LIBRARY_ROLES.EDITOR | LIBRARY_ROLES.VIEWER;

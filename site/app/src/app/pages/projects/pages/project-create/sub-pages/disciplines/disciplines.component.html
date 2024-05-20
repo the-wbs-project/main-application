@@ -1,0 +1,15 @@
+<div class="d-flex flex-flow-col h-100">
+  <div class="mg-t-10 w-100 tx-center flex-fill scroll">
+    <div class="d-inline-block wd-600 mx-wd-100p">
+      @if (categories) {
+      <wbs-discipline-editor [showAdd]="true" [(categories)]="categories" />
+      }
+    </div>
+  </div>
+  <wbs-wizard-footer
+    view="bc"
+    [disableContinue]="disable(categories)"
+    (backClicked)="back()"
+    (continueClicked)="continue()"
+  />
+</div>

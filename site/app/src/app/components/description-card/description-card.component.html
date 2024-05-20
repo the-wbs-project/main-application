@@ -1,0 +1,78 @@
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>
+      {{ "General.Description" | translate }} &nbsp;
+      <wbs-approval-badge [approval]="approval()" />
+    </div>
+
+    @if (!editMode()) {
+    <div class="flex-fill tx-right">
+      <wbs-save-message [state]="saveState()" cssClass="mg-r-10" />
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faPencil"
+        (click)="edit()"
+        [title]="'General.Edit' | translate"
+      />
+    </div>
+    }
+  </div>
+</div>
+@if (editMode()) {
+<div class="card-body text-center">
+  <div class="d-inline-block w-100" style="max-width: 1000px">
+    <div class="d-none d-sm-flex w-100 mg-b-10">
+      <div class="text-start flex-align-center flex-fill tx-18">
+        {{ "General.DescriptionEditor" | translate }}
+      </div>
+      <div class="text-end">
+        <wbs-ai-button buttonCssClass="btn-primary" (click)="askAi.set(true)" />
+        <wbs-save-button
+          cssClass="mg-l-15 tx-12 "
+          [isSaving]="saveState() === 'saving'"
+          (click)="save(editDescription)"
+        />
+        <button class="btn btn-dark mg-l-15 tx-12" (click)="cancel()">
+          <fa-icon [icon]="faXmark" class="mg-r-5" />
+          {{ "General.Cancel" | translate }}
+        </button>
+      </div>
+    </div>
+    <div class="d-sm-none">
+      <div class="tx-18">
+        {{ "General.DescriptionEditor" | translate }}
+      </div>
+      <div class="mg-y-10 tx-12">
+        <wbs-ai-button buttonCssClass="btn-primary" (click)="askAi.set(true)" />
+        <wbs-save-button
+          cssClass="mg-l-15"
+          [isSaving]="saveState() === 'saving'"
+          (click)="save(editDescription)"
+        />
+        <button class="btn btn-dark mg-l-15" (click)="cancel()">
+          <fa-icon [icon]="faXmark" class="mg-r-5" />
+          {{ "General.Cancel" | translate }}
+        </button>
+      </div>
+    </div>
+    <kendo-editor class="form-control" [(ngModel)]="editDescription" />
+    <div class="w-100 text-start">
+      <label class="tx-italic">
+        {{ "Library.DescriptionHelpEntry" | translate }}
+      </label>
+    </div>
+  </div>
+</div>
+} @else if (description() !== '') {
+<div class="card-body" [innerHTML]="description() | safeHtml"></div>
+} @else {
+<div class="card-body">
+  <wbs-alert
+    type="warning"
+    [dismissible]="false"
+    [message]="noDescriptionLabel()"
+  />
+</div>
+
+}

@@ -1,0 +1,43 @@
+<div class="d-flex justify-content-center">
+  <div class="card dashboard-card wd-400 mg-15">
+    <div class="card-header">
+      {{ "ProjectUpload.UploadResults" | translate }}
+    </div>
+    <div class="card-body pd-15">
+      @if (loading()) {
+      <div class="w-100 text-center">
+        <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+        <h3 class="pd-t-20">
+          @if (isXlsx()) {
+          {{ "ProjectUpload.LoadingExcel" | translate }}
+          } @else if (isMpp()) {
+          {{ "ProjectUpload.LoadingProject" | translate }}
+          }
+        </h3>
+      </div>
+      } @else if ((errors() ?? []).length > 0) {
+      {{ (errors() ?? []).length }}
+      {{ "ProjectUpload.UploadError" | translate }}
+      } @else { @if (stats(); as stats) {
+
+      <ul class="list-group pd-t-20 w-100 d-inline-block">
+        @for (line of lines(); track $index) {
+        <li
+          class="list-group-item d-flex justify-content-between align-items-center border-0 bg-transparent"
+        >
+          {{ line.text | translate }}
+
+          <span>{{ line.value }}</span>
+        </li>
+        }
+      </ul>
+      }
+      <div class="w-100 text-center">
+        <a class="btn btn-primary mg-t-20" [routerLink]="'../options'">
+          {{ "General.Continue" | translate }}
+        </a>
+      </div>
+      }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,64 @@
+<table class="table table-striped table-bordered tx-12 text-start">
+  <thead>
+    <tr>
+      <th colspan="2" class="text-center">
+        {{ "LibraryCreate.ReviewDetails" | translate }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "LibraryCreate.TemplateTitle" | translate }}
+      </td>
+      <td>{{ templateTitle() }}</td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.Disciplines" | translate }}
+      </td>
+      <td>{{ disciplineReview() }}</td>
+    </tr>
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.PMs" | translate }}
+      </td>
+      <td>{{ pms() ?? ("General.None" | translate) }}</td>
+    </tr>
+    @if (approvalEnabled()) {
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.Approvers" | translate }}
+      </td>
+      <td>{{ approvers() ?? ("General.None" | translate) }}</td>
+    </tr>
+    }
+    <tr>
+      <td class="row-header tx-semi wd-150">
+        {{ "General.SMEs" | translate }}
+      </td>
+      <td>{{ smes() ?? ("General.None" | translate) }}</td>
+    </tr>
+  </tbody>
+</table>
+@if (saveState() === undefined) {
+<button class="w-100 btn btn-primary mg-t-10" (click)="save()">
+  Create Project
+</button>
+
+} @else if (saveState() === "saving") {
+<fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+<p class="tx-18 mg-t-10">{{ "General.Saving" | translate }}</p>
+} @else if (saveState() === "saved") {
+<fa-icon [icon]="faCheck" size="5x" />
+<p class="tx-18 mg-t-10">{{ "LibraryCreate.TemplateSaved" | translate }}</p>
+<div class="w-100 text-center">
+  <button type="button" class="btn btn-primary" (click)="done.emit()">
+    {{ "General.View" | translate }}
+  </button>
+</div>
+} @else if (saveState() === "error") {
+<fa-icon [icon]="faExclamationTriangle" size="5x" />
+<p class="tx-18 mg-t-10">{{ "LibraryCreate.ErrorSaving" | translate }}</p>
+
+}

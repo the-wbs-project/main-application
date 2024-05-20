@@ -1,0 +1,27 @@
+<kendo-expansionpanel
+  [title]="'AI.Title' | translate"
+  class="ai-chat-panel"
+  [svgExpandIcon]="iconUp"
+  [svgCollapseIcon]="iconDown"
+>
+  <div class="d-flex">
+    <kendo-dropdownlist
+      [data]="store.models()"
+      [(value)]="model"
+      valueField="model"
+      textField="title"
+      (selectionChange)="changeModel($event)"
+    />
+    <button kendoButton fillMode="outline" (click)="clear()">
+      {{ "General.Clear" | translate }}
+    </button>
+  </div>
+  <div class="content">
+    <kendo-chat
+      [messages]="service.feed()"
+      [user]="store.you"
+      class="ai-chat"
+      (sendMessage)="sendMessage($event)"
+    />
+  </div>
+</kendo-expansionpanel>

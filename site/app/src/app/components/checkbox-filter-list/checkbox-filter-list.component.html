@@ -1,0 +1,32 @@
+@if (data(); as data) {
+<kendo-multiselect
+  kendoMultiSelectSummaryTag
+  [checkboxes]="true"
+  [autoClose]="false"
+  [data]="data"
+  [value]="values()"
+  adaptiveMode="auto"
+  [textField]="textField()"
+  [valueField]="valueField()"
+  [valuePrimitive]="true"
+  (valueChange)="valueChange($event)"
+>
+  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+    @if (dataItems.length == data.length) {
+    {{ allLabel() | translate }}
+    } @else {
+    {{ dataItems | translateList : textField() }}
+    }
+  </ng-template>
+  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+    <div class="checkbox-list-item">
+      <span class="d-inline-block" [style.width.px]="labelWidth">
+        {{ dataItem[textField()] | translate }}
+      </span>
+      <a class="tx-10" (click)="onlyClicked($event, dataItem)">
+        {{ "General.Only" | translate }}
+      </a>
+    </div>
+  </ng-template>
+</kendo-multiselect>
+}

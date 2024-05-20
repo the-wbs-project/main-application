@@ -1,0 +1,62 @@
+@if (task(); as task) {
+<div class="pd-15">
+  <kendo-treelist
+    #treelist
+    class="h-100"
+    kendoTreeListExpandable
+    kendoTreeListSelectable
+    [kendoTreeListFlatBinding]="task.subTasks"
+    parentIdField="treeParentId"
+    idField="treeId"
+    [initiallyExpanded]="false"
+    (dblclick)="navigate()"
+    [(expandedKeys)]="treeService.expandedKeys"
+    (cellClick)="clickedId = $event.dataItem.id"
+    [selectable]="{ enabled: true, mode: 'row' }"
+  >
+    <kendo-treelist-column
+      field="levelText"
+      [title]="'Wbs.Level' | translate"
+      [width]="100"
+      class="level-column tx-11"
+      headerClass="level-header-column tx-14"
+    />
+    <kendo-treelist-column
+      [expandable]="true"
+      field="title"
+      class="tx-11"
+      headerClass="tx-14"
+      [title]="'Wbs.Task' | translate"
+    >
+      <ng-template kendoTreeListHeaderTemplate>
+        <div class="w-100 d-flex flex-align-end">
+          <div>
+            {{ "Projects.Activity_Title" | translate }}
+          </div>
+          <div class="flex-fill text-end">
+            <wbs-tree-toggler
+              (collapse)="treeService.collapseAll(treelist, task.subTasks)"
+              (expand)="treeService.expandAll(treelist, task.subTasks)"
+            />
+          </div>
+        </div>
+      </ng-template>
+    </kendo-treelist-column>
+    @if ((width() ?? 0) > 800) {
+    <kendo-treelist-column
+      field="disciplines"
+      [width]="200"
+      class="discipline-column"
+      headerClass="discipline-column tx-14"
+    >
+      <ng-template kendoTreeListHeaderTemplate>
+        <wbs-tree-discipline-legend [list]="project()?.disciplines ?? []" />
+      </ng-template>
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+      </ng-template>
+    </kendo-treelist-column>
+    }
+  </kendo-treelist>
+</div>
+}

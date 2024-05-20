@@ -1,0 +1,107 @@
+<div class="card dashboard-card mg-10">
+  <div class="d-flex card-header flex-align-center">
+    <div>
+      {{ "General.Settings" | translate }} > {{ "General.General" | translate }}
+    </div>
+    <div class="flex-fill text-end">
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saved.state() === 'saved'"
+        cssClass="tx-success tx-12 mg-r-10"
+      />
+      <wbs-save-button
+        size="sm"
+        [disabled]="!canSave()"
+        [isSaving]="saved.state() === 'saving'"
+        (click)="save()"
+      />
+    </div>
+  </div>
+  <div class="card-body">
+    @if (entryStore.entry(); as entry) { @if (entryStore.version(); as version)
+    {
+
+    <div class="container-fluid pd-15">
+      <div class="row mb-5">
+        <label [for]="title" class="col-md-2 col-sm-12 col-form-label">
+          {{ "General.Title" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <input
+            #title
+            kendoTextBox
+            class="form-control"
+            [(ngModel)]="version.title"
+          />
+          <wbs-info-message
+            cssClass="d-inline-block mg-t-5"
+            message="LibraryCreate.TemplateTitleDescriptionPhase"
+          />
+        </div>
+      </div>
+      <div class="row mb-5">
+        <div class="col-2 d-none d-md-block">
+          <label [for]="description" class="col-form-label">
+            {{ "General.Description" | translate }}
+          </label>
+        </div>
+        <div class="col-12 d-flex d-md-none">
+          <label [for]="description" class="col-form-label">
+            {{ "General.Description" | translate }}
+          </label>
+          <div class="flex-fill text-end">
+            <wbs-ai-button
+              buttonCssClass="btn-sm btn-outline-dark"
+              (click)="askAi.set(true)"
+            />
+          </div>
+        </div>
+        <div class="col-md-10 col-sm-12">
+          <div class="w-100 mg-b-5 text-end d-none d-md-block">
+            <wbs-ai-button
+              buttonCssClass="btn-sm btn-outline-dark"
+              (click)="askAi.set(true)"
+            />
+          </div>
+          <kendo-editor #description [(ngModel)]="version.description" />
+
+          <wbs-info-message
+            cssClass="d-inline-block mg-t-5"
+            message="Library.DescriptionHelpEntry"
+          />
+        </div>
+      </div>
+      <div class="row mb-5">
+        <label class="col-md-2 col-sm-12 col-form-label">
+          {{ "General.Visibility" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <wbs-visibility-selection [(visibility)]="entry.visibility" />
+        </div>
+      </div>
+      @if (entry.type === 'project') {
+      <div class="row mb-5">
+        <label class="col-md-2 col-sm-12 col-form-label">
+          {{ "LibraryCreate.ProjectCategory" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <wbs-project-category-dropdown
+            [category]="version.categories![0]"
+            (categoryChange)="version.categories = [$event!]"
+          />
+        </div>
+      </div>
+      }
+    </div>
+
+    @if (askAi()) {
+    <wbs-description-ai-dialog
+      [(description)]="version.description"
+      [startingDialog]="descriptionAiStartingDialog()"
+      (descriptionChange)="askAi.set(false)"
+      (closed)="askAi.set(false)"
+    />
+    } } }
+  </div>
+</div>

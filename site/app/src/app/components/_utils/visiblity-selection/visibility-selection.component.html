@@ -1,0 +1,56 @@
+<div class="w-100 d-none d-md-flex">
+  <div class="flex-grow-1 pd-r-20">
+    <button
+      type="button"
+      class="btn w-100"
+      [ngClass]="visibility() === 'public' ? 'btn-dark' : 'btn-outline-dark'"
+      (click)="visibility.set('public')"
+    >
+      <wbs-visibility-text visibility="public" />
+    </button>
+    <label class="w-100 text-center d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.VisibilityPublicDescription" | translate }}
+    </label>
+  </div>
+  <div class="flex-grow-1 pd-l-20">
+    <button
+      type="button"
+      class="btn w-100"
+      [ngClass]="visibility() === 'private' ? 'btn-dark' : 'btn-outline-dark'"
+      (click)="visibility.set('private')"
+    >
+      <wbs-visibility-text visibility="private" />
+    </button>
+    <label class="w-100 text-center d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.VisibilityPrivateDescription" | translate }}
+    </label>
+  </div>
+</div>
+<div class="w-100 d-block d-md-none">
+  <div class="mg-b-20">
+    <button
+      type="button"
+      class="btn w-100"
+      [ngClass]="visibility() === 'public' ? 'btn-dark' : 'btn-outline-dark'"
+      (click)="visibility.set('public')"
+    >
+      <wbs-visibility-text visibility="public" />
+    </button>
+    <label class="w-100 text-center d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.VisibilityPublicDescription" | translate }}
+    </label>
+  </div>
+  <div class="">
+    <button
+      type="button"
+      class="btn w-100"
+      [ngClass]="visibility() === 'private' ? 'btn-dark' : 'btn-outline-dark'"
+      (click)="visibility.set('private')"
+    >
+      <wbs-visibility-text visibility="private" />
+    </button>
+    <label class="w-100 text-center d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.VisibilityPrivateDescription" | translate }}
+    </label>
+  </div>
+</div>

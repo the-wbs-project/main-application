@@ -1,0 +1,12 @@
+FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
+
+ENV DOTNET_USE_POLLING_FILE_WATCHER 1
+
+WORKDIR /usr/src/app/api
+
+COPY ./ ./
+
+EXPOSE 5216
+
+ENTRYPOINT dotnet watch run --non-interactive
+#ENTRYPOINT ["dotnet", "watch", "run"]

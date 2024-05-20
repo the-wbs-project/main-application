@@ -1,0 +1,35 @@
+<div ngbAccordion class="checklist-accordion">
+  @for (group of checklist(); track $index) {
+  <div
+    ngbAccordionItem
+    [collapsed]="!expandIfFailed() || group.result !== 'fail'"
+  >
+    <h2 ngbAccordionHeader>
+      <button ngbAccordionButton>
+        {{ group.description | translate }}&nbsp;&nbsp;
+        <fa-icon
+          [icon]="group.result | checklistResultIcon"
+          [ngClass]="group.result | checklistResultClass"
+        />
+      </button>
+    </h2>
+    <div ngbAccordionCollapse>
+      <div ngbAccordionBody>
+        <ng-template>
+          <ul class="list-group">
+            @for (test of group.items; track $index){
+            <li class="list-group-item">
+              {{ test.description | translate }}&nbsp;
+              <fa-icon
+                [icon]="test.result | checklistResultIcon"
+                [ngClass]="test.result | checklistResultClass"
+              />
+            </li>
+            }
+          </ul>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+  }
+</div>

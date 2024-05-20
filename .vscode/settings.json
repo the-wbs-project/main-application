@@ -1,8 +1,0 @@
-{
-  "debug.internalConsoleOptions": "neverOpen",
-  "appService.zipIgnorePattern": [
-    "node_modules{,/**}",
-    ".vscode{,/**}"
-  ],
-  "dotnet.defaultSolution": "pm-empower.sln"
-}

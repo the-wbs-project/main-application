@@ -1,0 +1,69 @@
+<kendo-dialog
+  width="500px"
+  [title]="titleText() | translate"
+  (close)="dialog.close()"
+>
+  <form [formGroup]="form" (submit)="close()">
+    <div class="form-group">
+      <kendo-label [for]="title" [text]="'General.Name' | translate" />
+      <input #title kendoTextBox formControlName="title" class="form-control" />
+      @if (controls.title.errors?.['required']) {
+      <div class="invalid-feedback">
+        {{ "General.Error" | translate }}:
+        {{ "General.NameIsRequired" | translate }}
+      </div>
+      }
+    </div>
+    @if (includeDescription()) {
+    <div class="form-group">
+      <kendo-label
+        [for]="description"
+        [text]="'General.Description' | translate"
+      />
+      <textarea
+        #description
+        kendoTextArea
+        class="form-control"
+        formControlName="description"
+      ></textarea>
+    </div>
+    } @if (includeIcons()) {
+    <div class="form-group">
+      <kendo-label [for]="iconList" text="Icon" />
+      <kendo-dropdownlist
+        #iconList
+        [data]="icons()"
+        textField="name"
+        valueField="icon"
+        formControlName="icon"
+        [filterable]="true"
+        [valuePrimitive]="true"
+        (filterChange)="handleIconFilter($event)"
+      >
+        <ng-template
+          kendoDropDownListValueTemplate
+          kendoComboBoxItemTemplate
+          let-dataItem
+        >
+          @if (dataItem) {
+          <span class="d-inline-block text-center wd-20 mg-r-10">
+            <i class="fa-solid" [ngClass]="dataItem.icon"></i>
+          </span>
+          {{ dataItem.name }}
+          }
+        </ng-template>
+      </kendo-dropdownlist>
+    </div>
+    }
+  </form>
+  <kendo-dialog-actions layout="end">
+    <button
+      type="button"
+      class="btn btn-sm btn-success"
+      [disabled]="!form.valid"
+      (click)="close()"
+    >
+      <fa-icon [icon]="check" /> &nbsp; {{ successText() | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

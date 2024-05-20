@@ -1,0 +1,55 @@
+<table class="table table-hover">
+  <thead>
+    <tr class="bg-dark text-white">
+      @if (showWatchedColumn()) {
+      <th class="bg-dark text-white pd-10 fw-normal">&nbsp;</th>
+      }
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Owner" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Title" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Type" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
+        {{ "General.LastUpdated" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
+        {{ "General.Author" | translate }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of entries(); track entry.entryId) {
+    <tr
+      class="pointer"
+      [ngClass]="{ 'bg-gray-300': selected()?.entryId === entry.entryId }"
+      (click)="selected.set(entry)"
+      (dblclick)="dblClick.emit()"
+    >
+      @if (showWatchedColumn()) {
+      <td class="tx-16">
+        <wbs-watch-indicator
+          source="library"
+          [alwaysShow]="false"
+          [owner]="entry.ownerId"
+          [entityId]="entry.entryId"
+        />
+      </td>
+      }
+      <td>{{ entry.ownerName }}</td>
+      <td>{{ entry.title }}</td>
+      <td>
+        <fa-icon [icon]="entry.type | entryTypeIcon" />
+        {{ entry.type | entryTypeTitle | translate }}
+      </td>
+      <td class="d-none d-md-table-cell">
+        {{ entry.lastModified | dateText }}
+      </td>
+      <td class="d-none d-md-table-cell">{{ entry.authorName }}</td>
+    </tr>
+    }
+  </tbody>
+</table>

@@ -1,0 +1,31 @@
+<div class="w-100 text-center h-100">
+  <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
+    <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
+      <wbs-details-card [entry]="store.entry()!" [version]="store.version()!" />
+      <wbs-discipline-card
+        [splitLimit]="650"
+        [items]="disciplines()"
+        noDisciplinesLabel="Library.NoDisciplinesEntry"
+        [canEdit]="claims() | check : UPDATE_CLAIM"
+        [editRoute]="['../', 'settings', 'disciplines']"
+      />
+      <wbs-description-card
+        [(askAi)]="askAi"
+        [(editMode)]="descriptionEditMode"
+        [saveState]="descriptionSave.state()"
+        [description]="store.version()?.description ?? ''"
+        noDescriptionLabel="Library.NoDescriptionEntry"
+        (descriptionChange)="descriptionChange($event)"
+      />
+    </div>
+  </div>
+</div>
+
+@if (askAi()) {
+<wbs-description-ai-dialog
+  [description]="store.version()!.description"
+  [startingDialog]="descriptionAiStartingDialog()"
+  (descriptionChange)="aiChangeSaved($event)"
+  (closed)="askAi.set(false)"
+/>
+}

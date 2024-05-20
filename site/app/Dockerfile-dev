@@ -1,0 +1,22 @@
+# Stage 1
+FROM node:20.11.1 as node
+
+WORKDIR /usr/src/app/site
+
+COPY ./ ./
+
+ARG FA_TOKEN
+ARG KENDO_UI_LICENSE
+
+ENV FA_TOKEN=${FA_TOKEN}
+ENV KENDO_UI_LICENSE=${KENDO_UI_LICENSE}
+ENV NODE_OPTIONS=--max_old_space_size=8048
+
+RUN npm run docker:globals
+RUN npm run docker:fa ${FA_TOKEN}
+RUN npm run docker:install
+RUN npm run kendo:auth
+
+#EXPOSE 4200
+
+CMD ["npm", "start"]

@@ -1,0 +1,38 @@
+<kendo-buttongroup selection="single">
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'personal'"
+    (click)="library.set('personal')"
+  >
+    {{ "General.Personal" | translate }}
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'watched'"
+    (click)="library.set('watched')"
+  >
+    {{ "General.Watched" | translate }}
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'organizational'"
+    (click)="library.set('organizational')"
+  >
+    {{ "General.Organizational" | translate }}
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="library() === 'public'"
+    (click)="library.set('public')"
+  >
+    {{ "General.Public" | translate }}
+  </button>
+</kendo-buttongroup>

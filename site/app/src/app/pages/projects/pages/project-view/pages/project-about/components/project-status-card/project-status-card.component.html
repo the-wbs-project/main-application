@@ -1,0 +1,73 @@
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>{{ "General.Status" | translate }}</div>
+  </div>
+</div>
+
+<div class="card-body">
+  @if (project(); as project) { @if (project.status; as status) {
+  <div>
+    <span class="d-inline-block wd-30">
+      <wbs-project-status-tile-icon
+        [status]="
+          status === 'cancelled'
+            ? 'unstarted'
+            : status === 'planning'
+            ? 'in-progress'
+            : 'completed'
+        "
+      />
+    </span>
+    {{ "Projects.PlanningPhase" | translate }}
+  </div>
+  <div class="wd-20 ht-20 tx-center rotate-90">...</div>
+  @if (approvalEnabled()) {
+  <div>
+    <span class="d-inline-block wd-30">
+      <wbs-project-status-tile-icon
+        [status]="
+          !project.approvalStarted
+            ? 'unstarted'
+            : status === 'approval'
+            ? 'in-progress'
+            : status === 'planning'
+            ? 'rejected'
+            : 'completed'
+        "
+      />
+    </span>
+    {{ "Projects.ApprovalPhase" | translate }}
+  </div>
+  <div class="wd-20 ht-20 tx-center rotate-90">...</div>
+  }
+  <div>
+    <span class="d-inline-block wd-30">
+      <wbs-project-status-tile-icon
+        [status]="
+          status === 'execution'
+            ? 'in-progress'
+            : status === 'planning' || status === 'approval'
+            ? 'unstarted'
+            : 'completed'
+        "
+      />
+    </span>
+    {{ "Projects.ExecutionPhase" | translate }}
+  </div>
+  <div class="wd-20 ht-20 tx-center rotate-90">...</div>
+  <div>
+    <span class="d-inline-block wd-30">
+      <wbs-project-status-tile-icon status="unstarted" />
+    </span>
+    {{ "Projects.ReviewPhase" | translate }}
+  </div>
+  @if (status === 'cancelled') {
+  <div class="wd-30 ht-20 tx-center rotate-90">...</div>
+  <div>
+    <span class="d-inline-block wd-30">
+      <wbs-project-status-tile-icon status="in-progress" />
+    </span>
+    {{ "Projects.ProjectCancelled" | translate }}
+  </div>
+  } }}
+</div>

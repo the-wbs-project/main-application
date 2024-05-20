@@ -1,0 +1,98 @@
+@if (entryStore.viewModels(); as tree) { @if (alert(); as alertText) {
+<wbs-alert
+  type="danger"
+  [message]="alertText"
+  (closed)="alert.set(undefined)"
+/>
+} @else {
+<wbs-alert
+  type="info"
+  [dismissible]="false"
+  message="Projects.TreeInstructions"
+/>
+}
+<kendo-treelist
+  #treelist
+  class="tx-12"
+  kendoTreeListExpandable
+  kendoTreeListSelectable
+  [kendoTreeListFlatBinding]="tree"
+  parentIdField="treeParentId"
+  idField="treeId"
+  [rowReorderable]="true"
+  [initiallyExpanded]="false"
+  [(expandedKeys)]="treeService.expandedKeys"
+  [navigable]="true"
+  [selectable]="{ enabled: true, mode: 'row' }"
+  [rowReorderable]="claims() | check : canEditClaim"
+  (selectionChange)="selectedTask.set($event.items[0].dataItem)"
+  (rowReorder)="rowReordered($event)"
+  (cellClick)="cellClick($event)"
+  (dblclick)="navigateToTask(selectedTask()?.id)"
+>
+  @if (claims() | check : canEditClaim) {
+  <kendo-treelist-rowreorder-column [width]="40" />
+  }
+  <kendo-treelist-column
+    field="levelText"
+    [title]="'Wbs.Level' | translate"
+    [width]="100"
+    class="level-column tx-11"
+    headerClass="level-header-column tx-14"
+  />
+  <kendo-treelist-column
+    [expandable]="true"
+    field="title"
+    class="tx-11 child-hoverer"
+    headerClass="tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <div class="w-100 d-flex flex-align-end">
+        <div>
+          {{ "Projects.Activity_Title" | translate }}
+        </div>
+        <div class="flex-fill text-end">
+          <wbs-tree-toggler
+            (collapse)="treeService.collapseAll(treelist, tree)"
+            (expand)="treeService.expandAll(treelist, tree)"
+          />
+        </div>
+      </div>
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-task-title
+        [title]="dataItem.title"
+        (titleChange)="taskTitleChanged(dataItem.id, $event)"
+      />
+      @if (taskSaveStates.get(dataItem.id); as saveState) {
+      <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+      }
+    </ng-template>
+  </kendo-treelist-column>
+  @if ((width() ?? 0) > 800) {
+  <kendo-treelist-column
+    field="disciplines"
+    [width]="200"
+    class="discipline-column"
+    headerClass="discipline-column tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <wbs-tree-discipline-legend [list]="disciplines()" />
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+    </ng-template>
+  </kendo-treelist-column>
+  }
+</kendo-treelist>
+@defer (on idle) {
+<kendo-contextmenu
+  #contextMenu
+  [items]="menu()"
+  (select)="onAction($event.item.action)"
+>
+  <ng-template kendoMenuItemTemplate let-item="item">
+    <wbs-context-menu-item [item]="item" />
+  </ng-template>
+</kendo-contextmenu>
+} }

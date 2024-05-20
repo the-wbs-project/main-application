@@ -1,0 +1,38 @@
+// 1. Include functions first (so you can manipulate colors, SVGs, calc, etc)
+@import "bootstrap/scss/functions";
+
+// 2. Include any default variable overrides here
+@import "variables";
+
+$body-bg: $background;
+$font-size-base: 0.875rem;
+$card-spacer-y: 20px;
+$card-spacer-x: 20px;
+$card-cap-bg: #fff;
+$font-size-base: 0.81568rem;
+$accordion-bg: white;
+$accordion-button-bg: #eeeeee;
+$accordion-button-color: #323251;
+$accordion-button-active-color: #323251;
+$accordion-button-active-bg: #eeeeee;
+
+@import "bootstrap/scss/bootstrap";
+
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  word-wrap: break-word;
+  background: $white !important;
+  background-clip: border-box;
+  border-radius: 5px;
+  border: 0px solid transparent;
+  margin-bottom: 1.3rem;
+  box-shadow: $shadow;
+}
+
+.btn-primary,
+.btn-primary:hover {
+  color: white;
+}

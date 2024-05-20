@@ -1,0 +1,31 @@
+<div class="card-header">
+  <div class="d-flex flex-align-center">
+    <div>{{ "General.Disciplines" | translate }}</div>
+
+    @if (canEdit()) {
+    <div class="flex-fill tx-right">
+      <fa-icon
+        size="lg"
+        class="pointer"
+        [icon]="faPencil"
+        [routerLink]="editRoute()"
+        [title]="'General.Edit' | translate"
+      />
+    </div>
+    }
+  </div>
+</div>
+
+@if (items(); as list) {
+<div class="card-body">
+  @if (list.length === 0) {
+  <wbs-alert
+    [type]="alertIfEmpty() ? 'warning' : 'info'"
+    [dismissible]="false"
+    [message]="noDisciplinesLabel()"
+  />
+  } @else {
+  <wbs-discipline-split-list [items]="list" [splitLimit]="splitLimit()" />
+  }
+</div>
+}

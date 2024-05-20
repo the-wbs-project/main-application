@@ -1,0 +1,27 @@
+<kendo-multiselect
+  kendoMultiSelectSummaryTag
+  [checkboxes]="true"
+  [autoClose]="false"
+  [data]="roles"
+  [value]="values()"
+  adaptiveMode="auto"
+  textField="abbreviation"
+  valueField="id"
+  (valueChange)="changed($event)"
+>
+  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+    @if (dataItems.length == roles.length) {
+    {{ "OrgSettings.AllRoles" | translate }}
+    } @else {
+    {{ dataItems | roleList : true }}
+    }
+  </ng-template>
+  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+    <div class="role-item">
+      <span class="d-inline-block wd-80">
+        {{ dataItem.abbreviation | translate }}
+      </span>
+      <a class="tx-10" (click)="onlyRole($event, dataItem)">Only</a>
+    </div>
+  </ng-template>
+</kendo-multiselect>

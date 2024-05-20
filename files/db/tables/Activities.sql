@@ -8,7 +8,7 @@ CREATE TABLE [dbo].[Activities] (
     [UserId] nvarchar(100) NOT NULL,
     [TopLevelId] nvarchar(100) NOT NULL,
     [ObjectId] nvarchar(100) NULL,
-    [VersionId] nvarchar(100) NULL,
+    [VersionId] int NULL,
     [Data] nvarchar(MAX) NULL,
     CONSTRAINT Activities_PK PRIMARY KEY CLUSTERED (Id ASC),
     INDEX Activities_INDX_ID NONCLUSTERED (TopLevelId ASC, ObjectId ASC),

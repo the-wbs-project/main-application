@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  - main
+  - library
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
@@ -40,18 +40,49 @@ jobs:
         inputs:
           command: "publish"
           publishWebProjects: false
-          projects: "./api/api.csproj"
-          arguments: "-o ./api/dist"
+          projects: "./server/api/api.csproj"
+          arguments: "-o ./server/api/dist"
           zipAfterPublish: false
           modifyOutputPath: true
         displayName: "Build"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "api/dist/api"
+          rootFolderOrFile: "server/api/dist/api"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
+          replaceExistingArchive: true
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
+
+  - job: functions_job
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Azure Functions
+    steps:
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: "publish"
+          publishWebProjects: false
+          projects: "./server/functions/functions.csproj"
+          arguments: "-o ./server/functions/dist"
+          zipAfterPublish: false
+          modifyOutputPath: true
+        displayName: "Build"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "server/functions/dist/functions"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Functions.zip"
           replaceExistingArchive: true
         displayName: "Zip"
 
@@ -72,20 +103,20 @@ jobs:
           versionSpec: "18.10"
         displayName: "Install Node.js"
 
-      - script: npm install --global esbuild
-        displayName: "Install ES Build"
+      - script: npm install --global typescript
+        displayName: "Install TypeScript"
 
       - script: npm install
-        workingDirectory: "worker"
+        workingDirectory: "server/worker"
         displayName: "Install"
 
-      - script: npm run build
-        workingDirectory: "worker"
-        displayName: "Build"
+      - script: npm run check
+        workingDirectory: "server/worker"
+        displayName: "Check"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "worker"
+          rootFolderOrFile: "server/worker"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"
@@ -112,7 +143,7 @@ jobs:
       - script: |
           echo "$(FA_LICENSE)"
           npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
-        workingDirectory: "site"
+        workingDirectory: "site/app"
         env:
           FA_LICENSE: $(FA_LICENSE)
         displayName: "Setup - Font Awesome Registry"
@@ -121,17 +152,17 @@ jobs:
         displayName: "Setup - Angular CLI"
 
       - script: npm install --force
-        workingDirectory: "site"
+        workingDirectory: "site/app"
         displayName: "Setup - Site Packages"
 
       - script: npx kendo-ui-license activate
-        workingDirectory: "site"
+        workingDirectory: "site/app"
         env:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup - Kendo UI License"
 
       - script: npm run deploy
-        workingDirectory: "site"
+        workingDirectory: "site/app"
         displayName: "Build"
 
       - task: ArchiveFiles@2
@@ -140,6 +171,27 @@ jobs:
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site.zip"
+          replaceExistingArchive: true
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
+
+  - job: pages_job
+    pool:
+      vmImage: ubuntu-latest
+    displayName: Pages
+    steps:
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "site/pages/_worker.js"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Pages.zip"
           replaceExistingArchive: true
         displayName: "Zip"
 

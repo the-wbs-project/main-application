@@ -1,0 +1,87 @@
+@if (showButtons()) {
+<div class="pd-b-10 text-center">
+  @if (showAdd()) {
+  <button class="btn btn-outline-dark mg-x-10" (click)="add()">
+    <fa-icon [icon]="faPlus" />
+    {{ "General.Add" | translate }}
+  </button>
+  } @if (showSave()) {
+  <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
+    <fa-icon [icon]="faFloppyDisk" />
+    {{ "General.Save" | translate }}
+  </button>
+  }
+</div>
+} @if (categories(); as cats) {
+<div class="overflow-hidden" cdkDropList (cdkDropListDropped)="onDrop($event)">
+  @for (dataItem of cats; track dataItem.id) {
+
+  <div class="rr-item rr-list-item" cdkDrag>
+    <div
+      class="list-group-item pd-5 flex-align-center d-none d-sm-grid rounded-0"
+      style="gap: 5px; grid-template-columns: 30px 20px auto 60px"
+    >
+      <div class="tx-semibold tx-20">
+        @if (dataItem.selected) {
+        {{ dataItem.number }}. }
+      </div>
+      <div class="">
+        @if (dataItem.selected) {
+        <span style="cursor: grab" cdkDragHandle>
+          <fa-icon [icon]="faBars" />
+        </span>
+        }
+      </div>
+      <div>
+        <div class="tx-16">
+          {{ dataItem.label }}
+        </div>
+        <div class="tx-12 font-italic">
+          {{ dataItem.description }}
+        </div>
+      </div>
+      <div class="tx-center">
+        <wbs-switch
+          [(value)]="dataItem.selected"
+          [confirmMessage]="dataItem.confirm?.label"
+          [confirmData]="dataItem.confirm?.data"
+          (valueChange)="rebuild()"
+        />
+      </div>
+    </div>
+    <div
+      class="list-group-item pd-5 flex-align-center d-grid d-sm-none"
+      style="gap: 5px; grid-template-columns: 25px 35px auto"
+    >
+      <div class="tx-center">
+        <span class="k-i-reorder">
+          <fa-icon [icon]="faBars" />
+        </span>
+      </div>
+
+      <div class="tx-semibold tx-center tx-24">
+        @if (dataItem.selected) {
+        {{ dataItem.number }}. }
+      </div>
+      <div class="tx-left">
+        <div class="d-flex tx-16 w-100 flex-align-center">
+          {{ dataItem.label }}
+
+          <wbs-switch
+            [ngClass]="'pos-absolute r-10'"
+            size="sm"
+            [(value)]="dataItem.selected"
+            [confirmMessage]="dataItem.confirm?.label"
+            [confirmData]="dataItem.confirm?.data"
+            (valueChange)="rebuild()"
+          />
+        </div>
+        <div class="tx-12 font-italic">
+          {{ dataItem.description }}
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}

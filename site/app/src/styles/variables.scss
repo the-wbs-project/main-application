@@ -1,0 +1,48 @@
+//
+// Colors
+//
+$dark-grey: #4f4e4e;
+$aqua-blue: #17b7bb;
+$dark-blue: #00427a;
+$dark-blue2: #002f59;
+$dark-background: #383d52;
+$light-grey: #f2f2f2;
+$info: #4ec2f0;
+$pass: #0aa44e;
+$fail: #b91414;
+$alt-pass: #006164;
+$alt-fail: #db4325;
+//
+//  Layout stuff
+//
+$aside-width: 260px;
+//
+//  Table stuff
+//
+$table-border: solid 1px $dark-blue;
+$seperator: solid 2px $aqua-blue !important;
+//
+//  Button stuff
+//
+$round-button-size: 30px;
+
+$border-radius: 2px;
+//
+// Kendo Themes
+//
+$primary: $aqua-blue;
+$primary-palette-name: $aqua-blue;
+$secondary-palette-name: pink;
+
+/*gray variables*/
+$gray-100: #f9f9fb;
+$gray-200: #f0f0f8;
+$gray-300: #e1e1ef;
+$gray-400: #d6d6e6;
+$gray-500: #949eb7;
+$gray-600: #7987a1;
+$gray-700: #4d5875;
+$gray-800: #383853;
+$gray-900: #323251;
+
+@import "variables2";

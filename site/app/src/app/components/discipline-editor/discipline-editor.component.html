@@ -1,0 +1,55 @@
+@if (showButtons()) {
+<div class="pd-b-10 text-center">
+  @if (showAdd()) {
+  <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
+    <fa-icon [icon]="faPlus" />
+    {{ "General.Add" | translate }}
+  </button>
+  } @if (showSave()) {
+  <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
+    <fa-icon [icon]="faFloppyDisk" />
+    {{ "General.Save" | translate }}
+  </button>
+  }
+</div>
+} @if (categories(); as cats) {
+<div class="overflow-hidden" cdkDropList (cdkDropListDropped)="onDrop($event)">
+  @for (dataItem of cats; track dataItem.id) {
+  <div class="rr-item rr-list-item" cdkDrag>
+    <div
+      class="d-grid pd-5 flex-align-center"
+      style="gap: 5px; grid-template-columns: 30px 20px auto 40px"
+    >
+      <div class="pd-l-3 tx-semibold tx-16">
+        @if (dataItem.selected){ {{ dataItem.number }}. }
+      </div>
+      <div>
+        @if (dataItem.selected) {
+        <span style="cursor: grab" cdkDragHandle>
+          <fa-icon [icon]="faBars" />
+        </span>
+        }
+      </div>
+      <div class="tx-left" [ngClass]="sizeCss()">
+        <span class="d-inline-block tx-center wd-25">
+          <i
+            class="fa-solid"
+            [ngClass]="dataItem.id | disciplineIcon : categories()"
+          ></i>
+        </span>
+        {{ dataItem.label }}
+      </div>
+      <div class="tx-center ht-24 pd-t-4">
+        <wbs-switch
+          size="sm"
+          [(value)]="dataItem.selected"
+          [confirmMessage]="dataItem.confirm?.label"
+          [confirmData]="dataItem.confirm?.data"
+          (valueChange)="rebuild()"
+        />
+      </div>
+    </div>
+  </div>
+  }
+</div>
+}

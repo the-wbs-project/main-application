@@ -1,0 +1,138 @@
+<div class="d-flex">
+  <div class="border-end pd-r-20 d-none d-lg-block">
+    <div class="wd-250">
+      <wbs-project-list-filters
+        position="side"
+        [(stati)]="stati"
+        [(search)]="search"
+        [(categories)]="categories"
+        [(assignedToMe)]="assignedToMe"
+      />
+    </div>
+  </div>
+  <div class="mg-t-20 mg-b-16 flex-grow-1">
+    <div class="container-fluid">
+      <div class="row mg-b-15 d-none d-lg-flex">
+        <div class="col-8">
+          <div class="d-flex gap-20">
+            <a class="btn btn-dark" [routerLink]="['create']">
+              <fa-icon [icon]="plusIcon" />&nbsp;
+              {{ "General.Create" | translate }}
+            </a>
+            <wbs-project-view-toggle
+              [view]="view()"
+              (changed)="setView($event)"
+            />
+          </div>
+        </div>
+        <div class="col-4">
+          <wbs-page-header />
+        </div>
+      </div>
+      <div class="row mg-b-15 d-lg-none flex-align-center">
+        <div class="col-8">
+          <div class="d-flex gap-20">
+            <button
+              class="btn btn-dark btn-block"
+              (click)="filterToggle.set(!filterToggle())"
+            >
+              <fa-icon [icon]="filterIcon" />
+            </button>
+
+            <a class="btn btn-dark btn-block" [routerLink]="['create']">
+              <fa-icon [icon]="plusIcon" />&nbsp;
+              {{ "General.Create" | translate }}
+            </a>
+            <wbs-project-view-toggle
+              [view]="view()"
+              (changed)="setView($event)"
+            />
+          </div>
+        </div>
+        <div class="col-4">
+          <wbs-page-header />
+        </div>
+      </div>
+      <div class="row mg-b-15 d-lg-none">
+        <div
+          class="col-12 animate__animated animate__faster"
+          [ngClass]="{
+            'd-none': !filterToggle(),
+            animate__slideInUp: filterToggle(),
+          }"
+        >
+          <wbs-project-list-filters
+            position="top"
+            [(stati)]="stati"
+            [(search)]="search"
+            [(categories)]="categories"
+            [(assignedToMe)]="assignedToMe"
+          />
+        </div>
+      </div>
+      @if (filteredList(); as projects) { @if (!loading() && projects.length ===
+      0) {
+      <div class="row">
+        <div class="col-12 pd-t-100 tx-20 tx-center">
+          <fa-icon [icon]="cactusIcon" size="2xl" />
+          <br />
+          <br />
+          {{ "Projects.NoProjectsFound" | translate }}
+        </div>
+      </div>
+      } @else if (view() === 'grid') {
+      <div class="row">
+        @for (project of projects; track project.id) {
+        <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6">
+          <a
+            class="tx-black text-decoration-none"
+            [routerLink]="['view', project.id]"
+          >
+            <div class="card">
+              <div class="card-body">
+                <div style="min-height: 100px">
+                  <div class="tx-14 tx-semibold">{{ project.title }}</div>
+                  <div class="tx-10">
+                    {{ project.category | projectCategoryLabel }}
+                  </div>
+                </div>
+                <div class="tx-right tx-10 tx-gray-600">
+                  {{ project.lastModified | editedDateText }}
+                </div>
+              </div>
+            </div>
+          </a>
+        </div>
+        }
+      </div>
+      } @else {
+      <table class="table table-hover">
+        <tr class="bg-dark text-white">
+          <th class="pd-10 fw-normal">
+            {{ "General.Project" | translate }}
+          </th>
+          <th class="pd-10 fw-normal">
+            {{ "General.Category" | translate }}
+          </th>
+          <th class="pd-10 fw-normal">
+            {{ "General.Status" | translate }}
+          </th>
+          <th class="pd-10 fw-normal">
+            {{ "General.LastUpdated" | translate }}
+          </th>
+        </tr>
+        <tbody>
+          @for (project of projects; track project.id) {
+          <tr class="pointer" [routerLink]="['view', project.id]">
+            <td>{{ project.title }}</td>
+            <td>{{ project.category | projectCategoryLabel }}</td>
+            <td>{{ project.status | projectStatus | translate }}</td>
+            <td>{{ project.lastModified | dateText }}</td>
+          </tr>
+          }
+        </tbody>
+      </table>
+      } }
+    </div>
+  </div>
+</div>

@@ -1,0 +1,51 @@
+<kendo-dialog
+  width="400px"
+  [title]="'Projects.DeleteTask' | translate"
+  (close)="dialog.close()"
+>
+  <div class="p-1">
+    <kendo-label [for]="reasonDropdown">
+      {{ "Wbs.DeleteTaskMessage" | translate }}
+    </kendo-label>
+    <kendo-dropdownlist
+      #reasonDropdown
+      [data]="reasons()"
+      [(value)]="reason"
+      valueField="id"
+      textField="label"
+      [valuePrimitive]="true"
+    >
+      <ng-template
+        kendoDropDownListItemTemplate
+        kendoDropDownListValueTemplate
+        let-dataItem
+      >
+        {{ dataItem?.label | translate }}
+      </ng-template>
+    </kendo-dropdownlist>
+    @if (showReason()) {
+    <div class="pt-3">
+      <kendo-label [for]="reasonText">
+        {{ "Wbs.PleaseSpecify" | translate }}
+      </kendo-label>
+      <textarea
+        #reasonText
+        [(ngModel)]="other"
+        class="form-control w-100"
+        resizable="auto"
+      >
+      </textarea>
+    </div>
+    }
+  </div>
+  <kendo-dialog-actions>
+    <button
+      kendoButton
+      themeColor="primary"
+      [disabled]="disableSubmit()"
+      (click)="finishDelete()"
+    >
+      {{ "General.Confirm" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

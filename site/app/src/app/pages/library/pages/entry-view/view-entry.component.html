@@ -1,0 +1,44 @@
+<div class="d-flex flex-column h-100">
+  <div class="mg-y-10">
+    <div class="d-lg-none w-100 text-end">
+      <wbs-page-header />
+    </div>
+    <div class="d-flex flex-align-center">
+      <span class="tx-24 mg-r-15">
+        <wbs-watch-indicator
+          source="library"
+          [owner]="owner()"
+          [entityId]="entryId()"
+        />
+      </span>
+      <wbs-entry-title
+        [title]="entryStore.version()?.title ?? ''"
+        [canEdit]="canEditTitle()"
+        (titleChange)="titleChanged($event)"
+      />
+      <wbs-save-message [state]="titleSaveState()" cssClass="tx-12" />
+      <div class="flex-fill tx-right">
+        <div class="d-none d-lg-inline-block mg-r-15">
+          <wbs-page-header />
+        </div>
+        <wbs-entry-action-button
+          [entryType]="entryStore.entry()!.type"
+          [entryUrl]="entryUrl()"
+          [claims]="claims()"
+        />
+      </div>
+    </div>
+  </div>
+  <div class="card border border-dark flex-fill">
+    <div class="card-header py-0 mg-b-0 bg-dark">
+      <wbs-navigation
+        [activeSubSection]="entryStore.navSectionEntry()"
+        [menu]="links()"
+        (navigate)="navigate($event)"
+      />
+    </div>
+    <div class="card-body border-0 p-0 rounded-10 w-100 bg-light">
+      <router-outlet />
+    </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+<kendo-buttongroup selection="multiple">
+  @for (type of typeDefinitions; track $index) {
+  <button
+    kendoButton
+    size="small"
+    [selected]="types().indexOf(type) > -1"
+    (click)="toggle(type)"
+  >
+    <fa-icon [icon]="type | entryTypeIcon" class="mg-r-5" />
+    {{ type | entryTypeTitle | translate }}
+  </button>
+  }
+</kendo-buttongroup>

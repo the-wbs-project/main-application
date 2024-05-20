@@ -1,0 +1,33 @@
+@if (task(); as task) {
+<div class="two-column-grid pd-20 mn-ht-100p fs-6" resizedCss>
+  <wbs-task-details-card
+    [entry]="entryStore.entry()!"
+    [version]="entryStore.version()!"
+    [task]="task"
+  />
+  <wbs-discipline-card
+    [splitLimit]="750"
+    [alertIfEmpty]="true"
+    [items]="task?.disciplines ?? []"
+    noDisciplinesLabel="Library.NoDisciplinesTask"
+    [canEdit]="claims() | check : UPDATE_CLAIM"
+    [editRoute]="['../', 'settings', 'disciplines']"
+  />
+  <wbs-description-card
+    [(askAi)]="askAi"
+    [(editMode)]="descriptionEditMode"
+    [saveState]="descriptionSave.state()"
+    [description]="task.description ?? ''"
+    noDescriptionLabel="Library.NoDescriptionTask"
+    (descriptionChange)="descriptionChange($event)"
+  />
+</div>
+
+@if (askAi()) {
+<wbs-description-ai-dialog
+  [description]="task.description"
+  [startingDialog]="descriptionAiStartingDialog()"
+  (descriptionChange)="aiChangeSaved($event)"
+  (closed)="askAi.set(false)"
+/>
+} }

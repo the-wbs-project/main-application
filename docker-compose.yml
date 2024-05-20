@@ -1,36 +1,50 @@
-version: '3'
 services:
-  web-api:
-    container_name: web-api
+  wbs-api:
+    container_name: wbs-api
     build:
-      context: ./api
+      context: ./server/api
       dockerfile: Dockerfile-dev
     ports:
       - 5216:5216
     volumes:
-      - './api:/usr/src/app/api'
+      - './server/core:/usr/src/app/core'
+      - './server/api:/usr/src/app/api'
   
-  worker:
-    container_name: worker
+  wbs-worker:
+    container_name: wbs-worker
     build:
-      context: ./worker
+      context: ./server/worker
       dockerfile: Dockerfile-dev
     ports:
       - 88:88
     volumes:
-       - ./worker:/usr/src/app/worker
-       - /usr/src/app/worker/node_modules
+       - ./server/worker:/usr/src/app/worker
 
-  site:
-    container_name: site
+  wbs-site:
+    container_name: wbs-site
     build:
-      context: ./site
+      context: ./site/app
       dockerfile: Dockerfile-dev
       args:
           FA_TOKEN: $FA_TOKEN
           KENDO_UI_LICENSE: $KENDO_UI_LICENSE
+    #ports:
+    #  - 4200:4200
+    volumes:
+       - ./site/app:/usr/src/app/site
+       - /usr/src/app/site/node_modules
+       - shared-volume:/usr/src/app/site/dist
+
+  wbs-pages:
+    container_name: wbs-pages
+    build:
+      context: ./site/pages
+      dockerfile: Dockerfile-dev
     ports:
       - 4200:4200
     volumes:
-       - ./site:/usr/src/app/site
-       - /usr/src/app/site/node_modules
+       - ./site/pages:/usr/src/app/pages
+       - shared-volume:/usr/src/app/pages/dist
+
+volumes:
+  shared-volume:

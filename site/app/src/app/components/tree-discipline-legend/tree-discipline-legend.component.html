@@ -1,0 +1,26 @@
+{{ "Wbs.Disciplines" | translate }} &nbsp;
+<a #anchor class="anchor content" (click)="toggle()">
+  <fa-duotone-icon [icon]="faCircleQuestion" />
+</a>
+@if (show()) {
+<kendo-popup
+  popupClass="rounded border bd-1 border-light"
+  [anchor]="anchor"
+  [anchorAlign]="{ horizontal: 'left', vertical: 'bottom' }"
+  [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
+>
+  <div class="pd-0">
+    <div class="card mg-0">
+      <div class="card-header bd-b-0 pd-5 text-center bg-info-light">
+        {{ "Wbs.DisciplineLegend" | translate }}
+      </div>
+      <wbs-discipline-split-list
+        altClass="bg-gray-200"
+        itemClass="pd-x-10 tx-10"
+        [items]="list()"
+        [splitLimit]="800"
+      />
+    </div>
+  </div>
+</kendo-popup>
+}

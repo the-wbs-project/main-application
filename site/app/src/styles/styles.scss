@@ -1,0 +1,471 @@
+@import "./variables";
+@import "./variables2";
+
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&amp;display=swap");
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
+
+/* ######## UTILITIES-STYLES ######## */
+@import "util/background";
+@import "util/border";
+@import "util/height";
+@import "util/margin";
+@import "util/opacity";
+@import "util/padding";
+@import "util/position";
+@import "util/typography";
+@import "util/width";
+
+html,
+body,
+wbs-app {
+  padding: 0;
+  height: 100%;
+  font-family: "Poppins", sans-serif;
+}
+
+wbs-app {
+  display: flex;
+  flex-direction: column;
+}
+
+.notification {
+  font-size: 14px !important;
+  z-index: 10000000 !important;
+}
+
+.notification-desktop {
+  margin: 20px !important;
+  padding: 15px !important;
+  min-width: 300px !important;
+}
+
+.notification-mobile {
+  padding: 10px !important;
+  width: 300px !important;
+  bottom: 50px !important;
+  margin: 0 !important;
+}
+
+.notification-success {
+  color: $light-grey !important;
+  background-color: $pass !important;
+}
+
+.notification-alt-success {
+  color: $light-grey !important;
+  background-color: $alt-pass !important;
+}
+
+.notification-error {
+  color: $light-grey !important;
+  background-color: $fail !important;
+}
+
+.notification-alt-error {
+  color: $light-grey !important;
+  background-color: $alt-fail !important;
+}
+
+.notification-info,
+.notification-alt-info {
+  color: $dark-grey !important;
+  background-color: $info !important;
+}
+
+.header-panel {
+  background-color: #216259;
+  border-bottom: solid 1px white;
+}
+
+.fc .fc-button-primary {
+  background-color: var(--primary-bg-color) !important;
+  border-color: var(--primary-bg-border) !important;
+}
+
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc-theme-standard .fc-scrollgrid {
+  border: 1px solid #ededf5 !important;
+}
+
+.modal-almost-fullscreen {
+  width: 90%;
+  height: 90%;
+  margin: 5%;
+}
+
+// ng select
+
+.ng-select > .ng-select-container {
+  border-color: #ededf5 !important;
+  outline: none !important;
+}
+
+.accordion-button {
+  outline: none !important;
+}
+
+.dark-theme {
+  .ng-select .ng-select-container {
+    background-color: #2a2e3f !important;
+    border: 1px solid #32394e !important;
+  }
+
+  .ng-select.ng-select-multiple
+    .ng-select-container
+    .ng-value-container
+    .ng-value {
+    color: #fff !important;
+    background-color: #212332 !important;
+  }
+
+  .ng-select.ng-select-multiple
+    .ng-select-container
+    .ng-value-container
+    .ng-value
+    .ng-value-icon.left {
+    border-right: 1px solid #32394e !important;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
+  .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option.ng-option.ng-option-marked,
+  .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option.ng-option-selected.ng-option-marked {
+    color: #fff;
+    background-color: #383d52;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background-color: #2a2e3f;
+    color: #ccc;
+  }
+
+  .ng-dropdown-panel {
+    background-color: #2a2e3f;
+    border: 1px solid #32394e;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-optgroup {
+    color: rgb(177 187 200);
+  }
+
+  pre {
+    color: #664dc9;
+    background-color: #202231;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-header {
+    border-bottom: 1px solid #404353;
+    padding: 5px 7px;
+  }
+
+  .ng-select .ng-select-container,
+  .ng-select input {
+    color: #eee !important;
+    background: #383d52;
+    border: none;
+    outline: none;
+    border-radius: 0.25rem;
+    padding-inline: 1.1rem;
+  }
+}
+
+.transparent-theme .main-header {
+  backdrop-filter: blur(0.25rem);
+}
+
+.ngx-slider {
+  z-index: 0 !important;
+}
+
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.transparent-theme {
+  .ng-value {
+    color: #fff;
+  }
+
+  .ng-placeholder {
+    color: #fff !important;
+  }
+
+  .ng-select-container,
+  .ng-select.ng-select-opened > .ng-select-container {
+    background: transparent !important;
+    border-color: #4cb0a0 !important;
+  }
+
+  .ng-dropdown-panel {
+    background-color: #2da28f;
+    border: 1px solid #37c6af;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option {
+    background-color: #38c8b1;
+    color: #fff;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-marked {
+    background-color: #2da28f !important;
+    color: #fff;
+  }
+
+  .ng-dropdown-panel .ng-dropdown-panel-items .ng-option.ng-option-selected,
+  .ng-dropdown-panel
+    .ng-dropdown-panel-items
+    .ng-option.ng-option-selected.ng-option-marked {
+    color: #fff;
+    background-color: #2da28f !important;
+  }
+
+  .side-menu__item:hover .side-menu__icon,
+  .side-menu__item:hover .side-menu__label,
+  .side-menu__item:hover .angle {
+    color: #fff !important;
+  }
+}
+
+@media screen and (max-width: 767.9px) {
+  .slide-menu.open {
+    display: block;
+  }
+}
+
+.apexcharts-toolbar,
+.apexcharts-tooltip,
+.fc .fc-timegrid-body,
+.fc .fc-timegrid-axis-chunk > table,
+.fc .fc-timegrid-slots,
+.fc .fc-timegrid .fc-daygrid-body,
+.owl-carousel,
+.list-group-item.active,
+.main-contact-label::after {
+  z-index: 0 !important;
+}
+
+.dropdown-menu,
+.popover,
+#leaflet1,
+.tooltip {
+  z-index: 1 !important;
+}
+
+.pagination li {
+  margin-block: 0.1rem;
+}
+
+.form-lg .ng-select-container {
+  height: 44px !important;
+}
+
+.form-md .ng-select-container {
+  height: 38px !important;
+}
+
+.dark-theme .table thead th {
+  border-bottom: 1px solid #404353 !important;
+}
+
+.transparent-theme .table thead th {
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
+}
+
+// ng-mat-int-tel-input
+
+.mat-menu-content:not(:empty) {
+  max-height: 250px;
+}
+
+.mat-form-field {
+  width: 300px;
+}
+
+.mat-form-field-appearance-outline .mat-form-field-infix {
+  padding: 0.5rem 0 !important;
+}
+
+.error {
+  color: red;
+}
+
+.menu-grid-cell > div {
+  display: flex;
+
+  > div {
+    flex-grow: 1;
+  }
+}
+
+.notiflix-report-button {
+  text-decoration: none;
+}
+
+button:focus:not(:focus-visible) {
+  outline: 0 !important;
+  box-shadow: none !important;
+}
+
+.transparent-theme {
+  aw-wizard-navigation-bar ul.steps-indicator li a .label,
+  aw-wizard-navigation-bar.horizontal.small
+    ul.steps-indicator
+    li:not(:last-child):after {
+    color: #fff;
+  }
+}
+
+.scroll {
+  overflow: scroll;
+}
+
+.my-custom-class {
+  z-index: max;
+}
+
+.app-nav {
+  display: flex;
+  justify-content: center;
+  flex-grow: 1;
+  padding-top: 1px;
+  padding-bottom: 1px;
+  align-items: center;
+
+  ul {
+    padding-block: 0 !important;
+    background-color: transparent !important;
+
+    li {
+      font-size: 14px;
+      font-weight: 500;
+      padding: 5px 20px !important;
+
+      .k-menu-link {
+        padding-block: 0 !important;
+      }
+    }
+
+    li:not(.active) {
+      color: white !important;
+    }
+    li.active {
+      color: #38cab3 !important;
+    }
+  }
+}
+
+.task-modal {
+  top: 25px;
+  width: 90%;
+  height: 95%;
+  margin: auto auto;
+
+  > .modal-content {
+    height: 100%;
+
+    > .modal-body {
+      background-color: $background;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .task-modal {
+    top: 0;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.row-hint {
+  background-color: #ededed;
+  padding: 5px;
+  pointer-events: none;
+}
+
+.row-hint > td {
+  border: none;
+}
+
+/*
+  Two Column Grid
+*/
+.two-column-grid {
+  display: grid;
+  background-color: #f8f9fa;
+  grid-template-rows: auto;
+  gap: 20px;
+}
+
+.two-column-grid.wbs-container-xl,
+.two-column-grid.wbs-container-xxl {
+  grid-template-columns: 1fr 1fr;
+
+  .full-item {
+    grid-column: span 2;
+  }
+}
+
+.two-column-grid.wbs-container-sm {
+  grid-template-columns: 1fr;
+
+  .full-item {
+    grid-column: span 1;
+  }
+}
+/* 
+  Four Column Grid
+  */
+.four-column-grid {
+  display: grid;
+  grid-template-rows: auto;
+  gap: 20px;
+}
+
+.four-column-grid.wbs-container-xl,
+.four-column-grid.wbs-container-xxl {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+
+  .double-item {
+    grid-column: span 2;
+  }
+
+  .full-item {
+    grid-column: span 4;
+  }
+}
+
+.four-column-grid.wbs-container-md,
+.four-column-grid.wbs-container-lg {
+  grid-template-columns: 1fr 1fr;
+
+  .double-item,
+  .full-item {
+    grid-column: span 2;
+  }
+}
+
+.about-page-grid.wbs-container-sm {
+  grid-template-columns: 1fr;
+
+  .full-item,
+  .double-item {
+    grid-column: span 1;
+  }
+}
+
+.dashboard-card {
+  border: solid 1px #bbbbbb;
+  box-shadow: 0 3px 10px rgb(0 0 0 / 0.2);
+
+  .card-header {
+    font-weight: 500;
+    background-color: $gray-200;
+    text-transform: uppercase;
+  }
+}

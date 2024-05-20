@@ -1,0 +1,46 @@
+<div class="list-group w-100">
+  @for (cat of categories(); track cat.id) {
+  <div
+    class="list-group-item pd-l-0 flex-align-center border-primary d-none d-sm-flex"
+    style="border-bottom-width: 2px !important"
+  >
+    <div class="wd-80 tx-center" style="flex: 0 0 80px">
+      <img class="wd-40 hd-40" [src]="cat.icon" />
+    </div>
+    <div class="flex-grow-1">
+      <div class="tx-16">
+        {{ cat.label | translate }}
+      </div>
+      <div class="tx-12 font-italic">
+        {{ cat.description ?? "" | translate }}
+      </div>
+    </div>
+    <div class="pd-l-10">
+      <wbs-select-button
+        [buttonClass]="buttonClass()"
+        [selected]="selected().includes(cat.id)"
+        (clicked)="toggle(cat.id)"
+      />
+    </div>
+  </div>
+  <div
+    class="list-group-item border-primary d-xs-block d-sm-none tx-center"
+    style="border-bottom-width: 2px !important"
+  >
+    <div>
+      <img class="wd-40 hd-40" [src]="cat.icon" />
+    </div>
+    <div class="tx-16">
+      {{ cat.label | translate }}
+    </div>
+    <div class="tx-12 font-italic mg-b-15">
+      {{ cat.description ?? "" | translate }}
+    </div>
+    <wbs-select-button
+      [buttonClass]="buttonClass()"
+      [selected]="selected().includes(cat.id)"
+      (clicked)="toggle(cat.id)"
+    />
+  </div>
+  }
+</div>

@@ -1,0 +1,83 @@
+@if (task(); as task) {
+<div class="card-header">
+  {{ "General.Details" | translate }}
+</div>
+<div class="card-body">
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Owner" | translate }}:
+    </span>
+    <span>
+      {{ owner() }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      WBS:
+    </span>
+    <span>
+      {{ version().title }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Level" | translate }}:
+    </span>
+    <span>
+      {{ task.levelText }}
+    </span>
+  </p>
+  @if (entry().type !== 'task') {
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "Wbs.Phase" | translate }}:
+    </span>
+    @if (task.phaseId) {
+    <a
+      class="text-decoration-none"
+      [routerLink]="['../../', task.phaseId, 'about']"
+    >
+      {{ task.phaseLabel }}
+    </a>
+    } @else {
+    <span>
+      {{ "General.None" | translate }}
+    </span>
+    }
+  </p>
+  }
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Parent" | translate }}:
+    </span>
+    @if (task.parent; as parent) {
+    <a
+      class="text-decoration-none"
+      [routerLink]="['../../', parent.id, 'about']"
+    >
+      {{ parent.title }}
+    </a>
+    } @else {
+    <span>
+      {{ "General.None" | translate }}
+    </span>
+    }
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.LastModified" | translate }}:
+    </span>
+    <span>
+      {{ task.lastModified | dateText }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "Projects.SubTaskCount" | translate }}:
+    </span>
+    <span>
+      {{ task.subTasks.length }}
+    </span>
+  </p>
+</div>
+}

@@ -82,6 +82,7 @@
         "id": "project-description-changed",
         "type": "actions",
         "label": "Actions.ProjectDescriptionChangedTitle",
+        "description": "Actions.ProjectDescriptionChangedDescription",
         "icon": "fa-pencil",
         "order": 0
     },
@@ -121,6 +122,7 @@
         "id": "task-description-changed",
         "type": "actions",
         "label": "Actions.TaskDescriptionChangedTitle",
+        "description": "Actions.TaskDescriptionChangedDescription",
         "icon": "fa-pencil",
         "order": 0
     },
@@ -130,6 +132,14 @@
         "label": "Actions.TaskDisciplinesChangedTitle",
         "description": "Actions.TaskDisciplinesChangedDescription",
         "icon": "fa-user-helmet-safety",
+        "order": 0
+    },
+    {
+        "id": "project-imported-from-library",
+        "type": "actions",
+        "label": "Actions.ProjectImportedFromLibraryTitle",
+        "description": "Actions.ProjectImportedFromLibraryDescription",
+        "icon": "fa-file-import",
         "order": 0
     }
 ]

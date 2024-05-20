@@ -1,0 +1,106 @@
+<kendo-dialog
+  height="80%"
+  width="80%"
+  [title]="'LibraryCreate.TitleTask' | translate"
+  (close)="dialog.close()"
+>
+  <div class="d-flex flex-column h-100">
+    <kendo-stepper
+      [steps]="steps"
+      stepType="full"
+      [(currentStep)]="view"
+      [linear]="false"
+    >
+      <ng-template kendoStepperIndicatorTemplate let-step>
+        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+      </ng-template>
+      <ng-template kendoStepperLabelTemplate let-step>
+        {{ step.label | translate }}
+        @if (step.isOptional) { <span class="mg-l-5">*</span> }
+      </ng-template>
+    </kendo-stepper>
+    <div [appScrollToTop]="view()" class="tx-center flex-fill pd-t-20 pd-x-10">
+      @if (view() === 0) {
+      <div
+        class="d-inline-block w-100 mx-wd-800 tx-left animate__animated"
+        [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
+      >
+        <div class="pd-x-12">
+          <wbs-title-form
+            [(mainTaskTitle)]="mainTaskTitle"
+            [(templateTitle)]="templateTitle"
+            [(syncTitles)]="syncTitles"
+          />
+
+          <label class="form-label tx-18">
+            {{ "General.Visibility" | translate }}
+          </label>
+          <wbs-visibility-selection [(visibility)]="visibility" />
+        </div>
+      </div>
+      } @else if (view() === 1) {
+
+      <div
+        class="d-inline-block w-100 mx-wd-800 text-center animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <div class="pd-y-15 pd-x-30 tx-14">
+          {{ "LibraryCreate.DisciplinesHeader" | translate }}
+        </div>
+        <div class="d-inline-block w-100" style="max-width: 500px">
+          <wbs-discipline-editor
+            [showAdd]="true"
+            [(categories)]="disciplines"
+          />
+        </div>
+      </div>
+      } @else if (view() === 2) {
+
+      <div
+        class="d-inline-block w-100 mx-wd-800 animate__animated"
+        [ngClass]="{
+          animate__slideInLeft: dir() === 'left',
+          animate__slideInRight: dir() === 'right'
+        }"
+      >
+        <wbs-save-section
+          [owner]="owner()!"
+          [disciplines]="disciplines()"
+          [mainTaskTitle]="mainTaskTitle()"
+          [templateTitle]="templateTitle()"
+          [visibility]="visibility()"
+          (close)="dialog.close($event)"
+        />
+      </div>
+      }
+    </div>
+  </div>
+
+  <kendo-dialog-actions>
+    <div class="flex-grow-1 text-start">
+      @if (view() > 0) {
+      <button class="btn btn-warning" (click)="back()">
+        {{ "General.Back" | translate }}
+      </button>
+      }
+    </div>
+    <div class="flex-grow-1 tx-10 text-center pd-t-10 tx-italic">
+      * {{ "General.Optional" | translate }}
+    </div>
+
+    <div class="flex-grow-1 text-end">
+      @if (view() < 2) {
+      <button
+        class="btn btn-primary"
+        [disabled]="!canContinue()"
+        (click)="next()"
+      >
+        {{ nextButtonLabel() | translate }}
+      </button>
+      }
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

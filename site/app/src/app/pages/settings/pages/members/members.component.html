@@ -1,0 +1,100 @@
+<div class="container-fluid">
+  <div class="row mg-b-20">
+    <div
+      class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1"
+    >
+      <wbs-membership-rollup
+        [isLoading]="isLoading()"
+        [organization]="organization()"
+        [memberCount]="members()?.length ?? 0"
+        [inviteCount]="invites()?.length ?? 0"
+        [capacity]="capacity()"
+        [remaining]="remaining()"
+      />
+    </div>
+  </div>
+  @if (isLoading()) {
+  <div class="row">
+    <div class="col-12 tx-center mg-t-50">
+      <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+      <h3 class="pd-t-20">
+        {{ "General.Loading" | translate }}
+      </h3>
+    </div>
+  </div>
+  } @else {
+  <div class="row">
+    <div class="col-12">
+      <div class="row mg-b-20">
+        <div class="col-6">
+          <div class="btn-group" role="group" aria-label="Basic example">
+            <button
+              type="button"
+              class="btn"
+              [ngClass]="{
+                'btn-primary': view() === 'members',
+                'btn-outline-primary': view() !== 'members'
+              }"
+              (click)="view.set('members')"
+            >
+              {{ "General.Members" | translate }}
+            </button>
+            <button
+              type="button"
+              class="btn"
+              [ngClass]="{
+                'btn-primary': view() === 'invitations',
+                'btn-outline-primary': view() !== 'invitations'
+              }"
+              (click)="view.set('invitations')"
+            >
+              {{ "OrgSettings.Invitations" | translate }}
+            </button>
+          </div>
+        </div>
+        <div class="col-6 tx-right">
+          @if (canAdd()) {
+          <button class="btn btn-sm btn-primary" (click)="startInvite()">
+            <fa-icon [icon]="faPlus" />
+            <span class="d-none d-sm-inline">
+              {{ "OrgSettings.InviteMembers" | translate }}
+            </span>
+          </button>
+          }
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-xl-8 col-lg-7 col-md-12 mg-b-20">
+          <kendo-textbox
+            class="w-100"
+            [(ngModel)]="textFilter"
+            placeholder="Search by name or email"
+          />
+        </div>
+        <div class="col-xl-4 col-lg-5 col-md-12 mg-b-20">
+          <wbs-role-filter-list (valueChanged)="roleFilters.set($event)" />
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          @if (view() === 'members') {
+          <wbs-member-list
+            [org]="org()"
+            [filteredRoles]="roleFilters()"
+            [(members)]="members"
+            [textFilter]="textFilter"
+          />
+          } @else if (view() === 'invitations') {
+          <wbs-invitation-list
+            [org]="org()"
+            [filteredRoles]="roleFilters()"
+            [(invites)]="invites"
+            [textFilter]="textFilter"
+          />
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  }
+</div>

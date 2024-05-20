@@ -1,0 +1,66 @@
+name = "pm-empower-api"
+account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
+compatibility_date = "2024-05-02"
+main = "src/index.ts"
+logpush = true
+
+[env.dev]
+name = "pm-empower-api-dev"
+usage_model = "unbound"
+kv_namespaces = [
+  { binding = "KV_DATA", id = "123" },
+]
+
+[env.dev.vars]
+DEBUG = "true"
+DATADOG_ENV = "development"
+CORS_ORIGINS = "http://localhost:4200"
+KV_BYPASS = "LISTS"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
+
+[env.test]
+name = "pm-empower-api-test"
+usage_model = "unbound"
+workers_dev = false
+routes = [
+	{ pattern = "test-api.pm-empower.com/*", zone_name = "pm-empower.com" },
+]
+kv_namespaces = [
+  { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
+]
+
+[env.test.vars]
+DEBUG = "false"
+DATADOG_ENV = "test"
+CORS_ORIGINS = "https://test.pm-empower.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+
+[env.prod]
+name = "pm-empower-api-prod"
+usage_model = "unbound"
+workers_dev = false
+routes = [
+	{ pattern = "api.pm-empower.com/*", zone_name = "pm-empower.com" }
+]
+kv_namespaces = [
+  { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
+]
+
+[env.prod.vars]
+DEBUG = "false"
+DATADOG_ENV = "production"
+CORS_ORIGINS = "https://app.pm-empower.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+
+[dev]
+port = 88
+host = "wbs-api"
+ip = "*"
