@@ -39,7 +39,7 @@ public class LibrarySearchIndexService
 
     public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)
     {
-        var userCache = new Dictionary<string, UserDocument>();
+        var userCache = new Dictionary<string, UserBasicDocument>();
         var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
         var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
         var resources = new Resources(resourceObj);
@@ -70,7 +70,7 @@ public class LibrarySearchIndexService
         IEnumerable<LibraryEntryNode> entryTasks,
         IEnumerable<string> watcherIds,
         Dictionary<string, string> disciplineLabels,
-        Dictionary<string, UserDocument> userCache = null)
+        Dictionary<string, UserBasicDocument> userCache = null)
     {
         var users = await GetUsersAsync(watcherIds.Concat([entry.AuthorId]).Distinct(), userCache);
         var disciplines = new List<string>();
@@ -97,7 +97,7 @@ public class LibrarySearchIndexService
             //
             //  Users
             //
-            Author = users.ContainsKey(entry.AuthorId) ? new SortableUserDocument(users[entry.AuthorId]) : null,
+            Author = users.ContainsKey(entry.AuthorId) ? new SortableBasicUserDocument(users[entry.AuthorId]) : null,
             Watchers = watcherIds
                 .Where(x => users.ContainsKey(x))
                 .Select(x => users[x])
@@ -152,9 +152,9 @@ public class LibrarySearchIndexService
         return "";
     }
 
-    private async Task<Dictionary<string, UserDocument>> GetUsersAsync(IEnumerable<string> userIds, Dictionary<string, UserDocument> userCache = null)
+    private async Task<Dictionary<string, UserBasicDocument>> GetUsersAsync(IEnumerable<string> userIds, Dictionary<string, UserBasicDocument> userCache = null)
     {
-        var users = new Dictionary<string, UserDocument>();
+        var users = new Dictionary<string, UserBasicDocument>();
         var calls = new List<Task<Member>>();
 
         foreach (var userId in userIds)
@@ -172,7 +172,7 @@ public class LibrarySearchIndexService
 
                 foreach (var result in results)
                 {
-                    var model = new UserDocument(result.Id, result.Name);
+                    var model = new UserBasicDocument(result.Id, result.Name);
                     users.Add(result.Id, model);
 
                     if (userCache != null) userCache.Add(result.Id, model);
@@ -186,7 +186,7 @@ public class LibrarySearchIndexService
 
             foreach (var result in results)
             {
-                var model = new UserDocument(result.Id, result.Name);
+                var model = new UserBasicDocument(result.Id, result.Name);
                 users.Add(result.Id, model);
 
                 if (userCache != null) userCache.Add(result.Id, model);

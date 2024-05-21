@@ -41,7 +41,7 @@ public partial class LibrarySearchDocument
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string[] Disciplines_En { get; set; }
 
-    public SortableUserDocument Author { get; set; }
-    public UserDocument[] Watchers { get; set; }
+    public SortableBasicUserDocument Author { get; set; }
+    public UserBasicDocument[] Watchers { get; set; }
     public TaskSearchDocument[] Tasks { get; set; }
 }
