@@ -31,10 +31,7 @@
         </h3>
       </div>
       } @else if (view() === 0) {
-      <div
-        class="d-inline-block w-100 mx-wd-800 tx-left animate__animated"
-        [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
-      >
+      <div class="d-inline-block w-100 mx-wd-800 tx-left">
         <div class="pd-x-12 mb-3">
           <label for="templateTitle" class="form-label tx-18">
             Project Title
@@ -58,13 +55,7 @@
       </div>
       } @else if (view() === 1) {
 
-      <div
-        class="d-inline-block w-100 mx-wd-800 text-center animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
+      <div class="d-inline-block w-100 mx-wd-800 text-center">
         <div class="pd-y-15 pd-x-30 tx-14">
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
@@ -77,13 +68,7 @@
       </div>
       } @else if (view() === 2) {
 
-      <div
-        class="d-inline-block w-100 text-center animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
+      <div class="d-inline-block w-100 text-center">
         <div class="pd-y-15 pd-x-30 tx-14">
           {{ "General.Roles" | translate }}
         </div>
@@ -99,13 +84,7 @@
       </div>
       } @else if (view() === 3) {
 
-      <div
-        class="d-inline-block w-100 mx-wd-800 animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
+      <div class="d-inline-block w-100 mx-wd-800">
         <wbs-save-section
           [owner]="owner()!"
           [tasks]="tasks()"

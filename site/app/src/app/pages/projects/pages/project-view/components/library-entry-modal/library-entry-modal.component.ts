@@ -83,9 +83,7 @@ export class LibraryEntryModalComponent extends DialogContentBase {
 
     comp.form.get('categories')?.clearValidators();
 
-    return ref.result.pipe(
-      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
-    );
+    return ref.result;
   }
 
   save(nav: boolean): void {

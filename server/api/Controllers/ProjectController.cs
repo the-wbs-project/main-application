@@ -16,8 +16,9 @@ public class ProjectController : ControllerBase
     private readonly ProjectResourceDataService projectResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
     private readonly ResourceFileStorageService resourceService;
+    private readonly LibrarySearchIndexService searchIndexService;
 
-    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db, LibrarySearchIndexService searchIndexService)
     {
         logger = loggerFactory.CreateLogger<ProjectController>();
         this.projectDataService = projectDataService;
@@ -25,6 +26,7 @@ public class ProjectController : ControllerBase
         this.importLibraryEntryService = importLibraryEntryService;
         this.resourceService = resourceService;
         this.db = db;
+        this.searchIndexService = searchIndexService;
     }
 
     [Authorize]
@@ -122,7 +124,16 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            return Ok(await importLibraryEntryService.ImportFromProjectAsync(owner, projectId, options));
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                var newId = await importLibraryEntryService.ImportFromProjectAsync(conn, owner, projectId, options);
+
+                await searchIndexService.VerifyIndexAsync();
+                await searchIndexService.PushToSearchAsync(conn, owner, [newId]);
+
+                return Ok(newId);
+            }
+
         }
         catch (Exception ex)
         {

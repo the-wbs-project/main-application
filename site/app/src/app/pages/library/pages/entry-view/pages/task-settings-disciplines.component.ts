@@ -7,7 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { DisciplineSettingsPageComponent } from '@wbs/components/discipline-settings-page';
-import { Category, DirtyComponent } from '@wbs/core/models';
+import { DirtyComponent } from '@wbs/core/models';
 import { CategoryService, SaveService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';

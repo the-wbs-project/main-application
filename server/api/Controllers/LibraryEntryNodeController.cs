@@ -193,11 +193,11 @@ public class LibraryEntryNodeController : ControllerBase
         {
             using (var conn = await db.CreateConnectionAsync())
             {
-                var results = await importLibraryEntryService.ImportFromEntryNodeAsync(owner, entryId, entryVersion, nodeId, options);
+                var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, owner, entryId, entryVersion, nodeId, options);
 
-                await IndexLibraryEntryAsync(conn, owner, results.newId);
+                await IndexLibraryEntryAsync(conn, owner, newId);
 
-                return Ok(results);
+                return Ok(newId);
             }
         }
         catch (Exception ex)

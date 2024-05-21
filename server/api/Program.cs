@@ -90,6 +90,7 @@ builder.Services.AddSingleton<JiraSyncService>();
 builder.Services.AddSingleton<LibrarySearchIndexService>();
 builder.Services.AddSingleton<LibrarySearchService>();
 builder.Services.AddSingleton<QueueService>();
+builder.Services.AddSingleton<ResourceCopyService>();
 
 var app = builder.Build();
 

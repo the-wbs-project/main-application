@@ -56,7 +56,6 @@ import { SaveSectionComponent } from './components/save-section';
     FindByIdPipe,
     FontAwesomeModule,
     FormsModule,
-    NgClass,
     PhaseEditorComponent,
     ProjectCategoryDropdownComponent,
     RolesSectionComponent,
@@ -92,7 +91,6 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>('left');
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Disciplines', icon: faPeople },
@@ -177,12 +175,10 @@ export class ProjectCreationComponent extends DialogContentBase {
   }
 
   back(): void {
-    this.dir.set('left');
     this.view.update((x) => x - 1);
   }
 
   next(): void {
-    this.dir.set('right');
     this.view.update((x) => x + 1);
   }
 }
