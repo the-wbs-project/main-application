@@ -99,8 +99,8 @@ app.get('api/queue/test', (ctx) => {
 });
 
 for (const path of ROUTES.RESOURCE_URLS) {
-  app.get(path, verifyJwt, kv.resourceFile, OriginService.pass);
-  app.put(path, verifyJwt, kv.resourceFileClear, OriginService.pass);
+  app.get(path, verifyJwt, verifyMembership, kv.resourceFile, OriginService.pass);
+  app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
 }
 for (const path of ROUTES.VERIFY_JWT_GET) app.get(path, verifyJwt, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_POST) app.post(path, verifyJwt, OriginService.pass);

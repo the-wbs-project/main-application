@@ -29,7 +29,9 @@
     ],
     "VERIFY_JWT_MEMBERSHIP_DELETE": [],
     "RESOURCE_URLS": [
-        "api/portfolio/:owner/library/entries/:entryId/versions/:version/resources/:resource/file",
-        "api/portfolio/:owner/library/entries/:entryId/versions/:version/nodes/:nodeId/resources/:resource/file"
+        "api/portfolio/:owner/projects/*/resources/:resource/file",
+        "api/portfolio/:owner/projects/*/nodes/*/resources/:resource/file",
+        "api/portfolio/:owner/library/entries/*/versions/*/resources/:resource/file",
+        "api/portfolio/:owner/library/entries/*/versions/*/nodes/*/resources/:resource/file"
     ]
 }
