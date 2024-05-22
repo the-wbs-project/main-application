@@ -13,11 +13,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoComponent } from '@wbs/components/info/info.component';
 import { RESOURCE_TYPES, ResourceRecord } from '@wbs/core/models';
-import { RecordResourceValidation } from '@wbs/core/services';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { RecordResourceEditorComponent } from './components/record-resources-editor';
 import { RecordResourceListComponent } from './components/record-resources-list';
+import { RecordResourceValidation } from './services';
 
 @Component({
   standalone: true,
@@ -45,8 +45,11 @@ export class RecordResourcesPageComponent {
   readonly list = input.required<ResourceRecord[]>();
   readonly claims = input.required<string[]>();
   readonly addClaim = input.required<string>();
+  readonly editClaim = input.required<string>();
+  readonly deleteClaim = input.required<string>();
   readonly apiUrlPrefix = input.required<string>();
   readonly view = signal<'list' | 'editor'>('list');
+  readonly editType = signal<'add' | 'edit'>('add');
 
   readonly faPlus = faPlus;
   readonly vm = model<RecordResourceViewModel | undefined>(undefined);
@@ -62,6 +65,7 @@ export class RecordResourcesPageComponent {
       url: vm?.resource ?? '',
       errors: {},
     });
+    this.editType.set(vm ? 'edit' : 'add');
     this.view.set('editor');
   }
 
@@ -77,7 +81,7 @@ export class RecordResourcesPageComponent {
     this.vm.set(vm);
 
     if (!valid) return;
-    if (vm.type === RESOURCE_TYPES.LINK) {
+    if (vm.type === RESOURCE_TYPES.LINK || !vm.file) {
       this.saveRecords.emit([
         {
           id: vm.id,

@@ -41,32 +41,28 @@ public class Storage
         }
     }
 
-    public Task<BlobClient> SaveFileAsync(string containerName, string[] folders, string fileName, byte[] data, bool snapshot)
+    public Task SaveFileAsync(string containerName, string[] folders, string fileName, byte[] data)
     {
-        return SaveFileAsync(containerName, string.Join('/', folders) + "/" + fileName, data, snapshot);
+        return SaveFileAsync(containerName, string.Join('/', folders) + "/" + fileName, data);
     }
 
-    public async Task<BlobClient> SaveFileAsync(string containerName, string fileName, byte[] data, bool snapshot)
+    public async Task SaveFileAsync(string containerName, string fileName, byte[] data)
     {
         var container = await GetContainerAsync(containerName);
         var blob = container.GetBlobClient(fileName);
 
-        if (snapshot && await blob.ExistsAsync()) await blob.CreateSnapshotAsync();
-
+        await blob.DeleteIfExistsAsync();
         await blob.UploadAsync(new BinaryData(data));
-
-        return blob;
     }
 
-    public async Task SaveFileAsync(string containerName, string fileName, string data, bool snapshot)
+    public async Task SaveFileAsync(string containerName, string fileName, string data)
     {
         logger.LogWarning($"Saving file {fileName} to container {containerName}");
 
         var container = await GetContainerAsync(containerName);
         var blob = container.GetBlobClient(fileName);
 
-        if (snapshot && await blob.ExistsAsync()) await blob.CreateSnapshotAsync();
-
+        await blob.DeleteIfExistsAsync();
         await blob.UploadAsync(new BinaryData(data));
     }
 

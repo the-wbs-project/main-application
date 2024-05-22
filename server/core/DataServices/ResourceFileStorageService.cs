@@ -21,7 +21,7 @@ public class ResourceFileStorageService
 
     public Task SaveLibraryResourceAsync(string owner, string entryId, int versionId, string resourceId, byte[] file)
     {
-        return storage.SaveFileAsync("resources", GetLibraryPath(owner, entryId, versionId, resourceId), file, true);
+        return storage.SaveFileAsync("resources", GetLibraryPath(owner, entryId, versionId, resourceId), file);
     }
 
     public Task<byte[]> GetLibraryTaskResourceAsync(string owner, string entryId, int versionId, string taskId, string resourceId)
@@ -31,7 +31,7 @@ public class ResourceFileStorageService
 
     public Task SaveLibraryTaskResourceAsync(string owner, string entryId, int versionId, string taskId, string resourceId, byte[] file)
     {
-        return storage.SaveFileAsync("resources", GetLibraryTaskPath(owner, entryId, versionId, taskId, resourceId), file, true);
+        return storage.SaveFileAsync("resources", GetLibraryTaskPath(owner, entryId, versionId, taskId, resourceId), file);
     }
 
     public Task<byte[]> GetProjectResourceAsync(string owner, string projectId, string resourceId)
@@ -41,7 +41,7 @@ public class ResourceFileStorageService
 
     public Task SaveProjectResourceAsync(string owner, string projectId, string resourceId, byte[] file)
     {
-        return storage.SaveFileAsync("resources", GetProjectPath(owner, projectId, resourceId), file, true);
+        return storage.SaveFileAsync("resources", GetProjectPath(owner, projectId, resourceId), file);
     }
 
     public Task<byte[]> GetProjectTaskResourceAsync(string owner, string projectId, string taskId, string resourceId)
@@ -51,7 +51,7 @@ public class ResourceFileStorageService
 
     public Task SaveProjectTaskResourceAsync(string owner, string projectId, string taskId, string resourceId, byte[] file)
     {
-        return storage.SaveFileAsync("resources", GetProjectyTaskPath(owner, projectId, taskId, resourceId), file, true);
+        return storage.SaveFileAsync("resources", GetProjectyTaskPath(owner, projectId, taskId, resourceId), file);
     }
 
     private string GetLibraryPath(string owner, string entryId, int versionId, string resourceId)

@@ -19,12 +19,15 @@
     (close)="close()"
   >
     @if (record.type === 'image') {
-    <img
-      class="w-100"
-      [src]="
-        ([apiUrlPrefix(), record.id] | resourceObject | async)! | resourceImage
-      "
-    />
+    <div class="d-flex justify-content-center">
+      <img
+        class="mw-100 mh-100"
+        [src]="
+          ([apiUrlPrefix(), record.id] | resourceObject | async)!
+            | resourceImage
+        "
+      />
+    </div>
     } @else if (record.type === 'pdf') {
     <div class="modal-body">
       <kendo-pdfviewer

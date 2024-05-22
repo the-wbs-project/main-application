@@ -9,7 +9,6 @@ export * from './id.service';
 export * from './logger.service';
 export * from './messages.service';
 export * from './navigation-menu.service';
-export * from './record-resource-validation.service';
 export * from './resource.service';
 export * from './save.service';
 export * from './signal-store.service';

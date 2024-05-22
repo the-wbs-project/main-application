@@ -696,6 +696,7 @@
     "locale": "en-US",
     "values": {
       "AddResource": "Add Resource",
+      "EditResource": "Edit Resource",
       "NoResourcesFound": "No Resources Found",
       "ResourceType": "Resource Type",
       "ResourceTypeHelper": "Select the type of resource you would like to add.",

@@ -21,7 +21,10 @@ export class RecordResourceValidation {
         !vm.errors.urlRequired
       );
     }
-    if (vm.type === RESOURCE_TYPES.PDF || vm.type === RESOURCE_TYPES.IMAGE) {
+    if (
+      vm.type === RESOURCE_TYPES.PDF ||
+      (vm.type === RESOURCE_TYPES.IMAGE && vm.id == undefined)
+    ) {
       this.validateFile(vm);
 
       return (

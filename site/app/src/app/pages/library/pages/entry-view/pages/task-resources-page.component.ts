@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { LIBRARY_CLAIMS, ResourceRecord } from '@wbs/core/models';
-import { RecordResourcesPageComponent } from '@wbs/components/record-resources-page';
-import { EntryResourceService } from '../services';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { RecordResourcesPageComponent } from '@wbs/components/resources';
+import { EntryResourceService } from '../services';
 
 @Component({
   standalone: true,
@@ -24,6 +24,8 @@ import { AlertComponent } from '@wbs/components/_utils/alert.component';
       [claims]="claims()"
       [apiUrlPrefix]="apiUrlPrefix()"
       [addClaim]="ADD_CLAIM"
+      [editClaim]="EDIT_CLAIM"
+      [deleteClaim]="DELETE_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
     />
@@ -41,6 +43,8 @@ export class ResourcesPageComponent implements OnInit {
   readonly list = signal<ResourceRecord[]>([]);
   readonly apiUrlPrefix = input.required<string>();
   readonly ADD_CLAIM = LIBRARY_CLAIMS.RESOURCES.CREATE;
+  readonly EDIT_CLAIM = LIBRARY_CLAIMS.RESOURCES.UPDATE;
+  readonly DELETE_CLAIM = LIBRARY_CLAIMS.RESOURCES.DELETE;
 
   constructor(private readonly service: EntryResourceService) {}
 

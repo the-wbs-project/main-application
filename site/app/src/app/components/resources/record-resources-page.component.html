@@ -27,6 +27,8 @@
       <wbs-record-resource-list
         [claims]="claims()"
         [list]="list()"
+        [editClaim]="editClaim()"
+        [deleteClaim]="deleteClaim()"
         [apiUrlPrefix]="apiUrlPrefix()"
         (save)="saveRecords.emit($event)"
         (edit)="launchEditor($event)"
@@ -38,6 +40,11 @@
     <div class="col-12 offset-lg-1 col-lg-10">
       <wbs-record-resource-editor
         [(vm)]="vm"
+        [title]="
+          editType() === 'add'
+            ? 'Resources.AddResource'
+            : 'Resources.EditResource'
+        "
         (saveClicked)="saveClicked()"
         (cancelClicked)="cancelEditor()"
       />

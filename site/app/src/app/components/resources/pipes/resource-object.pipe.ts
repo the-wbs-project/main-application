@@ -10,8 +10,6 @@ export class ResourceObjectPipe implements PipeTransform {
     string,
     string
   ]): Observable<ArrayBuffer> {
-    console.log(urlPrefix);
-    console.log(`${urlPrefix}/resources/${resourceId}/file`);
     return this.http.get(`${urlPrefix}/resources/${resourceId}/file`, {
       responseType: 'arraybuffer',
     });

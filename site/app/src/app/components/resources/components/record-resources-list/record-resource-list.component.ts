@@ -9,7 +9,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faGear } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { PROJECT_CLAIMS, ResourceRecord } from '@wbs/core/models';
+import { ResourceRecord } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../record-resources-type-text';
@@ -34,13 +34,11 @@ import { ResourceViewLinkComponent } from '../resource-view-link';
 export class RecordResourceListComponent {
   readonly apiUrlPrefix = input.required<string>();
   readonly claims = input.required<string[]>();
+  readonly editClaim = input.required<string>();
+  readonly deleteClaim = input.required<string>();
   readonly list = model.required<ResourceRecord[]>();
   readonly edit = output<ResourceRecord>();
   readonly save = output<ResourceRecord[]>();
-
-  readonly editClaim = PROJECT_CLAIMS.RESOURCES.UPDATE;
-  readonly deleteClaim = PROJECT_CLAIMS.RESOURCES.DELETE;
-
   readonly faBars = faBars;
   readonly faGear = faGear;
   readonly menu = [];

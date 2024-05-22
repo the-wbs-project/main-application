@@ -1,6 +1,6 @@
 <div cdkDropList (cdkDropListDropped)="onDrop($event)">
   <div class="rr-item rr-list-header">
-    @if (claims() | check : editClaim) {
+    @if (claims() | check : editClaim()) {
     <div class="reorder-item">&nbsp;</div>
     }
     <div class="type-item">{{ "General.Type" | translate }} &nbsp;</div>
@@ -10,13 +10,13 @@
       {{ "General.LastModified" | translate }}
     </div>
     <div class="view-item">&nbsp;</div>
-    @if (claims() | check : [editClaim, deleteClaim]) {
+    @if (claims() | check : [editClaim(), deleteClaim()]) {
     <div class="actions-item">&nbsp;</div>
     }
   </div>
   @for (dataItem of list(); track dataItem.id) {
   <div class="rr-item rr-list-item" cdkDrag>
-    @if (claims() | check : editClaim) {
+    @if (claims() | check : editClaim()) {
     <div class="reorder-item">
       <span cdkDragHandle style="cursor: grab">
         <fa-icon [icon]="faBars" />
@@ -35,7 +35,7 @@
         [apiUrlPrefix]="apiUrlPrefix()"
       />
     </div>
-    @if (claims() | check : [editClaim, deleteClaim]) {
+    @if (claims() | check : [editClaim(), deleteClaim()]) {
     <div class="actions-item">
       <a
         class="pointer text-decoration-none tx-black"

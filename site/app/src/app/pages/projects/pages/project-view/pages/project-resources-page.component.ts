@@ -9,7 +9,7 @@ import {
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { PROJECT_CLAIMS, ResourceRecord } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { RecordResourcesPageComponent } from '@wbs/components/record-resources-page';
+import { RecordResourcesPageComponent } from '@wbs/components/resources';
 import { ProjectResourceService } from '../services';
 
 @Component({
@@ -25,6 +25,8 @@ import { ProjectResourceService } from '../services';
       [claims]="claims()"
       [apiUrlPrefix]="apiUrlPrefix()"
       [addClaim]="ADD_CLAIM"
+      [editClaim]="EDIT_CLAIM"
+      [deleteClaim]="DELETE_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
     />
@@ -42,6 +44,8 @@ export class ProjectResourcesPageComponent implements OnInit {
   readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
   readonly ADD_CLAIM = PROJECT_CLAIMS.RESOURCES.CREATE;
+  readonly EDIT_CLAIM = PROJECT_CLAIMS.RESOURCES.UPDATE;
+  readonly DELETE_CLAIM = PROJECT_CLAIMS.RESOURCES.DELETE;
 
   ngOnInit(): void {
     this.service
