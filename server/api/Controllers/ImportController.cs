@@ -91,9 +91,11 @@ public class ImportController : ControllerBase
 
                 fileName = $"{DateTime.Now:yyyyMMddHHmmss}-${owner}-${fileName}";
 
-                var blob = await storage.SaveFileAsync("aistorage", fileName, stream.ToArray(), false);
+                await storage.SaveFileAsync("aistorage", fileName, stream.ToArray());
 
-                return Ok(await aiService.GetResultsAsync(owner, blob.Uri.ToString()));
+                var blob = await storage.GetFileAsBytesAsync("aistorage", fileName);
+
+                return Ok(""); //await aiService.GetResultsAsync(owner, blob.Uri.ToString()));
             }
         }
         catch (Exception ex)
