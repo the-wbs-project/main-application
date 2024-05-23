@@ -56,7 +56,7 @@ export class DisciplineEditorComponent {
   //
   //  Models and computes
   //
-  readonly categories = model<CategorySelection[]>();
+  readonly categories = model.required<CategorySelection[]>();
   readonly showButtons = computed(() => this.showAdd() || this.showSave());
 
   readonly faBars = faBars;
@@ -107,7 +107,7 @@ export class DisciplineEditorComponent {
   rebuild(): void {
     this.categories.update((list) => {
       this.catService.renumber(list);
-      return list;
+      return [...list];
     });
   }
 }

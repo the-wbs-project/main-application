@@ -25,6 +25,8 @@ import { MetadataStore } from '@wbs/core/store';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
 import { ProjectViewToggleComponent } from './components/project-view-toggle';
 import { ProjectListService } from './services';
+import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
+import { ProjectCreateDialogComponent } from './components/project-create-dialog/project-create-dialog.component';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -34,6 +36,7 @@ declare type ProjectView = 'grid' | 'table';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DateTextPipe,
+    DialogModule,
     EditedDateTextPipe,
     FontAwesomeModule,
     NgClass,
@@ -48,6 +51,7 @@ declare type ProjectView = 'grid' | 'table';
 })
 export class ProjectListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
+  private readonly dialog = inject(DialogService);
   private readonly metadata = inject(MetadataStore);
   private readonly service = inject(ProjectListService);
   private readonly storage = inject(Storage);
@@ -92,6 +96,18 @@ export class ProjectListComponent implements OnInit {
         projects.sort((a, b) => sorter(a.lastModified, b.lastModified, 'desc'))
       );
       this.loading.set(false);
+    });
+  }
+
+  launchCreateProject(): void {
+    const ref = this.dialog.open({
+      content: ProjectCreateDialogComponent,
+    });
+
+    ref.result.subscribe((id) => {
+      if (!id) return;
+      
+      console.log(id);
     });
   }
 

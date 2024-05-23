@@ -5,8 +5,6 @@ import {
   input,
   output,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { IconDefinition, faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -14,8 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
   selector: 'wbs-select-button',
   template: `@if (selected()) {
     <button type="button" class="btn btn-dark" [ngClass]="buttonClass()">
-      @if (prefixIcon(); as icon) { <fa-icon [icon]="icon" /> }
-      {{ selectedText() | translate }} &nbsp; <fa-icon [icon]="faCheck" />
+      {{ selectedText() | translate }}
     </button>
     } @else {
     <button
@@ -24,19 +21,16 @@ import { TranslateModule } from '@ngx-translate/core';
       [ngClass]="buttonClass()"
       (click)="clicked.emit()"
     >
-      @if (prefixIcon(); as icon) { <fa-icon [icon]="icon" /> }
       {{ selectText() | translate }}
     </button>
     }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, NgClass, TranslateModule],
+  imports: [NgClass, TranslateModule],
 })
 export class SelectButtonComponent {
-  readonly faCheck = faCheck;
   readonly selected = input<boolean>(false);
   readonly selectText = input<string>('General.Select');
   readonly selectedText = input<string>('General.Selected');
   readonly buttonClass = input<string>();
-  readonly prefixIcon = input<IconDefinition>();
   readonly clicked = output<void>();
 }

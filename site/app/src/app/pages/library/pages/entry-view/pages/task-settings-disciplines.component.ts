@@ -32,7 +32,7 @@ export class DisciplinesComponent implements DirtyComponent {
   readonly taskId = input.required<string>();
 
   readonly saveService = new SaveService();
-  readonly disciplines = signal<CategorySelection[] | undefined>(undefined);
+  readonly disciplines = signal<CategorySelection[]>([]);
   readonly isDirty = () => this.catService.isListDirty(this.disciplines());
 
   constructor() {

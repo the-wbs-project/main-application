@@ -3,7 +3,7 @@ import {
   Component,
   effect,
   inject,
-  model,
+  signal,
 } from '@angular/core';
 import { DisciplineSettingsPageComponent } from '@wbs/components/discipline-settings-page';
 import { DirtyComponent } from '@wbs/core/models';
@@ -29,7 +29,7 @@ export class DisciplinesComponent implements DirtyComponent {
   private readonly project = this.store.select(ProjectState.current);
 
   readonly saveService = new SaveService();
-  readonly disciplines = model<CategorySelection[]>();
+  readonly disciplines = signal<CategorySelection[]>([]);
   readonly isDirty = () => this.catService.isListDirty(this.disciplines());
 
   constructor() {

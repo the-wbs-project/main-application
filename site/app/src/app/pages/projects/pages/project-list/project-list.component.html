@@ -15,10 +15,10 @@
       <div class="row mg-b-15 d-none d-lg-flex">
         <div class="col-8">
           <div class="d-flex gap-20">
-            <a class="btn btn-dark" [routerLink]="['create']">
-              <fa-icon [icon]="plusIcon" />&nbsp;
+            <button class="btn btn-dark" (click)="launchCreateProject()">
+              <fa-icon [icon]="plusIcon" class="mg-r-5" />
               {{ "General.Create" | translate }}
-            </a>
+            </button>
             <wbs-project-view-toggle
               [view]="view()"
               (changed)="setView($event)"

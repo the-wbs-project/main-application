@@ -1,0 +1,64 @@
+<kendo-dialog
+  height="90%"
+  width="90%"
+  [title]="'General.CreateProject' | translate"
+  (close)="dialog.close()"
+>
+  <div class="pe-none">
+    <kendo-stepper
+      [steps]="steps"
+      stepType="full"
+      [currentStep]="store.page() - 1"
+      [linear]="false"
+    >
+      <ng-template kendoStepperIndicatorTemplate let-step>
+        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+      </ng-template>
+      <ng-template kendoStepperLabelTemplate let-step>
+        {{ step.label | translate }}
+      </ng-template>
+    </kendo-stepper>
+  </div>
+  <div class="pd-t-20 pd-x-10">
+    @if (store.page() === 1) {
+    <wbs-project-create-basics />
+    } @else if (store.page() === 2) {
+    <wbs-project-create-category />
+    } @else if (store.page() === 3) {
+    <wbs-project-create-phases />
+    } @else if (store.page() === 4) {
+    <wbs-project-create-disciplines />
+    } @else if (store.page() === 5) {
+    <wbs-project-create-roles />
+    } @else if (store.page() === 6) {
+    <div class="w-100 mg-t-50 text-center">
+      <fa-duotone-icon [icon]="savingIcon" size="5x" [spin]="true" />
+      <h3 class="pd-t-20">
+        {{ "General.Saving" | translate }}
+      </h3>
+    </div>
+    }
+  </div>
+
+  <kendo-dialog-actions>
+    @if (store.page() < 6) {
+    <div class="flex-grow-1 text-start">
+      @if (store.page() > 0) {
+      <button class="btn btn-warning" (click)="back()">
+        {{ "General.Back" | translate }}
+      </button>
+      }
+    </div>
+
+    <div class="flex-grow-1 text-end">
+      <button
+        class="btn btn-primary"
+        [disabled]="!store.canContinue()"
+        (click)="next()"
+      >
+        {{ "General.Next" | translate }}
+      </button>
+    </div>
+    }
+  </kendo-dialog-actions>
+</kendo-dialog>

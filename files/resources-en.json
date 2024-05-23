@@ -424,10 +424,8 @@
     "section": "ProjectCreate",
     "locale": "en-US",
     "values": {
-      "GettingStarted_Title": "Getting Started",
-      "GettingStarted_Description": "Let's get started by creating your project.",
       "Basics_Title": "Title & Description",
-      "Basics_Description": "Please provide the title for this project.",
+      "Basics_Description": "Let's get started by creating your project. Please provide the title for this project.",
       "Category_Title": "Project Category",
       "Category_Description": "Select the category that best describes this project.",
       "Lib_Hand_Title": "Library Or By Hand",

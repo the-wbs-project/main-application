@@ -5,6 +5,7 @@ import {
   input,
   model,
   output,
+  signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
@@ -44,7 +45,7 @@ export class DisciplineSettingsPageComponent {
   readonly checkIcon = faCheck;
   readonly canAdd = input.required<boolean>();
   readonly saveService = input.required<SaveService>();
-  readonly disciplines = model.required<CategorySelection[] | undefined>();
+  readonly disciplines = model.required<CategorySelection[]>();
   readonly saveClicked = output<void>();
 
   add(): void {

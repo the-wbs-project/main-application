@@ -1,5 +1,12 @@
 <div class="d-flex flex-flow-col h-100">
-  <div class="mg-t-10 tx-center w-100 flex-fill scroll">
+  <div class="mg-t-10 tx-center w-100 flex-fill">
+    <div class="tx-12 text-start">
+      <wbs-alert
+        type="info"
+        [dismissible]="false"
+        message="ProjectCreate.Roles_Description"
+      />
+    </div>
     @if (isLoading()) {
     <div class="w-100 mg-t-50">
       <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
@@ -10,9 +17,9 @@
     } @else {
     <wbs-project-roles
       [members]="members()"
-      [approverIds]="approverIds()"
-      [pmIds]="pmIds()"
-      [smeIds]="smeIds()"
+      [approverIds]="store.approverIds()"
+      [pmIds]="store.pmIds()"
+      [smeIds]="store.smeIds()"
       [mustConfirm]="false"
       [approvalEnabled]="approvalEnabled()!"
       (addUserToRole)="add($event.role, $event.user.id)"
@@ -20,10 +27,4 @@
     />
     }
   </div>
-  <wbs-wizard-footer
-    view="bc"
-    [disableContinue]="pmIds().length === 0"
-    (backClicked)="back()"
-    (continueClicked)="continue()"
-  />
 </div>

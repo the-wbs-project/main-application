@@ -19,7 +19,11 @@
   <div class="rr-item rr-list-item" cdkDrag>
     <div
       class="list-group-item pd-5 flex-align-center d-none d-sm-grid rounded-0"
-      style="gap: 5px; grid-template-columns: 30px 20px auto 60px"
+      style="
+        gap: 5px;
+        grid-template-columns: 30px 20px auto 60px;
+        border-bottom: solid 1px #cccccc;
+      "
     >
       <div class="tx-semibold tx-20">
         @if (dataItem.selected) {

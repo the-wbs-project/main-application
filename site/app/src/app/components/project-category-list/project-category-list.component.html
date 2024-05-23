@@ -2,9 +2,9 @@
   @for (cat of categories; track cat.id) {
   <div
     class="list-group-item pd-l-0 flex-align-center border-primary d-none d-sm-flex"
-    style="border-bottom-width: 2px !important"
+    style="border-bottom-width: 2px !important; flex: 0 0 80px"
   >
-    <div class="wd-80 tx-center" style="flex: 0 0 80px">
+    <div class="wd-80 tx-center">
       <img class="wd-40 hd-40" [src]="cat.icon" />
     </div>
     <div class="flex-grow-1">
@@ -20,8 +20,8 @@
     <div class="pd-l-10">
       <wbs-select-button
         [buttonClass]="buttonClass()"
-        [selected]="cat.id === selected()"
-        (clicked)="categoryChosen.emit(cat.id)"
+        [selected]="cat.id === category()"
+        (clicked)="category.set(cat.id)"
       />
     </div>
   </div>
@@ -42,8 +42,8 @@
     </div>
     <wbs-select-button
       [buttonClass]="buttonClass()"
-      [selected]="cat.id === selected()"
-      (clicked)="categoryChosen.emit(cat.id)"
+      [selected]="cat.id === category()"
+      (clicked)="category.set(cat.id)"
     />
   </div>
   }

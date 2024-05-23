@@ -3,7 +3,7 @@ import {
   Component,
   inject,
   input,
-  output,
+  model,
 } from '@angular/core';
 import { SelectButtonComponent } from '@wbs/components/_utils/select-button.component';
 import { MetadataStore } from '@wbs/core/store';
@@ -19,6 +19,5 @@ export class ProjectCategoryListComponent {
   readonly categories = inject(MetadataStore).categories.projectCategories;
 
   readonly buttonClass = input<string>();
-  readonly selected = input.required<string | undefined>();
-  readonly categoryChosen = output<string>();
+  readonly category = model.required<string | undefined>();
 }
