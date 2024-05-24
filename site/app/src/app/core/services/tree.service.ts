@@ -6,8 +6,8 @@ import { WbsNodeView } from '@wbs/core/view-models';
 export class TreeService {
   expandedKeys: string[] = [];
 
-  verifyExpanded(taskId: string): void {
-    if (!this.expandedKeys.includes(taskId)) {
+  verifyExpanded(taskId: string | undefined): void {
+    if (taskId && !this.expandedKeys.includes(taskId)) {
       this.expand(taskId);
     }
   }

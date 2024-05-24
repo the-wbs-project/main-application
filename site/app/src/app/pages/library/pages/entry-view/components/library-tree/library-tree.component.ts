@@ -138,7 +138,7 @@ export class LibraryTreeComponent {
   }
 
   menuItemSelected(action: string): void {
-    const taskId = this.selectedTask()!.id;
+    const taskId = this.selectedTask()?.id;
     const obsOrVoid = this.actions.onAction(
       action,
       this.entryUrl(),
@@ -147,7 +147,8 @@ export class LibraryTreeComponent {
     );
 
     if (obsOrVoid instanceof Observable) {
-      this.callSave(taskId, obsOrVoid);
+      if (taskId) this.callSave(taskId, obsOrVoid);
+      else obsOrVoid.subscribe();
     }
   }
 

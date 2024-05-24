@@ -182,16 +182,15 @@ export class EntryTaskService {
       );
   }
 
-  createTask(taskId: string, results: TaskCreationResults): Observable<string> {
+  createTask(
+    taskId: string | undefined,
+    results: TaskCreationResults
+  ): Observable<string> {
     const tasks = this.getTasks();
-    const siblings = tasks.filter((x) => x.parentId === taskId);
+    const siblings = tasks.filter((x) => x.parentId == taskId);
 
     const order =
-      siblings.length === 0
-        ? 1
-        : Math.max(
-            ...tasks.filter((x) => x.parentId === taskId).map((x) => x.order)
-          ) + 1;
+      siblings.length === 0 ? 1 : Math.max(...siblings.map((x) => x.order)) + 1;
 
     const task: LibraryEntryNode = {
       id: IdService.generate(),
