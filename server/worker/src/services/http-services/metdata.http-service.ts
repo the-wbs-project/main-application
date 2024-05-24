@@ -1,7 +1,25 @@
 import { Context } from '../../config';
 import { ListItem, Resources } from '../../models';
+import { ResourceService } from '../resource.service';
 
 export class MetadataHttpService {
+  static async getListsAsync(ctx: Context): Promise<Response> {
+    const types = ['project_category', 'categories_phase', 'categories_discipline'];
+    const { type, locale } = ctx.req.param();
+    const list = await ctx.var.data.lists.getAsync(type);
+
+    if (!types.includes(type)) return ctx.json(list);
+
+    const resourceObj = await ctx.var.data.resources.getAsync(locale);
+    const resources = new ResourceService(resourceObj!);
+
+    for (const item of list!) {
+      if (item.label) item.label = resources.get(item.label);
+      if (item.description) item.description = resources.get(item.label);
+    }
+
+    return ctx.json(list);
+  }
   static async putResourcesAsync(ctx: Context): Promise<Response> {
     try {
       const data = ctx.get('data').resources;

@@ -7,6 +7,7 @@ import {
 } from '@ngx-translate/core';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/environments/environment';
 
 declare type ResourceType = Record<string, Record<string, string>>;
 
@@ -83,7 +84,7 @@ export class Resources extends MissingTranslationHandler {
 
   private getFromServerAsync(): Observable<ResourceType> {
     return this.http
-      .get<ResourceType>('api/resources/all/en-US')
+      .get<ResourceType>(`api/resources/all/${environment.locale}`)
       .pipe(map((x) => x ?? {}));
   }
 }

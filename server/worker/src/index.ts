@@ -34,7 +34,7 @@ app.onError((err, ctx) => {
 app.options('api/*', cors, (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
-app.get('api/lists/:type', kv.lists, OriginService.pass);
+app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
 app.get('api/roles', async (ctx) => ctx.json(await ctx.get('data').roles.getAsync()));
 
 app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);

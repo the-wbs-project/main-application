@@ -1,8 +1,8 @@
 const prefetches = [
   "/api/resources/all/en-US",
-  "/api/lists/project_category",
-  "/api/lists/categories_phase",
-  "/api/lists/categories_discipline",
+  "/api/lists/project_category/en-US",
+  "/api/lists/categories_phase/en-US",
+  "/api/lists/categories_discipline/en-US",
 ];
 
 export default {
@@ -18,7 +18,7 @@ export default {
       let body = await resp.text();
 
       const categoryResponse = await fetch(
-        env.API_URL_INTERNAL + "/api/lists/project_category"
+        env.API_URL_INTERNAL + "/api/lists/project_category/en-US"
       );
 
       let section = `

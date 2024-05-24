@@ -21,7 +21,7 @@ function roles(ctx: Context, next: any): Promise<Response | void> {
 }
 
 function lists(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'LISTS|:type');
+  return execute(ctx, next, 'LISTS|:type|:locale');
 }
 
 function checklists(ctx: Context, next: any): Promise<Response | void> {

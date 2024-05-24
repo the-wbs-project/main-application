@@ -2,18 +2,22 @@ import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Category, LISTS, Role, RoleIds, ROLES } from '@wbs/core/models';
 import { Resources, sorter } from '@wbs/core/services';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map, of } from 'rxjs';
 import { ROLE_ICONS } from 'src/environments/icons';
 
 @Injectable({ providedIn: 'root' })
 export class MetadataStore {
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
+  private loaded = false;
 
-  readonly categories = new CategoryState(this.data, this.resources);
+  readonly categories = new CategoryState(this.data);
   readonly roles = new RolesState(this.data, this.resources);
 
-  loadAsync(): Observable<void> {
+  loadAsync(): Observable<any> {
+    if (this.loaded) return of('nothing');
+    this.loaded = true;
+
     return forkJoin([this.categories.loadAsync(), this.roles.loadAsync()]).pipe(
       map(() => {})
     );
@@ -21,10 +25,7 @@ export class MetadataStore {
 }
 
 class CategoryState {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly resources: Resources
-  ) {}
+  constructor(private readonly data: DataServiceFactory) {}
 
   private _icons = new Map<string, Map<string, string>>();
   private _list = new Map<string, Category[]>();
@@ -106,16 +107,6 @@ class CategoryState {
         categoryList.set(LISTS.DISCIPLINE, discipline);
         categoryList.set(LISTS.PHASE, phase);
         categoryList.set(LISTS.PROJECT_CATEGORIES, projectCats);
-
-        for (const cat of categoryList.keys()) {
-          for (const item of categoryList.get(cat)!) {
-            item.label = this.resources.get(item.label);
-
-            if (item.description) {
-              item.description = this.resources.get(item.description);
-            }
-          }
-        }
 
         for (const cat of projectCats) {
           const type = LISTS.PROJECT_CATEGORIES;

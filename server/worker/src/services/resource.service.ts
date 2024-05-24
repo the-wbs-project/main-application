@@ -1,19 +1,7 @@
 import { Resources } from '../models';
 
 export class ResourceService {
-  private resources: Record<string, Record<string, string>> = {};
-
-  constructor(list: Resources[]) {
-    let resources: Record<string, Record<string, string>> = {};
-
-    for (const item of list) {
-      resources = {
-        ...resources,
-        ...item.values,
-      };
-    }
-    this.resources = resources;
-  }
+  constructor(private readonly resources: Record<string, Record<string, string>>) {}
 
   get(resource: string, defaultValue?: string): string {
     if (resource == null) return 'EMPTY';
