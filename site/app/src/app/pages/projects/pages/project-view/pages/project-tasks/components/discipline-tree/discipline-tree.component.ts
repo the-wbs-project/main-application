@@ -10,7 +10,7 @@ import {
   SelectableSettings,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { SignalStore, Transformers, TreeService } from '@wbs/core/services';
 import { ProjectViewModel } from '@wbs/core/view-models';
 import { TasksState } from '../../../../states';
@@ -24,8 +24,8 @@ import { DisciplineIdsPipe } from './discipline-ids.pipe';
   imports: [
     DisciplineIdsPipe,
     TranslateModule,
+    TreeButtonsTogglerComponent,
     TreeListModule,
-    TreeTogglerComponent,
   ],
 })
 export class ProjectDisciplinesTreeComponent implements OnInit {

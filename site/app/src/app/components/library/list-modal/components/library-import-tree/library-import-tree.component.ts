@@ -17,7 +17,7 @@ import {
   TreeService,
 } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
-import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { TaskTitleComponent } from '@wbs/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/core/store';
@@ -31,9 +31,9 @@ import { UiStore } from '@wbs/core/store';
     DisciplineIconListComponent,
     TaskTitleComponent,
     TranslateModule,
+    TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
-    TreeTogglerComponent,
   ],
 })
 export class LibraryImportTreeComponent {

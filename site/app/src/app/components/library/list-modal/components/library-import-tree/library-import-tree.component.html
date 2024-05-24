@@ -1,12 +1,19 @@
+@if (viewModels(); as viewModels) {
 <kendo-treelist
   #treelist
   class="h-100"
   kendoTreeListSelectable
-  [kendoTreeListFlatBinding]="viewModels()"
+  [kendoTreeListFlatBinding]="viewModels"
   parentIdField="treeParentId"
   idField="treeId"
   [selectable]="{ enabled: true, mode: 'row' }"
 >
+  <ng-template kendoTreeListToolbarTemplate>
+    <wbs-tree-buttons-toggler
+      (collapse)="treeService.collapseAll(treelist, viewModels)"
+      (expand)="treeService.expandAll(treelist, viewModels)"
+    />
+  </ng-template>
   <kendo-treelist-column
     field="levelText"
     [title]="'Wbs.Level' | translate"
@@ -19,15 +26,8 @@
     field="title"
     class="tx-11"
     headerClass="tx-14"
-    [title]="'Wbs.Task' | translate"
+    [title]="'Projects.Activity_Title' | translate"
   >
-    <ng-template kendoTreeListHeaderTemplate>
-      <div class="w-100 d-flex flex-align-end">
-        <div>
-          {{ "Projects.Activity_Title" | translate }}
-        </div>
-      </div>
-    </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
       <wbs-task-title
         [showRemove]="dataItem.parentId != null"
@@ -53,3 +53,4 @@
   </kendo-treelist-column>
   }
 </kendo-treelist>
+}

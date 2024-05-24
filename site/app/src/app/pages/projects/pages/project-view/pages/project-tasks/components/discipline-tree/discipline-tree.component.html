@@ -13,6 +13,12 @@
     [initiallyExpanded]="false"
     [(expandedKeys)]="treeService.expandedKeys"
   >
+    <ng-template kendoTreeListToolbarTemplate>
+      <wbs-tree-buttons-toggler
+        (collapse)="treeService.collapseAll(treelist, disciplines)"
+        (expand)="treeService.expandAll(treelist, disciplines)"
+      />
+    </ng-template>
     <kendo-treelist-column
       field="levelText"
       [title]="'Wbs.Level' | translate"
@@ -33,21 +39,7 @@
       class="tx-11"
       headerClass="tx-14"
       [title]="'Wbs.Task' | translate"
-    >
-      <ng-template kendoTreeListHeaderTemplate>
-        <div class="w-100 d-flex flex-align-end">
-          <div>
-            {{ "Projects.Activity_Title" | translate }}
-          </div>
-          <div class="flex-fill text-end">
-            <wbs-tree-toggler
-              (collapse)="treeService.collapseAll(treelist, disciplines)"
-              (expand)="treeService.expandAll(treelist, disciplines)"
-            />
-          </div>
-        </div>
-      </ng-template>
-    </kendo-treelist-column>
+    />
   </kendo-treelist>
   }
 </div>
