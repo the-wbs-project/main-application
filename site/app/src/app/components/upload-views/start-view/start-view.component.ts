@@ -32,7 +32,7 @@ export class UploadStartViewComponent {
 
   downloadTemplate() {
     this.data.staticFiles
-      .downloadAsync('excel-upload-template.xlsx', 'Excel Template.xlsx')
+      .downloadAsync('phase-extract.xlsx', 'Excel Template.xlsx')
       .subscribe();
   }
 }

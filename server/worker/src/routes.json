@@ -1,5 +1,6 @@
 {
     "VERIFY_JWT_GET": [
+        "api/files/*",
         "api/watchers/*",
         "api/checklists",
         "api/activities/*",
