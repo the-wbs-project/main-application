@@ -320,8 +320,6 @@
       "CreateProject": "Create Project",
       "ProjectDetails": "Project Details",
       "NoProjectsFound": "No Projects Found",
-      "DownloadTasks": "Download Tasks",
-      "UploadTasks": "Upload Tasks",
       "UploadTaskIntro": "Select the file you want to upload...",
       "UploadTaskErrors": "The following errors found",
       "UploadTaskErrorPrefix": "Please fix and try again.",
@@ -533,6 +531,8 @@
       "Clone": "Clone",
       "CloneWith": "Clone (With Children)",
       "TrainingMaterial": "Training Material",
+      "DownloadTasks": "Download Tasks",
+      "UploadTasks": "Upload Tasks",
       "Attachments": "Attachments",
       "Level": "Level",
       "Depth": "Depth",
@@ -558,6 +558,7 @@
       "SelectDisciplines": "Select Disciplines",
       "CreateTask": "Create Task",
       "OtherFlags": "Other Flags",
+      "AddPhase": "Add Phase",
       "TaskDisciplines": "Task Disciplines",
       "WbsDisciplines": "WBS Disciplines",
       "AddDiscipline": "Add Discipline",
@@ -566,7 +567,9 @@
       "ImportFromLibrary": "Import From Library",
       "SearchLibrary": "Search Library",
       "SearchContinue": "Select Library Entry To Continue",
-      "LibraryFilters": "Library Filters"
+      "LibraryFilters": "Library Filters",
+      "ExpandAll": "Expand All",
+      "CollapseAll": "Collapse All"
     }
   },
   {

@@ -1,10 +1,18 @@
 @if (tasks(); as tasks) {
 <div class="d-flex flex-column">
+  @if (alert(); as alertText) {
+  <wbs-alert
+    type="danger"
+    [message]="alertText"
+    (closed)="alert.set(undefined)"
+  />
+  } @else {
   <wbs-alert
     type="info"
     [dismissible]="false"
     message="Projects.TreeInstructions"
   />
+  }
   <div class="flex-fill">
     <kendo-treelist
       #treelist
@@ -21,9 +29,23 @@
       [rowReorderable]="claims() | check : canEditClaim"
       (selectionChange)="taskId.set($event.items[0].dataItem.id)"
       (dblclick)="navigateToTask()"
-      (rowReorder)="onRowReordered($event)"
+      (rowReorder)="rowReordered($event)"
       (cellClick)="onCellClick($event)"
     >
+      <!--<kendo-treelist-excel fileName="Employees.xlsx" />-->
+      <ng-template kendoTreeListToolbarTemplate>
+        <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
+        <wbs-tree-buttons-toggler
+          (collapse)="treeService.collapseAll(treelist, tasks)"
+          (expand)="treeService.expandAll(treelist, tasks)"
+        />
+        <wbs-tree-buttons-download (click)="service.downloadTasks()" />
+
+        @if (project().status === 'planning' && (claims() | check :
+        canEditClaim)) {
+        <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
+        }
+      </ng-template>
       @if (claims() | check : canEditClaim) {
       <kendo-treelist-rowreorder-column [width]="40" />
       }
@@ -41,19 +63,6 @@
         class="tx-11 child-hoverer"
         headerClass="tx-14"
       >
-        <ng-template kendoTreeListHeaderTemplate>
-          <div class="w-100 d-flex flex-align-end">
-            <div>
-              {{ "Projects.Activity_Title" | translate }}
-            </div>
-            <div class="flex-fill text-end">
-              <wbs-tree-toggler
-                (collapse)="treeService.collapseAll(treelist, tasks)"
-                (expand)="treeService.expandAll(treelist, tasks)"
-              />
-            </div>
-          </div>
-        </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <wbs-task-title
             [title]="dataItem.title"
@@ -116,6 +125,19 @@
         <wbs-context-menu-item [item]="item" />
       </ng-template>
     </kendo-contextmenu>
+
+    @if (tasks.length === 0) {
+    <div class="mg-t-30 text-center">
+      <button
+        kendoButton
+        [size]="'large'"
+        [themeColor]="'primary'"
+        (click)="menuItemSelected('addSub')"
+      >
+        {{ "Wbs.AddFirstPhase" | translate }}
+      </button>
+    </div>
+    }
   </div>
 </div>
 }

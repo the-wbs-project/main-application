@@ -10,7 +10,7 @@ import { Navigate } from '@ngxs/router-plugin';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
+import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
 import { CategoryService, SignalStore, TreeService } from '@wbs/core/services';
 import { EntryStore, UiStore } from '@wbs/core/store';
@@ -22,9 +22,9 @@ import { EntryStore, UiStore } from '@wbs/core/store';
   imports: [
     DisciplineIconListComponent,
     TranslateModule,
+    TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
-    TreeTogglerComponent,
   ],
 })
 export class SubTasksComponent {

@@ -2,29 +2,16 @@ import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
 import {
   DragValidationResults,
-  LIBRARY_ENTRY_TYPES,
   LibraryEntryNode,
+  ProjectNode,
   RebuildResults,
 } from '@wbs/core/models';
 import { WbsNodeService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 
 @Injectable()
-export class EntryTaskReorderService {
+export class PhaseTreeReorderService {
   validate(
-    type: string,
-    dragged: WbsNodeView,
-    target: WbsNodeView,
-    dropPosition: DropPosition
-  ): DragValidationResults {
-    return type === LIBRARY_ENTRY_TYPES.PHASE
-      ? this.validatePhase(dragged, target, dropPosition)
-      : type === LIBRARY_ENTRY_TYPES.PROJECT
-      ? this.validateProject(dragged, target, dropPosition)
-      : this.validateTask(dragged, target, dropPosition);
-  }
-
-  validateProject(
     dragged: WbsNodeView,
     target: WbsNodeView,
     position: DropPosition
@@ -61,79 +48,12 @@ export class EntryTaskReorderService {
     return { valid: true };
   }
 
-  validatePhase(
-    dragged: WbsNodeView,
-    target: WbsNodeView,
-    dropPosition: DropPosition
-  ): DragValidationResults {
-    if (dropPosition === 'forbidden') {
-      return {
-        valid: false,
-        errorMessage: 'You cannot drop a node under itself.',
-      };
-    }
-    //
-    //  Check if the dragged item is a root element, if so it's a no go.
-    //
-    if (dragged.parentId == undefined) {
-      return {
-        valid: false,
-        errorMessage: "You cannot reorder the root item for task WBS's.",
-      };
-    }
-    //
-    //  Check if the dragged item is a root element, if so it's a no go.
-    //
-    if (target.parentId == undefined && dropPosition !== 'over') {
-      return {
-        valid: false,
-        errorMessage:
-          'Sorry, but there can only be one root item for this WBS type.',
-      };
-    }
-    return { valid: true };
-  }
-
-  validateTask(
-    dragged: WbsNodeView,
-    target: WbsNodeView,
-    dropPosition: DropPosition
-  ): DragValidationResults {
-    if (dropPosition === 'forbidden') {
-      return {
-        valid: false,
-        errorMessage: 'You cannot drop a node under itself',
-      };
-    }
-    //
-    //  Check if the dragged item is a root element, if so it's a no go.
-    //
-    if (dragged.parentId == undefined) {
-      return {
-        valid: false,
-        errorMessage: "You cannot reorder the root item for task WBS's.",
-      };
-    }
-    //
-    //  Check if the dragged item is a root element, if so it's a no go.
-    //
-    if (target.parentId == undefined && dropPosition !== 'over') {
-      return {
-        valid: false,
-        errorMessage:
-          'Sorry, but there can only be one root item for this WBS type.',
-      };
-    }
-    return { valid: true };
-  }
-
   run(
-    tasks: LibraryEntryNode[],
     tree: WbsNodeView[],
     dragged: WbsNodeView,
     target: WbsNodeView,
     position: DropPosition
-  ): LibraryEntryNode[] {
+  ): RebuildResults {
     dragged.phaseId = target.phaseId;
 
     if (position === 'over') {
@@ -159,20 +79,7 @@ export class EntryTaskReorderService {
 
     tree.splice(index, 1, dragged);
 
-    const rebuiltResults = this.rebuildLevels(tree);
-    const changes: LibraryEntryNode[] = [];
-
-    for (const id of rebuiltResults.changedIds) {
-      const node = tasks.find((x) => x.id === id)!;
-      const vm = rebuiltResults.rows.find((x) => x.id === id)!;
-
-      node.order = vm.order;
-      node.parentId = vm.parentId;
-      node.phaseIdAssociation = vm.phaseIdAssociation;
-
-      changes.push(node);
-    }
-    return changes;
+    return this.rebuildLevels(tree);
   }
 
   rebuildLevels(list: WbsNodeView[]): RebuildResults {

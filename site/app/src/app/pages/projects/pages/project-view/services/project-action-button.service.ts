@@ -46,7 +46,7 @@ export class ProjectActionButtonService {
       {
         action: this.actionDownload,
         icon: faCloudDownload,
-        text: 'Projects.DownloadTasks',
+        text: 'Wbs.DownloadTasks',
       },
     ];
 
@@ -57,7 +57,7 @@ export class ProjectActionButtonService {
       items.push({
         action: this.actionUpload,
         icon: faCloudUpload,
-        text: 'Projects.UploadTasks',
+        text: 'Wbs.UploadTasks',
       });
     }
 

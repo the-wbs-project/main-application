@@ -54,25 +54,25 @@ export class ProjectViewService {
       this.downloadTasks();
     } else if (action === 'upload') {
       this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
-    } else if (taskId) {
-      if (action === 'addSub') {
-        const sub = TaskCreateComponent.launchAsync(
-          this.dialogService,
-          this.project.disciplines
-        )
-          .pipe(
-            switchMap((results) =>
-              results
-                ? this.store.dispatch(
-                    new CreateTask(taskId, results.model, results.nav)
-                  )
-                : of()
-            )
+    } else if (action === 'addSub') {
+      const sub = TaskCreateComponent.launchAsync(
+        this.dialogService,
+        this.project.disciplines
+      )
+        .pipe(
+          switchMap((results) =>
+            results
+              ? this.store.dispatch(
+                  new CreateTask(taskId, results.model, results.nav)
+                )
+              : of()
           )
-          .subscribe(() => {
-            sub.unsubscribe();
-          });
-      } else if (action === 'cloneTask') {
+        )
+        .subscribe(() => {
+          sub.unsubscribe();
+        });
+    } else if (taskId) {
+      if (action === 'cloneTask') {
         this.store.dispatch(new CloneTask(taskId));
       } else if (action === 'viewTask') {
         this.nav.toTaskPage(taskId, TASK_PAGES.ABOUT);

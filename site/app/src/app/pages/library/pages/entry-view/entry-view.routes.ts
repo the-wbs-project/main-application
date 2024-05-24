@@ -5,7 +5,7 @@ import { dirtyGuard } from '@wbs/core/guards';
 import { EntryUploadState } from './pages/entry-upload/states';
 import {
   EntryTaskActionService,
-  EntryTaskRecorderService,
+  EntryTaskReorderService,
   LibraryImportProcessorService,
   entryApiUrlResolve,
   entryIdResolve,
@@ -28,7 +28,7 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
       EntryTaskActionService,
-      EntryTaskRecorderService,
+      EntryTaskReorderService,
       LibraryImportProcessorService,
     ],
     resolve: {

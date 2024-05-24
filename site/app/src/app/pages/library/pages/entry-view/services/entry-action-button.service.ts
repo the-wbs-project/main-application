@@ -33,13 +33,13 @@ export class EntryActionButtonService {
     items.push({
       action: this.actionDownload,
       icon: faCloudDownload,
-      text: 'Projects.DownloadTasks',
+      text: 'Wbs.DownloadTasks',
     });
 
     if (claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)) {
       items.push({
         icon: faCloudUpload,
-        text: 'Projects.UploadTasks',
+        text: 'Wbs.UploadTasks',
         route: [...entryUrl, 'upload'],
       });
     }

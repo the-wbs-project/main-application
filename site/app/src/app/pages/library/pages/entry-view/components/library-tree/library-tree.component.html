@@ -30,6 +30,20 @@
   (cellClick)="cellClick($event)"
   (dblclick)="navigateToTask(selectedTask()?.id)"
 >
+  <ng-template kendoTreeListToolbarTemplate>
+    @if (entry().type === 'project') {
+    <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
+    }
+    <wbs-tree-buttons-toggler
+      (collapse)="treeService.collapseAll(treelist, tree)"
+      (expand)="treeService.expandAll(treelist, tree)"
+    />
+    <wbs-tree-buttons-download (click)="entryService.downloadTasks()" />
+
+    @if ((claims() | check : canEditClaim)) {
+    <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
+    }
+  </ng-template>
   @if (claims() | check : canEditClaim) {
   <kendo-treelist-rowreorder-column [width]="40" />
   }
@@ -46,19 +60,6 @@
     class="tx-11 child-hoverer"
     headerClass="tx-14"
   >
-    <ng-template kendoTreeListHeaderTemplate>
-      <div class="w-100 d-flex flex-align-end">
-        <div>
-          {{ "Projects.Activity_Title" | translate }}
-        </div>
-        <div class="flex-fill text-end">
-          <wbs-tree-toggler
-            (collapse)="treeService.collapseAll(treelist, tree)"
-            (expand)="treeService.expandAll(treelist, tree)"
-          />
-        </div>
-      </div>
-    </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
       <wbs-task-title
         [title]="dataItem.title"
@@ -89,7 +90,7 @@
 <kendo-contextmenu
   #contextMenu
   [items]="menu()"
-  (select)="onAction($event.item.action)"
+  (select)="menuItemSelected($event.item.action)"
 >
   <ng-template kendoMenuItemTemplate let-item="item">
     <wbs-context-menu-item [item]="item" />

@@ -73,18 +73,17 @@ export class ProjectService {
 
   createTask(
     projectId: string,
-    parentId: string,
+    parentId: string | undefined,
     model: Partial<ProjectNode>,
     nodes: ProjectNode[]
   ): ProjectNode {
-    const siblings = nodes?.filter((x) => x.parentId === parentId) ?? [];
     const ts = new Date();
-    let order = 0;
-
-    for (const x of siblings) {
-      if (x.order > order) order = x.order;
-    }
-    order++;
+    let order =
+      Math.max(
+        ...(nodes
+          ?.filter((x) => x.parentId == parentId)
+          .map((x) => x.order) ?? [0])
+      ) + 1;
 
     return <ProjectNode>{
       ...model,

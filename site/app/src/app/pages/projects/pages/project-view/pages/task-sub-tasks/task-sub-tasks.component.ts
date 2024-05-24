@@ -9,8 +9,8 @@ import { Navigate } from '@ngxs/router-plugin';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
 import { SignalStore, TreeService } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TreeTogglerComponent } from '@wbs/components/_utils/tree-toggler.component';
 import { UiStore } from '@wbs/core/store';
 import { ProjectState, TasksState } from '../../states';
 
@@ -21,18 +21,16 @@ import { ProjectState, TasksState } from '../../states';
   imports: [
     DisciplineIconListComponent,
     TranslateModule,
+    TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
-    TreeTogglerComponent,
   ],
 })
 export class SubTasksComponent {
   private readonly store = inject(SignalStore);
 
   readonly treeService = new TreeService();
-
   readonly projectUrl = input.required<string[]>();
-
   readonly width = inject(UiStore).mainContentWidth;
   readonly project = this.store.select(ProjectState.current);
   readonly task = this.store.select(TasksState.current);

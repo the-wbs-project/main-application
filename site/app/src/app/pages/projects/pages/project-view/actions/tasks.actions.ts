@@ -30,11 +30,7 @@ export class SaveTasks {
 
 export class TreeReordered {
   static readonly type = '[Tasks] Tree Reordered';
-  constructor(
-    readonly draggedId: string,
-    readonly view: PROJECT_NODE_VIEW_TYPE,
-    readonly results: RebuildResults
-  ) {}
+  constructor(readonly draggedId: string, readonly results: RebuildResults) {}
 }
 
 export class RemoveTask {
@@ -98,7 +94,7 @@ export class RemoveDisciplineToTask {
 export class CreateTask {
   static readonly type = '[Tasks] Create Task';
   constructor(
-    readonly parentId: string,
+    readonly parentId: string | undefined,
     readonly model: Partial<WbsNode>,
     readonly navigateTo: boolean
   ) {}

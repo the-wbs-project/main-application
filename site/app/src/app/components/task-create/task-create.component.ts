@@ -55,6 +55,7 @@ export class TaskCreateComponent extends DialogContentBase {
     dialog: DialogService,
     disciplines: ProjectCategory[]
   ): Observable<TaskCreationResults | undefined> {
+    console.log('test');
     const ref = dialog.open({
       content: TaskCreateComponent,
       cssClass: 'bg-light',
