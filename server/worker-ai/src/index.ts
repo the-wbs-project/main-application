@@ -1,5 +1,4 @@
 import { Hono } from 'hono';
-import { cache } from 'hono/cache';
 import { Context, Context_Env, Context_Variables } from './context';
 import { TEXT_MODELS } from './CONSTS';
 import { cors, verify } from './middle';
@@ -13,17 +12,9 @@ app.use('*', async (ctx, next) => {
 	await next();
 });
 app.use('*', cors);
-app.options('*', cors, (c) => c.text(''));
+app.options('*', (c) => c.text(''));
 
-app.get(
-	'api/models/text',
-	verify,
-	cache({
-		cacheName: 'pm-empower-ai-models',
-		cacheControl: 'max-age=86400',
-	}),
-	(ctx) => ctx.json(TEXT_MODELS)
-);
+app.get('api/models/text', verify, (ctx) => ctx.json(TEXT_MODELS));
 app.post('api/run/worker-ai', verify, async (ctx: Context) => {
 	try {
 		const body: { model: string; body: string } = await ctx.req.json();
