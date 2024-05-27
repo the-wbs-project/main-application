@@ -15,7 +15,7 @@ export class MetadataHttpService {
 
     for (const item of list!) {
       if (item.label) item.label = resources.get(item.label);
-      if (item.description) item.description = resources.get(item.label);
+      if (item.description) item.description = resources.get(item.description);
     }
 
     return ctx.json(list);
