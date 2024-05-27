@@ -117,7 +117,7 @@ export class MembersComponent {
   private processRoles(): { name: string; text: string }[] {
     const definitions = this.metadata.roles.definitions;
 
-    for (const role of ROLES) {
+    for (const role of structuredClone(ROLES)) {
       if (role.name === 'all') continue;
 
       role.name = definitions.find((x) => x.name === role.name)!.id;

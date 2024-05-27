@@ -4,7 +4,7 @@ import { PageHeaderComponent } from '@wbs/components/page-header';
 
 @Component({
   standalone: true,
-  template: `<div class="w-100 text-end p-3">
+  template: `<div class="w-100 text-end p-2">
       <wbs-page-header />
     </div>
     <router-outlet />`,
