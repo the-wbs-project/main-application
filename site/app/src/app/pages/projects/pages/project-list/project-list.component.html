@@ -53,14 +53,9 @@
           <wbs-page-header />
         </div>
       </div>
+      @if (filterToggle()) {
       <div class="row mg-b-15 d-lg-none">
-        <div
-          class="col-12 animate__animated animate__faster"
-          [ngClass]="{
-            'd-none': !filterToggle(),
-            animate__slideInUp: filterToggle(),
-          }"
-        >
+        <div class="col-12">
           <wbs-project-list-filters
             position="top"
             [(stati)]="stati"
@@ -70,8 +65,8 @@
           />
         </div>
       </div>
-      @if (filteredList(); as projects) { @if (!loading() && projects.length ===
-      0) {
+      } @if (filteredList(); as projects) { @if (!loading() && projects.length
+      === 0) {
       <div class="row">
         <div class="col-12 pd-t-100 tx-20 tx-center">
           <fa-icon [icon]="cactusIcon" size="2xl" />
@@ -82,11 +77,15 @@
       </div>
       } @else if (view() === 'grid') {
       <div class="row">
-        <wbs-project-grid [projects]="projects" />
+        <div class="col-12">
+          <wbs-project-grid [projects]="projects" />
+        </div>
       </div>
       } @else {
       <div class="row">
-        <wbs-project-table [projects]="projects" />
+        <div class="col-12">
+          <wbs-project-table [projects]="projects" />
+        </div>
       </div>
       } }
     </div>
