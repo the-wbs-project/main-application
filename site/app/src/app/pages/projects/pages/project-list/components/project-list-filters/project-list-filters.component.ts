@@ -15,6 +15,8 @@ import { CheckboxFilterListComponent } from '@wbs/components/checkbox-filter-lis
 import { SwitchComponent } from '@wbs/components/switch';
 import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
 import { MetadataStore } from '@wbs/core/store';
+import { ProjectCategoryFilterComponent } from '../project-category-filter';
+import { ProjectStatusFilterComponent } from '../project-status-filter';
 
 @Component({
   standalone: true,
@@ -25,6 +27,8 @@ import { MetadataStore } from '@wbs/core/store';
     CheckBoxModule,
     CheckboxFilterListComponent,
     FormsModule,
+    ProjectCategoryFilterComponent,
+    ProjectStatusFilterComponent,
     ProjectStatusPipe,
     SwitchComponent,
     TranslateModule,

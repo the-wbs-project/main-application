@@ -1,0 +1,31 @@
+<kendo-multiselect
+  kendoMultiSelectSummaryTag
+  size="small"
+  [checkboxes]="true"
+  [autoClose]="false"
+  [data]="data"
+  [(value)]="values"
+  textField="label"
+  valueField="id"
+  [valuePrimitive]="true"
+  adaptiveMode="auto"
+  (valueChange)="changed($event)"
+>
+  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+    @if (dataItems.length == data.length) {
+    {{ "General.All" | translate }}
+    } @else {
+    <span class="tx-12"> {{ dataItems.length }} Categories </span>
+    }
+  </ng-template>
+  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+    <div class="role-item">
+      <span class="d-inline-block wd-200">
+        {{ dataItem.label }}
+      </span>
+      <a class="tx-10" (click)="only($event, dataItem.id)">
+        {{ "General.Only" | translate }}
+      </a>
+    </div>
+  </ng-template>
+</kendo-multiselect>

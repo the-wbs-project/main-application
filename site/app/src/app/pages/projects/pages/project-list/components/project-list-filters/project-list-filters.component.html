@@ -118,50 +118,14 @@
         {{ "General.Status" | translate }}:
       </label>
 
-      @for (status of statiList; track $index) {
-      <div class="mg-t-10 mg-l-15">
-        <div class="d-inline-block wd-140 tx-12">
-          <input
-            [name]="status"
-            kendoCheckbox
-            type="checkbox"
-            [ngModel]="stati().indexOf(status) > -1"
-            (change)="changeList(stati, status)"
-          />
-          <label [for]="status" class="mg-l-10">
-            {{ status | projectStatus | translate }}
-          </label>
-        </div>
-        <a class="tx-10 pointer" (click)="stati.set([status])">
-          {{ "General.Only" | translate }}
-        </a>
-      </div>
-      }
+      <wbs-project-status-filter [(values)]="stati" />
     </div>
 
     <div class="col-sm-6 col-xs-12">
       <label class="tx-12 tx-bold">
         {{ "General.Categories" | translate }}:
       </label>
-      @for (cat of cats; track cat.id) {
-      <div class="mg-t-10 mg-l-15">
-        <div class="d-inline-block wd-200 tx-12">
-          <input
-            [name]="cat.id"
-            kendoCheckbox
-            type="checkbox"
-            [ngModel]="categories().includes(cat.id)"
-            (change)="changeList(categories, cat.id)"
-          />
-          <label [for]="cat.id" class="mg-l-10">
-            {{ cat.label | translate }}
-          </label>
-        </div>
-        <a class="tx-10 pointer" (click)="categories.set([cat.id])">
-          {{ "General.Only" | translate }}
-        </a>
-      </div>
-      }
+      <wbs-project-category-filter [(values)]="categories" />
     </div>
   </div>
 </div>
