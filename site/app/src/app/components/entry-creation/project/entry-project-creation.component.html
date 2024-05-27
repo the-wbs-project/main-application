@@ -1,6 +1,7 @@
 <kendo-dialog
-  height="80%"
   width="80%"
+  height="80%"
+  maxWidth="1000px"
   [title]="'LibraryCreate.TitleProject' | translate"
   (close)="dialog.close()"
 >
@@ -21,10 +22,7 @@
     </kendo-stepper>
     <div [appScrollToTop]="view()" class="tx-center flex-fill pd-t-20 pd-x-10">
       @if (view() === 0) {
-      <div
-        class="d-inline-block w-100 mx-wd-800 tx-left animate__animated"
-        [ngClass]="{ animate__slideInLeft: dir() === 'left' }"
-      >
+      <div class="d-inline-block w-100 mx-wd-800 tx-left">
         <div class="pd-x-12 mb-3">
           <label for="templateTitle" class="form-label tx-18">
             {{ "LibraryCreate.TemplateTitle" | translate }}
@@ -53,13 +51,7 @@
         </div>
       </div>
       } @else if (view() === 1) {
-      <div
-        class="d-inline-block w-100 animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
+      <div class="d-inline-block w-100">
         <div class="pd-y-15 pd-x-30 tx-14">
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
@@ -69,13 +61,7 @@
       </div>
       } @else if (view() === 2) {
 
-      <div
-        class="d-inline-block w-100 mx-wd-800 text-center animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
+      <div class="d-inline-block w-100 mx-wd-800 text-center">
         <div class="pd-y-15 pd-x-30 tx-14">
           {{ "LibraryCreate.DisciplinesHeader" | translate }}
         </div>
@@ -88,13 +74,7 @@
       </div>
       } @else if (view() === 3) {
 
-      <div
-        class="d-inline-block w-100 mx-wd-800 animate__animated"
-        [ngClass]="{
-          animate__slideInLeft: dir() === 'left',
-          animate__slideInRight: dir() === 'right'
-        }"
-      >
+      <div class="d-inline-block w-100 mx-wd-800">
         <wbs-save-section
           [owner]="owner()!"
           [phases]="phases()"

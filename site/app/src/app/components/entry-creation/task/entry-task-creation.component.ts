@@ -22,11 +22,11 @@ import {
   DialogRef,
 } from '@progress/kendo-angular-dialog';
 import { StepperModule } from '@progress/kendo-angular-layout';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
-import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { SaveSectionComponent } from './components/save-section';
 import { TitleFormComponent } from './components/title-form';
 
@@ -65,7 +65,6 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>(undefined);
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Disciplines', icon: faPeople, isOptional: true },
@@ -109,12 +108,10 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   }
 
   back(): void {
-    this.dir.set('left');
     this.view.update((x) => x - 1);
   }
 
   next(): void {
-    this.dir.set('right');
     this.view.update((x) => x + 1);
   }
 }

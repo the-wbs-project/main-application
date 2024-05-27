@@ -31,9 +31,9 @@ import { PhaseEditorComponent } from '@wbs/components/phase-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { CategoryService } from '@wbs/core/services';
+import { MetadataStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { MetadataStore } from '@wbs/core/store';
 import { SaveSectionComponent } from './save-section';
 
 @Component({
@@ -76,7 +76,6 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>(undefined);
   readonly steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Phases', icon: faDiagramSubtask, isOptional: true },
@@ -118,12 +117,10 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   }
 
   back(): void {
-    this.dir.set('left');
     this.view.update((x) => x - 1);
   }
 
   next(): void {
-    this.dir.set('right');
     this.view.update((x) => x + 1);
   }
 }

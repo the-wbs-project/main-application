@@ -25,13 +25,13 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
+import { PhaseSelectionComponent } from '@wbs/components/_utils/phase-section';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { Phase } from '@wbs/core/models';
 import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
-import { PhaseSelectionComponent } from '@wbs/components/_utils/phase-section';
-import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
-import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { SaveSectionComponent } from './save-section';
 
 @Component({
@@ -70,7 +70,6 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
-  readonly dir = signal<'left' | 'right' | undefined>(undefined);
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Phase', icon: faDiagramSubtask },
@@ -116,12 +115,10 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   }
 
   back(): void {
-    this.dir.set('left');
     this.view.update((x) => x - 1);
   }
 
   next(): void {
-    this.dir.set('right');
     this.view.update((x) => x + 1);
   }
 }
