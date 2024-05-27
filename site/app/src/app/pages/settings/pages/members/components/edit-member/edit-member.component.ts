@@ -3,8 +3,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  model,
-  output,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,8 +13,8 @@ import {
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { MemberViewModel } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
+import { MemberViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 

@@ -13,11 +13,11 @@ import {
   FilterDescriptor,
   SortDescriptor,
 } from '@progress/kendo-data-query';
+import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
+import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
 import { Messages, TableHelper } from '@wbs/core/services';
 import { InviteViewModel } from '@wbs/core/view-models';
-import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
-import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { MemberSettingsService } from '../../services';

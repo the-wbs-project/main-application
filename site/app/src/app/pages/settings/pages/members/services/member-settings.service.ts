@@ -3,7 +3,7 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { Invite } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { MembershipStore } from '@wbs/core/store';
-import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
+import { MemberViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin } from 'rxjs';
 import { MembersSettingStore } from '../store';
 
