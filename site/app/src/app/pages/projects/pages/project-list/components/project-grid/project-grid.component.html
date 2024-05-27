@@ -1,19 +1,26 @@
-@for (project of projects(); track project.id) {
-<div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6">
-  <a class="tx-black text-decoration-none" [routerLink]="['view', project.id]">
-    <div class="card">
-      <div class="card-body">
-        <div style="min-height: 100px">
-          <div class="tx-14 tx-semibold">{{ project.title }}</div>
-          <div class="tx-10">
-            {{ project.category | projectCategoryLabel }}
+<div class="container-fluid">
+  <div class="row">
+    @for (project of projects(); track project.id) {
+    <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6">
+      <a
+        class="tx-black text-decoration-none"
+        [routerLink]="['view', project.id]"
+      >
+        <div class="card">
+          <div class="card-body">
+            <div style="min-height: 100px">
+              <div class="tx-14 tx-semibold">{{ project.title }}</div>
+              <div class="tx-10">
+                {{ project.category | projectCategoryLabel }}
+              </div>
+            </div>
+            <div class="tx-right tx-10 tx-gray-600">
+              {{ project.lastModified | editedDateText }}
+            </div>
           </div>
         </div>
-        <div class="tx-right tx-10 tx-gray-600">
-          {{ project.lastModified | editedDateText }}
-        </div>
-      </div>
+      </a>
     </div>
-  </a>
+    }
+  </div>
 </div>
-}
