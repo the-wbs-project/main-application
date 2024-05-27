@@ -1,4 +1,4 @@
-@if (saveState() !== "saved") {
+@if (saveState() !== "saving" && saveState() !== "saved") {
 <table class="table table-striped table-bordered tx-12 text-start">
   <thead>
     <tr>
@@ -43,11 +43,7 @@
         {{ "General.Phases" | translate }}
       </td>
       <td>
-        @if (phaseCount() > 0) { {{ phaseReview() }} } @else {
-        <span class="tx-danger fw-bold">
-          {{ "General.Required" | translate }}
-        </span>
-        }
+        {{ phaseReview() }}
       </td>
     </tr>
     <tr>
@@ -62,7 +58,7 @@
 <button
   (click)="save()"
   class="w-100 btn btn-primary mg-t-10"
-  [disabled]="!templateTitle() || !category() || phaseCount() === 0"
+  [disabled]="!templateTitle() || !category()"
 >
   {{ "LibraryCreate.CreateTask" | translate }}
 </button>

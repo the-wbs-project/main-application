@@ -79,7 +79,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   readonly dir = signal<'left' | 'right' | undefined>(undefined);
   readonly steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
-    { label: 'General.Phases', icon: faDiagramSubtask },
+    { label: 'General.Phases', icon: faDiagramSubtask, isOptional: true },
     { label: 'General.Disciplines', icon: faPeople, isOptional: true },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
@@ -98,15 +98,11 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   //make a computed one day, but for now it seems arrays in modals dont trigger
   canContinue(): boolean {
     const view = this.view();
-    const phases = this.phases();
     const category = this.category();
     const title = this.templateTitle();
 
     if (view === 0) {
       return category !== undefined && title.trim() !== '';
-    }
-    if (view === 1) {
-      return phases.some((x) => x.selected);
     }
     return true;
   }

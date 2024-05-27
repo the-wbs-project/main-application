@@ -19,10 +19,7 @@
         @if (step.isOptional) { <span class="mg-l-5">*</span> }
       </ng-template>
     </kendo-stepper>
-    <div
-      [appScrollToTop]="view()"
-      class="tx-center flex-fill pd-t-20 pd-x-10 scroll"
-    >
+    <div [appScrollToTop]="view()" class="tx-center flex-fill pd-t-20 pd-x-10">
       @if (view() === 0) {
       <div
         class="d-inline-block w-100 mx-wd-800 tx-left animate__animated"
