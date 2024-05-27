@@ -2,11 +2,8 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
-  computed,
+  effect,
   inject,
-  input,
-  model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -16,14 +13,12 @@ import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { SignalStore } from '@wbs/core/services';
-import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
-import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
-import { forkJoin, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
-import { ChangeBreadcrumbs } from '../../actions';
-import { Breadcrumb } from '../../models';
+import {
+  MembershipStore,
+  MetadataStore,
+  UiStore,
+  UserStore,
+} from '@wbs/core/store';
 import {
   InvitationFormComponent,
   InvitationListComponent,
@@ -31,7 +26,8 @@ import {
   MembershipRollupComponent,
   RoleFilterListComponent,
 } from './components';
-import { MembershipAdminService } from './services';
+import { MemberSettingsService } from './services';
+import { MembersSettingStore } from './store';
 
 const ROLES = [
   {
@@ -75,41 +71,16 @@ const ROLES = [
     TranslateModule,
   ],
 })
-export class MembersComponent implements OnInit {
-  private readonly data = inject(DataServiceFactory);
+export class MembersComponent {
   private readonly dialog = inject(DialogService);
-  private readonly memberService = inject(MembershipAdminService);
+  private readonly memberService = inject(MemberSettingsService);
   private readonly metadata = inject(MetadataStore);
-  private readonly store = inject(SignalStore);
+  private readonly uiStore = inject(UiStore);
   private readonly profile = inject(UserStore).profile;
 
-  readonly org = input.required<string>();
   readonly organization = inject(MembershipStore).organization;
-
-  private readonly crumbs: Breadcrumb[] = [
-    {
-      text: 'General.Users',
-    },
-  ];
-
-  readonly isLoading = signal(true);
-  readonly members = model<MemberViewModel[]>();
-  readonly invites = model<InviteViewModel[]>();
-
+  readonly store = inject(MembersSettingStore);
   readonly roles = this.processRoles();
-  readonly capacity = computed(() => this.organization()?.metadata?.seatCount);
-  readonly remaining = computed(() =>
-    this.capacity()
-      ? (this.capacity() ?? 0) -
-        (this.members()?.length ?? 0) -
-        (this.invites()?.length ?? 0)
-      : undefined
-  );
-  readonly canAdd = computed(() => {
-    const r = this.remaining();
-
-    return r === undefined || r > 0;
-  });
   readonly roleFilters = signal<string[]>([]);
   readonly view = signal<'members' | 'invitations'>('members');
   readonly faPlus = faPlus;
@@ -117,67 +88,30 @@ export class MembersComponent implements OnInit {
 
   textFilter = '';
 
-  ngOnInit(): void {
-    this.store.dispatch(new ChangeBreadcrumbs(this.crumbs));
-
-    const org = this.org();
-
-    forkJoin({
-      members: this.data.memberships.getMembershipUsersAsync(org),
-      invites: this.data.memberships.getInvitesAsync(org),
-    }).subscribe(({ members, invites }) => {
-      this.members.set(
-        members.map((m) => {
-          return {
-            ...m,
-            roleList: m.roles.join(','),
-          };
-        })
-      );
-      this.invites.set(
-        invites.map((i) => {
-          return {
-            ...i,
-            roleList: i.roles.join(','),
-          };
-        })
-      );
-      this.isLoading.set(false);
+  constructor() {
+    effect(() => this.store.initialize(this.organization()), {
+      allowSignalWrites: true,
     });
+
+    this.uiStore.setBreadcrumbs([
+      { text: 'General.Settings' },
+      { text: 'General.Users' },
+    ]);
   }
 
   startInvite(): void {
     InvitationFormComponent.launchAsync(
       this.dialog,
-      this.invites() ?? [],
-      this.members() ?? [],
+      this.store.invites() ?? [],
+      this.store.members() ?? [],
       this.metadata.roles.definitions
-    )
-      .pipe(
-        switchMap((results) => {
-          if (!results) return of(undefined);
+    ).subscribe((results) => {
+      if (!results) return;
 
-          const name = this.profile()!.name;
+      const name = this.profile()!.name;
 
-          return this.memberService.sendInvitesAsync(
-            this.org(),
-            results.emails,
-            results.roles,
-            name
-          );
-        })
-      )
-      .subscribe((invites) => {
-        if (!invites) return;
-
-        this.invites.update((list) => [
-          ...invites.map((i) => ({
-            ...i,
-            roleList: i.roles.join(','),
-          })),
-          ...(list ?? []),
-        ]);
-      });
+      this.memberService.sendInvitesAsync(results.emails, results.roles, name);
+    });
   }
 
   private processRoles(): { name: string; text: string }[] {

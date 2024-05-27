@@ -4,7 +4,6 @@ import {
   computed,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
 import { faGear, faX } from '@fortawesome/pro-solid-svg-icons';
@@ -15,13 +14,14 @@ import {
   SortDescriptor,
 } from '@progress/kendo-data-query';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
-import { TableHelper } from '@wbs/core/services';
+import { Messages, TableHelper } from '@wbs/core/services';
 import { InviteViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { InvitesService } from '../../services';
+import { MemberSettingsService } from '../../services';
+import { MembersSettingStore } from '../../store';
 import { IsExpiredPipe } from './is-expired.pipe';
 
 @Component({
@@ -29,7 +29,7 @@ import { IsExpiredPipe } from './is-expired.pipe';
   selector: 'wbs-invitation-list',
   templateUrl: './invitation-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [InvitesService, TableHelper],
+  providers: [TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
@@ -41,11 +41,11 @@ import { IsExpiredPipe } from './is-expired.pipe';
   ],
 })
 export class InvitationListComponent {
-  private readonly inviteService = inject(InvitesService);
+  private readonly messages = inject(Messages);
+  private readonly service = inject(MemberSettingsService);
   private readonly tableHelper = inject(TableHelper);
 
-  readonly invites = model.required<InviteViewModel[] | undefined>();
-  readonly org = input.required<string>();
+  readonly store = inject(MembersSettingStore);
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
   readonly sort = signal<SortDescriptor[]>([{ field: 'name', dir: 'asc' }]);
@@ -53,7 +53,7 @@ export class InvitationListComponent {
     this.createFilter(this.textFilter(), this.filteredRoles())
   );
   readonly data = computed(() =>
-    this.tableHelper.process(this.invites() ?? [], {
+    this.tableHelper.process(this.store.invites() ?? [], {
       sort: this.sort(),
       filter: this.filter(),
     })
@@ -69,20 +69,18 @@ export class InvitationListComponent {
 
   userActionClicked(invite: InviteViewModel, action: string): void {
     if (action === 'cancel') {
-      this.inviteService
-        .cancelInviteAsync(this.org(), invite)
-        .subscribe((answer) => {
-          if (!answer) return;
-
-          this.invites.update((invites) => {
-            if (!invites) return;
-
-            const index = invites.findIndex((i) => i.id === invite.id);
-            invites.splice(index, 1);
-            return [...invites];
-          });
-        });
+      this.cancelInvite(invite);
     }
+  }
+
+  private cancelInvite(invite: InviteViewModel): void {
+    this.messages.confirm
+      .show('General.Confirmation', 'OrgSettings.CancelInviteConfirm')
+      .subscribe((answer) => {
+        if (!answer) return;
+
+        this.service.cancelInviteAsync(invite.id);
+      });
   }
 
   createFilter(

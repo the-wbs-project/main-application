@@ -3,17 +3,10 @@
     <div
       class="col-lg-6 offset-lg-3 col-md-8 offset-md-2 col-sm-10 offset-sm-1"
     >
-      <wbs-membership-rollup
-        [isLoading]="isLoading()"
-        [organization]="organization()"
-        [memberCount]="members()?.length ?? 0"
-        [inviteCount]="invites()?.length ?? 0"
-        [capacity]="capacity()"
-        [remaining]="remaining()"
-      />
+      <wbs-membership-rollup />
     </div>
   </div>
-  @if (isLoading()) {
+  @if (store.isLoading()) {
   <div class="row">
     <div class="col-12 tx-center mg-t-50">
       <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
@@ -53,8 +46,8 @@
           </div>
         </div>
         <div class="col-6 tx-right">
-          @if (canAdd()) {
-          <button class="btn btn-sm btn-primary" (click)="startInvite()">
+          @if (store.canAdd()) {
+          <button class="btn btn-primary" (click)="startInvite()">
             <fa-icon [icon]="faPlus" />
             <span class="d-none d-sm-inline">
               {{ "OrgSettings.InviteMembers" | translate }}
@@ -79,16 +72,12 @@
         <div class="col-12">
           @if (view() === 'members') {
           <wbs-member-list
-            [org]="org()"
             [filteredRoles]="roleFilters()"
-            [(members)]="members"
             [textFilter]="textFilter"
           />
           } @else if (view() === 'invitations') {
           <wbs-invitation-list
-            [org]="org()"
             [filteredRoles]="roleFilters()"
-            [(invites)]="invites"
             [textFilter]="textFilter"
           />
           }

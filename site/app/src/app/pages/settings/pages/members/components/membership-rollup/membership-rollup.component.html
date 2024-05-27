@@ -11,10 +11,10 @@
           {{ "General.Members" | translate }}
         </p>
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ memberCount() }}
+          {{ store.members()!.length }}
           }
         </h5>
       </div>
@@ -23,10 +23,10 @@
           {{ "OrgSettings.Invitations" | translate }}
         </p>
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ inviteCount() }}
+          {{ store.invites()!.length }}
           }
         </h5>
       </div>
@@ -35,10 +35,10 @@
           {{ "OrgSettings.Capacity" | translate }}
         </p>
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
+          {{ store.capacity() ?? ("OrgSettings.Unlimited" | translate) }}
           }
         </h5>
       </div>
@@ -47,10 +47,10 @@
           {{ "OrgSettings.Remaining" | translate }}
         </p>
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
+          {{ store.remaining() ?? ("OrgSettings.Unlimited" | translate) }}
           }
         </h5>
       </div>
@@ -63,10 +63,10 @@
       </div>
       <div class="col-6 tx-center">
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ memberCount() }}
+          {{ store.members()!.length }}
           }
         </h5>
       </div>
@@ -77,10 +77,10 @@
       </div>
       <div class="col-6 tx-center">
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ inviteCount() }}
+          {{ store.invites()!.length }}
           }
         </h5>
       </div>
@@ -91,10 +91,10 @@
       </div>
       <div class="col-6 tx-center">
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ capacity() ?? ("OrgSettings.Unlimited" | translate) }}
+          {{ store.capacity() ?? ("OrgSettings.Unlimited" | translate) }}
           }
         </h5>
       </div>
@@ -105,10 +105,10 @@
       </div>
       <div class="col-6 tx-center">
         <h5>
-          @if (isLoading()) {
+          @if (store.isLoading()) {
           <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
           } @else {
-          {{ remaining() ?? ("OrgSettings.Unlimited" | translate) }}
+          {{ store.remaining() ?? ("OrgSettings.Unlimited" | translate) }}
           }
         </h5>
       </div>

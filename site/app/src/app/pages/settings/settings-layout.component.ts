@@ -1,10 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { BreadcrumbsComponent } from './components/settings-breadcrumbs/settings-breadcrumbs.component';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 
 @Component({
   standalone: true,
-  template: `<wbs-settings-bread-crumbs /><br /><router-outlet />`,
-  imports: [BreadcrumbsComponent, RouterModule],
+  template: `<div class="w-100 text-end p-3">
+      <wbs-page-header />
+    </div>
+    <router-outlet />`,
+  imports: [PageHeaderComponent, RouterModule],
 })
 export class SettingsLayoutComponent {}

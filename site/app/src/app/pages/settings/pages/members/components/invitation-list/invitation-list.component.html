@@ -13,7 +13,7 @@
       </th>
       <th
         scope="col"
-        class="pointer d-md-none d-lg-table-cell"
+        class="pointer d-none d-lg-table-cell"
         [sortable]="'inviter'"
         [(sortColumns)]="sort"
       >
@@ -23,7 +23,7 @@
 
       <th
         scope="col"
-        class="pointer d-md-none d-lg-table-cell"
+        class="pointer"
         [sortable]="'createdAt'"
         [(sortColumns)]="sort"
       >
@@ -33,7 +33,7 @@
 
       <th
         scope="col"
-        class="pointer d-md-none d-lg-table-cell"
+        class="pointer"
         [sortable]="'expiredAt'"
         [(sortColumns)]="sort"
       >
@@ -55,8 +55,8 @@
           [menuItems]="menu"
         />
       </td>
-      <td class="d-md-none d-lg-table-cell">{{ invite.invitee }}</td>
-      <td class="d-md-none d-lg-table-cell">{{ invite.inviter }}</td>
+      <td>{{ invite.invitee }}</td>
+      <td class="d-none d-lg-table-cell">{{ invite.inviter }}</td>
       <td>{{ invite.createdAt | dateText }}</td>
 
       @if (invite.expiresAt | isExpired) {

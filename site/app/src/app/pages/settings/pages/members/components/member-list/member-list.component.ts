@@ -4,7 +4,6 @@ import {
   computed,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
 import {
@@ -21,16 +20,14 @@ import {
   SortDescriptor,
 } from '@progress/kendo-data-query';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
-import { Member } from '@wbs/core/models';
 import { Messages, TableHelper } from '@wbs/core/services';
 import { MemberViewModel } from '@wbs/core/view-models';
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
-import { of } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
-import { MembershipAdminService } from '../../services';
+import { MemberSettingsService } from '../../services';
+import { MembersSettingStore } from '../../store';
 import { EditMemberComponent } from '../edit-member';
 
 @Component({
@@ -38,7 +35,7 @@ import { EditMemberComponent } from '../edit-member';
   selector: 'wbs-member-list',
   templateUrl: './member-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [MembershipAdminService, TableHelper],
+  providers: [MemberSettingsService, TableHelper],
   imports: [
     ActionIconListComponent,
     DateTextPipe,
@@ -52,12 +49,11 @@ import { EditMemberComponent } from '../edit-member';
 })
 export class MemberListComponent {
   private readonly dialog = inject(DialogService);
-  private readonly memberService = inject(MembershipAdminService);
+  private readonly memberService = inject(MemberSettingsService);
   private readonly messages = inject(Messages);
+  private readonly store = inject(MembersSettingStore);
   private readonly tableHelper = inject(TableHelper);
 
-  readonly members = model.required<MemberViewModel[] | undefined>();
-  readonly org = input.required<string>();
   readonly filteredRoles = input<string[]>([]);
   readonly textFilter = input<string>('');
   readonly sort = signal<SortDescriptor[]>([
@@ -67,7 +63,7 @@ export class MemberListComponent {
     this.createFilter(this.textFilter(), this.filteredRoles())
   );
   readonly data = computed(() =>
-    this.tableHelper.process(this.members() ?? [], {
+    this.tableHelper.process(this.store.members() ?? [], {
       sort: this.sort(),
       filter: this.filter(),
     })
@@ -140,62 +136,28 @@ export class MemberListComponent {
   }
 
   launchEdit(member: MemberViewModel): void {
-    EditMemberComponent.launchAsync(this.dialog, structuredClone(member))
-      .pipe(
-        switchMap((results) => {
-          if (results == undefined) return of(undefined);
+    EditMemberComponent.launchAsync(
+      this.dialog,
+      structuredClone(member)
+    ).subscribe((results) => {
+      if (results == undefined) return;
 
-          const toRemove = member.roles.filter(
-            (r) => !results.roles.includes(r)
-          );
-          const toAdd = results.roles.filter((r) => !member.roles.includes(r));
+      const toRemove = member.roles.filter((r) => !results.roles.includes(r));
+      const toAdd = results.roles.filter((r) => !member.roles.includes(r));
 
-          member.roleList = member.roles.join(',');
+      member.roleList = member.roles.join(',');
 
-          console.log('member', member);
-          console.log('toRemove', toRemove);
-          console.log('toAdd', toAdd);
-
-          return this.memberService
-            .updateMemberRolesAsync(this.org(), member, toAdd, toRemove)
-            .pipe(map(() => results));
-        })
-      )
-      .subscribe((result) => {
-        if (!result) return;
-
-        this.members.update((members) => {
-          if (!members) return [];
-
-          const index = members.findIndex((m) => m.id === result.id);
-          members[index] = result;
-          return [...members];
-        });
-      });
+      this.memberService.updateMemberRolesAsync(member, toAdd, toRemove);
+    });
   }
 
-  private openRemoveDialog(member: Member): void {
+  private openRemoveDialog(member: MemberViewModel): void {
     this.messages.confirm
       .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
-      .pipe(
-        switchMap((answer) => {
-          if (!answer) return of(false);
-
-          return this.memberService
-            .removeMemberAsync(this.org(), member.id)
-            .pipe(map(() => true));
-        })
-      )
       .subscribe((answer) => {
         if (!answer) return;
 
-        this.members.update((members) => {
-          if (!members) return [];
-
-          const index = members.findIndex((m) => m.id === member.id);
-          members.splice(index, 1);
-          return [...members];
-        });
+        this.memberService.removeMemberAsync(member.id);
       });
   }
 }
