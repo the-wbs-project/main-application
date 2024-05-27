@@ -1,0 +1,26 @@
+<table class="table table-hover">
+  <tr class="bg-dark text-white">
+    <th class="pd-10 fw-normal">
+      {{ "General.Project" | translate }}
+    </th>
+    <th class="pd-10 fw-normal">
+      {{ "General.Category" | translate }}
+    </th>
+    <th class="pd-10 fw-normal">
+      {{ "General.Status" | translate }}
+    </th>
+    <th class="pd-10 fw-normal">
+      {{ "General.LastUpdated" | translate }}
+    </th>
+  </tr>
+  <tbody>
+    @for (project of projects(); track project.id) {
+    <tr class="pointer" [routerLink]="['view', project.id]">
+      <td>{{ project.title }}</td>
+      <td>{{ project.category | projectCategoryLabel }}</td>
+      <td>{{ project.status | projectStatus | translate }}</td>
+      <td>{{ project.lastModified | dateText }}</td>
+    </tr>
+    }
+  </tbody>
+</table>

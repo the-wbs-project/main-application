@@ -34,7 +34,7 @@
     >
       <!--<kendo-treelist-excel fileName="Employees.xlsx" />-->
       <ng-template kendoTreeListToolbarTemplate>
-        <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
+        <wbs-tree-buttons-add (click)="addPhase()" />
         <wbs-tree-buttons-toggler
           (collapse)="treeService.collapseAll(treelist, tasks)"
           (expand)="treeService.expandAll(treelist, tasks)"

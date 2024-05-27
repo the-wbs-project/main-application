@@ -78,12 +78,9 @@ export class ProjectService {
     nodes: ProjectNode[]
   ): ProjectNode {
     const ts = new Date();
+    const siblings = nodes?.filter((x) => x.parentId == parentId) ?? [];
     let order =
-      Math.max(
-        ...(nodes
-          ?.filter((x) => x.parentId == parentId)
-          .map((x) => x.order) ?? [0])
-      ) + 1;
+      siblings.length === 0 ? 1 : Math.max(...siblings.map((x) => x.order)) + 1;
 
     return <ProjectNode>{
       ...model,

@@ -4,29 +4,29 @@ import {
   Component,
   OnInit,
   computed,
+  effect,
   inject,
   input,
   signal,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { faFilters, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI, Project } from '@wbs/core/models';
 import { sorter, Storage } from '@wbs/core/services';
-import { PageHeaderComponent } from '@wbs/components/page-header';
-import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
-import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
-import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
-import { ProjectListFiltersComponent } from './components/project-list-filters';
-import { ProjectViewToggleComponent } from './components/project-view-toggle';
 import { ProjectListService } from './services';
-import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
-import { ProjectCreateDialogComponent } from './components/project-create-dialog/project-create-dialog.component';
+import {
+  ProjectCreateDialogComponent,
+  ProjectGridComponent,
+  ProjectListFiltersComponent,
+  ProjectTableomponent,
+  ProjectViewToggleComponent,
+} from './components';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -35,17 +35,14 @@ declare type ProjectView = 'grid' | 'table';
   templateUrl: './project-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DateTextPipe,
     DialogModule,
-    EditedDateTextPipe,
     FontAwesomeModule,
     NgClass,
     PageHeaderComponent,
-    ProjectCategoryLabelPipe,
+    ProjectGridComponent,
     ProjectListFiltersComponent,
-    ProjectStatusPipe,
+    ProjectTableomponent,
     ProjectViewToggleComponent,
-    RouterModule,
     TranslateModule,
   ],
 })
@@ -73,7 +70,9 @@ export class ProjectListComponent implements OnInit {
     PROJECT_STATI.FOLLOW_UP,
   ]);
   readonly search = signal<string | undefined>(undefined);
-  readonly categories = signal<string[]>([]);
+  readonly categories = signal<string[]>(
+    this.metadata.categories.projectCategories.map((c) => c.id)
+  );
   readonly filteredList = computed(() =>
     this.filter(
       this.projects(),
@@ -87,18 +86,27 @@ export class ProjectListComponent implements OnInit {
   expanded = true;
   filterToggle = signal(false);
 
-  ngOnInit(): void {
-    this.categories.set(
-      this.metadata.categories.projectCategories.map((c) => c.id)
+  constructor() {
+    effect(
+      () => {
+        const owner = this.owner();
+        this.loading.set(true);
+        this.data.projects.getAllAsync(owner).subscribe((projects) => {
+          this.projects.set(
+            projects.sort((a, b) =>
+              sorter(a.lastModified, b.lastModified, 'desc')
+            )
+          );
+          this.loading.set(false);
+        });
+      },
+      {
+        allowSignalWrites: true,
+      }
     );
-
-    this.data.projects.getAllAsync(this.owner()).subscribe((projects) => {
-      this.projects.set(
-        projects.sort((a, b) => sorter(a.lastModified, b.lastModified, 'desc'))
-      );
-      this.loading.set(false);
-    });
   }
+
+  ngOnInit(): void {}
 
   launchCreateProject(): void {
     const ref = this.dialog.open({

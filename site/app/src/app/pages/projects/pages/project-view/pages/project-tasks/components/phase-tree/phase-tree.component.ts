@@ -256,6 +256,14 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 
+  addPhase(): void {
+    const obsOrVoid = this.service.action('addSub');
+
+    if (obsOrVoid instanceof Observable) {
+      obsOrVoid.subscribe();
+    }
+  }
+
   menuItemSelected(item: string): void {
     const taskId = this.taskId()!;
     const obsOrVoid = this.service.action(item, taskId);

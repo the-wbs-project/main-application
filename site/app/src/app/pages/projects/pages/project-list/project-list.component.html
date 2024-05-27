@@ -39,7 +39,7 @@
               <fa-icon [icon]="filterIcon" />
             </button>
 
-            <a class="btn btn-dark btn-block" [routerLink]="['create']">
+            <a class="btn btn-dark btn-block" (click)="launchCreateProject()">
               <fa-icon [icon]="plusIcon" />&nbsp;
               {{ "General.Create" | translate }}
             </a>
@@ -82,56 +82,12 @@
       </div>
       } @else if (view() === 'grid') {
       <div class="row">
-        @for (project of projects; track project.id) {
-        <div class="col-xxl-2 col-xl-3 col-lg-4 col-md-4 col-sm-6">
-          <a
-            class="tx-black text-decoration-none"
-            [routerLink]="['view', project.id]"
-          >
-            <div class="card">
-              <div class="card-body">
-                <div style="min-height: 100px">
-                  <div class="tx-14 tx-semibold">{{ project.title }}</div>
-                  <div class="tx-10">
-                    {{ project.category | projectCategoryLabel }}
-                  </div>
-                </div>
-                <div class="tx-right tx-10 tx-gray-600">
-                  {{ project.lastModified | editedDateText }}
-                </div>
-              </div>
-            </div>
-          </a>
-        </div>
-        }
+        <wbs-project-grid [projects]="projects" />
       </div>
       } @else {
-      <table class="table table-hover">
-        <tr class="bg-dark text-white">
-          <th class="pd-10 fw-normal">
-            {{ "General.Project" | translate }}
-          </th>
-          <th class="pd-10 fw-normal">
-            {{ "General.Category" | translate }}
-          </th>
-          <th class="pd-10 fw-normal">
-            {{ "General.Status" | translate }}
-          </th>
-          <th class="pd-10 fw-normal">
-            {{ "General.LastUpdated" | translate }}
-          </th>
-        </tr>
-        <tbody>
-          @for (project of projects; track project.id) {
-          <tr class="pointer" [routerLink]="['view', project.id]">
-            <td>{{ project.title }}</td>
-            <td>{{ project.category | projectCategoryLabel }}</td>
-            <td>{{ project.status | projectStatus | translate }}</td>
-            <td>{{ project.lastModified | dateText }}</td>
-          </tr>
-          }
-        </tbody>
-      </table>
+      <div class="row">
+        <wbs-project-table [projects]="projects" />
+      </div>
       } }
     </div>
   </div>
