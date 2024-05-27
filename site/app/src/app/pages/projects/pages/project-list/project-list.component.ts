@@ -21,7 +21,7 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
 import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
-import { MetadataStore } from '@wbs/core/store';
+import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import { ProjectListFiltersComponent } from './components/project-list-filters';
 import { ProjectViewToggleComponent } from './components/project-view-toggle';
 import { ProjectListService } from './services';
@@ -52,6 +52,7 @@ declare type ProjectView = 'grid' | 'table';
 export class ProjectListComponent implements OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
+  private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
   private readonly service = inject(ProjectListService);
   private readonly storage = inject(Storage);
@@ -61,7 +62,7 @@ export class ProjectListComponent implements OnInit {
   readonly plusIcon = faPlus;
   readonly loading = signal(true);
   readonly projects = signal<Project[]>([]);
-  readonly owner = input.required<string>();
+  readonly owner = computed(() => this.membership.organization()!.name);
   readonly userId = input.required<string>();
   readonly view = signal<ProjectView>(this.getView() ?? 'grid');
   readonly assignedToMe = signal(false);
@@ -106,7 +107,7 @@ export class ProjectListComponent implements OnInit {
 
     ref.result.subscribe((id) => {
       if (!id) return;
-      
+
       console.log(id);
     });
   }

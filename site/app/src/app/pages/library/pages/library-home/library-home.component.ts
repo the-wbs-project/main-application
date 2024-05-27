@@ -25,12 +25,11 @@ import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 export class LibraryHomeComponent implements OnInit {
   private readonly store = inject(Store);
   private readonly profile = inject(UserStore).profile;
-  private readonly organization = inject(MembershipStore).organization;
   public readonly creation = inject(EntryCreationService);
 
+  readonly organization = inject(MembershipStore).organization;
   readonly searchText = model<string>('');
   readonly typeFilters = model<string[]>([]);
-  readonly org = input.required<string>();
   readonly library = model<string>('');
 
   ngOnInit(): void {
@@ -39,30 +38,32 @@ export class LibraryHomeComponent implements OnInit {
   }
 
   create(type: string, list: LibraryListComponent): void {
-    this.creation.runAsync(this.org(), type).subscribe((results) => {
-      console.log(results);
-      if (results == undefined) return;
+    this.creation
+      .runAsync(this.organization()!.name, type)
+      .subscribe((results) => {
+        console.log(results);
+        if (results == undefined) return;
 
-      const vm: LibraryEntryViewModel = {
-        authorId: results.entry.author,
-        authorName: this.profile()!.name,
-        entryId: results.entry.id,
-        title: results.version.title,
-        type: results.entry.type,
-        visibility: results.entry.visibility,
-        version: results.version.version,
-        lastModified: results.version.lastModified,
-        description: results.version.description,
-        ownerId: results.entry.owner,
-        ownerName: this.organization()!.display_name,
-        status: results.version.status,
-      };
-      if (results.action === 'close') {
-        list.entryAdded(vm);
-      } else {
-        this.nav(vm, results.action);
-      }
-    });
+        const vm: LibraryEntryViewModel = {
+          authorId: results.entry.author,
+          authorName: this.profile()!.name,
+          entryId: results.entry.id,
+          title: results.version.title,
+          type: results.entry.type,
+          visibility: results.entry.visibility,
+          version: results.version.version,
+          lastModified: results.version.lastModified,
+          description: results.version.description,
+          ownerId: results.entry.owner,
+          ownerName: this.organization()!.display_name,
+          status: results.version.status,
+        };
+        if (results.action === 'close') {
+          list.entryAdded(vm);
+        } else {
+          this.nav(vm, results.action);
+        }
+      });
   }
 
   nav(vm: LibraryEntryViewModel | undefined, action?: string): void {
@@ -70,7 +71,7 @@ export class LibraryHomeComponent implements OnInit {
 
     this.store.dispatch(
       new Navigate([
-        '/' + this.org(),
+        '/' + this.organization()!.name,
         'library',
         'view',
         vm.ownerId,

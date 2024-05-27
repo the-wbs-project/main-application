@@ -9,7 +9,7 @@
     />
     <wbs-library-list
       #list
-      [org]="org()"
+      [org]="organization()!.name"
       [library]="library()"
       [searchText]="searchText()"
       [typeFilters]="typeFilters()"

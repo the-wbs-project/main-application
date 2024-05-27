@@ -1,6 +1,6 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { TitleService, orgResolve, userIdResolve } from '@wbs/core/services';
+import { TitleService, userIdResolve } from '@wbs/core/services';
 import { UiStore } from '@wbs/core/store';
 import { ProjectListService } from './services';
 
@@ -18,7 +18,6 @@ export const routes: Routes = [
       ),
     canActivate: [setupGuard],
     resolve: {
-      owner: orgResolve,
       userId: userIdResolve,
     },
     providers: [ProjectListService],
