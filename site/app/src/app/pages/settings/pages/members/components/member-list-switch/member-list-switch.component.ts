@@ -7,11 +7,11 @@ import {
 
 @Component({
   standalone: true,
-  selector: 'wbs-tree-type-button',
-  templateUrl: './tree-type-button.component.html',
+  selector: 'wbs-member-list-switch',
+  templateUrl: './member-list-switch.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [ButtonGroupModule, ButtonModule, TranslateModule],
 })
-export class TreeTypeButtonComponent {
-  readonly view = model.required<'phases' | 'disciplines'>();
+export class MemberListSwitchComponent {
+  readonly view = model.required<'members' | 'invites'>();
 }

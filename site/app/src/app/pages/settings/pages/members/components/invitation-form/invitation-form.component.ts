@@ -18,6 +18,10 @@ import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { InviteFormResults } from './invite-form-results.model';
 import { InviteValidators } from './invite-validators.service';
+import {
+  ButtonGroupModule,
+  ButtonModule,
+} from '@progress/kendo-angular-buttons';
 
 declare type InviteError = { email?: string; error: string };
 
@@ -27,7 +31,13 @@ declare type InviteError = { email?: string; error: string };
   templateUrl: './invitation-form.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [InviteValidators],
-  imports: [DialogModule, NgClass, TranslateModule],
+  imports: [
+    ButtonGroupModule,
+    ButtonModule,
+    DialogModule,
+    NgClass,
+    TranslateModule,
+  ],
 })
 export class InvitationFormComponent extends DialogContentBase {
   private readonly validators = inject(InviteValidators);

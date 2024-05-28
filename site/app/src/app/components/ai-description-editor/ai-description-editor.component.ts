@@ -11,6 +11,10 @@ import {
   faThumbsUp,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  ButtonGroupModule,
+  ButtonModule,
+} from '@progress/kendo-angular-buttons';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { EditorComponent } from '../../components/_utils/editor.component';
 
@@ -19,7 +23,14 @@ import { EditorComponent } from '../../components/_utils/editor.component';
   selector: 'wbs-ai-description-editor',
   templateUrl: './ai-description-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EditorComponent, EditorModule, FontAwesomeModule, TranslateModule],
+  imports: [
+    ButtonGroupModule,
+    ButtonModule,
+    EditorComponent,
+    EditorModule,
+    FontAwesomeModule,
+    TranslateModule,
+  ],
 })
 export class AiDescriptionEditorComponent {
   readonly proposal = model.required<string>();

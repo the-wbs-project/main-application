@@ -3,30 +3,30 @@
     <span>{{ "General.Description" | translate }}:</span>
   </div>
   <wbs-editor class="flex-fill" cssClass="h-100" [(value)]="proposal" />
-  <div class="btn-group w-100" role="group" aria-label="Basic example">
+  <kendo-buttongroup class="w-100">
     <button
-      type="button"
-      class="btn btn-outline-dark pd-8 rounded-0"
+      kendoButton
+      class="w-100 pd-8"
       (click)="actionSelected.emit('clear')"
     >
       <fa-icon [icon]="faEraser" />
-      Clear
+      {{ "General.Clear" | translate }}
     </button>
     <button
-      type="button"
-      class="btn btn-outline-dark pd-8 rounded-0"
+      kendoButton
+      class="w-100 pd-8"
       (click)="actionSelected.emit('revert')"
     >
       <fa-icon [icon]="faArrowRotateBack" />
-      Revert
+      {{ "General.Revert" | translate }}
     </button>
     <button
-      type="button"
-      class="btn btn-outline-dark pd-8 rounded-0"
+      kendoButton
+      class="w-100 pd-8"
       (click)="actionSelected.emit('accept')"
     >
       <fa-icon [icon]="faThumbsUp" />
-      Accept & Close
+      {{ "General.AcceptAndClose" | translate }}
     </button>
-  </div>
+  </kendo-buttongroup>
 </div>

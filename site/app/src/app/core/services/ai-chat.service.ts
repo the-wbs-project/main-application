@@ -18,13 +18,11 @@ import {
   WorkerAiMessage,
   WorkerAiRequest,
 } from '@wbs/core/models';
-import { Resources } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
 
 @Injectable()
 export class AiChatService {
   private readonly data = inject(DataServiceFactory);
-  private readonly resources = inject(Resources);
   private readonly userId = inject(UserStore).userId;
   private readonly _feed = signal<Message[]>([]);
   private model?: AiModel;
@@ -144,16 +142,24 @@ export class AiChatService {
           //this.saveChat(ctx);
         });
     } else if (this.model.type === 'open-ai') {
-      const messages: OpenAiMessage[] = feedArray
-        .filter((x) => x.text)
-        .map((x) => ({
-          role: x.author.id === this.bot.id ? 'assistant' : 'user',
-          content: x.text!,
-        }));
+      const messages: OpenAiMessage[] = [
+        {
+          content:
+            'You are a subject matter expert in project management with a good understanding of work breakdown structures.  You will exclude pre-text and post-text',
+          role: 'system',
+        },
+        ...feedArray
+          .filter((x) => x.text)
+          .map((x) => ({
+            role: x.author.id === this.bot.id ? 'assistant' : 'user',
+            content: x.text!,
+          })),
+      ];
       const input: OpenAiRequest = {
         model: this.model.model,
         user: this.you.id,
         messages,
+        //response_format: { type: 'json ' },
       };
 
       this.data.ai.runOpenAiWorkerAsync(input).subscribe(
