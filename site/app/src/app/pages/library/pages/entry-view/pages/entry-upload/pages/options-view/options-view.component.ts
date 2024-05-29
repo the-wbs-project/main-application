@@ -4,18 +4,18 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { UploadOptionsViewComponent } from '@wbs/components/upload-views/options-view';
 import { switchMap } from 'rxjs/operators';
 import { AppendOrOvewriteSelected } from '../../actions';
 import { EntryUploadState } from '../../states';
 
 @Component({
   standalone: true,
-  templateUrl: './options-view.component.html',
+  template: `<wbs-upload-options-view (selected)="select($event)" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [TranslateModule],
+  imports: [UploadOptionsViewComponent],
 })
 export class OptionsViewComponent {
   private readonly store = inject(Store);

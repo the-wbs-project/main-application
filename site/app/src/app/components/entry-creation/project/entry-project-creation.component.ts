@@ -18,6 +18,7 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
   DialogModule,
@@ -41,6 +42,7 @@ import { SaveSectionComponent } from './save-section';
   templateUrl: './entry-project-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     DisciplineEditorComponent,
     FindByIdPipe,

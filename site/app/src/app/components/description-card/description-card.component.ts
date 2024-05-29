@@ -14,6 +14,7 @@ import {
   faXmark,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectApproval, SaveState } from '@wbs/core/models';
 import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
@@ -33,6 +34,7 @@ import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
     AiButtonComponent,
     AlertComponent,
     ApprovalBadgeComponent,
+    ButtonModule,
     EditorModule,
     FontAwesomeModule,
     FormsModule,

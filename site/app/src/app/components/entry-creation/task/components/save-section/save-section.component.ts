@@ -14,25 +14,25 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   EntryCreationModel,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
-  Category,
   ProjectCategory,
 } from '@wbs/core/models';
 import { IdService, Resources } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
-import { CategorySelection } from '@wbs/core/view-models';
 import { UserStore } from '@wbs/core/store';
+import { CategorySelection } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
   selector: 'wbs-save-section',
   templateUrl: './save-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, TranslateModule],
+  imports: [ButtonModule, FontAwesomeModule, TranslateModule],
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {

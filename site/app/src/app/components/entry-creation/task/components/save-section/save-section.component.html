@@ -48,9 +48,11 @@
 </table>
 } @if (saveState() === undefined) {
 <button
-  (click)="save()"
-  class="w-100 btn btn-primary mg-t-10"
+  kendoButton
+  themeColor="primary"
+  class="w-100 mg-t-10"
   [disabled]="!templateTitle() || !mainTaskTitle()"
+  (click)="save()"
 >
   {{ "LibraryCreate.CreateTask" | translate }}
 </button>
@@ -63,29 +65,17 @@
 <p class="tx-18 mg-t-10">{{ "LibraryCreate.TemplateSaved" | translate }}</p>
 <div class="w-100 d-flex">
   <div class="flex-1 pd-10">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="actionClicked('view')"
-    >
+    <button kendoButton themeColor="primary" (click)="actionClicked('view')">
       {{ "LibraryCreate.ViewTemplate" | translate }}
     </button>
   </div>
   <div class="flex-1 pd-10">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="actionClicked('upload')"
-    >
+    <button kendoButton themeColor="primary" (click)="actionClicked('upload')">
       {{ "LibraryCreate.UploadWbs" | translate }}
     </button>
   </div>
   <div class="flex-1 pd-10">
-    <button
-      type="button"
-      class="btn btn-primary"
-      (click)="actionClicked('close')"
-    >
+    <button kendoButton themeColor="primary" (click)="actionClicked('close')">
       {{ "LibraryCreate.CloseWindow" | translate }}
     </button>
   </div>

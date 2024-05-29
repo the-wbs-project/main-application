@@ -9,6 +9,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogCloseResult,
   DialogContentBase,
@@ -30,6 +31,7 @@ declare type Icon = { icon: string; name: string };
   templateUrl: './category-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     DropDownListModule,
     FontAwesomeModule,

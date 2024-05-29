@@ -8,14 +8,11 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faCheck,
-  faFloppyDisk,
-  faRobot,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
@@ -29,6 +26,7 @@ import { EntryStore } from '@wbs/core/store';
   templateUrl: './general-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AiButtonComponent,
     AlertComponent,
     EditorModule,
     DescriptionAiDialogComponent,
@@ -49,8 +47,6 @@ export class GeneralComponent {
   readonly taskId = input.required<string>();
 
   readonly checkIcon = faCheck;
-  readonly faRobot = faRobot;
-  readonly faFloppyDisk = faFloppyDisk;
   readonly askAi = signal(false);
   readonly task = this.entryStore.getTask(this.taskId);
   readonly canSave = computed(() => {

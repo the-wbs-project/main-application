@@ -28,13 +28,9 @@
         <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
         <div class="col-9">
           <input
-            type="text"
+            kendoTextBox
             [(ngModel)]="vm.name"
-            class="form-control w-100"
-            [ngClass]="{
-              'is-valid': vm.errors.nameRequired === false,
-              'is-invalid': vm.errors.nameRequired
-            }"
+            class="w-100"
             (blur)="validator.validateName(vm)"
           />
           @if (vm.errors.nameRequired) {
@@ -55,13 +51,10 @@
         </span>
         <div class="col-9">
           <textarea
+            kendoTextArea
             [(ngModel)]="vm.description"
-            class="form-control w-100"
+            class="w-100"
             rows="5"
-            [ngClass]="{
-              'is-valid': vm.errors.descriptionRequired === false,
-              'is-invalid': vm.errors.descriptionRequired
-            }"
             (blur)="validator.validateDescription(vm)"
           ></textarea>
           @if (vm.errors.descriptionRequired) {
@@ -83,9 +76,9 @@
         </span>
         <div class="col-9">
           <input
-            type="text"
+            kendoTextBox
+            class="w-100"
             [(ngModel)]="vm.url"
-            class="form-control w-100"
             [ngClass]="{
               'is-valid': vm.errors.urlRequired === false,
               'is-invalid': vm.errors.urlRequired
@@ -130,16 +123,12 @@
       } } }
       <div class="row">
         <div class="col-12 text-end">
-          <button
-            type="button"
-            class="btn btn-outline-dark me-2"
-            (click)="cancelClicked.emit()"
-          >
+          <button kendoButton class="me-2" (click)="cancelClicked.emit()">
             {{ "General.Cancel" | translate }}
           </button>
           <button
-            type="button"
-            class="btn btn-primary"
+            kendoButton
+            themeColor="primary"
             [disabled]="vm.type == null"
             (click)="saveClicked.emit()"
           >

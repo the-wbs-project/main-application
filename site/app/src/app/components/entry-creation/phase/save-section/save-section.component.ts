@@ -14,6 +14,7 @@ import {
   faExclamationTriangle,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   EntryCreationModel,
   LibraryEntry,
@@ -32,7 +33,7 @@ import { CategorySelection } from '@wbs/core/view-models';
   selector: 'wbs-save-section',
   templateUrl: './save-section.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, TranslateModule],
+  imports: [ButtonModule, FontAwesomeModule, TranslateModule],
   styles: ['.row-header { max-width: 200px; }'],
 })
 export class SaveSectionComponent {

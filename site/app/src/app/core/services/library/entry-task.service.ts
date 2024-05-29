@@ -201,7 +201,7 @@ export class EntryTaskService {
       description: results.model.description,
       disciplineIds: results.model.disciplineIds,
     };
-    return this.saveAsync([task], [], 'Library.TaskAddedSuccess').pipe(
+    return this.saveAsync([task], []).pipe(
       tap(() =>
         this.activity.taskCreated(
           this.entryId,

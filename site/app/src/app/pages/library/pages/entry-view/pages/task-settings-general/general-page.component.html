@@ -11,7 +11,7 @@
         cssClass="tx-success tx-12 mg-r-10"
       />
       <wbs-save-button
-        size="sm"
+        size="small"
         [disabled]="!canSave()"
         [isSaving]="saved.state() === 'saving'"
         (click)="save()"
@@ -47,29 +47,13 @@
           <label [for]="description" class="col-form-label">
             {{ "General.Description" | translate }}
           </label>
-          <div class="flex-fill text-end">
-            <button
-              class="btn btn-sm btn-outline-dark"
-              (click)="askAi.set(true)"
-            >
-              <fa-icon [icon]="faRobot" />
-              <span class="mg-l-5">
-                {{ "General.AskAi" | translate }}
-              </span>
-            </button>
+          <div class="flex-fill text-end d-none d-sm-block">
+            <wbs-ai-button size="small" (click)="askAi.set(true)" />
           </div>
         </div>
         <div class="col-md-10 col-sm-12">
           <div class="w-100 mg-b-5 text-end d-none d-md-block">
-            <button
-              class="btn btn-sm btn-outline-dark"
-              (click)="askAi.set(true)"
-            >
-              <fa-icon [icon]="faRobot" />
-              <span class="mg-l-5">
-                {{ "General.AskAi" | translate }}
-              </span>
-            </button>
+            <wbs-ai-button size="small" (click)="askAi.set(true)" />
           </div>
           <kendo-editor #description [(ngModel)]="task.description" />
 

@@ -16,6 +16,7 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
   DialogModule,
@@ -35,6 +36,7 @@ import { TitleFormComponent } from './components/title-form';
   templateUrl: './entry-task-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     DisciplineEditorComponent,
     FontAwesomeModule,

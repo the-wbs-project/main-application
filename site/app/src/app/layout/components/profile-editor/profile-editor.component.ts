@@ -7,6 +7,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { Auth0Service } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
@@ -16,7 +17,7 @@ import { UserStore } from '@wbs/core/store';
   selector: 'wbs-profile-editor',
   templateUrl: './profile-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DialogModule, FontAwesomeModule, TranslateModule],
+  imports: [ButtonModule, DialogModule, FontAwesomeModule, TranslateModule],
 })
 export class ProfileEditorComponent {
   private readonly service = inject(Auth0Service);

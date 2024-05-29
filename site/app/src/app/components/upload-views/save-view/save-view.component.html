@@ -14,9 +14,14 @@
       <fa-icon [icon]="faCheck" size="5x" />
       <h3 class="pd-t-20">{{ "General.Done!" | translate }}</h3>
       <br />
-      <a class="btn btn-primary mg-t-20" [routerLink]="url()">
+      <button
+        kendoButton
+        themeColor="primary"
+        class="mg-t-20"
+        [routerLink]="url()"
+      >
         {{ "General.Continue" | translate }}
-      </a>
+      </button>
       }
     </div>
   </div>

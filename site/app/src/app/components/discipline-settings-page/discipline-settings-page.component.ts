@@ -5,11 +5,11 @@ import {
   input,
   model,
   output,
-  signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogCloseResult,
   DialogService,
@@ -29,6 +29,7 @@ import { filter, map } from 'rxjs/operators';
   templateUrl: './discipline-settings-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     CategoryDialogComponent,
     DisciplineEditorComponent,
     FadingMessageComponent,

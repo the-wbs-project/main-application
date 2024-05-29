@@ -27,13 +27,24 @@
         {{ "General.DescriptionEditor" | translate }}
       </div>
       <div class="text-end">
-        <wbs-ai-button buttonCssClass="btn-primary" (click)="askAi.set(true)" />
+        <wbs-ai-button
+          themeColor="primary"
+          size="small"
+          (click)="askAi.set(true)"
+        />
         <wbs-save-button
-          cssClass="mg-l-15 tx-12 "
+          size="small"
+          cssClass="mg-l-15"
           [isSaving]="saveState() === 'saving'"
           (click)="save(editDescription)"
         />
-        <button class="btn btn-dark mg-l-15 tx-12" (click)="cancel()">
+        <button
+          kendoButton
+          themeColor="dark"
+          size="small"
+          class="mg-l-15"
+          (click)="cancel()"
+        >
           <fa-icon [icon]="faXmark" class="mg-r-5" />
           {{ "General.Cancel" | translate }}
         </button>

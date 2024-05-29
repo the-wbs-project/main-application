@@ -18,6 +18,7 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
   DialogModule,
@@ -25,13 +26,13 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
-import { PhaseSelectionComponent } from '@wbs/components/_utils/phase-section';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { Phase } from '@wbs/core/models';
 import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { PhaseSelectionComponent } from './phase-section';
 import { SaveSectionComponent } from './save-section';
 
 @Component({
@@ -39,6 +40,7 @@ import { SaveSectionComponent } from './save-section';
   templateUrl: './entry-phase-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     DisciplineEditorComponent,
     FontAwesomeModule,
