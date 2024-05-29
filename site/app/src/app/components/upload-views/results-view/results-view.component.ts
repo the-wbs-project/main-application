@@ -9,6 +9,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { ImportResultStats } from '@wbs/core/models';
 
 @Component({
@@ -16,7 +17,7 @@ import { ImportResultStats } from '@wbs/core/models';
   selector: 'wbs-upload-results-view',
   templateUrl: './results-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [FontAwesomeModule, RouterModule, TranslateModule],
+  imports: [ButtonModule, FontAwesomeModule, RouterModule, TranslateModule],
 })
 export class UploadResultsViewComponent {
   readonly errors = input.required<string[] | undefined>();

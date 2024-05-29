@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogCloseResult,
   DialogContentBase,
@@ -31,6 +32,7 @@ import { DisciplineEditorComponent } from '../discipline-editor';
   templateUrl: './task-create.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     DisciplineEditorComponent,
     EditorModule,

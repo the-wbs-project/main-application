@@ -9,15 +9,17 @@
       </p>
       <div>
         <button
-          type="button"
-          class="btn btn-primary mg-r-10"
+          kendoButton
+          themeColor="primary"
+          class="mg-r-10"
           (click)="selected.emit('overwrite')"
         >
           {{ "General.Overwrite" | translate }}
         </button>
         <button
-          type="button"
-          class="btn btn-primary mg-l-10"
+          kendoButton
+          themeColor="primary"
+          class="mg-l-10"
           (click)="selected.emit('append')"
         >
           {{ "General.Append" | translate }}

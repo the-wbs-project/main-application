@@ -51,14 +51,16 @@
   </div>
   <kendo-dialog-actions layout="end">
     <button
-      class="btn btn-primary"
+      kendoButton
+      themeColor="primary"
       [disabled]="title() === ''"
       (click)="save(true)"
     >
       {{ "General.SaveAndView" | translate }}
     </button>
     <button
-      class="btn btn-primary"
+      kendoButton
+      themeColor="primary"
       [disabled]="title() === ''"
       (click)="save(false)"
     >

@@ -38,9 +38,14 @@
       </div>
       <br />
       <div class="w-100 text-end">
-        <a class="btn btn-primary mg-y-20" (click)="continue.emit()">
+        <button
+          kendoButton
+          themeColor="primary"
+          class="mg-y-20"
+          (click)="continue.emit()"
+        >
           {{ "General.Continue" | translate }}
-        </a>
+        </button>
       </div>
       }
     </div>

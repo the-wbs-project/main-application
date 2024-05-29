@@ -42,7 +42,7 @@
   </tbody>
 </table>
 @if (saveState() === undefined) {
-<button class="w-100 btn btn-primary mg-t-10" (click)="save()">
+<button kendoButton themeColor="primary" class="w-100 mg-t-10" (click)="save()">
   Create Project
 </button>
 
@@ -53,7 +53,7 @@
 <fa-icon [icon]="faCheck" size="5x" />
 <p class="tx-18 mg-t-10">{{ "LibraryCreate.TemplateSaved" | translate }}</p>
 <div class="w-100 text-center">
-  <button type="button" class="btn btn-primary" (click)="done.emit()">
+  <button kendoButton themeColor="primary" (click)="done.emit()">
     {{ "General.View" | translate }}
   </button>
 </div>

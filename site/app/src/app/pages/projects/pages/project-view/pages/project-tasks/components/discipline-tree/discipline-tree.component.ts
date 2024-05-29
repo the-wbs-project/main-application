@@ -54,11 +54,6 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.treeService.expandedKeys =
-      this.project().disciplines.map((d) => {
-        if (typeof d === 'string') return d;
-
-        return d.id;
-      }) ?? [];
+    this.treeService.expandedKeys = []; //this.project().disciplines.map((d) => d.id);
   }
 }
