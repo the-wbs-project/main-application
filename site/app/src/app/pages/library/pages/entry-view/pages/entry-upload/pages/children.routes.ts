@@ -26,7 +26,7 @@ export const routes: Routes = [
   {
     path: 'options',
     loadComponent: () =>
-      import('./options-view').then((x) => x.OptionsViewComponent),
+      import('./options-view.component').then((x) => x.OptionsViewComponent),
     canActivate: [verifyStartedGuard, setupGuard],
     data: {
       title: 'ProjectUpload.Page_Options',

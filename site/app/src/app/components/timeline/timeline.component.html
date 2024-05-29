@@ -40,7 +40,6 @@
                   <button
                     type="button"
                     id="actionMenu"
-                    class="btn btn-sm btn-outline-light"
                     ngbDropdownToggle
                   >
                     <i class="fa-solid fa-ellipsis"></i>
@@ -104,7 +103,11 @@
       </div>
       @if (loaded() && timeline.length < (length() ?? 0)) {
       <div class="w-100 pd-10 tx-center">
-        <button class="btn btn-primary" (click)="loadMoreClicked.emit()">
+        <button
+          kendoButton
+          themeColor="primary"
+          (click)="loadMoreClicked.emit()"
+        >
           Load More
         </button>
       </div>

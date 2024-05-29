@@ -58,12 +58,13 @@
     }
   </div>
   <kendo-dialog-actions layout="end">
-    <button type="button" class="btn btn-outline-dark" (click)="dialog.close()">
+    <button kendoButton size="small" (click)="dialog.close()">
       {{ "General.Close" | translate }}
     </button>
     <button
-      type="button"
-      class="btn btn-primary"
+      kendoButton
+      size="small"
+      themeColor="primary"
       (click)="submit(emails.value)"
     >
       {{ "OrgSettings.SendInvite" | translate }}

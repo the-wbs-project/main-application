@@ -8,8 +8,8 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { UploadOptionsViewComponent } from '@wbs/components/upload-views/options-view';
 import { switchMap } from 'rxjs/operators';
-import { AppendOrOvewriteSelected } from '../../actions';
-import { EntryUploadState } from '../../states';
+import { AppendOrOvewriteSelected } from '../actions';
+import { EntryUploadState } from '../states';
 
 @Component({
   standalone: true,

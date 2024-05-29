@@ -3,9 +3,7 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
-  input,
   model,
   output,
 } from '@angular/core';
@@ -49,10 +47,6 @@ export class PhaseEditorComponent {
   readonly faFloppyDisk = faFloppyDisk;
   readonly faPlus = faPlus;
   readonly categories = model.required<CategorySelection[]>();
-
-  readonly showAdd = input<boolean>(false);
-  readonly showSave = input<boolean>(false);
-  readonly showButtons = computed(() => this.showAdd() || this.showSave());
 
   onDrop({ previousIndex, currentIndex }: CdkDragDrop<any, any>): void {
     this.categories.update((list) => {

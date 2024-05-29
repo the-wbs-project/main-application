@@ -10,6 +10,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { TitleService } from '@wbs/core/services';
@@ -34,8 +35,8 @@ import { MemberListSwitchComponent } from './components/member-list-switch/membe
   standalone: true,
   templateUrl: './members.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [],
   imports: [
+    ButtonModule,
     DialogModule,
     FontAwesomeModule,
     FormsModule,

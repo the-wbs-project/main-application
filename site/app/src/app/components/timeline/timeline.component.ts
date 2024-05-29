@@ -8,6 +8,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleInfo, faComment } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { WaitNotifyDirective } from '@wbs/core/directives/wait-notify.directive';
 import { TimelineMenuItem } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
@@ -23,6 +24,7 @@ import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AsyncPipe,
+    ButtonModule,
     DateTextPipe,
     FontAwesomeModule,
     NgClass,

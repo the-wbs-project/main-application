@@ -15,7 +15,12 @@
       <div class="row mg-b-15 d-none d-lg-flex">
         <div class="col-8">
           <div class="d-flex gap-20">
-            <button class="btn btn-dark" (click)="launchCreateProject()">
+            <button
+              kendoButton
+              size="small"
+              themeColor="dark"
+              (click)="launchCreateProject()"
+            >
               <fa-icon [icon]="plusIcon" class="mg-r-5" />
               {{ "General.Create" | translate }}
             </button>
@@ -33,7 +38,9 @@
         <div class="col-8">
           <div class="d-flex gap-20">
             <button
-              class="btn btn-dark btn-block"
+              kendoButton
+              size="small"
+              themeColor="dark"
               (click)="filterToggle.set(!filterToggle())"
             >
               <fa-icon [icon]="filterIcon" />

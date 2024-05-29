@@ -24,7 +24,12 @@
         </div>
         <div class="col-6 tx-right">
           @if (store.canAdd()) {
-          <button class="btn btn-primary" (click)="startInvite()">
+          <button
+            kendoButton
+            size="small"
+            themeColor="primary"
+            (click)="startInvite()"
+          >
             <fa-icon [icon]="faPlus" />
             <span class="d-none d-sm-inline">
               {{ "OrgSettings.InviteMembers" | translate }}
