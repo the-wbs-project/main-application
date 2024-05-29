@@ -7,17 +7,6 @@ import { Utils } from '../services';
 export class LibraryEntryVersionDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAllAsync(
-    owner: string,
-    entryId: string
-  ): Observable<LibraryEntryVersion[]> {
-    return this.http
-      .get<LibraryEntryVersion[]>(
-        `api/portfolio/${owner}/library/entries/${entryId}/versions`
-      )
-      .pipe(map((list) => this.clean(list)));
-  }
-
   getAsync(
     owner: string,
     entryId: string,
@@ -37,10 +26,11 @@ export class LibraryEntryVersionDataService {
     );
   }
 
-  private clean<T extends LibraryEntryVersion | LibraryEntryVersion[]>(
-    obj: T
-  ): T {
+  private clean(obj: LibraryEntryVersion): LibraryEntryVersion {
     Utils.cleanDates(obj, 'lastModified');
+
+    if (obj.categories == undefined) obj.categories = [];
+    if (obj.disciplines == undefined) obj.disciplines = [];
 
     return obj;
   }

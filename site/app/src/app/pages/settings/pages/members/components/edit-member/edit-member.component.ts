@@ -7,6 +7,10 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import {
+  ButtonGroupModule,
+  ButtonModule,
+} from '@progress/kendo-angular-buttons';
+import {
   DialogCloseResult,
   DialogContentBase,
   DialogModule,
@@ -22,7 +26,13 @@ import { map } from 'rxjs/operators';
   standalone: true,
   templateUrl: './edit-member.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DialogModule, NgClass, TranslateModule],
+  imports: [
+    ButtonGroupModule,
+    ButtonModule,
+    DialogModule,
+    NgClass,
+    TranslateModule,
+  ],
 })
 export class EditMemberComponent extends DialogContentBase {
   readonly member = signal<MemberViewModel | undefined>(undefined);

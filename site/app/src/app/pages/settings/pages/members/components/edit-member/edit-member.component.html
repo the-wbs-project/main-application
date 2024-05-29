@@ -32,20 +32,18 @@
         {{ "General.Roles" | translate }}
       </label>
       <div class="col-sm-10">
-        <div class="btn-group">
+        <kendo-buttongroup selection="multiple">
           @for (role of this.roles; track role.id) {
           <button
-            class="btn"
-            [ngClass]="{
-              'btn-primary': member.roles.includes(role.id),
-              'btn-outline-primary': !member.roles.includes(role.id),
-            }"
+            kendoButton
+            size="small"
+            [selected]="member.roles.includes(role.id)"
             (click)="toggleRole(role.id)"
           >
             {{ role.abbreviation | translate }}
           </button>
           }
-        </div>
+        </kendo-buttongroup>
       </div>
     </div>
   </div>

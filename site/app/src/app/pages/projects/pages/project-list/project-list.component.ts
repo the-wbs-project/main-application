@@ -27,6 +27,7 @@ import {
   ProjectTableomponent,
   ProjectViewToggleComponent,
 } from './components';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -35,6 +36,7 @@ declare type ProjectView = 'grid' | 'table';
   templateUrl: './project-list.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     FontAwesomeModule,
     NgClass,
@@ -61,7 +63,7 @@ export class ProjectListComponent implements OnInit {
   readonly projects = signal<Project[]>([]);
   readonly owner = computed(() => this.membership.organization()!.name);
   readonly userId = input.required<string>();
-  readonly view = signal<ProjectView>(this.getView() ?? 'grid');
+  readonly view = signal<ProjectView>(this.getView() ?? 'table');
   readonly assignedToMe = signal(false);
   readonly stati = signal([
     PROJECT_STATI.PLANNING,

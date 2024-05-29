@@ -1,6 +1,6 @@
 export interface OpenAiMessage {
   content: string | null;
-  role: 'system' | 'user' | 'assistant';
+  role: string;
   name?: string;
 }
 
@@ -19,20 +19,10 @@ export interface OpenAiRequest {
   return_prompt?: boolean;
   return_metadata?: boolean;
   return_sequences?: boolean;
+  response_format?: { type: 'json ' };
   expand?: boolean;
   logit_bias?: {
     [key: string]: number;
   };
   user?: string;
-}
-export interface OpenAiMessage {
-  /**
-   * The contents of the message.
-   */
-  content: string | null;
-
-  /**
-   * The role of the author of this message.
-   */
-  role: 'system' | 'user' | 'assistant';
 }

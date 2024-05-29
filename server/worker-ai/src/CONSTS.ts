@@ -1,5 +1,10 @@
 export const TEXT_MODELS = [
 	{
+		model: 'gpt-4o',
+		type: 'open-ai',
+		title: 'OpenAI ChatGPT 4o',
+	},
+	{
 		model: 'gpt-4-turbo',
 		type: 'open-ai',
 		title: 'OpenAI ChatGPT 4 Turbo',

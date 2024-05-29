@@ -20,30 +20,7 @@
     <div class="col-12">
       <div class="row mg-b-20">
         <div class="col-6">
-          <div class="btn-group" role="group" aria-label="Basic example">
-            <button
-              type="button"
-              class="btn"
-              [ngClass]="{
-                'btn-primary': view() === 'members',
-                'btn-outline-primary': view() !== 'members'
-              }"
-              (click)="view.set('members')"
-            >
-              {{ "General.Members" | translate }}
-            </button>
-            <button
-              type="button"
-              class="btn"
-              [ngClass]="{
-                'btn-primary': view() === 'invitations',
-                'btn-outline-primary': view() !== 'invitations'
-              }"
-              (click)="view.set('invitations')"
-            >
-              {{ "OrgSettings.Invitations" | translate }}
-            </button>
-          </div>
+          <wbs-member-list-switch [(view)]="view" />
         </div>
         <div class="col-6 tx-right">
           @if (store.canAdd()) {
@@ -75,7 +52,7 @@
             [filteredRoles]="roleFilters()"
             [textFilter]="textFilter"
           />
-          } @else if (view() === 'invitations') {
+          } @else if (view() === 'invites') {
           <wbs-invitation-list
             [filteredRoles]="roleFilters()"
             [textFilter]="textFilter"

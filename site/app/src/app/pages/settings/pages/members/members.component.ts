@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -13,6 +12,7 @@ import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { TitleService } from '@wbs/core/services';
 import {
   MembershipStore,
   MetadataStore,
@@ -28,29 +28,7 @@ import {
 } from './components';
 import { MemberSettingsService } from './services';
 import { MembersSettingStore } from './store';
-
-const ROLES = [
-  {
-    name: 'all',
-    text: 'OrgSettings.AllRoles',
-  },
-  {
-    name: 'pm',
-    text: 'General.PMs',
-  },
-  {
-    name: 'approver',
-    text: 'General.Approvers',
-  },
-  {
-    name: 'sme',
-    text: 'General.SMEs',
-  },
-  {
-    name: 'admin',
-    text: 'General.Admin',
-  },
-];
+import { MemberListSwitchComponent } from './components/member-list-switch/member-list-switch.component';
 
 @Component({
   standalone: true,
@@ -64,8 +42,8 @@ const ROLES = [
     InvitationFormComponent,
     InvitationListComponent,
     MemberListComponent,
+    MemberListSwitchComponent,
     MembershipRollupComponent,
-    NgClass,
     RoleFilterListComponent,
     TextBoxModule,
     TranslateModule,
@@ -75,14 +53,14 @@ export class MembersComponent {
   private readonly dialog = inject(DialogService);
   private readonly memberService = inject(MemberSettingsService);
   private readonly metadata = inject(MetadataStore);
+  private readonly title = inject(TitleService);
   private readonly uiStore = inject(UiStore);
   private readonly profile = inject(UserStore).profile;
 
   readonly organization = inject(MembershipStore).organization;
   readonly store = inject(MembersSettingStore);
-  readonly roles = this.processRoles();
   readonly roleFilters = signal<string[]>([]);
-  readonly view = signal<'members' | 'invitations'>('members');
+  readonly view = signal<'members' | 'invites'>('members');
   readonly faPlus = faPlus;
   readonly faSpinner = faSpinner;
 
@@ -97,6 +75,7 @@ export class MembersComponent {
       { text: 'General.Settings' },
       { text: 'General.Users' },
     ]);
+    this.title.setTitle(['General.Settings', 'General.Members']);
   }
 
   startInvite(): void {
@@ -112,16 +91,5 @@ export class MembersComponent {
 
       this.memberService.sendInvitesAsync(results.emails, results.roles, name);
     });
-  }
-
-  private processRoles(): { name: string; text: string }[] {
-    const definitions = this.metadata.roles.definitions;
-
-    for (const role of structuredClone(ROLES)) {
-      if (role.name === 'all') continue;
-
-      role.name = definitions.find((x) => x.name === role.name)!.id;
-    }
-    return ROLES;
   }
 }

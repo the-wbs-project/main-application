@@ -1,0 +1,18 @@
+<kendo-buttongroup selection="single">
+  <button
+    kendoButton
+    size="small"
+    [selected]="view() === 'members'"
+    (click)="view.set('members')"
+  >
+    {{ "General.Members" | translate }}
+  </button>
+  <button
+    kendoButton
+    size="small"
+    [selected]="view() === 'invites'"
+    (click)="view.set('invites')"
+  >
+    {{ "OrgSettings.Invitations" | translate }}
+  </button>
+</kendo-buttongroup>

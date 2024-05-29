@@ -1,24 +1,22 @@
-<div class="btn-group">
+<kendo-buttongroup selection="single">
   <button
-    type="button"
-    class="btn"
-    [ngClass]="{
-      'btn-dark': view() === 'grid',
-      'btn-outline-dark': view() !== 'grid',
-    }"
-    (click)="changed.emit('grid')"
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="view() === 'table'"
+    (click)="view.set('table')"
   >
-    <fa-icon [icon]="gridIcon" />&nbsp; Grid
+    <fa-icon [icon]="tableIcon" class="mg-r-5" />
+    {{ "General.Table" | translate }}
   </button>
   <button
-    type="button"
-    class="btn"
-    [ngClass]="{
-      'btn-dark': view() === 'table',
-      'btn-outline-dark': view() !== 'table',
-    }"
-    (click)="changed.emit('table')"
+    kendoButton
+    size="small"
+    [toggleable]="true"
+    [selected]="view() === 'grid'"
+    (click)="view.set('grid')"
   >
-    <fa-icon [icon]="tableIcon" />&nbsp; Table
+    <fa-icon [icon]="gridIcon" class="mg-r-5" />
+    {{ "General.Grid" | translate }}
   </button>
-</div>
+</kendo-buttongroup>
