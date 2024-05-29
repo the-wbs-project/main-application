@@ -13,12 +13,19 @@
           cssClass="tx-success tx-12 mg-r-10"
         />
         @if (canAdd()) {
-        <button class="btn btn-sm btn-dark mg-r-10" (click)="add()">
-          <fa-icon [icon]="plus" />&nbsp; {{ "General.Add" | translate }}
+        <button
+          kendoButton
+          size="small"
+          themeColor="dark"
+          class="mg-r-10"
+          (click)="add()"
+        >
+          <fa-icon [icon]="plus" class="mg-r-5" />
+          {{ "General.Add" | translate }}
         </button>
         }
         <wbs-save-button
-          size="sm"
+          size="small"
           [isSaving]="saveService().state() === 'saving'"
           (click)="saveClicked.emit()"
         />

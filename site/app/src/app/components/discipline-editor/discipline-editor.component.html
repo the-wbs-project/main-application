@@ -1,16 +1,9 @@
-@if (showButtons()) {
+@if (showAdd()) {
 <div class="pd-b-10 text-center">
-  @if (showAdd()) {
-  <button class="btn btn-outline-dark mg-x-10" (click)="showCreate()">
-    <fa-icon [icon]="faPlus" />
+  <button kendoButton (click)="showCreate()">
+    <fa-icon [icon]="faPlus" class="mg-r-5" />
     {{ "General.Add" | translate }}
   </button>
-  } @if (showSave()) {
-  <button class="btn btn-dark mg-x-10" (click)="saveClicked.emit()">
-    <fa-icon [icon]="faFloppyDisk" />
-    {{ "General.Save" | translate }}
-  </button>
-  }
 </div>
 } @if (categories(); as cats) {
 <div class="overflow-hidden" cdkDropList (cdkDropListDropped)="onDrop($event)">

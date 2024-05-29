@@ -8,7 +8,9 @@ import {
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
+import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { RESOURCE_TYPES } from '@wbs/core/models';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
@@ -25,12 +27,15 @@ import { RestrictionsPipe } from './pipes/restrictions.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RecordResourceValidation],
   imports: [
+    ButtonModule,
     DropDownListModule,
     FormsModule,
     InfoMessageComponent,
     NgClass,
     ResourceTypeTextComponent,
     RestrictionsPipe,
+    TextAreaModule,
+    TextBoxModule,
     TranslateModule,
     UploaderComponent,
   ],

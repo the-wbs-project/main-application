@@ -16,12 +16,8 @@
         [value]="profile()?.name"
         (keydown.enter)="changeName(name.value)"
       />
-      <button
-        type="button"
-        class="btn btn-outline-primary"
-        (click)="changeName(name.value)"
-      >
-        <fa-icon [icon]="faFloppyDisk" /> &nbsp;
+      <button kendoButton themeColor="primary" (click)="changeName(name.value)">
+        <fa-icon [icon]="faFloppyDisk" class="mg-r-5" />
         {{ "General.Save" | translate }}
       </button>
     </div>

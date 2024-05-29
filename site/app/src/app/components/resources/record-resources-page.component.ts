@@ -10,6 +10,7 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoComponent } from '@wbs/components/info/info.component';
 import { RESOURCE_TYPES, ResourceRecord } from '@wbs/core/models';
@@ -25,6 +26,7 @@ import { RecordResourceValidation } from './services';
   templateUrl: './record-resources-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     CheckPipe,
     FontAwesomeModule,
     InfoComponent,

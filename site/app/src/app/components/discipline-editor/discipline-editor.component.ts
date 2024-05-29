@@ -3,7 +3,6 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
   model,
@@ -12,6 +11,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars, faFloppyDisk, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogCloseResult,
   DialogModule,
@@ -33,6 +33,7 @@ import { CategoryDialogComponent } from '../category-dialog';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [DialogService],
   imports: [
+    ButtonModule,
     DialogModule,
     DisciplineIconPipe,
     DragDropModule,
@@ -50,14 +51,11 @@ export class DisciplineEditorComponent {
   //
   readonly sizeCss = input('tx-16');
   readonly showAdd = input<boolean>(false);
-  readonly showSave = input<boolean>(false);
-  readonly saveClicked = output<void>();
   readonly categoryCreated = output<CategoryDialogResults>();
   //
   //  Models and computes
   //
   readonly categories = model.required<CategorySelection[]>();
-  readonly showButtons = computed(() => this.showAdd() || this.showSave());
 
   readonly faBars = faBars;
   readonly faFloppyDisk = faFloppyDisk;

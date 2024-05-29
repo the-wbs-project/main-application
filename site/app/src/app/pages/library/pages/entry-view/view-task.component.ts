@@ -11,7 +11,11 @@ import { faDiagramSubtask, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { TaskModalFooterComponent } from '@wbs/components/_utils/task-modal-footer.component';
 import {
   NavigationMenuService,
   SaveService,
@@ -19,14 +23,9 @@ import {
   TitleService,
 } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
-import { TaskModalFooterComponent } from '@wbs/components/_utils/task-modal-footer.component';
+import { EntryStore } from '@wbs/core/store';
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
-import { EntryStore } from '@wbs/core/store';
-import {} from '@fortawesome/pro-thin-svg-icons';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
 
 @Component({
   standalone: true,

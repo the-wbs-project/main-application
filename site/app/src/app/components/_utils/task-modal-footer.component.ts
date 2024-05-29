@@ -1,27 +1,28 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
   selector: 'wbs-task-modal-footer',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [RouterModule, TranslateModule],
+  imports: [ButtonModule, RouterModule, TranslateModule],
   host: { class: 'w-100' },
   template: `<div class="d-flex w-100">
     <div class="tx-left flex-grow-1">
       @if (task().previousTaskId; as taskId) {
-      <a class="btn btn-outline-dark" [routerLink]="['../', taskId, 'about']">
+      <button kendoButton size="small" [routerLink]="['../', taskId, 'about']">
         {{ 'General.Previous' | translate }}
-      </a>
+      </button>
       }
     </div>
     <div class="tx-right flex-grow-1">
       @if (task().nextTaskId; as taskId) {
-      <a class="btn btn-outline-dark" [routerLink]="['../', taskId, 'about']">
+      <button kendoButton size="small" [routerLink]="['../', taskId, 'about']">
         {{ 'General.Next' | translate }}
-      </a>
+      </button>
       }
     </div>
   </div>`,

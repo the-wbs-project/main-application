@@ -11,7 +11,7 @@
         cssClass="tx-success tx-12 mg-r-10"
       />
       <wbs-save-button
-        size="sm"
+        size="small"
         [disabled]="!canSave()"
         [isSaving]="saved.state() === 'saving'"
         (click)="save()"
@@ -52,7 +52,8 @@
           </label>
           <div class="flex-fill text-end">
             <wbs-ai-button
-              buttonCssClass="btn-sm btn-outline-dark"
+              themeColor="primary"
+              size="small"
               (click)="askAi.set(true)"
             />
           </div>
@@ -60,7 +61,8 @@
         <div class="col-md-10 col-sm-12">
           <div class="w-100 mg-b-5 text-end d-none d-md-block">
             <wbs-ai-button
-              buttonCssClass="btn-sm btn-outline-dark"
+              themeColor="primary"
+              size="small"
               (click)="askAi.set(true)"
             />
           </div>

@@ -13,6 +13,10 @@ import {
   faPencil,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import {
+  ButtonGroupModule,
+  ButtonModule,
+} from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { IdService } from '@wbs/core/services';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
@@ -26,6 +30,8 @@ import { MetadataStore } from '@wbs/core/store';
   templateUrl: './phase-selection.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonGroupModule,
+    ButtonModule,
     AlertComponent,
     FontAwesomeModule,
     InfoMessageComponent,

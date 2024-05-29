@@ -1,17 +1,19 @@
-<wbs-alert
-  type="info"
-  message="LibraryCreate.PhaseHeader"
-  [dismissible]="false"
-/>
+<div class="text-start tx-12">
+  <wbs-alert
+    type="info"
+    message="LibraryCreate.PhaseHeader"
+    [dismissible]="false"
+  />
+</div>
 <div class="w-100 d-flex">
   <div class="flex-grow-1 pd-r-20">
     <button
-      type="button"
-      class="btn w-100"
-      [ngClass]="phaseType() === 'predefined' ? 'btn-dark' : 'btn-outline-dark'"
+      kendoButton
+      class="w-100"
+      [themeColor]="phaseType() === 'predefined' ? 'dark' : 'base'"
       (click)="typeChosen('predefined')"
     >
-      <fa-icon [icon]="faList" />
+      <fa-icon [icon]="faList" class="mg-r-5" />
       {{ "LibraryCreate.PredefinedPhase" | translate }}
     </button>
 
@@ -22,12 +24,12 @@
   </div>
   <div class="flex-grow-1 pd-l-20">
     <button
-      type="button"
-      class="btn w-100"
-      [ngClass]="phaseType() === 'custom' ? 'btn-dark' : 'btn-outline-dark'"
+      kendoButton
+      class="w-100"
+      [themeColor]="phaseType() === 'custom' ? 'dark' : 'base'"
       (click)="typeChosen('custom')"
     >
-      <fa-icon [icon]="faPencil" />
+      <fa-icon [icon]="faPencil" class="mg-r-5" />
       {{ "LibraryCreate.CustomPhase" | translate }}
     </button>
     <wbs-info-message
@@ -51,7 +53,7 @@
           {{ cat.description ?? "" | translate }}
         </div>
       </div>
-      <div class="text-end wd-80" style="min-width: 110px">
+      <div class="text-end wd-80 pd-l-5" style="min-width: 110px">
         <wbs-select-button
           buttonClass="w-100 tx-12"
           [selected]="phase() === cat.id"
@@ -69,7 +71,7 @@
             {{ cat.label | translate }}
           </div>
 
-          <div class="text-end wd-80" style="min-width: 110px">
+          <div class="text-end wd-80 pd-l-5" style="min-width: 110px">
             <wbs-select-button
               buttonClass="w-100 tx-12"
               [selected]="phase() === cat.id"

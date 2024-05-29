@@ -1,6 +1,14 @@
-<button #anchor class="btn btn-sm btn-outline-dark mg-y-4" (click)="toggle()">
-  <fa-icon [icon]="faBoltLightning" />
-  &nbsp; {{ "General.Actions" | translate }}
+<button
+  #anchor
+  kendoButton
+  themeColor="base"
+  rounded="small"
+  size="small"
+  class="mg-y-4"
+  (click)="toggle()"
+>
+  <fa-icon [icon]="faBoltLightning" class="mg-r-5" />
+  {{ "General.Actions" | translate }}
 </button>
 @if (show()) {
 <kendo-popup

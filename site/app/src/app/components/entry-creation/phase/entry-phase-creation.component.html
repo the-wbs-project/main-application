@@ -80,7 +80,7 @@
   <kendo-dialog-actions>
     <div class="flex-grow-1 text-start">
       @if (view() > 0) {
-      <button class="btn btn-warning" (click)="back()">
+      <button kendoButton themeColor="warning" (click)="back()">
         {{ "General.Back" | translate }}
       </button>
       }
@@ -92,7 +92,8 @@
     <div class="flex-grow-1 text-end">
       @if (view() < 3) {
       <button
-        class="btn btn-primary"
+        kendoButton
+        themeColor="primary"
         [disabled]="!canContinue()"
         (click)="next()"
       >
