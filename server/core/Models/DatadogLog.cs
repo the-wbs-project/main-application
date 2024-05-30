@@ -11,7 +11,7 @@ public class DatadogLog
     public string session_id { get; set; }
     public string message { get; set; }
     public string status { get; set; }
-    public object state { get; set; }
+    public string loggerName { get; set; }
     public DateTimeOffset date { get; set; }
     public DatadogUserLog usr { get; set; }
     public DatadogHttpLog http { get; set; }

@@ -34,8 +34,8 @@ public class DatadogService : IDisposable
             ddtags = $"env:{_config.LogEnvironment},app:pm-empower",
             service = _config.LogService,
             status = logLevel,
-            state = state,
-            message = $"{loggerName}: {message}",
+            loggerName = loggerName,
+            message = message,
             error = exception == null ? null : new DatadogErrorLog
             {
                 message = exception.Message,

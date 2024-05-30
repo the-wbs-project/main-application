@@ -29,6 +29,5 @@ public sealed class DataDogLogger : ILogger
         if (!IsEnabled(logLevel)) return;
 
         service.AddLog(loggerName, logLevel.ToString(), eventId.ToString(), formatter(state, exception), state, exception);
-        Console.WriteLine("ADDED!");
     }
 }
