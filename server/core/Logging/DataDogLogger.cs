@@ -17,7 +17,7 @@ public sealed class DataDogLogger : ILogger
     }
     public IDisposable BeginScope<TState>(TState state) where TState : notnull => default!;
 
-    public bool IsEnabled(LogLevel logLevel) => logLevel >= level;
+    public bool IsEnabled(LogLevel logLevel) => true; // logLevel >= level;
 
     public void Log<TState>(
         LogLevel logLevel,
@@ -29,5 +29,6 @@ public sealed class DataDogLogger : ILogger
         if (!IsEnabled(logLevel)) return;
 
         service.AddLog(loggerName, logLevel.ToString(), eventId.ToString(), formatter(state, exception), state, exception);
+        Console.WriteLine("ADDED!");
     }
 }

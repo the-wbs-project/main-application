@@ -16,7 +16,7 @@ public class DatadogService : IDisposable
     {
         _config = config;
 
-        timer = new Timer(Flush, null, 0, 5000); // 10 seconds (10000ms
+        timer = new Timer(Flush, null, 0, 5000); // 5 seconds (10000ms
     }
 
     public void AddLog(
@@ -29,6 +29,7 @@ public class DatadogService : IDisposable
     {
         logs.Add(new DatadogLog
         {
+            date = DateTimeOffset.UtcNow,
             ddsource = _config.LogSource,
             ddtags = $"env:{_config.LogEnvironment},app:pm-empower",
             service = _config.LogService,
@@ -49,7 +50,7 @@ public class DatadogService : IDisposable
     {
         var currentLogs = new List<DatadogLog>(logs);
 
-        if (logs.Count == 0) return;
+        if (currentLogs.Count == 0) return;
 
         logs.Clear();
 

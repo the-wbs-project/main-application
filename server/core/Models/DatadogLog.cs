@@ -1,3 +1,5 @@
+using System.Dynamic;
+
 namespace Wbs.Core.Models;
 
 public class DatadogLog
@@ -10,6 +12,7 @@ public class DatadogLog
     public string message { get; set; }
     public string status { get; set; }
     public object state { get; set; }
+    public DateTimeOffset date { get; set; }
     public DatadogUserLog usr { get; set; }
     public DatadogHttpLog http { get; set; }
     public DatadogErrorLog error { get; set; }
