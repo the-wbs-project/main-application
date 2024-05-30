@@ -41,7 +41,7 @@ public class DatadogUserLog
 
 public class DatadogErrorLog
 {
-    public string type { get; set; }
+    public string kind { get; set; }
     public string message { get; set; }
     public string stack { get; set; }
 }

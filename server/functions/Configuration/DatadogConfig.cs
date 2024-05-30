@@ -5,13 +5,15 @@ namespace Wbs.Functions.Configuration;
 
 public class DatadogConfig : IDatadogConfig
 {
-    public DatadogConfig(IConfiguration config)
+    public DatadogConfig(IConfigurationRoot config)
     {
-        ApiUrl = config["ApiUrl"];
-        ApiKey = config["ApiKey"];
-        LogService = config["LogService"];
-        LogEnvironment = config["LogEnvironment"];
-        LogSource = config["LogSource"];
+        var section = config.GetSection("Datadog");
+
+        ApiUrl = section["ApiUrl"];
+        ApiKey = section["ApiKey"];
+        LogService = section["LogService"];
+        LogEnvironment = section["LogEnvironment"];
+        LogSource = section["LogSource"];
     }
 
     public string ApiUrl { get; private set; }

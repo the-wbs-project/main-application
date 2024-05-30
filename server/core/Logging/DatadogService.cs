@@ -36,7 +36,7 @@ public class DatadogService : IDisposable
             {
                 message = exception.Message,
                 stack = exception.ToString(),
-                type = exception.GetType().ToString()
+                kind = exception.GetType().ToString()
             },
             session_id = eventId
         });

@@ -24,7 +24,7 @@ builder.Configuration.AddAzureAppConfiguration(options =>
         .Select(KeyFilter.Any, builder.Configuration["AppConfig:Environment"]);
 });
 builder.Logging.AddProvider(new DataDogLoggerProvider(
-    new DatadogConfig(builder.Configuration.GetSection("Datadog")),
+    new DatadogConfig(builder.Configuration),
     builder.Configuration["Logging:LogLevel:Default"]));
 //
 //  Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

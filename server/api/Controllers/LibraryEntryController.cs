@@ -31,8 +31,16 @@ public class LibraryEntryController : ControllerBase
     [HttpPost("search")]
     public async Task<IActionResult> Search(string owner, LibraryFilters filters)
     {
-        throw new Exception("WAIT ONE MOMENT!");
-        return Ok(await searchService.RunQueryAsync(owner, filters));
+        try
+        {
+            throw new Exception("WAIT ONE MOMENT!");
+            return Ok(await searchService.RunQueryAsync(owner, filters));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error searching library entries");
+            return new StatusCodeResult(500);
+        }
     }
 
     [Authorize]

@@ -32,7 +32,7 @@ var host = new HostBuilder()
     .ConfigureLogging(builder =>
     {
         builder.AddProvider(new DataDogLoggerProvider(
-            new DatadogConfig(config.GetSection("Datadog")),
+            new DatadogConfig(config),
             config["Logging:LogLevel:Default"]));
     })
     .ConfigureFunctionsWorkerDefaults()
