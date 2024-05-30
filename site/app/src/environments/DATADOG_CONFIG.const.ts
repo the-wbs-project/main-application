@@ -12,7 +12,7 @@ export const DD_CONFIG: LogsInitConfiguration = {
   site: 'us5.datadoghq.com',
   service: 'pm-empower-site',
   env: config['datadog_env'],
-  forwardErrorsToLogs: true,
+  forwardErrorsToLogs: false,
   sessionSampleRate: 100,
   beforeSend: (log) => {
     //

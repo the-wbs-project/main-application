@@ -6,6 +6,7 @@ export * from './ai-prompt.service';
 export * from './auth0.service';
 export * from './category.service';
 export * from './id.service';
+export * from './error.service';
 export * from './logger.service';
 export * from './messages.service';
 export * from './navigation-menu.service';

@@ -6,6 +6,7 @@ import {
 import {
   APP_INITIALIZER,
   ApplicationConfig,
+  ErrorHandler,
   importProvidersFrom,
 } from '@angular/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -18,8 +19,12 @@ import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { AUTH_CONFIG } from 'src/environments/auth.config';
 import { routes } from './app.routes';
 import { Resources } from './core/services';
-import { AppInitializerFactory, ApiRequestInterceptor } from './setup';
 import { AiStore, UiStore } from './core/store';
+import {
+  AppInitializerFactory,
+  ApiRequestInterceptor,
+  GlobalErrorHandler,
+} from './setup';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -51,5 +56,6 @@ export const appConfig: ApplicationConfig = {
       multi: true,
     },
     { provide: HTTP_INTERCEPTORS, useClass: AuthHttpInterceptor, multi: true },
+    { provide: ErrorHandler, useClass: GlobalErrorHandler },
   ],
 };

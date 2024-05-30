@@ -1,4 +1,3 @@
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
@@ -13,13 +12,11 @@ import {
 import {
   AiChatServiceFactory,
   Auth0Service,
-  Logger,
   NavigationMenuService,
   orgClaimsResolve,
   orgListResolve,
   rolesResolve,
 } from '@wbs/core/services';
-import { LoggerRequestInterceptor } from '@wbs/setup/logger.http-interceptor';
 import { MetadataStore } from '@wbs/core/store';
 
 export const routes: Routes = [
@@ -30,17 +27,7 @@ export const routes: Routes = [
       authGuard,
       () => inject(MetadataStore).loadAsync(),
     ],
-    providers: [
-      Auth0Service,
-      Logger,
-      {
-        provide: HTTP_INTERCEPTORS,
-        useClass: LoggerRequestInterceptor,
-        multi: true,
-      },
-      AiChatServiceFactory,
-      NavigationMenuService,
-    ],
+    providers: [Auth0Service, AiChatServiceFactory, NavigationMenuService],
     children: [
       {
         path: '',
