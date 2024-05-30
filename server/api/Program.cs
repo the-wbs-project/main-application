@@ -3,6 +3,7 @@ using Microsoft.Extensions.Configuration.AzureAppConfiguration;
 using Microsoft.IdentityModel.Tokens;
 using System.Security.Claims;
 using Wbs.Api.Configuration;
+using Wbs.Core.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Services;
@@ -14,7 +15,6 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 //
 builder.Services.AddControllers();
-builder.Services.AddApplicationInsightsTelemetry();
 builder.Configuration.AddAzureAppConfiguration(options =>
 {
     options.Connect(builder.Configuration["AppConfig:ConnectionString"])
@@ -23,8 +23,11 @@ builder.Configuration.AddAzureAppConfiguration(options =>
         // Override with any configuration values specific to current hosting env
         .Select(KeyFilter.Any, builder.Configuration["AppConfig:Environment"]);
 });
+builder.Logging.AddProvider(new DataDogLoggerProvider(
+    new DatadogConfig(builder.Configuration.GetSection("Datadog")),
+    builder.Configuration["Logging:LogLevel:Default"]));
 //
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+//  Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 //
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();

@@ -75,7 +75,7 @@ export class HttpLogger {
       ddsource: 'worker',
       ddtags: `env:${this.ctx.env.DATADOG_ENV},app:pm-empower`,
       hostname: url.host,
-      service: 'pm-empower-api',
+      service: 'pm-empower-worker',
       session_id: info.request.headers.get('dd_session_id'),
       http: {
         url: info.request.url,

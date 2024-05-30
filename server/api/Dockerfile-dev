@@ -2,11 +2,18 @@ FROM mcr.microsoft.com/dotnet/sdk:8.0 as build
 
 ENV DOTNET_USE_POLLING_FILE_WATCHER 1
 
-WORKDIR /usr/src/app/api
+WORKDIR /usr/src/app
 
 COPY ./ ./
+
+#
+#   This isn't needed at the moment, but I left it in there incase we need it at a later date
+#
+#RUN dotnet restore "./api/api.csproj"
+#RUN dotnet build "./api/api.csproj"
+
+WORKDIR /usr/src/app/api
 
 EXPOSE 5216
 
 ENTRYPOINT dotnet watch run --non-interactive
-#ENTRYPOINT ["dotnet", "watch", "run"]

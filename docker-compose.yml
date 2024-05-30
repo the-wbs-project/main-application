@@ -2,13 +2,12 @@ services:
   wbs-api:
     container_name: wbs-api
     build:
-      context: ./server/api
-      dockerfile: Dockerfile-dev
+      context: ./server
+      dockerfile: ./api/Dockerfile-dev
     ports:
       - 5216:5216
     volumes:
-      - './server/core:/usr/src/app/core'
-      - './server/api:/usr/src/app/api'
+      - './server:/usr/src/app'
   
   wbs-worker:
     container_name: wbs-worker
