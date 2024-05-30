@@ -33,7 +33,6 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
-            throw new Exception("WAIT ONE MOMENT!");
             return Ok(await searchService.RunQueryAsync(owner, filters));
         }
         catch (Exception ex)
