@@ -1,10 +1,9 @@
 <kendo-dropdownbutton
-  [size]="'small'"
+  themeColor="dark"
   [data]="createMenu"
   (itemClick)="typeChosen.emit($event)"
-  buttonClass="py-0 px-2 fs-6"
 >
-  <fa-icon [icon]="plusIcon" />
+  <fa-icon [icon]="plusIcon" class="mg-r-5" />
   {{ "General.Create" | translate }}
   <ng-template kendoDropDownButtonItemTemplate let-dataItem>
     <div class="d-flex flex-1 flex-align-center text-start pd-4">

@@ -11,15 +11,22 @@ import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { LibraryListComponent } from '@wbs/components/library/list';
 import { LibraryListFiltersComponent } from '@wbs/components/library/list-filters';
+import { PageHeaderComponent } from '@wbs/components/page-header';
+import { MembershipStore, UserStore } from '@wbs/core/store';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { EntryCreationService } from '../../services';
-import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
+import { LibraryCreateButtonComponent } from './components';
 
 @Component({
   standalone: true,
   templateUrl: './library-home.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LibraryListFiltersComponent, LibraryListComponent],
+  imports: [
+    LibraryCreateButtonComponent,
+    LibraryListFiltersComponent,
+    LibraryListComponent,
+    PageHeaderComponent,
+  ],
   providers: [EntryCreationService],
 })
 export class LibraryHomeComponent implements OnInit {
