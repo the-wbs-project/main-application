@@ -1,18 +1,19 @@
 
 using Microsoft.Extensions.Logging;
-using Wbs.Core.Services;
 
 namespace Wbs.Core.Logging;
 
 public sealed class DataDogLogger : ILogger
 {
+    private readonly string loggerName;
     private readonly LogLevel level;
     private readonly DatadogService service;
 
-    public DataDogLogger(DatadogService service, LogLevel level)
+    public DataDogLogger(DatadogService service, string loggerName, LogLevel level)
     {
         this.service = service;
         this.level = level;
+        this.loggerName = loggerName;
     }
     public IDisposable BeginScope<TState>(TState state) where TState : notnull => default!;
 
@@ -27,6 +28,6 @@ public sealed class DataDogLogger : ILogger
     {
         if (!IsEnabled(logLevel)) return;
 
-        service.AddLog(logLevel.ToString(), eventId.ToString(), formatter(state, exception), exception);
+        service.AddLog(loggerName, logLevel.ToString(), eventId.ToString(), formatter(state, exception), state, exception);
     }
 }

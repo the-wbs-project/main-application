@@ -21,7 +21,7 @@ public class DataDogLoggerProvider : ILoggerProvider
     }
 
     public ILogger CreateLogger(string categoryName) =>
-        loggers.GetOrAdd(categoryName, name => new DataDogLogger(service, level));
+        loggers.GetOrAdd(categoryName, name => new DataDogLogger(service, name, level));
 
     public void Dispose()
     {

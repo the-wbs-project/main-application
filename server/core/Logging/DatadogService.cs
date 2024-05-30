@@ -20,9 +20,11 @@ public class DatadogService : IDisposable
     }
 
     public void AddLog(
+        string loggerName,
         string logLevel,
         string eventId,
         string message,
+        object state,
         Exception exception)
     {
         logs.Add(new DatadogLog
@@ -31,7 +33,8 @@ public class DatadogService : IDisposable
             ddtags = $"env:{_config.LogEnvironment},app:pm-empower",
             service = _config.LogService,
             status = logLevel,
-            message = message,
+            state = state,
+            message = $"{loggerName}: {message}",
             error = exception == null ? null : new DatadogErrorLog
             {
                 message = exception.Message,
