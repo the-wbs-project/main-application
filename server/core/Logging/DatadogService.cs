@@ -27,6 +27,11 @@ public class DatadogService : IDisposable
         object state,
         Exception exception)
     {
+        string stateString = null;
+
+        try { stateString = JsonSerializer.Serialize(state); }
+        catch { }
+
         logs.Add(new DatadogLog
         {
             date = DateTimeOffset.UtcNow,
@@ -37,7 +42,7 @@ public class DatadogService : IDisposable
             loggerName = loggerName,
             message = message,
             hostname = _config.LogHostname,
-            state = JsonSerializer.Serialize(state),
+            state = stateString,
             error = exception == null ? null : new DatadogErrorLog
             {
                 message = exception.Message,
