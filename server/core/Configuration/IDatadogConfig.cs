@@ -7,4 +7,5 @@ public interface IDatadogConfig
     string LogService { get; }
     string LogEnvironment { get; }
     string LogSource { get; }
+    string LogHostname { get; }
 }

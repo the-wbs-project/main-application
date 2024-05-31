@@ -41,6 +41,12 @@ export default {
         api_prefix: env.API_URL_EXTERNAL,
         auth_clientId: env.AUTH_CLIENT_ID,
         datadog_env: env.DD_ENV,
+        datadog_rum_url: env.DD_RUM_URL,
+        datadog_rum_client_token: env.DD_RUM_CLIENT_TOKEN,
+        datadog_rum_application_id: env.DD_RUM_APPLICATION_ID,
+        datadog_rum_site_url: env.DD_RUM_SITE,
+        datadog_rum_sample_rate: env.DD_RUM_SAMPLE_RATE,
+        datadog_rum_replay_sample_rate: env.DD_RUM_REPLAY_SAMPLE_RATE,
       });
 
       section += `

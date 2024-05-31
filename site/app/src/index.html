@@ -18,7 +18,51 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://imagedelivery.net" />
     <!--SERVER-->
+    <script>
+      window.appConfig = JSON.parse(
+        document.getElementById("edge_config").innerHTML
+      );
 
+      (function (h, o, u, n, d) {
+        h = h[d] = h[d] || {
+          q: [],
+          onReady: function (c) {
+            h.q.push(c);
+          },
+        };
+        d = o.createElement(u);
+        d.async = 1;
+        d.src = n;
+        n = o.getElementsByTagName(u)[0];
+        n.parentNode.insertBefore(d, n);
+      })(
+        window,
+        document,
+        "script",
+        window.appConfig["datadog_rum_url"],
+        "DD_RUM"
+      );
+      window.DD_RUM.onReady(function () {
+        window.DD_RUM.init({
+          clientToken: window.appConfig["datadog_rum_client_token"],
+          applicationId: window.appConfig["datadog_rum_application_id"],
+          // `site` refers to the Datadog site parameter of your organization
+          // see https://docs.datadoghq.com/getting_started/site/
+          site: window.appConfig["datadog_rum_site_url"],
+          service: "pm-empower",
+          env: window.appConfig["datadog_env"],
+          // Specify a version number to identify the deployed version of your application in Datadog
+          // version: '1.0.0',
+          sessionSampleRate: window.appConfig["datadog_rum_sample_rate"],
+          sessionReplaySampleRate:
+            window.appConfig["datadog_rum_replay_sample_rate"],
+          trackUserInteractions: true,
+          trackResources: true,
+          trackLongTasks: true,
+          defaultPrivacyLevel: "mask-user-input",
+        });
+      });
+    </script>
     <link rel="stylesheet" href="/assets/notiflix-3.2.6.min.css" async />
     <link rel="stylesheet" href="/assets/css/kendo.css" />
 

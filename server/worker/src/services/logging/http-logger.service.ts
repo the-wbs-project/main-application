@@ -74,7 +74,7 @@ export class HttpLogger {
     return {
       ddsource: 'worker',
       ddtags: `env:${this.ctx.env.DATADOG_ENV},app:pm-empower`,
-      hostname: url.host,
+      hostname: this.ctx.env.DATADOG_HOST,
       service: 'pm-empower-worker',
       session_id: info.request.headers.get('dd_session_id'),
       http: {
@@ -110,7 +110,7 @@ export class HttpLogger {
       ...(info.duration
         ? {
             performance: {
-              duration: info.duration,
+              duration: info.duration * 1000000, // convert to nanoseconds
             },
           }
         : {}),

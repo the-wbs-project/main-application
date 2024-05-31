@@ -18,18 +18,21 @@ export class Fetcher {
       url = input.url;
     }
     const start = new Date();
+    let end: Date;
     const request = new Request(input, init);
     let response: Response | undefined;
 
     try {
       response = await fetch(request);
+      end = new Date();
 
       return response;
     } catch (e) {
       console.log(e);
+      end = new Date();
       throw e;
     } finally {
-      const duration = (new Date().getTime() - start.getTime()) * 1000;
+      const duration = end!.getTime() - start.getTime();
       this.ctx.get('logger').trackDependency(url, method, duration, request, response);
     }
   }

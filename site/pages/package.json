@@ -4,7 +4,7 @@
   "scripts": {
     "setup": "npm",
     "docker:globals": "npm install wrangler -g",
-    "start:server": "wrangler pages dev dist --compatibility-date=2021-09-20 --port 4200 --script-path ../_worker.js --log-level warn --ip \"*\"",
+    "start:server": "wrangler pages dev --script-path ../_worker.js",
     "start": "npm run start:server"
   },
   "private": true,

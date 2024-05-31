@@ -7,6 +7,7 @@ export type Env = {
 
   readonly DATADOG_API_KEY: string;
   readonly DATADOG_ENV: string;
+  readonly DATADOG_HOST: string;
 
   readonly MAILGUN_ENDPOINT: string;
   readonly MAILGUN_KEY: string;

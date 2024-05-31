@@ -14,6 +14,7 @@ public class DatadogConfig : IDatadogConfig
         LogService = section["LogService"];
         LogEnvironment = section["LogEnvironment"];
         LogSource = section["LogSource"];
+        LogHostname = section["LogHostname"];
     }
 
     public string ApiUrl { get; private set; }
@@ -21,4 +22,5 @@ public class DatadogConfig : IDatadogConfig
     public string LogService { get; private set; }
     public string LogEnvironment { get; private set; }
     public string LogSource { get; private set; }
+    public string LogHostname { get; private set; }
 }

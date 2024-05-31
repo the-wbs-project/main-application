@@ -14,6 +14,7 @@ kv_namespaces = [
 [env.dev.vars]
 DEBUG = "true"
 DATADOG_ENV = "development"
+DATADOG_HOST = "localhost:88"
 CORS_ORIGINS = "http://localhost:4200"
 KV_BYPASS = "LISTS"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
@@ -36,6 +37,7 @@ kv_namespaces = [
 [env.test.vars]
 DEBUG = "false"
 DATADOG_ENV = "test"
+DATADOG_HOST = "test-api.pm-empower.com"
 CORS_ORIGINS = "https://test.pm-empower.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
@@ -55,6 +57,7 @@ kv_namespaces = [
 [env.prod.vars]
 DEBUG = "false"
 DATADOG_ENV = "production"
+DATADOG_HOST = "api.pm-empower.com"
 CORS_ORIGINS = "https://app.pm-empower.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"

@@ -36,6 +36,7 @@ public class DatadogService : IDisposable
             status = logLevel,
             loggerName = loggerName,
             message = message,
+            hostname = _config.LogHostname,
             state = JsonSerializer.Serialize(state),
             error = exception == null ? null : new DatadogErrorLog
             {
