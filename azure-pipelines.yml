@@ -167,7 +167,7 @@ jobs:
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "dist"
+          rootFolderOrFile: "site/dist"
           includeRootFolder: true
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site.zip"

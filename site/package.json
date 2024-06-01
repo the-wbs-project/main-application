@@ -6,7 +6,7 @@
     "build": "ng build",
     "purge": "rm -r .angular",
     "watch": "ng build --watch --configuration development --output-path dist",
-    "deploy": "ng build --configuration production --output-path ../../dist",
+    "deploy": "ng build --configuration production",
     "styles:kendo": "sass src/styles/kendo.scss src/assets/css/kendo.css -I node_modules",
     "kendo:auth": "npx kendo-ui-license activate",
     "docker:globals": "npm install @angular/cli wrangler -g",
