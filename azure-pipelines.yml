@@ -168,19 +168,10 @@ jobs:
       - task: ArchiveFiles@2
         inputs:
           rootFolderOrFile: "site/dist"
-          includeRootFolder: true
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site.zip"
-          replaceExistingArchive: true
-        displayName: "Zip"
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "site/wrangler.toml"
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site.zip"
-          replaceExistingArchive: false
+          replaceExistingArchive: true
         displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
