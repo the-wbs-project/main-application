@@ -5,8 +5,8 @@ pages_build_output_dir = "./dist"
 [vars]
 DD_RUM_URL = "https://www.datadoghq-browser-agent.com/us5/v5/datadog-rum.js"
 DD_RUM_SITE = "us5.datadoghq.com"
-DD_RUM_SAMPLE_RATE = 100
-DD_RUM_REPLAY_SAMPLE_RATE = 100
+DD_RUM_SAMPLE_RATE = "100"
+DD_RUM_REPLAY_SAMPLE_RATE = "100"
 
 [dev]
 port = 4200

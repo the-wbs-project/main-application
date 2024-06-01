@@ -45,8 +45,8 @@ export default {
         datadog_rum_client_token: env.DD_RUM_CLIENT_TOKEN,
         datadog_rum_application_id: env.DD_RUM_APPLICATION_ID,
         datadog_rum_site_url: env.DD_RUM_SITE,
-        datadog_rum_sample_rate: env.DD_RUM_SAMPLE_RATE,
-        datadog_rum_replay_sample_rate: env.DD_RUM_REPLAY_SAMPLE_RATE,
+        datadog_rum_sample_rate: parseInt(env.DD_RUM_SAMPLE_RATE),
+        datadog_rum_replay_sample_rate: parseInt(env.DD_RUM_REPLAY_SAMPLE_RATE),
       });
 
       section += `
