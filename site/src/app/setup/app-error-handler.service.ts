@@ -11,6 +11,8 @@ export class GlobalErrorHandler implements ErrorHandler {
   constructor(private injector: Injector) {}
 
   handleError(error: Error | HttpErrorResponse) {
+    if (error.message === 'login_required') return;
+
     const errorService = this.injector.get(ErrorService);
     const logger = this.injector.get(Logger);
     const notifier = this.injector.get(Messages);

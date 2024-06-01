@@ -9,10 +9,13 @@
     "deploy": "ng build --configuration production --output-path ../../dist",
     "styles:kendo": "sass src/styles/kendo.scss src/assets/css/kendo.css -I node_modules",
     "kendo:auth": "npx kendo-ui-license activate",
-    "docker:globals": "npm install @angular/cli @angular-devkit/build-angular -g",
+    "docker:globals": "npm install @angular/cli wrangler -g",
     "docker:fa": "npm config set \"@fortawesome:registry\" https://npm.fontawesome.com/ && npm config set \"//npm.fontawesome.com/:_authToken\"",
     "docker:install": "npm install --force",
-    "start": "ng build --watch --configuration development --output-path dist"
+    "start:setup": "mkdir -p dist && cp src/_worker.js dist/_worker.js",
+    "start:server": "wrangler pages dev",
+    "start:site": "ng build --watch --configuration development --output-path dist",
+    "start": "npm run start:setup && npm run start:server & npm run start:site"
   },
   "private": true,
   "dependencies": {

@@ -27,23 +27,8 @@ services:
       args:
           FA_TOKEN: $FA_TOKEN
           KENDO_UI_LICENSE: $KENDO_UI_LICENSE
-    #ports:
-    #  - 4200:4200
-    volumes:
-       - ./site/app:/usr/src/app/site
-       - /usr/src/app/site/node_modules
-       - shared-volume:/usr/src/app/site/dist
-
-  wbs-pages:
-    container_name: wbs-pages
-    build:
-      context: ./site/pages
-      dockerfile: Dockerfile-dev
     ports:
       - 4200:4200
     volumes:
-       - ./site/pages:/usr/src/app/pages
-       - shared-volume:/usr/src/app/pages/dist
-
-volumes:
-  shared-volume:
+       - ./site/app:/usr/src/app/site
+       - /usr/src/app/site/node_modules
