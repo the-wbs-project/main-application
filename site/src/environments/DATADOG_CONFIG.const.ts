@@ -1,6 +1,7 @@
 import { LogsInitConfiguration } from '@datadog/browser-logs';
 
-const config = JSON.parse(document.getElementById('edge_config')!.innerHTML);
+//@ts-ignore
+const config = window.appConfig;
 
 export const DD_CONTEXT = {
   app: 'pm-empower',

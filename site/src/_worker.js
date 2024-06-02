@@ -37,7 +37,7 @@ export default {
       //  set env variables
       //
       const config = {
-        api_prefix: env.API_URL_EXTERNAL,
+        api_domain: env.API_URL_EXTERNAL,
         auth_clientId: env.AUTH_CLIENT_ID,
         datadog_env: env.DD_ENV,
         datadog_rum_url: env.DD_RUM_URL,
@@ -78,7 +78,7 @@ export default {
       const newHeaders = new Headers(headers);
       newHeaders.set(
         "Content-Security-Policy",
-        "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com https://kit.fontawesome.com https://static.cloudflareinsights.com https://jam.dev https://www.datadoghq-browser-agent.com; style-src 'self' 'unsafe-inline' data: https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https://imagedelivery.net https://*.gravatar.com https://i2.wp.com/; connect-src 'self' data: https://logs.browser-intake-us5-datadoghq.com https://browser-intake-us5-datadoghq.com https://ka-p.fontawesome.com https://auth.pm-empower.com http://localhost:88 https://rum.browser-intake-us5-datadoghq.com https://ai.pm-empower.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; frame-src 'self' https://auth.pm-empower.com https://www.google.com;"
+        `script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com https://kit.fontawesome.com https://static.cloudflareinsights.com https://jam.dev https://www.datadoghq-browser-agent.com; style-src 'self' 'unsafe-inline' data: https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https://imagedelivery.net https://*.gravatar.com https://i2.wp.com/; connect-src 'self' data: https://logs.browser-intake-us5-datadoghq.com https://browser-intake-us5-datadoghq.com https://ka-p.fontawesome.com https://auth.pm-empower.com ${config.api_domain} https://rum.browser-intake-us5-datadoghq.com https://ai.pm-empower.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; frame-src 'self' https://auth.pm-empower.com https://www.google.com;`
       );
 
       return new Response(body.replace("<!--SERVER-->", section), {

@@ -1,7 +1,8 @@
 import { AuthConfig } from '@auth0/auth0-angular';
 
-const config = JSON.parse(document.getElementById('edge_config')!.innerHTML);
-const apiDomain = config['api_prefix'];
+//@ts-ignore
+const config = window.appConfig;
+const apiDomain = config['api_domain'];
 const authClientId = config['auth_clientId'];
 
 export const AUTH_CONFIG: AuthConfig = {
