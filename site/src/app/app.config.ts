@@ -18,7 +18,6 @@ import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { AUTH_CONFIG } from 'src/environments/auth.config';
 import { routes } from './app.routes';
-import { Resources } from './core/services';
 import { AiStore, UiStore } from './core/store';
 import {
   AppInitializerFactory,
@@ -47,7 +46,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [Resources, UiStore, AiStore],
+      deps: [UiStore, AiStore],
       multi: true,
     },
     {

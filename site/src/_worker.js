@@ -1,8 +1,12 @@
 const prefetches = [
-  "/api/resources/all/en-US",
-  "/api/lists/project_category/en-US",
-  "/api/lists/categories_phase/en-US",
-  "/api/lists/categories_discipline/en-US",
+  { variable: "resources", kvName: "", url: "/api/resources/all/en-US" },
+  { variable: "roles", kvName: "", url: "/api/roles" },
+  { variable: "phases", kvName: "", url: "/api/lists/categories_phase/en-US" },
+  {
+    variable: "disciplines",
+    kvName: "",
+    url: "/api/lists/categories_discipline/en-US",
+  },
 ];
 
 export default {
@@ -25,11 +29,6 @@ export default {
     <link rel="preconnect" href="${env.API_URL_EXTERNAL}" />`;
 
       const categories = await categoryResponse.json();
-
-      for (const url of prefetches) {
-        section += `
-      <link rel="prefetch" href="${env.API_URL_EXTERNAL}${url}" />`;
-      }
       for (const cat of categories) {
         section += `
       <link rel="prefetch" href="${cat.icon}" as="image" />`;
@@ -37,7 +36,7 @@ export default {
       //
       //  set env variables
       //
-      const config = JSON.stringify({
+      const config = {
         api_prefix: env.API_URL_EXTERNAL,
         auth_clientId: env.AUTH_CLIENT_ID,
         datadog_env: env.DD_ENV,
@@ -47,15 +46,45 @@ export default {
         datadog_rum_site_url: env.DD_RUM_SITE,
         datadog_rum_sample_rate: parseInt(env.DD_RUM_SAMPLE_RATE),
         datadog_rum_replay_sample_rate: parseInt(env.DD_RUM_REPLAY_SAMPLE_RATE),
-      });
+        project_categories: categories,
+      };
+      //
+      //  now we will store fetches and variables names at the same time, then combine them in the config object.
+      //
+      var fetches = [];
+      var variables = [];
+
+      for (const url of prefetches) {
+        fetches.push(fetch(env.API_URL_INTERNAL + url.url));
+        variables.push(url.variable);
+      }
+
+      var fetchResults = await Promise.all(fetches);
+
+      for (let i = 0; i < fetchResults.length; i++) {
+        const response = await fetchResults[i];
+
+        if (response.status !== 200) {
+          throw new Error("Failed to fetch " + prefetches[i].url);
+        }
+        config[variables[i]] = await fetchResults[i].json();
+      }
 
       section += `
-    <script id="edge_config" type="application/json">${config}</script>`;
+    <script id="edge_config" type="application/json">${JSON.stringify(
+      config
+    )}</script>`;
+
+      const newHeaders = new Headers(headers);
+      newHeaders.set(
+        "Content-Security-Policy",
+        "script-src 'self' 'unsafe-eval' 'unsafe-inline' https://cdnjs.cloudflare.com https://kit.fontawesome.com https://static.cloudflareinsights.com https://jam.dev https://www.datadoghq-browser-agent.com; style-src 'self' 'unsafe-inline' data: https://fonts.googleapis.com https://cdnjs.cloudflare.com; img-src 'self' data: https://imagedelivery.net https://*.gravatar.com https://i2.wp.com/; connect-src 'self' data: https://logs.browser-intake-us5-datadoghq.com https://browser-intake-us5-datadoghq.com https://ka-p.fontawesome.com https://auth.pm-empower.com http://localhost:88 https://rum.browser-intake-us5-datadoghq.com https://ai.pm-empower.com; font-src 'self' data: https://cdnjs.cloudflare.com https://fonts.gstatic.com; frame-src 'self' https://auth.pm-empower.com https://www.google.com;"
+      );
 
       return new Response(body.replace("<!--SERVER-->", section), {
         status: resp.status,
         statusText: resp.statusText,
-        headers: headers,
+        headers: newHeaders,
       });
     } catch (e) {
       var plainObject = {};

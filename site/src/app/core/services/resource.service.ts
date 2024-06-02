@@ -1,13 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
   TranslateService,
   MissingTranslationHandlerParams,
   MissingTranslationHandler,
 } from '@ngx-translate/core';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { environment } from 'src/environments/environment';
 
 declare type ResourceType = Record<string, Record<string, string>>;
 
@@ -18,22 +14,14 @@ export class Resources extends MissingTranslationHandler {
   private readonly redeemed: string[] = [];
   private resources: ResourceType = {};
 
-  constructor(
-    private readonly http: HttpClient,
-    private readonly translate: TranslateService
-  ) {
+  constructor(private readonly translate: TranslateService) {
     super();
-  }
 
-  initiate(): Observable<void> {
-    return this.getFromServerAsync().pipe(
-      map((resources) => {
-        this.resources = resources;
-        this.translate.setTranslation(this.culture, resources);
-        this.translate.setDefaultLang(this.culture);
-        this.translate.missingTranslationHandler = this;
-      })
-    );
+    //@ts-ignore
+    this.resources = window.appConfig.resources;
+    this.translate.setTranslation(this.culture, this.resources);
+    this.translate.setDefaultLang(this.culture);
+    this.translate.missingTranslationHandler = this;
   }
 
   get(resource: string, defaultValue?: string): string {
@@ -80,11 +68,5 @@ export class Resources extends MissingTranslationHandler {
       if (this.redeemed.indexOf(key) > -1) return key;
     }
     return params.key;
-  }
-
-  private getFromServerAsync(): Observable<ResourceType> {
-    return this.http
-      .get<ResourceType>(`api/resources/all/${environment.locale}`)
-      .pipe(map((x) => x ?? {}));
   }
 }

@@ -1,4 +1,3 @@
-import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import {
@@ -17,16 +16,11 @@ import {
   orgListResolve,
   rolesResolve,
 } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/core/store';
 
 export const routes: Routes = [
   {
     path: '',
-    canActivate: [
-      authGuardFn,
-      authGuard,
-      () => inject(MetadataStore).loadAsync(),
-    ],
+    canActivate: [authGuardFn, authGuard],
     providers: [Auth0Service, AiChatServiceFactory, NavigationMenuService],
     children: [
       {
