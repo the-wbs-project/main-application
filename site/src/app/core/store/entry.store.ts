@@ -61,6 +61,20 @@ export class EntryStore {
     this._viewModels.set(
       this.createViewModels(entry.type, version.disciplines, tasks)
     );
+
+    const vms = this.viewModels();
+    console.log({
+      id: entry.id,
+      visibility: entry.visibility,
+      name: version.title,
+      category: version.categories[0],
+      disciplines: version.disciplines.map((x) => x.id),
+      tasks: vms?.map((vm) => ({
+        level: vm.levelText,
+        title: vm.title,
+        disciplines: vm.disciplines.map((d) => d.id),
+      })),
+    });
   }
 
   setNavSectionEntry(value: string): void {

@@ -13,6 +13,9 @@ export class MetadataStore {
 
 class CategoryState {
   constructor() {
+    console.log('hello');
+    console.log('hello');
+    console.log('hello');
     this.initiate();
   }
 
@@ -72,6 +75,9 @@ class CategoryState {
     let projectCats: Category[] = config.project_categories;
     let discipline: Category[] = config.disciplines;
     let phase: Category[] = config.phases;
+
+    console.log(projectCats.map((x) => x.label).sort((a, b) => sorter(a, b)));
+    console.log(discipline.map((x) => x.label).sort((a, b) => sorter(a, b)));
 
     const categoryList = new Map<string, Category[]>();
     const categoryIcons = new Map<string, Map<string, string>>();
