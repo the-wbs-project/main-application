@@ -1,3 +1,4 @@
+import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -9,13 +10,14 @@ import {
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
+import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
-import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
 
 @Component({
   standalone: true,
@@ -24,12 +26,14 @@ import { WbsNodeView } from '@wbs/core/view-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'card dashboard-card' },
   imports: [
+    AsyncPipe,
     DateTextPipe,
     EntryTypeIconPipe,
     EntryTypeTitlePipe,
     FontAwesomeModule,
     FormsModule,
     TranslateModule,
+    UserNamePipe,
     VisibilityTextComponent,
   ],
 })
@@ -39,7 +43,6 @@ export class DetailsCardComponent implements OnInit {
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
   readonly tasks = input.required<WbsNodeView[]>();
-
 
   readonly owner = signal<string>('');
 
