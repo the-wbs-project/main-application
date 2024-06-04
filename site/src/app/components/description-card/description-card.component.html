@@ -5,7 +5,7 @@
       <wbs-approval-badge [approval]="approval()" />
     </div>
 
-    @if (!editMode()) {
+    @if (!editMode() && canEdit()) {
     <div class="flex-fill tx-right">
       <wbs-save-message [state]="saveState()" cssClass="mg-r-10" />
       <fa-icon

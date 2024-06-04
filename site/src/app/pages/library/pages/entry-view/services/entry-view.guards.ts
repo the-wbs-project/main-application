@@ -56,7 +56,6 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
 
   if (!owner || !entryId || !versionId || isNaN(versionId)) return false;
 
-  console.log('do you hear me?');
   return forkJoin({
     entry: data.libraryEntries.getAsync(owner, entryId),
     version: data.libraryEntryVersions.getAsync(owner, entryId, versionId),

@@ -30,4 +30,3 @@ Notiflix.Loading.standard();
 bootstrapApplication(AppComponent, appConfig).catch((err) =>
   console.error(err)
 );
-console.log('here?');

@@ -31,7 +31,7 @@
   (dblclick)="navigateToTask(selectedTask()?.id)"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    @if (entry().type === 'project') {
+    @if (entry().type === 'project' && (claims() | check : canCreateClaim)) {
     <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
     }
     <wbs-tree-buttons-toggler
@@ -59,15 +59,22 @@
     field="title"
     class="tx-11 child-hoverer"
     headerClass="tx-14"
+    [title]="'Wbs.Activity_Title' | translate"
   >
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      <wbs-task-title
-        [title]="dataItem.title"
-        (titleChange)="taskTitleChanged(dataItem.id, $event)"
-      />
-      @if (taskSaveStates.get(dataItem.id); as saveState) {
-      <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+      @defer (on idle) {
+        <wbs-task-title
+          [title]="dataItem.title"
+          (titleChange)="taskTitleChanged(dataItem.id, $event)"
+        />
+        @if (taskSaveStates.get(dataItem.id); as saveState) {
+        <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+        }
+      } @placeholder {
+        <span class="tx-8">Loading...</span>
       }
+      <!--
+      -->
     </ng-template>
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
@@ -81,7 +88,11 @@
       <wbs-tree-discipline-legend [list]="disciplines()" />
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
+      @defer (on idle) {
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+      } @placeholder {
+        <span class="tx-8">Loading...</span>
+      }
     </ng-template>
   </kendo-treelist-column>
   }

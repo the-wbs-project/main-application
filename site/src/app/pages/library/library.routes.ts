@@ -34,6 +34,11 @@ export const routes: Routes = [
         loadChildren: () =>
           import('./pages/entry-view/entry-view.routes').then((x) => x.routes),
       },
+      {
+        path: 'import',
+        loadChildren: () =>
+          import('./pages/library-import/library-import.routes').then((x) => x.routes),
+      },
     ],
   },
 ];

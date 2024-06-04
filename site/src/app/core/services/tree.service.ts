@@ -32,16 +32,7 @@ export class TreeService {
   }
 
   expandAll(treeList: TreeListComponent, tasks: WbsNodeView[]): void {
-    console.log(treeList);
-    console.log(tasks);
-    for (const task of tasks) {
-      if (
-        task.subTasks.length > 0 &&
-        !this.expandedKeys.includes(task.treeId)
-      ) {
-        treeList.expand(task);
-      }
-    }
+    this.expandedKeys = tasks.map((task) => task.treeId);
   }
 
   collapseAll(treeList: TreeListComponent, tasks: WbsNodeView[]): void {

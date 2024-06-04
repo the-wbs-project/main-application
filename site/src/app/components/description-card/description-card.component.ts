@@ -53,6 +53,7 @@ export class DescriptionCardComponent {
   readonly faXmark = faXmark;
   readonly askAi = model.required<boolean>();
   readonly editMode = model.required<boolean>();
+  readonly canEdit = input.required<boolean>();
   readonly description = input.required<string>();
   readonly saveState = input.required<SaveState>();
   readonly noDescriptionLabel = input.required<string>();

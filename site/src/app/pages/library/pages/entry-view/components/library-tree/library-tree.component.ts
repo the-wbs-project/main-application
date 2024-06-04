@@ -107,6 +107,7 @@ export class LibraryTreeComponent {
   readonly treeService = new TreeService();
 
   readonly checkIcon = faCheck;
+  readonly canCreateClaim = LIBRARY_CLAIMS.TASKS.CREATE;
   readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
   readonly entryUrl = input.required<string[]>();

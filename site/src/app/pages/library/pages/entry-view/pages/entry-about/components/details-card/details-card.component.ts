@@ -15,6 +15,7 @@ import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
+import { WbsNodeView } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -37,6 +38,8 @@ export class DetailsCardComponent implements OnInit {
 
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
+  readonly tasks = input.required<WbsNodeView[]>();
+
 
   readonly owner = signal<string>('');
 

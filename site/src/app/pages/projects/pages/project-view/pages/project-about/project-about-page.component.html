@@ -20,6 +20,7 @@
         [(askAi)]="askAi"
         [(editMode)]="descriptionEditMode"
         [saveState]="descriptionSave.state()"
+        [canEdit]="claims() | check : UPDATE_CLAIM"
         [description]="project()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         [approval]="approvals() | findById : 'project-description'"
