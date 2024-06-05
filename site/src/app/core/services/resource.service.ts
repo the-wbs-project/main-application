@@ -1,14 +1,16 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import {
   TranslateService,
   MissingTranslationHandlerParams,
   MissingTranslationHandler,
 } from '@ngx-translate/core';
+import { APP_CONFIG_TOKEN, AppConfiguration } from '../models';
 
 declare type ResourceType = Record<string, Record<string, string>>;
 
 @Injectable({ providedIn: 'root' })
 export class Resources extends MissingTranslationHandler {
+  private readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
   private readonly cache = new Map<string, string>();
   private readonly culture = 'en';
   private readonly redeemed: string[] = [];
@@ -17,8 +19,7 @@ export class Resources extends MissingTranslationHandler {
   constructor(private readonly translate: TranslateService) {
     super();
 
-    //@ts-ignore
-    this.resources = window.appConfig.resources;
+    this.resources = this.appConfig.resources;
     this.translate.setTranslation(this.culture, this.resources);
     this.translate.setDefaultLang(this.culture);
     this.translate.missingTranslationHandler = this;

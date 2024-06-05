@@ -18,11 +18,14 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://imagedelivery.net" />
     <!--SERVER-->
+
     <script>
       window.appConfig = JSON.parse(
         document.getElementById("edge_config").innerHTML
       );
       console.log(window.appConfig);
+    </script>
+    <script>
       (function (h, o, u, n, d) {
         h = h[d] = h[d] || {
           q: [],
@@ -39,7 +42,51 @@
         window,
         document,
         "script",
-        window.appConfig["datadog_rum_url"],
+        "https://www.datadoghq-browser-agent.com/us5/v5/datadog-logs.js",
+        "DD_LOGS"
+      );
+      window.DD_LOGS.onReady(function () {
+        window.DD_LOGS.init({
+          clientToken: window.appConfig["datadog_logs_client_token"],
+          site: "us5.datadoghq.com",
+          service: "pm-empower-site",
+          env: window.appConfig["environment"],
+          forwardErrorsToLogs: false,
+          sessionSampleRate: 100,
+          beforeSend: (log) => {
+            //
+            //  Don't send dev server errors
+            //
+            if ((log.message ?? "").indexOf("[webpack-dev-server]") > -1) {
+              return false;
+            }
+            return true;
+          },
+        });
+        window.DD_LOGS.logger.setContext({
+          app: "pm-empower",
+          host: window.location.host,
+        });
+      });
+    </script>
+    <script>
+      (function (h, o, u, n, d) {
+        h = h[d] = h[d] || {
+          q: [],
+          onReady: function (c) {
+            h.q.push(c);
+          },
+        };
+        d = o.createElement(u);
+        d.async = 1;
+        d.src = n;
+        n = o.getElementsByTagName(u)[0];
+        n.parentNode.insertBefore(d, n);
+      })(
+        window,
+        document,
+        "script",
+        "https://www.datadoghq-browser-agent.com/us5/v5/datadog-rum.js",
         "DD_RUM"
       );
       window.DD_RUM.onReady(function () {
@@ -48,14 +95,13 @@
           applicationId: window.appConfig["datadog_rum_application_id"],
           // `site` refers to the Datadog site parameter of your organization
           // see https://docs.datadoghq.com/getting_started/site/
-          site: window.appConfig["datadog_rum_site_url"],
+          site: "us5.datadoghq.com",
           service: "pm-empower",
-          env: window.appConfig["datadog_env"],
+          env: window.appConfig["environment"],
           // Specify a version number to identify the deployed version of your application in Datadog
           // version: '1.0.0',
-          sessionSampleRate: window.appConfig["datadog_rum_sample_rate"],
-          sessionReplaySampleRate:
-            window.appConfig["datadog_rum_replay_sample_rate"],
+          sessionSampleRate: 100,
+          sessionReplaySampleRate: 100,
           trackUserInteractions: true,
           trackResources: true,
           trackLongTasks: true,

@@ -6,7 +6,15 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { BehaviorSubject, map } from 'rxjs';
-import { INFO_PAGES } from 'src/environments/info-pages.const';
+
+const INFO_PAGES: Record<string, string[]> = {
+  'page-not-found': ['Info.PageNotFound', 'Info.PageNotFoundDescription'],
+  'invite-not-found': ['Info.InviteNotFound', 'Info.InviteNotFoundDescription'],
+  'invite-cancelled': [
+    'Info.InviteCancelled',
+    'Info.InviteCancelledDescription',
+  ],
+};
 
 @UntilDestroy()
 @Component({

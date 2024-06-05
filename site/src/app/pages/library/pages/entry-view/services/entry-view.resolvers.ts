@@ -1,9 +1,10 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { APP_CONFIG_TOKEN } from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
+import { EntryService } from '@wbs/core/services/library';
 import { Observable } from 'rxjs';
-import { EntryService } from '../../../../../core/services/library/entry.service';
 
 export const libraryClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
@@ -31,11 +32,11 @@ export const entryUrlResolve: ResolveFn<string[]> = (
 
 export const entryApiUrlResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => EntryService.getEntryApiUrl(route);
+) => EntryService.getEntryApiUrl(inject(APP_CONFIG_TOKEN), route);
 
 export const taskApiUrlResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => EntryService.getTaskApiUrl(route);
+) => EntryService.getTaskApiUrl(inject(APP_CONFIG_TOKEN), route);
 
 function getLibraryClaims(
   data: DataServiceFactory,

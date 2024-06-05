@@ -1,12 +1,12 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { User } from '@progress/kendo-angular-conversational-ui';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { AiModel } from '@wbs/core/models';
+import { APP_CONFIG_TOKEN, AiModel, AppConfiguration } from '@wbs/core/models';
 import { Storage } from '@wbs/core/services';
-import { environment } from 'src/environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class AiStore {
+  private readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
   private readonly data = inject(DataServiceFactory);
   private readonly storage = inject(Storage);
 
@@ -47,7 +47,7 @@ export class AiStore {
   }
 
   setUserInfo(user: User): void {
-    this._isEnabled.set(environment.canTestAi.includes(user.id ?? ''));
+    this._isEnabled.set(this.appConfig.can_test_ai.includes(user.id ?? ''));
     this.you.id = user.id!;
   }
 

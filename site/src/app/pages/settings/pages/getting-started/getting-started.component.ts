@@ -9,7 +9,6 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { faCircle } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { map } from 'rxjs/operators';
-import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
 
 @Component({
   standalone: true,
@@ -20,10 +19,15 @@ import { ORG_SETTINGS_MENU_ITEMS } from 'src/environments/menu-items.const';
   imports: [CommonModule, RouterModule, TranslateModule],
 })
 export class GettingStartedComponent {
-  readonly items = ORG_SETTINGS_MENU_ITEMS.slice(1);
+  readonly items = [
+    {
+      title: 'Settings.Organization',
+      path: ['settings', 'general'],
+      icon: 'fa-building',
+    },
+  ];
   readonly org = toSignal(this.route.data.pipe(map((d) => <string>d['org'])));
   readonly faCircle = faCircle;
 
-  constructor(private readonly route: ActivatedRoute) {
-  }
+  constructor(private readonly route: ActivatedRoute) {}
 }

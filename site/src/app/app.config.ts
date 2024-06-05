@@ -16,7 +16,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { AUTH_CONFIG } from 'src/environments/auth.config';
 import { routes } from './app.routes';
 import { AiStore, UiStore } from './core/store';
 import {
@@ -24,11 +23,15 @@ import {
   ApiRequestInterceptor,
   GlobalErrorHandler,
 } from './setup';
+import { APP_CONFIG_TOKEN, AppConfiguration } from './core/models';
+
+const config: AppConfiguration = (window as any)['appConfig'];
+const apiDomain = config.api_domain;
 
 export const appConfig: ApplicationConfig = {
   providers: [
+    { provide: APP_CONFIG_TOKEN, useValue: config },
     importProvidersFrom([
-      AuthModule.forRoot(AUTH_CONFIG),
       BrowserAnimationsModule,
       HttpClientModule,
       HttpClientXsrfModule.withOptions({
@@ -41,6 +44,24 @@ export const appConfig: ApplicationConfig = {
       NgxsModule.forRoot([]),
       NgxsRouterPluginModule.forRoot(),
       TranslateModule.forRoot(),
+      AuthModule.forRoot({
+        domain: 'auth.pm-empower.com',
+        clientId: config.auth_clientId,
+        authorizationParams: {
+          connection: 'Username-Password-Authentication',
+          audience: 'https://pm-empower.us.auth0.com/api/v2/',
+          redirect_uri: `${window.location.protocol}//${window.location.host}`,
+        },
+        // The AuthHttpInterceptor configuration
+        httpInterceptor: {
+          allowedList: [
+            { uri: apiDomain + '/api/resources/*', allowAnonymous: true },
+            { uri: apiDomain + '/api/lists/*', allowAnonymous: true },
+            'https://ai.pm-empower.com/*',
+            apiDomain + '/*',
+          ],
+        },
+      }),
     ]),
     provideRouter(routes, withComponentInputBinding()),
     {

@@ -3,10 +3,8 @@ compatibility_date = "2024-05-13"
 pages_build_output_dir = "./dist"
 
 [vars]
-DD_RUM_URL = "https://www.datadoghq-browser-agent.com/us5/v5/datadog-rum.js"
-DD_RUM_SITE = "us5.datadoghq.com"
-DD_RUM_SAMPLE_RATE = "100"
-DD_RUM_REPLAY_SAMPLE_RATE = "100"
+APP_TITLE = "PM Empower"
+CAN_TEST_AI = "auth0|62a1187e776a0843f54c2c22,auth0|62a26ab9b5d49668f27fd502"
 
 [dev]
 port = 4200

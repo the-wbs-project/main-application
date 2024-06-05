@@ -6,6 +6,7 @@ import { Observable } from 'rxjs';
 import { ProjectService } from './project.service';
 import { ProjectApprovalState } from '../states';
 import { Store } from '@ngxs/store';
+import { APP_CONFIG_TOKEN } from '@wbs/core/models';
 
 export const projectClaimsResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
@@ -25,11 +26,11 @@ export const projectUrlResolve: ResolveFn<string[]> = (
 
 export const projectApiUrlResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => ProjectService.getProjectApiUrl(route);
+) => ProjectService.getProjectApiUrl(inject(APP_CONFIG_TOKEN), route);
 
 export const taskApiUrlResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
-) => ProjectService.getTaskApiUrl(route);
+) => ProjectService.getTaskApiUrl(inject(APP_CONFIG_TOKEN), route);
 
 export const approvalEnabledResolve: ResolveFn<boolean> = () =>
   inject(Store).select(ProjectApprovalState.enabled);

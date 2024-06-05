@@ -1,3 +1,4 @@
+export * from './app-configuration.model';
 export * from './db-object.model';
 export * from './device.type';
 export * from './dialog.component';

@@ -7,15 +7,13 @@ import {
   TaskCreationResults,
 } from '@wbs/core/models';
 import {
-  CategoryService,
   IdService,
   Messages,
-  Resources,
   Transformers,
   WbsNodeService,
 } from '@wbs/core/services';
-import { EntryStore, MetadataStore } from '@wbs/core/store';
-import { CategorySelection, WbsNodeView } from '@wbs/core/view-models';
+import { EntryStore } from '@wbs/core/store';
+import { WbsNodeView } from '@wbs/core/view-models';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryTaskActivityService } from './entry-task-activity.service';
@@ -23,11 +21,8 @@ import { EntryTaskActivityService } from './entry-task-activity.service';
 @Injectable()
 export class EntryTaskService {
   private readonly activity = inject(EntryTaskActivityService);
-  private readonly categoryService = inject(CategoryService);
-  private readonly metadata = inject(MetadataStore);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
-  private readonly resources = inject(Resources);
   private readonly store = inject(EntryStore);
   private readonly transformers = inject(Transformers);
 

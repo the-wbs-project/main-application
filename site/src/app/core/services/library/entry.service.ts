@@ -9,6 +9,7 @@ import {
 import { ProjectCreationComponent } from '@wbs/components/project-creation-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
+  AppConfiguration,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
@@ -19,7 +20,6 @@ import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { Observable, forkJoin } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
-import { API_PREFIX } from 'src/environments/app.config';
 
 @Injectable()
 export class EntryService {
@@ -51,9 +51,12 @@ export class EntryService {
     ];
   }
 
-  static getEntryApiUrl(route: ActivatedRouteSnapshot): string {
+  static getEntryApiUrl(
+    appConfig: AppConfiguration,
+    route: ActivatedRouteSnapshot
+  ): string {
     return [
-      API_PREFIX,
+      appConfig.api_domain,
       'api',
       'portfolio',
       Utils.getParam(route, 'org'),
@@ -65,9 +68,12 @@ export class EntryService {
     ].join('/');
   }
 
-  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
+  static getTaskApiUrl(
+    appConfig: AppConfiguration,
+    route: ActivatedRouteSnapshot
+  ): string {
     return [
-      API_PREFIX,
+      appConfig.api_domain,
       'api',
       'portfolio',
       Utils.getParam(route, 'org'),

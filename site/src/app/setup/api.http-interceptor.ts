@@ -5,13 +5,13 @@ import {
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
+import { APP_CONFIG_TOKEN, AppConfiguration } from '@wbs/core/models';
 import { Observable, of } from 'rxjs';
-import { API_PREFIX } from 'src/environments/app.config';
 
 @Injectable()
 export class ApiRequestInterceptor implements HttpInterceptor {
-  private readonly apiDomain = API_PREFIX;
+  private readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
 
   intercept(
     request: HttpRequest<any>,
@@ -22,7 +22,7 @@ export class ApiRequestInterceptor implements HttpInterceptor {
 
     if (request.url.indexOf('api/') === 0) {
       request = request.clone({
-        url: `${this.apiDomain}/${request.url}`,
+        url: `${this.appConfig.api_domain}/${request.url}`,
       });
     }
     return next.handle(request);

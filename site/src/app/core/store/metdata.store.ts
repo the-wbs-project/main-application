@@ -1,18 +1,37 @@
 import { inject, Injectable } from '@angular/core';
-import { Category, LISTS, Role, RoleIds, ROLES } from '@wbs/core/models';
+import {
+  faHeadSideBrain,
+  faListCheck,
+  faStamp,
+} from '@fortawesome/pro-solid-svg-icons';
+import {
+  APP_CONFIG_TOKEN,
+  AppConfiguration,
+  Category,
+  LISTS,
+  Role,
+  RoleIds,
+  ROLES,
+} from '@wbs/core/models';
 import { Resources, sorter } from '@wbs/core/services';
-import { ROLE_ICONS } from 'src/environments/icons';
+
+export const ROLE_ICONS = {
+  pm: faListCheck,
+  approver: faStamp,
+  sme: faHeadSideBrain,
+};
 
 @Injectable({ providedIn: 'root' })
 export class MetadataStore {
   private readonly resources = inject(Resources);
+  private readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
 
-  readonly categories = new CategoryState();
-  readonly roles = new RolesState(this.resources);
+  readonly categories = new CategoryState(this.appConfig);
+  readonly roles = new RolesState(this.appConfig, this.resources);
 }
 
 class CategoryState {
-  constructor() {
+  constructor(private readonly appConfig: AppConfiguration) {
     this.initiate();
   }
 
@@ -67,11 +86,9 @@ class CategoryState {
   }
 
   private initiate(): void {
-    //@ts-ignore
-    const config = window.appConfig;
-    let projectCats: Category[] = config.project_categories;
-    let discipline: Category[] = config.disciplines;
-    let phase: Category[] = config.phases;
+    let projectCats = [...this.appConfig.project_categories];
+    let discipline = [...this.appConfig.disciplines];
+    let phase = [...this.appConfig.phases];
 
     const categoryList = new Map<string, Category[]>();
     const categoryIcons = new Map<string, Map<string, string>>();
@@ -126,8 +143,8 @@ class CategoryState {
 }
 
 class RolesState {
-  constructor(private readonly resources: Resources) {
-    this.initiate();
+  constructor(appConfig: AppConfiguration, resources: Resources) {
+    this.initiate(appConfig, resources);
   }
 
   private _ids: RoleIds | undefined;
@@ -141,28 +158,27 @@ class RolesState {
     return this._definitions;
   }
 
-  private initiate(): void {
-    //@ts-ignore
-    const definitions: Role[] = window.appConfig.roles;
+  private initiate(appConfig: AppConfiguration, resources: Resources): void {
+    const definitions = [...appConfig.roles];
 
     const pm = definitions.find((x) => x.name === ROLES.PM)!;
     const approver = definitions.find((x) => x.name === ROLES.APPROVER)!;
     const sme = definitions.find((x) => x.name === ROLES.SME)!;
     const admin = definitions.find((x) => x.name === ROLES.ADMIN)!;
 
-    admin.description = this.resources.get('General.Admin-Full');
-    admin.abbreviation = this.resources.get('General.Admin');
+    admin.description = resources.get('General.Admin-Full');
+    admin.abbreviation = resources.get('General.Admin');
 
-    approver.description = this.resources.get('General.Approver');
-    approver.abbreviation = this.resources.get('General.Approver');
+    approver.description = resources.get('General.Approver');
+    approver.abbreviation = resources.get('General.Approver');
     approver.icon = ROLE_ICONS.approver;
 
-    pm.description = this.resources.get('General.PM-Full');
-    pm.abbreviation = this.resources.get('General.PM');
+    pm.description = resources.get('General.PM-Full');
+    pm.abbreviation = resources.get('General.PM');
     pm.icon = ROLE_ICONS.pm;
 
-    sme.description = this.resources.get('General.SME-Full');
-    sme.abbreviation = this.resources.get('General.SME');
+    sme.description = resources.get('General.SME-Full');
+    sme.abbreviation = resources.get('General.SME');
     sme.icon = ROLE_ICONS.sme;
 
     this._ids = {

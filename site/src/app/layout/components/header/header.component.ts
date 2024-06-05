@@ -3,15 +3,20 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  inject,
   input,
 } from '@angular/core';
 import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { menuIcon } from '@progress/kendo-svg-icons';
-import { Organization, User } from '@wbs/core/models';
+import {
+  APP_CONFIG_TOKEN,
+  AppConfiguration,
+  Organization,
+  User,
+} from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { environment } from 'src/environments/environment';
 import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from '../../models';
 import { HeaderProfileComponent } from '../header-profile';
 import { OrganizationListComponent } from '../organization-list.component';
@@ -32,6 +37,8 @@ import { OrganizationListComponent } from '../organization-list.component';
   ],
 })
 export class HeaderComponent {
+  readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
+
   readonly user = input.required<User>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
@@ -43,7 +50,6 @@ export class HeaderComponent {
     () => this.orgs().find((x) => x.name === this.org())!
   );
   readonly menuIcon = menuIcon;
-  readonly appTitle = environment.appTitle;
 
   private createMenu(org: string | undefined): HeaderRouteItem[] {
     if (!org) return [];
