@@ -40,7 +40,18 @@
       </td>
       }
       <td>{{ entry.ownerName }}</td>
-      <td>{{ entry.title }}</td>
+      <td>
+        {{ entry.title }}
+        @if (entry.status === 'draft') {
+        <fa-duotone-icon
+          [icon]="draftIcon"
+          kendoTooltip
+          position="top"
+          class="mg-l-10"
+          [title]="'General.Draft' | translate"
+        />
+        }
+      </td>
       <td>
         <fa-icon [icon]="entry.type | entryTypeIcon" />
         {{ entry.type | entryTypeTitle | translate }}

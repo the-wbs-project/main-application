@@ -12,14 +12,16 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faPenRuler } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { UserStore } from '@wbs/core/store';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
-import { UserStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,
@@ -27,9 +29,7 @@ import { UserStore } from '@wbs/core/store';
   templateUrl: './library-list.component.html',
   styleUrl: './library-list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: {
-    class: 'd-block overflow-auto flex-fill',
-  },
+  host: { class: 'd-block overflow-auto flex-fill' },
   imports: [
     DateTextPipe,
     EntryTypeIconPipe,
@@ -37,6 +37,7 @@ import { UserStore } from '@wbs/core/store';
     FontAwesomeModule,
     NgClass,
     RouterModule,
+    TooltipModule,
     TranslateModule,
     WatchIndicatorComponent,
   ],
@@ -45,6 +46,7 @@ export class LibraryListComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
 
+  readonly draftIcon = faPenRuler;
   readonly org = input.required<string>();
   readonly typeFilters = input<string[]>();
   readonly library = input.required<string>();
