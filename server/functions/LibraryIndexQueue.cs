@@ -1,7 +1,7 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.DataServices;
-using Wbs.Core.Services;
+using Wbs.Core.Services.Search;
 
 namespace functions
 {
