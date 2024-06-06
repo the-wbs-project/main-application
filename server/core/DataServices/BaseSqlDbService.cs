@@ -1,22 +1,20 @@
 using Microsoft.Data.SqlClient;
-using System.Data;
-using System.Text.Json;
 
 namespace Wbs.Core.DataServices;
 
 public abstract class BaseSqlDbService
 {
-    protected DateTimeOffset? DbDate(SqlDataReader reader, string column) => reader.IsDBNull(column) ? (DateTimeOffset?)null : reader.GetDateTime(column);
+    protected DateTimeOffset? DbDate(SqlDataReader reader, string column) => SqlHelpers.DbDate(reader, column);
 
-    protected T DbValue<T>(SqlDataReader reader, string column) => reader.IsDBNull(column) ? default(T) : reader.GetFieldValue<T>(column);
+    protected T DbValue<T>(SqlDataReader reader, string column) => SqlHelpers.DbValue<T>(reader, column);
 
-    protected T DbValue<T>(SqlDataReader reader, int index) => reader.IsDBNull(index) ? default(T) : reader.GetFieldValue<T>(index);
+    protected T DbValue<T>(SqlDataReader reader, int index) => SqlHelpers.DbValue<T>(reader, index);
 
-    protected T DbJson<T>(SqlDataReader reader, string column) => reader.IsDBNull(column) ? default(T) : JsonSerializer.Deserialize<T>(reader.GetString(column));
+    protected T DbJson<T>(SqlDataReader reader, string column) => SqlHelpers.DbJson<T>(reader, column);
 
-    protected T DbJson<T>(SqlDataReader reader, int index) => reader.IsDBNull(index) ? default(T) : JsonSerializer.Deserialize<T>(reader.GetString(index));
+    protected T DbJson<T>(SqlDataReader reader, int index) => SqlHelpers.DbJson<T>(reader, index);
 
-    protected object DbValue(object obj) => obj == null ? DBNull.Value : obj;
+    protected object DbValue(object obj) => SqlHelpers.DbValue(obj);
 
-    protected object DbJson(object obj) => obj == null ? (object)DBNull.Value : JsonSerializer.Serialize(obj);
+    protected object DbJson(object obj) => SqlHelpers.DbJson(obj);
 }

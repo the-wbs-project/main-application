@@ -9,6 +9,7 @@ using Wbs.Core.DataServices;
 using Wbs.Core.Services;
 using Wbs.Core.Services.Exporters;
 using Wbs.Core.Services.Importers;
+using Wbs.Core.Services.Search;
 
 var builder = WebApplication.CreateBuilder(args);
 //
@@ -90,10 +91,14 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
 builder.Services.AddSingleton<JiraSyncService>();
-builder.Services.AddSingleton<LibrarySearchIndexService>();
-builder.Services.AddSingleton<LibrarySearchService>();
 builder.Services.AddSingleton<QueueService>();
 builder.Services.AddSingleton<ResourceCopyService>();
+//
+//  Search Service
+//
+builder.Services.AddSingleton<LibrarySearchIndexService>();
+builder.Services.AddSingleton<LibrarySearchService>();
+builder.Services.AddSingleton<SearchStorageService>();
 
 var app = builder.Build();
 

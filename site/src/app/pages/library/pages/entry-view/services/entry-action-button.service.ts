@@ -1,10 +1,16 @@
 import { Injectable, inject } from '@angular/core';
 import {
+  faBooks,
   faCloudDownload,
   faCloudUpload,
+  faPencil,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { ActionButtonMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
+import {
+  ActionButtonMenuItem,
+  LIBRARY_CLAIMS,
+  LibraryEntryVersion,
+} from '@wbs/core/models';
 import { EntryService } from '@wbs/core/services/library';
 
 @Injectable()
@@ -12,9 +18,12 @@ export class EntryActionButtonService {
   private readonly entryService = inject(EntryService);
   private readonly actionCreateProject = 'createProject';
   private readonly actionDownload = 'download';
+  private readonly actionPublish = 'publish';
+  private readonly actionUnpublish = 'unpublish';
 
   buildMenu(
     entryType: string,
+    versionStatus: string,
     entryUrl: string[],
     claims: string[]
   ): ActionButtonMenuItem[] | undefined {
@@ -43,6 +52,24 @@ export class EntryActionButtonService {
         route: [...entryUrl, 'upload'],
       });
     }
+
+    if (claims.includes(LIBRARY_CLAIMS.UPDATE)) {
+      items.push({ separator: true });
+
+      if (versionStatus === 'draft') {
+        items.push({
+          action: this.actionPublish,
+          icon: faBooks,
+          text: 'Wbs.PublishToLibrary',
+        });
+      } else if (versionStatus === 'published') {
+        items.push({
+          action: this.actionUnpublish,
+          icon: faPencil,
+          text: 'Wbs.UnpublishForEditing',
+        });
+      }
+    }
     return items.length === 0 ? undefined : items;
   }
 
@@ -53,6 +80,12 @@ export class EntryActionButtonService {
         break;
       case this.actionCreateProject:
         this.entryService.createProject();
+        break;
+      case this.actionPublish:
+        this.entryService.publish();
+        break;
+      case this.actionUnpublish:
+        this.entryService.unpublish();
         break;
     }
   }

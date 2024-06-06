@@ -57,13 +57,28 @@ public class Storage
 
     public async Task SaveFileAsync(string containerName, string fileName, string data)
     {
-        logger.LogWarning($"Saving file {fileName} to container {containerName}");
+        logger.LogInformation($"Saving file {fileName} to container {containerName}");
 
         var container = await GetContainerAsync(containerName);
         var blob = container.GetBlobClient(fileName);
 
         await blob.DeleteIfExistsAsync();
         await blob.UploadAsync(new BinaryData(data));
+    }
+
+    public Task DeleteIfExistsAsync(string containerName, string[] folders, string fileName)
+    {
+        return DeleteIfExistsAsync(containerName, string.Join('/', folders) + "/" + fileName);
+    }
+
+    public async Task DeleteIfExistsAsync(string containerName, string fileName)
+    {
+        logger.LogInformation($"deleting file {fileName} to container {containerName}");
+
+        var container = await GetContainerAsync(containerName);
+        var blob = container.GetBlobClient(fileName);
+
+        await blob.DeleteIfExistsAsync();
     }
 
     private async Task<BlobContainerClient> GetContainerAsync(string containerName)

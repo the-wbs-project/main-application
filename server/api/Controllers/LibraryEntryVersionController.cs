@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Data.SqlClient;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
-using Wbs.Core.Services;
+using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 

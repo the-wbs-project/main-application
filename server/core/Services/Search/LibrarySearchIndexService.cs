@@ -1,6 +1,4 @@
-using System.Text.Json;
 using Azure;
-using Azure.Search.Documents;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
 using Microsoft.Data.SqlClient;
@@ -8,9 +6,10 @@ using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
+using Wbs.Core.Services.Transformers;
 using Wbs.Core.ViewModels;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.Services.Search;
 
 public class LibrarySearchIndexService
 {
@@ -23,8 +22,9 @@ public class LibrarySearchIndexService
     private readonly WatcherLibraryEntryDataService watcherDataService;
     private readonly ResourcesDataService resourcesDataService;
     private readonly ListDataService listDataService;
+    private readonly SearchStorageService storage;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, SearchStorageService storage)
     {
         this.searchConfig = searchConfig;
         this.userDataService = userDataService;
@@ -35,6 +35,7 @@ public class LibrarySearchIndexService
         this.watcherDataService = watcherDataService;
         this.resourcesDataService = resourcesDataService;
         this.listDataService = listDataService;
+        this.storage = storage;
     }
 
     public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)
@@ -53,7 +54,11 @@ public class LibrarySearchIndexService
         {
             var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
 
-            if (entry == null) continue;
+            if (entry == null)
+            {
+                await storage.VerifyDoesntExist(searchConfig.LibraryIndex, owner, entryId);
+                continue;
+            }
 
             var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
             var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
@@ -72,54 +77,17 @@ public class LibrarySearchIndexService
         Dictionary<string, string> disciplineLabels,
         Dictionary<string, UserDocument> userCache = null)
     {
-        var users = await GetUsersAsync(watcherIds.Concat([entry.AuthorId]).Distinct(), userCache);
+        var owner = await organizationDataService.GetOrganizationByNameAsync(entry.OwnerId);
+        var users = await userDataService.GetUserDocumentsAsync(watcherIds.Concat([entry.AuthorId]).Distinct(), userCache);
+        var typeLabel = GetEntryTypeLabel(entry.Type, resources);
         var disciplines = new List<string>();
 
         foreach (var discipline in version.disciplines)
-        {
             disciplines.Add(discipline.isCustom ? discipline.label : disciplineLabels[discipline.id]);
-        }
 
-        var doc = new LibrarySearchDocument
-        {
-            EntryId = entry.EntryId,
-            Version = entry.Version,
-            OwnerId = entry.OwnerId,
-            OwnerName = (await organizationDataService.GetOrganizationByNameAsync(entry.OwnerId))?.DisplayName,
-            Title_En = entry.Title,
-            Description_En = entry.Description,
-            TypeId = entry.Type,
-            TypeName = GetEntryTypeLabel(entry.Type, resources),
-            LastModified = entry.LastModified,
-            StatusId = entry.Status,
-            Visibility = entry.Visibility,
-            Disciplines_En = disciplines.ToArray(),
-            //
-            //  Users
-            //
-            Author = users.ContainsKey(entry.AuthorId) ? new SortableUserDocument(users[entry.AuthorId]) : null,
-            Watchers = watcherIds
-                .Where(x => users.ContainsKey(x))
-                .Select(x => users[x])
-                .ToArray(),
-        };
+        var doc = LibrarySearchTransformer.CreateDocument(entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users);
 
-        var tasks = new List<TaskSearchDocument>();
-
-        foreach (var entryTask in entryTasks)
-        {
-            tasks.Add(new TaskSearchDocument
-            {
-                TaskId = entryTask.id,
-                Title_En = entryTask.title,
-                Description_En = entryTask.description,
-            });
-        }
-
-        doc.Tasks = tasks.ToArray();
-
-        var results = await GetSearchClient(searchConfig.LibraryIndex).MergeOrUploadDocumentsAsync(
-            new List<LibrarySearchDocument> { doc });
+        await storage.SaveDocumentAsync(searchConfig.LibraryIndex, entry.OwnerId, entry.EntryId, doc);
     }
 
     public async Task VerifyIndexAsync()
@@ -143,6 +111,7 @@ public class LibrarySearchIndexService
             await indexClient.CreateIndexAsync(definition);
         }
     }
+
     private static string GetEntryTypeLabel(string type, Resources resources)
     {
         if (type == "project") return resources.Get("General.Project");
@@ -152,57 +121,8 @@ public class LibrarySearchIndexService
         return "";
     }
 
-    private async Task<Dictionary<string, UserDocument>> GetUsersAsync(IEnumerable<string> userIds, Dictionary<string, UserDocument> userCache = null)
-    {
-        var users = new Dictionary<string, UserDocument>();
-        var calls = new List<Task<Member>>();
-
-        foreach (var userId in userIds)
-        {
-            if (userCache != null && userCache.ContainsKey(userId))
-            {
-                users.Add(userId, userCache[userId]);
-                continue;
-            }
-            calls.Add(userDataService.GetUserAsync(userId));
-
-            if (calls.Count == 25)
-            {
-                var results = await Task.WhenAll(calls);
-
-                foreach (var result in results)
-                {
-                    var model = new UserDocument(result.Id, result.Name);
-                    users.Add(result.Id, model);
-
-                    if (userCache != null) userCache.Add(result.Id, model);
-                }
-                calls.Clear();
-            }
-        }
-        if (calls.Count > 0)
-        {
-            var results = await Task.WhenAll(calls);
-
-            foreach (var result in results)
-            {
-                var model = new UserDocument(result.Id, result.Name);
-                users.Add(result.Id, model);
-
-                if (userCache != null) userCache.Add(result.Id, model);
-            }
-        }
-
-        return users;
-    }
-
     private SearchIndexClient GetIndexClient()
     {
         return new SearchIndexClient(new Uri(searchConfig.Url), new AzureKeyCredential(searchConfig.Key));
-    }
-
-    private SearchClient GetSearchClient(string indexName)
-    {
-        return GetIndexClient().GetSearchClient(indexName);
     }
 }

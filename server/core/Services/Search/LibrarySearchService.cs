@@ -4,9 +4,10 @@ using Azure.Search.Documents.Indexes;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.Models.Search;
+using Wbs.Core.Services.Transformers;
 using Wbs.Core.ViewModels;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.Services.Search;
 
 public class LibrarySearchService
 {
@@ -27,7 +28,7 @@ public class LibrarySearchService
         {
             IncludeTotalCount = true,
             Filter = filters.ToFilterString(owner),
-            Select = { "EntryId", "Version", "OwnerId", "OwnerName", "Title_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En" },
+            Select = { "EntryId", "Version", "OwnerId", "OwnerName", "Title_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En", "StatusId" },
             OrderBy = { "LastModified desc" }
         };
 
@@ -39,21 +40,7 @@ public class LibrarySearchService
             var doc = x.Document;
             viewModels.Add(new ApiSearchResult<LibraryEntryViewModel>
             {
-                Document = new LibraryEntryViewModel
-                {
-                    EntryId = doc.EntryId,
-                    AuthorId = doc.Author.Id,
-                    AuthorName = doc.Author.Name,
-                    Title = doc.Title_En,
-                    Description = doc.Description_En,
-                    Type = doc.TypeId,
-                    LastModified = doc.LastModified,
-                    Status = doc.StatusId,
-                    OwnerId = doc.OwnerId,
-                    OwnerName = doc.OwnerName,
-                    Visibility = doc.Visibility,
-                    Version = doc.Version
-                },
+                Document = LibraryEntryViewModelTransformer.ToViewModel(doc),
                 Highlights = x.Highlights,
                 Score = x.Score,
                 SemanticSearch = x.SemanticSearch

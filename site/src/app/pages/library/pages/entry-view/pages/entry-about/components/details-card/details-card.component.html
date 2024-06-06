@@ -1,4 +1,4 @@
-@if (entry(); as entry) { @if (version(); as version) {
+@if (store.entry()!; as entry) { @if (store.version()!; as version) {
 <div class="card-header">
   {{ "General.Details" | translate }}
 </div>
@@ -40,7 +40,7 @@
     <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
       {{ "General.Status" | translate }} :
     </span>
-    <span> Draft </span>
+    <span> {{ version.status | libraryStatus | translate }} </span>
   </p>
 
   <p class="ms-md-4 ms-0 mb-2">
@@ -48,7 +48,7 @@
       {{ "Wbs.TaskCount" | translate }} :
     </span>
     <span>
-      {{ tasks().length }}
+      {{ store.tasks()!.length }}
     </span>
   </p>
   <p class="ms-md-4 ms-0 mb-2">

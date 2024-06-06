@@ -8,6 +8,7 @@ using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Logging;
 using Wbs.Core.Services;
+using Wbs.Core.Services.Search;
 using Wbs.Functions.Configuration;
 
 var config = new ConfigurationBuilder()
@@ -57,12 +58,15 @@ var host = new HostBuilder()
         services.AddSingleton<ListDataService>();
         services.AddSingleton<OrganizationDataService>();
         services.AddSingleton<ResourcesDataService>();
+        services.AddSingleton<Storage>();
         services.AddSingleton<UserDataService>();
         services.AddSingleton<WatcherLibraryEntryDataService>();
         //
-        //  Services
+        //  Search Services
         //
         services.AddSingleton<LibrarySearchIndexService>();
+        services.AddSingleton<LibrarySearchService>();
+        services.AddSingleton<SearchStorageService>();
     })
     .Build();
 

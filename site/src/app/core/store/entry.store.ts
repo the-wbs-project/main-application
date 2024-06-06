@@ -72,15 +72,15 @@ export class EntryStore {
   }
 
   setEntry(entry: LibraryEntry): void {
-    this._entry.set(entry);
+    this._entry.set({ ...entry });
   }
 
   setVersion(version: LibraryEntryVersion): void {
-    this._version.set(version);
+    this._version.set({ ...version });
   }
 
   setTasks(tasks: LibraryEntryNode[]): void {
-    this._tasks.set(tasks);
+    this._tasks.set([...tasks]);
 
     const entry = this._entry();
     const version = this._version();

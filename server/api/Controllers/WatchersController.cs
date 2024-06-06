@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
-using Wbs.Core.Services;
+using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 

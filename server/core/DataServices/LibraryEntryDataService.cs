@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Wbs.Core.Models;
+using Wbs.Core.Services.Transformers;
 using Wbs.Core.ViewModels;
 
 namespace Wbs.Core.DataServices;
@@ -9,18 +10,14 @@ public class LibraryEntryDataService : BaseSqlDbService
 {
     public async Task<List<LibraryEntryViewModel>> GetByOwnerAsync(SqlConnection conn, string owner)
     {
-        var results = new List<LibraryEntryViewModel>();
-
         var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryView] WHERE [OwnerId] = @Owner ORDER BY [LastModified] DESC", conn);
 
         cmd.Parameters.AddWithValue("@Owner", owner);
 
         using (var reader = await cmd.ExecuteReaderAsync())
         {
-            while (reader.Read())
-                results.Add(ToViewModel(reader));
+            return LibraryEntryTransformer.ToViewModelList(reader);
         }
-        return results;
     }
 
     public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(SqlConnection conn, string owner, string entryId)
@@ -33,7 +30,7 @@ public class LibraryEntryDataService : BaseSqlDbService
         using (var reader = await cmd.ExecuteReaderAsync())
         {
             if (reader.Read())
-                return ToViewModel(reader);
+                return LibraryEntryTransformer.ToViewModel(reader);
             else
                 return null;
         }
@@ -49,7 +46,7 @@ public class LibraryEntryDataService : BaseSqlDbService
         using (var reader = await cmd.ExecuteReaderAsync())
         {
             if (await reader.ReadAsync())
-                return ToModel(reader);
+                return LibraryEntryTransformer.ToModel(reader);
             else
                 return null;
         }
@@ -85,36 +82,5 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Editors", DbValue(libraryEntry.editors));
 
         await cmd.ExecuteNonQueryAsync();
-    }
-
-    private LibraryEntry ToModel(SqlDataReader reader)
-    {
-        return new LibraryEntry
-        {
-            id = DbValue<string>(reader, "Id"),
-            publishedVersion = DbValue<int?>(reader, "PublishedVersion"),
-            owner = DbValue<string>(reader, "OwnerId"),
-            type = DbValue<string>(reader, "Type"),
-            author = DbValue<string>(reader, "Author"),
-            visibility = DbValue<string>(reader, "Visibility"),
-            editors = DbJson<string[]>(reader, "Editors")
-        };
-    }
-
-    private LibraryEntryViewModel ToViewModel(SqlDataReader reader)
-    {
-        return new LibraryEntryViewModel
-        {
-            EntryId = DbValue<string>(reader, "EntryId"),
-            Version = DbValue<int>(reader, "Version"),
-            OwnerId = DbValue<string>(reader, "OwnerId"),
-            Type = DbValue<string>(reader, "Type"),
-            Title = DbValue<string>(reader, "Title"),
-            Description = DbValue<string>(reader, "Description"),
-            Status = DbValue<string>(reader, "Status"),
-            AuthorId = DbValue<string>(reader, "Author"),
-            Visibility = DbValue<string>(reader, "Visibility"),
-            LastModified = DbValue<DateTimeOffset>(reader, "LastModified")
-        };
     }
 }

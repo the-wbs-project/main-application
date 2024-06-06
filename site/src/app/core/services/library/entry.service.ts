@@ -17,7 +17,7 @@ import {
 } from '@wbs/core/models';
 import { Messages, Utils } from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
 
@@ -206,7 +206,7 @@ export class EntryService {
     version.disciplines = disciplines;
 
     return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.entryStore.setVersion({ ...version })),
+      tap(() => this.entryStore.setVersion(version)),
       switchMap(() =>
         this.activity.entryDisciplinesChanged(
           entry.id,
@@ -216,5 +216,66 @@ export class EntryService {
         )
       )
     );
+  }
+
+  publish(): void {
+    this.messages.confirm
+      .show('General.Confirm', 'Wbs.ConfirmPublishToLibrary')
+      .pipe(
+        switchMap((answer) => {
+          if (!answer) return of(answer);
+
+          const entry = this.entry;
+          const version = this.version;
+
+          entry.publishedVersion = version.version;
+          version.status = 'published';
+
+          return this.data.libraryEntries.putAsync(entry).pipe(
+            switchMap(() =>
+              this.data.libraryEntryVersions.putAsync(entry.owner, version)
+            ),
+            tap(() =>
+              this.messages.report.success(
+                'General.Success',
+                'Wbs.PublishedToLibraryMessage'
+              )
+            )
+          );
+        })
+      )
+      .subscribe();
+  }
+
+  unpublish(): void {
+    this.messages.confirm
+      .show('General.Confirm', 'Wbs.ConfirmUnPublishFromLibrary')
+      .pipe(
+        switchMap((answer) => {
+          if (!answer) return of(answer);
+
+          const entry = this.entry;
+          const version = this.version;
+
+          entry.publishedVersion = undefined;
+          version.status = 'draft';
+
+          return this.data.libraryEntries.putAsync(entry).pipe(
+            switchMap(() =>
+              this.data.libraryEntryVersions.putAsync(entry.owner, version)
+            ),
+            tap(() => {
+              this.entryStore.setEntry(entry);
+              this.entryStore.setVersion(version);
+
+              this.messages.report.success(
+                'General.Success',
+                'Wbs.UnpublishedFromLibraryMessage'
+              );
+            })
+          );
+        })
+      )
+      .subscribe();
   }
 }
