@@ -40,11 +40,27 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
 
     public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
     {
+        var saves = new List<Task>();
+
         foreach (var upsert in record.upserts)
-            await SetAsync(conn, owner, entryId, entryVersion, upsert);
+            saves.Add(SetAsync(conn, owner, entryId, entryVersion, upsert));
 
         foreach (var removeId in record.removeIds)
-            await DeleteAsync(conn, owner, entryId, entryVersion, removeId);
+            saves.Add(DeleteAsync(conn, owner, entryId, entryVersion, removeId));
+        //
+        //  Now run the saves
+        //
+        var queue = new List<Task>();
+        foreach (var save in saves)
+        {
+            queue.Add(save);
+            if (queue.Count >= 10)
+            {
+                await Task.WhenAll(queue);
+                queue.Clear();
+            }
+        }
+        if (queue.Count > 0) await Task.WhenAll(queue);
     }
 
     public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, LibraryEntryNode node)

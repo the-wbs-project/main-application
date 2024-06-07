@@ -87,7 +87,8 @@ public class LibraryEntryVersionController : ControllerBase
                     return BadRequest("Library Entry not found for the credentials provided.");
 
                 await versionDataService.SetAsync(conn, owner, model);
-                await IndexLibraryEntryAsync(conn, owner, entryId);
+
+                searchIndexService.AddToLibraryQueue(owner, entryId);
 
                 return NoContent();
             }
@@ -200,12 +201,5 @@ public class LibraryEntryVersionController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
-
-    private async Task IndexLibraryEntryAsync(SqlConnection conn, string owner, string entryId)
-    {
-        await searchIndexService.VerifyIndexAsync();
-        await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
-    }
-
 }
 

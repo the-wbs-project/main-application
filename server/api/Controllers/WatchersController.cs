@@ -70,8 +70,7 @@ public class WatchersController : ControllerBase
                 else if (data.action == "delete")
                     await libraryDataService.DeleteAsync(conn, data.ownerId, data.entryId, data.watcherId);
 
-                await searchIndexService.VerifyIndexAsync();
-                await searchIndexService.PushToSearchAsync(conn, data.ownerId, [data.entryId]);
+                searchIndexService.AddToLibraryQueue(data.ownerId, data.entryId);
             }
             return NoContent();
         }

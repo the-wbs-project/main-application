@@ -72,7 +72,8 @@ public class LibraryEntryNodeController : ControllerBase
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
                 await nodeDataService.SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
-                await IndexLibraryEntryAsync(conn, owner, entryId);
+
+                searchIndexService.AddToLibraryQueue(owner, entryId);
 
                 return NoContent();
             }
@@ -196,7 +197,7 @@ public class LibraryEntryNodeController : ControllerBase
             {
                 var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, owner, entryId, entryVersion, nodeId, options);
 
-                await IndexLibraryEntryAsync(conn, owner, newId);
+                searchIndexService.AddToLibraryQueue(owner, newId);
 
                 return Ok(newId);
             }
@@ -207,11 +208,5 @@ public class LibraryEntryNodeController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
-    private async Task IndexLibraryEntryAsync(SqlConnection conn, string owner, string entryId)
-    {
-        await searchIndexService.VerifyIndexAsync();
-        await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
-    }
-
 }
 

@@ -129,8 +129,7 @@ public class ProjectController : ControllerBase
             {
                 var newId = await importLibraryEntryService.ImportFromProjectAsync(conn, owner, projectId, options);
 
-                await searchIndexService.VerifyIndexAsync();
-                await searchIndexService.PushToSearchAsync(conn, owner, [newId]);
+                searchIndexService.AddToLibraryQueue(owner, newId);
 
                 return Ok(newId);
             }

@@ -23,8 +23,9 @@ public class LibrarySearchIndexService
     private readonly ResourcesDataService resourcesDataService;
     private readonly ListDataService listDataService;
     private readonly SearchStorageService storage;
+    private readonly QueueService queueService;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, SearchStorageService storage)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, SearchStorageService storage, QueueService queueService)
     {
         this.searchConfig = searchConfig;
         this.userDataService = userDataService;
@@ -36,6 +37,12 @@ public class LibrarySearchIndexService
         this.resourcesDataService = resourcesDataService;
         this.listDataService = listDataService;
         this.storage = storage;
+        this.queueService = queueService;
+    }
+
+    public void AddToLibraryQueue(string owner, string id)
+    {
+        queueService.Add("search-library-item", $"{owner}|{id}");
     }
 
     public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)

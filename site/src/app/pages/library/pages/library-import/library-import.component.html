@@ -1,5 +1,17 @@
+<div class="pd-10">
+  <textarea #text class="w-100" rows="10"></textarea>
+  <br />
+  <br />
+  <button
+    class="btn btn-primary"
+    [disabled]="saving()"
+    (click)="import(text.value)"
+  >
+    @if (saving()) { Saving <fa-icon [icon]="spinIcon" [spin]="true" />
+    } @else { Import }
+  </button>
 
-<textarea #text class="w-100" rows="10" ></textarea>
-<br>
-<br>
-<button class="btn btn-primary" (click)="import(text.value)">Import</button>
+  @if (error(); as error) {
+  <div class="alert alert-danger mt-3">{{ error }}</div>
+  }
+</div>

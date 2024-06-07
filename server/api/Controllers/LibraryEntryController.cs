@@ -70,7 +70,8 @@ public class LibraryEntryController : ControllerBase
             using (var conn = await db.CreateConnectionAsync())
             {
                 await entryDataService.SetAsync(conn, entry);
-                await IndexLibraryEntryAsync(conn, owner, entryId);
+                
+                searchIndexService.AddToLibraryQueue(owner, entryId);
             }
             return Accepted();
         }
@@ -100,12 +101,4 @@ public class LibraryEntryController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
-
-    private async Task IndexLibraryEntryAsync(SqlConnection conn, string owner, string entryId)
-    {
-        await searchIndexService.VerifyIndexAsync();
-        await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
-    }
-
 }
-
