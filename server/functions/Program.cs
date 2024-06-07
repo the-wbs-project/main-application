@@ -62,6 +62,10 @@ var host = new HostBuilder()
         services.AddSingleton<UserDataService>();
         services.AddSingleton<WatcherLibraryEntryDataService>();
         //
+        //  Services
+        //
+        services.AddSingleton<QueueService>();
+        //
         //  Search Services
         //
         services.AddSingleton<LibrarySearchIndexService>();

@@ -553,6 +553,7 @@
       "NodeLevelStats": "Node Level Stats",
       "InsertDescription": "Insert Description Here",
       "DeleteTask": "Delete Task",
+      "NoTaskFound": "No Task Found",
       "DeleteTaskMessage": "Select A Reason...",
       "DeleteList_Scope": "Not In Scope",
       "DeleteList_Sub": "Subcontractor Will Perform",
