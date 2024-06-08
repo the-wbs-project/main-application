@@ -1,11 +1,6 @@
 import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
-import {
-  DragValidationResults,
-  LibraryEntryNode,
-  ProjectNode,
-  RebuildResults,
-} from '@wbs/core/models';
+import { DragValidationResults, RebuildResults } from '@wbs/core/models';
 import { WbsNodeService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 

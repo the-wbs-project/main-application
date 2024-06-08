@@ -55,6 +55,8 @@ export class SaveSectionComponent {
   readonly faExclamationTriangle = faExclamationTriangle;
   readonly done = output<void>();
   readonly owner = input.required<string>();
+  readonly entryId = input.required<string>();
+  readonly version = input.required<number>();
   readonly newId = input.required<string>();
   readonly templateTitle = input.required<string>();
   readonly category = input.required<Category>();
@@ -95,6 +97,10 @@ export class SaveSectionComponent {
     ).categories;
 
     const now = new Date();
+    const owner = this.owner();
+    const entryId = this.entryId();
+    const version = this.version();
+
     const project: Project = {
       id: this.newId(),
       owner: this.owner(),
@@ -108,6 +114,7 @@ export class SaveSectionComponent {
       status: PROJECT_STATI.PLANNING,
       description: '',
       createdBy: this.userId()!,
+      libraryLink: { owner, entryId, version },
     };
     const tasks: ProjectNode[] = [];
     const parentIdConversion = new Map<string, string>();
@@ -128,6 +135,7 @@ export class SaveSectionComponent {
         parentId: task.parentId,
         phaseIdAssociation: task.phaseIdAssociation,
         tags: task.tags,
+        libraryTaskLink: { owner, entryId, version, taskId: task.id },
       });
     }
     //

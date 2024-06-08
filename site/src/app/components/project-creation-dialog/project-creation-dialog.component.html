@@ -87,6 +87,8 @@
       <div class="d-inline-block w-100 mx-wd-800">
         <wbs-save-section
           [owner]="owner()!"
+          [entryId]="version()!.entryId"
+          [version]="version()!.version"
           [tasks]="tasks()"
           [newId]="newId"
           [pmIds]="pmIds()"

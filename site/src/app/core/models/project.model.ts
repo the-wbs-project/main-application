@@ -1,4 +1,5 @@
 import { PROJECT_NODE_VIEW_TYPE, PROJECT_STATI_TYPE } from './enums';
+import { LibraryLink } from './library-link.model';
 import { ProjectCategory } from './project-category.type';
 
 export interface UserRole {
@@ -20,4 +21,5 @@ export interface Project {
   category: string;
   disciplines: ProjectCategory[];
   roles: UserRole[];
+  libraryLink?: LibraryLink;
 }

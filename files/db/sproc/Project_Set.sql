@@ -12,7 +12,8 @@ CREATE PROCEDURE [dbo].[Project_Set]
     @Category nvarchar(50),
     @Disciplines nvarchar(MAX),
     @Roles nvarchar(MAX),
-    @ApprovalStarted bit = NULL
+    @ApprovalStarted bit = NULL,
+    @LibraryLink nvarchar(MAX)
 AS
 BEGIN
 IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
@@ -28,13 +29,14 @@ IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
             [Category] = @Category,
             [Disciplines] = @Disciplines,
             [Roles] = @Roles,
-            [ApprovalStarted] = @ApprovalStarted
+            [ApprovalStarted] = @ApprovalStarted,
+            [LibraryLink] = @LibraryLink
         WHERE [Id] = @Id
     END
 ELSE
     BEGIN
         INSERT INTO [dbo].[Projects]
-        VALUES (@Id, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @Roles, @ApprovalStarted)
+        VALUES (@Id, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @Roles, @ApprovalStarted, @LibraryLink)
     END
 END
 GO

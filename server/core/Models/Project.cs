@@ -14,5 +14,6 @@ public class Project
     public string category { get; set; }
     public Category[] disciplines { get; set; }
     public ProjectRole[] roles { get; set; }
+    public LibraryLink libraryLink { get; set; }
     public bool? approvalStarted { get; set; }
 }

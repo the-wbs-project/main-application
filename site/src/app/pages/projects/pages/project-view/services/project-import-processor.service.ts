@@ -2,7 +2,6 @@ import { Injectable, inject } from '@angular/core';
 import {
   LibraryEntryNode,
   LibraryImportResults,
-  ProjectCategory,
   ProjectNode,
 } from '@wbs/core/models';
 import { IdService, SignalStore, sorter } from '@wbs/core/services';
@@ -47,7 +46,7 @@ export class ProjectImportProcessorService {
         upserts.push(allSiblings[i]);
       }
     }
-    if (results.importDisciplines) {
+    if (results.importDisciplines && results.disciplines) {
       //
       //  Let's make sure all disciplines added to the task are now in the project.
       //
@@ -94,6 +93,12 @@ export class ProjectImportProcessorService {
               version: results.version.version,
             }
           : undefined,
+        libraryTaskLink: {
+          owner: results.owner,
+          entryId: results.version.entryId,
+          version: results.version.version,
+          taskId: task.id,
+        },
       };
       upserts.push(pTask);
 

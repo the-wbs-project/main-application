@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -78,6 +77,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly view = model<number>(0);
   readonly newId = IdService.generate();
   readonly owner = signal<string | undefined>(undefined);
+  readonly version = signal<LibraryEntryVersion | undefined>(undefined);
   readonly members = signal<Member[]>([]);
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
@@ -137,6 +137,7 @@ export class ProjectCreationComponent extends DialogContentBase {
       this.tasks.set(tasks);
       this.pmIds.set([this.userId()!]);
       this.owner.set(org);
+      this.version.set(version);
       this.projectTitle.set(version.title);
       this.disciplines.update((disciplines) => {
         disciplines = this.catService.buildDisciplines(version.disciplines);

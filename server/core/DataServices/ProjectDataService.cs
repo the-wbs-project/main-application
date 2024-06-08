@@ -67,6 +67,7 @@ public class ProjectDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Category", project.category);
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(project.disciplines));
         cmd.Parameters.AddWithValue("@Roles", DbJson(project.roles));
+        cmd.Parameters.AddWithValue("@LibraryLink", DbJson(project.libraryLink));
         cmd.Parameters.AddWithValue("@ApprovalStarted", DbValue(project.approvalStarted));
 
         await cmd.ExecuteNonQueryAsync();
@@ -89,6 +90,7 @@ public class ProjectDataService : BaseSqlDbService
 
             disciplines = DbJson<Category[]>(reader, "Disciplines"),
             roles = DbJson<ProjectRole[]>(reader, "Roles"),
+            libraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
 
             approvalStarted = DbValue<bool?>(reader, "ApprovalStarted"),
         };

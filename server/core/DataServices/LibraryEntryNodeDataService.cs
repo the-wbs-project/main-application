@@ -80,6 +80,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Order", node.order);
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
         cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
+        cmd.Parameters.AddWithValue("@LibraryTaskLink", DbJson(node.libraryTaskLink));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -118,6 +119,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
             order = DbValue<int>(reader, "Order"),
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
             libraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
+            libraryTaskLink = DbJson<LibraryTaskLink>(reader, "LibraryTaskLink"),
         };
     }
 }
