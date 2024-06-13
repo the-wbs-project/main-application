@@ -17,7 +17,7 @@ import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
 import { routes } from './app.routes';
-import { AiStore, UiStore } from './core/store';
+import { UiStore } from './core/store';
 import {
   AppInitializerFactory,
   ApiRequestInterceptor,
@@ -67,7 +67,7 @@ export const appConfig: ApplicationConfig = {
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [UiStore, AiStore],
+      deps: [UiStore],
       multi: true,
     },
     {

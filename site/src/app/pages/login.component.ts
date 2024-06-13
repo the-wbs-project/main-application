@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
@@ -13,16 +13,11 @@ import { LoaderModule } from '@progress/kendo-angular-indicators';
   </div>`,
   imports: [LoaderModule, RouterModule],
 })
-export class LoginComponent implements OnInit {
-  constructor(
-    private readonly auth: AuthService,
-    private readonly route: ActivatedRoute
-  ) {}
+export class LoginComponent {
+  constructor(auth: AuthService, route: ActivatedRoute) {
+    const { organization, invitation } = route.snapshot.queryParams;
 
-  ngOnInit(): void {
-    const { organization, invitation } = this.route.snapshot.queryParams;
-
-    this.auth.loginWithRedirect({
+    auth.loginWithRedirect({
       authorizationParams: {
         organization,
         invitation,

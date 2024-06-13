@@ -1,10 +1,9 @@
-import { AiStore, UiStore } from '@wbs/core/store';
+import { UiStore } from '@wbs/core/store';
 
 export class AppInitializerFactory {
-  static run(uiStore: UiStore, aiStore: AiStore) {
+  static run(uiStore: UiStore) {
     return () => {
       uiStore.setup();
-      aiStore.setup();
     };
   }
 }

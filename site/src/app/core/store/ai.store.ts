@@ -34,21 +34,22 @@ export class AiStore {
     return this._model;
   }
 
-  setup(): void {
-    this.data.ai.getModelsAsync('text').subscribe((models) => {
-      this._models.set(models);
-
-      const currentModelId = this.getCurrentModel();
-
-      this.setModel(
-        models.find((x) => x.model === currentModelId) ?? models[0]
-      );
-    });
-  }
-
   setUserInfo(user: User): void {
-    this._isEnabled.set(this.appConfig.can_test_ai.includes(user.id ?? ''));
+    const enabled = this.appConfig.can_test_ai.includes(user.id ?? '');
+    this._isEnabled.set(enabled);
     this.you.id = user.id!;
+
+    if (enabled) {
+      this.data.ai.getModelsAsync('text').subscribe((models) => {
+        this._models.set(models);
+
+        const currentModelId = this.getCurrentModel();
+
+        this.setModel(
+          models.find((x) => x.model === currentModelId) ?? models[0]
+        );
+      });
+    }
   }
 
   setModel(model: AiModel): void {
