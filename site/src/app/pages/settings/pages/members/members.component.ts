@@ -74,9 +74,12 @@ export class MembersComponent {
 
     this.uiStore.setBreadcrumbs([
       { text: 'General.Settings' },
-      { text: 'General.Users' },
+      { text: 'General.Members' },
     ]);
-    this.title.setTitle(['General.Settings', 'General.Members']);
+    this.title.setTitle([
+      { text: 'General.Settings' },
+      { text: 'General.Members' },
+    ]);
   }
 
   startInvite(): void {
