@@ -51,8 +51,6 @@ public class QueueService
 
         messages.Clear();
 
-        logger.LogError($"Flushing {current.Count} queues");
-
         foreach (var queueName in current.Keys)
         {
             var queue = new QueueClient(config.QueueConnectionString, queueName, new QueueClientOptions

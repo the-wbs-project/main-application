@@ -172,7 +172,7 @@ public class LibraryEntryVersionController : ControllerBase
 
     [Authorize]
     [HttpPut("{entryVersion}/resources/{resourceId}/file")]
-    public async Task<IActionResult> PutNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile file)
+    public async Task<IActionResult> PutResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile file)
     {
         try
         {
