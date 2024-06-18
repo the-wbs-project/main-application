@@ -420,7 +420,8 @@
       "ByDiscipline": "By Discipline",
       "PhaseSettingsInfo": "What are the phases of this project?",
       "DisciplineSettingsInfoProject": "What disciplines are associated with this project?",
-      "DisciplineSettingsInfoTask": "Who will be performing this task?"
+      "DisciplineSettingsInfoTask": "Who will be performing this task?",
+      "CancelProjectSuccess": "The project was successfully cancelled."
     }
   },
   {

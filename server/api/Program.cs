@@ -18,11 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Configuration.AddAzureAppConfiguration(options =>
 {
-    options.Connect(builder.Configuration["AppConfig:ConnectionString"])
+    var configBuilder = options.Connect(builder.Configuration["AppConfig:ConnectionString"])
         // Load configuration values with no label
-        .Select(KeyFilter.Any, LabelFilter.Null)
-        // Override with any configuration values specific to current hosting env
-        .Select(KeyFilter.Any, builder.Configuration["AppConfig:Environment"]);
+        .Select(KeyFilter.Any, LabelFilter.Null);
+
+    // Override with any configuration values specific to current hosting env
+    foreach (var env in builder.Configuration["AppConfig:Environments"].Split(","))
+    {
+        configBuilder = configBuilder.Select(KeyFilter.Any, env);
+    }
 });
 builder.Logging.AddProvider(new DataDogLoggerProvider(
     new DatadogConfig(builder.Configuration),

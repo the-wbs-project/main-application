@@ -4,13 +4,12 @@
     <TargetFramework>net8.0</TargetFramework>
     <Nullable>disable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
-    <DockerComposeProjectPath>docker-compose.dcproj</DockerComposeProjectPath>
     <UserSecretsId>817c8593-20ff-49a8-b3be-4ea19c392c7d</UserSecretsId>
     <DebugType>full</DebugType>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'https' " />
-  <PropertyGroup Condition=" '$(RunConfiguration)' == 'http' " />
+  <PropertyGroup Condition="'$(RunConfiguration)' == 'https'" />
+  <PropertyGroup Condition="'$(RunConfiguration)' == 'http'" />
   <ItemGroup>
     <ProjectReference Include="..\core\core.csproj" />
   </ItemGroup>

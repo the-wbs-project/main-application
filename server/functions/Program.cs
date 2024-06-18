@@ -16,11 +16,15 @@ var config = new ConfigurationBuilder()
     .AddEnvironmentVariables()
     .AddAzureAppConfiguration(options =>
     {
-        options.Connect(Environment.GetEnvironmentVariable("AppConfig:ConnectionString"))
+        var configBuilder = options.Connect(Environment.GetEnvironmentVariable("AppConfig:ConnectionString"))
             // Load configuration values with no label
-            .Select(KeyFilter.Any, LabelFilter.Null)
-            // Override with any configuration values specific to current hosting env
-            .Select(KeyFilter.Any, Environment.GetEnvironmentVariable("AppConfig:Environment"));
+            .Select(KeyFilter.Any, LabelFilter.Null);
+
+        // Override with any configuration values specific to current hosting env
+        foreach (var env in Environment.GetEnvironmentVariable("AppConfig:Environments").Split(","))
+        {
+            configBuilder = configBuilder.Select(KeyFilter.Any, env);
+        }
     })
     .Build();
 
