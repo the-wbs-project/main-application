@@ -1,3 +1,5 @@
+name: pm-empower-ng18
+
 services:
   wbs-api:
     container_name: wbs-api
