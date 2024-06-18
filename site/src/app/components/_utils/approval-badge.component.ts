@@ -20,7 +20,7 @@ import { ProjectApproval } from '@wbs/core/models';
   template: `@if (approval(); as approval) {
     <a
       class="pointer"
-      [style.fontSize.px]="fontSize"
+      [style.fontSize.px]="fontSize()"
       [ngClass]="{
         'tx-gray-600-f': approval.isApproved == undefined,
         'tx-success-f': approval.isApproved === true,

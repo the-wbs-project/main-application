@@ -1,8 +1,4 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpClientModule,
-  HttpClientXsrfModule,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
@@ -33,11 +29,6 @@ export const appConfig: ApplicationConfig = {
     { provide: APP_CONFIG_TOKEN, useValue: config },
     importProvidersFrom([
       BrowserAnimationsModule,
-      HttpClientModule,
-      HttpClientXsrfModule.withOptions({
-        cookieName: 'XSRF-TOKEN',
-        headerName: 'X-XSRF-TOKEN',
-      }),
       NgxsLoggerPluginModule.forRoot({
         disabled: true, // environment.production,
       }),
@@ -63,6 +54,7 @@ export const appConfig: ApplicationConfig = {
         },
       }),
     ]),
+    provideHttpClient(),
     provideRouter(routes, withComponentInputBinding()),
     {
       provide: APP_INITIALIZER,
