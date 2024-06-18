@@ -13,7 +13,8 @@ public class LibraryFilters
         //
         //  Ownership filter
         //
-        if (library == "organizational") filterParts.Add($"(OwnerId eq '{owner}' and StatusId eq 'published')");
+        if (library == "organizational") filterParts.Add($"OwnerId eq '{owner}'");
+        //if (library == "organizational") filterParts.Add($"(OwnerId eq '{owner}' and StatusId eq 'published')");
         else if (library == "personal") filterParts.Add($"(OwnerId eq '{owner}' and Author/Id eq '{userId}' and (StatusId eq 'published' or StatusId eq 'draft'))");
         else if (library == "watched") filterParts.Add($"(Watchers/any(person: person/Id eq '{userId}') and StatusId eq 'published')");
         else if (library == "public") filterParts.Add($"(Visibility eq 'public' and StatusId eq 'published')");
