@@ -1,15 +1,19 @@
-import { Injectable, Signal, computed, signal } from '@angular/core';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { Organization } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
+import { Observable, map } from 'rxjs';
+import { DataServiceFactory } from '../data-services';
 
 @Injectable({ providedIn: 'root' })
 export class MembershipStore {
+  private readonly data = inject(DataServiceFactory);
   private readonly _orgs = signal<Organization[] | undefined>(undefined);
   private readonly _org = signal<Organization | undefined>(undefined);
   private readonly _list = signal<Record<string, string[]> | undefined>(
     undefined
   );
   private readonly _roles = signal<string[] | undefined>(undefined);
+  private userId?: string;
 
   get organization(): Signal<Organization | undefined> {
     return this._org;
@@ -33,23 +37,24 @@ export class MembershipStore {
     );
   }
 
-  initialize(
-    organizations: Organization[],
-    orgList: Record<string, string[]>
-  ): void {
-    for (const org of organizations)
-      if (org.metadata == undefined) org.metadata = {};
-      else if (typeof org.metadata.projectApprovalRequired === 'string') {
-        org.metadata.projectApprovalRequired =
-          org.metadata.projectApprovalRequired === 'true';
-      }
+  initializeAsync(userId: string): Observable<void> {
+    this.userId = userId;
 
-    this._orgs.set(organizations.sort((a, b) => sorter(a.name, b.name)));
-    this._list.set(orgList);
+    return this.data.memberships.getMembershipsAsync().pipe(
+      map((organizations) => {
+        console.log(organizations);
+        this._orgs.set(organizations.sort((a, b) => sorter(a.name, b.name)));
+      })
+    );
   }
 
   setOrganization(org: Organization): void {
     this._org.set(org);
-    this._roles.set(this._list()![org.name]);
+
+    this.data.memberships
+      .getMembershipRolesForUserAsync(org.name, this.userId!)
+      .subscribe((roles) => {
+        this._roles.set(roles);
+      });
   }
 }

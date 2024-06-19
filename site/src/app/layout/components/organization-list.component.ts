@@ -16,8 +16,8 @@ import { Organization } from '@wbs/core/models';
   template: `@if (orgs().length === 1) { {{ org().display_name }} } @else {
     <kendo-dropdownlist
       [data]="orgs()"
-      [textField]="'display_name'"
-      [valueField]="'name'"
+      textField="display_name"
+      valueField="name"
       [value]="org()"
       size="small"
       fillMode="outline"

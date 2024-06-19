@@ -53,6 +53,7 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
 app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
+app.get('api/memberships', verifyJwt, Http.membership.getOrganizationsAsync);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
 app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), kvPurgeOrgs, OriginService.pass);
 //app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);

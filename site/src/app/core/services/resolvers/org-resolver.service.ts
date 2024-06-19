@@ -9,6 +9,3 @@ export const orgResolve: ResolveFn<string> = (route: ActivatedRouteSnapshot) =>
 
 export const orgObjResolve: ResolveFn<Organization> = () =>
   inject(MembershipStore).organization()!;
-
-export const orgListResolve: ResolveFn<Organization[]> = () =>
-  inject(MembershipStore).organizations()!;

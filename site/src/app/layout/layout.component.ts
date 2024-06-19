@@ -10,13 +10,11 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { ChatWindowComponent } from '@wbs/components/chat-window';
-import { Organization } from '@wbs/core/models';
-import { SignalStore } from '@wbs/core/services';
-import { AiStore, UiStore, UserStore } from '@wbs/core/store';
+import { MainContentDirective } from '@wbs/core/directives/main-content.directive';
+import { AiStore, MembershipStore, UiStore, UserStore } from '@wbs/core/store';
 import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header';
 import { ProfileEditorComponent } from './components/profile-editor';
-import { MainContentDirective } from '../core/directives/main-content.directive';
 
 @Component({
   standalone: true,
@@ -25,7 +23,7 @@ import { MainContentDirective } from '../core/directives/main-content.directive'
       <wbs-header
         [claims]="claims()"
         [org]="org"
-        [orgs]="orgs()"
+        [orgs]="orgs()!"
         [user]="user()!"
         [roles]="roles()"
         [activeSection]="activeSection()"
@@ -56,13 +54,12 @@ import { MainContentDirective } from '../core/directives/main-content.directive'
   ],
 })
 export class LayoutComponent implements AfterContentInit {
-  private readonly store = inject(SignalStore);
   private readonly userStore = inject(UserStore);
 
   readonly org = input.required<string>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
-  readonly orgs = input.required<Organization[]>();
+  readonly orgs = inject(MembershipStore).organizations;
 
   readonly showProfileEditor = model(false);
 

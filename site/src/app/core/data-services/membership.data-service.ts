@@ -1,9 +1,28 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Invite, InviteBody, Member } from '../models';
+import { map } from 'rxjs/operators';
+import { Invite, InviteBody, Member, Organization } from '../models';
 
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
+
+  getMembershipsAsync(): Observable<Organization[]> {
+    return this.http.get<any[]>('api/memberships').pipe(
+      map((orgs) => {
+        const list: Organization[] = [];
+
+        for (const org of orgs) {
+          list.push({
+            name: org.name,
+            display_name: org.displayName,
+            metadata: org.metadata,
+            branding: org.branding,
+          });
+        }
+        return list;
+      })
+    );
+  }
 
   getMembershipUsersAsync(
     organization: string,
