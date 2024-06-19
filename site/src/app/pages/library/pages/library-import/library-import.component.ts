@@ -53,7 +53,7 @@ export class LibraryImportComponent {
               id: IdService.generate(),
               author: members[memberIndex].id,
               owner,
-              type: 'project',
+              type: library.type,
               visibility: 'public',
             };
             const version: LibraryEntryVersion = {
