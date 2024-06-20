@@ -1,27 +1,16 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Invite, InviteBody, Member, Organization } from '../models';
+import { Invite, InviteBody, Member, Membership } from '../models';
 
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getMembershipsAsync(): Observable<Organization[]> {
-    return this.http.get<any[]>('api/memberships').pipe(
-      map((orgs) => {
-        const list: Organization[] = [];
+  getMembershipsAsync(): Observable<Membership[]> {
+    return this.http.get<Membership[]>('api/memberships');
+  }
 
-        for (const org of orgs) {
-          list.push({
-            name: org.name,
-            display_name: org.displayName,
-            metadata: org.metadata,
-            branding: org.branding,
-          });
-        }
-        return list;
-      })
-    );
+  clearMembershipsAsync(): Observable<void> {
+    return this.http.delete<void>('api/memberships');
   }
 
   getMembershipUsersAsync(
@@ -64,15 +53,6 @@ export class MembershipDataService {
   ): Observable<void> {
     return this.http.delete<void>(
       `api/organizations/${organization}/members/${user}`
-    );
-  }
-
-  getMembershipRolesForUserAsync(
-    organization: string,
-    user: string
-  ): Observable<string[]> {
-    return this.http.get<string[]>(
-      `api/organizations/${organization}/members/${user}/roles`
     );
   }
 

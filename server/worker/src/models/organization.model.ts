@@ -1,7 +1,7 @@
 export interface Organization {
   id: string;
-  display_name: string;
   name: string;
+  displayName: string;
   metadata: {
     mainProjectType: 'single' | 'multiple';
     logoId?: string;

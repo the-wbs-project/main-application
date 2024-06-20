@@ -23,7 +23,7 @@ import { ProfileEditorComponent } from './components/profile-editor';
       <wbs-header
         [claims]="claims()"
         [org]="org"
-        [orgs]="orgs()!"
+        [orgs]="memberships()!"
         [user]="user()!"
         [roles]="roles()"
         [activeSection]="activeSection()"
@@ -59,7 +59,7 @@ export class LayoutComponent implements AfterContentInit {
   readonly org = input.required<string>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
-  readonly orgs = inject(MembershipStore).organizations;
+  readonly memberships = inject(MembershipStore).memberships;
 
   readonly showProfileEditor = model(false);
 

@@ -1,9 +1,11 @@
-import { Injectable, Signal, computed, signal } from '@angular/core';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { EntityId, User } from '@wbs/core/models';
+import { UserService } from '@wbs/core/services';
 
 @Injectable({ providedIn: 'root' })
 export class UserStore {
-  private _profile = signal<User | undefined>(undefined);
+  private readonly userService = inject(UserService);
+  private readonly _profile = signal<User | undefined>(undefined);
 
   readonly watchers = new WatcherStore();
 
@@ -21,6 +23,8 @@ export class UserStore {
 
   set(user: User | undefined): void {
     this._profile.set(user);
+
+    if (user) this.userService.addUsers(user);
   }
 }
 

@@ -34,7 +34,7 @@ export class LibraryHomeComponent implements OnInit {
   private readonly profile = inject(UserStore).profile;
   public readonly creation = inject(EntryCreationService);
 
-  readonly organization = inject(MembershipStore).organization;
+  readonly membership = inject(MembershipStore).membership;
   readonly searchText = model<string>('');
   readonly typeFilters = model<string[]>([]);
   readonly library = model<string>('');
@@ -46,7 +46,7 @@ export class LibraryHomeComponent implements OnInit {
 
   create(type: string, list: LibraryListComponent): void {
     this.creation
-      .runAsync(this.organization()!.name, type)
+      .runAsync(this.membership()!.name, type)
       .subscribe((results) => {
         console.log(results);
         if (results == undefined) return;
@@ -62,7 +62,7 @@ export class LibraryHomeComponent implements OnInit {
           lastModified: results.version.lastModified,
           description: results.version.description,
           ownerId: results.entry.owner,
-          ownerName: this.organization()!.display_name,
+          ownerName: this.membership()!.displayName,
           status: results.version.status,
         };
         if (results.action === 'close') {
@@ -78,7 +78,7 @@ export class LibraryHomeComponent implements OnInit {
 
     this.store.dispatch(
       new Navigate([
-        '/' + this.organization()!.name,
+        '/' + this.membership()!.name,
         'library',
         'view',
         vm.ownerId,

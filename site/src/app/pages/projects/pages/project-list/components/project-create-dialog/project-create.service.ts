@@ -29,7 +29,7 @@ export class ProjectCreateService {
 
     const project: Project = {
       id: IdService.generate(),
-      owner: this.membership.organization()!.name,
+      owner: this.membership.membership()!.name,
       createdBy: this.userId()!,
       disciplines: this.pcStore.disciplines(),
       category: this.pcStore.category()!,

@@ -130,7 +130,7 @@ export class EntryService {
   }
 
   createProject(): void {
-    const org = this.membership.organization()!.name;
+    const org = this.membership.membership()!.name;
 
     ProjectCreationComponent.launchAsync(
       this.dialogService,

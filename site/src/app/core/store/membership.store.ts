@@ -1,30 +1,22 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
-import { Organization } from '@wbs/core/models';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { Membership } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
-import { Observable, map } from 'rxjs';
-import { DataServiceFactory } from '../data-services';
+import { Observable, map, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MembershipStore {
   private readonly data = inject(DataServiceFactory);
-  private readonly _orgs = signal<Organization[] | undefined>(undefined);
-  private readonly _org = signal<Organization | undefined>(undefined);
-  private readonly _list = signal<Record<string, string[]> | undefined>(
-    undefined
-  );
+  private readonly _memberships = signal<Membership[] | undefined>(undefined);
+  private readonly _membership = signal<Membership | undefined>(undefined);
   private readonly _roles = signal<string[] | undefined>(undefined);
-  private userId?: string;
 
-  get organization(): Signal<Organization | undefined> {
-    return this._org;
+  get membership(): Signal<Membership | undefined> {
+    return this._membership;
   }
 
-  get organizations(): Signal<Organization[] | undefined> {
-    return this._orgs;
-  }
-
-  get orgRoleList(): Signal<Record<string, string[]> | undefined> {
-    return this._list;
+  get memberships(): Signal<Membership[] | undefined> {
+    return this._memberships;
   }
 
   get roles(): Signal<string[] | undefined> {
@@ -33,28 +25,30 @@ export class MembershipStore {
 
   get projectApprovalRequired(): Signal<boolean> {
     return computed(
-      () => this.organization()?.metadata.projectApprovalRequired ?? false
+      () => this.membership()?.metadata.projectApprovalRequired ?? false
     );
   }
 
-  initializeAsync(userId: string): Observable<void> {
-    this.userId = userId;
+  initializeAsync(): Observable<any> {
+    if ((this.memberships() ?? []).length > 0) return of('nothing');
 
     return this.data.memberships.getMembershipsAsync().pipe(
-      map((organizations) => {
-        console.log(organizations);
-        this._orgs.set(organizations.sort((a, b) => sorter(a.name, b.name)));
+      map((memberships) => {
+        this._memberships.set(
+          memberships.sort((a, b) => sorter(a.name, b.name))
+        );
+
+        //
+        //  Add organization names to name cache
+        //
+        for (const m of memberships) {
+          this.data.organizations.addToCache(m.name, m.displayName);
+        }
       })
     );
   }
 
-  setOrganization(org: Organization): void {
-    this._org.set(org);
-
-    this.data.memberships
-      .getMembershipRolesForUserAsync(org.name, this.userId!)
-      .subscribe((roles) => {
-        this._roles.set(roles);
-      });
+  setMembership(membership: Membership): void {
+    this._membership.set(membership);
   }
 }

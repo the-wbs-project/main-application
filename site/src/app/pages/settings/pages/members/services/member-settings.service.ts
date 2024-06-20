@@ -11,12 +11,12 @@ import { MembersSettingStore } from '../store';
 export class MemberSettingsService {
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
-  private readonly org = inject(MembershipStore).organization;
+  private readonly membership = inject(MembershipStore).membership;
   private readonly store = inject(MembersSettingStore);
 
   removeMemberAsync(memberId: string): void {
     this.data.memberships
-      .removeUserFromOrganizationAsync(this.org()!.name, memberId)
+      .removeUserFromOrganizationAsync(this.membership()!.name, memberId)
       .subscribe(() => {
         this.messages.notify.success('OrgSettings.MemberRemoved');
         this.store.removeMember(memberId);
@@ -33,7 +33,7 @@ export class MemberSettingsService {
     if (toRemove.length > 0)
       calls.push(
         this.data.memberships.removeUserOrganizationalRolesAsync(
-          this.org()!.name,
+          this.membership()!.name,
           member.id,
           toRemove
         )
@@ -42,7 +42,7 @@ export class MemberSettingsService {
     if (toAdd.length > 0)
       calls.push(
         this.data.memberships.addUserOrganizationalRolesAsync(
-          this.org()!.name,
+          this.membership()!.name,
           member.id,
           toAdd
         )
@@ -61,7 +61,7 @@ export class MemberSettingsService {
 
     for (const invitee of emails) {
       saves.push(
-        this.data.memberships.sendInvitesAsync(this.org()!.name, {
+        this.data.memberships.sendInvitesAsync(this.membership()!.name, {
           invitee,
           inviter,
           roles,
@@ -76,7 +76,7 @@ export class MemberSettingsService {
 
   cancelInviteAsync(inviteId: string): void {
     this.data.memberships
-      .cancelInviteAsync(this.org()!.name, inviteId)
+      .cancelInviteAsync(this.membership()!.name, inviteId)
       .subscribe(() => {
         this.messages.notify.success('OrgSettings.InviteCancelled');
         this.store.removeInvite(inviteId);

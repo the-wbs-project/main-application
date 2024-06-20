@@ -30,7 +30,7 @@ import { ProjectCreateStore } from '../../project-create.store';
 })
 export class ProjectCreateRolesComponent implements OnInit {
   private readonly ids = inject(MetadataStore).roles.ids;
-  private readonly org = inject(MembershipStore).organization;
+  private readonly membership = inject(MembershipStore).membership;
 
   readonly faSpinner = faSpinner;
   readonly store = inject(ProjectCreateStore);
@@ -43,7 +43,7 @@ export class ProjectCreateRolesComponent implements OnInit {
 
   ngOnInit(): void {
     this.data.memberships
-      .getMembershipUsersAsync(this.org()!.name)
+      .getMembershipUsersAsync(this.membership()!.name)
       .subscribe((members) => {
         this.members.set(members);
         this.isLoading.set(false);

@@ -1,6 +1,7 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
+import { DataServiceFactory } from '@wbs/core/data-services';
 
 @Component({
   standalone: true,
@@ -13,9 +14,12 @@ import { LoaderModule } from '@progress/kendo-angular-indicators';
   imports: [LoaderModule],
 })
 export class LogoutComponent implements OnInit {
-  constructor(private readonly auth: AuthService) {}
+  private readonly auth = inject(AuthService);
+  private readonly data = inject(DataServiceFactory);
 
   ngOnInit(): void {
-    this.auth.logout();
+    this.data.memberships
+      .clearMembershipsAsync()
+      .subscribe(() => this.auth.logout());
   }
 }

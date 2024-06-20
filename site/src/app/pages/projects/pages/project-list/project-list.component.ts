@@ -61,7 +61,7 @@ export class ProjectListComponent implements OnInit {
   readonly plusIcon = faPlus;
   readonly loading = signal(true);
   readonly projects = signal<Project[]>([]);
-  readonly owner = computed(() => this.membership.organization()!.name);
+  readonly owner = computed(() => this.membership.membership()!.name);
   readonly userId = input.required<string>();
   readonly view = signal<ProjectView>(this.getView() ?? 'table');
   readonly assignedToMe = signal(false);
