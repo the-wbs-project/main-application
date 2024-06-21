@@ -10,6 +10,7 @@ using Wbs.Core.Logging;
 using Wbs.Core.Services;
 using Wbs.Core.Services.Search;
 using Wbs.Functions.Configuration;
+using Wbs.Functions.Services;
 
 var config = new ConfigurationBuilder()
     .AddJsonFile("local.settings.json", optional: true, reloadOnChange: true)
@@ -52,6 +53,7 @@ var host = new HostBuilder()
         services.AddSingleton<IAzureAiSearchConfig, AzureAiSearchConfig>();
         services.AddSingleton<IDatabaseConfig, DatabaseConfig>();
         services.AddSingleton<IStorageConfig, AzureStorageConfig>();
+        services.AddSingleton<EmailConfig>();
         //
         //  Data Services
         //
@@ -68,6 +70,7 @@ var host = new HostBuilder()
         //
         //  Services
         //
+        services.AddSingleton<MailgunService>();
         services.AddSingleton<QueueService>();
         //
         //  Search Services
