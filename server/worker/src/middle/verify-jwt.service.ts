@@ -19,8 +19,6 @@ export async function verifyJwt(ctx: Context, next: any): Promise<Response | voi
   ctx.set('idToken', {
     userId: result.payload.sub,
     //@ts-ignore
-    roles: result.payload['http://www.pm-empower.com/roles'],
-    //@ts-ignore
     siteRoles: result.payload['http://www.pm-empower.com/site-roles'],
     //@ts-ignore
     organizations: result.payload['http://www.pm-empower.com/organizations'],
