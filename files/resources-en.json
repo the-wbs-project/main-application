@@ -569,6 +569,7 @@
       "CreateTask": "Create Task",
       "OtherFlags": "Other Flags",
       "AddPhase": "Add Phase",
+      "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
       "UnpublishForEditing": "Unpublish For Editting",
       "ConfirmPublishToLibrary": "Are you sure you are ready to publish this to your organization's library?",

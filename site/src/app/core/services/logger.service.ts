@@ -13,6 +13,10 @@ export class Logger {
     Logger.setGlobalContext(newContext);
   }
 
+  static getSessionId(): string {
+    return Logger.DD_LOGS.getInternalContext().session_id;
+  }
+
   static setGlobalContext(newContext: Context): void {
     Logger.DD_LOGS.setGlobalContext(newContext);
   }

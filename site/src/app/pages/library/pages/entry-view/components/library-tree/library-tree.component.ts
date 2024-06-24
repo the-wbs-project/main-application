@@ -206,7 +206,7 @@ export class LibraryTreeComponent {
       );
       this.callSave(
         dragged.id,
-        this.taskService.saveAsync(results, [], 'Library.TasksReordered')
+        this.taskService.saveAsync(results, [], 'Wbs.TasksReordered')
       );
     };
     if (validation.confirmMessage) {
