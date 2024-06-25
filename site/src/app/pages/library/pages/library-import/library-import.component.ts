@@ -13,7 +13,7 @@ import {
   LibraryEntryVersion,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -26,6 +26,7 @@ import { catchError, switchMap } from 'rxjs/operators';
 export class LibraryImportComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly metadata = inject(MetadataStore);
+  private readonly user = inject(UserStore);
   private readonly org = inject(MembershipStore).organization;
 
   readonly spinIcon = faSpinner;
@@ -41,6 +42,7 @@ export class LibraryImportComponent {
       //const categories = this.getCategories();
       //const disciplines = this.getDisciplines();
       const owner = this.org()!.name;
+      const userId = this.user.userId()!;
       let memberIndex = 0;
 
       if (!Array.isArray(libraries)) libraries = [libraries];
@@ -51,7 +53,7 @@ export class LibraryImportComponent {
           for (const library of libraries) {
             const entry: LibraryEntry = {
               id: IdService.generate(),
-              author: members[memberIndex].id,
+              author: userId, // members[memberIndex].id,
               owner,
               type: library.type,
               visibility: 'public',
