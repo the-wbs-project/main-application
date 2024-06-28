@@ -8,16 +8,16 @@ import {
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
-import { Organization } from '@wbs/core/models';
+import { Membership } from '@wbs/core/models';
 
 @Component({
   standalone: true,
   selector: 'wbs-header-organization-list',
-  template: `@if (orgs().length === 1) { {{ org().display_name }} } @else {
+  template: `@if (orgs().length === 1) { {{ org().displayName }} } @else {
     <kendo-dropdownlist
       [data]="orgs()"
-      [textField]="'display_name'"
-      [valueField]="'name'"
+      textField="displayName"
+      valueField="name"
       [value]="org()"
       size="small"
       fillMode="outline"
@@ -32,8 +32,8 @@ import { Organization } from '@wbs/core/models';
 export class OrganizationListComponent {
   private readonly store = inject(Store);
 
-  readonly org = input.required<Organization>();
-  readonly orgs = input.required<Organization[]>();
+  readonly org = input.required<Membership>();
+  readonly orgs = input.required<Membership[]>();
 
   navigate(org: string) {
     const originalOrg = this.org().name;

@@ -70,7 +70,7 @@ export class EntryTaskActionService {
         this.creation.exportTaskToEntryAsync(taskId);
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
-        const org = this.membership.organization()!.name;
+        const org = this.membership.membership()!.name;
         const task = this.libraryStore.tasks()!.find((x) => x.id === taskId)!;
         const types: string[] =
           direction === 'right' || task.parentId != null

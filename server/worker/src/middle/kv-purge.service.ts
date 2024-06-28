@@ -5,7 +5,10 @@ export async function kvPurgeOrgs(ctx: Context, next: any): Promise<Response | v
 
   if (ctx.res.status > 204) return;
 
-  for (const org of ctx.get('idToken').organizations) {
+  const userId = ctx.var.idToken.userId;
+  const orgs = await ctx.var.data.memberships.getMembershipsAsync(userId, false);
+
+  for (const org of orgs) {
     await ctx.env.KV_DATA.delete(`ORGS|${org.name}|members`);
   }
 }

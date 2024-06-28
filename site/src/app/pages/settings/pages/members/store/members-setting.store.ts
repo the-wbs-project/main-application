@@ -1,6 +1,6 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, Organization } from '@wbs/core/models';
+import { Invite, Membership, Organization } from '@wbs/core/models';
 import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
 import { forkJoin } from 'rxjs';
 
@@ -39,10 +39,10 @@ export class MembersSettingStore {
     return this._isLoading;
   }
 
-  initialize(organization: Organization | undefined): void {
-    if (!organization) return;
+  initialize(membership: Membership | undefined): void {
+    if (!membership) return;
 
-    const org = organization.name;
+    const org = membership.name;
 
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(org),
@@ -64,7 +64,7 @@ export class MembersSettingStore {
           };
         })
       );
-      const capacity = organization.metadata?.seatCount;
+      const capacity = membership.metadata?.seatCount;
       const remaining = capacity
         ? capacity - members.length - invites.length
         : undefined;

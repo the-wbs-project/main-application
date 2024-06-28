@@ -24,8 +24,8 @@ export class UserService {
       .pipe(tap((user) => this.users.get(userId)!.next(user)));
   }
 
-  addUsers(users: User[]): void {
-    for (const user of users) {
+  addUsers(users: User[] | User): void {
+    for (const user of Array.isArray(users) ? users : [users]) {
       if (this.users.has(user.id)) continue;
 
       this.users.set(user.id, new BehaviorSubject<User | undefined>(user));

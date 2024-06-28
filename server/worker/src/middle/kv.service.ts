@@ -8,16 +8,11 @@ export const kv = {
   resources,
   resourceFile,
   resourceFileClear,
-  roles,
   users,
 };
 
 function resources(ctx: Context, next: any): Promise<Response | void> {
   return execute(ctx, next, 'RESOURCES|:locale');
-}
-
-function roles(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'ROLES');
 }
 
 function lists(ctx: Context, next: any): Promise<Response | void> {
@@ -35,7 +30,7 @@ function users(ctx: Context, next: any): Promise<Response | void> {
 function members(ctx: Context, next: any): Promise<Response | void> {
   const user = ctx.get('idToken').userId;
 
-  return execute(ctx, next, 'ORGS|:organization|MEMBERS', 15 * 60, (list: { id: string }[]) => list.some((x) => x.id === user));
+  return execute(ctx, next, 'ORGS|:organization|MEMBERS', 60 * 60, (list: { id: string }[]) => list.some((x) => x.id === user));
 }
 
 function membersClear(ctx: Context, next: any): Promise<Response | void> {

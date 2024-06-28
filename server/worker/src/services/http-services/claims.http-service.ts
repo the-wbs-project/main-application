@@ -13,9 +13,11 @@ export class ClaimsHttpService {
   static async getForOrganizationAsync(ctx: Context): Promise<Response> {
     try {
       const { organization } = ctx.req.param();
-      const definitions = await ctx.get('data').roles.getAsync();
-
-      const roles = ctx.get('idToken').orgRoles[organization].map((r) => definitions.find((d) => d.id === r)?.name ?? '');
+      const userId = ctx.var.idToken.userId;
+      const definitions = await ctx.var.data.memberships.getRolesAsync();
+      const memberships = await ctx.var.data.memberships.getMembershipsAsync(userId, false);
+      const orgRoles = memberships.find((m) => m.name === organization)?.roles ?? [];
+      const roles = orgRoles.map((r) => definitions.find((d) => d.id === r)?.name ?? '');
 
       return ctx.json(ClaimsHttpService.getClaims(ORGANZIATION_PERMISSIONS, roles));
     } catch (e) {
@@ -30,12 +32,13 @@ export class ClaimsHttpService {
       const { owner, project } = ctx.req.param();
       const userId = ctx.get('idToken').userId;
 
-      const definitions = await ctx.get('data').roles.getAsync();
+      const definitions = await ctx.var.data.memberships.getRolesAsync();
       const projectRoles = await ctx.get('data').projects.getRolesAsync(owner, project);
-      const orgRoleIds = ctx.get('idToken').orgRoles[owner];
-      const orgRoleNames = orgRoleIds.map((r) => definitions.find((d) => d.id === r)?.name ?? '');
+      const memberships = await ctx.var.data.memberships.getMembershipsAsync(userId, false);
+      const orgRoles = memberships.find((m) => m.name === owner)?.roles ?? [];
+      const orgRoleNames = orgRoles.map((r) => definitions.find((d) => d.id === r)?.name ?? '');
       const roles = projectRoles
-        .filter((r) => r.userId === userId && orgRoleIds.includes(r.role))
+        .filter((r) => r.userId === userId && orgRoles.includes(r.role))
         .map((r) => definitions.find((d) => d.id === r.role)!.name);
 
       if (orgRoleNames.includes(ROLES.ADMIN)) roles.push(ROLES.ADMIN);

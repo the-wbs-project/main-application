@@ -11,10 +11,12 @@ export function verifyMembershipRole(role: string): (ctx: Context, next: any) =>
 
     if (!toCheck) return ctx.text('Missing Parameters', 500);
 
-    const roleId = (await ctx.var.data.roles.getAsync())?.find((r) => r.name === role)?.id ?? '';
-    const roles = ctx.get('idToken').orgRoles?.[toCheck] ?? [];
+    const roles = await ctx.var.data.memberships.getRolesAsync();
+    const roleId = roles.find((r) => r.name === role)?.id ?? '';
+    const memberships = await ctx.var.data.memberships.getMembershipsAsync(ctx.var.idToken.userId, false);
+    const orgRoles = memberships.find((m) => m.id === toCheck)?.roles ?? [];
 
-    if (!roles || !roles.includes(roleId)) return ctx.text('Unauthorized', 403);
+    if (!orgRoles || !orgRoles.includes(roleId)) return ctx.text('Unauthorized', 403);
 
     await next();
   };

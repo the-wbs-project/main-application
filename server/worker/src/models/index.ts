@@ -3,6 +3,7 @@ export * from './chat-comment.model';
 export * from './id-token.model';
 export * from './library-entry.model';
 export * from './list-item.model';
+export * from './membership.model';
 export * from './message.model';
 export * from './organization.model';
 export * from './project-role.model';

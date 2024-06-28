@@ -105,7 +105,7 @@ export class NameVisibilityComponent extends DialogContentBase {
       .dispatch(
         new Navigate([
           '/',
-          this.membership.organization()!.name,
+          this.membership.membership()!.name,
           'library',
           'view',
           this.entryStore.entry()?.owner,

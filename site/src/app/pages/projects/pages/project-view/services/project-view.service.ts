@@ -116,7 +116,7 @@ export class ProjectViewService {
           .pipe(map(() => true));
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
-        const org = this.membership.organization()!.name;
+        const org = this.membership.membership()!.name;
         const task = this.store
           .selectSnapshot(TasksState.nodes)!
           .find((x) => x.id === taskId)!;
