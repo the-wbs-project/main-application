@@ -102,21 +102,30 @@ export class ProjectImportProcessorService {
       };
       upserts.push(pTask);
 
-      const children = results.tasks.filter((t) => t.parentId === task.id);
+      const children = results.tasks
+        .filter((t) => t.parentId === task.id)
+        .sort((a, b) => sorter(a.order, b.order));
 
       for (let i = 0; i < children.length; i++) {
         run(children[i], pTask.id, i + 1, false);
       }
     };
 
-    const first = results.tasks.find((x) => x.parentId == null)!;
+    const rootNodes = results.tasks
+      .filter((x) => x.parentId == null)
+      .sort((a, b) => sorter(a.order, b.order));
 
-    run(
-      first,
-      dir === 'right' ? fromTask.id : fromTask.parentId,
-      startOrder,
-      true
-    );
+    let currentIndex = startOrder;
+
+    for (const node of rootNodes) {
+      run(
+        node,
+        dir === 'right' ? fromTask.id : fromTask.parentId,
+        currentIndex,
+        true
+      );
+      currentIndex++;
+    }
 
     return this.store
       .dispatch([new SaveProject(project), new SaveTasks(upserts)])
