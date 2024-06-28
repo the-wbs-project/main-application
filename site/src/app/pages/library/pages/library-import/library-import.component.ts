@@ -27,6 +27,7 @@ export class LibraryImportComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly metadata = inject(MetadataStore);
   private readonly membership = inject(MembershipStore).membership;
+  private readonly userId = inject(UserStore).userId;
 
   readonly spinIcon = faSpinner;
   readonly saving = signal(false);
@@ -41,6 +42,7 @@ export class LibraryImportComponent {
       //const categories = this.getCategories();
       //const disciplines = this.getDisciplines();
       const owner = this.membership()!.name;
+      const userId = this.userId()!;
       let memberIndex = 0;
 
       if (!Array.isArray(libraries)) libraries = [libraries];
