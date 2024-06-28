@@ -9,8 +9,8 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
+import { OrganizationService } from '@wbs/core/services';
 import { WbsNodeView } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 
@@ -23,7 +23,7 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
   imports: [DateTextPipe, RouterModule, TranslateModule],
 })
 export class DetailsCardComponent implements OnChanges {
-  private readonly data = inject(DataServiceFactory);
+  private readonly orgService = inject(OrganizationService);
 
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
@@ -33,7 +33,7 @@ export class DetailsCardComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['entry'] && this.entry()) {
-      this.data.organizations
+      this.orgService
         .getNameAsync(this.entry().owner)
         .subscribe((name) => this.owner.set(name));
     }

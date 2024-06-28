@@ -65,6 +65,8 @@ public class OrganizationDataService : BaseAuthDataService
 
     public async Task<IEnumerable<Member>> GetOrganizationalUsersAsync(string organization)
     {
+        var token = await GetToken();
+
         using (var http = new HttpClient())
         {
             var request = new HttpRequestMessage
@@ -73,7 +75,7 @@ public class OrganizationDataService : BaseAuthDataService
                 RequestUri = new Uri($"https://{config.Domain}/api/v2/organizations/{organization}/members?per_page=100&take=100&fields=user_id"),
             };
 
-            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", mgmtToken);
+            request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
             var response = await http.SendAsync(request);
             var raw = await response.Content.ReadAsStringAsync();
@@ -92,7 +94,7 @@ public class OrganizationDataService : BaseAuthDataService
                     RequestUri = new Uri($"https://{config.Domain}/api/v2/users?per_page=100&take=100&q={query}"),
                 };
 
-                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", mgmtToken);
+                request.Headers.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 response = await http.SendAsync(request);
                 raw = await response.Content.ReadAsStringAsync();

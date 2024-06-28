@@ -17,6 +17,8 @@ export class Auth0Service {
   private readonly logger = inject(Logger);
   private readonly messages = inject(Messages);
   private readonly userStore = inject(UserStore);
+  private readonly userService = inject(UserService);
+  private readonly organizationService = inject(OrganizationService);
 
   private readonly _isInitiated = new BehaviorSubject<boolean>(false);
 
@@ -42,6 +44,10 @@ export class Auth0Service {
 
       this.aiStore.setUserInfo(profile);
       this.userStore.set(profile);
+      this.userService.addUsers([profile]);
+      this.organizationService.addOrganizations(
+        user[ns + '/organizations'] ?? []
+      );
       this.logger.setGlobalContext({
         'usr.id': profile.id,
         'usr.name': profile.name,

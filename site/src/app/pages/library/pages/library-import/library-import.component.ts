@@ -13,7 +13,7 @@ import {
   LibraryEntryVersion,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { catchError, switchMap } from 'rxjs/operators';
 
 @Component({
@@ -51,7 +51,7 @@ export class LibraryImportComponent {
           for (const library of libraries) {
             const entry: LibraryEntry = {
               id: IdService.generate(),
-              author: members[memberIndex].id,
+              author: userId, // members[memberIndex].id,
               owner,
               type: library.type,
               visibility: 'public',
