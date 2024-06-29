@@ -27,6 +27,8 @@ const apiDomain = config.api_domain;
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: APP_CONFIG_TOKEN, useValue: config },
+    provideHttpClient(),
+    provideRouter(routes, withComponentInputBinding()),
     importProvidersFrom([
       BrowserAnimationsModule,
       NgxsLoggerPluginModule.forRoot({
@@ -48,14 +50,12 @@ export const appConfig: ApplicationConfig = {
           allowedList: [
             { uri: apiDomain + '/api/resources/*', allowAnonymous: true },
             { uri: apiDomain + '/api/lists/*', allowAnonymous: true },
-            'https://ai.pm-empower.com/*',
-            apiDomain + '/*',
+            { uri: 'https://ai.pm-empower.com/*', allowAnonymous: false },
+            { uri: apiDomain + '/*', allowAnonymous: false },
           ],
         },
       }),
     ]),
-    provideHttpClient(),
-    provideRouter(routes, withComponentInputBinding()),
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,

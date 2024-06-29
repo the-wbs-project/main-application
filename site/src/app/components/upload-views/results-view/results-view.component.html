@@ -6,7 +6,7 @@
     <div class="card-body pd-15">
       @if (loading()) {
       <div class="w-100 text-center">
-        <fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+        <fa-duotone-icon [icon]="faSpinner" size="5x" animation="spin" />
         <h3 class="pd-t-20">
           @if (isXlsx()) {
           {{ "ProjectUpload.LoadingExcel" | translate }}

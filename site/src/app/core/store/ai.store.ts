@@ -35,6 +35,7 @@ export class AiStore {
   }
 
   setUserInfo(user: User): void {
+    console.log(user);
     const enabled = this.appConfig.can_test_ai.includes(user.id ?? '');
     this._isEnabled.set(enabled);
     this.you.id = user.id!;

@@ -12,7 +12,7 @@
         </p>
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.members()!.length }}
           }
@@ -24,7 +24,7 @@
         </p>
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.invites()!.length }}
           }
@@ -36,7 +36,7 @@
         </p>
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.capacity() ?? ("OrgSettings.Unlimited" | translate) }}
           }
@@ -48,7 +48,7 @@
         </p>
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.remaining() ?? ("OrgSettings.Unlimited" | translate) }}
           }
@@ -64,7 +64,7 @@
       <div class="col-6 tx-center">
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.members()!.length }}
           }
@@ -78,7 +78,7 @@
       <div class="col-6 tx-center">
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.invites()!.length }}
           }
@@ -92,7 +92,7 @@
       <div class="col-6 tx-center">
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.capacity() ?? ("OrgSettings.Unlimited" | translate) }}
           }
@@ -106,7 +106,7 @@
       <div class="col-6 tx-center">
         <h5>
           @if (store.isLoading()) {
-          <fa-duotone-icon [icon]="faSpinner" size="sm" [spin]="true" />
+          <fa-duotone-icon [icon]="faSpinner" size="sm" animation="spin" />
           } @else {
           {{ store.remaining() ?? ("OrgSettings.Unlimited" | translate) }}
           }
