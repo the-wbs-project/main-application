@@ -9,9 +9,10 @@ export async function verifyMembership(ctx: Context, next: any): Promise<Respons
 
   if (!toCheck) return ctx.text('Missing Parameters', 500);
 
-  const organizations = ctx.get('idToken').organizations ?? [];
+  const userId = ctx.var.idToken.userId;
+  const memberships = await ctx.var.data.memberships.getMembershipsAsync(userId, false);
 
-  if (!organizations.find((org) => org.id === toCheck || org.name === toCheck)) return ctx.text('Unauthorized', 403);
+  if (!memberships.find((m) => m.id === toCheck || m.name === toCheck)) return ctx.text('Unauthorized', 403);
 
   await next();
 }

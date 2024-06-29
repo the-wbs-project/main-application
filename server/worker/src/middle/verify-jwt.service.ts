@@ -2,7 +2,7 @@ import { parseJwt } from '@cfworker/jwt';
 import { Context } from '../config';
 
 export async function verifyJwt(ctx: Context, next: any): Promise<Response | void> {
-  let jwt = ctx.req.headers.get('Authorization');
+  let jwt = ctx.req.raw.headers.get('Authorization');
   const issuer = `https://${ctx.env.AUTH_DOMAIN}/`;
   const audience = ctx.env.AUTH_AUDIENCE;
 
@@ -17,15 +17,9 @@ export async function verifyJwt(ctx: Context, next: any): Promise<Response | voi
     return ctx.text(result.reason, 403);
   }
   ctx.set('idToken', {
+    token: jwt,
     userId: result.payload.sub,
-    //@ts-ignore
-    roles: result.payload['http://www.pm-empower.com/roles'],
-    //@ts-ignore
-    siteRoles: result.payload['http://www.pm-empower.com/site-roles'],
-    //@ts-ignore
-    organizations: result.payload['http://www.pm-empower.com/organizations'],
-    //@ts-ignore
-    orgRoles: result.payload['http://www.pm-empower.com/organizations-roles'],
+    siteRoles: (result.payload as any)['http://www.pm-empower.com/site-roles'],
   });
 
   await next();

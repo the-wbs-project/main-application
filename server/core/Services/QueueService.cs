@@ -7,7 +7,6 @@ namespace Wbs.Core.Services;
 
 public class QueueService
 {
-
     private readonly Timer timer;
     private readonly ILogger logger;
     private readonly IStorageConfig config;
@@ -18,7 +17,7 @@ public class QueueService
         this.config = config;
         logger = loggerFactory.CreateLogger<QueueService>();
 
-        timer = new Timer(Flush, null, 0, 30000); // 30 seconds
+        timer = new Timer(Flush, null, 0, 10000); // 10 seconds
     }
 
     public void Add<T>(string queueName, T message)
@@ -60,7 +59,7 @@ public class QueueService
 
             await queue.CreateIfNotExistsAsync();
 
-            foreach (var message in current[queueName])
+            foreach (var message in current[queueName].Distinct())
             {
                 try
                 {

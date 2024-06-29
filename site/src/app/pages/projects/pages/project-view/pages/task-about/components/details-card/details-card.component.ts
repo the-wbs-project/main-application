@@ -9,6 +9,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { OrganizationService } from '@wbs/core/services';
 import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 
@@ -20,16 +21,15 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
   imports: [DateTextPipe, RouterModule, TranslateModule],
 })
 export class DetailsCardComponent implements OnInit {
-  private readonly data = inject(DataServiceFactory);
+  private readonly orgService = inject(OrganizationService);
 
   readonly project = input.required<ProjectViewModel>();
   readonly task = input.required<WbsNodeView>();
-
-  readonly owner = signal<string>('');
+  readonly owner = signal('');
 
   ngOnInit(): void {
-    this.data.organizations
+    this.orgService
       .getNameAsync(this.project().owner)
-      .subscribe((name) => this.owner.set(name));
+      .subscribe((name) => this.owner.set(name ?? ''));
   }
 }

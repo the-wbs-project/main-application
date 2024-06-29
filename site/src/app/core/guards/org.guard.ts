@@ -8,7 +8,7 @@ import { first, map, skipWhile } from 'rxjs/operators';
 export const orgGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(MembershipStore);
 
-  return toObservable(store.organizations).pipe(
+  return toObservable(store.memberships).pipe(
     skipWhile((list) => list == undefined),
     map((list) => list!),
     map((list) => {
@@ -18,7 +18,7 @@ export const orgGuard = (route: ActivatedRouteSnapshot) => {
       const org =
         list.find((org) => org.name === route.params['org']) ?? list[0];
 
-      store.setOrganization(org);
+      store.setMembership(org);
 
       return true;
     }),

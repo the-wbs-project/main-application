@@ -199,7 +199,7 @@ export class EntryUploadState {
       body: Utils.getFileAsync(state.rawFile),
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
-        this.membership.organization()!.display_name,
+        this.membership.membership()!.displayName,
         this.profile()!
       ),
     }).pipe(
@@ -396,7 +396,7 @@ export class EntryUploadState {
     ctx: StateContext<StateModel>,
     pages: string[]
   ): Observable<void> {
-    const org = this.membership.organization()!.name;
+    const org = this.membership.membership()!.name;
     const entry = this.entryStore.entry()!;
     const version = this.entryStore.version()!;
 

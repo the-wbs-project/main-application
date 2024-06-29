@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  OnInit,
   computed,
   inject,
   input,
@@ -8,7 +9,7 @@ import {
   output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { TreeListModule } from '@progress/kendo-angular-treelist';
+import { SelectableSettings, TreeListModule } from '@progress/kendo-angular-treelist';
 import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
 import {
   CategoryService,
@@ -36,7 +37,7 @@ import { UiStore } from '@wbs/core/store';
     TreeListModule,
   ],
 })
-export class LibraryImportTreeComponent {
+export class LibraryImportTreeComponent implements OnInit {
   private readonly categoryService = inject(CategoryService);
   private readonly messages = inject(Messages);
   private readonly transformer = inject(Transformers);
@@ -56,6 +57,19 @@ export class LibraryImportTreeComponent {
       this.disciplines()
     )
   );
+  settings: SelectableSettings = {
+    enabled: true,
+    mode: 'row',
+    multiple: false,
+    drag: false,
+    readonly: false,
+  };
+
+  ngOnInit(): void {
+    this.treeService.expandedKeys = this.viewModels()
+      .filter((x) => x.children > 0)
+      .map((x) => x.id);
+  }
 
   titleChanged(taskId: string, title: string): void {
     this.tasks.update((tasks) => {

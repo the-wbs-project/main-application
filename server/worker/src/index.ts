@@ -35,7 +35,6 @@ app.options('api/*', cors, (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
 app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
-app.get('api/roles', async (ctx) => ctx.json(await ctx.get('data').roles.getAsync()));
 
 app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);
 app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
@@ -52,7 +51,9 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
-app.get('api/roles', verifyJwt, kv.roles, OriginService.pass);
+app.get('api/roles', Http.membership.getRolesAsync);
+app.get('api/memberships', verifyJwt, Http.membership.getMembershipsAsync);
+app.delete('api/memberships', verifyJwt, Http.membership.clearMembershipsAsync);
 app.get('api/users/:user', verifyJwt, kv.users, OriginService.pass);
 app.put('api/users/:user', verifyJwt, kvPurge('USERS|:user'), kvPurgeOrgs, OriginService.pass);
 //app.get('api/users/:user/roles', verifyJwt, verifyMyself, Http.users.getRolesAsync);

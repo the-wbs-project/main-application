@@ -2,10 +2,14 @@
 <kendo-treelist
   #treelist
   class="h-100"
+  kendoTreeListExpandable
   kendoTreeListSelectable
   [kendoTreeListFlatBinding]="viewModels"
   parentIdField="treeParentId"
   idField="treeId"
+  [selectable]="settings"
+  [initiallyExpanded]="false"
+  [(expandedKeys)]="treeService.expandedKeys"
   [selectable]="{ enabled: true, mode: 'row' }"
 >
   <ng-template kendoTreeListToolbarTemplate>

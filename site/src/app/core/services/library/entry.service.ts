@@ -130,7 +130,7 @@ export class EntryService {
   }
 
   createProject(): void {
-    const org = this.membership.organization()!.name;
+    const org = this.membership.membership()!.name;
 
     ProjectCreationComponent.launchAsync(
       this.dialogService,
@@ -139,7 +139,8 @@ export class EntryService {
       this.entryStore.tasks()!
     )
       .pipe(
-        filter((x) => !(x instanceof DialogCloseResult)),
+        filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
+        tap(console.log),
         map((id) => <string>id),
         switchMap((id) =>
           this.store.dispatch(new Navigate(['/', org, 'projects', 'view', id]))

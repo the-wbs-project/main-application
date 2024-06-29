@@ -3,8 +3,13 @@ import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { User } from '@wbs/core/models';
-import { Logger, Messages } from '@wbs/core/services';
-import { AiStore, MembershipStore, UserStore } from '@wbs/core/store';
+import {
+  Logger,
+  Messages,
+  OrganizationService,
+  UserService,
+} from '@wbs/core/services';
+import { AiStore, UserStore } from '@wbs/core/store';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 
@@ -15,9 +20,10 @@ export class Auth0Service {
   private readonly auth = inject(AuthService);
   private readonly data = inject(DataServiceFactory);
   private readonly logger = inject(Logger);
-  private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
   private readonly userStore = inject(UserStore);
+  private readonly userService = inject(UserService);
+  private readonly organizationService = inject(OrganizationService);
 
   private readonly _isInitiated = new BehaviorSubject<boolean>(false);
 
@@ -43,16 +49,16 @@ export class Auth0Service {
 
       this.aiStore.setUserInfo(profile);
       this.userStore.set(profile);
+      this.userService.addUsers([profile]);
+      this.organizationService.addOrganizations(
+        user[ns + '/organizations'] ?? []
+      );
       this.logger.setGlobalContext({
         'usr.id': profile.id,
         'usr.name': profile.name,
         'usr.email': profile.email,
       });
 
-      this.membership.initialize(
-        user[ns + '/organizations'] ?? [],
-        user[ns + '/organizations-roles']!
-      );
       this._isInitiated.next(true);
     });
   }

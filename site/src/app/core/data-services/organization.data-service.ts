@@ -16,4 +16,8 @@ export class OrganizationDataService {
       .get<string>(`api/organizations/${name}`)
       .pipe(tap((data) => this.cache.set(name, data)));
   }
+
+  addToCache(id: string, name: string): void {
+    this.cache.set(id, name);
+  }
 }

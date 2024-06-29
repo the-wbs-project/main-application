@@ -9,7 +9,7 @@ export const navToOrgGuard = () => {
   const membership = inject(MembershipStore);
   const store = inject(Store);
 
-  return toObservable(membership.organizations).pipe(
+  return toObservable(membership.memberships).pipe(
     skipWhile((x) => x == undefined),
     first(),
     tap((orgs) => store.dispatch(new Navigate(['/', orgs![0].name, 'library'])))

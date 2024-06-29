@@ -12,7 +12,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenRuler } from '@fortawesome/pro-duotone-svg-icons';
+import { faWrench } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
@@ -46,7 +46,7 @@ export class LibraryListComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
 
-  readonly draftIcon = faPenRuler;
+  readonly draftIcon = faWrench;
   readonly org = input.required<string>();
   readonly typeFilters = input<string[]>();
   readonly library = input.required<string>();

@@ -206,7 +206,7 @@ export class ProjectUploadState {
       body: Utils.getFileAsync(state.rawFile),
       jiraIssueId: this.data.jira.createUploadIssueAsync(
         description,
-        this.membership.organization()!.display_name,
+        this.membership.membership()!.displayName,
         this.userStore.profile()!
       ),
     }).pipe(

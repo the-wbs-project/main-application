@@ -21,6 +21,7 @@ export class LoginComponent {
       authorizationParams: {
         organization,
         invitation,
+        redirect_uri: invitation ? undefined : window.location.toString(),
       },
     });
   }
