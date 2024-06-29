@@ -39,7 +39,11 @@ export class MembershipDataService {
     }));
 
     if (data) {
-      this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(kvKey, JSON.stringify(data)));
+      this.ctx.executionCtx.waitUntil(
+        this.ctx.env.KV_DATA.put(kvKey, JSON.stringify(data), {
+          expirationTtl: 60 * 60 * 24 * 7,
+        }),
+      );
     }
     return data ?? [];
   }

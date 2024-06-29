@@ -58,7 +58,7 @@ export class OriginService {
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: this.ctx.req.headers.get('Authorization')!,
+        Authorization: this.ctx.req.raw.headers.get('Authorization')!,
       },
     });
   }
@@ -69,7 +69,7 @@ export class OriginService {
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
-        Authorization: this.ctx.req.headers.get('Authorization')!,
+        Authorization: this.ctx.req.raw.headers.get('Authorization')!,
       },
     });
   }
@@ -78,7 +78,7 @@ export class OriginService {
     return await fetch(this.getUrl(suffix), {
       method: 'DELETE',
       headers: {
-        Authorization: this.ctx.req.headers.get('Authorization')!,
+        Authorization: this.ctx.req.raw.headers.get('Authorization')!,
       },
     });
   }
