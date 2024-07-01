@@ -86,6 +86,7 @@ export class ProjectImportProcessorService {
         disciplineIds: task.disciplineIds,
         phaseIdAssociation: task.phaseIdAssociation,
         lastModified: new Date(),
+        absFlag: null,
         libraryLink: addLink
           ? {
               owner: results.owner,

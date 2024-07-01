@@ -81,6 +81,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
         cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
         cmd.Parameters.AddWithValue("@LibraryTaskLink", DbJson(node.libraryTaskLink));
+        cmd.Parameters.AddWithValue("@Visibility", DbValue(node.visibility));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -120,6 +121,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
             libraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
             libraryTaskLink = DbJson<LibraryTaskLink>(reader, "LibraryTaskLink"),
+            visibility = DbValue<string>(reader, "Visibility")
         };
     }
 }

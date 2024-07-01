@@ -13,7 +13,8 @@ CREATE PROCEDURE [dbo].[LibraryEntryNode_Set]
     @Description nvarchar(MAX),
     @DisciplineIds nvarchar(MAX),
     @LibraryLink nvarchar(MAX),
-    @LibraryTaskLink nvarchar(MAX)
+    @LibraryTaskLink nvarchar(MAX),
+    @Visibility nvarchar(50)
 AS
 BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
@@ -30,6 +31,7 @@ BEGIN
                         [DisciplineIds] = @DisciplineIds,
                         [LibraryLink] = @LibraryLink,
                         [LibraryTaskLink] = @LibraryTaskLink,
+                        [Visibility] = @Visibility,
                         [LastModified] = GETUTCDATE()
                     WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion
                 END
@@ -47,6 +49,7 @@ BEGIN
                         [DisciplineIds],
                         [LibraryLink],
                         [LibraryTaskLink],
+                        [Visibility],
                         [CreatedOn],
                         [LastModified],
                         [Removed]
@@ -62,6 +65,7 @@ BEGIN
                         @DisciplineIds,
                         @LibraryLink,
                         @LibraryTaskLink,
+                        @Visibility,
                         GETUTCDATE(),
                         GETUTCDATE(),
                         0

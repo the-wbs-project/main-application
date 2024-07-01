@@ -10,6 +10,7 @@ CREATE TABLE [dbo].[LibraryEntryNodeResources] (
     [LastModified] DateTimeOffset NOT NULL,
     [Resource] nvarchar(MAX) NULL,
     [Description] nvarchar(MAX) NULL,
+    [Visibility] nvarchar(50) NOT NULL,
     CONSTRAINT [LibraryEntryNodeResources_PK] PRIMARY KEY CLUSTERED ([Id] ASC),
     CONSTRAINT [LibraryEntryNodeResources_FK_EntryNode] FOREIGN KEY ([EntryId], [EntryVersion], [EntryNodeId]) REFERENCES [dbo].[LibraryEntryNodes] ([EntryId], [EntryVersion], [Id]) ON DELETE CASCADE
 )

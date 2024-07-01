@@ -343,6 +343,7 @@ export class TasksState {
       title: node.title + ' Clone',
       createdOn: now,
       lastModified: now,
+      absFlag: null,
     };
 
     return this.saveTask(ctx, newNode).pipe(
