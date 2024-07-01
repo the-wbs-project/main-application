@@ -38,7 +38,13 @@ public class UserDataService : BaseAuthDataService
         var client = await GetClientAsync();
         var page = new PaginationInfo(0, 50, false);
 
-        return await client.Users.GetAllOrganizationsAsync(userId, page);
+        var orgs = await client.Users.GetAllOrganizationsAsync(userId, page);
+
+        foreach (var org in orgs)
+        {
+            if (org.Metadata == null) org.Metadata = new Dictionary<string, object>();
+        }
+        return orgs;
     }
 
     public async Task UpdateProfileAsync(Member user)
