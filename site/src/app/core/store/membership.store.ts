@@ -25,7 +25,7 @@ export class MembershipStore {
 
   get projectApprovalRequired(): Signal<boolean> {
     return computed(
-      () => this.membership()?.metadata.projectApprovalRequired ?? false
+      () => this.membership()?.metadata?.projectApprovalRequired ?? false
     );
   }
 
