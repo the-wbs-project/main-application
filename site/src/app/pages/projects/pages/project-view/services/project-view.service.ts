@@ -6,7 +6,7 @@ import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryImportResults, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { MembershipStore } from '@wbs/core/store';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';

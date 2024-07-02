@@ -1,6 +1,6 @@
 import { CategoryViewModel } from './category.view-model';
 
-export interface WbsNodeView {
+export interface TaskViewModel {
   id: string;
   treeId: string;
 
@@ -30,8 +30,8 @@ export interface WbsNodeView {
   phaseIdAssociation?: string;
   phaseId?: string;
   phaseLabel?: string;
-  parent?: WbsNodeView;
-  subTasks: WbsNodeView[];
+  parent?: TaskViewModel;
+  subTasks: TaskViewModel[];
   previousTaskId?: string;
   nextTaskId?: string;
 }

@@ -1,7 +1,7 @@
 import { Category, WbsNode } from '@wbs/core/models';
 import { CategoryService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { CategoryViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {
@@ -18,9 +18,9 @@ export class WbsNodePhaseTransformer {
     models: WbsNode[],
     type: string,
     disciplines: CategoryViewModel[]
-  ): WbsNodeView[] {
+  ): TaskViewModel[] {
     const phases = this.phaseList;
-    const nodes: WbsNodeView[] = [];
+    const nodes: TaskViewModel[] = [];
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
       .sort((a, b) => a.order! - b.order!);
@@ -28,7 +28,7 @@ export class WbsNodePhaseTransformer {
     for (let i = 0; i < rootNodes.length; i++) {
       const parentlevel = [i + 1];
       const node = rootNodes[i];
-      const parent: WbsNodeView = {
+      const parent: TaskViewModel = {
         children: 0,
         childrenIds: [],
         description: node.description,
@@ -87,17 +87,17 @@ export class WbsNodePhaseTransformer {
     disciplines: CategoryViewModel[],
     phaseId: string,
     phaseLabel: string,
-    parent: WbsNodeView,
+    parent: TaskViewModel,
     type: string,
     list: WbsNode[]
-  ): WbsNodeView[] {
-    const results: WbsNodeView[] = [];
+  ): TaskViewModel[] {
+    const results: TaskViewModel[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parent.id, list);
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childLevel = [...parent.levels, child.order];
-      const node: WbsNodeView = {
+      const node: TaskViewModel = {
         children: 0,
         childrenIds: [],
         description: child.description,

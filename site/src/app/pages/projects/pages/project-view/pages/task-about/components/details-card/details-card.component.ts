@@ -10,7 +10,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { OrganizationService } from '@wbs/core/services';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 
 @Component({
@@ -24,7 +24,7 @@ export class DetailsCardComponent implements OnInit {
   private readonly orgService = inject(OrganizationService);
 
   readonly project = input.required<ProjectViewModel>();
-  readonly task = input.required<WbsNodeView>();
+  readonly task = input.required<TaskViewModel>();
   readonly owner = signal('');
 
   ngOnInit(): void {

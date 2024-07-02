@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { LibraryEntryNode, WbsNode, ProjectCategory } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class WbsNodeService {
-  static sort = (a: WbsNode | WbsNodeView, b: WbsNode | WbsNodeView) =>
+  static sort = (a: WbsNode | TaskViewModel, b: WbsNode | TaskViewModel) =>
     (a.order ?? 0) < (b.order ?? 0) ? -1 : 1;
 
   static getSortedChildrenForPhase(

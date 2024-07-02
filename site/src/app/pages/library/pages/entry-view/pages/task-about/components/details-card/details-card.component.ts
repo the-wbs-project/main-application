@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
 import { OrganizationService } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 
 @Component({
@@ -27,7 +27,7 @@ export class DetailsCardComponent implements OnChanges {
 
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
-  readonly task = input.required<WbsNodeView>();
+  readonly task = input.required<TaskViewModel>();
 
   readonly owner = signal<string | undefined>(undefined);
 

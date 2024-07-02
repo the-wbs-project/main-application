@@ -43,7 +43,7 @@ import {
 } from '@wbs/components/_utils/tree-buttons';
 import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
 import { Messages, SignalStore, TreeService } from '@wbs/core/services';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
@@ -133,7 +133,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
 
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
-  readonly tree = signal<WbsNodeView[] | undefined>(undefined);
+  readonly tree = signal<TaskViewModel[] | undefined>(undefined);
   readonly width = inject(UiStore).mainContentWidth;
   readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
@@ -207,8 +207,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   rowReordered(e: RowReorderEvent): void {
     const tree = this.getViewModels();
-    const dragged: WbsNodeView = e.draggedRows[0].dataItem;
-    const target: WbsNodeView = e.dropTargetRow?.dataItem;
+    const dragged: TaskViewModel = e.draggedRows[0].dataItem;
+    const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(dragged, target, e.dropPosition);
 
     if (!validation.valid) {
@@ -277,7 +277,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.taskSaveStates.get(taskId)?.set(state);
   }
 
-  private updateState(tasks: WbsNodeView[]): void {
+  private updateState(tasks: TaskViewModel[]): void {
     for (const task of tasks ?? []) {
       if (!this.taskSaveStates.has(task.id)) {
         this.taskSaveStates.set(task.id, signal('ready'));
@@ -300,7 +300,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 
-  private getViewModels(): WbsNodeView[] {
+  private getViewModels(): TaskViewModel[] {
     return structuredClone(this.store.selectSnapshot(TasksState.phases) ?? []);
   }
 }

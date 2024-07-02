@@ -53,7 +53,7 @@ import {
 } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore, UiStore } from '@wbs/core/store';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
@@ -118,7 +118,7 @@ export class LibraryTreeComponent {
   readonly width = inject(UiStore).mainContentWidth;
 
   readonly alert = signal<string | undefined>(undefined);
-  readonly selectedTask = signal<WbsNodeView | undefined>(undefined);
+  readonly selectedTask = signal<TaskViewModel | undefined>(undefined);
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly menu = computed(() =>
     this.menuService.buildMenu(
@@ -180,8 +180,8 @@ export class LibraryTreeComponent {
   rowReordered(e: RowReorderEvent): void {
     const tree = this.entryStore.viewModels()!;
     const entryType = this.entry().type;
-    const dragged: WbsNodeView = e.draggedRows[0].dataItem;
-    const target: WbsNodeView = e.dropTargetRow?.dataItem;
+    const dragged: TaskViewModel = e.draggedRows[0].dataItem;
+    const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(
       entryType,
       dragged,
@@ -245,7 +245,7 @@ export class LibraryTreeComponent {
     this.taskSaveStates.get(taskId)?.set(state);
   }
 
-  private updateState(tasks: WbsNodeView[]): void {
+  private updateState(tasks: TaskViewModel[]): void {
     for (const task of tasks ?? []) {
       if (!this.taskSaveStates.has(task.id)) {
         this.taskSaveStates.set(task.id, signal('ready'));

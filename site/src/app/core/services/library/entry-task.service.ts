@@ -13,7 +13,7 @@ import {
   WbsNodeService,
 } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryTaskActivityService } from './entry-task-activity.service';
@@ -46,7 +46,7 @@ export class EntryTaskService {
     return structuredClone(this.store.tasks() ?? []);
   }
 
-  private getTaskViewModel(id: string | undefined): WbsNodeView | undefined {
+  private getTaskViewModel(id: string | undefined): TaskViewModel | undefined {
     if (id == undefined) return undefined;
 
     return this.store.viewModels()?.find((x) => x.id === id);
