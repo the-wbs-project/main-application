@@ -35,3 +35,9 @@ export interface TaskViewModel {
   previousTaskId?: string;
   nextTaskId?: string;
 }
+
+export interface LibraryTaskViewModel extends TaskViewModel {
+  visibility?: 'public' | 'private' | 'impliedPrivate';
+}
+
+export interface ProjectTaskViewModel extends TaskViewModel {}

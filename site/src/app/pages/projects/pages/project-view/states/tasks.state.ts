@@ -8,7 +8,11 @@ import {
   Transformers,
   WbsNodeService,
 } from '@wbs/core/services';
-import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
+import {
+  ProjectTaskViewModel,
+  ProjectViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
@@ -84,7 +88,7 @@ export class TasksState {
   }
 
   @Selector()
-  static phases(state: StateModel): TaskViewModel[] | undefined {
+  static phases(state: StateModel): ProjectTaskViewModel[] | undefined {
     return state.phases;
   }
 
@@ -143,9 +147,8 @@ export class TasksState {
       project.disciplines,
       state.nodes
     );
-    const phases = this.transformers.nodes.phase.view.run(
+    const phases = this.transformers.nodes.phase.view.forProject(
       state.nodes,
-      'project',
       project.disciplines
     );
     ctx.patchState({ phases });

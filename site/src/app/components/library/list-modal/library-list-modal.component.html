@@ -42,7 +42,7 @@
         <button kendoButton (click)="loadTree()">Reload</button>
       </div>
       <wbs-library-import-tree
-        [entryType]="selected()!.type"
+        [entry]="selected()!"
         [version]="version()!"
         [(tasks)]="tasks"
       />

@@ -59,7 +59,7 @@ export class EntryStore {
     this._version.set(version);
     this._tasks.set(tasks);
     this._viewModels.set(
-      this.createViewModels(entry.type, version.disciplines, tasks)
+      this.createViewModels(entry, version.disciplines, tasks)
     );
   }
 
@@ -87,7 +87,7 @@ export class EntryStore {
 
     if (entry && version)
       this._viewModels.set(
-        this.createViewModels(entry.type, version.disciplines, tasks)
+        this.createViewModels(entry, version.disciplines, tasks)
       );
   }
 
@@ -111,13 +111,13 @@ export class EntryStore {
   }
 
   private createViewModels(
-    entryType: string,
+    entry: LibraryEntry,
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
   ): TaskViewModel[] {
-    return this.transformer.nodes.phase.view.run(
+    return this.transformer.nodes.phase.view.forLibrary(
+      entry,
       tasks,
-      entryType,
       disciplines.length > 0
         ? this.categoryService.buildViewModels(disciplines)
         : this.categoryService.buildViewModelsFromDefinitions()

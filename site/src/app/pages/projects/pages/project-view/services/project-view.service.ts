@@ -157,9 +157,8 @@ export class ProjectViewService {
       .pipe(
         map(([project, nodes]) => ({ project: project!, nodes: nodes! })),
         switchMap(({ project, nodes }) => {
-          const tasks = this.transformers.nodes.phase.view.run(
+          const tasks = this.transformers.nodes.phase.view.forProject(
             nodes,
-            'project',
             project.disciplines
           );
 

@@ -1,12 +1,25 @@
-import { Category, WbsNode } from '@wbs/core/models';
+import {
+  Category,
+  LibraryEntry,
+  LibraryEntryNode,
+  ProjectNode,
+  WbsNode,
+} from '@wbs/core/models';
 import { CategoryService } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/core/store';
-import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
+import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import {
+  CategoryViewModel,
+  LibraryEntryViewModel,
+  LibraryTaskViewModel,
+  ProjectTaskViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {
   constructor(
     private readonly categoryService: CategoryService,
+    private readonly membership: MembershipStore,
     private readonly metadata: MetadataStore
   ) {}
 
@@ -14,10 +27,56 @@ export class WbsNodePhaseTransformer {
     return this.metadata.categories.phases;
   }
 
-  run(
-    models: WbsNode[],
-    type: string,
+  forLibrary(
+    entry: LibraryEntry | LibraryEntryViewModel,
+    models: LibraryEntryNode[],
     disciplines: CategoryViewModel[]
+  ): LibraryTaskViewModel[] {
+    const org = this.membership.membership()!.name;
+    const owner =
+      (entry as LibraryEntry).owner || (entry as LibraryEntryViewModel).ownerId;
+    //
+    //  Just in case somehow the unthinkable happen, return NOTHING!
+    //
+    if (org !== owner && entry.visibility === 'private') return [];
+
+    const privateTasks =
+      org === owner && entry.visibility === 'private'
+        ? []
+        : models.filter((x) => x.visibility === 'private').map((x) => x.id);
+
+    const tasks: LibraryTaskViewModel[] = this.run(
+      entry.type,
+      models,
+      disciplines,
+      privateTasks
+    );
+
+    for (const task of privateTasks) {
+      const vm = tasks.find((x) => x.id === task)!;
+
+      vm.visibility = 'private';
+
+      for (const child of vm.subTasks) {
+        //child.visibility = 'impliedPrivate';
+      }
+    }
+
+    return tasks;
+  }
+
+  forProject(
+    models: ProjectNode[],
+    disciplines: CategoryViewModel[]
+  ): ProjectTaskViewModel[] {
+    return this.run('project', models, disciplines, []);
+  }
+
+  private run(
+    parentType: string,
+    models: (ProjectNode | LibraryEntryNode)[],
+    disciplines: CategoryViewModel[],
+    privateTasks: string[]
   ): TaskViewModel[] {
     const phases = this.phaseList;
     const nodes: TaskViewModel[] = [];
@@ -44,13 +103,15 @@ export class WbsNodePhaseTransformer {
         order: i + 1,
         title: node.title,
         canMoveLeft: false,
-        canMoveUp: type === 'project' ? i > 0 : false,
-        canMoveRight: type === 'project' ? i > 0 : false,
-        canMoveDown: type === 'project' ? i < rootNodes.length - 1 : false,
+        canMoveUp: parentType === 'project' ? i > 0 : false,
+        canMoveRight: parentType === 'project' ? i > 0 : false,
+        canMoveDown:
+          parentType === 'project' ? i < rootNodes.length - 1 : false,
         lastModified: node?.lastModified,
         subTasks: [],
         phaseIdAssociation: node.phaseIdAssociation,
       };
+
       if (parent.description === undefined && parent.phaseIdAssociation) {
         parent.description = phases.find(
           (x) => x.id === node.phaseIdAssociation
@@ -62,7 +123,7 @@ export class WbsNodePhaseTransformer {
         node.id,
         node.title,
         parent,
-        type,
+        parentType,
         models
       );
       parent.children = children.length;

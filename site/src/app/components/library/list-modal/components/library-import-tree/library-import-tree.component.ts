@@ -9,7 +9,10 @@ import {
   output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { SelectableSettings, TreeListModule } from '@progress/kendo-angular-treelist';
+import {
+  SelectableSettings,
+  TreeListModule,
+} from '@progress/kendo-angular-treelist';
 import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
 import {
   CategoryService,
@@ -22,6 +25,7 @@ import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons
 import { TaskTitleComponent } from '@wbs/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/core/store';
+import { LibraryEntryViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -43,7 +47,7 @@ export class LibraryImportTreeComponent implements OnInit {
   private readonly transformer = inject(Transformers);
   readonly treeService = new TreeService();
 
-  readonly entryType = input.required<string>();
+  readonly entry = input.required<LibraryEntryViewModel>();
   readonly version = input.required<LibraryEntryVersion>();
   readonly tasks = model.required<LibraryEntryNode[]>();
   readonly width = inject(UiStore).mainContentWidth;
@@ -51,9 +55,9 @@ export class LibraryImportTreeComponent implements OnInit {
     this.categoryService.buildViewModels(this.version()!.disciplines)
   );
   readonly viewModels = computed(() =>
-    this.transformer.nodes.phase.view.run(
+    this.transformer.nodes.phase.view.forLibrary(
+      this.entry(),
       this.tasks(),
-      this.entryType(),
       this.disciplines()
     )
   );
