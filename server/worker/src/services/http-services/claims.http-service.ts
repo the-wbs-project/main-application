@@ -57,7 +57,7 @@ export class ClaimsHttpService {
     try {
       const { owner, entry } = ctx.req.param();
       const userId = ctx.get('idToken').userId;
-      const model = await ctx.get('data').entries.getByIdAsync(owner, entry);
+      const model = await ctx.get('data').libraryEntries.getEntryByIdAsync(owner, entry);
       const roles: LIBRARY_ROLES_TYPE[] = [LIBRARY_ROLES.VIEWER];
 
       if (model?.author === userId) roles.push(LIBRARY_ROLES.OWNER);

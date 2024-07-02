@@ -51,6 +51,14 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
+app.get('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.getEntryAsync);
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', verifyJwt, Http.libraryEntries.getTasksAsync);
+
+app.put('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.putEntryAsync);
+app.put('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync);
+app.put('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', verifyJwt, Http.libraryEntries.putTasksAsync);
+
 app.get('api/roles', Http.membership.getRolesAsync);
 app.get('api/memberships', verifyJwt, Http.membership.getMembershipsAsync);
 app.delete('api/memberships', verifyJwt, Http.membership.clearMembershipsAsync);

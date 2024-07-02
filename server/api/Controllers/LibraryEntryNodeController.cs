@@ -60,8 +60,8 @@ public class LibraryEntryNodeController : ControllerBase
     {
         try
         {
-            if (record.upserts == null) record.upserts = new LibraryEntryNode[] { };
-            if (record.removeIds == null) record.removeIds = new string[] { };
+            if (record.upserts == null) record.upserts = [];
+            if (record.removeIds == null) record.removeIds = [];
 
             using (var conn = await db.CreateConnectionAsync())
             {
