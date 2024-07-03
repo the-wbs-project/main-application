@@ -50,6 +50,9 @@ export class TaskAboutComponent {
   readonly project = this.store.select(ProjectState.current);
   readonly current = this.store.select(TasksState.current);
   readonly tasks = this.store.select(TasksState.phases);
+  readonly parent = computed(() =>
+    this.tasks()?.find((t) => t.id === this.current()?.parentId)
+  );
 
   readonly claims = input.required<string[]>();
   readonly askAi = model(false);

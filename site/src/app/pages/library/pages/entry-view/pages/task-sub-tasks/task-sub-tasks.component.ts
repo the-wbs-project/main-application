@@ -12,7 +12,12 @@ import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-i
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { PROJECT_NODE_VIEW } from '@wbs/core/models';
-import { CategoryService, SignalStore, TreeService } from '@wbs/core/services';
+import {
+  CategoryService,
+  SignalStore,
+  TreeService,
+  WbsNodeService,
+} from '@wbs/core/services';
 import { EntryStore, UiStore } from '@wbs/core/store';
 
 @Component({
@@ -39,9 +44,14 @@ export class SubTasksComponent {
 
   readonly phaseView = PROJECT_NODE_VIEW.PHASE;
   readonly width = inject(UiStore).mainContentWidth;
-  readonly task = this.entryStore.getTask(this.taskId);
   readonly disciplines = computed(() =>
     this.categoryService.buildViewModels(this.entryStore.version()!.disciplines)
+  );
+  readonly subTasks = computed(() =>
+    WbsNodeService.getSubTasksForTree(
+      this.entryStore.viewModels() ?? [],
+      this.taskId()
+    )
   );
 
   clickedId?: string;

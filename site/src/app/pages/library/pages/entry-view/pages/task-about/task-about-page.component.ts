@@ -85,6 +85,9 @@ export class TaskAboutPageComponent {
   //  State Items
   //
   readonly task = this.entryStore.getTask(this.taskId);
+  readonly parent = computed(() =>
+    this.entryStore.viewModels()?.find((t) => t.id === this.task()?.parentId)
+  );
 
   descriptionChange(description: string): void {
     this.descriptionSave

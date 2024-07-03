@@ -7,6 +7,22 @@ export class WbsNodeService {
   static sort = (a: WbsNode | TaskViewModel, b: WbsNode | TaskViewModel) =>
     (a.order ?? 0) < (b.order ?? 0) ? -1 : 1;
 
+  static getSubTasksForTree(
+    tasks: TaskViewModel[],
+    taskId: string
+  ): TaskViewModel[] {
+    const childrenIds = tasks.find((x) => x.id === taskId)?.childrenIds || [];
+    const children = structuredClone(
+      tasks.filter((x) => childrenIds.includes(x.id))
+    );
+
+    for (const root of children.filter((x) => x.parentId === taskId)) {
+      root.treeParentId = undefined;
+    }
+
+    return children;
+  }
+
   static getSortedChildrenForPhase(
     parentId: string | undefined,
     list: WbsNode[] | undefined

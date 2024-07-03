@@ -8,7 +8,6 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { OrganizationService } from '@wbs/core/services';
 import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
@@ -25,6 +24,7 @@ export class DetailsCardComponent implements OnInit {
 
   readonly project = input.required<ProjectViewModel>();
   readonly task = input.required<TaskViewModel>();
+  readonly parent = input.required<TaskViewModel | undefined>();
   readonly owner = signal('');
 
   ngOnInit(): void {

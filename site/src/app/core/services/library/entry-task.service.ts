@@ -121,17 +121,23 @@ export class EntryTaskService {
   verifyChanges(
     taskId: string,
     title: string,
-    description: string | undefined
+    description: string | undefined,
+    visiblity: string | undefined
   ): boolean {
     const task = this.getTasks().find((x) => x.id === taskId)!;
 
-    return task.title !== title || task.description !== description;
+    return (
+      task.title !== title ||
+      task.description !== description ||
+      task.visibility !== visiblity
+    );
   }
 
   generalSaveAsync(
     taskId: string,
     title: string,
-    description: string | undefined
+    description: string | undefined,
+    visibility: string | undefined
   ): Observable<void> {
     const task = this.getTasks().find((x) => x.id === taskId)!;
     const activities: Observable<void>[] = [];
@@ -164,6 +170,21 @@ export class EntryTaskService {
       );
 
       task.description = description;
+      task.lastModified = new Date();
+    }
+    if (task.visibility !== visibility) {
+      const from = task.visibility;
+      activities.push(
+        this.activity.visibilityChanged(
+          this.entryId,
+          this.version,
+          task.id,
+          from,
+          visibility
+        )
+      );
+
+      task.visibility = visibility;
       task.lastModified = new Date();
     }
     if (activities.length === 0) return of();

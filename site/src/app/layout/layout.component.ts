@@ -23,9 +23,9 @@ import { ProfileEditorComponent } from './components/profile-editor';
       <wbs-header
         [claims]="claims()"
         [org]="org"
-        [orgs]="memberships()!"
+        [orgs]="membershipStore.memberships()!"
         [user]="user()!"
-        [roles]="roles()"
+        [roles]="membershipStore.roles()!"
         [activeSection]="activeSection()"
       />
       <div appMainContent class="scroll pd-x-20 flex-fill">
@@ -57,9 +57,8 @@ export class LayoutComponent implements AfterContentInit {
   private readonly userStore = inject(UserStore);
 
   readonly org = input.required<string>();
-  readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
-  readonly memberships = inject(MembershipStore).memberships;
+  readonly membershipStore = inject(MembershipStore);
 
   readonly showProfileEditor = model(false);
 

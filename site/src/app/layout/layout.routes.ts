@@ -13,7 +13,6 @@ import {
   Auth0Service,
   NavigationMenuService,
   orgClaimsResolve,
-  rolesResolve,
 } from '@wbs/core/services';
 
 export const routes: Routes = [
@@ -55,7 +54,6 @@ export const routes: Routes = [
         ],
         resolve: {
           claims: orgClaimsResolve,
-          roles: rolesResolve,
         },
       },
     ],

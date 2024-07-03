@@ -40,6 +40,7 @@ app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOr
 app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
 app.get('api/claims/libraryEntry/:owner/:entry', verifyJwt, Http.claims.getForLibraryEntryAsync);
 
+app.get('api/cache/clear', Http.misc.clearKvAsync);
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);

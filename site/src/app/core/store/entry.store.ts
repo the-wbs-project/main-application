@@ -6,7 +6,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
-import { TaskViewModel } from '@wbs/core/view-models';
+import { LibraryTaskViewModel } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
@@ -18,7 +18,9 @@ export class EntryStore {
     undefined
   );
   private readonly _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
-  private readonly _viewModels = signal<TaskViewModel[] | undefined>(undefined);
+  private readonly _viewModels = signal<LibraryTaskViewModel[] | undefined>(
+    undefined
+  );
   private readonly _navSectionEntry = signal<string | undefined>(undefined);
   private readonly _navSectionTask = signal<string | undefined>(undefined);
 
@@ -42,11 +44,11 @@ export class EntryStore {
     return this._version;
   }
 
-  get viewModels(): Signal<TaskViewModel[] | undefined> {
+  get viewModels(): Signal<LibraryTaskViewModel[] | undefined> {
     return this._viewModels;
   }
 
-  getTask(taskId: Signal<string>): Signal<TaskViewModel | undefined> {
+  getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
     return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
   }
 
@@ -114,7 +116,7 @@ export class EntryStore {
     entry: LibraryEntry,
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
-  ): TaskViewModel[] {
+  ): LibraryTaskViewModel[] {
     return this.transformer.nodes.phase.view.forLibrary(
       entry,
       tasks,

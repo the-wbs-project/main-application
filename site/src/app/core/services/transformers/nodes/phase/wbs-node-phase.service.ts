@@ -57,7 +57,7 @@ export class WbsNodePhaseTransformer {
 
       vm.visibility = 'private';
 
-      for (const child of vm.subTasks) {
+      for (const child of vm.childrenIds) {
         //child.visibility = 'impliedPrivate';
       }
     }
@@ -108,7 +108,6 @@ export class WbsNodePhaseTransformer {
         canMoveDown:
           parentType === 'project' ? i < rootNodes.length - 1 : false,
         lastModified: node?.lastModified,
-        subTasks: [],
         phaseIdAssociation: node.phaseIdAssociation,
       };
 
@@ -128,11 +127,6 @@ export class WbsNodePhaseTransformer {
       );
       parent.children = children.length;
       parent.childrenIds = children.map((x) => x.id);
-      parent.subTasks = structuredClone(children);
-
-      for (const task of parent.subTasks) {
-        if (task.treeParentId === parent.id) task.treeParentId = undefined;
-      }
 
       nodes.push(parent, ...children);
     }
@@ -172,7 +166,6 @@ export class WbsNodePhaseTransformer {
         levelText: childLevel.join('.'),
         depth: childLevel.length,
         order: child.order ?? 0,
-        parent,
         parentId: parent.id,
         treeParentId: parent.id,
         title: child.title ?? '',
@@ -181,7 +174,6 @@ export class WbsNodePhaseTransformer {
         canMoveUp: i > 0,
         canMoveRight: i > 0,
         canMoveLeft: type === 'project' || parent.levelText.length > 1,
-        subTasks: [],
         phaseIdAssociation: child.phaseIdAssociation,
         phaseId,
         phaseLabel,
@@ -198,11 +190,6 @@ export class WbsNodePhaseTransformer {
 
       node.children = taskChildren.length;
       node.childrenIds = taskChildren.map((x) => x.id);
-      node.subTasks = structuredClone(taskChildren);
-
-      for (const task of node.subTasks) {
-        if (task.treeParentId === node.id) task.treeParentId = undefined;
-      }
 
       results.push(node, ...taskChildren);
     }

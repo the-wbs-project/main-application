@@ -7,6 +7,8 @@ export class MiscHttpService {
     let calls: Promise<any>[] = [];
 
     for (const key of keys.keys) {
+      if (key.name.includes('MEMBERSHIPS')) continue;
+
       calls.push(kv.delete(key.name));
 
       if (calls.length === 15) {

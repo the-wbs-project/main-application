@@ -103,8 +103,8 @@ export class LibraryImportTreeComponent implements OnInit {
 
           tasks.splice(index, 1);
 
-          for (const child of vm.subTasks) {
-            const childIndex = tasks.findIndex((t) => t.id === child.id);
+          for (const child of vm.childrenIds) {
+            const childIndex = tasks.findIndex((t) => t.id === child);
             if (childIndex > -1) tasks.splice(childIndex, 1);
           }
           return [...tasks];

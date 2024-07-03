@@ -30,8 +30,6 @@ export interface TaskViewModel {
   phaseIdAssociation?: string;
   phaseId?: string;
   phaseLabel?: string;
-  parent?: TaskViewModel;
-  subTasks: TaskViewModel[];
   previousTaskId?: string;
   nextTaskId?: string;
 }

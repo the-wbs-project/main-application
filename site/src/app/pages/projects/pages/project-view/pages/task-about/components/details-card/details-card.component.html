@@ -56,7 +56,7 @@
     <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
       {{ "General.Parent" | translate }}:
     </span>
-    @if (task.parent; as parent) {
+    @if (parent(); as parent) {
     <a
       class="text-decoration-none"
       [routerLink]="['../../', parent.id, 'about']"
@@ -82,7 +82,7 @@
       {{ "Wbs.SubTaskCount" | translate }}:
     </span>
     <span>
-      {{ task.subTasks.length }}
+      {{ task.children }}
     </span>
   </p>
 </div>

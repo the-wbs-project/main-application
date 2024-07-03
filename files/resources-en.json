@@ -693,7 +693,8 @@
     "locale": "en-US",
     "values": {
       "Title": "Your Profile",
-      "ProfileUpdated": "Your profile has been updated."
+      "ProfileUpdated": "Your profile has been updated.",
+      "AdminTasks": "Admin Tasks"
     }
   },
   {

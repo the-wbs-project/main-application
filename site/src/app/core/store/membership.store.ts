@@ -1,11 +1,12 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Membership } from '@wbs/core/models';
-import { sorter } from '@wbs/core/services';
+import { OrganizationService, sorter } from '@wbs/core/services';
 import { Observable, map, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MembershipStore {
+  private readonly orgService = inject(OrganizationService);
   private readonly data = inject(DataServiceFactory);
   private readonly _memberships = signal<Membership[] | undefined>(undefined);
   private readonly _membership = signal<Membership | undefined>(undefined);
@@ -42,7 +43,7 @@ export class MembershipStore {
         //  Add organization names to name cache
         //
         for (const m of memberships) {
-          this.data.organizations.addToCache(m.name, m.displayName);
+          this.orgService.addOrganization(m.name, m.displayName);
         }
       })
     );
@@ -50,5 +51,9 @@ export class MembershipStore {
 
   setMembership(membership: Membership): void {
     this._membership.set(membership);
+  }
+
+  setRoles(roles: string[]): void {
+    this._roles.set(roles);
   }
 }

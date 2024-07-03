@@ -28,6 +28,7 @@ export class DetailsCardComponent implements OnChanges {
   readonly entry = input.required<LibraryEntry>();
   readonly version = input.required<LibraryEntryVersion>();
   readonly task = input.required<TaskViewModel>();
+  readonly parent = input.required<TaskViewModel | undefined>();
 
   readonly owner = signal<string | undefined>(undefined);
 
