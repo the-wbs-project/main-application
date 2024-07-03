@@ -53,7 +53,8 @@ app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembers
 
 app.get('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.getEntryAsync);
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', verifyJwt, Http.libraryEntries.getTasksAsync);
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', (ctx) => ctx.newResponse(null, 403));
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/:visibility', verifyJwt, Http.libraryEntries.getTasksAsync);
 
 app.put('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.putEntryAsync);
 app.put('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync);

@@ -27,9 +27,9 @@ export class LibraryEntryHttpService {
 
   static async getTasksAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry, version } = ctx.req.param();
+      const { owner, entry, version, visibility } = ctx.req.param();
 
-      return ctx.json(await ctx.var.data.libraryEntries.getTasksByVersionAsync(owner, entry, parseInt(version)));
+      return ctx.json(await ctx.var.data.libraryEntries.getTasksByVersionAsync(owner, entry, parseInt(version), visibility));
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get a library entry tasks.', <Error>e);
 

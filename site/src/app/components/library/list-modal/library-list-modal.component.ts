@@ -32,6 +32,7 @@ import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../list';
 import { LibraryListFiltersComponent } from '../list-filters';
 import { LibraryImportTreeComponent } from './components';
+import { MembershipStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,
@@ -52,6 +53,7 @@ import { LibraryImportTreeComponent } from './components';
 })
 export class LibraryListModalComponent extends DialogContentBase {
   private readonly data = inject(DataServiceFactory);
+  private readonly membership = inject(MembershipStore).membership;
 
   readonly org = signal<string | undefined>(undefined);
   readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
@@ -83,6 +85,10 @@ export class LibraryListModalComponent extends DialogContentBase {
 
     this.view.set(1);
     this.loadingTree.set(true);
+
+    const visibility =
+      this.membership()!.name === vm.ownerId ? 'private' : 'public';
+
     forkJoin({
       version: this.data.libraryEntryVersions.getAsync(
         vm.ownerId,
@@ -92,7 +98,8 @@ export class LibraryListModalComponent extends DialogContentBase {
       tasks: this.data.libraryEntryNodes.getAllAsync(
         vm.ownerId,
         vm.entryId,
-        vm.version
+        vm.version,
+        visibility
       ),
     }).subscribe(({ version, tasks }) => {
       this.version.set(version);
