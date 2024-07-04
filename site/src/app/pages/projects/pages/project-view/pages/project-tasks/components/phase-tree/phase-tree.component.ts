@@ -52,6 +52,7 @@ import { Observable, delay, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
   CreateTask,
+  RebuildNodeViews,
   TreeReordered,
 } from '../../../../actions';
 import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
@@ -133,7 +134,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
 
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
-  readonly tree = signal<WbsNodeView[] | undefined>(undefined);
   readonly width = inject(UiStore).mainContentWidth;
   readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
@@ -151,7 +151,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .selectAsync(TasksState.phases)
       .pipe(untilDestroyed(this))
       .subscribe((phases) => {
-        this.tree.set(structuredClone(phases));
         this.updateState(phases ?? []);
       });
     /*
@@ -219,6 +218,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
       this.alert.set(undefined);
     }
     const run = () => {
+      console.log('REORDER!');
       const results = this.reorderer.run(tree, dragged, target, e.dropPosition);
       this.callSave(
         dragged.id,
@@ -241,7 +241,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   taskTitleChanged(taskId: string, title: string): void {
-    const task = this.tree()?.find((x) => x.id === taskId);
+    const task = this.tasks()?.find((x) => x.id === taskId);
 
     if (!task) return;
 
@@ -286,7 +286,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   private resetTree(): void {
-    this.tree.set(this.getViewModels());
+    this.store.dispatch(new RebuildNodeViews());
   }
 
   private callSave(taskId: string, obs: Observable<any>): void {
