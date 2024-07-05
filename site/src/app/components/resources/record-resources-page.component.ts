@@ -15,7 +15,6 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoComponent } from '@wbs/components/info/info.component';
 import { RESOURCE_TYPES, ResourceRecord } from '@wbs/core/models';
 import { RecordResourceViewModel } from '@wbs/core/view-models';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { RecordResourceEditorComponent } from './components/record-resources-editor';
 import { RecordResourceListComponent } from './components/record-resources-list';
 import { RecordResourceValidation } from './services';
@@ -27,7 +26,6 @@ import { RecordResourceValidation } from './services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonModule,
-    CheckPipe,
     FontAwesomeModule,
     InfoComponent,
     RecordResourceEditorComponent,
@@ -45,10 +43,9 @@ export class RecordResourcesPageComponent {
   }>();
 
   readonly list = input.required<ResourceRecord[]>();
-  readonly claims = input.required<string[]>();
-  readonly addClaim = input.required<string>();
-  readonly editClaim = input.required<string>();
-  readonly deleteClaim = input.required<string>();
+  readonly canAdd = input.required<boolean>();
+  readonly canEdit = input.required<boolean>();
+  readonly canDelete = input.required<boolean>();
   readonly apiUrlPrefix = input.required<string>();
   readonly view = signal<'list' | 'editor'>('list');
   readonly editType = signal<'add' | 'edit'>('add');

@@ -49,12 +49,12 @@ import {
   Messages,
   SignalStore,
   TreeService,
+  Utils,
   WbsPhaseService,
 } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore, UiStore } from '@wbs/core/store';
 import { WbsNodeView } from '@wbs/core/view-models';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import {
@@ -73,7 +73,6 @@ import { LibraryTreeMenuService } from './library-tree-menu.service';
   imports: [
     AlertComponent,
     ButtonModule,
-    CheckPipe,
     ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
@@ -107,8 +106,6 @@ export class LibraryTreeComponent {
   readonly treeService = new TreeService();
 
   readonly checkIcon = faCheck;
-  readonly canCreateClaim = LIBRARY_CLAIMS.TASKS.CREATE;
-  readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
 
   readonly entryUrl = input.required<string[]>();
   readonly claims = input.required<string[]>();
@@ -130,6 +127,16 @@ export class LibraryTreeComponent {
   );
   readonly disciplines = computed(() =>
     this.category.buildViewModels(this.version().disciplines)
+  );
+  readonly canEdit = computed(
+    () =>
+      this.version().status === 'draft' &&
+      Utils.contains(this.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
+  );
+  readonly canCreate = computed(
+    () =>
+      this.version().status === 'draft' &&
+      Utils.contains(this.claims(), LIBRARY_CLAIMS.TASKS.CREATE)
   );
 
   constructor() {

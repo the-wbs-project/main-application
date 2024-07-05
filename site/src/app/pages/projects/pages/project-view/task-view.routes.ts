@@ -3,7 +3,6 @@ import { dirtyGuard } from '@wbs/core/guards';
 import { orgResolve, userIdResolve } from '@wbs/core/services';
 import {
   closeApprovalWindowGuard,
-  projectClaimsResolve,
   projectIdResolve,
   projectUrlResolve,
   setApprovalViewAsProject,
@@ -22,7 +21,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./view-task.component').then((x) => x.TaskViewComponent),
     resolve: {
-      claims: projectClaimsResolve,
       projectUrl: projectUrlResolve,
       taskId: taskIdResolve,
       userId: userIdResolve,
@@ -37,9 +35,6 @@ export const routes: Routes = [
         data: {
           navSection: 'about',
           crumbs: ['about'],
-        },
-        resolve: {
-          claims: projectClaimsResolve,
         },
       },
       {
@@ -71,7 +66,6 @@ export const routes: Routes = [
           owner: orgResolve,
           projectId: projectIdResolve,
           taskId: taskIdResolve,
-          claims: projectClaimsResolve,
           apiUrlPrefix: taskApiUrlResolve,
         },
       },

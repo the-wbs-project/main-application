@@ -16,7 +16,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { SaveState } from '@wbs/core/models';
+import { PROJECT_STATI, SaveState } from '@wbs/core/models';
 import {
   NavigationMenuService,
   SignalStore,
@@ -66,11 +66,11 @@ export class TaskViewComponent {
   //
   //  IO
   //
-  readonly claims = input.required<string[]>();
   readonly projectUrl = input.required<string[]>();
   readonly taskId = input.required<string>();
   readonly userId = input.required<string>();
 
+  readonly claims = this.store.select(ProjectState.claims);
   readonly project = this.store.select(ProjectState.current);
   readonly navSection = this.store.select(TasksState.navSection);
   readonly approval = this.store.select(ProjectApprovalState.current);
@@ -83,7 +83,11 @@ export class TaskViewComponent {
   readonly chat = this.store.select(ProjectApprovalState.messages);
   readonly titleSaveState = signal<SaveState>('ready');
   readonly links = computed(() =>
-    this.navService.processLinks(TASK_NAVIGATION, this.claims())
+    this.navService.processLinks(
+      TASK_NAVIGATION,
+      this.project()?.status === PROJECT_STATI.PLANNING,
+      this.claims() ?? []
+    )
   );
   readonly task = computed(() =>
     this.tasks()?.find((t) => t.id === this.taskId())

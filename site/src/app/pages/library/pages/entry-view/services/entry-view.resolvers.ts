@@ -6,10 +6,6 @@ import { Utils } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { Observable } from 'rxjs';
 
-export const libraryClaimsResolve: ResolveFn<string[]> = (
-  route: ActivatedRouteSnapshot
-) => getLibraryClaims(inject(DataServiceFactory), route);
-
 export const ownerIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
 ) => Utils.getParam(route, 'ownerId');

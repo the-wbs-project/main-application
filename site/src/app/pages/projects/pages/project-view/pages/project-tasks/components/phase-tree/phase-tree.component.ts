@@ -41,8 +41,8 @@ import {
   TreeButtonsTogglerComponent,
   TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
-import { Messages, SignalStore, TreeService } from '@wbs/core/services';
+import { PROJECT_CLAIMS, PROJECT_STATI, SaveState } from '@wbs/core/models';
+import { Messages, SignalStore, TreeService, Utils } from '@wbs/core/services';
 import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
@@ -77,7 +77,6 @@ import { PhaseTreeReorderService } from './phase-tree-reorder.service';
     AlertComponent,
     ApprovalBadgeComponent,
     ButtonModule,
-    CheckPipe,
     ChildrenApprovalPipe,
     ContextMenuItemComponent,
     ContextMenuModule,
@@ -120,6 +119,11 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
   readonly gridContextMenu =
     viewChild<ContextMenuComponent>(ContextMenuComponent);
+  readonly canEdit = computed(
+    () =>
+      this.project().status === PROJECT_STATI.PLANNING &&
+      Utils.contains(this.claims(), PROJECT_CLAIMS.TASKS.CREATE)
+  );
 
   settings: SelectableSettings = {
     enabled: true,
@@ -131,7 +135,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   readonly checkIcon = faCheck;
   readonly plusIcon = faPlus;
-  readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
 
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly width = inject(UiStore).mainContentWidth;

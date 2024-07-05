@@ -18,7 +18,6 @@ import {
   approvalEnabledResolve,
   closeApprovalWindowGuard,
   projectApiUrlResolve,
-  projectClaimsResolve,
   projectIdResolve,
   projectNavGuard,
   projectUrlResolve,
@@ -39,7 +38,6 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./view-project.component').then((m) => m.ProjectViewComponent),
     resolve: {
-      claims: projectClaimsResolve,
       userId: userIdResolve,
       projectUrl: projectUrlResolve,
     },
@@ -75,9 +73,6 @@ export const routes: Routes = [
           navSection: 'about',
           crumbs: ['about'],
         },
-        resolve: {
-          claims: projectClaimsResolve,
-        },
       },
       {
         path: 'tasks',
@@ -91,7 +86,6 @@ export const routes: Routes = [
           crumbs: ['tasks'],
         },
         resolve: {
-          claims: projectClaimsResolve,
           projectUrl: projectUrlResolve,
         },
       },
@@ -127,7 +121,6 @@ export const routes: Routes = [
         resolve: {
           owner: orgResolve,
           projectId: projectIdResolve,
-          claims: projectClaimsResolve,
           apiUrlPrefix: projectApiUrlResolve,
         },
       },

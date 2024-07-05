@@ -60,9 +60,10 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
     entry: data.libraryEntries.getAsync(owner, entryId),
     version: data.libraryEntryVersions.getAsync(owner, entryId, versionId),
     tasks: data.libraryEntryNodes.getAllAsync(owner, entryId, versionId),
+    claims: data.claims.getLibraryEntryClaimsAsync(owner, entryId),
   }).pipe(
-    map(({ entry, version, tasks }) => {
-      store.setAll(entry, version, tasks);
+    map(({ entry, version, tasks, claims }) => {
+      store.setAll(entry, version, tasks, claims);
     })
   );
 };

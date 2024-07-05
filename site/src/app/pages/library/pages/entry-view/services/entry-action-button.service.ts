@@ -30,14 +30,11 @@ export class EntryActionButtonService {
     const items: ActionButtonMenuItem[] = [];
 
     if (entryType === 'project') {
-      items.push(
-        {
-          action: this.actionCreateProject,
-          icon: faPlus,
-          text: 'General.CreateProject',
-        },
-        { separator: true }
-      );
+      items.push({
+        action: this.actionCreateProject,
+        icon: faPlus,
+        text: 'General.CreateProject',
+      });
     }
     items.push({
       action: this.actionDownload,
@@ -45,7 +42,10 @@ export class EntryActionButtonService {
       text: 'Wbs.DownloadTasks',
     });
 
-    if (claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)) {
+    if (
+      versionStatus === 'draft' &&
+      claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)
+    ) {
       items.push({
         icon: faCloudUpload,
         text: 'Wbs.UploadTasks',
@@ -54,8 +54,6 @@ export class EntryActionButtonService {
     }
 
     if (claims.includes(LIBRARY_CLAIMS.UPDATE)) {
-      items.push({ separator: true });
-
       if (versionStatus === 'draft') {
         items.push({
           action: this.actionPublish,

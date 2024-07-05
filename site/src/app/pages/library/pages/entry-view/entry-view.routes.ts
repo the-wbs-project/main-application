@@ -11,7 +11,6 @@ import {
   entryIdResolve,
   entryNavGuard,
   entryUrlResolve,
-  libraryClaimsResolve,
   ownerIdResolve,
   populateGuard,
   redirectGuard,
@@ -35,7 +34,6 @@ export const routes: Routes = [
       owner: ownerIdResolve,
       entryId: entryIdResolve,
       entryUrl: entryUrlResolve,
-      claims: libraryClaimsResolve,
     },
     children: [
       {
@@ -53,9 +51,6 @@ export const routes: Routes = [
           section: 'about',
           crumbs: ['about'],
         },
-        resolve: {
-          claims: libraryClaimsResolve,
-        },
       },
       {
         path: 'tasks',
@@ -68,7 +63,7 @@ export const routes: Routes = [
         },
         resolve: {
           entryUrl: entryUrlResolve,
-          claims: libraryClaimsResolve,
+          //claims: libraryClaimsResolve,
         },
         loadChildren: () => import('./task-view.routes').then((x) => x.routes),
       },
@@ -102,7 +97,6 @@ export const routes: Routes = [
           owner: ownerIdResolve,
           entryId: entryIdResolve,
           versionId: versionIdResolve,
-          claims: libraryClaimsResolve,
           apiUrlPrefix: entryApiUrlResolve,
         },
       },

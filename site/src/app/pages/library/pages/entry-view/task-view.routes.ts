@@ -5,7 +5,6 @@ import {
   entryIdResolve,
   taskNavGuard,
   entryUrlResolve,
-  libraryClaimsResolve,
   taskIdResolve,
   versionIdResolve,
   taskApiUrlResolve,
@@ -18,7 +17,6 @@ export const routes: Routes = [
       import('./view-task.component').then((m) => m.TaskViewComponent),
     resolve: {
       entryUrl: entryUrlResolve,
-      claims: libraryClaimsResolve,
     },
     children: [
       {
@@ -35,7 +33,6 @@ export const routes: Routes = [
           section: 'about',
         },
         resolve: {
-          claims: libraryClaimsResolve,
           taskId: taskIdResolve,
         },
       },
@@ -68,7 +65,6 @@ export const routes: Routes = [
           entryId: entryIdResolve,
           apiUrlPrefix: taskApiUrlResolve,
           versionId: versionIdResolve,
-          claims: libraryClaimsResolve,
         },
       },
       {
