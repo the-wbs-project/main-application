@@ -63,18 +63,29 @@
   >
     <ng-template kendoTreeListCellTemplate let-dataItem>
       @defer (on idle) {
-        <wbs-task-title
-          [title]="dataItem.title"
-          (titleChange)="taskTitleChanged(dataItem.id, $event)"
-        />
-        @if (taskSaveStates.get(dataItem.id); as saveState) {
-        <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
-        }
-      } @placeholder {
-        <span class="tx-8">Loading...</span>
+      <wbs-task-title
+        [title]="dataItem.title"
+        (titleChange)="taskTitleChanged(dataItem.id, $event)"
+      />
+      @if (taskSaveStates.get(dataItem.id); as saveState) {
+      <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+      } } @placeholder {
+      <span class="tx-8">Loading...</span>
       }
       <!--
       -->
+    </ng-template>
+  </kendo-treelist-column>
+  <kendo-treelist-column
+    [width]="100"
+    class="discipline-column"
+    headerClass="discipline-column tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <wbs-tree-flag-column-header />
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-visibility-icon [visibility]="dataItem.visibility" />
     </ng-template>
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
@@ -91,7 +102,7 @@
       @defer (on idle) {
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
       } @placeholder {
-        <span class="tx-8">Loading...</span>
+      <span class="tx-8">Loading...</span>
       }
     </ng-template>
   </kendo-treelist-column>

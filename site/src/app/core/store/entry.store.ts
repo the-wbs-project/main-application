@@ -49,7 +49,9 @@ export class EntryStore {
   }
 
   getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
-    return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
+    return computed(() =>
+      structuredClone(this.viewModels()?.find((t) => t.id === taskId()))
+    );
   }
 
   setAll(

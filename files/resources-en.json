@@ -82,6 +82,7 @@
       "Next": "Next",
       "Public": "Public",
       "Private": "Private",
+      "ImpliedPrivate": "Implied Private",
       "Actions": "Actions",
       "Project": "Project",
       "Projects": "Projects",
@@ -551,6 +552,7 @@
       "Disciplines": "Disciplines",
       "#Children": "# Children",
       "DisciplineLegend": "Discipline Legend",
+      "FlagLegend": "Flag Legend",
       "PhaseLegend": "Phase Legend",
       "NodeLevelStats": "Node Level Stats",
       "InsertDescription": "Insert Description Here",
@@ -587,7 +589,9 @@
       "SearchContinue": "Select Library Entry To Continue",
       "LibraryFilters": "Library Filters",
       "ExpandAll": "Expand All",
-      "CollapseAll": "Collapse All"
+      "CollapseAll": "Collapse All",
+      "PrivateTooltip": "Private - This task can only be seen within your organization.",
+      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent has been set to private."
     }
   },
   {

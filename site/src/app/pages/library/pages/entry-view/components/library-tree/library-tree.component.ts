@@ -11,7 +11,7 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck, faLock } from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
@@ -62,6 +62,8 @@ import {
   EntryTaskReorderService,
 } from '../../services';
 import { LibraryTreeMenuService } from './library-tree-menu.service';
+import { TreeFlagColumnHeaderComponent } from '../tree-flag-column-header';
+import { VisibilityIconComponent } from '../visibility-icon.component';
 
 @UntilDestroy()
 @Component({
@@ -88,6 +90,8 @@ import { LibraryTreeMenuService } from './library-tree-menu.service';
     TreeButtonsDownloadComponent,
     TreeButtonsTogglerComponent,
     TreeButtonsUploadComponent,
+    TreeFlagColumnHeaderComponent,
+    VisibilityIconComponent,
   ],
 })
 export class LibraryTreeComponent {

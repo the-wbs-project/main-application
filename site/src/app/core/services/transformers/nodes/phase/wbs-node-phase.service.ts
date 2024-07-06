@@ -57,8 +57,10 @@ export class WbsNodePhaseTransformer {
 
       vm.visibility = 'private';
 
-      for (const child of vm.childrenIds) {
-        //child.visibility = 'impliedPrivate';
+      for (const childId of vm.childrenIds) {
+        const child = tasks.find((x) => x.id === childId)!;
+
+        child.visibility = 'impliedPrivate';
       }
     }
 
