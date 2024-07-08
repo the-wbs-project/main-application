@@ -48,4 +48,24 @@ public class LibrarySearchService
         }
         return viewModels;
     }
+
+    public async Task<List<LibrarySearchDocument>> GetAllAsync(string owner)
+    {
+        var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
+        var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
+        var options = new SearchOptions()
+        {
+            Filter = $"OwnerId eq '{owner}'"
+        };
+
+        var results = await searchClient.SearchAsync<LibrarySearchDocument>(null, options);
+        var items = new List<LibrarySearchDocument>();
+
+        foreach (var x in results.Value.GetResults())
+        {
+            items.Add(x.Document);
+        }
+        return items;
+    }
+
 }
