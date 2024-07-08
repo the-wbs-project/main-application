@@ -1,5 +1,3 @@
-import { ProjectCategory } from './project-category.type';
-
 export interface LibraryEntryVersion {
   entryId: string;
   version: number;
@@ -9,5 +7,5 @@ export interface LibraryEntryVersion {
   description?: string;
   status: string;
   categories: string[];
-  disciplines: ProjectCategory[];
+  disciplines: any[];
 }
