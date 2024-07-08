@@ -591,7 +591,7 @@
       "ExpandAll": "Expand All",
       "CollapseAll": "Collapse All",
       "PrivateTooltip": "Private - This task can only be seen within your organization.",
-      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent has been set to private."
+      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private."
     }
   },
   {

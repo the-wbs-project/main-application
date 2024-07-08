@@ -85,7 +85,9 @@
       <wbs-tree-flag-column-header />
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
+      @if (dataItem.visibility) {
       <wbs-visibility-icon [visibility]="dataItem.visibility" />
+      }
     </ng-template>
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
