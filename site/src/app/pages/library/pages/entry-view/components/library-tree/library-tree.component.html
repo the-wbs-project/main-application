@@ -72,8 +72,6 @@
       } } @placeholder {
       <span class="tx-8">Loading...</span>
       }
-      <!--
-      -->
     </ng-template>
   </kendo-treelist-column>
   <kendo-treelist-column
@@ -98,12 +96,15 @@
     headerClass="discipline-column tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
-      <wbs-tree-discipline-legend [list]="disciplines()" />
+      @defer (on idle) {
+      <wbs-tree-discipline-legend [list]="disciplines()" /> } @placeholder {
+      <span class="tx-8">Loading...</span>
+      }
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      @defer (on idle) {
+      @defer (on idle) { @if ((dataItem.disciplines ?? []).length > 0) {
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
-      } @placeholder {
+      } } @placeholder {
       <span class="tx-8">Loading...</span>
       }
     </ng-template>

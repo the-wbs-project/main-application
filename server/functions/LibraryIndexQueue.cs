@@ -96,7 +96,8 @@ namespace functions
                         .Where(d => !entries.Any(e => e.EntryId == d.EntryId && e.Version == d.Version))
                         .ToList();
 
-                    await searchIndexService.RemoveAsync(toRemove);
+                    if (toRemove.Count > 0)
+                        await searchIndexService.RemoveAsync(toRemove);
                 }
             }
             catch (Exception ex)
