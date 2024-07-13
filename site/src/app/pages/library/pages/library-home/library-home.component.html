@@ -1,24 +1,31 @@
 <div class="d-flex h-100 justify-content-center">
   <div class="d-flex flex-column w-100 h-100 pd-t-10 pd-b-10 mx-wd-1200">
     <div class="d-flex w-100 flex-align-center">
-      <wbs-library-create-button (typeChosen)="create($event, list)" />
+      <wbs-library-create-button (typeChosen)="createEntry($event)" />
+      <div class="mg-l-10">
+        <wbs-library-filter
+          [buttons]="libraries"
+          [selection]="library()"
+          (selectionChange)="service.libraryChanged($event!)"
+        />
+      </div>
       <div class="flex-fill text-end">
         <wbs-page-header />
       </div>
     </div>
-    <wbs-library-list-filters
-      [showCreateButton]="true"
-      [(library)]="library"
-      [(typeFilters)]="typeFilters"
-      [(searchText)]="searchText"
-    />
+    <div class="mg-y-10">
+      <wbs-library-list-filters
+        [(authorFilter)]="roleFilter"
+        [(typeFilter)]="typeFilter"
+        [(searchText)]="searchText"
+        (authorFilterChange)="retrieve()"
+        (typeFilterChange)="retrieve()"
+        (searchTextChange)="retrieve()"
+      />
+    </div>
     <wbs-library-list
-      #list
-      [org]="membership()!.name"
-      [library]="library()"
-      [searchText]="searchText()"
-      [typeFilters]="typeFilters()"
-      (selectedChange)="nav($event)"
+      [entries]="entries()"
+      (selectedChange)="service.navigate($event)"
     />
   </div>
 </div>

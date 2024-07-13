@@ -53,9 +53,9 @@ import { MembershipStore } from '@wbs/core/store';
 })
 export class LibraryListModalComponent extends DialogContentBase {
   private readonly data = inject(DataServiceFactory);
-  private readonly membership = inject(MembershipStore).membership;
+  private org?: string;
+  private userId?: string;
 
-  readonly org = signal<string | undefined>(undefined);
   readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
   readonly view = signal(0);
   readonly ready = signal(false);
@@ -67,7 +67,8 @@ export class LibraryListModalComponent extends DialogContentBase {
   //  View 1 Items
   //
   readonly searchText = model('');
-  readonly typeFilters = model<string[]>([]);
+  readonly roleFilter = signal<string>('all');
+  readonly typeFilter = signal<string>('all');
   readonly library = model<string>('personal');
   //
   //  View 2 Items
@@ -75,6 +76,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   readonly loadingTree = signal(false);
   readonly version = signal<LibraryEntryVersion | undefined>(undefined);
   readonly tasks = signal<LibraryEntryNode[]>([]);
+  readonly entries = signal<LibraryEntryViewModel[]>([]);
 
   constructor(dialog: DialogRef) {
     super(dialog);
@@ -86,8 +88,7 @@ export class LibraryListModalComponent extends DialogContentBase {
     this.view.set(1);
     this.loadingTree.set(true);
 
-    const visibility =
-      this.membership()!.name === vm.ownerId ? 'private' : 'public';
+    const visibility = this.org === vm.ownerId ? 'private' : 'public';
 
     forkJoin({
       version: this.data.libraryEntryVersions.getAsync(
@@ -120,17 +121,19 @@ export class LibraryListModalComponent extends DialogContentBase {
   static launchAsync(
     dialog: DialogService,
     org: string,
+    userId: string,
     library: string,
-    typeFilters: string[] | undefined
+    typeFilter: string | undefined
   ): Observable<LibraryImportResults | undefined> {
     const ref = dialog.open({
       content: LibraryListModalComponent,
     });
     const component = ref.content.instance as LibraryListModalComponent;
 
-    component.org.set(org);
+    component.org = org;
+    component.userId = userId;
     component.library.set(library);
-    component.typeFilters.set(typeFilters ?? []);
+    component.typeFilter.set(typeFilter ?? 'all');
     component.ready.set(true);
 
     return ref.result.pipe(
@@ -138,5 +141,17 @@ export class LibraryListModalComponent extends DialogContentBase {
         x instanceof DialogCloseResult ? undefined : <LibraryImportResults>x
       )
     );
+  }
+
+  protected retrieve(): void {
+    this.data.libraryEntries
+      .searchAsync(this.org!, {
+        userId: this.userId!,
+        library: this.library(),
+        searchText: this.searchText(),
+        role: this.roleFilter(),
+        type: this.typeFilter(),
+      })
+      .subscribe((entries) => this.entries.set(entries));
   }
 }

@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -6,16 +5,19 @@ import {
   inject,
   input,
   model,
+  signal,
 } from '@angular/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
 import { LibraryListComponent } from '@wbs/components/library/list';
 import { LibraryListFiltersComponent } from '@wbs/components/library/list-filters';
 import { PageHeaderComponent } from '@wbs/components/page-header';
 import { MembershipStore, UserStore } from '@wbs/core/store';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
 import { EntryCreationService } from '../../services';
 import { LibraryCreateButtonComponent } from './components';
+import { LibraryHomeService } from './services';
+import { LibraryFilterComponent } from '@wbs/components/library/list-filters/components';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { LIBRARY_FILTER_LIBRARIES } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -25,67 +27,45 @@ import { LibraryCreateButtonComponent } from './components';
     LibraryCreateButtonComponent,
     LibraryListFiltersComponent,
     LibraryListComponent,
+    LibraryFilterComponent,
     PageHeaderComponent,
   ],
-  providers: [EntryCreationService],
+  providers: [EntryCreationService, LibraryHomeService],
 })
 export class LibraryHomeComponent implements OnInit {
-  private readonly store = inject(Store);
-  private readonly profile = inject(UserStore).profile;
-  public readonly creation = inject(EntryCreationService);
+  private readonly data = inject(DataServiceFactory);
+  private readonly userId = inject(UserStore).userId;
+  readonly service = inject(LibraryHomeService);
 
   readonly membership = inject(MembershipStore).membership;
-  readonly searchText = model<string>('');
-  readonly typeFilters = model<string[]>([]);
-  readonly library = model<string>('');
+  readonly library = input.required<string>();
+  readonly searchText = signal<string>('');
+  readonly roleFilter = signal<string>('all');
+  readonly typeFilter = signal<string>('all');
+  readonly entries = signal<LibraryEntryViewModel[]>([]);
+  readonly libraries = LIBRARY_FILTER_LIBRARIES;
 
   ngOnInit(): void {
-    this.library.set('personal');
-    this.typeFilters.set([]);
+    this.retrieve();
   }
 
-  create(type: string, list: LibraryListComponent): void {
-    this.creation
-      .runAsync(this.membership()!.name, type)
-      .subscribe((results) => {
-        console.log(results);
-        if (results == undefined) return;
-
-        const vm: LibraryEntryViewModel = {
-          authorId: results.entry.author,
-          authorName: this.profile()!.name,
-          entryId: results.entry.id,
-          title: results.version.title,
-          type: results.entry.type,
-          visibility: results.entry.visibility,
-          version: results.version.version,
-          lastModified: results.version.lastModified,
-          description: results.version.description,
-          ownerId: results.entry.owner,
-          ownerName: this.membership()!.displayName,
-          status: results.version.status,
-        };
-        if (results.action === 'close') {
-          list.entryAdded(vm);
-        } else {
-          this.nav(vm, results.action);
-        }
-      });
+  createEntry(type: string): void {
+    this.service.createEntry(type).subscribe((entry) => {
+      if (entry) {
+        this.entries.update((entries) => [entry, ...entries]);
+      }
+    });
   }
 
-  nav(vm: LibraryEntryViewModel | undefined, action?: string): void {
-    if (!vm) return;
-
-    this.store.dispatch(
-      new Navigate([
-        '/' + this.membership()!.name,
-        'library',
-        'view',
-        vm.ownerId,
-        vm.entryId,
-        vm.version,
-        ...(action === 'upload' ? [action] : []), // Don't send the view since 'view' should actually go to 'about'
-      ])
-    );
+  retrieve(): void {
+    this.data.libraryEntries
+      .searchAsync(this.membership()!.name, {
+        userId: this.userId()!,
+        library: this.library(),
+        searchText: this.searchText(),
+        role: this.roleFilter(),
+        type: this.typeFilter(),
+      })
+      .subscribe((entries) => this.entries.set(entries));
   }
 }
