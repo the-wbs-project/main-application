@@ -1,0 +1,63 @@
+@if (store.entry()!; as entry) { @if (store.version()!; as version) {
+<div class="card-header">
+  {{ "General.Details" | translate }}
+</div>
+<div class="card-body">
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Owner" | translate }} :
+    </span>
+    <span>
+      {{ owner() }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Owner" | translate }} :
+    </span>
+    <span>
+      {{ entry.author | userName | async }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Visibility" | translate }} :
+    </span>
+    <span>
+      <wbs-visibility-text [visibility]="entry.visibility" />
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Type" | translate }} :
+    </span>
+    <span>
+      <!--<fa-icon [icon]="entry.type | entryTypeIcon" size="sm" />-->
+      {{ entry.type | entryTypeTitle | translate }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.Status" | translate }} :
+    </span>
+    <span> {{ version.status | libraryStatus | translate }} </span>
+  </p>
+
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "Wbs.TaskCount" | translate }} :
+    </span>
+    <span>
+      {{ store.tasks()!.length }}
+    </span>
+  </p>
+  <p class="ms-md-4 ms-0 mb-2">
+    <span class="tx-semibold d-inline-block wd-100 tx-right mg-r-10">
+      {{ "General.LastModified" | translate }} :
+    </span>
+    <span>
+      {{ version.lastModified | dateText }}
+    </span>
+  </p>
+</div>
+} }

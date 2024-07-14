@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services.Search;
@@ -16,18 +15,20 @@ public class LibraryEntryVersionController : ControllerBase
     private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryVersionDataService versionDataService;
-    private readonly LibraryEntryVersionResourceDataService entryResourceDataService;
+    private readonly LibraryEntryVersionReviewDataService reviewDataService;
+    private readonly LibraryEntryVersionResourceDataService resourceDataService;
     private readonly ResourceFileStorageService resourceService;
 
-    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService entryResourceDataService, LibrarySearchIndexService searchIndexService, ResourceFileStorageService resourceService, DbService db)
+    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService resourceDataService, LibrarySearchIndexService searchIndexService, ResourceFileStorageService resourceService, DbService db, LibraryEntryVersionReviewDataService reviewDataService)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryVersionController>();
+        this.db = db;
         this.entryDataService = entryDataService;
         this.versionDataService = versionDataService;
         this.searchIndexService = searchIndexService;
-        this.entryResourceDataService = entryResourceDataService;
+        this.resourceDataService = resourceDataService;
         this.resourceService = resourceService;
-        this.db = db;
+        this.reviewDataService = reviewDataService;
     }
 
     [Authorize]
@@ -111,12 +112,54 @@ public class LibraryEntryVersionController : ControllerBase
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Entry Version not found for the owner provided.");
 
-                return Ok(await entryResourceDataService.GetListAsync(conn, entryId, entryVersion));
+                return Ok(await resourceDataService.GetListAsync(conn, entryId, entryVersion));
             }
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error getting library entry version resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{entryVersion}/rating")]
+    public async Task<IActionResult> GetRating(string owner, string entryId, int entryVersion)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Entry Version not found for the owner provided.");
+
+                return Ok(await reviewDataService.GetRatingAsync(conn, owner, entryId, entryVersion));
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting library entry version rating");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{entryVersion}/reviews")]
+    public async Task<IActionResult> GetReviews(string owner, string entryId, int entryVersion)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Entry Version not found for the owner provided.");
+
+                return Ok(await reviewDataService.GetListAsync(conn, owner, entryId, entryVersion));
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting library entry version reviews");
             return new StatusCodeResult(500);
         }
     }
@@ -134,7 +177,7 @@ public class LibraryEntryVersionController : ControllerBase
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Entry Version not found for the owner provided.");
 
-                await entryResourceDataService.SetAsync(conn, owner, entryId, entryVersion, model);
+                await resourceDataService.SetAsync(conn, owner, entryId, entryVersion, model);
 
                 return NoContent();
             }
@@ -157,7 +200,7 @@ public class LibraryEntryVersionController : ControllerBase
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Entry Version not found for the owner provided.");
 
-                var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
+                var record = await resourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
                 var file = await resourceService.GetLibraryResourceAsync(owner, entryId, entryVersion, resourceId);
 
                 return File(file, "application/octet-stream", record.Resource);
@@ -181,7 +224,7 @@ public class LibraryEntryVersionController : ControllerBase
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Entry Version not found for the owner provided.");
 
-                var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
+                var record = await resourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
                 var bytes = new byte[] { };
 
                 using (var stream = file.OpenReadStream())
@@ -198,6 +241,29 @@ public class LibraryEntryVersionController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving library entry version resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{entryVersion}/reviews")]
+    public async Task<IActionResult> SetReview(string owner, string entryId, int entryVersion, LibraryEntryVersionReview review)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Entry Version not found for the owner provided.");
+
+                await reviewDataService.SetAsync(conn, owner, entryId, entryVersion, review);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error setting library entry version review");
             return new StatusCodeResult(500);
         }
     }
