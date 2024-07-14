@@ -32,6 +32,10 @@ public class LibrarySearchService
             OrderBy = { "LastModified desc" }
         };
 
+        logger.LogWarning($"Search query: {filters.searchText}");
+        logger.LogWarning($"Search filter: {options.Filter}");
+
+
         var results = await searchClient.SearchAsync<LibrarySearchDocument>(filters.searchText, options);
         var viewModels = new List<ApiSearchResult<LibraryEntryViewModel>>();
 

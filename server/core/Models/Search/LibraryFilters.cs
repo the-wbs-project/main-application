@@ -19,14 +19,16 @@ public class LibraryFilters
 
         if (roles != null && roles.Length > 0)
         {
+            var roleParts = new List<string>();
             foreach (var role in roles)
             {
-                if (role == "watched")
-                    filterParts.Add($"Roles/any(person: person/Id eq '{role}')");
+                if (role == "watching")
+                    roleParts.Add($"Watchers/any(person: person/Id eq '{userId}')");
 
                 if (role == "author")
-                    filterParts.Add($"Author/Id eq '{userId}'");
+                    roleParts.Add($"Author/Id eq '{userId}'");
             }
+            filterParts.Add(string.Join(" or ", Wrap(roleParts)));
         }
 
         //if (library == "organizational") filterParts.Add($"(OwnerId eq '{owner}' and StatusId eq 'published')");

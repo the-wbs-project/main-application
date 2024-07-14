@@ -20,6 +20,7 @@ public static class LibrarySearchTransformer
     {
         var doc = new LibrarySearchDocument
         {
+            Id = $"{entry.EntryId}-{visibility}",
             EntryId = entry.EntryId,
             Version = entry.Version,
             OwnerId = entry.OwnerId,
