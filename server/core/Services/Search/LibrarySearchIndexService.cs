@@ -97,10 +97,17 @@ public class LibrarySearchIndexService
         foreach (var discipline in version.disciplines)
             disciplines.Add(discipline.isCustom ? discipline.label : disciplineLabels[discipline.id]);
 
-        var doc = LibrarySearchTransformer.CreateDocument(entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users);
+        var toUpload = new List<LibrarySearchDocument>
+        {
+            LibrarySearchTransformer.CreateDocument("private", entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users)
+        };
 
+        if (entry.Visibility == "public")
+        {
+            toUpload.Add(LibrarySearchTransformer.CreateDocument("public", entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users));
+        }
         var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
-            .MergeOrUploadDocumentsAsync(new List<LibrarySearchDocument> { doc });
+            .MergeOrUploadDocumentsAsync(toUpload);
     }
 
     public async Task VerifyIndexAsync()

@@ -9,6 +9,7 @@ namespace Wbs.Core.Services.Transformers;
 public static class LibrarySearchTransformer
 {
     public static LibrarySearchDocument CreateDocument(
+        string visibility,
         LibraryEntryViewModel entry,
         Organization owner,
         string typeName,
@@ -29,7 +30,7 @@ public static class LibrarySearchTransformer
             TypeName = typeName,
             LastModified = entry.LastModified,
             StatusId = entry.Status,
-            Visibility = entry.Visibility,
+            Visibility = visibility,
             Disciplines_En = disciplines.ToArray(),
             //
             //  Users
@@ -39,22 +40,33 @@ public static class LibrarySearchTransformer
                 .Where(x => users.ContainsKey(x))
                 .Select(x => users[x])
                 .ToArray(),
+            Tasks = GetChildren(entryTasks, null, visibility).ToArray()
         };
 
-        var tasks = new List<TaskSearchDocument>();
-
-        foreach (var entryTask in entryTasks)
-        {
-            tasks.Add(new TaskSearchDocument
-            {
-                TaskId = entryTask.id,
-                Title_En = entryTask.title,
-                Description_En = entryTask.description,
-            });
-        }
-
-        doc.Tasks = tasks.ToArray();
-
         return doc;
+    }
+
+    private static List<TaskSearchDocument> GetChildren(IEnumerable<LibraryEntryNode> entryTasks, string parentId, string visibility)
+    {
+        var results = new List<TaskSearchDocument>();
+
+        foreach (var task in entryTasks.Where(x => x.parentId == parentId))
+        {
+            if (task.visibility == "private" && visibility == "public") continue;
+
+            var children = GetChildren(entryTasks, task.id, visibility);
+
+            results.Add(new TaskSearchDocument
+            {
+                TaskId = task.id,
+                Title_En = task.title,
+                Description_En = task.description,
+            });
+
+            results.AddRange(children);
+        }
+        //
+
+        return results;
     }
 }

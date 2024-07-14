@@ -5,7 +5,8 @@ public class LibraryFilters
     public string userId { get; set; }
     public string searchText { get; set; }
     public string library { get; set; }
-    public string[] typeFilters { get; set; }
+    public string[] roles { get; set; }
+    public string[] types { get; set; }
 
     public string ToFilterString(string owner)
     {
@@ -13,19 +14,33 @@ public class LibraryFilters
         //
         //  Ownership filter
         //
-        if (library == "organizational") filterParts.Add($"OwnerId eq '{owner}'");
+        if (library == "public") filterParts.Add("(Visibility eq 'public' and StatusId eq 'published')");
+        else filterParts.Add($"(OwnerId eq '{owner}' and Visibility eq 'private')");
+
+        if (roles != null && roles.Length > 0)
+        {
+            foreach (var role in roles)
+            {
+                if (role == "watched")
+                    filterParts.Add($"Roles/any(person: person/Id eq '{role}')");
+
+                if (role == "author")
+                    filterParts.Add($"Author/Id eq '{userId}'");
+            }
+        }
+
         //if (library == "organizational") filterParts.Add($"(OwnerId eq '{owner}' and StatusId eq 'published')");
-        else if (library == "personal") filterParts.Add($"(OwnerId eq '{owner}' and Author/Id eq '{userId}' and (StatusId eq 'published' or StatusId eq 'draft'))");
-        else if (library == "watched") filterParts.Add($"(Watchers/any(person: person/Id eq '{userId}') and StatusId eq 'published')");
-        else if (library == "public") filterParts.Add($"(Visibility eq 'public' and StatusId eq 'published')");
+        //if (library == "personal") filterParts.Add($"(OwnerId eq '{owner}' and Author/Id eq '{userId}' and (StatusId eq 'published' or StatusId eq 'draft'))");
+        //else if (library == "watched") filterParts.Add($"(Watchers/any(person: person/Id eq '{userId}') and StatusId eq 'published')");
+        //else if (library == "public") filterParts.Add($"(Visibility eq 'public' and StatusId eq 'published')");
         //
         //  Type filter
         //
-        if (typeFilters != null && typeFilters.Length > 0)
+        if (types != null && types.Length > 0)
         {
             var typeParts = new List<string>();
 
-            foreach (var type in typeFilters)
+            foreach (var type in types)
             {
                 typeParts.Add($"TypeId eq '{type}'");
             }
