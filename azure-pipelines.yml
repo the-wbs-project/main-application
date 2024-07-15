@@ -4,7 +4,7 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-  - task-flags
+  - main
 
 variables:
   YARN_CACHE_FOLDER: $(Pipeline.Workspace)/.yarn
