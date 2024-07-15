@@ -1,4 +1,9 @@
-import { ChangeDetectionStrategy, Component, model } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  input,
+  output,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,13 +15,16 @@ import {
 @Component({
   standalone: true,
   selector: 'wbs-library-filter',
-  template: `<kendo-buttongroup selection="single">
+  template: `<kendo-buttongroup [selection]="selectionMode()">
     @for (button of buttons(); track $index) {
     <button
       kendoButton
       size="small"
-      [selected]="selection() === button.value"
-      (click)="selection.set(button.value)"
+      [selected]="
+        selection() === button.value ||
+        (selection() ?? []).includes(button.value)
+      "
+      (click)="selectionChanged.emit(button.value)"
     >
       @if (button.icon) {
       <fa-icon [icon]="button.icon" class="mg-r-5" />
@@ -34,6 +42,8 @@ import {
 })
 export class LibraryFilterComponent {
   readonly buttons =
-    model.required<{ value: string; label: string; icon?: IconDefinition }[]>();
-  readonly selection = model.required<string | undefined>();
+    input.required<{ value: string; label: string; icon?: IconDefinition }[]>();
+  readonly selection = input.required<string | string[] | undefined>();
+  readonly selectionMode = input<'single' | 'multiple'>('single');
+  readonly selectionChanged = output<string>();
 }

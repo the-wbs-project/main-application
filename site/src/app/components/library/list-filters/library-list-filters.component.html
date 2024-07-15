@@ -22,7 +22,8 @@
         </div>
         <wbs-library-filter
           [buttons]="FILTERS_LIBRARY"
-          [(selection)]="library"
+          [selection]="library()"
+          (selectionChanged)="libraryChanged($event)"
         />
       </div>
       }
@@ -31,8 +32,10 @@
           {{ "General.Association" | translate }}:
         </div>
         <wbs-library-filter
+          selectionMode="multiple"
           [buttons]="FILTERS_ROLES"
-          [(selection)]="authorFilter"
+          [selection]="authorFilters()"
+          (selectionChanged)="roleChanged($event)"
         />
       </div>
       <div class="flex-1 pd-t-5">
@@ -40,8 +43,10 @@
           {{ "General.Types" | translate }}:
         </div>
         <wbs-library-filter
+          selectionMode="multiple"
           [buttons]="FILTERS_TYPE"
-          [(selection)]="typeFilter"
+          [selection]="typeFilters()"
+          (selectionChanged)="typeChanged($event)"
         />
       </div>
     </div>

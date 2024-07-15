@@ -52,8 +52,8 @@ import {
 export class LibraryListFiltersComponent {
   readonly showLibrary = input(false);
   readonly searchText = model.required<string>();
-  readonly typeFilter = model.required<string>();
-  readonly authorFilter = model<string>();
+  readonly typeFilters = model.required<string[]>();
+  readonly authorFilters = model<string[]>();
   readonly library = model<string>();
   readonly expanded = signal(false);
 
@@ -62,4 +62,34 @@ export class LibraryListFiltersComponent {
   readonly FILTERS_TYPE = LIBRARY_FILTER_TYPES;
   readonly upIcon = faChevronUp;
   readonly downIcon = faChevronDown;
+
+  libraryChanged(value: string): void {
+    if (this.library() === value) return;
+
+    this.library.set(value);
+  }
+
+  roleChanged(value: string): void {
+    this.authorFilters.update((filters) => {
+      if (!filters) return [value];
+
+      if (filters.includes(value)) {
+        return filters.filter((filter) => filter !== value);
+      }
+
+      return [...filters, value];
+    });
+  }
+
+  typeChanged(value: string): void {
+    this.typeFilters.update((filters) => {
+      if (!filters) return [value];
+
+      if (filters.includes(value)) {
+        return filters.filter((filter) => filter !== value);
+      }
+
+      return [...filters, value];
+    });
+  }
 }

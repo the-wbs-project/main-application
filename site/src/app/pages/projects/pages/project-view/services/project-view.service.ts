@@ -122,8 +122,7 @@ export class ProjectViewService {
           this.dialogService,
           this.membership.membership()!.name,
           this.userId()!,
-          'personal',
-          'all'
+          'personal'
         ).pipe(
           switchMap((results: LibraryImportResults | undefined) =>
             !results

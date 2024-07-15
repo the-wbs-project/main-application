@@ -53,6 +53,7 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
 app.get('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.getEntryAsync);
+app.post('api/portfolio/:owner/library/entries/search', verifyJwt, Http.libraryEntries.getSearchAsync);
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', (ctx) => ctx.newResponse(null, 403));
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/:visibility', verifyJwt, Http.libraryEntries.getTasksAsync);

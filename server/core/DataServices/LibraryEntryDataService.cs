@@ -1,6 +1,7 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Wbs.Core.Models;
+using Wbs.Core.Models.Search;
 using Wbs.Core.Services.Transformers;
 using Wbs.Core.ViewModels;
 
@@ -14,10 +15,34 @@ public class LibraryEntryDataService : BaseSqlDbService
 
         cmd.Parameters.AddWithValue("@Owner", owner);
 
-        using (var reader = await cmd.ExecuteReaderAsync())
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        return LibraryEntryTransformer.ToViewModelList(reader);
+    }
+
+    public async Task<List<ApiSearchResult<LibraryEntryViewModel>>> GetFilteredAsync(SqlConnection conn, string owner, LibraryFilters filters)
+    {
+        var cmd = new SqlCommand("[dbo].[LibraryEntry_Get]", conn)
         {
-            return LibraryEntryTransformer.ToViewModelList(reader);
-        }
+            CommandType = CommandType.StoredProcedure
+        };
+        cmd.Parameters.AddWithValue("@OwnerId", owner);
+        cmd.Parameters.AddWithValue("@UserId", filters.userId);
+        cmd.Parameters.AddWithValue("@Visibility", filters.library == "public" ? "public" : "private");
+        cmd.Parameters.AddWithValue("@Roles", string.Join(',', filters.roles ?? []));
+        cmd.Parameters.AddWithValue("@Types", string.Join(',', filters.types ?? []));
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        var docs = LibraryEntryTransformer.ToViewModelList(reader);
+
+        return docs.Select(doc => new ApiSearchResult<LibraryEntryViewModel>
+        {
+            Document = doc,
+            Highlights = null,
+            Score = 100,
+            SemanticSearch = null
+        }).ToList();
     }
 
     public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(SqlConnection conn, string owner, string entryId)
@@ -27,13 +52,12 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Owner", owner);
         cmd.Parameters.AddWithValue("@EntryId", entryId);
 
-        using (var reader = await cmd.ExecuteReaderAsync())
-        {
-            if (reader.Read())
-                return LibraryEntryTransformer.ToViewModel(reader);
-            else
-                return null;
-        }
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        if (reader.Read())
+            return LibraryEntryTransformer.ToViewModel(reader);
+        else
+            return null;
     }
 
     public async Task<LibraryEntry> GetByIdAsync(SqlConnection conn, string owner, string id)
@@ -43,13 +67,12 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Owner", owner);
         cmd.Parameters.AddWithValue("@Id", id);
 
-        using (var reader = await cmd.ExecuteReaderAsync())
-        {
-            if (await reader.ReadAsync())
-                return LibraryEntryTransformer.ToModel(reader);
-            else
-                return null;
-        }
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        if (await reader.ReadAsync())
+            return LibraryEntryTransformer.ToModel(reader);
+        else
+            return null;
     }
 
 
@@ -60,10 +83,10 @@ public class LibraryEntryDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@LibraryEntryId", id);
         cmd.Parameters.AddWithValue("@Ownerid", owner);
 
-        using (var reader = await cmd.ExecuteReaderAsync())
-        {
-            if (reader.Read()) return reader.GetInt32(0) == 1;
-        }
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        if (reader.Read()) return reader.GetInt32(0) == 1;
+
         return false;
     }
 

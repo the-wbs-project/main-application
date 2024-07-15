@@ -9,7 +9,8 @@
     <wbs-library-list-filters
       [showLibrary]="true"
       [(library)]="library"
-      [(typeFilter)]="typeFilter"
+      [(typeFilters)]="typeFilters"
+      [(authorFilters)]="roleFilters"
       [(searchText)]="searchText"
       (libraryChange)="retrieve()"
       (typeFiltersChange)="retrieve()"

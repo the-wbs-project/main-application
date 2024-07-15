@@ -32,7 +32,6 @@ import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../list';
 import { LibraryListFiltersComponent } from '../list-filters';
 import { LibraryImportTreeComponent } from './components';
-import { MembershipStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,
@@ -67,9 +66,9 @@ export class LibraryListModalComponent extends DialogContentBase {
   //  View 1 Items
   //
   readonly searchText = model('');
-  readonly roleFilter = signal<string>('all');
-  readonly typeFilter = signal<string>('all');
-  readonly library = model<string>('personal');
+  readonly roleFilters = signal<string[]>([]);
+  readonly typeFilters = signal<string[]>([]);
+  readonly library = model<string>('organizational');
   //
   //  View 2 Items
   //
@@ -122,8 +121,7 @@ export class LibraryListModalComponent extends DialogContentBase {
     dialog: DialogService,
     org: string,
     userId: string,
-    library: string,
-    typeFilter: string | undefined
+    library: string
   ): Observable<LibraryImportResults | undefined> {
     const ref = dialog.open({
       content: LibraryListModalComponent,
@@ -133,7 +131,7 @@ export class LibraryListModalComponent extends DialogContentBase {
     component.org = org;
     component.userId = userId;
     component.library.set(library);
-    component.typeFilter.set(typeFilter ?? 'all');
+    component.typeFilters.set([]);
     component.ready.set(true);
 
     return ref.result.pipe(
@@ -149,8 +147,8 @@ export class LibraryListModalComponent extends DialogContentBase {
         userId: this.userId!,
         library: this.library(),
         searchText: this.searchText(),
-        role: this.roleFilter(),
-        type: this.typeFilter(),
+        roles: this.roleFilters(),
+        types: this.typeFilters(),
       })
       .subscribe((entries) => this.entries.set(entries));
   }

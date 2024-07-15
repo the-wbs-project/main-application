@@ -1,6 +1,53 @@
 import { Context } from '../../config';
+import { LibraryEntryViewModel } from '../../view-models';
+import { OriginService } from '../origin.service';
 
 export class LibraryEntryHttpService {
+  static async getSearchAsync(ctx: Context): Promise<Response> {
+    try {
+      const resp = await OriginService.pass(ctx);
+      const results = await resp.json<{ document: LibraryEntryViewModel }[]>();
+      var orgIds: string[] = [];
+      const userIds: string[] = [];
+
+      for (const x of results ?? []) {
+        const vm = x.document;
+
+        if (!vm.ownerName && !orgIds.includes(vm.ownerId)) {
+          orgIds.push(vm.ownerId);
+        }
+        if (!vm.authorName && !userIds.includes(vm.authorId)) {
+          userIds.push(vm.authorId);
+        }
+      }
+
+      if (orgIds.length === 0 && userIds.length === 0) {
+        return ctx.json(results);
+      }
+
+      const orgs = await Promise.all(orgIds.map((id) => ctx.var.data.organizations.getAsync(id)));
+      const users = await Promise.all(userIds.map((id) => ctx.var.data.users.getAsync(id)));
+
+      for (const x of results ?? []) {
+        const vm = x.document;
+
+        if (!vm.ownerName) {
+          const org = orgs.find((o) => o?.name === vm.ownerId);
+          if (org) vm.ownerName = org.displayName;
+        }
+        if (!vm.authorName) {
+          const user = users.find((u) => u?.id === vm.authorId);
+          if (user) vm.authorName = user.name;
+        }
+      }
+
+      return ctx.json(results);
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to get library entry search results.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
   static async getEntryAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();

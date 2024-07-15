@@ -1,10 +1,9 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
+  OnChanges,
   inject,
   input,
-  model,
   signal,
 } from '@angular/core';
 import { LibraryListComponent } from '@wbs/components/library/list';
@@ -32,7 +31,7 @@ import { LIBRARY_FILTER_LIBRARIES } from '@wbs/core/models';
   ],
   providers: [EntryCreationService, LibraryHomeService],
 })
-export class LibraryHomeComponent implements OnInit {
+export class LibraryHomeComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
   readonly service = inject(LibraryHomeService);
@@ -40,12 +39,12 @@ export class LibraryHomeComponent implements OnInit {
   readonly membership = inject(MembershipStore).membership;
   readonly library = input.required<string>();
   readonly searchText = signal<string>('');
-  readonly roleFilter = signal<string>('all');
-  readonly typeFilter = signal<string>('all');
+  readonly roleFilters = signal<string[]>([]);
+  readonly typeFilters = signal<string[]>([]);
   readonly entries = signal<LibraryEntryViewModel[]>([]);
   readonly libraries = LIBRARY_FILTER_LIBRARIES;
 
-  ngOnInit(): void {
+  ngOnChanges(): void {
     this.retrieve();
   }
 
@@ -57,15 +56,31 @@ export class LibraryHomeComponent implements OnInit {
     });
   }
 
+  authorFilterChanged(filter: string[] | undefined): void {
+    this.roleFilters.set(filter ?? []);
+    this.retrieve();
+  }
+
+  typeFilterChanged(filter: string[] | undefined): void {
+    this.typeFilters.set(filter ?? []);
+    this.retrieve();
+  }
+
   retrieve(): void {
     this.data.libraryEntries
       .searchAsync(this.membership()!.name, {
         userId: this.userId()!,
         library: this.library(),
         searchText: this.searchText(),
-        role: this.roleFilter(),
-        type: this.typeFilter(),
+        roles: this.roleFilters(),
+        types: this.typeFilters(),
       })
       .subscribe((entries) => this.entries.set(entries));
+  }
+
+  libraryChanged(library: string): void {
+    if (library === this.library()) return;
+
+    this.service.libraryChanged(library);
   }
 }

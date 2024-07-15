@@ -6,7 +6,7 @@
         <wbs-library-filter
           [buttons]="libraries"
           [selection]="library()"
-          (selectionChange)="service.libraryChanged($event!)"
+          (selectionChanged)="libraryChanged($event!)"
         />
       </div>
       <div class="flex-fill text-end">
@@ -15,11 +15,11 @@
     </div>
     <div class="mg-y-10">
       <wbs-library-list-filters
-        [(authorFilter)]="roleFilter"
-        [(typeFilter)]="typeFilter"
+        [(authorFilters)]="roleFilters"
+        [(typeFilters)]="typeFilters"
         [(searchText)]="searchText"
-        (authorFilterChange)="retrieve()"
-        (typeFilterChange)="retrieve()"
+        (authorFiltersChange)="retrieve()"
+        (typeFiltersChange)="retrieve()"
         (searchTextChange)="retrieve()"
       />
     </div>
