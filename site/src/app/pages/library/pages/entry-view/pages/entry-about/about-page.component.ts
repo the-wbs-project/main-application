@@ -10,7 +10,7 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import {  LIBRARY_CLAIMS } from '@wbs/core/models';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {
   AiPromptService,
   CategoryService,
@@ -30,7 +30,6 @@ import { DetailsCardComponent } from './components/details-card';
   templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CheckPipe,
     DescriptionCardComponent,
     DescriptionAiDialogComponent,
     DisciplineCardComponent,

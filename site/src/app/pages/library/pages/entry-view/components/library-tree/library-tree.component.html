@@ -24,14 +24,14 @@
   [(expandedKeys)]="treeService.expandedKeys"
   [navigable]="true"
   [selectable]="{ enabled: true, mode: 'row' }"
-  [rowReorderable]="claims() | check : canEditClaim"
+  [rowReorderable]="canEdit()"
   (selectionChange)="selectedTask.set($event.items[0].dataItem)"
   (rowReorder)="rowReordered($event)"
   (cellClick)="cellClick($event)"
   (dblclick)="navigateToTask(selectedTask()?.id)"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    @if (entry().type === 'project' && (claims() | check : canCreateClaim)) {
+    @if (canCreate()) {
     <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
     }
     <wbs-tree-buttons-toggler
@@ -40,11 +40,11 @@
     />
     <wbs-tree-buttons-download (click)="entryService.downloadTasks()" />
 
-    @if ((claims() | check : canEditClaim)) {
+    @if (canEdit()) {
     <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
     }
   </ng-template>
-  @if (claims() | check : canEditClaim) {
+  @if (canEdit()) {
   <kendo-treelist-rowreorder-column [width]="40" />
   }
   <kendo-treelist-column
@@ -65,6 +65,7 @@
       @defer (on idle) {
       <wbs-task-title
         [title]="dataItem.title"
+        [canEdit]="canEdit()"
         (titleChange)="taskTitleChanged(dataItem.id, $event)"
       />
       @if (taskSaveStates.get(dataItem.id); as saveState) {
@@ -104,8 +105,8 @@
     <ng-template kendoTreeListCellTemplate let-dataItem>
       @defer (on idle) { @if ((dataItem.disciplines ?? []).length > 0) {
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
-      } } @placeholder {
-      <span class="tx-8">Loading...</span>
+      } @placeholder {
+      <span class="tx-8"> {{ "General.Loading" | translate }}...</span>
       }
     </ng-template>
   </kendo-treelist-column>

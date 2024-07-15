@@ -9,6 +9,6 @@ export interface ContextMenuItem {
   items?: ContextMenuItem[];
   filters?: {
     claim?: string;
-    stati?: PROJECT_STATI_TYPE[];
+    stati?: string[];
   };
 }

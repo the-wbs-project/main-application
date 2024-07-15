@@ -4,16 +4,16 @@
       <wbs-details-card />
       <wbs-discipline-card
         [splitLimit]="650"
+        [canEdit]="store.canEditEntry()"
         [items]="disciplines()"
         noDisciplinesLabel="Library.NoDisciplinesEntry"
-        [canEdit]="claims() | check : UPDATE_CLAIM"
         [editRoute]="['../', 'settings', 'disciplines']"
       />
       <wbs-description-card
         [(askAi)]="askAi"
+        [canEdit]="store.canEditEntry()"
         [(editMode)]="descriptionEditMode"
         [saveState]="descriptionSave.state()"
-        [canEdit]="claims() | check : UPDATE_CLAIM"
         [description]="store.version()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         (descriptionChange)="descriptionChange($event)"

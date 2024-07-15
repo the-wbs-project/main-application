@@ -29,7 +29,6 @@ export class Utils {
       };
 
       reader.readAsArrayBuffer(file.rawFile!);
-      //reader.readAsDataURL(file.rawFile!);
     });
   }
 
@@ -69,5 +68,17 @@ export class Utils {
       //@ts-ignore
       if (value) obj[property] = new Date(value);
     }
+  }
+
+  static contains(
+    list: string[] | undefined,
+    toCheck: string | string[] | undefined
+  ): boolean {
+    if (!toCheck) return true;
+    if (!list) return false;
+
+    if (!Array.isArray(toCheck)) toCheck = [toCheck];
+
+    return toCheck.some((claim) => list.includes(claim));
   }
 }

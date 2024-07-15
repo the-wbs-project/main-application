@@ -10,11 +10,15 @@ export class NavigationMenuService {
   //    This was created so the labels can be translated before hand
   //        so the aria labels are translated as well.
   //
-  processLinks(menu: NavigationLink[], claims: string[]): NavigationLink[] {
+  processLinks(
+    menu: NavigationLink[],
+    isRecordEditable: boolean,
+    claims: string[]
+  ): NavigationLink[] {
     const processed: NavigationLink[] = [];
 
     for (const item of structuredClone(menu)) {
-      const processedItem = this.processLink(item, claims);
+      const processedItem = this.processLink(item, isRecordEditable, claims);
       if (processedItem) processed.push(processedItem);
     }
 
@@ -23,9 +27,11 @@ export class NavigationMenuService {
 
   private processLink(
     item: NavigationLink,
+    isRecordEditable: boolean,
     claims: string[]
   ): NavigationLink | undefined {
     if (item.claim && !claims.includes(item.claim)) return undefined;
+    if (item.onlyIfEditable && !isRecordEditable) return undefined;
 
     item.text = this.resources.get(item.text!);
 
@@ -33,7 +39,7 @@ export class NavigationMenuService {
       const children: NavigationLink[] = [];
 
       for (const child of item.items) {
-        const processed = this.processLink(child, claims);
+        const processed = this.processLink(child, isRecordEditable, claims);
         if (processed) children.push(processed);
       }
       item.items = children;

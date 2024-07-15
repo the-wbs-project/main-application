@@ -4,4 +4,5 @@ export type NavigationLink = MenuItem & {
   section?: string;
   route?: string[];
   claim?: string;
+  onlyIfEditable?: boolean;
 };

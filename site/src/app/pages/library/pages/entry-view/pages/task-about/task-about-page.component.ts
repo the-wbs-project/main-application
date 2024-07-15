@@ -6,7 +6,6 @@ import {
   inject,
   input,
   model,
-  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -15,21 +14,19 @@ import {
   faTriangleExclamation,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DescriptionCardComponent } from '@wbs/components/description-card';
+import { DisciplineCardComponent } from '@wbs/components/discipline-card';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { SavingAlertComponent } from '@wbs/components/_utils/saving-alert.component';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {
   AiPromptService,
   SaveService,
   TaskModalService,
 } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
-import { DescriptionCardComponent } from '@wbs/components/description-card';
-import { DisciplineCardComponent } from '@wbs/components/discipline-card';
-import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
-import { SavingAlertComponent } from '@wbs/components/_utils/saving-alert.component';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
+import { EntryStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryStore, MetadataStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 import { DetailsCardComponent } from './components/details-card';
 
@@ -38,7 +35,6 @@ import { DetailsCardComponent } from './components/details-card';
   templateUrl: './task-about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CheckPipe,
     DateTextPipe,
     DescriptionAiDialogComponent,
     DescriptionCardComponent,
@@ -56,18 +52,14 @@ import { DetailsCardComponent } from './components/details-card';
 export class TaskAboutPageComponent {
   private readonly prompt = inject(AiPromptService);
   private readonly taskService = inject(EntryTaskService);
-  private readonly metadata = inject(MetadataStore);
   readonly modal = inject(TaskModalService);
   readonly entryStore = inject(EntryStore);
 
-  readonly UPDATE_CLAIM = LIBRARY_CLAIMS.TASKS.UPDATE;
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
-  readonly canEditClaim = LIBRARY_CLAIMS.TASKS.UPDATE;
   //
   //  Inputs & Models
   //
-  readonly claims = input.required<string[]>();
   readonly taskId = input.required<string>();
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);

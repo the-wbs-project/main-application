@@ -1,5 +1,6 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import {
+  LIBRARY_CLAIMS,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
@@ -23,6 +24,7 @@ export class EntryStore {
   );
   private readonly _navSectionEntry = signal<string | undefined>(undefined);
   private readonly _navSectionTask = signal<string | undefined>(undefined);
+  private readonly _claims = signal<string[]>([]);
 
   get entry(): Signal<LibraryEntry | undefined> {
     return this._entry;
@@ -48,20 +50,60 @@ export class EntryStore {
     return this._viewModels;
   }
 
-  getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
+  get claims(): Signal<string[]> {
+    return this._claims;
+  }
+
+  get canEditEntry(): Signal<boolean> {
     return computed(() =>
-      structuredClone(this.viewModels()?.find((t) => t.id === taskId()))
+      this.claimCheck(this.version(), this._claims(), LIBRARY_CLAIMS.UPDATE)
     );
+  }
+
+  get canCreateTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.CREATE
+      )
+    );
+  }
+
+  get canEditTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.UPDATE
+      )
+    );
+  }
+
+  get canDeleteTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.DELETE
+      )
+    );
+  }
+
+  getTask(taskId: Signal<string>): Signal<WbsNodeView | undefined> {
+    return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
   }
 
   setAll(
     entry: LibraryEntry,
     version: LibraryEntryVersion,
-    tasks: LibraryEntryNode[]
+    tasks: LibraryEntryNode[],
+    claims: string[]
   ): void {
     this._entry.set(entry);
     this._version.set(version);
     this._tasks.set(tasks);
+    this._claims.set(claims);
     this._viewModels.set(
       this.createViewModels(entry, version.disciplines, tasks)
     );
@@ -126,5 +168,13 @@ export class EntryStore {
         ? this.categoryService.buildViewModels(disciplines)
         : this.categoryService.buildViewModelsFromDefinitions()
     );
+  }
+
+  private claimCheck(
+    version: LibraryEntryVersion | undefined,
+    claims: string[],
+    claim: string
+  ): boolean {
+    return version?.status === 'draft' && claims.includes(claim);
   }
 }

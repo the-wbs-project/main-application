@@ -11,7 +11,7 @@ import {
 import { CategoryService } from '@wbs/core/services';
 import { ProjectViewModel, UserRolesViewModel } from '@wbs/core/view-models';
 import { MetadataStore, UserStore } from '@wbs/core/store';
-import { Observable, of } from 'rxjs';
+import { Observable, forkJoin, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../models';
 import {
@@ -35,6 +35,7 @@ import { ProjectService, TimelineService } from '../services';
 
 interface StateModel {
   model?: Project;
+  claims: string[];
   current?: ProjectViewModel;
   navSection?: string;
   roles?: string[];
@@ -46,7 +47,9 @@ declare type Context = StateContext<StateModel>;
 @Injectable()
 @State<StateModel>({
   name: 'project',
-  defaults: {},
+  defaults: {
+    claims: [],
+  },
 })
 export class ProjectState {
   private readonly categoryService = inject(CategoryService);
@@ -55,6 +58,11 @@ export class ProjectState {
   private readonly services = inject(ProjectService);
   private readonly timeline = inject(TimelineService);
   private readonly userId = inject(UserStore).userId;
+
+  @Selector()
+  static claims(state: StateModel): string[] {
+    return state.claims;
+  }
 
   @Selector()
   static current(state: StateModel): ProjectViewModel | undefined {
@@ -107,18 +115,23 @@ export class ProjectState {
     const userId = this.userId()!;
     const roles: string[] = [];
 
-    return this.data.projects.getAsync(owner, projectId).pipe(
-      tap((project) => this.verifyRoles(project)),
-      tap((project) => {
-        for (const role of project!.roles.filter((x) => x.userId === userId)) {
+    return forkJoin({
+      project: this.data.projects.getAsync(owner, projectId),
+      claims: this.data.claims.getProjectClaimsAsync(owner, projectId),
+    }).pipe(
+      tap((data) => this.verifyRoles(data.project)),
+      tap((data) => {
+        for (const role of data.project!.roles.filter(
+          (x) => x.userId === userId
+        )) {
           roles.push(role.role);
         }
-        ctx.patchState({ model: project, roles });
+        ctx.patchState({ model: data.project, claims: data.claims, roles });
       }),
       tap(() => this.setVm(ctx)),
       tap(() => ctx.dispatch([new VerifyTasks()])),
-      tap((project) =>
-        ctx.dispatch(new SetChecklistData(project, undefined, undefined))
+      tap((data) =>
+        ctx.dispatch(new SetChecklistData(data.project, undefined, undefined))
       ),
       switchMap(() => this.updateUsers(ctx)),
       tap(() => this.clearClaimCache())

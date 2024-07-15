@@ -10,16 +10,16 @@
     [splitLimit]="750"
     [alertIfEmpty]="true"
     [items]="task?.disciplines ?? []"
+    [canEdit]="entryStore.canEditTask()"
     noDisciplinesLabel="Library.NoDisciplinesTask"
-    [canEdit]="claims() | check : UPDATE_CLAIM"
     [editRoute]="['../', 'settings', 'disciplines']"
   />
   <wbs-description-card
     [(askAi)]="askAi"
     [(editMode)]="descriptionEditMode"
+    [canEdit]="entryStore.canEditTask()"
     [saveState]="descriptionSave.state()"
     [description]="task.description ?? ''"
-    [canEdit]="claims() | check : UPDATE_CLAIM"
     noDescriptionLabel="Library.NoDescriptionTask"
     (descriptionChange)="descriptionChange($event)"
   />

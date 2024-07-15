@@ -36,6 +36,7 @@
       <wbs-task-title
         [showRemove]="dataItem.parentId != null || entry().type === 'project'"
         [title]="dataItem.title"
+        [canEdit]="true"
         (titleChange)="titleChanged(dataItem.id, $event)"
         (remove)="removeTask(dataItem.id)"
       />

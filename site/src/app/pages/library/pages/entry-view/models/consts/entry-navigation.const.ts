@@ -60,6 +60,7 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
     text: 'General.Settings',
     items: settings,
     section: 'settings',
+    onlyIfEditable: true,
     claim: LIBRARY_CLAIMS.SETTINGS.READ,
     cssClass: ['nav-item', 'tx-uppercase'],
   },

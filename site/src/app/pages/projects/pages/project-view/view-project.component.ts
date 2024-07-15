@@ -9,7 +9,7 @@ import {
 import { RouterModule } from '@angular/router';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
-import { SaveState } from '@wbs/core/models';
+import { PROJECT_STATI, SaveState } from '@wbs/core/models';
 import { NavigationMenuService, SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
@@ -48,12 +48,12 @@ export class ProjectViewComponent {
 
   readonly checkIcon = faCheck;
 
-  readonly claims = input.required<string[]>();
   readonly userId = input.required<string>();
   readonly projectUrl = input.required<string[]>();
 
   readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly approval = this.store.select(ProjectApprovalState.current);
+  readonly claims = this.store.select(ProjectState.claims);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly approvalView = this.store.select(ProjectApprovalState.view);
   readonly showApproval = computed(
@@ -69,7 +69,11 @@ export class ProjectViewComponent {
   readonly category = computed(() => this.project()?.category);
   readonly title = computed(() => this.project()?.title);
   readonly links = computed(() =>
-    this.navService.processLinks(PROJECT_NAVIGATION, this.claims())
+    this.navService.processLinks(
+      PROJECT_NAVIGATION,
+      this.project()?.status === PROJECT_STATI.PLANNING,
+      this.claims() ?? []
+    )
   );
 
   titleChanged(title: string): void {

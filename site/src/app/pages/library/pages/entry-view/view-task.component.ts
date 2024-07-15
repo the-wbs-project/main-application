@@ -21,11 +21,13 @@ import {
   SaveService,
   TaskModalService,
   TitleService,
+  Utils,
 } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
 import { EntryTitleComponent } from './components/entry-title';
 import { TASK_NAVIGATION } from './models';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -52,13 +54,16 @@ export class TaskViewComponent {
   readonly entryStore = inject(EntryStore);
 
   readonly closeIcon = faX;
-  readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
   readonly taskId = input.required<string>();
   readonly titleSave = new SaveService();
 
   readonly links = computed(() =>
-    this.navService.processLinks(TASK_NAVIGATION, this.claims())
+    this.navService.processLinks(
+      TASK_NAVIGATION,
+      this.entryStore.version()?.status === 'draft',
+      this.entryStore.claims()
+    )
   );
   readonly task = computed(() =>
     this.entryStore.viewModels()?.find((t) => t.id === this.taskId())

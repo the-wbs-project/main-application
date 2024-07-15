@@ -28,7 +28,7 @@ import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type
     <div class="pd-15">
       @if (view() === 'phases') {
       <wbs-project-phase-tree
-        [claims]="claims()"
+        [claims]="claims() ?? []"
         [project]="project()!"
         [projectUrl]="projectUrl()"
       />
@@ -41,8 +41,8 @@ import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type
 export class ProjectTasksComponent {
   private readonly store = inject(SignalStore);
 
-  readonly claims = input.required<string[]>();
   readonly projectUrl = input.required<string[]>();
   readonly view = signal<'phases' | 'disciplines'>('phases');
+  readonly claims = this.store.select(ProjectState.claims);
   readonly project = this.store.select(ProjectState.current);
 }

@@ -12,6 +12,7 @@
         </div>
         <wbs-entry-title
           [title]="task()!.title"
+          [canEdit]="entryStore.canEditTask()"
           (titleChange)="titleChanged($event)"
         />
         <wbs-save-message [state]="titleSave.state()" cssClass="tx-12" />

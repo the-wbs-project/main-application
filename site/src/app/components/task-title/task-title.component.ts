@@ -1,4 +1,3 @@
-import { NgClass, UpperCasePipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -28,10 +27,8 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
     ButtonModule,
     FontAwesomeModule,
     FormsModule,
-    NgClass,
     TextBoxModule,
     TranslateModule,
-    UpperCasePipe,
   ],
 })
 export class TaskTitleComponent {
@@ -41,6 +38,7 @@ export class TaskTitleComponent {
   readonly faTrash = faTrash;
   readonly showRemove = input(false);
   readonly title = model.required<string>();
+  readonly canEdit = input.required<boolean>();
   readonly editMode = signal<boolean>(false);
   readonly remove = output<void>();
 

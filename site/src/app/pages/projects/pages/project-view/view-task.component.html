@@ -44,7 +44,7 @@
       @if (approvalView() === 'task' && approval(); as approval) {
       <wbs-project-approval-window
         [approval]="approval"
-        [claims]="claims()"
+        [claims]="claims() ?? []"
         [userId]="userId()"
         [isReadyOnly]="project()?.status !== 'approval'"
         [chat]="chat() ?? []"

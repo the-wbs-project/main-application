@@ -38,6 +38,7 @@ export const TASK_NAVIGATION: NavigationLink[] = [
     text: 'General.Settings',
     items: settings,
     section: 'settings',
+    onlyIfEditable: true,
     claim: PROJECT_CLAIMS.TASKS.UPDATE,
     cssClass: ['nav-item', 'tx-uppercase'],
   },

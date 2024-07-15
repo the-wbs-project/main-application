@@ -30,6 +30,7 @@
     <span class="mg-r-10 mg-t-6">
       {{ title() }}
     </span>
+    @if (canEdit()) {
     <fa-icon
       size="sm"
       class="pointer child-to-show"
@@ -45,7 +46,7 @@
       (click)="remove.emit()"
       [title]="'General.Remove' | translate"
     />
-    }
+    } }
   </div>
 </div>
 }

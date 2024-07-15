@@ -41,8 +41,8 @@ import {
   TreeButtonsTogglerComponent,
   TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
-import { Messages, SignalStore, TreeService } from '@wbs/core/services';
+import { PROJECT_CLAIMS, PROJECT_STATI, SaveState } from '@wbs/core/models';
+import { Messages, SignalStore, TreeService, Utils } from '@wbs/core/services';
 import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
@@ -52,6 +52,7 @@ import { Observable, delay, tap } from 'rxjs';
 import {
   ChangeTaskBasics,
   CreateTask,
+  RebuildNodeViews,
   TreeReordered,
 } from '../../../../actions';
 import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
@@ -76,7 +77,6 @@ import { PhaseTreeReorderService } from './phase-tree-reorder.service';
     AlertComponent,
     ApprovalBadgeComponent,
     ButtonModule,
-    CheckPipe,
     ChildrenApprovalPipe,
     ContextMenuItemComponent,
     ContextMenuModule,
@@ -119,6 +119,11 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
   readonly gridContextMenu =
     viewChild<ContextMenuComponent>(ContextMenuComponent);
+  readonly canEdit = computed(
+    () =>
+      this.project().status === PROJECT_STATI.PLANNING &&
+      Utils.contains(this.claims(), PROJECT_CLAIMS.TASKS.CREATE)
+  );
 
   settings: SelectableSettings = {
     enabled: true,
@@ -130,10 +135,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   readonly checkIcon = faCheck;
   readonly plusIcon = faPlus;
-  readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
 
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
-  readonly tree = signal<TaskViewModel[] | undefined>(undefined);
   readonly width = inject(UiStore).mainContentWidth;
   readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
@@ -151,7 +154,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .selectAsync(TasksState.phases)
       .pipe(untilDestroyed(this))
       .subscribe((phases) => {
-        this.tree.set(structuredClone(phases));
         this.updateState(phases ?? []);
       });
     /*
@@ -219,6 +221,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
       this.alert.set(undefined);
     }
     const run = () => {
+      console.log('REORDER!');
       const results = this.reorderer.run(tree, dragged, target, e.dropPosition);
       this.callSave(
         dragged.id,
@@ -241,7 +244,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   taskTitleChanged(taskId: string, title: string): void {
-    const task = this.tree()?.find((x) => x.id === taskId);
+    const task = this.tasks()?.find((x) => x.id === taskId);
 
     if (!task) return;
 
@@ -286,7 +289,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   private resetTree(): void {
-    this.tree.set(this.getViewModels());
+    this.store.dispatch(new RebuildNodeViews());
   }
 
   private callSave(taskId: string, obs: Observable<any>): void {

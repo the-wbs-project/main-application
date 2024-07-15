@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
+  computed,
   inject,
   input,
   signal,
@@ -11,6 +12,8 @@ import { LIBRARY_CLAIMS, ResourceRecord } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { RecordResourcesPageComponent } from '@wbs/components/resources';
 import { EntryResourceService } from '../services';
+import { EntryStore } from '@wbs/core/store';
+import { Utils } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -22,11 +25,10 @@ import { EntryResourceService } from '../services';
     />
     <wbs-record-resources-page
       [list]="list()"
-      [claims]="claims()"
+      [canAdd]="canAdd()"
+      [canEdit]="canEdit()"
+      [canDelete]="canDelete()"
       [apiUrlPrefix]="apiUrlPrefix()"
-      [addClaim]="ADD_CLAIM"
-      [editClaim]="EDIT_CLAIM"
-      [deleteClaim]="DELETE_CLAIM"
       (saveRecords)="saveRecords($event)"
       (uploadAndSave)="uploadAndSaveAsync($event.rawFile, $event.data)"
     />
@@ -37,16 +39,31 @@ import { EntryResourceService } from '../services';
 })
 export class ResourcesPageComponent implements OnInit {
   private readonly service = inject(EntryResourceService);
+  private readonly store = inject(EntryStore);
+  private readonly isDraft = computed(
+    () => this.store.version()?.status === 'draft'
+  );
 
   readonly owner = input.required<string>();
   readonly entryId = input.required<string>();
   readonly versionId = input.required<number>();
-  readonly claims = input.required<string[]>();
   readonly list = signal<ResourceRecord[]>([]);
   readonly apiUrlPrefix = input.required<string>();
-  readonly ADD_CLAIM = LIBRARY_CLAIMS.RESOURCES.CREATE;
-  readonly EDIT_CLAIM = LIBRARY_CLAIMS.RESOURCES.UPDATE;
-  readonly DELETE_CLAIM = LIBRARY_CLAIMS.RESOURCES.DELETE;
+  readonly canAdd = computed(
+    () =>
+      this.isDraft() &&
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.RESOURCES.CREATE)
+  );
+  readonly canEdit = computed(
+    () =>
+      this.isDraft() &&
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.RESOURCES.UPDATE)
+  );
+  readonly canDelete = computed(
+    () =>
+      this.isDraft() &&
+      Utils.contains(this.store.claims(), LIBRARY_CLAIMS.RESOURCES.DELETE)
+  );
 
   ngOnInit(): void {
     this.service
