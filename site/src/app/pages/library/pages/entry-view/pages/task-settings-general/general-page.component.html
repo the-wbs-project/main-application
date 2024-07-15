@@ -71,6 +71,14 @@
           }
         </div>
       </div>
+      <div class="row mb-5">
+        <label class="col-md-2 col-sm-12 col-form-label">
+          {{ "General.Visibility" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <wbs-visibility-selection [(visibility)]="task.visibility" />
+        </div>
+      </div>
     </div>
 
     @if (askAi()) {

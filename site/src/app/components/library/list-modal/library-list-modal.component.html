@@ -7,18 +7,19 @@
   <div class="d-flex h-100 flex-column fs-6">
     @if (ready()) { @if (view() === 0) {
     <wbs-library-list-filters
-      [showCreateButton]="false"
+      [showLibrary]="true"
       [(library)]="library"
       [(typeFilters)]="typeFilters"
+      [(authorFilters)]="roleFilters"
       [(searchText)]="searchText"
+      (libraryChange)="retrieve()"
+      (typeFiltersChange)="retrieve()"
+      (searchTextChange)="retrieve()"
     />
     <wbs-library-list
-      [org]="org()!"
-      [library]="library()!"
-      [searchText]="searchText()"
-      [typeFilters]="typeFilters()"
-      [showWatchedColumn]="false"
+      [entries]="entries()"
       [(selected)]="selected"
+      [showWatchedColumn]="false"
       (dblClick)="loadTree()"
     />
     } @else if (view() === 1) {
@@ -42,7 +43,7 @@
         <button kendoButton (click)="loadTree()">Reload</button>
       </div>
       <wbs-library-import-tree
-        [entryType]="selected()!.type"
+        [entry]="selected()!"
         [version]="version()!"
         [(tasks)]="tasks"
       />

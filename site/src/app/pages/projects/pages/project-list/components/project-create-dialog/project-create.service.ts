@@ -54,6 +54,7 @@ export class ProjectCreateService {
           order: i + 1,
           projectId: project.id,
           title: phase.label,
+          absFlag: null,
           createdOn: now,
           lastModified: now,
         });
@@ -70,6 +71,7 @@ export class ProjectCreateService {
           phaseIdAssociation: cat.id,
           title: cat.label,
           description: cat.description,
+          absFlag: null,
         });
       }
     }

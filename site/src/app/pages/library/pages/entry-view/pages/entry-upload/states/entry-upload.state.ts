@@ -324,7 +324,8 @@ export class EntryUploadState {
       existingNodes: this.data.libraryEntryNodes.getAllAsync(
         entry.owner,
         entry.id,
-        version.version
+        version.version,
+        'private'
       ),
     }).pipe(
       switchMap((data) => {
@@ -383,7 +384,8 @@ export class EntryUploadState {
         this.data.libraryEntryNodes.getAllAsync(
           entry.owner,
           entry.id,
-          version.version
+          version.version,
+          'private'
         )
       ),
       tap((tasks) => this.entryStore.setTasks(tasks)),

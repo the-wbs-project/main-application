@@ -1,4 +1,4 @@
-import { importProvidersFrom } from '@angular/core';
+import { importProvidersFrom, inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
@@ -8,6 +8,12 @@ import {
   EntryTaskService,
 } from '@wbs/core/services/library';
 import { EntryCreationService, watcherGuard } from './services';
+import { Store } from '@ngxs/store';
+import { Navigate } from '@ngxs/router-plugin';
+import { WrapperComponent } from '../wrapper.component';
+
+export const redirectGuard = () =>
+  inject(Store).dispatch(new Navigate(['home']));
 
 export const routes: Routes = [
   {
@@ -24,6 +30,11 @@ export const routes: Routes = [
     children: [
       {
         path: '',
+        redirectTo: 'home',
+        pathMatch: 'full',
+      },
+      {
+        path: 'home',
         loadChildren: () =>
           import('./pages/library-home/library-home.routes').then(
             (x) => x.routes
@@ -37,7 +48,9 @@ export const routes: Routes = [
       {
         path: 'import',
         loadChildren: () =>
-          import('./pages/library-import/library-import.routes').then((x) => x.routes),
+          import('./pages/library-import/library-import.routes').then(
+            (x) => x.routes
+          ),
       },
     ],
   },

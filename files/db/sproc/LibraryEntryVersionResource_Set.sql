@@ -10,7 +10,8 @@ CREATE PROCEDURE [dbo].[LibraryEntryVersionResource_Set]
     @Type nvarchar(100),
     @Order int,
     @Resource nvarchar(MAX),
-    @Description nvarchar(MAX)
+    @Description nvarchar(MAX),
+    @Visibility nvarchar(50)
 AS
     DECLARE @ts DATETIMEOFFSET = GETUTCDATE();
 BEGIN
@@ -25,13 +26,14 @@ BEGIN
                         [Order] = @Order,
                         [LastModified] = @ts,
                         [Resource] = @Resource,
-                        [Description] = @Description
+                        [Description] = @Description,
+                        [Visibility] = @Visibility
                     WHERE [Id] = @Id
                 END
             ELSE
                 BEGIN
                     INSERT INTO [dbo].[LibraryEntryVersionResources]
-                    VALUES (@Id, @EntryId, @EntryVersion, @Name, @Type, @Order, @ts, @ts, @Resource, @Description)
+                    VALUES (@Id, @EntryId, @EntryVersion, @Name, @Type, @Order, @ts, @ts, @Resource, @Description, @Visibility)
                 END
         END
 END

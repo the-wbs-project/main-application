@@ -7,14 +7,14 @@ import {
   RebuildResults,
 } from '@wbs/core/models';
 import { WbsNodeService } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class EntryTaskReorderService {
   validate(
     type: string,
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     dropPosition: DropPosition
   ): DragValidationResults {
     return type === LIBRARY_ENTRY_TYPES.PHASE
@@ -25,8 +25,8 @@ export class EntryTaskReorderService {
   }
 
   validateProject(
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     position: DropPosition
   ): DragValidationResults {
     if (position === 'forbidden') {
@@ -62,8 +62,8 @@ export class EntryTaskReorderService {
   }
 
   validatePhase(
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     dropPosition: DropPosition
   ): DragValidationResults {
     if (dropPosition === 'forbidden') {
@@ -95,8 +95,8 @@ export class EntryTaskReorderService {
   }
 
   validateTask(
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     dropPosition: DropPosition
   ): DragValidationResults {
     if (dropPosition === 'forbidden') {
@@ -129,9 +129,9 @@ export class EntryTaskReorderService {
 
   run(
     tasks: LibraryEntryNode[],
-    tree: WbsNodeView[],
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    tree: TaskViewModel[],
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     position: DropPosition
   ): LibraryEntryNode[] {
     dragged.phaseId = target.phaseId;
@@ -175,7 +175,7 @@ export class EntryTaskReorderService {
     return changes;
   }
 
-  rebuildLevels(list: WbsNodeView[]): RebuildResults {
+  rebuildLevels(list: TaskViewModel[]): RebuildResults {
     const results: RebuildResults = {
       rows: [],
       changedIds: [],
@@ -233,8 +233,8 @@ export class EntryTaskReorderService {
 
   private getSortedVmChildren(
     parentId: string | undefined,
-    list: WbsNodeView[]
-  ): WbsNodeView[] {
+    list: TaskViewModel[]
+  ): TaskViewModel[] {
     return list
       .filter((x) => x.parentId === parentId)
       .sort(WbsNodeService.sort);

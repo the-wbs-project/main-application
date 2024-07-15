@@ -366,7 +366,11 @@ export class ProjectUploadState {
         this.data.projectNodes.putAsync(
           project.owner,
           project.id,
-          results.upserts.map((node) => ({ ...node, projectId: project.id })),
+          results.upserts.map((node) => ({
+            ...node,
+            projectId: project.id,
+            absFlag: null,
+          })),
           results.removeIds
         )
       );

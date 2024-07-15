@@ -8,7 +8,11 @@ import {
   Transformers,
   WbsNodeService,
 } from '@wbs/core/services';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
+import {
+  ProjectTaskViewModel,
+  ProjectViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
@@ -44,10 +48,10 @@ import { ProjectState } from './project.state';
 
 interface StateModel {
   currentId?: string;
-  current?: WbsNodeView;
+  current?: TaskViewModel;
   navSection?: string;
   nodes?: ProjectNode[];
-  phases?: WbsNodeView[];
+  phases?: TaskViewModel[];
   projectId?: string;
 }
 
@@ -69,7 +73,7 @@ export class TasksState {
   private readonly transformers = inject(Transformers);
 
   @Selector()
-  static current(state: StateModel): WbsNodeView | undefined {
+  static current(state: StateModel): TaskViewModel | undefined {
     return state.current;
   }
 
@@ -84,7 +88,7 @@ export class TasksState {
   }
 
   @Selector()
-  static phases(state: StateModel): WbsNodeView[] | undefined {
+  static phases(state: StateModel): ProjectTaskViewModel[] | undefined {
     return state.phases;
   }
 
@@ -143,9 +147,8 @@ export class TasksState {
       project.disciplines,
       state.nodes
     );
-    const phases = this.transformers.nodes.phase.view.run(
+    const phases = this.transformers.nodes.phase.view.forProject(
       state.nodes,
-      'project',
       project.disciplines
     );
     ctx.patchState({ phases });
@@ -343,6 +346,7 @@ export class TasksState {
       title: node.title + ' Clone',
       createdOn: now,
       lastModified: now,
+      absFlag: null,
     };
 
     return this.saveTask(ctx, newNode).pipe(

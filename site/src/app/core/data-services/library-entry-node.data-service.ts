@@ -10,11 +10,12 @@ export class LibraryEntryNodeDataService {
   getAllAsync(
     owner: string,
     entryId: string,
-    version: number
+    version: number,
+    visibility: string
   ): Observable<LibraryEntryNode[]> {
     return this.http
       .get<LibraryEntryNode[]>(
-        `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}/nodes`
+        `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}/nodes/${visibility}`
       )
       .pipe(map((list) => this.clean(list)));
   }

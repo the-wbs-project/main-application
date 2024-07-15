@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
 
 declare type Seperator = { separator: true };
@@ -9,7 +9,7 @@ declare type Seperator = { separator: true };
 export class PhaseTreeMenuService {
   buildMenu(
     project: ProjectViewModel,
-    task: WbsNodeView | undefined,
+    task: TaskViewModel | undefined,
     claims: string[]
   ): (ContextMenuItem | Seperator)[] {
     if (!task) return [];
@@ -103,7 +103,7 @@ export class PhaseTreeMenuService {
 
   private getDisciplinesToAdd(
     project: ProjectViewModel,
-    task: WbsNodeView
+    task: TaskViewModel
   ): ContextMenuItem[] {
     const existing = task.disciplines.map((x) => x.id);
     const results: ContextMenuItem[] = [];
@@ -122,7 +122,7 @@ export class PhaseTreeMenuService {
     return results;
   }
 
-  private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
+  private getDisciplinesToRemove(task: TaskViewModel): ContextMenuItem[] {
     const results: ContextMenuItem[] = [];
 
     for (const discipline of task.disciplines) {

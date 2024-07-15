@@ -1,5 +1,5 @@
 import { WbsNode } from '@wbs/core/models';
-import { CategoryViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { CategoryService } from '../../../category.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 
@@ -12,14 +12,14 @@ export class WbsDisciplineNodeTransformer {
   run(
     disciplines: CategoryViewModel[],
     projectNodes: WbsNode[]
-  ): WbsNodeView[] {
+  ): TaskViewModel[] {
     const phases = this.wbsService.getPhases(projectNodes);
-    const nodes: WbsNodeView[] = [];
+    const nodes: TaskViewModel[] = [];
 
     for (let i = 0; i < disciplines.length; i++) {
       const d = disciplines[i];
 
-      const dView: WbsNodeView = {
+      const dView: TaskViewModel = {
         children: 0,
         childrenIds: [],
         disciplines: [d],
@@ -35,7 +35,6 @@ export class WbsDisciplineNodeTransformer {
         canMoveUp: false,
         canMoveLeft: false,
         canMoveRight: false,
-        subTasks: [],
       };
       nodes.push(dView);
 
@@ -47,7 +46,7 @@ export class WbsDisciplineNodeTransformer {
 
         //if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
 
-        const pView: WbsNodeView = {
+        const pView: TaskViewModel = {
           children: 0,
           childrenIds: [],
           description: pNode.description,
@@ -67,7 +66,6 @@ export class WbsDisciplineNodeTransformer {
           canMoveUp: false,
           canMoveLeft: false,
           canMoveRight: false,
-          subTasks: [],
         };
 
         const children = this.getPhaseChildren(
@@ -108,15 +106,15 @@ export class WbsDisciplineNodeTransformer {
     parentId: string,
     parentLevel: number[],
     list: WbsNode[]
-  ): WbsNodeView[] {
-    const results: WbsNodeView[] = [];
+  ): TaskViewModel[] {
+    const results: TaskViewModel[] = [];
     const children = this.getSortedChildren(parentId, list);
     let counter = 1;
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childLevel = [...parentLevel, counter];
-      const node: WbsNodeView = {
+      const node: TaskViewModel = {
         id: child.id,
         childrenIds: [],
         parentId: parentId,
@@ -139,7 +137,6 @@ export class WbsDisciplineNodeTransformer {
         canMoveUp: false,
         canMoveLeft: false,
         canMoveRight: false,
-        subTasks: [],
       };
       const myChildren = this.getPhaseChildren(
         disciplines,
@@ -162,7 +159,7 @@ export class WbsDisciplineNodeTransformer {
     return results;
   }
 
-  private setSameAs(rows: WbsNodeView[]): void {
+  private setSameAs(rows: TaskViewModel[]): void {
     const vals = new Map<string, [string, string, number]>();
 
     for (let i = 0; i < rows.length; i++) {
@@ -180,7 +177,7 @@ export class WbsDisciplineNodeTransformer {
     }
   }
 
-  private getChildCount(children: WbsNodeView[]): number {
+  private getChildCount(children: TaskViewModel[]): number {
     return children
       .map((x) => x.children + 1)
       .reduce((partialSum, a) => partialSum + a, 0);

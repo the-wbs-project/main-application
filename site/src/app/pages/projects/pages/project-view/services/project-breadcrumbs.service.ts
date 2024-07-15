@@ -9,7 +9,7 @@ import {
   RoutedBreadcrumbItem,
 } from '@wbs/core/models';
 import { UiStore } from '@wbs/core/store';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Subscription } from 'rxjs';
 import { PROJECT_NAVIGATION, TASK_NAVIGATION } from '../models';
 import { ProjectState, TasksState } from '../states';
@@ -56,7 +56,7 @@ export class ProjectBreadcrumbsService {
     return this.store.selectSnapshot(ProjectState.current)!;
   }
 
-  private getTask(): WbsNodeView {
+  private getTask(): TaskViewModel {
     return this.store.selectSnapshot(TasksState.current)!;
   }
 
@@ -105,7 +105,7 @@ export class ProjectBreadcrumbsService {
 
   private task(
     project: ProjectViewModel,
-    task: WbsNodeView,
+    task: TaskViewModel,
     route: ActivatedRouteSnapshot
   ): void {
     const projectUrl = ProjectService.getProjectUrl(route);

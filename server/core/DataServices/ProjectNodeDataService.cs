@@ -76,6 +76,7 @@ public class ProjectNodeDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
         cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
         cmd.Parameters.AddWithValue("@LibraryTaskLink", DbJson(node.libraryTaskLink));
+        cmd.Parameters.AddWithValue("@AbsFlag", DbValue(node.absFlag));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -114,6 +115,7 @@ public class ProjectNodeDataService : BaseSqlDbService
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
             libraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
             libraryTaskLink = DbJson<LibraryTaskLink>(reader, "LibraryTaskLink"),
+            absFlag = DbValue<bool?>(reader, "AbsFlag"),
             order = DbValue<int>(reader, "Order"),
         };
     }

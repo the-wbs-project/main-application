@@ -23,7 +23,7 @@ import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-s
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
 import { EntryActivityService, EntryService } from '@wbs/core/services/library';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
 
@@ -50,7 +50,7 @@ export class NameVisibilityComponent extends DialogContentBase {
   private readonly membership = inject(MembershipStore);
   private readonly store = inject(SignalStore);
   private readonly userId = inject(UserStore).userId;
-  private task: WbsNodeView | undefined;
+  private task: TaskViewModel | undefined;
 
   readonly checkIcon = faCheck;
   readonly newEntryId = signal<string | undefined>(undefined);

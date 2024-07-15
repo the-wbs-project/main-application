@@ -73,8 +73,20 @@
       } } @placeholder {
       <span class="tx-8">Loading...</span>
       }
-      <!--
-      -->
+    </ng-template>
+  </kendo-treelist-column>
+  <kendo-treelist-column
+    [width]="100"
+    class="discipline-column"
+    headerClass="discipline-column tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <wbs-tree-flag-column-header />
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      @if (dataItem.visibility) {
+      <wbs-visibility-icon [visibility]="dataItem.visibility" />
+      }
     </ng-template>
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
@@ -85,10 +97,13 @@
     headerClass="discipline-column tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
-      <wbs-tree-discipline-legend [list]="disciplines()" />
+      @defer (on idle) {
+      <wbs-tree-discipline-legend [list]="disciplines()" /> } @placeholder {
+      <span class="tx-8">Loading...</span>
+      }
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      @defer (on idle) {
+      @defer (on idle) { @if ((dataItem.disciplines ?? []).length > 0) {
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
       } @placeholder {
       <span class="tx-8"> {{ "General.Loading" | translate }}...</span>

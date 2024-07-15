@@ -30,66 +30,6 @@ function flows(config) {
   return getFlowIds(config).then((ids) => {
     return Promise.all([
       uploadFlow(config, {
-        id: ids["login-add-organization-info"],
-        name: "login-add-organization-info",
-        filePath: "./src/flows/login/add-organization-info.js",
-        trigger: "post-login",
-        dependencies: [
-          {
-            name: "axios",
-            version: "1.5.0",
-          },
-        ],
-        secrets: [
-          {
-            name: "clientId",
-            value: config.clientId,
-          },
-          {
-            name: "domain",
-            value: config.domain,
-          },
-          {
-            name: "secret",
-            value: config.clientSecret,
-          },
-          {
-            name: "audience",
-            value: config.audience,
-          },
-        ],
-      }),
-      uploadFlow(config, {
-        id: ids["login-add-roles"],
-        name: "login-add-roles",
-        filePath: "./src/flows/login/add-roles.js",
-        trigger: "post-login",
-        dependencies: [
-          {
-            name: "axios",
-            version: "1.5.0",
-          },
-        ],
-        secrets: [
-          {
-            name: "clientId",
-            value: config.clientId,
-          },
-          {
-            name: "domain",
-            value: config.domain,
-          },
-          {
-            name: "secret",
-            value: config.clientSecret,
-          },
-          {
-            name: "audience",
-            value: config.audience,
-          },
-        ],
-      }),
-      uploadFlow(config, {
         id: ids["login-add-site-roles"],
         name: "login-add-site-roles",
         filePath: "./src/flows/login/add-site-roles.js",
@@ -104,21 +44,11 @@ function flows(config) {
         //      so they have time to build
         //
         return delay(2500).then(() =>
-          Promise.all([
-            deployFlow(config, ids2[0]),
-            deployFlow(config, ids2[1]),
-            deployFlow(config, ids2[2]),
-          ])
+          Promise.all([deployFlow(config, ids2[0])])
         );
       })
       .then(() =>
         updateTriggerBinding(config, "post-login", [
-          {
-            name: "login-add-organization-info",
-          },
-          {
-            name: "login-add-roles",
-          },
           {
             name: "login-add-site-roles",
           },

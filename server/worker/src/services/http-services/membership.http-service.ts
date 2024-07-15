@@ -13,7 +13,7 @@ export class MembershipHttpService {
 
   static async getMembershipsAsync(ctx: Context): Promise<Response> {
     try {
-      return ctx.json(await ctx.var.data.memberships.getMembershipsAsync(ctx.var.idToken.userId, true));
+      return ctx.json(await ctx.var.data.memberships.getMembershipsAsync(ctx.var.idToken.userId, false));
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get the users memberships.', <Error>e);
 

@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -28,5 +28,5 @@ import { WbsNodeView } from '@wbs/core/view-models';
   </div>`,
 })
 export class TaskModalFooterComponent {
-  readonly task = input.required<WbsNodeView>();
+  readonly task = input.required<TaskViewModel>();
 }

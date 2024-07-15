@@ -82,6 +82,7 @@
       "Next": "Next",
       "Public": "Public",
       "Private": "Private",
+      "ImpliedPrivate": "Implied Private",
       "Actions": "Actions",
       "Project": "Project",
       "Projects": "Projects",
@@ -99,6 +100,7 @@
       "Owner": "Owner",
       "Create": "Create",
       "Continue": "Continue",
+      "Association": "Association",
       "AssignedToMe": "Assigned To Me",
       "RetrievingData": "Retrieving Data...",
       "ReviewingData": "Reviewing Data...",
@@ -189,7 +191,8 @@
       "Right": "Right",
       "Above": "Above",
       "Below": "Below",
-      "Author": "Author"
+      "Author": "Author",
+      "Watching": "Watching"
     }
   },
   {
@@ -551,6 +554,7 @@
       "Disciplines": "Disciplines",
       "#Children": "# Children",
       "DisciplineLegend": "Discipline Legend",
+      "FlagLegend": "Flag Legend",
       "PhaseLegend": "Phase Legend",
       "NodeLevelStats": "Node Level Stats",
       "InsertDescription": "Insert Description Here",
@@ -587,7 +591,9 @@
       "SearchContinue": "Select Library Entry To Continue",
       "LibraryFilters": "Library Filters",
       "ExpandAll": "Expand All",
-      "CollapseAll": "Collapse All"
+      "CollapseAll": "Collapse All",
+      "PrivateTooltip": "Private - This task can only be seen within your organization.",
+      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private."
     }
   },
   {
@@ -693,7 +699,8 @@
     "locale": "en-US",
     "values": {
       "Title": "Your Profile",
-      "ProfileUpdated": "Your profile has been updated."
+      "ProfileUpdated": "Your profile has been updated.",
+      "AdminTasks": "Admin Tasks"
     }
   },
   {

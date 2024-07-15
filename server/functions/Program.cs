@@ -74,7 +74,6 @@ var host = new HostBuilder()
         //
         services.AddSingleton<LibrarySearchIndexService>();
         services.AddSingleton<LibrarySearchService>();
-        services.AddSingleton<SearchStorageService>();
     })
     .Build();
 

@@ -7,7 +7,7 @@ import {
   ProjectCategory,
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { LibraryTaskViewModel } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
@@ -19,7 +19,9 @@ export class EntryStore {
     undefined
   );
   private readonly _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
-  private readonly _viewModels = signal<WbsNodeView[] | undefined>(undefined);
+  private readonly _viewModels = signal<LibraryTaskViewModel[] | undefined>(
+    undefined
+  );
   private readonly _navSectionEntry = signal<string | undefined>(undefined);
   private readonly _navSectionTask = signal<string | undefined>(undefined);
   private readonly _claims = signal<string[]>([]);
@@ -44,7 +46,7 @@ export class EntryStore {
     return this._version;
   }
 
-  get viewModels(): Signal<WbsNodeView[] | undefined> {
+  get viewModels(): Signal<LibraryTaskViewModel[] | undefined> {
     return this._viewModels;
   }
 
@@ -103,7 +105,7 @@ export class EntryStore {
     this._tasks.set(tasks);
     this._claims.set(claims);
     this._viewModels.set(
-      this.createViewModels(entry.type, version.disciplines, tasks)
+      this.createViewModels(entry, version.disciplines, tasks)
     );
   }
 
@@ -131,7 +133,7 @@ export class EntryStore {
 
     if (entry && version)
       this._viewModels.set(
-        this.createViewModels(entry.type, version.disciplines, tasks)
+        this.createViewModels(entry, version.disciplines, tasks)
       );
   }
 
@@ -155,13 +157,13 @@ export class EntryStore {
   }
 
   private createViewModels(
-    entryType: string,
+    entry: LibraryEntry,
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
-  ): WbsNodeView[] {
-    return this.transformer.nodes.phase.view.run(
+  ): LibraryTaskViewModel[] {
+    return this.transformer.nodes.phase.view.forLibrary(
+      entry,
       tasks,
-      entryType,
       disciplines.length > 0
         ? this.categoryService.buildViewModels(disciplines)
         : this.categoryService.buildViewModelsFromDefinitions()

@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { saveAs } from '@progress/kendo-file-saver';
 import { map, Observable } from 'rxjs';
 import { ProjectCategory } from '../models';
-import { WbsNodeView } from '../view-models';
+import { TaskViewModel } from '../view-models';
 
 export class WbsExportDataService {
   constructor(private readonly http: HttpClient) {}
@@ -11,7 +11,7 @@ export class WbsExportDataService {
     fileName: string,
     extension: 'xlsx' | 'mpp',
     disciplines: ProjectCategory[],
-    tasks: WbsNodeView[]
+    tasks: TaskViewModel[]
   ): Observable<any> {
     return this.http
       .post(

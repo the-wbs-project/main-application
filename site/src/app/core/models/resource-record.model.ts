@@ -9,4 +9,5 @@ export interface ResourceRecord {
   lastModified: Date;
   order: number;
   resource?: string;
+  visibility?: string;
 }

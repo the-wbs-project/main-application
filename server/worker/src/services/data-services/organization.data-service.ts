@@ -1,4 +1,5 @@
 import { Context } from '../../config';
+import { Organization } from '../../models';
 import { OriginService } from '../origin.service';
 
 export class OrganizationDataService {
@@ -8,21 +9,16 @@ export class OrganizationDataService {
     return this.ctx.get('origin');
   }
 
-  async getNameAsync(name: string): Promise<string | undefined> {
-    const key = this.key(name);
-    let data: string | null | undefined = await this.ctx.env.KV_DATA.get(key, 'text');
+  async getAsync(name: string): Promise<Organization | undefined> {
+    const key = ['ORGS', name].join('|');
+    let data = await this.ctx.env.KV_DATA.get<Organization>(key, 'json');
 
     if (data) return data;
 
-    data = await this.origin.getTextAsync(`organizations/${name}`);
+    const data2 = await this.origin.getAsync<Organization>(`organizations/${name}`);
 
-    console.log(data);
-    if (data) this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(key, data));
+    if (data2) this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(key, JSON.stringify(data2)));
 
-    return data;
-  }
-
-  private key(name: string): string {
-    return ['ORG_NAMES', name].join('|');
+    return data2;
   }
 }

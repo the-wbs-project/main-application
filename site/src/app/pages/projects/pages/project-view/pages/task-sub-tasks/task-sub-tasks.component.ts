@@ -1,13 +1,14 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
-import { SignalStore, TreeService } from '@wbs/core/services';
+import { SignalStore, TreeService, WbsNodeService } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
@@ -33,7 +34,11 @@ export class SubTasksComponent {
   readonly projectUrl = input.required<string[]>();
   readonly width = inject(UiStore).mainContentWidth;
   readonly project = this.store.select(ProjectState.current);
+  readonly tasks = this.store.select(TasksState.phases);
   readonly task = this.store.select(TasksState.current);
+  readonly subTasks = computed(() =>
+    WbsNodeService.getSubTasksForTree(this.tasks() ?? [], this.task()?.id ?? '')
+  );
 
   clickedId?: string;
 

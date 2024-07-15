@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ContextMenuItem, LibraryEntryVersion } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/core/store';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../../models';
 
 declare type Seperator = { separator: true };
@@ -13,7 +13,7 @@ export class LibraryTreeMenuService {
   buildMenu(
     entryType: string,
     version: LibraryEntryVersion,
-    task: WbsNodeView | undefined,
+    task: TaskViewModel | undefined,
     claims: string[]
   ): (ContextMenuItem | Seperator)[] {
     if (task === undefined) return [];
@@ -110,7 +110,7 @@ export class LibraryTreeMenuService {
   private preFilterActions(
     items: ContextMenuItem[],
     entryType: string,
-    task: WbsNodeView
+    task: TaskViewModel
   ): ContextMenuItem[] {
     const filter = entryType !== 'project' && task.parentId == undefined;
 
@@ -121,13 +121,13 @@ export class LibraryTreeMenuService {
     );
   }
 
-  private canHaveNavActions(entryType: string, task: WbsNodeView): boolean {
+  private canHaveNavActions(entryType: string, task: TaskViewModel): boolean {
     return entryType === 'project' || task.parentId != undefined;
   }
 
   private getDisciplinesToAdd(
     version: LibraryEntryVersion,
-    task: WbsNodeView
+    task: TaskViewModel
   ): ContextMenuItem[] {
     const disciplines = this.metadata.categories.disciplines;
     const existing = task.disciplines.map((x) => x.id);
@@ -152,7 +152,7 @@ export class LibraryTreeMenuService {
     return results;
   }
 
-  private getDisciplinesToRemove(task: WbsNodeView): ContextMenuItem[] {
+  private getDisciplinesToRemove(task: TaskViewModel): ContextMenuItem[] {
     const results: ContextMenuItem[] = [];
 
     for (const discipline of task.disciplines) {

@@ -10,4 +10,5 @@ public class ResourceRecord
     public DateTimeOffset LastModified { get; set; }
     public string Resource { get; set; }
     public string Description { get; set; }
+    public string Visibility { get; set; }
 }

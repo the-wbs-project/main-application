@@ -102,7 +102,6 @@ builder.Services.AddSingleton<ResourceCopyService>();
 //
 builder.Services.AddSingleton<LibrarySearchIndexService>();
 builder.Services.AddSingleton<LibrarySearchService>();
-builder.Services.AddSingleton<SearchStorageService>();
 
 var app = builder.Build();
 

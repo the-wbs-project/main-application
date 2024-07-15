@@ -12,6 +12,8 @@ export const navToOrgGuard = () => {
   return toObservable(membership.memberships).pipe(
     skipWhile((x) => x == undefined),
     first(),
-    tap((orgs) => store.dispatch(new Navigate(['/', orgs![0].name, 'library'])))
+    tap((orgs) =>
+      store.dispatch(new Navigate(['/', orgs![0].name, 'library', 'home']))
+    )
   );
 };

@@ -1,11 +1,11 @@
-@if (task(); as task) {
+@if (subTasks(); as subTasks) {
 <div class="pd-15">
   <kendo-treelist
     #treelist
     class="h-100"
     kendoTreeListExpandable
     kendoTreeListSelectable
-    [kendoTreeListFlatBinding]="task.subTasks"
+    [kendoTreeListFlatBinding]="subTasks"
     parentIdField="treeParentId"
     idField="treeId"
     [initiallyExpanded]="false"
@@ -16,8 +16,8 @@
   >
     <ng-template kendoTreeListToolbarTemplate>
       <wbs-tree-buttons-toggler
-        (collapse)="treeService.collapseAll(treelist, task.subTasks)"
-        (expand)="treeService.expandAll(treelist, task.subTasks)"
+        (collapse)="treeService.collapseAll(treelist, subTasks)"
+        (expand)="treeService.expandAll(treelist, subTasks)"
       />
     </ng-template>
     <kendo-treelist-column

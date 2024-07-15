@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TreeListComponent } from '@progress/kendo-angular-treelist';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class TreeService {
@@ -31,11 +31,11 @@ export class TreeService {
     this.expandedKeys = keys;
   }
 
-  expandAll(treeList: TreeListComponent, tasks: WbsNodeView[]): void {
+  expandAll(treeList: TreeListComponent, tasks: TaskViewModel[]): void {
     this.expandedKeys = tasks.map((task) => task.treeId);
   }
 
-  collapseAll(treeList: TreeListComponent, tasks: WbsNodeView[]): void {
+  collapseAll(treeList: TreeListComponent, tasks: TaskViewModel[]): void {
     for (const task of tasks) {
       if (this.expandedKeys.includes(task.treeId)) {
         treeList.collapse(task);

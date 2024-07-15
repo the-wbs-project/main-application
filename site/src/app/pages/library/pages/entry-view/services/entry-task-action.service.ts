@@ -6,7 +6,7 @@ import { TaskCreateComponent } from '@wbs/components/task-create';
 import { LibraryImportResults, TaskCreationResults } from '@wbs/core/models';
 import { SignalStore, TreeService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
-import { EntryStore, MembershipStore } from '@wbs/core/store';
+import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryCreationService } from '../../../services';
@@ -21,6 +21,7 @@ export class EntryTaskActionService {
   private readonly membership = inject(MembershipStore);
   private readonly store = inject(SignalStore);
   private readonly taskService = inject(EntryTaskService);
+  private readonly userId = inject(UserStore).userId;
 
   onAction(
     action: string,
@@ -70,18 +71,12 @@ export class EntryTaskActionService {
         this.creation.exportTaskToEntryAsync(taskId);
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
-        const org = this.membership.membership()!.name;
-        const task = this.libraryStore.tasks()!.find((x) => x.id === taskId)!;
-        const types: string[] =
-          direction === 'right' || task.parentId != null
-            ? ['task']
-            : ['phase', 'task'];
 
         return LibraryListModalComponent.launchAsync(
           this.dialogService,
-          org,
-          'personal',
-          types
+          this.membership.membership()!.name,
+          this.userId()!,
+          'personal'
         ).pipe(
           switchMap((results: LibraryImportResults | undefined) =>
             !results

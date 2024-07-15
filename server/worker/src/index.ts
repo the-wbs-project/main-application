@@ -40,6 +40,7 @@ app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOr
 app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
 app.get('api/claims/libraryEntry/:owner/:entry', verifyJwt, Http.claims.getForLibraryEntryAsync);
 
+app.get('api/cache/clear', Http.misc.clearKvAsync);
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
@@ -50,6 +51,16 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //  Auth calls
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
+
+app.get('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.getEntryAsync);
+app.post('api/portfolio/:owner/library/entries/search', verifyJwt, Http.libraryEntries.getSearchAsync);
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', (ctx) => ctx.newResponse(null, 403));
+app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/:visibility', verifyJwt, Http.libraryEntries.getTasksAsync);
+
+app.put('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.putEntryAsync);
+app.put('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync);
+app.put('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', verifyJwt, Http.libraryEntries.putTasksAsync);
 
 app.get('api/roles', Http.membership.getRolesAsync);
 app.get('api/memberships', verifyJwt, Http.membership.getMembershipsAsync);
