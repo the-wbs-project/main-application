@@ -103,11 +103,11 @@
       }
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      @defer (on idle) { @if ((dataItem.disciplines ?? []).length > 0) {
+      @if ((dataItem.disciplines ?? []).length > 0) { @defer (on idle) {
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
       } @placeholder {
       <span class="tx-8"> {{ "General.Loading" | translate }}...</span>
-      }
+      } }
     </ng-template>
   </kendo-treelist-column>
   }

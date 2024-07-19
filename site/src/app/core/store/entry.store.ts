@@ -90,7 +90,7 @@ export class EntryStore {
     );
   }
 
-  getTask(taskId: Signal<string>): Signal<WbsNodeView | undefined> {
+  getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
     return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
   }
 
