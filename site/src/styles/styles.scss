@@ -469,3 +469,13 @@ button:focus:not(:focus-visible) {
     text-transform: uppercase;
   }
 }
+
+.tree-column {
+  padding-block: 6px !important;
+  padding-inline: 8px !important;
+
+  .k-svg-i-none {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
+}

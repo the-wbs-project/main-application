@@ -544,7 +544,8 @@
       "SubTaskCount": "# of Sub-Tasks",
       "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)",
       "TrainingMaterial": "Training Material",
-      "DownloadTasks": "Download Tasks",
+      "DownloadWbs": "Download WBS",
+      "DownloadAbs": "Download ABS",
       "UploadTasks": "Upload Tasks",
       "Attachments": "Attachments",
       "Level": "Level",
@@ -593,7 +594,12 @@
       "ExpandAll": "Expand All",
       "CollapseAll": "Collapse All",
       "PrivateTooltip": "Private - This task can only be seen within your organization.",
-      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private."
+      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
+      "ABS": "ABS",
+      "ABS-Full": "Account Breakdown Structure",
+      "ABS-Explanation": "The ABS is a hierarchical structure that breaks down the project into smaller, more manageable components. It is used to organize and categorize project costs and resources.",
+      "ABS-Tooltip": "This task has been marked as ABS. This means none of its children will be included in the Account Breakdown Structure.",
+      "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS."
     }
   },
   {

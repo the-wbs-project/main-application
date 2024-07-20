@@ -11,7 +11,7 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
   imports: [ButtonModule, FontAwesomeModule, TranslateModule],
   template: `<button kendoButton size="small">
     <fa-icon [icon]="icon" class="mg-r-5" />
-    {{ 'Wbs.UploadTasks' | translate }}
+    {{ 'General.Upload' | translate }}
   </button>`,
 })
 export class TreeButtonsUploadComponent {

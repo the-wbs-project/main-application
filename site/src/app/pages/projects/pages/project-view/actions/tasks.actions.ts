@@ -72,7 +72,8 @@ export class ChangeTaskBasics {
   constructor(
     readonly taskId: string,
     readonly title: string,
-    readonly description: string
+    readonly description: string,
+    readonly abs: boolean
   ) {}
 }
 

@@ -38,11 +38,6 @@
       (collapse)="treeService.collapseAll(treelist, tree)"
       (expand)="treeService.expandAll(treelist, tree)"
     />
-    <wbs-tree-buttons-download (click)="entryService.downloadTasks()" />
-
-    @if (canEdit()) {
-    <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
-    }
   </ng-template>
   @if (canEdit()) {
   <kendo-treelist-rowreorder-column [width]="40" />
@@ -100,7 +95,8 @@
   >
     <ng-template kendoTreeListHeaderTemplate>
       @defer (on idle) {
-      <wbs-tree-discipline-legend [list]="disciplines()" /> } @placeholder {
+      <wbs-tree-discipline-legend [list]="disciplines()" />
+      } @placeholder {
       <span class="tx-8">Loading...</span>
       }
     </ng-template>

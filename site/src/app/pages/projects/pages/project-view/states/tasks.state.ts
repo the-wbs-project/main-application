@@ -8,11 +8,7 @@ import {
   Transformers,
   WbsNodeService,
 } from '@wbs/core/services';
-import {
-  ProjectTaskViewModel,
-  ProjectViewModel,
-  TaskViewModel,
-} from '@wbs/core/view-models';
+import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
 import { MetadataStore } from '@wbs/core/store';
 import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
@@ -48,10 +44,10 @@ import { ProjectState } from './project.state';
 
 interface StateModel {
   currentId?: string;
-  current?: TaskViewModel;
+  current?: ProjectTaskViewModel;
   navSection?: string;
   nodes?: ProjectNode[];
-  phases?: TaskViewModel[];
+  phases?: ProjectTaskViewModel[];
   projectId?: string;
 }
 
@@ -73,7 +69,7 @@ export class TasksState {
   private readonly transformers = inject(Transformers);
 
   @Selector()
-  static current(state: StateModel): TaskViewModel | undefined {
+  static current(state: StateModel): ProjectTaskViewModel | undefined {
     return state.current;
   }
 
@@ -547,7 +543,7 @@ export class TasksState {
   @Action(ChangeTaskBasics)
   changeTaskBasics(
     ctx: Context,
-    { taskId, title, description }: ChangeTaskBasics
+    { taskId, title, description, abs }: ChangeTaskBasics
   ): Observable<void> | void {
     const state = ctx.getState();
     const model = state.nodes!.find((x) => x.id === taskId)!;
@@ -565,7 +561,6 @@ export class TasksState {
         },
       });
       model.title = title;
-      viewModel.title = title;
     }
 
     if (model.description !== description) {
@@ -580,7 +575,20 @@ export class TasksState {
         },
       });
       model.description = description;
-      viewModel.description = description;
+    }
+
+    if ((model.absFlag ?? false) !== abs) {
+      activities.push({
+        action: TASK_ACTIONS.ABS_CHANGED,
+        objectId: model.id,
+        topLevelId: this.project.id,
+        data: {
+          title: model.title,
+          from: model.absFlag ?? false,
+          to: abs,
+        },
+      });
+      model.absFlag = abs;
     }
     //
     //  If no activities then nothing actually changed

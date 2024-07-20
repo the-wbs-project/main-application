@@ -7,10 +7,6 @@ export interface TaskViewModel {
   parentId?: string;
   treeParentId?: string;
 
-  sameAsId?: string;
-  sameAsIndex?: number;
-  sameAsLevelText?: string;
-
   children: number;
   childrenIds: string[];
   description?: string;
@@ -38,4 +34,6 @@ export interface LibraryTaskViewModel extends TaskViewModel {
   visibility?: 'public' | 'private' | 'impliedPrivate';
 }
 
-export interface ProjectTaskViewModel extends TaskViewModel {}
+export interface ProjectTaskViewModel extends TaskViewModel {
+  absFlag?: 'set' | 'implied';
+}

@@ -33,6 +33,7 @@ import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-it
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { ProgressBarComponent } from '@wbs/components/_utils/progress-bar.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { AbsHeaderComponent } from '@wbs/components/abs-header';
 import { TaskTitleComponent } from '@wbs/components/task-title';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
@@ -44,7 +45,6 @@ import {
 import { PROJECT_CLAIMS, PROJECT_STATI, SaveState } from '@wbs/core/models';
 import { Messages, SignalStore, TreeService, Utils } from '@wbs/core/services';
 import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
 import { UiStore } from '@wbs/core/store';
@@ -65,6 +65,8 @@ import {
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
 import { PhaseTreeReorderService } from './phase-tree-reorder.service';
+import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
+import { AbsIconComponent } from '@wbs/components/abs-icon.component';
 
 @UntilDestroy()
 @Component({
@@ -74,6 +76,8 @@ import { PhaseTreeReorderService } from './phase-tree-reorder.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PhaseTreeReorderService, PhaseTreeMenuService],
   imports: [
+    AbsHeaderComponent,
+    AbsIconComponent,
     AlertComponent,
     ApprovalBadgeComponent,
     ButtonModule,
@@ -98,7 +102,6 @@ import { PhaseTreeReorderService } from './phase-tree-reorder.service';
   ],
 })
 export class ProjectPhaseTreeComponent implements OnInit {
-  private readonly projectService = inject(ProjectService);
   private readonly actions$ = inject(Actions);
   private readonly menuService = inject(PhaseTreeMenuService);
   private readonly messages = inject(Messages);
@@ -135,6 +138,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   readonly checkIcon = faCheck;
   readonly plusIcon = faPlus;
+  readonly infoIcon = faCircleQuestion;
 
   readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly width = inject(UiStore).mainContentWidth;
@@ -147,6 +151,9 @@ export class ProjectPhaseTreeComponent implements OnInit {
   );
   readonly menu = computed(() =>
     this.menuService.buildMenu(this.project(), this.task(), this.claims())
+  );
+  readonly disciplineWidth = computed(() =>
+    this.treeService.disciplineWidth(this.tasks())
   );
 
   ngOnInit(): void {
@@ -178,9 +185,9 @@ export class ProjectPhaseTreeComponent implements OnInit {
         }
       });
 
-    this.treeService.expandedKeys = this.projectService.getPhaseIds(
+    this.treeService.expandedKeys = []; /* = this.projectService.getPhaseIds(
       this.tasks() ?? []
-    );
+    );*/
   }
 
   navigateToTask(): void {
@@ -251,7 +258,14 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.setSaveState(taskId, 'saving');
 
     this.store
-      .dispatch(new ChangeTaskBasics(taskId, title, task.description ?? ''))
+      .dispatch(
+        new ChangeTaskBasics(
+          taskId,
+          title,
+          task.description ?? '',
+          task.absFlag === 'set'
+        )
+      )
       .pipe(
         tap(() => this.setSaveState(taskId, 'saved')),
         delay(5000)

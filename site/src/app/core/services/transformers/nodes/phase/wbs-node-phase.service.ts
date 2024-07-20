@@ -48,8 +48,7 @@ export class WbsNodePhaseTransformer {
     const tasks: LibraryTaskViewModel[] = this.run(
       entry.type,
       models,
-      disciplines,
-      privateTasks
+      disciplines
     );
 
     for (const task of privateTasks) {
@@ -71,14 +70,35 @@ export class WbsNodePhaseTransformer {
     models: ProjectNode[],
     disciplines: CategoryViewModel[]
   ): ProjectTaskViewModel[] {
-    return this.run('project', models, disciplines, []);
+    const tasks: ProjectTaskViewModel[] = this.run(
+      'project',
+      models,
+      disciplines
+    );
+
+    const setParent = (taskId: string) => {
+      const task = tasks.find((x) => x.id === taskId)!;
+
+      task.absFlag = 'implied';
+
+      if (task.parentId) setParent(task.parentId);
+    };
+
+    for (const task of models.filter((x) => x.absFlag)) {
+      const taskVm = tasks.find((x) => x.id === task.id)!;
+
+      taskVm.absFlag = 'set';
+
+      if (task.parentId) setParent(task.parentId);
+    }
+
+    return tasks;
   }
 
   private run(
     parentType: string,
     models: (ProjectNode | LibraryEntryNode)[],
-    disciplines: CategoryViewModel[],
-    privateTasks: string[]
+    disciplines: CategoryViewModel[]
   ): TaskViewModel[] {
     const phases = this.phaseList;
     const nodes: TaskViewModel[] = [];
