@@ -71,7 +71,7 @@ export class ProjectBreadcrumbsService {
     const crumbs: RoutedBreadcrumbItem[] = [
       {
         route: ['/', Utils.getParam(route, 'org'), 'projects'],
-        text: 'Pages.Projects',
+        text: 'General.Projects',
       },
       {
         route: [...currentUrl],

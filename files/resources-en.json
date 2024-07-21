@@ -320,7 +320,6 @@
     "section": "Pages",
     "locale": "en-US",
     "values": {
-      "Projects": "Projects",
       "ProjectDetails": "Project Details",
       "TaskDetails": "Task Details"
     }
@@ -575,6 +574,9 @@
       "CreateTask": "Create Task",
       "OtherFlags": "Other Flags",
       "AddPhase": "Add Phase",
+      "MarkAsAbs": "Mark As ABS",
+      "RemoveAbsFlag": "Remove ABS Flag",
+      "OtherActions": "Other Actions",
       "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
       "UnpublishForEditing": "Unpublish For Editting",

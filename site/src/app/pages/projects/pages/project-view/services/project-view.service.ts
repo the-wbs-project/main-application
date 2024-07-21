@@ -13,6 +13,7 @@ import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AddDisciplineToTask,
   ChangeProjectStatus,
+  ChangeTaskAbsFlag,
   CloneTask,
   CreateTask,
   MoveTaskDown,
@@ -51,8 +52,10 @@ export class ProjectViewService {
   }
 
   action(action: string, taskId?: string): void | Observable<boolean> {
-    if (action === 'download') {
-      this.downloadTasks();
+    if (action === 'downloadWbs') {
+      this.downloadTasks(false);
+    } else if (action === 'downloadAbs') {
+      this.downloadTasks(true);
     } else if (action === 'upload') {
       this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
     } else if (action === 'addSub') {
@@ -95,6 +98,10 @@ export class ProjectViewService {
         this.store.dispatch(new MoveTaskUp(taskId));
       } else if (action === 'moveDown') {
         this.store.dispatch(new MoveTaskDown(taskId));
+      } else if (action === 'setAbsFlag') {
+        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, true));
+      } else if (action === 'removeAbsFlag') {
+        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, false));
       } else if (action === 'exportTask') {
         const task = this.store
           .selectSnapshot(TasksState.nodes)!
@@ -140,7 +147,7 @@ export class ProjectViewService {
     this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
   }
 
-  downloadTasks(): void {
+  downloadTasks(abs: boolean): void {
     this.messages.notify.info('General.RetrievingData');
 
     forkJoin([
@@ -150,10 +157,15 @@ export class ProjectViewService {
       .pipe(
         map(([project, nodes]) => ({ project: project!, nodes: nodes! })),
         switchMap(({ project, nodes }) => {
-          const tasks = this.transformers.nodes.phase.view.forProject(
-            nodes,
-            project.disciplines
-          );
+          let tasks = abs
+            ? this.transformers.nodes.phase.view.forAbsProject(
+                nodes,
+                project.disciplines
+              )
+            : this.transformers.nodes.phase.view.forProject(
+                nodes,
+                project.disciplines
+              );
 
           return this.data.wbsExport.runAsync(
             project.title,

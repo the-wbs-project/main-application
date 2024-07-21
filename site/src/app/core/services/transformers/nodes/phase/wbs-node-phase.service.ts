@@ -5,7 +5,7 @@ import {
   ProjectNode,
   WbsNode,
 } from '@wbs/core/models';
-import { CategoryService } from '@wbs/core/services';
+import { CategoryService, sorter } from '@wbs/core/services';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import {
   CategoryViewModel,
@@ -91,6 +91,33 @@ export class WbsNodePhaseTransformer {
 
       if (task.parentId) setParent(task.parentId);
     }
+
+    return tasks;
+  }
+
+  forAbsProject(
+    models: ProjectNode[],
+    disciplines: CategoryViewModel[]
+  ): ProjectTaskViewModel[] {
+    const tasks = this.forProject(models, disciplines).filter((x) => x.absFlag);
+
+    const rebuild = (parent: ProjectTaskViewModel | undefined) => {
+      const children = tasks
+        .filter((x) => x.parentId === parent?.id)
+        .sort((a, b) => sorter(a.order, b.order));
+
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+
+        child.order = i + 1;
+        child.levels = parent ? [...parent.levels, i + 1] : [i + 1];
+        child.levelText = child.levels.join('.');
+
+        rebuild(child);
+      }
+    };
+
+    rebuild(undefined);
 
     return tasks;
   }

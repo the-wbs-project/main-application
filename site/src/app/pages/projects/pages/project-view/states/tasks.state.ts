@@ -14,6 +14,7 @@ import { map, Observable, of, switchMap, tap } from 'rxjs';
 import { TASK_ACTIONS } from '../../../models';
 import {
   AddDisciplineToTask,
+  ChangeTaskAbsFlag,
   ChangeTaskBasics,
   ChangeTaskDisciplines,
   CloneTask,
@@ -607,6 +608,19 @@ export class TasksState {
       }),
       switchMap(() => this.rebuildNodeViews(ctx)),
       tap(() => this.saveActivity(...activities))
+    );
+  }
+
+  @Action(ChangeTaskAbsFlag)
+  changeTaskAbsFlag(
+    ctx: Context,
+    { taskId, abs }: ChangeTaskAbsFlag
+  ): Observable<void> {
+    const state = ctx.getState();
+    const model = state.nodes!.find((x) => x.id === taskId)!;
+
+    return ctx.dispatch(
+      new ChangeTaskBasics(taskId, model.title, model.description ?? '', abs)
     );
   }
 

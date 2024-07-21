@@ -185,9 +185,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
         }
       });
 
-    this.treeService.expandedKeys = []; /* = this.projectService.getPhaseIds(
-      this.tasks() ?? []
-    );*/
+    this.treeService.expandedKeys = [];
   }
 
   navigateToTask(): void {
@@ -228,7 +226,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
       this.alert.set(undefined);
     }
     const run = () => {
-      console.log('REORDER!');
       const results = this.reorderer.run(tree, dragged, target, e.dropPosition);
       this.callSave(
         dragged.id,
