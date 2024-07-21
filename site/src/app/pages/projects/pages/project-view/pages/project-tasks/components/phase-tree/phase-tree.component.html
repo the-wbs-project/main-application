@@ -45,21 +45,15 @@
       <kendo-treelist-rowreorder-column [width]="40" class="tree-column" />
       }
       <kendo-treelist-column
-        field="levelText"
-        [title]="'Wbs.Level' | translate"
-        [width]="treeService.levelsWidth(tasks)"
-        class="level-column tx-11 tree-column"
-        headerClass="level-header-column tx-14"
-      />
-      <kendo-treelist-column
         [expandable]="true"
         field="title"
-        class="tx-11 child-hoverer tree-column"
+        class="child-hoverer tree-column"
         headerClass="tx-14"
         [title]="'Wbs.Activity_Title' | translate"
       >
         <ng-template kendoTreeListCellTemplate let-dataItem>
           @defer (on idle) {
+          {{ dataItem.levelText }}&nbsp;-
           <wbs-task-title
             [canEdit]="canEdit()"
             [title]="dataItem.title"
@@ -105,7 +99,7 @@
       <kendo-treelist-column
         [width]="80"
         headerClass="tx-14"
-        class="text-center tx-14 tree-column"
+        class="text-center tree-column"
       >
         <ng-template kendoTreeListHeaderTemplate>
           <wbs-abs-header text="abbrev" />
@@ -118,10 +112,9 @@
       </kendo-treelist-column>
       @if ((width() ?? 0) > 800) {
       <kendo-treelist-column
-        field="disciplines"
-        [width]="disciplineWidth()"
-        class="discipline-column"
-        headerClass="discipline-column tx-14 tree-column"
+        [width]="treeService.disciplineWidth(tasks)"
+        class="tree-column"
+        headerClass="tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
           <wbs-tree-discipline-legend [list]="project().disciplines" />

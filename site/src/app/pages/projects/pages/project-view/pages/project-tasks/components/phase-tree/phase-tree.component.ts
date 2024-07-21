@@ -59,7 +59,6 @@ import { ApprovalBadgeComponent } from '../../../../components/approval-badge.co
 import { ChildrenApprovalPipe } from '../../../../pipes/children-approval.pipe';
 import {
   ProjectNavigationService,
-  ProjectService,
   ProjectViewService,
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
@@ -151,9 +150,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
   );
   readonly menu = computed(() =>
     this.menuService.buildMenu(this.project(), this.task(), this.claims())
-  );
-  readonly disciplineWidth = computed(() =>
-    this.treeService.disciplineWidth(this.tasks())
   );
 
   ngOnInit(): void {
