@@ -3,87 +3,49 @@
   {{ "General.Details" | translate }}
 </div>
 <div class="card-body">
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "General.Title" | translate }}:
-    </span>
-    <span>
-      {{ task.title }}
-    </span>
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "General.Owner" | translate }}:
-    </span>
-    <span>
-      {{ owner() }}
-    </span>
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "General.Project" | translate }}:
-    </span>
-    <span>
-      {{ project().title }}
-    </span>
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "General.Level" | translate }}:
-    </span>
-    <span>
-      {{ task.levelText }}
-    </span>
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "Wbs.Phase" | translate }}:
-    </span>
-    @if (task.phaseId) {
-    <a
-      class="text-decoration-none"
-      [routerLink]="['../../', task.phaseId, 'about']"
-    >
-      {{ task.phaseLabel }}
-    </a>
-    } @else {
-    <span>
+  <div class="wbs-detail-card">
+    <div class="detail-header">{{ "General.Organization" | translate }} :</div>
+    <div>{{ owner() }}</div>
+
+    <div class="detail-header">{{ "General.Project" | translate }} :</div>
+    <div>{{ project().title }}</div>
+
+    <div class="detail-header">{{ "General.Level" | translate }} :</div>
+    <div>{{ task.levelText }}</div>
+
+    <div class="detail-header">{{ "Wbs.Phase" | translate }} :</div>
+    <div>
+      @if (task.phaseId) {
+      <a
+        class="text-decoration-none"
+        [routerLink]="['../../', task.phaseId, 'about']"
+      >
+        {{ task.phaseLabel }}
+      </a>
+      } @else {
       {{ "General.None" | translate }}
-    </span>
-    }
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "General.Parent" | translate }}:
-    </span>
-    @if (parent(); as parent) {
-    <a
-      class="text-decoration-none"
-      [routerLink]="['../../', parent.id, 'about']"
-    >
-      {{ parent.title }}
-    </a>
-    } @else {
-    <span>
+      }
+    </div>
+
+    <div class="detail-header">{{ "General.Parent" | translate }} :</div>
+    <div>
+      @if (parent(); as parent) {
+      <a
+        class="text-decoration-none"
+        [routerLink]="['../../', parent.id, 'about']"
+      >
+        {{ parent.title }}
+      </a>
+      } @else {
       {{ "General.None" | translate }}
-    </span>
-    }
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "General.LastModified" | translate }}:
-    </span>
-    <span>
-      {{ task.lastModified | dateText }}
-    </span>
-  </p>
-  <p class="ms-md-4 ms-0 mb-2">
-    <span class="tx-semibold d-inline-block wd-120 tx-right mg-r-10">
-      {{ "Wbs.SubTaskCount" | translate }}:
-    </span>
-    <span>
-      {{ task.children }}
-    </span>
-  </p>
+      }
+    </div>
+
+    <div class="detail-header">{{ "General.LastModified" | translate }} :</div>
+    <div>{{ task.lastModified | dateText }}</div>
+
+    <div class="detail-header">{{ "Wbs.SubTaskCount" | translate }} :</div>
+    <div>{{ task.children }}</div>
+  </div>
 </div>
 }

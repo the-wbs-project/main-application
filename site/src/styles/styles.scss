@@ -479,3 +479,14 @@ button:focus:not(:focus-visible) {
     padding-right: 0px !important;
   }
 }
+
+.wbs-detail-card {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 120px auto;
+
+  > .detail-header {
+    font-weight: 600;
+    text-align: right;
+  }
+}
