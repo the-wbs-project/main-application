@@ -5,7 +5,7 @@ import {
   ProjectNode,
   WbsNode,
 } from '@wbs/core/models';
-import { CategoryService } from '@wbs/core/services';
+import { CategoryService, sorter } from '@wbs/core/services';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import {
   CategoryViewModel,
@@ -48,8 +48,7 @@ export class WbsNodePhaseTransformer {
     const tasks: LibraryTaskViewModel[] = this.run(
       entry.type,
       models,
-      disciplines,
-      privateTasks
+      disciplines
     );
 
     for (const task of privateTasks) {
@@ -71,14 +70,62 @@ export class WbsNodePhaseTransformer {
     models: ProjectNode[],
     disciplines: CategoryViewModel[]
   ): ProjectTaskViewModel[] {
-    return this.run('project', models, disciplines, []);
+    const tasks: ProjectTaskViewModel[] = this.run(
+      'project',
+      models,
+      disciplines
+    );
+
+    const setParent = (taskId: string) => {
+      const task = tasks.find((x) => x.id === taskId)!;
+
+      task.absFlag = 'implied';
+
+      if (task.parentId) setParent(task.parentId);
+    };
+
+    for (const task of models.filter((x) => x.absFlag)) {
+      const taskVm = tasks.find((x) => x.id === task.id)!;
+
+      taskVm.absFlag = 'set';
+
+      if (task.parentId) setParent(task.parentId);
+    }
+
+    return tasks;
+  }
+
+  forAbsProject(
+    models: ProjectNode[],
+    disciplines: CategoryViewModel[]
+  ): ProjectTaskViewModel[] {
+    const tasks = this.forProject(models, disciplines).filter((x) => x.absFlag);
+
+    const rebuild = (parent: ProjectTaskViewModel | undefined) => {
+      const children = tasks
+        .filter((x) => x.parentId === parent?.id)
+        .sort((a, b) => sorter(a.order, b.order));
+
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+
+        child.order = i + 1;
+        child.levels = parent ? [...parent.levels, i + 1] : [i + 1];
+        child.levelText = child.levels.join('.');
+
+        rebuild(child);
+      }
+    };
+
+    rebuild(undefined);
+
+    return tasks;
   }
 
   private run(
     parentType: string,
     models: (ProjectNode | LibraryEntryNode)[],
-    disciplines: CategoryViewModel[],
-    privateTasks: string[]
+    disciplines: CategoryViewModel[]
   ): TaskViewModel[] {
     const phases = this.phaseList;
     const nodes: TaskViewModel[] = [];

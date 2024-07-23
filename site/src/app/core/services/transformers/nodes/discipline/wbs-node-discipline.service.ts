@@ -15,20 +15,19 @@ export class WbsDisciplineNodeTransformer {
   ): TaskViewModel[] {
     const phases = this.wbsService.getPhases(projectNodes);
     const nodes: TaskViewModel[] = [];
+    let dCounter = 1;
 
-    for (let i = 0; i < disciplines.length; i++) {
-      const d = disciplines[i];
-
+    for (const d of disciplines) {
       const dView: TaskViewModel = {
         children: 0,
         childrenIds: [],
         disciplines: [d],
         id: d.id,
         treeId: d.id,
-        levels: [i + 1],
-        levelText: (i + 1).toString(),
+        levels: [dCounter],
+        levelText: dCounter.toString(),
         depth: 1,
-        order: i + 1,
+        order: dCounter,
         title: d.label,
         lastModified: undefined,
         canMoveDown: false,
@@ -36,13 +35,12 @@ export class WbsDisciplineNodeTransformer {
         canMoveLeft: false,
         canMoveRight: false,
       };
-      nodes.push(dView);
 
       let phaseCounter = 1;
 
       for (const p of phases) {
         const pNode = projectNodes.find((x) => x.id === p.id)!;
-        const pLevel = [i + 1, phaseCounter];
+        const pLevel = [dCounter, phaseCounter];
 
         //if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
 
@@ -86,9 +84,12 @@ export class WbsDisciplineNodeTransformer {
         phaseCounter++;
       }
       dView.children = phaseCounter - 1;
-    }
 
-    this.setSameAs(nodes);
+      if (dView.children > 0) {
+        nodes.push(dView);
+        dCounter++;
+      }
+    }
 
     return nodes;
   }
@@ -157,24 +158,6 @@ export class WbsDisciplineNodeTransformer {
       }
     }
     return results;
-  }
-
-  private setSameAs(rows: TaskViewModel[]): void {
-    const vals = new Map<string, [string, string, number]>();
-
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-
-      if (vals.has(row.id)) {
-        const parts = vals.get(row.id)!;
-
-        row.sameAsId = parts[0];
-        row.sameAsIndex = parts[2];
-        row.sameAsLevelText = parts[1];
-      } else {
-        vals.set(row.id, [row.treeId, row.levelText, i]);
-      }
-    }
   }
 
   private getChildCount(children: TaskViewModel[]): number {

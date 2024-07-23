@@ -5,8 +5,8 @@ import { UiStore } from '@wbs/core/store';
 import { ProjectListService } from './services';
 
 export const setupGuard = () => {
-  inject(TitleService).setTitle([{ text: 'Pages.Projects' }]);
-  inject(UiStore).setBreadcrumbs([{ text: 'Pages.Projects' }]);
+  inject(TitleService).setTitle([{ text: 'General.Projects' }]);
+  inject(UiStore).setBreadcrumbs([{ text: 'General.Projects' }]);
 };
 
 export const routes: Routes = [

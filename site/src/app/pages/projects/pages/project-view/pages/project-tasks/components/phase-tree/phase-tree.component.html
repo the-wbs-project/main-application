@@ -32,7 +32,6 @@
       (rowReorder)="rowReordered($event)"
       (cellClick)="onCellClick($event)"
     >
-      <!--<kendo-treelist-excel fileName="Employees.xlsx" />-->
       <ng-template kendoTreeListToolbarTemplate>
         @if (canEdit()) {
         <wbs-tree-buttons-add (click)="addPhase()" />
@@ -41,30 +40,20 @@
           (collapse)="treeService.collapseAll(treelist, tasks)"
           (expand)="treeService.expandAll(treelist, tasks)"
         />
-        <wbs-tree-buttons-download (click)="service.downloadTasks()" />
-
-        @if (canEdit()) {
-        <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
-        }
       </ng-template>
       @if (canEdit()) {
-      <kendo-treelist-rowreorder-column [width]="40" />
+      <kendo-treelist-rowreorder-column [width]="40" class="tree-column" />
       }
-      <kendo-treelist-column
-        field="levelText"
-        [title]="'Wbs.Level' | translate"
-        [width]="100"
-        class="level-column tx-11"
-        headerClass="level-header-column tx-14"
-      />
       <kendo-treelist-column
         [expandable]="true"
         field="title"
-        class="tx-11 child-hoverer"
+        class="child-hoverer tree-column"
         headerClass="tx-14"
         [title]="'Wbs.Activity_Title' | translate"
       >
         <ng-template kendoTreeListCellTemplate let-dataItem>
+          @defer (on idle) {
+          {{ dataItem.levelText }}&nbsp;-
           <wbs-task-title
             [canEdit]="canEdit()"
             [title]="dataItem.title"
@@ -72,6 +61,8 @@
           />
           @if (taskSaveStates.get(dataItem.id); as saveState) {
           <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+          } } @placeholder {
+          <span class="tx-8">{{ "General.Loading" | translate }}...</span>
           }
         </ng-template>
       </kendo-treelist-column>
@@ -80,6 +71,7 @@
         [width]="175"
         [title]="'Approval'"
         headerClass="tx-14"
+        class="tree-column"
       >
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <div class="tx-12 w-100 d-flex flex-row flex-align-center">
@@ -103,18 +95,35 @@
           </div>
         </ng-template>
       </kendo-treelist-column>
-      } @if ((width() ?? 0) > 800) {
+      }
       <kendo-treelist-column
-        field="disciplines"
-        [width]="200"
-        class="discipline-column"
-        headerClass="discipline-column tx-14"
+        [width]="80"
+        headerClass="tx-14"
+        class="text-center tree-column"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <wbs-abs-header text="abbrev" />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          @if (dataItem.absFlag) {
+          <wbs-abs-icon [abs]="dataItem.absFlag" />
+          }
+        </ng-template>
+      </kendo-treelist-column>
+      @if ((width() ?? 0) > 800) {
+      <kendo-treelist-column
+        [width]="treeService.disciplineWidth(tasks)"
+        class="tree-column"
+        headerClass="tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
           <wbs-tree-discipline-legend [list]="project().disciplines" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
+          @defer (on idle) {
           <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+          } @placeholder {
+          <span class="tx-8">{{ "General.Loading" | translate }}...</span> }
         </ng-template>
       </kendo-treelist-column>
       }

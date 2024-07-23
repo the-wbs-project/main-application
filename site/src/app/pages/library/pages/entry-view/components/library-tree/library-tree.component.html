@@ -38,11 +38,6 @@
       (collapse)="treeService.collapseAll(treelist, tree)"
       (expand)="treeService.expandAll(treelist, tree)"
     />
-    <wbs-tree-buttons-download (click)="entryService.downloadTasks()" />
-
-    @if (canEdit()) {
-    <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
-    }
   </ng-template>
   @if (canEdit()) {
   <kendo-treelist-rowreorder-column [width]="40" />
@@ -50,14 +45,14 @@
   <kendo-treelist-column
     field="levelText"
     [title]="'Wbs.Level' | translate"
-    [width]="100"
-    class="level-column tx-11"
-    headerClass="level-header-column tx-14"
+    [width]="treeService.levelsWidth(tree)"
+    class="tree-column"
+    headerClass="tx-14"
   />
   <kendo-treelist-column
     [expandable]="true"
     field="title"
-    class="tx-11 child-hoverer"
+    class="child-hoverer tree-column"
     headerClass="tx-14"
     [title]="'Wbs.Activity_Title' | translate"
   >
@@ -75,11 +70,7 @@
       }
     </ng-template>
   </kendo-treelist-column>
-  <kendo-treelist-column
-    [width]="100"
-    class="discipline-column"
-    headerClass="discipline-column tx-14"
-  >
+  <kendo-treelist-column [width]="100" class="tree-column" headerClass="tx-14">
     <ng-template kendoTreeListHeaderTemplate>
       <wbs-tree-flag-column-header />
     </ng-template>
@@ -93,15 +84,15 @@
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
   <kendo-treelist-column
-    field="disciplines"
-    [width]="200"
-    class="discipline-column"
-    headerClass="discipline-column tx-14"
+    [width]="treeService.disciplineWidth(tree)"
+    class="tree-column"
+    headerClass="tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
       @defer (on idle) {
-      <wbs-tree-discipline-legend [list]="disciplines()" /> } @placeholder {
-      <span class="tx-8">Loading...</span>
+      <wbs-tree-discipline-legend [list]="disciplines()" />
+      } @placeholder {
+      <span class="tx-8">{{ "General.Loading" | translate }}...</span>
       }
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>

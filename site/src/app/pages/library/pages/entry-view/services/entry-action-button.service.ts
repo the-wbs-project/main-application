@@ -17,7 +17,8 @@ import { EntryService } from '@wbs/core/services/library';
 export class EntryActionButtonService {
   private readonly entryService = inject(EntryService);
   private readonly actionCreateProject = 'createProject';
-  private readonly actionDownload = 'download';
+  private readonly actionDownloadWbs = 'downloadWbs';
+  private readonly actionDownloadAbs = 'downloadAbs';
   private readonly actionPublish = 'publish';
   private readonly actionUnpublish = 'unpublish';
 
@@ -37,9 +38,14 @@ export class EntryActionButtonService {
       });
     }
     items.push({
-      action: this.actionDownload,
+      action: this.actionDownloadWbs,
       icon: faCloudDownload,
-      text: 'Wbs.DownloadTasks',
+      text: 'Wbs.DownloadWbs',
+    });
+    items.push({
+      action: this.actionDownloadAbs,
+      icon: faCloudDownload,
+      text: 'Wbs.DownloadAbs',
     });
 
     if (
@@ -73,7 +79,10 @@ export class EntryActionButtonService {
 
   handleAction(action: string): void {
     switch (action) {
-      case this.actionDownload:
+      case this.actionDownloadAbs:
+        this.entryService.downloadTasks();
+        break;
+      case this.actionDownloadWbs:
         this.entryService.downloadTasks();
         break;
       case this.actionCreateProject:

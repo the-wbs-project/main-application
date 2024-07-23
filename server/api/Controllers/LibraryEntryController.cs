@@ -35,8 +35,8 @@ public class LibraryEntryController : ControllerBase
         {
             using var conn = await db.CreateConnectionAsync();
 
-            if (string.IsNullOrWhiteSpace(filters.searchText))
-                return Ok(await entryDataService.GetFilteredAsync(conn, owner, filters));
+            //if (string.IsNullOrWhiteSpace(filters.searchText))
+            //    return Ok(await entryDataService.GetFilteredAsync(conn, owner, filters));
 
             return Ok(await searchService.RunQueryAsync(owner, filters));
         }
@@ -76,7 +76,8 @@ public class LibraryEntryController : ControllerBase
             {
                 await entryDataService.SetAsync(conn, entry);
 
-                searchIndexService.AddToLibraryQueue(owner, entryId);
+                //searchIndexService.AddToLibraryQueue(owner, entryId);
+                await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
             }
             return Accepted();
         }

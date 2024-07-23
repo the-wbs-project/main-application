@@ -36,6 +36,7 @@ import {
 } from '../../states';
 import { ProjectApprovalCardComponent } from './components/project-approval-card';
 import { ProjectStatusCardComponent } from './components/project-status-card';
+import { ProjectDetailsCardComponent } from './components/project-details-card';
 
 @Component({
   standalone: true,
@@ -52,6 +53,7 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
     NgClass,
     ProjectApprovalCardComponent,
     ProjectChecklistComponent,
+    ProjectDetailsCardComponent,
     ProjectStatusCardComponent,
     ResizedCssDirective,
     RoleListPipe,

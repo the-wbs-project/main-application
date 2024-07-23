@@ -42,4 +42,21 @@ export class TreeService {
       }
     }
   }
+
+  disciplineWidth(items: { disciplines: any[] }[] | undefined): number {
+    const max = Math.max(
+      ...(items ?? []).map((x) => (x.disciplines ?? []).length)
+    );
+
+    const width = max * 25;
+
+    return width <= 125 ? 125 : width >= 200 ? 200 : width;
+  }
+
+  levelsWidth(items: { levels: number[] }[] | undefined): number {
+    const max = Math.max(...(items ?? []).map((x) => (x.levels ?? []).length));
+
+    return max < 6 ? 80 : max < 8 ? 90 : 120;
+  }
 }
+//levels: number[]

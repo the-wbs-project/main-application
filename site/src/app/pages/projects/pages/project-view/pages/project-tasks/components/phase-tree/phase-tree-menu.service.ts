@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ContextMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
-import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
+import { Utils } from '@wbs/core/services';
+import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
 import { PROJECT_TREE_MENU_ITEMS } from '../../../../models';
 
 declare type Seperator = { separator: true };
@@ -9,18 +10,20 @@ declare type Seperator = { separator: true };
 export class PhaseTreeMenuService {
   buildMenu(
     project: ProjectViewModel,
-    task: TaskViewModel | undefined,
+    task: ProjectTaskViewModel | undefined,
     claims: string[]
   ): (ContextMenuItem | Seperator)[] {
     if (!task) return [];
     const status = project.status;
     const navActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS.reorderTaskActions,
+      structuredClone(PROJECT_TREE_MENU_ITEMS.reorderTaskActions),
+      task,
       claims,
       status
     );
     const phaseActions = this.filterList(
-      PROJECT_TREE_MENU_ITEMS.taskActions,
+      structuredClone(PROJECT_TREE_MENU_ITEMS.taskActions),
+      task,
       claims,
       status
     );
@@ -67,35 +70,40 @@ export class PhaseTreeMenuService {
 
   private filterList(
     actions: ContextMenuItem[],
+    task: ProjectTaskViewModel,
     claims: string[],
     status: PROJECT_STATI_TYPE
   ): ContextMenuItem[] {
     if (!actions || actions.length === 0) return actions;
 
-    const results: ContextMenuItem[] = [];
-
-    for (const action of actions) {
-      if (this.filterItem(action, claims, status)) {
-        results.push(action);
-      }
-    }
-
-    return results;
+    return actions.filter((x) => this.filterItem(x, task, claims, status));
   }
 
   private filterItem(
     link: ContextMenuItem,
+    task: ProjectTaskViewModel,
     claims: string[],
     status: PROJECT_STATI_TYPE
   ): boolean {
-    if (!link.filters) return true;
-    if (link.filters.claim && !claims.includes(link.filters.claim))
-      return false;
+    if (link.filters) {
+      if (link.filters.claim && !claims.includes(link.filters.claim))
+        return false;
 
-    if (link.filters.stati) {
-      const statusResult = link.filters.stati.some((s) => s === status);
+      if (link.filters.stati) {
+        const statusResult = link.filters.stati.some((s) => s === status);
 
-      if (!statusResult) return false;
+        if (!statusResult) return false;
+      }
+      if (link.filters.props) {
+        for (const test of link.filters.props) {
+          const propResult = Utils.executeTestByObject(task, test);
+
+          if (!propResult) return false;
+        }
+      }
+    }
+    if (link.items) {
+      link.items = this.filterList(link.items, task, claims, status);
     }
 
     return true;
@@ -103,7 +111,7 @@ export class PhaseTreeMenuService {
 
   private getDisciplinesToAdd(
     project: ProjectViewModel,
-    task: TaskViewModel
+    task: ProjectTaskViewModel
   ): ContextMenuItem[] {
     const existing = task.disciplines.map((x) => x.id);
     const results: ContextMenuItem[] = [];
@@ -122,7 +130,9 @@ export class PhaseTreeMenuService {
     return results;
   }
 
-  private getDisciplinesToRemove(task: TaskViewModel): ContextMenuItem[] {
+  private getDisciplinesToRemove(
+    task: ProjectTaskViewModel
+  ): ContextMenuItem[] {
     const results: ContextMenuItem[] = [];
 
     for (const discipline of task.disciplines) {

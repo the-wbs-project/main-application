@@ -17,9 +17,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { SwitchModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
+import { AbsHeaderComponent } from '@wbs/components/abs-header';
 import { DirtyComponent } from '@wbs/core/models';
 import { SaveService } from '@wbs/core/services';
 import { ChangeTaskBasics } from '../../actions';
@@ -30,11 +31,13 @@ import { TasksState } from '../../states';
   templateUrl: './general.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AbsHeaderComponent,
     EditorModule,
     FadingMessageComponent,
     FormsModule,
     ReactiveFormsModule,
     SaveButtonComponent,
+    SwitchModule,
     TextBoxModule,
     TranslateModule,
   ],
@@ -46,6 +49,7 @@ export class GeneralComponent implements DirtyComponent {
   readonly form = new FormGroup({
     title: new FormControl<string>('', [Validators.required]),
     description: new FormControl<string>(''),
+    abs: new FormControl<boolean>(false),
   });
   readonly saveService = new SaveService();
   readonly taskId = input.required<string>();
@@ -61,6 +65,7 @@ export class GeneralComponent implements DirtyComponent {
     this.form.setValue({
       description: t?.description ?? '',
       title: t?.title ?? '',
+      abs: t?.absFlag === 'set',
     });
   }
 
@@ -75,7 +80,8 @@ export class GeneralComponent implements DirtyComponent {
           new ChangeTaskBasics(
             this.taskId(),
             values.title!,
-            values.description!
+            values.description!,
+            values.abs!
           )
         )
       )

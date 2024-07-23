@@ -469,3 +469,25 @@ button:focus:not(:focus-visible) {
     text-transform: uppercase;
   }
 }
+
+.tree-column {
+  font-size: 12px;
+  padding-block: 6px !important;
+  padding-inline: 8px !important;
+
+  .k-svg-icon {
+    padding-left: 1px !important;
+    padding-right: 1px !important;
+  }
+}
+
+.wbs-detail-card {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 120px auto;
+
+  > .detail-header {
+    font-weight: 600;
+    text-align: right;
+  }
+}

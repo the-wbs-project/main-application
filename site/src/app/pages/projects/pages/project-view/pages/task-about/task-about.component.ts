@@ -83,7 +83,14 @@ export class TaskAboutComponent {
     this.descriptionSave
       .call(
         this.store
-          .dispatch(new ChangeTaskBasics(task.id, task.title, description))
+          .dispatch(
+            new ChangeTaskBasics(
+              task.id,
+              task.title,
+              description,
+              task.absFlag === 'set'
+            )
+          )
           .pipe(tap(() => this.descriptionEditMode.set(false)))
       )
       .subscribe();

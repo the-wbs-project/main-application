@@ -31,7 +31,8 @@ export class ProjectActionButtonService {
   private readonly actionReturnPlanning = 'returnPlanning';
   private readonly actionReject = 'reject';
   private readonly actionApprove = 'approve';
-  private readonly actionDownload = 'download';
+  private readonly actionDownloadWbs = 'downloadWbs';
+  private readonly actionDownloadAbs = 'downloadAbs';
   private readonly actionUpload = 'upload';
   private readonly actionExport = 'export';
 
@@ -44,9 +45,14 @@ export class ProjectActionButtonService {
     const items: ProjectAction[] = [
       { separator: true },
       {
-        action: this.actionDownload,
+        action: this.actionDownloadWbs,
         icon: faCloudDownload,
-        text: 'Wbs.DownloadTasks',
+        text: 'Wbs.DownloadWbs',
+      },
+      {
+        action: this.actionDownloadAbs,
+        icon: faCloudDownload,
+        text: 'Wbs.DownloadAbs',
       },
     ];
 
@@ -127,9 +133,14 @@ export class ProjectActionButtonService {
   }
 
   handleAction(action: string, approvalEnabled: boolean): void {
+    console.log(action);
     switch (action) {
-      case this.actionDownload:
-        this.actions.downloadTasks();
+      case this.actionDownloadAbs:
+        this.actions.downloadTasks(true);
+        break;
+
+      case this.actionDownloadWbs:
+        this.actions.downloadTasks(false);
         break;
 
       case this.actionUpload:

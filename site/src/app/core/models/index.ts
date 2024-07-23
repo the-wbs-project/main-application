@@ -29,6 +29,7 @@ export * from './membership.model';
 export * from './navigation-link.model';
 export * from './open-ai-request.model';
 export * from './open-ai-results.model';
+export * from './operation-test.model';
 export * from './organization.model';
 export * from './phase.model';
 export * from './project-activity-record.model';
