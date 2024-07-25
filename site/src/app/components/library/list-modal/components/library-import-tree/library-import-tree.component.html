@@ -11,6 +11,7 @@
   [initiallyExpanded]="false"
   [(expandedKeys)]="treeService.expandedKeys"
   [selectable]="{ enabled: true, mode: 'row' }"
+  (cellClick)="onCellClick($event)"
 >
   <ng-template kendoTreeListToolbarTemplate>
     <wbs-tree-buttons-toggler
@@ -18,13 +19,6 @@
       (expand)="treeService.expandAll(treelist, viewModels)"
     />
   </ng-template>
-  <kendo-treelist-column
-    field="levelText"
-    [title]="'Wbs.Level' | translate"
-    [width]="100"
-    class="tx-11"
-    headerClass="tx-14"
-  />
   <kendo-treelist-column
     [expandable]="true"
     field="title"
@@ -34,11 +28,17 @@
   >
     <ng-template kendoTreeListCellTemplate let-dataItem>
       <wbs-task-title
-        [showRemove]="dataItem.parentId != null || entry().type === 'project'"
-        [title]="dataItem.title"
         [canEdit]="true"
-        (titleChange)="titleChanged(dataItem.id, $event)"
-        (remove)="removeTask(dataItem.id)"
+        [level]="dataItem.levelText"
+        [title]="dataItem.title"
+        (edit)="treeService.editTitle(treelist, dataItem)"
+      />
+    </ng-template>
+    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+      <wbs-task-title-editor
+        [title]="dataItem.title"
+        (save)="dataItem.title = $event"
+        (cancel)="treelist.closeCell()"
       />
     </ng-template>
   </kendo-treelist-column>
@@ -54,6 +54,13 @@
     </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
       <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+    </ng-template>
+    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+      <wbs-discipline-dropdown
+        [data]="disciplines()"
+        [values]="dataItem.disciplines"
+        (save)="dataItem.disciplines = $event"
+      />
     </ng-template>
   </kendo-treelist-column>
   }

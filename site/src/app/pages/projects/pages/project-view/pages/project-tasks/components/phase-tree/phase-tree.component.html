@@ -53,17 +53,24 @@
       >
         <ng-template kendoTreeListCellTemplate let-dataItem>
           @defer (on idle) {
-          {{ dataItem.levelText }}&nbsp;-
           <wbs-task-title
             [canEdit]="canEdit()"
+            [level]="dataItem.levelText"
             [title]="dataItem.title"
-            (titleChange)="taskTitleChanged(dataItem.id, $event)"
+            (edit)="treeService.editTitle(treelist, dataItem)"
           />
-          @if (taskSaveStates.get(dataItem.id); as saveState) {
+          @if (treeService.getSaveState(dataItem.id); as saveState) {
           <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
           } } @placeholder {
           <span class="tx-8">{{ "General.Loading" | translate }}...</span>
           }
+        </ng-template>
+        <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+          <wbs-task-title-editor
+            [title]="dataItem.title"
+            (save)="taskTitleChanged(treelist, dataItem.id, $event)"
+            (cancel)="treelist.closeCell()"
+          />
         </ng-template>
       </kendo-treelist-column>
       @if (project().approvalStarted) {
@@ -112,7 +119,8 @@
       </kendo-treelist-column>
       @if ((width() ?? 0) > 800) {
       <kendo-treelist-column
-        [width]="treeService.disciplineWidth(tasks)"
+        [width]="200"
+        field="disciplines"
         class="tree-column"
         headerClass="tx-14"
       >
@@ -123,7 +131,15 @@
           @defer (on idle) {
           <wbs-discipline-icon-list [items]="dataItem.disciplines" />
           } @placeholder {
-          <span class="tx-8">{{ "General.Loading" | translate }}...</span> }
+          <span class="tx-8">{{ "General.Loading" | translate }}...</span>
+          }
+        </ng-template>
+        <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+          <wbs-discipline-dropdown
+            [data]="project().disciplines"
+            [values]="dataItem.disciplines"
+            (save)="disciplinesChanged(treelist, dataItem.id, $event)"
+          />
         </ng-template>
       </kendo-treelist-column>
       }

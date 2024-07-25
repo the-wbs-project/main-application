@@ -55,7 +55,7 @@ export class LibraryListFiltersComponent {
   readonly typeFilters = model.required<string[]>();
   readonly authorFilters = model<string[]>();
   readonly library = model<string>();
-  readonly expanded = signal(false);
+  readonly expanded = model(false);
 
   readonly FILTERS_LIBRARY = LIBRARY_FILTER_LIBRARIES;
   readonly FILTERS_ROLES = LIBRARY_FILTER_ROLES;

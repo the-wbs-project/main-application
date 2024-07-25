@@ -133,6 +133,7 @@ export class LibraryListModalComponent extends DialogContentBase {
     component.library.set(library);
     component.typeFilters.set([]);
     component.ready.set(true);
+    component.retrieve();
 
     return ref.result.pipe(
       map((x: unknown) =>

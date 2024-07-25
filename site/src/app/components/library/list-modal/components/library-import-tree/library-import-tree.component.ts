@@ -6,10 +6,11 @@ import {
   inject,
   input,
   model,
-  output,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import {
+  CellClickEvent,
+  ColumnComponent,
   SelectableSettings,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
@@ -19,10 +20,13 @@ import {
   Messages,
   Transformers,
   TreeService,
+  sorter,
 } from '@wbs/core/services';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
-import { TaskTitleComponent } from '@wbs/components/task-title';
+import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
+import { TaskTitle2Component } from '@wbs/components/task-title';
+import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/core/store';
 import { LibraryEntryViewModel } from '@wbs/core/view-models';
@@ -34,7 +38,9 @@ import { LibraryEntryViewModel } from '@wbs/core/view-models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     DisciplineIconListComponent,
-    TaskTitleComponent,
+    DisciplinesDropdownComponent,
+    TaskTitle2Component,
+    TaskTitleEditorComponent,
     TranslateModule,
     TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,
@@ -71,8 +77,16 @@ export class LibraryImportTreeComponent implements OnInit {
 
   ngOnInit(): void {
     this.treeService.expandedKeys = this.viewModels()
-      .filter((x) => x.children > 0)
+      .filter((x) => !x.parentId)
       .map((x) => x.id);
+  }
+
+  onCellClick(e: CellClickEvent): void {
+    const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
+
+    if (!e.isEdited && column?.field === 'disciplines') {
+      e.sender.editCell(e.dataItem, e.columnIndex);
+    }
   }
 
   titleChanged(taskId: string, title: string): void {
@@ -102,10 +116,22 @@ export class LibraryImportTreeComponent implements OnInit {
           if (index < 0 || !vm) return tasks;
 
           tasks.splice(index, 1);
-
+          //
+          //  Remove the task and its children
+          //
           for (const child of vm.childrenIds) {
             const childIndex = tasks.findIndex((t) => t.id === child);
             if (childIndex > -1) tasks.splice(childIndex, 1);
+          }
+          //
+          //  Update the sibling's order
+          //
+          const siblings = tasks
+            .filter((x) => x.parentId === vm.parentId)
+            .sort((a, b) => sorter(a.order, b.order));
+
+          for (let i = 0; i < siblings.length; i++) {
+            siblings[i].order = i + 1;
           }
           return [...tasks];
         });

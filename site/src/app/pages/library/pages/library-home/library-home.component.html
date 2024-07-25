@@ -25,6 +25,7 @@
     </div>
     <wbs-library-list
       [entries]="entries()"
+      [showOwner]="library() === 'public'"
       (selectedChange)="service.navigate($event)"
     />
   </div>

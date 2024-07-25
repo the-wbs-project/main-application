@@ -1,9 +1,14 @@
-import { Injectable } from '@angular/core';
+import { Injectable, WritableSignal, signal } from '@angular/core';
 import { TreeListComponent } from '@progress/kendo-angular-treelist';
+import { SaveState } from '@wbs/core/models';
 import { TaskViewModel } from '@wbs/core/view-models';
+import { Observable } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TreeService {
+  private readonly saveStates: Map<string, WritableSignal<SaveState>> =
+    new Map();
   expandedKeys: string[] = [];
 
   verifyExpanded(taskId: string | undefined): void {
@@ -58,5 +63,40 @@ export class TreeService {
 
     return max < 6 ? 80 : max < 8 ? 90 : 120;
   }
+
+  editTitle(grid: TreeListComponent, dataItem: any): void {
+    grid.editCell(dataItem, 1);
+  }
+
+  getSaveState(taskId: string): WritableSignal<SaveState> {
+    if (!this.saveStates.has(taskId)) {
+      this.saveStates.set(taskId, signal('ready'));
+    }
+    return this.saveStates.get(taskId)!;
+  }
+
+  setSaveState(taskId: string, state: SaveState): void {
+    this.saveStates.get(taskId)?.set(state);
+  }
+
+  updateState(tasks: TaskViewModel[]): void {
+    for (const task of tasks ?? []) {
+      if (!this.saveStates.has(task.id)) {
+        this.saveStates.set(task.id, signal('ready'));
+      }
+    }
+  }
+
+  callSave(taskId: string, obs: Observable<any>): void {
+    this.setSaveState(taskId, 'saving');
+
+    obs
+      .pipe(
+        tap((x) => console.log(x)),
+        tap((x) => console.log(x === false ? 'ready' : 'saved')),
+        tap((x) => this.setSaveState(taskId, x === false ? 'ready' : 'saved')),
+        delay(5000)
+      )
+      .subscribe(() => this.setSaveState(taskId, 'ready'));
+  }
 }
-//levels: number[]

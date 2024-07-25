@@ -41,5 +41,6 @@ export class LibraryListComponent {
   readonly showWatchedColumn = input(true);
   readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
   readonly entries = input.required<LibraryEntryViewModel[]>();
+  readonly showOwner = input(false);
   readonly dblClick = output<void>();
 }

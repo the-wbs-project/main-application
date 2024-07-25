@@ -53,7 +53,9 @@ export class DisciplinesComponent implements DirtyComponent {
       .map((x) => x.id);
 
     this.saveService
-      .call(this.store.dispatch(new ChangeTaskDisciplines(results)))
+      .call(
+        this.store.dispatch(new ChangeTaskDisciplines(this.task()!.id, results))
+      )
       .subscribe();
   }
 }

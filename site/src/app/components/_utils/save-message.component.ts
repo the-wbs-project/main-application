@@ -31,7 +31,7 @@ import { SaveState } from '@wbs/core/models';
     @if (showSaving()) {
     <fa-duotone-icon [icon]="spinnerIcon" class="mg-r-5" [spin]="true" />
     {{ 'General.Saving' | translate }}
-    } @else {
+    } @else if (showSaved()) {
     <fa-icon [icon]="checkIcon" class="mg-r-5" />
     {{ 'General.Saved' | translate }}
     }

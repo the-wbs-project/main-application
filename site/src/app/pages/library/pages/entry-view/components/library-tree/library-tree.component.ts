@@ -11,17 +11,23 @@ import {
 import { toObservable } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, faLock } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faCheck,
+  faFloppyDisk,
+  faXmark,
+} from '@fortawesome/pro-solid-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import {
   ContextMenuComponent,
   ContextMenuModule,
 } from '@progress/kendo-angular-menu';
 import {
   CellClickEvent,
+  ColumnComponent,
   RowReorderEvent,
   TreeListComponent,
   TreeListModule,
@@ -36,7 +42,8 @@ import {
   TreeButtonsTogglerComponent,
   TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { TaskTitleComponent } from '@wbs/components/task-title';
+import { TaskTitle2Component } from '@wbs/components/task-title';
+import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
   LIBRARY_CLAIMS,
@@ -54,17 +61,17 @@ import {
 } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore, UiStore } from '@wbs/core/store';
-import { TaskViewModel } from '@wbs/core/view-models';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
+import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import {
   EntryTaskActionService,
   EntryTaskReorderService,
 } from '../../services';
-import { LibraryTreeMenuService } from './library-tree-menu.service';
 import { TreeFlagColumnHeaderComponent } from '../tree-flag-column-header';
 import { VisibilityIconComponent } from '../visibility-icon.component';
+import { LibraryTreeMenuService } from './library-tree-menu.service';
+import { DisciplinesDropdownComponent } from '../../../../../../components/discipline-dropdown/discipline-dropdown.component';
 
 @UntilDestroy()
 @Component({
@@ -79,11 +86,14 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
     ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
+    DisciplinesDropdownComponent,
     FontAwesomeModule,
     RouterModule,
     SaveMessageComponent,
+    TextBoxModule,
     TranslateModule,
-    TaskTitleComponent,
+    TaskTitle2Component,
+    TaskTitleEditorComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
     TreeButtonsAddComponent,
@@ -111,6 +121,8 @@ export class LibraryTreeComponent {
   readonly treeService = new TreeService();
 
   readonly checkIcon = faCheck;
+  readonly faFloppyDisk = faFloppyDisk;
+  readonly faXmark = faXmark;
 
   readonly entryUrl = input.required<string[]>();
   readonly claims = input.required<string[]>();
@@ -121,7 +133,6 @@ export class LibraryTreeComponent {
 
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<TaskViewModel | undefined>(undefined);
-  readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly menu = computed(() =>
     this.menuService.buildMenu(
       this.entry().type,
@@ -147,7 +158,7 @@ export class LibraryTreeComponent {
   constructor() {
     toObservable(this.entryStore.viewModels)
       .pipe(untilDestroyed(this))
-      .subscribe((tasks) => this.updateState(tasks ?? []));
+      .subscribe((tasks) => this.treeService.updateState(tasks ?? []));
   }
 
   menuItemSelected(action: string): void {
@@ -160,7 +171,7 @@ export class LibraryTreeComponent {
     );
 
     if (obsOrVoid instanceof Observable) {
-      if (taskId) this.callSave(taskId, obsOrVoid);
+      if (taskId) this.treeService.callSave(taskId, obsOrVoid);
       else obsOrVoid.subscribe();
     }
   }
@@ -176,17 +187,14 @@ export class LibraryTreeComponent {
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });
+      return;
     }
-  }
 
-  expand(taskId: string): void {
-    this.treeService.expand(taskId);
-    this.resetTree();
-  }
+    const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
 
-  collapse(taskId: string): void {
-    this.treeService.collapse(taskId);
-    this.resetTree();
+    if (!e.isEdited && column?.field === 'disciplines') {
+      e.sender.editCell(e.dataItem, e.columnIndex);
+    }
   }
 
   rowReordered(e: RowReorderEvent): void {
@@ -216,7 +224,7 @@ export class LibraryTreeComponent {
         target,
         e.dropPosition
       );
-      this.callSave(
+      this.treeService.callSave(
         dragged.id,
         this.taskService.saveAsync(results, [], 'Wbs.TasksReordered')
       );
@@ -245,34 +253,35 @@ export class LibraryTreeComponent {
     this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));
   }
 
-  taskTitleChanged(taskId: string, title: string): void {
-    this.callSave(taskId, this.taskService.titleChangedAsync(taskId, title));
+  disciplinesChanged(
+    treelist: TreeListComponent,
+    taskId: string,
+    discipilnes: CategoryViewModel[]
+  ) {
+    treelist.closeCell();
+    this.treeService.callSave(
+      taskId,
+      this.taskService.disciplinesChangedAsync(
+        taskId,
+        discipilnes.map((x) => x.id)
+      )
+    );
+  }
+
+  taskTitleChanged(
+    treelist: TreeListComponent,
+    taskId: string,
+    title: string
+  ): void {
+    treelist.closeCell();
+
+    this.treeService.callSave(
+      taskId,
+      this.taskService.titleChangedAsync(taskId, title)
+    );
   }
 
   private resetTree(): void {
     this.entryStore.setTasks(structuredClone(this.entryStore.tasks() ?? []));
-  }
-
-  private setSaveState(taskId: string, state: SaveState): void {
-    this.taskSaveStates.get(taskId)?.set(state);
-  }
-
-  private updateState(tasks: TaskViewModel[]): void {
-    for (const task of tasks ?? []) {
-      if (!this.taskSaveStates.has(task.id)) {
-        this.taskSaveStates.set(task.id, signal('ready'));
-      }
-    }
-  }
-
-  private callSave(taskId: string, obs: Observable<any>): void {
-    this.setSaveState(taskId, 'saving');
-
-    obs
-      .pipe(
-        tap(() => this.setSaveState(taskId, 'saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 }

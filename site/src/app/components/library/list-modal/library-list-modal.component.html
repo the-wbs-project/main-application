@@ -12,8 +12,9 @@
       [(typeFilters)]="typeFilters"
       [(authorFilters)]="roleFilters"
       [(searchText)]="searchText"
+      [expanded]="true"
       (libraryChange)="retrieve()"
-      (typeFiltersChange)="retrieve()"
+      (authorFiltersChange)="retrieve()"
       (searchTextChange)="retrieve()"
     />
     <wbs-library-list

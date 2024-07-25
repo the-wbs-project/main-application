@@ -84,7 +84,7 @@ export class ChangeTaskAbsFlag {
 
 export class ChangeTaskDisciplines {
   static readonly type = '[Tasks] Change Task Disciplines';
-  constructor(readonly disciplines: string[]) {}
+  constructor(readonly taskId: string, readonly disciplines: string[]) {}
 }
 
 export class AddDisciplineToTask {

@@ -76,7 +76,7 @@ export class EntryTaskActionService {
           this.dialogService,
           this.membership.membership()!.name,
           this.userId()!,
-          'personal'
+          'organizational'
         ).pipe(
           switchMap((results: LibraryImportResults | undefined) =>
             !results

@@ -627,11 +627,10 @@ export class TasksState {
   @Action(ChangeTaskDisciplines)
   changeTaskDisciplines(
     ctx: Context,
-    { disciplines }: ChangeTaskDisciplines
+    { taskId, disciplines }: ChangeTaskDisciplines
   ): Observable<void> | void {
     const state = ctx.getState();
-    const viewModel = state.current!;
-    const model = state.nodes!.find((x) => x.id === viewModel.id)!;
+    const model = state.nodes!.find((x) => x.id === taskId)!;
 
     if (
       JSON.stringify(model.disciplineIds ?? []) === JSON.stringify(disciplines)
@@ -661,12 +660,8 @@ export class TasksState {
     return this.saveTask(ctx, model).pipe(
       map(() => {
         model.lastModified = now;
-        viewModel.lastModified = now;
 
-        ctx.patchState({
-          current: { ...viewModel },
-          nodes: state.nodes,
-        });
+        ctx.patchState({ nodes: state.nodes });
       }),
       switchMap(() => this.rebuildNodeViews(ctx)),
       tap(() => this.saveActivity(activityData))

@@ -31,7 +31,7 @@
   (dblclick)="navigateToTask(selectedTask()?.id)"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    @if (canCreate()) {
+    @if (canCreate() && entryStore.entry()?.type === 'project') {
     <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
     }
     <wbs-tree-buttons-toggler
@@ -43,13 +43,6 @@
   <kendo-treelist-rowreorder-column [width]="40" />
   }
   <kendo-treelist-column
-    field="levelText"
-    [title]="'Wbs.Level' | translate"
-    [width]="treeService.levelsWidth(tree)"
-    class="tree-column"
-    headerClass="tx-14"
-  />
-  <kendo-treelist-column
     [expandable]="true"
     field="title"
     class="child-hoverer tree-column"
@@ -59,17 +52,27 @@
     <ng-template kendoTreeListCellTemplate let-dataItem>
       @defer (on idle) {
       <wbs-task-title
-        [title]="dataItem.title"
         [canEdit]="canEdit()"
-        (titleChange)="taskTitleChanged(dataItem.id, $event)"
+        [level]="dataItem.levelText"
+        [title]="dataItem.title"
+        (edit)="treeService.editTitle(treelist, dataItem)"
       />
-      @if (taskSaveStates.get(dataItem.id); as saveState) {
+      @if (treeService.getSaveState(dataItem.id); as saveState) {
       <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
       } } @placeholder {
-      <span class="tx-8">Loading...</span>
+      <span class="tx-8"> {{ "General.Loading" | translate }}...</span>
       }
     </ng-template>
+    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+      <wbs-task-title-editor
+        [title]="dataItem.title"
+        (save)="taskTitleChanged(treelist, dataItem.id, $event)"
+        (cancel)="treelist.closeCell()"
+      />
+    </ng-template>
   </kendo-treelist-column>
+
+  @if ((width() ?? 0) > 600) {
   <kendo-treelist-column [width]="100" class="tree-column" headerClass="tx-14">
     <ng-template kendoTreeListHeaderTemplate>
       <wbs-tree-flag-column-header />
@@ -82,9 +85,11 @@
       } }
     </ng-template>
   </kendo-treelist-column>
-  @if ((width() ?? 0) > 800) {
+
+  } @if ((width() ?? 0) > 800) {
   <kendo-treelist-column
-    [width]="treeService.disciplineWidth(tree)"
+    field="disciplines"
+    [width]="200"
     class="tree-column"
     headerClass="tx-14"
   >
@@ -101,6 +106,13 @@
       } @placeholder {
       <span class="tx-8"> {{ "General.Loading" | translate }}...</span>
       } }
+    </ng-template>
+    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+      <wbs-discipline-dropdown
+        [data]="disciplines()"
+        [values]="dataItem.disciplines"
+        (save)="disciplinesChanged(treelist, dataItem.id, $event)"
+      />
     </ng-template>
   </kendo-treelist-column>
   }

@@ -21,19 +21,15 @@
       />
     </ng-template>
     <kendo-treelist-column
-      field="levelText"
-      [title]="'Wbs.Level' | translate"
-      [width]="treeService.levelsWidth(subTasks)"
-      class="tree-column"
-      headerClass="tx-14"
-    />
-    <kendo-treelist-column
       [expandable]="true"
-      field="title"
       class="tree-column"
       headerClass="tx-14"
       [title]="'Wbs.Activity_Title' | translate"
-    />
+    >
+      <ng-template kendoTreeListCellTemplate let-dataItem>
+        {{ dataItem.levelText }}&nbsp;-&nbsp;{{ dataItem.title }}
+      </ng-template>
+    </kendo-treelist-column>
     @if ((width() ?? 0) > 800) {
     <kendo-treelist-column
       [width]="treeService.disciplineWidth(subTasks)"

@@ -2,15 +2,14 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  WritableSignal,
   computed,
   inject,
   input,
   signal,
   viewChild,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -23,6 +22,7 @@ import {
 } from '@progress/kendo-angular-menu';
 import {
   CellClickEvent,
+  ColumnComponent,
   RowReorderEvent,
   SelectableSettings,
   TreeListComponent,
@@ -34,7 +34,10 @@ import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-i
 import { ProgressBarComponent } from '@wbs/components/_utils/progress-bar.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { AbsHeaderComponent } from '@wbs/components/abs-header';
-import { TaskTitleComponent } from '@wbs/components/task-title';
+import { AbsIconComponent } from '@wbs/components/abs-icon.component';
+import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
+import { TaskTitle2Component } from '@wbs/components/task-title';
+import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
   TreeButtonsAddComponent,
@@ -42,15 +45,20 @@ import {
   TreeButtonsTogglerComponent,
   TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { PROJECT_CLAIMS, PROJECT_STATI, SaveState } from '@wbs/core/models';
+import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { Messages, SignalStore, TreeService, Utils } from '@wbs/core/services';
-import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
+import {
+  CategoryViewModel,
+  ProjectViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
 import { UiStore } from '@wbs/core/store';
-import { Observable, delay, tap } from 'rxjs';
+import { Observable } from 'rxjs';
 import {
   ChangeTaskBasics,
+  ChangeTaskDisciplines,
   CreateTask,
   RebuildNodeViews,
   TreeReordered,
@@ -64,8 +72,6 @@ import {
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeMenuService } from './phase-tree-menu.service';
 import { PhaseTreeReorderService } from './phase-tree-reorder.service';
-import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
-import { AbsIconComponent } from '@wbs/components/abs-icon.component';
 
 @UntilDestroy()
 @Component({
@@ -84,13 +90,14 @@ import { AbsIconComponent } from '@wbs/components/abs-icon.component';
     ContextMenuItemComponent,
     ContextMenuModule,
     DisciplineIconListComponent,
+    DisciplinesDropdownComponent,
     FindByIdPipe,
     FindThemByIdPipe,
     FontAwesomeModule,
     ProgressBarComponent,
-    RouterModule,
     SaveMessageComponent,
-    TaskTitleComponent,
+    TaskTitle2Component,
+    TaskTitleEditorComponent,
     TranslateModule,
     TreeButtonsAddComponent,
     TreeButtonsDownloadComponent,
@@ -139,7 +146,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly plusIcon = faPlus;
   readonly infoIcon = faCircleQuestion;
 
-  readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
   readonly width = inject(UiStore).mainContentWidth;
   readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
@@ -156,15 +162,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.store
       .selectAsync(TasksState.phases)
       .pipe(untilDestroyed(this))
-      .subscribe((phases) => {
-        this.updateState(phases ?? []);
-      });
-    /*
-    Is this needed?
-    this.store
-      .selectAsync(ProjectApprovalState.list)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => this.cd.detectChanges());*/
+      .subscribe((phases) => this.treeService.updateState(phases ?? []));
 
     this.actions$
       .pipe(ofActionSuccessful(CreateTask), untilDestroyed(this))
@@ -203,8 +201,13 @@ export class ProjectPhaseTreeComponent implements OnInit {
         left: originalEvent.pageX,
         top: originalEvent.pageY,
       });
-    } else {
-      this.taskId.set(e.dataItem.id);
+      return;
+    }
+
+    const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
+
+    if (!e.isEdited && column?.field === 'disciplines') {
+      e.sender.editCell(e.dataItem, e.columnIndex);
     }
   }
 
@@ -223,7 +226,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
     const run = () => {
       const results = this.reorderer.run(tree, dragged, target, e.dropPosition);
-      this.callSave(
+
+      this.treeService.callSave(
         dragged.id,
         this.store.dispatch(new TreeReordered(dragged.id, results))
       );
@@ -243,15 +247,37 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
   }
 
-  taskTitleChanged(taskId: string, title: string): void {
+  disciplinesChanged(
+    treelist: TreeListComponent,
+    taskId: string,
+    discipilnes: CategoryViewModel[]
+  ) {
+    treelist.closeCell();
+    this.treeService.callSave(
+      taskId,
+      this.store.dispatch(
+        new ChangeTaskDisciplines(
+          taskId,
+          discipilnes.map((x) => x.id)
+        )
+      )
+    );
+  }
+
+  taskTitleChanged(
+    treelist: TreeListComponent,
+    taskId: string,
+    title: string
+  ): void {
+    treelist.closeCell();
+
     const task = this.tasks()?.find((x) => x.id === taskId);
 
     if (!task) return;
 
-    this.setSaveState(taskId, 'saving');
-
-    this.store
-      .dispatch(
+    this.treeService.callSave(
+      taskId,
+      this.store.dispatch(
         new ChangeTaskBasics(
           taskId,
           title,
@@ -259,11 +285,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
           task.absFlag === 'set'
         )
       )
-      .pipe(
-        tap(() => this.setSaveState(taskId, 'saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
+    );
   }
 
   addPhase(): void {
@@ -279,35 +301,12 @@ export class ProjectPhaseTreeComponent implements OnInit {
     const obsOrVoid = this.service.action(item, taskId);
 
     if (obsOrVoid instanceof Observable) {
-      this.callSave(taskId, obsOrVoid);
-    }
-  }
-
-  private setSaveState(taskId: string, state: SaveState): void {
-    this.taskSaveStates.get(taskId)?.set(state);
-  }
-
-  private updateState(tasks: TaskViewModel[]): void {
-    for (const task of tasks ?? []) {
-      if (!this.taskSaveStates.has(task.id)) {
-        this.taskSaveStates.set(task.id, signal('ready'));
-      }
+      this.treeService.callSave(taskId, obsOrVoid);
     }
   }
 
   private resetTree(): void {
     this.store.dispatch(new RebuildNodeViews());
-  }
-
-  private callSave(taskId: string, obs: Observable<any>): void {
-    this.setSaveState(taskId, 'saving');
-
-    obs
-      .pipe(
-        tap(() => this.setSaveState(taskId, 'saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
   }
 
   private getViewModels(): TaskViewModel[] {
