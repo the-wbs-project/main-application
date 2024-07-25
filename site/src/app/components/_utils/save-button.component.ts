@@ -23,7 +23,7 @@ import { ButtonModule, ButtonSize } from '@progress/kendo-angular-buttons';
     [disabled]="disabled() || isSaving()"
   >
     @if (isSaving()) {
-    <fa-duotone-icon [icon]="faSpinner" [spin]="true" class="mg-r-5" />
+    <fa-duotone-icon [icon]="faSpinner" animation="spin" class="mg-r-5" />
     {{ 'General.Saving' | translate }}
     } @else {
     <fa-icon [icon]="faFloppyDisk" class="mg-r-5" />

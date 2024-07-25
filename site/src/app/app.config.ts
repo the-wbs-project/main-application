@@ -1,8 +1,4 @@
-import {
-  HTTP_INTERCEPTORS,
-  HttpClientModule,
-  HttpClientXsrfModule,
-} from '@angular/common/http';
+import { HTTP_INTERCEPTORS, provideHttpClient } from '@angular/common/http';
 import {
   APP_INITIALIZER,
   ApplicationConfig,
@@ -31,13 +27,10 @@ const apiDomain = config.api_domain;
 export const appConfig: ApplicationConfig = {
   providers: [
     { provide: APP_CONFIG_TOKEN, useValue: config },
+    provideHttpClient(),
+    provideRouter(routes, withComponentInputBinding()),
     importProvidersFrom([
       BrowserAnimationsModule,
-      HttpClientModule,
-      HttpClientXsrfModule.withOptions({
-        cookieName: 'XSRF-TOKEN',
-        headerName: 'X-XSRF-TOKEN',
-      }),
       NgxsLoggerPluginModule.forRoot({
         disabled: true, // environment.production,
       }),
@@ -57,13 +50,12 @@ export const appConfig: ApplicationConfig = {
           allowedList: [
             { uri: apiDomain + '/api/resources/*', allowAnonymous: true },
             { uri: apiDomain + '/api/lists/*', allowAnonymous: true },
-            'https://ai.pm-empower.com/*',
-            apiDomain + '/*',
+            { uri: 'https://ai.pm-empower.com/*', allowAnonymous: false },
+            { uri: apiDomain + '/*', allowAnonymous: false },
           ],
         },
       }),
     ]),
-    provideRouter(routes, withComponentInputBinding()),
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,

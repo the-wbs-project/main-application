@@ -47,7 +47,7 @@
 </button>
 
 } @else if (saveState() === "saving") {
-<fa-duotone-icon [icon]="faSpinner" size="5x" [spin]="true" />
+<fa-duotone-icon [icon]="faSpinner" size="5x" animation="spin" />
 <p class="tx-18 mg-t-10">{{ "General.Saving" | translate }}</p>
 } @else if (saveState() === "saved") {
 <fa-icon [icon]="faCheck" size="5x" />

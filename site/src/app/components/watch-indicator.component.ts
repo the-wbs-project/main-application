@@ -26,7 +26,7 @@ import { UserStore } from '@wbs/core/store';
     (click)="changed($event)"
   >
     <span class="child-to-show">
-      <fa-icon [icon]="icon()" [spin]="saving()" />
+      <fa-icon [icon]="icon()" [animation]="saving() ? 'spin' : undefined" />
     </span>
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,

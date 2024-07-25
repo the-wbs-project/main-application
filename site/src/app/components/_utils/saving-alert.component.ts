@@ -10,7 +10,7 @@ import { TranslateModule } from '@ngx-translate/core';
   template: `<ngb-alert type="info" [animation]="true" [dismissible]="false">
     <div class="d-flex flex-align-center w-100">
       <div class="wd-40">
-        <fa-duotone-icon [icon]="faSpinner" size="xl" [spin]="true" />
+        <fa-duotone-icon [icon]="faSpinner" size="xl" animation="spin" />
       </div>
       <div class="flex-fill">
         {{ 'General.Saving' | translate }}

@@ -27,7 +27,7 @@
           type="button"
           id="approveButton"
           class="btn btn-sm"
-          [disabled]="isReadyOnly"
+          [disabled]="isReadyOnly()"
           [ngClass]="
             approval.isApproved ? 'btn-success' : 'btn-outline-success'
           "
@@ -52,7 +52,7 @@
           type="button"
           id="rejectButton"
           class="btn btn-sm"
-          [disabled]="isReadyOnly"
+          [disabled]="isReadyOnly()"
           [ngClass]="
             approval.isApproved === false ? 'btn-danger' : 'btn-outline-danger'
           "
@@ -75,7 +75,7 @@
       <div class="d-inline-block wd-50p tx-center pd-t-5">
         <button
           class="btn btn-sm"
-          [disabled]="isReadyOnly"
+          [disabled]="isReadyOnly()"
           [ngClass]="
             approval.isApproved ? 'btn-success' : 'btn-outline-success'
           "
@@ -90,7 +90,7 @@
       <div class="d-inline-block wd-50p tx-center pd-t-5">
         <button
           class="btn btn-sm"
-          [disabled]="isReadyOnly"
+          [disabled]="isReadyOnly()"
           [ngClass]="
             approval.isApproved === false ? 'btn-danger' : 'btn-outline-danger'
           "
