@@ -1,4 +1,5 @@
 import { Pipe, PipeTransform } from '@angular/core';
+import { Utils } from '@wbs/core/services';
 
 @Pipe({ name: 'check', standalone: true })
 export class CheckPipe implements PipeTransform {
@@ -6,11 +7,6 @@ export class CheckPipe implements PipeTransform {
     claims: string[] | undefined,
     toCheck: string | string[] | undefined
   ): boolean {
-    if (!toCheck) return true;
-    if (!claims) return false;
-
-    if (!Array.isArray(toCheck)) toCheck = [toCheck];
-
-    return toCheck.some((claim) => claims.includes(claim));
+    return Utils.contains(claims, toCheck);
   }
 }

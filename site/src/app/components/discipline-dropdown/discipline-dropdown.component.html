@@ -1,0 +1,41 @@
+<kendo-multiselect
+  kendoMultiSelectSummaryTag
+  [checkboxes]="true"
+  [autoClose]="false"
+  [data]="data()"
+  [(value)]="ids"
+  adaptiveMode="auto"
+  textField="label"
+  valueField="id"
+  size="small"
+  [valuePrimitive]="true"
+  [popupSettings]="{ width: '300px' }"
+>
+  <ng-template kendoSuffixTemplate>
+    @if (showSave()) {
+    <button
+      kendoButton
+      size="small"
+      fillMode="outline"
+      (click)="saveSelected()"
+    >
+      <fa-icon [icon]="saveIcon" class="mg-r-5" />
+      {{ "General.Save" | translate }}
+    </button>
+    }
+  </ng-template>
+  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+    {{ dataItems.length }} {{ "General.Selected" | translate }}
+  </ng-template>
+  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+    <div class="tx-12">
+      <span class="d-inline-block tx-center wd-25">
+        <i
+          class="fa-solid"
+          [ngClass]="dataItem.id | disciplineIcon : data()"
+        ></i>
+      </span>
+      {{ dataItem.label }}
+    </div>
+  </ng-template>
+</kendo-multiselect>

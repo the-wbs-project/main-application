@@ -6,13 +6,14 @@ import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryImportResults, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
-import { MembershipStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
+import { MembershipStore, UserStore } from '@wbs/core/store';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AddDisciplineToTask,
   ChangeProjectStatus,
+  ChangeTaskAbsFlag,
   CloneTask,
   CreateTask,
   MoveTaskDown,
@@ -40,6 +41,7 @@ export class ProjectViewService {
   private readonly nav = inject(ProjectNavigationService);
   private readonly store = inject(Store);
   private readonly transformers = inject(Transformers);
+  private readonly userId = inject(UserStore).userId;
 
   private get project(): ProjectViewModel {
     return this.store.selectSnapshot(ProjectState.current)!;
@@ -50,8 +52,10 @@ export class ProjectViewService {
   }
 
   action(action: string, taskId?: string): void | Observable<boolean> {
-    if (action === 'download') {
-      this.downloadTasks();
+    if (action === 'downloadWbs') {
+      this.downloadTasks(false);
+    } else if (action === 'downloadAbs') {
+      this.downloadTasks(true);
     } else if (action === 'upload') {
       this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
     } else if (action === 'addSub') {
@@ -94,6 +98,10 @@ export class ProjectViewService {
         this.store.dispatch(new MoveTaskUp(taskId));
       } else if (action === 'moveDown') {
         this.store.dispatch(new MoveTaskDown(taskId));
+      } else if (action === 'setAbsFlag') {
+        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, true));
+      } else if (action === 'removeAbsFlag') {
+        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, false));
       } else if (action === 'exportTask') {
         const task = this.store
           .selectSnapshot(TasksState.nodes)!
@@ -116,20 +124,12 @@ export class ProjectViewService {
           .pipe(map(() => true));
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
-        const org = this.membership.membership()!.name;
-        const task = this.store
-          .selectSnapshot(TasksState.nodes)!
-          .find((x) => x.id === taskId)!;
-        const types: string[] =
-          direction === 'right' || task.parentId != null
-            ? ['task']
-            : ['phase', 'task'];
 
         return LibraryListModalComponent.launchAsync(
           this.dialogService,
-          org,
-          'personal',
-          types
+          this.membership.membership()!.name,
+          this.userId()!,
+          'personal'
         ).pipe(
           switchMap((results: LibraryImportResults | undefined) =>
             !results
@@ -147,7 +147,7 @@ export class ProjectViewService {
     this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
   }
 
-  downloadTasks(): void {
+  downloadTasks(abs: boolean): void {
     this.messages.notify.info('General.RetrievingData');
 
     forkJoin([
@@ -157,11 +157,15 @@ export class ProjectViewService {
       .pipe(
         map(([project, nodes]) => ({ project: project!, nodes: nodes! })),
         switchMap(({ project, nodes }) => {
-          const tasks = this.transformers.nodes.phase.view.run(
-            nodes,
-            'project',
-            project.disciplines
-          );
+          let tasks = abs
+            ? this.transformers.nodes.phase.view.forAbsProject(
+                nodes,
+                project.disciplines
+              )
+            : this.transformers.nodes.phase.view.forProject(
+                nodes,
+                project.disciplines
+              );
 
           return this.data.wbsExport.runAsync(
             project.title,

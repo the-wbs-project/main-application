@@ -27,10 +27,7 @@ export class TasksPageComponent {
   readonly entryStore = inject(EntryStore);
 
   readonly faSpinner = faSpinner;
-
-  readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
-
   readonly isLoading = computed(
     () => !this.entryStore.entry() || !this.entryStore.version()
   );

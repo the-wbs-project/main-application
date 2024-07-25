@@ -1,11 +1,27 @@
 import { Injectable } from '@angular/core';
 import { LibraryEntryNode, WbsNode, ProjectCategory } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class WbsNodeService {
-  static sort = (a: WbsNode | WbsNodeView, b: WbsNode | WbsNodeView) =>
+  static sort = (a: WbsNode | TaskViewModel, b: WbsNode | TaskViewModel) =>
     (a.order ?? 0) < (b.order ?? 0) ? -1 : 1;
+
+  static getSubTasksForTree(
+    tasks: TaskViewModel[],
+    taskId: string
+  ): TaskViewModel[] {
+    const childrenIds = tasks.find((x) => x.id === taskId)?.childrenIds || [];
+    const children = structuredClone(
+      tasks.filter((x) => childrenIds.includes(x.id))
+    );
+
+    for (const root of children.filter((x) => x.parentId === taskId)) {
+      root.treeParentId = undefined;
+    }
+
+    return children;
+  }
 
   static getSortedChildrenForPhase(
     parentId: string | undefined,

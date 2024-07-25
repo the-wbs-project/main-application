@@ -12,7 +12,8 @@ CREATE PROCEDURE [dbo].[ProjectNode_Set]
     @DisciplineIds nvarchar(MAX) = NULL,
     @PhaseIdAssociation nvarchar(100),
     @LibraryLink nvarchar(MAX),
-    @LibraryTaskLink nvarchar(MAX)
+    @LibraryTaskLink nvarchar(MAX),
+    @AbsFlag nvarchar(MAX)
 AS
 BEGIN
     IF EXISTS(SELECT 1 FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId)
@@ -29,6 +30,7 @@ BEGIN
                         [PhaseIdAssociation] = @PhaseIdAssociation,
                         [LibraryLink] = @LibraryLink,
                         [LibraryTaskLink] = @LibraryTaskLink,
+                        [AbsFlag] = @AbsFlag,
                         [LastModified] = GETUTCDATE()
                     WHERE [Id] = @Id AND [ProjectId] = @ProjectId
                 END
@@ -47,6 +49,7 @@ BEGIN
                         [PhaseIdAssociation],
                         [LibraryLink],
                         [LibraryTaskLink],
+                        [AbsFlag],
                         [Removed]
                     ) VALUES (
                         @Id,
@@ -61,6 +64,7 @@ BEGIN
                         @PhaseIdAssociation,
                         @LibraryLink,
                         @LibraryTaskLink,
+                        @AbsFlag,
                         0
                     )
                 END

@@ -1,6 +1,7 @@
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { Observable } from 'rxjs';
+import { OPERATOR, OperationTest } from '../models';
 
 export class Utils {
   static getParam(route: ActivatedRouteSnapshot, prop: string): string {
@@ -29,7 +30,6 @@ export class Utils {
       };
 
       reader.readAsArrayBuffer(file.rawFile!);
-      //reader.readAsDataURL(file.rawFile!);
     });
   }
 
@@ -68,6 +68,49 @@ export class Utils {
 
       //@ts-ignore
       if (value) obj[property] = new Date(value);
+    }
+  }
+
+  static contains(
+    list: string[] | undefined,
+    toCheck: string | string[] | undefined
+  ): boolean {
+    if (!toCheck) return true;
+    if (!list) return false;
+
+    if (!Array.isArray(toCheck)) toCheck = [toCheck];
+
+    return toCheck.some((claim) => list.includes(claim));
+  }
+
+  static executeTestByObject(
+    data: Record<string, any> | Record<string, any>[] | undefined,
+    test: OperationTest
+  ): boolean {
+    if (!data) return false;
+    if (Array.isArray(data)) {
+      for (const item of data) {
+        if (!this.executeTestByObject(item, test)) return false;
+      }
+      return true;
+    }
+    return this.executeTestByValue(data[test.prop], test.op, test.value);
+  }
+
+  static executeTestByValue<T>(val1: T, op: OPERATOR, val2: T): boolean {
+    switch (op) {
+      case '=':
+        return val1 == val2;
+      case '!=':
+        return val1 != val2;
+      case '>':
+        return val1 > val2;
+      case '>=':
+        return val1 >= val2;
+      case '<':
+        return val1 < val2;
+      case '<=':
+        return val1 <= val2;
     }
   }
 }

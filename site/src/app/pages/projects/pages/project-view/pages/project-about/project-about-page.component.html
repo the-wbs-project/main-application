@@ -1,10 +1,11 @@
 <div class="w-100 text-center h-100">
   <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
     <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
+      <wbs-project-details-card [project]="project()!" [tasks]="tasks()!" />
       <wbs-discipline-card
         [splitLimit]="650"
+        [canEdit]="canEdit()"
         [items]="project()?.disciplines ?? []"
-        [canEdit]="claims() | check : UPDATE_CLAIM"
         noDisciplinesLabel="Projects.NoDisciplinesProject"
         [editRoute]="['../', 'settings', 'disciplines']"
       />
@@ -18,9 +19,9 @@
       }
       <wbs-description-card
         [(askAi)]="askAi"
+        [canEdit]="canEdit()"
         [(editMode)]="descriptionEditMode"
         [saveState]="descriptionSave.state()"
-        [canEdit]="claims() | check : UPDATE_CLAIM"
         [description]="project()?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         [approval]="approvals() | findById : 'project-description'"

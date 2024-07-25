@@ -1,16 +1,10 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { Utils } from '@wbs/core/services';
-import { Observable } from 'rxjs';
 import { ProjectService } from './project.service';
 import { ProjectApprovalState } from '../states';
 import { Store } from '@ngxs/store';
 import { APP_CONFIG_TOKEN } from '@wbs/core/models';
-
-export const projectClaimsResolve: ResolveFn<string[]> = (
-  route: ActivatedRouteSnapshot
-) => getProjectClaims(inject(DataServiceFactory), route);
 
 export const projectIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
@@ -34,13 +28,3 @@ export const taskApiUrlResolve: ResolveFn<string> = (
 
 export const approvalEnabledResolve: ResolveFn<boolean> = () =>
   inject(Store).select(ProjectApprovalState.enabled);
-
-function getProjectClaims(
-  data: DataServiceFactory,
-  route: ActivatedRouteSnapshot
-): Observable<string[]> {
-  return data.claims.getProjectClaimsAsync(
-    Utils.getParam(route, 'org'),
-    Utils.getParam(route, 'projectId')
-  );
-}

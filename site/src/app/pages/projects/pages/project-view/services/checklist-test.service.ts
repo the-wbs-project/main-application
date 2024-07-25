@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
+import { Utils } from '@wbs/core/services';
 import { apply } from 'jspath';
 import {
-  CHECKLIST_OPERATORS,
   CHECKLIST_RESULTS,
   ChecklistDataModel,
   ChecklistExistsTest,
@@ -67,7 +67,11 @@ export class ChecklistTestService {
     let results: number =
       test.type === 'array' ? arrayResults.length : arrayResults[0];
 
-    let passes = this.perform(results, test.pass.op, test.pass.value);
+    let passes = Utils.executeTestByValue(
+      results,
+      test.pass.op,
+      test.pass.value
+    );
 
     if (passes)
       return {
@@ -76,7 +80,7 @@ export class ChecklistTestService {
       };
 
     if (test.warn) {
-      passes = this.perform(results, test.warn.op, test.warn.value);
+      passes = Utils.executeTestByValue(results, test.warn.op, test.warn.value);
 
       if (passes)
         return {
@@ -91,26 +95,5 @@ export class ChecklistTestService {
       result: CHECKLIST_RESULTS.FAIL,
       message: test.failMessage,
     };
-  }
-
-  private perform(
-    val1: number,
-    op: CHECKLIST_OPERATORS,
-    val2: number
-  ): boolean {
-    switch (op) {
-      case '=':
-        return val1 == val2;
-      case '!=':
-        return val1 != val2;
-      case '>':
-        return val1 > val2;
-      case '>=':
-        return val1 >= val2;
-      case '<':
-        return val1 < val2;
-      case '<=':
-        return val1 <= val2;
-    }
   }
 }

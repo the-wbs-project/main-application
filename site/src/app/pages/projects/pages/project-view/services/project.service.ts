@@ -4,7 +4,7 @@ import { Store } from '@ngxs/store';
 import { AppConfiguration, ProjectNode } from '@wbs/core/models';
 import { IdService, Utils } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class ProjectService {
@@ -72,7 +72,7 @@ export class ProjectService {
     return useAbbreviations ? definition.abbreviation : definition.description;
   }
 
-  getPhaseIds(nodes: ProjectNode[] | WbsNodeView[]): string[] {
+  getPhaseIds(nodes: ProjectNode[] | TaskViewModel[]): string[] {
     return nodes.filter((x) => x.parentId == null).map((x) => x.id);
   }
 

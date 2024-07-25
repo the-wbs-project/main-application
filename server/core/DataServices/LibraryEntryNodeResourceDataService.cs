@@ -49,6 +49,7 @@ public class LibraryEntryNodeResourceDataService : ResourceRecordDataService
         cmd.Parameters.AddWithValue("@Order", DbValue(resource.Order));
         cmd.Parameters.AddWithValue("@Resource", DbValue(resource.Resource));
         cmd.Parameters.AddWithValue("@Description", DbValue(resource.Description));
+        cmd.Parameters.AddWithValue("@Visibility", DbValue(resource.Visibility));
 
         await cmd.ExecuteNonQueryAsync();
     }

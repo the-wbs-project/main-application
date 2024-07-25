@@ -6,6 +6,9 @@ namespace Wbs.Core.Models.Search;
 public partial class LibrarySearchDocument
 {
     [SimpleField(IsFilterable = false, IsKey = true)]
+    public string Id { get; set; }
+
+    [SimpleField(IsFilterable = false)]
     public string EntryId { get; set; }
 
     [SimpleField]

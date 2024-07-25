@@ -9,8 +9,13 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { PROJECT_CLAIMS } from '@wbs/core/models';
-import { AiPromptService, SaveService, SignalStore } from '@wbs/core/services';
+import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import {
+  AiPromptService,
+  SaveService,
+  SignalStore,
+  Utils,
+} from '@wbs/core/services';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
@@ -31,6 +36,7 @@ import {
 } from '../../states';
 import { ProjectApprovalCardComponent } from './components/project-approval-card';
 import { ProjectStatusCardComponent } from './components/project-status-card';
+import { ProjectDetailsCardComponent } from './components/project-details-card';
 
 @Component({
   standalone: true,
@@ -47,6 +53,7 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
     NgClass,
     ProjectApprovalCardComponent,
     ProjectChecklistComponent,
+    ProjectDetailsCardComponent,
     ProjectStatusCardComponent,
     ResizedCssDirective,
     RoleListPipe,
@@ -59,14 +66,13 @@ export class ProjectAboutComponent {
   private readonly prompt = inject(AiPromptService);
   private readonly store = inject(SignalStore);
 
-  readonly claims = input.required<string[]>();
-
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly descriptionSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.projectDescription(this.project(), this.tasks())
   );
+  readonly claims = this.store.select(ProjectState.claims);
   readonly project = this.store.select(ProjectState.current);
   readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly tasks = this.store.select(TasksState.phases);
@@ -75,8 +81,11 @@ export class ProjectAboutComponent {
   readonly checklist = this.store.select(ProjectChecklistState.results);
   readonly approvalStats = this.store.select(ProjectApprovalState.stats);
   readonly approvals = this.store.select(ProjectApprovalState.list);
-
-  readonly UPDATE_CLAIM = PROJECT_CLAIMS.UPDATE;
+  readonly canEdit = computed(
+    () =>
+      this.project()?.status === PROJECT_STATI.PLANNING &&
+      Utils.contains(this.claims(), PROJECT_CLAIMS.UPDATE)
+  );
 
   descriptionChange(description: string): void {
     const project = this.project()!;

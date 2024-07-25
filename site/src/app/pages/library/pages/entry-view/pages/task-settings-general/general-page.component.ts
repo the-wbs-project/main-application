@@ -16,6 +16,7 @@ import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
+import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
 import { AiPromptService, SaveService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
@@ -36,6 +37,7 @@ import { EntryStore } from '@wbs/core/store';
     SaveButtonComponent,
     TextBoxModule,
     TranslateModule,
+    VisibilitySelectionComponent,
   ],
   providers: [AiPromptService],
 })
@@ -74,14 +76,20 @@ export class GeneralComponent {
     const changes = this.service.verifyChanges(
       task.id,
       task.title,
-      task.description
+      task.description,
+      task.visibility
     );
 
     if (!changes) return;
 
     this.saved
       .call(
-        this.service.generalSaveAsync(task.id, task.title, task.description)
+        this.service.generalSaveAsync(
+          task.id,
+          task.title,
+          task.description,
+          task.visibility
+        )
       )
       .subscribe();
   }

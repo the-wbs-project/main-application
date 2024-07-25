@@ -22,7 +22,7 @@ export const closeApprovalWindowGuard = () =>
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
 
-  inject(TitleService).setTitle([{ text: 'Pages.Projects' }]);
+  inject(TitleService).setTitle([{ text: 'General.Projects' }]);
 
   return store
     .dispatch([

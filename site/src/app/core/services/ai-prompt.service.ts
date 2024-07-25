@@ -1,7 +1,7 @@
 import { inject } from '@angular/core';
 import { MetadataStore } from '@wbs/core/store';
 import { LISTS, LibraryEntry, LibraryEntryVersion } from '../models';
-import { ProjectViewModel, WbsNodeView } from '../view-models';
+import { ProjectViewModel, TaskViewModel } from '../view-models';
 import { sorter } from './sorter.service';
 
 export class AiPromptService {
@@ -10,7 +10,7 @@ export class AiPromptService {
   libraryEntryDescription(
     entry: LibraryEntry | undefined,
     version: LibraryEntryVersion | undefined,
-    tasks: WbsNodeView[] | undefined
+    tasks: TaskViewModel[] | undefined
   ): string {
     if (!entry || !version) return '';
 
@@ -45,7 +45,7 @@ export class AiPromptService {
     entry: LibraryEntry | undefined,
     version: LibraryEntryVersion | undefined,
     taskId: string | undefined,
-    tasks: WbsNodeView[] | undefined
+    tasks: TaskViewModel[] | undefined
   ): string {
     if (!entry || !version || !taskId) return '';
 
@@ -92,7 +92,7 @@ export class AiPromptService {
 
   projectDescription(
     project: ProjectViewModel | undefined,
-    tasks: WbsNodeView[] | undefined
+    tasks: TaskViewModel[] | undefined
   ): string {
     if (!project) return '';
 
@@ -123,7 +123,7 @@ export class AiPromptService {
   projectTaskDescription(
     project: ProjectViewModel | undefined,
     taskId: string | undefined,
-    tasks: WbsNodeView[] | undefined
+    tasks: TaskViewModel[] | undefined
   ): string {
     if (!project || !taskId) return '';
 

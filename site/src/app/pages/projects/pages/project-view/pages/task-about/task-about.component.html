@@ -3,24 +3,25 @@
   <wbs-task-details-card
     ngClass="card dashboard-card"
     [project]="project()!"
+    [parent]="parent()"
     [task]="task"
   />
   <wbs-discipline-card
     ngClass="card dashboard-card"
     [splitLimit]="750"
+    [canEdit]="canEdit()"
     [alertIfEmpty]="true"
     [items]="task?.disciplines ?? []"
     noDisciplinesLabel="Library.NoDisciplinesTask"
-    [canEdit]="claims() | check : UPDATE_CLAIM"
     [editRoute]="['../', 'settings', 'disciplines']"
   />
   <wbs-description-card
     ngClass="card dashboard-card"
     [(askAi)]="askAi"
+    [canEdit]="canEdit()"
     [(editMode)]="descriptionEditMode"
     [saveState]="descriptionSave.state()"
     [description]="task.description ?? ''"
-    [canEdit]="claims() | check : UPDATE_CLAIM"
     noDescriptionLabel="Library.NoDescriptionTask"
     (descriptionChange)="descriptionChange($event)"
   />

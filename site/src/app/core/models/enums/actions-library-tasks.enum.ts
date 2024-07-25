@@ -4,6 +4,7 @@ export enum LIBRARY_TASKS_ACTIONS {
   TITLE_CHANGED = 'library-task-title-changed',
   DESCRIPTION_CHANGED = 'library-task-description-changed',
   DISCIPLINES_CHANGED = 'library-task-disciplines-changed',
+  VISIBILITY_CHANGED = 'library-task-visibility-changed',
   REORDERED = 'library-task-reordered',
   REMOVED = 'library-task-removed',
 }

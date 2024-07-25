@@ -1,12 +1,25 @@
-import { Category, WbsNode } from '@wbs/core/models';
-import { CategoryService } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/core/store';
-import { CategoryViewModel, WbsNodeView } from '@wbs/core/view-models';
+import {
+  Category,
+  LibraryEntry,
+  LibraryEntryNode,
+  ProjectNode,
+  WbsNode,
+} from '@wbs/core/models';
+import { CategoryService, sorter } from '@wbs/core/services';
+import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import {
+  CategoryViewModel,
+  LibraryEntryViewModel,
+  LibraryTaskViewModel,
+  ProjectTaskViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {
   constructor(
     private readonly categoryService: CategoryService,
+    private readonly membership: MembershipStore,
     private readonly metadata: MetadataStore
   ) {}
 
@@ -14,13 +27,108 @@ export class WbsNodePhaseTransformer {
     return this.metadata.categories.phases;
   }
 
-  run(
-    models: WbsNode[],
-    type: string,
+  forLibrary(
+    entry: LibraryEntry | LibraryEntryViewModel,
+    models: LibraryEntryNode[],
     disciplines: CategoryViewModel[]
-  ): WbsNodeView[] {
+  ): LibraryTaskViewModel[] {
+    const org = this.membership.membership()!.name;
+    const owner =
+      (entry as LibraryEntry).owner || (entry as LibraryEntryViewModel).ownerId;
+    //
+    //  Just in case somehow the unthinkable happen, return NOTHING!
+    //
+    if (org !== owner && entry.visibility === 'private') return [];
+
+    const privateTasks =
+      org === owner && entry.visibility === 'private'
+        ? []
+        : models.filter((x) => x.visibility === 'private').map((x) => x.id);
+
+    const tasks: LibraryTaskViewModel[] = this.run(
+      entry.type,
+      models,
+      disciplines
+    );
+
+    for (const task of privateTasks) {
+      const vm = tasks.find((x) => x.id === task)!;
+
+      vm.visibility = 'private';
+
+      for (const childId of vm.childrenIds) {
+        const child = tasks.find((x) => x.id === childId)!;
+
+        child.visibility = 'impliedPrivate';
+      }
+    }
+
+    return tasks;
+  }
+
+  forProject(
+    models: ProjectNode[],
+    disciplines: CategoryViewModel[]
+  ): ProjectTaskViewModel[] {
+    const tasks: ProjectTaskViewModel[] = this.run(
+      'project',
+      models,
+      disciplines
+    );
+
+    const setParent = (taskId: string) => {
+      const task = tasks.find((x) => x.id === taskId)!;
+
+      task.absFlag = 'implied';
+
+      if (task.parentId) setParent(task.parentId);
+    };
+
+    for (const task of models.filter((x) => x.absFlag)) {
+      const taskVm = tasks.find((x) => x.id === task.id)!;
+
+      taskVm.absFlag = 'set';
+
+      if (task.parentId) setParent(task.parentId);
+    }
+
+    return tasks;
+  }
+
+  forAbsProject(
+    models: ProjectNode[],
+    disciplines: CategoryViewModel[]
+  ): ProjectTaskViewModel[] {
+    const tasks = this.forProject(models, disciplines).filter((x) => x.absFlag);
+
+    const rebuild = (parent: ProjectTaskViewModel | undefined) => {
+      const children = tasks
+        .filter((x) => x.parentId === parent?.id)
+        .sort((a, b) => sorter(a.order, b.order));
+
+      for (let i = 0; i < children.length; i++) {
+        const child = children[i];
+
+        child.order = i + 1;
+        child.levels = parent ? [...parent.levels, i + 1] : [i + 1];
+        child.levelText = child.levels.join('.');
+
+        rebuild(child);
+      }
+    };
+
+    rebuild(undefined);
+
+    return tasks;
+  }
+
+  private run(
+    parentType: string,
+    models: (ProjectNode | LibraryEntryNode)[],
+    disciplines: CategoryViewModel[]
+  ): TaskViewModel[] {
     const phases = this.phaseList;
-    const nodes: WbsNodeView[] = [];
+    const nodes: TaskViewModel[] = [];
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
       .sort((a, b) => a.order! - b.order!);
@@ -28,7 +136,7 @@ export class WbsNodePhaseTransformer {
     for (let i = 0; i < rootNodes.length; i++) {
       const parentlevel = [i + 1];
       const node = rootNodes[i];
-      const parent: WbsNodeView = {
+      const parent: TaskViewModel = {
         children: 0,
         childrenIds: [],
         description: node.description,
@@ -44,13 +152,14 @@ export class WbsNodePhaseTransformer {
         order: i + 1,
         title: node.title,
         canMoveLeft: false,
-        canMoveUp: type === 'project' ? i > 0 : false,
-        canMoveRight: type === 'project' ? i > 0 : false,
-        canMoveDown: type === 'project' ? i < rootNodes.length - 1 : false,
+        canMoveUp: parentType === 'project' ? i > 0 : false,
+        canMoveRight: parentType === 'project' ? i > 0 : false,
+        canMoveDown:
+          parentType === 'project' ? i < rootNodes.length - 1 : false,
         lastModified: node?.lastModified,
-        subTasks: [],
         phaseIdAssociation: node.phaseIdAssociation,
       };
+
       if (parent.description === undefined && parent.phaseIdAssociation) {
         parent.description = phases.find(
           (x) => x.id === node.phaseIdAssociation
@@ -62,16 +171,11 @@ export class WbsNodePhaseTransformer {
         node.id,
         node.title,
         parent,
-        type,
+        parentType,
         models
       );
       parent.children = children.length;
       parent.childrenIds = children.map((x) => x.id);
-      parent.subTasks = structuredClone(children);
-
-      for (const task of parent.subTasks) {
-        if (task.treeParentId === parent.id) task.treeParentId = undefined;
-      }
 
       nodes.push(parent, ...children);
     }
@@ -87,17 +191,17 @@ export class WbsNodePhaseTransformer {
     disciplines: CategoryViewModel[],
     phaseId: string,
     phaseLabel: string,
-    parent: WbsNodeView,
+    parent: TaskViewModel,
     type: string,
     list: WbsNode[]
-  ): WbsNodeView[] {
-    const results: WbsNodeView[] = [];
+  ): TaskViewModel[] {
+    const results: TaskViewModel[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parent.id, list);
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childLevel = [...parent.levels, child.order];
-      const node: WbsNodeView = {
+      const node: TaskViewModel = {
         children: 0,
         childrenIds: [],
         description: child.description,
@@ -111,7 +215,6 @@ export class WbsNodePhaseTransformer {
         levelText: childLevel.join('.'),
         depth: childLevel.length,
         order: child.order ?? 0,
-        parent,
         parentId: parent.id,
         treeParentId: parent.id,
         title: child.title ?? '',
@@ -120,7 +223,6 @@ export class WbsNodePhaseTransformer {
         canMoveUp: i > 0,
         canMoveRight: i > 0,
         canMoveLeft: type === 'project' || parent.levelText.length > 1,
-        subTasks: [],
         phaseIdAssociation: child.phaseIdAssociation,
         phaseId,
         phaseLabel,
@@ -137,11 +239,6 @@ export class WbsNodePhaseTransformer {
 
       node.children = taskChildren.length;
       node.childrenIds = taskChildren.map((x) => x.id);
-      node.subTasks = structuredClone(taskChildren);
-
-      for (const task of node.subTasks) {
-        if (task.treeParentId === node.id) task.treeParentId = undefined;
-      }
 
       results.push(node, ...taskChildren);
     }

@@ -23,14 +23,12 @@ export class OrganizationService {
       .pipe(tap((org) => this.names.get(orgName)!.next(org)));
   }
 
-  addOrganizations(orgs: Organization[]): void {
-    for (const org of orgs) {
-      if (this.names.has(org.name)) continue;
+  addOrganization(orgName: string, displayName: string): void {
+    if (this.names.has(orgName)) return;
 
-      this.names.set(
-        org.name,
-        new BehaviorSubject<string | undefined>(org.display_name)
-      );
-    }
+    this.names.set(
+      orgName,
+      new BehaviorSubject<string | undefined>(displayName)
+    );
   }
 }

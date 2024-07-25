@@ -21,6 +21,7 @@ const taskActions: ContextMenuItem[] = [
     text: 'Projects.AddSubTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
+      stati: ['draft'],
     },
   },
   {
@@ -29,6 +30,7 @@ const taskActions: ContextMenuItem[] = [
     text: 'General.Import',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
+      stati: ['draft'],
     },
     items: [
       {
@@ -62,6 +64,7 @@ const taskActions: ContextMenuItem[] = [
     text: 'Projects.CloneTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
+      stati: ['draft'],
     },
   },
   {
@@ -70,6 +73,7 @@ const taskActions: ContextMenuItem[] = [
     text: 'Wbs.AddDiscipline',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+      stati: ['draft'],
     },
   },
   {
@@ -78,6 +82,7 @@ const taskActions: ContextMenuItem[] = [
     text: 'Wbs.RemoveDiscipline',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+      stati: ['draft'],
     },
   },
   {
@@ -91,6 +96,7 @@ const taskActions: ContextMenuItem[] = [
     text: 'Projects.DeleteTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.DELETE,
+      stati: ['draft'],
     },
   },
 ];
@@ -102,6 +108,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveLeft',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+      stati: ['draft'],
     },
   },
   {
@@ -110,6 +117,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveUp',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+      stati: ['draft'],
     },
   },
   {
@@ -118,6 +126,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveDown',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+      stati: ['draft'],
     },
   },
   {
@@ -126,6 +135,7 @@ const reorderTaskActions: ContextMenuItem[] = [
     text: 'Projects.MoveRight',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
+      stati: ['draft'],
     },
   },
 ];

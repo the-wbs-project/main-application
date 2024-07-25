@@ -13,7 +13,7 @@
       </span>
       <wbs-entry-title
         [title]="entryStore.version()?.title ?? ''"
-        [canEdit]="canEditTitle()"
+        [canEdit]="entryStore.canEditEntry() && canEditTitle()"
         (titleChange)="titleChanged($event)"
       />
       <wbs-save-message [state]="titleSaveState()" cssClass="tx-12" />
@@ -25,7 +25,7 @@
           [entryType]="entryStore.entry()!.type"
           [versionStatus]="entryStore.version()!.status"
           [entryUrl]="entryUrl()"
-          [claims]="claims()"
+          [claims]="entryStore.claims()"
         />
       </div>
     </div>

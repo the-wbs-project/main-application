@@ -98,17 +98,14 @@ export class LibraryImportProcessorService {
       }
     };
 
+    let order = startOrder;
     const rootNodes = results.tasks
       .filter((x) => x.parentId == null)
       .sort((a, b) => sorter(a.order, b.order));
 
     for (const node of rootNodes) {
-      run(
-        node,
-        dir === 'right' ? fromTask.id : fromTask.parentId,
-        startOrder,
-        true
-      );
+      run(node, dir === 'right' ? fromTask.id : fromTask.parentId, order, true);
+      order++;
     }
 
     return forkJoin([

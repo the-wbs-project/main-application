@@ -1,5 +1,6 @@
 import { IconDefinition } from '@fortawesome/fontawesome-svg-core';
-import { PROJECT_STATI_TYPE } from '@wbs/core/models';
+
+export type MENU_ITEM_OPS = '=' | '!=' | '>' | '>=' | '<' | '<=';
 
 export interface ContextMenuItem {
   text: string;
@@ -9,6 +10,7 @@ export interface ContextMenuItem {
   items?: ContextMenuItem[];
   filters?: {
     claim?: string;
-    stati?: PROJECT_STATI_TYPE[];
+    stati?: string[];
+    props?: [{ prop: string; op: MENU_ITEM_OPS; value: any }];
   };
 }

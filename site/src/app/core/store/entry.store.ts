@@ -1,12 +1,13 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import {
+  LIBRARY_CLAIMS,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
   ProjectCategory,
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { LibraryTaskViewModel } from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
@@ -18,9 +19,12 @@ export class EntryStore {
     undefined
   );
   private readonly _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
-  private readonly _viewModels = signal<WbsNodeView[] | undefined>(undefined);
+  private readonly _viewModels = signal<LibraryTaskViewModel[] | undefined>(
+    undefined
+  );
   private readonly _navSectionEntry = signal<string | undefined>(undefined);
   private readonly _navSectionTask = signal<string | undefined>(undefined);
+  private readonly _claims = signal<string[]>([]);
 
   get entry(): Signal<LibraryEntry | undefined> {
     return this._entry;
@@ -42,24 +46,66 @@ export class EntryStore {
     return this._version;
   }
 
-  get viewModels(): Signal<WbsNodeView[] | undefined> {
+  get viewModels(): Signal<LibraryTaskViewModel[] | undefined> {
     return this._viewModels;
   }
 
-  getTask(taskId: Signal<string>): Signal<WbsNodeView | undefined> {
+  get claims(): Signal<string[]> {
+    return this._claims;
+  }
+
+  get canEditEntry(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(this.version(), this._claims(), LIBRARY_CLAIMS.UPDATE)
+    );
+  }
+
+  get canCreateTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.CREATE
+      )
+    );
+  }
+
+  get canEditTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.UPDATE
+      )
+    );
+  }
+
+  get canDeleteTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.DELETE
+      )
+    );
+  }
+
+  getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
     return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
   }
 
   setAll(
     entry: LibraryEntry,
     version: LibraryEntryVersion,
-    tasks: LibraryEntryNode[]
+    tasks: LibraryEntryNode[],
+    claims: string[]
   ): void {
     this._entry.set(entry);
     this._version.set(version);
     this._tasks.set(tasks);
+    this._claims.set(claims);
     this._viewModels.set(
-      this.createViewModels(entry.type, version.disciplines, tasks)
+      this.createViewModels(entry, version.disciplines, tasks)
     );
   }
 
@@ -87,7 +133,7 @@ export class EntryStore {
 
     if (entry && version)
       this._viewModels.set(
-        this.createViewModels(entry.type, version.disciplines, tasks)
+        this.createViewModels(entry, version.disciplines, tasks)
       );
   }
 
@@ -111,16 +157,24 @@ export class EntryStore {
   }
 
   private createViewModels(
-    entryType: string,
+    entry: LibraryEntry,
     disciplines: ProjectCategory[],
     tasks: LibraryEntryNode[]
-  ): WbsNodeView[] {
-    return this.transformer.nodes.phase.view.run(
+  ): LibraryTaskViewModel[] {
+    return this.transformer.nodes.phase.view.forLibrary(
+      entry,
       tasks,
-      entryType,
       disciplines.length > 0
         ? this.categoryService.buildViewModels(disciplines)
         : this.categoryService.buildViewModelsFromDefinitions()
     );
+  }
+
+  private claimCheck(
+    version: LibraryEntryVersion | undefined,
+    claims: string[],
+    claim: string
+  ): boolean {
+    return version?.status === 'draft' && claims.includes(claim);
   }
 }

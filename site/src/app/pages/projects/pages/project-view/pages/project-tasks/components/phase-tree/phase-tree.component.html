@@ -26,51 +26,51 @@
       [selectable]="settings"
       [initiallyExpanded]="false"
       [(expandedKeys)]="treeService.expandedKeys"
-      [rowReorderable]="claims() | check : canEditClaim"
+      [rowReorderable]="canEdit()"
       (selectionChange)="taskId.set($event.items[0].dataItem.id)"
       (dblclick)="navigateToTask()"
       (rowReorder)="rowReordered($event)"
       (cellClick)="onCellClick($event)"
     >
-      <!--<kendo-treelist-excel fileName="Employees.xlsx" />-->
       <ng-template kendoTreeListToolbarTemplate>
+        @if (canEdit()) {
         <wbs-tree-buttons-add (click)="addPhase()" />
+        }
         <wbs-tree-buttons-toggler
           (collapse)="treeService.collapseAll(treelist, tasks)"
           (expand)="treeService.expandAll(treelist, tasks)"
         />
-        <wbs-tree-buttons-download (click)="service.downloadTasks()" />
-
-        @if (project().status === 'planning' && (claims() | check :
-        canEditClaim)) {
-        <wbs-tree-buttons-upload [routerLink]="['../', 'upload']" />
-        }
       </ng-template>
-      @if (claims() | check : canEditClaim) {
-      <kendo-treelist-rowreorder-column [width]="40" />
+      @if (canEdit()) {
+      <kendo-treelist-rowreorder-column [width]="40" class="tree-column" />
       }
-      <kendo-treelist-column
-        field="levelText"
-        [title]="'Wbs.Level' | translate"
-        [width]="100"
-        class="level-column tx-11"
-        headerClass="level-header-column tx-14"
-      />
       <kendo-treelist-column
         [expandable]="true"
         field="title"
-        class="tx-11 child-hoverer"
+        class="child-hoverer tree-column"
         headerClass="tx-14"
         [title]="'Wbs.Activity_Title' | translate"
       >
         <ng-template kendoTreeListCellTemplate let-dataItem>
+          @defer (on idle) {
           <wbs-task-title
+            [canEdit]="canEdit()"
+            [level]="dataItem.levelText"
             [title]="dataItem.title"
-            (titleChange)="taskTitleChanged(dataItem.id, $event)"
+            (edit)="treeService.editTitle(treelist, dataItem)"
           />
-          @if (taskSaveStates.get(dataItem.id); as saveState) {
+          @if (treeService.getSaveState(dataItem.id); as saveState) {
           <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
+          } } @placeholder {
+          <span class="tx-8">{{ "General.Loading" | translate }}...</span>
           }
+        </ng-template>
+        <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+          <wbs-task-title-editor
+            [title]="dataItem.title"
+            (save)="taskTitleChanged(treelist, dataItem.id, $event)"
+            (cancel)="treelist.closeCell()"
+          />
         </ng-template>
       </kendo-treelist-column>
       @if (project().approvalStarted) {
@@ -78,6 +78,7 @@
         [width]="175"
         [title]="'Approval'"
         headerClass="tx-14"
+        class="tree-column"
       >
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <div class="tx-12 w-100 d-flex flex-row flex-align-center">
@@ -101,18 +102,44 @@
           </div>
         </ng-template>
       </kendo-treelist-column>
-      } @if ((width() ?? 0) > 800) {
+      }
       <kendo-treelist-column
-        field="disciplines"
+        [width]="80"
+        headerClass="tx-14"
+        class="text-center tree-column"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <wbs-abs-header text="abbrev" />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          @if (dataItem.absFlag) {
+          <wbs-abs-icon [abs]="dataItem.absFlag" />
+          }
+        </ng-template>
+      </kendo-treelist-column>
+      @if ((width() ?? 0) > 800) {
+      <kendo-treelist-column
         [width]="200"
-        class="discipline-column"
-        headerClass="discipline-column tx-14"
+        field="disciplines"
+        class="tree-column"
+        headerClass="tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
           <wbs-tree-discipline-legend [list]="project().disciplines" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
+          @defer (on idle) {
           <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+          } @placeholder {
+          <span class="tx-8">{{ "General.Loading" | translate }}...</span>
+          }
+        </ng-template>
+        <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+          <wbs-discipline-dropdown
+            [data]="project().disciplines"
+            [values]="dataItem.disciplines"
+            (save)="disciplinesChanged(treelist, dataItem.id, $event)"
+          />
         </ng-template>
       </kendo-treelist-column>
       }

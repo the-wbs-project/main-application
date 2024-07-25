@@ -26,7 +26,7 @@ public class OrganizationsController : ControllerBase
     {
         try
         {
-            return Ok((await dataService.GetOrganizationByNameAsync(organization))?.DisplayName);
+            return Ok(await dataService.GetOrganizationByNameAsync(organization));
         }
         catch (Exception ex)
         {

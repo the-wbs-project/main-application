@@ -13,7 +13,12 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
-import { AiPromptService, SaveService, SignalStore } from '@wbs/core/services';
+import {
+  AiPromptService,
+  SaveService,
+  SignalStore,
+  Utils,
+} from '@wbs/core/services';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
@@ -29,7 +34,6 @@ import { DetailsCardComponent } from './components/details-card';
   templateUrl: './task-about.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CheckPipe,
     DescriptionAiDialogComponent,
     DescriptionCardComponent,
     DetailsCardComponent,
@@ -45,18 +49,24 @@ export class TaskAboutComponent {
 
   readonly faTools = faTools;
   readonly faTriangleExclamation = faTriangleExclamation;
-  readonly UPDATE_CLAIM = PROJECT_CLAIMS.TASKS.UPDATE;
 
+  readonly claims = this.store.select(ProjectState.claims);
   readonly project = this.store.select(ProjectState.current);
   readonly current = this.store.select(TasksState.current);
   readonly tasks = this.store.select(TasksState.phases);
+  readonly parent = computed(() =>
+    this.tasks()?.find((t) => t.id === this.current()?.parentId)
+  );
 
-  readonly claims = input.required<string[]>();
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly descriptionSave = new SaveService();
   readonly isPlanning = computed(
     () => this.project()?.status === PROJECT_STATI.PLANNING
+  );
+  readonly canEdit = computed(
+    () =>
+      this.isPlanning() && Utils.contains(this.claims(), PROJECT_CLAIMS.UPDATE)
   );
 
   readonly descriptionAiStartingDialog = computed(() =>
@@ -73,7 +83,14 @@ export class TaskAboutComponent {
     this.descriptionSave
       .call(
         this.store
-          .dispatch(new ChangeTaskBasics(task.id, task.title, description))
+          .dispatch(
+            new ChangeTaskBasics(
+              task.id,
+              task.title,
+              description,
+              task.absFlag === 'set'
+            )
+          )
           .pipe(tap(() => this.descriptionEditMode.set(false)))
       )
       .subscribe();

@@ -130,6 +130,22 @@ export class EntryTaskActivityService {
     );
   }
 
+  visibilityChanged(
+    entryId: string,
+    version: number,
+    taskId: string,
+    from: string | undefined,
+    to: string | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.VISIBILITY_CHANGED,
+      { from, to }
+    );
+  }
+
   taskRemoved(
     entryId: string,
     version: number,

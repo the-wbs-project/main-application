@@ -23,6 +23,7 @@ import { StaticFileDataService } from './static-files.data-service';
 import { UserDataService } from './user.data-service';
 import { WbsExportDataService } from './wbs-export.data-service';
 import { WbsImportDataService } from './wbs-import.data-service';
+import { MiscDataService } from './misc.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -43,6 +44,7 @@ export class DataServiceFactory {
   readonly libraryEntryWatchers = new LibraryEntryWatcherDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);
+  readonly misc = new MiscDataService(this.http);
   readonly organizations = new OrganizationDataService(this.http);
   readonly projectApprovals = new ProjectApprovalDataService(this.http);
   readonly projectNodes = new ProjectNodeDataService(this.http);

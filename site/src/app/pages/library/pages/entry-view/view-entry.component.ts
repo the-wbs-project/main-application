@@ -58,14 +58,17 @@ export class EntryViewComponent {
   readonly entryStore = inject(EntryStore);
   readonly owner = input.required<string>();
   readonly entryId = input.required<string>();
-  readonly claims = input.required<string[]>();
   readonly entryUrl = input.required<string[]>();
 
   readonly url = this.store.select(RouterState.url);
   readonly titleSaveState = signal<SaveState>('ready');
   readonly links = computed(() =>
     this.filterSettings(
-      this.navService.processLinks(ENTRY_NAVIGATION, this.claims()),
+      this.navService.processLinks(
+        ENTRY_NAVIGATION,
+        this.entryStore.version()?.status === 'draft',
+        this.entryStore.claims()
+      ),
       this.entryStore.entry()
     )
   );

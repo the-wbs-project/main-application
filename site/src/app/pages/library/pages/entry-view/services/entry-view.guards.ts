@@ -50,19 +50,28 @@ export const redirectTaskGuard = (route: ActivatedRouteSnapshot) =>
 export const populateGuard = (route: ActivatedRouteSnapshot) => {
   const data = inject(DataServiceFactory);
   const store = inject(EntryStore);
+  const org = Utils.getParam(route, 'org');
   const owner = Utils.getParam(route, 'ownerId');
   const entryId = Utils.getParam(route, 'entryId');
   const versionId = parseInt(Utils.getParam(route, 'versionId'), 10);
 
   if (!owner || !entryId || !versionId || isNaN(versionId)) return false;
 
+  const visibility = org === owner ? 'private' : 'public';
+
   return forkJoin({
     entry: data.libraryEntries.getAsync(owner, entryId),
     version: data.libraryEntryVersions.getAsync(owner, entryId, versionId),
-    tasks: data.libraryEntryNodes.getAllAsync(owner, entryId, versionId),
+    tasks: data.libraryEntryNodes.getAllAsync(
+      owner,
+      entryId,
+      versionId,
+      visibility
+    ),
+    claims: data.claims.getLibraryEntryClaimsAsync(owner, entryId),
   }).pipe(
-    map(({ entry, version, tasks }) => {
-      store.setAll(entry, version, tasks);
+    map(({ entry, version, tasks, claims }) => {
+      store.setAll(entry, version, tasks, claims);
     })
   );
 };

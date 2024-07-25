@@ -1,0 +1,37 @@
+<kendo-textbox
+  class="tx-12"
+  size="small"
+  [(ngModel)]="editTitle"
+  (keydown)="keydown($event)"
+>
+  <ng-template kendoTextBoxSuffixTemplate>
+    <button
+      kendoButton
+      size="small"
+      fillMode="clear"
+      class="tx-12"
+      (click)="save.emit(editTitle)"
+    >
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [icon]="faFloppyDisk"
+        [title]="'General.Save' | translate"
+      />
+    </button>
+    <button
+      kendoButton
+      size="small"
+      fillMode="clear"
+      class="tx-12"
+      (click)="cancel.emit()"
+    >
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [icon]="faXmark"
+        [title]="'General.Cancel' | translate"
+      />
+    </button>
+  </ng-template>
+</kendo-textbox>

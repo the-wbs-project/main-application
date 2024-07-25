@@ -116,8 +116,7 @@ export class EntryService {
     const tasks = structuredClone(this.entryStore.viewModels()!);
 
     for (const task of tasks) {
-      task.subTasks = [];
-      task.parent = undefined;
+      task.childrenIds = [];
     }
     this.data.wbsExport
       .runAsync(

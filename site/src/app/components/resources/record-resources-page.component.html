@@ -1,6 +1,5 @@
 <div class="container-fluid">
-  @if (view() === 'list') { @if (list().length > 0 && (claims() | check :
-  addClaim())) {
+  @if (view() === 'list') { @if (list().length > 0 && canAdd()) {
   <div class="row">
     <div class="col-12 tx-right">
       <button kendoButton themeColor="primary" (click)="launchEditor()">
@@ -13,7 +12,7 @@
   <div class="row">
     <div class="col-12 mg-t-40 text-center tx-20">
       <div>{{ "Resources.NoResourcesFound" | translate }}</div>
-      @if (claims() | check : addClaim()) {
+      @if (canAdd()) {
       <button
         kendoButton
         themeColor="primary"
@@ -30,10 +29,9 @@
   <div class="row">
     <div class="col-12 mg-t-10">
       <wbs-record-resource-list
-        [claims]="claims()"
         [list]="list()"
-        [editClaim]="editClaim()"
-        [deleteClaim]="deleteClaim()"
+        [canEdit]="canEdit()"
+        [canDelete]="canDelete()"
         [apiUrlPrefix]="apiUrlPrefix()"
         (save)="saveRecords.emit($event)"
         (edit)="launchEditor($event)"

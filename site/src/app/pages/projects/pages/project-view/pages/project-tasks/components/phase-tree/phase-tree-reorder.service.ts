@@ -2,13 +2,13 @@ import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
 import { DragValidationResults, RebuildResults } from '@wbs/core/models';
 import { WbsNodeService } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class PhaseTreeReorderService {
   validate(
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     position: DropPosition
   ): DragValidationResults {
     if (position === 'forbidden') {
@@ -44,9 +44,9 @@ export class PhaseTreeReorderService {
   }
 
   run(
-    tree: WbsNodeView[],
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    tree: TaskViewModel[],
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     position: DropPosition
   ): RebuildResults {
     dragged.phaseId = target.phaseId;
@@ -77,7 +77,7 @@ export class PhaseTreeReorderService {
     return this.rebuildLevels(tree);
   }
 
-  rebuildLevels(list: WbsNodeView[]): RebuildResults {
+  rebuildLevels(list: TaskViewModel[]): RebuildResults {
     const results: RebuildResults = {
       rows: [],
       changedIds: [],
@@ -135,8 +135,8 @@ export class PhaseTreeReorderService {
 
   private getSortedVmChildren(
     parentId: string | undefined,
-    list: WbsNodeView[]
-  ): WbsNodeView[] {
+    list: TaskViewModel[]
+  ): TaskViewModel[] {
     return list
       .filter((x) => x.parentId === parentId)
       .sort(WbsNodeService.sort);

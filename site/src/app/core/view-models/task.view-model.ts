@@ -1,15 +1,11 @@
 import { CategoryViewModel } from './category.view-model';
 
-export interface WbsNodeView {
+export interface TaskViewModel {
   id: string;
   treeId: string;
 
   parentId?: string;
   treeParentId?: string;
-
-  sameAsId?: string;
-  sameAsIndex?: number;
-  sameAsLevelText?: string;
 
   children: number;
   childrenIds: string[];
@@ -30,8 +26,14 @@ export interface WbsNodeView {
   phaseIdAssociation?: string;
   phaseId?: string;
   phaseLabel?: string;
-  parent?: WbsNodeView;
-  subTasks: WbsNodeView[];
   previousTaskId?: string;
   nextTaskId?: string;
+}
+
+export interface LibraryTaskViewModel extends TaskViewModel {
+  visibility?: 'public' | 'private' | 'impliedPrivate';
+}
+
+export interface ProjectTaskViewModel extends TaskViewModel {
+  absFlag?: 'set' | 'implied';
 }

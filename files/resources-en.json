@@ -36,6 +36,8 @@
       "Error": "Error",
       "Success": "Success",
       "Okay": "Okay",
+      "WBS": "WBS",
+      "Organization": "Organization",
       "Children": "Children",
       "Parent": "Parent",
       "Confirmation": "Confirmation",
@@ -82,6 +84,7 @@
       "Next": "Next",
       "Public": "Public",
       "Private": "Private",
+      "ImpliedPrivate": "Implied Private",
       "Actions": "Actions",
       "Project": "Project",
       "Projects": "Projects",
@@ -99,6 +102,7 @@
       "Owner": "Owner",
       "Create": "Create",
       "Continue": "Continue",
+      "Association": "Association",
       "AssignedToMe": "Assigned To Me",
       "RetrievingData": "Retrieving Data...",
       "ReviewingData": "Reviewing Data...",
@@ -189,7 +193,8 @@
       "Right": "Right",
       "Above": "Above",
       "Below": "Below",
-      "Author": "Author"
+      "Author": "Author",
+      "Watching": "Watching"
     }
   },
   {
@@ -317,7 +322,6 @@
     "section": "Pages",
     "locale": "en-US",
     "values": {
-      "Projects": "Projects",
       "ProjectDetails": "Project Details",
       "TaskDetails": "Task Details"
     }
@@ -541,7 +545,8 @@
       "SubTaskCount": "# of Sub-Tasks",
       "Activity_Title": "Activity (Phase, Task, Sub-Task, etc.)",
       "TrainingMaterial": "Training Material",
-      "DownloadTasks": "Download Tasks",
+      "DownloadWbs": "Download WBS",
+      "DownloadAbs": "Download ABS",
       "UploadTasks": "Upload Tasks",
       "Attachments": "Attachments",
       "Level": "Level",
@@ -551,6 +556,7 @@
       "Disciplines": "Disciplines",
       "#Children": "# Children",
       "DisciplineLegend": "Discipline Legend",
+      "FlagLegend": "Flag Legend",
       "PhaseLegend": "Phase Legend",
       "NodeLevelStats": "Node Level Stats",
       "InsertDescription": "Insert Description Here",
@@ -569,7 +575,11 @@
       "SelectDisciplines": "Select Disciplines",
       "CreateTask": "Create Task",
       "OtherFlags": "Other Flags",
+      "Organization": "Organization",
       "AddPhase": "Add Phase",
+      "MarkAsAbs": "Mark As ABS",
+      "RemoveAbsFlag": "Remove ABS Flag",
+      "OtherActions": "Other Actions",
       "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
       "UnpublishForEditing": "Unpublish For Editting",
@@ -587,7 +597,14 @@
       "SearchContinue": "Select Library Entry To Continue",
       "LibraryFilters": "Library Filters",
       "ExpandAll": "Expand All",
-      "CollapseAll": "Collapse All"
+      "CollapseAll": "Collapse All",
+      "PrivateTooltip": "Private - This task can only be seen within your organization.",
+      "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
+      "ABS": "ABS",
+      "ABS-Full": "Account Breakdown Structure",
+      "ABS-Explanation": "The ABS is a hierarchical structure that breaks down the project into smaller, more manageable components. It is used to organize and categorize project costs and resources.",
+      "ABS-Tooltip": "This task has been marked as ABS. This means none of its children will be included in the Account Breakdown Structure.",
+      "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS."
     }
   },
   {
@@ -693,7 +710,8 @@
     "locale": "en-US",
     "values": {
       "Title": "Your Profile",
-      "ProfileUpdated": "Your profile has been updated."
+      "ProfileUpdated": "Your profile has been updated.",
+      "AdminTasks": "Admin Tasks"
     }
   },
   {

@@ -3,7 +3,7 @@
     <button
       kendoButton
       class="w-100"
-      [themeColor]="visibility() === 'public' ? 'dark' : 'base'"
+      [themeColor]="visibility() === 'public' ? 'dark' : 'light'"
       (click)="visibility.set('public')"
     >
       <wbs-visibility-text visibility="public" />
@@ -16,7 +16,13 @@
     <button
       kendoButton
       class="w-100"
-      [themeColor]="visibility() === 'private' ? 'dark' : 'base'"
+      [themeColor]="
+        visibility() === 'private'
+          ? 'dark'
+          : visibility() === 'impliedPrivate'
+          ? 'base'
+          : 'light'
+      "
       (click)="visibility.set('private')"
     >
       <wbs-visibility-text visibility="private" />

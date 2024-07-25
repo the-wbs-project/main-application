@@ -12,6 +12,7 @@ CREATE TABLE [dbo].[ProjectNodes] (
     [PhaseIdAssociation] nvarchar(100) NULL,
     [LibraryLink] nvarchar(MAX) NULL,
     [LibraryTaskLink] nvarchar(MAX) NULL,
+    [AbsFlag] bit NULL,
     CONSTRAINT ProjectNodes_PK PRIMARY KEY CLUSTERED ([ProjectId] ASC, [Id] ASC),
     CONSTRAINT ProjectNode_FK_ProjectId FOREIGN KEY ([ProjectId]) REFERENCES [dbo].[Projects] ([Id]) ON DELETE CASCADE
 )

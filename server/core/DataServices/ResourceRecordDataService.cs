@@ -29,6 +29,7 @@ public class ResourceRecordDataService : BaseSqlDbService
             LastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
             Resource = DbValue<string>(reader, "Resource"),
             Description = DbValue<string>(reader, "Description"),
+            Visibility = DbValue<string>(reader, "Visibility"),
         };
     }
 }

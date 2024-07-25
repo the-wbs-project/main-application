@@ -22,10 +22,9 @@ public class LibrarySearchIndexService
     private readonly WatcherLibraryEntryDataService watcherDataService;
     private readonly ResourcesDataService resourcesDataService;
     private readonly ListDataService listDataService;
-    private readonly SearchStorageService storage;
     private readonly QueueService queueService;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, SearchStorageService storage, QueueService queueService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, QueueService queueService)
     {
         this.searchConfig = searchConfig;
         this.userDataService = userDataService;
@@ -36,7 +35,6 @@ public class LibrarySearchIndexService
         this.watcherDataService = watcherDataService;
         this.resourcesDataService = resourcesDataService;
         this.listDataService = listDataService;
-        this.storage = storage;
         this.queueService = queueService;
     }
 
@@ -45,12 +43,19 @@ public class LibrarySearchIndexService
         queueService.Add("search-library-item", $"{owner}|{id}");
     }
 
+    public async Task RemoveAsync(IEnumerable<LibrarySearchDocument> docs)
+    {
+        var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
+            .DeleteDocumentsAsync(docs);
+    }
+
     public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)
     {
         var userCache = new Dictionary<string, UserDocument>();
         var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
         var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
         var resources = new Resources(resourceObj);
+        var pushes = new List<Task>();
         //
         //  Get discipline labels
         //
@@ -60,19 +65,19 @@ public class LibrarySearchIndexService
         foreach (var entryId in entryIds)
         {
             var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
-
-            if (entry == null)
-            {
-                await storage.VerifyDoesntExist(searchConfig.LibraryIndex, owner, entryId);
-                continue;
-            }
-
             var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
             var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
             var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
 
-            await PushToSearchAsync(resources, entry, version, entryTasks, watcherIds, disciplineLabels, userCache);
+            pushes.Add(PushToSearchAsync(resources, entry, version, entryTasks, watcherIds, disciplineLabels, userCache));
+
+            if (pushes.Count > 0)
+            {
+                await Task.WhenAll(pushes);
+                pushes.Clear();
+            }
         }
+        if (pushes.Count > 0) await Task.WhenAll(pushes);
     }
 
     public async Task PushToSearchAsync(
@@ -92,9 +97,17 @@ public class LibrarySearchIndexService
         foreach (var discipline in version.disciplines)
             disciplines.Add(discipline.isCustom ? discipline.label : disciplineLabels[discipline.id]);
 
-        var doc = LibrarySearchTransformer.CreateDocument(entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users);
+        var toUpload = new List<LibrarySearchDocument>
+        {
+            LibrarySearchTransformer.CreateDocument("private", entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users)
+        };
 
-        await storage.SaveDocumentAsync(searchConfig.LibraryIndex, entry.OwnerId, entry.EntryId, doc);
+        if (entry.Visibility == "public")
+        {
+            toUpload.Add(LibrarySearchTransformer.CreateDocument("public", entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users));
+        }
+        var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
+            .MergeOrUploadDocumentsAsync(toUpload);
     }
 
     public async Task VerifyIndexAsync()
