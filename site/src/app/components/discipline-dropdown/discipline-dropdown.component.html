@@ -2,6 +2,8 @@
   kendoMultiSelectSummaryTag
   [checkboxes]="true"
   [autoClose]="false"
+  [filterable]="false"
+  [clearButton]="false"
   [data]="data()"
   [(value)]="ids"
   adaptiveMode="auto"
@@ -13,19 +15,15 @@
 >
   <ng-template kendoSuffixTemplate>
     @if (showSave()) {
-    <button
-      kendoButton
-      size="small"
-      fillMode="outline"
-      (click)="saveSelected()"
-    >
+    <button kendoButton size="small" fillMode="clear" (click)="saveSelected()">
       <fa-icon [icon]="saveIcon" class="mg-r-5" />
-      {{ "General.Save" | translate }}
     </button>
     }
   </ng-template>
   <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
-    {{ dataItems.length }} {{ "General.Selected" | translate }}
+    <span class="tx-10">
+      {{ dataItems.length }} {{ "General.Selected" | translate }}
+    </span>
   </ng-template>
   <ng-template kendoMultiSelectItemTemplate let-dataItem>
     <div class="tx-12">

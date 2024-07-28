@@ -36,7 +36,8 @@
     id="mainTaskTitle"
     name="mainTaskTitle"
     [disabled]="syncTitles()"
-    [ngModel]="syncTitles() ? templateTitle : mainTaskTitle" (ngModelChange)="syncTitles() ? templateTitle : mainTaskTitle = $event"
+    [ngModel]="syncTitles() ? templateTitle() : mainTaskTitle()"
+    (ngModelChange)="(syncTitles() ? templateTitle : mainTaskTitle).set($event)"
   />
   <label class="tx-12 tx-italic mg-t-5">
     {{ "LibraryCreate.MainTaskTitleDescription" | translate }}

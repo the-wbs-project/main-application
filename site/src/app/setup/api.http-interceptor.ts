@@ -1,30 +1,25 @@
 import {
   HttpEvent,
-  HttpHandler,
-  HttpInterceptor,
+  HttpHandlerFn,
   HttpRequest,
   HttpResponse,
 } from '@angular/common/http';
-import { Injectable, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { APP_CONFIG_TOKEN, AppConfiguration } from '@wbs/core/models';
 import { Observable, of } from 'rxjs';
 
-@Injectable()
-export class ApiRequestInterceptor implements HttpInterceptor {
-  private readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
+export function apiRequestInterceptor(
+  req: HttpRequest<unknown>,
+  next: HttpHandlerFn
+): Observable<HttpEvent<unknown>> {
+  const appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
 
-  intercept(
-    request: HttpRequest<any>,
-    next: HttpHandler
-  ): Observable<HttpEvent<any>> {
-    if (request.url === 'uploadSaveUrl')
-      return of(new HttpResponse({ status: 200 }));
+  if (req.url === 'uploadSaveUrl') return of(new HttpResponse({ status: 200 }));
 
-    if (request.url.indexOf('api/') === 0) {
-      request = request.clone({
-        url: `${this.appConfig.api_domain}/${request.url}`,
-      });
-    }
-    return next.handle(request);
+  if (req.url.indexOf('api/') === 0) {
+    req = req.clone({
+      url: `${appConfig.api_domain}/${req.url}`,
+    });
   }
+  return next(req);
 }

@@ -292,6 +292,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     const obsOrVoid = this.service.action('addSub');
 
     if (obsOrVoid instanceof Observable) {
+      //@ts-ignore
       obsOrVoid.subscribe();
     }
   }

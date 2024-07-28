@@ -51,7 +51,10 @@ export class ProjectViewService {
     return this.project.owner;
   }
 
-  action(action: string, taskId?: string): void | Observable<boolean> {
+  action(
+    action: string,
+    taskId?: string
+  ): void | Observable<void> | Observable<boolean> {
     if (action === 'downloadWbs') {
       this.downloadTasks(false);
     } else if (action === 'downloadAbs') {

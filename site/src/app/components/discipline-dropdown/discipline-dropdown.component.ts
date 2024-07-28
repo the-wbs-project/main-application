@@ -13,6 +13,7 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   MultiSelectComponent,
   MultiSelectModule,
@@ -26,6 +27,7 @@ import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
   templateUrl: './discipline-dropdown.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DisciplineIconPipe,
     FontAwesomeModule,
     MultiSelectModule,

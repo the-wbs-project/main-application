@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import { ContextMenuItem, LibraryEntryVersion } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/core/store';
 import { TaskViewModel } from '@wbs/core/view-models';
-import { LIBRARY_TREE_MENU_ITEMS } from '../../models';
+import { LIBRARY_TREE_MENU_ITEMS } from '../../../models';
 
 declare type Seperator = { separator: true };
 
