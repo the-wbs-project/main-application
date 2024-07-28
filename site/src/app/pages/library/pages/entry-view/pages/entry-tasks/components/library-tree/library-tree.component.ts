@@ -42,6 +42,7 @@ import {
   TreeButtonsTogglerComponent,
   TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
+import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitle2Component } from '@wbs/components/task-title';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
@@ -49,7 +50,6 @@ import {
   LIBRARY_CLAIMS,
   LibraryEntry,
   LibraryEntryVersion,
-  SaveState,
 } from '@wbs/core/models';
 import {
   CategoryService,
@@ -63,15 +63,13 @@ import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore, UiStore } from '@wbs/core/store';
 import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
 import {
   EntryTaskActionService,
   EntryTaskReorderService,
-} from '../../services';
+} from '../../../../services';
+import { LibraryTreeMenuService } from './library-tree-menu.service';
 import { TreeFlagColumnHeaderComponent } from '../tree-flag-column-header';
 import { VisibilityIconComponent } from '../visibility-icon.component';
-import { LibraryTreeMenuService } from './library-tree-menu.service';
-import { DisciplinesDropdownComponent } from '../../../../../../components/discipline-dropdown/discipline-dropdown.component';
 
 @UntilDestroy()
 @Component({
