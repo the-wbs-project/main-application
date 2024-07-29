@@ -1,30 +1,20 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  WritableSignal,
+  OnInit,
   computed,
   inject,
   input,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faCheck,
-  faFloppyDisk,
-  faXmark,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import {
-  ContextMenuComponent,
-  ContextMenuModule,
-} from '@progress/kendo-angular-menu';
 import {
   CellClickEvent,
   ColumnComponent,
@@ -35,40 +25,33 @@ import {
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import {
   TreeButtonsAddComponent,
   TreeButtonsDownloadComponent,
+  TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
   TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
-import { TaskTitle2Component } from '@wbs/components/task-title';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import {
-  LIBRARY_CLAIMS,
-  LibraryEntry,
-  LibraryEntryVersion,
-} from '@wbs/core/models';
+import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {
   CategoryService,
   Messages,
-  SignalStore,
   TreeService,
   Utils,
-  WbsPhaseService,
 } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
-import { EntryStore, UiStore } from '@wbs/core/store';
+import { EntryStore, MetadataStore, UiStore } from '@wbs/core/store';
 import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import {
   EntryTaskActionService,
   EntryTaskReorderService,
 } from '../../../../services';
-import { LibraryTreeMenuService } from './library-tree-menu.service';
-import { TreeFlagColumnHeaderComponent } from '../tree-flag-column-header';
+import { LibraryTaskTitleComponent } from '../library-task-title';
 import { VisibilityIconComponent } from '../visibility-icon.component';
 
 @UntilDestroy()
@@ -77,81 +60,85 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
   selector: 'wbs-library-tree',
   templateUrl: './library-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LibraryTreeMenuService, WbsPhaseService],
   imports: [
     AlertComponent,
-    ButtonModule,
-    ContextMenuItemComponent,
-    ContextMenuModule,
     DisciplineIconListComponent,
     DisciplinesDropdownComponent,
+    LibraryTaskTitleComponent,
     FontAwesomeModule,
     RouterModule,
     SaveMessageComponent,
-    TextBoxModule,
     TranslateModule,
-    TaskTitle2Component,
     TaskTitleEditorComponent,
-    TreeDisciplineLegendComponent,
-    TreeListModule,
     TreeButtonsAddComponent,
     TreeButtonsDownloadComponent,
+    TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
     TreeButtonsUploadComponent,
-    TreeFlagColumnHeaderComponent,
+    TreeDisciplineLegendComponent,
+    TreeHeightDirective,
+    TreeListModule,
     VisibilityIconComponent,
   ],
 })
-export class LibraryTreeComponent {
+export class LibraryTreeComponent implements OnInit {
   protected readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
-  protected readonly gridContextMenu =
-    viewChild<ContextMenuComponent>(ContextMenuComponent);
 
   private readonly actions = inject(EntryTaskActionService);
   private readonly category = inject(CategoryService);
-  private readonly menuService = inject(LibraryTreeMenuService);
-  private readonly store = inject(SignalStore);
+  private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(EntryTaskReorderService);
   private readonly taskService = inject(EntryTaskService);
   readonly entryService = inject(EntryService);
   readonly entryStore = inject(EntryStore);
+  readonly width = inject(UiStore).mainContentWidth;
   readonly treeService = new TreeService();
 
-  readonly checkIcon = faCheck;
-  readonly faFloppyDisk = faFloppyDisk;
-  readonly faXmark = faXmark;
+  readonly faSpinner = faSpinner;
 
-  readonly entryUrl = input.required<string[]>();
-  readonly claims = input.required<string[]>();
-  readonly entry = input.required<LibraryEntry>();
-  readonly version = input.required<LibraryEntryVersion>();
-
-  readonly width = inject(UiStore).mainContentWidth;
+  readonly showFullscreen = input.required<boolean>();
+  readonly containerHeight = input.required<number>();
+  readonly isLoading = computed(
+    () => !this.entryStore.entry() || !this.entryStore.version()
+  );
 
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<TaskViewModel | undefined>(undefined);
-  readonly menu = computed(() =>
-    this.menuService.buildMenu(
-      this.entry().type,
-      this.version(),
-      this.selectedTask(),
-      this.claims()
-    )
-  );
-  readonly disciplines = computed(() =>
-    this.category.buildViewModels(this.version().disciplines)
+  readonly disciplines = computed(() => {
+    let d = this.entryStore.version()!.disciplines;
+
+    if (!d || d.length === 0)
+      d = this.metadata.categories.disciplines.map((x) => ({
+        ...x,
+        isCustom: false,
+      }));
+
+    return this.category.buildViewModels(d);
+  });
+  readonly showPrivate = computed(
+    () =>
+      this.entryStore.version()!.status === 'draft' &&
+      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
   );
   readonly canEdit = computed(
     () =>
-      this.version().status === 'draft' &&
-      Utils.contains(this.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
+      this.entryStore.version()!.status === 'draft' &&
+      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
   );
   readonly canCreate = computed(
     () =>
-      this.version().status === 'draft' &&
-      Utils.contains(this.claims(), LIBRARY_CLAIMS.TASKS.CREATE)
+      this.entryStore.version()!.status === 'draft' &&
+      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.CREATE)
   );
+  readonly pageSize = computed(() => {
+    const height = this.containerHeight() - 50 - 48 - 36;
+    const rows = Math.floor(height / 31.5);
+
+    return Math.max(20, rows * 2);
+  });
+  readonly navigateToTask = output<string>();
+  readonly goFullScreen = output<void>();
 
   constructor() {
     toObservable(this.entryStore.viewModels)
@@ -159,14 +146,17 @@ export class LibraryTreeComponent {
       .subscribe((tasks) => this.treeService.updateState(tasks ?? []));
   }
 
-  menuItemSelected(action: string): void {
-    const taskId = this.selectedTask()?.id;
-    const obsOrVoid = this.actions.onAction(
-      action,
-      this.entryUrl(),
-      taskId,
-      this.treeService
-    );
+  ngOnInit(): void {
+    this.treeService.expandedKeys = (this.entryStore.viewModels() ?? [])
+      .filter((x) => !x.parentId)
+      .map((x) => x.id);
+  }
+
+  menuItemSelected(action: string, taskId?: string): void {
+    if (action === 'viewTask') {
+      if (taskId) this.navigateToTask.emit(taskId!);
+    }
+    const obsOrVoid = this.actions.onAction(action, taskId, this.treeService);
 
     if (obsOrVoid instanceof Observable) {
       if (taskId) this.treeService.callSave(taskId, obsOrVoid);
@@ -175,19 +165,6 @@ export class LibraryTreeComponent {
   }
 
   cellClick(e: CellClickEvent): void {
-    this.selectedTask.set(e.dataItem);
-
-    if (e.type === 'contextmenu') {
-      const originalEvent = e.originalEvent;
-      originalEvent.preventDefault();
-
-      this.gridContextMenu()?.show({
-        left: originalEvent.pageX,
-        top: originalEvent.pageY,
-      });
-      return;
-    }
-
     const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
 
     if (!e.isEdited && column?.field === 'disciplines') {
@@ -195,9 +172,19 @@ export class LibraryTreeComponent {
     }
   }
 
+  nav(): void {
+    const taskId = this.selectedTask()?.id;
+    //
+    //  Keep this here in case someone double clicks outside a standard row
+    //
+    if (!taskId) return;
+
+    this.navigateToTask.emit(taskId);
+  }
+
   rowReordered(e: RowReorderEvent): void {
     const tree = this.entryStore.viewModels()!;
-    const entryType = this.entry().type;
+    const entryType = this.entryStore.entry()!.type;
     const dragged: TaskViewModel = e.draggedRows[0].dataItem;
     const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(
@@ -240,15 +227,6 @@ export class LibraryTreeComponent {
     } else {
       run();
     }
-  }
-
-  navigateToTask(taskId: string | undefined): void {
-    //
-    //  Keep this here in case someone double clicks outside a standard row
-    //
-    if (!taskId) return;
-
-    this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));
   }
 
   disciplinesChanged(

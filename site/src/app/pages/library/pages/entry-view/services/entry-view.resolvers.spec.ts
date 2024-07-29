@@ -46,10 +46,7 @@ describe('Utils', () => {
     });
 
     of({ owner: 'fromStore' })
-      .pipe(
-        delay(50000),
-        tap((x) => console.log('oh hi'))
-      )
+      .pipe(delay(50000))
       .subscribe((obj) => subj.next(obj));
 
     tick(60000);

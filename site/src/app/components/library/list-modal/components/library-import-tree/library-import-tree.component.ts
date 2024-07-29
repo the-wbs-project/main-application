@@ -6,12 +6,15 @@ import {
   inject,
   input,
   model,
+  output,
 } from '@angular/core';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faRefresh } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   CellClickEvent,
   ColumnComponent,
-  SelectableSettings,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
 import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
@@ -37,8 +40,10 @@ import { LibraryEntryViewModel } from '@wbs/core/view-models';
   templateUrl: './library-import-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DisciplineIconListComponent,
     DisciplinesDropdownComponent,
+    FontAwesomeModule,
     TaskTitle2Component,
     TaskTitleEditorComponent,
     TranslateModule,
@@ -53,6 +58,8 @@ export class LibraryImportTreeComponent implements OnInit {
   private readonly transformer = inject(Transformers);
   readonly treeService = new TreeService();
 
+  readonly refreshIcon = faRefresh;
+  readonly containerHeight = input.required<number>();
   readonly entry = input.required<LibraryEntryViewModel>();
   readonly version = input.required<LibraryEntryVersion>();
   readonly tasks = model.required<LibraryEntryNode[]>();
@@ -67,13 +74,13 @@ export class LibraryImportTreeComponent implements OnInit {
       this.disciplines()
     )
   );
-  settings: SelectableSettings = {
-    enabled: true,
-    mode: 'row',
-    multiple: false,
-    drag: false,
-    readonly: false,
-  };
+  readonly pageSize = computed(() => {
+    const height = this.containerHeight() - 50 - 48 - 36;
+    const rows = Math.floor(height / 31.5);
+
+    return Math.max(20, rows * 2);
+  });
+  readonly reloadTree = output<void>();
 
   ngOnInit(): void {
     this.treeService.expandedKeys = this.viewModels()
@@ -87,17 +94,6 @@ export class LibraryImportTreeComponent implements OnInit {
     if (!e.isEdited && column?.field === 'disciplines') {
       e.sender.editCell(e.dataItem, e.columnIndex);
     }
-  }
-
-  titleChanged(taskId: string, title: string): void {
-    this.tasks.update((tasks) => {
-      const task = tasks.find((t) => t.id === taskId);
-      if (!task) return tasks;
-
-      task.title = title;
-
-      return [...tasks];
-    });
   }
 
   removeTask(taskId: string): void {

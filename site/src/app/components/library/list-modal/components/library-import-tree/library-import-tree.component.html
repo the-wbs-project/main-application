@@ -1,13 +1,16 @@
 @if (viewModels(); as viewModels) {
 <kendo-treelist
   #treelist
-  class="h-100"
+  class="tx-12"
   kendoTreeListExpandable
   kendoTreeListSelectable
   [kendoTreeListFlatBinding]="viewModels"
   parentIdField="treeParentId"
   idField="treeId"
-  [selectable]="settings"
+  [rowHeight]="31.5"
+  [pageSize]="pageSize()"
+  [height]="containerHeight() - 100"
+  scrollable="virtual"
   [initiallyExpanded]="false"
   [(expandedKeys)]="treeService.expandedKeys"
   [selectable]="{ enabled: true, mode: 'row' }"
@@ -18,20 +21,26 @@
       (collapse)="treeService.collapseAll(treelist, viewModels)"
       (expand)="treeService.expandAll(treelist, viewModels)"
     />
+    <button kendoButton size="small" (click)="reloadTree.emit()">
+      <fa-icon [icon]="refreshIcon" class="mg-r-5" />
+      {{ "General.Reload" | translate }}
+    </button>
   </ng-template>
   <kendo-treelist-column
     [expandable]="true"
     field="title"
-    class="tx-11"
+    class="child-hoverer tree-column"
     headerClass="tx-14"
     [title]="'Wbs.Activity_Title' | translate"
   >
     <ng-template kendoTreeListCellTemplate let-dataItem>
       <wbs-task-title
         [canEdit]="true"
+        [showRemove]="true"
         [level]="dataItem.levelText"
         [title]="dataItem.title"
-        (edit)="treeService.editTitle(treelist, dataItem)"
+        (edit)="treeService.editTitle(treelist, dataItem, 0)"
+        (remove)="removeTask(dataItem.id)"
       />
     </ng-template>
     <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
@@ -44,10 +53,10 @@
   </kendo-treelist-column>
   @if ((width() ?? 0) > 800) {
   <kendo-treelist-column
-    field="disciplines"
     [width]="200"
-    class="discipline-column"
-    headerClass="discipline-column tx-14"
+    field="disciplines"
+    class="tree-column tx-13-f"
+    headerClass="tx-14"
   >
     <ng-template kendoTreeListHeaderTemplate>
       <wbs-tree-discipline-legend [list]="disciplines()" />

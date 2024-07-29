@@ -18,9 +18,9 @@ export class VisibilityIconComponent {
   readonly visibility = input.required<string | undefined>();
   readonly iconClass = computed(() =>
     this.visibility() === 'private'
-      ? 'fas fa-lock'
+      ? 'fas fa-check tx-gray-800'
       : this.visibility() === 'impliedPrivate'
-      ? 'fas fa-lock tx-gray-400'
+      ? 'fas fa-check tx-gray-500'
       : undefined
   );
   readonly tooltip = computed(() =>

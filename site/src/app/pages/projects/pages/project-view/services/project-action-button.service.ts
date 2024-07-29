@@ -133,7 +133,6 @@ export class ProjectActionButtonService {
   }
 
   handleAction(action: string, approvalEnabled: boolean): void {
-    console.log(action);
     switch (action) {
       case this.actionDownloadAbs:
         this.actions.downloadTasks(true);

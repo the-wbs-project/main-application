@@ -1,5 +1,5 @@
 name = "pm-empower-site"
-compatibility_date = "2024-05-13"
+compatibility_date = "2024-06-03"
 pages_build_output_dir = "./dist"
 
 [vars]

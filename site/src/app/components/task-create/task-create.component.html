@@ -21,7 +21,7 @@
                 #titleTextBox
                 kendoTextBox
                 [(ngModel)]="title"
-                (keydown.enter)="save(false)"
+                (keydown.enter)="save()"
               />
             </div>
             <div class="mb-3">
@@ -49,20 +49,12 @@
       </div>
     </div>
   </div>
-  <kendo-dialog-actions layout="end">
+  <kendo-dialog-actions layout="stretched">
     <button
       kendoButton
       themeColor="primary"
       [disabled]="title() === ''"
-      (click)="save(true)"
-    >
-      {{ "General.SaveAndView" | translate }}
-    </button>
-    <button
-      kendoButton
-      themeColor="primary"
-      [disabled]="title() === ''"
-      (click)="save(false)"
+      (click)="save()"
     >
       {{ "General.Save" | translate }}
     </button>

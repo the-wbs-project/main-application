@@ -117,8 +117,6 @@ export class ProjectListComponent implements OnInit {
 
     ref.result.subscribe((id) => {
       if (!id) return;
-
-      console.log(id);
     });
   }
 

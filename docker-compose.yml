@@ -1,3 +1,4 @@
+name: pm-empower
 services:
   wbs-api:
     container_name: wbs-api

@@ -24,6 +24,7 @@ import { ContextMenuItem } from '@wbs/core/models';
     } }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, TranslateModule],
+  host: { class: 'tx-12' },
 })
 export class ContextMenuItemComponent {
   readonly item = input.required<ContextMenuItem>();

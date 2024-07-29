@@ -4,13 +4,13 @@ import {
   LIBRARY_TASKS_REORDER_WAYS,
   LibraryEntryNode,
   LibraryEntryVersion,
-  TaskCreationResults,
+  WbsNode,
 } from '@wbs/core/models';
 import {
   IdService,
   Messages,
-  Transformers,
   WbsNodeService,
+  sorter,
 } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { TaskViewModel } from '@wbs/core/view-models';
@@ -24,7 +24,6 @@ export class EntryTaskService {
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
   private readonly store = inject(EntryStore);
-  private readonly transformers = inject(Transformers);
 
   private get owner(): string {
     return this.store.entry()!.owner;
@@ -200,7 +199,7 @@ export class EntryTaskService {
 
   createTask(
     taskId: string | undefined,
-    results: TaskCreationResults
+    results: Partial<WbsNode>
   ): Observable<string> {
     const tasks = this.getTasks();
     const siblings = tasks.filter((x) => x.parentId == taskId);
@@ -213,9 +212,9 @@ export class EntryTaskService {
       parentId: taskId,
       order,
       lastModified: new Date(),
-      title: results.model.title!,
-      description: results.model.description,
-      disciplineIds: results.model.disciplineIds,
+      title: results.title!,
+      description: results.description,
+      disciplineIds: results.disciplineIds,
     };
     return this.saveAsync([task], []).pipe(
       tap(() =>
@@ -223,7 +222,7 @@ export class EntryTaskService {
           this.entryId,
           this.version,
           task.id,
-          results.model.title!
+          results.title!
         )
       ),
       map(() => task.id)
@@ -530,14 +529,15 @@ export class EntryTaskService {
     );
   }
 
-  removeTask(taskId: string): Observable<void> {
+  removeTask(taskId: string): Observable<boolean> {
     return this.messages.confirm
       .show('General.Confirm', 'Library.DeleteTask')
       .pipe(
         switchMap((answer) => {
-          if (!answer) return of();
+          if (!answer) return of(false);
 
           const tasks = this.getTasks();
+          const task = tasks.find((x) => x.id === taskId)!;
           const nodeIndex = tasks.findIndex((x) => x.id === taskId);
           const parentId = tasks[nodeIndex].parentId!;
 
@@ -545,16 +545,29 @@ export class EntryTaskService {
 
           tasks.splice(nodeIndex, 1);
 
+          const upserts: LibraryEntryNode[] = [];
           const childrenIds = WbsNodeService.getChildrenIds(tasks, taskId);
-          const changedIds = this.transformers.nodes.phase.reorderer.run(
-            parentId,
-            tasks
-          );
+          const siblings = tasks
+            .filter((x) => x.parentId === parentId)
+            .filter((x) => x.order > task.order)
+            .sort((a, b) => sorter(a.order, b.order));
+
+          let order = task.order;
+
+          for (const sibling of siblings) {
+            sibling.order = order;
+            order++;
+
+            upserts.push(sibling);
+          }
 
           const removedIds: string[] = [taskId, ...childrenIds];
-          const upserts = tasks.filter((x) => changedIds.includes(x.id));
 
-          return this.saveAsync(upserts, removedIds, 'Library.TaskRemoved');
+          return this.saveAsync(
+            upserts,
+            removedIds,
+            'Library.TaskRemoved'
+          ).pipe(map(() => true));
         })
       );
   }

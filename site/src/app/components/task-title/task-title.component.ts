@@ -11,6 +11,7 @@ import { faPencil, faTrash } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { ContextMenuModule } from '@progress/kendo-angular-menu';
 
 @Component({
   standalone: true,
@@ -19,6 +20,7 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonModule,
+    ContextMenuModule,
     FontAwesomeModule,
     FormsModule,
     TextBoxModule,

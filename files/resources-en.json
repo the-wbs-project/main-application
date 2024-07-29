@@ -36,7 +36,7 @@
       "Error": "Error",
       "Success": "Success",
       "Okay": "Okay",
-      "WBS": "WBS",
+      "Reload": "Reload",
       "Organization": "Organization",
       "Children": "Children",
       "Parent": "Parent",
@@ -82,6 +82,7 @@
       "UnexpectedServerError": "An unexpected server error occured.",
       "Previous": "Previous",
       "Next": "Next",
+      "FullScreen": "Full Screen",
       "Public": "Public",
       "Private": "Private",
       "ImpliedPrivate": "Implied Private",
@@ -536,7 +537,6 @@
     "section": "Wbs",
     "locale": "en-US",
     "values": {
-      "WBS": "WBS",
       "Task": "Task",
       "History": "History",
       "Clone": "Clone",
@@ -547,6 +547,7 @@
       "TrainingMaterial": "Training Material",
       "DownloadWbs": "Download WBS",
       "DownloadAbs": "Download ABS",
+      "DownloadTasks": "Download Tasks",
       "UploadTasks": "Upload Tasks",
       "Attachments": "Attachments",
       "Level": "Level",
@@ -602,9 +603,13 @@
       "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
       "ABS": "ABS",
       "ABS-Full": "Account Breakdown Structure",
+      "ABS-Full2": "ABS - Account Breakdown Structure",
       "ABS-Explanation": "The ABS is a hierarchical structure that breaks down the project into smaller, more manageable components. It is used to organize and categorize project costs and resources.",
-      "ABS-Tooltip": "This task has been marked as ABS. This means none of its children will be included in the Account Breakdown Structure.",
-      "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS."
+      "ABS-Tooltip": "TheditEnabledis task has been marked as ABS. This means none of its children will be included in the Account Breakdown Structure.",
+      "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS.",
+      "WBS": "WBS",
+      "WBS-Full": "Work Breakdown Structure",
+      "WBS-Full2": "WBS - Work Breakdown Structure"
     }
   },
   {

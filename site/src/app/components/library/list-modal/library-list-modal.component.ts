@@ -32,12 +32,14 @@ import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../list';
 import { LibraryListFiltersComponent } from '../list-filters';
 import { LibraryImportTreeComponent } from './components';
+import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
 
 @Component({
   standalone: true,
   templateUrl: './library-list-modal.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    AlertComponent,
     ButtonModule,
     DialogModule,
     FontAwesomeModule,
@@ -47,7 +49,7 @@ import { LibraryImportTreeComponent } from './components';
     LoaderModule,
     SaveMessageComponent,
     TranslateModule,
-    AlertComponent,
+    TreeHeightDirective,
   ],
 })
 export class LibraryListModalComponent extends DialogContentBase {
@@ -55,6 +57,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   private org?: string;
   private userId?: string;
 
+  readonly containerHeight = signal(100);
   readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
   readonly view = signal(0);
   readonly ready = signal(false);

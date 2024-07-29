@@ -129,6 +129,7 @@ export const taskNavGuard = (route: ActivatedRouteSnapshot) =>
   inject(EntryStore).setNavSectionTask(route.data['section']);
 
 export const verifyTaskUpdateClaimGuard = (route: ActivatedRouteSnapshot) => {
+  console.log('verifyTaskUpdateClaimGuard');
   const data = inject(DataServiceFactory);
   const owner = Utils.getParam(route, 'ownerId');
   const entryId = Utils.getParam(route, 'entryId');

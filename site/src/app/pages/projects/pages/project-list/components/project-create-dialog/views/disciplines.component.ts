@@ -50,8 +50,6 @@ export class ProjectCreateDisciplinesComponent implements OnInit {
   }
 
   changed(disciplines: CategorySelection[]): void {
-    console.log(disciplines);
-    console.log(this.categoryService.extract(disciplines, []).categories);
     this.store.disciplines.set(
       this.categoryService.extract(disciplines, []).categories
     );

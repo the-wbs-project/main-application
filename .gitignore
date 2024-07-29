@@ -21,6 +21,4 @@ _theme/Nowa
 /example
 
 **/appsettings.Development.json
-site/package-lock.json
-
-test-app/**
+package-lock.json

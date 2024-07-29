@@ -19,7 +19,7 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { ProjectCategory, TaskCreationResults } from '@wbs/core/models';
+import { ProjectCategory, WbsNode } from '@wbs/core/models';
 import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
@@ -56,8 +56,7 @@ export class TaskCreateComponent extends DialogContentBase {
   static launchAsync(
     dialog: DialogService,
     disciplines: ProjectCategory[]
-  ): Observable<TaskCreationResults | undefined> {
-    console.log('test');
+  ): Observable<Partial<WbsNode> | undefined> {
     const ref = dialog.open({
       content: TaskCreateComponent,
       cssClass: 'bg-light',
@@ -73,23 +72,20 @@ export class TaskCreateComponent extends DialogContentBase {
 
     return ref.result.pipe(
       map((x: unknown) =>
-        x instanceof DialogCloseResult ? undefined : <TaskCreationResults>x
+        x instanceof DialogCloseResult ? undefined : <Partial<WbsNode>>x
       )
     );
   }
 
-  protected save(nav: boolean): void {
+  protected save(): void {
     if (!this.title) return;
 
     this.dialog.close({
-      model: {
-        title: this.title().trim(),
-        description: this.description()?.trim(),
-        disciplineIds: this.disciplines()
-          .filter((x) => x.selected)
-          .map((x) => x.id),
-      },
-      nav,
+      title: this.title().trim(),
+      description: this.description()?.trim(),
+      disciplineIds: this.disciplines()
+        .filter((x) => x.selected)
+        .map((x) => x.id),
     });
   }
 }

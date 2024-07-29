@@ -69,9 +69,7 @@ export class ProjectViewService {
         .pipe(
           switchMap((results) =>
             results
-              ? this.store.dispatch(
-                  new CreateTask(taskId, results.model, results.nav)
-                )
+              ? this.store.dispatch(new CreateTask(taskId, results, false))
               : of()
           )
         )

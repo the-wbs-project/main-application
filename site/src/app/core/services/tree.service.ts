@@ -64,8 +64,8 @@ export class TreeService {
     return max < 6 ? 80 : max < 8 ? 90 : 120;
   }
 
-  editTitle(grid: TreeListComponent, dataItem: any): void {
-    grid.editCell(dataItem, 1);
+  editTitle(grid: TreeListComponent, dataItem: any, column: number): void {
+    grid.editCell(dataItem, column);
   }
 
   getSaveState(taskId: string): WritableSignal<SaveState> {
@@ -92,8 +92,6 @@ export class TreeService {
 
     obs
       .pipe(
-        tap((x) => console.log(x)),
-        tap((x) => console.log(x === false ? 'ready' : 'saved')),
         tap((x) => this.setSaveState(taskId, x === false ? 'ready' : 'saved')),
         delay(5000)
       )

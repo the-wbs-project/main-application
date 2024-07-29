@@ -11,17 +11,17 @@
   "author": "author",
   "license": "MIT",
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20240512.0",
+    "@cloudflare/workers-types": "^4.20240725.0",
     "@types/jest": "^27.5.1",
     "@typescript-eslint/eslint-plugin": "^5.53.0",
     "@typescript-eslint/parser": "^5.53.0",
     "jest": "^29.4.3",
     "prettier": "^2.8.4",
     "ts-jest": "^29.0.5",
-    "typescript": "^5.4.5"
+    "typescript": "^5.5.4"
   },
   "dependencies": {
     "@cfworker/jwt": "^4.0.4",
-    "hono": "^3.12.12"
+    "hono": "^4.5.2"
   }
 }

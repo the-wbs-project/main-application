@@ -4,7 +4,10 @@
   [title]="'Wbs.ImportFromLibrary' | translate"
   (close)="dialog.close()"
 >
-  <div class="d-flex h-100 flex-column fs-6">
+  <div
+    [(wbsTreeHeight)]="containerHeight"
+    class="d-flex h-100 flex-column fs-6"
+  >
     @if (ready()) { @if (view() === 0) {
     <wbs-library-list-filters
       [showLibrary]="true"
@@ -40,13 +43,12 @@
         <div class="mg-t-50">{{ "General.Loading" | translate }}...</div>
       </div>
       } @else {
-      <div class="w-100 text-end pd-b-15">
-        <button kendoButton (click)="loadTree()">Reload</button>
-      </div>
       <wbs-library-import-tree
+        [containerHeight]="containerHeight()"
         [entry]="selected()!"
         [version]="version()!"
         [(tasks)]="tasks"
+        (reloadTree)="loadTree()"
       />
       }
     </div>

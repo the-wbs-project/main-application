@@ -4,6 +4,9 @@
   .child-to-show {
     display: none !important;
   }
+  .child-to-show.nevermind {
+    display: block !important;
+  }
 }
 
 .child-hoverer:hover {
@@ -34,6 +37,10 @@
 
 .d-ib {
   display: inline-block;
+}
+
+.d-block-f {
+  display: block !important;
 }
 
 .flex-flow-col {

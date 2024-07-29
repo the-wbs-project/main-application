@@ -139,7 +139,6 @@ export class EntryService {
     )
       .pipe(
         filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
-        tap(console.log),
         map((id) => <string>id),
         switchMap((id) =>
           this.store.dispatch(new Navigate(['/', org, 'projects', 'view', id]))

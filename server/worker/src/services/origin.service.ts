@@ -1,3 +1,4 @@
+import { StatusCode } from 'hono/utils/http-status';
 import { Context } from '../config';
 
 export class OriginService {
@@ -39,7 +40,7 @@ export class OriginService {
 
     const body = res.status === 202 || res.status === 204 ? null : await res.arrayBuffer();
 
-    return ctx.newResponse(body, res.status, OriginService.headers(res));
+    return ctx.newResponse(body, <StatusCode>res.status, OriginService.headers(res));
   }
 
   static headers(res: Response): Record<string, string | string[]> {

@@ -88,6 +88,5 @@ export class AboutPageComponent implements OnInit {
       for (let part of task.levels ?? []) text += '  ';
       text += `${task.levelText}: ${task.title}\n`;
     }
-    //console.log(text);
   }
 }

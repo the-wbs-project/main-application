@@ -66,7 +66,9 @@ export class HttpLogger {
     request?: { url: string; method: string; headers: Headers };
     data?: any | undefined;
   }): any {
-    if (!info.request) info.request = this.ctx.req;
+    if (!info.request) info.request = this.ctx.req.raw;
+
+    this.ctx.req.raw.headers;
 
     const url = new URL(this.ctx.req.url);
     const cf: Record<string, any> = (<any>info.request).cf || {};
