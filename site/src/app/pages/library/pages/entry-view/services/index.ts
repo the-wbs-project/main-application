@@ -5,3 +5,4 @@ export * from './entry-resource.service';
 export * from './entry-view.guards';
 export * from './entry-view.resolvers';
 export * from './library-import-processor.service';
+export * from './library-tree-menu.service';

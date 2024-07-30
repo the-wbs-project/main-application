@@ -51,7 +51,7 @@ import {
   EntryTaskActionService,
   EntryTaskReorderService,
 } from '../../../../services';
-import { LibraryTaskTitleComponent } from '../library-task-title';
+import { LibraryTaskTitleComponent } from '../../../../components/library-task-title';
 import { VisibilityIconComponent } from '../visibility-icon.component';
 
 @UntilDestroy()
@@ -118,11 +118,6 @@ export class LibraryTreeComponent implements OnInit {
 
     return this.category.buildViewModels(d);
   });
-  readonly showPrivate = computed(
-    () =>
-      this.entryStore.version()!.status === 'draft' &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.UPDATE)
-  );
   readonly canEdit = computed(
     () =>
       this.entryStore.version()!.status === 'draft' &&

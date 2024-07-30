@@ -1,1 +1,1 @@
-export * from './library-tree-menu.service';
+export * from '../../../services/library-tree-menu.service';
