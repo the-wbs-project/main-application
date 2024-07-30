@@ -5,6 +5,7 @@ import {
   faArrowUp,
   faBookArrowRight,
   faCopy,
+  faEclipse,
   faEye,
   faFileImport,
   faPlus,
@@ -59,15 +60,6 @@ const taskActions: ContextMenuItem[] = [
     },
   },
   {
-    action: 'cloneTask',
-    faIcon: faCopy,
-    text: 'Projects.CloneTask',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.CREATE,
-      stati: ['draft'],
-    },
-  },
-  {
     action: 'addDiscipline',
     faIcon: faUserPlus,
     text: 'Wbs.AddDiscipline',
@@ -86,18 +78,37 @@ const taskActions: ContextMenuItem[] = [
     },
   },
   {
-    action: 'export',
-    faIcon: faBookArrowRight,
-    text: 'Wbs.ExportToLibrary',
-  },
-  {
-    action: 'deleteTask',
-    faIcon: faTrash,
-    text: 'Projects.DeleteTask',
+    action: 'other',
+    faIcon: faEclipse,
+    text: 'Wbs.OtherActions',
     filters: {
-      claim: LIBRARY_CLAIMS.TASKS.DELETE,
-      stati: ['draft'],
+      claim: LIBRARY_CLAIMS.TASKS.CREATE,
     },
+    items: [
+      {
+        action: 'cloneTask',
+        faIcon: faCopy,
+        text: 'Projects.CloneTask',
+        filters: {
+          claim: LIBRARY_CLAIMS.TASKS.CREATE,
+          stati: ['draft'],
+        },
+      },
+      {
+        action: 'export',
+        faIcon: faBookArrowRight,
+        text: 'Wbs.ExportToLibrary',
+      },
+      {
+        action: 'deleteTask',
+        faIcon: faTrash,
+        text: 'Projects.DeleteTask',
+        filters: {
+          claim: LIBRARY_CLAIMS.TASKS.DELETE,
+          stati: ['draft'],
+        },
+      },
+    ],
   },
 ];
 

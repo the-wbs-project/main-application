@@ -24,7 +24,7 @@ import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdow
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
-import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import { PROJECT_CLAIMS } from '@wbs/core/models';
 import {
   CategoryService,
   SignalStore,
@@ -134,6 +134,8 @@ export class SubTasksComponent implements OnInit {
   onCellClick(e: CellClickEvent): void {
     this.selectedTaskId.set(e.dataItem.id);
 
+    if (!this.canEdit()) return;
+
     const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
 
     if (!e.isEdited && column?.field === 'disciplines') {
@@ -170,6 +172,9 @@ export class SubTasksComponent implements OnInit {
   }
 
   menuItemSelected(action: string, taskId?: string): void {
+    if (action === 'viewTask') {
+      this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));
+    }
     const obsOrVoid = this.actions.onAction(action, taskId, this.treeService);
 
     if (obsOrVoid instanceof Observable) {

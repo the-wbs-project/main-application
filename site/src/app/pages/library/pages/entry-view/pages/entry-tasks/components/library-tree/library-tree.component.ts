@@ -166,6 +166,8 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   cellClick(e: CellClickEvent): void {
+    if (!this.canEdit()) return;
+
     const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
 
     if (!e.isEdited && column?.field === 'disciplines') {

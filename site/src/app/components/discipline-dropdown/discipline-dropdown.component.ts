@@ -11,7 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
@@ -36,7 +36,7 @@ import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
   ],
 })
 export class DisciplinesDropdownComponent implements OnChanges {
-  readonly saveIcon = faFloppyDisk;
+  readonly saveIcon = faCheck;
   readonly multiselect = viewChild<MultiSelectComponent>(MultiSelectComponent);
   readonly data = input.required<CategoryViewModel[]>();
   readonly values = input.required<CategoryViewModel[]>();

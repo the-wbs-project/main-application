@@ -46,8 +46,8 @@
     <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
       <wbs-task-title-editor
         [title]="dataItem.title"
-        (save)="dataItem.title = $event"
         (cancel)="treelist.closeCell()"
+        (save)="taskTitleChanged(treelist, dataItem, $event)"
       />
     </ng-template>
   </kendo-treelist-column>

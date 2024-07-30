@@ -15,6 +15,7 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   CellClickEvent,
   ColumnComponent,
+  TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
 import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
@@ -32,7 +33,10 @@ import { TaskTitle2Component } from '@wbs/components/task-title';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/core/store';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import {
+  LibraryEntryViewModel,
+  LibraryTaskViewModel,
+} from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -132,5 +136,15 @@ export class LibraryImportTreeComponent implements OnInit {
           return [...tasks];
         });
       });
+  }
+
+  taskTitleChanged(
+    treelist: TreeListComponent,
+    item: LibraryTaskViewModel,
+    title: string
+  ): void {
+    treelist.closeCell();
+
+    item.title = title;
   }
 }
