@@ -25,10 +25,13 @@ import {
   template: `@if (dropdownItems(); as items) {
     <kendo-dropdownbutton
       [data]="items"
+      size="small"
       valueField="id"
       textField="text"
       (itemClick)="itemClick.emit($event.id)"
     >
+      <fa-icon [icon]="icon" class="mg-r-5" />
+      {{ 'Wbs.DownloadTasks' | translate }}
       <ng-template kendoDropDownButtonItemTemplate let-dataItem>
         {{ dataItem.text | translate }}
       </ng-template>

@@ -7,6 +7,8 @@ import { delay, tap } from 'rxjs/operators';
 
 @Injectable()
 export class TreeService {
+  private readonly treeMenuHeight = 48;
+  private readonly treeColumnHeight = 36;
   private readonly saveStates: Map<string, WritableSignal<SaveState>> =
     new Map();
   expandedKeys: string[] = [];
@@ -96,5 +98,13 @@ export class TreeService {
         delay(5000)
       )
       .subscribe(() => this.setSaveState(taskId, 'ready'));
+  }
+
+  pageSize(containerHeight: number, offset: number, rowHeight: number): number {
+    const height =
+      containerHeight - offset - this.treeMenuHeight - this.treeColumnHeight;
+    const rows = Math.floor(height / rowHeight);
+
+    return Math.max(20, rows * 2);
   }
 }

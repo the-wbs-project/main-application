@@ -11,38 +11,39 @@ import { ProjectState } from '../../states';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';
 import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type-button.component';
+import { DialogModule } from '@progress/kendo-angular-dialog';
+import { TranslateModule } from '@ngx-translate/core';
+import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   standalone: true,
+  templateUrl: './tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [WbsPhaseService],
   imports: [
+    DialogModule,
     ProjectDisciplinesTreeComponent,
     ProjectPhaseTreeComponent,
     RouterModule,
-    TreeTypeButtonComponent,
+    TranslateModule,
+    TreeHeightDirective,
   ],
-  template: `<div class="w-100 tx-center pd-t-15">
-      <wbs-tree-type-button [(view)]="view" />
-    </div>
-    <div class="pd-15">
-      @if (view() === 'phases') {
-      <wbs-project-phase-tree
-        [claims]="claims() ?? []"
-        [project]="project()!"
-        [projectUrl]="projectUrl()"
-      />
-      } @else if (view() === 'disciplines') {
-      <wbs-project-discipline-tree [project]="project()!" />
-      }
-    </div>
-    <router-outlet />`,
 })
 export class ProjectTasksComponent {
   private readonly store = inject(SignalStore);
 
   readonly projectUrl = input.required<string[]>();
+
+  readonly showDialog = signal(false);
+  readonly containerHeight = signal(100);
+  readonly dialogContainerHeight = signal(100);
   readonly view = signal<'phases' | 'disciplines'>('phases');
+
   readonly claims = this.store.select(ProjectState.claims);
   readonly project = this.store.select(ProjectState.current);
+
+  navigateToTask(taskId: string): void {
+    this.store.dispatch(new Navigate([...this.projectUrl(), 'tasks', taskId]));
+  }
 }

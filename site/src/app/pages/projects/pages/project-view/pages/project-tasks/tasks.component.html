@@ -1,0 +1,58 @@
+@if (showDialog()) {
+<kendo-dialog
+  height="95%"
+  width="95%"
+  [title]="'General.Tasks' | translate"
+  (close)="showDialog.set(false)"
+>
+  <div
+    [(wbsTreeHeight)]="dialogContainerHeight"
+    class="pd-15 d-flex flex-column h-100"
+  >
+    @if (view() === 'phases') {
+    <wbs-project-phase-tree
+      [(view)]="view"
+      [showFullscreen]="false"
+      [claims]="claims() ?? []"
+      [currentProject]="project()!"
+      [containerHeight]="dialogContainerHeight()"
+      (navigateToTask)="navigateToTask($event)"
+      (goFullScreen)="showDialog.set(true)"
+    />
+    } @else if (view() === 'disciplines') {
+    <wbs-project-discipline-tree
+      [(view)]="view"
+      [showFullscreen]="false"
+      [currentProject]="project()!"
+      [containerHeight]="dialogContainerHeight()"
+      (navigateToTask)="navigateToTask($event)"
+      (goFullScreen)="showDialog.set(true)"
+    />
+    }
+  </div>
+</kendo-dialog>
+} @else {
+<div [(wbsTreeHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
+  @if (view() === 'phases') {
+  <wbs-project-phase-tree
+    [(view)]="view"
+    [showFullscreen]="true"
+    [claims]="claims() ?? []"
+    [currentProject]="project()!"
+    [containerHeight]="containerHeight()"
+    (navigateToTask)="navigateToTask($event)"
+    (goFullScreen)="showDialog.set(true)"
+  />
+  } @else if (view() === 'disciplines') {
+  <wbs-project-discipline-tree
+    [(view)]="view"
+    [showFullscreen]="true"
+    [currentProject]="project()!"
+    [containerHeight]="containerHeight()"
+    (navigateToTask)="navigateToTask($event)"
+    (goFullScreen)="showDialog.set(true)"
+  />
+  }
+</div>
+}
+<router-outlet />

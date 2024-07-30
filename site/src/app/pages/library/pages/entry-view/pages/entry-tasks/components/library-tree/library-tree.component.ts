@@ -96,6 +96,8 @@ export class LibraryTreeComponent implements OnInit {
   readonly treeService = new TreeService();
 
   readonly faSpinner = faSpinner;
+  readonly heightOffset = 50;
+  readonly rowHeight = 31.5;
 
   readonly showFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
@@ -131,12 +133,16 @@ export class LibraryTreeComponent implements OnInit {
       this.entryStore.version()!.status === 'draft' &&
       Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.TASKS.CREATE)
   );
-  readonly pageSize = computed(() => {
-    const height = this.containerHeight() - 50 - 48 - 36;
-    const rows = Math.floor(height / 31.5);
-
-    return Math.max(20, rows * 2);
-  });
+  readonly pageSize = computed(() =>
+    this.treeService.pageSize(
+      this.containerHeight(),
+      this.heightOffset,
+      this.rowHeight
+    )
+  );
+  //
+  //  Outputs
+  //
   readonly navigateToTask = output<string>();
   readonly goFullScreen = output<void>();
 

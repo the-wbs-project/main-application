@@ -1,38 +1,42 @@
-<div class="tx-italic tx-10">&nbsp;</div>
-<div class="flex-fill">
-  @if (disciplines(); as disciplines) {
-  <kendo-treelist
-    #treelist
-    class="h-100"
-    kendoTreeListExpandable
-    kendoTreeListSelectable
-    [kendoTreeListFlatBinding]="disciplines"
-    parentIdField="treeParentId"
-    idField="treeId"
-    [selectable]="settings"
-    [initiallyExpanded]="false"
-    [(expandedKeys)]="treeService.expandedKeys"
+@let list = disciplines();
+<kendo-treelist
+  #treelist
+  class="tx-12"
+  kendoTreeListExpandable
+  kendoTreeListSelectable
+  [kendoTreeListFlatBinding]="list"
+  parentIdField="treeParentId"
+  idField="treeId"
+  [rowHeight]="rowHeight"
+  [pageSize]="pageSize()"
+  [height]="containerHeight() - heightOffset"
+  scrollable="virtual"
+  [navigable]="true"
+  [initiallyExpanded]="false"
+  [(expandedKeys)]="treeService.expandedKeys"
+  [selectable]="{ enabled: true, mode: 'row' }"
+  (selectionChange)="taskId.set($event.items[0].dataItem.id)"
+  (dblclick)="nav()"
+>
+  <ng-template kendoTreeListToolbarTemplate>
+    <wbs-tree-type-button [(view)]="view" />
+    <wbs-tree-buttons-toggler
+      (collapse)="treeService.collapseAll(treelist, list)"
+      (expand)="treeService.expandAll(treelist, list)"
+    />
+    @if (showFullscreen()) {
+    <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
+    }
+  </ng-template>
+  <kendo-treelist-column
+    [expandable]="true"
+    field="title"
+    class="child-hoverer tree-column"
+    headerClass="tx-14"
+    [title]="'Wbs.Activity_Title' | translate"
   >
-    <ng-template kendoTreeListToolbarTemplate>
-      <wbs-tree-buttons-toggler
-        (collapse)="treeService.collapseAll(treelist, disciplines)"
-        (expand)="treeService.expandAll(treelist, disciplines)"
-      />
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      {{ dataItem.levelText }}&nbsp;-&nbsp;{{ dataItem.title }}
     </ng-template>
-    <kendo-treelist-column
-      field="levelText"
-      [title]="'Wbs.Level' | translate"
-      [width]="treeService.levelsWidth(disciplines)"
-      class="tx-11 tree-column"
-      headerClass="tx-14"
-    />
-    <kendo-treelist-column
-      [expandable]="true"
-      field="title"
-      class="tx-11 tree-column"
-      headerClass="tx-14"
-      [title]="'Wbs.Activity_Title' | translate"
-    />
-  </kendo-treelist>
-  }
-</div>
+  </kendo-treelist-column>
+</kendo-treelist>
