@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { ContextMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
 import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
-import { PROJECT_TREE_MENU_ITEMS } from '../../../models';
+import { PROJECT_TREE_MENU_ITEMS } from '../models';
 
 declare type Seperator = { separator: true };
 

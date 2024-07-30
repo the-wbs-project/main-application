@@ -59,6 +59,7 @@ import {
   TreeReordered,
 } from '../../../../actions';
 import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
+import { PhaseTaskTitleComponent } from '../../../../components/phase-task-title';
 import { ChildrenApprovalPipe } from '../../../../pipes/children-approval.pipe';
 import {
   ProjectNavigationService,
@@ -66,7 +67,6 @@ import {
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeReorderService } from '../../services';
-import { PhaseTaskTitleComponent } from '../phase-task-title';
 import { TreeTypeButtonComponent } from '../tree-type-button';
 
 @UntilDestroy()
@@ -207,7 +207,9 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   rowReordered(e: RowReorderEvent): void {
-    const tree = this.getViewModels();
+    const tree = structuredClone(
+      this.store.selectSnapshot(TasksState.phases) ?? []
+    );
     const dragged: TaskViewModel = e.draggedRows[0].dataItem;
     const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(dragged, target, e.dropPosition);
@@ -306,9 +308,5 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   private resetTree(): void {
     this.store.dispatch(new RebuildNodeViews());
-  }
-
-  private getViewModels(): TaskViewModel[] {
-    return structuredClone(this.store.selectSnapshot(TasksState.phases) ?? []);
   }
 }
