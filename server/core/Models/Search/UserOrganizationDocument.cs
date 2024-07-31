@@ -18,41 +18,43 @@ public partial class UserOrganizationDocument
     public string OrgName { get; set; }
 
     [SimpleField(IsFilterable = true)]
-    public string OrgDisplayName { get; set; }
-
-    [SimpleField(IsFilterable = false)]
     public string Visibility { get; set; }
 
-    [SearchableField(IsFilterable = true)]
-    public string FullName { get; set; }
+    [SimpleField(IsFilterable = false)]
+    public string Phone { get; set; }
 
+    [SimpleField(IsFilterable = false)]
+    public string LinkedIn { get; set; }
+
+    [SimpleField(IsFilterable = false)]
+    public string Twitter { get; set; }
+
+    [SimpleField(IsFilterable = false)]
+    public string Picture { get; set; }
+
+    [SimpleField(IsFilterable = false)]
+    public DateTime? CreatedAt { get; set; }
+
+    [SimpleField(IsFilterable = false)]
+    public DateTime? LastLogin { get; set; }
+
+    [SimpleField(IsFilterable = false)]
+    public string LoginCount { get; set; }
+    //
+    //  Searchable
+    //
     [SearchableField(IsFilterable = true)]
     public string Email { get; set; }
 
-    [SearchableField(IsFilterable = true, IsFacetable = true)]
+    [SearchableField(IsFilterable = true)]
     public string Title { get; set; }
 
-    [SearchableField(IsFilterable = false)]
-    public string Phone { get; set; }
+    [SearchableField(IsFilterable = true)]
+    public string OrgDisplayName { get; set; }
 
     [SearchableField(IsFilterable = false)]
-    public string LinkedIn { get; set; }
-
-    [SearchableField(IsFilterable = false)]
-    public string Twitter { get; set; }
+    public string FullName { get; set; }
 
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string[] Roles { get; set; }
-
-    [SearchableField(IsFilterable = false)]
-    public string Picture { get; set; }
-
-    [SearchableField(IsFilterable = false)]
-    public DateTime? CreatedAt { get; set; }
-
-    [SearchableField(IsFilterable = false)]
-    public DateTime? LastLogin { get; set; }
-
-    [SearchableField(IsFilterable = false)]
-    public string LoginCount { get; set; }
 }
