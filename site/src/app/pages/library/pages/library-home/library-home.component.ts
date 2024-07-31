@@ -37,6 +37,7 @@ export class LibraryHomeComponent implements OnChanges {
   readonly service = inject(LibraryHomeService);
 
   readonly membership = inject(MembershipStore).membership;
+  readonly org = input.required<string>();
   readonly library = input.required<string>();
   readonly searchText = signal<string>('');
   readonly roleFilters = signal<string[]>([]);
@@ -68,7 +69,7 @@ export class LibraryHomeComponent implements OnChanges {
 
   retrieve(): void {
     this.data.libraryEntries
-      .searchAsync(this.membership()!.name, {
+      .searchAsync(this.org(), {
         userId: this.userId()!,
         library: this.library(),
         searchText: this.searchText(),

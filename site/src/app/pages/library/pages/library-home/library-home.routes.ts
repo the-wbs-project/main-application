@@ -2,7 +2,7 @@ import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { TitleService } from '@wbs/core/services';
+import { TitleService, orgResolve } from '@wbs/core/services';
 import { MembershipStore, UiStore } from '@wbs/core/store';
 import { WrapperComponent } from '@wbs/pages/wrapper.component';
 import { LibraryHomeService } from './services';
@@ -34,5 +34,8 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./library-home.component').then((x) => x.LibraryHomeComponent),
     canActivate: [loadGuard],
+    resolve: {
+      org: orgResolve,
+    },
   },
 ];
