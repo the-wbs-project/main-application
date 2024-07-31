@@ -1,8 +1,8 @@
 using Auth0.Core.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Wbs.Core.DataServices;
 using Wbs.Core.Models;
-using Wbs.Core.Services;
 
 namespace Wbs.Api.Controllers;
 
@@ -25,7 +25,7 @@ public class UsersController : ControllerBase
     {
         try
         {
-            return Ok(await dataService.GetUserAsync(user));
+            return Ok(await dataService.GetMemberAsync(user));
         }
         catch (ErrorApiException ex)
         {

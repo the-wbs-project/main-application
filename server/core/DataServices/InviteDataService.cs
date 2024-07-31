@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.DataServices;
 
 public class InviteDataService : BaseAuthDataService
 {

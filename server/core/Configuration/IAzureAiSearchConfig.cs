@@ -6,4 +6,5 @@ public interface IAzureAiSearchConfig
     string Key { get; }
     string LibraryIndex { get; }
     string ProjectIndex { get; }
+    string UserIndex { get; }
 }

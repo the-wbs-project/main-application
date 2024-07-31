@@ -5,7 +5,7 @@ using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.DataServices;
 
 public class UserDataService : BaseAuthDataService
 {
@@ -18,11 +18,16 @@ public class UserDataService : BaseAuthDataService
         return new List<Role>(await client.Roles.GetAllAsync(new GetRolesRequest()));
     }
 
-    public async Task<Member> GetUserAsync(string userId)
+    public async Task<Member> GetMemberAsync(string userId)
+    {
+        return new Member(await GetUserAsync(userId));
+    }
+
+    public async Task<User> GetUserAsync(string userId)
     {
         var client = await GetClientAsync();
 
-        return new Member(await client.Users.GetAsync(userId));
+        return await client.Users.GetAsync(userId);
     }
 
     public async Task<List<string>> GetRolesAsync(string userId)
@@ -70,7 +75,7 @@ public class UserDataService : BaseAuthDataService
                 users.Add(userId, userCache[userId]);
                 continue;
             }
-            calls.Add(GetUserAsync(userId));
+            calls.Add(GetMemberAsync(userId));
 
             if (calls.Count == 25)
             {
