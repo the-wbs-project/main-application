@@ -1,4 +1,3 @@
-export * from './cors.service';
 export * from './is-site-admin.service';
 export * from './kv.service';
 export * from './kv-purge.service';

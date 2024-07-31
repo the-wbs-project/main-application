@@ -1,6 +1,7 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { Env, Variables } from './config';
-import { cors, kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
+import { kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -24,14 +25,21 @@ app.use('*', async (ctx, next) => {
 // CORS
 //
 app.use('*', ddLogger);
-app.use('*', cors);
+app.use('*', async (c, next) => {
+  const corsMiddlewareHandler = cors({
+    origin: c.env.CORS_ORIGINS,
+    allowHeaders: ['authorization', 'content-type', 'force-refresh', 'x-filename'],
+    allowMethods: ['GET', 'POST', 'PUT', 'DELETE'],
+  });
+  return corsMiddlewareHandler(c, next);
+});
 app.onError((err, ctx) => {
   ctx.get('logger').trackException('An uncaught error occured trying to process a request.', <Error>err);
 
   return ctx.text('Unexpected Error', { status: 500 });
 });
 
-app.options('api/*', cors, (c) => c.text(''));
+app.options('api/*', (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
 app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
