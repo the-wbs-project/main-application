@@ -58,7 +58,7 @@ public class UserOrganizationIndexService
     {
         var orgDoc = new UserOrganizationDocument
         {
-            Id = $"{organization.Id}-{user.UserId}-organization",
+            Id = $"{organization.Name}|{user.UserId}|organization",
             UserId = user.UserId,
             OrgId = organization.Id,
             OrgName = organization.Name,
@@ -80,7 +80,7 @@ public class UserOrganizationIndexService
         string[] showExternally = (user.UserMetadata.ShowExternally ?? "").Split(",");
         var publicDoc = new UserOrganizationDocument
         {
-            Id = $"{organization.Id}-{user.UserId}-public",
+            Id = $"{organization.Name}|{user.UserId}|public",
             UserId = user.UserId,
             OrgId = organization.Id,
             OrgName = organization.Name,

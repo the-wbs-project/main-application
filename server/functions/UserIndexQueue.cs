@@ -1,13 +1,11 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
-using Wbs.Core.DataServices;
 using Wbs.Core.Services.Search;
 
 namespace functions
 {
     public class UserIndexQueue
     {
-        private readonly DbService db;
         private readonly ILogger _logger;
         private readonly UserOrganizationIndexService searchIndexService;
 
