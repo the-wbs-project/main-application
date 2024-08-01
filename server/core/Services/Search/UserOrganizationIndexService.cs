@@ -27,10 +27,10 @@ public class UserOrganizationIndexService
             .DeleteDocumentsAsync(docs);
     }
 
-    public async Task PushAllUsersAsync(string organizationId)
+    public async Task PushAllUsersAsync(string organizationName)
     {
-        var organization = await organizationDataService.GetOrganizationByNameAsync(organizationId);
-        var members = await organizationDataService.GetOrganizationalUsersAsync(organizationId);
+        var organization = await organizationDataService.GetOrganizationByNameAsync(organizationName);
+        var members = await organizationDataService.GetOrganizationalUsersAsync(organization.Id);
 
         foreach (var member in members)
         {
@@ -38,9 +38,9 @@ public class UserOrganizationIndexService
         }
     }
 
-    public async Task PushToSearchAsync(string organizationId, string userId)
+    public async Task PushToSearchAsync(string organizationName, string userId)
     {
-        var organization = await organizationDataService.GetOrganizationByNameAsync(organizationId);
+        var organization = await organizationDataService.GetOrganizationByNameAsync(organizationName);
 
         await PushAsync(organization, userId);
     }
