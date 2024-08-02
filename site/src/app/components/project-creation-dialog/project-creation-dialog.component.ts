@@ -12,8 +12,8 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
   faFloppyDisk,
   faInfo,
-  faLock,
   faPeople,
+  faWrench,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
@@ -93,8 +93,8 @@ export class ProjectCreationComponent extends DialogContentBase {
   );
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
-    { label: 'General.Disciplines', icon: faPeople },
-    { label: 'General.Roles', icon: faLock },
+    { label: 'General.Disciplines', icon: faWrench },
+    { label: 'General.Roles', icon: faPeople },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
 

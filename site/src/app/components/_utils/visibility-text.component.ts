@@ -5,7 +5,11 @@ import {
   input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEarth, faLock, faQuestion } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faBuilding,
+  faEarth,
+  faQuestion,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
@@ -31,7 +35,7 @@ export class VisibilityTextComponent {
     const visibility = this.visibility();
 
     if (visibility === 'public') return faEarth;
-    if (visibility === 'private') return faLock;
+    if (visibility === 'private') return faBuilding;
 
     return faQuestion;
   });
