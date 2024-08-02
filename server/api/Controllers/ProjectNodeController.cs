@@ -189,7 +189,7 @@ public class ProjectNodeController : ControllerBase
 
     [Authorize]
     [HttpPut("{nodeId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId, IFormFile blob)
+    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId)
     {
         try
         {
@@ -202,12 +202,16 @@ public class ProjectNodeController : ControllerBase
                     return BadRequest("Node not found for the project provided.");
 
                 var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
+
+                Request.EnableBuffering();
+                Request.Body.Position = 0;
                 var bytes = new byte[] { };
 
-                using (var stream = blob.OpenReadStream())
+                using (var stream = new MemoryStream())
                 {
-                    bytes = new byte[stream.Length];
-                    await stream.ReadAsync(bytes, 0, bytes.Length);
+                    await Request.Body.CopyToAsync(stream);
+
+                    bytes = stream.ToArray();
                 }
 
                 await resourceService.SaveProjectTaskResourceAsync(owner, projectId, nodeId, resourceId, bytes);

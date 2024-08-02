@@ -183,7 +183,6 @@ public class LibraryEntryVersionController : ControllerBase
 
                 var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
 
-
                 Request.EnableBuffering();
                 Request.Body.Position = 0;
                 var bytes = new byte[] { };

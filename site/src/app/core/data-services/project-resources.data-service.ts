@@ -35,13 +35,9 @@ export class ProjectResourcesDataService {
     resourceId: string,
     file: ArrayBuffer
   ): Observable<void> {
-    const formData = new FormData();
-
-    formData.append('blob', new Blob([file]));
-
     return this.http.put<void>(
       this.getIdUrl(resourceId, owner, projectId, taskId) + '/blob',
-      formData
+      file
     );
   }
 
