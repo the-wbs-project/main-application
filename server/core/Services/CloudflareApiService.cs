@@ -33,7 +33,7 @@ public class CloudflareApiService
     {
         try
         {
-            //curl --request POST --url "https://api.cloudflare.com/client/v4/zones/586d8bc205ce5079b6b4472d45d502ce/purge_cache" -H "Authorization: Bearer b3rGFhojr_KREDf9sLa4mxjwXnAFg38NByvyVbTk" -H "Content-Type: application/json" --data '{"purge_everything":true}'
+            //curl --request POST --url "https://api.cloudflare.com/client/v4/zones/586d8bc205ce5079b6b4472d45d502ce/purge_cache" -H "Authorization: Bearer HA!" -H "Content-Type: application/json" --data '{"purge_everything":true}'
 
             using (var client = new HttpClient())
             {
