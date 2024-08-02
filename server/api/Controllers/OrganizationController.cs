@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
+using Wbs.Core.Services.Search;
+using Wbs.Core.Services.Transformers;
 
 namespace Wbs.Api.Controllers;
 
@@ -12,12 +14,14 @@ public class OrganizationsController : ControllerBase
     private readonly ILogger logger;
     private readonly OrganizationDataService dataService;
     private readonly InviteDataService inviteDataService;
+    private readonly UserOrganizationSearchService searchService;
 
-    public OrganizationsController(ILoggerFactory loggerFactory, OrganizationDataService dataService, InviteDataService inviteDataService)
+    public OrganizationsController(ILoggerFactory loggerFactory, OrganizationDataService dataService, InviteDataService inviteDataService, UserOrganizationSearchService searchService)
     {
         logger = loggerFactory.CreateLogger<OrganizationsController>();
         this.dataService = dataService;
         this.inviteDataService = inviteDataService;
+        this.searchService = searchService;
     }
 
     [Authorize]
@@ -31,6 +35,40 @@ public class OrganizationsController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error retrieving organization");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{organization}/users")]
+    public async Task<IActionResult> GetUsersAsync(string organizationName)
+    {
+        try
+        {
+            var docs = await searchService.GetAllForOrganizationAsync(organizationName);
+
+            return Ok(docs.Select(UserSearchTransformer.ToViewModel).ToArray());
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting users");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("{organization}/users/{user}/{visibility}")]
+    public async Task<IActionResult> GetUserAsync(string organizationName, string user, string visibility)
+    {
+        try
+        {
+            var doc = await searchService.GetAsync(organizationName, user, visibility);
+
+            return Ok(UserSearchTransformer.ToViewModel(doc));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting user");
             return new StatusCodeResult(500);
         }
     }

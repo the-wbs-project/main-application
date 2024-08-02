@@ -20,12 +20,12 @@ public class UsersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{user}")]
+    [HttpGet("profile/{user}")]
     public async Task<IActionResult> GetUserAsync(string user)
     {
         try
         {
-            return Ok(await dataService.GetMemberAsync(user));
+            return Ok(await dataService.GetUserAsync(user));
         }
         catch (ErrorApiException ex)
         {

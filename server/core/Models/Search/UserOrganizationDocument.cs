@@ -20,25 +20,22 @@ public partial class UserOrganizationDocument
     [SimpleField(IsFilterable = true)]
     public string Visibility { get; set; }
 
-    [SimpleField(IsFilterable = false)]
+    [SimpleField]
     public string Phone { get; set; }
 
-    [SimpleField(IsFilterable = false)]
+    [SimpleField]
     public string LinkedIn { get; set; }
 
-    [SimpleField(IsFilterable = false)]
+    [SimpleField]
     public string Twitter { get; set; }
 
-    [SimpleField(IsFilterable = false)]
+    [SimpleField]
     public string Picture { get; set; }
 
-    [SimpleField(IsFilterable = false)]
     public DateTime? CreatedAt { get; set; }
 
-    [SimpleField(IsFilterable = false)]
     public DateTime? LastLogin { get; set; }
 
-    [SimpleField(IsFilterable = false)]
     public string LoginCount { get; set; }
     //
     //  Searchable
@@ -52,9 +49,15 @@ public partial class UserOrganizationDocument
     [SearchableField(IsFilterable = true)]
     public string OrgDisplayName { get; set; }
 
-    [SearchableField(IsFilterable = false)]
+    [SearchableField]
     public string FullName { get; set; }
 
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string[] Roles { get; set; }
+
+    public static string CreateId(string orgName, string userId, string visibility)
+    {
+        return $"{orgName}_{userId.Replace("auth0|", "")}_{visibility}";
+    }
+
 }

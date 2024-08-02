@@ -1,5 +1,6 @@
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
+using Wbs.Core.DataServices;
 using Wbs.Core.Services.Search;
 
 namespace functions
@@ -7,12 +8,16 @@ namespace functions
     public class UserIndexQueue
     {
         private readonly ILogger _logger;
+        private readonly UserDataService userDataService;
+        private readonly OrganizationDataService organizationDataService;
         private readonly UserOrganizationIndexService searchIndexService;
 
-        public UserIndexQueue(ILoggerFactory loggerFactory, UserOrganizationIndexService searchIndexService)
+        public UserIndexQueue(ILoggerFactory loggerFactory, UserOrganizationIndexService searchIndexService, OrganizationDataService organizationDataService, UserDataService userDataService)
         {
             _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
             this.searchIndexService = searchIndexService;
+            this.organizationDataService = organizationDataService;
+            this.userDataService = userDataService;
         }
 
         [Function("UserIndex-Build")]
@@ -30,16 +35,22 @@ namespace functions
         }
 
         [Function("UserIndex-Owner")]
-        public async Task RunOrg([QueueTrigger("search-user-organization", Connection = "")] string organization)
+        public async Task RunOrg([QueueTrigger("search-user-organization", Connection = "")] string organizationName)
         {
             try
             {
                 await searchIndexService.VerifyIndexAsync();
-                await searchIndexService.PushAllUsersAsync(organization);
+
+                var docs = await searchIndexService.BuildDocsAsync(organizationName);
+
+                await searchIndexService.PushAsync(docs);
+                //
+                //  Now rebuild Cloudflare KV
+                //
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error adding users for " + organization);
+                _logger.LogError(ex, "Error adding users for " + organizationName);
                 throw;
             }
         }

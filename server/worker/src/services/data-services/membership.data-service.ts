@@ -1,5 +1,6 @@
 import { Context } from '../../config';
 import { Membership, Organization, Role } from '../../models';
+import { UserViewModel } from '../../view-models';
 
 export class MembershipDataService {
   constructor(private readonly ctx: Context) {}

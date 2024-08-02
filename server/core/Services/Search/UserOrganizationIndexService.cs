@@ -5,6 +5,7 @@ using Azure.Search.Documents.Indexes.Models;
 using Wbs.Core.Configuration;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models.Search;
+using Wbs.Core.Services.Transformers;
 
 namespace Wbs.Core.Services.Search;
 
@@ -27,80 +28,37 @@ public class UserOrganizationIndexService
             .DeleteDocumentsAsync(docs);
     }
 
-    public async Task PushAllUsersAsync(string organizationName)
+    public async Task PushAsync(IEnumerable<UserOrganizationDocument> docs)
+    {
+        var results = await GetIndexClient()
+            .GetSearchClient(searchConfig.UserIndex)
+            .MergeOrUploadDocumentsAsync(docs);
+    }
+
+    public async Task<List<UserOrganizationDocument>> BuildDocsAsync(string organizationName)
     {
         var organization = await organizationDataService.GetOrganizationByNameAsync(organizationName);
         var members = await organizationDataService.GetOrganizationalUsersAsync(organization.Id);
+        var results = new List<UserOrganizationDocument>();
 
         foreach (var member in members)
         {
-            await PushAsync(organization, member.Id);
+            results.AddRange(await BuildDocsAsync(organization, member.Id));
         }
+        return results;
     }
 
-    public async Task PushToSearchAsync(string organizationName, string userId)
-    {
-        var organization = await organizationDataService.GetOrganizationByNameAsync(organizationName);
-
-        await PushAsync(organization, userId);
-    }
-
-    private async Task PushAsync(Organization organization, string userId)
+    public async Task<List<UserOrganizationDocument>> BuildDocsAsync(Organization organization, string userId)
     {
         var roles = await userDataService.GetRolesAsync();
         var user = await userDataService.GetUserAsync(userId);
         var userRoles = await organizationDataService.GetUserOrganizationalRolesAsync(organization.Id, userId);
+        var userRoles2 = userRoles.Select(r => roles.Single(x => x.Id == r).Name).ToArray();
 
-        await PushAsync(organization, user, userRoles.Select(r => roles.Single(x => x.Id == r).Name).ToArray());
-    }
-
-    private async Task PushAsync(Organization organization, User user, string[] roles)
-    {
-        var orgDoc = new UserOrganizationDocument
-        {
-            Id = $"{organization.Name}|{user.UserId}|organization",
-            UserId = user.UserId,
-            OrgId = organization.Id,
-            OrgName = organization.Name,
-            OrgDisplayName = organization.DisplayName,
-            Visibility = "organization",
-            FullName = user.FullName,
-            Email = user.Email,
-            Title = user.UserMetadata.Title,
-            Phone = user.UserMetadata.Phone,
-            Picture = user.Picture,
-            CreatedAt = user.CreatedAt,
-            LastLogin = user.LastLogin,
-            LoginCount = user.LoginsCount,
-            Roles = roles,
-            LinkedIn = user.UserMetadata.LinkedIn,
-            Twitter = user.UserMetadata.Twitter
+        return new List<UserOrganizationDocument> {
+            UserSearchTransformer.CreateDocument(organization, user, userRoles2, "organization"),
+            UserSearchTransformer.CreateDocument(organization, user, userRoles2, "public")
         };
-
-        string[] showExternally = (user.UserMetadata.ShowExternally ?? "").Split(",");
-        var publicDoc = new UserOrganizationDocument
-        {
-            Id = $"{organization.Name}|{user.UserId}|public",
-            UserId = user.UserId,
-            OrgId = organization.Id,
-            OrgName = organization.Name,
-            OrgDisplayName = organization.DisplayName,
-            Visibility = "public",
-            FullName = user.FullName,
-            Picture = user.Picture,
-            CreatedAt = user.CreatedAt,
-            LastLogin = user.LastLogin,
-            LoginCount = user.LoginsCount,
-            Roles = roles,
-            Email = showExternally.Contains("email") ? user.Email : "private",
-            Phone = showExternally.Contains("phone") ? user.PhoneNumber : "private",
-            Title = showExternally.Contains("title") ? user.UserMetadata.Title : "private",
-            LinkedIn = showExternally.Contains("linkedIn") ? user.UserMetadata.LinkedIn : "private",
-            Twitter = showExternally.Contains("twitter") ? user.UserMetadata.Twitter : "private",
-        };
-
-        var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
-            .MergeOrUploadDocumentsAsync(new List<UserOrganizationDocument> { orgDoc, publicDoc });
     }
 
     public async Task VerifyIndexAsync()

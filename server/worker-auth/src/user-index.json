@@ -1,0 +1,89 @@
+{
+  "name": "user-index-dev",
+  "fields": [
+    {
+      "name": "id",
+      "type": "Edm.String",
+      "filterable": false,
+      "key": true
+    },
+    {
+      "name": "userId",
+      "type": "Edm.String",
+      "filterable": true
+    },
+    {
+      "name": "orgId",
+      "type": "Edm.String",
+      "filterable": true
+    },
+    {
+      "name": "orgName",
+      "type": "Edm.String",
+      "filterable": true
+    },
+    {
+      "name": "visibility",
+      "type": "Edm.String",
+      "filterable": true
+    },
+    {
+      "name": "phone",
+      "type": "Edm.String"
+    },
+    {
+      "name": "linkedIn",
+      "type": "Edm.String"
+    },
+    {
+      "name": "twitter",
+      "type": "Edm.String"
+    },
+    {
+      "name": "picture",
+      "type": "Edm.String"
+    },
+    {
+      "name": "createdAt",
+      "type": "Edm.DateTimeOffset"
+    },
+    {
+      "name": "lastLogin",
+      "type": "Edm.DateTimeOffset"
+    },
+    {
+      "name": "loginCount",
+      "type": "Edm.String"
+    },
+    {
+      "name": "email",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true
+    },
+    {
+      "name": "title",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true
+    },
+    {
+      "name": "orgDisplayName",
+      "type": "Edm.String",
+      "searchable": true,
+      "filterable": true
+    },
+    {
+      "name": "fullName",
+      "type": "Edm.String",
+      "searchable": true
+    },
+    {
+      "name": "roles",
+      "type": "Collection(Edm.String)",
+      "searchable": true,
+      "filterable": true,
+      "analyzer": "en.lucene"
+    }
+  ]
+}
