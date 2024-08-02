@@ -40,10 +40,10 @@ export class LibraryEntryResourcesDataService {
   ): Observable<void> {
     const formData = new FormData();
 
-    formData.append('file', new Blob([file]));
+    formData.append('blob', new Blob([file]));
 
     return this.http.put<void>(
-      this.getIdUrl(resourceId, owner, entryId, entryVersion, taskId) + '/file',
+      this.getIdUrl(resourceId, owner, entryId, entryVersion, taskId) + '/blob',
       formData
     );
   }

@@ -147,7 +147,7 @@ public class LibraryEntryVersionController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{entryVersion}/resources/{resourceId}/file")]
+    [HttpGet("{entryVersion}/resources/{resourceId}/blob")]
     public async Task<IActionResult> GetResourceFileAsync(string owner, string entryId, int entryVersion, string resourceId)
     {
         try
@@ -171,8 +171,8 @@ public class LibraryEntryVersionController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{entryVersion}/resources/{resourceId}/file")]
-    public async Task<IActionResult> PutResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile file)
+    [HttpPut("{entryVersion}/resources/{resourceId}/blob")]
+    public async Task<IActionResult> PutResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile blob)
     {
         try
         {
@@ -184,7 +184,7 @@ public class LibraryEntryVersionController : ControllerBase
                 var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
                 var bytes = new byte[] { };
 
-                using (var stream = file.OpenReadStream())
+                using (var stream = blob.OpenReadStream())
                 {
                     bytes = new byte[stream.Length];
                     await stream.ReadAsync(bytes, 0, bytes.Length);

@@ -161,7 +161,7 @@ public class ProjectNodeController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{nodeId}/resources/{resourceId}/file")]
+    [HttpGet("{nodeId}/resources/{resourceId}/blob")]
     public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string projectId, string nodeId, string resourceId)
     {
         try
@@ -188,8 +188,8 @@ public class ProjectNodeController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}/file")]
-    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId, IFormFile file)
+    [HttpPut("{nodeId}/resources/{resourceId}/blob")]
+    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId, IFormFile blob)
     {
         try
         {
@@ -204,7 +204,7 @@ public class ProjectNodeController : ControllerBase
                 var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
                 var bytes = new byte[] { };
 
-                using (var stream = file.OpenReadStream())
+                using (var stream = blob.OpenReadStream())
                 {
                     bytes = new byte[stream.Length];
                     await stream.ReadAsync(bytes, 0, bytes.Length);
