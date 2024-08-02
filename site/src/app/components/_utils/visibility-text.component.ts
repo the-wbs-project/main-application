@@ -23,7 +23,7 @@ export class VisibilityTextComponent {
     const visibility = this.visibility();
 
     if (visibility === 'public') return 'General.Public';
-    if (visibility === 'private') return 'General.Private';
+    if (visibility === 'private') return 'General.Internal';
 
     return '';
   });
