@@ -22,8 +22,8 @@ import {
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
+import { Member } from '@wbs/core/models';
 import { Messages, TableHelper } from '@wbs/core/services';
-import { MemberViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { MemberSettingsService } from '../../services';
@@ -83,7 +83,7 @@ export class MemberListComponent {
     },
   ];
 
-  userActionClicked(member: MemberViewModel, action: string): void {
+  userActionClicked(member: Member, action: string): void {
     if (action === 'edit') {
       this.launchEdit(member);
     } else if (action === 'remove') {
@@ -135,29 +135,30 @@ export class MemberListComponent {
     };
   }
 
-  launchEdit(member: MemberViewModel): void {
+  launchEdit(member: Member): void {
     EditMemberComponent.launchAsync(
       this.dialog,
       structuredClone(member)
     ).subscribe((results) => {
       if (results == undefined) return;
 
-      const toRemove = member.roles.filter((r) => !results.roles.includes(r));
-      const toAdd = results.roles.filter((r) => !member.roles.includes(r));
+      const previous = member.roles.map((r) => r.id);
+      const next = results.roles.map((r) => r.id);
 
-      member.roleList = member.roles.join(',');
+      const toRemove = previous.filter((r) => !next.includes(r));
+      const toAdd = next.filter((r) => !previous.includes(r));
 
       this.memberService.updateMemberRolesAsync(member, toAdd, toRemove);
     });
   }
 
-  private openRemoveDialog(member: MemberViewModel): void {
+  private openRemoveDialog(member: Member): void {
     this.messages.confirm
       .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
       .subscribe((answer) => {
         if (!answer) return;
 
-        this.memberService.removeMemberAsync(member.id);
+        this.memberService.removeMemberAsync(member.user_id);
       });
   }
 }

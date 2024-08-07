@@ -62,6 +62,7 @@
       "Append": "Append",
       "Select": "Select",
       "Selected": "Selected",
+      "Hidden": "Hidden",
       "Flags": "Flags",
       "People": "People",
       "Phase": "Phase",
@@ -712,12 +713,20 @@
     }
   },
   {
-    "section": "ProfileEditor",
+    "section": "Profile",
     "locale": "en-US",
     "values": {
       "Title": "Your Profile",
       "ProfileUpdated": "Your profile has been updated.",
-      "AdminTasks": "Admin Tasks"
+      "AdminTasks": "Admin Tasks",
+      "JobTitle": "Job Title",
+      "Twitter": "Twitter/X",
+      "TwitterUrl": "Twitter/X URL",
+      "LinkedIn": "LinkedIn",
+      "LinkedInUrl": "LinkedIn URL",
+      "Visibility": "Visibility",
+      "ClickToView": "Click To View",
+      "VisibilityHelp": "Select what people outside of your organization can see about you."
     }
   },
   {

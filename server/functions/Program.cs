@@ -1,4 +1,3 @@
-using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
@@ -68,6 +67,8 @@ var host = new HostBuilder()
         //
         //  Services
         //
+        services.AddSingleton<CloudflareApiService>();
+        services.AddSingleton<CloudflareKvService>();
         services.AddSingleton<QueueService>();
         //
         //  Search Services

@@ -52,6 +52,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 builder.Services.AddSingleton<IAuth0Config, Auth0Config>();
 builder.Services.AddSingleton<IAzureAiDocumentConfig, AzureAiDocumentConfig>();
 builder.Services.AddSingleton<IAzureAiSearchConfig, AzureAiSearchConfig>();
+builder.Services.AddSingleton<ICloudflareConfiguration, CloudflareConfiguration>();
 builder.Services.AddSingleton<IDatabaseConfig, DatabaseConfig>();
 builder.Services.AddSingleton<IJiraHelpDeskConfig, JiraHelpDeskConfig>();
 builder.Services.AddSingleton<IStorageConfig, AzureStorageConfig>();
@@ -63,7 +64,6 @@ builder.Services.AddSingleton<ActivityDataService>();
 builder.Services.AddSingleton<ChatDataService>();
 builder.Services.AddSingleton<ChecklistDataService>();
 builder.Services.AddSingleton<DocumentProcessDataService>();
-builder.Services.AddSingleton<InviteDataService>();
 builder.Services.AddSingleton<JiraHelpDeskDataService>();
 builder.Services.AddSingleton<LibraryEntryDataService>();
 builder.Services.AddSingleton<LibraryEntryNodeDataService>();
@@ -92,9 +92,10 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 //
 //  Services
 //
+builder.Services.AddSingleton<CloudflareApiService>();
+builder.Services.AddSingleton<CloudflareKvService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
-builder.Services.AddSingleton<JiraSyncService>();
 builder.Services.AddSingleton<QueueService>();
 builder.Services.AddSingleton<ResourceCopyService>();
 //

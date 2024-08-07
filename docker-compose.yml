@@ -11,14 +11,14 @@ services:
       - './server:/usr/src/app'
   
   wbs-worker:
-    container_name: wbs-worker
+    container_name: wbs-workers
     build:
-      context: ./server/worker
+      context: ./server/workers
       dockerfile: Dockerfile-dev
     ports:
       - 88:88
     volumes:
-       - ./server/worker:/usr/src/app/worker
+       - ./server/workers:/usr/src/app/workers/
 
   wbs-site:
     container_name: wbs-site

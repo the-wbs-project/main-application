@@ -17,7 +17,7 @@
       {{ "General.None" | translate }}
       } @else { @for (user of list; track user; let i = $index) {
       <div [ngClass]="{ 'mg-b-10': list.length > i + 1 }">
-        {{ user | userName | async }}
+        {{ [project.owner, user] | userName | async }}
       </div>
       } } }
     </div>
@@ -28,7 +28,7 @@
       {{ "General.None" | translate }}
       } @else { @for (user of list; track user; let i = $index) {
       <div [ngClass]="{ 'mg-b-3': list.length > i + 1 }">
-        {{ user | userName | async }}
+        {{ [project.owner, user] | userName | async }}
       </div>
       } } }
     </div>
@@ -39,7 +39,7 @@
       {{ "General.None" | translate }}
       } @else { @for (user of list; track user; let i = $index) {
       <div [ngClass]="{ 'mg-b-3': list.length > i + 1 }">
-        {{ user | userName | async }}
+        {{ [project.owner, user] | userName | async }}
       </div>
       } } }
     </div>

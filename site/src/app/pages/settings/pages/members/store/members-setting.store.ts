@@ -1,7 +1,7 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, Membership, Organization } from '@wbs/core/models';
-import { InviteViewModel, MemberViewModel } from '@wbs/core/view-models';
+import { Invite, Member, Organization } from '@wbs/core/models';
+import { InviteViewModel } from '@wbs/core/view-models';
 import { forkJoin } from 'rxjs';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class MembersSettingStore {
   private readonly data = inject(DataServiceFactory);
 
   private readonly _invites = signal<InviteViewModel[] | undefined>(undefined);
-  private readonly _members = signal<MemberViewModel[] | undefined>(undefined);
+  private readonly _members = signal<Member[] | undefined>(undefined);
   private readonly _capacity = signal<number | undefined>(undefined);
   private readonly _remaining = signal<number | undefined>(undefined);
   private readonly _isLoading = signal<boolean>(true);
@@ -31,7 +31,7 @@ export class MembersSettingStore {
     return this._invites;
   }
 
-  get members(): Signal<MemberViewModel[] | undefined> {
+  get members(): Signal<Member[] | undefined> {
     return this._members;
   }
 
@@ -39,7 +39,7 @@ export class MembersSettingStore {
     return this._isLoading;
   }
 
-  initialize(membership: Membership | undefined): void {
+  initialize(membership: Organization | undefined): void {
     if (!membership) return;
 
     const org = membership.name;
@@ -76,11 +76,11 @@ export class MembersSettingStore {
     });
   }
 
-  updateMember(member: MemberViewModel): void {
+  updateMember(member: Member): void {
     this._members.update((members) => {
       if (!members) return [];
 
-      const index = members.findIndex((m) => m.id === member.id);
+      const index = members.findIndex((m) => m.user_id === member.user_id);
       members[index] = member;
       return [...members];
     });
@@ -90,7 +90,7 @@ export class MembersSettingStore {
     this._members.update((members) => {
       if (!members) return [];
 
-      const index = members.findIndex((m) => m.id === memberId);
+      const index = members.findIndex((m) => m.user_id === memberId);
       members.splice(index, 1);
       return [...members];
     });

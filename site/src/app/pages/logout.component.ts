@@ -1,7 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
-import { DataServiceFactory } from '@wbs/core/data-services';
 
 @Component({
   standalone: true,
@@ -15,11 +14,8 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 })
 export class LogoutComponent implements OnInit {
   private readonly auth = inject(AuthService);
-  private readonly data = inject(DataServiceFactory);
 
   ngOnInit(): void {
-    this.data.memberships
-      .clearMembershipsAsync()
-      .subscribe(() => this.auth.logout());
+    this.auth.logout();
   }
 }

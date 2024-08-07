@@ -5,7 +5,7 @@ using System.Text;
 using System.Text.Json;
 using Wbs.Core.Configuration;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.DataServices;
 
 public abstract class BaseAuthDataService
 {

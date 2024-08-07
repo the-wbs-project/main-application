@@ -1,0 +1,93 @@
+@if (user(); as user) {
+<div class="pointer">
+  <a kendoPopoverAnchor [popover]="myPopover" (click)="show.set(!show())">
+    {{ user.fullName }}
+  </a>
+</div>
+
+<kendo-popover #myPopover position="bottom">
+  <ng-template kendoPopoverTitleTemplate>
+    <div class="popover-title">User Information</div>
+  </ng-template>
+
+  <ng-template kendoPopoverBodyTemplate>
+    <div class="user-popup-grid">
+      <div class="detail-header">
+        <span class="d-inline-block wd-20 text-center">
+          <fa-icon [icon]="nameIcon" />
+        </span>
+        {{ "General.Name" | translate }} :
+      </div>
+      <div>{{ user.fullName }}</div>
+
+      <div class="detail-header">
+        <span class="d-inline-block wd-20 text-center">
+          <fa-icon [icon]="titleIcon" />
+        </span>
+        {{ "General.Title" | translate }} :
+      </div>
+      <div>
+        @if (user.title === 'private') {
+        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        } @else { {{ user.title }} }
+      </div>
+
+      <div class="detail-header">
+        <span class="d-inline-block wd-20 text-center">
+          <fa-icon [icon]="emailIcon" />
+        </span>
+        {{ "General.Email" | translate }} :
+      </div>
+      <div>
+        @if (user.email === 'private') {
+        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        } @else {
+        <a class="tx-dark" href="mailto:{{ user.email }}">{{ user.email }}</a>
+        }
+      </div>
+
+      <div class="detail-header">
+        <span class="d-inline-block wd-20 text-center">
+          <fa-icon [icon]="linkedInIcon" />
+        </span>
+        {{ "Profile.LinkedIn" | translate }} :
+      </div>
+      <div>
+        @if (user.linkedIn === 'private') {
+        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        } @else {
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tx-dark"
+          [href]="user.linkedIn"
+        >
+          {{ "Profile.ClickToView" | translate }}
+        </a>
+        }
+      </div>
+
+      <div class="detail-header">
+        <span class="d-inline-block wd-20 text-center">
+          <fa-icon [icon]="twitterIcon" />
+        </span>
+        {{ "Profile.Twitter" | translate }} :
+      </div>
+      <div>
+        @if (user.twitter === 'private') {
+        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        } @else {
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          class="tx-dark"
+          [href]="user.twitter"
+        >
+          {{ "Profile.ClickToView" | translate }}
+        </a>
+        }
+      </div>
+    </div>
+  </ng-template>
+</kendo-popover>
+}

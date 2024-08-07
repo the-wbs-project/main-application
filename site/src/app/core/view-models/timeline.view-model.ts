@@ -7,6 +7,7 @@ export interface TimelineViewModel {
   data: Record<string, any>;
   timestamp: Date;
   userId?: string;
+  userName?: string;
   actionIcon?: string;
   actionTitle?: string;
   actionDescription?: string;

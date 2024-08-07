@@ -41,7 +41,7 @@ export class LibraryHomeService {
           lastModified: results.version.lastModified,
           description: results.version.description,
           ownerId: results.entry.owner,
-          ownerName: this.membership()!.displayName,
+          ownerName: this.membership()!.display_name,
           status: results.version.status,
         };
         if (results.action === 'close') return vm;

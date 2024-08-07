@@ -10,13 +10,13 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
+import { UserPopupComponent } from '@wbs/components/user-popup/user-popup.component';
 import { OrganizationService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
-import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
 
 @Component({
   standalone: true,
@@ -33,7 +33,7 @@ import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
     FormsModule,
     LibraryStatusPipe,
     TranslateModule,
-    UserNamePipe,
+    UserPopupComponent,
     VisibilityTextComponent,
   ],
 })

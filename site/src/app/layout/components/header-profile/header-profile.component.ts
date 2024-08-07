@@ -3,7 +3,6 @@ import {
   Component,
   inject,
   input,
-  model,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -13,15 +12,16 @@ import {
   faUser,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
-import { ROLES, User } from '@wbs/core/models';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { User } from '@wbs/core/models';
+import { Messages } from '@wbs/core/services';
+import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { HeaderProfileHeaderComponent } from '../header-profile-header';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
-import { ProfileEditorComponent } from '../profile-editor';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { Messages } from '@wbs/core/services';
+import { ProfileEditorDialogComponent } from '../profile-editor-dialog';
 
 @Component({
   standalone: true,
@@ -34,7 +34,6 @@ import { Messages } from '@wbs/core/services';
     FontAwesomeModule,
     HeaderProfileHeaderComponent,
     HeaderProfilePictureComponent,
-    ProfileEditorComponent,
     RoleListPipe,
     RouterModule,
     TranslateModule,
@@ -42,10 +41,10 @@ import { Messages } from '@wbs/core/services';
 })
 export class HeaderProfileComponent {
   private readonly data = inject(DataServiceFactory);
+  private readonly dialog = inject(DialogService);
   private readonly messages = inject(Messages);
   readonly user = input.required<User>();
   readonly roles = input.required<string[] | undefined>();
-  readonly showProfileEditor = model(false);
   readonly faRightFromBracket = faRightFromBracket;
   readonly faUser = faUser;
   readonly faCogs = faCogs;
@@ -53,7 +52,10 @@ export class HeaderProfileComponent {
 
   itemClicked(e: any): void {
     if (e.item.data === 'profile') {
-      this.showProfileEditor.set(true);
+      ProfileEditorDialogComponent.launchAsync(
+        this.dialog,
+        structuredClone(this.user())
+      ).subscribe();
     } else if (e.item.data === 'clearCache') {
       this.data.misc
         .clearKvCache()
