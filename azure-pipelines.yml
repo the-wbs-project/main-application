@@ -107,7 +107,7 @@ jobs:
         displayName: "Install TypeScript"
 
       - script: npm install
-        workingDirectory: "server/workers"
+        workingDirectory: "server/workers/worker-auth"
         displayName: "Install"
 
       - script: npm run check
@@ -144,7 +144,7 @@ jobs:
         displayName: "Install TypeScript"
 
       - script: npm install
-        workingDirectory: "server/workers"
+        workingDirectory: "server/workers/worker-api"
         displayName: "Install"
 
       - script: npm run check
