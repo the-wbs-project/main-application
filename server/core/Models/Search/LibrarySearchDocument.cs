@@ -46,5 +46,4 @@ public partial class LibrarySearchDocument
 
     public SortableUserDocument Author { get; set; }
     public UserDocument[] Watchers { get; set; }
-    public TaskSearchDocument[] Tasks { get; set; }
 }

@@ -17,20 +17,18 @@ public class LibrarySearchIndexService
     private readonly UserDataService userDataService;
     private readonly OrganizationDataService organizationDataService;
     private readonly LibraryEntryDataService libraryEntryDataService;
-    private readonly LibraryEntryNodeDataService libraryEntryNodeDataService;
     private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
     private readonly WatcherLibraryEntryDataService watcherDataService;
     private readonly ResourcesDataService resourcesDataService;
     private readonly ListDataService listDataService;
     private readonly QueueService queueService;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryNodeDataService libraryEntryNodeDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, QueueService queueService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, QueueService queueService)
     {
         this.searchConfig = searchConfig;
         this.userDataService = userDataService;
         this.organizationDataService = organizationDataService;
         this.libraryEntryDataService = libraryEntryDataService;
-        this.libraryEntryNodeDataService = libraryEntryNodeDataService;
         this.libraryEntryVersionDataService = libraryEntryVersionDataService;
         this.watcherDataService = watcherDataService;
         this.resourcesDataService = resourcesDataService;
@@ -66,10 +64,9 @@ public class LibrarySearchIndexService
         {
             var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
             var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
-            var entryTasks = await libraryEntryNodeDataService.GetListAsync(conn, entryId, entry.Version);
             var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
 
-            pushes.Add(PushToSearchAsync(resources, entry, version, entryTasks, watcherIds, disciplineLabels, userCache));
+            pushes.Add(PushToSearchAsync(resources, entry, version, watcherIds, disciplineLabels, userCache));
 
             if (pushes.Count > 0)
             {
@@ -84,7 +81,6 @@ public class LibrarySearchIndexService
         Resources resources,
         LibraryEntryViewModel entry,
         LibraryEntryVersion version,
-        IEnumerable<LibraryEntryNode> entryTasks,
         IEnumerable<string> watcherIds,
         Dictionary<string, string> disciplineLabels,
         Dictionary<string, UserDocument> userCache = null)
@@ -99,12 +95,12 @@ public class LibrarySearchIndexService
 
         var toUpload = new List<LibrarySearchDocument>
         {
-            LibrarySearchTransformer.CreateDocument("private", entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users)
+            LibrarySearchTransformer.CreateDocument("private", entry, owner, typeLabel, watcherIds, disciplines, users)
         };
 
         if (entry.Visibility == "public")
         {
-            toUpload.Add(LibrarySearchTransformer.CreateDocument("public", entry, owner, typeLabel, watcherIds, entryTasks, disciplines, users));
+            toUpload.Add(LibrarySearchTransformer.CreateDocument("public", entry, owner, typeLabel, watcherIds, disciplines, users));
         }
         var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
             .MergeOrUploadDocumentsAsync(toUpload);
