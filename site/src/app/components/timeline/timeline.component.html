@@ -60,7 +60,7 @@
                 }-->
               </div>
               <label class="tx-italic tx-10">
-                {{ activity.userId | userName | async }}
+                {{ [owner(), activity.userId] | userName | async }}
               </label>
             </div>
             <div class="timeline-body">

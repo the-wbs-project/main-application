@@ -1,17 +1,17 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite } from '@wbs/core/models';
+import { Invite, Member } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { MembershipStore } from '@wbs/core/store';
-import { MemberViewModel } from '@wbs/core/view-models';
+import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import { Observable, forkJoin } from 'rxjs';
 import { MembersSettingStore } from '../store';
 
 @Injectable()
 export class MemberSettingsService {
   private readonly data = inject(DataServiceFactory);
-  private readonly messages = inject(Messages);
   private readonly membership = inject(MembershipStore).membership;
+  private readonly messages = inject(Messages);
+  private readonly metadata = inject(MetadataStore);
   private readonly store = inject(MembersSettingStore);
 
   removeMemberAsync(memberId: string): void {
@@ -24,7 +24,7 @@ export class MemberSettingsService {
   }
 
   updateMemberRolesAsync(
-    member: MemberViewModel,
+    member: Member,
     toAdd: string[],
     toRemove: string[]
   ): void {
@@ -34,7 +34,7 @@ export class MemberSettingsService {
       calls.push(
         this.data.memberships.removeUserOrganizationalRolesAsync(
           this.membership()!.name,
-          member.id,
+          member.user_id,
           toRemove
         )
       );
@@ -43,7 +43,7 @@ export class MemberSettingsService {
       calls.push(
         this.data.memberships.addUserOrganizationalRolesAsync(
           this.membership()!.name,
-          member.id,
+          member.user_id,
           toAdd
         )
       );
@@ -52,6 +52,19 @@ export class MemberSettingsService {
 
     forkJoin(calls).subscribe(() => {
       this.messages.notify.success('OrgSettings.MemberRolesUpdated');
+
+      const roleIds = [
+        ...member.roles
+          .map((role) => role.id)
+          .filter((id) => !toRemove.includes(id)),
+        ...toAdd,
+      ];
+
+      const roles = this.metadata.roles.definitions.filter((role) =>
+        roleIds.includes(role.id)
+      );
+      member.roles = structuredClone(roles);
+
       this.store.updateMember(member);
     });
   }

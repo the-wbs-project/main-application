@@ -13,7 +13,7 @@ import { menuIcon } from '@progress/kendo-svg-icons';
 import {
   APP_CONFIG_TOKEN,
   AppConfiguration,
-  Membership,
+  Organization,
   User,
 } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
@@ -43,7 +43,7 @@ export class HeaderComponent {
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
   readonly org = input.required<string>();
-  readonly orgs = input.required<Membership[]>();
+  readonly orgs = input.required<Organization[]>();
   readonly activeSection = input.required<string | undefined>();
   readonly menu = computed(() => this.createMenu(this.org()));
   readonly orgObj = computed(

@@ -14,7 +14,6 @@ import { MainContentDirective } from '@wbs/core/directives/main-content.directiv
 import { AiStore, MembershipStore, UiStore, UserStore } from '@wbs/core/store';
 import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header';
-import { ProfileEditorComponent } from './components/profile-editor';
 
 @Component({
   standalone: true,
@@ -39,8 +38,7 @@ import { ProfileEditorComponent } from './components/profile-editor';
       </div>
     </div>
     }
-    <div kendoDialogContainer></div>
-    <wbs-profile-editor [(show)]="showProfileEditor" />`,
+    <div kendoDialogContainer></div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ChatWindowComponent,
@@ -48,7 +46,6 @@ import { ProfileEditorComponent } from './components/profile-editor';
     FooterComponent,
     HeaderComponent,
     MainContentDirective,
-    ProfileEditorComponent,
     RouterModule,
     TranslateModule,
   ],

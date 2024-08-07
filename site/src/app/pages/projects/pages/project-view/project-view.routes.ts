@@ -29,6 +29,7 @@ import {
   ProjectState,
   TasksState,
 } from './states';
+import { ownerIdResolve } from '@wbs/pages/library/pages/entry-view/services';
 
 export const routes: Routes = [
   {
@@ -102,6 +103,7 @@ export const routes: Routes = [
           crumbs: ['timeline'],
         },
         resolve: {
+          owner: ownerIdResolve,
           projectId: projectIdResolve,
           projectUrl: projectUrlResolve,
         },

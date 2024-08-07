@@ -1,16 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Invite, InviteBody, Member, Membership } from '../models';
+import { Invite, InviteBody, Member, Organization } from '../models';
 
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getMembershipsAsync(): Observable<Membership[]> {
-    return this.http.get<Membership[]>('api/memberships');
-  }
-
-  clearMembershipsAsync(): Observable<void> {
-    return this.http.delete<void>('api/memberships');
+  getMembershipsAsync(): Observable<Organization[]> {
+    return this.http.get<Organization[]>('api/memberships');
   }
 
   getMembershipUsersAsync(

@@ -1,6 +1,6 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Membership } from '@wbs/core/models';
+import { Organization, Role } from '@wbs/core/models';
 import { OrganizationService, sorter } from '@wbs/core/services';
 import { Observable, map, of } from 'rxjs';
 
@@ -8,15 +8,15 @@ import { Observable, map, of } from 'rxjs';
 export class MembershipStore {
   private readonly orgService = inject(OrganizationService);
   private readonly data = inject(DataServiceFactory);
-  private readonly _memberships = signal<Membership[] | undefined>(undefined);
-  private readonly _membership = signal<Membership | undefined>(undefined);
+  private readonly _memberships = signal<Organization[] | undefined>(undefined);
+  private readonly _membership = signal<Organization | undefined>(undefined);
   private readonly _roles = signal<string[] | undefined>(undefined);
 
-  get membership(): Signal<Membership | undefined> {
+  get membership(): Signal<Organization | undefined> {
     return this._membership;
   }
 
-  get memberships(): Signal<Membership[] | undefined> {
+  get memberships(): Signal<Organization[] | undefined> {
     return this._memberships;
   }
 
@@ -43,17 +43,17 @@ export class MembershipStore {
         //  Add organization names to name cache
         //
         for (const m of memberships) {
-          this.orgService.addOrganization(m.name, m.displayName);
+          this.orgService.addOrganization(m.name, m.display_name);
         }
       })
     );
   }
 
-  setMembership(membership: Membership): void {
+  setMembership(membership: Organization): void {
     this._membership.set(membership);
   }
 
-  setRoles(roles: string[]): void {
-    this._roles.set(roles);
+  setRoles(roles: Role[]): void {
+    this._roles.set(roles.map((r) => r.name));
   }
 }

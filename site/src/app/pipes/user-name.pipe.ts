@@ -10,11 +10,16 @@ export class UserNamePipe implements PipeTransform {
     private readonly service: UserService
   ) {}
 
-  transform(userId: string | null | undefined): Observable<string | undefined> {
-    if (!userId) return of(undefined);
+  transform([organization, userId]: [
+    string | null | undefined,
+    string | null | undefined
+  ]): Observable<string | undefined> {
+    if (!organization || !userId) return of(undefined);
 
     return (
-      this.service.getUser(userId).pipe(map((user) => user?.name)) ??
+      this.service
+        .getUserAsync(organization, userId)
+        .pipe(map((user) => user?.fullName)) ??
       this.resoures.get('General.UnknownUser')
     );
   }

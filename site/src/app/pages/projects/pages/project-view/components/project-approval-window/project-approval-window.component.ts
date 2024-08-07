@@ -53,6 +53,7 @@ export class ProjectApprovalWindowComponent {
   readonly faX = faX;
   readonly claims = input.required<string[]>();
   readonly userId = input.required<string>();
+  readonly owner = input.required<string>();
   readonly approval = input.required<ProjectApproval>();
   readonly isReadyOnly = input.required<boolean>();
   readonly chat = input.required<Message[]>();

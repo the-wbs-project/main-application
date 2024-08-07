@@ -64,7 +64,6 @@ builder.Services.AddSingleton<ActivityDataService>();
 builder.Services.AddSingleton<ChatDataService>();
 builder.Services.AddSingleton<ChecklistDataService>();
 builder.Services.AddSingleton<DocumentProcessDataService>();
-builder.Services.AddSingleton<InviteDataService>();
 builder.Services.AddSingleton<JiraHelpDeskDataService>();
 builder.Services.AddSingleton<LibraryEntryDataService>();
 builder.Services.AddSingleton<LibraryEntryNodeDataService>();
@@ -97,7 +96,6 @@ builder.Services.AddSingleton<CloudflareApiService>();
 builder.Services.AddSingleton<CloudflareKvService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
-builder.Services.AddSingleton<JiraSyncService>();
 builder.Services.AddSingleton<QueueService>();
 builder.Services.AddSingleton<ResourceCopyService>();
 //
@@ -105,8 +103,6 @@ builder.Services.AddSingleton<ResourceCopyService>();
 //
 builder.Services.AddSingleton<LibrarySearchIndexService>();
 builder.Services.AddSingleton<LibrarySearchService>();
-builder.Services.AddSingleton<UserOrganizationIndexService>();
-builder.Services.AddSingleton<UserOrganizationSearchService>();
 
 var app = builder.Build();
 

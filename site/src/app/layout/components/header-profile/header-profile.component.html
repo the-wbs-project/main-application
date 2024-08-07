@@ -16,14 +16,14 @@
   <kendo-menu-item data="profile">
     <ng-template kendoMenuItemTemplate>
       <fa-icon [icon]="faUser" class="mg-r-5" />
-      {{ "ProfileEditor.Title" | translate }}
+      {{ "Profile.Title" | translate }}
     </ng-template>
   </kendo-menu-item>
   @if (roles() | check : ADMIN_ROLE) {
   <kendo-menu-item>
     <ng-template kendoMenuItemTemplate>
       <fa-icon [icon]="faCogs" class="mg-r-5" />
-      {{ "ProfileEditor.AdminTasks" | translate }}
+      {{ "Profile.AdminTasks" | translate }}
     </ng-template>
     <kendo-menu-item data="clearCache">
       <ng-template kendoMenuItemTemplate>
@@ -40,5 +40,3 @@
     </ng-template>
   </kendo-menu-item>
 </kendo-contextmenu>
-
-<wbs-profile-editor [(show)]="showProfileEditor" />

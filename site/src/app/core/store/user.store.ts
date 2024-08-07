@@ -18,13 +18,13 @@ export class UserStore {
   }
 
   get userId(): Signal<string | undefined> {
-    return computed(() => this.profile()?.id);
+    return computed(() => this.profile()?.user_id);
   }
 
   set(user: User | undefined): void {
     this._profile.set(user);
 
-    if (user) this.userService.addUsers(user);
+    //if (user) this.userService.addUsers(user);
   }
 }
 

@@ -5,6 +5,6 @@
   [smeIds]="smeIds()"
   [mustConfirm]="false"
   [approvalEnabled]="approvalEnabled()"
-  (addUserToRole)="add($event.role, $event.user.id)"
-  (removeUserToRole)="remove($event.role, $event.user.id)"
+  (addUserToRole)="add($event.role, $event.user.user_id)"
+  (removeUserToRole)="remove($event.role, $event.user.user_id)"
 />

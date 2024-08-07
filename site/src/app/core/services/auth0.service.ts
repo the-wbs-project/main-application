@@ -2,11 +2,11 @@ import { Injectable, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { User } from '@wbs/core/models';
-import { Logger, Messages, UserService } from '@wbs/core/services';
+import { Logger } from '@wbs/core/services';
 import { AiStore, MembershipStore, UserStore } from '@wbs/core/store';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
+import { User } from '../models';
 
 @UntilDestroy()
 @Injectable()
@@ -16,9 +16,7 @@ export class Auth0Service {
   private readonly data = inject(DataServiceFactory);
   private readonly logger = inject(Logger);
   private readonly memberships = inject(MembershipStore);
-  private readonly messages = inject(Messages);
   private readonly userStore = inject(UserStore);
-  private readonly userService = inject(UserService);
 
   private readonly _isInitiated = new BehaviorSubject<boolean>(false);
 
@@ -27,53 +25,57 @@ export class Auth0Service {
   }
 
   initiate(): void {
-    this.auth.user$.pipe(untilDestroyed(this)).subscribe((user) => {
-      if (!user) return;
+    this.auth.isAuthenticated$
+      .pipe(untilDestroyed(this))
+      .subscribe((isAuthenticated) => {
+        if (!isAuthenticated) return;
 
-      const ns = 'http://www.pm-empower.com';
-      const profile: User = {
-        email: user['email']!,
-        id: user['sub']!,
-        name: user['name']!,
-        picture: user['picture']!,
-      };
+        forkJoin([
+          this.data.users.getProfileAsync(),
+          this.data.users.getSiteRolesAsync(),
+        ]).subscribe(([profile, siteRoles]) => {
+          if (!profile) return;
 
-      if (profile.email === profile.name) {
-        profile.name = '';
-      }
+          this.aiStore.setUserInfo({
+            id: profile.user_id,
+            name: profile.name,
+            avatarUrl: profile.picture,
+          });
+          this.userStore.set(profile);
+          this.memberships.setRoles(siteRoles);
+          this.logger.setGlobalContext({
+            'usr.id': profile.user_id,
+            'usr.name': profile.name,
+            'usr.email': profile.email,
+          });
 
-      this.aiStore.setUserInfo(profile);
-      this.userStore.set(profile);
-      this.userService.addUsers([profile]);
-      this.memberships.setRoles(user[ns + '/site-roles'] ?? []);
-      this.logger.setGlobalContext({
-        'usr.id': profile.id,
-        'usr.name': profile.name,
-        'usr.email': profile.email,
+          this.userStore.set(profile);
+          this._isInitiated.next(true);
+        });
       });
-
-      this._isInitiated.next(true);
-    });
   }
 
-  changeProfileName(name: string): Observable<any> {
+  saveProfile(profile: User): Observable<any> {
     const originalProfile = this.userStore.profile()!;
-    const originalName = originalProfile.name;
-
-    const profile = { ...originalProfile, name };
 
     return this.data.users.putAsync(profile).pipe(
-      tap(() => this.messages.notify.success('ProfileEditor.ProfileUpdated')),
-      tap(() => this.userStore.set(profile)),
+      tap(() => {
+        this.userStore.set(profile);
+        this.aiStore.setUserInfo({
+          id: profile.user_id,
+          name: profile.name,
+          avatarUrl: profile.picture,
+        });
+      }),
       switchMap(() =>
-        this.data.activities.saveAsync(profile.id, [
+        this.data.activities.saveAsync(profile.user_id, [
           {
-            action: 'profile-name-updated',
+            action: 'profile-updated',
             data: {
-              from: originalName,
-              to: name,
+              from: originalProfile,
+              to: profile,
             },
-            topLevelId: profile.id,
+            topLevelId: profile.user_id,
           },
         ])
       )

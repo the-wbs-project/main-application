@@ -1,4 +1,8 @@
-import { PROJECT_STATI, ProjectCategoryChanges, User } from '@wbs/core/models';
+import {
+  Member,
+  PROJECT_STATI,
+  ProjectCategoryChanges,
+} from '@wbs/core/models';
 import { ProjectViewModel } from '@wbs/core/view-models';
 
 export class VerifyProject {
@@ -37,12 +41,12 @@ export class ChangeProjectBasics {
 
 export class AddUserToRole {
   static readonly type = '[Project] Add User To Role';
-  constructor(readonly role: string, readonly user: User) {}
+  constructor(readonly role: string, readonly user: Member) {}
 }
 
 export class RemoveUserToRole {
   static readonly type = '[Project] Remove User To Role';
-  constructor(readonly role: string, readonly user: User) {}
+  constructor(readonly role: string, readonly user: Member) {}
 }
 
 export class MarkProjectChanged {

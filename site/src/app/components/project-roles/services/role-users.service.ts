@@ -23,9 +23,9 @@ export class RoleUsersService {
     }
 
     for (const member of members) {
-      if (userIds.indexOf(member.id) > -1) {
+      if (userIds.indexOf(member.user_id) > -1) {
         vm.assigned.push(member);
-      } else if (member.roles.includes(roleId)) {
+      } else if (member.roles.map((x) => x.id).includes(roleId)) {
         vm.unassigned.push(member);
       }
     }

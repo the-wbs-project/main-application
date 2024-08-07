@@ -10,58 +10,13 @@ namespace Wbs.Core.DataServices;
 public class UserDataService : BaseAuthDataService
 {
     public UserDataService(ILogger<UserDataService> logger, IAuth0Config config) : base(logger, config) { }
-
-    public async Task<List<Role>> GetRolesAsync()
-    {
-        var client = await GetClientAsync();
-
-        return new List<Role>(await client.Roles.GetAllAsync(new GetRolesRequest()));
-    }
-
     public async Task<Member> GetMemberAsync(string userId)
     {
-        return new Member(await GetUserAsync(userId));
-    }
-
-    public async Task<User> GetUserAsync(string userId)
-    {
         var client = await GetClientAsync();
+        var user = await client.Users.GetAsync(userId);
 
-        return await client.Users.GetAsync(userId);
+        return new Member(user);
     }
-
-    public async Task<List<string>> GetRolesAsync(string userId)
-    {
-        var client = await GetClientAsync();
-        var roles = await client.Users.GetRolesAsync(userId);
-
-        return roles.Select(x => x.Id).ToList();
-    }
-
-    public async Task<IEnumerable<Organization>> GetUserOrganizationsAsync(string userId)
-    {
-        var client = await GetClientAsync();
-        var page = new PaginationInfo(0, 50, false);
-
-        var orgs = await client.Users.GetAllOrganizationsAsync(userId, page);
-
-        foreach (var org in orgs)
-        {
-            if (org.Metadata == null) org.Metadata = new Dictionary<string, object>();
-        }
-        return orgs;
-    }
-
-    public async Task UpdateProfileAsync(Member user)
-    {
-        var client = await GetClientAsync();
-
-        await client.Users.UpdateAsync(user.Id, new UserUpdateRequest
-        {
-            FullName = user.Name
-        });
-    }
-
 
     public async Task<Dictionary<string, UserDocument>> GetUserDocumentsAsync(IEnumerable<string> userIds, Dictionary<string, UserDocument> userCache = null)
     {

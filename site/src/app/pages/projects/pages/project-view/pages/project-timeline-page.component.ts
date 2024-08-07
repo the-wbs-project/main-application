@@ -16,6 +16,7 @@ import { TimelineService } from '../services';
 @Component({
   standalone: true,
   template: `<wbs-timeline
+    [owner]="owner()"
     [length]="length()"
     [loaded]="loaded()"
     [loading]="loading()"
@@ -30,6 +31,7 @@ export class ProjectTimelinePageComponent implements OnInit {
   private readonly timelineService = inject(TimelineService);
   private readonly store = inject(Store);
 
+  readonly owner = input.required<string>();
   readonly projectId = input.required<string>();
   readonly projectUrl = input.required<string[]>();
   readonly loaded = signal(false);

@@ -53,6 +53,7 @@
         [approval]="approval"
         [claims]="claims() ?? []"
         [userId]="userId()"
+        [owner]="project()!.owner"
         [isReadyOnly]="project()?.status !== 'approval'"
         [chat]="chat() ?? []"
         [hasChildren]="approvalHasChildren()!"

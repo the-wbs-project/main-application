@@ -1,0 +1,31 @@
+<div class="card border border-1 bd-gray-400">
+  <div class="card-header bg-gray-200 d-flex">
+    <h4>Avatar Editor</h4>
+    <div class="flex-fill text-end">
+      <button kendoButton (click)="cancel.emit()">Cancel</button>
+    </div>
+  </div>
+  <div class="card-body">
+    @if (imageToCrop(); as image) {
+    <div style="max-height: 400px">
+      <wbs-profile-image-cropper
+        [image]="image"
+        (cropped)="cropped($event)"
+        (cancel)="imageToCrop.set(undefined)"
+      />
+    </div>
+    } @else {
+    <div class="w-100 text-center">
+      <p class="fw-bold">Step 1:</p>
+      <p>Select The New Avatar From Your Computer</p>
+      <div class="pd-t-30">
+        <kendo-fileselect
+          #fs
+          accept="image/*"
+          (select)="onFileChange(fs, $event)"
+        />
+      </div>
+    </div>
+    }
+  </div>
+</div>

@@ -4,12 +4,13 @@ import { Action, Selector, State, StateContext } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   ActivityData,
+  Member,
   Project,
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
 } from '@wbs/core/models';
 import { CategoryService } from '@wbs/core/services';
-import { ProjectViewModel, UserRolesViewModel } from '@wbs/core/view-models';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { MetadataStore, UserStore } from '@wbs/core/store';
 import { Observable, forkJoin, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
@@ -39,7 +40,7 @@ interface StateModel {
   current?: ProjectViewModel;
   navSection?: string;
   roles?: string[];
-  users?: UserRolesViewModel[];
+  users?: Member[];
 }
 
 declare type Context = StateContext<StateModel>;
@@ -80,7 +81,7 @@ export class ProjectState {
   }
 
   @Selector()
-  static users(state: StateModel): UserRolesViewModel[] | undefined {
+  static users(state: StateModel): Member[] | undefined {
     return state.users;
   }
 
@@ -148,7 +149,7 @@ export class ProjectState {
     const project = ctx.getState().model!;
     const roleTitle = this.services.getRoleTitle(role, false);
 
-    project.roles.push({ role, userId: user.id });
+    project.roles.push({ role, userId: user.user_id });
 
     return this.saveProject(ctx, project).pipe(
       switchMap(() => this.updateUsers(ctx)),
@@ -174,7 +175,7 @@ export class ProjectState {
     const project = ctx.getState().model!;
     const roleTitle = this.services.getRoleTitle(role, false);
     const index = project.roles.findIndex(
-      (x) => x.role === role && x.userId === user.id
+      (x) => x.role === role && x.userId === user.user_id
     );
 
     if (index === -1) return of();

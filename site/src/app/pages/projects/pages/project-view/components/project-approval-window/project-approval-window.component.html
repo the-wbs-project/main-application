@@ -108,23 +108,13 @@
     <div class="tx-center pd-15">
       @if (approval.isApproved == undefined) {
       {{ "Projects.NoApproval" | translate }}
-      } @else if (approval.isApproved) {
-      {{
-        "Projects.ApprovedBy"
-          | translate
-          | textTransform
-            : {
-                name: (approval.approvedBy | userName | async),
-                date: approval.approvedOn | date
-              }
-      }}
       } @else {
       {{
-        "Projects.RejectedBy"
+        (approval.isApproved ? "Projects.ApprovedBy" : "Projects.RejectedBy")
           | translate
           | textTransform
             : {
-                name: (approval.approvedBy | userName | async),
+                name: ([owner(), approval.approvedBy] | userName | async),
                 date: approval.approvedOn | date
               }
       }}

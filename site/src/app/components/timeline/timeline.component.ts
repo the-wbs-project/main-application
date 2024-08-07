@@ -40,6 +40,7 @@ export class TimelineComponent {
 
   readonly faCircleInfo = faCircleInfo;
   readonly faComment = faComment;
+  readonly owner = input.required<string>();
   readonly loading = input.required<boolean>();
   readonly loaded = input.required<boolean>();
   readonly length = input<number>();
