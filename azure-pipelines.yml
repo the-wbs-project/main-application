@@ -93,10 +93,10 @@ jobs:
           publishLocation: "Container"
         displayName: "Publish"
 
-  - job: worker_job
+  - job: auth_worker_job
     pool:
       vmImage: ubuntu-latest
-    displayName: Worker
+    displayName: Auth Worker
     steps:
       - task: NodeTool@0
         inputs:
@@ -107,19 +107,56 @@ jobs:
         displayName: "Install TypeScript"
 
       - script: npm install
-        workingDirectory: "server/worker"
+        workingDirectory: "server/workers"
         displayName: "Install"
 
       - script: npm run check
-        workingDirectory: "server/worker"
+        workingDirectory: "server/workers/worker-auth"
         displayName: "Check"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "server/worker"
+          rootFolderOrFile: "server/workers/worker-auth"
           includeRootFolder: false
           archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker-Auth.zip"
+          replaceExistingArchive: true
+        displayName: "Zip"
+
+      - task: PublishBuildArtifacts@1
+        inputs:
+          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+          ArtifactName: "drop"
+          publishLocation: "Container"
+        displayName: "Publish"
+
+  - job: api_worker_job
+    pool:
+      vmImage: ubuntu-latest
+    displayName: API Worker
+    steps:
+      - task: NodeTool@0
+        inputs:
+          versionSpec: "18.10"
+        displayName: "Install Node.js"
+
+      - script: npm install --global typescript
+        displayName: "Install TypeScript"
+
+      - script: npm install
+        workingDirectory: "server/workers"
+        displayName: "Install"
+
+      - script: npm run check
+        workingDirectory: "server/workers/worker-api"
+        displayName: "Check"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "server/workers/worker-api"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker-Api.zip"
           replaceExistingArchive: true
         displayName: "Zip"
 
