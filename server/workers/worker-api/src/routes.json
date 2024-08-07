@@ -30,9 +30,9 @@
     ],
     "VERIFY_JWT_MEMBERSHIP_DELETE": [],
     "RESOURCE_URLS": [
-        "api/portfolio/:owner/projects/:projectId/resources/:resource/file",
-        "api/portfolio/:owner/projects/:projectId/nodes/:nodeId/resources/:resource/file",
-        "api/portfolio/:owner/library/entries/:entryId/versions/:versionId/resources/:resource/file",
-        "api/portfolio/:owner/library/entries/:entryId/versions/:versionId/nodes/:nodeId/resources/:resource/file"
+        "api/portfolio/:owner/projects/:projectId/resources/:resource/blob",
+        "api/portfolio/:owner/projects/:projectId/nodes/:nodeId/resources/:resource/blob",
+        "api/portfolio/:owner/library/entries/:entryId/versions/:versionId/resources/:resource/blob",
+        "api/portfolio/:owner/library/entries/:entryId/versions/:versionId/nodes/:nodeId/resources/:resource/blob"
     ]
 }

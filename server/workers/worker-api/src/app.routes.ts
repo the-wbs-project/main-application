@@ -1,6 +1,11 @@
 import { Hono } from 'hono';
+import { cors } from 'hono/cors';
 import { Env, Variables } from './config';
+<<<<<<< HEAD:server/workers/worker-api/src/app.routes.ts
 import { cors, kv, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error, verifyMyself } from './middle';
+=======
+import { kv, kvPurge, kvPurgeOrgs, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership } from './middle';
+>>>>>>> main:server/worker/src/index.ts
 import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -26,6 +31,7 @@ app.use('*', async (ctx, next) => {
 app.use('*', ddLogger);
 app.use('*', cors);
 app.onError(error);
+
 app.options('api/*', (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);

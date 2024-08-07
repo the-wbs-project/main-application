@@ -147,7 +147,7 @@ public class LibraryEntryVersionController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{entryVersion}/resources/{resourceId}/file")]
+    [HttpGet("{entryVersion}/resources/{resourceId}/blob")]
     public async Task<IActionResult> GetResourceFileAsync(string owner, string entryId, int entryVersion, string resourceId)
     {
         try
@@ -171,8 +171,8 @@ public class LibraryEntryVersionController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{entryVersion}/resources/{resourceId}/file")]
-    public async Task<IActionResult> PutResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile file)
+    [HttpPut("{entryVersion}/resources/{resourceId}/blob")]
+    public async Task<IActionResult> PutResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
     {
         try
         {
@@ -182,12 +182,16 @@ public class LibraryEntryVersionController : ControllerBase
                     return BadRequest("Entry Version not found for the owner provided.");
 
                 var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
+
+                Request.EnableBuffering();
+                Request.Body.Position = 0;
                 var bytes = new byte[] { };
 
-                using (var stream = file.OpenReadStream())
+                using (var stream = new MemoryStream())
                 {
-                    bytes = new byte[stream.Length];
-                    await stream.ReadAsync(bytes, 0, bytes.Length);
+                    await Request.Body.CopyToAsync(stream);
+
+                    bytes = stream.ToArray();
                 }
 
                 await resourceService.SaveLibraryResourceAsync(owner, entryId, entryVersion, resourceId, bytes);

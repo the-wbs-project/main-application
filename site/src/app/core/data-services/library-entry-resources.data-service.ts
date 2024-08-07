@@ -38,13 +38,9 @@ export class LibraryEntryResourcesDataService {
     resourceId: string,
     file: ArrayBuffer
   ): Observable<void> {
-    const formData = new FormData();
-
-    formData.append('file', new Blob([file]));
-
     return this.http.put<void>(
-      this.getIdUrl(resourceId, owner, entryId, entryVersion, taskId) + '/file',
-      formData
+      this.getIdUrl(resourceId, owner, entryId, entryVersion, taskId) + '/blob',
+      file
     );
   }
 

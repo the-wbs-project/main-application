@@ -59,7 +59,7 @@ export class SaveSectionComponent {
   );
   readonly visibilityReview = computed(() => {
     return this.resources.get(
-      this.visibility() === 'private' ? 'General.Private' : 'General.Public'
+      this.visibility() === 'private' ? 'General.Internal' : 'General.Public'
     );
   });
   readonly disciplineReview = computed(() => {

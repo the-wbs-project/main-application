@@ -132,7 +132,7 @@ public class LibraryEntryNodeController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{nodeId}/resources/{resourceId}/file")]
+    [HttpGet("{nodeId}/resources/{resourceId}/blob")]
     public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
     {
         try
@@ -156,8 +156,8 @@ public class LibraryEntryNodeController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}/file")]
-    public async Task<IActionResult> PutNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, IFormFile file)
+    [HttpPut("{nodeId}/resources/{resourceId}/blob")]
+    public async Task<IActionResult> PutNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
     {
         try
         {
@@ -167,12 +167,16 @@ public class LibraryEntryNodeController : ControllerBase
                     return BadRequest("Entry Node not found for the credentails provided.");
 
                 var record = await nodeResourceDataService.GetAsync(conn, entryId, entryVersion, nodeId, resourceId);
+
+                Request.EnableBuffering();
+                Request.Body.Position = 0;
                 var bytes = new byte[] { };
 
-                using (var stream = file.OpenReadStream())
+                using (var stream = new MemoryStream())
                 {
-                    bytes = new byte[stream.Length];
-                    await stream.ReadAsync(bytes, 0, bytes.Length);
+                    await Request.Body.CopyToAsync(stream);
+
+                    bytes = stream.ToArray();
                 }
 
                 await resourceService.SaveLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId, bytes);

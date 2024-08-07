@@ -63,6 +63,9 @@ public class LibrarySearchIndexService
         foreach (var entryId in entryIds)
         {
             var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
+
+            if (entry == null) continue;
+
             var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
             var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
 
