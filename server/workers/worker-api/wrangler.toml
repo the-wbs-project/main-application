@@ -6,7 +6,6 @@ logpush = true
 
 [env.dev]
 name = "pm-empower-api-dev"
-usage_model = "unbound"
 kv_namespaces = [
   { binding = "KV_DATA", id = "123" },
 ]
@@ -33,7 +32,6 @@ JIRA_DOMAIN = "cw-software.atlassian.net"
 
 [env.test]
 name = "pm-empower-api-test"
-usage_model = "unbound"
 workers_dev = false
 routes = [
 	{ pattern = "test-api.pm-empower.com/*", zone_name = "pm-empower.com" }
@@ -61,7 +59,6 @@ AUTH_DOMAIN = "auth.pm-empower.com"
 
 [env.prod]
 name = "pm-empower-api-prod"
-usage_model = "unbound"
 workers_dev = false
 routes = [
 	{ pattern = "api.pm-empower.com/*", zone_name = "pm-empower.com" }
