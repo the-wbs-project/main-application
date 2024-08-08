@@ -17,7 +17,18 @@
       {{ "General.None" | translate }}
       } @else { @for (user of list; track user; let i = $index) {
       <div [ngClass]="{ 'mg-b-10': list.length > i + 1 }">
-        {{ [project.owner, user] | userName | async }}
+        <wbs-user
+          class="d-none d-sm-block"
+          [organization]="project.owner"
+          [userId]="user"
+          position="right"
+        />
+        <wbs-user
+          class="d-block d-sm-none"
+          [organization]="project.owner"
+          [userId]="user"
+          position="bottom"
+        />
       </div>
       } } }
     </div>
@@ -28,7 +39,18 @@
       {{ "General.None" | translate }}
       } @else { @for (user of list; track user; let i = $index) {
       <div [ngClass]="{ 'mg-b-3': list.length > i + 1 }">
-        {{ [project.owner, user] | userName | async }}
+        <wbs-user
+          class="d-none d-sm-block"
+          [organization]="project.owner"
+          [userId]="user"
+          position="right"
+        />
+        <wbs-user
+          class="d-block d-sm-none"
+          [organization]="project.owner"
+          [userId]="user"
+          position="bottom"
+        />
       </div>
       } } }
     </div>
@@ -39,7 +61,18 @@
       {{ "General.None" | translate }}
       } @else { @for (user of list; track user; let i = $index) {
       <div [ngClass]="{ 'mg-b-3': list.length > i + 1 }">
-        {{ [project.owner, user] | userName | async }}
+        <wbs-user
+          class="d-none d-sm-block"
+          [organization]="project.owner"
+          [userId]="user"
+          position="right"
+        />
+        <wbs-user
+          class="d-block d-sm-none"
+          [organization]="project.owner"
+          [userId]="user"
+          position="bottom"
+        />
       </div>
       } } }
     </div>

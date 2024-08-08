@@ -7,6 +7,7 @@ import {
   input,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { UserComponent } from '@wbs/components/user';
 import { MetadataStore } from '@wbs/core/store';
 import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
@@ -25,6 +26,7 @@ import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
     NgClass,
     ProjectCategoryLabelPipe,
     TranslateModule,
+    UserComponent,
     UserNamePipe,
   ],
 })

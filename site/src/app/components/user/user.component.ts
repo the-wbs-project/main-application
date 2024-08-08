@@ -1,14 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   input,
   OnChanges,
   signal,
   SimpleChanges,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import {
@@ -18,19 +16,19 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { AvatarModule } from '@progress/kendo-angular-layout';
-import { PopoverModule } from '@progress/kendo-angular-tooltip';
+import { PopoverModule, Position } from '@progress/kendo-angular-tooltip';
 import { UserService } from '@wbs/core/services';
 import { UserViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
-  selector: 'wbs-user-popup',
-  templateUrl: './user-popup.component.html',
-  styleUrl: './user-popup.component.scss',
+  selector: 'wbs-user',
+  templateUrl: './user.component.html',
+  styleUrl: './user.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AvatarModule, FontAwesomeModule, PopoverModule, TranslateModule],
 })
-export class UserPopupComponent implements OnChanges {
+export class UserComponent implements OnChanges {
   private readonly userService = inject(UserService);
 
   readonly nameIcon = faUser;
@@ -39,6 +37,7 @@ export class UserPopupComponent implements OnChanges {
   readonly twitterIcon = faXTwitter;
   readonly linkedInIcon = faLinkedin;
 
+  readonly position = input<Position>('bottom');
   readonly organization = input.required<string>();
   readonly userId = input.required<string>();
 

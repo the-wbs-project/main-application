@@ -3,7 +3,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCircleQuestion } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { PopoverModule } from '@progress/kendo-angular-tooltip';
-import { DisciplineListComponent } from '@wbs/components/_utils/discipline-list.component';
 import { DisciplineSplitListComponent } from '@wbs/components/_utils/discipline-split-list.component';
 import { CategoryViewModel } from '@wbs/core/view-models';
 
@@ -13,7 +12,6 @@ import { CategoryViewModel } from '@wbs/core/view-models';
   templateUrl: './tree-discipline-legend.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    DisciplineListComponent,
     DisciplineSplitListComponent,
     FontAwesomeModule,
     PopoverModule,

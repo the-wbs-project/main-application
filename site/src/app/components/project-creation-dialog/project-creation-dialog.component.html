@@ -74,6 +74,7 @@
         </div>
         <div class="d-inline-block w-100" style="max-width: 800px">
           <wbs-roles-section
+            [organization]="owner()!"
             [(pmIds)]="pmIds"
             [(smeIds)]="smeIds"
             [(approverIds)]="approverIds"

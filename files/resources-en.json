@@ -713,7 +713,9 @@
       "ProjectRemoveUserDescription": "{user} was revoked the role of {role}.",
       "NodeRecordered": "{0} was reordered from {1} to {2}.",
       "ProjectImportedFromLibraryTitle": "Task Imported From Library",
-      "ProjectImportedFromLibraryDescription": "Library Entry '{title}' was imported into the project."
+      "ProjectImportedFromLibraryDescription": "Library Entry '{title}' was imported into the project.",
+      "TaskAbsFlagChangedTitle": "ABS Flag Changed",
+      "TaskAbsFlagChangedDescription": "The ABS flag for task '{title}' was changed."
     }
   },
   {

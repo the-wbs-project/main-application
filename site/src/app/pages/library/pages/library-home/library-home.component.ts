@@ -42,6 +42,7 @@ export class LibraryHomeComponent implements OnChanges {
   readonly searchText = signal<string>('');
   readonly roleFilters = signal<string[]>([]);
   readonly typeFilters = signal<string[]>([]);
+  readonly loading = signal(false);
   readonly entries = signal<LibraryEntryViewModel[]>([]);
   readonly libraries = LIBRARY_FILTER_LIBRARIES;
 
@@ -68,6 +69,9 @@ export class LibraryHomeComponent implements OnChanges {
   }
 
   retrieve(): void {
+    this.entries.set([]);
+    this.loading.set(true);
+
     this.data.libraryEntries
       .searchAsync(this.org(), {
         userId: this.userId()!,
@@ -76,7 +80,10 @@ export class LibraryHomeComponent implements OnChanges {
         roles: this.roleFilters(),
         types: this.typeFilters(),
       })
-      .subscribe((entries) => this.entries.set(entries));
+      .subscribe((entries) => {
+        this.loading.set(false);
+        this.entries.set(entries);
+      });
   }
 
   libraryChanged(library: string): void {

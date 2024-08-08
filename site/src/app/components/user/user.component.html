@@ -5,12 +5,15 @@
   </a>
 </div>
 
-<kendo-popover #myPopover position="bottom">
+<kendo-popover #myPopover [position]="position()">
   <ng-template kendoPopoverTitleTemplate>
     <div class="popover-title">User Information</div>
   </ng-template>
 
   <ng-template kendoPopoverBodyTemplate>
+    <div class="w-100 text-center pd-t-15">
+      <kendo-avatar [imageSrc]="user.picture!" size="large" />
+    </div>
     <div class="user-popup-grid">
       <div class="detail-header">
         <span class="d-inline-block wd-20 text-center">
@@ -27,8 +30,8 @@
         {{ "General.Title" | translate }} :
       </div>
       <div>
-        @if (user.title === 'private') {
-        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        @if (user.title === 'private' || !user.title) {
+        <span class="wbs-text-muted"> N/A </span>
         } @else { {{ user.title }} }
       </div>
 
@@ -39,8 +42,8 @@
         {{ "General.Email" | translate }} :
       </div>
       <div>
-        @if (user.email === 'private') {
-        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        @if (user.email === 'private' || !user.email) {
+        <span class="wbs-text-muted"> N/A </span>
         } @else {
         <a class="tx-dark" href="mailto:{{ user.email }}">{{ user.email }}</a>
         }
@@ -53,8 +56,8 @@
         {{ "Profile.LinkedIn" | translate }} :
       </div>
       <div>
-        @if (user.linkedIn === 'private') {
-        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        @if (user.linkedIn === 'private' || !user.linkedIn) {
+        <span class="wbs-text-muted"> N/A </span>
         } @else {
         <a
           target="_blank"
@@ -74,8 +77,8 @@
         {{ "Profile.Twitter" | translate }} :
       </div>
       <div>
-        @if (user.twitter === 'private') {
-        <span class="wbs-text-muted">{{ "General.Hidden" | translate }}</span>
+        @if (user.twitter === 'private' || !user.twitter) {
+        <span class="wbs-text-muted"> N/A </span>
         } @else {
         <a
           target="_blank"

@@ -19,6 +19,7 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   CellClickEvent,
   ColumnComponent,
+  RowClassArgs,
   RowReorderEvent,
   TreeListComponent,
   TreeListModule,
@@ -44,6 +45,7 @@ import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { Messages, SignalStore, TreeService, Utils } from '@wbs/core/services';
 import {
   CategoryViewModel,
+  ProjectTaskViewModel,
   ProjectViewModel,
   TaskViewModel,
 } from '@wbs/core/view-models';
@@ -67,6 +69,7 @@ import {
 } from '../../../../services';
 import { ProjectApprovalState, TasksState } from '../../../../states';
 import { PhaseTreeReorderService } from '../../services';
+import { PhaseTreeTitleLegendComponent } from '../phase-tree-title-legend';
 import { TreeTypeButtonComponent } from '../tree-type-button';
 
 @UntilDestroy()
@@ -89,6 +92,7 @@ import { TreeTypeButtonComponent } from '../tree-type-button';
     FindThemByIdPipe,
     FontAwesomeModule,
     PhaseTaskTitleComponent,
+    PhaseTreeTitleLegendComponent,
     ProgressBarComponent,
     RouterModule,
     SaveMessageComponent,
@@ -305,6 +309,12 @@ export class ProjectPhaseTreeComponent implements OnInit {
       }
     }
   }
+
+  rowCallback = (context: RowClassArgs) => {
+    const vm = context.dataItem as ProjectTaskViewModel;
+
+    return { 'bg-light-blue-f': vm.absFlag != undefined };
+  };
 
   private resetTree(): void {
     this.store.dispatch(new RebuildNodeViews());

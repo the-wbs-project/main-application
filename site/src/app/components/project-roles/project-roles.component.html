@@ -25,6 +25,7 @@
             <wbs-project-user-list
               [icon]="minusIcon"
               [users]="pms()?.assigned"
+              [organization]="organization()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.pm, $event)"
             />
@@ -34,6 +35,7 @@
             <wbs-project-user-list
               [icon]="minusIcon"
               [users]="approvers()?.assigned"
+              [organization]="organization()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.approver, $event)"
             />
@@ -43,6 +45,7 @@
             <wbs-project-user-list
               [icon]="minusIcon"
               [users]="smes()?.assigned"
+              [organization]="organization()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.sme, $event)"
             />
@@ -58,6 +61,7 @@
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="pms()?.unassigned"
+              [organization]="organization()"
               (selected)="add(roles.pm, $event)"
             />
           </td>
@@ -65,6 +69,7 @@
           <td class="wd-200 border border-dark pd-5 valign-top">
             <wbs-project-user-list
               [icon]="plusIcon"
+              [organization]="organization()"
               [users]="approvers()?.unassigned"
               (selected)="add(roles.approver, $event)"
             />
@@ -74,6 +79,7 @@
             <wbs-project-user-list
               [icon]="plusIcon"
               [users]="smes()?.unassigned"
+              [organization]="organization()"
               (selected)="add(roles.sme, $event)"
             />
           </td>

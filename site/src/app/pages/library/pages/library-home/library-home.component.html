@@ -24,6 +24,7 @@
       />
     </div>
     <wbs-library-list
+      [showLoading]="loading()"
       [entries]="entries()"
       [showOwner]="library() === 'public'"
       (selectedChange)="service.navigate($event)"

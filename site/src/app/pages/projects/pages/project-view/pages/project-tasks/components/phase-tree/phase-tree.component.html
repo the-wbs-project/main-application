@@ -24,6 +24,7 @@
   [height]="containerHeight() - heightOffset"
   scrollable="virtual"
   [navigable]="true"
+  [rowClass]="rowCallback"
   [initiallyExpanded]="false"
   [(expandedKeys)]="treeService.expandedKeys"
   [selectable]="{ enabled: true, mode: 'row' }"
@@ -62,8 +63,11 @@
     field="title"
     class="child-hoverer tree-column"
     headerClass="tx-14"
-    [title]="'Wbs.Activity_Title' | translate"
   >
+    <ng-template kendoTreeListHeaderTemplate>
+      {{ "Wbs.Activity_Title" | translate }}
+      <wbs-phase-tree-title-legend [canEdit]="editEnabled" />
+    </ng-template>
     <ng-template kendoTreeListCellTemplate let-dataItem>
       <wbs-phase-task-title
         [task]="dataItem"
@@ -111,22 +115,7 @@
       </div>
     </ng-template>
   </kendo-treelist-column>
-  }
-  <kendo-treelist-column
-    [width]="80"
-    headerClass="tx-14"
-    class="text-center tree-column"
-  >
-    <ng-template kendoTreeListHeaderTemplate>
-      <wbs-abs-header text="abbrev" />
-    </ng-template>
-    <ng-template kendoTreeListCellTemplate let-dataItem>
-      @if (dataItem.absFlag) {
-      <wbs-abs-icon [abs]="dataItem.absFlag" />
-      }
-    </ng-template>
-  </kendo-treelist-column>
-  @if ((width() ?? 0) > 800) {
+  } @if ((width() ?? 0) > 800) {
   <kendo-treelist-column
     [width]="200"
     field="disciplines"

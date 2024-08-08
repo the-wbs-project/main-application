@@ -72,3 +72,8 @@
     }
   </tbody>
 </table>
+@if (showLoading()) {
+<div class="w-100 text-center pd-t-40">
+  <fa-duotone-icon [icon]="loadingIcon" size="5x" animation="spin" />
+</div>
+}

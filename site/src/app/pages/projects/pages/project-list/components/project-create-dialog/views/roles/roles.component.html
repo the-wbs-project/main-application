@@ -16,6 +16,7 @@
     </div>
     } @else {
     <wbs-project-roles
+      [organization]="membership()!.name"
       [members]="members()"
       [approverIds]="store.approverIds()"
       [pmIds]="store.pmIds()"

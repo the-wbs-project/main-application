@@ -35,12 +35,7 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 services = [
-  { binding = "AUTH_API_ROLES", service = "pm-empower-auth-test", entrypoint = "RolesEntrypoint" },
-  { binding = "AUTH_API_USERS", service = "pm-empower-auth-test", entrypoint = "UserEntrypoint" },
-  { binding = "AUTH_API_QUEUES", service = "pm-empower-auth-test", entrypoint = "QueueEntrypoint" },
-  { binding = "AUTH_API_INVITES", service = "pm-empower-auth-test", entrypoint = "InviteEntrypoint" },
-  { binding = "AUTH_API_MEMBERSHIPS", service = "pm-empower-auth-test", entrypoint = "MembershipsEntrypoint" },
-  { binding = "AUTH_API_ORGANIZATIONS", service = "pm-empower-auth-test", entrypoint = "OrganizationEntrypoint" }
+  { binding = "AUTH_API", service = "pm-empower-auth-test" }
 ]
 
 [env.test.vars]
@@ -62,12 +57,7 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 services = [
-  { binding = "AUTH_API_ROLES", service = "pm-empower-auth-test", entrypoint = "RolesEntrypoint" },
-  { binding = "AUTH_API_USERS", service = "pm-empower-auth-test", entrypoint = "UserEntrypoint" },
-  { binding = "AUTH_API_QUEUES", service = "pm-empower-auth-test", entrypoint = "QueueEntrypoint" },
-  { binding = "AUTH_API_INVITES", service = "pm-empower-auth-test", entrypoint = "InviteEntrypoint" },
-  { binding = "AUTH_API_MEMBERSHIPS", service = "pm-empower-auth-test", entrypoint = "MembershipsEntrypoint" },
-  { binding = "AUTH_API_ORGANIZATIONS", service = "pm-empower-auth-test", entrypoint = "OrganizationEntrypoint" }
+  { binding = "AUTH_API", service = "pm-empower-auth-prod" }
 ]
 
 [env.prod.vars]

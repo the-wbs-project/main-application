@@ -35,11 +35,12 @@ export class ProjectRolesComponent {
   private readonly resources = inject(Resources);
   private readonly service = inject(RoleUsersService);
 
+  readonly organization = input.required<string>();
   readonly mustConfirm = input<boolean>(false);
-  readonly members = input<Member[]>();
-  readonly approverIds = input<string[]>();
-  readonly pmIds = input<string[]>();
-  readonly smeIds = input<string[]>();
+  readonly members = input.required<Member[]>();
+  readonly approverIds = input.required<string[]>();
+  readonly pmIds = input.required<string[]>();
+  readonly smeIds = input.required<string[]>();
   readonly approvalEnabled = input.required<boolean>();
 
   readonly addUserToRole = output<OutputType>();

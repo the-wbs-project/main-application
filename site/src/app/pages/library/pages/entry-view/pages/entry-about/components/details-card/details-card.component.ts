@@ -10,7 +10,7 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
-import { UserPopupComponent } from '@wbs/components/user-popup/user-popup.component';
+import { UserComponent } from '@wbs/components/user';
 import { OrganizationService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
@@ -33,7 +33,7 @@ import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
     FormsModule,
     LibraryStatusPipe,
     TranslateModule,
-    UserPopupComponent,
+    UserComponent,
     VisibilityTextComponent,
   ],
 })

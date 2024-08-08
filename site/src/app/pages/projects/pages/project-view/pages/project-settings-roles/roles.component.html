@@ -28,6 +28,7 @@
       [pmIds]="pmIds()"
       [smeIds]="smeIds()"
       [mustConfirm]="true"
+      [organization]="org()"
       [approvalEnabled]="approvalEnabled()!"
       (addUserToRole)="add($event.role, $event.user)"
       (removeUserToRole)="remove($event.role, $event.user)"

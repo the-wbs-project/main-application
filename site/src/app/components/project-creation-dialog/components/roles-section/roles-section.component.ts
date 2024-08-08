@@ -20,10 +20,10 @@ import { MetadataStore } from '@wbs/core/store';
   imports: [ProjectRolesComponent],
 })
 export class RolesSectionComponent {
-  private readonly store = inject(SignalStore);
   private readonly ids = inject(MetadataStore).roles.ids;
 
   readonly faSpinner = faSpinner;
+  readonly organization = input.required<string>();
   readonly approverIds = model.required<string[]>();
   readonly pmIds = model.required<string[]>();
   readonly smeIds = model.required<string[]>();

@@ -5,7 +5,11 @@
 } @else { @for (user of sortedUsers(); track user.user_id) {
 <div class="d-flex w-100">
   <div class="flex-grow-1">
-    {{ user.name }}
+    <wbs-user
+      [organization]="organization()"
+      [userId]="user.user_id"
+      position="bottom"
+    />
   </div>
   <div class="wd-20 tx-center">
     <a class="pointer" (click)="selected.emit(user)">

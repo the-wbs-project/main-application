@@ -30,10 +30,10 @@ import { ProjectCreateStore } from '../../project-create.store';
 })
 export class ProjectCreateRolesComponent implements OnInit {
   private readonly ids = inject(MetadataStore).roles.ids;
-  private readonly membership = inject(MembershipStore).membership;
 
   readonly faSpinner = faSpinner;
   readonly store = inject(ProjectCreateStore);
+  readonly membership = inject(MembershipStore).membership;
 
   readonly isLoading = signal<boolean>(true);
   readonly members = signal<Member[]>([]);
