@@ -100,7 +100,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "18.10"
+          versionSpec: "22.0"
         displayName: "Install Node.js"
 
       - script: npm install --global typescript
@@ -137,7 +137,7 @@ jobs:
     steps:
       - task: NodeTool@0
         inputs:
-          versionSpec: "18.10"
+          versionSpec: "22.0"
         displayName: "Install Node.js"
 
       - script: npm install --global typescript

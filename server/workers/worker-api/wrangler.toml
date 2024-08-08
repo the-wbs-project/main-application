@@ -19,11 +19,6 @@ services = [
   { binding = "AUTH_API_ORGANIZATIONS", service = "pm-empower-auth-dev", entrypoint = "OrganizationEntrypoint" }
 ]
 
-[env.queues]
-producers = [{ binding = "QUEUE_REFRESH_ALL", queue = "auth-refresh-all" }]
-consumers = [{ queue = "auth-refresh-all", max_batch_size = 1, max_batch_timeout = 30, max_retries = 5, dead_letter_queue = "auth-refresh-all-dlq", max_concurrency = 5, retry_delay = 120 }]
-
-
 [env.dev.vars]
 DEBUG = "true"
 DATADOG_ENV = "development"
