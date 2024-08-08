@@ -32,14 +32,14 @@ CORS_ORIGINS = "https://test.pm-empower.com"
 AUTH_DOMAIN = "auth.pm-empower.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 
-[env.test]
+[env.prod]
 name = "pm-empower-auth-prod"
 workers_dev = false
 kv_namespaces = [
   { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
 ]
 
-[env.test.vars]
+[env.prod.vars]
 DATADOG_ENV = "production"
 DATADOG_HOST = "api.pm-empower.com"
 CORS_ORIGINS = "https://app.pm-empower.com"
