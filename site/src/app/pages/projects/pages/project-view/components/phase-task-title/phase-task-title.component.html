@@ -3,15 +3,18 @@
 <div class="d-inline-block">
   <div class="d-flex flex-align-start">
     <span> {{ vm.levelText }} &nbsp;-&nbsp; {{ vm.title }} </span>
-    @if (canEdit()) {
-    <span class="child-to-show mg-l-10" [ngClass]="{ nevermind: forcedShow() }">
+    <span class="child-to-show" [ngClass]="{ nevermind: forcedShow() }">
+      @if (canEdit()) {
       <fa-icon
         size="sm"
-        class="pointer"
+        class="pointer mg-l-10"
         [icon]="editIcon"
         (click)="edit.emit()"
         [title]="'General.Edit' | translate"
       />
+
+      }
+
       <a #menuTarget class="pointer mg-l-10 pd-h-5">
         <fa-icon
           size="sm"
@@ -33,6 +36,5 @@
         <wbs-context-menu-item [item]="item" />
       </ng-template>
     </kendo-contextmenu>
-    }
   </div>
 </div>

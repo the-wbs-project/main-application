@@ -65,19 +65,16 @@
     [title]="'Wbs.Activity_Title' | translate"
   >
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      @if (editEnabled) {
       <wbs-phase-task-title
         [task]="dataItem"
         [project]="project"
         [claims]="claims()"
-        [canEdit]="true"
+        [canEdit]="editEnabled"
         (edit)="treeService.editTitle(treelist, dataItem, 1)"
         (menuItemSelected)="menuItemSelected($event, dataItem.id)"
       />
       @if (treeService.getSaveState(dataItem.id); as saveState) {
       <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
-      } } @else {
-      {{ dataItem.levelText }} &nbsp;-&nbsp; {{ dataItem.title }}
       }
     </ng-template>
     <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
