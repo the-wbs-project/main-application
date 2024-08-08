@@ -10,12 +10,7 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "123" },
 ]
 services = [
-  { binding = "AUTH_API_ROLES", service = "pm-empower-auth-dev", entrypoint = "RolesEntrypoint" },
-  { binding = "AUTH_API_USERS", service = "pm-empower-auth-dev", entrypoint = "UserEntrypoint" },
-  { binding = "AUTH_API_QUEUES", service = "pm-empower-auth-dev", entrypoint = "QueueEntrypoint" },
-  { binding = "AUTH_API_INVITES", service = "pm-empower-auth-dev", entrypoint = "InviteEntrypoint" },
-  { binding = "AUTH_API_MEMBERSHIPS", service = "pm-empower-auth-dev", entrypoint = "MembershipsEntrypoint" },
-  { binding = "AUTH_API_ORGANIZATIONS", service = "pm-empower-auth-dev", entrypoint = "OrganizationEntrypoint" }
+  { binding = "AUTH_API", service = "pm-empower-auth-dev" }
 ]
 
 [env.dev.vars]

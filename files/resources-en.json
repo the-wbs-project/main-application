@@ -169,6 +169,7 @@
       "ClosedProjects": "Closed Projects",
       "More": "More",
       "Less": "Less",
+      "Legend": "Legend",
       "Category": "Category",
       "Categories": "Categories",
       "Level": "Level",
@@ -429,7 +430,10 @@
       "PhaseSettingsInfo": "What are the phases of this project?",
       "DisciplineSettingsInfoProject": "What disciplines are associated with this project?",
       "DisciplineSettingsInfoTask": "Who will be performing this task?",
-      "CancelProjectSuccess": "The project was successfully cancelled."
+      "CancelProjectSuccess": "The project was successfully cancelled.",
+      "TaskLegend_Title": "Click to edit the task title.",
+      "TaskLegend_Menu": "Click to see other actions which can be performed on this task.",
+      "TaskLegend_Abs": "Account Breakdown Structure Task"
     }
   },
   {

@@ -1,21 +1,9 @@
-import {
-  InviteEntrypoint,
-  MembershipsEntrypoint,
-  OrganizationEntrypoint,
-  QueueEntrypoint,
-  RolesEntrypoint,
-  UserEntrypoint,
-} from './entrypoints';
+import { AuthEntrypoint } from './entrypoints';
 
 export type Env = {
   readonly KV_DATA: KVNamespace;
 
-  readonly AUTH_API_MEMBERSHIPS: MembershipsEntrypoint;
-  readonly AUTH_API_INVITES: InviteEntrypoint;
-  readonly AUTH_API_ORGANIZATIONS: OrganizationEntrypoint;
-  readonly AUTH_API_QUEUES: QueueEntrypoint;
-  readonly AUTH_API_ROLES: RolesEntrypoint;
-  readonly AUTH_API_USERS: UserEntrypoint;
+  readonly AUTH_API: AuthEntrypoint;
 
   readonly AUTH_URL: string;
   readonly AUTH_AUDIENCE: string;

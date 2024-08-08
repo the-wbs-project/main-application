@@ -1,31 +1,35 @@
-import { UserEntrypoint } from '../../config';
+import { AuthEntrypoint, UsersEntrypoint } from '../../config';
 import { Organization, Role, User, UserBasic } from '../../models';
 import { UserViewModel } from '../../view-models';
 
 export class UserDataService {
-  constructor(private readonly service: UserEntrypoint) {}
+  constructor(private readonly authApi: AuthEntrypoint) {}
 
-  public getViewAsync(organizationId: string, userId: string, visibility: string): Promise<UserViewModel | undefined> {
-    return this.service.getView(organizationId, userId, visibility);
+  async getViewAsync(organizationId: string, userId: string, visibility: string): Promise<UserViewModel | undefined> {
+    return (await this.service()).getView(organizationId, userId, visibility);
   }
 
-  getBasicAsync(userId: string): Promise<UserBasic | undefined> {
-    return this.service.getBasic(userId);
+  async getBasicAsync(userId: string): Promise<UserBasic | undefined> {
+    return (await this.service()).getBasic(userId);
   }
 
-  getProfileAsync(userId: string): Promise<User | undefined> {
-    return this.service.getProfile(userId);
+  async getProfileAsync(userId: string): Promise<User | undefined> {
+    return (await this.service()).getProfile(userId);
   }
 
-  getSiteRolesAsync(userId: string): Promise<Role[]> {
-    return this.service.getSiteRoles(userId);
+  async getSiteRolesAsync(userId: string): Promise<Role[]> {
+    return (await this.service()).getSiteRoles(userId);
   }
 
-  getMembershipsAsync(userId: string): Promise<Organization[]> {
-    return this.service.getMemberships(userId);
+  async getMembershipsAsync(userId: string): Promise<Organization[]> {
+    return (await this.service()).getMemberships(userId);
   }
 
-  updateAsync(user: User): Promise<void> {
-    return this.service.update(user);
+  async updateAsync(user: User): Promise<void> {
+    return (await this.service()).update(user);
+  }
+
+  private async service(): Promise<UsersEntrypoint> {
+    return this.authApi.users();
   }
 }

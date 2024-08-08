@@ -26,14 +26,14 @@ export class DataServiceFactory {
   constructor(ctx: Context) {
     this.aiChat = new AiChatDataService(ctx);
     this.entries = new LibraryEntryDataService(ctx);
-    this.invites = new InvitesDataService(ctx.env.AUTH_API_INVITES);
+    this.invites = new InvitesDataService(ctx.env.AUTH_API);
     this.libraryEntries = new LibraryEntryDataService(ctx);
     this.lists = new ListDataService(ctx);
-    this.memberships = new MembershipDataService(ctx.env.AUTH_API_MEMBERSHIPS);
-    this.organizations = new OrganizationDataService(ctx.env.AUTH_API_ORGANIZATIONS);
+    this.memberships = new MembershipDataService(ctx.env.AUTH_API);
+    this.organizations = new OrganizationDataService(ctx.env.AUTH_API);
     this.projects = new ProjectDataService(ctx);
     this.resources = new ResourcesDataService(ctx);
-    this.roles = new RolesDataService(ctx.env.AUTH_API_ROLES);
-    this.users = new UserDataService(ctx.env.AUTH_API_USERS);
+    this.roles = new RolesDataService(ctx.env.AUTH_API);
+    this.users = new UserDataService(ctx.env.AUTH_API);
   }
 }

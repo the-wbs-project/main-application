@@ -1,18 +1,22 @@
-import { InviteEntrypoint } from '../../config';
+import { AuthEntrypoint, InviteEntrypoint } from '../../config';
 import { Invite, InviteBody } from '../../models';
 
 export class InvitesDataService {
-  constructor(private readonly service: InviteEntrypoint) {}
+  constructor(private readonly authApi: AuthEntrypoint) {}
 
-  getAllAsync(organizationName: string): Promise<Invite[]> {
-    return this.service.getAll(organizationName);
+  async getAllAsync(organizationName: string): Promise<Invite[]> {
+    return (await this.service()).getAll(organizationName);
   }
 
-  sendAsync(organizationName: string, inviteBody: InviteBody): Promise<void> {
-    return this.service.send(organizationName, inviteBody);
+  async sendAsync(organizationName: string, inviteBody: InviteBody): Promise<void> {
+    return (await this.service()).send(organizationName, inviteBody);
   }
 
-  deleteAsync(organizationName: string, inviteId: string): Promise<void> {
-    return this.service.delete(organizationName, inviteId);
+  async deleteAsync(organizationName: string, inviteId: string): Promise<void> {
+    return (await this.service()).delete(organizationName, inviteId);
+  }
+
+  private async service(): Promise<InviteEntrypoint> {
+    return this.authApi.invites();
   }
 }

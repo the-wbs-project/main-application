@@ -1,10 +1,14 @@
-import { RolesEntrypoint } from '../../config';
+import { AuthEntrypoint, RolesEntrypoint } from '../../config';
 import { Role } from '../../models';
 
 export class RolesDataService {
-  constructor(private readonly service: RolesEntrypoint) {}
+  constructor(private readonly authApi: AuthEntrypoint) {}
 
-  getAllAsync(): Promise<Role[]> {
-    return this.service.getAll();
+  async getAllAsync(): Promise<Role[]> {
+    return (await this.service()).getAll();
+  }
+
+  private async service(): Promise<RolesEntrypoint> {
+    return this.authApi.roles();
   }
 }

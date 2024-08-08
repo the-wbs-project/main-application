@@ -1,18 +1,22 @@
-import { OrganizationEntrypoint } from '../../config';
+import { AuthEntrypoint, OrganizationsEntrypoint } from '../../config';
 import { Organization } from '../../models';
 
 export class OrganizationDataService {
-  constructor(private readonly service: OrganizationEntrypoint) {}
+  constructor(private readonly authApi: AuthEntrypoint) {}
 
-  getAllAsync(): Promise<Organization[]> {
-    return this.service.getAll();
+  async getAllAsync(): Promise<Organization[]> {
+    return (await this.service()).getAll();
   }
 
-  getByNameAsync(name: string): Promise<Organization | undefined> {
-    return this.service.getByName(name);
+  async getByNameAsync(name: string): Promise<Organization | undefined> {
+    return (await this.service()).getByName(name);
   }
 
-  updateAsync(organization: Organization): Promise<void> {
-    return this.service.update(organization);
+  async updateAsync(organization: Organization): Promise<void> {
+    return (await this.service()).update(organization);
+  }
+
+  private async service(): Promise<OrganizationsEntrypoint> {
+    return this.authApi.organizations();
   }
 }
