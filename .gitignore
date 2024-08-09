@@ -9,6 +9,7 @@ _theme/Nowa
 **/.mf/
 **/data/**/config*.*
 .vs/
+.vscode/
 
 .angular
 .env
