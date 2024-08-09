@@ -186,6 +186,13 @@ wbs-app {
   flex-wrap: wrap;
 }
 
+.profile-img {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  box-shadow: 0px 4px 4px 0px #dbe4f9;
+}
+
 .transparent-theme {
   .ng-value {
     color: #fff;
