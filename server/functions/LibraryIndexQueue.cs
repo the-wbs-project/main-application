@@ -12,15 +12,17 @@ namespace functions
         private readonly ILogger _logger;
         private readonly LibrarySearchIndexService searchIndexService;
         private readonly LibraryEntryDataService dataService;
+        private readonly LibraryEntryViewDataService entryViewDataService;
         private readonly LibrarySearchService searchSearch;
 
-        public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchIndexService, LibraryEntryDataService dataService, DbService db, LibrarySearchService searchSearch)
+        public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchIndexService, LibraryEntryDataService dataService, DbService db, LibrarySearchService searchSearch, LibraryEntryViewDataService entryViewDataService)
         {
             _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
             this.dataService = dataService;
             this.searchIndexService = searchIndexService;
             this.db = db;
             this.searchSearch = searchSearch;
+            this.entryViewDataService = entryViewDataService;
         }
 
         [Function("LibraryIndex-Build")]
@@ -67,7 +69,7 @@ namespace functions
             {
                 using (var conn = await db.CreateConnectionAsync())
                 {
-                    var entries = await dataService.GetByOwnerAsync(conn, owner);
+                    var entries = await entryViewDataService.GetAllAsync(conn, owner);
 
                     await searchIndexService.VerifyIndexAsync();
                     await searchIndexService.PushToSearchAsync(conn, owner, entries.Select(e => e.EntryId).ToArray());
@@ -90,7 +92,7 @@ namespace functions
                 {
                     await searchIndexService.VerifyIndexAsync();
 
-                    var entries = await dataService.GetByOwnerAsync(conn, owner);
+                    var entries = await entryViewDataService.GetAllAsync(conn, owner);
                     var search = await searchSearch.GetAllAsync(owner);
                     var toRemove = search
                         .Where(d => !entries.Any(e => e.EntryId == d.EntryId && e.Version == d.Version))

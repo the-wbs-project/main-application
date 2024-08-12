@@ -16,6 +16,17 @@ public class LibraryEntryViewDataService : BaseSqlDbService
         logger = loggerFactory.CreateLogger<LibraryEntryViewDataService>();
     }
 
+    public async Task<IEnumerable<LibraryViewModel>> GetAllAsync(SqlConnection conn, string owner)
+    {
+        var cmd = new SqlCommand("SELECT * from [dbo].[LibraryEntryView] WHERE OwnerId = @Owner AND Status = 'published'", conn);
+
+        cmd.Parameters.AddWithValue("@Owner", owner);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        return LibraryViewModelTransformer.ToViewModelList(reader);
+    }
+
     public async Task<IEnumerable<LibraryDraftViewModel>> GetDraftsAsync(SqlConnection conn, string owner, string userId, string types)
     {
         var cmd = new SqlCommand("[dbo].[Library_GetDrafts]", conn) { CommandType = CommandType.StoredProcedure };
