@@ -29,6 +29,8 @@ public static class LibrarySearchTransformer
             Disciplines_En = disciplines.ToArray(),
             AuthorId = version.Author,
             AuthorName = authorName,
+            VersionAlias = version.VersionAlias,
+            Visibility = entry.Visibility
         };
 
         return doc;
