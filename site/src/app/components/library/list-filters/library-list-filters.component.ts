@@ -1,24 +1,23 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
   input,
   model,
-  signal,
 } from '@angular/core';
-import { TranslateModule } from '@ngx-translate/core';
-import { ExpansionPanelModule } from '@progress/kendo-angular-layout';
-import { LibraryFilterComponent } from './components';
-import { LibrarySearchComponent } from '../search.component';
-import { LibrarySelectorComponent } from '../selector';
-import { NgClass } from '@angular/common';
-import { faChevronDown, faChevronUp } from '@fortawesome/pro-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faChevronDown, faChevronUp } from '@fortawesome/pro-solid-svg-icons';
+import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { ExpansionPanelModule } from '@progress/kendo-angular-layout';
 import {
   LIBRARY_FILTER_LIBRARIES,
   LIBRARY_FILTER_ROLES,
   LIBRARY_FILTER_TYPES,
 } from '@wbs/core/models';
+import { LibraryFilterComponent } from '../library-filter.component';
+import { LibrarySearchComponent } from '../search.component';
+import { LibrarySelectorComponent } from '../selector';
 
 @Component({
   standalone: true,
@@ -51,8 +50,10 @@ import {
 })
 export class LibraryListFiltersComponent {
   readonly showLibrary = input(false);
-  readonly searchText = model.required<string>();
-  readonly typeFilters = model.required<string[]>();
+  readonly showAssociations = input(false);
+  readonly showSearch = input(false);
+  readonly searchText = model<string>();
+  readonly typeFilters = model<string[]>();
   readonly authorFilters = model<string[]>();
   readonly library = model<string>();
   readonly expanded = model(false);

@@ -117,6 +117,7 @@ export class SaveSectionComponent {
       lastModified: new Date(),
       title: this.templateTitle(),
       disciplines,
+      versionAlias: 'TODO',
     };
     const nodes: LibraryEntryNode[] = [];
 

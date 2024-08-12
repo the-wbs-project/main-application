@@ -1,56 +1,42 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, Signal, inject, signal } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { LibraryListComponent } from '@wbs/components/library/list';
 import { Storage } from '@wbs/core/services';
-import { MembershipStore, UserStore } from '@wbs/core/store';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { MembershipStore } from '@wbs/core/store';
+import { LibraryDraftViewModel, LibraryViewModel } from '@wbs/core/view-models';
 import { EntryCreationService } from '@wbs/pages/library/services';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Injectable()
 export class LibraryHomeService {
   private readonly storage = inject(Storage);
   private readonly store = inject(Store);
   private readonly membership = inject(MembershipStore).membership;
-  private readonly profile = inject(UserStore).profile;
   private readonly creation = inject(EntryCreationService);
+  private readonly _library = signal<string>(this.getLibraryFromStorage());
 
-  get selectedLibrary(): string {
-    return this.storage.local.get('selectedLibrary') || 'organizational';
+  get library(): Signal<string> {
+    return this._library;
   }
 
-  set selectedLibrary(library: string) {
+  setLibrary(library: string): void {
+    this._library.set(library);
+    this.setLibraryInStorage(library);
+  }
+
+  private getLibraryFromStorage(): string {
+    return this.storage.local.get('selectedLibrary') || 'drafts';
+  }
+
+  private setLibraryInStorage(library: string) {
     this.storage.local.set('selectedLibrary', library);
   }
 
-  createEntry(type: string): Observable<LibraryEntryViewModel | undefined> {
-    return this.creation.runAsync(this.membership()!.name, type).pipe(
-      map((results) => {
-        if (results == undefined) return undefined;
+  createDraft(type: string): void {
+    this.creation.runAsync(this.membership()!.name, type).subscribe((data) => {
+      if (!data) return;
 
-        const vm: LibraryEntryViewModel = {
-          authorId: results.entry.author,
-          authorName: this.profile()!.name,
-          entryId: results.entry.id,
-          title: results.version.title,
-          type: results.entry.type,
-          visibility: results.entry.visibility,
-          version: results.version.version,
-          lastModified: results.version.lastModified,
-          description: results.version.description,
-          ownerId: results.entry.owner,
-          ownerName: this.membership()!.display_name,
-          status: results.version.status,
-        };
-        if (results.action === 'close') return vm;
-
-        this.navigate(vm, results.action);
-
-        return undefined;
-      })
-    );
+      this.navigate(data.entry.owner, data.entry.id, data.version.version);
+    });
   }
 
   libraryChanged(library: string): void {
@@ -61,18 +47,20 @@ export class LibraryHomeService {
     );
   }
 
-  navigate(vm: LibraryEntryViewModel | undefined, action?: string): void {
+  navigateToVm(vm: LibraryViewModel | LibraryDraftViewModel | undefined): void {
     if (!vm) return;
+    this.navigate(vm.ownerId, vm.entryId, vm.version);
+  }
 
+  navigate(owner: string, entryId: string, version: number): void {
     this.store.dispatch(
       new Navigate([
         '/' + this.membership()!.name,
         'library',
         'view',
-        vm.ownerId,
-        vm.entryId,
-        vm.version,
-        ...(action === 'upload' ? [action] : []), // Don't send the view since 'view' should actually go to 'about'
+        owner,
+        entryId,
+        version,
       ])
     );
   }

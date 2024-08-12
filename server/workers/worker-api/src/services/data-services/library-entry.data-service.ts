@@ -20,6 +20,19 @@ export class LibraryEntryDataService extends BaseDataService {
     return data;
   }
 
+  async getVersionsAsync(owner: string, entry: string): Promise<LibraryEntryVersion[]> {
+    const key = this.getVersionsKey(owner, entry);
+    const kvData = await this.getKv<LibraryEntryVersion[]>(key);
+
+    if (kvData) return kvData;
+
+    const data = await this.origin.getAsync<LibraryEntryVersion[]>(`${this.getBaseUrl(owner, entry)}/versions`);
+
+    if (data) this.putKv(key, data);
+
+    return data ?? [];
+  }
+
   async getVersionByIdAsync(owner: string, entry: string, version: number): Promise<LibraryEntryVersion | undefined> {
     const key = this.getVersionKey(owner, entry, version);
     const kvData = await this.getKv<LibraryEntryVersion>(key);
@@ -45,6 +58,7 @@ export class LibraryEntryDataService extends BaseDataService {
     await Promise.all([
       this.origin.putAsync(data, `${this.getBaseUrl(owner, entry)}/versions/${version}`),
       this.clearEntryAsync(owner, entry),
+      this.clearVersionsAsync(owner, entry),
       this.clearVersionAsync(owner, entry, version),
     ]);
   }
@@ -53,6 +67,7 @@ export class LibraryEntryDataService extends BaseDataService {
     await Promise.all([
       this.origin.putAsync(data, `${this.getBaseUrl(owner, entry)}/versions/${version}/nodes`),
       this.clearEntryAsync(owner, entry),
+      this.clearVersionsAsync(owner, entry),
       this.clearVersionAsync(owner, entry, version),
       this.clearTasksAsync(owner, entry, version),
     ]);
@@ -121,6 +136,11 @@ export class LibraryEntryDataService extends BaseDataService {
     await this.ctx.env.KV_DATA.delete(this.getVersionKey(owner, entry, version));
   }
 
+  private async clearVersionsAsync(owner: string, entry: string): Promise<void> {
+    console.log('clearVersionsAsync', owner, entry);
+    await this.ctx.env.KV_DATA.delete(this.getVersionsKey(owner, entry));
+  }
+
   private async clearTasksAsync(owner: string, entry: string, version: number): Promise<void> {
     console.log('clearTasksAsync', owner, entry, version);
     await Promise.all([
@@ -131,6 +151,10 @@ export class LibraryEntryDataService extends BaseDataService {
 
   private getEntryKey(owner: string, entry: string): string {
     return `PORTFOLIO|${owner}|LIBRARY|${entry}|ENTRY`;
+  }
+
+  private getVersionsKey(owner: string, entry: string): string {
+    return `PORTFOLIO|${owner}|LIBRARY|${entry}|VERSIONS`;
   }
 
   private getVersionKey(owner: string, entry: string, version: number): string {

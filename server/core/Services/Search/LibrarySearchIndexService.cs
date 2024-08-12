@@ -1,3 +1,4 @@
+using Auth0.ManagementApi.Models;
 using Azure;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
@@ -7,7 +8,6 @@ using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
 using Wbs.Core.Services.Transformers;
-using Wbs.Core.ViewModels;
 
 namespace Wbs.Core.Services.Search;
 
@@ -18,19 +18,17 @@ public class LibrarySearchIndexService
     private readonly OrganizationDataService organizationDataService;
     private readonly LibraryEntryDataService libraryEntryDataService;
     private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
-    private readonly WatcherLibraryEntryDataService watcherDataService;
     private readonly ResourcesDataService resourcesDataService;
     private readonly ListDataService listDataService;
     private readonly QueueService queueService;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, WatcherLibraryEntryDataService watcherDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, QueueService queueService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, QueueService queueService)
     {
         this.searchConfig = searchConfig;
         this.userDataService = userDataService;
         this.organizationDataService = organizationDataService;
         this.libraryEntryDataService = libraryEntryDataService;
         this.libraryEntryVersionDataService = libraryEntryVersionDataService;
-        this.watcherDataService = watcherDataService;
         this.resourcesDataService = resourcesDataService;
         this.listDataService = listDataService;
         this.queueService = queueService;
@@ -54,6 +52,7 @@ public class LibrarySearchIndexService
         var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
         var resources = new Resources(resourceObj);
         var pushes = new List<Task>();
+        var ownerObj = await organizationDataService.GetOrganizationByNameAsync(owner);
         //
         //  Get discipline labels
         //
@@ -62,14 +61,14 @@ public class LibrarySearchIndexService
 
         foreach (var entryId in entryIds)
         {
-            var entry = await libraryEntryDataService.GetViewModelByIdAsync(conn, owner, entryId);
+            var entry = await libraryEntryDataService.GetByIdAsync(conn, owner, entryId);
 
-            if (entry == null) continue;
+            if (entry == null || !entry.PublishedVersion.HasValue) continue;
 
-            var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.Version);
-            var watcherIds = await watcherDataService.GetUsersAsync(conn, owner, entryId);
+            var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
+            var author = await userDataService.GetMemberAsync(version.Author);
 
-            pushes.Add(PushToSearchAsync(resources, entry, version, watcherIds, disciplineLabels, userCache));
+            pushes.Add(PushToSearchAsync(resources, ownerObj, entry, version, author.Name, disciplineLabels));
 
             if (pushes.Count > 0)
             {
@@ -82,31 +81,20 @@ public class LibrarySearchIndexService
 
     public async Task PushToSearchAsync(
         Resources resources,
-        LibraryEntryViewModel entry,
+        Organization owner,
+        LibraryEntry entry,
         LibraryEntryVersion version,
-        IEnumerable<string> watcherIds,
-        Dictionary<string, string> disciplineLabels,
-        Dictionary<string, UserDocument> userCache = null)
+        string authorName,
+        Dictionary<string, string> disciplineLabels)
     {
-        var owner = await organizationDataService.GetOrganizationByNameAsync(entry.OwnerId);
-        var users = await userDataService.GetUserDocumentsAsync(watcherIds.Concat([entry.AuthorId]).Distinct(), userCache);
         var typeLabel = GetEntryTypeLabel(entry.Type, resources);
         var disciplines = new List<string>();
 
-        foreach (var discipline in version.disciplines)
+        foreach (var discipline in version.Disciplines)
             disciplines.Add(discipline.isCustom ? discipline.label : disciplineLabels[discipline.id]);
 
-        var toUpload = new List<LibrarySearchDocument>
-        {
-            LibrarySearchTransformer.CreateDocument("private", entry, owner, typeLabel, watcherIds, disciplines, users)
-        };
-
-        if (entry.Visibility == "public")
-        {
-            toUpload.Add(LibrarySearchTransformer.CreateDocument("public", entry, owner, typeLabel, watcherIds, disciplines, users));
-        }
         var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
-            .MergeOrUploadDocumentsAsync(toUpload);
+            .MergeOrUploadDocumentsAsync(new[] { LibrarySearchTransformer.CreateDocument(entry, version, owner, typeLabel, authorName, disciplines) });
     }
 
     public async Task VerifyIndexAsync()

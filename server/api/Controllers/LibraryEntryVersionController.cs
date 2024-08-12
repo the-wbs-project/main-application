@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services.Search;
@@ -78,8 +77,8 @@ public class LibraryEntryVersionController : ControllerBase
     {
         try
         {
-            if (model.entryId != entryId) return BadRequest("EntryId in body must match EntryId in url");
-            if (model.version != entryVersion) return BadRequest("Version in body must match Version in url");
+            if (model.EntryId != entryId) return BadRequest("EntryId in body must match EntryId in url");
+            if (model.Version != entryVersion) return BadRequest("Version in body must match Version in url");
 
             using (var conn = await db.CreateConnectionAsync())
             {

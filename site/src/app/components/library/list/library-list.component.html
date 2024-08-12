@@ -51,15 +51,6 @@
       </td>
       <td>
         {{ entry.title }}
-        @if (entry.status === 'draft') {
-        <fa-icon
-          [icon]="draftIcon"
-          kendoTooltip
-          position="top"
-          class="mg-l-10"
-          [title]="'General.UnderConstruction' | translate"
-        />
-        }
       </td>
       <td class="d-none d-md-table-cell">
         {{ entry.lastModified | dateText }}

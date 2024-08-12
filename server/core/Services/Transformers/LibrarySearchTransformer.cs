@@ -2,44 +2,33 @@
 using Auth0.ManagementApi.Models;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
-using Wbs.Core.ViewModels;
 
 namespace Wbs.Core.Services.Transformers;
 
 public static class LibrarySearchTransformer
 {
     public static LibrarySearchDocument CreateDocument(
-        string visibility,
-        LibraryEntryViewModel entry,
+        LibraryEntry entry,
+        LibraryEntryVersion version,
         Organization owner,
         string typeName,
-        IEnumerable<string> watcherIds,
-        IEnumerable<string> disciplines,
-        Dictionary<string, UserDocument> users)
+        string authorName,
+        IEnumerable<string> disciplines)
     {
         var doc = new LibrarySearchDocument
         {
-            Id = $"{entry.EntryId}-{visibility}",
-            EntryId = entry.EntryId,
-            Version = entry.Version,
+            EntryId = entry.Id,
+            Version = version.Version,
             OwnerId = entry.OwnerId,
             OwnerName = owner.DisplayName,
-            Title_En = entry.Title,
-            Description_En = entry.Description,
+            Title = version.Title,
             TypeId = entry.Type,
             TypeName = typeName,
-            LastModified = entry.LastModified,
-            StatusId = entry.Status,
-            Visibility = visibility,
+            LastModified = version.LastModified,
+            StatusId = version.Status,
             Disciplines_En = disciplines.ToArray(),
-            //
-            //  Users
-            //
-            Author = users.ContainsKey(entry.AuthorId) ? new SortableUserDocument(users[entry.AuthorId]) : null,
-            Watchers = watcherIds
-                .Where(x => users.ContainsKey(x))
-                .Select(x => users[x])
-                .ToArray(),
+            AuthorId = version.Author,
+            AuthorName = authorName,
         };
 
         return doc;

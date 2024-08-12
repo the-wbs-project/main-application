@@ -9,11 +9,10 @@ import {
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
-import { faWrench } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { LibraryViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
@@ -38,12 +37,11 @@ import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
   ],
 })
 export class LibraryListComponent {
-  readonly draftIcon = faWrench;
   readonly loadingIcon = faSpinner;
   readonly showLoading = input(false);
   readonly showWatchedColumn = input(true);
-  readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
-  readonly entries = input.required<LibraryEntryViewModel[]>();
+  readonly selected = model<LibraryViewModel | undefined>(undefined);
+  readonly entries = input.required<LibraryViewModel[]>();
   readonly showOwner = input(false);
   readonly dblClick = output<void>();
 }

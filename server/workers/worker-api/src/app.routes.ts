@@ -5,8 +5,12 @@ import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunServ
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
 
+function newApp() {
+  return new Hono<{ Bindings: Env; Variables: Variables }>();
+}
+
 const ROUTES: Routes = ROUTE_FILE;
-const app = new Hono<{ Bindings: Env; Variables: Variables }>();
+const app = newApp();
 //
 //  Dependency Injection
 //
@@ -27,14 +31,21 @@ app.use('*', ddLogger);
 app.use('*', cors);
 app.onError(error);
 
-app.options('api/*', (c) => c.text(''));
+app.options('*', (c) => c.text(''));
 
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
 app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
+//
+//  Claims
+//
+const claimsApp = newApp()
+  .basePath('api/claims')
+  .use('*', verifyJwt)
+  .get('organization/:organization', Http.claims.getForOrganizationAsync)
+  .get('project/:owner/:project', Http.claims.getForProjectAsync)
+  .get('libraryEntry/:owner/:entry', Http.claims.getForLibraryEntryAsync);
 
-app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);
-app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
-app.get('api/claims/libraryEntry/:owner/:entry', verifyJwt, Http.claims.getForLibraryEntryAsync);
+app.route('/', claimsApp);
 
 app.get('api/cache/clear', Http.misc.clearKvAsync);
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
@@ -44,12 +55,19 @@ app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsyn
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
+//  Library calls
+//
+const libApp = newApp().basePath('api/libraries').use('*', verifyJwt);
+libApp.get('/drafts/:owner/:types', verifyMembership, Http.library.getDraftsAsync);
+libApp.post('internal/:owner', verifyMembership, OriginService.pass);
+libApp.post('public', OriginService.pass);
+
+app.route('/', libApp);
+//
 //  Auth calls
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
 
-app.get('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.getEntryAsync);
-app.post('api/portfolio/:owner/library/entries/search', verifyJwt, Http.libraryEntries.getSearchAsync);
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', (ctx) => ctx.newResponse(null, 403));
 app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/public', verifyJwt, Http.libraryEntries.getPublicTasksAsync);

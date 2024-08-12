@@ -70,6 +70,7 @@ builder.Services.AddSingleton<LibraryEntryNodeDataService>();
 builder.Services.AddSingleton<LibraryEntryNodeResourceDataService>();
 builder.Services.AddSingleton<LibraryEntryVersionResourceDataService>();
 builder.Services.AddSingleton<LibraryEntryVersionDataService>();
+builder.Services.AddSingleton<LibraryEntryViewDataService>();
 builder.Services.AddSingleton<ListDataService>();
 builder.Services.AddSingleton<OrganizationDataService>();
 builder.Services.AddSingleton<ProjectApprovalDataService>();

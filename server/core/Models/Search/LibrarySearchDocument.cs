@@ -6,13 +6,7 @@ namespace Wbs.Core.Models.Search;
 public partial class LibrarySearchDocument
 {
     [SimpleField(IsFilterable = false, IsKey = true)]
-    public string Id { get; set; }
-
-    [SimpleField(IsFilterable = false)]
     public string EntryId { get; set; }
-
-    [SimpleField]
-    public int Version { get; set; }
 
     [SimpleField(IsFilterable = true)]
     public string OwnerId { get; set; }
@@ -20,11 +14,15 @@ public partial class LibrarySearchDocument
     [SearchableField(IsSortable = true, IsFilterable = true, IsFacetable = true)]
     public string OwnerName { get; set; }
 
-    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
-    public string Title_En { get; set; }
+    [SimpleField]
+    public string VersionAlias { get; set; }
+
+    [SimpleField]
+    public int Version { get; set; }
 
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
-    public string Description_En { get; set; }
+    public string Title { get; set; }
+
 
     [SimpleField(IsFilterable = true, IsSortable = true, IsFacetable = true)]
     public string TypeId { get; set; }
@@ -44,6 +42,9 @@ public partial class LibrarySearchDocument
     [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
     public string[] Disciplines_En { get; set; }
 
-    public SortableUserDocument Author { get; set; }
-    public UserDocument[] Watchers { get; set; }
+    [SimpleField(IsFilterable = true, IsFacetable = true)]
+    public string AuthorId { get; set; }
+
+    [SearchableField(AnalyzerName = LexicalAnalyzerName.Values.EnLucene)]
+    public string AuthorName { get; set; }
 }

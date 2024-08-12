@@ -33,10 +33,7 @@ import { TaskTitle2Component } from '@wbs/components/task-title';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/core/store';
-import {
-  LibraryEntryViewModel,
-  LibraryTaskViewModel,
-} from '@wbs/core/view-models';
+import { LibraryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -64,7 +61,7 @@ export class LibraryImportTreeComponent implements OnInit {
 
   readonly refreshIcon = faRefresh;
   readonly containerHeight = input.required<number>();
-  readonly entry = input.required<LibraryEntryViewModel>();
+  readonly entry = input.required<LibraryViewModel>();
   readonly version = input.required<LibraryEntryVersion>();
   readonly tasks = model.required<LibraryEntryNode[]>();
   readonly width = inject(UiStore).mainContentWidth;

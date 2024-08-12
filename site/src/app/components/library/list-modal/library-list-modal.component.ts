@@ -24,7 +24,7 @@ import {
   LibraryImportResults,
   StepperItem,
 } from '@wbs/core/models';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { LibraryViewModel } from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { Observable, forkJoin } from 'rxjs';
@@ -58,7 +58,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   private userId?: string;
 
   readonly containerHeight = signal(100);
-  readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
+  readonly selected = model<LibraryViewModel | undefined>(undefined);
   readonly view = signal(0);
   readonly ready = signal(false);
   readonly steps: StepperItem[] = [
@@ -78,7 +78,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   readonly loadingTree = signal(false);
   readonly version = signal<LibraryEntryVersion | undefined>(undefined);
   readonly tasks = signal<LibraryEntryNode[]>([]);
-  readonly entries = signal<LibraryEntryViewModel[]>([]);
+  readonly entries = signal<LibraryViewModel[]>([]);
 
   constructor(dialog: DialogRef) {
     super(dialog);
@@ -146,7 +146,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   }
 
   protected retrieve(): void {
-    this.data.libraryEntries
+    /*this.data.libraryEntries
       .searchAsync(this.org!, {
         userId: this.userId!,
         library: this.library(),
@@ -154,6 +154,6 @@ export class LibraryListModalComponent extends DialogContentBase {
         roles: this.roleFilters(),
         types: this.typeFilters(),
       })
-      .subscribe((entries) => this.entries.set(entries));
+      .subscribe((entries) => this.entries.set(entries));*/
   }
 }

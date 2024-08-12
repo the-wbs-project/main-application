@@ -9,7 +9,7 @@ import { CategoryService, sorter } from '@wbs/core/services';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import {
   CategoryViewModel,
-  LibraryEntryViewModel,
+  LibraryViewModel,
   LibraryTaskViewModel,
   ProjectTaskViewModel,
   TaskViewModel,
@@ -28,13 +28,13 @@ export class WbsNodePhaseTransformer {
   }
 
   forLibrary(
-    entry: LibraryEntry | LibraryEntryViewModel,
+    entry: LibraryEntry | LibraryViewModel,
     models: LibraryEntryNode[],
     disciplines: CategoryViewModel[]
   ): LibraryTaskViewModel[] {
     const org = this.membership.membership()!.name;
     const owner =
-      (entry as LibraryEntry).owner || (entry as LibraryEntryViewModel).ownerId;
+      (entry as LibraryEntry).owner || (entry as LibraryViewModel).ownerId;
     //
     //  Just in case somehow the unthinkable happen, return NOTHING!
     //

@@ -5,7 +5,8 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 
 export const LIBRARY_FILTER_LIBRARIES = [
-  { value: 'organizational', label: 'General.Organizational' },
+  { value: 'draft', label: 'General.Drafts' },
+  { value: 'internal', label: 'General.Organizational' },
   { value: 'public', label: 'General.Public' },
 ];
 

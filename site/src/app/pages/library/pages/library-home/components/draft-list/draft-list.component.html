@@ -1,0 +1,53 @@
+<table class="table table-hover">
+  <thead>
+    <tr class="bg-dark text-white">
+      <th class="text-center bg-dark text-white pd-10 fw-normal">
+        {{ "General.Type" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal">
+        {{ "General.Title" | translate }}
+      </th>
+      <th class="text-center bg-dark text-white pd-10 fw-normal">
+        {{ "General.Version" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
+        {{ "General.LastUpdated" | translate }}
+      </th>
+      <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
+        {{ "General.Author" | translate }}
+      </th>
+    </tr>
+  </thead>
+  <tbody>
+    @for (entry of entries(); track entry.entryId) {
+    <tr class="pointer" (click)="selected.emit(entry)">
+      <td class="text-center">
+        <fa-icon
+          [icon]="entry.type | entryTypeIcon"
+          class="d-none d-sm-inline mg-r-5"
+        />
+        <span class="d-inline-block wd-50">
+          {{ entry.type | entryTypeTitle | translate }}
+        </span>
+      </td>
+      <td>{{ entry.title }}</td>
+      <td class="text-center">
+        @if (entry.versionAlias) {
+        {{ entry.versionAlias }} &nbsp; (v{{ entry.version }}) } @else { v{{
+          entry.version
+        }}
+        }
+      </td>
+      <td class="d-none d-md-table-cell">
+        {{ entry.lastModified | dateText }}
+      </td>
+      <td class="d-none d-md-table-cell">{{ entry.authorName }}</td>
+    </tr>
+    }
+  </tbody>
+</table>
+@if (showLoading()) {
+<div class="w-100 text-center pd-t-40">
+  <fa-duotone-icon [icon]="loadingIcon" size="5x" animation="spin" />
+</div>
+}

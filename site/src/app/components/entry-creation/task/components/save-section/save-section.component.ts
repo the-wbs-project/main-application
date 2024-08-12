@@ -103,6 +103,7 @@ export class SaveSectionComponent {
       lastModified: new Date(),
       title: this.templateTitle(),
       disciplines,
+      versionAlias: 'TODO',
     };
     const node: LibraryEntryNode = {
       id: IdService.generate(),

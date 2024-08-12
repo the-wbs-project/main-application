@@ -66,6 +66,7 @@ export class LibraryImportComponent {
               lastModified: new Date(),
               status: 'draft',
               title: library.name,
+              versionAlias: 'TODO',
             };
             const tasks = new Map<
               string,

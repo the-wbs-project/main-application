@@ -17,12 +17,18 @@ CREATE PROCEDURE [dbo].[LibraryEntryNode_Set]
     @Visibility nvarchar(50)
 AS
 BEGIN
-    IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
-       EXISTS(SELECT 1 FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
+    IF EXISTS(SELECT 1
+        FROM [dbo].[LibraryEntries]
+        WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
+        EXISTS(SELECT 1
+        FROM [dbo].[LibraryEntryVersions]
+        WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
         BEGIN
-            IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntryNodes] WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion)
+        IF EXISTS(SELECT 1
+        FROM [dbo].[LibraryEntryNodes]
+        WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion)
                 BEGIN
-                    UPDATE [dbo].[LibraryEntryNodes] SET
+            UPDATE [dbo].[LibraryEntryNodes] SET
                         [ParentId] = @ParentId,
                         [PhaseIdAssociation] = @PhaseIdAssociation,
                         [Order] = @Order,
@@ -34,43 +40,46 @@ BEGIN
                         [Visibility] = @Visibility,
                         [LastModified] = GETUTCDATE()
                     WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion
-                END
+        END
             ELSE
                 BEGIN
-                    INSERT INTO [dbo].[LibraryEntryNodes] (
-                        [Id],
-                        [EntryId],
-                        [EntryVersion],
-                        [ParentId],
-                        [PhaseIdAssociation],
-                        [Order],
-                        [Title],
-                        [Description],
-                        [DisciplineIds],
-                        [LibraryLink],
-                        [LibraryTaskLink],
-                        [Visibility],
-                        [CreatedOn],
-                        [LastModified],
-                        [Removed]
-                    ) VALUES (
-                        @Id,
-                        @EntryId,
-                        @EntryVersion,
-                        @ParentId,
-                        @PhaseIdAssociation,
-                        @Order,
-                        @Title,
-                        @Description,
-                        @DisciplineIds,
-                        @LibraryLink,
-                        @LibraryTaskLink,
-                        @Visibility,
-                        GETUTCDATE(),
-                        GETUTCDATE(),
-                        0
+            INSERT INTO [dbo].[LibraryEntryNodes]
+                (
+                [Id],
+                [EntryId],
+                [EntryVersion],
+                [ParentId],
+                [PhaseIdAssociation],
+                [Order],
+                [Title],
+                [Description],
+                [DisciplineIds],
+                [LibraryLink],
+                [LibraryTaskLink],
+                [Visibility],
+                [CreatedOn],
+                [LastModified],
+                [Removed]
+                )
+            VALUES
+                (
+                    @Id,
+                    @EntryId,
+                    @EntryVersion,
+                    @ParentId,
+                    @PhaseIdAssociation,
+                    @Order,
+                    @Title,
+                    @Description,
+                    @DisciplineIds,
+                    @LibraryLink,
+                    @LibraryTaskLink,
+                    @Visibility,
+                    GETUTCDATE(),
+                    GETUTCDATE(),
+                    0
                     )
-                END
         END
+    END
 END
 GO
