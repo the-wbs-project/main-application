@@ -58,6 +58,7 @@ var host = new HostBuilder()
         services.AddSingleton<LibraryEntryDataService>();
         services.AddSingleton<LibraryEntryNodeDataService>();
         services.AddSingleton<LibraryEntryVersionDataService>();
+        services.AddSingleton<LibraryEntryViewDataService>();
         services.AddSingleton<ListDataService>();
         services.AddSingleton<OrganizationDataService>();
         services.AddSingleton<ResourcesDataService>();
