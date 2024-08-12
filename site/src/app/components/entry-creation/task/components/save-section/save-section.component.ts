@@ -89,7 +89,6 @@ export class SaveSectionComponent {
       );
     }
     const entry: LibraryEntry = {
-      author: this.userId()!,
       id: IdService.generate(),
       owner: this.owner(),
       type: 'task',
@@ -104,6 +103,8 @@ export class SaveSectionComponent {
       title: this.templateTitle(),
       disciplines,
       versionAlias: 'TODO',
+      author: this.userId()!,
+      editors: [],
     };
     const node: LibraryEntryNode = {
       id: IdService.generate(),

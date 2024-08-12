@@ -5,8 +5,8 @@ import {
   inject,
   input,
 } from '@angular/core';
-import { ActionButtonComponent } from '@wbs/components/action-button';
 import { EntryActionButtonService } from '../services';
+import { ActionButtonComponent2 } from '@wbs/components/action-button2';
 
 @Component({
   standalone: true,
@@ -16,7 +16,7 @@ import { EntryActionButtonService } from '../services';
     (itemClicked)="service.handleAction($event)"
   />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ActionButtonComponent],
+  imports: [ActionButtonComponent2],
   providers: [EntryActionButtonService],
 })
 export class EntryActionButtonComponent {

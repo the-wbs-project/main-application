@@ -39,9 +39,7 @@ export class TasksPageComponent {
   readonly containerHeight = signal(100);
   readonly dialogContainerHeight = signal(100);
   readonly entryUrl = input.required<string[]>();
-  readonly isLoading = computed(
-    () => !this.entryStore.entry() || !this.entryStore.version()
-  );
+  readonly isLoading = computed(() => !this.entryStore.version());
 
   navigateToTask(taskId: string): void {
     this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));

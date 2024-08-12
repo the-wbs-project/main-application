@@ -1,21 +1,24 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import {
   LIBRARY_CLAIMS,
-  LibraryEntry,
   LibraryEntryNode,
-  LibraryEntryVersion,
-  ProjectCategory,
+  LibraryEntryVersionBasic,
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
-import { LibraryTaskViewModel } from '@wbs/core/view-models';
+import {
+  LibraryTaskViewModel,
+  LibraryVersionViewModel,
+} from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
   private readonly categoryService = inject(CategoryService);
   private readonly transformer = inject(Transformers);
 
-  private readonly _entry = signal<LibraryEntry | undefined>(undefined);
-  private readonly _version = signal<LibraryEntryVersion | undefined>(
+  private readonly _versions = signal<LibraryEntryVersionBasic[] | undefined>(
+    undefined
+  );
+  private readonly _version = signal<LibraryVersionViewModel | undefined>(
     undefined
   );
   private readonly _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
@@ -25,10 +28,6 @@ export class EntryStore {
   private readonly _navSectionEntry = signal<string | undefined>(undefined);
   private readonly _navSectionTask = signal<string | undefined>(undefined);
   private readonly _claims = signal<string[]>([]);
-
-  get entry(): Signal<LibraryEntry | undefined> {
-    return this._entry;
-  }
 
   get navSectionEntry(): Signal<string | undefined> {
     return this._navSectionEntry;
@@ -42,8 +41,12 @@ export class EntryStore {
     return this._tasks;
   }
 
-  get version(): Signal<LibraryEntryVersion | undefined> {
+  get version(): Signal<LibraryVersionViewModel | undefined> {
     return this._version;
+  }
+
+  get versions(): Signal<LibraryEntryVersionBasic[] | undefined> {
+    return this._versions;
   }
 
   get viewModels(): Signal<LibraryTaskViewModel[] | undefined> {
@@ -95,18 +98,16 @@ export class EntryStore {
   }
 
   setAll(
-    entry: LibraryEntry,
-    version: LibraryEntryVersion,
+    versions: LibraryEntryVersionBasic[],
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[],
     claims: string[]
   ): void {
-    this._entry.set(entry);
+    this._versions.set(versions);
     this._version.set(version);
     this._tasks.set(tasks);
     this._claims.set(claims);
-    this._viewModels.set(
-      this.createViewModels(entry, version.disciplines, tasks)
-    );
+    this._viewModels.set(this.createViewModels(version, tasks));
   }
 
   setNavSectionEntry(value: string): void {
@@ -117,24 +118,18 @@ export class EntryStore {
     this._navSectionTask.set(value);
   }
 
-  setEntry(entry: LibraryEntry): void {
-    this._entry.set({ ...entry });
-  }
-
-  setVersion(version: LibraryEntryVersion): void {
+  setVersion(version: LibraryVersionViewModel): void {
     this._version.set({ ...version });
   }
 
   setTasks(tasks: LibraryEntryNode[]): void {
     this._tasks.set([...tasks]);
 
-    const entry = this._entry();
     const version = this._version();
 
-    if (entry && version)
-      this._viewModels.set(
-        this.createViewModels(entry, version.disciplines, tasks)
-      );
+    if (!version) return;
+
+    this._viewModels.set(this.createViewModels(version, tasks));
   }
 
   tasksChanged(upserts: LibraryEntryNode[], removeIds?: string[]): void {
@@ -157,21 +152,20 @@ export class EntryStore {
   }
 
   private createViewModels(
-    entry: LibraryEntry,
-    disciplines: ProjectCategory[],
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
   ): LibraryTaskViewModel[] {
     return this.transformer.nodes.phase.view.forLibrary(
-      entry,
+      version,
       tasks,
-      disciplines.length > 0
-        ? this.categoryService.buildViewModels(disciplines)
+      version.disciplines.length > 0
+        ? this.categoryService.buildViewModels(version.disciplines)
         : this.categoryService.buildViewModelsFromDefinitions()
     );
   }
 
   private claimCheck(
-    version: LibraryEntryVersion | undefined,
+    version: LibraryVersionViewModel | undefined,
     claims: string[],
     claim: string
   ): boolean {

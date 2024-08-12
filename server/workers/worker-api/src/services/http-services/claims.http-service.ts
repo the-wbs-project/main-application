@@ -53,10 +53,12 @@ export class ClaimsHttpService {
 
   static async getForLibraryEntryAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry } = ctx.req.param();
-      const userId = ctx.get('idToken').userId;
-      const model = await ctx.get('data').libraryEntries.getEntryByIdAsync(owner, entry);
+      const { owner, entry, version } = ctx.req.param();
+      const userId = ctx.var.idToken.userId;
+      const model = await ctx.var.data.libraryVersions.getByIdAsync(owner, entry, parseInt(version));
       const roles: LIBRARY_ROLES_TYPE[] = [LIBRARY_ROLES.VIEWER];
+
+      console.log('is null: ' + (model == null));
 
       if (model?.author === userId) roles.push(LIBRARY_ROLES.OWNER);
       //if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);

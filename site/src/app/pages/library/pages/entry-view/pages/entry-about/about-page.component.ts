@@ -52,7 +52,6 @@ export class AboutPageComponent implements OnInit {
   readonly descriptionSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryDescription(
-      this.store.entry(),
       this.store.version(),
       this.store.viewModels()
     )

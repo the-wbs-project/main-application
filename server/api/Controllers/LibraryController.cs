@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.ObjectPool;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models.Search;
 using Wbs.Core.Services.Search;

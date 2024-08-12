@@ -33,18 +33,18 @@ export class EntryActionButtonService {
     if (entryType === 'project') {
       items.push({
         action: this.actionCreateProject,
-        icon: faPlus,
+        faIcon: faPlus,
         text: 'General.CreateProject',
       });
     }
     items.push({
       action: this.actionDownloadWbs,
-      icon: faCloudDownload,
+      faIcon: faCloudDownload,
       text: 'Wbs.DownloadWbs',
     });
     items.push({
       action: this.actionDownloadAbs,
-      icon: faCloudDownload,
+      faIcon: faCloudDownload,
       text: 'Wbs.DownloadAbs',
     });
 
@@ -53,7 +53,7 @@ export class EntryActionButtonService {
       claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)
     ) {
       items.push({
-        icon: faCloudUpload,
+        faIcon: faCloudUpload,
         text: 'Wbs.UploadTasks',
         route: [...entryUrl, 'upload'],
       });
@@ -63,13 +63,13 @@ export class EntryActionButtonService {
       if (versionStatus === 'draft') {
         items.push({
           action: this.actionPublish,
-          icon: faBooks,
+          faIcon: faBooks,
           text: 'Wbs.PublishToLibrary',
         });
       } else if (versionStatus === 'published') {
         items.push({
           action: this.actionUnpublish,
-          icon: faPencil,
+          faIcon: faPencil,
           text: 'Wbs.UnpublishForEditing',
         });
       }

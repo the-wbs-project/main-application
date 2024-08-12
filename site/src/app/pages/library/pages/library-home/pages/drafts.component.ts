@@ -6,10 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { LibraryFilterComponent } from '@wbs/components/library/library-filter.component';
-import { LibraryListComponent } from '@wbs/components/library/list';
 import { LibraryListFiltersComponent } from '@wbs/components/library/list-filters';
-import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryDraftViewModel } from '@wbs/core/view-models';
 import { LibraryHomeService } from '../services';
@@ -31,13 +28,7 @@ import { LibraryDraftListComponent } from '../components/draft-list';
       [entries]="entries()"
       (selected)="service.navigateToVm($event)"
     />`,
-  imports: [
-    LibraryDraftListComponent,
-    LibraryListFiltersComponent,
-    LibraryListComponent,
-    LibraryFilterComponent,
-    PageHeaderComponent,
-  ],
+  imports: [LibraryDraftListComponent, LibraryListFiltersComponent],
 })
 export class DraftsComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);

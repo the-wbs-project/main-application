@@ -1,27 +1,28 @@
-@if (task(); as task) {
+@let versionVm = version()!; @let taskVm = task();
+
 <div class="card-header">
   {{ "General.Details" | translate }}
 </div>
 <div class="card-body">
   <div class="wbs-detail-card">
     <div class="detail-header">{{ "General.Organization" | translate }} :</div>
-    <div>{{ owner() }}</div>
+    <div>{{ versionVm.ownerName }}</div>
 
     <div class="detail-header">{{ "Wbs.WBS" | translate }} :</div>
     <div>{{ version().title }}</div>
 
     <div class="detail-header">{{ "General.Level" | translate }} :</div>
-    <div>{{ task.levelText }}</div>
+    <div>{{ taskVm.levelText }}</div>
 
-    @if (entry().type !== 'task') {
+    @if (versionVm.type !== 'task') {
     <div class="detail-header">{{ "Wbs.Phase" | translate }} :</div>
     <div>
-      @if (task.phaseId) {
+      @if (taskVm.phaseId) {
       <a
         class="text-decoration-none"
-        [routerLink]="['../../', task.phaseId, 'about']"
+        [routerLink]="['../../', taskVm.phaseId, 'about']"
       >
-        {{ task.phaseLabel }}
+        {{ taskVm.phaseLabel }}
       </a>
       } @else {
       {{ "General.None" | translate }}
@@ -44,10 +45,9 @@
     </div>
 
     <div class="detail-header">{{ "General.LastModified" | translate }} :</div>
-    <div>{{ task.lastModified | dateText }}</div>
+    <div>{{ taskVm.lastModified | dateText }}</div>
 
     <div class="detail-header">{{ "Wbs.SubTaskCount" | translate }} :</div>
-    <div>{{ task.children }}</div>
+    <div>{{ taskVm.children }}</div>
   </div>
 </div>
-}

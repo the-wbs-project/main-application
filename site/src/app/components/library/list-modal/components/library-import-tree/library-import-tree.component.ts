@@ -18,7 +18,13 @@ import {
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
-import { LibraryEntryNode, LibraryEntryVersion } from '@wbs/core/models';
+import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
+import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
+import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
+import { TaskTitle2Component } from '@wbs/components/task-title';
+import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
+import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
+import { LibraryEntryNode } from '@wbs/core/models';
 import {
   CategoryService,
   Messages,
@@ -26,14 +32,12 @@ import {
   TreeService,
   sorter,
 } from '@wbs/core/services';
-import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
-import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
-import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
-import { TaskTitle2Component } from '@wbs/components/task-title';
-import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
-import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { UiStore } from '@wbs/core/store';
-import { LibraryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
+import {
+  LibraryViewModel,
+  LibraryTaskViewModel,
+  LibraryVersionViewModel,
+} from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -62,7 +66,7 @@ export class LibraryImportTreeComponent implements OnInit {
   readonly refreshIcon = faRefresh;
   readonly containerHeight = input.required<number>();
   readonly entry = input.required<LibraryViewModel>();
-  readonly version = input.required<LibraryEntryVersion>();
+  readonly version = input.required<LibraryVersionViewModel>();
   readonly tasks = model.required<LibraryEntryNode[]>();
   readonly width = inject(UiStore).mainContentWidth;
   readonly disciplines = computed(() =>
@@ -70,7 +74,7 @@ export class LibraryImportTreeComponent implements OnInit {
   );
   readonly viewModels = computed(() =>
     this.transformer.nodes.phase.view.forLibrary(
-      this.entry(),
+      this.version(),
       this.tasks(),
       this.disciplines()
     )

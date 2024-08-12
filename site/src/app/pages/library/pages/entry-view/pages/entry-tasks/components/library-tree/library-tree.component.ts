@@ -101,9 +101,7 @@ export class LibraryTreeComponent implements OnInit {
 
   readonly showFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
-  readonly isLoading = computed(
-    () => !this.entryStore.entry() || !this.entryStore.version()
-  );
+  readonly isLoading = computed(() => !this.entryStore.version());
 
   readonly alert = signal<string | undefined>(undefined);
   readonly selectedTask = signal<TaskViewModel | undefined>(undefined);
@@ -187,7 +185,7 @@ export class LibraryTreeComponent implements OnInit {
 
   rowReordered(e: RowReorderEvent): void {
     const tree = this.entryStore.viewModels()!;
-    const entryType = this.entryStore.entry()!.type;
+    const entryType = this.entryStore.version()!.type;
     const dragged: TaskViewModel = e.draggedRows[0].dataItem;
     const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(

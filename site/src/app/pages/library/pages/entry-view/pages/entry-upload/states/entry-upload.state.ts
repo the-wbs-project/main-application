@@ -312,41 +312,29 @@ export class EntryUploadState {
     for (const node of state.uploadResults?.results ?? []) {
       nodes.set(node.levelText, node);
     }
-    const entry = this.entryStore.entry()!;
     const version = this.entryStore.version()!;
 
-    return forkJoin({
-      version: this.data.libraryEntryVersions.getAsync(
-        entry.owner,
-        entry.id,
-        version.version
-      ),
-      existingNodes: this.data.libraryEntryNodes.getAllAsync(
-        entry.owner,
-        entry.id,
-        version.version,
-        'private'
-      ),
-    }).pipe(
-      switchMap((data) => {
-        const results = this.transformer.nodes.phase.libraryImporter.run(
-          entry.type,
-          data.version,
-          data.existingNodes,
-          state.action!,
-          people,
-          nodes
-        );
-        return ctx.dispatch(new SaveUpload(results)).pipe(
-          map(() => {
-            ctx.patchState({
-              saving: false,
-              started: false,
-            });
-          })
-        );
-      })
-    );
+    return this.data.libraryEntryNodes
+      .getAllAsync(version.ownerId, version.entryId, version.version, 'private')
+      .pipe(
+        switchMap((existingNodes) => {
+          const results = this.transformer.nodes.phase.libraryImporter.run(
+            version,
+            existingNodes,
+            state.action!,
+            people,
+            nodes
+          );
+          return ctx.dispatch(new SaveUpload(results)).pipe(
+            map(() => {
+              ctx.patchState({
+                saving: false,
+                started: false,
+              });
+            })
+          );
+        })
+      );
   }
 
   @Action(SaveUpload)
@@ -354,22 +342,22 @@ export class EntryUploadState {
     ctx: StateContext<StateModel>,
     { results }: SaveUpload
   ): void | Observable<any> {
-    const entry = this.entryStore.entry()!;
     const version = this.entryStore.version()!;
 
     version.disciplines = results.disciplines;
 
+    const versionModel = this.transformer.libraryVersions.toModel(version);
     const saves: Observable<any>[] = [
       this.data.libraryEntryVersions
-        .putAsync(entry.owner, version)
+        .putAsync(version.ownerId, versionModel)
         .pipe(tap(() => this.entryStore.setVersion(version))),
     ];
 
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
         this.data.libraryEntryNodes.putAsync(
-          entry.owner,
-          entry.id,
+          version.ownerId,
+          version.entryId,
           version.version,
           results.upserts,
           results.removeIds
@@ -382,14 +370,14 @@ export class EntryUploadState {
     return forkJoin(saves).pipe(
       switchMap(() =>
         this.data.libraryEntryNodes.getAllAsync(
-          entry.owner,
-          entry.id,
+          version.ownerId,
+          version.entryId,
           version.version,
           'private'
         )
       ),
       tap((tasks) => this.entryStore.setTasks(tasks)),
-      tap(() => this.activities.entryUpload(entry.id, version.version)),
+      tap(() => this.activities.entryUpload(version.entryId, version.version)),
       tap(() => ctx.patchState({ saving: false }))
     );
   }
@@ -399,7 +387,6 @@ export class EntryUploadState {
     pages: string[]
   ): Observable<void> {
     const org = this.membership.membership()!.name;
-    const entry = this.entryStore.entry()!;
     const version = this.entryStore.version()!;
 
     return ctx.dispatch(
@@ -407,8 +394,8 @@ export class EntryUploadState {
         './' + org,
         'library',
         'view',
-        entry.owner,
-        entry.id,
+        version.ownerId,
+        version.entryId,
         version.version.toString(),
         'upload',
         ...pages,

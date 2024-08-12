@@ -1,32 +1,35 @@
 import { inject } from '@angular/core';
 import { MetadataStore } from '@wbs/core/store';
-import { LISTS, LibraryEntry, LibraryEntryVersion } from '../models';
-import { ProjectViewModel, TaskViewModel } from '../view-models';
+import { LISTS } from '../models';
+import {
+  LibraryVersionViewModel,
+  ProjectViewModel,
+  TaskViewModel,
+} from '../view-models';
 import { sorter } from './sorter.service';
 
 export class AiPromptService {
   private readonly state = inject(MetadataStore);
 
   libraryEntryDescription(
-    entry: LibraryEntry | undefined,
-    version: LibraryEntryVersion | undefined,
+    version: LibraryVersionViewModel | undefined,
     tasks: TaskViewModel[] | undefined
   ): string {
-    if (!entry || !version) return '';
+    if (!version) return '';
 
     let message: string[] = [
-      entry.type === 'project'
+      version.type === 'project'
         ? `Can you provide me with a one paragraph description for a work breakdown structure titled '${version.title}?`
-        : `Can you provide me with a one paragraph description for a work breakdown structure ${entry.type} titled '${version.title}?`,
+        : `Can you provide me with a one paragraph description for a work breakdown structure ${version.type} titled '${version.title}?`,
     ];
 
     const subTasks = (tasks ?? []).filter((t) => t.parentId == undefined);
 
     if (subTasks.length > 0) {
       message.push(
-        entry.type == 'project'
+        version.type == 'project'
           ? 'The phase(s) for this project are:'
-          : entry.type === 'phase'
+          : version.type === 'phase'
           ? 'The immediate sub-task(s) for this phase are:'
           : 'The immediate sub-task(s) for this task are:'
       );
@@ -42,19 +45,18 @@ export class AiPromptService {
   }
 
   libraryEntryTaskDescription(
-    entry: LibraryEntry | undefined,
-    version: LibraryEntryVersion | undefined,
+    version: LibraryVersionViewModel | undefined,
     taskId: string | undefined,
     tasks: TaskViewModel[] | undefined
   ): string {
-    if (!entry || !version || !taskId) return '';
+    if (!version || !taskId) return '';
 
     const task = tasks?.find((t) => t.id === taskId);
 
     if (!task) return '';
 
     let type =
-      entry.type === 'project' && task.parentId == null ? 'phase' : 'task';
+      version.type === 'project' && task.parentId == null ? 'phase' : 'task';
     let message: string[] = [
       `Can you provide me with a one paragraph description for a ${type} titled '${task.title}?`,
     ];

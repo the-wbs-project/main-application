@@ -24,7 +24,10 @@ import {
   LibraryImportResults,
   StepperItem,
 } from '@wbs/core/models';
-import { LibraryViewModel } from '@wbs/core/view-models';
+import {
+  LibraryVersionViewModel,
+  LibraryViewModel,
+} from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { Observable, forkJoin } from 'rxjs';
@@ -76,7 +79,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   //  View 2 Items
   //
   readonly loadingTree = signal(false);
-  readonly version = signal<LibraryEntryVersion | undefined>(undefined);
+  readonly version = signal<LibraryVersionViewModel | undefined>(undefined);
   readonly tasks = signal<LibraryEntryNode[]>([]);
   readonly entries = signal<LibraryViewModel[]>([]);
 
@@ -93,7 +96,7 @@ export class LibraryListModalComponent extends DialogContentBase {
     const visibility = this.org === vm.ownerId ? 'private' : 'public';
 
     forkJoin({
-      version: this.data.libraryEntryVersions.getAsync(
+      version: this.data.libraryEntryVersions.getByIdAsync(
         vm.ownerId,
         vm.entryId,
         vm.version

@@ -3,6 +3,5 @@ export interface LibraryEntry {
   owner: string;
   type: string;
   publishedVersion?: number;
-  author: string;
   visibility: string;
 }

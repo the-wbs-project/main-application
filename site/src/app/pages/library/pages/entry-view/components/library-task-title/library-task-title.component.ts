@@ -46,7 +46,6 @@ export class LibraryTaskTitleComponent {
   protected buildMenu(): void {
     this.menu.set(
       this.menuService.buildMenu(
-        this.entryStore.entry()!.type,
         this.entryStore.version()!,
         this.task(),
         this.entryStore.claims()

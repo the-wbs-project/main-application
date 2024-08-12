@@ -17,7 +17,6 @@ export class LibraryImportProcessorService {
     dir: string,
     results: LibraryImportResults
   ): Observable<void> {
-    const entry = this.store.entry()!;
     const version = this.store.version()!;
     const tasks = this.store.tasks()!;
     const fromTask = tasks.find((t) => t.id === taskId)!;
@@ -109,7 +108,7 @@ export class LibraryImportProcessorService {
     }
 
     return forkJoin([
-      this.entryService.generalSaveAsync(entry, version),
+      this.entryService.saveAsync(version),
       this.taskService.saveAsync(upserts, []),
     ]).pipe(map(() => {}));
   }

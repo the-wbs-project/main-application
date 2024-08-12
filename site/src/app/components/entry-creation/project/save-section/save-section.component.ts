@@ -103,7 +103,6 @@ export class SaveSectionComponent {
     }
 
     const entry: LibraryEntry = {
-      author: this.userId()!,
       id: IdService.generate(),
       owner: this.owner(),
       type: 'project',
@@ -111,6 +110,7 @@ export class SaveSectionComponent {
     };
     const version: LibraryEntryVersion = {
       entryId: entry.id,
+      author: this.userId()!,
       version: 1,
       categories: [this.category().id],
       status: 'draft',
@@ -118,6 +118,7 @@ export class SaveSectionComponent {
       title: this.templateTitle(),
       disciplines,
       versionAlias: 'TODO',
+      editors: [],
     };
     const nodes: LibraryEntryNode[] = [];
 

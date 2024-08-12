@@ -1,10 +1,17 @@
+@if (entryStore.version(); as version) {
 <div class="d-flex flex-column h-100">
   <div class="mg-y-10">
-    <div class="d-lg-none w-100 text-end">
+    <div class="d-md-none w-100 text-end">
       <wbs-page-header />
     </div>
     <div class="d-flex flex-align-center">
-      <span class="tx-24 mg-r-15">
+      <wbs-entry-action-button
+        [entryType]="version.type"
+        [versionStatus]="version.status"
+        [entryUrl]="entryUrl()"
+        [claims]="entryStore.claims()"
+      />
+      <span class="tx-24 mg-x-15">
         <wbs-watch-indicator
           source="library"
           [owner]="owner()"
@@ -12,21 +19,13 @@
         />
       </span>
       <wbs-entry-title
-        [title]="entryStore.version()?.title ?? ''"
+        [title]="version.title"
         [canEdit]="entryStore.canEditEntry() && canEditTitle()"
         (titleChange)="titleChanged($event)"
       />
       <wbs-save-message [state]="titleSaveState()" cssClass="tx-12" />
-      <div class="flex-fill tx-right">
-        <div class="d-none d-lg-inline-block mg-r-15">
-          <wbs-page-header />
-        </div>
-        <wbs-entry-action-button
-          [entryType]="entryStore.entry()!.type"
-          [versionStatus]="entryStore.version()!.status"
-          [entryUrl]="entryUrl()"
-          [claims]="entryStore.claims()"
-        />
+      <div class="flex-fill tx-right d-none d-md-inline-block mg-r-15">
+        <wbs-page-header />
       </div>
     </div>
   </div>
@@ -43,3 +42,4 @@
     </div>
   </div>
 </div>
+}

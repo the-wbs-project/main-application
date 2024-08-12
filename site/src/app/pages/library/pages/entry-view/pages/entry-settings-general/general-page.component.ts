@@ -74,12 +74,7 @@ export class GeneralComponent implements DirtyComponent {
 
   save(): void {
     this.saved
-      .call(
-        this.service.generalSaveAsync(
-          this.entryStore.entry()!,
-          this.entryStore.version()!
-        )
-      )
+      .call(this.service.saveAsync(this.entryStore.version()!))
       .subscribe();
   }
 }

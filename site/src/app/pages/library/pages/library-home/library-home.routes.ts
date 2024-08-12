@@ -56,6 +56,15 @@ export const routes: Routes = [
           org: orgResolve,
         },
       },
+      {
+        path: 'public',
+        loadComponent: () =>
+          import('./pages/public.component').then((x) => x.PublicComponent),
+        canActivate: [setLibraryGuard],
+        resolve: {
+          org: orgResolve,
+        },
+      },
     ],
   },
 ];

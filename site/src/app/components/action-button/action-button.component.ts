@@ -10,11 +10,12 @@ import {
   viewChild,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBoltLightning } from '@fortawesome/pro-solid-svg-icons';
+import { faBars, faBoltLightning } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { MenuModule } from '@progress/kendo-angular-menu';
 import { PopupModule } from '@progress/kendo-angular-popup';
 import { ActionButtonMenuItem } from '@wbs/core/models';
 
@@ -23,7 +24,13 @@ import { ActionButtonMenuItem } from '@wbs/core/models';
   selector: 'wbs-action-button',
   templateUrl: './action-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonModule, FontAwesomeModule, PopupModule, TranslateModule],
+  imports: [
+    ButtonModule,
+    FontAwesomeModule,
+    MenuModule,
+    PopupModule,
+    TranslateModule,
+  ],
 })
 export class ActionButtonComponent {
   private readonly store = inject(Store);
@@ -32,8 +39,10 @@ export class ActionButtonComponent {
   readonly anchor = viewChild<ElementRef>('anchor');
   readonly itemClicked = output<string>();
   readonly show = signal(false);
+  readonly uiVersion = input<'v1' | 'v2'>('v1');
 
   readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
+  readonly menuIcon = faBars;
   readonly faBoltLightning = faBoltLightning;
 
   @HostListener('document:keydown', ['$event'])

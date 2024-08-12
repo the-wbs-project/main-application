@@ -13,14 +13,12 @@ public class LibraryEntryController : ControllerBase
 {
     private readonly DbService db;
     private readonly ILogger logger;
-    private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryDataService entryDataService;
 
-    public LibraryEntryController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibrarySearchIndexService searchIndexService, DbService db)
+    public LibraryEntryController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryController>();
         this.entryDataService = entryDataService;
-        this.searchIndexService = searchIndexService;
         this.db = db;
     }
 
@@ -30,6 +28,7 @@ public class LibraryEntryController : ControllerBase
     {
         try
         {
+
             using (var conn = await db.CreateConnectionAsync())
                 return Ok(await entryDataService.GetByIdAsync(conn, owner, entryId));
         }
@@ -49,13 +48,9 @@ public class LibraryEntryController : ControllerBase
             if (entry.OwnerId != owner) return BadRequest("Owner in url must match owner in body");
             if (entry.Id != entryId) return BadRequest("Id in url must match owner in body");
 
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                await entryDataService.SetAsync(conn, entry);
+            using var conn = await db.CreateConnectionAsync();
 
-                if (entry.PublishedVersion.HasValue)
-                    await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
-            }
+            await entryDataService.SetAsync(conn, entry);
             return Accepted();
         }
         catch (Exception ex)

@@ -87,7 +87,45 @@ public class LibraryEntryVersionController : ControllerBase
 
                 await versionDataService.SetAsync(conn, owner, model);
 
-                searchIndexService.AddToLibraryQueue(owner, entryId);
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry versions");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{entryVersion}/public")]
+    public async Task<IActionResult> PublishVersionAsync(string owner, string entryId, int entryVersion, LibraryEntryVersion model)
+    {
+        try
+        {
+            if (model.EntryId != entryId) return BadRequest("EntryId in body must match EntryId in url");
+            if (model.Version != entryVersion) return BadRequest("Version in body must match Version in url");
+
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                    return BadRequest("Library Entry not found for the credentials provided.");
+
+                await versionDataService.SetAsync(conn, owner, model);
+
+                var entry = await entryDataService.GetByIdAsync(conn, owner, entryId);
+                //
+                //  Retire any existing published version
+                //
+                if (entry.PublishedVersion != entryVersion)
+                {
+                    var otherVersion = await versionDataService.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
+
+                    otherVersion.Status = "retired";
+                    await versionDataService.SetAsync(conn, owner, otherVersion);
+                }
+                await entryDataService.SetAsync(conn, entry);
+                await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
 
                 return NoContent();
             }

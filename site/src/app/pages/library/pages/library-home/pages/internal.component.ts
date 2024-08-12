@@ -7,9 +7,7 @@ import {
   signal,
 } from '@angular/core';
 import { LibraryListComponent } from '@wbs/components/library/list';
-import { LibraryFilterComponent } from '@wbs/components/library/library-filter.component';
 import { LibraryListFiltersComponent } from '@wbs/components/library/list-filters';
-import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryViewModel } from '@wbs/core/view-models';
 import { LIBRARY_FILTER_LIBRARIES } from '@wbs/core/models';
@@ -34,12 +32,7 @@ import { LibraryHomeService } from '../services';
       [showOwner]="false"
       (selectedChange)="service.navigateToVm($event)"
     />`,
-  imports: [
-    LibraryListFiltersComponent,
-    LibraryListComponent,
-    LibraryFilterComponent,
-    PageHeaderComponent,
-  ],
+  imports: [LibraryListFiltersComponent, LibraryListComponent],
 })
 export class InternalComponent implements OnChanges {
   private readonly data = inject(DataServiceFactory);

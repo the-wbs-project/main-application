@@ -25,6 +25,11 @@ export class UserDataService {
     return (await this.service()).getMemberships(userId);
   }
 
+  async isMemberAsync(organization: string, user: string): Promise<boolean> {
+    const memberships = await this.getMembershipsAsync(user);
+    return memberships.some((m) => m.name === organization);
+  }
+
   async updateAsync(user: User): Promise<void> {
     return (await this.service()).update(user);
   }

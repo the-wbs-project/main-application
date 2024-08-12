@@ -5,7 +5,6 @@ import {
   input,
   OnChanges,
   signal,
-  SimpleChanges,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
@@ -38,20 +37,27 @@ export class UserComponent implements OnChanges {
   readonly linkedInIcon = faLinkedin;
 
   readonly position = input<Position>('bottom');
-  readonly organization = input.required<string>();
-  readonly userId = input.required<string>();
+  readonly organization = input<string>();
+  readonly userId = input<string>();
+  readonly user = input<UserViewModel>();
 
   readonly show = signal(false);
-  readonly user = signal<UserViewModel | undefined>(undefined);
+  readonly userVm = signal<UserViewModel | undefined>(undefined);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    const organization = this.organization();
-    const userId = this.userId();
+  ngOnChanges(): void {
+    const user = this.user();
 
-    if (organization && userId) {
-      this.userService
-        .getUserAsync(this.organization(), this.userId())
-        .subscribe((user) => this.user.set(user));
+    if (user) {
+      this.userVm.set(user);
+    } else {
+      const organization = this.organization();
+      const userId = this.userId();
+
+      if (organization && userId) {
+        this.userService
+          .getUserAsync(organization, userId)
+          .subscribe((user) => this.userVm.set(user));
+      }
     }
   }
 }

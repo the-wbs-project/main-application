@@ -24,8 +24,14 @@ export class LibraryDataService {
     filters: LibrarySearchFilters
   ): Observable<LibraryViewModel[]> {
     return this.http
-      .post<LibraryViewModel[]>(`api/libraries/internal/${owner}`, filters)
-      .pipe(map(this.clean));
+      .post<{ document: LibraryViewModel }[]>(
+        `api/libraries/internal/${owner}`,
+        filters
+      )
+      .pipe(
+        map((x) => x.map((y) => y.document)),
+        map(this.clean)
+      );
   }
 
   getPublicAsync(

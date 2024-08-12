@@ -63,7 +63,6 @@ export class GeneralComponent {
   );
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryTaskDescription(
-      this.entryStore.entry(),
       this.entryStore.version(),
       this.taskId(),
       this.entryStore.viewModels()

@@ -9,9 +9,7 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { LibraryEntry, LibraryEntryVersion } from '@wbs/core/models';
-import { OrganizationService } from '@wbs/core/services';
-import { TaskViewModel } from '@wbs/core/view-models';
+import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 
 @Component({
@@ -22,21 +20,8 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DateTextPipe, RouterModule, TranslateModule],
 })
-export class DetailsCardComponent implements OnChanges {
-  private readonly orgService = inject(OrganizationService);
-
-  readonly entry = input.required<LibraryEntry>();
-  readonly version = input.required<LibraryEntryVersion>();
+export class DetailsCardComponent {
+  readonly version = input.required<LibraryVersionViewModel>();
   readonly task = input.required<TaskViewModel>();
   readonly parent = input.required<TaskViewModel | undefined>();
-
-  readonly owner = signal<string | undefined>(undefined);
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['entry'] && this.entry()) {
-      this.orgService
-        .getNameAsync(this.entry().owner)
-        .subscribe((name) => this.owner.set(name));
-    }
-  }
 }

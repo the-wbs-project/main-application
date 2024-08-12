@@ -36,7 +36,7 @@
   (dblclick)="nav()"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    @if (canCreate() && entryStore.entry()?.type === 'project') {
+    @if (canCreate() && entryStore.version()?.type === 'project') {
     <wbs-tree-buttons-add (click)="menuItemSelected('addSub')" />
     }
     <wbs-tree-buttons-toggler

@@ -4,6 +4,8 @@ import { ClaimsHttpService } from './claims.http-service';
 import { InvitesHttpService } from './invites.http-service';
 import { JiraHttpService } from './jira.http-service';
 import { LibraryEntryHttpService } from './library-entry.http-service';
+import { LibraryTaskHttpService } from './library-task.http-service';
+import { LibraryVersionHttpService } from './library-version.http-service';
 import { LibraryHttpService } from './library.http-service';
 import { MembershipHttpService } from './membership.http-service';
 import { MetadataHttpService } from './metdata.http-service';
@@ -21,6 +23,8 @@ export const Http = {
   jira: JiraHttpService,
   library: LibraryHttpService,
   libraryEntries: LibraryEntryHttpService,
+  libraryTasks: LibraryTaskHttpService,
+  libraryVersions: LibraryVersionHttpService,
   membership: MembershipHttpService,
   metadata: MetadataHttpService,
   misc: MiscHttpService,

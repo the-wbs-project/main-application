@@ -29,6 +29,7 @@ public class LibrarySearchService
         var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
         var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
         var watchIds = new List<string>();
+        string author = null;
 
         if (filters.Roles.Contains("watching"))
         {
@@ -37,11 +38,15 @@ public class LibrarySearchService
                 .Select(x => x.Id)
                 .ToList();
         }
+        if (filters.Roles.Contains("author"))
+        {
+            author = userId;
+        }
 
         var options = new SearchOptions()
         {
             IncludeTotalCount = true,
-            Filter = ToInternalFilterString(owner, userId, filters.Types, watchIds),
+            Filter = ToInternalFilterString(owner, author, filters.Types, watchIds),
             //Select = { "EntryId", "PublishedVersion", "VersionTitle_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En", "StatusId" },
             OrderBy = { "LastModified desc" }
         };
@@ -71,16 +76,21 @@ public class LibrarySearchService
         var indexClient = new SearchIndexClient(new Uri(config.Url), new AzureKeyCredential(config.Key));
         var searchClient = indexClient.GetSearchClient(config.LibraryIndex);
         var watchIds = new List<string>();
+        string author = null;
 
         if (filters.Roles.Contains("watching"))
         {
             watchIds = (await watchDataService.GetEntriesAsync(conn, userId)).Select(x => x.Id).ToList();
         }
+        if (filters.Roles.Contains("author"))
+        {
+            author = userId;
+        }
 
         var options = new SearchOptions()
         {
             IncludeTotalCount = true,
-            Filter = ToPublicFilterString(userId, filters.Types, watchIds),
+            Filter = ToPublicFilterString(author, filters.Types, watchIds),
             //Select = { "EntryId", "PublishedVersion", "OwnerId", "OwnerName", "VersionTitle_En", "TypeId", "LastModified", "Visibility", "Author", "Disciplines_En", "StatusId" },
             OrderBy = { "LastModified desc" }
         };

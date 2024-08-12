@@ -15,9 +15,10 @@ import {
   LibraryEntryVersion,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages, Utils } from '@wbs/core/services';
+import { Messages, Transformers, Utils } from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
-import { Observable, forkJoin, of } from 'rxjs';
+import { LibraryVersionViewModel } from '@wbs/core/view-models';
+import { Observable, of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
 
@@ -30,12 +31,9 @@ export class EntryService {
   private readonly messages = inject(Messages);
   private readonly entryStore = inject(EntryStore);
   private readonly store = inject(Store);
+  private readonly transformers = inject(Transformers);
 
-  private get entry(): LibraryEntry {
-    return this.entryStore.entry()!;
-  }
-
-  private get version(): LibraryEntryVersion {
+  private get version(): LibraryVersionViewModel {
     return this.entryStore.version()!;
   }
 
@@ -147,48 +145,42 @@ export class EntryService {
       .subscribe();
   }
 
-  generalSaveAsync(
-    entry: LibraryEntry,
-    version: LibraryEntryVersion
-  ): Observable<void> {
-    return forkJoin([
-      this.data.libraryEntries.putAsync(entry),
-      this.data.libraryEntryVersions.putAsync(entry.owner, version),
-    ]).pipe(
-      map(() => {
-        this.entryStore.setEntry(entry);
-        this.entryStore.setVersion(version);
-      })
-    );
+  saveAsync(version: LibraryVersionViewModel): Observable<void> {
+    const model = this.transformers.libraryVersions.toModel(version);
+
+    return this.data.libraryEntryVersions
+      .putAsync(version.ownerId, model)
+      .pipe(map(() => this.entryStore.setVersion(version)));
   }
 
   titleChangedAsync(title: string): Observable<void> {
-    const entry = this.entry;
     const version = structuredClone(this.version);
     const from = version.title;
 
     version.title = title;
 
-    return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.entryStore.setVersion(version)),
+    return this.saveAsync(version).pipe(
       switchMap(() =>
-        this.activity.entryTitleChanged(entry.id, version.version, from, title)
+        this.activity.entryTitleChanged(
+          version.entryId,
+          version.version,
+          from,
+          title
+        )
       )
     );
   }
 
   descriptionChangedAsync(description: string): Observable<void> {
-    const entry = this.entry;
     const version = structuredClone(this.version);
     const from = version.description;
 
     version.description = description;
 
-    return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.entryStore.setVersion(version)),
+    return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.entryTitleChanged(
-          entry.id,
+          version.entryId,
           version.version,
           from,
           description
@@ -198,17 +190,15 @@ export class EntryService {
   }
 
   disciplinesChangedAsync(disciplines: ProjectCategory[]): Observable<void> {
-    const entry = this.entry;
     const version = this.version;
     const from = version.disciplines;
 
     version.disciplines = disciplines;
 
-    return this.data.libraryEntryVersions.putAsync(entry.owner, version).pipe(
-      tap(() => this.entryStore.setVersion(version)),
+    return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.entryDisciplinesChanged(
-          entry.id,
+          version.entryId,
           version.version,
           from,
           disciplines
@@ -224,30 +214,28 @@ export class EntryService {
         switchMap((answer) => {
           if (!answer) return of(answer);
 
-          const entry = this.entry;
           const version = this.version;
-
-          entry.publishedVersion = version.version;
           version.status = 'published';
 
-          return this.data.libraryEntries.putAsync(entry).pipe(
-            switchMap(() =>
-              this.data.libraryEntryVersions.putAsync(entry.owner, version)
-            ),
-            tap(() =>
-              this.messages.report.success(
-                'General.Success',
-                'Wbs.PublishedToLibraryMessage'
+          const model = this.transformers.libraryVersions.toModel(version);
+
+          return this.data.libraryEntryVersions
+            .putAsync(version.ownerId, model)
+            .pipe(
+              tap(() =>
+                this.messages.report.success(
+                  'General.Success',
+                  'Wbs.PublishedToLibraryMessage'
+                )
               )
-            )
-          );
+            );
         })
       )
       .subscribe();
   }
 
   unpublish(): void {
-    this.messages.confirm
+    /*this.messages.confirm
       .show('General.Confirm', 'Wbs.ConfirmUnPublishFromLibrary')
       .pipe(
         switchMap((answer) => {
@@ -275,6 +263,6 @@ export class EntryService {
           );
         })
       )
-      .subscribe();
+      .subscribe();*/
   }
 }

@@ -1,13 +1,12 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
   model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
+import { RouterModule } from '@angular/router';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
@@ -76,16 +75,21 @@ export class NameVisibilityComponent extends DialogContentBase {
 
     this.saveState.set('saving');
 
-    const entry = this.entryStore.entry()!;
     const version = this.entryStore.version()!;
 
     this.data.libraryEntryNodes
-      .exportAsync(entry.owner, entry.id, version.version, this.task.id, {
-        author: this.userId()!,
-        includeResources: true,
-        title: this.templateTitle(),
-        visibility: this.visibility(),
-      })
+      .exportAsync(
+        version.ownerId,
+        version.entryId,
+        version.version,
+        this.task.id,
+        {
+          author: this.userId()!,
+          includeResources: true,
+          title: this.templateTitle(),
+          visibility: this.visibility(),
+        }
+      )
       .pipe(
         delay(1000),
         tap((newEntryId) => {
@@ -108,7 +112,7 @@ export class NameVisibilityComponent extends DialogContentBase {
           this.membership.membership()!.name,
           'library',
           'view',
-          this.entryStore.entry()?.owner,
+          this.entryStore.version()?.ownerId,
           this.newEntryId(),
           1,
         ])

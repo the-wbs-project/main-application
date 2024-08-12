@@ -18,9 +18,8 @@ public class ProjectNodeController : ControllerBase
     private readonly ProjectNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
     private readonly ResourceFileStorageService resourceService;
-    private readonly LibrarySearchIndexService searchIndexService;
 
-    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db, LibrarySearchIndexService searchIndexService)
+    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectNodeController>();
         this.nodeDataService = nodeDataService;
@@ -29,7 +28,6 @@ public class ProjectNodeController : ControllerBase
         this.importLibraryEntryService = importLibraryEntryService;
         this.resourceService = resourceService;
         this.db = db;
-        this.searchIndexService = searchIndexService;
     }
 
     [Authorize]
@@ -121,8 +119,6 @@ public class ProjectNodeController : ControllerBase
             using (var conn = await db.CreateConnectionAsync())
             {
                 var entryId = await importLibraryEntryService.ImportFromProjectNodeAsync(conn, owner, projectId, nodeId, options);
-
-                searchIndexService.AddToLibraryQueue(owner, entryId);
 
                 return Ok(entryId);
             }

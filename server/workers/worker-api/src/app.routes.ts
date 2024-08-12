@@ -43,7 +43,7 @@ const claimsApp = newApp()
   .use('*', verifyJwt)
   .get('organization/:organization', Http.claims.getForOrganizationAsync)
   .get('project/:owner/:project', Http.claims.getForProjectAsync)
-  .get('libraryEntry/:owner/:entry', Http.claims.getForLibraryEntryAsync);
+  .get('libraryEntry/:owner/:entry/:version', Http.claims.getForLibraryEntryAsync);
 
 app.route('/', claimsApp);
 
@@ -57,30 +57,35 @@ app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
 //  Library calls
 //
-const libApp = newApp().basePath('api/libraries').use('*', verifyJwt);
-libApp.get('/drafts/:owner/:types', verifyMembership, Http.library.getDraftsAsync);
-libApp.post('internal/:owner', verifyMembership, OriginService.pass);
-libApp.post('public', OriginService.pass);
+const libApp = newApp()
+  .basePath('api/libraries')
+  .use('*', verifyJwt)
+  .get('/drafts/:owner/:types', verifyMembership, Http.library.getDraftsAsync)
+  .post('internal/:owner', verifyMembership, OriginService.pass)
+  .post('public', OriginService.pass);
 
 app.route('/', libApp);
 //
 //  Auth calls
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
+//
+//  Library Entry calls
+//
+const entryApp = newApp()
+  .basePath('api/portfolio/:owner/library/entries/:entry')
+  .use('*', verifyJwt)
+  .get('versions', verifyJwt, Http.libraryVersions.getAsync)
+  .get('versions/:version', verifyJwt, Http.libraryVersions.getByIdAsync)
+  .get('versions/:version/nodes/public', verifyJwt, Http.libraryTasks.getPublicAsync)
+  .get('versions/:version/nodes/private', verifyMembership, Http.libraryTasks.getInternalAsync)
 
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', (ctx) => ctx.newResponse(null, 403));
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/public', verifyJwt, Http.libraryEntries.getPublicTasksAsync);
-app.get(
-  'api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/private',
-  verifyJwt,
-  verifyMembership,
-  Http.libraryEntries.getInternalTasksAsync,
-);
+  .put('', verifyJwt, Http.libraryEntries.putAsync)
+  .put('versions/:version', verifyJwt, Http.libraryVersions.putAsync)
+  .put('versions/:version/publish', verifyJwt, Http.libraryVersions.publishAsync)
+  .put('versions/:version/nodes', verifyJwt, Http.libraryTasks.putAsync);
 
-app.put('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.putEntryAsync);
-app.put('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync);
-app.put('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', verifyJwt, Http.libraryEntries.putTasksAsync);
+app.route('/', entryApp);
 
 app.get('api/roles', Http.roles.getAllAsync);
 app.get('api/memberships', verifyJwt, Http.users.getMembershipsAsync);

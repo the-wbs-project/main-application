@@ -6,7 +6,7 @@
         <wbs-library-filter
           [buttons]="libraries"
           [selection]="service.library()"
-          (selectionChanged)="libraryChanged($event!)"
+          (selectionChanged)="service.libraryChanged($event!)"
         />
       </div>
       <div class="flex-fill text-end">

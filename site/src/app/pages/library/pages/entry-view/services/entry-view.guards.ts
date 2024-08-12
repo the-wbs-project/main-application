@@ -60,18 +60,18 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
   const visibility = org === owner ? 'private' : 'public';
 
   return forkJoin({
-    entry: data.libraryEntries.getAsync(owner, entryId),
-    version: data.libraryEntryVersions.getAsync(owner, entryId, versionId),
+    versions: data.libraryEntryVersions.getAsync(owner, entryId),
+    version: data.libraryEntryVersions.getByIdAsync(owner, entryId, versionId),
     tasks: data.libraryEntryNodes.getAllAsync(
       owner,
       entryId,
       versionId,
       visibility
     ),
-    claims: data.claims.getLibraryEntryClaimsAsync(owner, entryId),
+    claims: data.claims.getLibraryEntryClaimsAsync(owner, entryId, versionId),
   }).pipe(
-    map(({ entry, version, tasks, claims }) => {
-      store.setAll(entry, version, tasks, claims);
+    map(({ versions, version, tasks, claims }) => {
+      store.setAll(versions, version, tasks, claims);
     })
   );
 };
@@ -133,10 +133,10 @@ export const verifyTaskUpdateClaimGuard = (route: ActivatedRouteSnapshot) => {
   const data = inject(DataServiceFactory);
   const owner = Utils.getParam(route, 'ownerId');
   const entryId = Utils.getParam(route, 'entryId');
-
+  const version = parseInt(Utils.getParam(route, 'versionId'), 10);
   if (!owner || !entryId) return false;
 
   return data.claims
-    .getLibraryEntryClaimsAsync(owner, entryId)
+    .getLibraryEntryClaimsAsync(owner, entryId, version)
     .pipe(map((claims) => claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)));
 };

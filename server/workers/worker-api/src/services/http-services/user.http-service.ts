@@ -5,8 +5,7 @@ export class UserHttpService {
   static async getUserAsync(ctx: Context): Promise<Response> {
     try {
       const { organization, user } = ctx.req.param();
-      const memberships = await ctx.var.data.users.getMembershipsAsync(user);
-      const isMember = memberships.some((m) => m.name === organization);
+      const isMember = await ctx.var.data.users.isMemberAsync(organization, user);
 
       return ctx.json(await ctx.var.data.users.getViewAsync(organization, user, isMember ? 'organization' : 'public'));
     } catch (e) {

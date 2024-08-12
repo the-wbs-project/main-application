@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import { ContextMenuItem, LibraryEntryVersion } from '@wbs/core/models';
+import { ContextMenuItem } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/core/store';
-import { TaskViewModel } from '@wbs/core/view-models';
+import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
 
 declare type Seperator = { separator: true };
@@ -11,8 +11,7 @@ export class LibraryTreeMenuService {
   private readonly metadata = inject(MetadataStore);
 
   buildMenu(
-    entryType: string,
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     task: TaskViewModel | undefined,
     claims: string[]
   ): (ContextMenuItem | Seperator)[] {
@@ -21,7 +20,7 @@ export class LibraryTreeMenuService {
     const phaseActions = this.filterList(
       this.preFilterActions(
         LIBRARY_TREE_MENU_ITEMS.taskActions,
-        entryType,
+        version.type,
         task
       ),
       claims,
@@ -29,7 +28,7 @@ export class LibraryTreeMenuService {
     );
     const movers: ContextMenuItem[] = [];
 
-    if (this.canHaveNavActions(entryType, task)) {
+    if (this.canHaveNavActions(version.type, task)) {
       const navActions = this.filterList(
         LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
         claims,
@@ -126,7 +125,7 @@ export class LibraryTreeMenuService {
   }
 
   private getDisciplinesToAdd(
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     task: TaskViewModel
   ): ContextMenuItem[] {
     const disciplines = this.metadata.categories.disciplines;

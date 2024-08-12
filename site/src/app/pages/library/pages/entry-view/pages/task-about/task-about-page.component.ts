@@ -67,7 +67,6 @@ export class TaskAboutPageComponent {
   readonly disciplines = computed(() => this.entryStore.version()?.disciplines);
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryTaskDescription(
-      this.entryStore.entry(),
       this.entryStore.version(),
       this.taskId(),
       this.entryStore.viewModels()

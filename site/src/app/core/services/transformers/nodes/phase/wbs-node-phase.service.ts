@@ -13,6 +13,7 @@ import {
   LibraryTaskViewModel,
   ProjectTaskViewModel,
   TaskViewModel,
+  LibraryVersionViewModel,
 } from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
@@ -28,25 +29,24 @@ export class WbsNodePhaseTransformer {
   }
 
   forLibrary(
-    entry: LibraryEntry | LibraryViewModel,
+    version: LibraryVersionViewModel,
     models: LibraryEntryNode[],
     disciplines: CategoryViewModel[]
   ): LibraryTaskViewModel[] {
     const org = this.membership.membership()!.name;
-    const owner =
-      (entry as LibraryEntry).owner || (entry as LibraryViewModel).ownerId;
+    const owner = version.ownerId;
     //
     //  Just in case somehow the unthinkable happen, return NOTHING!
     //
-    if (org !== owner && entry.visibility === 'private') return [];
+    if (org !== owner && version.visibility === 'private') return [];
 
     const privateTasks =
-      org === owner && entry.visibility === 'private'
+      org === owner && version.visibility === 'private'
         ? []
         : models.filter((x) => x.visibility === 'private').map((x) => x.id);
 
     const tasks: LibraryTaskViewModel[] = this.run(
-      entry.type,
+      version.type,
       models,
       disciplines
     );

@@ -13,19 +13,17 @@ public class LibraryEntryNodeController : ControllerBase
 {
     private readonly DbService db;
     private readonly ILogger logger;
-    private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
     private readonly ResourceFileStorageService resourceService;
 
-    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, LibrarySearchIndexService searchIndexService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryNodeController>();
         this.nodeDataService = nodeDataService;
         this.versionDataService = versionDataService;
-        this.searchIndexService = searchIndexService;
         this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
         this.resourceService = resourceService;
@@ -71,8 +69,6 @@ public class LibraryEntryNodeController : ControllerBase
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
                 await nodeDataService.SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
-
-                searchIndexService.AddToLibraryQueue(owner, entryId);
 
                 return NoContent();
             }
@@ -199,8 +195,6 @@ public class LibraryEntryNodeController : ControllerBase
             using (var conn = await db.CreateConnectionAsync())
             {
                 var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, owner, entryId, entryVersion, nodeId, options);
-
-                searchIndexService.AddToLibraryQueue(owner, newId);
 
                 return Ok(newId);
             }

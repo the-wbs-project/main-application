@@ -1,0 +1,36 @@
+<button
+  #anchor
+  kendoButton
+  themeColor="base"
+  rounded="small"
+  size="small"
+  class="mg-y-4"
+  (click)="toggle()"
+>
+  <fa-icon [icon]="menuIcon" />
+</button>
+@if (show()) {
+<kendo-popup
+  #popup
+  [anchor]="anchor"
+  (anchorViewportLeave)="toggle()"
+  [anchorAlign]="{ horizontal: 'left', vertical: 'bottom' }"
+  [popupAlign]="{ horizontal: 'left', vertical: 'top' }"
+>
+  <kendo-menu
+    [items]="menu() ?? []"
+    [vertical]="true"
+    style="display: inline-block"
+    (select)="selected($event.item)"
+  >
+    <ng-template kendoMenuItemTemplate let-item="item">
+      <div class="tx-gray-700">
+        <div class="d-inline-block wd-20 text-center">
+          <fa-icon [icon]="item.faIcon!" />
+        </div>
+        {{ item.text! | translate }}
+      </div>
+    </ng-template>
+  </kendo-menu>
+</kendo-popup>
+}

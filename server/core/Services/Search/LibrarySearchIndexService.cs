@@ -20,9 +20,8 @@ public class LibrarySearchIndexService
     private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
     private readonly ResourcesDataService resourcesDataService;
     private readonly ListDataService listDataService;
-    private readonly QueueService queueService;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, ResourcesDataService resourcesDataService, ListDataService listDataService, QueueService queueService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, ResourcesDataService resourcesDataService, ListDataService listDataService)
     {
         this.searchConfig = searchConfig;
         this.userDataService = userDataService;
@@ -31,12 +30,6 @@ public class LibrarySearchIndexService
         this.libraryEntryVersionDataService = libraryEntryVersionDataService;
         this.resourcesDataService = resourcesDataService;
         this.listDataService = listDataService;
-        this.queueService = queueService;
-    }
-
-    public void AddToLibraryQueue(string owner, string id)
-    {
-        queueService.Add("search-library-item", $"{owner}|{id}");
     }
 
     public async Task RemoveAsync(IEnumerable<LibrarySearchDocument> docs)

@@ -64,12 +64,12 @@ export class EntryViewComponent {
   readonly titleSaveState = signal<SaveState>('ready');
   readonly links = computed(() =>
     this.filterSettings(
+      this.entryStore.version()?.type,
       this.navService.processLinks(
         ENTRY_NAVIGATION,
         this.entryStore.version()?.status === 'draft',
         this.entryStore.claims()
-      ),
-      this.entryStore.entry()
+      )
     )
   );
   readonly canEditTitle = computed(
@@ -109,10 +109,10 @@ export class EntryViewComponent {
   }
 
   filterSettings(
-    list: NavigationLink[],
-    entry: LibraryEntry | undefined
+    type: string | undefined,
+    list: NavigationLink[]
   ): NavigationLink[] {
-    if (!entry) return [];
+    if (!type) return [];
 
     list = structuredClone(list);
 
@@ -120,9 +120,9 @@ export class EntryViewComponent {
 
     if (!settings) return list;
 
-    if (entry.type === 'project') {
+    if (type === 'project') {
       settings.items = settings.items?.filter((x) => x.section !== 'phase');
-    } else if (entry.type === 'phase') {
+    } else if (type === 'phase') {
       settings.items = settings.items?.filter((x) => x.section !== 'phases');
     } else {
       settings.items = settings.items?.filter(

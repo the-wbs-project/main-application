@@ -6,11 +6,14 @@ import {
   signal,
 } from '@angular/core';
 import { DisciplineSettingsPageComponent } from '@wbs/components/discipline-settings-page';
-import { DirtyComponent, LibraryEntryVersion } from '@wbs/core/models';
+import { DirtyComponent } from '@wbs/core/models';
 import { CategoryService, SaveService } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
-import { CategorySelection } from '@wbs/core/view-models';
+import {
+  CategorySelection,
+  LibraryVersionViewModel,
+} from '@wbs/core/view-models';
 import { of } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
@@ -61,7 +64,7 @@ export class DisciplinesComponent implements DirtyComponent {
     this.saveService.call(obs).subscribe();
   }
 
-  private set(version: LibraryEntryVersion | undefined): void {
+  private set(version: LibraryVersionViewModel | undefined): void {
     this.disciplines.set(
       this.catService.buildDisciplines(version?.disciplines ?? [])
     );

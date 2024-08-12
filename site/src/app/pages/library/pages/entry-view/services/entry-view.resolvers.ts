@@ -40,6 +40,7 @@ function getLibraryClaims(
 ): Observable<string[]> {
   return data.claims.getLibraryEntryClaimsAsync(
     Utils.getParam(route, 'ownerId'),
-    Utils.getParam(route, 'entryId')
+    Utils.getParam(route, 'entryId'),
+    parseInt(Utils.getParam(route, 'version'))
   );
 }

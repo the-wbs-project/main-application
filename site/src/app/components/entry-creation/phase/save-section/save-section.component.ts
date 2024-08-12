@@ -117,7 +117,6 @@ export class SaveSectionComponent {
     }
     const entry: LibraryEntry = {
       id: IdService.generate(),
-      author: this.userId()!,
       owner: this.owner(),
       type: 'phase',
       visibility: this.visibility(),
@@ -131,6 +130,8 @@ export class SaveSectionComponent {
       title: this.templateTitle(),
       disciplines,
       versionAlias: 'TODO',
+      author: this.userId()!,
+      editors: [],
     };
     const node: LibraryEntryNode = {
       id: IdService.generate(),

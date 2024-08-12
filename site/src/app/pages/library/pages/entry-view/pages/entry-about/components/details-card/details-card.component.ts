@@ -1,20 +1,9 @@
-import { AsyncPipe } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-  signal,
-} from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
 import { UserComponent } from '@wbs/components/user';
-import { OrganizationService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
 
@@ -25,27 +14,14 @@ import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'card dashboard-card' },
   imports: [
-    AsyncPipe,
     DateTextPipe,
-    EntryTypeIconPipe,
     EntryTypeTitlePipe,
-    FontAwesomeModule,
-    FormsModule,
     LibraryStatusPipe,
     TranslateModule,
     UserComponent,
     VisibilityTextComponent,
   ],
 })
-export class DetailsCardComponent implements OnInit {
-  private readonly orgService = inject(OrganizationService);
-
+export class DetailsCardComponent {
   readonly store = inject(EntryStore);
-  readonly owner = signal('');
-
-  ngOnInit(): void {
-    this.orgService
-      .getNameAsync(this.store.entry()!.owner)
-      .subscribe((name) => this.owner.set(name ?? ''));
-  }
 }

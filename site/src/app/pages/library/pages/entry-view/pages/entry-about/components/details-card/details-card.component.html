@@ -1,20 +1,20 @@
-@if (store.entry()!; as entry) { @if (store.version()!; as version) {
+@if (store.version()!; as version) {
 <div class="card-header">{{ "General.Details" | translate }}</div>
 <div class="card-body">
   <div class="wbs-detail-card">
     <div class="detail-header">{{ "General.Organization" | translate }} :</div>
-    <div>{{ owner() }}</div>
+    <div>{{ version.ownerName }}</div>
 
     <div class="detail-header">{{ "General.Owner" | translate }} :</div>
     <div>
-      <wbs-user [organization]="entry.owner" [userId]="entry.author" />
+      <wbs-user [user]="version.author" />
     </div>
 
     <div class="detail-header">{{ "General.Visibility" | translate }} :</div>
-    <div><wbs-visibility-text [visibility]="entry.visibility" /></div>
+    <div><wbs-visibility-text [visibility]="version.visibility" /></div>
 
     <div class="detail-header">{{ "General.Type" | translate }} :</div>
-    <div>{{ entry.type | entryTypeTitle | translate }}</div>
+    <div>{{ version.type | entryTypeTitle | translate }}</div>
 
     <div class="detail-header">{{ "General.Status" | translate }} :</div>
     <div>{{ version.status | libraryStatus | translate }}</div>
@@ -26,4 +26,4 @@
     <div>{{ version.lastModified | dateText }}</div>
   </div>
 </div>
-} }
+}

@@ -53,7 +53,6 @@ export class LibraryImportComponent {
           for (const library of libraries) {
             const entry: LibraryEntry = {
               id: IdService.generate(),
-              author: userId, // members[memberIndex].id,
               owner,
               type: library.type,
               visibility: 'public',
@@ -67,6 +66,8 @@ export class LibraryImportComponent {
               status: 'draft',
               title: library.name,
               versionAlias: 'TODO',
+              author: userId, // members[memberIndex].id,
+              editors: [],
             };
             const tasks = new Map<
               string,

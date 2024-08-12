@@ -9,8 +9,12 @@ public class LibraryEntryVersionTransformer : SqlHelpers
 {
     public static IEnumerable<LibraryEntryVersion> ToList(SqlDataReader reader)
     {
+        var list = new List<LibraryEntryVersion>();
+
         while (reader.Read())
-            yield return ToModel(reader);
+            list.Add(ToModel(reader));
+
+        return list;
     }
 
     public static LibraryEntryVersion ToModel(SqlDataReader reader)
