@@ -10,6 +10,11 @@
       <wbs-user [user]="version.author" />
     </div>
 
+    <div class="detail-header">{{ "General.Version" | translate }} :</div>
+    <div>
+      <wbs-version-editor [record]="version" />
+    </div>
+
     <div class="detail-header">{{ "General.Visibility" | translate }} :</div>
     <div><wbs-visibility-text [visibility]="version.visibility" /></div>
 

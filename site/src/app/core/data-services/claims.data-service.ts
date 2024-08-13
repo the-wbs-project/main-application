@@ -34,18 +34,21 @@ export class ClaimsDataService {
   }
 
   getLibraryEntryClaimsAsync(
+    organization: string,
     owner: string,
     entry: string,
     version: number
   ): Observable<string[]> {
-    const cacheKey = `${owner}/${entry}/${version}`;
+    const cacheKey = `${organization}/${owner}/${entry}/${version}`;
 
     if (this.cache.has(cacheKey)) {
       return of(this.cache.get(cacheKey) ?? []);
     }
 
     return this.http
-      .get<string[]>(`api/claims/libraryEntry/${owner}/${entry}/${version}`)
+      .get<string[]>(
+        `api/claims/libraryEntry/${organization}/${owner}/${entry}/${version}`
+      )
       .pipe(tap((data) => this.cache.set(cacheKey, data)));
   }
 }

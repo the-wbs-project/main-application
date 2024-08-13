@@ -4,18 +4,11 @@ import {
   OnChanges,
   SimpleChanges,
   input,
-  model,
   output,
-  signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faFloppyDisk,
-  faPencil,
-  faTrash,
-  faXmark,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faFloppyDisk, faXmark } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';

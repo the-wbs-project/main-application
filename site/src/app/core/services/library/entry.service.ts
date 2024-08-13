@@ -153,6 +153,24 @@ export class EntryService {
       .pipe(map(() => this.entryStore.setVersion(version)));
   }
 
+  versionAliasChangedAsync(alias: string): Observable<void> {
+    const version = structuredClone(this.version);
+    const from = version.versionAlias;
+
+    version.versionAlias = alias;
+
+    return this.saveAsync(version).pipe(
+      switchMap(() =>
+        this.activity.versionAliasChanged(
+          version.entryId,
+          version.version,
+          from,
+          alias
+        )
+      )
+    );
+  }
+
   titleChangedAsync(title: string): Observable<void> {
     const version = structuredClone(this.version);
     const from = version.title;

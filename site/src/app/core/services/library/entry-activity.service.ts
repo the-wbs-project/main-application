@@ -64,6 +64,23 @@ export class EntryActivityService {
     );
   }
 
+  versionAliasChanged(
+    entryId: string,
+    version: number,
+    from: string | undefined,
+    to: string | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.VERSION_ALIAS_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
   entryUpload(entryId: string, version: number): Observable<void> {
     return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UPLOAD);
   }

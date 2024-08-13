@@ -43,7 +43,7 @@ const claimsApp = newApp()
   .use('*', verifyJwt)
   .get('organization/:organization', Http.claims.getForOrganizationAsync)
   .get('project/:owner/:project', Http.claims.getForProjectAsync)
-  .get('libraryEntry/:owner/:entry/:version', Http.claims.getForLibraryEntryAsync);
+  .get('libraryEntry/:organization/:owner/:entry/:version', Http.claims.getForLibraryEntryAsync);
 
 app.route('/', claimsApp);
 

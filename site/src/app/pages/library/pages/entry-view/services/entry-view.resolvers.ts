@@ -1,10 +1,8 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { APP_CONFIG_TOKEN } from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
-import { Observable } from 'rxjs';
 
 export const ownerIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
@@ -33,14 +31,3 @@ export const entryApiUrlResolve: ResolveFn<string> = (
 export const taskApiUrlResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
 ) => EntryService.getTaskApiUrl(inject(APP_CONFIG_TOKEN), route);
-
-function getLibraryClaims(
-  data: DataServiceFactory,
-  route: ActivatedRouteSnapshot
-): Observable<string[]> {
-  return data.claims.getLibraryEntryClaimsAsync(
-    Utils.getParam(route, 'ownerId'),
-    Utils.getParam(route, 'entryId'),
-    parseInt(Utils.getParam(route, 'version'))
-  );
-}

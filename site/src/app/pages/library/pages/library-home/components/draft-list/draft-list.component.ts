@@ -12,6 +12,7 @@ import { LibraryDraftViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
+import { VersionPipe } from '@wbs/pipes/version.pipe';
 
 @Component({
   standalone: true,
@@ -27,6 +28,7 @@ import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
     FontAwesomeModule,
     RouterModule,
     TranslateModule,
+    VersionPipe,
   ],
 })
 export class LibraryDraftListComponent {

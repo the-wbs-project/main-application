@@ -38,8 +38,11 @@ export class LibraryDataService {
     filters: LibrarySearchFilters
   ): Observable<LibraryViewModel[]> {
     return this.http
-      .post<LibraryViewModel[]>('api/libraries/public', filters)
-      .pipe(map(this.clean));
+      .post<{ document: LibraryViewModel }[]>('api/libraries/public', filters)
+      .pipe(
+        map((x) => x.map((y) => y.document)),
+        map(this.clean)
+      );
   }
 
   private clean<T extends (LibraryViewModel | LibraryDraftViewModel)[]>(

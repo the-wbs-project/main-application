@@ -96,7 +96,7 @@ jobs:
   - job: worker_job
     pool:
       vmImage: ubuntu-latest
-    displayName: Auth Worker
+    displayName: Workers
     steps:
       - task: NodeTool@0
         inputs:

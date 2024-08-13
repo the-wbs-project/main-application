@@ -68,7 +68,12 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
       versionId,
       visibility
     ),
-    claims: data.claims.getLibraryEntryClaimsAsync(owner, entryId, versionId),
+    claims: data.claims.getLibraryEntryClaimsAsync(
+      org,
+      owner,
+      entryId,
+      versionId
+    ),
   }).pipe(
     map(({ versions, version, tasks, claims }) => {
       store.setAll(versions, version, tasks, claims);
@@ -131,12 +136,13 @@ export const taskNavGuard = (route: ActivatedRouteSnapshot) =>
 export const verifyTaskUpdateClaimGuard = (route: ActivatedRouteSnapshot) => {
   console.log('verifyTaskUpdateClaimGuard');
   const data = inject(DataServiceFactory);
+  const org = Utils.getParam(route, 'org');
   const owner = Utils.getParam(route, 'ownerId');
   const entryId = Utils.getParam(route, 'entryId');
   const version = parseInt(Utils.getParam(route, 'versionId'), 10);
   if (!owner || !entryId) return false;
 
   return data.claims
-    .getLibraryEntryClaimsAsync(owner, entryId, version)
+    .getLibraryEntryClaimsAsync(org, owner, entryId, version)
     .pipe(map((claims) => claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)));
 };

@@ -16,7 +16,7 @@ import {
 import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { gearIcon } from '@progress/kendo-svg-icons';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { LibraryEntry, NavigationLink, SaveState } from '@wbs/core/models';
+import { NavigationLink, SaveState } from '@wbs/core/models';
 import {
   NavigationMenuService,
   SignalStore,
@@ -74,6 +74,9 @@ export class EntryViewComponent {
   );
   readonly canEditTitle = computed(
     () => !(this.url()?.includes('/settings/') ?? false)
+  );
+  readonly canWatch = computed(() =>
+    (this.entryStore.versions() ?? []).some((x) => x.status === 'published')
   );
 
   readonly faArrowUpFromBracket = faArrowUpFromBracket;
