@@ -88,6 +88,14 @@ export class EntryActivityService {
     });
   }
 
+  publishedVersion(entryId: string, version: number): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.PUBLISHED);
+  }
+
+  unpublishedVersion(entryId: string, version: number): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UNPUBLISHED);
+  }
+
   private save(
     topLevelId: string,
     versionId: number,

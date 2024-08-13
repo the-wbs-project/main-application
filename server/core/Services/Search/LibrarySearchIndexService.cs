@@ -40,7 +40,6 @@ public class LibrarySearchIndexService
 
     public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)
     {
-        var userCache = new Dictionary<string, UserDocument>();
         var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
         var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
         var resources = new Resources(resourceObj);
@@ -70,6 +69,22 @@ public class LibrarySearchIndexService
             }
         }
         if (pushes.Count > 0) await Task.WhenAll(pushes);
+    }
+
+    public async Task PushToSearchAsync(SqlConnection conn, LibraryEntry entry, LibraryEntryVersion version)
+    {
+        var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
+        var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
+        var resources = new Resources(resourceObj);
+        var ownerObj = await organizationDataService.GetOrganizationByNameAsync(entry.OwnerId);
+        var author = await userDataService.GetMemberAsync(version.Author);
+        //
+        //  Get discipline labels
+        //
+        foreach (var discipline in disciplineLabels.Keys)
+            disciplineLabels[discipline] = resources.Get(disciplineLabels[discipline]);
+
+        await PushToSearchAsync(resources, ownerObj, entry, version, author.Name, disciplineLabels);
     }
 
     public async Task PushToSearchAsync(

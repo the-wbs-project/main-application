@@ -149,6 +149,9 @@ export class EntryStore {
       else list[index] = node;
     }
     this.setTasks(list);
+    this._version.update((v) =>
+      v ? { ...v, lastModified: new Date() } : undefined
+    );
   }
 
   private createViewModels(

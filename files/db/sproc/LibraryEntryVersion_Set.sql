@@ -11,7 +11,6 @@ CREATE PROCEDURE [dbo].[LibraryEntryVersion_Set]
     @Status nvarchar(50),
     @Categories nvarchar(MAX),
     @Disciplines nvarchar(MAX),
-    @Visibility nvarchar(50),
     @Author nvarchar(100),
     @Editors nvarchar(MAX)
 AS

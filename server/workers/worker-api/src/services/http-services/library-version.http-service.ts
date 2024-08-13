@@ -1,5 +1,6 @@
 import { Context } from '../../config';
 import { UserViewModel } from '../../view-models';
+import { OriginService } from '../origin.service';
 import { Transformers } from '../transformers';
 
 export class LibraryVersionHttpService {
@@ -49,12 +50,10 @@ export class LibraryVersionHttpService {
 
   static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry, version } = ctx.req.param();
-      const body = await ctx.req.json();
+      const { owner, entry } = ctx.req.param();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearVersionsAsync(owner, entry)]);
 
-      await ctx.var.data.libraryVersions.putAsync(owner, entry, parseInt(version), body);
-
-      return ctx.newResponse(null, 204);
+      return resp;
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a library entry version.', <Error>e);
 
@@ -64,12 +63,10 @@ export class LibraryVersionHttpService {
 
   static async publishAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry, version } = ctx.req.param();
-      const body = await ctx.req.json();
+      const { owner, entry } = ctx.req.param();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearVersionsAsync(owner, entry)]);
 
-      await ctx.var.data.libraryVersions.publishAsync(owner, entry, parseInt(version), body);
-
-      return ctx.newResponse(null, 204);
+      return resp;
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to publish a library entry version.', <Error>e);
 

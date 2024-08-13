@@ -19,6 +19,7 @@ import { LibraryDraftListComponent } from '../components/draft-list';
       <wbs-library-list-filters
         [showAssociations]="false"
         [showSearch]="false"
+        [(expanded)]="service.filtersExpanded"
         [(typeFilters)]="typeFilters"
         (typeFiltersChange)="retrieve()"
       />

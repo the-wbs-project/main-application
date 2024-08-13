@@ -18,9 +18,12 @@ import { LibraryHomeService } from '../services';
   changeDetection: ChangeDetectionStrategy.OnPush,
   template: `<div class="mg-y-10">
       <wbs-library-list-filters
+        [showAssociations]="true"
+        [showSearch]="true"
         [(authorFilters)]="roleFilters"
         [(typeFilters)]="typeFilters"
         [(searchText)]="searchText"
+        [(expanded)]="service.filtersExpanded"
         (authorFiltersChange)="retrieve()"
         (typeFiltersChange)="retrieve()"
         (searchTextChange)="retrieve()"

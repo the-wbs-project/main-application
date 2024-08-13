@@ -98,7 +98,7 @@ public class LibraryEntryVersionController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{entryVersion}/public")]
+    [HttpPut("{entryVersion}/publish")]
     public async Task<IActionResult> PublishVersionAsync(string owner, string entryId, int entryVersion, LibraryEntryVersion model)
     {
         try
@@ -111,21 +111,24 @@ public class LibraryEntryVersionController : ControllerBase
                 if (!await entryDataService.VerifyAsync(conn, owner, entryId))
                     return BadRequest("Library Entry not found for the credentials provided.");
 
-                await versionDataService.SetAsync(conn, owner, model);
 
                 var entry = await entryDataService.GetByIdAsync(conn, owner, entryId);
                 //
                 //  Retire any existing published version
                 //
-                if (entry.PublishedVersion != entryVersion)
+                if (entry.PublishedVersion.HasValue && entry.PublishedVersion.Value != entryVersion)
                 {
                     var otherVersion = await versionDataService.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
 
                     otherVersion.Status = "retired";
                     await versionDataService.SetAsync(conn, owner, otherVersion);
                 }
+                model.LastModified = DateTime.UtcNow;
+                entry.PublishedVersion = entryVersion;
+
+                await versionDataService.SetAsync(conn, owner, model);
                 await entryDataService.SetAsync(conn, entry);
-                await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
+                await searchIndexService.PushToSearchAsync(conn, entry, model);
 
                 return NoContent();
             }

@@ -220,14 +220,20 @@ export class EntryService {
           const model = this.transformers.libraryVersions.toModel(version);
 
           return this.data.libraryEntryVersions
-            .putAsync(version.ownerId, model)
+            .publishAsync(version.ownerId, model)
             .pipe(
-              tap(() =>
+              switchMap(() =>
+                this.activity.publishedVersion(version.entryId, version.version)
+              ),
+              tap(() => {
+                version.lastModified = new Date();
+
                 this.messages.report.success(
                   'General.Success',
                   'Wbs.PublishedToLibraryMessage'
-                )
-              )
+                );
+                this.entryStore.setVersion(version);
+              })
             );
         })
       )

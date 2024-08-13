@@ -34,6 +34,7 @@ BEGIN
         FROM #Types) THEN 1
             ELSE 0
         END = 1
+    ORDER BY [LastModified] DESC
 
     DROP TABLE #Types
 END

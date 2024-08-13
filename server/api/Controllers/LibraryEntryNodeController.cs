@@ -69,6 +69,7 @@ public class LibraryEntryNodeController : ControllerBase
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
                 await nodeDataService.SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
+                await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
 
                 return NoContent();
             }
@@ -115,6 +116,7 @@ public class LibraryEntryNodeController : ControllerBase
                     return BadRequest("Entry Node not found for the credentails provided.");
 
                 await nodeResourceDataService.SetAsync(conn, owner, entryId, entryVersion, nodeId, model);
+                await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
 
                 return NoContent();
             }

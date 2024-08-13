@@ -18,7 +18,7 @@ export class LibraryVersionTransformer {
   ): LibraryVersionViewModel {
     return {
       entryId: entry.id,
-      ownerId: entry.owner,
+      ownerId: entry.ownerId,
       ownerName: organization.display_name,
       version: version.version,
       versionAlias: version.versionAlias,

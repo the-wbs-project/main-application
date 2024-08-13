@@ -27,7 +27,7 @@ export class LibraryEntryVersionDataService extends BaseDataService {
   }
 
   async putAsync(owner: string, entry: string, version: number, data: LibraryEntryVersion): Promise<void> {
-    await Promise.all([
+    const [resp, nothing] = await Promise.all([
       this.origin.putAsync(data, `${this.getBaseUrl(owner, entry)}/versions/${version}`),
       this.clearVersionsAsync(owner, entry),
     ]);
@@ -40,13 +40,12 @@ export class LibraryEntryVersionDataService extends BaseDataService {
     ]);
   }
 
-  private getBaseUrl(owner: string, entry: string): string {
-    return `portfolio/${owner}/library/entries/${entry}`;
+  async clearVersionsAsync(owner: string, entry: string): Promise<void> {
+    await this.ctx.env.KV_DATA.delete(this.getVersionsKey(owner, entry));
   }
 
-  private async clearVersionsAsync(owner: string, entry: string): Promise<void> {
-    console.log('clearVersionsAsync', owner, entry);
-    await this.ctx.env.KV_DATA.delete(this.getVersionsKey(owner, entry));
+  private getBaseUrl(owner: string, entry: string): string {
+    return `portfolio/${owner}/library/entries/${entry}`;
   }
 
   private getVersionsKey(owner: string, entry: string): string {

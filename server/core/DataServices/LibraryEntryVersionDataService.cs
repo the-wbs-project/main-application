@@ -48,6 +48,16 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         return false;
     }
 
+    public async Task MarkAsUpdatedAsync(SqlConnection conn, string entryId, int entryVersion)
+    {
+        var cmd = new SqlCommand("UPDATE [dbo].[LibraryEntryVersions] SET [LastModified] = GETUTCDATE() WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion", conn);
+
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
+
+        await cmd.ExecuteNonQueryAsync();
+    }
+
     public async Task SetAsync(SqlConnection conn, string owner, LibraryEntryVersion entryVersion)
     {
         var cmd = new SqlCommand("dbo.LibraryEntryVersion_Set", conn)

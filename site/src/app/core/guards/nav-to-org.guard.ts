@@ -10,7 +10,6 @@ export const navToOrgGuard = () => {
   const store = inject(Store);
 
   return toObservable(membership.memberships).pipe(
-    tap((orgs) => console.log(orgs)),
     skipWhile((x) => x == undefined),
     first(),
     tap((orgs) =>

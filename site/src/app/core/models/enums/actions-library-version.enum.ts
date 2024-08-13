@@ -7,4 +7,6 @@ export enum LIBRARY_VERSION_ACTIONS {
   SETUP_PHASE = 'library-version-phase-setup',
   SETUP_TASK = 'library-version-task-task-setup',
   UPLOAD = 'library-version-upload',
+  PUBLISHED = 'library-version-published',
+  UNPUBLISHED = 'library-version-unpublished',
 }

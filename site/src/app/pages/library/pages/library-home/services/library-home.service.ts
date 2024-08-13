@@ -1,4 +1,4 @@
-import { Injectable, Signal, inject, signal } from '@angular/core';
+import { Injectable, Signal, inject, model, signal } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Storage } from '@wbs/core/services';
@@ -13,6 +13,7 @@ export class LibraryHomeService {
   private readonly membership = inject(MembershipStore).membership;
   private readonly creation = inject(EntryCreationService);
   private readonly _library = signal<string>(this.getLibraryFromStorage());
+  readonly filtersExpanded = signal(false);
 
   get library(): Signal<string> {
     return this._library;
