@@ -127,6 +127,15 @@ public class LibrarySearchIndexService
         }
     }
 
+    public async Task DeleteIndexAsync()
+    {
+        try
+        {
+            await GetIndexClient().DeleteIndexAsync(searchConfig.LibraryIndex);
+        }
+        catch { }
+    }
+
     private static string GetEntryTypeLabel(string type, Resources resources)
     {
         if (type == "project") return resources.Get("General.Project");

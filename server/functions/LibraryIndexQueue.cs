@@ -11,18 +11,18 @@ namespace functions
         private readonly DbService db;
         private readonly ILogger _logger;
         private readonly LibrarySearchIndexService searchIndexService;
-        private readonly LibraryEntryDataService dataService;
+        private readonly OrganizationDataService organizationDataService;
         private readonly LibraryEntryViewDataService entryViewDataService;
         private readonly LibrarySearchService searchSearch;
 
-        public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchIndexService, LibraryEntryDataService dataService, DbService db, LibrarySearchService searchSearch, LibraryEntryViewDataService entryViewDataService)
+        public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchIndexService, DbService db, LibrarySearchService searchSearch, LibraryEntryViewDataService entryViewDataService, OrganizationDataService organizationDataService)
         {
             _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
-            this.dataService = dataService;
             this.searchIndexService = searchIndexService;
             this.db = db;
             this.searchSearch = searchSearch;
             this.entryViewDataService = entryViewDataService;
+            this.organizationDataService = organizationDataService;
         }
 
         [Function("LibraryIndex-Build")]
@@ -35,6 +35,32 @@ namespace functions
             catch (Exception ex)
             {
                 _logger.LogError(ex, "Error processing library entry");
+                throw;
+            }
+        }
+
+        [Function("LibraryIndex-ReBuild")]
+        public async Task RunReBuild([QueueTrigger("search-library-rebuild", Connection = "")] string message)
+        {
+            try
+            {
+                await searchIndexService.DeleteIndexAsync();
+                await searchIndexService.VerifyIndexAsync();
+                var orgs = await organizationDataService.GetAllAsync();
+
+                using (var conn = await db.CreateConnectionAsync())
+                {
+                    foreach (var org in orgs)
+                    {
+                        var entries = await entryViewDataService.GetAllAsync(conn, org.Name);
+
+                        await searchIndexService.PushToSearchAsync(conn, org.Name, entries.Select(e => e.EntryId).ToArray());
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Error rebuilding library entry index");
                 throw;
             }
         }
