@@ -93,7 +93,7 @@ jobs:
           publishLocation: "Container"
         displayName: "Publish"
 
-  - job: auth_worker_job
+  - job: worker_job
     pool:
       vmImage: ubuntu-latest
     displayName: Auth Worker
@@ -106,13 +106,17 @@ jobs:
       - script: npm install --global typescript
         displayName: "Install TypeScript"
 
-      - script: npm install
-        workingDirectory: "server/workers/worker-auth"
+      - script: npm run deploy:install
+        workingDirectory: "server/workers"
         displayName: "Install"
 
       - script: npm run check
         workingDirectory: "server/workers/worker-auth"
-        displayName: "Check"
+        displayName: "Check Auth"
+
+      - script: npm run check
+        workingDirectory: "server/workers/worker-api"
+        displayName: "Check API"
 
       - task: ArchiveFiles@2
         inputs:
@@ -121,35 +125,7 @@ jobs:
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker-Auth.zip"
           replaceExistingArchive: true
-        displayName: "Zip"
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-          ArtifactName: "drop"
-          publishLocation: "Container"
-        displayName: "Publish"
-
-  - job: api_worker_job
-    pool:
-      vmImage: ubuntu-latest
-    displayName: API Worker
-    steps:
-      - task: NodeTool@0
-        inputs:
-          versionSpec: "22.0"
-        displayName: "Install Node.js"
-
-      - script: npm install --global typescript
-        displayName: "Install TypeScript"
-
-      - script: npm install
-        workingDirectory: "server/workers/worker-api"
-        displayName: "Install"
-
-      - script: npm run check
-        workingDirectory: "server/workers/worker-api"
-        displayName: "Check"
+        displayName: "Zip Auth"
 
       - task: ArchiveFiles@2
         inputs:
@@ -158,7 +134,7 @@ jobs:
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker-Api.zip"
           replaceExistingArchive: true
-        displayName: "Zip"
+        displayName: "Zip API"
 
       - task: PublishBuildArtifacts@1
         inputs:

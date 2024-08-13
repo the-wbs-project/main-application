@@ -2,6 +2,7 @@
   "name": "workers",
   "version": "1.0.0",
   "scripts": {
+    "deploy:install": "npm run install:api & npm run install:auth",
     "install:globals": "npm install wrangler concurrently -g",
     "install:api": "npm --prefix worker-api install",
     "install:auth": "npm --prefix worker-auth install",
