@@ -9,15 +9,19 @@
     <kendo-stepper
       [steps]="steps"
       stepType="full"
-      [(currentStep)]="view"
-      [linear]="false"
+      [currentStep]="view()"
+      [linear]="true"
     >
       <ng-template kendoStepperIndicatorTemplate let-step>
-        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+        <div (click)="stop($event)">
+          @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+        </div>
       </ng-template>
       <ng-template kendoStepperLabelTemplate let-step>
-        {{ step.label | translate }}
-        @if (step.isOptional) { <span class="mg-l-5">*</span> }
+        <div (click)="stop($event)">
+          {{ step.label | translate }}
+          @if (step.isOptional) { <span class="mg-l-5">*</span> }
+        </div>
       </ng-template>
     </kendo-stepper>
     <div [appScrollToTop]="view()" class="tx-center flex-fill pd-t-20 pd-x-10">
@@ -75,15 +79,23 @@
       } @else if (view() === 3) {
 
       <div class="d-inline-block w-100 mx-wd-800">
+        <wbs-versioning [(alias)]="alias" />
+      </div>
+      } @else if (view() === 4) {
+
+      <div class="d-inline-block w-100 mx-wd-800">
+        @let saveState = service.saveState.state(); @if (saveState !== "saving")
+        {
         <wbs-save-section
-          [owner]="owner()!"
           [phases]="phases()"
+          [versionAlias]="alias()"
           [category]="(categories | findById : category()!)!"
           [disciplines]="disciplines()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility()"
-          (close)="dialog.close($event)"
         />
+        }
+        <wbs-saving-entry [saveState]="saveState" />
       </div>
       }
     </div>
@@ -102,7 +114,6 @@
     </div>
 
     <div class="flex-grow-1 text-end">
-      @if (view() < 3) {
       <button
         kendoButton
         themeColor="primary"
@@ -111,7 +122,6 @@
       >
         {{ nextButtonLabel() | translate }}
       </button>
-      }
     </div>
   </kendo-dialog-actions>
 </kendo-dialog>

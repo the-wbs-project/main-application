@@ -9,9 +9,9 @@ export class LibraryEntryVersionDataService extends BaseDataService {
 
   async getAsync(owner: string, entry: string): Promise<LibraryEntryVersion[]> {
     const key = this.getVersionsKey(owner, entry);
-    //const kvData = await this.getKv<LibraryEntryVersion[]>(key);
+    const kvData = await this.getKv<LibraryEntryVersion[]>(key);
 
-    //if (kvData) return kvData;
+    if (kvData) return kvData;
 
     const data = await this.origin.getAsync<LibraryEntryVersion[]>(`${this.getBaseUrl(owner, entry)}/versions`);
 
@@ -26,21 +26,14 @@ export class LibraryEntryVersionDataService extends BaseDataService {
     return versions.find((v) => v.version === versionId);
   }
 
-  async putAsync(owner: string, entry: string, version: number, data: LibraryEntryVersion): Promise<void> {
-    const [resp, nothing] = await Promise.all([
-      this.origin.putAsync(data, `${this.getBaseUrl(owner, entry)}/versions/${version}`),
-      this.clearVersionsAsync(owner, entry),
-    ]);
-  }
-
   async publishAsync(owner: string, entry: string, version: number, data: LibraryEntryVersion): Promise<void> {
     await Promise.all([
       this.origin.putAsync(data, `${this.getBaseUrl(owner, entry)}/versions/${version}/publish`),
-      this.clearVersionsAsync(owner, entry),
+      this.clearKvAsync(owner, entry),
     ]);
   }
 
-  async clearVersionsAsync(owner: string, entry: string): Promise<void> {
+  async clearKvAsync(owner: string, entry: string): Promise<void> {
     await this.ctx.env.KV_DATA.delete(this.getVersionsKey(owner, entry));
   }
 

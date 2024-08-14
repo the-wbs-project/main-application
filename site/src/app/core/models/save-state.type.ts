@@ -1,1 +1,1 @@
-export type SaveState = 'ready' | 'saving' | 'saved';
+export type SaveState = 'ready' | 'saving' | 'error' | 'saved';

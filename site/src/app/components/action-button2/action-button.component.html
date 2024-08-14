@@ -5,32 +5,23 @@
   rounded="small"
   size="small"
   class="mg-y-4"
-  (click)="toggle()"
 >
   <fa-icon [icon]="menuIcon" />
 </button>
-@if (show()) {
-<kendo-popup
-  #popup
-  [anchor]="anchor"
-  (anchorViewportLeave)="toggle()"
+<kendo-contextmenu
+  showOn="click"
+  [alignToAnchor]="true"
   [anchorAlign]="{ horizontal: 'left', vertical: 'bottom' }"
-  [popupAlign]="{ horizontal: 'left', vertical: 'top' }"
+  [target]="anchor"
+  [items]="menu() ?? []"
+  (select)="selected($event.item)"
 >
-  <kendo-menu
-    [items]="menu() ?? []"
-    [vertical]="true"
-    style="display: inline-block"
-    (select)="selected($event.item)"
-  >
-    <ng-template kendoMenuItemTemplate let-item="item">
-      <div class="tx-gray-700">
-        <div class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="item.faIcon!" />
-        </div>
-        {{ item.text! | translate }}
-      </div>
-    </ng-template>
-  </kendo-menu>
-</kendo-popup>
-}
+  <ng-template kendoMenuItemTemplate let-item="item">
+    @if (item.faIcon) {
+    <div class="d-inline-block wd-30 text-center" style="margin-left: -5px">
+      <fa-icon [icon]="item.faIcon!" />
+    </div>
+    } @if (item.text) { {{ item.text }} } @else if (item.resource) {
+    {{ item.resource | translate }} }
+  </ng-template>
+</kendo-contextmenu>

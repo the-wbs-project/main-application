@@ -59,6 +59,8 @@
       "About": "About",
       "Active": "Active",
       "Version": "Version",
+      "Versions": "Versions",
+      "Versioning": "Versioning",
       "Clear": "Clear",
       "Revert": "Revert",
       "Overwrite": "Overwrite",
@@ -618,7 +620,9 @@
       "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS.",
       "WBS": "WBS",
       "WBS-Full": "Work Breakdown Structure",
-      "WBS-Full2": "WBS - Work Breakdown Structure"
+      "WBS-Full2": "WBS - Work Breakdown Structure",
+      "CreateNewVersion": "Create New Version",
+      "VersionAlias": "Version Alias"
     }
   },
   {
@@ -849,7 +853,8 @@
       "PhaseHeader": "In order to get started, we need to identify the phase you are creating a WBS template for. This is what you would see on the project plan. Do you want to use a...",
       "DisciplinesHeader": "Optionally, you can define what disciplines are apart of this WBS. This will improve the value and understanding of the WBS.",
       "Step_Title": "Title & Visibility",
-      "Step_Review": "Review & Save"
+      "Step_Review": "Review & Save",
+      "VersioningHelp": "You can optionally create an alias for this WBS. This will allow yourself and others to understand what is different between each version."
     }
   },
   {

@@ -26,21 +26,22 @@ import { EntryService } from '@wbs/core/services/library';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
+import { ActionButtonComponent2 } from '@wbs/components/action-button2';
 import { PageHeaderComponent } from '@wbs/components/page-header';
 import { EntryStore } from '@wbs/core/store';
 import { delay, tap } from 'rxjs/operators';
-import { EntryActionButtonComponent } from './components/entry-action-button.component';
 import { EntryTitleComponent } from './components/entry-title';
 import { ENTRY_NAVIGATION } from './models';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
+import { EntryActionButtonService } from './services';
 
 @Component({
   standalone: true,
   templateUrl: './view-entry.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ActionButtonComponent2,
     ActionIconListComponent,
-    EntryActionButtonComponent,
     EntryTitleComponent,
     EntryViewBreadcrumbsPipe,
     NavigationComponent,
@@ -56,6 +57,7 @@ export class EntryViewComponent {
   private readonly store = inject(SignalStore);
 
   readonly entryStore = inject(EntryStore);
+  readonly menuService = inject(EntryActionButtonService);
   readonly owner = input.required<string>();
   readonly entryId = input.required<string>();
   readonly entryUrl = input.required<string[]>();
@@ -77,6 +79,14 @@ export class EntryViewComponent {
   );
   readonly canWatch = computed(() =>
     (this.entryStore.versions() ?? []).some((x) => x.status === 'published')
+  );
+  readonly menu = computed(() =>
+    this.menuService.buildMenu(
+      this.entryStore.versions()!,
+      this.entryStore.version()!,
+      this.entryUrl(),
+      this.entryStore.claims()
+    )
   );
 
   readonly faArrowUpFromBracket = faArrowUpFromBracket;

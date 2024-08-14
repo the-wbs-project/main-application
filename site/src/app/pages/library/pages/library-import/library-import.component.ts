@@ -21,7 +21,6 @@ import { catchError, switchMap } from 'rxjs/operators';
   templateUrl: './library-import.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule],
-  providers: [],
 })
 export class LibraryImportComponent {
   private readonly data = inject(DataServiceFactory);
@@ -53,7 +52,7 @@ export class LibraryImportComponent {
           for (const library of libraries) {
             const entry: LibraryEntry = {
               id: IdService.generate(),
-              owner,
+              ownerId: owner,
               type: library.type,
               visibility: 'public',
             };

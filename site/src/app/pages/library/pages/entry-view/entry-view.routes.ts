@@ -4,6 +4,7 @@ import { NgxsModule } from '@ngxs/store';
 import { dirtyGuard } from '@wbs/core/guards';
 import { EntryUploadState } from './pages/entry-upload/states';
 import {
+  EntryActionButtonService,
   EntryTaskActionService,
   EntryTaskReorderService,
   LibraryImportProcessorService,
@@ -26,6 +27,7 @@ export const routes: Routes = [
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
+      EntryActionButtonService,
       EntryTaskActionService,
       EntryTaskReorderService,
       LibraryImportProcessorService,

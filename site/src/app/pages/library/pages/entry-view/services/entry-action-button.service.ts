@@ -3,74 +3,100 @@ import {
   faBooks,
   faCloudDownload,
   faCloudUpload,
+  faCodeBranch,
+  faEye,
   faPencil,
   faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
   ActionButtonMenuItem,
   LIBRARY_CLAIMS,
-  LibraryEntryVersion,
+  LibraryEntryVersionBasic,
 } from '@wbs/core/models';
 import { EntryService } from '@wbs/core/services/library';
+import { LibraryVersionViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class EntryActionButtonService {
   private readonly entryService = inject(EntryService);
   private readonly actionCreateProject = 'createProject';
+  private readonly actionNewVersion = 'newVersion';
   private readonly actionDownloadWbs = 'downloadWbs';
   private readonly actionDownloadAbs = 'downloadAbs';
   private readonly actionPublish = 'publish';
   private readonly actionUnpublish = 'unpublish';
 
   buildMenu(
-    entryType: string,
-    versionStatus: string,
+    versions: LibraryEntryVersionBasic[],
+    version: LibraryVersionViewModel,
     entryUrl: string[],
     claims: string[]
   ): ActionButtonMenuItem[] | undefined {
     const items: ActionButtonMenuItem[] = [];
+    const canUpdate = claims.includes(LIBRARY_CLAIMS.UPDATE);
+    const canUpdateTasks = claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE);
 
-    if (entryType === 'project') {
+    if (version.type === 'project') {
       items.push({
         action: this.actionCreateProject,
         faIcon: faPlus,
-        text: 'General.CreateProject',
+        resource: 'General.CreateProject',
       });
     }
     items.push({
       action: this.actionDownloadWbs,
       faIcon: faCloudDownload,
-      text: 'Wbs.DownloadWbs',
+      resource: 'Wbs.DownloadWbs',
     });
-    items.push({
+
+    /*items.push({
       action: this.actionDownloadAbs,
       faIcon: faCloudDownload,
       text: 'Wbs.DownloadAbs',
-    });
+    });*/
 
-    if (
-      versionStatus === 'draft' &&
-      claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)
-    ) {
+    if (version.status === 'draft' && canUpdateTasks) {
       items.push({
         faIcon: faCloudUpload,
-        text: 'Wbs.UploadTasks',
+        resource: 'Wbs.UploadTasks',
         route: [...entryUrl, 'upload'],
       });
     }
 
-    if (claims.includes(LIBRARY_CLAIMS.UPDATE)) {
-      if (versionStatus === 'draft') {
+    if (canUpdate) {
+      const versionItems: ActionButtonMenuItem[] = [
+        {
+          action: this.actionNewVersion,
+          faIcon: faPlus,
+          resource: 'Wbs.CreateNewVersion',
+        },
+        ...versions
+          .filter((v) => v.version !== version.version)
+          .map((v) => ({
+            faIcon: faEye,
+            text:
+              `v${v.version}` + (v.versionAlias ? ` - ${v.versionAlias}` : ''),
+            route: [...entryUrl.slice(0, -1), v.version.toString()],
+          })),
+      ];
+
+      items.push({
+        faIcon: faCodeBranch,
+        resource: 'General.Versions',
+        items: versionItems,
+      });
+
+      if (version.status === 'draft') {
         items.push({
           action: this.actionPublish,
           faIcon: faBooks,
-          text: 'Wbs.PublishToLibrary',
+          resource: 'Wbs.PublishToLibrary',
         });
-      } else if (versionStatus === 'published') {
+      } else if (version.status === 'published') {
         items.push({
           action: this.actionUnpublish,
           faIcon: faPencil,
-          text: 'Wbs.UnpublishForEditing',
+          resource: 'Wbs.UnpublishForEditing',
         });
       }
     }

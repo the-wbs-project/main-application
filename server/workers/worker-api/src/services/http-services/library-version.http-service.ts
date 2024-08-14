@@ -51,7 +51,7 @@ export class LibraryVersionHttpService {
   static async putAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();
-      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearVersionsAsync(owner, entry)]);
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearKvAsync(owner, entry)]);
 
       return resp;
     } catch (e) {
@@ -64,7 +64,7 @@ export class LibraryVersionHttpService {
   static async publishAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();
-      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearVersionsAsync(owner, entry)]);
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearKvAsync(owner, entry)]);
 
       return resp;
     } catch (e) {

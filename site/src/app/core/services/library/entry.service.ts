@@ -92,11 +92,11 @@ export class EntryService {
   ): Observable<void> {
     return this.data.libraryEntries.putAsync(entry).pipe(
       switchMap(() =>
-        this.data.libraryEntryVersions.putAsync(entry.owner, version)
+        this.data.libraryEntryVersions.putAsync(entry.ownerId, version)
       ),
       switchMap(() =>
         this.data.libraryEntryNodes.putAsync(
-          entry.owner,
+          entry.ownerId,
           entry.id,
           version.version,
           tasks,

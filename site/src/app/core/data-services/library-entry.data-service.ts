@@ -6,7 +6,7 @@ export class LibraryEntryDataService {
   constructor(private readonly http: HttpClient) {}
 
   putAsync(entry: LibraryEntry): Observable<void> {
-    return this.http.put<void>(this.url(entry.owner, entry.id), entry);
+    return this.http.put<void>(this.url(entry.ownerId, entry.id), entry);
   }
 
   private url(owner: string, entryId?: string): string {

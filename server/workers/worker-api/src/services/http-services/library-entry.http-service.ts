@@ -1,4 +1,5 @@
 import { Context } from '../../config';
+import { OriginService } from '../origin.service';
 
 export class LibraryEntryHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
@@ -16,11 +17,9 @@ export class LibraryEntryHttpService {
   static async putAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();
-      const body = await ctx.req.json();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryEntries.clearKvAsync(owner, entry)]);
 
-      await ctx.var.data.libraryEntries.putAsync(owner, entry, body);
-
-      return ctx.newResponse(null, 204);
+      return resp;
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a library entry.', <Error>e);
 

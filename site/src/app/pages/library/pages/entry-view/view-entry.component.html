@@ -5,11 +5,9 @@
       <wbs-page-header />
     </div>
     <div class="d-flex flex-align-center gap-10">
-      <wbs-entry-action-button
-        [entryType]="version.type"
-        [versionStatus]="version.status"
-        [entryUrl]="entryUrl()"
-        [claims]="entryStore.claims()"
+      <wbs-action-button
+        [menu]="menu()"
+        (itemClicked)="menuService.handleAction($event)"
       />
       @if (canWatch()) {
       <span class="tx-24">

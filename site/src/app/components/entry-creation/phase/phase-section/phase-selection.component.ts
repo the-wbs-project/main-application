@@ -23,6 +23,7 @@ import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
 import { SelectButtonComponent } from '@wbs/components/_utils/select-button.component';
 import { MetadataStore } from '@wbs/core/store';
+import { LabelModule } from '@progress/kendo-angular-label';
 
 @Component({
   standalone: true,
@@ -35,6 +36,7 @@ import { MetadataStore } from '@wbs/core/store';
     AlertComponent,
     FontAwesomeModule,
     InfoMessageComponent,
+    LabelModule,
     NgClass,
     SelectButtonComponent,
     TextBoxModule,
@@ -80,7 +82,7 @@ export class PhaseSelectionComponent {
       if (phase && typeof phase === 'object') {
         phase.label = text;
 
-        return phase;
+        return { ...phase };
       }
       return {
         id: IdService.generate(),

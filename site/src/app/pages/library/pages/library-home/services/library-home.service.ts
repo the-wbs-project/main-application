@@ -1,4 +1,4 @@
-import { Injectable, Signal, inject, model, signal } from '@angular/core';
+import { Injectable, Signal, inject, signal } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Storage } from '@wbs/core/services';
@@ -33,11 +33,7 @@ export class LibraryHomeService {
   }
 
   createDraft(type: string): void {
-    this.creation.runAsync(this.membership()!.name, type).subscribe((data) => {
-      if (!data) return;
-
-      this.navigate(data.entry.owner, data.entry.id, data.version.version);
-    });
+    this.creation.runAsync(type);
   }
 
   libraryChanged(library: string): void {
