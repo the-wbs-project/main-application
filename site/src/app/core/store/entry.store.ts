@@ -59,13 +59,23 @@ export class EntryStore {
 
   get canEditEntry(): Signal<boolean> {
     return computed(() =>
-      this.claimCheck(this.version(), this._claims(), LIBRARY_CLAIMS.UPDATE)
+      this.claimStatusCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.UPDATE
+      )
+    );
+  }
+
+  get canEditAlias(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(this._claims(), LIBRARY_CLAIMS.UPDATE)
     );
   }
 
   get canCreateTask(): Signal<boolean> {
     return computed(() =>
-      this.claimCheck(
+      this.claimStatusCheck(
         this.version(),
         this._claims(),
         LIBRARY_CLAIMS.TASKS.CREATE
@@ -75,7 +85,7 @@ export class EntryStore {
 
   get canEditTask(): Signal<boolean> {
     return computed(() =>
-      this.claimCheck(
+      this.claimStatusCheck(
         this.version(),
         this._claims(),
         LIBRARY_CLAIMS.TASKS.UPDATE
@@ -85,7 +95,7 @@ export class EntryStore {
 
   get canDeleteTask(): Signal<boolean> {
     return computed(() =>
-      this.claimCheck(
+      this.claimStatusCheck(
         this.version(),
         this._claims(),
         LIBRARY_CLAIMS.TASKS.DELETE
@@ -167,11 +177,15 @@ export class EntryStore {
     );
   }
 
-  private claimCheck(
+  private claimStatusCheck(
     version: LibraryVersionViewModel | undefined,
     claims: string[],
     claim: string
   ): boolean {
-    return version?.status === 'draft' && claims.includes(claim);
+    return version?.status === 'draft' && this.claimCheck(claims, claim);
+  }
+
+  private claimCheck(claims: string[], claim: string): boolean {
+    return claims.includes(claim);
   }
 }

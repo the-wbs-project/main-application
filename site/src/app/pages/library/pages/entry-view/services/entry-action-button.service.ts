@@ -68,7 +68,7 @@ export class EntryActionButtonService {
         {
           action: this.actionNewVersion,
           faIcon: faPlus,
-          resource: 'Wbs.CreateNewVersion',
+          resource: 'Library.CreateNewVersion',
         },
         ...versions
           .filter((v) => v.version !== version.version)
@@ -119,6 +119,9 @@ export class EntryActionButtonService {
         break;
       case this.actionUnpublish:
         this.entryService.unpublish();
+        break;
+      case this.actionNewVersion:
+        this.entryService.createNewVersion();
         break;
     }
   }

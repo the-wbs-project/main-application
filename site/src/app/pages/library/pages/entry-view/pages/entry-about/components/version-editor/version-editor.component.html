@@ -31,7 +31,7 @@
   <span>
     {{ [version.version, version.versionAlias] | version }}
   </span>
-  @if (saveMode.state() !== 'saving' && store.canEditEntry()) {
+  @if (saveMode.state() !== 'saving' && store.canEditAlias()) {
   <span class="child-to-show">
     <fa-icon
       size="sm"

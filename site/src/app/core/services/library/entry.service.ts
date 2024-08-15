@@ -21,6 +21,7 @@ import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
+import { NewVersionDialogComponent } from '@wbs/pages/library/pages/entry-view/components/new-version-dialog/new-version-dialog.component';
 
 @Injectable()
 export class EntryService {
@@ -144,6 +145,49 @@ export class EntryService {
       )
       .subscribe();
   }
+
+  createNewVersion(): void {
+    const version = this.version;
+
+    NewVersionDialogComponent.launchAsync(
+      this.dialogService,
+      this.entryStore.versions()!,
+      version
+    )
+      .pipe(
+        filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
+        switchMap((data) =>
+          this.data.libraryEntryVersions.replicateAsync(
+            version.ownerId,
+            version.entryId,
+            data!.version,
+            data!.alias
+          )
+        )
+      )
+      .subscribe((newVersion) =>
+        this.store.dispatch(
+          new Navigate([
+            '/',
+            version.ownerId,
+            'library',
+            'view',
+            version.ownerId,
+            version.entryId,
+            newVersion,
+          ])
+        )
+      );
+  }
+  /*
+    this.data.libraryEntryVersions
+      .replicateAsync(
+        this.ownerId!,
+        this.entryId!,
+        this.selected()!,
+        this.alias()
+      )
+      .subscribe((version) => this.dialog.close(version));*/
 
   saveAsync(version: LibraryVersionViewModel): Observable<void> {
     const model = this.transformers.libraryVersions.toModel(version);

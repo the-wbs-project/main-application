@@ -73,4 +73,17 @@ export class LibraryVersionHttpService {
       return ctx.text('Internal Server Error', 500);
     }
   }
+
+  static async replicateAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, entry } = ctx.req.param();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryVersions.clearKvAsync(owner, entry)]);
+
+      return resp;
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to replicate a library entry version.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
 }

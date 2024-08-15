@@ -83,6 +83,7 @@ const entryApp = newApp()
   .put('', verifyJwt, Http.libraryEntries.putAsync)
   .put('versions/:version', verifyJwt, Http.libraryVersions.putAsync)
   .put('versions/:version/publish', verifyJwt, Http.libraryVersions.publishAsync)
+  .put('versions/:version/replicate', verifyJwt, Http.libraryVersions.publishAsync)
   .put('versions/:version/nodes', verifyJwt, Http.libraryTasks.putAsync);
 
 app.route('/', entryApp);

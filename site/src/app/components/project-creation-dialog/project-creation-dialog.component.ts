@@ -31,11 +31,7 @@ import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
-import {
-  LibraryEntryNode,
-  LibraryEntryVersion,
-  Member,
-} from '@wbs/core/models';
+import { LibraryEntryNode, Member } from '@wbs/core/models';
 import { CategoryService, IdService } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import {

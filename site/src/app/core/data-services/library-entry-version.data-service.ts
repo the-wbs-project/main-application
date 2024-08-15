@@ -23,15 +23,13 @@ export class LibraryEntryVersionDataService {
     entryVersion: number
   ): Observable<LibraryVersionViewModel> {
     return this.http
-      .get<LibraryVersionViewModel>(
-        `api/portfolio/${owner}/library/entries/${entryId}/versions/${entryVersion}`
-      )
+      .get<LibraryVersionViewModel>(this.url(owner, entryId, entryVersion))
       .pipe(map((list) => this.cleanVm(list)));
   }
 
   putAsync(owner: string, entryVersion: LibraryEntryVersion): Observable<void> {
     return this.http.put<void>(
-      `api/portfolio/${owner}/library/entries/${entryVersion.entryId}/versions/${entryVersion.version}`,
+      this.url(owner, entryVersion.entryId, entryVersion.version),
       entryVersion
     );
   }
@@ -41,9 +39,36 @@ export class LibraryEntryVersionDataService {
     entryVersion: LibraryEntryVersion
   ): Observable<void> {
     return this.http.put<void>(
-      `api/portfolio/${owner}/library/entries/${entryVersion.entryId}/versions/${entryVersion.version}/publish`,
+      this.url(owner, entryVersion.entryId, entryVersion.version, 'publish'),
       entryVersion
     );
+  }
+
+  replicateAsync(
+    owner: string,
+    entryId: string,
+    version: number,
+    alias: string
+  ): Observable<number> {
+    return this.http.put<number>(
+      this.url(owner, entryId, version, 'replicate'),
+      {
+        alias,
+      }
+    );
+  }
+
+  private url(
+    owner: string,
+    entryId: string,
+    version: number,
+    suffix?: string
+  ): string {
+    let url = `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}`;
+
+    if (suffix) url += `/${suffix}`;
+
+    return url;
   }
 
   private cleanVm(obj: LibraryVersionViewModel): LibraryVersionViewModel {

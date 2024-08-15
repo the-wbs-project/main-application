@@ -621,7 +621,6 @@
       "WBS": "WBS",
       "WBS-Full": "Work Breakdown Structure",
       "WBS-Full2": "WBS - Work Breakdown Structure",
-      "CreateNewVersion": "Create New Version",
       "VersionAlias": "Version Alias"
     }
   },
@@ -807,7 +806,11 @@
       "DisciplineSettingsInfoEntry": "What disciplines are associated with this WBS? If you aren't sure don't select any and all disciplines will be available.",
       "DisciplineSettingsInfoTask": "Who will be performing this task?",
       "ResourceInfoEntry": "Resources are files or links which are associated with this WBS. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly.",
-      "ResourceInfoTask": "Resources are files or links which are associated with this task. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly."
+      "ResourceInfoTask": "Resources are files or links which are associated with this task. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly.",
+      "CreateNewVersion": "Create New Version",
+      "CreateNewVersionHelp": "If you want to make changes to an already published WBS, you should create a new version to implement the changes. Once you are done you will then published that new version.",
+      "CreateNewVersionFrom": "Create New Version From...",
+      "NewVersionAlias": "New Version Alias"
     }
   },
   {

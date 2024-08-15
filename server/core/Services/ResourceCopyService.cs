@@ -47,6 +47,28 @@ public class ResourceCopyService
         if (saves.Count > 0) await Task.WhenAll(saves);
     }
 
+    public async Task LibraryToLibraryAsync(SqlConnection conn, string owner, string sourceEntryId, int sourceVersion, string destinationEntryId, int destinationVersion)
+    {
+        var saves = new List<Task>();
+
+        foreach (var resource in await libraryVersions.GetListAsync(conn, sourceEntryId, sourceVersion))
+        {
+            var sourceResourceId = resource.Id;
+            var destinationResourceId = IdService.Create();
+
+            resource.Id = destinationResourceId;
+
+            saves.Add(libraryVersions.SetAsync(conn, owner, destinationEntryId, destinationVersion, resource));
+
+            if (!(resource.Type == "pdf" || resource.Type == "image")) continue;
+
+            var file = await storage.GetLibraryResourceAsync(owner, sourceEntryId, sourceVersion, sourceResourceId);
+
+            saves.Add(storage.SaveLibraryResourceAsync(owner, destinationEntryId, destinationVersion, destinationResourceId, file));
+        }
+        if (saves.Count > 0) await Task.WhenAll(saves);
+    }
+
     public async Task ProjectTaskToLibraryAsync(SqlConnection conn, string owner, string projectId, string projectTaskId, string entryId, int versionId)
     {
         var saves = new List<Task>();

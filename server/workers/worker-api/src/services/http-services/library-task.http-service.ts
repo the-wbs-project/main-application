@@ -1,4 +1,5 @@
 import { Context } from '../../config';
+import { OriginService } from '../origin.service';
 
 export class LibraryTaskHttpService {
   static async getPublicAsync(ctx: Context): Promise<Response> {
@@ -28,11 +29,9 @@ export class LibraryTaskHttpService {
   static async putAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry, version } = ctx.req.param();
-      const body = await ctx.req.json();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.libraryTasks.clearKvAsync(owner, entry, parseInt(version))]);
 
-      await ctx.var.data.libraryTasks.putTasksAsync(owner, entry, parseInt(version), body);
-
-      return ctx.newResponse(null, 204);
+      return resp;
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a library entry tasks.', <Error>e);
 

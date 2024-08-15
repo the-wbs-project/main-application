@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Wbs.Api.Models;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
+using Wbs.Core.Services;
 using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
@@ -17,8 +19,9 @@ public class LibraryEntryVersionController : ControllerBase
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryVersionResourceDataService entryResourceDataService;
     private readonly ResourceFileStorageService resourceService;
+    private readonly VersioningService versioningService;
 
-    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService entryResourceDataService, LibrarySearchIndexService searchIndexService, ResourceFileStorageService resourceService, DbService db)
+    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService entryResourceDataService, LibrarySearchIndexService searchIndexService, ResourceFileStorageService resourceService, DbService db, VersioningService versioningService)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryVersionController>();
         this.entryDataService = entryDataService;
@@ -27,6 +30,7 @@ public class LibraryEntryVersionController : ControllerBase
         this.entryResourceDataService = entryResourceDataService;
         this.resourceService = resourceService;
         this.db = db;
+        this.versioningService = versioningService;
     }
 
     [Authorize]
@@ -88,6 +92,33 @@ public class LibraryEntryVersionController : ControllerBase
                 await versionDataService.SetAsync(conn, owner, model);
 
                 return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry versions");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPut("{entryVersion}/replicate")]
+    public async Task<IActionResult> ReplicateVersionAsync(string owner, string entryId, int entryVersion, ReplicateVersionData model)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                    return BadRequest("Library Entry not found for the credentials provided.");
+
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Library Entry Version not found for the credentials provided.");
+
+
+                var newVersion = await versioningService.ReplicateAsync(conn, owner, entryId, entryVersion, model.Alias, User.Identity.Name);
+
+                return Ok(newVersion);
             }
         }
         catch (Exception ex)

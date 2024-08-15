@@ -11,9 +11,8 @@ export class LibraryEntryTaskDataService extends BaseDataService {
     return await this.getAllTasksAsync(owner, entry, version);
   }
 
-  async putTasksAsync(owner: string, entry: string, version: number, data: any): Promise<void> {
+  async clearKvAsync(owner: string, entry: string, version: number): Promise<void> {
     await Promise.all([
-      this.origin.putAsync(data, `${this.getBaseUrl(owner, entry)}/versions/${version}/nodes`),
       this.clearVersionsAsync(owner, entry),
       this.clearVersionAsync(owner, entry, version),
       this.clearTasksAsync(owner, entry, version),
