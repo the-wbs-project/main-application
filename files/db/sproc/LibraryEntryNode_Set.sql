@@ -2,52 +2,38 @@ DROP PROCEDURE IF EXISTS [dbo].[LibraryEntryNode_Set]
 GO
 
 CREATE PROCEDURE [dbo].[LibraryEntryNode_Set]
-    @Id nvarchar(100),
-    @OwnerId nvarchar(100),
     @EntryId nvarchar(100),
     @EntryVersion int,
-    @ParentId nvarchar(100),
-    @PhaseIdAssociation nvarchar(100),
-    @Order int,
-    @Title nvarchar(MAX),
-    @Description nvarchar(MAX),
-    @DisciplineIds nvarchar(MAX),
-    @LibraryLink nvarchar(MAX),
-    @LibraryTaskLink nvarchar(MAX),
-    @Visibility nvarchar(50)
+    @Upserts [nvarchar](MAX),
+    @RemoveIds [nvarchar](MAX)
 AS
 BEGIN
-    IF EXISTS(SELECT 1
-        FROM [dbo].[LibraryEntries]
-        WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId) AND
-        EXISTS(SELECT 1
-        FROM [dbo].[LibraryEntryVersions]
-        WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion)
-        BEGIN
-        IF EXISTS(SELECT 1
-        FROM [dbo].[LibraryEntryNodes]
-        WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion)
-                BEGIN
-            UPDATE [dbo].[LibraryEntryNodes] SET
-                        [ParentId] = @ParentId,
-                        [PhaseIdAssociation] = @PhaseIdAssociation,
-                        [Order] = @Order,
-                        [Title] = @Title,
-                        [Description] = @Description,
-                        [DisciplineIds] = @DisciplineIds,
-                        [LibraryLink] = @LibraryLink,
-                        [LibraryTaskLink] = @LibraryTaskLink,
-                        [Visibility] = @Visibility,
-                        [LastModified] = GETUTCDATE()
-                    WHERE [Id] = @Id AND [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion
-        END
-            ELSE
-                BEGIN
-            INSERT INTO [dbo].[LibraryEntryNodes]
-                (
+    MERGE [dbo].[LibraryEntryNodes] AS target  
+		USING (
+			SELECT
+        [Id] as [Id],
+        [ParentId],
+        [PhaseIdAssociation],
+        [Order],
+        [Title],
+        [Description],
+        [DisciplineIds],
+        [LibraryLink],
+        [LibraryTaskLink],
+        [Visibility]
+    FROM OPENJSON (@Upserts) WITH (
+                [Id] nvarchar(100),
+                [ParentId] nvarchar(100),
+                [PhaseIdAssociation] nvarchar(100),
+                [Order] int,
+                [Title] nvarchar(MAX),
+                [Description] nvarchar(MAX),
+                [DisciplineIds] nvarchar(MAX),
+                [LibraryLink] nvarchar(MAX),
+                [LibraryTaskLink] nvarchar(MAX),
+                [Visibility] nvarchar(50)
+            )) AS source (
                 [Id],
-                [EntryId],
-                [EntryVersion],
                 [ParentId],
                 [PhaseIdAssociation],
                 [Order],
@@ -56,30 +42,69 @@ BEGIN
                 [DisciplineIds],
                 [LibraryLink],
                 [LibraryTaskLink],
-                [Visibility],
+                [Visibility]
+            )  
+		ON (
+            target.[EntryId] = @EntryId AND
+        target.[EntryVersion] = @EntryVersion AND
+        target.[Id] = source.[Id])  
+
+		WHEN NOT MATCHED THEN
+			INSERT (
+                [Id],
+                [EntryId],
+                [EntryVersion],
+                [ParentId],
+                [PhaseIdAssociation],
+                [Order],
                 [CreatedOn],
                 [LastModified],
-                [Removed]
-                )
-            VALUES
-                (
-                    @Id,
-                    @EntryId,
-                    @EntryVersion,
-                    @ParentId,
-                    @PhaseIdAssociation,
-                    @Order,
-                    @Title,
-                    @Description,
-                    @DisciplineIds,
-                    @LibraryLink,
-                    @LibraryTaskLink,
-                    @Visibility,
-                    GETUTCDATE(),
-                    GETUTCDATE(),
-                    0
-                    )
-        END
-    END
+                [Title],
+                [Description],
+                [DisciplineIds],
+                [LibraryLink],
+                [LibraryTaskLink],
+                [Visibility],
+                [Removed])
+            VALUES (
+                source.[Id],
+                @EntryId,
+                @EntryVersion,
+                source.[ParentId],
+                source.[PhaseIdAssociation],
+                source.[Order],
+                GETUTCDATE(),
+                GETUTCDATE(),
+                source.[Title],
+                source.[Description],
+                source.[DisciplineIds],
+                source.[LibraryLink],
+                source.[LibraryTaskLink],
+                source.[Visibility],
+                0)
+		WHEN MATCHED THEN
+			UPDATE SET
+                [ParentId] = source.[ParentId],  
+                [PhaseIdAssociation] = source.[PhaseIdAssociation],  
+                [Order] = source.[Order], 
+                [LastModified] = GETUTCDATE(),  
+                [Title] = source.[Title],  
+                [Description] = source.[Description],  
+                [DisciplineIds] = source.[DisciplineIds], 
+                [LibraryLink] = source.[LibraryLink], 
+                [LibraryTaskLink] = source.[LibraryTaskLink], 
+                [Visibility] = source.[Visibility]
+    ;
+
+    DELETE FROM [dbo].[LibraryEntryNodes]
+    WHERE
+        [EntryId] = @EntryId AND
+        [EntryVersion] = @EntryVersion AND
+        [Id] IN (SELECT [value]
+        FROM OPENJSON(@RemoveIds))
+
+    UPDATE [dbo].[LibraryEntryVersions]
+    SET [LastModified] = GETUTCDATE()
+    WHERE [EntryId] = @EntryId AND [Version] = @EntryVersion
 END
 GO

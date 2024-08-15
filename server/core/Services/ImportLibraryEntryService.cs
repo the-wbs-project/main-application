@@ -90,7 +90,7 @@ public class ImportLibraryEntryService
 
         await entryDataService.SetAsync(conn, libraryEntry);
         await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
-        await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.Id, 1, n)));
+        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
@@ -164,8 +164,7 @@ public class ImportLibraryEntryService
 
         await entryDataService.SetAsync(conn, libraryEntry);
         await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
-
-        await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.Id, 1, n)));
+        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
@@ -239,8 +238,7 @@ public class ImportLibraryEntryService
 
         await entryDataService.SetAsync(conn, libraryEntry);
         await entryVersionDataService.SetAsync(conn, owner, version);
-
-        await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.Id, 1, n)));
+        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {

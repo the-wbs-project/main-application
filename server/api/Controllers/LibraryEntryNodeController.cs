@@ -68,7 +68,7 @@ public class LibraryEntryNodeController : ControllerBase
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
-                await nodeDataService.SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
+                await nodeDataService.SetAsync(conn, entryId, entryVersion, record.upserts ?? [], record.removeIds ?? []);
                 await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
 
                 return NoContent();
