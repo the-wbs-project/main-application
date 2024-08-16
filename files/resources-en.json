@@ -14,6 +14,7 @@
       "Email": "Email",
       "Emails": "Email(s)",
       "Edit": "Edit",
+      "Editors": "Editors",
       "Remove": "Remove",
       "Internal": "Internal",
       "Grid": "Grid",
@@ -814,7 +815,8 @@
       "CreateNewVersion": "Create New Version",
       "CreateNewVersionHelp": "If you want to make changes to an already published WBS, you should create a new version to implement the changes. Once you are done you will then published that new version.",
       "CreateNewVersionFrom": "Create New Version From...",
-      "NewVersionAlias": "New Version Alias"
+      "NewVersionAlias": "New Version Alias",
+      "RemoveEditorConfirm": "Are you sure you want to remove this editor?"
     }
   },
   {

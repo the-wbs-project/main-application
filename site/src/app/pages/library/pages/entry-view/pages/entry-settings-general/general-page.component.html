@@ -19,7 +19,7 @@
     </div>
   </div>
   <div class="card-body">
-    @if (entryStore.version(); as version) {
+    @if (version(); as version) {
 
     <div class="container-fluid pd-15">
       <div class="row mb-5">
@@ -94,6 +94,66 @@
         </div>
       </div>
       }
+      <div class="row mb-5">
+        <label class="col-md-2 col-sm-12 col-form-label">
+          {{ "General.Editors" | translate }}
+        </label>
+        <div class="col-md-10 col-sm-12">
+          <ul class="list-group">
+            <li class="list-group-item">
+              <div class="d-flex flex-row">
+                <kendo-dropdownlist
+                  size="small"
+                  [data]="filteredPossibleEditors()"
+                  [filterable]="true"
+                  textField="name"
+                  valueField="user_id"
+                  [(ngModel)]="editorToAdd"
+                  (filterChange)="editorFilter.set($event)"
+                />
+                <button
+                  kendoButton
+                  size="small"
+                  themeColor="primary"
+                  [disabled]="!editorToAdd()"
+                  (click)="addEditor()"
+                >
+                  <fa-icon [icon]="plusIcon" class="mg-r-5" />
+                  {{ "General.Add" | translate }}
+                </button>
+              </div>
+            </li>
+            @if (version.editors.length > 0) { @for (editor of version.editors;
+            track editor.userId) {
+            <li class="list-group-item">
+              <div class="d-flex flex-row flex-align-center">
+                <div class="flex-fill">
+                  <wbs-user [user]="editor" />
+                </div>
+                <button
+                  kendoButton
+                  size="small"
+                  fillMode="clear"
+                  (click)="removeEditor(editor.userId)"
+                >
+                  <fa-icon [icon]="deleteIcon" />
+                </button>
+              </div>
+            </li>
+            } } @else {
+            <li class="list-group-item">
+              {{ "General.None" | translate }}
+            </li>
+            }
+          </ul>
+          @if (showSaveReminder()) {
+          <div class="mg-t-15">
+            <fa-icon [icon]="infoIcon" class="mg-r-5" />
+            Don't forget to click the save button at the top of the page.
+          </div>
+          }
+        </div>
+      </div>
     </div>
 
     @if (askAi()) {
