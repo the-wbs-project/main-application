@@ -7,7 +7,12 @@ export class LibraryVersionHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();
-      const versions = await ctx.var.data.libraryVersions.getAsync(owner, entry);
+      const userId = ctx.var.idToken.userId;
+      let versions = await ctx.var.data.libraryVersions.getAsync(owner, entry);
+      //
+      //  Only send those where the version is published or the user is the author or an editor
+      //
+      versions = versions.filter((v) => v.status === 'published' || v.author === userId || v.editors?.includes(userId));
 
       return ctx.json(versions.map((v) => Transformers.libraryVersion.toBasic(v)));
     } catch (e) {

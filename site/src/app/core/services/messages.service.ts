@@ -98,6 +98,47 @@ class Confirm {
       );
     });
   }
+
+  showWithFeedback(
+    titleLabel: string,
+    messageLabel: string,
+    data?: Record<string, string>,
+    yesLabel = 'General.Yes',
+    noLabel = 'General.No'
+  ): Observable<{ answer: boolean; message?: string }> {
+    return new Observable<{ answer: boolean; message?: string }>(
+      (subscriber) => {
+        const title = this.resources.get(titleLabel);
+        let message = this.resources.get(messageLabel);
+        const yes = this.resources.get(yesLabel);
+        const no = this.resources.get(noLabel);
+
+        if (data) {
+          for (const prop of Object.keys(data)) {
+            message = message.replace(`{${prop}}`, data[prop]);
+          }
+        }
+
+        //@ts-ignore
+        Notiflix.Confirm.prompt(
+          title,
+          message,
+          '',
+          yes,
+          no,
+          (clientAnswer: string) => {
+            subscriber.next({ answer: true, message: clientAnswer });
+            subscriber.complete();
+          },
+          () => {
+            subscriber.next({ answer: false });
+            subscriber.complete();
+          },
+          {}
+        );
+      }
+    );
+  }
 }
 
 class Report {

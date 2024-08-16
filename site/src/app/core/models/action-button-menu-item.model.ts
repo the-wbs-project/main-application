@@ -7,5 +7,8 @@ export class ActionButtonMenuItem {
   faIcon?: IconDefinition;
   route?: string[];
   action?: string;
+  disabled?: boolean;
+  isHeader?: boolean;
+  cssClass?: string | string[];
   items?: ActionButtonMenuItem[];
 }

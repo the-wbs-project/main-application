@@ -10,4 +10,5 @@ export enum LIBRARY_VERSION_ACTIONS {
   UPLOAD = 'library-version-upload',
   PUBLISHED = 'library-version-published',
   UNPUBLISHED = 'library-version-unpublished',
+  CANCEL_VERSION = 'library-version-cancel',
 }

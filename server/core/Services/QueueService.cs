@@ -15,9 +15,8 @@ public class QueueService
     public QueueService(IStorageConfig config, ILoggerFactory loggerFactory)
     {
         this.config = config;
-        logger = loggerFactory.CreateLogger<QueueService>();
-
-        timer = new Timer(Flush, null, 0, 10000); // 10 seconds
+        //logger = loggerFactory.CreateLogger<QueueService>();
+        //timer = new Timer(Flush, null, 0, 10000); // 10 seconds
     }
 
     public void Add<T>(string queueName, T message)

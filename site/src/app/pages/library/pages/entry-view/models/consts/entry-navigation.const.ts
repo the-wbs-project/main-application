@@ -1,4 +1,14 @@
-import { LIBRARY_CLAIMS, NavigationLink } from '@wbs/core/models';
+import {
+  faCog,
+  faFiles,
+  faInfoCircle,
+  faTasks,
+} from '@fortawesome/pro-solid-svg-icons';
+import {
+  LIBRARY_CLAIMS,
+  NavigationLink,
+  RouteContextMenuItem,
+} from '@wbs/core/models';
 import { ENTRY_PAGES } from './entry-pages.const';
 
 const settings: NavigationLink[] = [
@@ -63,5 +73,48 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
     onlyIfEditable: true,
     claim: LIBRARY_CLAIMS.SETTINGS.READ,
     cssClass: ['nav-item', 'tx-uppercase'],
+  },
+];
+
+export const ENTRY_NAVIGATION2: RouteContextMenuItem[] = [
+  {
+    route: [ENTRY_PAGES.ABOUT],
+    resource: 'General.About',
+    faIcon: faInfoCircle,
+  },
+  {
+    route: [ENTRY_PAGES.TASKS],
+    resource: 'General.Tasks',
+    faIcon: faTasks,
+  },
+  {
+    route: [ENTRY_PAGES.RESOURCES],
+    resource: 'General.Resources',
+    faIcon: faFiles,
+  },
+  {
+    route: [ENTRY_PAGES.SETTINGS],
+    resource: 'General.Settings',
+    faIcon: faCog,
+    filters: {
+      claim: LIBRARY_CLAIMS.SETTINGS.READ,
+      props: [{ prop: 'status', op: '=', value: 'draft' }],
+    },
+    items: [
+      {
+        route: ['settings', 'general'],
+        resource: 'General.General',
+        filters: {
+          claim: LIBRARY_CLAIMS.UPDATE,
+        },
+      },
+      {
+        route: ['settings', 'disciplines'],
+        resource: 'General.Disciplines',
+        filters: {
+          claim: LIBRARY_CLAIMS.UPDATE,
+        },
+      },
+    ],
   },
 ];

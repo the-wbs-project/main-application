@@ -130,6 +130,20 @@ export class EntryStore {
 
   setVersion(version: LibraryVersionViewModel): void {
     this._version.set({ ...version });
+    this._versions.update((list) => {
+      const basic = list?.find((x) => x.version === version.version);
+
+      if (basic) {
+        basic.versionAlias = version.versionAlias ?? '';
+        basic.title = version.title ?? '';
+        basic.status = version.status ?? '';
+      }
+      return [...(list ?? [])];
+    });
+  }
+
+  setVersions(versions: LibraryEntryVersionBasic[]): void {
+    this._versions.set(structuredClone(versions));
   }
 
   setTasks(tasks: LibraryEntryNode[]): void {

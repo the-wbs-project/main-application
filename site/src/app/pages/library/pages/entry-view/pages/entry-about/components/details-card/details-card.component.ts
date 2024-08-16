@@ -5,6 +5,7 @@ import {
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { NumberPipe } from '@progress/kendo-angular-intl';
 import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
 import { UserComponent } from '@wbs/components/user';
 import { EntryStore } from '@wbs/core/store';
@@ -23,6 +24,7 @@ import { VersionEditorComponent } from '../version-editor';
     DateTextPipe,
     EntryTypeTitlePipe,
     LibraryStatusPipe,
+    NumberPipe,
     TranslateModule,
     UserComponent,
     VersionEditorComponent,

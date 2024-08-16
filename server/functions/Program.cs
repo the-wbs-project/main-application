@@ -70,7 +70,6 @@ var host = new HostBuilder()
         //
         services.AddSingleton<CloudflareApiService>();
         services.AddSingleton<CloudflareKvService>();
-        services.AddSingleton<QueueService>();
         //
         //  Search Services
         //

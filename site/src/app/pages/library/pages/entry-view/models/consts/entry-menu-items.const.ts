@@ -13,13 +13,13 @@ import {
   faUserMinus,
   faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { ContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
+import { ActionContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
 
-const taskActions: ContextMenuItem[] = [
+const taskActions: ActionContextMenuItem[] = [
   {
     action: 'addSub',
     faIcon: faPlus,
-    text: 'Projects.AddSubTask',
+    resource: 'Projects.AddSubTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
       stati: ['draft'],
@@ -28,7 +28,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'import',
     faIcon: faFileImport,
-    text: 'General.Import',
+    resource: 'General.Import',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
       stati: ['draft'],
@@ -37,24 +37,24 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'import|above',
         faIcon: faArrowUp,
-        text: 'General.Above',
+        resource: 'General.Above',
       },
       {
         action: 'import|right',
         faIcon: faArrowRight,
-        text: 'General.SubTask',
+        resource: 'General.SubTask',
       },
       {
         action: 'import|below',
         faIcon: faArrowDown,
-        text: 'General.Below',
+        resource: 'General.Below',
       },
     ],
   },
   {
     action: 'viewTask',
     faIcon: faEye,
-    text: 'Projects.ViewTask',
+    resource: 'Projects.ViewTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.READ,
     },
@@ -62,7 +62,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'addDiscipline',
     faIcon: faUserPlus,
-    text: 'Wbs.AddDiscipline',
+    resource: 'Wbs.AddDiscipline',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -71,7 +71,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'removeDiscipline',
     faIcon: faUserMinus,
-    text: 'Wbs.RemoveDiscipline',
+    resource: 'Wbs.RemoveDiscipline',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -80,7 +80,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'other',
     faIcon: faEclipse,
-    text: 'Wbs.OtherActions',
+    resource: 'Wbs.OtherActions',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
     },
@@ -88,7 +88,7 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'cloneTask',
         faIcon: faCopy,
-        text: 'Projects.CloneTask',
+        resource: 'Projects.CloneTask',
         filters: {
           claim: LIBRARY_CLAIMS.TASKS.CREATE,
           stati: ['draft'],
@@ -97,12 +97,12 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'export',
         faIcon: faBookArrowRight,
-        text: 'Wbs.ExportToLibrary',
+        resource: 'Wbs.ExportToLibrary',
       },
       {
         action: 'deleteTask',
         faIcon: faTrash,
-        text: 'Projects.DeleteTask',
+        resource: 'Projects.DeleteTask',
         filters: {
           claim: LIBRARY_CLAIMS.TASKS.DELETE,
           stati: ['draft'],
@@ -112,11 +112,11 @@ const taskActions: ContextMenuItem[] = [
   },
 ];
 
-const reorderTaskActions: ContextMenuItem[] = [
+const reorderTaskActions: ActionContextMenuItem[] = [
   {
     action: 'moveLeft',
     faIcon: faArrowLeft,
-    text: 'Projects.MoveLeft',
+    resource: 'Projects.MoveLeft',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -125,7 +125,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveUp',
     faIcon: faArrowUp,
-    text: 'Projects.MoveUp',
+    resource: 'Projects.MoveUp',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -134,7 +134,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveDown',
     faIcon: faArrowDown,
-    text: 'Projects.MoveDown',
+    resource: 'Projects.MoveDown',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -143,7 +143,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveRight',
     faIcon: faArrowRight,
-    text: 'Projects.MoveRight',
+    resource: 'Projects.MoveRight',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],

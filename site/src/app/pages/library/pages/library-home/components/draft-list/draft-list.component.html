@@ -19,7 +19,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (entry of entries(); track entry.entryId) {
+    @for (entry of entries(); track (entry.entryId + "-" + entry.version)) {
     <tr class="pointer" (click)="selected.emit(entry)">
       <td class="wd-100">
         <span class="d-inline-block wd-20 text-center">

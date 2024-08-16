@@ -15,7 +15,7 @@ import {
   LibraryEntryVersion,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages, Transformers, Utils } from '@wbs/core/services';
+import { Messages, sorter, Transformers, Utils } from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
@@ -179,15 +179,38 @@ export class EntryService {
         )
       );
   }
-  /*
-    this.data.libraryEntryVersions
-      .replicateAsync(
-        this.ownerId!,
-        this.entryId!,
-        this.selected()!,
-        this.alias()
+
+  cancelVersion(): void {
+    const version = this.version;
+
+    this.messages.confirm
+      .showWithFeedback(
+        'Wbs.CancelVersionConfirm',
+        'Wbs.CancelVersionPrompt',
+        {},
+        'Wbs.CancelVersion',
+        'General.Nevermind'
       )
-      .subscribe((version) => this.dialog.close(version));*/
+      .pipe(
+        switchMap((feedback) => {
+          if (!feedback.answer) return of(false);
+
+          version.status = 'cancelled';
+
+          return this.saveAsync(version).pipe(
+            switchMap(() =>
+              this.activity.cancelVersion(
+                version.entryId,
+                version.version,
+                version.title,
+                feedback.message!
+              )
+            )
+          );
+        })
+      )
+      .subscribe();
+  }
 
   saveAsync(version: LibraryVersionViewModel): Observable<void> {
     const model = this.transformers.libraryVersions.toModel(version);

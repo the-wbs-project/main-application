@@ -33,6 +33,18 @@ export class EntryActivityService {
     });
   }
 
+  cancelVersion(
+    entryId: string,
+    version: number,
+    title: string,
+    reason: string
+  ): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.CANCEL_VERSION, {
+      title,
+      reason,
+    });
+  }
+
   entryDescriptionChanged(
     entryId: string,
     version: number,

@@ -25,7 +25,7 @@
     <div>{{ version.status | libraryStatus | translate }}</div>
 
     <div class="detail-header">{{ "Wbs.TaskCount" | translate }} :</div>
-    <div>{{ store.tasks()!.length }}</div>
+    <div>{{ store.tasks()!.length | kendoNumber }}</div>
 
     <div class="detail-header">{{ "General.LastModified" | translate }} :</div>
     <div>{{ version.lastModified | dateText }}</div>

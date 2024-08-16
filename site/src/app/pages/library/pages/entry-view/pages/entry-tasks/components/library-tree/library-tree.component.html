@@ -14,7 +14,7 @@
 
 <kendo-treelist
   #treelist
-  class="tx-12"
+  class="tx-12 border bd-gray-500"
   kendoTreeListExpandable
   kendoTreeListSelectable
   [kendoTreeListFlatBinding]="tree"
@@ -51,7 +51,8 @@
     <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
     }
   </ng-template>
-  @if (editEnabled) { <kendo-treelist-rowreorder-column [width]="40" /> }
+  @if (editEnabled) {
+  <kendo-treelist-rowreorder-column class="bg-gray-200" [width]="40" /> }
 
   <kendo-treelist-column
     [expandable]="true"
@@ -80,7 +81,7 @@
     </ng-template>
   </kendo-treelist-column>
 
-  @if ((width() ?? 0) > 600) {
+  @if ((width() ?? 0) > 600 && showInternal()) {
   <kendo-treelist-column
     [width]="75"
     class="tree-column tx-14-f text-center"

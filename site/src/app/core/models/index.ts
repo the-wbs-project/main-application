@@ -10,7 +10,6 @@ export * from './category.model';
 export * from './category-dialog-results.model';
 export * from './chat-comment.model';
 export * from './claim-filter.model';
-export * from './context-menu-item.model';
 export * from './dirty-component.interface';
 export * from './drag-validation-results.model';
 export * from './entity-id.model';

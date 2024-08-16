@@ -5,7 +5,7 @@
   "scripts": {
     "setup": "yarn",
     "check": "tsc --noEmit",
-    "start": "wrangler dev --env dev --port 88 --ip \"*\" --inspector-port 0  --log-level warn",
+    "start": "wrangler dev --env dev --port 88 --ip \"*\" --inspector-port 0  --log-level warn --persist-to ../.data/api",
     "publish": "wrangler publish --env prod"
   },
   "author": "author",

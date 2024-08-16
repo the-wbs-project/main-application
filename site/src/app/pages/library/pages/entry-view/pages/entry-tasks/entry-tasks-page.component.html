@@ -1,5 +1,5 @@
 @if (isLoading()) {
-<div class="w-100 text-center mg-t-50">
+<div class="w-100 text-center">
   <fa-duotone-icon [icon]="faSpinner" size="5x" animation="spin" />
   <h3 class="pd-t-20">
     {{ "General.Loading" | translate }}
@@ -14,7 +14,7 @@
 >
   <div
     [(wbsTreeHeight)]="dialogContainerHeight"
-    class="pd-15 d-flex flex-column h-100"
+    class="d-flex flex-column h-100"
   >
     <wbs-library-tree
       [showFullscreen]="false"
@@ -24,7 +24,7 @@
   </div>
 </kendo-dialog>
 } @else {
-<div [(wbsTreeHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
+<div [(wbsTreeHeight)]="containerHeight" class="d-flex flex-column h-100">
   <wbs-library-tree
     [showFullscreen]="true"
     [containerHeight]="containerHeight()"

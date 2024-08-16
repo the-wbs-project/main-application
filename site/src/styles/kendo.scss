@@ -46,3 +46,8 @@ $kendo-input-border-width: 1;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+
+.k-grid-toolbar {
+  background-color: $gray-500;
+}
+// This hasn't been implemented since Kendo changed things

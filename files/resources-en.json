@@ -594,6 +594,7 @@
       "OtherActions": "Other Actions",
       "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
+      "PublishVersion": "Publish Version",
       "UnpublishForEditing": "Unpublish For Editting",
       "ConfirmPublishToLibrary": "Are you sure you are ready to publish this to your organization's library?",
       "PublishedToLibraryMessage": "This WBS has been published. It may take up to 15 minutes for the WBS to appear in the library.",
@@ -621,7 +622,10 @@
       "WBS": "WBS",
       "WBS-Full": "Work Breakdown Structure",
       "WBS-Full2": "WBS - Work Breakdown Structure",
-      "VersionAlias": "Version Alias"
+      "VersionAlias": "Version Alias",
+      "CancelVersion": "Cancel Draft",
+      "CancelVersionConfirm": "Cancel Draft Confirmation",
+      "CancelVersionPrompt": "What is the reason for cancelling this draft?"
     }
   },
   {

@@ -97,7 +97,6 @@ builder.Services.AddSingleton<CloudflareApiService>();
 builder.Services.AddSingleton<CloudflareKvService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
-builder.Services.AddSingleton<QueueService>();
 builder.Services.AddSingleton<ResourceCopyService>();
 builder.Services.AddSingleton<VersioningService>();
 //

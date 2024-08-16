@@ -60,15 +60,14 @@ export class NewVersionDialogComponent extends DialogContentBase {
   readonly alias = model('');
   readonly saveState = new SaveService();
   readonly sortedList = computed(() => {
-    const list = this.versions();
+    let list = this.versions();
     const current = list.find((x) => x.status === 'published');
 
-    return [
-      current,
-      ...list
-        .filter((x) => x.version !== current!.version)
-        .sort((a, b) => sorter(a.version, b.version, 'desc')),
-    ];
+    if (current) {
+      list = [current, ...list.filter((x) => x.version !== current.version)];
+    }
+
+    return list.sort((a, b) => sorter(a.version, b.version, 'desc'));
   });
 
   constructor(dialog: DialogRef) {

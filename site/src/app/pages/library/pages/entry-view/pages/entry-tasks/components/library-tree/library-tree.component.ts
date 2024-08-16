@@ -44,7 +44,12 @@ import {
   Utils,
 } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
-import { EntryStore, MetadataStore, UiStore } from '@wbs/core/store';
+import {
+  EntryStore,
+  MembershipStore,
+  MetadataStore,
+  UiStore,
+} from '@wbs/core/store';
 import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import {
@@ -88,6 +93,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly category = inject(CategoryService);
   private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
+  private readonly membership = inject(MembershipStore);
   private readonly reorderer = inject(EntryTaskReorderService);
   private readonly taskService = inject(EntryTaskService);
   readonly entryService = inject(EntryService);
@@ -96,7 +102,7 @@ export class LibraryTreeComponent implements OnInit {
   readonly treeService = new TreeService();
 
   readonly faSpinner = faSpinner;
-  readonly heightOffset = 50;
+  readonly heightOffset = 0;
   readonly rowHeight = 31.5;
 
   readonly showFullscreen = input.required<boolean>();
@@ -115,6 +121,12 @@ export class LibraryTreeComponent implements OnInit {
       }));
 
     return this.category.buildViewModels(d);
+  });
+  readonly showInternal = computed(() => {
+    const org = this.membership.membership()?.name;
+    const version = this.entryStore.version()!;
+
+    return version.visibility === 'public' && org === version.ownerId;
   });
   readonly canEdit = computed(
     () =>

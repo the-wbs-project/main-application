@@ -1,5 +1,6 @@
 import { Injectable, inject } from '@angular/core';
-import { ContextMenuItem } from '@wbs/core/models';
+import { ActionContextMenuItem, ContextMenuItem } from '@wbs/core/models';
+import { MenuService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
@@ -9,6 +10,7 @@ declare type Seperator = { separator: true };
 @Injectable()
 export class LibraryTreeMenuService {
   private readonly metadata = inject(MetadataStore);
+  private readonly menuService = inject(MenuService);
 
   buildMenu(
     version: LibraryVersionViewModel,
@@ -17,22 +19,24 @@ export class LibraryTreeMenuService {
   ): (ContextMenuItem | Seperator)[] {
     if (task === undefined) return [];
 
-    const phaseActions = this.filterList(
+    const phaseActions = this.menuService.filterList(
       this.preFilterActions(
         LIBRARY_TREE_MENU_ITEMS.taskActions,
         version.type,
         task
       ),
       claims,
-      version.status
+      version.status,
+      version
     );
-    const movers: ContextMenuItem[] = [];
+    const movers: ActionContextMenuItem[] = [];
 
     if (this.canHaveNavActions(version.type, task)) {
-      const navActions = this.filterList(
+      const navActions = this.menuService.filterList(
         LIBRARY_TREE_MENU_ITEMS.reorderTaskActions,
         claims,
-        version.status
+        version.status,
+        version
       );
       for (const item of navActions) {
         if (item.action === 'moveLeft' && task.canMoveLeft) movers.push(item);
@@ -70,47 +74,11 @@ export class LibraryTreeMenuService {
       : [...phaseActions, { separator: true }, ...movers];
   }
 
-  private filterList(
-    actions: ContextMenuItem[],
-    claims: string[],
-    status: string
-  ): ContextMenuItem[] {
-    if (!actions || actions.length === 0) return actions;
-
-    const results: ContextMenuItem[] = [];
-
-    for (const action of actions) {
-      if (this.filterItem(action, claims, status)) {
-        results.push(action);
-      }
-    }
-
-    return results;
-  }
-
-  private filterItem(
-    link: ContextMenuItem,
-    claims: string[],
-    status: string
-  ): boolean {
-    if (!link.filters) return true;
-    if (link.filters.claim && !claims.includes(link.filters.claim))
-      return false;
-
-    if (link.filters.stati) {
-      const statusResult = link.filters.stati.some((s) => s === status);
-
-      if (!statusResult) return false;
-    }
-
-    return true;
-  }
-
   private preFilterActions(
-    items: ContextMenuItem[],
+    items: ActionContextMenuItem[],
     entryType: string,
     task: TaskViewModel
-  ): ContextMenuItem[] {
+  ): ActionContextMenuItem[] {
     const filter = entryType !== 'project' && task.parentId == undefined;
 
     if (!filter) return items;
@@ -144,7 +112,6 @@ export class LibraryTreeMenuService {
           action: 'addDiscipline|' + vDiscipline.id,
           faIcon: discipline.icon ?? 'fa-question',
           text: discipline.label,
-          isNotResource: true,
         });
     }
 
@@ -159,7 +126,6 @@ export class LibraryTreeMenuService {
         action: 'removeDiscipline|' + discipline.id,
         faIcon: discipline.icon ?? 'fa-question',
         text: discipline.label,
-        isNotResource: true,
       });
     }
 
