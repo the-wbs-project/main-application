@@ -19,9 +19,11 @@
       </span>
       }
       <span class="tx-20 tx-medium mg-r-10">
+        @let page = pageLabel();
+
         {{ version.title }}
+        @if (page) { &nbsp;-&nbsp;{{ page | translate }} }
       </span>
-      {{ page() }}
       <wbs-save-message [state]="titleSaveState.state()" cssClass="tx-12" />
       <div class="flex-fill tx-right d-none d-lg-inline-block mg-r-15">
         <wbs-page-header />

@@ -68,10 +68,9 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
   },
   {
     text: 'General.Settings',
-    items: settings,
-    section: 'settings',
+    section: 'general',
     onlyIfEditable: true,
-    claim: LIBRARY_CLAIMS.SETTINGS.READ,
+    claim: LIBRARY_CLAIMS.UPDATE,
     cssClass: ['nav-item', 'tx-uppercase'],
   },
 ];
@@ -100,21 +99,5 @@ export const ENTRY_NAVIGATION2: RouteContextMenuItem[] = [
       claim: LIBRARY_CLAIMS.SETTINGS.READ,
       props: [{ prop: 'status', op: '=', value: 'draft' }],
     },
-    items: [
-      {
-        route: ['settings', 'general'],
-        resource: 'General.General',
-        filters: {
-          claim: LIBRARY_CLAIMS.UPDATE,
-        },
-      },
-      {
-        route: ['settings', 'disciplines'],
-        resource: 'General.Disciplines',
-        filters: {
-          claim: LIBRARY_CLAIMS.UPDATE,
-        },
-      },
-    ],
   },
 ];

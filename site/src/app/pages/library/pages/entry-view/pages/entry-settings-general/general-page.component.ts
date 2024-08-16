@@ -30,14 +30,25 @@ import { InfoMessageComponent } from '@wbs/components/_utils/info-message.compon
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { UserComponent } from '@wbs/components/user';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { DirtyComponent, Member } from '@wbs/core/models';
-import { Messages, SaveService, sorter } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
+import {
+  CategoryService,
+  Messages,
+  SaveService,
+  sorter,
+} from '@wbs/core/services';
+import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
-import { LibraryVersionViewModel } from '@wbs/core/view-models';
+import {
+  CategorySelection,
+  LibraryVersionViewModel,
+} from '@wbs/core/view-models';
+import { of } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -47,6 +58,7 @@ import { LibraryVersionViewModel } from '@wbs/core/view-models';
     AiButtonComponent,
     ButtonModule,
     DescriptionAiDialogComponent,
+    DisciplineEditorComponent,
     DropDownListModule,
     EditorModule,
     FadingMessageComponent,
@@ -63,10 +75,12 @@ import { LibraryVersionViewModel } from '@wbs/core/view-models';
     VisibilitySelectionComponent,
   ],
 })
-export class GeneralComponent implements DirtyComponent, OnInit {
+export class SettingsComponent implements DirtyComponent, OnInit {
+  private readonly catService = inject(CategoryService);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
   private readonly service = inject(EntryService);
+  private readonly taskService = inject(EntryTaskService);
   private readonly members = signal<Member[]>([]);
 
   readonly entryStore = inject(EntryStore);
@@ -79,6 +93,7 @@ export class GeneralComponent implements DirtyComponent, OnInit {
   readonly askAi = model(true);
   readonly editorFilter = signal('');
   readonly editorToAdd = signal<Member | null>(null);
+  readonly disciplines = signal<CategorySelection[]>([]);
   readonly version = signal<LibraryVersionViewModel | null>(null);
   readonly showSaveReminder = signal(false);
   readonly canSave = computed(() => {
@@ -116,16 +131,36 @@ export class GeneralComponent implements DirtyComponent, OnInit {
   });
 
   ngOnInit(): void {
-    const version = this.entryStore.version()!;
-
-    this.version.set(version);
+    this.setVersion();
     this.data.memberships
-      .getMembershipUsersAsync(version.ownerId)
+      .getMembershipUsersAsync(this.version()!.ownerId)
       .subscribe((users) => this.members.set(users));
   }
 
   save(): void {
-    this.saved.call(this.service.saveAsync(this.version()!)).subscribe();
+    const version = this.version()!;
+    const disciplinesResults = this.catService.extract(
+      this.disciplines(),
+      this.entryStore.version()?.disciplines ?? []
+    );
+
+    version.disciplines = disciplinesResults.categories;
+
+    this.saved
+      .call(this.service.saveAsync(version))
+      .pipe(
+        switchMap(() =>
+          disciplinesResults.removedIds.length === 0
+            ? of('hello')
+            : this.taskService.removeDisciplinesFromAllTasksAsync(
+                disciplinesResults.removedIds
+              )
+        )
+      )
+      .subscribe(() => {
+        this.showSaveReminder.set(false);
+        this.setVersion();
+      });
   }
 
   addEditor(): void {
@@ -162,6 +197,16 @@ export class GeneralComponent implements DirtyComponent, OnInit {
             editors: version.editors.filter((e) => e.userId !== editorId),
           };
         });
+        this.showSaveReminder.set(true);
       });
+  }
+
+  private setVersion(): void {
+    const version = this.entryStore.version()!;
+
+    this.version.set(version);
+    this.disciplines.set(
+      this.catService.buildDisciplines(version.disciplines ?? [])
+    );
   }
 }

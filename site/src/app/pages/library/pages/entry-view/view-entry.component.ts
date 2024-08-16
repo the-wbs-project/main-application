@@ -19,6 +19,7 @@ import { EntryStore } from '@wbs/core/store';
 import { EntryTitleComponent } from './components/entry-title';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 import { EntryActionButtonService } from './services';
+import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -32,6 +33,7 @@ import { EntryActionButtonService } from './services';
     PageHeaderComponent,
     SaveMessageComponent,
     RouterModule,
+    TranslateModule,
     WatchIndicatorComponent,
   ],
 })
@@ -47,13 +49,6 @@ export class EntryViewComponent {
 
   readonly url = this.store.select(RouterState.url);
   readonly titleSaveState = new SaveService();
-  readonly page = computed(() => {
-    const version = this.entryStore.version()!;
-    const url = this.url()?.split('/') ?? [];
-    const index = url.indexOf(version.entryId);
-
-    return url[index + 2];
-  });
   readonly canEditTitle = computed(
     () => !(this.url()?.includes('/settings/') ?? false)
   );
@@ -68,6 +63,20 @@ export class EntryViewComponent {
       this.entryStore.claims()
     )
   );
+  readonly pageLabel = computed(() => {
+    const version = this.entryStore.version()!;
+    const url = this.url()?.split('/') ?? [];
+    const index = url.indexOf(version.entryId);
+    const page = url[index + 2];
+
+    return page === 'tasks'
+      ? 'General.Tasks'
+      : page === 'resources'
+      ? 'General.Resources'
+      : page === 'settings'
+      ? 'General.Settings'
+      : undefined;
+  });
 
   constructor(title: TitleService) {
     effect(() => {

@@ -103,28 +103,15 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'settings/general',
+        path: 'settings',
         loadComponent: () =>
           import('./pages/entry-settings-general').then(
-            (x) => x.GeneralComponent
+            (x) => x.SettingsComponent
           ),
         canActivate: [entryNavGuard],
         data: {
           section: 'settings',
           crumbs: ['settings', 'general'],
-        },
-      },
-      {
-        path: 'settings/disciplines',
-        loadComponent: () =>
-          import('./pages/entry-settings-disciplines.component').then(
-            (x) => x.DisciplinesComponent
-          ),
-        canActivate: [entryNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          section: 'settings',
-          crumbs: ['settings', 'disciplines'],
         },
       },
     ],
