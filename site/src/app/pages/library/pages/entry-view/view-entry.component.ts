@@ -49,9 +49,6 @@ export class EntryViewComponent {
 
   readonly url = this.store.select(RouterState.url);
   readonly titleSaveState = new SaveService();
-  readonly canEditTitle = computed(
-    () => !(this.url()?.includes('/settings/') ?? false)
-  );
   readonly canWatch = computed(() =>
     (this.entryStore.versions() ?? []).some((x) => x.status === 'published')
   );
@@ -73,8 +70,6 @@ export class EntryViewComponent {
       ? 'General.Tasks'
       : page === 'resources'
       ? 'General.Resources'
-      : page === 'settings'
-      ? 'General.Settings'
       : undefined;
   });
 

@@ -1,30 +1,10 @@
 import {
-  faCog,
   faFiles,
   faInfoCircle,
   faTasks,
 } from '@fortawesome/pro-solid-svg-icons';
-import {
-  LIBRARY_CLAIMS,
-  NavigationLink,
-  RouteContextMenuItem,
-} from '@wbs/core/models';
+import { NavigationLink, RouteContextMenuItem } from '@wbs/core/models';
 import { ENTRY_PAGES } from './entry-pages.const';
-
-const settings: NavigationLink[] = [
-  {
-    route: ['settings', 'general'],
-    text: 'General.General',
-    section: 'general',
-    claim: LIBRARY_CLAIMS.UPDATE,
-  },
-  {
-    route: ['settings', 'disciplines'],
-    section: 'disciplines',
-    text: 'General.Disciplines',
-    claim: LIBRARY_CLAIMS.UPDATE,
-  },
-];
 
 export const ENTRY_NAVIGATION: NavigationLink[] = [
   {
@@ -66,13 +46,6 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
     section: 'resources',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
-  {
-    text: 'General.Settings',
-    section: 'general',
-    onlyIfEditable: true,
-    claim: LIBRARY_CLAIMS.UPDATE,
-    cssClass: ['nav-item', 'tx-uppercase'],
-  },
 ];
 
 export const ENTRY_NAVIGATION2: RouteContextMenuItem[] = [
@@ -90,14 +63,5 @@ export const ENTRY_NAVIGATION2: RouteContextMenuItem[] = [
     route: [ENTRY_PAGES.RESOURCES],
     resource: 'General.Resources',
     faIcon: faFiles,
-  },
-  {
-    route: [ENTRY_PAGES.SETTINGS],
-    resource: 'General.Settings',
-    faIcon: faCog,
-    filters: {
-      claim: LIBRARY_CLAIMS.SETTINGS.READ,
-      props: [{ prop: 'status', op: '=', value: 'draft' }],
-    },
   },
 ];

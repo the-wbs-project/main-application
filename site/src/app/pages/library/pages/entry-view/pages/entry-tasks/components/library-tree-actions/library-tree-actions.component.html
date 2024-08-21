@@ -1,0 +1,12 @@
+<div class="d-flex row-column align-items-center" style="gap: 10px">
+  @if (showAdd()) {
+  <wbs-tree-buttons-add (click)="addClicked.emit()" />
+  }
+  <wbs-tree-buttons-toggler
+    (collapse)="collapseAllClicked.emit()"
+    (expand)="expandAllClicked.emit()"
+  />
+  @if (showFullscreen()) {
+  <wbs-tree-buttons-fullscreen (click)="fullscreenClicked.emit()" />
+  }
+</div>

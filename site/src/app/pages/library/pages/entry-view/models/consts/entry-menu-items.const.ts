@@ -26,37 +26,12 @@ const taskActions: ActionContextMenuItem[] = [
     },
   },
   {
-    action: 'import',
+    action: 'import|right',
     faIcon: faFileImport,
-    resource: 'General.Import',
+    resource: 'Wbs.ImportSubTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
       stati: ['draft'],
-    },
-    items: [
-      {
-        action: 'import|above',
-        faIcon: faArrowUp,
-        resource: 'General.Above',
-      },
-      {
-        action: 'import|right',
-        faIcon: faArrowRight,
-        resource: 'General.SubTask',
-      },
-      {
-        action: 'import|below',
-        faIcon: faArrowDown,
-        resource: 'General.Below',
-      },
-    ],
-  },
-  {
-    action: 'viewTask',
-    faIcon: faEye,
-    resource: 'Projects.ViewTask',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.READ,
     },
   },
   {

@@ -1,96 +1,19 @@
 @if (userVm(); as user) {
 <div class="pointer">
-  <a kendoPopoverAnchor [popover]="myPopover" (click)="show.set(!show())">
+  <a kendoPopoverAnchor [popover]="popover">
     {{ user.fullName }}
   </a>
 </div>
 
-<kendo-popover #myPopover [position]="position()">
+<kendo-popover #popover [position]="position()">
   <ng-template kendoPopoverTitleTemplate>
-    <div class="popover-title">User Information</div>
+    <div class="popover-title">
+      {{ "General.UserInformation" | translate }}
+    </div>
   </ng-template>
 
   <ng-template kendoPopoverBodyTemplate>
-    <div class="w-100 text-center pd-t-15">
-      <kendo-avatar [imageSrc]="user.picture!" size="large" />
-    </div>
-    <div class="user-popup-grid">
-      <div class="detail-header">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="nameIcon" />
-        </span>
-        {{ "General.Name" | translate }} :
-      </div>
-      <div>{{ user.fullName }}</div>
-
-      <div class="detail-header">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="titleIcon" />
-        </span>
-        {{ "General.Title" | translate }} :
-      </div>
-      <div>
-        @if (user.title === 'private' || !user.title) {
-        <span class="wbs-text-muted"> N/A </span>
-        } @else { {{ user.title }} }
-      </div>
-
-      <div class="detail-header">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="emailIcon" />
-        </span>
-        {{ "General.Email" | translate }} :
-      </div>
-      <div>
-        @if (user.email === 'private' || !user.email) {
-        <span class="wbs-text-muted"> N/A </span>
-        } @else {
-        <a class="tx-dark" href="mailto:{{ user.email }}">{{ user.email }}</a>
-        }
-      </div>
-
-      <div class="detail-header">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="linkedInIcon" />
-        </span>
-        {{ "Profile.LinkedIn" | translate }} :
-      </div>
-      <div>
-        @if (user.linkedIn === 'private' || !user.linkedIn) {
-        <span class="wbs-text-muted"> N/A </span>
-        } @else {
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          class="tx-dark"
-          [href]="user.linkedIn"
-        >
-          {{ "Profile.ClickToView" | translate }}
-        </a>
-        }
-      </div>
-
-      <div class="detail-header">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="twitterIcon" />
-        </span>
-        {{ "Profile.Twitter" | translate }} :
-      </div>
-      <div>
-        @if (user.twitter === 'private' || !user.twitter) {
-        <span class="wbs-text-muted"> N/A </span>
-        } @else {
-        <a
-          target="_blank"
-          rel="noopener noreferrer"
-          class="tx-dark"
-          [href]="user.twitter"
-        >
-          {{ "Profile.ClickToView" | translate }}
-        </a>
-        }
-      </div>
-    </div>
+    <wbs-user-info [user]="user" />
   </ng-template>
 </kendo-popover>
 }

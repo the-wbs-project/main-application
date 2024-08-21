@@ -12,6 +12,7 @@ _theme/Nowa
 .vs/
 .vscode/
 
+**/deps.png
 .angular
 .env
 .wrangler

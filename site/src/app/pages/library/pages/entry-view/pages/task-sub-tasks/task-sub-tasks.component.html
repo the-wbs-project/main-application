@@ -4,7 +4,7 @@
 <!---->
 @let editEnabled = canEdit();
 <!---->
-<div [(wbsTreeHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
+<div [(wbsHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
   @if (alert(); as alertText) {
   <wbs-alert
     type="danger"

@@ -4,15 +4,6 @@
   <div class="d-flex flex-align-start">
     <span> {{ vm.levelText }}&nbsp;-&nbsp; {{ vm.title }} </span>
     <span class="child-to-show" [ngClass]="{ nevermind: forcedShow() }">
-      @if (canEdit()) {
-      <fa-icon
-        size="sm"
-        class="pointer mg-l-10"
-        [icon]="editIcon"
-        (click)="edit.emit()"
-        [title]="'General.Edit' | translate"
-      />
-      }
       <a #menuTarget class="pointer mg-l-10 pd-h-5">
         <fa-icon
           size="sm"

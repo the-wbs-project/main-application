@@ -8,11 +8,10 @@ import {
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faEllipsisH, faPencil } from '@fortawesome/pro-solid-svg-icons';
+import { faEllipsisH } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
-import { EntryStore } from '@wbs/core/store';
 import { LibraryTaskViewModel } from '@wbs/core/view-models';
 import { LibraryTreeMenuService } from '../../services';
 
@@ -31,10 +30,8 @@ import { LibraryTreeMenuService } from '../../services';
   ],
 })
 export class LibraryTaskTitleComponent {
-  private readonly entryStore = inject(EntryStore);
   private readonly menuService = inject(LibraryTreeMenuService);
 
-  readonly editIcon = faPencil;
   readonly menuIcon = faEllipsisH;
   readonly task = input.required<LibraryTaskViewModel>();
   readonly canEdit = input.required<boolean>();
@@ -44,12 +41,6 @@ export class LibraryTaskTitleComponent {
   readonly menuItemSelected = output<string>();
 
   protected buildMenu(): void {
-    this.menu.set(
-      this.menuService.buildMenu(
-        this.entryStore.version()!,
-        this.task(),
-        this.entryStore.claims()
-      )
-    );
+    this.menu.set(this.menuService.buildMenu(this.task()));
   }
 }

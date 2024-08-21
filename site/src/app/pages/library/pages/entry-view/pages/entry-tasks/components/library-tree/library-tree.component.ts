@@ -15,10 +15,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
+import { SplitterModule } from '@progress/kendo-angular-layout';
 import {
   CellClickEvent,
   ColumnComponent,
+  RowClassArgs,
   RowReorderEvent,
+  SelectionChangeEvent,
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
@@ -35,7 +38,7 @@ import {
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {
   CategoryService,
@@ -50,7 +53,11 @@ import {
   MetadataStore,
   UiStore,
 } from '@wbs/core/store';
-import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
+import {
+  CategoryViewModel,
+  LibraryTaskViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import {
   EntryTaskActionService,
@@ -58,6 +65,9 @@ import {
 } from '../../../../services';
 import { LibraryTaskTitleComponent } from '../../../../components/library-task-title';
 import { VisibilityIconComponent } from '../visibility-icon.component';
+import { TaskDetailsComponent } from '../task-details/task-details.component';
+import { LibraryTreeActionsComponent } from '../library-tree-actions';
+import { LibraryTreeTitleLegendComponent } from '../library-tree-title-legend';
 
 @UntilDestroy()
 @Component({
@@ -70,10 +80,14 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
     DisciplineIconListComponent,
     DisciplinesDropdownComponent,
     LibraryTaskTitleComponent,
+    LibraryTreeTitleLegendComponent,
+    LibraryTreeActionsComponent,
     FontAwesomeModule,
     RouterModule,
     SaveMessageComponent,
+    SplitterModule,
     TranslateModule,
+    TaskDetailsComponent,
     TaskTitleEditorComponent,
     TreeButtonsAddComponent,
     TreeButtonsDownloadComponent,
@@ -81,7 +95,7 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
     TreeButtonsTogglerComponent,
     TreeButtonsUploadComponent,
     TreeDisciplineLegendComponent,
-    TreeHeightDirective,
+    HeightDirective,
     TreeListModule,
     VisibilityIconComponent,
   ],
@@ -102,7 +116,7 @@ export class LibraryTreeComponent implements OnInit {
   readonly treeService = new TreeService();
 
   readonly faSpinner = faSpinner;
-  readonly heightOffset = 0;
+  readonly heightOffset = 10;
   readonly rowHeight = 31.5;
 
   readonly showFullscreen = input.required<boolean>();
@@ -110,7 +124,13 @@ export class LibraryTreeComponent implements OnInit {
   readonly isLoading = computed(() => !this.entryStore.version());
 
   readonly alert = signal<string | undefined>(undefined);
-  readonly selectedTask = signal<TaskViewModel | undefined>(undefined);
+  readonly taskAreaHeight = signal(0);
+  readonly selectedTaskId = signal<string | undefined>(undefined);
+  readonly selectedTask = computed(() => {
+    const id = this.selectedTaskId();
+    if (!id) return undefined;
+    return this.entryStore.viewModels()?.find((x) => x.id === id);
+  });
   readonly disciplines = computed(() => {
     let d = this.entryStore.version()!.disciplines;
 
@@ -163,6 +183,15 @@ export class LibraryTreeComponent implements OnInit {
       .map((x) => x.id);
   }
 
+  closeTask(): void {
+    this.selectedTaskId.set(undefined);
+    this.treeList()!.updateView();
+  }
+
+  selectTask(e: SelectionChangeEvent): void {
+    this.selectedTaskId.set(e.items[0].dataItem.id);
+  }
+
   menuItemSelected(action: string, taskId?: string): void {
     if (action === 'viewTask') {
       if (taskId) this.navigateToTask.emit(taskId!);
@@ -186,7 +215,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   nav(): void {
-    const taskId = this.selectedTask()?.id;
+    const taskId = this.selectedTaskId();
     //
     //  Keep this here in case someone double clicks outside a standard row
     //
@@ -269,6 +298,15 @@ export class LibraryTreeComponent implements OnInit {
       this.taskService.titleChangedAsync(taskId, title)
     );
   }
+
+  rowCallback = (context: RowClassArgs) => {
+    const vm = context.dataItem as LibraryTaskViewModel;
+
+    return {
+      'bg-light-blue-f':
+        vm.visibility === 'private' || vm.visibility === 'impliedPrivate',
+    };
+  };
 
   private resetTree(): void {
     this.entryStore.setTasks(structuredClone(this.entryStore.tasks() ?? []));

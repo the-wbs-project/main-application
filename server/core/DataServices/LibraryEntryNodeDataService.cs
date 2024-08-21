@@ -49,7 +49,7 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
             Description = n.description,
             PhaseIdAssociation = n.phaseIdAssociation,
             Order = n.order,
-            DisciplineIds = n.disciplineIds,
+            DisciplineIds = JsonSerializer.Serialize(n.disciplineIds),
             Visibility = n.visibility,
             LibraryLink = n.libraryLink == null ? null : JsonSerializer.Serialize(n.libraryLink),
             LibraryTaskLink = n.libraryTaskLink == null ? null : JsonSerializer.Serialize(n.libraryTaskLink)

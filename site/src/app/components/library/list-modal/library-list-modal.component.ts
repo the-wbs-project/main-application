@@ -18,13 +18,9 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { LibraryEntryNode, StepperItem } from '@wbs/core/models';
 import {
-  LibraryEntryNode,
-  LibraryEntryVersion,
   LibraryImportResults,
-  StepperItem,
-} from '@wbs/core/models';
-import {
   LibraryVersionViewModel,
   LibraryViewModel,
 } from '@wbs/core/view-models';
@@ -35,7 +31,7 @@ import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../list';
 import { LibraryListFiltersComponent } from '../list-filters';
 import { LibraryImportTreeComponent } from './components';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 
 @Component({
   standalone: true,
@@ -52,7 +48,7 @@ import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive'
     LoaderModule,
     SaveMessageComponent,
     TranslateModule,
-    TreeHeightDirective,
+    HeightDirective,
   ],
 })
 export class LibraryListModalComponent extends DialogContentBase {

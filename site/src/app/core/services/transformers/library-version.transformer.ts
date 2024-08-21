@@ -13,7 +13,7 @@ export class LibraryVersionTransformer {
       disciplines: vm.disciplines,
       status: vm.status,
       author: vm.author.userId,
-      categories: vm.categories,
+      categories: vm.category == null ? [] : [vm.category],
       editors: vm.editors.map((x) => x.userId),
     };
     return model;

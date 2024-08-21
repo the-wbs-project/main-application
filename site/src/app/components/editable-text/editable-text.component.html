@@ -1,8 +1,8 @@
-@let version = record(); @if (editMode()) {
+@if (editMode()) {
 <kendo-textbox
   class="w-100 tx-12"
   size="small"
-  [(ngModel)]="editTitle"
+  [(ngModel)]="editText"
   (keydown)="keydown($event)"
 >
   <ng-template kendoTextBoxSuffixTemplate>
@@ -29,9 +29,9 @@
 } @else {
 <div class="d-flex flex-align-start">
   <span>
-    {{ [version.version, version.versionAlias] | version }}
+    {{ viewText() }}
   </span>
-  @if (saveMode.state() !== 'saving' && store.canEditAlias()) {
+  @if (saveState() !== 'saving') {
   <span class="child-to-show">
     <fa-icon
       size="sm"
@@ -42,6 +42,6 @@
     />
   </span>
   }
-  <wbs-save-message [state]="saveMode.state()" cssClass="tx-12 mg-l-15" />
+  <wbs-save-message [state]="saveState()" cssClass="tx-12 mg-l-15" />
 </div>
 }

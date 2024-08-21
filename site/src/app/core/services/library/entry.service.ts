@@ -17,7 +17,7 @@ import {
 } from '@wbs/core/models';
 import { Messages, sorter, Transformers, Utils } from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
-import { LibraryVersionViewModel } from '@wbs/core/view-models';
+import { LibraryVersionViewModel, UserViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from './entry-activity.service';
@@ -220,6 +220,24 @@ export class EntryService {
       .pipe(map(() => this.entryStore.setVersion(version)));
   }
 
+  categoryChangedAsync(category: string): Observable<void> {
+    const version = structuredClone(this.version);
+    const from = version.category;
+
+    version.category = category;
+
+    return this.saveAsync(version).pipe(
+      switchMap(() =>
+        this.activity.categoryChanged(
+          version.entryId,
+          version.version,
+          from,
+          category
+        )
+      )
+    );
+  }
+
   versionAliasChangedAsync(alias: string): Observable<void> {
     const version = structuredClone(this.version);
     const from = version.versionAlias;
@@ -287,6 +305,24 @@ export class EntryService {
           version.version,
           from,
           disciplines
+        )
+      )
+    );
+  }
+
+  contributorsChangedAsync(contributors: UserViewModel[]): Observable<void> {
+    const version = this.version;
+    const from = version.editors;
+
+    version.editors = contributors;
+
+    return this.saveAsync(version).pipe(
+      switchMap(() =>
+        this.activity.contributorsChanged(
+          version.entryId,
+          version.version,
+          from,
+          contributors
         )
       )
     );

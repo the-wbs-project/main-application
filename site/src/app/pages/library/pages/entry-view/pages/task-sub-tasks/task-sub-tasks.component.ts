@@ -23,7 +23,7 @@ import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 import { PROJECT_CLAIMS } from '@wbs/core/models';
 import {
   CategoryService,
@@ -52,7 +52,7 @@ import { EntryTaskActionService } from '../../services';
     TaskTitleEditorComponent,
     TranslateModule,
     TreeButtonsTogglerComponent,
-    TreeHeightDirective,
+    HeightDirective,
     TreeDisciplineLegendComponent,
     TreeListModule,
   ],

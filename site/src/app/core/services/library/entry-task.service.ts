@@ -601,4 +601,30 @@ export class EntryTaskService {
         )
       );
   }
+
+  visibilityChanged(
+    taskId: string,
+    visibility: 'public' | 'private'
+  ): Observable<void> {
+    const task = this.getTasks().find((x) => x.id === taskId)!;
+    const from = task.description;
+
+    task.visibility = visibility === 'public' ? undefined : 'private';
+    task.lastModified = new Date();
+
+    return this.data.libraryEntryNodes
+      .putAsync(this.owner, this.entryId, this.version, [task], [])
+      .pipe(
+        tap(() => this.store.tasksChanged([task])),
+        switchMap(() =>
+          this.activity.visibilityChanged(
+            this.entryId,
+            this.version,
+            task.id,
+            from,
+            visibility
+          )
+        )
+      );
+  }
 }

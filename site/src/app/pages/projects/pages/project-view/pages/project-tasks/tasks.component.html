@@ -6,7 +6,7 @@
   (close)="showDialog.set(false)"
 >
   <div
-    [(wbsTreeHeight)]="dialogContainerHeight"
+    [(wbsHeight)]="dialogContainerHeight"
     class="pd-15 d-flex flex-column h-100"
   >
     @if (view() === 'phases') {
@@ -32,7 +32,7 @@
   </div>
 </kendo-dialog>
 } @else {
-<div [(wbsTreeHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
+<div [(wbsHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
   @if (view() === 'phases') {
   <wbs-project-phase-tree
     [(view)]="view"

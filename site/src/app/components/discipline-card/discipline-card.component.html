@@ -1,24 +1,57 @@
 <div class="card-header">
   <div class="d-flex flex-align-center">
-    <div>{{ "General.Disciplines" | translate }}</div>
+    <div class="tx-16">{{ "General.Disciplines" | translate }}</div>
 
-    @if (canEdit()) {
     <div class="flex-fill tx-right">
-      <fa-icon
-        size="lg"
-        class="pointer"
-        [icon]="faPencil"
-        [routerLink]="editRoute()"
-        [title]="'General.Edit' | translate"
+      @if (editMode()) { @if (canAdd()) {
+      <button
+        kendoButton
+        size="small"
+        themeColor="dark"
+        class="mg-r-10"
+        (click)="add()"
+      >
+        <fa-icon [icon]="plusIcon" class="mg-r-5" />
+        {{ "General.Add" | translate }}
+      </button>
+      }
+      <wbs-save-button
+        size="small"
+        cssClass="mg-l-10"
+        [isSaving]="saveState() === 'saving'"
+        (click)="saveClicked(editItems())"
       />
+      <button
+        kendoButton
+        themeColor="dark"
+        size="small"
+        class="mg-l-15"
+        (click)="editMode.set(false)"
+      >
+        <fa-icon [icon]="cancelIcon" class="mg-r-5" />
+        {{ "General.Cancel" | translate }}
+      </button>
+      } @else if ( canEdit()) {
+      <wbs-save-message [state]="saveState()!" cssClass="mg-r-10" />
+      <button
+        kendoButton
+        size="small"
+        fillMode="flat"
+        class="p-0"
+        (click)="editMode.set(true)"
+      >
+        <fa-icon [icon]="editIcon" />
+      </button>
+      }
     </div>
-    }
   </div>
 </div>
 
 @if (items(); as list) {
 <div class="card-body">
-  @if (list.length === 0) {
+  @if (editMode()) {
+  <wbs-discipline-editor [(categories)]="editItems" />
+  } @else if (list.length === 0) {
   <wbs-alert
     [type]="alertIfEmpty() ? 'warning' : 'info'"
     [dismissible]="false"

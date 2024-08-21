@@ -4,6 +4,7 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { IdService } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
+import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class EntryActivityService {
@@ -76,6 +77,23 @@ export class EntryActivityService {
     );
   }
 
+  contributorsChanged(
+    entryId: string,
+    version: number,
+    from: UserViewModel[] | undefined,
+    to: UserViewModel[] | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.CONTRIBUTORS_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
   versionAliasChanged(
     entryId: string,
     version: number,
@@ -86,6 +104,23 @@ export class EntryActivityService {
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.VERSION_ALIAS_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
+  categoryChanged(
+    entryId: string,
+    version: number,
+    from: string | undefined,
+    to: string | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.CATEGORY_CHANGED,
       {
         from,
         to,

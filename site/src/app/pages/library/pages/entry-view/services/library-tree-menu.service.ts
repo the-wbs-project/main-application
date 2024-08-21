@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { ActionContextMenuItem, ContextMenuItem } from '@wbs/core/models';
 import { MenuService } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/core/store';
+import { EntryStore, MetadataStore } from '@wbs/core/store';
 import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
 
@@ -11,13 +11,13 @@ declare type Seperator = { separator: true };
 export class LibraryTreeMenuService {
   private readonly metadata = inject(MetadataStore);
   private readonly menuService = inject(MenuService);
+  private readonly store = inject(EntryStore);
 
-  buildMenu(
-    version: LibraryVersionViewModel,
-    task: TaskViewModel | undefined,
-    claims: string[]
-  ): (ContextMenuItem | Seperator)[] {
+  buildMenu(task: TaskViewModel | undefined): (ContextMenuItem | Seperator)[] {
     if (task === undefined) return [];
+
+    const version = this.store.version()!;
+    const claims = this.store.claims();
 
     const phaseActions = this.menuService.filterList(
       this.preFilterActions(

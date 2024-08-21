@@ -1,0 +1,42 @@
+@if (editMode()) {
+<div class="w-100 d-flex flex-row">
+  <wbs-project-category-dropdown
+    size="small"
+    class="w-100"
+    [listHeight]="400"
+    [popupWidth]="600"
+    [(category)]="editValue"
+  />
+  <button kendoButton size="small" fillMode="clear" (click)="save()">
+    <fa-icon [icon]="saveIcon" [title]="'General.Save' | translate" />
+  </button>
+  <button kendoButton size="small" fillMode="clear" (click)="cancel()">
+    <fa-icon [icon]="cancelIcon" [title]="'General.Cancel' | translate" />
+  </button>
+</div>
+} @else { @let cat = category();
+<div class="d-flex flex-align-start">
+  <span kendoPopoverAnchor [popover]="myPopover" showOn="hover" class="pointer">
+    {{ cat?.label }}
+  </span>
+  <kendo-popover #myPopover position="top" [width]="400">
+    <ng-template kendoPopoverBodyTemplate>
+      <div class="pd-10">
+        <wbs-project-category-description [category]="cat" />
+      </div>
+    </ng-template>
+  </kendo-popover>
+  @if (saveMode.state() !== 'saving' && store.canEditAlias()) {
+  <span class="child-to-show">
+    <fa-icon
+      size="sm"
+      class="pointer mg-l-10"
+      [icon]="editIcon"
+      (click)="edit()"
+      [title]="'General.Edit' | translate"
+    />
+  </span>
+  }
+  <wbs-save-message [state]="saveMode.state()" cssClass="tx-12 mg-l-15" />
+</div>
+}

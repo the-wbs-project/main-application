@@ -12,10 +12,7 @@
   [title]="'General.Tasks' | translate"
   (close)="showDialog.set(false)"
 >
-  <div
-    [(wbsTreeHeight)]="dialogContainerHeight"
-    class="d-flex flex-column h-100"
-  >
+  <div [(wbsHeight)]="dialogContainerHeight" class="d-flex flex-column h-100">
     <wbs-library-tree
       [showFullscreen]="false"
       [containerHeight]="dialogContainerHeight()"
@@ -24,7 +21,7 @@
   </div>
 </kendo-dialog>
 } @else {
-<div [(wbsTreeHeight)]="containerHeight" class="d-flex flex-column h-100">
+<div [(wbsHeight)]="containerHeight" class="d-flex flex-column h-100">
   <wbs-library-tree
     [showFullscreen]="true"
     [containerHeight]="containerHeight()"

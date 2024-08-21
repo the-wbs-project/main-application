@@ -1,20 +1,19 @@
 import {
   Category,
-  LibraryEntry,
   LibraryEntryNode,
   ProjectNode,
   WbsNode,
 } from '@wbs/core/models';
-import { CategoryService, sorter } from '@wbs/core/services';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import {
   CategoryViewModel,
-  LibraryViewModel,
   LibraryTaskViewModel,
   ProjectTaskViewModel,
   TaskViewModel,
   LibraryVersionViewModel,
 } from '@wbs/core/view-models';
+import { CategoryService } from '../../../category.service';
+import { sorter } from '../../../sorter.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {

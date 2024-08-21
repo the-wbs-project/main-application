@@ -1,4 +1,5 @@
-import { PROJECT_STATI_TYPE, UserRole } from '../models';
+import { UserRole } from '../models/project.model';
+import { PROJECT_STATI_TYPE } from '../models/enums/project-status.enum';
 import { CategoryViewModel } from './category.view-model';
 
 export interface ProjectViewModel {

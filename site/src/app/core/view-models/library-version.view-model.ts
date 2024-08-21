@@ -12,7 +12,7 @@ export interface LibraryVersionViewModel {
   title: string;
   description?: string;
   status: string;
-  categories: string[];
+  category: string;
   editors: UserViewModel[];
   disciplines: any[];
   lastModified: Date;

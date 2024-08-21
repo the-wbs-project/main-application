@@ -1,7 +1,6 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { dirtyGuard } from '@wbs/core/guards';
 import { EntryUploadState } from './pages/entry-upload/states';
 import {
   EntryActionButtonService,
@@ -65,9 +64,7 @@ export const routes: Routes = [
         },
         resolve: {
           entryUrl: entryUrlResolve,
-          //claims: libraryClaimsResolve,
         },
-        loadChildren: () => import('./task-view.routes').then((x) => x.routes),
       },
       {
         path: 'upload',
@@ -100,18 +97,6 @@ export const routes: Routes = [
           entryId: entryIdResolve,
           versionId: versionIdResolve,
           apiUrlPrefix: entryApiUrlResolve,
-        },
-      },
-      {
-        path: 'settings',
-        loadComponent: () =>
-          import('./pages/entry-settings-general').then(
-            (x) => x.SettingsComponent
-          ),
-        canActivate: [entryNavGuard],
-        data: {
-          section: 'settings',
-          crumbs: ['settings', 'general'],
         },
       },
     ],

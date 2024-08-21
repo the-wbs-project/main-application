@@ -1,18 +1,28 @@
 @if (store.version()!; as version) {
-<div class="card-header">{{ "General.Details" | translate }}</div>
+<div class="card-header tx-16">{{ "General.Details" | translate }}</div>
 <div class="card-body">
   <div class="wbs-detail-card">
     <div class="detail-header">{{ "General.Organization" | translate }} :</div>
     <div>{{ version.ownerName }}</div>
 
-    <div class="detail-header">{{ "General.Owner" | translate }} :</div>
+    <div class="detail-header">{{ "General.Title" | translate }} :</div>
     <div>
-      <wbs-user [user]="version.author" />
+      <wbs-editable-text
+        [viewText]="version.title"
+        [saveState]="saveAlias.state()"
+        [editText]="version.title"
+        (saveText)="titleChanged($event)"
+      />
     </div>
 
     <div class="detail-header">{{ "General.Version" | translate }} :</div>
     <div>
-      <wbs-version-editor [record]="version" />
+      <wbs-editable-text
+        [viewText]="[version.version, version.versionAlias] | version"
+        [saveState]="saveAlias.state()"
+        [editText]="version.versionAlias"
+        (saveText)="aliasChanged($event)"
+      />
     </div>
 
     <div class="detail-header">{{ "General.Visibility" | translate }} :</div>
@@ -20,6 +30,11 @@
 
     <div class="detail-header">{{ "General.Type" | translate }} :</div>
     <div>{{ version.type | entryTypeTitle | translate }}</div>
+
+    <div class="detail-header">{{ "General.Category" | translate }} :</div>
+    <div>
+      <wbs-details-project-category [record]="version" />
+    </div>
 
     <div class="detail-header">{{ "General.Status" | translate }} :</div>
     <div>{{ version.status | libraryStatus | translate }}</div>

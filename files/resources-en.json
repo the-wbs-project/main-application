@@ -14,6 +14,7 @@
       "Email": "Email",
       "Emails": "Email(s)",
       "Edit": "Edit",
+      "Editor": "Editor",
       "Editors": "Editors",
       "Remove": "Remove",
       "Internal": "Internal",
@@ -62,6 +63,8 @@
       "Version": "Version",
       "Versions": "Versions",
       "Versioning": "Versioning",
+      "Contributor": "Contributor",
+      "Contributors": "Contributors",
       "Clear": "Clear",
       "Revert": "Revert",
       "Overwrite": "Overwrite",
@@ -104,7 +107,9 @@
       "Submitting": "Submitting",
       "NoThankYou": "No Thank You",
       "Nevermind": "Nevermind",
+      "User": "User",
       "Users": "Users",
+      "UserInformation": "User Information",
       "Members": "Members",
       "Views": "Views",
       "Back": "Back",
@@ -560,7 +565,7 @@
       "DownloadWbs": "Download WBS",
       "DownloadAbs": "Download ABS",
       "DownloadTasks": "Download Tasks",
-      "UploadTasks": "Upload Tasks",
+      "UploadTasks": "Upload WBS File",
       "Attachments": "Attachments",
       "Level": "Level",
       "Depth": "Depth",
@@ -612,6 +617,7 @@
       "LibraryFilters": "Library Filters",
       "ExpandAll": "Expand All",
       "CollapseAll": "Collapse All",
+      "ImportSubTask": "Import Sub Task",
       "PrivateTooltip": "Private - This task can only be seen within your organization.",
       "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
       "ABS": "ABS",
@@ -626,7 +632,11 @@
       "VersionAlias": "Version Alias",
       "CancelVersion": "Cancel Draft",
       "CancelVersionConfirm": "Cancel Draft Confirmation",
-      "CancelVersionPrompt": "What is the reason for cancelling this draft?"
+      "CancelVersionPrompt": "What is the reason for cancelling this draft?",
+      "VisibilityHelper": "Who Can See This?",
+      "VisibilityPublic": "Everyone",
+      "VisibilityPrivate": "Only Co-Workers",
+      "SelectTask": "Select A Task To View Details"
     }
   },
   {
@@ -816,7 +826,11 @@
       "CreateNewVersionHelp": "If you want to make changes to an already published WBS, you should create a new version to implement the changes. Once you are done you will then published that new version.",
       "CreateNewVersionFrom": "Create New Version From...",
       "NewVersionAlias": "New Version Alias",
-      "RemoveEditorConfirm": "Are you sure you want to remove this editor?"
+      "RemoveEditorConfirm": "Are you sure you want to remove this editor?",
+      "ManageContributors": "Manage Contributors",
+      "LegendReorder": "Use this to drag and drop a task to where you want to reorder it.",
+      "LegendMenu": "Use this to open the menu for the task.",
+      "LegendInternal": "This task can only be seen within your organization."
     }
   },
   {

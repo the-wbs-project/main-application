@@ -74,7 +74,6 @@ export class LibraryEntryVersionDataService {
   private cleanVm(obj: LibraryVersionViewModel): LibraryVersionViewModel {
     Utils.cleanDates(obj, 'lastModified');
 
-    if (obj.categories == undefined) obj.categories = [];
     if (obj.disciplines == undefined) obj.disciplines = [];
 
     return obj;

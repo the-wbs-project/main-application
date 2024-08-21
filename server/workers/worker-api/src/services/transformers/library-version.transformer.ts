@@ -27,7 +27,7 @@ export class LibraryVersionTransformer {
       visibility: entry.visibility,
       status: version.status,
       author: users.find((u) => u.userId === version.author)!,
-      categories: version.categories,
+      category: (version.categories ?? [])[0],
       disciplines: version.disciplines,
       editors: (version.editors ?? []).map((editor) => users.find((u) => u.userId === editor)).filter((u) => u !== undefined),
       lastModified: version.lastModified,

@@ -15,9 +15,18 @@
     "start:setup": "mkdir -p dist && cp src/_worker.js dist/_worker.js",
     "start:server": "wrangler pages dev --log-level warn",
     "start:site": "ng build --watch --configuration development --output-path dist",
-    "start": "npm run start:setup && npm run start:server & npm run start:site"
+    "start": "npm run start:setup && npm run start:server & npm run start:site",
+    "dep": "npx madge src/main.ts --ts-config tsconfig.json --image ./deps.png"
   },
   "private": true,
+  "madge": {
+    "fontSize": "10px",
+    "graphVizOptions": {
+      "G": {
+        "rankdir": "LR"
+      }
+    }
+  },
   "dependencies": {
     "@angular/animations": "^18.1.4",
     "@angular/cdk": "^18.1.4",
