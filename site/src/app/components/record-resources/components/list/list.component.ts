@@ -2,24 +2,35 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
   model,
   output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBars, faGear } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faBars,
+  faEye,
+  faPencil,
+  faQuestionCircle,
+  faTrash,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { TooltipModule } from '@progress/kendo-angular-tooltip';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import { ResourceRecord } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { ResourceTypeTextComponent } from '../record-resources-type-text';
-import { ResourceViewLinkComponent } from '../resource-view-link';
+import { ResourceTypeTextComponent } from '../type-text';
+import { ImageDialogComponent } from './components/image-dialog.component';
+import { PdfDialogComponent } from './components/pdf-dialog.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-record-resource-list',
-  templateUrl: './record-resource-list.component.html',
-  styleUrls: ['./record-resource-list.component.scss'],
+  templateUrl: './list.component.html',
+  styleUrl: './list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     CheckPipe,
@@ -27,20 +38,30 @@ import { ResourceViewLinkComponent } from '../resource-view-link';
     DragDropModule,
     FontAwesomeModule,
     ResourceTypeTextComponent,
-    ResourceViewLinkComponent,
+    TooltipModule,
     TranslateModule,
   ],
 })
 export class RecordResourceListComponent {
+  private readonly data = inject(DataServiceFactory);
+  private readonly dialog = inject(DialogService);
+
+  readonly reorderIcon = faBars;
+  readonly viewIcon = faEye;
+  readonly editIcon = faPencil;
+  readonly deleteIcon = faTrash;
+  readonly infoIcon = faQuestionCircle;
+
   readonly apiUrlPrefix = input.required<string>();
   readonly canEdit = input.required<boolean>();
   readonly canDelete = input.required<boolean>();
   readonly list = model.required<ResourceRecord[]>();
+  //
+  //  Outputs
+  //
+  readonly delete = output<ResourceRecord>();
   readonly edit = output<ResourceRecord>();
   readonly save = output<ResourceRecord[]>();
-  readonly faBars = faBars;
-  readonly faGear = faGear;
-  readonly menu = [];
 
   onDrop({ previousIndex, currentIndex }: CdkDragDrop<any, any>): void {
     this.list.update((list) => {
@@ -62,5 +83,21 @@ export class RecordResourceListComponent {
 
       return list;
     });
+  }
+
+  open(record: ResourceRecord): void {
+    if (record.type === 'image') {
+      this.data.staticFiles
+        .getResourceFileAsync(this.apiUrlPrefix(), record.id)
+        .subscribe((file) =>
+          ImageDialogComponent.launch(this.dialog, record.name, file)
+        );
+    } else if (record.type === 'pdf') {
+      this.data.staticFiles
+        .getResourceFileAsync(this.apiUrlPrefix(), record.id)
+        .subscribe((file) =>
+          PdfDialogComponent.launch(this.dialog, record.name, file)
+        );
+    }
   }
 }

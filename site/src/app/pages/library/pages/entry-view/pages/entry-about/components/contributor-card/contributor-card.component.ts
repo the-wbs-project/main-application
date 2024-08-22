@@ -8,15 +8,15 @@ import {
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserInfoComponent } from '@wbs/components/user-info';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import { SaveService, sorter } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
-import { LibraryVersionViewModel, UserViewModel } from '@wbs/core/view-models';
-import { ContributorDialogComponent } from '../contributor-dialog';
-import { DataServiceFactory } from '@wbs/core/data-services';
+import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { switchMap } from 'rxjs';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { ContributorDialogComponent } from '../contributor-dialog';
 
 @Component({
   standalone: true,

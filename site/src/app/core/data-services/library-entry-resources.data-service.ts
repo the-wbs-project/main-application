@@ -44,6 +44,18 @@ export class LibraryEntryResourcesDataService {
     );
   }
 
+  deleteAsync(
+    owner: string,
+    entryId: string,
+    entryVersion: number,
+    taskId: string | undefined,
+    resourceId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      this.getIdUrl(resourceId, owner, entryId, entryVersion, taskId)
+    );
+  }
+
   private cleanList(nodes: ResourceRecord[]): ResourceRecord[] {
     for (const node of nodes) {
       if (typeof node.createdOn === 'string')

@@ -786,7 +786,10 @@
       "LinkUrl": "Link URL",
       "FileUpload": "File Upload",
       "UrlIsRequired": "Url Is Required",
-      "DescriptionIsRequired": "Description Is Required"
+      "DescriptionIsRequired": "Description Is Required",
+      "FileIsRequired": "File Is Required",
+      "DeleteResource": "Delete Resource",
+      "DeleteResourceConfirm": "Are you sure you want to delete this resource? This will remove the resource from the library and any projects which have it."
     }
   },
   {

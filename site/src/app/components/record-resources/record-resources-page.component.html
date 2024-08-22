@@ -40,18 +40,7 @@
   </div>
   } } @else {
   <div class="row">
-    <div class="col-12 offset-lg-1 col-lg-10">
-      <wbs-record-resource-editor
-        [(vm)]="vm"
-        [title]="
-          editType() === 'add'
-            ? 'Resources.AddResource'
-            : 'Resources.EditResource'
-        "
-        (saveClicked)="saveClicked()"
-        (cancelClicked)="cancelEditor()"
-      />
-    </div>
+    <div class="col-12 offset-lg-1 col-lg-10"></div>
   </div>
   }
 </div>

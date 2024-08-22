@@ -6,13 +6,6 @@ export interface RecordResourceViewModel {
   type?: RESOURCE_TYPE_TYPE;
   name: string;
   description: string;
-  url: string;
+  url?: string;
   file?: FileInfo;
-  errors: {
-    started?: boolean;
-    nameRequired?: boolean;
-    descriptionRequired?: boolean;
-    urlRequired?: boolean;
-    fileRequired?: boolean;
-  };
 }

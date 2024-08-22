@@ -36,8 +36,6 @@ export class EntryResourceService {
   ): Observable<ResourceRecord[]> {
     let obs: Observable<ResourceRecord>[] = [];
 
-    //this.messages.block.show('.resource-editor', 'General.Saving');
-
     for (const record of records) {
       obs.push(this.save(owner, entryId, versionId, taskId, record));
     }

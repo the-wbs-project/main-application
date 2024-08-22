@@ -218,6 +218,30 @@ public class LibraryEntryVersionController : ControllerBase
     }
 
     [Authorize]
+    [HttpDelete("{entryVersion}/resources/{resourceId}")]
+    public async Task<IActionResult> DeleteResourceAsync(string owner, string entryId, int entryVersion, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Entry Version not found for the owner provided.");
+
+                await entryResourceDataService.DeleteAsync(conn, entryId, entryVersion, resourceId);
+                await resourceService.DeleteLibraryResourceAsync(owner, entryId, entryVersion, resourceId);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("{entryVersion}/resources/{resourceId}/blob")]
     public async Task<IActionResult> GetResourceFileAsync(string owner, string entryId, int entryVersion, string resourceId)
     {

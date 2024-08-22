@@ -52,6 +52,9 @@ export const routes: Routes = [
           section: 'about',
           crumbs: ['about'],
         },
+        resolve: {
+          apiUrlPrefix: entryApiUrlResolve,
+        },
       },
       {
         path: 'tasks',

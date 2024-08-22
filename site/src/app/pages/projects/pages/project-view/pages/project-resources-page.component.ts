@@ -14,7 +14,7 @@ import {
   ResourceRecord,
 } from '@wbs/core/models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { RecordResourcesPageComponent } from '@wbs/components/resources';
+import { RecordResourcesPageComponent } from '@wbs/components/record-resources';
 import { ProjectResourceService } from '../services';
 import { SignalStore, Utils } from '@wbs/core/services';
 import { ProjectState } from '../states';

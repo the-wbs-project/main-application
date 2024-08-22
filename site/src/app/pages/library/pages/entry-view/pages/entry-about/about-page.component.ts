@@ -26,6 +26,7 @@ import { of } from 'rxjs';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { ContributorCardComponent } from './components/contributor-card';
 import { DetailsCardComponent } from './components/details-card';
+import { ResourceCardComponent } from './components/resource-card';
 
 @Component({
   standalone: true,
@@ -38,6 +39,7 @@ import { DetailsCardComponent } from './components/details-card';
     DisciplineCardComponent,
     DetailsCardComponent,
     ResizedCssDirective,
+    ResourceCardComponent,
     SafeHtmlPipe,
     TranslateModule,
   ],
@@ -53,6 +55,7 @@ export class AboutPageComponent implements OnInit {
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
+  readonly apiUrlPrefix = input.required<string>();
   readonly descriptionSave = new SaveService();
   readonly disciplineSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>

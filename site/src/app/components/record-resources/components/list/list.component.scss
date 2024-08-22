@@ -26,11 +26,6 @@
 }
 
 .name-item {
-  width: 200px;
-  flex: 0 0 200px;
-}
-
-.description-item {
   flex: 1 1 auto;
 }
 
@@ -39,13 +34,7 @@
   flex: 0 0 150px;
 }
 
-.actions-item {
-  width: 30px;
-  flex: 0 0 30px;
-  text-align: center;
-}
-
-.view-item {
+.action-item {
   width: 30px;
   flex: 0 0 30px;
   text-align: center;

@@ -14,10 +14,10 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoComponent } from '@wbs/components/info/info.component';
 import { RESOURCE_TYPES, ResourceRecord } from '@wbs/core/models';
-import { RecordResourceViewModel } from '@wbs/core/view-models';
-import { RecordResourceEditorComponent } from './components/record-resources-editor';
-import { RecordResourceListComponent } from './components/record-resources-list';
+import { RecordResourceEditorComponent } from './components/editor';
+import { RecordResourceListComponent } from './components/list';
 import { RecordResourceValidation } from './services';
+import { RecordResourceViewModel } from './view-models';
 
 @Component({
   standalone: true,
@@ -62,7 +62,6 @@ export class RecordResourcesPageComponent {
       description: vm?.description ?? '',
       name: vm?.name ?? '',
       url: vm?.resource ?? '',
-      errors: {},
     });
     this.editType.set(vm ? 'edit' : 'add');
     this.view.set('editor');

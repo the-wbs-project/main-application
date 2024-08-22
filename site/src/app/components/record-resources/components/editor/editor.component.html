@@ -1,0 +1,119 @@
+@let vm = model(); @let err = errors();
+
+<kendo-dialog
+  height="80%"
+  width="80%"
+  [title]="title() | translate"
+  (close)="dialog.close()"
+>
+  @if (vm) {
+  <div class="container-fluid">
+    <div class="row mb-4">
+      <span class="col-3 pd-t-10">
+        {{ "Resources.ResourceType" | translate }} *
+      </span>
+      <div class="col-9">
+        <kendo-dropdownlist
+          [data]="typeList"
+          [value]="vm.type"
+          (valueChange)="typeChanged($event)"
+        >
+          <ng-template
+            kendoDropDownListItemTemplate
+            kendoDropDownListValueTemplate
+            let-dataItem
+          >
+            <wbs-resource-type-text [type]="dataItem" />
+          </ng-template>
+        </kendo-dropdownlist>
+        <wbs-info-message
+          cssClass="mt-1"
+          message="Resources.ResourceTypeHelper"
+        />
+      </div>
+    </div>
+    @if (vm.type) {
+    <div class="row mb-4">
+      <span class="col-3 pd-t-10"> {{ "General.Name" | translate }} *</span>
+      <div class="col-9">
+        <input
+          #nameInput
+          kendoTextBox
+          class="w-100"
+          [ngModel]="vm.name"
+          (ngModelChange)="nameChanged(nameInput.value)"
+        />
+        @if (err.nameRequired) {
+        <div class="invalid-feedback">
+          {{ "General.NameIsRequired" | translate }}
+        </div>
+        } @else {
+        <wbs-info-message
+          cssClass="mt-1"
+          message="Resources.ResourceNameHelper"
+        />
+        }
+      </div>
+    </div>
+    <div class="row mb-4">
+      <span class="col-3 pd-t-10">
+        {{ "General.Description" | translate }}
+      </span>
+      <div class="col-9">
+        <textarea
+          #descriptionInput
+          kendoTextArea
+          class="w-100"
+          rows="5"
+          [ngModel]="vm.description"
+          (ngModelChange)="descriptionChanged(descriptionInput.value)"
+        ></textarea>
+        <wbs-info-message
+          cssClass="mt-1"
+          message="Resources.ResourceDescriptionHelper"
+        />
+      </div>
+    </div>
+    @switch (vm.type) { @case ('link') {
+    <div class="row mb-4">
+      <span class="col-3 pd-t-10">
+        {{ "Resources.LinkUrl" | translate }} *
+      </span>
+      <div class="col-9">
+        <input
+          #urlInput
+          kendoTextBox
+          class="w-100"
+          [ngModel]="vm.url ?? ''"
+          (ngModelChange)="urlChanged(urlInput.value)"
+        />
+        <wbs-info-message cssClass="mt-1" message="Resources.UrlIsRequired" />
+      </div>
+    </div>
+    } @case ('youtube') { } @default {
+    <div class="row mb-4">
+      <span class="col-3 pd-t-10">
+        {{ "Resources.FileUpload" | translate }}
+      </span>
+      <div class="col-9">
+        <wbs-uploader
+          (removed)="setFile(undefined)"
+          (uploaded)="setFile($event)"
+        />
+        <wbs-info-message cssClass="mt-1" message="Resources.FileIsRequired" />
+      </div>
+    </div>
+    } } }
+  </div>
+  }
+  <kendo-dialog-actions layout="stretched">
+    <button
+      kendoButton
+      themeColor="primary"
+      [disabled]="!err.valid"
+      (click)="dialog.close(vm)"
+    >
+      {{ "General.Save" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

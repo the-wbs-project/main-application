@@ -1,0 +1,80 @@
+<div
+  cdkDropList
+  (cdkDropListDropped)="onDrop($event)"
+  kendoTooltip
+  filter=".title-info"
+>
+  <div class="rr-item rr-list-header">
+    @if (canEdit()) {
+    <div class="reorder-item">&nbsp;</div>
+    }
+    <div class="type-item">{{ "General.Type" | translate }} &nbsp;</div>
+    <div class="name-item">{{ "General.Name" | translate }}</div>
+    <div class="action-item">&nbsp;</div>
+    @if (canEdit()) {
+    <div class="action-item">&nbsp;</div>
+    } @if (canDelete() ) {
+    <div class="action-item">&nbsp;</div>
+    }
+  </div>
+  @for (dataItem of list(); track dataItem.id) {
+  <div class="rr-item rr-list-item" cdkDrag>
+    @if (canEdit()) {
+    <div class="reorder-item">
+      <span cdkDragHandle style="cursor: grab">
+        <fa-icon [icon]="reorderIcon" />
+      </span>
+    </div>
+    }
+    <div class="type-item">
+      <wbs-resource-type-text [type]="dataItem.type" />
+    </div>
+    <div class="name-item">
+      {{ dataItem.name }}
+      @if (dataItem.description) {
+      <span class="title-info mg-l-15" [title]="dataItem.description">
+        <fa-icon [icon]="infoIcon" />
+      </span>
+      }
+    </div>
+    <!--<div class="description-item">{{ dataItem.description }}</div>-->
+    <!--<div class="modified-item">{{ dataItem.lastModified | dateText }}</div>-->
+    <div class="action-item">
+      @if (dataItem.type === 'link') {
+      <a
+        class="text-decoration-none tx-black"
+        [href]="dataItem.resource!"
+        target="_blank"
+      >
+        <fa-icon [icon]="viewIcon" />
+      </a>
+      } @else {
+      <a class="pointer text-decoration-none tx-black" (click)="open(dataItem)">
+        <fa-icon [icon]="viewIcon" />
+      </a>
+      }
+    </div>
+    @if (canEdit()) {
+    <div class="action-item">
+      <a
+        class="pointer text-decoration-none tx-black"
+        (click)="edit.emit(dataItem)"
+        [title]="'Resources.EditResource' | translate"
+      >
+        <fa-icon [icon]="editIcon" />
+      </a>
+    </div>
+    } @if (canDelete()) {
+    <div class="action-item">
+      <a
+        class="pointer text-decoration-none tx-black"
+        (click)="delete.emit(dataItem)"
+        [title]="'Resources.DeleteResource' | translate"
+      >
+        <fa-icon [icon]="deleteIcon" />
+      </a>
+    </div>
+    }
+  </div>
+  }
+</div>
