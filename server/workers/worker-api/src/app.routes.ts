@@ -33,6 +33,10 @@ app.onError(error);
 
 app.options('*', (c) => c.text(''));
 
+for (const path of ROUTES.RESOURCE_URLS) {
+  app.get(path, OriginService.pass);
+  //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
+}
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
 app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
 //
@@ -129,10 +133,6 @@ app.get('api/queue/test', (ctx) => {
   return ctx.text('OK');
 });
 
-for (const path of ROUTES.RESOURCE_URLS) {
-  //app.get(path, verifyJwt, verifyMembership, kv.resourceFile, OriginService.pass);
-  //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
-}
 for (const path of ROUTES.VERIFY_JWT_GET) app.get(path, verifyJwt, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_POST) app.post(path, verifyJwt, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_PUT) app.put(path, verifyJwt, OriginService.pass);

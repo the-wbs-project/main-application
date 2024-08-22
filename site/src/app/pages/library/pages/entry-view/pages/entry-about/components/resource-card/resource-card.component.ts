@@ -155,6 +155,10 @@ export class ResourceCardComponent implements OnChanges {
       .subscribe();
   }
 
+  save(records: ResourceRecord[]): void {
+    this.saveRecords(records).subscribe();
+  }
+
   saveRecords(records: Partial<ResourceRecord>[]): Observable<void> {
     const version = this.version()!;
 
