@@ -4,6 +4,7 @@ public class LibraryDraftViewModel
 {
     public string OwnerId { get; set; }
     public string EntryId { get; set; }
+    public string RecordId { get; set; }
     public string Type { get; set; }
     public int Version { get; set; }
     public string VersionAlias { get; set; }

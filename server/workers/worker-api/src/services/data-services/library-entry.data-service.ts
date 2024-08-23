@@ -15,8 +15,10 @@ export class LibraryEntryDataService extends BaseDataService {
 
     const data = await this.origin.getAsync<LibraryEntry>(this.getBaseUrl(owner, entry));
 
-    if (data) this.putKv(key, data);
-
+    if (data) {
+      this.putKv(this.getKey(owner, data.id), data);
+      this.putKv(this.getKey(owner, data.recordId), data);
+    }
     return data;
   }
 

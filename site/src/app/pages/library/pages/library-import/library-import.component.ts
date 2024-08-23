@@ -52,6 +52,7 @@ export class LibraryImportComponent {
           for (const library of libraries) {
             const entry: LibraryEntry = {
               id: IdService.generate(),
+              recordId: '',
               ownerId: owner,
               type: library.type,
               visibility: 'public',

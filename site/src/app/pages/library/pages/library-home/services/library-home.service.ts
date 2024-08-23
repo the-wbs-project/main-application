@@ -1,17 +1,20 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { EntryPhaseCreationComponent } from '@wbs/components/entry-creation/phase';
+import { EntryProjectCreationComponent } from '@wbs/components/entry-creation/project';
+import { EntryTaskCreationComponent } from '@wbs/components/entry-creation/task';
 import { Storage } from '@wbs/core/services';
 import { MembershipStore } from '@wbs/core/store';
 import { LibraryDraftViewModel, LibraryViewModel } from '@wbs/core/view-models';
-import { EntryCreationService } from '@wbs/pages/library/services';
 
 @Injectable()
 export class LibraryHomeService {
+  private readonly dialog = inject(DialogService);
   private readonly storage = inject(Storage);
   private readonly store = inject(Store);
   private readonly membership = inject(MembershipStore).membership;
-  private readonly creation = inject(EntryCreationService);
   private readonly _library = signal<string>(this.getLibraryFromStorage());
   readonly filtersExpanded = signal(false);
 
@@ -33,7 +36,14 @@ export class LibraryHomeService {
   }
 
   createDraft(type: string): void {
-    this.creation.runAsync(type);
+    this.dialog.open({
+      content:
+        type === 'task'
+          ? EntryTaskCreationComponent
+          : type === 'phase'
+          ? EntryPhaseCreationComponent
+          : EntryProjectCreationComponent,
+    });
   }
 
   libraryChanged(library: string): void {
@@ -46,18 +56,15 @@ export class LibraryHomeService {
 
   navigateToVm(vm: LibraryViewModel | LibraryDraftViewModel | undefined): void {
     if (!vm) return;
-    this.navigate(vm.ownerId, vm.entryId, vm.version);
-  }
 
-  navigate(owner: string, entryId: string, version: number): void {
     this.store.dispatch(
       new Navigate([
         '/' + this.membership()!.name,
         'library',
         'view',
-        owner,
-        entryId,
-        version,
+        vm.ownerId,
+        vm.recordId,
+        vm.version,
       ])
     );
   }

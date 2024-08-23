@@ -4,6 +4,7 @@ export interface LibraryVersionViewModel {
   entryId: string;
   ownerId: string;
   ownerName: string;
+  recordId: string;
   type: string;
   visibility: string;
   version: number;

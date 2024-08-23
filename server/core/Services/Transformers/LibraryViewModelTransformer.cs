@@ -22,6 +22,7 @@ public class LibraryViewModelTransformer : SqlHelpers
         return new LibraryViewModel
         {
             EntryId = doc.EntryId,
+            RecordId = doc.RecordId,
             AuthorId = doc.AuthorId,
             AuthorName = doc.AuthorName,
             Title = doc.Title,
@@ -40,6 +41,7 @@ public class LibraryViewModelTransformer : SqlHelpers
         return new LibraryViewModel
         {
             EntryId = DbValue<string>(reader, "EntryId"),
+            RecordId = DbValue<string>(reader, "RecordId"),
             Version = DbValue<int?>(reader, "Version"),
             OwnerId = DbValue<string>(reader, "OwnerId"),
             Type = DbValue<string>(reader, "Type"),

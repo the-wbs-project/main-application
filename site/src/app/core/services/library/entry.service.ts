@@ -90,21 +90,25 @@ export class EntryService {
     entry: LibraryEntry,
     version: LibraryEntryVersion,
     tasks: LibraryEntryNode[]
-  ): Observable<void> {
+  ): Observable<LibraryEntry> {
     return this.data.libraryEntries.putAsync(entry).pipe(
-      switchMap(() =>
-        this.data.libraryEntryVersions.putAsync(entry.ownerId, version)
-      ),
-      switchMap(() =>
-        this.data.libraryEntryNodes.putAsync(
-          entry.ownerId,
-          entry.id,
-          version.version,
-          tasks,
-          []
+      switchMap((newEntry) =>
+        this.data.libraryEntryVersions.putAsync(entry.ownerId, version).pipe(
+          switchMap(() =>
+            this.data.libraryEntryNodes.putAsync(
+              entry.ownerId,
+              entry.id,
+              version.version,
+              tasks,
+              []
+            )
+          ),
+          tap(() =>
+            this.activity.entryCreated(entry.id, entry.type, version.title)
+          ),
+          map(() => newEntry)
         )
-      ),
-      tap(() => this.activity.entryCreated(entry.id, entry.type, version.title))
+      )
     );
   }
 

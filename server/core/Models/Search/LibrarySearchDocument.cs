@@ -14,6 +14,9 @@ public partial class LibrarySearchDocument
     [SearchableField(IsSortable = true, IsFilterable = true, IsFacetable = true)]
     public string OwnerName { get; set; }
 
+    [SearchableField(IsSortable = true, IsFilterable = true, IsFacetable = true)]
+    public string RecordId { get; set; }
+
     [SimpleField]
     public string VersionAlias { get; set; }
 

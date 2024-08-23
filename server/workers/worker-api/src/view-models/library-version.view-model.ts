@@ -2,6 +2,7 @@ import { UserViewModel } from './user.view-model';
 
 export interface LibraryVersionViewModel {
   entryId: string;
+  recordId: string;
   ownerId: string;
   ownerName: string;
   version: number;

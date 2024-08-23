@@ -1,5 +1,6 @@
 export interface LibraryDraftViewModel {
   entryId: string;
+  recordId: string;
   type: string;
   version: number;
   versionAlias: string;

@@ -4,6 +4,7 @@ GO
 CREATE PROCEDURE [dbo].[LibraryEntry_Set]
     @Id nvarchar(100),
     @OwnerId nvarchar(100),
+    @RecordId nvarchar(100),
     @PublishedVersion int,
     @Type nvarchar(50),
     @Visibility nvarchar(50)
@@ -22,8 +23,9 @@ BEGIN
 ELSE
     BEGIN
         INSERT INTO [dbo].[LibraryEntries]
+            ([Id], [OwnerId], [RecordId], [PublishedVersion], [Type], [Visibility])
         VALUES
-            (@Id, @OwnerId, @PublishedVersion, @Type, @Visibility)
+            (@Id, @OwnerId, @RecordId, @PublishedVersion, @Type, @Visibility)
     END
 END
 GO

@@ -13,7 +13,7 @@ import { EntryService } from '@wbs/core/services/library';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { map, switchMap, tap } from 'rxjs/operators';
 
 @Injectable()
 export class EntryCreationService {
@@ -51,6 +51,7 @@ export class EntryCreationService {
     }
     const entry: LibraryEntry = {
       id: IdService.generate(),
+      recordId: '',
       ownerId: owner,
       type: 'project',
       visibility,
@@ -86,13 +87,7 @@ export class EntryCreationService {
 
     return this.saveState
       .call(this.entryService.createAsync(entry, version, nodes), 0, 0)
-      .pipe(
-        tap(() =>
-          this.store.dispatch(
-            new Navigate(['/', owner, 'library', 'view', owner, entry.id, 1])
-          )
-        )
-      );
+      .pipe(switchMap((newEntry) => this.navigate(owner, newEntry)));
   }
 
   createPhaseEntryAsync(
@@ -134,6 +129,7 @@ export class EntryCreationService {
     }
     const entry: LibraryEntry = {
       id: IdService.generate(),
+      recordId: '',
       ownerId: owner,
       type: 'phase',
       visibility,
@@ -161,13 +157,7 @@ export class EntryCreationService {
 
     return this.saveState
       .call(this.entryService.createAsync(entry, version, [node]), 0, 0)
-      .pipe(
-        tap(() =>
-          this.store.dispatch(
-            new Navigate(['/', owner, 'library', 'view', owner, entry.id, 1])
-          )
-        )
-      );
+      .pipe(switchMap((newEntry) => this.navigate(owner, newEntry)));
   }
 
   createTaskEntryAsync(
@@ -195,6 +185,7 @@ export class EntryCreationService {
     }
     const entry: LibraryEntry = {
       id: IdService.generate(),
+      recordId: '',
       ownerId: owner,
       type: 'task',
       visibility,
@@ -220,12 +211,12 @@ export class EntryCreationService {
 
     return this.saveState
       .call(this.entryService.createAsync(entry, version, [node]), 0, 0)
-      .pipe(
-        tap(() =>
-          this.store.dispatch(
-            new Navigate(['/', owner, 'library', 'view', owner, entry.id, 1])
-          )
-        )
-      );
+      .pipe(switchMap((newEntry) => this.navigate(owner, newEntry)));
+  }
+
+  private navigate(owner: string, entry: LibraryEntry): Observable<void> {
+    return this.store.dispatch(
+      new Navigate(['/', owner, 'library', 'view', owner, entry.recordId, 1])
+    );
   }
 }

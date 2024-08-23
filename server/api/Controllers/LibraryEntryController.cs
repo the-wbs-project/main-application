@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
-using Wbs.Core.Models.Search;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -50,8 +48,9 @@ public class LibraryEntryController : ControllerBase
 
             using var conn = await db.CreateConnectionAsync();
 
-            await entryDataService.SetAsync(conn, entry);
-            return Accepted();
+            var entryObj = await entryDataService.SetAsync(conn, entry);
+
+            return Ok(entryObj);
         }
         catch (Exception ex)
         {

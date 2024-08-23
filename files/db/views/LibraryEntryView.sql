@@ -6,6 +6,7 @@ AS
     SELECT
         e.[OwnerId],
         e.[Id] EntryId,
+        e.[RecordId],
         e.[Type],
         e.[Visibility],
         v.[Version],

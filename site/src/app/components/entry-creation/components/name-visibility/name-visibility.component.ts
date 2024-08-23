@@ -14,6 +14,7 @@ import {
   DialogContentBase,
   DialogModule,
   DialogRef,
+  DialogService,
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
@@ -61,6 +62,13 @@ export class NameVisibilityComponent extends DialogContentBase {
 
   constructor(dialog: DialogRef) {
     super(dialog);
+  }
+
+  static launch(dialog: DialogService, taskId: string): void {
+    const dialogRef = dialog.open({ content: NameVisibilityComponent });
+    const comp: NameVisibilityComponent = dialogRef.content.instance;
+
+    comp.setup(taskId);
   }
 
   setup(taskId: string): void {

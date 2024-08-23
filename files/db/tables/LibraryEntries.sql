@@ -1,5 +1,7 @@
-CREATE TABLE [dbo].[LibraryEntries] (
+CREATE TABLE [dbo].[LibraryEntries]
+(
     [Id] nvarchar(100) NOT NULL,
+    [RecordId] nvarchar(100) NOT NULL,
     [OwnerId] nvarchar(100) NOT NULL,
     [PublishedVersion] int NULL,
     [Type] nvarchar(50) NOT NULL,

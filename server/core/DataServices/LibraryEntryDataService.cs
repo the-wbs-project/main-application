@@ -37,18 +37,42 @@ public class LibraryEntryDataService : BaseSqlDbService
         return false;
     }
 
-    public async Task SetAsync(SqlConnection conn, LibraryEntry libraryEntry)
+    public async Task<LibraryEntry> SetAsync(SqlConnection conn, LibraryEntry libraryEntry)
     {
+        if (string.IsNullOrEmpty(libraryEntry.RecordId))
+            libraryEntry.RecordId = await GetNewRecordIdAsync(conn);
+
         var cmd = new SqlCommand("[dbo].[LibraryEntry_Set]", conn)
         {
             CommandType = CommandType.StoredProcedure
         };
         cmd.Parameters.AddWithValue("@Id", libraryEntry.Id);
+        cmd.Parameters.AddWithValue("@RecordId", libraryEntry.RecordId);
         cmd.Parameters.AddWithValue("@PublishedVersion", DbValue(libraryEntry.PublishedVersion));
         cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.OwnerId);
         cmd.Parameters.AddWithValue("@Type", libraryEntry.Type);
         cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.Visibility));
 
         await cmd.ExecuteNonQueryAsync();
+
+        return libraryEntry;
+    }
+
+    private async Task<string> GetNewRecordIdAsync(SqlConnection conn)
+    {
+        var cmd = new SqlCommand("[dbo].[LibraryEntry_GetNewId]", conn)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        var output = new SqlParameter("@Id", SqlDbType.VarChar, 10)
+        {
+            Direction = ParameterDirection.Output
+        };
+
+        cmd.Parameters.Add(output);
+
+        await cmd.ExecuteNonQueryAsync();
+
+        return output.Value.ToString();
     }
 }

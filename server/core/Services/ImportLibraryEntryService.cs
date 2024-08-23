@@ -58,7 +58,6 @@ public class ImportLibraryEntryService
         };
 
         var libraryEntryNodes = new List<LibraryEntryNode>();
-        var libraryEntryNodeResourceSaves = new List<Task>();
         var nodeIds = new Dictionary<string, string>();
 
         foreach (var n in projectNodes)
@@ -88,7 +87,8 @@ public class ImportLibraryEntryService
                 n.parentId = null;
         }
 
-        await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+
         await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
         await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
@@ -97,7 +97,7 @@ public class ImportLibraryEntryService
             await resourceCopier.ProjectToLibraryAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version);
             await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version, nodeIds);
         }
-        return libraryEntry.Id;
+        return newEntry.RecordId;
     }
 
     public async Task<string> ImportFromProjectNodeAsync(SqlConnection conn, string owner, string projectId, string nodeId, ProjectNodeToLibraryOptions options)
@@ -162,7 +162,8 @@ public class ImportLibraryEntryService
         libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds).Distinct());
 
-        await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+
         await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
         await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
@@ -171,7 +172,7 @@ public class ImportLibraryEntryService
             await resourceCopier.ProjectTaskToLibraryAsync(conn, owner, projectId, nodeId, libraryEntry.Id, libraryEntryVersion.Version);
             await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version, nodeIds);
         }
-        return libraryEntry.Id;
+        return newEntry.RecordId;
     }
 
     public async Task<string> ImportFromEntryNodeAsync(SqlConnection conn, string owner, string entryId, int versionId, string nodeId, ProjectNodeToLibraryOptions options)
@@ -236,7 +237,8 @@ public class ImportLibraryEntryService
         version.Disciplines = GetDisciplinesForNode(currentVersion.Disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds ?? []).Distinct());
 
-        await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+
         await entryVersionDataService.SetAsync(conn, owner, version);
         await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
@@ -245,7 +247,7 @@ public class ImportLibraryEntryService
             await resourceCopier.LibraryTaskToLibraryAsync(conn, owner, entryId, versionId, nodeId, libraryEntry.Id, version.Version);
             await resourceCopier.LibraryTasksToLibraryTasksAsync(conn, owner, entryId, versionId, libraryEntry.Id, version.Version, nodeIds);
         }
-        return libraryEntry.Id;
+        return newEntry.RecordId;
     }
 
     private Category[] GetDisciplinesForNode(Category[] disciplines, IEnumerable<string> disciplineIds)

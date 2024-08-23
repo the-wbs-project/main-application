@@ -22,6 +22,7 @@ public class LibraryEntryTransformer : SqlHelpers
         return new LibraryEntry
         {
             Id = DbValue<string>(reader, "Id"),
+            RecordId = DbValue<string>(reader, "RecordId"),
             PublishedVersion = DbValue<int?>(reader, "PublishedVersion"),
             OwnerId = DbValue<string>(reader, "OwnerId"),
             Type = DbValue<string>(reader, "Type"),

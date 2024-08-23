@@ -1,6 +1,7 @@
 export interface LibraryViewModel {
   ownerId: string;
   ownerName: string;
+  recordId: string;
   entryId: string;
   authorId: string;
   authorName: string;

@@ -22,6 +22,7 @@ public class LibraryDraftViewModelTransformer : SqlHelpers
         return new LibraryDraftViewModel
         {
             EntryId = DbValue<string>(reader, "Id"),
+            RecordId = DbValue<string>(reader, "RecordId"),
             OwnerId = DbValue<string>(reader, "OwnerId"),
             Type = DbValue<string>(reader, "Type"),
             Version = DbValue<int>(reader, "Version"),

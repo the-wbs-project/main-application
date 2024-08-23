@@ -18,6 +18,7 @@ public static class LibrarySearchTransformer
         var doc = new LibrarySearchDocument
         {
             EntryId = entry.Id,
+            RecordId = entry.RecordId,
             Version = version.Version,
             OwnerId = entry.OwnerId,
             OwnerName = owner.DisplayName,
