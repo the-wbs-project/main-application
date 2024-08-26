@@ -15,6 +15,7 @@ BEGIN
         e.[Id],
         e.[Type],
         e.[OwnerId],
+        e.[RecordId],
         v.[Author],
         v.[Version],
         v.[VersionAlias],

@@ -3,6 +3,18 @@ import { LibraryDraftViewModel } from '../../view-models';
 import { OriginService } from '../origin.service';
 
 export class LibraryHttpService {
+  static async getIdAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, entry } = ctx.req.param();
+      const entryObj = await ctx.var.data.libraryEntries.getByIdAsync(owner, entry);
+
+      return entryObj ? ctx.json(entryObj.id) : ctx.text('Not Found', 404);
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to get a library entry ID from record locator.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
   static async getDraftsAsync(ctx: Context): Promise<Response> {
     try {
       const resp = await OriginService.pass(ctx);

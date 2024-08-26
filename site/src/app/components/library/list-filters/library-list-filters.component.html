@@ -21,7 +21,7 @@
           {{ "General.Library" | translate }}:
         </div>
         <wbs-library-filter
-          [buttons]="FILTERS_LIBRARY"
+          [buttons]="libraryFilters()"
           [selection]="library()"
           (selectionChanged)="libraryChanged($event)"
         />

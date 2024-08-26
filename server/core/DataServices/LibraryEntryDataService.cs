@@ -9,7 +9,7 @@ public class LibraryEntryDataService : BaseSqlDbService
 {
     public async Task<LibraryEntry> GetByIdAsync(SqlConnection conn, string owner, string id)
     {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @Owner AND [Id] = @Id", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @Owner AND ([Id] = @Id OR [RecordId] = @Id)", conn);
 
         cmd.Parameters.AddWithValue("@Owner", owner);
         cmd.Parameters.AddWithValue("@Id", id);

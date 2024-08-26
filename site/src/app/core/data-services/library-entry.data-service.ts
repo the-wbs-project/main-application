@@ -5,6 +5,10 @@ import { LibraryEntry } from '../models';
 export class LibraryEntryDataService {
   constructor(private readonly http: HttpClient) {}
 
+  getIdAsync(owner: string, recordId: string): Observable<string> {
+    return this.http.get<string>(this.url(owner, recordId) + '/id');
+  }
+
   putAsync(entry: LibraryEntry): Observable<LibraryEntry> {
     return this.http.put<LibraryEntry>(
       this.url(entry.ownerId, entry.id),

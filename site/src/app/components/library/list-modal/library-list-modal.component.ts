@@ -145,14 +145,24 @@ export class LibraryListModalComponent extends DialogContentBase {
   }
 
   protected retrieve(): void {
-    /*this.data.libraryEntries
-      .searchAsync(this.org!, {
-        userId: this.userId!,
-        library: this.library(),
-        searchText: this.searchText(),
-        roles: this.roleFilters(),
-        types: this.typeFilters(),
-      })
-      .subscribe((entries) => this.entries.set(entries));*/
+    const lib = this.library();
+
+    if (lib === 'public') {
+      this.data.library
+        .getPublicAsync({
+          searchText: this.searchText(),
+          roles: this.roleFilters(),
+          types: this.typeFilters(),
+        })
+        .subscribe((entries) => this.entries.set(entries));
+    } else {
+      this.data.library
+        .getInternalAsync(this.org!, {
+          searchText: this.searchText(),
+          roles: this.roleFilters(),
+          types: this.typeFilters(),
+        })
+        .subscribe((entries) => this.entries.set(entries));
+    }
   }
 }

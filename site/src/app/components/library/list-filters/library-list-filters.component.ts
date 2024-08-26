@@ -2,6 +2,7 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   input,
   model,
 } from '@angular/core';
@@ -52,13 +53,20 @@ export class LibraryListFiltersComponent {
   readonly showLibrary = input(false);
   readonly showAssociations = input(false);
   readonly showSearch = input(false);
+  readonly includeDrafts = input(true);
   readonly searchText = model<string>();
   readonly typeFilters = model<string[]>();
   readonly authorFilters = model<string[]>();
   readonly library = model<string>();
   readonly expanded = model(false);
+  readonly libraryFilters = computed(() => {
+    const includeDrafts = this.includeDrafts();
 
-  readonly FILTERS_LIBRARY = LIBRARY_FILTER_LIBRARIES;
+    return LIBRARY_FILTER_LIBRARIES.filter(
+      (x) => includeDrafts || x.value !== 'drafts'
+    );
+  });
+
   readonly FILTERS_ROLES = LIBRARY_FILTER_ROLES;
   readonly FILTERS_TYPE = LIBRARY_FILTER_TYPES;
   readonly upIcon = faChevronUp;

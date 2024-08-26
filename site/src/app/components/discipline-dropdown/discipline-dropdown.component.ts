@@ -40,6 +40,7 @@ export class DisciplinesDropdownComponent implements OnChanges {
   readonly data = input.required<CategoryViewModel[]>();
   readonly values = input.required<CategoryViewModel[]>();
   readonly saveIcon = input(faCheck);
+  readonly autoSave = input(false);
   readonly save = output<CategoryViewModel[]>();
   readonly cancel = output<void>();
   readonly ids = signal<string[]>([]);
@@ -63,5 +64,11 @@ export class DisciplinesDropdownComponent implements OnChanges {
 
     this.multiselect()?.toggle(false);
     this.save.emit(this.data().filter((d) => ids.includes(d.id)));
+  }
+
+  valueChange(ids: string[]): void {
+    if (this.autoSave()) {
+      this.save.emit(this.data().filter((d) => ids.includes(d.id)));
+    }
   }
 }

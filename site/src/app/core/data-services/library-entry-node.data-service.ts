@@ -43,9 +43,10 @@ export class LibraryEntryNodeDataService {
     nodeId: string,
     model: ProjectNodeToLibraryOptions
   ): Observable<string> {
-    return this.http.post<string>(
+    return this.http.post(
       `api/portfolio/${owner}/library/entries/${entryId}/versions/${version}/nodes/${nodeId}/export`,
-      model
+      model,
+      { responseType: 'text' }
     );
   }
 

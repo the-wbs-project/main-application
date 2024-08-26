@@ -8,6 +8,7 @@
     @if (ready()) { @if (view() === 0) {
     <wbs-library-list-filters
       [showLibrary]="true"
+      [includeDrafts]="false"
       [(library)]="library"
       [(typeFilters)]="typeFilters"
       [(authorFilters)]="roleFilters"

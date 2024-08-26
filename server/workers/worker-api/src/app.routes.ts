@@ -78,11 +78,11 @@ app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembers
 //
 const entryApp = newApp()
   .basePath('api/portfolio/:owner/library/entries/:entry')
-  .use('*', verifyJwt)
+  .get('id', verifyJwt, Http.library.getIdAsync)
   .get('versions', verifyJwt, Http.libraryVersions.getAsync)
   .get('versions/:version', verifyJwt, Http.libraryVersions.getByIdAsync)
   .get('versions/:version/nodes/public', verifyJwt, Http.libraryTasks.getPublicAsync)
-  .get('versions/:version/nodes/private', verifyMembership, Http.libraryTasks.getInternalAsync)
+  .get('versions/:version/nodes/private', verifyJwt, verifyMembership, Http.libraryTasks.getInternalAsync)
 
   .put('', verifyJwt, Http.libraryEntries.putAsync)
   .put('versions/:version', verifyJwt, Http.libraryVersions.putAsync)

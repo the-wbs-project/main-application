@@ -19,12 +19,14 @@ export class LibraryEntryHttpService {
     try {
       const { owner, entry } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
+
+      await ctx.var.data.libraryEntries.clearKvAsync(owner, entry);
+
+      if (resp.status !== 200) return ctx.text(resp.statusText, resp.status);
+
       const entryObj: LibraryEntry = await resp.json();
 
-      await Promise.all([
-        ctx.var.data.libraryEntries.clearKvAsync(owner, entry),
-        ctx.var.data.libraryEntries.clearKvAsync(owner, entryObj.recordId),
-      ]);
+      await ctx.var.data.libraryEntries.clearKvAsync(owner, entryObj.recordId);
 
       return ctx.json(entryObj);
     } catch (e) {

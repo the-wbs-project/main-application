@@ -28,6 +28,7 @@
       "Review": "Review",
       "Personal": "Personal",
       "Watched": "Watched",
+      "RecordId": "Record ID",
       "Draft": "Draft",
       "Published": "Published",
       "Retired": "Retired",
@@ -833,7 +834,10 @@
       "ManageContributors": "Manage Contributors",
       "LegendReorder": "Use this to drag and drop a task to where you want to reorder it.",
       "LegendMenu": "Use this to open the menu for the task.",
-      "LegendInternal": "This task can only be seen within your organization."
+      "LegendInternal": "This task can only be seen within your organization.",
+      "LegendLink": "This is an indicator that this task was imported from another WBS. Editors will be noitified if an update is available.",
+      "LegendDelete": "This button allows you delete a task and all of it's subtasks.",
+      "LegendAdd": "This button allows you create a new task or subtask."
     }
   },
   {
