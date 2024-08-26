@@ -45,7 +45,7 @@ export class EntryService {
       'library',
       'view',
       Utils.getParam(route, 'ownerId'),
-      Utils.getParam(route, 'entryId'),
+      Utils.getParam(route, 'recordId'),
       Utils.getParam(route, 'versionId'),
     ];
   }
@@ -54,6 +54,10 @@ export class EntryService {
     appConfig: AppConfiguration,
     route: ActivatedRouteSnapshot
   ): string {
+    const version = inject(EntryStore).version();
+
+    if (!version) return '';
+
     return [
       appConfig.api_domain,
       'api',
@@ -61,9 +65,9 @@ export class EntryService {
       Utils.getParam(route, 'org'),
       'library',
       'entries',
-      Utils.getParam(route, 'entryId'),
+      version.entryId,
       'versions',
-      Utils.getParam(route, 'versionId'),
+      version.version,
     ].join('/');
   }
 
@@ -71,6 +75,10 @@ export class EntryService {
     appConfig: AppConfiguration,
     route: ActivatedRouteSnapshot
   ): string {
+    const version = inject(EntryStore).version();
+
+    if (!version) return '';
+
     return [
       appConfig.api_domain,
       'api',
@@ -78,9 +86,9 @@ export class EntryService {
       Utils.getParam(route, 'org'),
       'library',
       'entries',
-      Utils.getParam(route, 'entryId'),
+      version.entryId,
       'versions',
-      Utils.getParam(route, 'versionId'),
+      version.version,
       'nodes',
       Utils.getParam(route, 'taskId'),
     ].join('/');
@@ -177,7 +185,7 @@ export class EntryService {
             'library',
             'view',
             version.ownerId,
-            version.entryId,
+            version.recordId,
             newVersion,
           ])
         )

@@ -31,12 +31,14 @@ import { DisciplineIconLabelComponent } from '@wbs/components/_utils/discipline-
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
-import { SaveService } from '@wbs/core/services';
+import { SaveService, TreeService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
 import { CategoryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
 import { tap } from 'rxjs/operators';
 import { LibraryTreeMenuService } from '../../services';
+import { EntryTaskActionService } from '../../../../services';
+import { Observable } from 'rxjs';
 
 @Component({
   standalone: true,
@@ -62,6 +64,7 @@ import { LibraryTreeMenuService } from '../../services';
   ],
 })
 export class TaskDetailsComponent implements OnChanges {
+  private readonly actions = inject(EntryTaskActionService);
   private readonly menuService = inject(LibraryTreeMenuService);
   private readonly taskService = inject(EntryTaskService);
   readonly entryStore = inject(EntryStore);
@@ -80,6 +83,7 @@ export class TaskDetailsComponent implements OnChanges {
   //
   //  Inputs
   //
+  readonly treeService = input.required<TreeService>();
   readonly versionDisciplines = input.required<CategoryViewModel[]>();
   readonly task = input.required<LibraryTaskViewModel | undefined>();
   //
@@ -88,6 +92,7 @@ export class TaskDetailsComponent implements OnChanges {
   readonly menu = signal<any[]>([]);
   readonly editTask = signal<LibraryTaskViewModel | undefined>(undefined);
   readonly editDisciplines = signal(false);
+  readonly menuSave = new SaveService();
   readonly descriptionSave = new SaveService();
   readonly disciplineSave = new SaveService();
   readonly visibilitySave = new SaveService();
@@ -138,6 +143,18 @@ export class TaskDetailsComponent implements OnChanges {
     this.visibilitySave
       .call(this.taskService.visibilityChanged(this.task()!.id, visibility))
       .subscribe();
+  }
+
+  menuItemSelected(action: string): void {
+    const obsOrVoid = this.actions.onAction(
+      action,
+      this.task()?.id,
+      this.treeService()
+    );
+
+    if (obsOrVoid instanceof Observable) {
+      this.menuSave.call(obsOrVoid).subscribe();
+    }
   }
 
   protected buildMenu(): void {

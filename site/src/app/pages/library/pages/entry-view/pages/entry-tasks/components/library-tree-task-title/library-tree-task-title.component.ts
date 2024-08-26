@@ -17,8 +17,8 @@ import { LibraryTreeMenuService } from '../../services';
 
 @Component({
   standalone: true,
-  selector: 'wbs-library-task-title',
-  templateUrl: './library-task-title.component.html',
+  selector: 'wbs-library-tree-task-title',
+  templateUrl: './library-tree-task-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [LibraryTreeMenuService],
   imports: [
@@ -29,15 +29,13 @@ import { LibraryTreeMenuService } from '../../services';
     TranslateModule,
   ],
 })
-export class LibraryTaskTitleComponent {
+export class LibraryTreeTaskTitleComponent {
   private readonly menuService = inject(LibraryTreeMenuService);
 
   readonly menuIcon = faEllipsisH;
   readonly task = input.required<LibraryTaskViewModel>();
-  readonly canEdit = input.required<boolean>();
   readonly menu = signal<any[]>([]);
   readonly forcedShow = signal<boolean>(false);
-  readonly edit = output<void>();
   readonly menuItemSelected = output<string>();
 
   protected buildMenu(): void {

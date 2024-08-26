@@ -8,19 +8,17 @@ import {
   EntryTaskReorderService,
   LibraryImportProcessorService,
   entryApiUrlResolve,
-  entryIdResolve,
   entryNavGuard,
   entryUrlResolve,
   ownerIdResolve,
   populateGuard,
   redirectGuard,
-  verifyTaskUpdateClaimGuard,
-  versionIdResolve,
+  verifyClaimsGuard,
 } from './services';
 
 export const routes: Routes = [
   {
-    path: ':ownerId/:entryId/:versionId',
+    path: ':ownerId/:recordId/:versionId',
     canActivate: [populateGuard],
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
@@ -33,7 +31,6 @@ export const routes: Routes = [
     ],
     resolve: {
       owner: ownerIdResolve,
-      entryId: entryIdResolve,
       entryUrl: entryUrlResolve,
     },
     children: [
@@ -75,7 +72,7 @@ export const routes: Routes = [
           import('./pages/entry-upload/upload-layout.component').then(
             (x) => x.ProjectUploadLayoutComponent
           ),
-        canActivate: [entryNavGuard, verifyTaskUpdateClaimGuard],
+        canActivate: [entryNavGuard, verifyClaimsGuard],
         data: {
           section: 'tasks',
         },
@@ -83,24 +80,6 @@ export const routes: Routes = [
           import('./pages/entry-upload/pages/children.routes').then(
             (x) => x.routes
           ),
-      },
-      {
-        path: 'resources',
-        loadComponent: () =>
-          import('./pages/entry-resources-page.component').then(
-            (x) => x.ResourcesPageComponent
-          ),
-        canActivate: [entryNavGuard],
-        data: {
-          section: 'resources',
-          crumbs: ['resources'],
-        },
-        resolve: {
-          owner: ownerIdResolve,
-          entryId: entryIdResolve,
-          versionId: versionIdResolve,
-          apiUrlPrefix: entryApiUrlResolve,
-        },
       },
     ],
   },

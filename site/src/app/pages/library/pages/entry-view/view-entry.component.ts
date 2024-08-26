@@ -7,19 +7,18 @@ import {
   input,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { Navigate, RouterState } from '@ngxs/router-plugin';
+import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { ActionButtonComponent2 } from '@wbs/components/action-button2';
+import { PageHeaderComponent } from '@wbs/components/page-header';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { SaveService, SignalStore, TitleService } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
-import { ActionButtonComponent2 } from '@wbs/components/action-button2';
-import { PageHeaderComponent } from '@wbs/components/page-header';
 import { EntryStore } from '@wbs/core/store';
-import { EntryTitleComponent } from './components/entry-title';
 import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
 import { EntryActionButtonService } from './services';
-import { TranslateModule } from '@ngx-translate/core';
 
 @Component({
   standalone: true,
@@ -28,7 +27,6 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [
     ActionButtonComponent2,
     ActionIconListComponent,
-    EntryTitleComponent,
     EntryViewBreadcrumbsPipe,
     PageHeaderComponent,
     SaveMessageComponent,
@@ -44,7 +42,6 @@ export class EntryViewComponent {
   readonly entryStore = inject(EntryStore);
   readonly menuService = inject(EntryActionButtonService);
   readonly owner = input.required<string>();
-  readonly entryId = input.required<string>();
   readonly entryUrl = input.required<string[]>();
 
   readonly url = this.store.select(RouterState.url);

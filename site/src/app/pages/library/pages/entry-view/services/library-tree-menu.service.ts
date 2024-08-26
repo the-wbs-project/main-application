@@ -1,15 +1,14 @@
 import { Injectable, inject } from '@angular/core';
 import { ActionContextMenuItem, ContextMenuItem } from '@wbs/core/models';
 import { MenuService } from '@wbs/core/services';
-import { EntryStore, MetadataStore } from '@wbs/core/store';
-import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
+import { EntryStore } from '@wbs/core/store';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { LIBRARY_TREE_MENU_ITEMS } from '../models';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class LibraryTreeMenuService {
-  private readonly metadata = inject(MetadataStore);
   private readonly menuService = inject(MenuService);
   private readonly store = inject(EntryStore);
 
@@ -47,27 +46,6 @@ export class LibraryTreeMenuService {
           movers.push(item);
       }
     }
-    //
-    //  Now add disciplines
-    //
-    const add = phaseActions.find((a) => a.action === 'addDiscipline');
-    const remove = phaseActions.find((a) => a.action === 'removeDiscipline');
-
-    if (add) {
-      add.items = this.getDisciplinesToAdd(version, task);
-
-      if (add.items.length === 0) {
-        phaseActions.splice(phaseActions.indexOf(add), 1);
-      }
-    }
-
-    if (remove) {
-      remove.items = this.getDisciplinesToRemove(task);
-
-      if (remove.items.length === 0) {
-        phaseActions.splice(phaseActions.indexOf(remove), 1);
-      }
-    }
 
     return movers.length === 0
       ? phaseActions
@@ -90,45 +68,5 @@ export class LibraryTreeMenuService {
 
   private canHaveNavActions(entryType: string, task: TaskViewModel): boolean {
     return entryType === 'project' || task.parentId != undefined;
-  }
-
-  private getDisciplinesToAdd(
-    version: LibraryVersionViewModel,
-    task: TaskViewModel
-  ): ContextMenuItem[] {
-    const disciplines = this.metadata.categories.disciplines;
-    const existing = task.disciplines.map((x) => x.id);
-    const results: ContextMenuItem[] = [];
-
-    for (const vDiscipline of version.disciplines) {
-      if (existing.includes(vDiscipline.id)) continue;
-
-      const discipline = vDiscipline.isCustom
-        ? vDiscipline
-        : disciplines.find((x) => x.id === vDiscipline.id);
-
-      if (discipline)
-        results.push({
-          action: 'addDiscipline|' + vDiscipline.id,
-          faIcon: discipline.icon ?? 'fa-question',
-          text: discipline.label,
-        });
-    }
-
-    return results;
-  }
-
-  private getDisciplinesToRemove(task: TaskViewModel): ContextMenuItem[] {
-    const results: ContextMenuItem[] = [];
-
-    for (const discipline of task.disciplines) {
-      results.push({
-        action: 'removeDiscipline|' + discipline.id,
-        faIcon: discipline.icon ?? 'fa-question',
-        text: discipline.label,
-      });
-    }
-
-    return results;
   }
 }

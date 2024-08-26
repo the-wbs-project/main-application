@@ -1,0 +1,15 @@
+.library-legend-grid {
+  margin-top: 20px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 50px auto;
+  font-size: 12px;
+
+  > div {
+    margin-bottom: 5px;
+  }
+
+  div:nth-child(odd) {
+    text-align: center;
+  }
+}

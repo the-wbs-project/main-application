@@ -1,29 +1,37 @@
 <div class="h-100 d-flex flex-column">
-  <div class="w-100 bg-gray-200 border tx-12 fw-bold pd-l-10 pd-y-5">
-    <div class="d-inline-block wd-30">
-      @if (task()) {
-      <button
-        #menuTarget
-        kendoButton
-        size="small"
-        fillMode="flat"
-        class="pointer p-0 ht-10"
-      >
-        <fa-icon
-          size="sm"
-          [icon]="menuIcon"
-          (click)="buildMenu()"
-          [title]="'General.Options' | translate"
-        />
-      </button>
-      <kendo-contextmenu showOn="click" [items]="menu()" [target]="menuTarget">
-        <ng-template kendoMenuItemTemplate let-item="item">
-          <wbs-context-menu-item [item]="item" />
-        </ng-template>
-      </kendo-contextmenu>
-      }
+  <div
+    class="d-flex flex-row flex-align-center gap-10 bg-gray-200 border tx-12 pd-l-10 pd-y-5"
+  >
+    @if (task()) {
+    <button
+      #menuTarget
+      kendoButton
+      size="small"
+      fillMode="flat"
+      class="pointer p-0 ht-10"
+    >
+      <fa-icon
+        size="sm"
+        [icon]="menuIcon"
+        (click)="buildMenu()"
+        [title]="'General.Options' | translate"
+      />
+    </button>
+    <kendo-contextmenu
+      showOn="click"
+      [items]="menu()"
+      [target]="menuTarget"
+      (select)="menuItemSelected($event.item.action)"
+    >
+      <ng-template kendoMenuItemTemplate let-item="item">
+        <wbs-context-menu-item [item]="item" />
+      </ng-template>
+    </kendo-contextmenu>
+    }
+    <div class="fw-bold">
+      {{ "General.TaskDetails" | translate }}
     </div>
-    {{ "General.TaskDetails" | translate }}
+    <wbs-save-message [state]="menuSave.state()" />
   </div>
   <div #taskDetails class="flex-fill scroll-y">
     @if (editTask(); as t) {

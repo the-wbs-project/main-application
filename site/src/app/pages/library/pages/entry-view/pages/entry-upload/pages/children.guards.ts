@@ -15,7 +15,7 @@ function getEntryUrl(route: ActivatedRouteSnapshot): string[] {
     'library',
     'view',
     Utils.getParam(route, 'ownerId'),
-    Utils.getParam(route, 'entryId'),
+    Utils.getParam(route, 'recordId'),
     Utils.getParam(route, 'versionId'),
   ];
 }

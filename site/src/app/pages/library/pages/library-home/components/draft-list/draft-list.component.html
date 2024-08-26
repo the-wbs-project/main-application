@@ -4,6 +4,9 @@
       <th class="wd-100 bg-dark text-white pd-10 fw-normal">
         {{ "General.Type" | translate }}
       </th>
+      <th class="wd-100 bg-dark text-white pd-10 fw-normal">
+        {{ "General.RecordId" | translate }}
+      </th>
       <th class="bg-dark text-white pd-10 fw-normal">
         {{ "General.Title" | translate }}
       </th>
@@ -30,6 +33,7 @@
         </span>
         {{ entry.type | entryTypeTitle | translate }}
       </td>
+      <td>{{ entry.recordId }}</td>
       <td>{{ entry.title }}</td>
       <td>{{ [entry.version, entry.versionAlias] | version }}</td>
       <td class="d-none d-md-table-cell">

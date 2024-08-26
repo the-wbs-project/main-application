@@ -8,28 +8,47 @@
     </div>
   </ng-template>
   <ng-template kendoPopoverBodyTemplate>
-    <div class="mg-t-20 tx-12">
+    <div class="library-legend-grid">
       @if (canEdit()) {
-      <div class="mb-3">
-        <span class="d-inline-block wd-50 text-center">
-          <fa-icon [icon]="reorderIcon" />
-        </span>
+      <div>
+        <fa-icon [icon]="reorderIcon" />
+      </div>
+      <div>
         {{ "Library.LegendReorder" | translate }}
       </div>
       }
-      <div class="mb-3">
-        <span class="d-inline-block wd-50 text-center">
-          <fa-icon [icon]="menuIcon" />
-        </span>
+      <div>
+        <fa-icon [icon]="linkIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendLink" | translate }}
+      </div>
+      <div>
+        <fa-icon [icon]="menuIcon" />
+      </div>
+      <div>
         {{ "Library.LegendMenu" | translate }}
       </div>
-      @if (visibility() !== 'private') {
-      <div class="mb-3">
+      @if (canEdit()) {
+      <div>
+        <fa-icon [icon]="addIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendAdd" | translate }}
+      </div>
+      <div>
+        <fa-icon [icon]="deleteIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendDelete" | translate }}
+      </div>
+      } @if (visibility() !== 'private') {
+      <!--<div>
         <span class="d-inline-block wd-50 text-center">
           <span class="d-inline-block wd-30 ht-20 bg-light-blue-f">&nbsp;</span>
         </span>
         {{ "Library.LegendInternal" | translate }}
-      </div>
+      </div>-->
       }
     </div>
   </ng-template>

@@ -17,15 +17,6 @@ import { ActionContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
 
 const taskActions: ActionContextMenuItem[] = [
   {
-    action: 'addSub',
-    faIcon: faPlus,
-    resource: 'Projects.AddSubTask',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.CREATE,
-      stati: ['draft'],
-    },
-  },
-  {
     action: 'import|right',
     faIcon: faFileImport,
     resource: 'Wbs.ImportSubTask',
@@ -35,55 +26,18 @@ const taskActions: ActionContextMenuItem[] = [
     },
   },
   {
-    action: 'addDiscipline',
-    faIcon: faUserPlus,
-    resource: 'Wbs.AddDiscipline',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
-      stati: ['draft'],
-    },
-  },
-  {
-    action: 'removeDiscipline',
-    faIcon: faUserMinus,
-    resource: 'Wbs.RemoveDiscipline',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
-      stati: ['draft'],
-    },
-  },
-  {
-    action: 'other',
-    faIcon: faEclipse,
-    resource: 'Wbs.OtherActions',
+    action: 'cloneTask',
+    faIcon: faCopy,
+    resource: 'Projects.CloneTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
+      stati: ['draft'],
     },
-    items: [
-      {
-        action: 'cloneTask',
-        faIcon: faCopy,
-        resource: 'Projects.CloneTask',
-        filters: {
-          claim: LIBRARY_CLAIMS.TASKS.CREATE,
-          stati: ['draft'],
-        },
-      },
-      {
-        action: 'export',
-        faIcon: faBookArrowRight,
-        resource: 'Wbs.ExportToLibrary',
-      },
-      {
-        action: 'deleteTask',
-        faIcon: faTrash,
-        resource: 'Projects.DeleteTask',
-        filters: {
-          claim: LIBRARY_CLAIMS.TASKS.DELETE,
-          stati: ['draft'],
-        },
-      },
-    ],
+  },
+  {
+    action: 'export',
+    faIcon: faBookArrowRight,
+    resource: 'Wbs.ExportToLibrary',
   },
 ];
 
