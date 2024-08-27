@@ -16,8 +16,10 @@
 </div>
 } @else { @let cat = category();
 <div class="d-flex flex-align-start">
+  @if (cat) {
+  <span class="mg-r-10"> {{ cat?.label }} </span>
   <span kendoPopoverAnchor [popover]="myPopover" showOn="hover" class="pointer">
-    {{ cat?.label }}
+    <fa-icon [icon]="infoIcon" />
   </span>
   <kendo-popover #myPopover position="top" [width]="400">
     <ng-template kendoPopoverBodyTemplate>
@@ -26,7 +28,9 @@
       </div>
     </ng-template>
   </kendo-popover>
-  @if (saveMode.state() !== 'saving' && store.canEditAlias()) {
+  } @else {
+  {{ "General.None" | translate }}
+  } @if (saveMode.state() !== 'saving' && store.canEditAlias()) {
   <span class="child-to-show">
     <fa-icon
       size="sm"

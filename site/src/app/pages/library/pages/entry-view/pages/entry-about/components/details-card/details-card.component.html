@@ -34,10 +34,12 @@
     <div class="detail-header">{{ "General.Type" | translate }} :</div>
     <div>{{ version.type | entryTypeTitle | translate }}</div>
 
+    @if (version.type === 'project') {
     <div class="detail-header">{{ "General.Category" | translate }} :</div>
     <div>
       <wbs-details-project-category [record]="version" />
     </div>
+    }
 
     <div class="detail-header">{{ "General.Status" | translate }} :</div>
     <div>{{ version.status | libraryStatus | translate }}</div>

@@ -8,13 +8,8 @@ import {
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faInfo,
-  faInfoCircle,
-  faPencil,
-  faSave,
-  faXmark,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faInfoCircle } from '@fortawesome/pro-duotone-svg-icons';
+import { faPencil, faQuestion, faSave, faXmark } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { PopoverModule } from '@progress/kendo-angular-tooltip';
@@ -50,7 +45,7 @@ export class ProjectCategoryComponent {
   readonly editIcon = faPencil;
   readonly saveIcon = faSave;
   readonly cancelIcon = faXmark;
-  readonly infoIcon = faInfo;
+  readonly infoIcon = faQuestion;
   readonly store = inject(EntryStore);
   readonly record = input.required<LibraryVersionViewModel>();
   readonly category = computed(() =>
