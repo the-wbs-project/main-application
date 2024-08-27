@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -124,6 +123,30 @@ public class LibraryEntryNodeController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving library entry version task resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{nodeId}/resources/{resourceId}")]
+    public async Task<IActionResult> DeleteResourceAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Entry Version not found for the owner provided.");
+
+                await nodeResourceDataService.DeleteAsync(conn, entryId, entryVersion, nodeId, resourceId);
+                await resourceService.DeleteLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version resources");
             return new StatusCodeResult(500);
         }
     }

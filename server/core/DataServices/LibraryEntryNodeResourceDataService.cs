@@ -53,4 +53,16 @@ public class LibraryEntryNodeResourceDataService : ResourceRecordDataService
 
         await cmd.ExecuteNonQueryAsync();
     }
+
+    public async Task DeleteAsync(SqlConnection conn, string entryId, int entryVersion, string entryNodeId, string resourceId)
+    {
+        var cmd = new SqlCommand("DELETE FROM [dbo].[LibraryEntryNodeResources] WHERE [EntryId] = @EntryId AND [EntryVersion] = @EntryVersion AND [EntryNodeId] = @EntryNodeId AND [Id] = @ResourceId", conn);
+
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
+        cmd.Parameters.AddWithValue("@EntryNodeId", entryNodeId);
+        cmd.Parameters.AddWithValue("@ResourceId", resourceId);
+
+        await cmd.ExecuteNonQueryAsync();
+    }
 }

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   input,
   OnInit,
@@ -12,61 +13,65 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
 import { ResourceRecord } from '@wbs/core/models';
+import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { LibraryResourcesService } from '@wbs/pages/library/services';
-import { CardHeaderComponent } from '../card-header.component';
 
 @Component({
   standalone: true,
-  selector: 'wbs-resource-card',
-  templateUrl: './resource-card.component.html',
-  host: { class: 'card dashboard-card full-item' },
+  selector: 'wbs-task-details-resources',
+  templateUrl: './task-details-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [LibraryResourcesService],
   imports: [
     ButtonModule,
-    CardHeaderComponent,
     FontAwesomeModule,
     RecordResourceListComponent,
     TranslateModule,
   ],
-  providers: [LibraryResourcesService],
 })
-export class ResourceCardComponent implements OnInit {
+export class TaskDetailsResourcesComponent implements OnInit {
   readonly addIcon = faPlus;
   readonly service = inject(LibraryResourcesService);
   //
   //  Inputs & Signals
   //
-  readonly apiUrlPrefix = input.required<string>();
+  readonly taskId = input.required<string>();
   readonly list = signal<ResourceRecord[]>([]);
+  //
+  //  Computed
+  //
+  readonly apiUrl = computed(() => this.service.getApiUrl(this.taskId()));
 
   ngOnInit(): void {
     this.service
-      .getRecordsAsync(undefined)
+      .getRecordsAsync(this.taskId())
       .subscribe((list) => this.list.set(list));
   }
 
   launchAdd(): void {
-    this.service.launchAddAsync(undefined).subscribe((item) => {
+    this.service.launchAddAsync(this.taskId()).subscribe((item) => {
       if (item) this.updateList([item]);
     });
   }
 
   editRecord(record: ResourceRecord): void {
-    this.service.editRecordAsync(undefined, record).subscribe((item) => {
+    this.service.editRecordAsync(this.taskId(), record).subscribe((item) => {
       if (item) this.updateList([item]);
     });
   }
 
   deleteRecord(record: ResourceRecord): void {
-    this.service.deleteRecordAsync(undefined, record).subscribe((deleted) => {
-      if (deleted)
-        this.list.update((list) => list.filter((x) => x.id !== record.id));
-    });
+    this.service
+      .deleteRecordAsync(this.taskId(), record)
+      .subscribe((deleted) => {
+        if (deleted)
+          this.list.update((list) => list.filter((x) => x.id !== record.id));
+      });
   }
 
   save(records: ResourceRecord[]): void {
     this.service
-      .saveRecordsAsync(undefined, records)
+      .saveRecordsAsync(this.taskId(), records)
       .subscribe((newRecords) => {
         this.updateList(newRecords);
       });
@@ -84,5 +89,25 @@ export class ResourceCardComponent implements OnInit {
       }
       return [...list];
     });
+  }
+
+  private static getApiUrl(
+    apiDomain: string,
+    version: LibraryVersionViewModel,
+    taskId: string
+  ): string {
+    return [
+      apiDomain,
+      'api',
+      'portfolio',
+      version.ownerId,
+      'library',
+      'entries',
+      version.entryId,
+      'versions',
+      version.version,
+      'nodes',
+      taskId,
+    ].join('/');
   }
 }

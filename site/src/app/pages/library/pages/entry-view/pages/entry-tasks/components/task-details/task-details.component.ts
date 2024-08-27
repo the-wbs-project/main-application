@@ -35,10 +35,11 @@ import { SaveService, TreeService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
 import { CategoryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
+import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import { LibraryTreeMenuService } from '../../services';
 import { EntryTaskActionService } from '../../../../services';
-import { Observable } from 'rxjs';
+import { TaskDetailsResourcesComponent } from '../task-details-resources';
 
 @Component({
   standalone: true,
@@ -51,13 +52,13 @@ import { Observable } from 'rxjs';
     ChipModule,
     ContextMenuItemComponent,
     ContextMenuModule,
-    FontAwesomeModule,
-    FormsModule,
     DisciplineIconLabelComponent,
     DisciplinesDropdownComponent,
     FontAwesomeModule,
+    FormsModule,
     LabelModule,
     SaveMessageComponent,
+    TaskDetailsResourcesComponent,
     TaskTitleEditorComponent,
     TextAreaModule,
     TranslateModule,

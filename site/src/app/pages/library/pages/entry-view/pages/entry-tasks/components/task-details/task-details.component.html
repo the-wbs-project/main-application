@@ -155,6 +155,12 @@
         </span>
       </div>
       }
+      <div class="detail-header">
+        {{ "General.Resources" | translate }}
+      </div>
+      <div>
+        <wbs-task-details-resources [taskId]="t.id" />
+      </div>
     </div>
 
     } @else {

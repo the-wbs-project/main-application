@@ -8,7 +8,7 @@
         </div>
       </wbs-card-header>
     </div>
-    @if (canEdit()) {
+    @if (service.canEdit()) {
     <div class="flex-fill tx-right">
       <button
         kendoButton
@@ -31,8 +31,8 @@
   } @else {
   <wbs-record-resource-list
     [apiUrlPrefix]="apiUrlPrefix()"
-    [canEdit]="canEdit()"
-    [canDelete]="canDelete()"
+    [canEdit]="service.canEdit()"
+    [canDelete]="service.canDelete()"
     [list]="resourceList"
     (save)="save($event)"
     (delete)="deleteRecord($event)"
