@@ -13,7 +13,7 @@ import {
   sorter,
 } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
-import { TaskViewModel } from '@wbs/core/view-models';
+import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { EntryTaskActivityService } from './entry-task-activity.service';
@@ -26,18 +26,18 @@ export class EntryTaskService {
   private readonly store = inject(EntryStore);
 
   private get owner(): string {
-    return this.store.entry()!.owner;
+    return this.store.version()!.ownerId;
   }
 
   private get entryId(): string {
-    return this.store.entry()!.id;
+    return this.store.version()!.entryId;
   }
 
   private get version(): number {
     return this.versionObj.version;
   }
 
-  private get versionObj(): LibraryEntryVersion {
+  private get versionObj(): LibraryVersionViewModel {
     return this.store.version()!;
   }
 
@@ -576,8 +576,7 @@ export class EntryTaskService {
     taskId: string,
     disciplineIds: string[]
   ): Observable<void> {
-    const entry = this.store.entry()!;
-    const version = this.store.version()!.version;
+    const version = this.versionObj;
     const task = this.getTasks().find((x) => x.id === taskId);
 
     if (!task) return of();
@@ -588,16 +587,42 @@ export class EntryTaskService {
     task.lastModified = new Date();
 
     return this.data.libraryEntryNodes
-      .putAsync(entry.owner, entry.id, version, [task], [])
+      .putAsync(version.ownerId, version.entryId, version.version, [task], [])
       .pipe(
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
           this.activity.entryDisciplinesChanged(
-            entry.id,
-            version,
+            version.entryId,
+            version.version,
             taskId,
             from,
             disciplineIds
+          )
+        )
+      );
+  }
+
+  visibilityChanged(
+    taskId: string,
+    visibility: 'public' | 'private'
+  ): Observable<void> {
+    const task = this.getTasks().find((x) => x.id === taskId)!;
+    const from = task.description;
+
+    task.visibility = visibility === 'public' ? undefined : 'private';
+    task.lastModified = new Date();
+
+    return this.data.libraryEntryNodes
+      .putAsync(this.owner, this.entryId, this.version, [task], [])
+      .pipe(
+        tap(() => this.store.tasksChanged([task])),
+        switchMap(() =>
+          this.activity.visibilityChanged(
+            this.entryId,
+            this.version,
+            task.id,
+            from,
+            visibility
           )
         )
       );

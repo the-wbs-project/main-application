@@ -1,22 +1,21 @@
-import { AsyncPipe } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   inject,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
+import { NumberPipe } from '@progress/kendo-angular-intl';
 import { VisibilityTextComponent } from '@wbs/components/_utils/visibility-text.component';
-import { UserComponent } from '@wbs/components/user';
-import { OrganizationService } from '@wbs/core/services';
+import { EditableTextComponent } from '@wbs/components/editable-text';
 import { EntryStore } from '@wbs/core/store';
+import { SaveService } from '@wbs/core/services';
+import { EntryService } from '@wbs/core/services/library';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
 import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
+import { VersionPipe } from '@wbs/pipes/version.pipe';
+import { ProjectCategoryComponent } from '../project-category';
 
 @Component({
   standalone: true,
@@ -25,27 +24,34 @@ import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'card dashboard-card' },
   imports: [
-    AsyncPipe,
     DateTextPipe,
-    EntryTypeIconPipe,
+    EditableTextComponent,
     EntryTypeTitlePipe,
-    FontAwesomeModule,
-    FormsModule,
     LibraryStatusPipe,
+    NumberPipe,
+    ProjectCategoryComponent,
     TranslateModule,
-    UserComponent,
+    VersionPipe,
     VisibilityTextComponent,
   ],
 })
-export class DetailsCardComponent implements OnInit {
-  private readonly orgService = inject(OrganizationService);
+export class DetailsCardComponent {
+  private readonly service = inject(EntryService);
 
   readonly store = inject(EntryStore);
-  readonly owner = signal('');
+  readonly editAlias = signal(false);
+  readonly saveAlias = new SaveService();
+  readonly saveTitle = new SaveService();
 
-  ngOnInit(): void {
-    this.orgService
-      .getNameAsync(this.store.entry()!.owner)
-      .subscribe((name) => this.owner.set(name ?? ''));
+  aliasChanged(alias: string): void {
+    this.saveAlias
+      .call(this.service.versionAliasChangedAsync(alias ?? ''))
+      .subscribe();
+  }
+
+  titleChanged(title: string): void {
+    this.saveTitle
+      .call(this.service.titleChangedAsync(title ?? ''))
+      .subscribe();
   }
 }

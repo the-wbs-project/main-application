@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text.Json;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
@@ -38,70 +39,30 @@ public class LibraryEntryNodeDataService : BaseSqlDbService
         return false;
     }
 
-    public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string entryId, int entryVersion, BulkSaveRecord<LibraryEntryNode> record)
+    public async Task SetAsync(SqlConnection conn, string entryId, int entryVersion, IEnumerable<LibraryEntryNode> nodes, IEnumerable<string> removeIds)
     {
-        var saves = new List<Task>();
-
-        foreach (var upsert in record.upserts)
-            saves.Add(SetAsync(conn, owner, entryId, entryVersion, upsert));
-
-        foreach (var removeId in record.removeIds)
-            saves.Add(DeleteAsync(conn, owner, entryId, entryVersion, removeId));
-        //
-        //  Now run the saves
-        //
-        var queue = new List<Task>();
-        foreach (var save in saves)
+        var dbNodes = nodes.Select(n => new
         {
-            queue.Add(save);
-            if (queue.Count >= 10)
-            {
-                await Task.WhenAll(queue);
-                queue.Clear();
-            }
-        }
-        if (queue.Count > 0) await Task.WhenAll(queue);
-    }
+            Id = n.id,
+            ParentId = n.parentId,
+            Title = n.title,
+            Description = n.description,
+            PhaseIdAssociation = n.phaseIdAssociation,
+            Order = n.order,
+            DisciplineIds = JsonSerializer.Serialize(n.disciplineIds),
+            Visibility = n.visibility,
+            LibraryLink = n.libraryLink == null ? null : JsonSerializer.Serialize(n.libraryLink),
+            LibraryTaskLink = n.libraryTaskLink == null ? null : JsonSerializer.Serialize(n.libraryTaskLink)
+        }).ToArray();
 
-    public async Task SetAsync(SqlConnection conn, string owner, string entryId, int entryVersion, LibraryEntryNode node)
-    {
         var cmd = new SqlCommand("dbo.LibraryEntryNode_Set", conn)
         {
             CommandType = CommandType.StoredProcedure
         };
-        cmd.Parameters.AddWithValue("@Id", node.id);
-        cmd.Parameters.AddWithValue("@OwnerId", owner);
         cmd.Parameters.AddWithValue("@EntryId", entryId);
         cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
-        cmd.Parameters.AddWithValue("@ParentId", DbValue(node.parentId));
-        cmd.Parameters.AddWithValue("@Title", node.title);
-        cmd.Parameters.AddWithValue("@Description", DbValue(node.description));
-        cmd.Parameters.AddWithValue("@PhaseIdAssociation", DbValue(node.phaseIdAssociation));
-        cmd.Parameters.AddWithValue("@Order", node.order);
-        cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
-        cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
-        cmd.Parameters.AddWithValue("@LibraryTaskLink", DbJson(node.libraryTaskLink));
-        cmd.Parameters.AddWithValue("@Visibility", DbValue(node.visibility));
-
-        await cmd.ExecuteNonQueryAsync();
-    }
-
-    /// <summary>
-    ///     Deletes the node.
-    /// </summary>
-    /// <remarks>
-    ///     The owner and project ID are included to make sure that the user has permission to delete the node.
-    /// </remarks>
-    public async Task DeleteAsync(SqlConnection conn, string owner, string entryId, int entryVersion, string id)
-    {
-        var cmd = new SqlCommand("dbo.LibraryEntryNode_Delete", conn)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
-        cmd.Parameters.AddWithValue("@Id", id);
-        cmd.Parameters.AddWithValue("@OwnerId", owner);
-        cmd.Parameters.AddWithValue("@EntryId", entryId);
-        cmd.Parameters.AddWithValue("@EntryVersion", entryVersion);
+        cmd.Parameters.AddWithValue("@Upserts", JsonSerializer.Serialize(dbNodes));
+        cmd.Parameters.AddWithValue("@RemoveIds", JsonSerializer.Serialize(removeIds));
 
         await cmd.ExecuteNonQueryAsync();
     }

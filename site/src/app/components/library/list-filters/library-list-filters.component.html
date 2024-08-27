@@ -21,23 +21,12 @@
           {{ "General.Library" | translate }}:
         </div>
         <wbs-library-filter
-          [buttons]="FILTERS_LIBRARY"
+          [buttons]="libraryFilters()"
           [selection]="library()"
           (selectionChanged)="libraryChanged($event)"
         />
       </div>
       }
-      <div class="flex-1 pd-t-5">
-        <div class="d-inline-block fw-bold mg-r-10 fs-6 wd-100">
-          {{ "General.Association" | translate }}:
-        </div>
-        <wbs-library-filter
-          selectionMode="multiple"
-          [buttons]="FILTERS_ROLES"
-          [selection]="authorFilters()"
-          (selectionChanged)="roleChanged($event)"
-        />
-      </div>
       <div class="flex-1 pd-t-5">
         <div class="d-inline-block fw-bold mg-r-10 fs-6 wd-100">
           {{ "General.Types" | translate }}:
@@ -49,7 +38,22 @@
           (selectionChanged)="typeChanged($event)"
         />
       </div>
+      @if (showAssociations()) {
+      <div class="flex-1 pd-t-5">
+        <div class="d-inline-block fw-bold mg-r-10 fs-6 wd-100">
+          {{ "General.Association" | translate }}:
+        </div>
+        <wbs-library-filter
+          selectionMode="multiple"
+          [buttons]="FILTERS_ROLES"
+          [selection]="authorFilters()"
+          (selectionChanged)="roleChanged($event)"
+        />
+      </div>
+      }
     </div>
+    @if (showSearch()) {
     <wbs-library-search [(searchText)]="searchText" />
+    }
   </div>
 </div>

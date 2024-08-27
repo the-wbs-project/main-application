@@ -4,7 +4,6 @@ import { InvitesRpc, MembershipsRpc, OrganizationsRpc, RolesRpc, UsersRpc, Utils
 
 export default class extends WorkerEntrypoint<Env> {
   invites() {
-    console.log(this.env);
     return new InvitesRpc(this.env, this.ctx);
   }
   memberships() {
@@ -14,7 +13,6 @@ export default class extends WorkerEntrypoint<Env> {
     return new OrganizationsRpc(this.env, this.ctx);
   }
   roles() {
-    console.log(this.env);
     return new RolesRpc(this.env, this.ctx);
   }
   users() {

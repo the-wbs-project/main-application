@@ -8,7 +8,7 @@ export class EntryViewBreadcrumbsPipe implements PipeTransform {
 
     return [
       {
-        route: ['/', entry.owner, 'library'],
+        route: ['/', entry.ownerId, 'library'],
         text: 'General.Library',
       },
       {

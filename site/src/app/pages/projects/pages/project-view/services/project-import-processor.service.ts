@@ -1,10 +1,7 @@
 import { Injectable, inject } from '@angular/core';
-import {
-  LibraryEntryNode,
-  LibraryImportResults,
-  ProjectNode,
-} from '@wbs/core/models';
+import { LibraryEntryNode, ProjectNode } from '@wbs/core/models';
 import { IdService, SignalStore, sorter } from '@wbs/core/services';
+import { LibraryImportResults } from '@wbs/core/view-models';
 import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';

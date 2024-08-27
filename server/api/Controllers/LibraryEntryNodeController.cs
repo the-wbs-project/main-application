@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Data.SqlClient;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -14,19 +12,17 @@ public class LibraryEntryNodeController : ControllerBase
 {
     private readonly DbService db;
     private readonly ILogger logger;
-    private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
     private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
     private readonly ResourceFileStorageService resourceService;
 
-    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, LibrarySearchIndexService searchIndexService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryNodeController>();
         this.nodeDataService = nodeDataService;
         this.versionDataService = versionDataService;
-        this.searchIndexService = searchIndexService;
         this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
         this.resourceService = resourceService;
@@ -71,9 +67,8 @@ public class LibraryEntryNodeController : ControllerBase
                 if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
-                await nodeDataService.SetSaveRecordAsync(conn, owner, entryId, entryVersion, record);
-
-                searchIndexService.AddToLibraryQueue(owner, entryId);
+                await nodeDataService.SetAsync(conn, entryId, entryVersion, record.upserts ?? [], record.removeIds ?? []);
+                await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
 
                 return NoContent();
             }
@@ -120,6 +115,7 @@ public class LibraryEntryNodeController : ControllerBase
                     return BadRequest("Entry Node not found for the credentails provided.");
 
                 await nodeResourceDataService.SetAsync(conn, owner, entryId, entryVersion, nodeId, model);
+                await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
 
                 return NoContent();
             }
@@ -127,6 +123,30 @@ public class LibraryEntryNodeController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving library entry version task resources");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{nodeId}/resources/{resourceId}")]
+    public async Task<IActionResult> DeleteResourceAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                    return BadRequest("Entry Version not found for the owner provided.");
+
+                await nodeResourceDataService.DeleteAsync(conn, entryId, entryVersion, nodeId, resourceId);
+                await resourceService.DeleteLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error saving library entry version resources");
             return new StatusCodeResult(500);
         }
     }
@@ -200,8 +220,6 @@ public class LibraryEntryNodeController : ControllerBase
             using (var conn = await db.CreateConnectionAsync())
             {
                 var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, owner, entryId, entryVersion, nodeId, options);
-
-                searchIndexService.AddToLibraryQueue(owner, newId);
 
                 return Ok(newId);
             }

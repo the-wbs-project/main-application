@@ -1,43 +1,8 @@
-import { LIBRARY_CLAIMS, NavigationLink } from '@wbs/core/models';
+import { faInfoCircle, faTasks } from '@fortawesome/pro-solid-svg-icons';
+import { NavigationLink, RouteContextMenuItem } from '@wbs/core/models';
 import { ENTRY_PAGES } from './entry-pages.const';
 
-const settings: NavigationLink[] = [
-  {
-    route: ['settings', 'general'],
-    text: 'General.General',
-    section: 'general',
-    claim: LIBRARY_CLAIMS.UPDATE,
-  },
-  {
-    route: ['settings', 'disciplines'],
-    section: 'disciplines',
-    text: 'General.Disciplines',
-    claim: LIBRARY_CLAIMS.UPDATE,
-  },
-];
-
 export const ENTRY_NAVIGATION: NavigationLink[] = [
-  {
-    text: 'General.Views',
-    cssClass: ['d-sm-inline', 'd-md-none', 'nav-item', 'tx-uppercase'],
-    items: [
-      {
-        route: [ENTRY_PAGES.ABOUT],
-        text: 'General.About',
-        cssClass: ['nav-item', 'tx-uppercase'],
-      },
-      {
-        route: [ENTRY_PAGES.TASKS],
-        text: 'General.Tasks',
-        cssClass: ['nav-item', 'tx-uppercase'],
-      },
-      {
-        route: [ENTRY_PAGES.RESOURCES],
-        text: 'General.Resources',
-        cssClass: ['nav-item', 'tx-uppercase'],
-      },
-    ],
-  },
   {
     route: [ENTRY_PAGES.ABOUT],
     text: 'General.About',
@@ -50,18 +15,17 @@ export const ENTRY_NAVIGATION: NavigationLink[] = [
     section: 'tasks',
     cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
   },
+];
+
+export const ENTRY_NAVIGATION2: RouteContextMenuItem[] = [
   {
-    route: [ENTRY_PAGES.RESOURCES],
-    text: 'General.Resources',
-    section: 'resources',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
+    route: [ENTRY_PAGES.ABOUT],
+    resource: 'General.About',
+    faIcon: faInfoCircle,
   },
   {
-    text: 'General.Settings',
-    items: settings,
-    section: 'settings',
-    onlyIfEditable: true,
-    claim: LIBRARY_CLAIMS.SETTINGS.READ,
-    cssClass: ['nav-item', 'tx-uppercase'],
+    route: [ENTRY_PAGES.TASKS],
+    resource: 'General.Tasks',
+    faIcon: faTasks,
   },
 ];

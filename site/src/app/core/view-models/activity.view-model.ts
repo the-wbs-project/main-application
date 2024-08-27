@@ -1,4 +1,4 @@
-import { Activity } from '../models';
+import { Activity } from '../models/activity.model';
 
 export interface ActivityViewModel extends Activity {
   actionIcon?: string;

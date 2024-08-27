@@ -1,68 +1,15 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
 using Wbs.Core.Models;
-using Wbs.Core.Models.Search;
 using Wbs.Core.Services.Transformers;
-using Wbs.Core.ViewModels;
 
 namespace Wbs.Core.DataServices;
 
 public class LibraryEntryDataService : BaseSqlDbService
 {
-    public async Task<List<LibraryEntryViewModel>> GetByOwnerAsync(SqlConnection conn, string owner)
-    {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryView] WHERE [OwnerId] = @Owner ORDER BY [LastModified] DESC", conn);
-
-        cmd.Parameters.AddWithValue("@Owner", owner);
-
-        using var reader = await cmd.ExecuteReaderAsync();
-
-        return LibraryEntryTransformer.ToViewModelList(reader);
-    }
-
-    public async Task<List<ApiSearchResult<LibraryEntryViewModel>>> GetFilteredAsync(SqlConnection conn, string owner, LibraryFilters filters)
-    {
-        var cmd = new SqlCommand("[dbo].[LibraryEntry_Get]", conn)
-        {
-            CommandType = CommandType.StoredProcedure
-        };
-        cmd.Parameters.AddWithValue("@OwnerId", owner);
-        cmd.Parameters.AddWithValue("@UserId", filters.userId);
-        cmd.Parameters.AddWithValue("@Visibility", filters.library == "public" ? "public" : "private");
-        cmd.Parameters.AddWithValue("@Roles", string.Join(',', filters.roles ?? []));
-        cmd.Parameters.AddWithValue("@Types", string.Join(',', filters.types ?? []));
-
-        using var reader = await cmd.ExecuteReaderAsync();
-
-        var docs = LibraryEntryTransformer.ToViewModelList(reader);
-
-        return docs.Select(doc => new ApiSearchResult<LibraryEntryViewModel>
-        {
-            Document = doc,
-            Highlights = null,
-            Score = 100,
-            SemanticSearch = null
-        }).ToList();
-    }
-
-    public async Task<LibraryEntryViewModel> GetViewModelByIdAsync(SqlConnection conn, string owner, string entryId)
-    {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntryView] WHERE [OwnerId] = @Owner AND [EntryId] = @EntryId", conn);
-
-        cmd.Parameters.AddWithValue("@Owner", owner);
-        cmd.Parameters.AddWithValue("@EntryId", entryId);
-
-        using var reader = await cmd.ExecuteReaderAsync();
-
-        if (reader.Read())
-            return LibraryEntryTransformer.ToViewModel(reader);
-        else
-            return null;
-    }
-
     public async Task<LibraryEntry> GetByIdAsync(SqlConnection conn, string owner, string id)
     {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @Owner AND [Id] = @Id", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @Owner AND ([Id] = @Id OR [RecordId] = @Id)", conn);
 
         cmd.Parameters.AddWithValue("@Owner", owner);
         cmd.Parameters.AddWithValue("@Id", id);
@@ -90,20 +37,42 @@ public class LibraryEntryDataService : BaseSqlDbService
         return false;
     }
 
-    public async Task SetAsync(SqlConnection conn, LibraryEntry libraryEntry)
+    public async Task<LibraryEntry> SetAsync(SqlConnection conn, LibraryEntry libraryEntry)
     {
+        if (string.IsNullOrEmpty(libraryEntry.RecordId))
+            libraryEntry.RecordId = await GetNewRecordIdAsync(conn);
+
         var cmd = new SqlCommand("[dbo].[LibraryEntry_Set]", conn)
         {
             CommandType = CommandType.StoredProcedure
         };
-        cmd.Parameters.AddWithValue("@Id", libraryEntry.id);
-        cmd.Parameters.AddWithValue("@PublishedVersion", DbValue(libraryEntry.publishedVersion));
-        cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.owner);
-        cmd.Parameters.AddWithValue("@Type", libraryEntry.type);
-        cmd.Parameters.AddWithValue("@Author", libraryEntry.author);
-        cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.visibility));
-        cmd.Parameters.AddWithValue("@Editors", DbValue(libraryEntry.editors));
+        cmd.Parameters.AddWithValue("@Id", libraryEntry.Id);
+        cmd.Parameters.AddWithValue("@RecordId", libraryEntry.RecordId);
+        cmd.Parameters.AddWithValue("@PublishedVersion", DbValue(libraryEntry.PublishedVersion));
+        cmd.Parameters.AddWithValue("@OwnerId", libraryEntry.OwnerId);
+        cmd.Parameters.AddWithValue("@Type", libraryEntry.Type);
+        cmd.Parameters.AddWithValue("@Visibility", DbValue(libraryEntry.Visibility));
 
         await cmd.ExecuteNonQueryAsync();
+
+        return libraryEntry;
+    }
+
+    private async Task<string> GetNewRecordIdAsync(SqlConnection conn)
+    {
+        var cmd = new SqlCommand("[dbo].[LibraryEntry_GetNewId]", conn)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        var output = new SqlParameter("@Id", SqlDbType.VarChar, 10)
+        {
+            Direction = ParameterDirection.Output
+        };
+
+        cmd.Parameters.Add(output);
+
+        await cmd.ExecuteNonQueryAsync();
+
+        return output.Value.ToString();
     }
 }

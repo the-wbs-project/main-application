@@ -1,6 +1,8 @@
 import { Context } from '../../config';
 import { AiChatDataService } from './ai-chat.data-service';
 import { InvitesDataService } from './invites.data-service';
+import { LibraryEntryTaskDataService } from './library-entry-tasks.data-service';
+import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
 import { LibraryEntryDataService } from './library-entry.data-service';
 import { ListDataService } from './list.data-service';
 import { MembershipDataService } from './membership.data-service';
@@ -15,6 +17,8 @@ export class DataServiceFactory {
   readonly entries: LibraryEntryDataService;
   readonly invites: InvitesDataService;
   readonly libraryEntries: LibraryEntryDataService;
+  readonly libraryTasks: LibraryEntryTaskDataService;
+  readonly libraryVersions: LibraryEntryVersionDataService;
   readonly lists: ListDataService;
   readonly memberships: MembershipDataService;
   readonly organizations: OrganizationDataService;
@@ -24,16 +28,27 @@ export class DataServiceFactory {
   readonly users: UserDataService;
 
   constructor(ctx: Context) {
-    this.aiChat = new AiChatDataService(ctx);
-    this.entries = new LibraryEntryDataService(ctx);
+    //
+    //  Auth
+    //
     this.invites = new InvitesDataService(ctx.env.AUTH_API);
-    this.libraryEntries = new LibraryEntryDataService(ctx);
-    this.lists = new ListDataService(ctx);
     this.memberships = new MembershipDataService(ctx.env.AUTH_API);
     this.organizations = new OrganizationDataService(ctx.env.AUTH_API);
-    this.projects = new ProjectDataService(ctx);
-    this.resources = new ResourcesDataService(ctx);
     this.roles = new RolesDataService(ctx.env.AUTH_API);
     this.users = new UserDataService(ctx.env.AUTH_API);
+    //
+    //  Simple
+    //
+    this.aiChat = new AiChatDataService(ctx);
+    this.entries = new LibraryEntryDataService(ctx);
+    this.libraryEntries = new LibraryEntryDataService(ctx);
+    this.libraryTasks = new LibraryEntryTaskDataService(ctx);
+    this.libraryVersions = new LibraryEntryVersionDataService(ctx);
+    this.lists = new ListDataService(ctx);
+    this.projects = new ProjectDataService(ctx);
+    this.resources = new ResourcesDataService(ctx);
+    //
+    //  Complex
+    //
   }
 }

@@ -35,8 +35,6 @@ export class UserDataService extends BaseDataService {
     const key = this.key('USERS', userId, 'ORGS', organization, 'VIS', visibility);
     const kvData = await this.getKv<UserViewModel>(key);
 
-    this.logger.trackEvent('getAsync KV', 'Info', { key, kvData });
-
     if (kvData) return kvData;
 
     const [profile, roles] = await Promise.all([this.api.users.getAsync(userId), this.api.memberships.getRolesAsync(organization, userId)]);

@@ -2,18 +2,18 @@ import { Injectable, inject } from '@angular/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
 import { TaskCreateComponent } from '@wbs/components/task-create';
-import { LibraryImportResults, WbsNode } from '@wbs/core/models';
+import { WbsNode } from '@wbs/core/models';
 import { TreeService } from '@wbs/core/services';
 import { EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
+import { LibraryImportResults } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { EntryCreationService } from '../../../services';
 import { LibraryImportProcessorService } from './library-import-processor.service';
+import { NameVisibilityComponent } from '@wbs/components/entry-creation/components/name-visibility';
 
 @Injectable()
 export class EntryTaskActionService {
-  private readonly creation = inject(EntryCreationService);
   private readonly dialogService = inject(DialogService);
   private readonly importProcessor = inject(LibraryImportProcessorService);
   private readonly libraryStore = inject(EntryStore);
@@ -59,7 +59,7 @@ export class EntryTaskActionService {
 
         return this.taskService.removeDisciplineAsync(taskId, discipline);
       } else if (action === 'export') {
-        this.creation.exportTaskToEntryAsync(taskId);
+        NameVisibilityComponent.launch(this.dialogService, taskId);
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
 
@@ -67,7 +67,7 @@ export class EntryTaskActionService {
           this.dialogService,
           this.membership.membership()!.name,
           this.userId()!,
-          'organizational'
+          'internal'
         ).pipe(
           switchMap((results: LibraryImportResults | undefined) =>
             !results

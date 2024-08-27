@@ -1,0 +1,10 @@
+<div class="card" [ngClass]="cardClass()">
+  <div class="card-header" [ngClass]="cardHeaderClass()">
+    {{ cardHeader() }}
+  </div>
+  <div class="card-body" [ngClass]="cardBodyClass()">
+    @if (userVm(); as user) {
+    <wbs-user-info [user]="user" />
+    }
+  </div>
+</div>

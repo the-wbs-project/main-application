@@ -12,7 +12,7 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 import { SignalStore } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { LibraryTreeComponent } from './components';
@@ -27,7 +27,7 @@ import { LibraryTreeComponent } from './components';
     FontAwesomeModule,
     RouterModule,
     TranslateModule,
-    TreeHeightDirective,
+    HeightDirective,
   ],
 })
 export class TasksPageComponent {
@@ -39,9 +39,7 @@ export class TasksPageComponent {
   readonly containerHeight = signal(100);
   readonly dialogContainerHeight = signal(100);
   readonly entryUrl = input.required<string[]>();
-  readonly isLoading = computed(
-    () => !this.entryStore.entry() || !this.entryStore.version()
-  );
+  readonly isLoading = computed(() => !this.entryStore.version());
 
   navigateToTask(taskId: string): void {
     this.store.dispatch(new Navigate([...this.entryUrl(), 'tasks', taskId]));

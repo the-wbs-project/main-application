@@ -1,0 +1,55 @@
+<a kendoPopoverAnchor [popover]="popover" showOn="hover">
+  <fa-duotone-icon [icon]="infoIcon" />
+</a>
+<kendo-popover #popover position="bottom" [width]="500">
+  <ng-template kendoPopoverTitleTemplate>
+    <div class="tx-14">
+      {{ "General.Legend" | translate }}
+    </div>
+  </ng-template>
+  <ng-template kendoPopoverBodyTemplate>
+    <div class="library-legend-grid">
+      @if (canEdit()) {
+      <div>
+        <fa-icon [icon]="reorderIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendReorder" | translate }}
+      </div>
+      }
+      <div>
+        <fa-icon [icon]="linkIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendLink" | translate }}
+      </div>
+      <div>
+        <fa-icon [icon]="menuIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendMenu" | translate }}
+      </div>
+      @if (canEdit()) {
+      <div>
+        <fa-icon [icon]="addIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendAdd" | translate }}
+      </div>
+      <div>
+        <fa-icon [icon]="deleteIcon" />
+      </div>
+      <div>
+        {{ "Library.LegendDelete" | translate }}
+      </div>
+      } @if (visibility() !== 'private') {
+      <!--<div>
+        <span class="d-inline-block wd-50 text-center">
+          <span class="d-inline-block wd-30 ht-20 bg-light-blue-f">&nbsp;</span>
+        </span>
+        {{ "Library.LegendInternal" | translate }}
+      </div>-->
+      }
+    </div>
+  </ng-template>
+</kendo-popover>

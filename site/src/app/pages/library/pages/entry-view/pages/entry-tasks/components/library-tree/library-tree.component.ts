@@ -10,15 +10,29 @@ import {
   viewChild,
 } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
+import { faEllipsisH, faSave, faXmark } from '@fortawesome/pro-light-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { SplitterModule } from '@progress/kendo-angular-layout';
 import {
+  CancelEvent,
   CellClickEvent,
   ColumnComponent,
+  RowClassArgs,
   RowReorderEvent,
+  SaveEvent,
+  SelectionChangeEvent,
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
@@ -26,17 +40,14 @@ import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import {
-  TreeButtonsAddComponent,
-  TreeButtonsDownloadComponent,
   TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
-  TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
+import { LIBRARY_CLAIMS, LibraryEntryNode } from '@wbs/core/models';
 import {
   CategoryService,
   Messages,
@@ -44,15 +55,27 @@ import {
   Utils,
 } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
-import { EntryStore, MetadataStore, UiStore } from '@wbs/core/store';
-import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
-import { Observable } from 'rxjs';
+import {
+  EntryStore,
+  MembershipStore,
+  MetadataStore,
+  UiStore,
+} from '@wbs/core/store';
+import {
+  CategoryViewModel,
+  LibraryTaskViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
+import { Observable, tap } from 'rxjs';
 import {
   EntryTaskActionService,
   EntryTaskReorderService,
 } from '../../../../services';
-import { LibraryTaskTitleComponent } from '../../../../components/library-task-title';
+import { LibraryTreeTaskTitleComponent } from '../library-tree-task-title';
+import { LibraryTreeTitleLegendComponent } from '../library-tree-title-legend';
+import { TaskDetailsComponent } from '../task-details/task-details.component';
 import { VisibilityIconComponent } from '../visibility-icon.component';
+import { faPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
 
 @UntilDestroy()
 @Component({
@@ -64,19 +87,22 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
     AlertComponent,
     DisciplineIconListComponent,
     DisciplinesDropdownComponent,
-    LibraryTaskTitleComponent,
+    LibraryTreeTaskTitleComponent,
+    LibraryTreeTitleLegendComponent,
     FontAwesomeModule,
+    FormsModule,
+    ReactiveFormsModule,
     RouterModule,
     SaveMessageComponent,
+    SplitterModule,
+    TextBoxModule,
     TranslateModule,
+    TaskDetailsComponent,
     TaskTitleEditorComponent,
-    TreeButtonsAddComponent,
-    TreeButtonsDownloadComponent,
     TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
-    TreeButtonsUploadComponent,
     TreeDisciplineLegendComponent,
-    TreeHeightDirective,
+    HeightDirective,
     TreeListModule,
     VisibilityIconComponent,
   ],
@@ -88,6 +114,7 @@ export class LibraryTreeComponent implements OnInit {
   private readonly category = inject(CategoryService);
   private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
+  private readonly membership = inject(MembershipStore);
   private readonly reorderer = inject(EntryTaskReorderService);
   private readonly taskService = inject(EntryTaskService);
   readonly entryService = inject(EntryService);
@@ -95,18 +122,30 @@ export class LibraryTreeComponent implements OnInit {
   readonly width = inject(UiStore).mainContentWidth;
   readonly treeService = new TreeService();
 
+  readonly menuIcon = faEllipsisH;
+  readonly addIcon = faPlus;
+  readonly cancelIcon = faXmark;
+  readonly saveIcon = faSave;
+  readonly removeIcon = faTrash;
   readonly faSpinner = faSpinner;
-  readonly heightOffset = 50;
-  readonly rowHeight = 31.5;
+  readonly heightOffset = 10;
+  readonly rowHeight = 30;
+  editParentId?: string;
+  editItem?: LibraryTaskViewModel;
+  editForm?: FormGroup;
 
   readonly showFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
-  readonly isLoading = computed(
-    () => !this.entryStore.entry() || !this.entryStore.version()
-  );
+  readonly isLoading = computed(() => !this.entryStore.version());
 
   readonly alert = signal<string | undefined>(undefined);
-  readonly selectedTask = signal<TaskViewModel | undefined>(undefined);
+  readonly taskAreaHeight = signal(0);
+  readonly selectedTaskId = signal<string | undefined>(undefined);
+  readonly selectedTask = computed(() => {
+    const id = this.selectedTaskId();
+    if (!id) return undefined;
+    return this.entryStore.viewModels()?.find((x) => x.id === id);
+  });
   readonly disciplines = computed(() => {
     let d = this.entryStore.version()!.disciplines;
 
@@ -117,6 +156,12 @@ export class LibraryTreeComponent implements OnInit {
       }));
 
     return this.category.buildViewModels(d);
+  });
+  readonly showInternal = computed(() => {
+    const org = this.membership.membership()?.name;
+    const version = this.entryStore.version()!;
+
+    return version.visibility === 'public' && org === version.ownerId;
   });
   readonly canEdit = computed(
     () =>
@@ -153,10 +198,16 @@ export class LibraryTreeComponent implements OnInit {
       .map((x) => x.id);
   }
 
+  closeTask(): void {
+    this.selectedTaskId.set(undefined);
+    this.treeList()!.updateView();
+  }
+
+  selectTask(e: SelectionChangeEvent): void {
+    this.selectedTaskId.set(e.items[0].dataItem.id);
+  }
+
   menuItemSelected(action: string, taskId?: string): void {
-    if (action === 'viewTask') {
-      if (taskId) this.navigateToTask.emit(taskId!);
-    }
     const obsOrVoid = this.actions.onAction(action, taskId, this.treeService);
 
     if (obsOrVoid instanceof Observable) {
@@ -176,7 +227,7 @@ export class LibraryTreeComponent implements OnInit {
   }
 
   nav(): void {
-    const taskId = this.selectedTask()?.id;
+    const taskId = this.selectedTaskId();
     //
     //  Keep this here in case someone double clicks outside a standard row
     //
@@ -187,7 +238,7 @@ export class LibraryTreeComponent implements OnInit {
 
   rowReordered(e: RowReorderEvent): void {
     const tree = this.entryStore.viewModels()!;
-    const entryType = this.entryStore.entry()!.type;
+    const entryType = this.entryStore.version()!.type;
     const dragged: TaskViewModel = e.draggedRows[0].dataItem;
     const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(
@@ -257,6 +308,89 @@ export class LibraryTreeComponent implements OnInit {
     this.treeService.callSave(
       taskId,
       this.taskService.titleChangedAsync(taskId, title)
+    );
+  }
+
+  rowCallback = (context: RowClassArgs) => {
+    const vm = context.dataItem as LibraryTaskViewModel;
+
+    return {
+      'bg-light-blue-f':
+        vm.visibility === 'private' || vm.visibility === 'impliedPrivate',
+    };
+  };
+
+  addHandler(parent: LibraryTaskViewModel | undefined): void {
+    // Close the current edited row, if any.
+    this.closeEditor();
+    this.editParentId = parent?.id;
+
+    const sender = this.treeList()!;
+    // Expand the parent.
+    if (parent) {
+      sender.expand(parent);
+    }
+
+    // Define all editable fields validators and default values
+    this.editForm = new FormGroup({
+      parentId: new FormControl(parent?.id),
+      title: new FormControl('', Validators.required),
+      disciplines: new FormControl([]),
+    });
+
+    // Show the new row editor, with the `FormGroup` build above
+    sender.addRow(this.editForm, parent);
+  }
+
+  closeEditor(dataItem = this.editItem): void {
+    this.treeList()?.closeRow(undefined, true);
+    this.editItem = undefined;
+    this.editForm = undefined;
+    this.editParentId = undefined;
+  }
+
+  saveHandler(): void {
+    const editForm = this.editForm!;
+
+    if (editForm.invalid) return;
+    // Collect the current state of the form.
+    // The `editForm` argument is the same as was provided when calling `editRow`.
+    const title = editForm.value.title;
+    const disciplines: CategoryViewModel[] = editForm.value.disciplines;
+    const task: Partial<LibraryEntryNode> = {
+      title,
+      parentId: editForm.value.parentId,
+      disciplineIds: disciplines.map((x) => x.id),
+    };
+
+    this.treeService.callSave(
+      this.editParentId!,
+      this.taskService.createTask(task.parentId, task).pipe(
+        tap((taskId) => {
+          this.treeList()?.scrollTo({
+            column: 0,
+            row: -1,
+          });
+          this.closeEditor();
+        })
+      )
+    );
+  }
+
+  removeHandler(task: LibraryTaskViewModel): void {
+    const taskId = task.id;
+    const sender = this.treeList()!;
+    const parent = task.parentId
+      ? this.entryStore.viewModels()?.find((x) => x.id === task.parentId)
+      : undefined;
+
+    this.treeService.callSave(
+      taskId,
+      this.taskService.removeTask(taskId).pipe(
+        tap(() => {
+          if (parent) sender.reload(parent);
+        })
+      )
     );
   }
 

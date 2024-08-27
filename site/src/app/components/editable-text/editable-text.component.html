@@ -1,0 +1,47 @@
+@if (editMode()) {
+<kendo-textbox
+  class="w-100 tx-12"
+  size="small"
+  [(ngModel)]="editText"
+  (keydown)="keydown($event)"
+>
+  <ng-template kendoTextBoxSuffixTemplate>
+    <button
+      kendoButton
+      size="small"
+      class="tx-12"
+      fillMode="clear"
+      (click)="save()"
+    >
+      <fa-icon [icon]="saveIcon" [title]="'General.Save' | translate" />
+    </button>
+    <button
+      kendoButton
+      size="small"
+      class="tx-12"
+      fillMode="clear"
+      (click)="cancel()"
+    >
+      <fa-icon [icon]="cancelIcon" [title]="'General.Cancel' | translate" />
+    </button>
+  </ng-template>
+</kendo-textbox>
+} @else {
+<div class="d-flex flex-align-start">
+  <span>
+    {{ viewText() }}
+  </span>
+  @if (saveState() !== 'saving') {
+  <span class="child-to-show">
+    <fa-icon
+      size="sm"
+      class="pointer mg-l-10"
+      [icon]="editIcon"
+      (click)="edit()"
+      [title]="'General.Edit' | translate"
+    />
+  </span>
+  }
+  <wbs-save-message [state]="saveState()" cssClass="tx-12 mg-l-15" />
+</div>
+}

@@ -1,4 +1,4 @@
-import { TimelineMenuItem } from '../models';
+import { TimelineMenuItem } from '../models/app-models/menu-item.model';
 
 export interface TimelineViewModel {
   id: string;

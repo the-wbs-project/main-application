@@ -16,16 +16,16 @@ import {
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
-  ContextMenuItem,
+  ActionContextMenuItem,
   PROJECT_CLAIMS,
   PROJECT_STATI,
 } from '@wbs/core/models';
 
-const taskActions: ContextMenuItem[] = [
+const taskActions: ActionContextMenuItem[] = [
   {
     action: 'addSub',
     faIcon: faPlus,
-    text: 'Projects.AddSubTask',
+    resource: 'Projects.AddSubTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
@@ -34,7 +34,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'import',
     faIcon: faFileImport,
-    text: 'General.Import',
+    resource: 'General.Import',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
@@ -43,24 +43,24 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'import|above',
         faIcon: faArrowUp,
-        text: 'General.Above',
+        resource: 'General.Above',
       },
       {
         action: 'import|right',
         faIcon: faArrowRight,
-        text: 'General.SubTask',
+        resource: 'General.SubTask',
       },
       {
         action: 'import|below',
         faIcon: faArrowDown,
-        text: 'General.Below',
+        resource: 'General.Below',
       },
     ],
   },
   {
     action: 'viewTask',
     faIcon: faEye,
-    text: 'Projects.ViewTask',
+    resource: 'Projects.ViewTask',
     filters: {
       claim: PROJECT_CLAIMS.TASKS.READ,
     },
@@ -68,7 +68,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'addDiscipline',
     faIcon: faUserPlus,
-    text: 'Wbs.AddDiscipline',
+    resource: 'Wbs.AddDiscipline',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -77,7 +77,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'removeDiscipline',
     faIcon: faUserMinus,
-    text: 'Wbs.RemoveDiscipline',
+    resource: 'Wbs.RemoveDiscipline',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -86,7 +86,7 @@ const taskActions: ContextMenuItem[] = [
   {
     action: 'other',
     faIcon: faEclipse,
-    text: 'Wbs.OtherActions',
+    resource: 'Wbs.OtherActions',
     filters: {
       claim: PROJECT_CLAIMS.TASKS.CREATE,
     },
@@ -94,7 +94,7 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'cloneTask',
         faIcon: faCopy,
-        text: 'Projects.CloneTask',
+        resource: 'Projects.CloneTask',
         filters: {
           stati: [PROJECT_STATI.PLANNING],
           claim: PROJECT_CLAIMS.TASKS.CREATE,
@@ -103,7 +103,7 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'setAbsFlag',
         faIcon: faCheck,
-        text: 'Wbs.MarkAsAbs',
+        resource: 'Wbs.MarkAsAbs',
         filters: {
           stati: [PROJECT_STATI.PLANNING],
           claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -113,7 +113,7 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'removeAbsFlag',
         faIcon: faX,
-        text: 'Wbs.RemoveAbsFlag',
+        resource: 'Wbs.RemoveAbsFlag',
         filters: {
           stati: [PROJECT_STATI.PLANNING],
           claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -123,13 +123,13 @@ const taskActions: ContextMenuItem[] = [
       {
         action: 'exportTask',
         faIcon: faBookArrowRight,
-        text: 'Projects.ExportToLibrary',
+        resource: 'Projects.ExportToLibrary',
         filters: {},
       },
       {
         action: 'deleteTask',
         faIcon: faTrash,
-        text: 'Projects.DeleteTask',
+        resource: 'Projects.DeleteTask',
         filters: {
           stati: [PROJECT_STATI.PLANNING],
           claim: PROJECT_CLAIMS.TASKS.DELETE,
@@ -139,11 +139,11 @@ const taskActions: ContextMenuItem[] = [
   },
 ];
 
-const reorderTaskActions: ContextMenuItem[] = [
+const reorderTaskActions: ActionContextMenuItem[] = [
   {
     action: 'moveLeft',
     faIcon: faArrowLeft,
-    text: 'Projects.MoveLeft',
+    resource: 'Projects.MoveLeft',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -152,7 +152,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveUp',
     faIcon: faArrowUp,
-    text: 'Projects.MoveUp',
+    resource: 'Projects.MoveUp',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -161,7 +161,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveDown',
     faIcon: faArrowDown,
-    text: 'Projects.MoveDown',
+    resource: 'Projects.MoveDown',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -170,7 +170,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveRight',
     faIcon: faArrowRight,
-    text: 'Projects.MoveRight',
+    resource: 'Projects.MoveRight',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,

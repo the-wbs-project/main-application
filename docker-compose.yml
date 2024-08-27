@@ -19,6 +19,8 @@ services:
       - 88:88
     volumes:
        - ./server/workers:/usr/src/app/workers/
+       #- ./server/workers/data:/usr/src/app/workers/.data
+       #- worker_data:/usr/src/app/workers/.data
 
   wbs-site:
     container_name: wbs-site
@@ -33,3 +35,8 @@ services:
     volumes:
        - ./site:/usr/src/app/site
        - /usr/src/app/site/node_modules
+
+
+volumes:
+  share:
+    external: true

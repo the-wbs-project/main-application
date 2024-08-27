@@ -40,25 +40,24 @@ public class ImportLibraryEntryService
 
         var libraryEntry = new LibraryEntry
         {
-            id = IdService.Create(),
-            type = "project",
-            owner = owner,
-            author = options.author,
-            visibility = options.visibility
+            Id = IdService.Create(),
+            Type = "project",
+            OwnerId = owner,
+            Visibility = options.visibility
         };
         var libraryEntryVersion = new LibraryEntryVersion
         {
-            entryId = libraryEntry.id,
-            version = 1,
-            title = options.title ?? project.title,
-            description = options.description ?? project.description,
-            lastModified = DateTimeOffset.Now,
-            disciplines = project.disciplines,
-            status = "draft"
+            EntryId = libraryEntry.Id,
+            Version = 1,
+            Author = options.author,
+            Title = options.title ?? project.title,
+            Description = options.description ?? project.description,
+            LastModified = DateTimeOffset.Now,
+            Disciplines = project.disciplines,
+            Status = "draft"
         };
 
         var libraryEntryNodes = new List<LibraryEntryNode>();
-        var libraryEntryNodeResourceSaves = new List<Task>();
         var nodeIds = new Dictionary<string, string>();
 
         foreach (var n in projectNodes)
@@ -88,16 +87,17 @@ public class ImportLibraryEntryService
                 n.parentId = null;
         }
 
-        await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+
         await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
-        await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.id, 1, n)));
+        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
-            await resourceCopier.ProjectToLibraryAsync(conn, owner, projectId, libraryEntry.id, libraryEntryVersion.version);
-            await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.id, libraryEntryVersion.version, nodeIds);
+            await resourceCopier.ProjectToLibraryAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version);
+            await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version, nodeIds);
         }
-        return libraryEntry.id;
+        return newEntry.RecordId;
     }
 
     public async Task<string> ImportFromProjectNodeAsync(SqlConnection conn, string owner, string projectId, string nodeId, ProjectNodeToLibraryOptions options)
@@ -108,20 +108,20 @@ public class ImportLibraryEntryService
 
         var libraryEntry = new LibraryEntry
         {
-            id = IdService.Create(),
-            owner = owner,
-            author = options.author,
-            type = options.phase != null ? "phase" : "node",
-            visibility = options.visibility,
+            Id = IdService.Create(),
+            OwnerId = owner,
+            Type = options.phase != null ? "phase" : "node",
+            Visibility = options.visibility,
         };
         var libraryEntryVersion = new LibraryEntryVersion
         {
-            version = 1,
-            status = "draft",
-            entryId = libraryEntry.id,
-            lastModified = DateTimeOffset.Now,
-            title = options.title ?? projectNode.title,
-            description = options.description ?? projectNode.description,
+            Version = 1,
+            Status = "draft",
+            Author = options.author,
+            EntryId = libraryEntry.Id,
+            LastModified = DateTimeOffset.Now,
+            Title = options.title ?? projectNode.title,
+            Description = options.description ?? projectNode.description,
         };
 
         var libraryEntryNodes = new List<LibraryEntryNode>();
@@ -159,20 +159,20 @@ public class ImportLibraryEntryService
             else
                 n.parentId = null;
         }
-        libraryEntryVersion.disciplines = GetDisciplinesForNode(project.disciplines,
+        libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds).Distinct());
 
-        await entryDataService.SetAsync(conn, libraryEntry);
-        await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
+        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
 
-        await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.id, 1, n)));
+        await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
+        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
-            await resourceCopier.ProjectTaskToLibraryAsync(conn, owner, projectId, nodeId, libraryEntry.id, libraryEntryVersion.version);
-            await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.id, libraryEntryVersion.version, nodeIds);
+            await resourceCopier.ProjectTaskToLibraryAsync(conn, owner, projectId, nodeId, libraryEntry.Id, libraryEntryVersion.Version);
+            await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version, nodeIds);
         }
-        return libraryEntry.id;
+        return newEntry.RecordId;
     }
 
     public async Task<string> ImportFromEntryNodeAsync(SqlConnection conn, string owner, string entryId, int versionId, string nodeId, ProjectNodeToLibraryOptions options)
@@ -183,20 +183,20 @@ public class ImportLibraryEntryService
 
         var libraryEntry = new LibraryEntry
         {
-            id = IdService.Create(),
-            owner = owner,
-            author = options.author,
-            type = task.parentId == null ? "phase" : "task",
-            visibility = options.visibility,
+            Id = IdService.Create(),
+            OwnerId = owner,
+            Type = task.parentId == null ? "phase" : "task",
+            Visibility = options.visibility,
         };
         var version = new LibraryEntryVersion
         {
-            version = 1,
-            status = "draft",
-            entryId = libraryEntry.id,
-            lastModified = DateTimeOffset.Now,
-            title = options.title,
-            description = task.description,
+            Version = 1,
+            Status = "draft",
+            Author = options.author,
+            EntryId = libraryEntry.Id,
+            LastModified = DateTimeOffset.Now,
+            Title = options.title,
+            Description = task.description,
         };
 
         var libraryEntryNodes = new List<LibraryEntryNode>();
@@ -234,20 +234,20 @@ public class ImportLibraryEntryService
             else
                 n.parentId = null;
         }
-        version.disciplines = GetDisciplinesForNode(currentVersion.disciplines,
+        version.Disciplines = GetDisciplinesForNode(currentVersion.Disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds ?? []).Distinct());
 
-        await entryDataService.SetAsync(conn, libraryEntry);
-        await entryVersionDataService.SetAsync(conn, owner, version);
+        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
 
-        await Task.WhenAll(libraryEntryNodes.Select(n => entryNodeDataService.SetAsync(conn, owner, libraryEntry.id, 1, n)));
+        await entryVersionDataService.SetAsync(conn, owner, version);
+        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
-            await resourceCopier.LibraryTaskToLibraryAsync(conn, owner, entryId, versionId, nodeId, libraryEntry.id, version.version);
-            await resourceCopier.LibraryTasksToLibraryTasksAsync(conn, owner, entryId, versionId, libraryEntry.id, version.version, nodeIds);
+            await resourceCopier.LibraryTaskToLibraryAsync(conn, owner, entryId, versionId, nodeId, libraryEntry.Id, version.Version);
+            await resourceCopier.LibraryTasksToLibraryTasksAsync(conn, owner, entryId, versionId, libraryEntry.Id, version.Version, nodeIds);
         }
-        return libraryEntry.id;
+        return newEntry.RecordId;
     }
 
     private Category[] GetDisciplinesForNode(Category[] disciplines, IEnumerable<string> disciplineIds)

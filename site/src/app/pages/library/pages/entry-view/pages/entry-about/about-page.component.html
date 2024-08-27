@@ -1,32 +1,42 @@
-<div class="w-100 text-center h-100">
+<div class="w-100 text-center">
   <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
-    <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
+    <div class="two-column-grid mn-ht-100p" resizedCss>
+      @let version = store.version();
+
       <wbs-details-card />
       <wbs-discipline-card
         [splitLimit]="650"
-        [canEdit]="store.canEditEntry()"
+        [canAdd]="true"
         [items]="disciplines()"
+        [editItems]="editDisciplines()"
+        [canEdit]="store.canEditEntry()"
+        [saveState]="disciplineSave.state()"
         noDisciplinesLabel="Library.NoDisciplinesEntry"
-        [editRoute]="['../', 'settings', 'disciplines']"
+        (save)="saveDisciplines($event)"
       />
       <wbs-description-card
         [(askAi)]="askAi"
         [canEdit]="store.canEditEntry()"
         [(editMode)]="descriptionEditMode"
         [saveState]="descriptionSave.state()"
-        [description]="store.version()?.description ?? ''"
+        [description]="version?.description ?? ''"
         noDescriptionLabel="Library.NoDescriptionEntry"
         (descriptionChange)="descriptionChange($event)"
       />
+      <wbs-resource-card [apiUrlPrefix]="apiUrlPrefix()" />
+      <wbs-contributor-card
+        [canEdit]="store.canEditEntry()"
+        [version]="version!"
+      />
     </div>
   </div>
-</div>
 
-@if (askAi()) {
-<wbs-description-ai-dialog
-  [description]="store.version()!.description"
-  [startingDialog]="descriptionAiStartingDialog()"
-  (descriptionChange)="aiChangeSaved($event)"
-  (closed)="askAi.set(false)"
-/>
-}
+  @if (askAi()) {
+  <wbs-description-ai-dialog
+    [description]="version?.description ?? ''"
+    [startingDialog]="descriptionAiStartingDialog()"
+    (descriptionChange)="aiChangeSaved($event)"
+    (closed)="askAi.set(false)"
+  />
+  }
+</div>

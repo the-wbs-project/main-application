@@ -1,0 +1,42 @@
+<div class="card-header tx-16">
+  <div class="d-flex flex-align-center">
+    <div>
+      <wbs-card-header header="General.Resources">
+        <div class="pd-15 mx-wd-500">
+          This should be a list of files and URLs to help understand this WBS
+          and the work associated with it.
+        </div>
+      </wbs-card-header>
+    </div>
+    @if (service.canEdit()) {
+    <div class="flex-fill tx-right">
+      <button
+        kendoButton
+        size="small"
+        fillMode="flat"
+        class="p-0"
+        (click)="launchAdd()"
+        [title]="'Resources.AddResource' | translate"
+      >
+        <fa-icon [icon]="addIcon" />
+      </button>
+    </div>
+    }
+  </div>
+</div>
+<div class="card-body pd-20">
+  @let resourceList = list(); @if (resourceList === undefined) { } @else if
+  (resourceList.length === 0) {
+  <div class="w-100 text-center tx-16">No Resources Found</div>
+  } @else {
+  <wbs-record-resource-list
+    [apiUrlPrefix]="apiUrlPrefix()"
+    [canEdit]="service.canEdit()"
+    [canDelete]="service.canDelete()"
+    [list]="resourceList"
+    (save)="save($event)"
+    (delete)="deleteRecord($event)"
+    (edit)="editRecord($event)"
+  />
+  }
+</div>

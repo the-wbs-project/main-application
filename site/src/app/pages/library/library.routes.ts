@@ -7,10 +7,9 @@ import {
   EntryTaskActivityService,
   EntryTaskService,
 } from '@wbs/core/services/library';
-import { EntryCreationService, watcherGuard } from './services';
+import { watcherGuard } from './services';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
-import { WrapperComponent } from '../wrapper.component';
 
 export const redirectGuard = () =>
   inject(Store).dispatch(new Navigate(['home']));
@@ -22,7 +21,6 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom([DialogModule]),
       EntryActivityService,
-      EntryCreationService,
       EntryService,
       EntryTaskActivityService,
       EntryTaskService,

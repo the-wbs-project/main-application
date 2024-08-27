@@ -24,6 +24,7 @@ import { UserDataService } from './user.data-service';
 import { WbsExportDataService } from './wbs-export.data-service';
 import { WbsImportDataService } from './wbs-import.data-service';
 import { MiscDataService } from './misc.data-service';
+import { LibraryDataService } from './library.data-service';
 
 @Injectable({ providedIn: 'root' })
 export class DataServiceFactory {
@@ -35,6 +36,7 @@ export class DataServiceFactory {
   readonly chat = new ChatDataService(this.http);
   readonly claims = new ClaimsDataService(this.http);
   readonly jira = new JiraDataService(this.http);
+  readonly library = new LibraryDataService(this.http);
   readonly libraryEntries = new LibraryEntryDataService(this.http);
   readonly libraryEntryNodes = new LibraryEntryNodeDataService(this.http);
   readonly libraryEntryResources = new LibraryEntryResourcesDataService(

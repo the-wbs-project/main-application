@@ -12,14 +12,20 @@
   size="small"
   [valuePrimitive]="true"
   [popupSettings]="{ width: '300px' }"
+  (valueChange)="valueChange($event)"
 >
+  @if (!autoSave()) {
   <ng-template kendoSuffixTemplate>
     @if (showSave()) {
     <button kendoButton size="small" fillMode="clear" (click)="saveSelected()">
-      <fa-icon [icon]="saveIcon" class="mg-r-5" />
+      <fa-icon [icon]="saveIcon()" />
     </button>
     }
+    <button kendoButton size="small" fillMode="clear" (click)="cancel.emit()">
+      <fa-icon [icon]="cancelIcon" />
+    </button>
   </ng-template>
+  }
   <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
     <span class="tx-10">
       {{ dataItems.length }} {{ "General.Selected" | translate }}

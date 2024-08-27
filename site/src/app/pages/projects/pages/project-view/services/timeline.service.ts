@@ -1,14 +1,13 @@
 import { Injectable, inject } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import {
-  ActivityData,
-  Project,
-  ProjectActivityRecord,
-  ProjectNode,
-} from '@wbs/core/models';
+import { ActivityData, ProjectNode } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
-import { ProjectViewModel, TimelineViewModel } from '@wbs/core/view-models';
+import {
+  ProjectActivityRecord,
+  ProjectViewModel,
+  TimelineViewModel,
+} from '@wbs/core/view-models';
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';

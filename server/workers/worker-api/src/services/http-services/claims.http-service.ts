@@ -53,13 +53,15 @@ export class ClaimsHttpService {
 
   static async getForLibraryEntryAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry } = ctx.req.param();
-      const userId = ctx.get('idToken').userId;
-      const model = await ctx.get('data').libraryEntries.getEntryByIdAsync(owner, entry);
+      const { organization, owner, entry, version } = ctx.req.param();
+      const userId = ctx.var.idToken.userId;
       const roles: LIBRARY_ROLES_TYPE[] = [LIBRARY_ROLES.VIEWER];
 
-      if (model?.author === userId) roles.push(LIBRARY_ROLES.OWNER);
-      //if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
+      if (organization === owner) {
+        const model = await ctx.var.data.libraryVersions.getByIdAsync(owner, entry, parseInt(version));
+        if (model?.author === userId) roles.push(LIBRARY_ROLES.OWNER);
+        //if (model?.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
+      }
 
       return ctx.json(ClaimsHttpService.getClaims(LIBRARY_PERMISSIONS, roles));
     } catch (e) {

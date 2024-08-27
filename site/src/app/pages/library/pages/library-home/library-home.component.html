@@ -1,33 +1,18 @@
 <div class="d-flex h-100 justify-content-center">
   <div class="d-flex flex-column w-100 h-100 pd-t-10 pd-b-10 mx-wd-1200">
     <div class="d-flex w-100 flex-align-center">
-      <wbs-library-create-button (typeChosen)="createEntry($event)" />
+      <wbs-library-create-button (typeChosen)="service.createDraft($event)" />
       <div class="mg-l-10">
         <wbs-library-filter
           [buttons]="libraries"
-          [selection]="library()"
-          (selectionChanged)="libraryChanged($event!)"
+          [selection]="service.library()"
+          (selectionChanged)="service.libraryChanged($event!)"
         />
       </div>
       <div class="flex-fill text-end">
         <wbs-page-header />
       </div>
     </div>
-    <div class="mg-y-10">
-      <wbs-library-list-filters
-        [(authorFilters)]="roleFilters"
-        [(typeFilters)]="typeFilters"
-        [(searchText)]="searchText"
-        (authorFiltersChange)="retrieve()"
-        (typeFiltersChange)="retrieve()"
-        (searchTextChange)="retrieve()"
-      />
-    </div>
-    <wbs-library-list
-      [showLoading]="loading()"
-      [entries]="entries()"
-      [showOwner]="library() === 'public'"
-      (selectedChange)="service.navigate($event)"
-    />
+    <router-outlet />
   </div>
 </div>

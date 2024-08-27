@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { LibraryEntryNode, LibraryImportResults } from '@wbs/core/models';
+import { LibraryEntryNode } from '@wbs/core/models';
 import { IdService, sorter } from '@wbs/core/services';
 import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
+import { LibraryImportResults } from '@wbs/core/view-models';
 import { Observable, forkJoin } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -17,7 +18,6 @@ export class LibraryImportProcessorService {
     dir: string,
     results: LibraryImportResults
   ): Observable<void> {
-    const entry = this.store.entry()!;
     const version = this.store.version()!;
     const tasks = this.store.tasks()!;
     const fromTask = tasks.find((t) => t.id === taskId)!;
@@ -109,7 +109,7 @@ export class LibraryImportProcessorService {
     }
 
     return forkJoin([
-      this.entryService.generalSaveAsync(entry, version),
+      this.entryService.saveAsync(version),
       this.taskService.saveAsync(upserts, []),
     ]).pipe(map(() => {}));
   }

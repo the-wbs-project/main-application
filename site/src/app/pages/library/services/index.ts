@@ -1,2 +1,2 @@
-export * from './entry-creation.service';
+export * from './library-resources.service';
 export * from './library.guards';

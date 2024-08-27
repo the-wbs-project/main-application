@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
 import { RebuildResults } from '@wbs/core/models';
-import { WbsNodeService } from '@wbs/core/services';
 import { TaskViewModel } from '@wbs/core/view-models';
+import { WbsNodeService } from './wbs-node.service';
 
 @Injectable()
 export class WbsPhaseService {

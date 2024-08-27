@@ -1,4 +1,3 @@
-import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
@@ -7,21 +6,18 @@ import {
   model,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faExclamationTriangle,
-  faList,
-  faPencil,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faList, faPencil } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   ButtonGroupModule,
   ButtonModule,
 } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
-import { IdService } from '@wbs/core/services';
+import { LabelModule } from '@progress/kendo-angular-label';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
 import { SelectButtonComponent } from '@wbs/components/_utils/select-button.component';
+import { IdService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 
 @Component({
@@ -35,7 +31,7 @@ import { MetadataStore } from '@wbs/core/store';
     AlertComponent,
     FontAwesomeModule,
     InfoMessageComponent,
-    NgClass,
+    LabelModule,
     SelectButtonComponent,
     TextBoxModule,
     TranslateModule,
@@ -45,7 +41,6 @@ import { MetadataStore } from '@wbs/core/store';
 export class PhaseSelectionComponent {
   readonly faList = faList;
   readonly faPencil = faPencil;
-  readonly faExclamationTriangle = faExclamationTriangle;
   readonly phases = inject(MetadataStore).categories.phases;
   readonly phase = model.required<string | { label: string } | undefined>();
   readonly phaseText = computed(() => {
@@ -80,7 +75,7 @@ export class PhaseSelectionComponent {
       if (phase && typeof phase === 'object') {
         phase.label = text;
 
-        return phase;
+        return { ...phase };
       }
       return {
         id: IdService.generate(),

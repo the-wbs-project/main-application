@@ -11,7 +11,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck } from '@fortawesome/pro-solid-svg-icons';
+import { faCheck, faXmark } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
@@ -36,11 +36,13 @@ import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
   ],
 })
 export class DisciplinesDropdownComponent implements OnChanges {
-  readonly saveIcon = faCheck;
   readonly multiselect = viewChild<MultiSelectComponent>(MultiSelectComponent);
   readonly data = input.required<CategoryViewModel[]>();
   readonly values = input.required<CategoryViewModel[]>();
+  readonly saveIcon = input(faCheck);
+  readonly autoSave = input(false);
   readonly save = output<CategoryViewModel[]>();
+  readonly cancel = output<void>();
   readonly ids = signal<string[]>([]);
   readonly showSave = computed(() => {
     const vals = this.values();
@@ -48,6 +50,7 @@ export class DisciplinesDropdownComponent implements OnChanges {
 
     return vals.length !== ids.length || vals.some((v) => !ids.includes(v.id));
   });
+  readonly cancelIcon = faXmark;
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['values']) {
@@ -61,5 +64,11 @@ export class DisciplinesDropdownComponent implements OnChanges {
 
     this.multiselect()?.toggle(false);
     this.save.emit(this.data().filter((d) => ids.includes(d.id)));
+  }
+
+  valueChange(ids: string[]): void {
+    if (this.autoSave()) {
+      this.save.emit(this.data().filter((d) => ids.includes(d.id)));
+    }
   }
 }

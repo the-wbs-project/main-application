@@ -1,45 +1,37 @@
+@if (entryStore.version(); as version) {
 <div class="d-flex flex-column h-100">
-  <div class="mg-y-10">
+  <div class="mg-y-5">
     <div class="d-lg-none w-100 text-end">
       <wbs-page-header />
     </div>
-    <div class="d-flex flex-align-center">
-      <span class="tx-24 mg-r-15">
+    <div class="d-flex flex-align-center gap-10">
+      <wbs-action-button
+        [menu]="menu()"
+        (itemClicked)="menuService.handleAction($event)"
+      />
+      @if (canWatch()) {
+      <span class="tx-24">
         <wbs-watch-indicator
           source="library"
           [owner]="owner()"
-          [entityId]="entryId()"
+          [entityId]="version.entryId"
         />
       </span>
-      <wbs-entry-title
-        [title]="entryStore.version()?.title ?? ''"
-        [canEdit]="entryStore.canEditEntry() && canEditTitle()"
-        (titleChange)="titleChanged($event)"
-      />
-      <wbs-save-message [state]="titleSaveState()" cssClass="tx-12" />
-      <div class="flex-fill tx-right">
-        <div class="d-none d-lg-inline-block mg-r-15">
-          <wbs-page-header />
-        </div>
-        <wbs-entry-action-button
-          [entryType]="entryStore.entry()!.type"
-          [versionStatus]="entryStore.version()!.status"
-          [entryUrl]="entryUrl()"
-          [claims]="entryStore.claims()"
-        />
+      }
+      <span class="tx-20 tx-medium mg-r-10">
+        @let page = pageLabel();
+
+        {{ version.title }}
+        @if (page) { &nbsp;-&nbsp;{{ page | translate }} }
+      </span>
+      <wbs-save-message [state]="titleSaveState.state()" cssClass="tx-12" />
+      <div class="flex-fill tx-right d-none d-lg-inline-block mg-r-15">
+        <wbs-page-header />
       </div>
     </div>
   </div>
-  <div class="card border border-dark flex-fill">
-    <div class="card-header py-0 mg-b-0 bg-dark">
-      <wbs-navigation
-        [menu]="links()"
-        [activeSubSection]="entryStore.navSectionEntry()"
-        (navigate)="navigate($event)"
-      />
-    </div>
-    <div class="card-body border-0 p-0 rounded-10 w-100 bg-light">
-      <router-outlet />
-    </div>
+  <div class="flex-fill">
+    <router-outlet />
   </div>
 </div>
+}

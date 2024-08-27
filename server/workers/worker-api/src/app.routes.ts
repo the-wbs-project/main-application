@@ -5,8 +5,12 @@ import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunServ
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
 
+function newApp() {
+  return new Hono<{ Bindings: Env; Variables: Variables }>();
+}
+
 const ROUTES: Routes = ROUTE_FILE;
-const app = new Hono<{ Bindings: Env; Variables: Variables }>();
+const app = newApp();
 //
 //  Dependency Injection
 //
@@ -27,14 +31,25 @@ app.use('*', ddLogger);
 app.use('*', cors);
 app.onError(error);
 
-app.options('api/*', (c) => c.text(''));
+app.options('*', (c) => c.text(''));
 
+for (const path of ROUTES.RESOURCE_URLS) {
+  app.get(path, OriginService.pass);
+  //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
+}
 app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
 app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
+//
+//  Claims
+//
+const claimsApp = newApp()
+  .basePath('api/claims')
+  .use('*', verifyJwt)
+  .get('organization/:organization', Http.claims.getForOrganizationAsync)
+  .get('project/:owner/:project', Http.claims.getForProjectAsync)
+  .get('libraryEntry/:organization/:owner/:entry/:version', Http.claims.getForLibraryEntryAsync);
 
-app.get('api/claims/organization/:organization', verifyJwt, Http.claims.getForOrganizationAsync);
-app.get('api/claims/project/:owner/:project', verifyJwt, Http.claims.getForProjectAsync);
-app.get('api/claims/libraryEntry/:owner/:entry', verifyJwt, Http.claims.getForLibraryEntryAsync);
+app.route('/', claimsApp);
 
 app.get('api/cache/clear', Http.misc.clearKvAsync);
 app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
@@ -44,25 +59,38 @@ app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsyn
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 //
+//  Library calls
+//
+const libApp = newApp()
+  .basePath('api/libraries')
+  .use('*', verifyJwt)
+  .get('/drafts/:owner/:types', verifyMembership, Http.library.getDraftsAsync)
+  .post('internal/:owner', verifyMembership, OriginService.pass)
+  .post('public', OriginService.pass);
+
+app.route('/', libApp);
+//
 //  Auth calls
 //
 app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
+//
+//  Library Entry calls
+//
+const entryApp = newApp()
+  .basePath('api/portfolio/:owner/library/entries/:entry')
+  .get('id', verifyJwt, Http.library.getIdAsync)
+  .get('versions', verifyJwt, Http.libraryVersions.getAsync)
+  .get('versions/:version', verifyJwt, Http.libraryVersions.getByIdAsync)
+  .get('versions/:version/nodes/public', verifyJwt, Http.libraryTasks.getPublicAsync)
+  .get('versions/:version/nodes/private', verifyJwt, verifyMembership, Http.libraryTasks.getInternalAsync)
 
-app.get('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.getEntryAsync);
-app.post('api/portfolio/:owner/library/entries/search', verifyJwt, Http.libraryEntries.getSearchAsync);
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.getVersionAsync);
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', (ctx) => ctx.newResponse(null, 403));
-app.get('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/public', verifyJwt, Http.libraryEntries.getPublicTasksAsync);
-app.get(
-  'api/portfolio/:owner/library/entries/:entry/versions/:version/nodes/private',
-  verifyJwt,
-  verifyMembership,
-  Http.libraryEntries.getInternalTasksAsync,
-);
+  .put('', verifyJwt, Http.libraryEntries.putAsync)
+  .put('versions/:version', verifyJwt, Http.libraryVersions.putAsync)
+  .put('versions/:version/publish', verifyJwt, Http.libraryVersions.publishAsync)
+  .put('versions/:version/replicate', verifyJwt, Http.libraryVersions.publishAsync)
+  .put('versions/:version/nodes', verifyJwt, Http.libraryTasks.putAsync);
 
-app.put('api/portfolio/:owner/library/entries/:entry', verifyJwt, Http.libraryEntries.putEntryAsync);
-app.put('api/portfolio/:owner/library/entries/:entry/versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync);
-app.put('api/portfolio/:owner/library/entries/:entry/versions/:version/nodes', verifyJwt, Http.libraryEntries.putTasksAsync);
+app.route('/', entryApp);
 
 app.get('api/roles', Http.roles.getAllAsync);
 app.get('api/memberships', verifyJwt, Http.users.getMembershipsAsync);
@@ -105,10 +133,6 @@ app.get('api/queue/test', (ctx) => {
   return ctx.text('OK');
 });
 
-for (const path of ROUTES.RESOURCE_URLS) {
-  //app.get(path, verifyJwt, verifyMembership, kv.resourceFile, OriginService.pass);
-  //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
-}
 for (const path of ROUTES.VERIFY_JWT_GET) app.get(path, verifyJwt, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_POST) app.post(path, verifyJwt, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_PUT) app.put(path, verifyJwt, OriginService.pass);

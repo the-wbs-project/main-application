@@ -7,9 +7,13 @@ _theme/Nowa
 **/obj
 **/dist
 **/.mf/
+**/.data/
 **/data/**/config*.*
 .vs/
+.vscode/
+test/**
 
+**/deps.png
 .angular
 .env
 .wrangler

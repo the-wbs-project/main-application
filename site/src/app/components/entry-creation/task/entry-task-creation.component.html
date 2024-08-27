@@ -52,14 +52,22 @@
       } @else if (view() === 2) {
 
       <div class="d-inline-block w-100 mx-wd-800">
+        <wbs-versioning [(alias)]="alias" />
+      </div>
+      } @else if (view() === 3) {
+
+      <div class="d-inline-block w-100 mx-wd-800">
+        @let saveState = service.saveState.state(); @if (saveState !== "saving")
+        {
         <wbs-save-section
-          [owner]="owner()!"
           [disciplines]="disciplines()"
           [mainTaskTitle]="mainTaskTitle()"
           [templateTitle]="templateTitle()"
           [visibility]="visibility()"
-          (close)="dialog.close($event)"
+          [versionAlias]="alias()"
         />
+        }
+        <wbs-saving-entry [saveState]="saveState" />
       </div>
       }
     </div>
@@ -78,7 +86,6 @@
     </div>
 
     <div class="flex-grow-1 text-end">
-      @if (view() < 2) {
       <button
         kendoButton
         themeColor="primary"
@@ -87,7 +94,6 @@
       >
         {{ nextButtonLabel() | translate }}
       </button>
-      }
     </div>
   </kendo-dialog-actions>
 </kendo-dialog>

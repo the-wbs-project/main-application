@@ -16,25 +16,30 @@ import {
   CategoryService,
   SaveService,
 } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
+import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { EntryStore } from '@wbs/core/store';
-import { delay, tap } from 'rxjs/operators';
+import { CategorySelection } from '@wbs/core/view-models';
+import { of } from 'rxjs';
+import { delay, switchMap, tap } from 'rxjs/operators';
+import { ContributorCardComponent } from './components/contributor-card';
 import { DetailsCardComponent } from './components/details-card';
+import { ResourceCardComponent } from './components/resource-card';
 
 @Component({
   standalone: true,
   templateUrl: './about-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ContributorCardComponent,
     DescriptionCardComponent,
     DescriptionAiDialogComponent,
     DisciplineCardComponent,
     DetailsCardComponent,
     ResizedCssDirective,
+    ResourceCardComponent,
     SafeHtmlPipe,
     TranslateModule,
   ],
@@ -44,21 +49,26 @@ export class AboutPageComponent implements OnInit {
   private readonly category = inject(CategoryService);
   private readonly prompt = inject(AiPromptService);
   private readonly entryService = inject(EntryService);
+  private readonly taskService = inject(EntryTaskService);
   readonly store = inject(EntryStore);
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
+  readonly apiUrlPrefix = input.required<string>();
   readonly descriptionSave = new SaveService();
+  readonly disciplineSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>
     this.prompt.libraryEntryDescription(
-      this.store.entry(),
       this.store.version(),
       this.store.viewModels()
     )
   );
   readonly disciplines = computed(() =>
     this.category.buildViewModels(this.store.version()!.disciplines)
+  );
+  readonly editDisciplines = computed(() =>
+    this.category.buildDisciplines(this.store.version()!.disciplines)
   );
 
   readonly UPDATE_CLAIM = LIBRARY_CLAIMS.UPDATE;
@@ -80,13 +90,28 @@ export class AboutPageComponent implements OnInit {
     this.descriptionChange(description);
   }
 
-  ngOnInit(): void {
-    let tasks = this.store.viewModels();
-    let text = '';
+  ngOnInit(): void {}
 
-    for (const task of tasks ?? []) {
-      for (let part of task.levels ?? []) text += '  ';
-      text += `${task.levelText}: ${task.title}\n`;
-    }
+  saveDisciplines(disciplines: CategorySelection[]): void {
+    const version = this.store.version()!;
+    const disciplinesResults = this.category.extract(
+      disciplines,
+      version.disciplines ?? []
+    );
+
+    version.disciplines = disciplinesResults.categories;
+
+    this.disciplineSave
+      .call(this.entryService.saveAsync(version))
+      .pipe(
+        switchMap(() =>
+          disciplinesResults.removedIds.length === 0
+            ? of('hello')
+            : this.taskService.removeDisciplinesFromAllTasksAsync(
+                disciplinesResults.removedIds
+              )
+        )
+      )
+      .subscribe();
   }
 }

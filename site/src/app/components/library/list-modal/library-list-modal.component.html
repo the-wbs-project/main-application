@@ -4,13 +4,11 @@
   [title]="'Wbs.ImportFromLibrary' | translate"
   (close)="dialog.close()"
 >
-  <div
-    [(wbsTreeHeight)]="containerHeight"
-    class="d-flex h-100 flex-column fs-6"
-  >
+  <div [(wbsHeight)]="containerHeight" class="d-flex h-100 flex-column fs-6">
     @if (ready()) { @if (view() === 0) {
     <wbs-library-list-filters
       [showLibrary]="true"
+      [includeDrafts]="false"
       [(library)]="library"
       [(typeFilters)]="typeFilters"
       [(authorFilters)]="roleFilters"

@@ -1,4 +1,5 @@
 using Auth0.ManagementApi.Models;
+using Auth0.ManagementApi.Paging;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 
@@ -12,6 +13,13 @@ public class OrganizationDataService : BaseAuthDataService
     public OrganizationDataService(ILogger<OrganizationDataService> logger, IAuth0Config config) : base(logger, config)
     {
         this.logger = logger;
+    }
+
+    public async Task<List<Organization>> GetAllAsync()
+    {
+        var client = await GetClientAsync();
+
+        return (await client.Organizations.GetAllAsync(new PaginationInfo())).ToList();
     }
 
     public async Task<Organization> GetOrganizationByNameAsync(string name)

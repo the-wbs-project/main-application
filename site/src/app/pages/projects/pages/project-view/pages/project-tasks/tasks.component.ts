@@ -6,15 +6,14 @@ import {
   signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { Navigate } from '@ngxs/router-plugin';
+import { DialogModule } from '@progress/kendo-angular-dialog';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 import { SignalStore, WbsPhaseService } from '@wbs/core/services';
 import { ProjectState } from '../../states';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';
-import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type-button.component';
-import { DialogModule } from '@progress/kendo-angular-dialog';
-import { TranslateModule } from '@ngx-translate/core';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
-import { Navigate } from '@ngxs/router-plugin';
 
 @Component({
   standalone: true,
@@ -27,7 +26,7 @@ import { Navigate } from '@ngxs/router-plugin';
     ProjectPhaseTreeComponent,
     RouterModule,
     TranslateModule,
-    TreeHeightDirective,
+    HeightDirective,
   ],
 })
 export class ProjectTasksComponent {

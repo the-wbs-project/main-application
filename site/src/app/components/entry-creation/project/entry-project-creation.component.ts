@@ -5,13 +5,12 @@ import {
   computed,
   inject,
   model,
-  output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
+  faCodeBranch,
   faDiagramSubtask,
   faFloppyDisk,
   faInfo,
@@ -35,12 +34,16 @@ import { CategoryService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { SaveSectionComponent } from './save-section';
+import { SaveSectionComponent } from '../components/save-section';
+import { SavingEntryComponent } from '../components/saving-entry.component';
+import { VersioningComponent } from '../components/versioning.component';
+import { EntryCreationService } from '../services';
 
 @Component({
   standalone: true,
   templateUrl: './entry-project-creation.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [EntryCreationService],
   imports: [
     ButtonModule,
     DialogModule,
@@ -52,36 +55,34 @@ import { SaveSectionComponent } from './save-section';
     PhaseEditorComponent,
     ProjectCategoryDropdownComponent,
     SaveSectionComponent,
+    SavingEntryComponent,
     ScrollToTopDirective,
     StepperModule,
     TextBoxModule,
     TranslateModule,
+    VersioningComponent,
     VisibilitySelectionComponent,
   ],
 })
 export class EntryProjectCreationComponent extends DialogContentBase {
-  readonly done = output<void>();
-
   private readonly catService = inject(CategoryService);
+  readonly service = inject(EntryCreationService);
 
-  readonly owner = signal<string | undefined>(undefined);
   readonly templateTitle = model<string>('');
   readonly category = model<string | undefined>(undefined);
+  readonly alias = signal<string>('Initial Version');
   readonly visibility = model<'public' | 'private'>('public');
   readonly phases = model<CategorySelection[]>(this.catService.buildPhases([]));
   readonly disciplines = model<CategorySelection[]>(
     this.catService.buildDisciplines([])
   );
-  readonly faSpinner = faSpinner;
   readonly view = model<number>(0);
   readonly categories = inject(MetadataStore).categories.projectCategories;
-  readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
-    undefined
-  );
   readonly steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Phases', icon: faDiagramSubtask, isOptional: true },
     { label: 'General.Disciplines', icon: faPeople, isOptional: true },
+    { label: 'General.Versioning', icon: faCodeBranch, isOptional: true },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
 
@@ -92,12 +93,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
       .join(', ')
   );
 
-  constructor(dialog: DialogRef) {
-    super(dialog);
-  }
-
-  //make a computed one day, but for now it seems arrays in modals dont trigger
-  canContinue(): boolean {
+  readonly canContinue = computed(() => {
     const view = this.view();
     const category = this.category();
     const title = this.templateTitle();
@@ -105,17 +101,32 @@ export class EntryProjectCreationComponent extends DialogContentBase {
     if (view === 0) {
       return category !== undefined && title.trim() !== '';
     }
-    return true;
-  }
+    //
+    //  No pressing buttons if saving
+    //
+    if (view === this.steps.length - 1)
+      return this.service.saveState.state() !== 'saving';
 
-  //make a computed one day, but for now it seems arrays in modals dont trigger
-  nextButtonLabel(): string {
+    return true;
+  });
+
+  readonly nextButtonLabel = computed(() => {
     const view = this.view();
     const hasDisciplines = this.disciplines().some((x) => x.selected);
 
     if (view === 2) return hasDisciplines ? 'General.Next' : 'General.Skip';
+    if (view === this.steps.length - 1) return 'General.Save';
 
     return 'General.Next';
+  });
+
+  constructor(dialog: DialogRef) {
+    super(dialog);
+  }
+
+  stop(event: Event): void {
+    event.preventDefault();
+    event.stopPropagation();
   }
 
   back(): void {
@@ -123,6 +134,19 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   }
 
   next(): void {
-    this.view.update((x) => x + 1);
+    if (this.view() < this.steps.length - 1) {
+      this.view.update((x) => x + 1);
+    } else {
+      this.service
+        .createProjectEntryAsync(
+          this.templateTitle(),
+          this.alias(),
+          this.visibility(),
+          this.category()!,
+          this.phases(),
+          this.disciplines()
+        )
+        .subscribe(() => this.dialog.close());
+    }
   }
 }

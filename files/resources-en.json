@@ -14,6 +14,8 @@
       "Email": "Email",
       "Emails": "Email(s)",
       "Edit": "Edit",
+      "Editor": "Editor",
+      "Editors": "Editors",
       "Remove": "Remove",
       "Internal": "Internal",
       "Grid": "Grid",
@@ -26,16 +28,19 @@
       "Review": "Review",
       "Personal": "Personal",
       "Watched": "Watched",
+      "RecordId": "Record ID",
       "Draft": "Draft",
       "Published": "Published",
       "Retired": "Retired",
       "Type": "Type",
       "Types": "Types",
       "Library": "Library",
+      "Libraries": "Libraries",
       "Title": "Title",
       "All": "All",
       "Error": "Error",
       "Success": "Success",
+      "Drafts": "Drafts",
       "Okay": "Okay",
       "Reload": "Reload",
       "Organization": "Organization",
@@ -56,6 +61,11 @@
       "Tasks": "Tasks",
       "About": "About",
       "Active": "Active",
+      "Version": "Version",
+      "Versions": "Versions",
+      "Versioning": "Versioning",
+      "Contributor": "Contributor",
+      "Contributors": "Contributors",
       "Clear": "Clear",
       "Revert": "Revert",
       "Overwrite": "Overwrite",
@@ -98,7 +108,9 @@
       "Submitting": "Submitting",
       "NoThankYou": "No Thank You",
       "Nevermind": "Nevermind",
+      "User": "User",
       "Users": "Users",
+      "UserInformation": "User Information",
       "Members": "Members",
       "Views": "Views",
       "Back": "Back",
@@ -554,7 +566,7 @@
       "DownloadWbs": "Download WBS",
       "DownloadAbs": "Download ABS",
       "DownloadTasks": "Download Tasks",
-      "UploadTasks": "Upload Tasks",
+      "UploadTasks": "Upload WBS File",
       "Attachments": "Attachments",
       "Level": "Level",
       "Depth": "Depth",
@@ -589,6 +601,7 @@
       "OtherActions": "Other Actions",
       "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
+      "PublishVersion": "Publish Version",
       "UnpublishForEditing": "Unpublish For Editting",
       "ConfirmPublishToLibrary": "Are you sure you are ready to publish this to your organization's library?",
       "PublishedToLibraryMessage": "This WBS has been published. It may take up to 15 minutes for the WBS to appear in the library.",
@@ -605,6 +618,7 @@
       "LibraryFilters": "Library Filters",
       "ExpandAll": "Expand All",
       "CollapseAll": "Collapse All",
+      "ImportSubTask": "Import Sub Task",
       "PrivateTooltip": "Private - This task can only be seen within your organization.",
       "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
       "ABS": "ABS",
@@ -615,7 +629,15 @@
       "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS.",
       "WBS": "WBS",
       "WBS-Full": "Work Breakdown Structure",
-      "WBS-Full2": "WBS - Work Breakdown Structure"
+      "WBS-Full2": "WBS - Work Breakdown Structure",
+      "VersionAlias": "Version Alias",
+      "CancelVersion": "Cancel Draft",
+      "CancelVersionConfirm": "Cancel Draft Confirmation",
+      "CancelVersionPrompt": "What is the reason for cancelling this draft?",
+      "VisibilityHelper": "Who Can See This?",
+      "VisibilityPublic": "Everyone",
+      "VisibilityPrivate": "Only Co-Workers",
+      "SelectTask": "Select A Task To View Details"
     }
   },
   {
@@ -765,7 +787,10 @@
       "LinkUrl": "Link URL",
       "FileUpload": "File Upload",
       "UrlIsRequired": "Url Is Required",
-      "DescriptionIsRequired": "Description Is Required"
+      "DescriptionIsRequired": "Description Is Required",
+      "FileIsRequired": "File Is Required",
+      "DeleteResource": "Delete Resource",
+      "DeleteResourceConfirm": "Are you sure you want to delete this resource? This will remove the resource from the library and any projects which have it."
     }
   },
   {
@@ -800,7 +825,19 @@
       "DisciplineSettingsInfoEntry": "What disciplines are associated with this WBS? If you aren't sure don't select any and all disciplines will be available.",
       "DisciplineSettingsInfoTask": "Who will be performing this task?",
       "ResourceInfoEntry": "Resources are files or links which are associated with this WBS. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly.",
-      "ResourceInfoTask": "Resources are files or links which are associated with this task. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly."
+      "ResourceInfoTask": "Resources are files or links which are associated with this task. They can be training material, links to a LMS, forms which must be filled out, and anything else which could help a PM ensure the job gets done properly.",
+      "CreateNewVersion": "Create New Version",
+      "CreateNewVersionHelp": "If you want to make changes to an already published WBS, you should create a new version to implement the changes. Once you are done you will then published that new version.",
+      "CreateNewVersionFrom": "Create New Version From...",
+      "NewVersionAlias": "New Version Alias",
+      "RemoveEditorConfirm": "Are you sure you want to remove this editor?",
+      "ManageContributors": "Manage Contributors",
+      "LegendReorder": "Use this to drag and drop a task to where you want to reorder it.",
+      "LegendMenu": "Use this to open the menu for the task.",
+      "LegendInternal": "This task can only be seen within your organization.",
+      "LegendLink": "This is an indicator that this task was imported from another WBS. Editors will be noitified if an update is available.",
+      "LegendDelete": "This button allows you delete a task and all of it's subtasks.",
+      "LegendAdd": "This button allows you create a new task or subtask."
     }
   },
   {
@@ -846,7 +883,8 @@
       "PhaseHeader": "In order to get started, we need to identify the phase you are creating a WBS template for. This is what you would see on the project plan. Do you want to use a...",
       "DisciplinesHeader": "Optionally, you can define what disciplines are apart of this WBS. This will improve the value and understanding of the WBS.",
       "Step_Title": "Title & Visibility",
-      "Step_Review": "Review & Save"
+      "Step_Review": "Review & Save",
+      "VersioningHelp": "You can optionally create an alias for this WBS. This will allow yourself and others to understand what is different between each version."
     }
   },
   {

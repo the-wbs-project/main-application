@@ -38,19 +38,6 @@ export const routes: Routes = [
         },
       },
       {
-        path: 'sub-tasks',
-        loadComponent: () =>
-          import('./pages/task-sub-tasks').then((x) => x.SubTasksComponent),
-        canActivate: [taskNavGuard],
-        data: {
-          navSection: 'sub-tasks',
-          crumbs: ['sub-tasks'],
-        },
-        resolve: {
-          projectUrl: projectUrlResolve,
-        },
-      },
-      {
         path: 'resources',
         loadComponent: () =>
           import('./pages/task-resources-page.component').then(

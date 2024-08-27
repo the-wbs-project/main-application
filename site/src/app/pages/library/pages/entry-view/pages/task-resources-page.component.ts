@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { RecordResourcesPageComponent } from '@wbs/components/resources';
+import { RecordResourcesPageComponent } from '@wbs/components/record-resources';
 import { LIBRARY_CLAIMS, ResourceRecord } from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';

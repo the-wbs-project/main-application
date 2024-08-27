@@ -1,0 +1,59 @@
+@if (userVm(); as user) {
+
+<div class="d-flex flex-row flex-align-center">
+  <div class="wd-100 text-center">
+    <kendo-avatar [imageSrc]="user.picture!" size="large" />
+  </div>
+  <div class="pd-y-10 pd-r-20">
+    <div class="tx-24">
+      {{ user.fullName }}
+    </div>
+    <div class="tx-gray-600 tx-12">
+      @if (user.title && user.title !== 'private') {
+      {{ user.title }}
+      } @else { &nbsp; }
+    </div>
+    @if (secondaryTitle(); as secondaryTitle) {
+    <div class="tx-gray-600 tx-12">
+      {{ secondaryTitle }}
+    </div>
+    }
+    <div class="d-flex flex-row pd-t-10" style="gap: 20px">
+      <!-- Email -->
+      @if (user.email && user.email !== 'private') {
+      <a
+        role="button"
+        class="btn btn-sm btn-light tx-gray-600"
+        href="mailto:{{ user.email }}"
+      >
+        <fa-icon [icon]="emailIcon" size="lg" />
+      </a>
+      }
+      <!-- LinkedIn -->
+      @if (user.linkedIn && user.linkedIn !== 'private') {
+      <a
+        role="button"
+        class="btn btn-sm btn-light tx-gray-600"
+        target="_blank"
+        rel="noopener noreferrer"
+        [href]="user.linkedIn"
+      >
+        <fa-icon [icon]="linkedInIcon" size="lg" />
+      </a>
+      }
+      <!-- Twitter -->
+      @if (user.twitter && user.twitter !== 'private') {
+      <a
+        role="button"
+        class="btn btn-sm btn-light tx-gray-600"
+        target="_blank"
+        rel="noopener noreferrer"
+        [href]="user.twitter"
+      >
+        <fa-icon [icon]="twitterIcon" size="lg" />
+      </a>
+      }
+    </div>
+  </div>
+</div>
+}

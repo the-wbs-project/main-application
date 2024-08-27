@@ -70,6 +70,7 @@ builder.Services.AddSingleton<LibraryEntryNodeDataService>();
 builder.Services.AddSingleton<LibraryEntryNodeResourceDataService>();
 builder.Services.AddSingleton<LibraryEntryVersionResourceDataService>();
 builder.Services.AddSingleton<LibraryEntryVersionDataService>();
+builder.Services.AddSingleton<LibraryEntryViewDataService>();
 builder.Services.AddSingleton<ListDataService>();
 builder.Services.AddSingleton<OrganizationDataService>();
 builder.Services.AddSingleton<ProjectApprovalDataService>();
@@ -96,8 +97,8 @@ builder.Services.AddSingleton<CloudflareApiService>();
 builder.Services.AddSingleton<CloudflareKvService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
-builder.Services.AddSingleton<QueueService>();
 builder.Services.AddSingleton<ResourceCopyService>();
+builder.Services.AddSingleton<VersioningService>();
 //
 //  Search Service
 //

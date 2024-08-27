@@ -1,8 +1,8 @@
 export interface LibraryEntry {
   id: string;
-  owner: string;
+  recordId: string;
+  ownerId: string;
   type: string;
   publishedVersion?: number;
-  author: string;
   visibility: string;
 }

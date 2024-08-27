@@ -7,17 +7,16 @@ namespace Wbs.Core.Services;
 
 public class QueueService
 {
-    private readonly Timer timer;
-    private readonly ILogger logger;
+    //private readonly Timer timer;
+    //private readonly ILogger logger;
     private readonly IStorageConfig config;
     private readonly Dictionary<string, List<string>> messages = new Dictionary<string, List<string>>();
 
-    public QueueService(IStorageConfig config, ILoggerFactory loggerFactory)
+    public QueueService(IStorageConfig config)
     {
         this.config = config;
-        logger = loggerFactory.CreateLogger<QueueService>();
-
-        timer = new Timer(Flush, null, 0, 10000); // 10 seconds
+        //logger = loggerFactory.CreateLogger<QueueService>();
+        //timer = new Timer(Flush, null, 0, 10000); // 10 seconds
     }
 
     public void Add<T>(string queueName, T message)
@@ -65,9 +64,9 @@ public class QueueService
                 {
                     await queue.SendMessageAsync(message);
                 }
-                catch (Exception ex)
+                catch //(Exception ex)
                 {
-                    logger.LogError(ex, $"Failed to add message to queue '{queueName}'");
+                    //logger.LogError(ex, $"Failed to add message to queue '{queueName}'");
                 }
             }
         }

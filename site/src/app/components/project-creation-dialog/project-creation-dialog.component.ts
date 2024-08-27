@@ -31,14 +31,13 @@ import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
-import {
-  LibraryEntryNode,
-  LibraryEntryVersion,
-  Member,
-} from '@wbs/core/models';
+import { LibraryEntryNode, Member } from '@wbs/core/models';
 import { CategoryService, IdService } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
-import { CategorySelection } from '@wbs/core/view-models';
+import {
+  CategorySelection,
+  LibraryVersionViewModel,
+} from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -77,7 +76,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly view = model<number>(0);
   readonly newId = IdService.generate();
   readonly owner = signal<string | undefined>(undefined);
-  readonly version = signal<LibraryEntryVersion | undefined>(undefined);
+  readonly version = signal<LibraryVersionViewModel | undefined>(undefined);
   readonly members = signal<Member[]>([]);
   readonly approverIds = signal<string[]>([]);
   readonly pmIds = signal<string[]>([]);
@@ -112,7 +111,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   static launchAsync(
     dialog: DialogService,
     org: string,
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
   ): Observable<any | undefined> {
     const ref = dialog.open({
@@ -129,7 +128,7 @@ export class ProjectCreationComponent extends DialogContentBase {
 
   setup(
     org: string,
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
   ): void {
     this.data.memberships.getMembershipUsersAsync(org).subscribe((members) => {

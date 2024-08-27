@@ -331,7 +331,11 @@ button:focus:not(:focus-visible) {
   overflow: scroll;
 }
 
-.my-custom-class {
+.scroll-y {
+  overflow-y: scroll;
+}
+
+.z-max {
   z-index: max;
 }
 
@@ -497,4 +501,21 @@ button:focus:not(:focus-visible) {
     font-weight: 600;
     text-align: right;
   }
+}
+
+.task-detail-card {
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 100px auto;
+
+  > .detail-header {
+    font-weight: 600;
+    text-align: right;
+    padding-top: 6px;
+  }
+}
+
+.k-grid-toolbar {
+  background-color: $gray-500;
 }

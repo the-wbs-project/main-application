@@ -6,7 +6,7 @@
     "setup": "yarn",
     "check": "tsc --noEmit",
     "publish": "wrangler publish --env prod",
-    "start": "wrangler dev --env dev --port 8080 --ip \"*\" --inspector-port 0"
+    "start": "wrangler dev --env dev --port 8080 --ip \"*\" --inspector-port 0 --persist-to ../.data/auth"
   },
   "author": "author",
   "license": "MIT",

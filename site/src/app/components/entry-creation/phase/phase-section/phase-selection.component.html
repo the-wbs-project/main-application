@@ -90,14 +90,12 @@
 } @else if (phaseType() === 'custom') {
 
 <div class="pd-t-25 text-start">
-  <label for="customTitle" class="form-label tx-18">
+  <label [for]="customTitle" class="form-label tx-18">
     {{ "LibraryCreate.PhaseTitle" | translate }}
   </label>
   <input
     #customTitle
     kendoTextBox
-    name="customTitle"
-    id="customTitle"
     [value]="phaseText()"
     (change)="textChanged(customTitle.value)"
   />

@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core';
-import { ContextMenuItem, PROJECT_STATI_TYPE } from '@wbs/core/models';
-import { Utils } from '@wbs/core/services';
+import { inject, Injectable } from '@angular/core';
+import { ContextMenuItem } from '@wbs/core/models';
+import { MenuService } from '@wbs/core/services';
 import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
 import { PROJECT_TREE_MENU_ITEMS } from '../models';
 
@@ -8,6 +8,8 @@ declare type Seperator = { separator: true };
 
 @Injectable()
 export class PhaseTreeMenuService {
+  private menuService = inject(MenuService);
+
   buildMenu(
     project: ProjectViewModel,
     task: ProjectTaskViewModel | undefined,
@@ -15,17 +17,17 @@ export class PhaseTreeMenuService {
   ): (ContextMenuItem | Seperator)[] {
     if (!task) return [];
     const status = project.status;
-    const navActions = this.filterList(
+    const navActions = this.menuService.filterList(
       structuredClone(PROJECT_TREE_MENU_ITEMS.reorderTaskActions),
-      task,
       claims,
-      status
+      status,
+      task
     );
-    const phaseActions = this.filterList(
+    const phaseActions = this.menuService.filterList(
       structuredClone(PROJECT_TREE_MENU_ITEMS.taskActions),
-      task,
       claims,
-      status
+      status,
+      task
     );
 
     const movers: ContextMenuItem[] = [];
@@ -68,47 +70,6 @@ export class PhaseTreeMenuService {
       : [...phaseActions, { separator: true }, ...movers];
   }
 
-  private filterList(
-    actions: ContextMenuItem[],
-    task: ProjectTaskViewModel,
-    claims: string[],
-    status: PROJECT_STATI_TYPE
-  ): ContextMenuItem[] {
-    if (!actions || actions.length === 0) return actions;
-
-    return actions.filter((x) => this.filterItem(x, task, claims, status));
-  }
-
-  private filterItem(
-    link: ContextMenuItem,
-    task: ProjectTaskViewModel,
-    claims: string[],
-    status: PROJECT_STATI_TYPE
-  ): boolean {
-    if (link.filters) {
-      if (link.filters.claim && !claims.includes(link.filters.claim))
-        return false;
-
-      if (link.filters.stati) {
-        const statusResult = link.filters.stati.some((s) => s === status);
-
-        if (!statusResult) return false;
-      }
-      if (link.filters.props) {
-        for (const test of link.filters.props) {
-          const propResult = Utils.executeTestByObject(task, test);
-
-          if (!propResult) return false;
-        }
-      }
-    }
-    if (link.items) {
-      link.items = this.filterList(link.items, task, claims, status);
-    }
-
-    return true;
-  }
-
   private getDisciplinesToAdd(
     project: ProjectViewModel,
     task: ProjectTaskViewModel
@@ -123,7 +84,6 @@ export class PhaseTreeMenuService {
         action: 'addDiscipline|' + discipline.id,
         faIcon: discipline.icon ?? 'fa-question',
         text: discipline.label,
-        isNotResource: true,
       });
     }
 
@@ -140,7 +100,6 @@ export class PhaseTreeMenuService {
         action: 'removeDiscipline|' + discipline.id,
         faIcon: discipline.icon,
         text: discipline.label,
-        isNotResource: true,
       });
     }
 

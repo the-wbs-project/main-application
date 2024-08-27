@@ -1,38 +1,36 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { dirtyGuard } from '@wbs/core/guards';
 import { EntryUploadState } from './pages/entry-upload/states';
 import {
+  EntryActionButtonService,
   EntryTaskActionService,
   EntryTaskReorderService,
   LibraryImportProcessorService,
   entryApiUrlResolve,
-  entryIdResolve,
   entryNavGuard,
   entryUrlResolve,
   ownerIdResolve,
   populateGuard,
   redirectGuard,
-  verifyTaskUpdateClaimGuard,
-  versionIdResolve,
+  verifyClaimsGuard,
 } from './services';
 
 export const routes: Routes = [
   {
-    path: ':ownerId/:entryId/:versionId',
+    path: ':ownerId/:recordId/:versionId',
     canActivate: [populateGuard],
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
       importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
+      EntryActionButtonService,
       EntryTaskActionService,
       EntryTaskReorderService,
       LibraryImportProcessorService,
     ],
     resolve: {
       owner: ownerIdResolve,
-      entryId: entryIdResolve,
       entryUrl: entryUrlResolve,
     },
     children: [
@@ -51,6 +49,9 @@ export const routes: Routes = [
           section: 'about',
           crumbs: ['about'],
         },
+        resolve: {
+          apiUrlPrefix: entryApiUrlResolve,
+        },
       },
       {
         path: 'tasks',
@@ -63,9 +64,7 @@ export const routes: Routes = [
         },
         resolve: {
           entryUrl: entryUrlResolve,
-          //claims: libraryClaimsResolve,
         },
-        loadChildren: () => import('./task-view.routes').then((x) => x.routes),
       },
       {
         path: 'upload',
@@ -73,7 +72,7 @@ export const routes: Routes = [
           import('./pages/entry-upload/upload-layout.component').then(
             (x) => x.ProjectUploadLayoutComponent
           ),
-        canActivate: [entryNavGuard, verifyTaskUpdateClaimGuard],
+        canActivate: [entryNavGuard, verifyClaimsGuard],
         data: {
           section: 'tasks',
         },
@@ -81,49 +80,6 @@ export const routes: Routes = [
           import('./pages/entry-upload/pages/children.routes').then(
             (x) => x.routes
           ),
-      },
-      {
-        path: 'resources',
-        loadComponent: () =>
-          import('./pages/entry-resources-page.component').then(
-            (x) => x.ResourcesPageComponent
-          ),
-        canActivate: [entryNavGuard],
-        data: {
-          section: 'resources',
-          crumbs: ['resources'],
-        },
-        resolve: {
-          owner: ownerIdResolve,
-          entryId: entryIdResolve,
-          versionId: versionIdResolve,
-          apiUrlPrefix: entryApiUrlResolve,
-        },
-      },
-      {
-        path: 'settings/general',
-        loadComponent: () =>
-          import('./pages/entry-settings-general').then(
-            (x) => x.GeneralComponent
-          ),
-        canActivate: [entryNavGuard],
-        data: {
-          section: 'settings',
-          crumbs: ['settings', 'general'],
-        },
-      },
-      {
-        path: 'settings/disciplines',
-        loadComponent: () =>
-          import('./pages/entry-settings-disciplines.component').then(
-            (x) => x.DisciplinesComponent
-          ),
-        canActivate: [entryNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          section: 'settings',
-          crumbs: ['settings', 'disciplines'],
-        },
       },
     ],
   },

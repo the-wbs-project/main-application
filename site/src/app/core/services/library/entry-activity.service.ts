@@ -4,6 +4,7 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { IdService } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
+import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class EntryActivityService {
@@ -30,6 +31,18 @@ export class EntryActivityService {
     return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.TITLE_CHANGED, {
       from,
       to,
+    });
+  }
+
+  cancelVersion(
+    entryId: string,
+    version: number,
+    title: string,
+    reason: string
+  ): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.CANCEL_VERSION, {
+      title,
+      reason,
     });
   }
 
@@ -64,6 +77,57 @@ export class EntryActivityService {
     );
   }
 
+  contributorsChanged(
+    entryId: string,
+    version: number,
+    from: UserViewModel[] | undefined,
+    to: UserViewModel[] | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.CONTRIBUTORS_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
+  versionAliasChanged(
+    entryId: string,
+    version: number,
+    from: string | undefined,
+    to: string | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.VERSION_ALIAS_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
+  categoryChanged(
+    entryId: string,
+    version: number,
+    from: string | undefined,
+    to: string | undefined
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.CATEGORY_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
+  }
+
   entryUpload(entryId: string, version: number): Observable<void> {
     return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UPLOAD);
   }
@@ -86,6 +150,14 @@ export class EntryActivityService {
     return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.SETUP_TASK, {
       taskTitle,
     });
+  }
+
+  publishedVersion(entryId: string, version: number): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.PUBLISHED);
+  }
+
+  unpublishedVersion(entryId: string, version: number): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UNPUBLISHED);
   }
 
   private save(

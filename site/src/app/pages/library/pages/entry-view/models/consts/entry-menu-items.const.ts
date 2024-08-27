@@ -13,110 +13,39 @@ import {
   faUserMinus,
   faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
-import { ContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
+import { ActionContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
 
-const taskActions: ContextMenuItem[] = [
+const taskActions: ActionContextMenuItem[] = [
   {
-    action: 'addSub',
-    faIcon: faPlus,
-    text: 'Projects.AddSubTask',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.CREATE,
-      stati: ['draft'],
-    },
-  },
-  {
-    action: 'import',
+    action: 'import|right',
     faIcon: faFileImport,
-    text: 'General.Import',
+    resource: 'Wbs.ImportSubTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
       stati: ['draft'],
     },
-    items: [
-      {
-        action: 'import|above',
-        faIcon: faArrowUp,
-        text: 'General.Above',
-      },
-      {
-        action: 'import|right',
-        faIcon: faArrowRight,
-        text: 'General.SubTask',
-      },
-      {
-        action: 'import|below',
-        faIcon: faArrowDown,
-        text: 'General.Below',
-      },
-    ],
   },
   {
-    action: 'viewTask',
-    faIcon: faEye,
-    text: 'Projects.ViewTask',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.READ,
-    },
-  },
-  {
-    action: 'addDiscipline',
-    faIcon: faUserPlus,
-    text: 'Wbs.AddDiscipline',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
-      stati: ['draft'],
-    },
-  },
-  {
-    action: 'removeDiscipline',
-    faIcon: faUserMinus,
-    text: 'Wbs.RemoveDiscipline',
-    filters: {
-      claim: LIBRARY_CLAIMS.TASKS.UPDATE,
-      stati: ['draft'],
-    },
-  },
-  {
-    action: 'other',
-    faIcon: faEclipse,
-    text: 'Wbs.OtherActions',
+    action: 'cloneTask',
+    faIcon: faCopy,
+    resource: 'Projects.CloneTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
+      stati: ['draft'],
     },
-    items: [
-      {
-        action: 'cloneTask',
-        faIcon: faCopy,
-        text: 'Projects.CloneTask',
-        filters: {
-          claim: LIBRARY_CLAIMS.TASKS.CREATE,
-          stati: ['draft'],
-        },
-      },
-      {
-        action: 'export',
-        faIcon: faBookArrowRight,
-        text: 'Wbs.ExportToLibrary',
-      },
-      {
-        action: 'deleteTask',
-        faIcon: faTrash,
-        text: 'Projects.DeleteTask',
-        filters: {
-          claim: LIBRARY_CLAIMS.TASKS.DELETE,
-          stati: ['draft'],
-        },
-      },
-    ],
+  },
+  {
+    action: 'export',
+    faIcon: faBookArrowRight,
+    resource: 'Wbs.ExportToLibrary',
   },
 ];
 
-const reorderTaskActions: ContextMenuItem[] = [
+const reorderTaskActions: ActionContextMenuItem[] = [
   {
     action: 'moveLeft',
     faIcon: faArrowLeft,
-    text: 'Projects.MoveLeft',
+    resource: 'Projects.MoveLeft',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -125,7 +54,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveUp',
     faIcon: faArrowUp,
-    text: 'Projects.MoveUp',
+    resource: 'Projects.MoveUp',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -134,7 +63,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveDown',
     faIcon: faArrowDown,
-    text: 'Projects.MoveDown',
+    resource: 'Projects.MoveDown',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],
@@ -143,7 +72,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveRight',
     faIcon: faArrowRight,
-    text: 'Projects.MoveRight',
+    resource: 'Projects.MoveRight',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.UPDATE,
       stati: ['draft'],

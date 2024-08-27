@@ -6,14 +6,15 @@ AS
     SELECT
         e.[OwnerId],
         e.[Id] EntryId,
-        v.[Version],
-        e.[Author],
-        v.[Title],
-        v.[Description],
-        v.[LastModified],
-        v.[Status],
+        e.[RecordId],
         e.[Type],
-        e.[Visibility]
+        e.[Visibility],
+        v.[Version],
+        v.[Author],
+        v.[Title],
+        v.[VersionAlias],
+        v.[LastModified],
+        v.[Status]
     FROM
         [dbo].[LibraryEntries] e INNER JOIN
         [dbo].[LibraryEntryVersions] v ON e.[Id] = v.[EntryId] AND v.[Version] = ISNULL(e.[PublishedVersion], 1)

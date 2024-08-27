@@ -1,0 +1,55 @@
+<kendo-dialog
+  minWidth="600px"
+  maxWidth="800px"
+  width="75%"
+  [title]="'Library.CreateNewVersion' | translate"
+  (close)="dialog.close()"
+>
+  <wbs-alert
+    type="info"
+    [dismissible]="false"
+    [message]="'Library.CreateNewVersionHelp' | translate"
+  />
+  <div class="p-2">
+    <label [for]="fromList" class="tx-10 fs-italic">
+      {{ "Library.CreateNewVersionFrom" | translate }}
+    </label>
+    <kendo-dropdownlist
+      #fromList
+      size="small"
+      textField="title"
+      valueField="version"
+      [data]="sortedList()"
+      [(value)]="selected"
+      [valuePrimitive]="true"
+    >
+      <ng-template
+        kendoDropDownListValueTemplate
+        kendoDropDownListItemTemplate
+        let-dataItem
+      >
+        @if (dataItem) {
+        {{ [dataItem.version, dataItem.versionAlias] | version }} &nbsp; ({{
+          dataItem.status | libraryStatus | translate
+        }}) }
+      </ng-template>
+    </kendo-dropdownlist>
+  </div>
+  <div class="p-2 pt-0">
+    <label [for]="newAlias" class="tx-10 fs-italic">
+      {{ "Library.NewVersionAlias" | translate }}
+    </label>
+    <input #newAlias kendoTextBox class="w-100" [(ngModel)]="alias" />
+  </div>
+  <kendo-dialog-actions layout="stretched">
+    <button
+      kendoButton
+      type="button"
+      themeColor="primary"
+      [disabled]="!alias() || !selected()"
+      (click)="create()"
+    >
+      {{ "General.Create" | translate }}
+    </button>
+  </kendo-dialog-actions>
+</kendo-dialog>

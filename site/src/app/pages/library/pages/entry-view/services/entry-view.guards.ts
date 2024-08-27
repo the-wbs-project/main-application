@@ -12,7 +12,7 @@ import { Utils } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
 import { EntryStore, UiStore } from '@wbs/core/store';
 import { forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, switchMap } from 'rxjs/operators';
 import { ENTRY_NAVIGATION } from '../models';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
@@ -25,53 +25,50 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
       'library',
       'view',
       Utils.getParam(route, 'ownerId'),
-      Utils.getParam(route, 'entryId'),
+      Utils.getParam(route, 'recordId'),
       Utils.getParam(route, 'versionId'),
       'about',
     ])
   );
 };
 
-export const redirectTaskGuard = (route: ActivatedRouteSnapshot) =>
-  inject(Store).dispatch(
-    new Navigate([
-      Utils.getParam(route, 'org'),
-      'library',
-      'view',
-      Utils.getParam(route, 'ownerId'),
-      Utils.getParam(route, 'entryId'),
-      Utils.getParam(route, 'versionId'),
-      'tasks',
-      route.params['taskId'],
-      'about',
-    ])
-  );
-
 export const populateGuard = (route: ActivatedRouteSnapshot) => {
   const data = inject(DataServiceFactory);
   const store = inject(EntryStore);
   const org = Utils.getParam(route, 'org');
   const owner = Utils.getParam(route, 'ownerId');
-  const entryId = Utils.getParam(route, 'entryId');
+  const recordId = Utils.getParam(route, 'recordId');
   const versionId = parseInt(Utils.getParam(route, 'versionId'), 10);
 
-  if (!owner || !entryId || !versionId || isNaN(versionId)) return false;
+  if (!owner || !recordId || !versionId || isNaN(versionId)) return false;
 
   const visibility = org === owner ? 'private' : 'public';
 
-  return forkJoin({
-    entry: data.libraryEntries.getAsync(owner, entryId),
-    version: data.libraryEntryVersions.getAsync(owner, entryId, versionId),
-    tasks: data.libraryEntryNodes.getAllAsync(
-      owner,
-      entryId,
-      versionId,
-      visibility
+  return data.libraryEntries.getIdAsync(owner, recordId).pipe(
+    switchMap((entryId) =>
+      forkJoin({
+        versions: data.libraryEntryVersions.getAsync(owner, entryId),
+        version: data.libraryEntryVersions.getByIdAsync(
+          owner,
+          entryId,
+          versionId
+        ),
+        tasks: data.libraryEntryNodes.getAllAsync(
+          owner,
+          entryId,
+          versionId,
+          visibility
+        ),
+        claims: data.claims.getLibraryEntryClaimsAsync(
+          org,
+          owner,
+          entryId,
+          versionId
+        ),
+      })
     ),
-    claims: data.claims.getLibraryEntryClaimsAsync(owner, entryId),
-  }).pipe(
-    map(({ entry, version, tasks, claims }) => {
-      store.setAll(entry, version, tasks, claims);
+    map(({ versions, version, tasks, claims }) => {
+      store.setAll(versions, version, tasks, claims);
     })
   );
 };
@@ -128,15 +125,22 @@ export const entryNavGuard = (route: ActivatedRouteSnapshot) => {
 export const taskNavGuard = (route: ActivatedRouteSnapshot) =>
   inject(EntryStore).setNavSectionTask(route.data['section']);
 
-export const verifyTaskUpdateClaimGuard = (route: ActivatedRouteSnapshot) => {
-  console.log('verifyTaskUpdateClaimGuard');
+export const verifyClaimsGuard = (route: ActivatedRouteSnapshot) => {
   const data = inject(DataServiceFactory);
+  const org = Utils.getParam(route, 'org');
   const owner = Utils.getParam(route, 'ownerId');
-  const entryId = Utils.getParam(route, 'entryId');
+  const recordId = Utils.getParam(route, 'recordId');
+  const version = parseInt(Utils.getParam(route, 'versionId'), 10);
 
-  if (!owner || !entryId) return false;
+  if (!owner || !recordId) return false;
 
-  return data.claims
-    .getLibraryEntryClaimsAsync(owner, entryId)
-    .pipe(map((claims) => claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)));
+  return data.libraryEntries
+    .getIdAsync(owner, recordId)
+    .pipe(
+      switchMap((entryId) =>
+        data.claims
+          .getLibraryEntryClaimsAsync(org, owner, entryId, version)
+          .pipe(map((claims) => claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)))
+      )
+    );
 };

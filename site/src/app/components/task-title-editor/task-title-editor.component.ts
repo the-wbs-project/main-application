@@ -4,18 +4,12 @@ import {
   OnChanges,
   SimpleChanges,
   input,
-  model,
   output,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import {
-  faFloppyDisk,
-  faPencil,
-  faTrash,
-  faXmark,
-} from '@fortawesome/pro-solid-svg-icons';
+import { faFloppyDisk, faXmark } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
@@ -38,16 +32,18 @@ export class TaskTitleEditorComponent implements OnChanges {
   readonly faXmark = faXmark;
   readonly title = input.required<string>();
   readonly save = output<string>();
-  readonly cancel = output<void>();
-
-  editTitle = '';
+  readonly editTitle = signal<string>('');
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['title']) this.editTitle = this.title();
+    if (changes['title']) this.reset();
   }
 
   keydown({ key }: { key: string }): void {
-    if (key === 'Enter') this.save.emit(this.editTitle);
-    else if (key === 'Escape') this.cancel.emit();
+    if (key === 'Enter') this.save.emit(this.editTitle());
+    else if (key === 'Escape') this.reset();
+  }
+
+  reset(): void {
+    this.editTitle.set(this.title());
   }
 }

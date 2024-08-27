@@ -18,13 +18,12 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { LibraryEntryNode, StepperItem } from '@wbs/core/models';
 import {
-  LibraryEntryNode,
-  LibraryEntryVersion,
   LibraryImportResults,
-  StepperItem,
-} from '@wbs/core/models';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
+  LibraryVersionViewModel,
+  LibraryViewModel,
+} from '@wbs/core/view-models';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { Observable, forkJoin } from 'rxjs';
@@ -32,7 +31,7 @@ import { map } from 'rxjs/operators';
 import { LibraryListComponent } from '../list';
 import { LibraryListFiltersComponent } from '../list-filters';
 import { LibraryImportTreeComponent } from './components';
-import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 
 @Component({
   standalone: true,
@@ -49,7 +48,7 @@ import { TreeHeightDirective } from '@wbs/core/directives/tree-height.directive'
     LoaderModule,
     SaveMessageComponent,
     TranslateModule,
-    TreeHeightDirective,
+    HeightDirective,
   ],
 })
 export class LibraryListModalComponent extends DialogContentBase {
@@ -58,7 +57,7 @@ export class LibraryListModalComponent extends DialogContentBase {
   private userId?: string;
 
   readonly containerHeight = signal(100);
-  readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
+  readonly selected = model<LibraryViewModel | undefined>(undefined);
   readonly view = signal(0);
   readonly ready = signal(false);
   readonly steps: StepperItem[] = [
@@ -76,9 +75,9 @@ export class LibraryListModalComponent extends DialogContentBase {
   //  View 2 Items
   //
   readonly loadingTree = signal(false);
-  readonly version = signal<LibraryEntryVersion | undefined>(undefined);
+  readonly version = signal<LibraryVersionViewModel | undefined>(undefined);
   readonly tasks = signal<LibraryEntryNode[]>([]);
-  readonly entries = signal<LibraryEntryViewModel[]>([]);
+  readonly entries = signal<LibraryViewModel[]>([]);
 
   constructor(dialog: DialogRef) {
     super(dialog);
@@ -93,7 +92,7 @@ export class LibraryListModalComponent extends DialogContentBase {
     const visibility = this.org === vm.ownerId ? 'private' : 'public';
 
     forkJoin({
-      version: this.data.libraryEntryVersions.getAsync(
+      version: this.data.libraryEntryVersions.getByIdAsync(
         vm.ownerId,
         vm.entryId,
         vm.version
@@ -146,14 +145,24 @@ export class LibraryListModalComponent extends DialogContentBase {
   }
 
   protected retrieve(): void {
-    this.data.libraryEntries
-      .searchAsync(this.org!, {
-        userId: this.userId!,
-        library: this.library(),
-        searchText: this.searchText(),
-        roles: this.roleFilters(),
-        types: this.typeFilters(),
-      })
-      .subscribe((entries) => this.entries.set(entries));
+    const lib = this.library();
+
+    if (lib === 'public') {
+      this.data.library
+        .getPublicAsync({
+          searchText: this.searchText(),
+          roles: this.roleFilters(),
+          types: this.typeFilters(),
+        })
+        .subscribe((entries) => this.entries.set(entries));
+    } else {
+      this.data.library
+        .getInternalAsync(this.org!, {
+          searchText: this.searchText(),
+          roles: this.roleFilters(),
+          types: this.typeFilters(),
+        })
+        .subscribe((entries) => this.entries.set(entries));
+    }
   }
 }
