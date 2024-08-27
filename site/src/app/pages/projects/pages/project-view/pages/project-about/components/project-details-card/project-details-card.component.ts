@@ -44,6 +44,8 @@ export class ProjectDetailsCardComponent {
   );
 
   private getUsers(project: ProjectViewModel, role: string): string[] {
-    return project.roles.filter((x) => x.role === role).map((x) => x.userId);
+    return project.roles
+      .filter((x) => x.role === role)
+      .map((x) => x.user.userId);
   }
 }

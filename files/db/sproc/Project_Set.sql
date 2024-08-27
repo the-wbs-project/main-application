@@ -3,6 +3,7 @@ GO
 
 CREATE PROCEDURE [dbo].[Project_Set]
     @Id nvarchar(100),
+    @RecordId nvarchar(100),
     @OwnerId nvarchar(100),
     @CreatedBy nvarchar(100),
     @Title nvarchar(200),
@@ -16,7 +17,9 @@ CREATE PROCEDURE [dbo].[Project_Set]
     @LibraryLink nvarchar(MAX)
 AS
 BEGIN
-IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
+    IF EXISTS(SELECT *
+    FROM [dbo].[Projects]
+    WHERE [Id] = @Id)
     BEGIN
         UPDATE [dbo].[Projects]
         SET [OwnerId] = @OwnerId,
@@ -36,7 +39,8 @@ IF EXISTS(SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id)
 ELSE
     BEGIN
         INSERT INTO [dbo].[Projects]
-        VALUES (@Id, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @Roles, @ApprovalStarted, @LibraryLink)
+        VALUES
+            (@Id, @RecordId, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @Roles, @ApprovalStarted, @LibraryLink)
     END
 END
 GO

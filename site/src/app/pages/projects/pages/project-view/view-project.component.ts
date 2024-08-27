@@ -9,21 +9,20 @@ import {
 import { RouterModule } from '@angular/router';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
-import { PROJECT_STATI, SaveState } from '@wbs/core/models';
-import { NavigationMenuService, SignalStore } from '@wbs/core/services';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
 import { PageHeaderComponent } from '@wbs/components/page-header';
+import { PROJECT_STATI, SaveState } from '@wbs/core/models';
+import { NavigationMenuService, SignalStore } from '@wbs/core/services';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { delay, tap } from 'rxjs/operators';
-import { ChangeProjectBasics } from './actions';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button.component';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
 import { ProjectTitleComponent } from './components/project-title';
 import { PROJECT_NAVIGATION } from './models';
-import { ProjectApprovalState, ProjectState } from './states';
+import { ProjectApprovalState } from './states';
+import { ProjectStore } from './stores';
 
 @Component({
   standalone: true,
@@ -47,13 +46,13 @@ export class ProjectViewComponent {
   private readonly store = inject(SignalStore);
 
   readonly checkIcon = faCheck;
+  readonly projectStore = inject(ProjectStore);
 
   readonly userId = input.required<string>();
   readonly projectUrl = input.required<string[]>();
 
   readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly approval = this.store.select(ProjectApprovalState.current);
-  readonly claims = this.store.select(ProjectState.claims);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly approvalView = this.store.select(ProjectApprovalState.view);
   readonly showApproval = computed(
@@ -63,34 +62,18 @@ export class ProjectViewComponent {
     ProjectApprovalState.hasChildren
   );
   readonly chat = this.store.select(ProjectApprovalState.messages);
-  readonly project = this.store.select(ProjectState.current);
-  readonly navSection = this.store.select(ProjectState.navSection);
   readonly titleSaveState = signal<SaveState>('ready');
-  readonly category = computed(() => this.project()?.category);
-  readonly title = computed(() => this.project()?.title);
+  readonly category = computed(() => this.projectStore.project()?.category);
+  readonly title = computed(() => this.projectStore.project()?.title);
   readonly links = computed(() =>
     this.navService.processLinks(
       PROJECT_NAVIGATION,
-      this.project()?.status === PROJECT_STATI.PLANNING,
-      this.claims() ?? []
+      this.projectStore.project()?.status === PROJECT_STATI.PLANNING,
+      this.projectStore.claims() ?? []
     )
   );
 
-  titleChanged(title: string): void {
-    this.titleSaveState.set('saving');
-    const project = this.project()!;
-
-    this.store
-      .dispatch(
-        new ChangeProjectBasics(title, project.description, project.category)
-      )
-      .pipe(
-        delay(500),
-        tap(() => this.titleSaveState.set('saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.titleSaveState.set('ready'));
-  }
+  titleChanged(title: string): void {}
 
   navigate(route: string[]): void {
     this.store.dispatch(new Navigate([...this.projectUrl(), ...route]));

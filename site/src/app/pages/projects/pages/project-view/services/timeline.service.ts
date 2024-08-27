@@ -11,11 +11,13 @@ import {
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { ProjectState, TasksState } from '../states';
+import { TasksState } from '../states';
+import { ProjectStore } from '../stores';
 
 @Injectable()
 export class TimelineService {
   private readonly data = inject(DataServiceFactory);
+  private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
   private readonly userId = inject(UserStore).userId;
@@ -28,7 +30,7 @@ export class TimelineService {
   ): ProjectActivityRecord {
     return {
       data,
-      project: project ?? this.store.selectSnapshot(ProjectState.current)!,
+      project: project ?? this.projectStore.project()!,
       nodes: nodes ?? this.store.selectSnapshot(TasksState.nodes)!,
     };
   }

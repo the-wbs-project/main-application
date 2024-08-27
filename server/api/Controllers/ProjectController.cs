@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -50,7 +49,7 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            if (project.owner != owner) return BadRequest("Owner in url must match owner in body");
+            if (project.Owner != owner) return BadRequest("Owner in url must match owner in body");
 
             using (var conn = await db.CreateConnectionAsync())
                 await projectDataService.SetAsync(conn, project);
@@ -59,7 +58,7 @@ public class ProjectController : ControllerBase
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error setting project {projectId} for owner {owner}", project.id, owner);
+            logger.LogError(ex, "Error setting project {projectId} for owner {owner}", project.Id, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -87,7 +86,7 @@ public class ProjectController : ControllerBase
         try
         {
             using (var conn = await db.CreateConnectionAsync())
-                return Ok((await projectDataService.GetByIdAsync(conn, projectId)).roles ?? new ProjectRole[] { });
+                return Ok((await projectDataService.GetByIdAsync(conn, projectId)).Roles ?? new ProjectRole[] { });
         }
         catch (Exception ex)
         {

@@ -1,15 +1,35 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AppConfiguration, ProjectNode } from '@wbs/core/models';
-import { IdService, Utils } from '@wbs/core/services';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import {
+  AppConfiguration,
+  PROJECT_STATI,
+  PROJECT_STATI_TYPE,
+  ProjectCategoryChanges,
+  ProjectNode,
+} from '@wbs/core/models';
+import { IdService, Transformers, Utils } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { TaskViewModel } from '@wbs/core/view-models';
+import {
+  ProjectViewModel,
+  TaskViewModel,
+  UserViewModel,
+} from '@wbs/core/view-models';
+import { Observable, of } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { RemoveDisciplinesFromTasks, SetChecklistData } from '../actions';
+import { ProjectStore } from '../stores';
+import { ProjectActivityService } from './project-activity.service';
 
 @Injectable()
 export class ProjectService {
+  private readonly activity = inject(ProjectActivityService);
+  private readonly data = inject(DataServiceFactory);
   private readonly metadata = inject(MetadataStore);
+  protected readonly projectStore = inject(ProjectStore);
   protected readonly store = inject(Store);
+  protected readonly transformers = inject(Transformers);
 
   static getProjectUrl(route: ActivatedRouteSnapshot): string[] {
     return [
@@ -76,6 +96,119 @@ export class ProjectService {
     return nodes.filter((x) => x.parentId == null).map((x) => x.id);
   }
 
+  changeProjectTitle(title: string): Observable<void> {
+    const project = this.projectStore.project()!;
+    const from = project.title;
+
+    project.title = title;
+
+    return this.saveProject(project).pipe(
+      tap(() => this.activity.changeProjectTitle(project.id, from, title))
+    );
+  }
+
+  changeProjectDescription(description: string): Observable<void> {
+    const project = this.projectStore.project()!;
+    const from = project.description;
+
+    project.description = description;
+
+    return this.saveProject(project).pipe(
+      tap(() =>
+        this.activity.changeProjectDescription(project.id, from, description)
+      )
+    );
+  }
+
+  changeProjectCategory(category: string): Observable<void> {
+    const project = this.projectStore.project()!;
+    const from = project.category;
+
+    project.category = category;
+
+    return this.saveProject(project).pipe(
+      tap(() => this.activity.changeProjectCategory(project.id, from, category))
+    );
+  }
+
+  changeProjectStatus(status: PROJECT_STATI_TYPE): Observable<void> {
+    const project = this.projectStore.project()!;
+    const original = project.status;
+
+    project.status = status;
+
+    if (status === PROJECT_STATI.APPROVAL) {
+      //
+      //  If the status is approval, set to true.  If its not true leave it alone (don't set to false).
+      //
+      project.approvalStarted = true;
+    }
+
+    return this.saveProject(project).pipe(
+      tap(() => this.activity.changeProjectStatus(project.id, original, status))
+    );
+  }
+
+  changeProjectDisciplines(changes: ProjectCategoryChanges): Observable<void> {
+    const project = this.projectStore.project()!;
+    const original = [...project.disciplines];
+
+    project.disciplines = changes.categories;
+
+    return this.saveProject(project).pipe(
+      tap(() =>
+        this.activity.changeProjectDisciplines(
+          project.id,
+          original,
+          project.disciplines
+        )
+      ),
+      tap(() =>
+        changes.removedIds.length == 0
+          ? of('')
+          : this.store.dispatch(
+              new RemoveDisciplinesFromTasks(changes.removedIds)
+            )
+      )
+    );
+  }
+  addUserToRole(role: string, user: UserViewModel): Observable<void> {
+    const project = this.projectStore.project()!;
+
+    project.roles.push({ role, user });
+
+    return this.saveProject(project).pipe(
+      tap(() =>
+        this.activity.addUserToRole(
+          project.id,
+          user,
+          this.getRoleTitle(role, false)
+        )
+      )
+    );
+  }
+
+  removeUserFromRole(role: string, user: UserViewModel): Observable<unknown> {
+    const project = this.projectStore.project()!;
+    const index = project.roles.findIndex(
+      (x) => x.role === role && x.user.userId === user.userId
+    );
+
+    if (index === -1) return of('');
+
+    project.roles.splice(index, 1);
+
+    return this.saveProject(project).pipe(
+      tap(() =>
+        this.activity.removeUserToRole(
+          project.id,
+          user,
+          this.getRoleTitle(role, false)
+        )
+      )
+    );
+  }
+
   createTask(
     projectId: string,
     parentId: string | undefined,
@@ -96,5 +229,16 @@ export class ProjectService {
       createdOn: ts,
       lastModified: ts,
     };
+  }
+
+  private saveProject(project: ProjectViewModel): Observable<void> {
+    const model = this.transformers.projects.toModel(project);
+
+    return this.data.projects.putAsync(model).pipe(
+      tap(() => this.projectStore.markProject()),
+      tap(() =>
+        this.store.dispatch(new SetChecklistData(project, undefined, undefined))
+      )
+    );
   }
 }

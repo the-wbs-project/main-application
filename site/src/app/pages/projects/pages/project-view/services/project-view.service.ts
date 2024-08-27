@@ -8,11 +8,10 @@ import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
 import { LibraryImportResults, ProjectViewModel } from '@wbs/core/view-models';
 import { MembershipStore, UserStore } from '@wbs/core/store';
-import { Observable, forkJoin, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import {
   AddDisciplineToTask,
-  ChangeProjectStatus,
   ChangeTaskAbsFlag,
   CloneTask,
   CreateTask,
@@ -25,10 +24,12 @@ import {
 } from '../actions';
 import { TaskDeleteComponent } from '../components/task-delete';
 import { PROJECT_PAGES, TASK_PAGES } from '../models';
-import { ProjectState, TasksState } from '../states';
+import { TasksState } from '../states';
+import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
 import { ProjectImportProcessorService } from './project-import-processor.service';
+import { ProjectService } from './project.service';
 
 @Injectable()
 export class ProjectViewService {
@@ -39,12 +40,14 @@ export class ProjectViewService {
   private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
   private readonly nav = inject(ProjectNavigationService);
+  private readonly projectService = inject(ProjectService);
+  private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
   private readonly transformers = inject(Transformers);
   private readonly userId = inject(UserStore).userId;
 
   private get project(): ProjectViewModel {
-    return this.store.selectSnapshot(ProjectState.current)!;
+    return this.projectStore.project()!;
   }
 
   private get owner(): string {
@@ -151,12 +154,12 @@ export class ProjectViewService {
   downloadTasks(abs: boolean): void {
     this.messages.notify.info('General.RetrievingData');
 
-    forkJoin([
-      this.store.selectOnce(ProjectState.current),
-      this.store.selectOnce(TasksState.nodes),
-    ])
+    const project = this.project;
+
+    this.store
+      .selectOnce(TasksState.nodes)
       .pipe(
-        map(([project, nodes]) => ({ project: project!, nodes: nodes! })),
+        map((nodes) => ({ project: project!, nodes: nodes! })),
         switchMap(({ project, nodes }) => {
           let tasks = abs
             ? this.transformers.nodes.phase.view.forAbsProject(
@@ -190,8 +193,8 @@ export class ProjectViewService {
         switchMap((answer: boolean) => {
           if (!answer) return of();
 
-          return this.store
-            .dispatch(new ChangeProjectStatus(status))
+          return this.projectService
+            .changeProjectStatus(status)
             .pipe(
               tap(() =>
                 this.messages.report.success('General.Success', successMessage)

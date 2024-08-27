@@ -1,3 +1,4 @@
+import { LibraryLink, LibraryTaskLink } from '../models';
 import { CategoryViewModel } from './category.view-model';
 
 export interface TaskViewModel {
@@ -7,6 +8,7 @@ export interface TaskViewModel {
   parentId?: string;
   treeParentId?: string;
 
+  createdOn?: Date;
   children: number;
   childrenIds: string[];
   description?: string;
@@ -28,6 +30,9 @@ export interface TaskViewModel {
   phaseLabel?: string;
   previousTaskId?: string;
   nextTaskId?: string;
+
+  libraryLink?: LibraryLink;
+  libraryTaskLink?: LibraryTaskLink;
 }
 
 export interface LibraryTaskViewModel extends TaskViewModel {

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   ViewChild,
   ViewEncapsulation,
 } from '@angular/core';
@@ -9,9 +10,9 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
 import { PROJECT_STATI } from '@wbs/core/models';
-import { ChangeProjectStatus } from '../../actions';
-import { ProjectChecklistComponent } from '../project-checklist/project-checklist.component';
+import { ProjectService } from '../../services';
 import { ProjectChecklistState } from '../../states';
+import { ProjectChecklistComponent } from '../project-checklist';
 
 @Component({
   standalone: true,
@@ -22,16 +23,16 @@ import { ProjectChecklistState } from '../../states';
   imports: [ProjectChecklistComponent, TranslateModule],
 })
 export class ProjectChecklistModalComponent {
+  private readonly service = inject(ProjectService);
+  private readonly store = inject(Store);
+
   @ViewChild('content') content!: any;
 
   readonly checklist = toSignal(
     this.store.select(ProjectChecklistState.results)
   );
 
-  constructor(
-    private readonly modalService: NgbModal,
-    private readonly store: Store
-  ) {}
+  constructor(private readonly modalService: NgbModal) {}
 
   open(): void {
     const modal = this.modalService.open(this.content, {
@@ -42,7 +43,7 @@ export class ProjectChecklistModalComponent {
     // deepcode ignore PromiseNotCaughtGeneral: aint nobody got time for that
     modal.result.then((value) => {
       if (value === 'submit') {
-        this.store.dispatch(new ChangeProjectStatus(PROJECT_STATI.APPROVAL));
+        this.service.changeProjectStatus(PROJECT_STATI.APPROVAL).subscribe();
       }
     });
     modal.dismissed.subscribe();

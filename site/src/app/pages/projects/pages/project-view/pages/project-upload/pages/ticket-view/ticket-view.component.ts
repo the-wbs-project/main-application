@@ -2,6 +2,7 @@ import { NgIf } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
+  inject,
   input,
   signal,
 } from '@angular/core';
@@ -11,7 +12,7 @@ import { Store } from '@ngxs/store';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { CreateJiraTicket } from '../../actions';
-import { ProjectState } from '../../../../states';
+import { ProjectStore } from '../../../../stores';
 
 @Component({
   standalone: true,
@@ -23,7 +24,7 @@ export class TicketViewComponent {
   readonly reasonCode = input<string>();
   readonly sending = signal<boolean>(false);
   readonly mode = signal<'description' | 'thank-you'>('description');
-  readonly project = this.store.selectSnapshot(ProjectState.current)!;
+  readonly project = inject(ProjectStore).project()!;
 
   constructor(private readonly store: Store) {}
 

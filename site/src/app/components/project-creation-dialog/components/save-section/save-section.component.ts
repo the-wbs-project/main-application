@@ -105,6 +105,7 @@ export class SaveSectionComponent {
       id: this.newId(),
       owner: this.owner(),
       category: this.category().id,
+      recordId: '',
       title: this.templateTitle(),
       disciplines,
       createdOn: now,

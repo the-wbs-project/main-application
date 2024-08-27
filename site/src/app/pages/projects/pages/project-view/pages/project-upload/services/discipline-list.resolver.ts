@@ -1,14 +1,12 @@
 import { inject } from '@angular/core';
 import { ResolveFn } from '@angular/router';
-import { Store } from '@ngxs/store';
 import { ProjectCategory } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/core/store';
-import { ProjectState } from '../../../states';
+import { ProjectStore } from '../../../stores';
 
 export const disciplineListResolver: ResolveFn<ProjectCategory[]> = () => {
-  const store = inject(Store);
   const categories = inject(MetadataStore).categories.disciplines;
-  const project = store.selectSnapshot(ProjectState.current);
+  const project = inject(ProjectStore).project();
 
   return [
     ...project!.disciplines.filter((category) => category.isCustom),

@@ -70,10 +70,6 @@ const libApp = newApp()
 
 app.route('/', libApp);
 //
-//  Auth calls
-//
-app.get('api/portfolio/:owner/projects/:project/users', verifyJwt, verifyMembership, Http.projects.getUsersAsync);
-//
 //  Library Entry calls
 //
 const entryApp = newApp()
@@ -91,7 +87,21 @@ const entryApp = newApp()
   .put('versions/:version/nodes', verifyJwt, Http.libraryTasks.putAsync);
 
 app.route('/', entryApp);
+//
+//
+//  Project calls
+//
+const projectApp = newApp()
+  .basePath('api/portfolio/:owner/projects')
+  .get('', verifyJwt, verifyMembership, Http.projects.getByOwnerAsync)
+  .get(':project', verifyJwt, verifyMembership, Http.projects.getByIdAsync)
+  .put(':project', verifyJwt, verifyMembership, Http.projects.putAsync);
 
+app.route('/', projectApp);
+
+//
+//  Organization calls
+//
 app.get('api/roles', Http.roles.getAllAsync);
 app.get('api/memberships', verifyJwt, Http.users.getMembershipsAsync);
 app.get('api/users/:organization/:user', verifyJwt, Http.users.getUserAsync);

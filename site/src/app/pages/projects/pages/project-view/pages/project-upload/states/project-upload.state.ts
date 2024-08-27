@@ -9,6 +9,7 @@ import {
   WbsImportResult,
   UploadResults,
   ProjectCategory,
+  ProjectCategoryChanges,
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
@@ -17,8 +18,8 @@ import { ProjectViewModel } from '@wbs/core/view-models';
 import { forkJoin, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 import { PROJECT_ACTIONS } from '../../../../../models';
-import { SaveProject, VerifyTasks } from '../../../actions';
-import { ProjectState } from '../../../states';
+import { VerifyTasks } from '../../../actions';
+import { ProjectStore } from '../../../stores';
 import {
   AppendOrOvewriteSelected,
   CreateJiraTicket,
@@ -31,6 +32,7 @@ import {
   SetAsStarted,
   SetPageTitle,
 } from '../actions';
+import { ProjectService } from '../../../services';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -65,6 +67,8 @@ export class ProjectUploadState {
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
+  private readonly projectService = inject(ProjectService);
+  private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
   private readonly userStore = inject(UserStore);
@@ -122,7 +126,7 @@ export class ProjectUploadState {
   }
 
   private get project(): ProjectViewModel {
-    return this.store.selectSnapshot(ProjectState.current)!;
+    return this.projectStore.project()!;
   }
 
   @Action(SetAsStarted)
@@ -354,12 +358,14 @@ export class ProjectUploadState {
     { results }: SaveUpload
   ): void | Observable<any> {
     const project = this.project;
+    const disciplines: ProjectCategoryChanges = {
+      categories: results.disciplines,
+      removedIds: [],
+    };
 
-    project.disciplines = this.categoryService.buildViewModels(
-      results.disciplines
-    );
-
-    const saves: Observable<any>[] = [ctx.dispatch(new SaveProject(project))];
+    const saves: Observable<any>[] = [
+      this.projectService.changeProjectDisciplines(disciplines),
+    ];
 
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(

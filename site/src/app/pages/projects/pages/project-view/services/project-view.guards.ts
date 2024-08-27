@@ -8,57 +8,37 @@ import {
   InitiateChecklist,
   SetApproval,
   SetApprovalView,
-  SetProjectNavSection,
-  SetTaskNavSection,
-  VerifyProject,
-  VerifyTask,
   VerifyTasks,
 } from '../actions';
-import { ProjectBreadcrumbsService } from './project-breadcrumbs.service';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { forkJoin } from 'rxjs';
+import { ProjectStore } from '../stores';
 
 export const closeApprovalWindowGuard = () =>
   inject(Store).dispatch(new SetApproval());
 
 export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
+  const data = inject(DataServiceFactory);
+  const projectStore = inject(ProjectStore);
   const store = inject(Store);
+  const owner = Utils.getParam(route, 'org');
+  const projectId = Utils.getParam(route, 'projectId');
+
+  if (!owner || !projectId) return false;
 
   inject(TitleService).setTitle([{ text: 'General.Projects' }]);
 
-  return store
-    .dispatch([
-      new InitiateChecklist(),
-      new VerifyProject(
-        Utils.getParam(route, 'org'),
-        Utils.getParam(route, 'projectId')
-      ),
-    ])
-    .pipe(switchMap(() => store.dispatch(new VerifyTasks(true))));
-};
+  return forkJoin({
+    project: data.projects.getAsync(owner, projectId),
+    tasks: data.projectNodes.getAllAsync(owner, projectId),
+    claims: data.claims.getProjectClaimsAsync(owner, projectId),
+  }).pipe(
+    switchMap(({ project, tasks, claims }) => {
+      projectStore.setAll(project, tasks, claims);
 
-export const projectNavGuard = (route: ActivatedRouteSnapshot) => {
-  inject(Store).dispatch(new SetProjectNavSection(route.data['navSection']));
-
-  if (!route.data['crumbs']) return;
-
-  inject(ProjectBreadcrumbsService).setProjectCrumbs(route);
-};
-
-export const taskNavGuard = (route: ActivatedRouteSnapshot) => {
-  inject(Store).dispatch(new SetTaskNavSection(route.data['navSection']));
-  //
-  //  At the moment breadcrumbs aren't being shown in the task dialog, so don't call
-  //
-  //if (!route.data['crumbs']) return;
-  //inject(ProjectBreadcrumbsService).setTaskCrumbs(route);
-};
-
-export const taskVerifyGuard = (route: ActivatedRouteSnapshot) => {
-  const store = inject(Store);
-  const taskId = Utils.getParam(route, 'taskId');
-
-  if (!taskId) return false;
-
-  return store.dispatch([new VerifyTask(taskId)]);
+      return store.dispatch([new InitiateChecklist(), new VerifyTasks(true)]);
+    })
+  );
 };
 
 export const setApprovalViewAsTask = () =>

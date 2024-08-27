@@ -8,13 +8,12 @@ import {
   faStamp,
   faXmarkToSlot,
 } from '@fortawesome/pro-solid-svg-icons';
-import { Store } from '@ngxs/store';
 import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { ProjectViewModel } from '@wbs/core/view-models';
 import { ProjectAction } from '../models';
-import { ProjectState } from '../states';
+import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectViewService } from './project-view.service';
 
@@ -24,7 +23,7 @@ export class ProjectActionButtonService {
   private readonly exportService = inject(LibraryEntryExportService);
   private readonly messages = inject(Messages);
   private readonly metadata = inject(MetadataStore);
-  private readonly store = inject(Store);
+  private readonly store = inject(ProjectStore);
 
   private readonly actionApproval = 'approval';
   private readonly actionCancel = 'cancel';
@@ -173,9 +172,7 @@ export class ProjectActionButtonService {
   }
 
   private export(): void {
-    this.exportService.exportProject(
-      this.store.selectSnapshot(ProjectState.current)!
-    );
+    this.exportService.exportProject(this.store.project()!);
   }
 
   private cancel(): void {
@@ -189,9 +186,9 @@ export class ProjectActionButtonService {
   private approval(): void {
     const role = this.metadata.roles.ids.approver;
     const approvals = this.store
-      .selectSnapshot(ProjectState.current)!
+      .project()!
       .roles.filter((r) => r.role === role)
-      .map((r) => r.userId);
+      .map((r) => r.user.userId);
 
     if (approvals.length === 0) {
       this.messages.report.failure(

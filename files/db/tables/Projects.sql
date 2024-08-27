@@ -1,5 +1,7 @@
-CREATE TABLE [dbo].[Projects] (
+CREATE TABLE [dbo].[Projects]
+(
     [Id] nvarchar(100) NOT NULL,
+    [RecordId] nvarchar(100) NOT NULL,
     [OwnerId] nvarchar(100) NOT NULL,
     [CreatedBy] nvarchar(100) NOT NULL,
     [CreatedOn] datetimeoffset NOT NULL,

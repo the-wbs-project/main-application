@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, effect, inject } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -11,6 +11,7 @@ import {
 } from '@ngxs/store';
 import { Message } from '@progress/kendo-angular-conversational-ui';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { MembershipStore, UserStore } from '@wbs/core/store';
 import {
   ChatComment,
   ProjectApproval,
@@ -26,8 +27,7 @@ import {
   SetApproval,
   SetApprovalView,
 } from '../actions';
-import { ProjectState } from './project.state';
-import { MembershipStore, UserStore } from '@wbs/core/store';
+import { ProjectStore } from '../stores';
 
 interface StateModel {
   childrenIds?: string[];
@@ -56,6 +56,7 @@ declare type Context = StateContext<StateModel>;
 })
 export class ProjectApprovalState implements NgxsOnInit {
   private readonly data = inject(DataServiceFactory);
+  private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
   private readonly userId = inject(UserStore).userId;
   private readonly membership = inject(MembershipStore);
@@ -109,38 +110,37 @@ export class ProjectApprovalState implements NgxsOnInit {
         })
       );
 
-    this.store
-      .select(ProjectState.current)
-      .pipe(untilDestroyed(this))
-      .subscribe((project) => {
-        if (!project) return;
+    effect(() => {
+      const project = this.projectStore.project();
 
-        const state = ctx.getState();
-        //
-        //  If we're already started, and the project is still started, do nothing.
-        //
-        if (
-          state.owner === project.owner &&
-          state.projectId === project.id &&
-          state.started === project.approvalStarted
-        )
-          return;
+      if (!project) return;
 
-        ctx.patchState({
-          started: project.approvalStarted,
-          owner: project.owner,
-          projectId: project.id,
-          childrenIds: undefined,
-          current: undefined,
-          list: [],
-          messages: undefined,
-          stats: undefined,
-        });
+      const state = ctx.getState();
+      //
+      //  If we're already started, and the project is still started, do nothing.
+      //
+      if (
+        state.owner === project.owner &&
+        state.projectId === project.id &&
+        state.started === project.approvalStarted
+      )
+        return;
 
-        if (project.approvalStarted) {
-          ctx.dispatch(new InitiateApprovals(project.owner, project.id));
-        }
+      ctx.patchState({
+        started: project.approvalStarted,
+        owner: project.owner,
+        projectId: project.id,
+        childrenIds: undefined,
+        current: undefined,
+        list: [],
+        messages: undefined,
+        stats: undefined,
       });
+
+      if (project.approvalStarted) {
+        ctx.dispatch(new InitiateApprovals(project.owner, project.id));
+      }
+    });
   }
 
   @Action(InitiateApprovals)

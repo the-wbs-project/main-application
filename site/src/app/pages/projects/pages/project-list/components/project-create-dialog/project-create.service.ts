@@ -40,6 +40,7 @@ export class ProjectCreateService {
       title: this.pcStore.title(),
       createdOn: now,
       lastModified: now,
+      recordId: '',
     };
     const nodes: ProjectNode[] = [];
 

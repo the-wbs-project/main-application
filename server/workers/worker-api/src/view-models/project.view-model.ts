@@ -1,8 +1,4 @@
-import {
-  LibraryLink,
-  PROJECT_NODE_VIEW_TYPE,
-  PROJECT_STATI_TYPE,
-} from '../models';
+import { LibraryLink } from '../models';
 import { UserViewModel } from './user.view-model';
 
 export interface UserRoleViewModel {
@@ -20,8 +16,8 @@ export interface ProjectViewModel {
   createdOn: Date;
   lastModified: Date;
   approvalStarted?: boolean;
-  status: PROJECT_STATI_TYPE;
-  mainNodeView: PROJECT_NODE_VIEW_TYPE;
+  status: string;
+  mainNodeView: string;
   category: string;
   disciplines: any[];
   roles: UserRoleViewModel[];

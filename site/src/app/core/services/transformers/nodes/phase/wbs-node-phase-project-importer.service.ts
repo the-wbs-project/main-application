@@ -1,20 +1,19 @@
+import { inject } from '@angular/core';
 import {
-  Project,
   WbsImportResult,
   ProjectUploadData,
   WbsNode,
   ProjectCategory,
 } from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
+import { IdService, WbsNodeService } from '@wbs/core/services';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { BaseImporter } from './base-importer.service';
-import { inject } from '@angular/core';
-import { WbsNodeService } from '@wbs/core/services/wbs-node.service';
 
 export class WbsNodePhaseProjectImporter extends BaseImporter {
   private readonly wbsService = inject(WbsNodeService);
 
   run(
-    project: Project,
+    project: ProjectViewModel,
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
     people: Map<string, ProjectCategory>,

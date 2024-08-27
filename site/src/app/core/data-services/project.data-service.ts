@@ -2,19 +2,20 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Member, Project, ProjectToLibraryOptions } from '../models';
+import { ProjectViewModel } from '../view-models';
 
 export class ProjectDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAllAsync(owner: string): Observable<Project[]> {
+  getAllAsync(owner: string): Observable<ProjectViewModel[]> {
     return this.http
-      .get<Project[]>(`api/portfolio/${owner}/projects`)
+      .get<ProjectViewModel[]>(`api/portfolio/${owner}/projects`)
       .pipe(map((list) => this.cleanList(list)));
   }
 
-  getAsync(owner: string, projectId: string): Observable<Project> {
+  getAsync(owner: string, projectId: string): Observable<ProjectViewModel> {
     return this.http
-      .get<Project>(`api/portfolio/${owner}/projects/${projectId}`)
+      .get<ProjectViewModel>(`api/portfolio/${owner}/projects/${projectId}`)
       .pipe(map((node) => this.clean(node)));
   }
 
@@ -29,12 +30,6 @@ export class ProjectDataService {
     );
   }
 
-  getUsersAsync(owner: string, projectId: string): Observable<Member[]> {
-    return this.http.get<Member[]>(
-      `api/portfolio/${owner}/projects/${projectId}/users`
-    );
-  }
-
   putAsync(project: Project): Observable<void> {
     return this.http.put<void>(
       `api/portfolio/${project.owner}/projects/${project.id}`,
@@ -42,13 +37,13 @@ export class ProjectDataService {
     );
   }
 
-  private cleanList(projects: Project[]): Project[] {
+  private cleanList(projects: ProjectViewModel[]): ProjectViewModel[] {
     for (const project of projects) this.clean(project);
 
     return projects;
   }
 
-  private clean(project: Project): Project {
+  private clean(project: ProjectViewModel): ProjectViewModel {
     if (typeof project.createdOn === 'string')
       project.createdOn = new Date(project.createdOn);
 

@@ -1,45 +1,40 @@
 import { Context } from '../../config';
 import { Member } from '../../models';
+import { OriginService } from '../origin.service';
 
 export class ProjectHttpService {
-  static async getUsersAsync(ctx: Context): Promise<Response> {
+  static async getByOwnerAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner } = ctx.req.param();
+
+      return ctx.json(await ctx.var.data.projects.getByOwnerAsync(owner));
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to get projects.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async getByIdAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, project } = ctx.req.param();
 
-      const [projectRoles, members] = await Promise.all([
-        ctx.var.data.projects.getRolesAsync(owner, project),
-        ctx.var.data.memberships.getAllAsync(owner),
-      ]);
-      const map = new Map<string, string[]>();
-
-      for (const role of projectRoles) {
-        const roles = map.get(role.userId) ?? [];
-        roles.push(role.role);
-        map.set(role.userId, roles);
-      }
-
-      const results: Member[] = [];
-
-      for (const userId of map.keys()) {
-        const user = members.find((m) => m.user_id === userId);
-        const roles = map.get(userId);
-
-        if (user) {
-          results.push({
-            user_id: user.user_id,
-            name: user.name,
-            email: user.email,
-            picture: user.picture,
-            roles: user.roles.filter((r) => roles?.includes(r.id)),
-          });
-        }
-      }
-
-      return ctx.json(results);
+      return ctx.json(await ctx.var.data.projects.getByIdAsync(owner, project));
     } catch (e) {
-      //@ts-ignore
-      console.log(e.message);
-      ctx.get('logger').trackException('An error occured trying to get project users.', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to get project by id.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async putAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, entry } = ctx.req.param();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.projects.clearKvAsync(owner, entry)]);
+
+      return resp;
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to save a library entry version.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

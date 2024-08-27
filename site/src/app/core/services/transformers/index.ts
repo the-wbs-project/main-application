@@ -5,6 +5,7 @@ import { WbsNodeService } from '../wbs-node.service';
 import { ActivityTransformer } from './activity.transformer';
 import { WbsNodeTransformers } from './nodes';
 import { LibraryVersionTransformer } from './library-version.transformer';
+import { ProjectTransformer } from './project.transformer';
 
 @Injectable({ providedIn: 'root' })
 export class Transformers {
@@ -16,6 +17,7 @@ export class Transformers {
   );
   readonly activities = ActivityTransformer;
   readonly libraryVersions = LibraryVersionTransformer;
+  readonly projects = ProjectTransformer;
 
   constructor(
     private readonly categoryService: CategoryService,

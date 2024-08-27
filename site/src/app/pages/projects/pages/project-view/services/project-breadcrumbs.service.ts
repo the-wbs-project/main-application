@@ -1,59 +1,50 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, effect, inject, signal } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngxs/store';
 import { Utils } from '@wbs/core/services';
-import {
-  NavigationLink,
-  Project,
-  RoutedBreadcrumbItem,
-} from '@wbs/core/models';
+import { NavigationLink, RoutedBreadcrumbItem } from '@wbs/core/models';
 import { UiStore } from '@wbs/core/store';
 import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
-import { Subscription } from 'rxjs';
 import { PROJECT_NAVIGATION, TASK_NAVIGATION } from '../models';
-import { ProjectState, TasksState } from '../states';
+import { TasksState } from '../states';
+import { ProjectStore } from '../stores';
 import { ProjectService } from './project.service';
 
 @Injectable()
-@UntilDestroy()
 export class ProjectBreadcrumbsService {
+  private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
   private readonly ui = inject(UiStore);
-  private sub?: Subscription;
+  private readonly _route = signal<ActivatedRouteSnapshot | undefined>(
+    undefined
+  );
 
-  setProjectCrumbs(route: ActivatedRouteSnapshot): void {
-    if (this.sub) this.sub.unsubscribe();
+  constructor() {
+    //
+    //  Project crumbs
+    //
+    effect(() => {
+      const route = this._route();
+      const project = this.projectStore.project();
 
-    this.project(this.getProject(), route);
+      if (!project || !route) return;
 
-    this.sub = this.store
-      .select(ProjectState.current)
-      .pipe(untilDestroyed(this))
-      .subscribe((project) => {
-        if (!project) return;
-
-        this.project(project, route);
-      });
+      this.project(project, route);
+    });
   }
 
   setTaskCrumbs(route: ActivatedRouteSnapshot): void {
-    if (this.sub) this.sub.unsubscribe();
-
     this.task(this.getProject(), this.getTask(), route);
 
-    this.sub = this.store
-      .select(TasksState.current)
-      .pipe(untilDestroyed(this))
-      .subscribe((task) => {
-        if (!task) return;
+    this.store.select(TasksState.current).subscribe((task) => {
+      if (!task) return;
 
-        this.task(this.getProject(), task, route);
-      });
+      this.task(this.getProject(), task, route);
+    });
   }
 
   private getProject(): ProjectViewModel {
-    return this.store.selectSnapshot(ProjectState.current)!;
+    return this.projectStore.project()!;
   }
 
   private getTask(): TaskViewModel {

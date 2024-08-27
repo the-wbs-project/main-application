@@ -4,7 +4,6 @@ import {
   Component,
   computed,
   inject,
-  input,
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,18 +24,18 @@ import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { tap } from 'rxjs/operators';
-import { ChangeProjectBasics } from '../../actions';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
 import { ProjectChecklistComponent } from '../../components/project-checklist';
 import {
   ProjectApprovalState,
   ProjectChecklistState,
-  ProjectState,
   TasksState,
 } from '../../states';
 import { ProjectApprovalCardComponent } from './components/project-approval-card';
 import { ProjectStatusCardComponent } from './components/project-status-card';
 import { ProjectDetailsCardComponent } from './components/project-details-card';
+import { ProjectStore } from '../../stores';
+import { ProjectService } from '../../services';
 
 @Component({
   standalone: true,
@@ -63,45 +62,34 @@ import { ProjectDetailsCardComponent } from './components/project-details-card';
   providers: [AiPromptService],
 })
 export class ProjectAboutComponent {
+  private readonly projectService = inject(ProjectService);
   private readonly prompt = inject(AiPromptService);
   private readonly store = inject(SignalStore);
+
+  readonly projectStore = inject(ProjectStore);
 
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly descriptionSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>
-    this.prompt.projectDescription(this.project(), this.tasks())
+    this.prompt.projectDescription(this.projectStore.project(), this.tasks())
   );
-  readonly claims = this.store.select(ProjectState.claims);
-  readonly project = this.store.select(ProjectState.current);
   readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly tasks = this.store.select(TasksState.phases);
   readonly taskCount = this.store.select(TasksState.taskCount);
-  readonly users = this.store.select(ProjectState.users);
   readonly checklist = this.store.select(ProjectChecklistState.results);
   readonly approvalStats = this.store.select(ProjectApprovalState.stats);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly canEdit = computed(
     () =>
-      this.project()?.status === PROJECT_STATI.PLANNING &&
-      Utils.contains(this.claims(), PROJECT_CLAIMS.UPDATE)
+      this.projectStore.project()?.status === PROJECT_STATI.PLANNING &&
+      Utils.contains(this.projectStore.claims(), PROJECT_CLAIMS.UPDATE)
   );
 
   descriptionChange(description: string): void {
-    const project = this.project()!;
-
-    this.descriptionSave
-      .call(
-        this.store
-          .dispatch(
-            new ChangeProjectBasics(
-              project.title,
-              description,
-              project.category
-            )
-          )
-          .pipe(tap(() => this.descriptionEditMode.set(false)))
-      )
+    this.projectService
+      .changeProjectDescription(description)
+      .pipe(tap(() => this.descriptionEditMode.set(false)))
       .subscribe();
   }
 

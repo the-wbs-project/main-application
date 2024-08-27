@@ -19,7 +19,6 @@ import {
   ChangeTaskDisciplines,
   CloneTask,
   CreateTask,
-  MarkProjectChanged,
   MoveTaskDown,
   MoveTaskLeft,
   MoveTaskRight,
@@ -41,7 +40,6 @@ import {
   ProjectService,
   TimelineService,
 } from '../services';
-import { ProjectState } from './project.state';
 
 interface StateModel {
   currentId?: string;
@@ -89,8 +87,8 @@ export class TasksState {
     return state.phases;
   }
 
-  private get project(): ProjectViewModel {
-    return this.store.selectSnapshot(ProjectState.current)!;
+  private get project(): any {
+    return {};
   }
 
   @Selector()
@@ -687,7 +685,7 @@ export class TasksState {
 
         if (activityInfo) this.saveActivity(activityInfo);
       }),
-      switchMap(() => ctx.dispatch(new MarkProjectChanged())),
+      //switchMap(() => ctx.dispatch(new MarkProjectChanged())),
       switchMap(() => this.rebuildNodeViews(ctx))
     );
   }
@@ -703,9 +701,13 @@ export class TasksState {
 
     task.lastModified = new Date();
 
-    return this.data.projectNodes
-      .putAsync(project.owner, project.id, [task], [])
-      .pipe(switchMap(() => ctx.dispatch(new MarkProjectChanged())));
+    return this.data.projectNodes.putAsync(
+      project.owner,
+      project.id,
+      [task],
+      []
+    );
+    //.pipe(switchMap(() => ctx.dispatch(new MarkProjectChanged())));
   }
 
   private saveReordered(
@@ -731,8 +733,8 @@ export class TasksState {
           action: TASK_ACTIONS.REORDERED,
         });
       }),
-      tap(() => this.messaging.notify.success('Projects.TaskReordered')),
-      switchMap(() => ctx.dispatch(new MarkProjectChanged()))
+      tap(() => this.messaging.notify.success('Projects.TaskReordered'))
+      //switchMap(() => ctx.dispatch(new MarkProjectChanged()))
     );
   }
 

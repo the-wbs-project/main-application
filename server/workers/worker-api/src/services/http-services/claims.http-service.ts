@@ -30,14 +30,15 @@ export class ClaimsHttpService {
       const { owner, project } = ctx.req.param();
       const userId = ctx.get('idToken').userId;
 
-      const [membership, projectRoleRecords, definitions] = await Promise.all([
+      const [membership, projectObj, definitions] = await Promise.all([
         ctx.get('data').memberships.getAsync(owner, userId),
-        ctx.get('data').projects.getRolesAsync(owner, project),
+        ctx.get('data').projects.getByIdAsync(owner, project),
         ctx.get('data').roles.getAllAsync(),
       ]);
 
       const orgRoles = membership?.roles?.map((x) => x.name) ?? [];
-      const roles = projectRoleRecords.map((pr) => definitions.find((d) => d.id === pr.role)!.name).filter((r) => orgRoles.includes(r));
+      const roles =
+        projectObj?.roles.map((pr) => definitions.find((d) => d.id === pr.role)!.name).filter((r) => orgRoles.includes(r)) ?? [];
 
       if (orgRoles.includes(ROLES.ADMIN)) roles.push(ROLES.ADMIN);
 

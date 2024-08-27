@@ -1,16 +1,24 @@
 import { Injectable, inject } from '@angular/core';
-import { LibraryEntryNode, ProjectNode } from '@wbs/core/models';
+import {
+  LibraryEntryNode,
+  ProjectCategoryChanges,
+  ProjectNode,
+} from '@wbs/core/models';
 import { IdService, SignalStore, sorter } from '@wbs/core/services';
 import { LibraryImportResults } from '@wbs/core/view-models';
 import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
-import { Observable } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { SaveProject, SaveTasks } from '../actions';
-import { ProjectState, TasksState } from '../states';
+import { SaveTasks } from '../actions';
+import { TasksState } from '../states';
+import { ProjectStore } from '../stores';
+import { ProjectService } from './project.service';
 import { TimelineService } from './timeline.service';
 
 @Injectable()
 export class ProjectImportProcessorService {
+  private readonly projectService = inject(ProjectService);
+  private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(SignalStore);
   private readonly timeline = inject(TimelineService);
 
@@ -18,8 +26,8 @@ export class ProjectImportProcessorService {
     taskId: string,
     dir: string,
     results: LibraryImportResults
-  ): Observable<void> {
-    const project = this.store.selectSnapshot(ProjectState.current)!;
+  ): Observable<unknown> {
+    const project = this.projectStore.project()!;
     const tasks = this.store.selectSnapshot(TasksState.nodes)!;
     const fromTask = tasks.find((t) => t.id === taskId)!;
     const allSiblings = tasks
@@ -30,6 +38,8 @@ export class ProjectImportProcessorService {
       dir === 'right'
         ? tasks.filter((x) => x.parentId === fromTask.id).length + 1
         : fromTask.order + (dir === 'above' ? -1 : 1);
+
+    const saves: Observable<unknown>[] = [];
 
     if (startOrder < 1) startOrder = 1;
 
@@ -44,27 +54,32 @@ export class ProjectImportProcessorService {
       }
     }
     if (results.importDisciplines && results.disciplines) {
+      const changes: ProjectCategoryChanges = {
+        categories: project.disciplines,
+        removedIds: [],
+      };
       //
       //  Let's make sure all disciplines added to the task are now in the project.
       //
       for (const discipline of results.disciplines) {
         if (discipline.isCustom) {
           let name = discipline.label;
-          let index = project.disciplines.findIndex(
+          let index = changes.categories.findIndex(
             (x) => x.isCustom && x.label === name
           );
 
           if (index === -1)
-            project.disciplines.push({
+            changes.categories.push({
               id: IdService.generate(),
               label: name,
               isCustom: true,
               icon: discipline.icon!,
             });
-        } else if (!project.disciplines.find((x) => x.id === discipline.id)) {
-          project.disciplines.push(discipline);
+        } else if (!changes.categories.find((x) => x.id === discipline.id)) {
+          changes.categories.push(discipline);
         }
       }
+      saves.push(this.projectService.changeProjectDisciplines(changes));
     }
 
     const run = (
@@ -125,27 +140,27 @@ export class ProjectImportProcessorService {
       currentIndex++;
     }
 
-    return this.store
-      .dispatch([new SaveProject(project), new SaveTasks(upserts)])
-      .pipe(
-        tap(() => {
-          const record = this.timeline.createProjectRecord({
-            action: PROJECT_ACTIONS.IMPORTED_NODE_FROM_LIBRARY,
-            topLevelId: project.id,
-            objectId: taskId,
-            data: {
-              direction: dir,
+    saves.push(this.store.dispatch(new SaveTasks(upserts)));
+
+    return forkJoin(saves).pipe(
+      tap(() => {
+        const record = this.timeline.createProjectRecord({
+          action: PROJECT_ACTIONS.IMPORTED_NODE_FROM_LIBRARY,
+          topLevelId: project.id,
+          objectId: taskId,
+          data: {
+            direction: dir,
+            title: results.version.title,
+            libraryInfo: {
+              owner: results.owner,
+              entryId: results.version.entryId,
+              version: results.version.version,
               title: results.version.title,
-              libraryInfo: {
-                owner: results.owner,
-                entryId: results.version.entryId,
-                version: results.version.version,
-                title: results.version.title,
-              },
             },
-          });
-          this.timeline.saveProjectActions([record]);
-        })
-      );
+          },
+        });
+        this.timeline.saveProjectActions([record]);
+      })
+    );
   }
 }

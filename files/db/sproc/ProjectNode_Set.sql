@@ -16,11 +16,15 @@ CREATE PROCEDURE [dbo].[ProjectNode_Set]
     @AbsFlag nvarchar(MAX)
 AS
 BEGIN
-    IF EXISTS(SELECT 1 FROM [dbo].[Projects] WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId)
+    IF EXISTS(SELECT 1
+    FROM [dbo].[Projects]
+    WHERE [Id] = @ProjectId AND [OwnerId] = @OwnerId)
         BEGIN
-            IF EXISTS(SELECT 1 FROM [dbo].[ProjectNodes] WHERE [Id] = @Id AND [ProjectId] = @ProjectId)
+        IF EXISTS(SELECT 1
+        FROM [dbo].[ProjectNodes]
+        WHERE [Id] = @Id AND [ProjectId] = @ProjectId)
                 BEGIN
-                    UPDATE [dbo].[ProjectNodes] SET
+            UPDATE [dbo].[ProjectNodes] SET
                         [ProjectId] = @ProjectId,
                         [ParentId] = @ParentId,
                         [Order] = @Order,
@@ -33,41 +37,44 @@ BEGIN
                         [AbsFlag] = @AbsFlag,
                         [LastModified] = GETUTCDATE()
                     WHERE [Id] = @Id AND [ProjectId] = @ProjectId
-                END
+        END
             ELSE
                 BEGIN
-                    INSERT INTO [dbo].[ProjectNodes] (
-                        [Id],
-                        [ProjectId],
-                        [ParentId],
-                        [Order],
-                        [Title],
-                        [Description],
-                        [DisciplineIds],
-                        [CreatedOn],
-                        [LastModified],
-                        [PhaseIdAssociation],
-                        [LibraryLink],
-                        [LibraryTaskLink],
-                        [AbsFlag],
-                        [Removed]
-                    ) VALUES (
-                        @Id,
-                        @ProjectId,
-                        @ParentId,
-                        @Order,
-                        @Title,
-                        @Description,
-                        @DisciplineIds,
-                        GETUTCDATE(),
-                        GETUTCDATE(),
-                        @PhaseIdAssociation,
-                        @LibraryLink,
-                        @LibraryTaskLink,
-                        @AbsFlag,
-                        0
+            INSERT INTO [dbo].[ProjectNodes]
+                (
+                [Id],
+                [ProjectId],
+                [ParentId],
+                [Order],
+                [Title],
+                [Description],
+                [DisciplineIds],
+                [CreatedOn],
+                [LastModified],
+                [PhaseIdAssociation],
+                [LibraryLink],
+                [LibraryTaskLink],
+                [AbsFlag],
+                [Removed]
+                )
+            VALUES
+                (
+                    @Id,
+                    @ProjectId,
+                    @ParentId,
+                    @Order,
+                    @Title,
+                    @Description,
+                    @DisciplineIds,
+                    GETUTCDATE(),
+                    GETUTCDATE(),
+                    @PhaseIdAssociation,
+                    @LibraryLink,
+                    @LibraryTaskLink,
+                    @AbsFlag,
+                    0
                     )
-                END
         END
+    END
 END
 GO

@@ -16,7 +16,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI, Project } from '@wbs/core/models';
+import { PROJECT_STATI } from '@wbs/core/models';
 import { sorter, Storage } from '@wbs/core/services';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import { ProjectListService } from './services';
@@ -28,6 +28,7 @@ import {
   ProjectViewToggleComponent,
 } from './components';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { ProjectViewModel } from '@wbs/core/view-models';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -48,10 +49,9 @@ declare type ProjectView = 'grid' | 'table';
     TranslateModule,
   ],
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
-  private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
   private readonly service = inject(ProjectListService);
   private readonly storage = inject(Storage);
@@ -60,9 +60,9 @@ export class ProjectListComponent implements OnInit {
   readonly filterIcon = faFilters;
   readonly plusIcon = faPlus;
   readonly loading = signal(true);
-  readonly projects = signal<Project[]>([]);
-  readonly owner = computed(() => this.membership.membership()!.name);
+  readonly projects = signal<ProjectViewModel[]>([]);
   readonly userId = input.required<string>();
+  readonly orgId = input.required<string>();
   readonly view = signal<ProjectView>(this.getView() ?? 'table');
   readonly assignedToMe = signal(false);
   readonly stati = signal([
@@ -91,7 +91,7 @@ export class ProjectListComponent implements OnInit {
   constructor() {
     effect(
       () => {
-        const owner = this.owner();
+        const owner = this.orgId();
         this.loading.set(true);
         this.data.projects.getAllAsync(owner).subscribe((projects) => {
           this.projects.set(
@@ -107,8 +107,6 @@ export class ProjectListComponent implements OnInit {
       }
     );
   }
-
-  ngOnInit(): void {}
 
   launchCreateProject(): void {
     const ref = this.dialog.open({
@@ -126,13 +124,13 @@ export class ProjectListComponent implements OnInit {
   }
 
   private filter(
-    list: Project[],
+    list: ProjectViewModel[],
     userId: string,
     search: string | undefined,
     assignedToMe: boolean,
     stati: PROJECT_STATI[],
     categories: string[]
-  ): Project[] {
+  ): ProjectViewModel[] {
     if (list == null || list.length === 0) return list;
 
     if (search) list = this.service.filterByName(list, search);
@@ -140,7 +138,7 @@ export class ProjectListComponent implements OnInit {
     if (assignedToMe) {
       list = list.filter(
         (project) =>
-          project.roles?.some((role) => role.userId === userId) ?? false
+          project.roles?.some((role) => role.user.userId === userId) ?? false
       );
     }
     list = this.service.filterByStati(list, stati);

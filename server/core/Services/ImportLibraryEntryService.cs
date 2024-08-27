@@ -50,10 +50,10 @@ public class ImportLibraryEntryService
             EntryId = libraryEntry.Id,
             Version = 1,
             Author = options.author,
-            Title = options.title ?? project.title,
-            Description = options.description ?? project.description,
+            Title = options.title ?? project.Title,
+            Description = options.description ?? project.Description,
             LastModified = DateTimeOffset.Now,
-            Disciplines = project.disciplines,
+            Disciplines = project.Disciplines,
             Status = "draft"
         };
 
@@ -159,7 +159,7 @@ public class ImportLibraryEntryService
             else
                 n.parentId = null;
         }
-        libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.disciplines,
+        libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.Disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds).Distinct());
 
         var newEntry = await entryDataService.SetAsync(conn, libraryEntry);

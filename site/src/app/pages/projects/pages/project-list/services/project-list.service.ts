@@ -1,34 +1,35 @@
 import { inject, Injectable } from '@angular/core';
-import { Project, PROJECT_STATI, ProjectNode } from '@wbs/core/models';
+import { PROJECT_STATI, ProjectNode } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class ProjectListService {
   private readonly metadata = inject(MetadataStore);
 
   filterByStati(
-    projects: Project[] | null | undefined,
+    projects: ProjectViewModel[] | null | undefined,
     stati: string[]
-  ): Project[] {
+  ): ProjectViewModel[] {
     if (!projects || stati.length === 0) return [];
 
     return projects.filter((x) => stati.includes(x.status));
   }
 
   filterByCategories(
-    projects: Project[] | null | undefined,
+    projects: ProjectViewModel[] | null | undefined,
     categories: string[]
-  ): Project[] {
+  ): ProjectViewModel[] {
     if (!projects || categories.length === 0) return [];
 
     return projects.filter((x) => categories.includes(x.category));
   }
 
   filterByName(
-    projects: Project[] | null | undefined,
+    projects: ProjectViewModel[] | null | undefined,
     text: string
-  ): Project[] {
+  ): ProjectViewModel[] {
     return (projects ?? []).filter((x) =>
       (x.title ?? '').toLowerCase().includes(text.toLowerCase())
     );

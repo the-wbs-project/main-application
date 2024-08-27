@@ -10,7 +10,7 @@ public class ProjectSnapshotDataService : BaseSqlDbService
         var cmd = new SqlCommand("INSERT INTO [dbo].[ProjectSnapshots] ([ActivityId], [ProjectId], [Timestamp], [Project], [Nodes]) VALUES (@ActivityId, @ProjectId, GETUTCDATE(), @Project, @Nodes)", conn);
 
         cmd.Parameters.AddWithValue("@ActivityId", activityId);
-        cmd.Parameters.AddWithValue("@ProjectId", project.id);
+        cmd.Parameters.AddWithValue("@ProjectId", project.Id);
         cmd.Parameters.AddWithValue("@Project", DbJson(project));
         cmd.Parameters.AddWithValue("@Nodes", DbJson(nodes));
 

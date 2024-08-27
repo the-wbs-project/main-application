@@ -2,7 +2,6 @@ import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
-import { dirtyGuard } from '@wbs/core/guards';
 import { orgResolve, userIdResolve } from '@wbs/core/services';
 import { PROJECT_PAGES } from './models';
 import {
@@ -15,20 +14,18 @@ import {
   ProjectService,
   ProjectViewService,
   TimelineService,
-  approvalEnabledResolve,
   closeApprovalWindowGuard,
-  projectApiUrlResolve,
   projectIdResolve,
-  projectNavGuard,
   projectUrlResolve,
   projectVerifyGuard,
 } from './services';
 import {
   ProjectApprovalState,
   ProjectChecklistState,
-  ProjectState,
   TasksState,
 } from './states';
+import { ProjectActivityService } from './services/project-activity.service';
+import { ProjectStore } from './stores';
 
 export const routes: Routes = [
   {
@@ -47,17 +44,18 @@ export const routes: Routes = [
         NgxsModule.forFeature([
           ProjectApprovalState,
           ProjectChecklistState,
-          ProjectState,
           TasksState,
         ]),
       ]),
       ChecklistDataService,
       ChecklistTestService,
+      ProjectActivityService,
       ProjectBreadcrumbsService,
       ProjectImportProcessorService,
       LibraryEntryExportService,
       ProjectNavigationService,
       ProjectService,
+      ProjectStore,
       ProjectViewService,
       TimelineService,
     ],
@@ -67,7 +65,6 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () =>
           import('./pages/project-about').then((x) => x.ProjectAboutComponent),
-        canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
           navSection: 'about',
@@ -78,8 +75,7 @@ export const routes: Routes = [
         path: 'tasks',
         loadComponent: () =>
           import('./pages/project-tasks').then((x) => x.ProjectTasksComponent),
-        loadChildren: () => import('./task-view.routes').then((x) => x.routes),
-        canActivate: [projectNavGuard],
+        //loadChildren: () => import('./task-view.routes').then((x) => x.routes),
         canDeactivate: [closeApprovalWindowGuard],
         data: {
           navSection: 'tasks',
@@ -95,7 +91,6 @@ export const routes: Routes = [
           import('./pages/project-timeline-page.component').then(
             (x) => x.ProjectTimelinePageComponent
           ),
-        canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
           navSection: 'timeline',
@@ -107,7 +102,7 @@ export const routes: Routes = [
           projectUrl: projectUrlResolve,
         },
       },
-      {
+      /* {
         path: 'resources',
         loadComponent: () =>
           import('./pages/project-resources-page.component').then(
@@ -125,7 +120,7 @@ export const routes: Routes = [
           apiUrlPrefix: projectApiUrlResolve,
         },
       },
-      /*{
+      {
           path: 'discussions',
           canActivate: [projectViewGuard, ProjectDiscussionGuard],
           data: {
@@ -141,12 +136,12 @@ export const routes: Routes = [
         path: 'upload',
         loadChildren: () =>
           import('./pages/project-upload/upload.routes').then((x) => x.routes),
-        canActivate: [projectNavGuard],
         canDeactivate: [closeApprovalWindowGuard],
         data: {
           view: PROJECT_PAGES.UPLOAD,
         },
       },
+      /*
       {
         path: 'settings/general',
         loadComponent: () =>
@@ -188,7 +183,7 @@ export const routes: Routes = [
           org: orgResolve,
           approvalEnabled: approvalEnabledResolve,
         },
-      },
+      },*/
     ],
   },
 ];
