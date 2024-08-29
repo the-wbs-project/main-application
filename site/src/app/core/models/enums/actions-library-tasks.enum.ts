@@ -7,6 +7,10 @@ export enum LIBRARY_TASKS_ACTIONS {
   VISIBILITY_CHANGED = 'library-task-visibility-changed',
   REORDERED = 'library-task-reordered',
   REMOVED = 'library-task-removed',
+  RESOURCE_ADDED = 'library-task-resource-added',
+  RESOURCE_CHANGED = 'library-task-resource-changed',
+  RESOURCE_REMOVED = 'library-task-resource-removed',
+  RESOURCE_REORDERED = 'library-task-resource-reordered',
 }
 
 export enum LIBRARY_TASKS_REORDER_WAYS {

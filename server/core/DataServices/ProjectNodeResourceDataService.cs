@@ -31,6 +31,17 @@ public class ProjectNodeResourceDataService : ResourceRecordDataService
         return null;
     }
 
+    public async Task DeleteAsync(SqlConnection conn, string projectId, string nodeId, string resourceId)
+    {
+        var cmd = new SqlCommand("DELETE FROM [dbo].[ProjectNodeResources] WHERE [ProjectId] = @ProjectId AND [NodeId] = @NodeId AND [Id] = @ResourceId", conn);
+
+        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+        cmd.Parameters.AddWithValue("@NodeId", nodeId);
+        cmd.Parameters.AddWithValue("@ResourceId", resourceId);
+
+        await cmd.ExecuteNonQueryAsync();
+    }
+
     public async Task SetAsync(SqlConnection conn, string owner, string projectId, string nodeId, ResourceRecord resource)
     {
         var cmd = new SqlCommand("dbo.ProjectNodeResources_Set", conn)
@@ -46,6 +57,7 @@ public class ProjectNodeResourceDataService : ResourceRecordDataService
         cmd.Parameters.AddWithValue("@Order", DbValue(resource.Order));
         cmd.Parameters.AddWithValue("@Resource", DbValue(resource.Resource));
         cmd.Parameters.AddWithValue("@Description", DbValue(resource.Description));
+        cmd.Parameters.AddWithValue("@Visibility", DbValue(resource.Visibility));
 
         await cmd.ExecuteNonQueryAsync();
     }

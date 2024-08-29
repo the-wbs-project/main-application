@@ -13,11 +13,11 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { CardHeaderComponent } from '@wbs/components/_utils/card-header.component';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
 import { ResourceRecord } from '@wbs/core/models';
-import { LibraryResourcesService } from '@wbs/pages/library/services';
+import { ProjectResourcesService } from '../../../../services';
 
 @Component({
   standalone: true,
-  selector: 'wbs-resource-card',
+  selector: 'wbs-project-resource-card',
   templateUrl: './resource-card.component.html',
   host: { class: 'card dashboard-card full-item' },
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -28,11 +28,11 @@ import { LibraryResourcesService } from '@wbs/pages/library/services';
     RecordResourceListComponent,
     TranslateModule,
   ],
-  providers: [LibraryResourcesService],
+  providers: [ProjectResourcesService],
 })
-export class ResourceCardComponent implements OnInit {
+export class ProjectResourceCardComponent implements OnInit {
   readonly addIcon = faPlus;
-  readonly service = inject(LibraryResourcesService);
+  readonly service = inject(ProjectResourcesService);
   //
   //  Inputs & Signals
   //

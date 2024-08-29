@@ -54,7 +54,6 @@ export class AboutPageComponent {
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
   readonly claims = input.required<string[]>();
-  readonly apiUrlPrefix = input.required<string>();
   readonly descriptionSave = new SaveService();
   readonly disciplineSave = new SaveService();
   readonly descriptionAiStartingDialog = computed(() =>

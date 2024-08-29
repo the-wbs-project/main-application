@@ -17,7 +17,7 @@ import {
   UserViewModel,
 } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { ProjectActivityService } from '../../../services';
 import { SetChecklistData } from '../actions';
 import { ProjectStore } from '../stores';
@@ -105,7 +105,9 @@ export class ProjectService {
     project.title = title;
 
     return this.saveProject(project).pipe(
-      tap(() => this.activity.changeProjectTitle(project.id, from, title))
+      switchMap(() =>
+        this.activity.changeProjectTitle(project.owner, project.id, from, title)
+      )
     );
   }
 
@@ -116,8 +118,13 @@ export class ProjectService {
     project.description = description;
 
     return this.saveProject(project).pipe(
-      tap(() =>
-        this.activity.changeProjectDescription(project.id, from, description)
+      switchMap(() =>
+        this.activity.changeProjectDescription(
+          project.owner,
+          project.id,
+          from,
+          description
+        )
       )
     );
   }
@@ -129,7 +136,14 @@ export class ProjectService {
     project.category = category;
 
     return this.saveProject(project).pipe(
-      tap(() => this.activity.changeProjectCategory(project.id, from, category))
+      switchMap(() =>
+        this.activity.changeProjectCategory(
+          project.owner,
+          project.id,
+          from,
+          category
+        )
+      )
     );
   }
 
@@ -147,7 +161,14 @@ export class ProjectService {
     }
 
     return this.saveProject(project).pipe(
-      tap(() => this.activity.changeProjectStatus(project.id, original, status))
+      switchMap(() =>
+        this.activity.changeProjectStatus(
+          project.owner,
+          project.id,
+          original,
+          status
+        )
+      )
     );
   }
 
@@ -158,8 +179,9 @@ export class ProjectService {
     project.disciplines = changes.categories;
 
     return this.saveProject(project).pipe(
-      tap(() =>
+      switchMap(() =>
         this.activity.changeProjectDisciplines(
+          project.owner,
           project.id,
           original,
           project.disciplines
@@ -179,8 +201,9 @@ export class ProjectService {
     project.roles.push({ role, user });
 
     return this.saveProject(project).pipe(
-      tap(() =>
+      switchMap(() =>
         this.activity.addUserToRole(
+          project.owner,
           project.id,
           user,
           this.getRoleTitle(role, false)
@@ -200,8 +223,9 @@ export class ProjectService {
     project.roles.splice(index, 1);
 
     return this.saveProject(project).pipe(
-      tap(() =>
+      switchMap(() =>
         this.activity.removeUserToRole(
+          project.owner,
           project.id,
           user,
           this.getRoleTitle(role, false)

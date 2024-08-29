@@ -12,14 +12,16 @@ public class ActivitiesController : ControllerBase
     private readonly DbService db;
     private readonly ILogger logger;
     private readonly ActivityDataService dataService;
+    private readonly ProjectDataService projectDataService;
     private readonly ProjectSnapshotDataService snapshotDataService;
 
-    public ActivitiesController(ILoggerFactory loggerFactory, ActivityDataService dataService, ProjectSnapshotDataService snapshotDataService, DbService db)
+    public ActivitiesController(ILoggerFactory loggerFactory, ActivityDataService dataService, ProjectSnapshotDataService snapshotDataService, ProjectDataService projectDataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ActivitiesController>();
         this.dataService = dataService;
         this.snapshotDataService = snapshotDataService;
         this.db = db;
+        this.projectDataService = projectDataService;
     }
 
     [Authorize]
@@ -108,17 +110,20 @@ public class ActivitiesController : ControllerBase
     }
 
     [Authorize]
-    [HttpPost("projects")]
-    public async Task<IActionResult> PostProjects(ProjectActivityRecord[] activities)
+    [HttpPost("projects/{owner}/{projectId}")]
+    public async Task<IActionResult> PostProjects(string owner, string projectId, Activity[] activities)
     {
         try
         {
             using (var conn = await db.CreateConnectionAsync())
             {
-                foreach (var data in activities)
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                foreach (var activity in activities)
                 {
-                    await dataService.InsertAsync(conn, data.activity);
-                    await snapshotDataService.SetAsync(conn, data.activity.id, data.project, data.nodes);
+                    await dataService.InsertAsync(conn, activity);
+                    await snapshotDataService.SetAsync(conn, projectId, activity.id);
                 }
 
                 return NoContent();

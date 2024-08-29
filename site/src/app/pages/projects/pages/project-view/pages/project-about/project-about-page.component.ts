@@ -33,6 +33,7 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
 import { ProjectService, ProjectTaskService } from '../../services';
 import { ProjectApprovalState, ProjectChecklistState } from '../../states';
 import { ProjectStore } from '../../stores';
+import { ProjectResourceCardComponent } from './components/resource-card';
 
 @Component({
   standalone: true,
@@ -50,6 +51,7 @@ import { ProjectStore } from '../../stores';
     ProjectApprovalCardComponent,
     ProjectChecklistComponent,
     ProjectDetailsCardComponent,
+    ProjectResourceCardComponent,
     ProjectStatusCardComponent,
     ResizedCssDirective,
     RoleListPipe,

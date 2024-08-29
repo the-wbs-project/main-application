@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LIBRARY_TASKS_ACTIONS } from '@wbs/core/models';
+import { LIBRARY_TASKS_ACTIONS, ResourceRecord } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
@@ -174,6 +174,74 @@ export class EntryTaskActivityService {
       {
         from,
         to,
+      }
+    );
+  }
+
+  resourceAdded(
+    entryId: string,
+    version: number,
+    taskId: string,
+    resource: ResourceRecord
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.RESOURCE_ADDED,
+      {
+        resource,
+      }
+    );
+  }
+
+  resourceReordered(
+    entryId: string,
+    version: number,
+    taskId: string,
+    ids: string[]
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.RESOURCE_REORDERED,
+      {
+        ids,
+      }
+    );
+  }
+
+  resourceRemoved(
+    entryId: string,
+    version: number,
+    taskId: string,
+    resource: ResourceRecord
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.RESOURCE_REMOVED,
+      {
+        resource,
+      }
+    );
+  }
+
+  resourceUpdated(
+    entryId: string,
+    version: number,
+    taskId: string,
+    resource: ResourceRecord
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.RESOURCE_CHANGED,
+      {
+        resource,
       }
     );
   }

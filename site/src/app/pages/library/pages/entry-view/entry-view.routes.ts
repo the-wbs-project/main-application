@@ -7,7 +7,6 @@ import {
   EntryTaskActionService,
   EntryTaskReorderService,
   LibraryImportProcessorService,
-  entryApiUrlResolve,
   entryNavGuard,
   entryUrlResolve,
   ownerIdResolve,
@@ -48,9 +47,6 @@ export const routes: Routes = [
         data: {
           section: 'about',
           crumbs: ['about'],
-        },
-        resolve: {
-          apiUrlPrefix: entryApiUrlResolve,
         },
       },
       {

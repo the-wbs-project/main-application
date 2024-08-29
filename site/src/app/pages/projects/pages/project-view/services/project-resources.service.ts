@@ -5,58 +5,62 @@ import { RecordResourceEditorComponent } from '@wbs/components/record-resources/
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   APP_CONFIG_TOKEN,
-  LIBRARY_CLAIMS,
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
   RESOURCE_TYPES,
   ResourceRecord,
 } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
-import {
-  EntryActivityService,
-  EntryTaskActivityService,
-} from '@wbs/core/services/library';
-import { EntryStore } from '@wbs/core/store';
+import { ProjectActivityService } from '@wbs/pages/projects/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { ProjectStore } from '../stores';
 
 @Injectable()
-export class LibraryResourcesService {
-  private readonly versionActivity = inject(EntryActivityService);
-  private readonly taskActivity = inject(EntryTaskActivityService);
+export class ProjectResourcesService {
+  private readonly activity = inject(ProjectActivityService);
   private readonly appConfig = inject(APP_CONFIG_TOKEN);
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
-  private readonly entryStore = inject(EntryStore);
+  private readonly projectStore = inject(ProjectStore);
   private readonly messages = inject(Messages);
-
   //
   //  Computed
   //
-  private readonly isDraft = computed(
-    () => this.entryStore.version()?.status === 'draft'
+  private readonly isPlanning = computed(
+    () => this.projectStore.project()?.status === PROJECT_STATI.PLANNING
   );
   readonly canAdd = computed(
     () =>
-      this.isDraft() &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.CREATE)
+      this.isPlanning() &&
+      Utils.contains(
+        this.projectStore.claims(),
+        PROJECT_CLAIMS.RESOURCES.CREATE
+      )
   );
   readonly canEdit = computed(
     () =>
-      this.isDraft() &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.UPDATE)
+      this.isPlanning() &&
+      Utils.contains(
+        this.projectStore.claims(),
+        PROJECT_CLAIMS.RESOURCES.UPDATE
+      )
   );
   readonly canDelete = computed(
     () =>
-      this.isDraft() &&
-      Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.DELETE)
+      this.isPlanning() &&
+      Utils.contains(
+        this.projectStore.claims(),
+        PROJECT_CLAIMS.RESOURCES.DELETE
+      )
   );
 
   getRecordsAsync(taskId?: string): Observable<ResourceRecord[]> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
 
-    return this.data.libraryEntryResources.getAsync(
-      version.ownerId,
-      version.entryId,
-      version.version,
+    return this.data.projectResources.getAsync(
+      project.owner,
+      project.id,
       taskId
     );
   }
@@ -64,7 +68,7 @@ export class LibraryResourcesService {
   launchAddAsync(
     taskId: string | undefined
   ): Observable<ResourceRecord | undefined> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
 
     return RecordResourceEditorComponent.launchAddAsync(
       this.dialogService
@@ -77,21 +81,11 @@ export class LibraryResourcesService {
           : this.uploadAndSaveAsync(taskId, x[1]!, x[0])
       ),
       switchMap((record) =>
-        !record
-          ? of(undefined)
-          : (taskId
-              ? this.taskActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  taskId,
-                  record
-                )
-              : this.versionActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  record
-                )
-            ).pipe(map(() => record))
+        record
+          ? this.activity
+              .resourceAdded(project.owner, project.id, record)
+              .pipe(map(() => record))
+          : of(record)
       )
     );
   }
@@ -100,7 +94,7 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     record: ResourceRecord
   ): Observable<ResourceRecord | undefined> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
 
     return RecordResourceEditorComponent.launchEditAsync(
       this.dialogService,
@@ -114,21 +108,11 @@ export class LibraryResourcesService {
           : this.uploadAndSaveAsync(taskId, x[1]!, x[0])
       ),
       switchMap((record) =>
-        !record
-          ? of(undefined)
-          : (taskId
-              ? this.taskActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  taskId,
-                  record
-                )
-              : this.versionActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  record
-                )
-            ).pipe(map(() => record))
+        record
+          ? this.activity
+              .resourceUpdated(project.owner, project.id, record)
+              .pipe(map(() => record))
+          : of(record)
       )
     );
   }
@@ -137,35 +121,22 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     record: ResourceRecord
   ): Observable<boolean> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
 
     return this.messages.confirm
       .show('General.Confirm', 'Resources.DeleteResourceConfirm')
       .pipe(
         switchMap((answer) =>
           answer
-            ? this.data.libraryEntryResources
-                .deleteAsync(
-                  version.ownerId,
-                  version.entryId,
-                  version.version,
-                  taskId,
-                  record.id
-                )
+            ? this.data.projectResources
+                .deleteAsync(project.owner, project.id, taskId, record.id)
                 .pipe(
                   switchMap(() =>
-                    taskId
-                      ? this.taskActivity.resourceRemoved(
-                          version.entryId,
-                          version.version,
-                          taskId,
-                          record
-                        )
-                      : this.versionActivity.resourceRemoved(
-                          version.entryId,
-                          version.version,
-                          record
-                        )
+                    this.activity.resourceRemoved(
+                      project.owner,
+                      project.id,
+                      record
+                    )
                   ),
                   map(() => true)
                 )
@@ -178,29 +149,23 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     records: Partial<ResourceRecord>[]
   ): Observable<ResourceRecord[]> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
     let obs: Observable<ResourceRecord>[] = [];
 
     for (const record of records) {
       obs.push(this.save(taskId, record));
     }
     return forkJoin(obs).pipe(
+      tap(() => this.messages.notify.success('Resources.ResourceSaved')),
       switchMap((records) =>
-        (taskId
-          ? this.taskActivity.resourceReordered(
-              version.entryId,
-              version.version,
-              taskId,
-              records.map((x) => x.id)
-            )
-          : this.versionActivity.resourceReordered(
-              version.entryId,
-              version.version,
-              records.map((x) => x.id)
-            )
-        ).pipe(map(() => records))
-      ),
-      tap(() => this.messages.notify.success('Resources.ResourceSaved'))
+        this.activity
+          .resourceReordered(
+            project.owner,
+            project.id,
+            records.map((x) => x.id!)
+          )
+          .pipe(map(() => records))
+      )
     );
   }
 
@@ -209,7 +174,7 @@ export class LibraryResourcesService {
     rawFile: FileInfo,
     data: Partial<ResourceRecord>
   ): Observable<ResourceRecord> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
 
     if (!data.id) data.id = IdService.generate();
 
@@ -219,15 +184,8 @@ export class LibraryResourcesService {
       switchMap((file) => {
         return this.save(taskId, data).pipe(
           switchMap((record) =>
-            this.data.libraryEntryResources
-              .putFileAsync(
-                version.ownerId,
-                version.entryId,
-                version.version,
-                taskId,
-                data.id!,
-                file
-              )
+            this.data.projectResources
+              .putFileAsync(project.owner, project.id, taskId, data.id!, file)
               .pipe(map(() => record))
           )
         );
@@ -237,17 +195,14 @@ export class LibraryResourcesService {
   }
 
   getApiUrl(taskId?: string): string {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
     const parts = [
       this.appConfig.api_domain,
       'api',
       'portfolio',
-      version.ownerId,
-      'library',
-      'entries',
-      version.entryId,
-      'versions',
-      version.version,
+      project.owner,
+      'projects',
+      project.id,
     ];
 
     if (taskId) parts.push('nodes', taskId);
@@ -259,7 +214,7 @@ export class LibraryResourcesService {
     taskId: string | undefined,
     data: Partial<ResourceRecord>
   ): Observable<ResourceRecord> {
-    const version = this.entryStore.version()!;
+    const project = this.projectStore.project()!;
     const resource: ResourceRecord = {
       id: data.id ?? IdService.generate(),
       createdOn: data.createdOn ?? new Date(),
@@ -271,14 +226,8 @@ export class LibraryResourcesService {
       order: data.order!, // ?? Math.max(...this.list().map((x) => x.order), 0) + 1,
     };
 
-    return this.data.libraryEntryResources
-      .putAsync(
-        version.ownerId,
-        version.entryId,
-        version.version,
-        taskId,
-        resource
-      )
+    return this.data.projectResources
+      .putAsync(project.owner, project.id, taskId, resource)
       .pipe(map(() => resource));
   }
 }

@@ -375,7 +375,9 @@ export class ProjectUploadState {
     if (saves.length === 0) return;
 
     return forkJoin(saves).pipe(
-      switchMap(() => this.activityService.projectUploaded(project.id)),
+      switchMap(() =>
+        this.activityService.projectUploaded(project.owner, project.id)
+      ),
       switchMap(() =>
         this.data.projectNodes.getAllAsync(project.owner, project.id)
       ),

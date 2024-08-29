@@ -94,6 +94,15 @@ export const routes: Routes = [
           projectUrl: projectUrlResolve,
         },
       },
+      {
+        path: 'upload',
+        loadChildren: () =>
+          import('./pages/project-upload/upload.routes').then((x) => x.routes),
+        canDeactivate: [closeApprovalWindowGuard],
+        data: {
+          view: PROJECT_PAGES.UPLOAD,
+        },
+      },
       /* {
         path: 'resources',
         loadComponent: () =>
@@ -124,15 +133,6 @@ export const routes: Routes = [
               (m) => m.DiscussionForumModule
             ),
         },*/
-      {
-        path: 'upload',
-        loadChildren: () =>
-          import('./pages/project-upload/upload.routes').then((x) => x.routes),
-        canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          view: PROJECT_PAGES.UPLOAD,
-        },
-      },
       /*
       {
         path: 'settings/general',

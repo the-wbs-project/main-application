@@ -96,27 +96,6 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{projectId}/resources")]
-    public async Task<IActionResult> GetProjectResources(string owner, string projectId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                return Ok(await projectResourceDataService.GetListAsync(conn, projectId));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting resources for project {projectId} for owner {owner}", projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
     [HttpPost("{projectId}/export/libraryEntry")]
     public async Task<IActionResult> ExportProjectToLibraryEntry(string owner, string projectId, [FromBody] ProjectToLibraryOptions options)
     {
@@ -138,6 +117,27 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{projectId}/resources")]
+    public async Task<IActionResult> GetProjectResources(string owner, string projectId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                return Ok(await projectResourceDataService.GetListAsync(conn, projectId));
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting resources for project {projectId} for owner {owner}", projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPut("{projectId}/resources/{resourceId}")]
     public async Task<IActionResult> PutProjectResources(string owner, string projectId, string resourceId, ResourceRecord resource)
     {
@@ -149,6 +149,29 @@ public class ProjectController : ControllerBase
                     return BadRequest("Project not found for the owner provided.");
 
                 await projectResourceDataService.SetAsync(conn, owner, projectId, resource);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{projectId}/resources/{resourceId}")]
+    public async Task<IActionResult> DeleteProjectResources(string owner, string projectId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                await projectResourceDataService.DeleteAsync(conn, projectId, resourceId);
 
                 return NoContent();
             }

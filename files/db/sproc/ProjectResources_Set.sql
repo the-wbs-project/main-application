@@ -9,28 +9,47 @@ CREATE PROCEDURE [dbo].[ProjectResources_Set]
     @Type nvarchar(100),
     @Order int,
     @Resource nvarchar(MAX),
-    @Description nvarchar(MAX)
+    @Description nvarchar(MAX),
+    @Visibility nvarchar(50)
 AS
-    DECLARE @ts DATETIMEOFFSET = GETUTCDATE();
+DECLARE @ts DATETIMEOFFSET = GETUTCDATE();
 BEGIN
-    IF EXISTS(SELECT 1 FROM [dbo].[Projects] WHERE [OwnerId] = @OwnerId AND [Id] = @ProjectId)
+    IF EXISTS(SELECT 1
+    FROM [dbo].[Projects]
+    WHERE [OwnerId] = @OwnerId AND [Id] = @ProjectId)
         BEGIN
-            IF EXISTS(SELECT * FROM [dbo].[ProjectResources] WHERE [Id] = @Id AND [ProjectId] = @ProjectId)
+        IF EXISTS(SELECT *
+        FROM [dbo].[ProjectResources]
+        WHERE [Id] = @Id AND [ProjectId] = @ProjectId)
                 BEGIN
-                    UPDATE [dbo].[ProjectResources]
+            UPDATE [dbo].[ProjectResources]
                     SET [Name] = @Name,
                         [Type] = @Type,
                         [Order] = @Order,
                         [LastModified] = @ts,
                         [Resource] = @Resource,
-                        [Description] = @Description
+                        [Description] = @Description,
+                        [Visibility] = @Visibility
                     WHERE [Id] = @Id AND [ProjectId] = @ProjectId
-                END
+        END
             ELSE
                 BEGIN
-                    INSERT INTO [dbo].[ProjectResources]
-                    VALUES (@Id, @ProjectId, @Name, @Type, @Order, @ts, @ts, @Resource, @Description)
-                END
+            INSERT INTO [dbo].[ProjectResources]
+                (
+                [Id],
+                [ProjectId],
+                [Name],
+                [Type],
+                [Order],
+                [CreatedOn],
+                [LastModified],
+                [Resource],
+                [Description],
+                [Visibility]
+                )
+            VALUES
+                (@Id, @ProjectId, @Name, @Type, @Order, @ts, @ts, @Resource, @Description, @Visibility)
         END
+    END
 END
 GO

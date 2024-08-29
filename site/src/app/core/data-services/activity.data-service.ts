@@ -93,8 +93,15 @@ export class ActivityDataService {
       .pipe(map(() => ids));
   }*/
 
-  saveProjectActivitiesAsync(data: Activity[]): Observable<void> {
-    return this.http.post<void>('api/activities/projects', data);
+  saveProjectAsync(
+    owner: string,
+    projectId: string,
+    data: Activity[]
+  ): Observable<void> {
+    return this.http.post<void>(
+      `api/activities/projects/${owner}/${projectId}`,
+      data
+    );
   }
 
   saveLibraryEntryAsync(data: Activity[]): Observable<void> {

@@ -23,7 +23,7 @@
         noDescriptionLabel="Library.NoDescriptionEntry"
         (descriptionChange)="descriptionChange($event)"
       />
-      <wbs-resource-card [apiUrlPrefix]="apiUrlPrefix()" />
+      <wbs-resource-card />
       <wbs-contributor-card
         [canEdit]="store.canEditEntry()"
         [version]="version!"

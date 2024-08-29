@@ -41,6 +41,17 @@ export class ProjectResourcesDataService {
     );
   }
 
+  deleteAsync(
+    owner: string,
+    projectId: string,
+    taskId: string | undefined,
+    resourceId: string
+  ): Observable<void> {
+    return this.http.delete<void>(
+      this.getIdUrl(resourceId, owner, projectId, taskId)
+    );
+  }
+
   private cleanList(nodes: ResourceRecord[]): ResourceRecord[] {
     for (const node of nodes) {
       if (typeof node.createdOn === 'string')

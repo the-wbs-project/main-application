@@ -1,23 +1,22 @@
 import { inject, Injectable } from '@angular/core';
-import { ProjectTaskActivityService } from '../../../services/project-task-activity.service';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { MetadataStore } from '@wbs/core/store';
-import { ProjectStore } from '../stores';
 import { Store } from '@ngxs/store';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { ProjectNode, RebuildResults } from '@wbs/core/models';
 import { IdService, Transformers } from '@wbs/core/services';
-import { map, Observable, of, tap } from 'rxjs';
 import {
   CategoryViewModel,
   ProjectTaskViewModel,
   ProjectViewModel,
 } from '@wbs/core/view-models';
-import { ProjectNode, RebuildResults } from '@wbs/core/models';
+import { Observable, of } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
+import { ProjectTaskActivityService } from '../../../services';
+import { ProjectStore } from '../stores';
 
 @Injectable()
 export class ProjectTaskService {
   private readonly activity = inject(ProjectTaskActivityService);
   private readonly data = inject(DataServiceFactory);
-  private readonly metadata = inject(MetadataStore);
   protected readonly projectStore = inject(ProjectStore);
   protected readonly store = inject(Store);
   protected readonly transformers = inject(Transformers);
@@ -42,8 +41,14 @@ export class ProjectTaskService {
     const upserts = tasks.filter((x) => changedIds.includes(x.id));
 
     return this.saveTaskVms(project, upserts, toRemove).pipe(
-      tap(() =>
-        this.activity.removeTask(project.id, taskId, task.title, reason)
+      switchMap(() =>
+        this.activity.removeTask(
+          project.owner,
+          project.id,
+          taskId,
+          task.title,
+          reason
+        )
       )
     );
   }
@@ -82,8 +87,9 @@ export class ProjectTaskService {
     task.disciplines = disciplines;
 
     return this.saveTaskVms(project, [task]).pipe(
-      tap(() =>
+      switchMap(() =>
         this.activity.changeDisciplines(
+          project.owner,
           project.id,
           taskId,
           task.title,
@@ -123,8 +129,14 @@ export class ProjectTaskService {
     };
 
     return this.saveTasks(project, [newNode]).pipe(
-      tap(() =>
-        this.activity.cloneTask(project.id, nodeId, task.title, task.levelText)
+      switchMap(() =>
+        this.activity.cloneTask(
+          project.owner,
+          project.id,
+          nodeId,
+          task.title,
+          task.levelText
+        )
       )
     );
   }
@@ -276,8 +288,13 @@ export class ProjectTaskService {
     };
 
     return this.saveTasks(this.getProject(), [task]).pipe(
-      tap(() =>
-        this.activity.createTask(this.getProject().id, task.id, task.title)
+      switchMap(() =>
+        this.activity.createTask(
+          this.getProject().owner,
+          this.getProject().id,
+          task.id,
+          task.title
+        )
       )
     );
 
@@ -285,6 +302,7 @@ export class ProjectTaskService {
   }
 
   changeTaskTitle(taskId: string, title: string): Observable<unknown> {
+    const project = this.getProject();
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
     const from = task.title;
@@ -292,9 +310,10 @@ export class ProjectTaskService {
     task.title = title;
 
     return this.saveTaskVms(this.getProject(), [task]).pipe(
-      tap(() =>
+      switchMap(() =>
         this.activity.changeTaskTitle(
-          this.getProject().id,
+          project.owner,
+          project.id,
           task.id,
           from,
           title
@@ -307,6 +326,7 @@ export class ProjectTaskService {
     taskId: string,
     description: string
   ): Observable<unknown> {
+    const project = this.getProject();
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
     const from = task.description ?? '';
@@ -314,9 +334,10 @@ export class ProjectTaskService {
     task.description = description;
 
     return this.saveTaskVms(this.getProject(), [task]).pipe(
-      tap(() =>
+      switchMap(() =>
         this.activity.changeTaskDescription(
-          this.getProject().id,
+          project.owner,
+          project.id,
           task.id,
           from,
           description
@@ -326,6 +347,7 @@ export class ProjectTaskService {
   }
 
   changeTaskAbs(taskId: string, abs: 'set' | undefined): Observable<unknown> {
+    const project = this.getProject();
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
     let from = task.absFlag;
@@ -335,8 +357,14 @@ export class ProjectTaskService {
     task.absFlag = abs;
 
     return this.saveTaskVms(this.getProject(), [task]).pipe(
-      tap(() =>
-        this.activity.changeTaskAbs(this.getProject().id, task.id, from, abs)
+      switchMap(() =>
+        this.activity.changeTaskAbs(
+          project.owner,
+          project.id,
+          task.id,
+          from,
+          abs
+        )
       )
     );
   }
@@ -350,8 +378,9 @@ export class ProjectTaskService {
 
     return this.saveTaskVms(project, [mainTask, ...others]).pipe(
       map(() => this.getTasks().find((x) => x.id === mainTask.id)!),
-      tap((task) =>
+      switchMap((task) =>
         this.activity.reorderTask(
+          project.owner,
           project.id,
           task.id,
           task.title,

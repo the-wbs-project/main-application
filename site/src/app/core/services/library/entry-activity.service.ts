@@ -1,5 +1,9 @@
 import { Injectable, inject } from '@angular/core';
-import { LIBRARY_VERSION_ACTIONS, ProjectCategory } from '@wbs/core/models';
+import {
+  LIBRARY_VERSION_ACTIONS,
+  ProjectCategory,
+  ResourceRecord,
+} from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { IdService } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
@@ -158,6 +162,61 @@ export class EntryActivityService {
 
   unpublishedVersion(entryId: string, version: number): Observable<void> {
     return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UNPUBLISHED);
+  }
+
+  resourceAdded(
+    entryId: string,
+    version: number,
+    resource: ResourceRecord
+  ): Observable<void> {
+    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.RESOURCE_ADDED, {
+      resource,
+    });
+  }
+
+  resourceReordered(
+    entryId: string,
+    version: number,
+    ids: string[]
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.RESOURCE_REORDERED,
+      {
+        ids,
+      }
+    );
+  }
+
+  resourceRemoved(
+    entryId: string,
+    version: number,
+    resource: ResourceRecord
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.RESOURCE_REMOVED,
+      {
+        resource,
+      }
+    );
+  }
+
+  resourceUpdated(
+    entryId: string,
+    version: number,
+    resource: ResourceRecord
+  ): Observable<void> {
+    return this.save(
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.RESOURCE_CHANGED,
+      {
+        resource,
+      }
+    );
   }
 
   private save(

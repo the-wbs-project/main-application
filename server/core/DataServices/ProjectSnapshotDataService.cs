@@ -5,8 +5,20 @@ namespace Wbs.Core.DataServices;
 
 public class ProjectSnapshotDataService : BaseSqlDbService
 {
-    public async Task SetAsync(SqlConnection conn, string activityId, Project project, ProjectNode[] nodes)
+    private readonly ProjectDataService projectDataService;
+    private readonly ProjectNodeDataService projectNodeDataService;
+
+    public ProjectSnapshotDataService(ProjectDataService projectDataService, ProjectNodeDataService projectNodeDataService)
     {
+        this.projectDataService = projectDataService;
+        this.projectNodeDataService = projectNodeDataService;
+    }
+
+    public async Task SetAsync(SqlConnection conn, string projectId, string activityId)
+    {
+        var project = await projectDataService.GetByIdAsync(conn, projectId);
+        var nodes = await projectNodeDataService.GetByProjectAsync(conn, projectId);
+
         var cmd = new SqlCommand("INSERT INTO [dbo].[ProjectSnapshots] ([ActivityId], [ProjectId], [Timestamp], [Project], [Nodes]) VALUES (@ActivityId, @ProjectId, GETUTCDATE(), @Project, @Nodes)", conn);
 
         cmd.Parameters.AddWithValue("@ActivityId", activityId);

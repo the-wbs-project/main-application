@@ -157,6 +157,29 @@ public class ProjectNodeController : ControllerBase
     }
 
     [Authorize]
+    [HttpDelete("{nodeId}/resources/{resourceId}")]
+    public async Task<IActionResult> DeleteTaskResource(string owner, string projectId, string nodeId, string resourceId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                    return BadRequest("Project not found for the owner provided.");
+
+                await nodeResourceDataService.DeleteAsync(conn, projectId, nodeId, resourceId);
+
+                return NoContent();
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("{nodeId}/resources/{resourceId}/blob")]
     public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string projectId, string nodeId, string resourceId)
     {

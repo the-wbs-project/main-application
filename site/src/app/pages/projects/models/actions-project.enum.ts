@@ -12,5 +12,6 @@ export enum PROJECT_ACTIONS {
   IMPORTED_NODE_FROM_LIBRARY = 'project-imported-from-library',
   RESOURCE_ADDED = 'project-resource-added',
   RESOURCE_UPDATED = 'project-resource-updated',
+  RESOURCE_REORDERED = 'project-resource-reordered',
   RESOURCE_REMOVED = 'project-resource-removed',
 }

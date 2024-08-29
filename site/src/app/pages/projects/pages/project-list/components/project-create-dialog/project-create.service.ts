@@ -82,7 +82,9 @@ export class ProjectCreateService {
       switchMap(() =>
         this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
       ),
-      switchMap(() => this.activities.createProject(project.id, project.title)),
+      switchMap(() =>
+        this.activities.createProject(project.owner, project.id, project.title)
+      ),
       map(() => project)
     );
   }
