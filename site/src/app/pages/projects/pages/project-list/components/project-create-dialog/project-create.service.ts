@@ -9,7 +9,7 @@ import {
   UserRole,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
+import { ProjectActivityService } from '@wbs/pages/projects/services';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProjectCreateStore } from './project-create.store';
@@ -20,6 +20,7 @@ export class ProjectCreateService {
   private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
   private readonly pcStore = inject(ProjectCreateStore);
+  private readonly activities = inject(ProjectActivityService);
   private readonly userId = inject(UserStore).userId;
 
   createAsync(): Observable<Project> {
@@ -81,22 +82,7 @@ export class ProjectCreateService {
       switchMap(() =>
         this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
       ),
-      switchMap(() =>
-        this.data.activities.saveProjectActivitiesAsync(this.userId()!, [
-          {
-            data: {
-              action: PROJECT_ACTIONS.CREATED,
-              topLevelId: project.id,
-              data: {
-                title: project.title,
-                id: project.id,
-              },
-            },
-            project,
-            nodes,
-          },
-        ])
-      ),
+      switchMap(() => this.activities.createProject(project.id, project.title)),
       map(() => project)
     );
   }

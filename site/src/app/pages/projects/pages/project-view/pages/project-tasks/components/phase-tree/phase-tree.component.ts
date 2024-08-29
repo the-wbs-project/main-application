@@ -3,6 +3,7 @@ import {
   Component,
   OnInit,
   computed,
+  effect,
   inject,
   input,
   model,
@@ -13,8 +14,6 @@ import {
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Actions, ofActionSuccessful } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   CellClickEvent,
@@ -46,33 +45,26 @@ import { Messages, SignalStore, TreeService, Utils } from '@wbs/core/services';
 import {
   CategoryViewModel,
   ProjectTaskViewModel,
-  ProjectViewModel,
   TaskViewModel,
 } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
 import { UiStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
-import {
-  ChangeTaskBasics,
-  ChangeTaskDisciplines,
-  CreateTask,
-  RebuildNodeViews,
-  TreeReordered,
-} from '../../../../actions';
 import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
 import { PhaseTaskTitleComponent } from '../../../../components/phase-task-title';
 import { ChildrenApprovalPipe } from '../../../../pipes/children-approval.pipe';
 import {
   ProjectNavigationService,
+  ProjectTaskService,
   ProjectViewService,
 } from '../../../../services';
-import { ProjectApprovalState, TasksState } from '../../../../states';
+import { ProjectApprovalState } from '../../../../states';
+import { ProjectStore } from '../../../../stores';
 import { PhaseTreeReorderService } from '../../services';
 import { PhaseTreeTitleLegendComponent } from '../phase-tree-title-legend';
 import { TreeTypeButtonComponent } from '../tree-type-button';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   selector: 'wbs-project-phase-tree',
@@ -110,13 +102,14 @@ import { TreeTypeButtonComponent } from '../tree-type-button';
   ],
 })
 export class ProjectPhaseTreeComponent implements OnInit {
-  private readonly actions$ = inject(Actions);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(PhaseTreeReorderService);
+  private readonly taskService = inject(ProjectTaskService);
   private readonly store = inject(SignalStore);
   readonly width = inject(UiStore).mainContentWidth;
   readonly navigate = inject(ProjectNavigationService);
-  readonly service = inject(ProjectViewService);
+  readonly projectStore = inject(ProjectStore);
+  readonly viewService = inject(ProjectViewService);
   readonly treeService = new TreeService();
   //
   //  Inputs
@@ -124,7 +117,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly claims = input.required<string[]>();
   readonly showFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
-  readonly currentProject = input.required<ProjectViewModel>();
   readonly view = model.required<'phases' | 'disciplines'>();
   //
   //  components
@@ -142,7 +134,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //
   //  signals/models
   //
-  readonly tasks = this.store.select(TasksState.phases);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly taskId = signal<string | undefined>(undefined);
   readonly alert = signal<string | undefined>(undefined);
@@ -150,11 +141,11 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  Computed signals
   //
   readonly task = computed(
-    () => this.tasks()?.find((x) => x.id === this.taskId())!
+    () => this.projectStore.viewModels()?.find((x) => x.id === this.taskId())!
   );
   readonly canEdit = computed(
     () =>
-      this.currentProject().status === PROJECT_STATI.PLANNING &&
+      this.projectStore.project()?.status === PROJECT_STATI.PLANNING &&
       Utils.contains(this.claims(), PROJECT_CLAIMS.TASKS.CREATE)
   );
   readonly pageSize = computed(() =>
@@ -170,13 +161,14 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly navigateToTask = output<string>();
   readonly goFullScreen = output<void>();
 
-  ngOnInit(): void {
-    this.store
-      .selectAsync(TasksState.phases)
-      .pipe(untilDestroyed(this))
-      .subscribe((phases) => this.treeService.updateState(phases ?? []));
+  constructor() {
+    effect(() => {
+      this.treeService.updateState(this.projectStore.viewModels() ?? []);
+    });
+  }
 
-    this.actions$
+  ngOnInit(): void {
+    /*this.actions$
       .pipe(ofActionSuccessful(CreateTask), untilDestroyed(this))
       .subscribe(() => {
         const phases = this.tasks() ?? [];
@@ -189,15 +181,11 @@ export class ProjectPhaseTreeComponent implements OnInit {
           this.treeList()?.expand(task);
           this.treeList()?.focusCell(taskIndex, 0);
         }
-      });
+      });*/
 
-    this.treeService.expandedKeys = (this.tasks() ?? [])
+    this.treeService.expandedKeys = (this.projectStore.viewModels() ?? [])
       .filter((x) => !x.parentId)
       .map((x) => x.id);
-  }
-
-  nav(): void {
-    if (this.taskId()) this.navigateToTask.emit(this.taskId()!);
   }
 
   onCellClick(e: CellClickEvent): void {
@@ -211,9 +199,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   rowReordered(e: RowReorderEvent): void {
-    const tree = structuredClone(
-      this.store.selectSnapshot(TasksState.phases) ?? []
-    );
+    const tree = structuredClone(this.projectStore.viewModels() ?? []);
     const dragged: TaskViewModel = e.draggedRows[0].dataItem;
     const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(dragged, target, e.dropPosition);
@@ -228,10 +214,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     const run = () => {
       const results = this.reorderer.run(tree, dragged, target, e.dropPosition);
 
-      this.treeService.callSave(
-        dragged.id,
-        this.store.dispatch(new TreeReordered(dragged.id, results))
-      );
+      this.taskService.treeReordered(dragged.id, results).subscribe();
     };
     if (validation.confirmMessage) {
       this.messages.confirm
@@ -251,17 +234,12 @@ export class ProjectPhaseTreeComponent implements OnInit {
   disciplinesChanged(
     treelist: TreeListComponent,
     taskId: string,
-    discipilnes: CategoryViewModel[]
+    disciplines: CategoryViewModel[]
   ) {
     treelist.closeCell();
     this.treeService.callSave(
       taskId,
-      this.store.dispatch(
-        new ChangeTaskDisciplines(
-          taskId,
-          discipilnes.map((x) => x.id)
-        )
-      )
+      this.taskService.changeDisciplines(taskId, disciplines)
     );
   }
 
@@ -272,25 +250,18 @@ export class ProjectPhaseTreeComponent implements OnInit {
   ): void {
     treelist.closeCell();
 
-    const task = this.tasks()?.find((x) => x.id === taskId);
+    const task = this.projectStore.viewModels()?.find((x) => x.id === taskId);
 
     if (!task) return;
 
     this.treeService.callSave(
       taskId,
-      this.store.dispatch(
-        new ChangeTaskBasics(
-          taskId,
-          title,
-          task.description ?? '',
-          task.absFlag === 'set'
-        )
-      )
+      this.taskService.changeTaskTitle(taskId, title)
     );
   }
 
   addPhase(): void {
-    const obsOrVoid = this.service.action('addSub');
+    const obsOrVoid = this.viewService.action('addSub');
 
     if (obsOrVoid instanceof Observable) {
       //@ts-ignore
@@ -299,7 +270,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   menuItemSelected(item: string, taskId?: string): void {
-    const obsOrVoid = this.service.action(item, taskId);
+    const obsOrVoid = this.viewService.action(item, taskId);
 
     if (obsOrVoid instanceof Observable) {
       if (taskId) this.treeService.callSave(taskId, obsOrVoid);
@@ -317,6 +288,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
   };
 
   private resetTree(): void {
-    this.store.dispatch(new RebuildNodeViews());
+    this.projectStore.setTasks(
+      structuredClone(this.projectStore.tasks() ?? [])
+    );
   }
 }

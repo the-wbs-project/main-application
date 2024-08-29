@@ -1,5 +1,5 @@
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { ImportPerson, Project, ProjectUploadData } from '@wbs/core/models';
+import { ImportPerson, ProjectNode, ProjectUploadData } from '@wbs/core/models';
 import { ProjectViewModel } from '@wbs/core/view-models';
 
 export class SetProject {
@@ -50,5 +50,5 @@ export class PrepUploadToSave {
 
 export class SaveUpload {
   static readonly type = '[Project Upload] Save Upload';
-  constructor(readonly results: ProjectUploadData) {}
+  constructor(readonly results: ProjectUploadData<ProjectNode>) {}
 }

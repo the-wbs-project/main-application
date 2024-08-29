@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { LibraryEntryNode, WbsNode, ProjectCategory } from '@wbs/core/models';
 import { TaskViewModel } from '@wbs/core/view-models';
+import { sorter } from './sorter.service';
 
 @Injectable({ providedIn: 'root' })
 export class WbsNodeService {
@@ -23,13 +24,12 @@ export class WbsNodeService {
     return children;
   }
 
-  static getSortedChildrenForPhase(
-    parentId: string | undefined,
-    list: WbsNode[] | undefined
-  ): WbsNode[] {
-    return (list ?? [])
+  static getSortedChildrenForPhase<
+    T extends { parentId?: string; order: number }
+  >(parentId: string | undefined, list: T[]): T[] {
+    return list
       .filter((x) => x.parentId === parentId)
-      .sort(WbsNodeService.sort);
+      .sort((a, b) => sorter(a.order, b.order));
   }
 
   static getChildrenIds(tasks: LibraryEntryNode[], taskId: string): string[] {

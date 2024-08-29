@@ -1,39 +1,15 @@
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ActivityData, ProjectNode } from '@wbs/core/models';
 import { Transformers } from '@wbs/core/services';
-import {
-  ProjectActivityRecord,
-  ProjectViewModel,
-  TimelineViewModel,
-} from '@wbs/core/view-models';
-import { UserStore } from '@wbs/core/store';
+import { TimelineViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { TasksState } from '../states';
-import { ProjectStore } from '../stores';
 
 @Injectable()
 export class TimelineService {
   private readonly data = inject(DataServiceFactory);
-  private readonly projectStore = inject(ProjectStore);
-  private readonly store = inject(Store);
   private readonly transformer = inject(Transformers);
-  private readonly userId = inject(UserStore).userId;
   private readonly take = 50;
-
-  createProjectRecord(
-    data: ActivityData,
-    project?: ProjectViewModel,
-    nodes?: ProjectNode[]
-  ): ProjectActivityRecord {
-    return {
-      data,
-      project: project ?? this.projectStore.project()!,
-      nodes: nodes ?? this.store.selectSnapshot(TasksState.nodes)!,
-    };
-  }
 
   getCountAsync(topLevelId: string, objectId?: string): Observable<number> {
     return objectId
@@ -85,11 +61,5 @@ export class TimelineService {
         return list;
       })
     );
-  }
-
-  saveProjectActions(data: ProjectActivityRecord[]): void {
-    this.data.activities
-      .saveProjectActivitiesAsync(this.userId()!, data)
-      .subscribe();
   }
 }

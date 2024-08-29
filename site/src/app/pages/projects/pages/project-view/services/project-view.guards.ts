@@ -1,17 +1,11 @@
 import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { TitleService } from '@wbs/core/services';
-import { Utils } from '@wbs/core/services';
-import { switchMap } from 'rxjs/operators';
-import {
-  InitiateChecklist,
-  SetApproval,
-  SetApprovalView,
-  VerifyTasks,
-} from '../actions';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { TitleService, Utils } from '@wbs/core/services';
 import { forkJoin } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { InitiateChecklist, SetApproval, SetApprovalView } from '../actions';
 import { ProjectStore } from '../stores';
 
 export const closeApprovalWindowGuard = () =>
@@ -36,7 +30,7 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
     switchMap(({ project, tasks, claims }) => {
       projectStore.setAll(project, tasks, claims);
 
-      return store.dispatch([new InitiateChecklist(), new VerifyTasks(true)]);
+      return store.dispatch([new InitiateChecklist()]);
     })
   );
 };

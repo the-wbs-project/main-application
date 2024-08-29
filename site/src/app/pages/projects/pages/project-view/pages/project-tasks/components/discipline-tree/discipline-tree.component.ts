@@ -15,9 +15,8 @@ import {
   TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { SignalStore, Transformers, TreeService } from '@wbs/core/services';
-import { ProjectViewModel } from '@wbs/core/view-models';
-import { TasksState } from '../../../../states';
+import { Transformers, TreeService } from '@wbs/core/services';
+import { ProjectStore } from '../../../../stores';
 import { TreeTypeButtonComponent } from '../tree-type-button';
 
 @Component({
@@ -34,7 +33,7 @@ import { TreeTypeButtonComponent } from '../tree-type-button';
   ],
 })
 export class ProjectDisciplinesTreeComponent implements OnInit {
-  private readonly store = inject(SignalStore);
+  private readonly store = inject(ProjectStore);
   private readonly transformers = inject(Transformers);
   readonly treeService = new TreeService();
   //
@@ -43,7 +42,6 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   readonly showFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
   readonly view = model.required<'phases' | 'disciplines'>();
-  readonly currentProject = input.required<ProjectViewModel>();
   //
   //  Constaints
   //
@@ -53,14 +51,13 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   //  signals/models
   //
   readonly taskId = signal<string | undefined>(undefined);
-  readonly nodes = this.store.select(TasksState.nodes);
   //
   //  Computed signals
   //
   readonly disciplines = computed(() =>
     this.transformers.nodes.discipline.view.run(
-      this.currentProject().disciplines,
-      this.nodes()!
+      this.store.project()?.disciplines ?? [],
+      this.store.tasks() ?? []
     )
   );
   readonly pageSize = computed(() =>

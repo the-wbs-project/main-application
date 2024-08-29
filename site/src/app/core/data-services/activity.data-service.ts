@@ -3,7 +3,6 @@ import { IdService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { Activity, ActivityData } from '../models';
-import { ProjectActivityRecord } from '../view-models';
 
 export class ActivityDataService {
   constructor(private readonly http: HttpClient) {}
@@ -67,9 +66,9 @@ export class ActivityDataService {
     return this.http.post<void>('api/activities', toSave).pipe(map(() => ids));
   }
 
-  saveProjectActivitiesAsync(
+  /*saveProjectActivitiesAsync(
     userId: string,
-    data: ProjectActivityRecord[]
+    data: Activity[]
   ): Observable<string[]> {
     const ids: string[] = [];
     const toSave: any[] = [];
@@ -92,6 +91,10 @@ export class ActivityDataService {
     return this.http
       .post<void>('api/activities/projects', toSave)
       .pipe(map(() => ids));
+  }*/
+
+  saveProjectActivitiesAsync(data: Activity[]): Observable<void> {
+    return this.http.post<void>('api/activities/projects', data);
   }
 
   saveLibraryEntryAsync(data: Activity[]): Observable<void> {

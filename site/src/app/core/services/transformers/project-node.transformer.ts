@@ -1,7 +1,7 @@
 import { ProjectNode } from '@wbs/core/models';
 import { ProjectTaskViewModel } from '@wbs/core/view-models';
 
-export class ProjectTransformer {
+export class ProjectTaskTransformer {
   static toModel(projectId: string, vm: ProjectTaskViewModel): ProjectNode {
     const model: ProjectNode = {
       id: vm.id,

@@ -1,5 +1,4 @@
-@let project = projectStore.project(); @let claims = projectStore.claims(); @if
-(project) { @if (showDialog()) {
+@let claims = projectStore.claims(); @if (showDialog()) {
 <kendo-dialog
   height="95%"
   width="95%"
@@ -15,7 +14,6 @@
       [(view)]="view"
       [showFullscreen]="false"
       [claims]="claims"
-      [currentProject]="project"
       [containerHeight]="dialogContainerHeight()"
       (navigateToTask)="navigateToTask($event)"
       (goFullScreen)="showDialog.set(true)"
@@ -24,7 +22,6 @@
     <wbs-project-discipline-tree
       [(view)]="view"
       [showFullscreen]="false"
-      [currentProject]="project"
       [containerHeight]="dialogContainerHeight()"
       (navigateToTask)="navigateToTask($event)"
       (goFullScreen)="showDialog.set(true)"
@@ -39,7 +36,6 @@
     [(view)]="view"
     [showFullscreen]="true"
     [claims]="claims"
-    [currentProject]="project"
     [containerHeight]="containerHeight()"
     (navigateToTask)="navigateToTask($event)"
     (goFullScreen)="showDialog.set(true)"
@@ -48,7 +44,6 @@
   <wbs-project-discipline-tree
     [(view)]="view"
     [showFullscreen]="true"
-    [currentProject]="project"
     [containerHeight]="containerHeight()"
     (navigateToTask)="navigateToTask($event)"
     (goFullScreen)="showDialog.set(true)"
@@ -57,4 +52,3 @@
 </div>
 }
 <router-outlet />
-}

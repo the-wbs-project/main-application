@@ -1,6 +1,6 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import { PROJECT_CLAIMS, PROJECT_STATI, ProjectNode } from '@wbs/core/models';
-import { CategoryService, Transformers } from '@wbs/core/services';
+import { Transformers } from '@wbs/core/services';
 import {
   LibraryTaskViewModel,
   ProjectTaskViewModel,
@@ -9,8 +9,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ProjectStore {
-  private readonly categoryService = inject(CategoryService);
-  private readonly transformer = inject(Transformers);
+  private readonly transformers = inject(Transformers);
 
   private readonly _project = signal<ProjectViewModel | undefined>(undefined);
   private readonly _taskModels = signal<ProjectNode[] | undefined>(undefined);
@@ -87,13 +86,13 @@ export class ProjectStore {
     tasks: ProjectNode[],
     claims: string[]
   ): void {
-    this._project.set(project);
-    this._taskModels.set(tasks);
+    this.setProject(project);
+    this.setTasks(tasks);
     this._claims.set(claims);
   }
 
   setProject(project: ProjectViewModel): void {
-    this._project.set(project);
+    this._project.set(structuredClone(project));
   }
 
   markProject(): void {
@@ -106,7 +105,8 @@ export class ProjectStore {
   }
 
   setTasks(tasks: ProjectNode[]): void {
-    this._taskModels.set([...tasks]);
+    this._taskModels.set(structuredClone(tasks));
+    this.rebuildNodeViews();
   }
 
   tasksChanged(upserts: ProjectNode[], removeIds?: string[]): void {
@@ -144,5 +144,22 @@ export class ProjectStore {
 
   private claimCheck(claims: string[], claim: string): boolean {
     return claims.includes(claim);
+  }
+
+  private rebuildNodeViews(): void {
+    const project = this.project();
+    const tasks = this._taskModels();
+
+    if (!project || !tasks) return;
+
+    this._tasks.set(
+      this.transformers.nodes.phase.view.forProject(tasks, project.disciplines)
+    );
+    this._absTasks.set(
+      this.transformers.nodes.phase.view.forAbsProject(
+        tasks,
+        project.disciplines
+      )
+    );
   }
 }

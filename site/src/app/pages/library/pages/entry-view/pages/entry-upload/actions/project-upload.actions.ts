@@ -1,5 +1,9 @@
 import { FileInfo } from '@progress/kendo-angular-upload';
-import { ImportPerson, ProjectUploadData } from '@wbs/core/models';
+import {
+  ImportPerson,
+  LibraryEntryNode,
+  ProjectUploadData,
+} from '@wbs/core/models';
 
 export class SetPageTitle {
   static readonly type = '[Library Upload] Set Page Title';
@@ -44,5 +48,5 @@ export class PrepUploadToSave {
 
 export class SaveUpload {
   static readonly type = '[Library Upload] Save Upload';
-  constructor(readonly results: ProjectUploadData) {}
+  constructor(readonly results: ProjectUploadData<LibraryEntryNode>) {}
 }

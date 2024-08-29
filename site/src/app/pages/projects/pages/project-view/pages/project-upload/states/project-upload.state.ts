@@ -11,14 +11,14 @@ import {
   ProjectCategory,
   ProjectCategoryChanges,
 } from '@wbs/core/models';
-import { CategoryService, Transformers } from '@wbs/core/services';
+import { Transformers } from '@wbs/core/services';
 import { Utils } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { ProjectViewModel } from '@wbs/core/view-models';
+import { ProjectActivityService } from '@wbs/pages/projects/services';
 import { forkJoin, Observable, of } from 'rxjs';
-import { catchError, map, switchMap } from 'rxjs/operators';
-import { PROJECT_ACTIONS } from '../../../../../models';
-import { VerifyTasks } from '../../../actions';
+import { catchError, map, switchMap, tap } from 'rxjs/operators';
+import { ProjectService, ProjectTaskService } from '../../../services';
 import { ProjectStore } from '../../../stores';
 import {
   AppendOrOvewriteSelected,
@@ -32,7 +32,6 @@ import {
   SetAsStarted,
   SetPageTitle,
 } from '../actions';
-import { ProjectService } from '../../../services';
 
 const EXTENSION_PAGES: Record<string, string> = {
   xlsx: 'excel',
@@ -63,13 +62,13 @@ interface StateModel {
   },
 })
 export class ProjectUploadState {
-  private readonly categoryService = inject(CategoryService);
+  private readonly activityService = inject(ProjectActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
   private readonly projectService = inject(ProjectService);
   private readonly projectStore = inject(ProjectStore);
-  private readonly store = inject(Store);
+  private readonly taskService = inject(ProjectTaskService);
   private readonly transformer = inject(Transformers);
   private readonly userStore = inject(UserStore);
 
@@ -369,42 +368,18 @@ export class ProjectUploadState {
 
     if (results.removeIds.length > 0 || results.upserts.length > 0) {
       saves.push(
-        this.data.projectNodes.putAsync(
-          project.owner,
-          project.id,
-          results.upserts.map((node) => ({
-            ...node,
-            projectId: project.id,
-            absFlag: null,
-          })),
-          results.removeIds
-        )
+        this.taskService.saveTasks(project, results.upserts, results.removeIds)
       );
     }
 
     if (saves.length === 0) return;
 
     return forkJoin(saves).pipe(
+      switchMap(() => this.activityService.projectUploaded(project.id)),
       switchMap(() =>
         this.data.projectNodes.getAllAsync(project.owner, project.id)
       ),
-      switchMap((nodes) =>
-        this.data.activities.saveProjectActivitiesAsync(
-          this.userStore.userId()!,
-          [
-            {
-              data: {
-                action: PROJECT_ACTIONS.UPLOADED,
-                topLevelId: project.id,
-                data: {},
-              },
-              project,
-              nodes,
-            },
-          ]
-        )
-      ),
-      switchMap(() => ctx.dispatch(new VerifyTasks(true)))
+      tap((tasks) => this.projectStore.setTasks(tasks))
     );
   }
 

@@ -4,23 +4,18 @@ import {
   ProjectCategoryChanges,
   ProjectNode,
 } from '@wbs/core/models';
-import { IdService, SignalStore, sorter } from '@wbs/core/services';
+import { IdService, sorter } from '@wbs/core/services';
 import { LibraryImportResults } from '@wbs/core/view-models';
-import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
 import { forkJoin, Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
-import { SaveTasks } from '../actions';
-import { TasksState } from '../states';
 import { ProjectStore } from '../stores';
 import { ProjectService } from './project.service';
-import { TimelineService } from './timeline.service';
+import { ProjectTaskService } from './project-task.service';
 
 @Injectable()
 export class ProjectImportProcessorService {
   private readonly projectService = inject(ProjectService);
   private readonly projectStore = inject(ProjectStore);
-  private readonly store = inject(SignalStore);
-  private readonly timeline = inject(TimelineService);
+  private readonly taskService = inject(ProjectTaskService);
 
   importAsync(
     taskId: string,
@@ -28,7 +23,7 @@ export class ProjectImportProcessorService {
     results: LibraryImportResults
   ): Observable<unknown> {
     const project = this.projectStore.project()!;
-    const tasks = this.store.selectSnapshot(TasksState.nodes)!;
+    const tasks = this.projectStore.tasks() ?? [];
     const fromTask = tasks.find((t) => t.id === taskId)!;
     const allSiblings = tasks
       .filter((x) => x.parentId === fromTask.parentId)
@@ -140,10 +135,10 @@ export class ProjectImportProcessorService {
       currentIndex++;
     }
 
-    saves.push(this.store.dispatch(new SaveTasks(upserts)));
+    saves.push(this.taskService.saveTasks(project, upserts));
 
-    return forkJoin(saves).pipe(
-      tap(() => {
+    return forkJoin(saves);
+    /*tap(() => {
         const record = this.timeline.createProjectRecord({
           action: PROJECT_ACTIONS.IMPORTED_NODE_FROM_LIBRARY,
           topLevelId: project.id,
@@ -159,8 +154,7 @@ export class ProjectImportProcessorService {
             },
           },
         });
-        this.timeline.saveProjectActions([record]);
-      })
-    );
+        // this.timeline.saveProjectActions([record]);
+      })*/
   }
 }

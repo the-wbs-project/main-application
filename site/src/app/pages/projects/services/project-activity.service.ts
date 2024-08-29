@@ -12,6 +12,13 @@ export class ProjectActivityService {
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
 
+  createProject(projectId: string, title: string): Observable<void> {
+    return this.save(projectId, PROJECT_ACTIONS.CREATED, {
+      title,
+      id: projectId,
+    });
+  }
+
   changeProjectTitle(
     projectId: string,
     from: string,
@@ -91,12 +98,16 @@ export class ProjectActivityService {
     });
   }
 
+  projectUploaded(projectId: string): Observable<void> {
+    return this.save(projectId, PROJECT_ACTIONS.UPLOADED, {});
+  }
+
   private save(
     topLevelId: string,
     action: string,
     data?: any
   ): Observable<void> {
-    return this.data.activities.saveLibraryEntryAsync([
+    return this.data.activities.saveProjectActivitiesAsync([
       {
         id: IdService.generate(),
         timestamp: new Date(),

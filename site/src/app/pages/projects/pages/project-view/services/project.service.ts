@@ -9,7 +9,7 @@ import {
   ProjectCategoryChanges,
   ProjectNode,
 } from '@wbs/core/models';
-import { IdService, Transformers, Utils } from '@wbs/core/services';
+import { Transformers, Utils } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import {
   ProjectViewModel,
@@ -18,9 +18,10 @@ import {
 } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { RemoveDisciplinesFromTasks, SetChecklistData } from '../actions';
+import { ProjectActivityService } from '../../../services';
+import { SetChecklistData } from '../actions';
 import { ProjectStore } from '../stores';
-import { ProjectActivityService } from './project-activity.service';
+import { ProjectTaskService } from './project-task.service';
 
 @Injectable()
 export class ProjectService {
@@ -29,6 +30,7 @@ export class ProjectService {
   private readonly metadata = inject(MetadataStore);
   protected readonly projectStore = inject(ProjectStore);
   protected readonly store = inject(Store);
+  protected readonly taskService = inject(ProjectTaskService);
   protected readonly transformers = inject(Transformers);
 
   static getProjectUrl(route: ActivatedRouteSnapshot): string[] {
@@ -166,12 +168,11 @@ export class ProjectService {
       tap(() =>
         changes.removedIds.length == 0
           ? of('')
-          : this.store.dispatch(
-              new RemoveDisciplinesFromTasks(changes.removedIds)
-            )
+          : this.taskService.removeDisciplinesFromTasks(changes.removedIds)
       )
     );
   }
+
   addUserToRole(role: string, user: UserViewModel): Observable<void> {
     const project = this.projectStore.project()!;
 
@@ -207,28 +208,6 @@ export class ProjectService {
         )
       )
     );
-  }
-
-  createTask(
-    projectId: string,
-    parentId: string | undefined,
-    model: Partial<ProjectNode>,
-    nodes: ProjectNode[]
-  ): ProjectNode {
-    const ts = new Date();
-    const siblings = nodes?.filter((x) => x.parentId == parentId) ?? [];
-    let order =
-      siblings.length === 0 ? 1 : Math.max(...siblings.map((x) => x.order)) + 1;
-
-    return <ProjectNode>{
-      ...model,
-      id: IdService.generate(),
-      parentId,
-      projectId,
-      order,
-      createdOn: ts,
-      lastModified: ts,
-    };
   }
 
   private saveProject(project: ProjectViewModel): Observable<void> {

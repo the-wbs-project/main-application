@@ -1,6 +1,6 @@
-@let list = tasks() ?? [];
+@let list = projectStore.viewModels() ?? [];
 <!---->
-@let project = currentProject();
+@let project = projectStore.project()!;
 <!---->
 @let editEnabled = canEdit();
 <!---->
@@ -32,7 +32,6 @@
   (selectionChange)="taskId.set($event.items[0].dataItem.id)"
   (rowReorder)="rowReordered($event)"
   (cellClick)="onCellClick($event)"
-  (dblclick)="nav()"
 >
   <ng-template kendoTreeListToolbarTemplate>
     <wbs-tree-type-button [(view)]="view" />
@@ -45,7 +44,7 @@
     />
     <wbs-tree-buttons-download
       [dropdownItems]="downloadMenuItems"
-      (itemClick)="service.action($event)"
+      (itemClick)="viewService.action($event)"
     />
     @if (editEnabled) {
     <a [routerLink]="['../', 'upload']">

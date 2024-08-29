@@ -3,15 +3,16 @@ import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { orgResolve, userIdResolve } from '@wbs/core/services';
+import { ProjectActivityService } from '../../services';
 import { PROJECT_PAGES } from './models';
 import {
   ChecklistDataService,
   ChecklistTestService,
   LibraryEntryExportService,
-  ProjectBreadcrumbsService,
   ProjectImportProcessorService,
   ProjectNavigationService,
   ProjectService,
+  ProjectTaskService,
   ProjectViewService,
   TimelineService,
   closeApprovalWindowGuard,
@@ -19,12 +20,7 @@ import {
   projectUrlResolve,
   projectVerifyGuard,
 } from './services';
-import {
-  ProjectApprovalState,
-  ProjectChecklistState,
-  TasksState,
-} from './states';
-import { ProjectActivityService } from './services/project-activity.service';
+import { ProjectApprovalState, ProjectChecklistState } from './states';
 import { ProjectStore } from './stores';
 
 export const routes: Routes = [
@@ -41,21 +37,17 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom([
         DialogModule,
-        NgxsModule.forFeature([
-          ProjectApprovalState,
-          ProjectChecklistState,
-          TasksState,
-        ]),
+        NgxsModule.forFeature([ProjectApprovalState, ProjectChecklistState]),
       ]),
       ChecklistDataService,
       ChecklistTestService,
       ProjectActivityService,
-      ProjectBreadcrumbsService,
       ProjectImportProcessorService,
       LibraryEntryExportService,
       ProjectNavigationService,
       ProjectService,
       ProjectStore,
+      ProjectTaskService,
       ProjectViewService,
       TimelineService,
     ],

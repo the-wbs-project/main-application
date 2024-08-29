@@ -1,7 +1,6 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   computed,
   inject,
   input,
@@ -45,7 +44,7 @@ import { ResourceCardComponent } from './components/resource-card';
   ],
   providers: [AiPromptService],
 })
-export class AboutPageComponent implements OnInit {
+export class AboutPageComponent {
   private readonly category = inject(CategoryService);
   private readonly prompt = inject(AiPromptService);
   private readonly entryService = inject(EntryService);
@@ -89,8 +88,6 @@ export class AboutPageComponent implements OnInit {
     this.descriptionEditMode.set(false);
     this.descriptionChange(description);
   }
-
-  ngOnInit(): void {}
 
   saveDisciplines(disciplines: CategorySelection[]): void {
     const version = this.store.version()!;

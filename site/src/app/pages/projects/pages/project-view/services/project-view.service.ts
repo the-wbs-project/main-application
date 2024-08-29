@@ -10,26 +10,14 @@ import { LibraryImportResults, ProjectViewModel } from '@wbs/core/view-models';
 import { MembershipStore, UserStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import {
-  AddDisciplineToTask,
-  ChangeTaskAbsFlag,
-  CloneTask,
-  CreateTask,
-  MoveTaskDown,
-  MoveTaskLeft,
-  MoveTaskRight,
-  MoveTaskUp,
-  RemoveDisciplineToTask,
-  RemoveTask,
-} from '../actions';
 import { TaskDeleteComponent } from '../components/task-delete';
-import { PROJECT_PAGES, TASK_PAGES } from '../models';
-import { TasksState } from '../states';
+import { PROJECT_PAGES } from '../models';
 import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectNavigationService } from './project-navigation.service';
 import { ProjectImportProcessorService } from './project-import-processor.service';
 import { ProjectService } from './project.service';
+import { ProjectTaskService } from './project-task.service';
 
 @Injectable()
 export class ProjectViewService {
@@ -43,6 +31,7 @@ export class ProjectViewService {
   private readonly projectService = inject(ProjectService);
   private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
+  private readonly taskService = inject(ProjectTaskService);
   private readonly transformers = inject(Transformers);
   private readonly userId = inject(UserStore).userId;
 
@@ -72,7 +61,12 @@ export class ProjectViewService {
         .pipe(
           switchMap((results) =>
             results
-              ? this.store.dispatch(new CreateTask(taskId, results, false))
+              ? this.taskService.createTask(
+                  taskId,
+                  results.title!,
+                  results.description,
+                  results.disciplineIds
+                )
               : of()
           )
         )
@@ -81,51 +75,38 @@ export class ProjectViewService {
         });
     } else if (taskId) {
       if (action === 'cloneTask') {
-        this.store.dispatch(new CloneTask(taskId));
-      } else if (action === 'viewTask') {
-        this.nav.toTaskPage(taskId, TASK_PAGES.ABOUT);
+        this.taskService.cloneTask(taskId).subscribe();
       } else if (action === 'deleteTask') {
         return TaskDeleteComponent.launchAsync(this.dialogService).pipe(
           switchMap((reason) =>
             reason
-              ? this.store
-                  .dispatch(new RemoveTask(taskId, reason))
-                  .pipe(map(() => true))
+              ? this.taskService.remove(taskId, reason).pipe(map(() => true))
               : of(false)
           )
         );
       } else if (action === 'moveLeft') {
-        this.store.dispatch(new MoveTaskLeft(taskId));
+        this.taskService.moveTaskLeft(taskId).subscribe();
       } else if (action === 'moveRight') {
-        this.store.dispatch(new MoveTaskRight(taskId));
+        this.taskService.moveTaskRight(taskId).subscribe();
       } else if (action === 'moveUp') {
-        this.store.dispatch(new MoveTaskUp(taskId));
+        this.taskService.moveTaskUp(taskId).subscribe();
       } else if (action === 'moveDown') {
-        this.store.dispatch(new MoveTaskDown(taskId));
+        this.taskService.moveTaskDown(taskId).subscribe();
       } else if (action === 'setAbsFlag') {
-        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, true));
+        return this.taskService
+          .changeTaskAbs(taskId, 'set')
+          .pipe(map(() => true));
       } else if (action === 'removeAbsFlag') {
-        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, false));
+        return this.taskService
+          .changeTaskAbs(taskId, undefined)
+          .pipe(map(() => true));
       } else if (action === 'exportTask') {
-        const task = this.store
-          .selectSnapshot(TasksState.nodes)!
-          .find((x) => x.id === taskId)!;
+        const task = this.projectStore.tasks()!.find((x) => x.id === taskId)!;
 
         if (task.parentId == null)
           this.exportService.exportPhase(this.owner, this.project.id, task);
         else if (task) this.exportService.exportTask(this.owner, task);
-      } else if (action.startsWith('addDiscipline|')) {
-        const discipline = action.split('|')[1];
-
-        return this.store
-          .dispatch(new AddDisciplineToTask(taskId!, discipline))
-          .pipe(map(() => true));
-      } else if (action.startsWith('removeDiscipline|')) {
-        const discipline = action.split('|')[1];
-
-        return this.store
-          .dispatch(new RemoveDisciplineToTask(taskId!, discipline))
-          .pipe(map(() => true));
+        //
       } else if (action.startsWith('import|')) {
         const direction = action.split('|')[1]!;
 
@@ -155,29 +136,23 @@ export class ProjectViewService {
     this.messages.notify.info('General.RetrievingData');
 
     const project = this.project;
+    const nodes = this.projectStore.tasks()!;
+    let tasks = abs
+      ? this.transformers.nodes.phase.view.forAbsProject(
+          nodes,
+          project.disciplines
+        )
+      : this.transformers.nodes.phase.view.forProject(
+          nodes,
+          project.disciplines
+        );
 
-    this.store
-      .selectOnce(TasksState.nodes)
-      .pipe(
-        map((nodes) => ({ project: project!, nodes: nodes! })),
-        switchMap(({ project, nodes }) => {
-          let tasks = abs
-            ? this.transformers.nodes.phase.view.forAbsProject(
-                nodes,
-                project.disciplines
-              )
-            : this.transformers.nodes.phase.view.forProject(
-                nodes,
-                project.disciplines
-              );
-
-          return this.data.wbsExport.runAsync(
-            project.title,
-            'xlsx',
-            project.disciplines.filter((x) => x.isCustom),
-            tasks
-          );
-        })
+    this.data.wbsExport
+      .runAsync(
+        project.title,
+        'xlsx',
+        project.disciplines.filter((x) => x.isCustom),
+        tasks
       )
       .subscribe();
   }
