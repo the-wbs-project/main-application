@@ -10,19 +10,17 @@ import { RouterModule } from '@angular/router';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { Navigate } from '@ngxs/router-plugin';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
-import { NavigationComponent } from '@wbs/components/_utils/navigation.component';
-import { PageHeaderComponent } from '@wbs/components/page-header';
-import { PROJECT_STATI, SaveState } from '@wbs/core/models';
-import { NavigationMenuService, SignalStore } from '@wbs/core/services';
+import { SaveState } from '@wbs/core/models';
+import { SignalStore } from '@wbs/core/services';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { ApprovalBadgeComponent } from './components/approval-badge.component';
 import { ProjectActionButtonComponent } from './components/project-action-button.component';
 import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
 import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
-import { ProjectTitleComponent } from './components/project-title';
-import { PROJECT_NAVIGATION } from './models';
 import { ProjectApprovalState } from './states';
 import { ProjectStore } from './stores';
+import { ProjectCategoryIconPipe } from '@wbs/pipes/project-category-icon.pipe';
+import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
 
 @Component({
   standalone: true,
@@ -32,17 +30,15 @@ import { ProjectStore } from './stores';
     ApprovalBadgeComponent,
     FadingMessageComponent,
     FindByIdPipe,
-    NavigationComponent,
-    PageHeaderComponent,
     ProjectActionButtonComponent,
     ProjectApprovalWindowComponent,
+    ProjectCategoryIconPipe,
+    ProjectCategoryLabelPipe,
     ProjectChecklistModalComponent,
-    ProjectTitleComponent,
     RouterModule,
   ],
 })
 export class ProjectViewComponent {
-  private readonly navService = inject(NavigationMenuService);
   private readonly store = inject(SignalStore);
 
   readonly checkIcon = faCheck;
@@ -63,17 +59,6 @@ export class ProjectViewComponent {
   );
   readonly chat = this.store.select(ProjectApprovalState.messages);
   readonly titleSaveState = signal<SaveState>('ready');
-  readonly category = computed(() => this.projectStore.project()?.category);
-  readonly title = computed(() => this.projectStore.project()?.title);
-  readonly links = computed(() =>
-    this.navService.processLinks(
-      PROJECT_NAVIGATION,
-      this.projectStore.project()?.status === PROJECT_STATI.PLANNING,
-      this.projectStore.claims() ?? []
-    )
-  );
-
-  titleChanged(title: string): void {}
 
   navigate(route: string[]): void {
     this.store.dispatch(new Navigate([...this.projectUrl(), ...route]));

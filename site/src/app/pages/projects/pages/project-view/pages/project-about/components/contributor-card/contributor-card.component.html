@@ -1,7 +1,7 @@
 <div class="card-header tx-16">
   <div class="d-flex flex-align-center">
     <div>{{ "General.Contributors" | translate }}</div>
-    @if (store.canEditEntry()) {
+    @if (store.canEditProject()) {
     <div class="flex-fill tx-right">
       <button
         kendoButton
@@ -17,22 +17,11 @@
   </div>
 </div>
 <div class="card-body d-flex flex-row flex-wrap gap-20">
+  @for (x of contributors(); track x.user.userId + '-' + x.role) {
   <div class="card border text-start">
-    <wbs-user-info
-      [user]="store.version()!.author"
-      [secondaryTitle]="'General.Author' | translate"
-    />
-  </div>
-  @for (contributor of contributors(); track contributor.userId) {
-  <div class="card border text-start">
-    <div class="card-header bg-light-blue-f">
-      {{ "General.Contributor" | translate }}
-    </div>
+    <div class="card-header bg-light-blue-f">{{ x.role | roleTitle }}</div>
     <div class="card-body">
-      <wbs-user-info
-        [user]="contributor"
-        [secondaryTitle]="'General.Contributor' | translate"
-      />
+      <wbs-user-info [user]="x.user" />
     </div>
   </div>
   }

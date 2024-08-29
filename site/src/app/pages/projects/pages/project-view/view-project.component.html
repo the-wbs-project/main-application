@@ -1,16 +1,22 @@
-@let project = projectStore.project(); @let claims = projectStore.claims(); @if
-(project) {
+@if (projectStore.project(); as project) {
+<!---->
+@let claims = projectStore.claims();
+
 <div class="d-flex flex-column h-100">
-  <div class="mg-y-10">
-    <div class="d-block d-lg-none mg-b-10 w-100 text-end">
-      <wbs-page-header />
-    </div>
+  <div class="mg-y-5">
     <div class="d-flex flex-align-center">
-      <wbs-project-title
-        [title]="title() ?? ''"
-        [category]="category()"
-        (titleChange)="titleChanged($event)"
-      />
+      @if (project.category | projectCategoryIcon; as url) {
+      <div class="wd-50 tx-center">
+        <img
+          [src]="url"
+          [title]="project.category | projectCategoryLabel"
+          class="wd-30 h-auto"
+        />
+      </div>
+      }
+      <span class="tx-20 tx-medium mg-r-10">
+        {{ project.title }}
+      </span>
       @if (approvalEnabled()) {
       <wbs-approval-badge
         [approval]="approvals() | findById : 'project-title'"
@@ -24,9 +30,6 @@
       />
 
       <div class="flex-fill tx-right">
-        <div class="d-none d-lg-block d-lg-inline-block mg-r-20">
-          <wbs-page-header />
-        </div>
         <wbs-project-action-button
           [claims]="claims"
           [project]="project"
@@ -35,34 +38,22 @@
       </div>
     </div>
   </div>
-  <div class="card border border-dark flex-fill">
-    <!--<div class="card-header py-0 mg-b-0 bg-dark">
-      <wbs-navigation
-        [menu]="links()"
-        [activeSubSection]="navSection()"
-        (navigate)="navigate($event)"
-      />
-    </div>-->
-    <div
-      class="card-body border-0 p-0 rounded-10 d-flex flex-row w-100 bg-light"
-    >
-      <div class="flex-fill">
-        <router-outlet />
-      </div>
-      @if (approvalEnabled() && approvalView() === 'project' && approval(); as
-      approval) {
-      <wbs-project-approval-window
-        [approval]="approval"
-        [claims]="claims"
-        [userId]="userId()"
-        [owner]="project.owner"
-        [isReadyOnly]="project.status !== 'approval'"
-        [chat]="chat() ?? []"
-        [hasChildren]="approvalHasChildren()!"
-      />
-      }
-    </div>
+
+  <div class="flex-fill">
+    <router-outlet />
   </div>
+  @if (approvalEnabled() && approvalView() === 'project' && approval(); as
+  approval) {
+  <wbs-project-approval-window
+    [approval]="approval"
+    [claims]="claims"
+    [userId]="userId()"
+    [owner]="project.owner"
+    [isReadyOnly]="project.status !== 'approval'"
+    [chat]="chat() ?? []"
+    [hasChildren]="approvalHasChildren()!"
+  />
+  }
 </div>
 <wbs-project-checklist-modal #checklist />
 }

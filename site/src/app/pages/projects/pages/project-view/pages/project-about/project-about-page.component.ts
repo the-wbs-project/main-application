@@ -34,6 +34,7 @@ import { ProjectService, ProjectTaskService } from '../../services';
 import { ProjectApprovalState, ProjectChecklistState } from '../../states';
 import { ProjectStore } from '../../stores';
 import { ProjectResourceCardComponent } from './components/resource-card';
+import { ProjectContributorCardComponent } from './components/contributor-card';
 
 @Component({
   standalone: true,
@@ -50,6 +51,7 @@ import { ProjectResourceCardComponent } from './components/resource-card';
     NgClass,
     ProjectApprovalCardComponent,
     ProjectChecklistComponent,
+    ProjectContributorCardComponent,
     ProjectDetailsCardComponent,
     ProjectResourceCardComponent,
     ProjectStatusCardComponent,

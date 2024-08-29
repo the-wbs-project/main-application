@@ -1,81 +1,35 @@
-@if (project(); as project) {
+@if (store.project(); as project) {
 <div class="card-header">{{ "General.Details" | translate }}</div>
 <div class="card-body">
   <div class="wbs-detail-card">
+    <div class="detail-header">{{ "General.RecordId" | translate }} :</div>
+    <div>{{ project.recordId }}</div>
+
+    <div class="detail-header">{{ "General.Title" | translate }} :</div>
+    <div>
+      <wbs-editable-text
+        [viewText]="project.title"
+        [saveState]="saveTitle.state()"
+        [editText]="project.title"
+        (saveText)="titleChanged($event)"
+      />
+    </div>
+
     <div class="detail-header">{{ "General.Category" | translate }} :</div>
-    <div>{{ project.category | projectCategoryLabel }}</div>
+    <div>
+      <wbs-project-category-editor
+        [canEdit]="store.canEditProject()"
+        [categoryId]="project.category"
+        [saveMode]="saveCategory.state()"
+        (save)="projectCategoryChanged($event)"
+      />
+    </div>
 
     <div class="detail-header">{{ "Wbs.TaskCount" | translate }} :</div>
-    <div>{{ tasks()!.length }}</div>
+    <div>{{ store.viewModels()?.length ?? 0 }}</div>
 
     <div class="detail-header">{{ "General.LastModified" | translate }} :</div>
     <div>{{ project.lastModified | dateText }}</div>
-
-    <div class="detail-header">{{ "General.PMs" | translate }} :</div>
-    <div>
-      @if (pms(); as list) { @if (list.length === 0) {
-      {{ "General.None" | translate }}
-      } @else { @for (user of list; track user; let i = $index) {
-      <div [ngClass]="{ 'mg-b-10': list.length > i + 1 }">
-        <wbs-user
-          class="d-none d-sm-block"
-          [organization]="project.owner"
-          [userId]="user"
-          position="right"
-        />
-        <wbs-user
-          class="d-block d-sm-none"
-          [organization]="project.owner"
-          [userId]="user"
-          position="bottom"
-        />
-      </div>
-      } } }
-    </div>
-
-    <div class="detail-header">{{ "General.Approvers" | translate }} :</div>
-    <div>
-      @if (approvers(); as list) { @if (list.length === 0) {
-      {{ "General.None" | translate }}
-      } @else { @for (user of list; track user; let i = $index) {
-      <div [ngClass]="{ 'mg-b-3': list.length > i + 1 }">
-        <wbs-user
-          class="d-none d-sm-block"
-          [organization]="project.owner"
-          [userId]="user"
-          position="right"
-        />
-        <wbs-user
-          class="d-block d-sm-none"
-          [organization]="project.owner"
-          [userId]="user"
-          position="bottom"
-        />
-      </div>
-      } } }
-    </div>
-
-    <div class="detail-header">{{ "General.SMEs" | translate }} :</div>
-    <div>
-      @if (smes(); as list) { @if (list.length === 0) {
-      {{ "General.None" | translate }}
-      } @else { @for (user of list; track user; let i = $index) {
-      <div [ngClass]="{ 'mg-b-3': list.length > i + 1 }">
-        <wbs-user
-          class="d-none d-sm-block"
-          [organization]="project.owner"
-          [userId]="user"
-          position="right"
-        />
-        <wbs-user
-          class="d-block d-sm-none"
-          [organization]="project.owner"
-          [userId]="user"
-          position="bottom"
-        />
-      </div>
-      } } }
-    </div>
   </div>
 </div>
 }

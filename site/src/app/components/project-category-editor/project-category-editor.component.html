@@ -7,7 +7,7 @@
     [popupWidth]="600"
     [(category)]="editValue"
   />
-  <button kendoButton size="small" fillMode="clear" (click)="save()">
+  <button kendoButton size="small" fillMode="clear" (click)="categoryChosen()">
     <fa-icon [icon]="saveIcon" [title]="'General.Save' | translate" />
   </button>
   <button kendoButton size="small" fillMode="clear" (click)="cancel()">
@@ -30,7 +30,7 @@
   </kendo-popover>
   } @else {
   {{ "General.None" | translate }}
-  } @if (saveMode.state() !== 'saving' && store.canEditAlias()) {
+  } @if (saveMode() !== 'saving' && canEdit()) {
   <span class="child-to-show">
     <fa-icon
       size="sm"
@@ -41,6 +41,6 @@
     />
   </span>
   }
-  <wbs-save-message [state]="saveMode.state()" cssClass="tx-12 mg-l-15" />
+  <wbs-save-message [state]="saveMode()" cssClass="tx-12 mg-l-15" />
 </div>
 }

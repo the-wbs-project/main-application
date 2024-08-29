@@ -4,27 +4,29 @@ import {
   computed,
   inject,
   input,
-  model,
+  output,
   signal,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faInfoCircle } from '@fortawesome/pro-duotone-svg-icons';
-import { faPencil, faQuestion, faSave, faXmark } from '@fortawesome/pro-solid-svg-icons';
+import {
+  faPencil,
+  faQuestion,
+  faSave,
+  faXmark,
+} from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { PopoverModule } from '@progress/kendo-angular-tooltip';
 import { ProjectCategoryDescriptionComponent } from '@wbs/components/_utils/project-category-description.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
-import { SaveService } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
-import { EntryStore, MetadataStore } from '@wbs/core/store';
-import { LibraryVersionViewModel } from '@wbs/core/view-models';
+import { SaveState } from '@wbs/core/models';
+import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,
-  selector: 'wbs-details-project-category',
-  templateUrl: './project-category.component.html',
+  selector: 'wbs-project-category-editor',
+  templateUrl: './project-category-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'child-hoverer' },
   imports: [
@@ -37,34 +39,34 @@ import { LibraryVersionViewModel } from '@wbs/core/view-models';
     TranslateModule,
   ],
 })
-export class ProjectCategoryComponent {
+export class ProjectCategoryEditorComponent {
   private readonly categories =
     inject(MetadataStore).categories.projectCategories;
-  private readonly service = inject(EntryService);
 
   readonly editIcon = faPencil;
   readonly saveIcon = faSave;
   readonly cancelIcon = faXmark;
   readonly infoIcon = faQuestion;
-  readonly store = inject(EntryStore);
-  readonly record = input.required<LibraryVersionViewModel>();
+  readonly canEdit = input.required<boolean>();
+  readonly categoryId = input.required<string | undefined>();
+  readonly saveMode = input.required<SaveState>();
   readonly category = computed(() =>
-    this.categories.find((c) => c.id === this.record().category)
+    this.categories.find((c) => c.id === this.categoryId())
   );
-  readonly editValue = model<string>();
+  readonly editValue = signal<string | undefined>(undefined);
   readonly editMode = signal(false);
-  readonly saveMode = new SaveService();
+  readonly save = output<string>();
 
   edit(): void {
-    this.editValue.set(this.record().category);
+    this.editValue.set(this.categoryId());
     this.editMode.set(true);
   }
 
-  save(): void {
+  categoryChosen(): void {
     const category = this.editValue()!;
 
     this.editMode.set(false);
-    this.saveMode.call(this.service.categoryChangedAsync(category)).subscribe();
+    this.save.emit(category);
   }
 
   cancel(): void {

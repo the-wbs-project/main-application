@@ -42,8 +42,8 @@ export class ProjectHttpService {
 
   static async putAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry } = ctx.req.param();
-      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.projects.clearKvAsync(owner, entry)]);
+      const { owner, project } = ctx.req.param();
+      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.projects.clearKvAsync(owner, project)]);
 
       return resp;
     } catch (e) {

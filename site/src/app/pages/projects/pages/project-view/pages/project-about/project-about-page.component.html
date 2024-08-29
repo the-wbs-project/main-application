@@ -2,13 +2,10 @@
 <!---->
 @let canEdit = projectStore.canEditProject();
 
-<div class="w-100 text-center h-100">
+<div class="w-100 text-center">
   <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
-    <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
-      <wbs-project-details-card
-        [project]="project"
-        [tasks]="projectStore.viewModels()!"
-      />
+    <div class="two-column-grid mn-ht-100p" resizedCss>
+      <wbs-project-details-card />
       <wbs-discipline-card
         [splitLimit]="650"
         [canAdd]="true"
@@ -38,6 +35,7 @@
         (descriptionChange)="descriptionChange($event)"
       />
       <wbs-project-resource-card />
+      <wbs-project-contributor-card />
     </div>
   </div>
 </div>

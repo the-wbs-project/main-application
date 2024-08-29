@@ -12,7 +12,7 @@
     <div>
       <wbs-editable-text
         [viewText]="version.title"
-        [saveState]="saveAlias.state()"
+        [saveState]="saveTitle.state()"
         [editText]="version.title"
         (saveText)="titleChanged($event)"
       />
@@ -37,7 +37,12 @@
     @if (version.type === 'project') {
     <div class="detail-header">{{ "General.Category" | translate }} :</div>
     <div>
-      <wbs-details-project-category [record]="version" />
+      <wbs-project-category-editor
+        [canEdit]="store.canEditEntry()"
+        [categoryId]="version.category"
+        [saveMode]="saveAlias.state()"
+        (save)="projectCategoryChanged($event)"
+      />
     </div>
     }
 

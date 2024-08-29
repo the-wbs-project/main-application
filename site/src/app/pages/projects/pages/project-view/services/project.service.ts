@@ -98,7 +98,7 @@ export class ProjectService {
     return nodes.filter((x) => x.parentId == null).map((x) => x.id);
   }
 
-  changeProjectTitle(title: string): Observable<void> {
+  changeTitle(title: string): Observable<void> {
     const project = this.projectStore.project()!;
     const from = project.title;
 

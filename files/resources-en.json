@@ -445,7 +445,8 @@
       "CancelProjectSuccess": "The project was successfully cancelled.",
       "TaskLegend_Title": "Click to edit the task title.",
       "TaskLegend_Menu": "Click to see other actions which can be performed on this task.",
-      "TaskLegend_Abs": "Account Breakdown Structure Task"
+      "TaskLegend_Abs": "Account Breakdown Structure Task",
+      "ManageRoles": "Manage Roles"
     }
   },
   {

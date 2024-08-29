@@ -12,53 +12,60 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserInfoComponent } from '@wbs/components/user-info';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { ROLES } from '@wbs/core/models';
 import { SaveService, sorter } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
-import { LibraryVersionViewModel } from '@wbs/core/view-models';
+import { MetadataStore } from '@wbs/core/store';
+import { ProjectViewModel, UserRoleViewModel } from '@wbs/core/view-models';
+import { RoleTitlePipe } from '@wbs/pipes/role-title.pipe';
 import { switchMap } from 'rxjs';
 import { ContributorDialogComponent } from '../contributor-dialog';
-import { EntryStore } from '@wbs/core/store';
+import { ProjectStore } from '../../../../stores';
 
 @Component({
   standalone: true,
-  selector: 'wbs-contributor-card',
+  selector: 'wbs-project-contributor-card',
   templateUrl: './contributor-card.component.html',
   host: { class: 'card dashboard-card full-item' },
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonModule,
     FontAwesomeModule,
+    RoleTitlePipe,
     TranslateModule,
     UserInfoComponent,
   ],
 })
-export class ContributorCardComponent {
+export class ProjectContributorCardComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
-  private readonly service = inject(EntryService);
+  private readonly metadata = inject(MetadataStore);
 
   readonly editIcon = faPencil;
-  readonly store = inject(EntryStore);
+  readonly store = inject(ProjectStore);
   readonly saveState = new SaveService();
 
-  readonly contributors = computed(
-    () =>
-      (this.store.version()!.editors ?? []).sort((a, b) =>
-        sorter(a.fullName, b.fullName)
-      ) ?? []
-  );
+  readonly contributors = computed(() => {
+    const project = this.store.project();
+
+    return project
+      ? [
+          ...this.getUsers(project, ROLES.PM),
+          ...this.getUsers(project, ROLES.APPROVER),
+          ...this.getUsers(project, ROLES.SME),
+        ]
+      : [];
+  });
 
   launchEdit(): void {
-    const version = this.store.version()!;
+    const project = this.store.project()!;
 
     this.data.memberships
-      .getMembershipUsersAsync(version.ownerId)
+      .getMembershipUsersAsync(project.owner)
       .pipe(
         switchMap((members) =>
           ContributorDialogComponent.launchAsync(
             this.dialog,
-            version.author,
-            version.editors,
+            project.roles,
             members
           )
         )
@@ -66,9 +73,22 @@ export class ContributorCardComponent {
       .subscribe((x) => {
         if (!x) return;
 
-        this.saveState
-          .call(this.service.contributorsChangedAsync(x))
-          .subscribe();
+        //this.saveState
+        //  .call(this.service.contributorsChangedAsync(x))
+        //  .subscribe();
       });
+  }
+
+  private getUsers(
+    project: ProjectViewModel,
+    role: string
+  ): UserRoleViewModel[] {
+    const roleId = this.metadata.roles.definitions.find(
+      (x) => x.name === role
+    )?.id;
+
+    return project.roles
+      .filter((x) => x.role === roleId)
+      .sort((a, b) => sorter(a.user.fullName, b.user.fullName));
   }
 }
