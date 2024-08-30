@@ -55,11 +55,6 @@ export class EntryActionButtonService {
         resource: view.resource,
         faIcon: view.faIcon as IconDefinition | undefined,
         route: [...entryUrl, ...view.route!],
-        items: view.items?.map((v) => ({
-          resource: v.resource,
-          faIcon: view.faIcon as IconDefinition | undefined,
-          route: [...entryUrl, ...(v as RouteContextMenuItem).route!],
-        })),
       });
     }
     items.push(this.header('General.Versioning'));

@@ -1,0 +1,6 @@
+{
+    "/api": {
+        "target": "http://wbs-worker:88",
+        "secure": false
+    }
+}

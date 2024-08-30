@@ -4,7 +4,6 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { RecordResourceEditorComponent } from '@wbs/components/record-resources/components/editor';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  APP_CONFIG_TOKEN,
   PROJECT_CLAIMS,
   PROJECT_STATI,
   RESOURCE_TYPES,
@@ -19,7 +18,6 @@ import { ProjectStore } from '../stores';
 @Injectable()
 export class ProjectResourcesService {
   private readonly activity = inject(ProjectActivityService);
-  private readonly appConfig = inject(APP_CONFIG_TOKEN);
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
   private readonly projectStore = inject(ProjectStore);
@@ -196,14 +194,7 @@ export class ProjectResourcesService {
 
   getApiUrl(taskId?: string): string {
     const project = this.projectStore.project()!;
-    const parts = [
-      this.appConfig.api_domain,
-      'api',
-      'portfolio',
-      project.owner,
-      'projects',
-      project.id,
-    ];
+    const parts = ['/api', 'portfolio', project.owner, 'projects', project.id];
 
     if (taskId) parts.push('nodes', taskId);
 

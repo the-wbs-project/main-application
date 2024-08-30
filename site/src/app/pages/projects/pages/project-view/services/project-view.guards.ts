@@ -16,17 +16,20 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   const projectStore = inject(ProjectStore);
   const store = inject(Store);
   const owner = Utils.getParam(route, 'org');
-  const projectId = Utils.getParam(route, 'projectId');
+  const recordId = Utils.getParam(route, 'recordId');
 
-  if (!owner || !projectId) return false;
+  if (!owner || !recordId) return false;
 
   inject(TitleService).setTitle([{ text: 'General.Projects' }]);
 
-  return forkJoin({
-    project: data.projects.getAsync(owner, projectId),
-    tasks: data.projectNodes.getAllAsync(owner, projectId),
-    claims: data.claims.getProjectClaimsAsync(owner, projectId),
-  }).pipe(
+  return data.projects.getIdAsync(owner, recordId).pipe(
+    switchMap((projectId) =>
+      forkJoin({
+        project: data.projects.getAsync(owner, projectId),
+        tasks: data.projectNodes.getAllAsync(owner, projectId),
+        claims: data.claims.getProjectClaimsAsync(owner, projectId),
+      })
+    ),
     switchMap(({ project, tasks, claims }) => {
       projectStore.setAll(project, tasks, claims);
 

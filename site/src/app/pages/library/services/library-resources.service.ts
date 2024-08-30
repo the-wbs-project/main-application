@@ -4,7 +4,6 @@ import { FileInfo } from '@progress/kendo-angular-upload';
 import { RecordResourceEditorComponent } from '@wbs/components/record-resources/components/editor';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  APP_CONFIG_TOKEN,
   LIBRARY_CLAIMS,
   RESOURCE_TYPES,
   ResourceRecord,
@@ -22,7 +21,6 @@ import { map, switchMap, tap } from 'rxjs/operators';
 export class LibraryResourcesService {
   private readonly versionActivity = inject(EntryActivityService);
   private readonly taskActivity = inject(EntryTaskActivityService);
-  private readonly appConfig = inject(APP_CONFIG_TOKEN);
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
   private readonly entryStore = inject(EntryStore);
@@ -239,8 +237,7 @@ export class LibraryResourcesService {
   getApiUrl(taskId?: string): string {
     const version = this.entryStore.version()!;
     const parts = [
-      this.appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       version.ownerId,
       'library',

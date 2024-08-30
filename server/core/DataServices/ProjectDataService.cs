@@ -20,7 +20,7 @@ public class ProjectDataService : BaseSqlDbService
 
     public async Task<Project> GetByIdAsync(SqlConnection conn, string id)
     {
-        var cmd = new SqlCommand("SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id", conn);
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[Projects] WHERE [Id] = @Id OR [RecordId] = @Id", conn);
 
         cmd.Parameters.AddWithValue("@Id", id);
 

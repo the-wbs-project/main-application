@@ -1,5 +1,5 @@
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
-import { APP_CONFIG_TOKEN, AppConfiguration } from '@wbs/core/models';
+import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { environment } from 'src/env';
 
 @Component({
   standalone: true,
@@ -9,13 +9,13 @@ import { APP_CONFIG_TOKEN, AppConfiguration } from '@wbs/core/models';
   >
     Copyright © {{ year }}
     <a href="/" class="text-primary">
-      {{ appConfig.app_title }}
+      {{ title }}
     </a>
     All rights reserved
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class FooterComponent {
-  readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
+  readonly title = environment.appTitle;
   readonly year = new Date().getFullYear();
 }

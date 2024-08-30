@@ -1,10 +1,21 @@
 import { Context } from '../../config';
-import { Member } from '../../models';
-import { UserViewModel } from '../../view-models';
 import { OriginService } from '../origin.service';
 import { Transformers } from '../transformers';
 
 export class ProjectHttpService {
+  static async getIdAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, project } = ctx.req.param();
+      const obj = await ctx.var.data.projects.getByIdAsync(owner, project);
+
+      return obj ? ctx.json(obj.id) : ctx.text('Not Found', 404);
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to get a project ID from record locator.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
   static async getByOwnerAsync(ctx: Context): Promise<Response> {
     try {
       const { owner } = ctx.req.param();

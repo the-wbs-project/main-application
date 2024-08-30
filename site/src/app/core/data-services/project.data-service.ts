@@ -13,6 +13,12 @@ export class ProjectDataService {
       .pipe(map((list) => this.cleanList(list)));
   }
 
+  getIdAsync(owner: string, recordId: string): Observable<string> {
+    return this.http.get<string>(
+      `api/portfolio/${owner}/projects/${recordId}/id`
+    );
+  }
+
   getAsync(owner: string, projectId: string): Observable<ProjectViewModel> {
     return this.http
       .get<ProjectViewModel>(`api/portfolio/${owner}/projects/${projectId}`)

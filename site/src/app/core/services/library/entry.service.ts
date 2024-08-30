@@ -9,13 +9,12 @@ import {
 import { ProjectCreationComponent } from '@wbs/components/project-creation-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  AppConfiguration,
   LibraryEntry,
   LibraryEntryNode,
   LibraryEntryVersion,
   ProjectCategory,
 } from '@wbs/core/models';
-import { Messages, sorter, Transformers, Utils } from '@wbs/core/services';
+import { Messages, Transformers, Utils } from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { LibraryVersionViewModel, UserViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
@@ -50,17 +49,13 @@ export class EntryService {
     ];
   }
 
-  static getEntryApiUrl(
-    appConfig: AppConfiguration,
-    route: ActivatedRouteSnapshot
-  ): string {
+  static getEntryApiUrl(route: ActivatedRouteSnapshot): string {
     const version = inject(EntryStore).version();
 
     if (!version) return '';
 
     return [
-      appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       Utils.getParam(route, 'org'),
       'library',
@@ -71,17 +66,13 @@ export class EntryService {
     ].join('/');
   }
 
-  static getTaskApiUrl(
-    appConfig: AppConfiguration,
-    route: ActivatedRouteSnapshot
-  ): string {
+  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
     const version = inject(EntryStore).version();
 
     if (!version) return '';
 
     return [
-      appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       Utils.getParam(route, 'org'),
       'library',

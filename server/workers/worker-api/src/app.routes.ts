@@ -95,6 +95,7 @@ const projectApp = newApp()
   .basePath('api/portfolio/:owner/projects')
   .get('', verifyJwt, verifyMembership, Http.projects.getByOwnerAsync)
   .get(':project', verifyJwt, verifyMembership, Http.projects.getByIdAsync)
+  .get(':project/id', verifyJwt, verifyMembership, Http.projects.getIdAsync)
   .put(':project', verifyJwt, verifyMembership, Http.projects.putAsync);
 
 app.route('/', projectApp);

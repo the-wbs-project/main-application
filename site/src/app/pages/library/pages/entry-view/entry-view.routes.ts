@@ -7,7 +7,6 @@ import {
   EntryTaskActionService,
   EntryTaskReorderService,
   LibraryImportProcessorService,
-  entryNavGuard,
   entryUrlResolve,
   ownerIdResolve,
   populateGuard,
@@ -43,21 +42,11 @@ export const routes: Routes = [
         path: 'about',
         loadComponent: () =>
           import('./pages/entry-about').then((x) => x.AboutPageComponent),
-        canActivate: [entryNavGuard],
-        data: {
-          section: 'about',
-          crumbs: ['about'],
-        },
       },
       {
         path: 'tasks',
         loadComponent: () =>
           import('./pages/entry-tasks').then((x) => x.TasksPageComponent),
-        canActivate: [entryNavGuard],
-        data: {
-          section: 'tasks',
-          crumbs: ['tasks'],
-        },
         resolve: {
           entryUrl: entryUrlResolve,
         },
@@ -68,10 +57,7 @@ export const routes: Routes = [
           import('./pages/entry-upload/upload-layout.component').then(
             (x) => x.ProjectUploadLayoutComponent
           ),
-        canActivate: [entryNavGuard, verifyClaimsGuard],
-        data: {
-          section: 'tasks',
-        },
+        canActivate: [verifyClaimsGuard],
         loadChildren: () =>
           import('./pages/entry-upload/pages/children.routes').then(
             (x) => x.routes

@@ -1,22 +1,24 @@
-import { NavigationLink } from '@wbs/core/models';
+import {
+  faInfoCircle,
+  faTasks,
+  faTimeline,
+} from '@fortawesome/pro-solid-svg-icons';
+import { RouteContextMenuItem } from '@wbs/core/models';
 
-export const PROJECT_NAVIGATION: NavigationLink[] = [
+export const PROJECT_NAVIGATION: RouteContextMenuItem[] = [
   {
     route: ['about'],
-    text: 'General.About',
-    section: 'about',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
+    resource: 'General.About',
+    faIcon: faInfoCircle,
   },
   {
     route: ['tasks'],
-    text: 'General.Tasks',
-    section: 'tasks',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
+    resource: 'General.Tasks',
+    faIcon: faTasks,
   },
   {
     route: ['timeline'],
-    text: 'General.Timeline',
-    section: 'timeline',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
+    resource: 'General.Timeline',
+    faIcon: faTimeline,
   },
 ];

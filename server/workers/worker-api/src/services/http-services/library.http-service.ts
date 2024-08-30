@@ -15,6 +15,7 @@ export class LibraryHttpService {
       return ctx.text('Internal Server Error', 500);
     }
   }
+
   static async getDraftsAsync(ctx: Context): Promise<Response> {
     try {
       const resp = await OriginService.pass(ctx);

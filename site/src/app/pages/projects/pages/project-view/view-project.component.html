@@ -5,6 +5,10 @@
 <div class="d-flex flex-column h-100">
   <div class="mg-y-5">
     <div class="d-flex flex-align-center">
+      <wbs-action-button
+        [menu]="menu()"
+        (itemClicked)="menuService.handleAction($event, approvalEnabled()!)"
+      />
       @if (project.category | projectCategoryIcon; as url) {
       <div class="wd-50 tx-center">
         <img
@@ -28,14 +32,6 @@
         [show]="titleSaveState() === 'saved'"
         cssClass="tx-success tx-14"
       />
-
-      <div class="flex-fill tx-right">
-        <wbs-project-action-button
-          [claims]="claims"
-          [project]="project"
-          [approvalEnabled]="approvalEnabled()!"
-        />
-      </div>
     </div>
   </div>
 

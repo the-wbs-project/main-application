@@ -9,6 +9,7 @@ import {
   ChecklistDataService,
   ChecklistTestService,
   LibraryEntryExportService,
+  ProjectActionButtonService,
   ProjectImportProcessorService,
   ProjectNavigationService,
   ProjectService,
@@ -16,7 +17,6 @@ import {
   ProjectViewService,
   TimelineService,
   closeApprovalWindowGuard,
-  projectIdResolve,
   projectUrlResolve,
   projectVerifyGuard,
 } from './services';
@@ -25,7 +25,7 @@ import { ProjectStore } from './stores';
 
 export const routes: Routes = [
   {
-    path: ':projectId',
+    path: ':recordId',
     canActivate: [projectVerifyGuard],
     canDeactivate: [closeApprovalWindowGuard],
     loadComponent: () =>
@@ -41,6 +41,7 @@ export const routes: Routes = [
       ]),
       ChecklistDataService,
       ChecklistTestService,
+      ProjectActionButtonService,
       ProjectActivityService,
       ProjectImportProcessorService,
       LibraryEntryExportService,
@@ -90,7 +91,6 @@ export const routes: Routes = [
         },
         resolve: {
           owner: orgResolve,
-          projectId: projectIdResolve,
           projectUrl: projectUrlResolve,
         },
       },

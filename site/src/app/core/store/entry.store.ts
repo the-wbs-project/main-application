@@ -25,17 +25,7 @@ export class EntryStore {
   private readonly _viewModels = signal<LibraryTaskViewModel[] | undefined>(
     undefined
   );
-  private readonly _navSectionEntry = signal<string | undefined>(undefined);
-  private readonly _navSectionTask = signal<string | undefined>(undefined);
   private readonly _claims = signal<string[]>([]);
-
-  get navSectionEntry(): Signal<string | undefined> {
-    return this._navSectionEntry;
-  }
-
-  get navSectionTask(): Signal<string | undefined> {
-    return this._navSectionTask;
-  }
 
   get tasks(): Signal<LibraryEntryNode[] | undefined> {
     return this._tasks;
@@ -118,14 +108,6 @@ export class EntryStore {
     this._tasks.set(tasks);
     this._claims.set(claims);
     this._viewModels.set(this.createViewModels(version, tasks));
-  }
-
-  setNavSectionEntry(value: string): void {
-    this._navSectionEntry.set(value);
-  }
-
-  setNavSectionTask(value: string): void {
-    this._navSectionTask.set(value);
   }
 
   setVersion(version: LibraryVersionViewModel): void {

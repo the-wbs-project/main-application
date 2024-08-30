@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
-  AppConfiguration,
   PROJECT_STATI,
   PROJECT_STATI_TYPE,
   ProjectCategoryChanges,
@@ -33,23 +32,27 @@ export class ProjectService {
   protected readonly taskService = inject(ProjectTaskService);
   protected readonly transformers = inject(Transformers);
 
-  static getProjectUrl(route: ActivatedRouteSnapshot): string[] {
-    return [
-      '/',
-      Utils.getParam(route, 'org'),
-      'projects',
-      'view',
-      Utils.getParam(route, 'projectId'),
-    ];
+  static getProjectUrl(route: ProjectViewModel): string[];
+  static getProjectUrl(route: ActivatedRouteSnapshot): string[];
+  static getProjectUrl(
+    item: ActivatedRouteSnapshot | ProjectViewModel
+  ): string[] {
+    if (item instanceof ActivatedRouteSnapshot) {
+      return [
+        '/',
+        Utils.getParam(item, 'org'),
+        'projects',
+        'view',
+        Utils.getParam(item, 'projectId'),
+      ];
+    } else {
+      return ['/', item.owner, 'projects', 'view', item.id];
+    }
   }
 
-  static getProjectApiUrl(
-    appConfig: AppConfiguration,
-    route: ActivatedRouteSnapshot
-  ): string {
+  static getProjectApiUrl(route: ActivatedRouteSnapshot): string {
     return [
-      appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       Utils.getParam(route, 'org'),
       'projects',
@@ -65,13 +68,9 @@ export class ProjectService {
     ];
   }
 
-  static getTaskApiUrl(
-    appConfig: AppConfiguration,
-    route: ActivatedRouteSnapshot
-  ): string {
+  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
     return [
-      appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       Utils.getParam(route, 'org'),
       'projects',
