@@ -1,6 +1,6 @@
-import { Injectable, computed, inject, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { ProjectCategory } from '@wbs/core/models';
-import { UserStore } from '@wbs/core/store';
+import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class ProjectCreateStore {
@@ -11,9 +11,9 @@ export class ProjectCreateStore {
   readonly category = signal<string | undefined>(undefined);
   readonly phases = signal<ProjectCategory[]>([]);
   readonly disciplines = signal<ProjectCategory[]>([]);
-  readonly pmIds = signal<string[]>([inject(UserStore).userId()!]);
-  readonly smeIds = signal<string[]>([]);
-  readonly approverIds = signal<string[]>([]);
+  readonly pms = signal<UserViewModel[]>([]);
+  readonly smes = signal<UserViewModel[]>([]);
+  readonly approvers = signal<UserViewModel[]>([]);
 
   readonly canContinue = computed(() => {
     const page = this.page();
@@ -28,7 +28,7 @@ export class ProjectCreateStore {
       return true;
     }
     if (page === 5) {
-      return this.pmIds().length > 0;
+      return this.pms().length > 0;
     }
 
     return false;

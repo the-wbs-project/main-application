@@ -5,61 +5,17 @@
   [title]="'Project.ManageRoles' | translate"
   (close)="dialog.close()"
 >
-  <ul class="list-group">
-    <li class="list-group-item">
-      <div class="d-flex flex-row">
-        <kendo-dropdownlist
-          size="small"
-          [data]="filteredPossibleEditors()"
-          [filterable]="true"
-          textField="name"
-          valueField="user_id"
-          [(ngModel)]="editorToAdd"
-          (filterChange)="editorFilter.set($event)"
-        />
-        <button
-          kendoButton
-          size="small"
-          themeColor="primary"
-          [disabled]="!editorToAdd()"
-          (click)="addEditor()"
-        >
-          <fa-icon [icon]="plusIcon" class="mg-r-5" />
-          {{ "General.Add" | translate }}
-        </button>
-      </div>
-    </li>
-    @if (editors().length > 0) { @for (editor of editors(); track editor.userId)
-    {
-    <li class="list-group-item">
-      <div class="d-flex flex-row flex-align-center">
-        <div class="flex-fill">
-          <wbs-user [user]="editor" />
-        </div>
-        <button
-          kendoButton
-          size="small"
-          fillMode="clear"
-          (click)="removeEditor(editor.userId)"
-        >
-          <fa-icon [icon]="deleteIcon" />
-        </button>
-      </div>
-    </li>
-    } } @else {
-    <li class="list-group-item">
-      {{ "General.None" | translate }}
-    </li>
-    }
-  </ul>
-  <kendo-dialog-actions layout="stretched">
-    <button
-      kendoButton
-      type="button"
-      themeColor="primary"
-      (click)="dialog.close(editors())"
-    >
-      {{ "General.Save" | translate }}
-    </button>
-  </kendo-dialog-actions>
+  <div class="w-100 text-center pd-b-5">
+    <wbs-save-message [state]="saving.state()" />
+  </div>
+  <wbs-project-roles
+    [members]="members()"
+    [approvers]="approvers()"
+    [pms]="pms()"
+    [smes]="smes()"
+    [mustConfirm]="true"
+    [approvalEnabled]="approvalEnabled()"
+    (addUserToRole)="add($event.role, $event.user)"
+    (removeUserToRole)="remove($event.role, $event.user)"
+  />
 </kendo-dialog>

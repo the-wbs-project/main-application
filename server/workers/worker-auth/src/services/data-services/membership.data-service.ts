@@ -1,4 +1,3 @@
-import { Member } from '../../models';
 import { Auth0Service } from '../api-services';
 import { BaseDataService } from './base.data-service';
 
@@ -7,14 +6,10 @@ export class MembershipDataService extends BaseDataService {
     super(kv, ctx);
   }
 
-  async getAllAsync(organizationId: string): Promise<Member[]> {
+  async getAllAsync(organizationId: string): Promise<string[]> {
     const key = this.key('ORGS', organizationId, 'MEMBERS');
 
     return this.getArrayAsync(key, () => this.api.memberships.getAllAsync(organizationId));
-  }
-
-  async getAsync(organizationId: string, userId: string): Promise<Member | undefined> {
-    return (await this.getAllAsync(organizationId)).find((m) => m.user_id === userId);
   }
 
   async addAsync(organizationId: string, members: string[]): Promise<void> {

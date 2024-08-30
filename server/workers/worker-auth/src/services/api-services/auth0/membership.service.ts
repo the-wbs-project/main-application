@@ -1,5 +1,5 @@
 import { Env } from '../../../config';
-import { Member, Role } from '../../../models';
+import { Role } from '../../../models';
 import { Fetcher } from '../../fetcher.service';
 import { Logger } from '../../logging';
 import { Auth0TokenService } from './token.service';
@@ -12,16 +12,16 @@ export class Auth0MembershipService {
     private readonly tokenService: Auth0TokenService,
   ) {}
 
-  async getAllAsync(organizationId: string): Promise<Member[]> {
+  async getAllAsync(organizationId: string): Promise<string[]> {
     const token = await this.tokenService.getToken();
-    const members: Member[] = [];
+    const memberIds: string[] = [];
     const pageSize = 5;
     let page = 0;
     let getMore = true;
 
     while (getMore) {
       const resp = await this.fetcher.fetch(
-        `https://${this.env.AUTH_DOMAIN}/api/v2/organizations/${organizationId}/members?page=${page}&per_page=${pageSize}&fields=user_id%2Cname%2Cemail%2Cpicture%2Croles&include_fields=true`,
+        `https://${this.env.AUTH_DOMAIN}/api/v2/organizations/${organizationId}/members?page=${page}&per_page=${pageSize}&fields=user_id&include_fields=true`,
         {
           method: 'GET',
           headers: { Accept: 'application/json', authorization: `Bearer ${token}` },
@@ -35,14 +35,14 @@ export class Auth0MembershipService {
         throw new Error('Failed to get Auth0 organization members');
       }
 
-      const data: any[] = await resp.json();
+      const data: { user_id: string }[] = await resp.json();
 
-      members.push(...data);
+      memberIds.push(...data.map((m) => m.user_id));
       page++;
       getMore = data.length === pageSize;
     }
 
-    return members;
+    return memberIds;
   }
 
   async getRolesAsync(organization: string, userId: string): Promise<Role[]> {

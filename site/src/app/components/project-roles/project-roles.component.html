@@ -22,30 +22,27 @@
         </tr>
         <tr>
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="minusIcon"
-              [users]="pms()?.assigned"
-              [organization]="organization()"
+              [users]="pms()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.pm, $event)"
             />
           </td>
           @if (approvalEnabled()) {
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="minusIcon"
-              [users]="approvers()?.assigned"
-              [organization]="organization()"
+              [users]="approvers()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.approver, $event)"
             />
           </td>
           }
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="minusIcon"
-              [users]="smes()?.assigned"
-              [organization]="organization()"
+              [users]="smes()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.sme, $event)"
             />
@@ -58,28 +55,25 @@
         </tr>
         <tr>
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="plusIcon"
-              [users]="pms()?.unassigned"
-              [organization]="organization()"
+              [users]="unassignedPms()"
               (selected)="add(roles.pm, $event)"
             />
           </td>
           @if (approvalEnabled()) {
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="plusIcon"
-              [organization]="organization()"
-              [users]="approvers()?.unassigned"
+              [users]="unassignedApprovers()"
               (selected)="add(roles.approver, $event)"
             />
           </td>
           }
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="plusIcon"
-              [users]="smes()?.unassigned"
-              [organization]="organization()"
+              [users]="unassignedSmes()"
               (selected)="add(roles.sme, $event)"
             />
           </td>

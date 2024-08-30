@@ -90,28 +90,20 @@ export class ProjectCreateService {
   }
 
   private getRoles(): UserRole[] {
-    const roles: UserRole[] = [];
-
-    for (const userId of this.pcStore.pmIds()) {
-      roles.push({
+    const roles: UserRole[] = [
+      ...this.pcStore.pms().map((x) => ({
         role: this.metadata.roles.ids.pm,
-        userId,
-      });
-    }
-
-    for (const userId of this.pcStore.smeIds()) {
-      roles.push({
+        userId: x.userId,
+      })),
+      ...this.pcStore.smes().map((x) => ({
         role: this.metadata.roles.ids.sme,
-        userId,
-      });
-    }
-
-    for (const userId of this.pcStore.approverIds()) {
-      roles.push({
+        userId: x.userId,
+      })),
+      ...this.pcStore.approvers().map((x) => ({
         role: this.metadata.roles.ids.approver,
-        userId,
-      });
-    }
+        userId: x.userId,
+      })),
+    ];
 
     return roles;
   }

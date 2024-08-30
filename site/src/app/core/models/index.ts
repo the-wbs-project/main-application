@@ -21,7 +21,6 @@ export * from './library-entry-version.model';
 export * from './library-entry.model';
 export * from './library-link.model';
 export * from './library-search-filters.model';
-export * from './member.model';
 export * from './navigation-link.model';
 export * from './open-ai-request.model';
 export * from './open-ai-results.model';

@@ -22,8 +22,6 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { UserComponent } from '@wbs/components/user';
-import { UserInfoComponent } from '@wbs/components/user-info';
-import { Member } from '@wbs/core/models';
 import { Messages, sorter } from '@wbs/core/services';
 import { UserViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
@@ -50,24 +48,24 @@ import { map } from 'rxjs/operators';
 export class ContributorDialogComponent extends DialogContentBase {
   private readonly messages = inject(Messages);
 
-  private readonly members = signal<Member[]>([]);
+  private readonly members = signal<UserViewModel[]>([]);
   private readonly authorId = signal<string | undefined>(undefined);
   private readonly possibleEditors = computed(() => {
     const editors = this.editors().map((e) => e.userId);
 
     return this.members()
       .filter(
-        (m) => m.user_id !== this.authorId() && !editors.includes(m.user_id)
+        (m) => m.userId !== this.authorId() && !editors.includes(m.userId)
       )
-      .sort((a, b) => sorter(a.name, b.name));
+      .sort((a, b) => sorter(a.fullName, b.fullName));
   });
 
-  readonly editorToAdd = signal<Member | null>(null);
+  readonly editorToAdd = signal<UserViewModel | null>(null);
   readonly editors = signal<UserViewModel[]>([]);
   readonly editorFilter = signal('');
   readonly filteredPossibleEditors = computed(() => {
     return this.possibleEditors().filter((e) =>
-      e.name.toLowerCase().includes(this.editorFilter())
+      e.fullName.toLowerCase().includes(this.editorFilter())
     );
   });
 
@@ -78,7 +76,11 @@ export class ContributorDialogComponent extends DialogContentBase {
     super(dialog);
   }
 
-  setup(author: UserViewModel, editors: UserViewModel[], members: Member[]) {
+  setup(
+    author: UserViewModel,
+    editors: UserViewModel[],
+    members: UserViewModel[]
+  ) {
     this.editors.set(editors.sort((a, b) => sorter(a.fullName, b.fullName)));
     this.authorId.set(author.userId);
     this.members.set(members);
@@ -88,7 +90,7 @@ export class ContributorDialogComponent extends DialogContentBase {
     dialog: DialogService,
     author: UserViewModel,
     editors: UserViewModel[],
-    members: Member[]
+    members: UserViewModel[]
   ): Observable<UserViewModel[] | undefined> {
     const ref = dialog.open({
       content: ContributorDialogComponent,
@@ -107,8 +109,8 @@ export class ContributorDialogComponent extends DialogContentBase {
   addEditor(): void {
     const member = this.editorToAdd()!;
     const user: UserViewModel = {
-      userId: member.user_id,
-      fullName: member.name,
+      userId: member.userId,
+      fullName: member.fullName,
       email: member.email,
       picture: member.picture,
       roles: [],

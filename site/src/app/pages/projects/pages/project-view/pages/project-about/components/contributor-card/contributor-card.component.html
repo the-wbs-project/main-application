@@ -17,12 +17,13 @@
   </div>
 </div>
 <div class="card-body d-flex flex-row flex-wrap gap-20">
-  @for (x of contributors(); track x.user.userId + '-' + x.role) {
-  <div class="card border text-start">
-    <div class="card-header bg-light-blue-f">{{ x.role | roleTitle }}</div>
-    <div class="card-body">
-      <wbs-user-info [user]="x.user" />
-    </div>
-  </div>
+  @for (x of contributors(); track x.trackId) {
+  <wbs-user-card
+    [user]="x.user"
+    [cardHeader]="x.role | roleTitle"
+    cardClass="text-start border shadow"
+    cardHeaderClass="bg-light-blue-f"
+    cardBodyClass="pd-0"
+  />
   }
 </div>

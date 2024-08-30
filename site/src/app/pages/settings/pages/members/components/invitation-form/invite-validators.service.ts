@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
-import { Invite, Member } from '@wbs/core/models';
+import { Invite } from '@wbs/core/models';
+import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class InviteValidators {
@@ -14,7 +15,7 @@ export class InviteValidators {
     return invalid;
   }
 
-  checkIfAnyExists(members: Member[], emails: string[]): string[] {
+  checkIfAnyExists(members: UserViewModel[], emails: string[]): string[] {
     const existing: string[] = [];
 
     for (const email of emails) {

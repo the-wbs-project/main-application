@@ -1,8 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, Member } from '@wbs/core/models';
+import { Invite } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import { UserViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin } from 'rxjs';
 import { MembersSettingStore } from '../store';
 
@@ -24,7 +25,7 @@ export class MemberSettingsService {
   }
 
   updateMemberRolesAsync(
-    member: Member,
+    member: UserViewModel,
     toAdd: string[],
     toRemove: string[]
   ): void {
@@ -34,7 +35,7 @@ export class MemberSettingsService {
       calls.push(
         this.data.memberships.removeUserOrganizationalRolesAsync(
           this.membership()!.name,
-          member.user_id,
+          member.userId,
           toRemove
         )
       );
@@ -43,7 +44,7 @@ export class MemberSettingsService {
       calls.push(
         this.data.memberships.addUserOrganizationalRolesAsync(
           this.membership()!.name,
-          member.user_id,
+          member.userId,
           toAdd
         )
       );

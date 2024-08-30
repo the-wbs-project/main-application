@@ -12,20 +12,14 @@ export class MembershipsRpc extends RpcTarget {
 
   async getAll(organizationName: string) {
     try {
-      return await this.helper.data.memberships.getAllAsync(await this.getId(organizationName));
+      const org = await this.getId(organizationName);
+      const ids = await this.helper.data.memberships.getAllAsync(org);
+
+      const calls = ids.map((id) => this.helper.data.users.getAsync(org, id, 'organization'));
+
+      return (await Promise.all(calls)).filter((u) => u !== null);
     } catch (e) {
       this.helper.logger.trackException('An error occured trying to get all memberships for an organization.', <Error>e);
-      throw e;
-    } finally {
-      this.ctx.waitUntil(this.helper.datadog.flush());
-    }
-  }
-
-  async get(organizationName: string, userId: string) {
-    try {
-      return await this.helper.data.memberships.getAsync(await this.getId(organizationName), userId);
-    } catch (e) {
-      this.helper.logger.trackException('An error occured trying to get membership by org and user.', <Error>e);
       throw e;
     } finally {
       this.ctx.waitUntil(this.helper.datadog.flush());

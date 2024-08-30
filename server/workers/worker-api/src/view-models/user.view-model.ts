@@ -1,3 +1,5 @@
+import { Role } from '../models';
+
 export interface UserViewModel {
   userId: string;
   fullName: string;
@@ -11,5 +13,5 @@ export interface UserViewModel {
   lastLogin?: string;
   loginCount?: number;
   phone?: string;
-  roles: string[];
+  roles: Role[];
 }

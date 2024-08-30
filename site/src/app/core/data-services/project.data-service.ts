@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { Member, Project, ProjectToLibraryOptions } from '../models';
+import { Project, ProjectToLibraryOptions } from '../models';
 import { ProjectViewModel } from '../view-models';
 
 export class ProjectDataService {

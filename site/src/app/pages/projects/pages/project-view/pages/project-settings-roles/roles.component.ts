@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
-import { Member, ROLES, SaveState } from '@wbs/core/models';
+import {  ROLES, SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { ProjectViewModel } from '@wbs/core/view-models';

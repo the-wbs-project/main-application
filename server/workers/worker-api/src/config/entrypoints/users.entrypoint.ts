@@ -3,7 +3,7 @@ import { UserViewModel } from '../../view-models';
 
 export interface UsersEntrypoint {
   getBasic(userId: string): Promise<UserBasic | undefined>;
-  getView(organizationName: string, userId: string, visibility: string): Promise<UserViewModel>;
+  getView(organizationName: string, userId: string, visibility: 'organization' | 'public'): Promise<UserViewModel>;
   getProfile(userId: string): Promise<User | undefined>;
   getSiteRoles(userId: string): Promise<Role[]>;
   getMemberships(userId: string): Promise<Organization[]>;

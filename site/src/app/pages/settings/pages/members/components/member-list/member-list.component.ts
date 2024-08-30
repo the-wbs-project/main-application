@@ -22,13 +22,13 @@ import {
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { SortArrowComponent } from '@wbs/components/_utils/sort-arrow.component';
 import { SortableDirective } from '@wbs/core/directives/table-sorter.directive';
-import { Member } from '@wbs/core/models';
 import { Messages, TableHelper } from '@wbs/core/services';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { MemberSettingsService } from '../../services';
 import { MembersSettingStore } from '../../store';
 import { EditMemberComponent } from '../edit-member';
+import { UserViewModel } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
@@ -83,7 +83,7 @@ export class MemberListComponent {
     },
   ];
 
-  userActionClicked(member: Member, action: string): void {
+  userActionClicked(member: UserViewModel, action: string): void {
     if (action === 'edit') {
       this.launchEdit(member);
     } else if (action === 'remove') {
@@ -135,7 +135,7 @@ export class MemberListComponent {
     };
   }
 
-  launchEdit(member: Member): void {
+  launchEdit(member: UserViewModel): void {
     EditMemberComponent.launchAsync(
       this.dialog,
       structuredClone(member)
@@ -152,13 +152,13 @@ export class MemberListComponent {
     });
   }
 
-  private openRemoveDialog(member: Member): void {
+  private openRemoveDialog(member: UserViewModel): void {
     this.messages.confirm
       .show('General.Confirmation', 'OrgSettings.MemberRemoveConfirm')
       .subscribe((answer) => {
         if (!answer) return;
 
-        this.memberService.removeMemberAsync(member.user_id);
+        this.memberService.removeMemberAsync(member.userId);
       });
   }
 }

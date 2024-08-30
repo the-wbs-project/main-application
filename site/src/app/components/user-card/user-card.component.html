@@ -2,9 +2,7 @@
   <div class="card-header" [ngClass]="cardHeaderClass()">
     {{ cardHeader() }}
   </div>
-  <div class="card-body" [ngClass]="cardBodyClass()">
-    @if (userVm(); as user) {
-    <wbs-user-info [user]="user" />
-    }
+  <div class="card-body pd-0" [ngClass]="cardBodyClass()">
+    <wbs-user-info [user]="user()" />
   </div>
 </div>

@@ -95,13 +95,11 @@ export class ProjectStore {
     this._project.set(structuredClone(project));
   }
 
-  markProject(): void {
-    this._project.update((v) => {
-      if (!v) return v;
-      v.lastModified = new Date();
+  markProject(project: ProjectViewModel): void {
+    console.log('markProject', project);
+    project.lastModified = new Date();
 
-      return { ...v };
-    });
+    this._project.set(structuredClone(project));
   }
 
   setTasks(tasks: ProjectNode[]): void {

@@ -6,6 +6,7 @@ import {
 import { UserViewModel } from './user.view-model';
 
 export interface UserRoleViewModel {
+  trackId?: string;
   role: string;
   user: UserViewModel;
 }

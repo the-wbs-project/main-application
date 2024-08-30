@@ -237,7 +237,7 @@ export class ProjectService {
     const model = this.transformers.projects.toModel(project);
 
     return this.data.projects.putAsync(model).pipe(
-      tap(() => this.projectStore.markProject()),
+      tap(() => this.projectStore.markProject(project)),
       tap(() =>
         this.store.dispatch(new SetChecklistData(project, undefined, undefined))
       )

@@ -74,10 +74,9 @@
         </div>
         <div class="d-inline-block w-100" style="max-width: 800px">
           <wbs-roles-section
-            [organization]="owner()!"
-            [(pmIds)]="pmIds"
-            [(smeIds)]="smeIds"
-            [(approverIds)]="approverIds"
+            [(pms)]="pms"
+            [(smes)]="smes"
+            [(approvers)]="approvers"
             [approvalEnabled]="approvalEnabled()"
             [members]="members()"
           />
@@ -92,10 +91,9 @@
           [version]="version()!.version"
           [tasks]="tasks()"
           [newId]="newId"
-          [pmIds]="pmIds()"
-          [smeIds]="smeIds()"
-          [approverIds]="approverIds()"
-          [members]="members()"
+          [pms]="pms()"
+          [smes]="smes()"
+          [approvers]="approvers()"
           [approvalEnabled]="approvalEnabled()"
           [category]="(categories | findById : category()!)!"
           [disciplines]="disciplines()"

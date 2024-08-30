@@ -16,15 +16,14 @@
     </div>
     } @else {
     <wbs-project-roles
-      [organization]="membership()!.name"
       [members]="members()"
-      [approverIds]="store.approverIds()"
-      [pmIds]="store.pmIds()"
-      [smeIds]="store.smeIds()"
+      [approvers]="store.approvers()"
+      [pms]="store.pms()"
+      [smes]="store.smes()"
       [mustConfirm]="false"
       [approvalEnabled]="approvalEnabled()!"
-      (addUserToRole)="add($event.role, $event.user.user_id)"
-      (removeUserToRole)="remove($event.role, $event.user.user_id)"
+      (addUserToRole)="add($event.role, $event.user)"
+      (removeUserToRole)="remove($event.role, $event.user)"
     />
     }
   </div>

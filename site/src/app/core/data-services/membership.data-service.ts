@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Invite, InviteBody, Member, Organization } from '../models';
+import { Invite, InviteBody, Organization } from '../models';
+import { UserViewModel } from '../view-models';
 
 export class MembershipDataService {
   constructor(private readonly http: HttpClient) {}
@@ -12,8 +13,8 @@ export class MembershipDataService {
   getMembershipUsersAsync(
     organization: string,
     forceRefresh = false
-  ): Observable<Member[]> {
-    return this.http.get<Member[]>(
+  ): Observable<UserViewModel[]> {
+    return this.http.get<UserViewModel[]>(
       `api/organizations/${organization}/members`,
       {
         headers: {

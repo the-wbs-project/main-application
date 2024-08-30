@@ -10,16 +10,16 @@ import { faPencil } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { UserInfoComponent } from '@wbs/components/user-info';
+import { UserCardComponent } from '@wbs/components/user-card';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ROLES } from '@wbs/core/models';
-import { SaveService, sorter } from '@wbs/core/services';
+import { IdService, SaveService, sorter } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { ProjectViewModel, UserRoleViewModel } from '@wbs/core/view-models';
 import { RoleTitlePipe } from '@wbs/pipes/role-title.pipe';
 import { switchMap } from 'rxjs';
-import { ContributorDialogComponent } from '../contributor-dialog';
 import { ProjectStore } from '../../../../stores';
+import { ContributorDialogComponent } from '../contributor-dialog';
 
 @Component({
   standalone: true,
@@ -32,7 +32,7 @@ import { ProjectStore } from '../../../../stores';
     FontAwesomeModule,
     RoleTitlePipe,
     TranslateModule,
-    UserInfoComponent,
+    UserCardComponent,
   ],
 })
 export class ProjectContributorCardComponent {
@@ -63,11 +63,7 @@ export class ProjectContributorCardComponent {
       .getMembershipUsersAsync(project.owner)
       .pipe(
         switchMap((members) =>
-          ContributorDialogComponent.launchAsync(
-            this.dialog,
-            project.roles,
-            members
-          )
+          ContributorDialogComponent.launchAsync(this.dialog, true, members)
         )
       )
       .subscribe((x) => {
@@ -89,6 +85,7 @@ export class ProjectContributorCardComponent {
 
     return project.roles
       .filter((x) => x.role === roleId)
-      .sort((a, b) => sorter(a.user.fullName, b.user.fullName));
+      .sort((a, b) => sorter(a.user.fullName, b.user.fullName))
+      .map((x) => ({ ...x, trackId: IdService.generate() }));
   }
 }
