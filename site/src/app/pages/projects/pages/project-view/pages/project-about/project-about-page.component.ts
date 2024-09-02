@@ -31,7 +31,7 @@ import { ProjectChecklistComponent } from '../../components/project-checklist';
 import { ProjectDetailsCardComponent } from './components/project-details-card';
 import { ProjectStatusCardComponent } from './components/project-status-card';
 import { ProjectService, ProjectTaskService } from '../../services';
-import { ProjectApprovalState, ProjectChecklistState } from '../../states';
+import { ProjectChecklistState } from '../../states';
 import { ProjectStore } from '../../stores';
 import { ProjectResourceCardComponent } from './components/resource-card';
 import { ProjectContributorCardComponent } from './components/contributor-card';
@@ -79,10 +79,10 @@ export class ProjectAboutComponent {
   //
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
-  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly checklist = this.store.select(ProjectChecklistState.results);
-  readonly approvalStats = this.store.select(ProjectApprovalState.stats);
-  readonly approvals = this.store.select(ProjectApprovalState.list);
+  //readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  //readonly approvalStats = this.store.select(ProjectApprovalState.stats);
+  //readonly approvals = this.store.select(ProjectApprovalState.list);
   //
   //  Computed
   //
@@ -94,9 +94,6 @@ export class ProjectAboutComponent {
   );
   readonly taskCount = computed(
     () => this.projectStore.viewModels()?.length ?? 0
-  );
-  readonly disciplines = computed(() =>
-    this.category.buildViewModels(this.projectStore.project()?.disciplines)
   );
   readonly editDisciplines = computed(() =>
     this.category.buildDisciplines(this.projectStore.project()?.disciplines)

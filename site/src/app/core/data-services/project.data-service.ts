@@ -1,8 +1,23 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
-import { Project, ProjectToLibraryOptions } from '../models';
+import { map, tap } from 'rxjs/operators';
+import {
+  Project,
+  ProjectApproval,
+  ProjectApprovalSaveRecord,
+  ProjectNode,
+  ProjectNodeToLibraryOptions,
+  ProjectToLibraryOptions,
+} from '../models';
 import { ProjectViewModel } from '../view-models';
+import { Utils } from '../services';
+
+declare type ProjectWithNodesAndApprovals = {
+  project: ProjectViewModel;
+  tasks: ProjectNode[];
+  approvals: ProjectApproval[];
+  claims: string[];
+};
 
 export class ProjectDataService {
   constructor(private readonly http: HttpClient) {}
@@ -10,7 +25,7 @@ export class ProjectDataService {
   getAllAsync(owner: string): Observable<ProjectViewModel[]> {
     return this.http
       .get<ProjectViewModel[]>(`api/portfolio/${owner}/projects`)
-      .pipe(map((list) => this.cleanList(list)));
+      .pipe(tap((list) => this.cleanList(list)));
   }
 
   getIdAsync(owner: string, recordId: string): Observable<string> {
@@ -19,13 +34,51 @@ export class ProjectDataService {
     );
   }
 
-  getAsync(owner: string, projectId: string): Observable<ProjectViewModel> {
+  getAsync(
+    owner: string,
+    projectId: string
+  ): Observable<ProjectWithNodesAndApprovals> {
     return this.http
-      .get<ProjectViewModel>(`api/portfolio/${owner}/projects/${projectId}`)
-      .pipe(map((node) => this.clean(node)));
+      .get<ProjectWithNodesAndApprovals>(
+        `api/portfolio/${owner}/projects/${projectId}`
+      )
+      .pipe(tap((data) => this.clean(data)));
   }
 
-  exportToLibraryAsync(
+  putProjectAsync(project: Project): Observable<void> {
+    return this.http.put<void>(
+      `api/portfolio/${project.owner}/projects/${project.id}`,
+      project
+    );
+  }
+
+  putTasksAsync(
+    owner: string,
+    projectId: string,
+    upserts: ProjectNode[],
+    removeIds: string[]
+  ): Observable<void> {
+    return this.http.put<void>(
+      `api/portfolio/${owner}/projects/${projectId}/nodes`,
+      {
+        upserts,
+        removeIds,
+      }
+    );
+  }
+
+  putApprovalAsync(
+    owner: string,
+    projectId: string,
+    approval: ProjectApprovalSaveRecord
+  ): Observable<void> {
+    return this.http.put<void>(
+      `api/portfolio/${owner}/projects/${projectId}/approvals`,
+      approval
+    );
+  }
+
+  exportProjectToLibraryAsync(
     owner: string,
     projectId: string,
     model: ProjectToLibraryOptions
@@ -36,26 +89,25 @@ export class ProjectDataService {
     );
   }
 
-  putAsync(project: Project): Observable<void> {
-    return this.http.put<void>(
-      `api/portfolio/${project.owner}/projects/${project.id}`,
-      project
+  exportTaskToLibraryAsync(
+    owner: string,
+    projectId: string,
+    nodeId: string,
+    model: ProjectNodeToLibraryOptions
+  ): Observable<string> {
+    return this.http.post<string>(
+      `api/portfolio/${owner}/projects/${projectId}/nodes/${nodeId}/export/libraryEntry`,
+      model
     );
   }
 
-  private cleanList(projects: ProjectViewModel[]): ProjectViewModel[] {
-    for (const project of projects) this.clean(project);
-
-    return projects;
+  private cleanList(projects: ProjectViewModel[]): void {
+    Utils.cleanDates(projects, 'createdOn', 'lastModified');
   }
 
-  private clean(project: ProjectViewModel): ProjectViewModel {
-    if (typeof project.createdOn === 'string')
-      project.createdOn = new Date(project.createdOn);
-
-    if (typeof project.lastModified === 'string')
-      project.lastModified = new Date(project.lastModified);
-
-    return project;
+  private clean(data: ProjectWithNodesAndApprovals): void {
+    Utils.cleanDates(data.project, 'createdOn', 'lastModified');
+    Utils.cleanDates(data.tasks, 'createdOn', 'lastModified');
+    Utils.cleanDates(data.approvals, 'approvedOn');
   }
 }

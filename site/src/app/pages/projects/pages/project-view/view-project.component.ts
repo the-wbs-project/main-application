@@ -12,26 +12,21 @@ import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.co
 import { SaveState } from '@wbs/core/models';
 import { SignalStore } from '@wbs/core/services';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { ApprovalBadgeComponent } from './components/approval-badge.component';
-import { ProjectApprovalWindowComponent } from './components/project-approval-window/project-approval-window.component';
-import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
-import { ProjectApprovalState } from './states';
-import { ProjectStore } from './stores';
 import { ProjectCategoryIconPipe } from '@wbs/pipes/project-category-icon.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
-import { ActionButtonComponent2 } from '@wbs/components/action-button2';
-import { ProjectActionButtonService, ProjectService } from './services';
+import { ActionButtonComponent } from '@wbs/components/action-button';
+import { ProjectChecklistModalComponent } from './components/project-checklist-modal/project-checklist-modal.component';
+import { ProjectActionButtonService } from './services';
+import { ProjectStore } from './stores';
 
 @Component({
   standalone: true,
   templateUrl: './view-project.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ActionButtonComponent2,
-    ApprovalBadgeComponent,
+    ActionButtonComponent,
     FadingMessageComponent,
     FindByIdPipe,
-    ProjectApprovalWindowComponent,
     ProjectCategoryIconPipe,
     ProjectCategoryLabelPipe,
     ProjectChecklistModalComponent,
@@ -48,7 +43,7 @@ export class ProjectViewComponent {
   readonly userId = input.required<string>();
   readonly projectUrl = input.required<string[]>();
 
-  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  /*readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly approval = this.store.select(ProjectApprovalState.current);
   readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly approvalView = this.store.select(ProjectApprovalState.view);
@@ -58,20 +53,12 @@ export class ProjectViewComponent {
   readonly approvalHasChildren = this.store.select(
     ProjectApprovalState.hasChildren
   );
-  readonly chat = this.store.select(ProjectApprovalState.messages);
+  readonly chat = this.store.select(ProjectApprovalState.messages);*/
+
   readonly titleSaveState = signal<SaveState>('ready');
-  readonly menu = computed(() => {
-    const project = this.projectStore.project();
-
-    if (!project) return [];
-
-    return this.menuService.buildMenu(
-      project,
-      this.projectStore.claims(),
-      ProjectService.getProjectUrl(project),
-      this.approvalEnabled() ?? false
-    );
-  });
+  readonly menu = computed(() =>
+    this.menuService.buildMenu(this.projectStore.project())
+  );
 
   navigate(route: string[]): void {
     //this.store.dispatch(new Navigate([...this.projectUrl(), ...route]));

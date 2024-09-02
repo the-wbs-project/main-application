@@ -36,10 +36,14 @@ export class ProjectDataService extends BaseDataService {
   }
 
   async clearKvAsync(owner: string, id: string): Promise<void> {
-    await Promise.all([
-      this.ctx.env.KV_DATA.delete(this.getKey(owner, id)), //
-      this.ctx.env.KV_DATA.delete(this.getListKey(owner)),
-    ]);
+    const keys = [this.getListKey(owner)];
+
+    const keys2 = await this.ctx.env.KV_DATA.list({ prefix: this.getKey(owner, id) });
+
+    for (const key of keys2.keys) {
+      keys.push(key.name);
+    }
+    await Promise.all(keys.map((key) => this.ctx.env.KV_DATA.delete(key)));
   }
 
   private getUrl(owner: string, projectId?: string): string {

@@ -70,11 +70,11 @@ export class TreeService {
     grid.editCell(dataItem, column);
   }
 
-  getSaveState(taskId: string): WritableSignal<SaveState> {
+  getSaveState(taskId: string): WritableSignal<SaveState> | undefined {
     if (!this.saveStates.has(taskId)) {
       this.saveStates.set(taskId, signal('ready'));
     }
-    return this.saveStates.get(taskId)!;
+    return this.saveStates.get(taskId);
   }
 
   setSaveState(taskId: string, state: SaveState): void {

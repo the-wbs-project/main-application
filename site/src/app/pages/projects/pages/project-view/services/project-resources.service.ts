@@ -6,7 +6,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   PROJECT_CLAIMS,
   PROJECT_STATI,
-  RESOURCE_TYPES,
   ResourceRecord,
 } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
@@ -71,19 +70,16 @@ export class ProjectResourcesService {
     return RecordResourceEditorComponent.launchAddAsync(
       this.dialogService
     ).pipe(
-      switchMap((x) =>
-        x == undefined
+      switchMap((data) =>
+        data.record == undefined
           ? of(undefined)
-          : x[0].type === RESOURCE_TYPES.LINK
-          ? this.save(taskId, x[0])
-          : this.uploadAndSaveAsync(taskId, x[1]!, x[0])
-      ),
-      switchMap((record) =>
-        record
-          ? this.activity
-              .resourceAdded(project.owner, project.id, record)
-              .pipe(map(() => record))
-          : of(record)
+          : this.save(taskId, data.record, data.file).pipe(
+              switchMap((newRecord) =>
+                this.activity
+                  .resourceAdded(project.owner, project.id, newRecord)
+                  .pipe(map(() => newRecord))
+              )
+            )
       )
     );
   }
@@ -98,19 +94,16 @@ export class ProjectResourcesService {
       this.dialogService,
       record
     ).pipe(
-      switchMap((x) =>
-        x == undefined
+      switchMap((data) =>
+        data.record == undefined
           ? of(undefined)
-          : x[0].type === RESOURCE_TYPES.LINK
-          ? this.save(taskId, x[0])
-          : this.uploadAndSaveAsync(taskId, x[1]!, x[0])
-      ),
-      switchMap((record) =>
-        record
-          ? this.activity
-              .resourceUpdated(project.owner, project.id, record)
-              .pipe(map(() => record))
-          : of(record)
+          : this.save(taskId, data.record, data.file).pipe(
+              switchMap((newRecord) =>
+                this.activity
+                  .resourceUpdated(project.owner, project.id, newRecord)
+                  .pipe(map(() => newRecord))
+              )
+            )
       )
     );
   }
@@ -167,31 +160,6 @@ export class ProjectResourcesService {
     );
   }
 
-  uploadAndSaveAsync(
-    taskId: string | undefined,
-    rawFile: FileInfo,
-    data: Partial<ResourceRecord>
-  ): Observable<ResourceRecord> {
-    const project = this.projectStore.project()!;
-
-    if (!data.id) data.id = IdService.generate();
-
-    data.resource = rawFile.name;
-
-    return Utils.getFileAsync(rawFile).pipe(
-      switchMap((file) => {
-        return this.save(taskId, data).pipe(
-          switchMap((record) =>
-            this.data.projectResources
-              .putFileAsync(project.owner, project.id, taskId, data.id!, file)
-              .pipe(map(() => record))
-          )
-        );
-      }),
-      tap(() => this.messages.notify.success('Resources.ResourceSaved'))
-    );
-  }
-
   getApiUrl(taskId?: string): string {
     const project = this.projectStore.project()!;
     const parts = ['/api', 'portfolio', project.owner, 'projects', project.id];
@@ -203,7 +171,8 @@ export class ProjectResourcesService {
 
   private save(
     taskId: string | undefined,
-    data: Partial<ResourceRecord>
+    data: Partial<ResourceRecord>,
+    file?: FileInfo
   ): Observable<ResourceRecord> {
     const project = this.projectStore.project()!;
     const resource: ResourceRecord = {
@@ -219,6 +188,25 @@ export class ProjectResourcesService {
 
     return this.data.projectResources
       .putAsync(project.owner, project.id, taskId, resource)
-      .pipe(map(() => resource));
+      .pipe(
+        switchMap(() => {
+          if (!file) return of(resource);
+
+          return Utils.getFileAsync(file).pipe(
+            switchMap((file) =>
+              this.data.projectResources
+                .putFileAsync(
+                  project.owner,
+                  project.id,
+                  taskId,
+                  resource.id,
+                  file
+                )
+                .pipe(map(() => resource))
+            )
+          );
+        }),
+        map(() => resource)
+      );
   }
 }

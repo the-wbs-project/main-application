@@ -5,13 +5,7 @@ import {
   faArrowUp,
   faBookArrowRight,
   faCopy,
-  faEclipse,
-  faEye,
   faFileImport,
-  faPlus,
-  faTrash,
-  faUserMinus,
-  faUserPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { ActionContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
 

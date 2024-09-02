@@ -1,13 +1,10 @@
 @if (projectStore.project(); as project) {
-<!---->
-@let claims = projectStore.claims();
-
 <div class="d-flex flex-column h-100">
   <div class="mg-y-5">
     <div class="d-flex flex-align-center">
       <wbs-action-button
         [menu]="menu()"
-        (itemClicked)="menuService.handleAction($event, approvalEnabled()!)"
+        (itemClicked)="menuService.handleAction($event)"
       />
       @if (project.category | projectCategoryIcon; as url) {
       <div class="wd-50 tx-center">
@@ -21,11 +18,11 @@
       <span class="tx-20 tx-medium mg-r-10">
         {{ project.title }}
       </span>
-      @if (approvalEnabled()) {
+      <!--@if (approvalEnabled()) {
       <wbs-approval-badge
         [approval]="approvals() | findById : 'project-title'"
       />
-      }
+    }-->
       <wbs-fading-message
         [icon]="checkIcon"
         message="General.Saved"
@@ -38,8 +35,9 @@
   <div class="flex-fill">
     <router-outlet />
   </div>
-  @if (approvalEnabled() && approvalView() === 'project' && approval(); as
-  approval) {
+  <!--
+  @if (store.isApprovalEnabled() && approvalView() === 'project' && approval();
+  as approval) {
   <wbs-project-approval-window
     [approval]="approval"
     [claims]="claims"
@@ -49,7 +47,7 @@
     [chat]="chat() ?? []"
     [hasChildren]="approvalHasChildren()!"
   />
-  }
+  }-->
 </div>
 <wbs-project-checklist-modal #checklist />
 }

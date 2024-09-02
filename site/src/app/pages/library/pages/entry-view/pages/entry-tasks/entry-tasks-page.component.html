@@ -1,33 +1,26 @@
-@if (isLoading()) {
-<div class="w-100 text-center">
-  <fa-duotone-icon [icon]="faSpinner" size="5x" animation="spin" />
-  <h3 class="pd-t-20">
-    {{ "General.Loading" | translate }}
-  </h3>
-</div>
-} @else if (showDialog()) {
+@if (showDialog()) {
 <kendo-dialog
   height="95%"
   width="95%"
   [title]="'General.Tasks' | translate"
   (close)="showDialog.set(false)"
 >
-  <div [(wbsHeight)]="dialogContainerHeight" class="d-flex flex-column h-100">
+  <div
+    [(wbsHeight)]="dialogContainerHeight"
+    class="pd-15 d-flex flex-column h-100"
+  >
     <wbs-library-tree
       [showFullscreen]="false"
       [containerHeight]="dialogContainerHeight()"
-      (navigateToTask)="navigateToTask($event)"
     />
   </div>
 </kendo-dialog>
 } @else {
-<div [(wbsHeight)]="containerHeight" class="d-flex flex-column h-100">
+<div [(wbsHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
   <wbs-library-tree
     [showFullscreen]="true"
     [containerHeight]="containerHeight()"
-    (navigateToTask)="navigateToTask($event)"
     (goFullScreen)="showDialog.set(true)"
   />
 </div>
 }
-<router-outlet />

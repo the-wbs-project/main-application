@@ -24,7 +24,7 @@ BEGIN
         BEGIN
         IF EXISTS(SELECT *
         FROM [dbo].[ProjectNodeResources]
-        WHERE [Id] = @ProjectNodeId AND [ProjectId] = @ProjectId)
+        WHERE [Id] = @Id AND [ProjectId] = @ProjectId)
                 BEGIN
             UPDATE [dbo].[ProjectNodeResources]
                     SET [Name] = @Name,

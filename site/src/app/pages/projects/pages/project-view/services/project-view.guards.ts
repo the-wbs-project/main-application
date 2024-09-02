@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { TitleService, Utils } from '@wbs/core/services';
-import { forkJoin } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { InitiateChecklist, SetApproval, SetApprovalView } from '../actions';
 import { ProjectStore } from '../stores';
@@ -23,13 +22,7 @@ export const projectVerifyGuard = (route: ActivatedRouteSnapshot) => {
   inject(TitleService).setTitle([{ text: 'General.Projects' }]);
 
   return data.projects.getIdAsync(owner, recordId).pipe(
-    switchMap((projectId) =>
-      forkJoin({
-        project: data.projects.getAsync(owner, projectId),
-        tasks: data.projectNodes.getAllAsync(owner, projectId),
-        claims: data.claims.getProjectClaimsAsync(owner, projectId),
-      })
-    ),
+    switchMap((projectId) => data.projects.getAsync(owner, projectId)),
     switchMap(({ project, tasks, claims }) => {
       projectStore.setAll(project, tasks, claims);
 

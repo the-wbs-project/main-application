@@ -7,6 +7,8 @@ import { LibraryEntryDataService } from './library-entry.data-service';
 import { ListDataService } from './list.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { OrganizationDataService } from './organization.data-service';
+import { ProjectApprovalsDataService } from './project-approvals.data-service';
+import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectDataService } from './project.data-service';
 import { ResourcesDataService } from './resources.data-service';
 import { RolesDataService } from './roles.data-service';
@@ -22,6 +24,8 @@ export class DataServiceFactory {
   readonly lists: ListDataService;
   readonly memberships: MembershipDataService;
   readonly organizations: OrganizationDataService;
+  readonly projectApprovals: ProjectApprovalsDataService;
+  readonly projectNodes: ProjectNodeDataService;
   readonly projects: ProjectDataService;
   readonly resources: ResourcesDataService;
   readonly roles: RolesDataService;
@@ -45,6 +49,8 @@ export class DataServiceFactory {
     this.libraryTasks = new LibraryEntryTaskDataService(ctx);
     this.libraryVersions = new LibraryEntryVersionDataService(ctx);
     this.lists = new ListDataService(ctx);
+    this.projectApprovals = new ProjectApprovalsDataService(ctx);
+    this.projectNodes = new ProjectNodeDataService(ctx);
     this.projects = new ProjectDataService(ctx);
     this.resources = new ResourcesDataService(ctx);
     //

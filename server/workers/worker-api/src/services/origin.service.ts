@@ -5,6 +5,9 @@ export class OriginService {
   constructor(private readonly ctx: Context) {}
 
   async getResponseAsync(suffix?: string): Promise<Response | undefined> {
+    this.ctx.var.logger.trackEvent('url test', 'Warn', { url: this.getUrl(suffix) });
+    await this.ctx.var.datadog.flush();
+
     const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {
       headers: {
         Authorization: this.ctx.req.header('Authorization') ?? '',
@@ -31,12 +34,12 @@ export class OriginService {
 
   static async pass(ctx: Context): Promise<Response> {
     const req = ctx.req;
-    const res = await ctx.get('fetcher').fetch(req.url, {
+    const url = OriginService.getUrl(ctx.env.ORIGIN, new URL(req.url).pathname);
+    const res = await ctx.get('fetcher').fetch(url, {
       body: req.raw.body,
       headers: req.raw.headers,
       method: req.method,
     });
-    console.log(res.status);
 
     const body = res.status === 202 || res.status === 204 ? null : await res.arrayBuffer();
 
@@ -84,12 +87,17 @@ export class OriginService {
     });
   }
 
-  private getUrl(suffix?: string): string {
-    let url = new URL(this.ctx.req.url);
+  private static getUrl(origin: string, pathName: string): string {
+    const parts = pathName.split('/').filter((x) => x !== '');
 
-    if (suffix) {
-      url = new URL(`${url.origin}/api/${suffix}`);
-    }
-    return url.toString();
+    if (parts[0] !== 'api') parts.splice(0, 0, 'api');
+
+    return `${origin}/${parts.join('/')}`;
+  }
+
+  private getUrl(pathName?: string): string {
+    const suffix = pathName ?? new URL(this.ctx.req.url).pathname;
+
+    return OriginService.getUrl(this.ctx.env.ORIGIN, suffix);
   }
 }

@@ -21,18 +21,6 @@ export class ClaimsDataService {
       .pipe(tap((data) => this.cache.set(organization, data)));
   }
 
-  getProjectClaimsAsync(owner: string, project: string): Observable<string[]> {
-    const cacheKey = `${owner}/${project}`;
-
-    if (this.cache.has(cacheKey)) {
-      return of(this.cache.get(cacheKey) ?? []);
-    }
-
-    return this.http
-      .get<string[]>(`api/claims/project/${owner}/${project}`)
-      .pipe(tap((data) => this.cache.set(cacheKey, data)));
-  }
-
   getLibraryEntryClaimsAsync(
     organization: string,
     owner: string,

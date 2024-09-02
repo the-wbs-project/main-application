@@ -10,20 +10,20 @@
         [splitLimit]="650"
         [canAdd]="true"
         [canEdit]="canEdit"
-        [items]="disciplines()"
+        [items]="projectStore.projectDisciplines()"
         [editItems]="editDisciplines()"
         [saveState]="disciplineSave.state()"
         noDisciplinesLabel="Projects.NoDisciplinesProject"
         (save)="saveDisciplines($event)"
       />
-      <wbs-project-status-card
+      <!--<wbs-project-status-card
         [project]="project"
         [approvalEnabled]="approvalEnabled()!"
         [ngClass]="{ 'double-item': approvalEnabled() }"
       />
       @if (approvalEnabled()) {
       <wbs-project-approval-card [stats]="approvalStats()" />
-      }
+      }-->
       <wbs-description-card
         [(askAi)]="askAi"
         [canEdit]="canEdit"
@@ -31,9 +31,9 @@
         [saveState]="descriptionSave.state()"
         [description]="project.description"
         noDescriptionLabel="Library.NoDescriptionEntry"
-        [approval]="approvals() | findById : 'project-description'"
         (descriptionChange)="descriptionChange($event)"
       />
+      <!--[approval]="approvals() | findById : 'project-description'"-->
       <wbs-project-resource-card />
       <wbs-project-contributor-card />
     </div>

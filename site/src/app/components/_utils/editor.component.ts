@@ -1,10 +1,5 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import {
-  EditorModule,
-  EditorComponent as EC,
-} from '@progress/kendo-angular-editor';
-import { EditorCommand } from '@progress/kendo-angular-editor/common/commands';
-import { ToolBarComponent } from '@progress/kendo-angular-toolbar';
+import { EditorModule } from '@progress/kendo-angular-editor';
 
 @Component({
   standalone: true,
@@ -39,8 +34,4 @@ import { ToolBarComponent } from '@progress/kendo-angular-toolbar';
 export class EditorComponent {
   readonly value = model.required<string>();
   readonly cssClass = model<string>();
-
-  constructor() {
-    let editor: EC;
-  }
 }

@@ -2,7 +2,6 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   computed,
   effect,
   inject,
@@ -13,13 +12,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { faFilters, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
-import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI } from '@wbs/core/models';
 import { sorter, Storage } from '@wbs/core/services';
-import { MembershipStore, MetadataStore } from '@wbs/core/store';
-import { ProjectListService } from './services';
+import { MetadataStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import {
   ProjectCreateDialogComponent,
   ProjectGridComponent,
@@ -27,8 +26,6 @@ import {
   ProjectTableomponent,
   ProjectViewToggleComponent,
 } from './components';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { ProjectViewModel } from '@wbs/core/view-models';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -41,7 +38,6 @@ declare type ProjectView = 'grid' | 'table';
     DialogModule,
     FontAwesomeModule,
     NgClass,
-    PageHeaderComponent,
     ProjectGridComponent,
     ProjectListFiltersComponent,
     ProjectTableomponent,
@@ -53,7 +49,6 @@ export class ProjectListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
   private readonly metadata = inject(MetadataStore);
-  private readonly service = inject(ProjectListService);
   private readonly storage = inject(Storage);
 
   readonly cactusIcon = faCactus;
@@ -133,7 +128,7 @@ export class ProjectListComponent {
   ): ProjectViewModel[] {
     if (list == null || list.length === 0) return list;
 
-    if (search) list = this.service.filterByName(list, search);
+    if (search) list = this.filterByName(list, search);
 
     if (assignedToMe) {
       list = list.filter(
@@ -141,13 +136,40 @@ export class ProjectListComponent {
           project.roles?.some((role) => role.user.userId === userId) ?? false
       );
     }
-    list = this.service.filterByStati(list, stati);
-    list = this.service.filterByCategories(list, categories);
+    list = this.filterByStati(list, stati);
+    list = this.filterByCategories(list, categories);
 
     return list;
   }
 
   private getView(): ProjectView | undefined {
     return this.storage.local.get('projectListView') as ProjectView;
+  }
+
+  private filterByStati(
+    projects: ProjectViewModel[] | null | undefined,
+    stati: string[]
+  ): ProjectViewModel[] {
+    if (!projects || stati.length === 0) return [];
+
+    return projects.filter((x) => stati.includes(x.status));
+  }
+
+  private filterByCategories(
+    projects: ProjectViewModel[] | null | undefined,
+    categories: string[]
+  ): ProjectViewModel[] {
+    if (!projects || categories.length === 0) return [];
+
+    return projects.filter((x) => categories.includes(x.category));
+  }
+
+  private filterByName(
+    projects: ProjectViewModel[] | null | undefined,
+    text: string
+  ): ProjectViewModel[] {
+    return (projects ?? []).filter((x) =>
+      (x.title ?? '').toLowerCase().includes(text.toLowerCase())
+    );
   }
 }

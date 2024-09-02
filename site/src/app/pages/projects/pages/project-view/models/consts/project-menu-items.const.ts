@@ -7,12 +7,9 @@ import {
   faCheck,
   faCopy,
   faEclipse,
-  faEye,
   faFileImport,
   faPlus,
   faTrash,
-  faUserMinus,
-  faUserPlus,
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
@@ -32,55 +29,12 @@ const taskActions: ActionContextMenuItem[] = [
     },
   },
   {
-    action: 'import',
+    action: 'import|right',
     faIcon: faFileImport,
-    resource: 'General.Import',
+    resource: 'Wbs.ImportSubTask',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
-    },
-    items: [
-      {
-        action: 'import|above',
-        faIcon: faArrowUp,
-        resource: 'General.Above',
-      },
-      {
-        action: 'import|right',
-        faIcon: faArrowRight,
-        resource: 'General.SubTask',
-      },
-      {
-        action: 'import|below',
-        faIcon: faArrowDown,
-        resource: 'General.Below',
-      },
-    ],
-  },
-  {
-    action: 'viewTask',
-    faIcon: faEye,
-    resource: 'Projects.ViewTask',
-    filters: {
-      claim: PROJECT_CLAIMS.TASKS.READ,
-    },
-  },
-  {
-    action: 'addDiscipline',
-    faIcon: faUserPlus,
-    resource: 'Wbs.AddDiscipline',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
-    },
-  },
-  {
-    action: 'removeDiscipline',
-    faIcon: faUserMinus,
-    resource: 'Wbs.RemoveDiscipline',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
     },
   },
   {

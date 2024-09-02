@@ -21,7 +21,6 @@ import {
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
-import { TaskTitle2Component } from '@wbs/components/task-title';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { LibraryEntryNode } from '@wbs/core/models';
@@ -38,6 +37,7 @@ import {
   LibraryTaskViewModel,
   LibraryVersionViewModel,
 } from '@wbs/core/view-models';
+import { TaskTitleComponent } from './components';
 
 @Component({
   standalone: true,
@@ -49,7 +49,7 @@ import {
     DisciplineIconListComponent,
     DisciplinesDropdownComponent,
     FontAwesomeModule,
-    TaskTitle2Component,
+    TaskTitleComponent,
     TaskTitleEditorComponent,
     TranslateModule,
     TreeButtonsTogglerComponent,

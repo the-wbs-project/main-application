@@ -32,6 +32,11 @@ import { ResourceTypeTextComponent } from '../type-text';
 import { RecordResourceValidation } from '../../services';
 import { RecordResourceViewModel } from '../../view-models';
 
+declare type RecordEditResults = {
+  record?: Partial<ResourceRecord>;
+  file?: FileInfo;
+};
+
 @Component({
   standalone: true,
   selector: 'wbs-record-resource-editor',
@@ -57,12 +62,15 @@ export class RecordResourceEditorComponent extends DialogContentBase {
   //
   //  Signals
   //
+  readonly isNew = signal(false);
   readonly title = signal<string>('');
   readonly model = signal<RecordResourceViewModel | undefined>(undefined);
   //
   //  Computed
   //
-  readonly errors = computed(() => this.validator.validate(this.model()));
+  readonly errors = computed(() =>
+    this.validator.validate(this.model(), this.isNew())
+  );
 
   readonly typeList = [
     RESOURCE_TYPES.PDF,
@@ -74,15 +82,14 @@ export class RecordResourceEditorComponent extends DialogContentBase {
     super(dialog);
   }
 
-  static launchAddAsync(
-    dialog: DialogService
-  ): Observable<[Partial<ResourceRecord>, FileInfo | undefined] | undefined> {
+  static launchAddAsync(dialog: DialogService): Observable<RecordEditResults> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,
     });
     const component = ref.content.instance as RecordResourceEditorComponent;
 
     component.title.set('Resources.AddResource');
+    component.isNew.set(true);
     component.model.set({
       description: '',
       name: '',
@@ -94,16 +101,16 @@ export class RecordResourceEditorComponent extends DialogContentBase {
       ),
       map((vm) =>
         vm
-          ? [
-              {
+          ? {
+              record: {
                 type: vm.type,
                 name: vm.name,
                 description: vm.description,
                 resource: vm.url,
               },
-              vm.file,
-            ]
-          : undefined
+              file: vm.file,
+            }
+          : {}
       )
     );
   }
@@ -111,13 +118,14 @@ export class RecordResourceEditorComponent extends DialogContentBase {
   static launchEditAsync(
     dialog: DialogService,
     data: ResourceRecord
-  ): Observable<[ResourceRecord, FileInfo | undefined] | undefined> {
+  ): Observable<RecordEditResults> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,
     });
     const component = ref.content.instance as RecordResourceEditorComponent;
 
     component.title.set('Resources.EditResource');
+    component.isNew.set(false);
     component.model.set({
       id: data.id,
       name: data.name,
@@ -131,14 +139,14 @@ export class RecordResourceEditorComponent extends DialogContentBase {
         x instanceof DialogCloseResult ? undefined : <RecordResourceViewModel>x
       ),
       map((vm) => {
-        if (!vm) return undefined;
+        if (!vm) return {};
 
         data.name = vm.name;
         data.description = vm.description;
         data.resource = vm.url;
         data.type = vm.type!;
 
-        return [data, vm.file];
+        return { record: data, file: vm.file };
       })
     );
   }

@@ -14,8 +14,6 @@ import { LibraryEntryWatcherDataService } from './library-entry-watcher.data-ser
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
 import { OrganizationDataService } from './organization.data-service';
-import { ProjectApprovalDataService } from './project-approval.data-service';
-import { ProjectNodeDataService } from './project-node.data-service';
 import { ProjectResourcesDataService } from './project-resources.data-service';
 import { ProjectSnapshotDataService } from './project-snapshot.data-service';
 import { ProjectDataService } from './project.data-service';
@@ -48,8 +46,6 @@ export class DataServiceFactory {
   readonly metdata = new MetdataDataService(this.http);
   readonly misc = new MiscDataService(this.http);
   readonly organizations = new OrganizationDataService(this.http);
-  readonly projectApprovals = new ProjectApprovalDataService(this.http);
-  readonly projectNodes = new ProjectNodeDataService(this.http);
   readonly projectResources = new ProjectResourcesDataService(this.http);
   readonly projects = new ProjectDataService(this.http);
   readonly projectSnapshots = new ProjectSnapshotDataService(this.http);

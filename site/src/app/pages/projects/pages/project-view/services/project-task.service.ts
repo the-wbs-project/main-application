@@ -409,8 +409,8 @@ export class ProjectTaskService {
     upserts: ProjectNode[],
     toRemove?: string[]
   ): Observable<void> {
-    return this.data.projectNodes
-      .putAsync(project.owner, project.id, upserts, toRemove ?? [])
+    return this.data.projects
+      .putTasksAsync(project.owner, project.id, upserts, toRemove ?? [])
       .pipe(tap(() => this.projectStore.tasksChanged(upserts, toRemove)));
   }
 

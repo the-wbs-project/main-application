@@ -5,12 +5,10 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate } from '@ngxs/router-plugin';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { HeightDirective } from '@wbs/core/directives/height.directive';
-import { SignalStore, WbsPhaseService } from '@wbs/core/services';
+import { WbsPhaseService } from '@wbs/core/services';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';
 import { ProjectStore } from '../../stores';
@@ -22,16 +20,13 @@ import { ProjectStore } from '../../stores';
   providers: [WbsPhaseService],
   imports: [
     DialogModule,
+    HeightDirective,
     ProjectDisciplinesTreeComponent,
     ProjectPhaseTreeComponent,
-    RouterModule,
     TranslateModule,
-    HeightDirective,
   ],
 })
 export class ProjectTasksComponent {
-  private readonly store = inject(SignalStore);
-
   readonly projectStore = inject(ProjectStore);
   readonly projectUrl = input.required<string[]>();
 
@@ -39,8 +34,4 @@ export class ProjectTasksComponent {
   readonly containerHeight = signal(100);
   readonly dialogContainerHeight = signal(100);
   readonly view = signal<'phases' | 'disciplines'>('phases');
-
-  navigateToTask(taskId: string): void {
-    this.store.dispatch(new Navigate([...this.projectUrl(), 'tasks', taskId]));
-  }
 }

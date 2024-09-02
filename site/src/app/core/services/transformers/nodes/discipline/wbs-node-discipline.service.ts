@@ -17,6 +17,8 @@ export class WbsDisciplineNodeTransformer {
     const nodes: TaskViewModel[] = [];
     let dCounter = 1;
 
+    console.log(disciplines);
+
     for (const d of disciplines) {
       const dView: TaskViewModel = {
         children: 0,

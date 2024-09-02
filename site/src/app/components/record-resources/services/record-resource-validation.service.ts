@@ -4,7 +4,11 @@ import { RecordResourceErrors, RecordResourceViewModel } from '../view-models';
 
 @Injectable()
 export class RecordResourceValidation {
-  validate(vm: RecordResourceViewModel | undefined): RecordResourceErrors {
+  validate(
+    vm: RecordResourceViewModel | undefined,
+    isNew: boolean
+  ): RecordResourceErrors {
+    console.log(vm);
     if (!vm)
       return {
         started: false,
@@ -24,11 +28,8 @@ export class RecordResourceValidation {
 
       return errors;
     }
-    if (
-      vm.type === RESOURCE_TYPES.PDF ||
-      (vm.type === RESOURCE_TYPES.IMAGE && vm.id == undefined)
-    ) {
-      errors.fileRequired = this.validateFile(vm);
+    if (vm.type === RESOURCE_TYPES.PDF || vm.type === RESOURCE_TYPES.IMAGE) {
+      errors.fileRequired = isNew ? this.validateFile(vm) : false;
       errors.valid = !errors.nameRequired && !errors.fileRequired;
     }
 

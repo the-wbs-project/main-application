@@ -1,13 +1,19 @@
-<span class="child-to-show" [ngClass]="{ nevermind: forcedShow() }">
-  <a #menuTarget class="pointer mg-l-10 pd-h-5">
-    <fa-icon
-      size="sm"
-      [icon]="menuIcon"
-      (click)="buildMenu()"
-      [title]="'General.Options' | translate"
-    />
-  </a>
-</span>
+<div class="d-flex flex-align-start">
+  <span> {{ task().levelText }}&nbsp;-&nbsp; {{ task().title }} </span>
+  <span class="child-to-show" [ngClass]="{ nevermind: forcedShow() }">
+    <a #menuTarget class="pointer mg-l-10 pd-h-5">
+      <fa-icon
+        size="sm"
+        [icon]="menuIcon"
+        (click)="buildMenu()"
+        [title]="'General.Options' | translate"
+      />
+    </a>
+  </span>
+  @if (saveState(); as saveState) {
+  <wbs-save-message [state]="saveState" cssClass=" mg-l-15 tx-12" />
+  }
+</div>
 <kendo-contextmenu
   showOn="click"
   [items]="menu()"

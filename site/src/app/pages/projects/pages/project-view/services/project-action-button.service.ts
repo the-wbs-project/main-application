@@ -21,6 +21,7 @@ import { PROJECT_NAVIGATION } from '../models';
 import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectViewService } from './project-view.service';
+import { ProjectService } from './project.service';
 
 @Injectable()
 export class ProjectActionButtonService {
@@ -41,14 +42,12 @@ export class ProjectActionButtonService {
   private readonly actionUpload = 'upload';
   private readonly actionExport = 'export';
 
-  buildMenu(
-    project: ProjectViewModel | undefined,
-    claims: string[],
-    projectUrl: string[],
-    approvalEnabled: boolean
-  ): ActionButtonMenuItem[] {
+  buildMenu(project: ProjectViewModel | undefined): ActionButtonMenuItem[] {
     if (!project) return [];
 
+    const claims = this.store.claims();
+    const projectUrl = ProjectService.getProjectUrl(project);
+    const approvalEnabled = this.store.isApprovalEnabled();
     const items: ActionButtonMenuItem[] = [this.header('General.Views')];
     const stati = PROJECT_STATI;
 
@@ -155,7 +154,7 @@ export class ProjectActionButtonService {
     return items;
   }
 
-  handleAction(action: string, approvalEnabled: boolean): void {
+  handleAction(action: string): void {
     switch (action) {
       case this.actionDownloadAbs:
         this.actions.downloadTasks(true);
@@ -186,7 +185,7 @@ export class ProjectActionButtonService {
         break;
 
       case this.actionApprove:
-        this.approve(approvalEnabled);
+        //this.approve(approvalEnabled);
         break;
 
       case this.actionExport:

@@ -10,6 +10,7 @@ export * from './list-item.model';
 export * from './message.model';
 export * from './organization.model';
 export * from './project.model';
+export * from './project-approval.model';
 export * from './project-role.model';
 export * from './resources.model';
 export * from './role.model';

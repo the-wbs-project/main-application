@@ -1,7 +1,15 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
-import { PROJECT_CLAIMS, PROJECT_STATI, ProjectNode } from '@wbs/core/models';
-import { Transformers } from '@wbs/core/services';
 import {
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
+  ProjectApproval,
+  ProjectApprovalStats,
+  ProjectNode,
+} from '@wbs/core/models';
+import { CategoryService, Transformers } from '@wbs/core/services';
+import { MembershipStore } from '@wbs/core/store';
+import {
+  CategoryViewModel,
   LibraryTaskViewModel,
   ProjectTaskViewModel,
   ProjectViewModel,
@@ -9,8 +17,11 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class ProjectStore {
+  private readonly categories = inject(CategoryService);
   private readonly transformers = inject(Transformers);
+  private readonly membership = inject(MembershipStore);
 
+  private readonly _disciplines = signal<CategoryViewModel[]>([]);
   private readonly _project = signal<ProjectViewModel | undefined>(undefined);
   private readonly _taskModels = signal<ProjectNode[] | undefined>(undefined);
   private readonly _absTasks = signal<ProjectTaskViewModel[] | undefined>(
@@ -25,8 +36,16 @@ export class ProjectStore {
     return this._claims;
   }
 
+  get isApprovalEnabled(): Signal<boolean> {
+    return this.membership.projectApprovalRequired;
+  }
+
   get project(): Signal<ProjectViewModel | undefined> {
     return this._project;
+  }
+
+  get projectDisciplines(): Signal<CategoryViewModel[]> {
+    return this._disciplines;
   }
 
   get tasks(): Signal<ProjectNode[] | undefined> {
@@ -93,10 +112,10 @@ export class ProjectStore {
 
   setProject(project: ProjectViewModel): void {
     this._project.set(structuredClone(project));
+    this._disciplines.set(this.categories.buildViewModels(project.disciplines));
   }
 
   markProject(project: ProjectViewModel): void {
-    console.log('markProject', project);
     project.lastModified = new Date();
 
     this._project.set(structuredClone(project));
@@ -159,5 +178,22 @@ export class ProjectStore {
         project.disciplines
       )
     );
+  }
+
+  private runStats(list: ProjectApproval[]): ProjectApprovalStats {
+    const total = list.length;
+    const approved = list.filter((a) => a.isApproved === true).length;
+    const rejected = list.filter((a) => a.isApproved === false).length;
+    const remaining = list.filter((a) => a.isApproved == undefined).length;
+
+    return {
+      approved,
+      approvedPercent: Math.round((approved / total) * 100),
+      rejected,
+      rejectedPercent: Math.round((rejected / total) * 100),
+      remaining,
+      remainingPercent: Math.round((remaining / total) * 100),
+      total,
+    };
   }
 }

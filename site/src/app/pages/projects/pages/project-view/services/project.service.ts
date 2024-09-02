@@ -236,7 +236,7 @@ export class ProjectService {
   private saveProject(project: ProjectViewModel): Observable<void> {
     const model = this.transformers.projects.toModel(project);
 
-    return this.data.projects.putAsync(model).pipe(
+    return this.data.projects.putProjectAsync(model).pipe(
       tap(() => this.projectStore.markProject(project)),
       tap(() =>
         this.store.dispatch(new SetChecklistData(project, undefined, undefined))

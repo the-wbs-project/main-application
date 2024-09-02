@@ -2,7 +2,6 @@ import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { TitleService, orgResolve, userIdResolve } from '@wbs/core/services';
 import { UiStore } from '@wbs/core/store';
-import { ProjectListService } from './services';
 
 export const setupGuard = () => {
   inject(TitleService).setTitle([{ text: 'General.Projects' }]);
@@ -19,6 +18,5 @@ export const routes: Routes = [
       orgId: orgResolve,
       userId: userIdResolve,
     },
-    providers: [ProjectListService],
   },
 ];

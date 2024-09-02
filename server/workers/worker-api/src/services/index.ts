@@ -1,3 +1,4 @@
+export * from './claims.service';
 export * from './data-services';
 export * from './logging';
 export * from './fetcher.service';

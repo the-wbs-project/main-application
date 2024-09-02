@@ -1,7 +1,17 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cors, kv, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error } from './middle';
-import { DataServiceFactory, Fetcher, Http, JiraService, HttpLogger, MailGunService, OriginService, DataDogService } from './services';
+import {
+  DataServiceFactory,
+  Fetcher,
+  Http,
+  JiraService,
+  HttpLogger,
+  MailGunService,
+  OriginService,
+  DataDogService,
+  ClaimsService,
+} from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
 
@@ -20,6 +30,7 @@ app.use('*', async (ctx, next) => {
   ctx.set('fetcher', new Fetcher(ctx));
   ctx.set('jira', new JiraService(ctx));
   ctx.set('origin', new OriginService(ctx));
+  ctx.set('claims', new ClaimsService(ctx));
   ctx.set('data', new DataServiceFactory(ctx));
 
   await next();
@@ -37,7 +48,8 @@ for (const path of ROUTES.RESOURCE_URLS) {
   app.get(path, OriginService.pass);
   //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
 }
-app.get('api/resources/all/:locale', kv.resources, OriginService.pass);
+app.get('api/resources/test', OriginService.pass);
+app.get('api/resources/all/:locale', OriginService.pass);
 app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
 //
 //  Claims
@@ -46,7 +58,6 @@ const claimsApp = newApp()
   .basePath('api/claims')
   .use('*', verifyJwt)
   .get('organization/:organization', Http.claims.getForOrganizationAsync)
-  .get('project/:owner/:project', Http.claims.getForProjectAsync)
   .get('libraryEntry/:organization/:owner/:entry/:version', Http.claims.getForLibraryEntryAsync);
 
 app.route('/', claimsApp);
@@ -96,7 +107,10 @@ const projectApp = newApp()
   .get('', verifyJwt, verifyMembership, Http.projects.getByOwnerAsync)
   .get(':project', verifyJwt, verifyMembership, Http.projects.getByIdAsync)
   .get(':project/id', verifyJwt, verifyMembership, Http.projects.getIdAsync)
-  .put(':project', verifyJwt, verifyMembership, Http.projects.putAsync);
+  .get(':project/nodes', verifyJwt, verifyMembership, Http.projects.getNodesAsync)
+  .put(':project', verifyJwt, verifyMembership, Http.projects.putAsync)
+  .put(':project/nodes', verifyJwt, verifyMembership, Http.projects.putAsync)
+  .put(':project/approvals', verifyJwt, verifyMembership, Http.projects.putAsync);
 
 app.route('/', projectApp);
 
@@ -153,5 +167,10 @@ for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_GET) app.get(path, verifyJwt, ve
 for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_POST) app.post(path, verifyJwt, verifyMembership, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_PUT) app.put(path, verifyJwt, verifyMembership, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_DELETE) app.delete(path, verifyJwt, verifyMembership, OriginService.pass);
+
+app.get('/api/*', verifyJwt, OriginService.pass);
+app.put('/api/*', verifyJwt, OriginService.pass);
+app.post('/api/*', verifyJwt, OriginService.pass);
+app.delete('/api/*', verifyJwt, OriginService.pass);
 
 export const APP_ROUTES = app;

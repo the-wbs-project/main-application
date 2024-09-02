@@ -1,4 +1,4 @@
-@let list = disciplines();
+@let list = tasks();
 <kendo-treelist
   #treelist
   class="tx-12"
@@ -14,9 +14,6 @@
   [navigable]="true"
   [initiallyExpanded]="false"
   [(expandedKeys)]="treeService.expandedKeys"
-  [selectable]="{ enabled: true, mode: 'row' }"
-  (selectionChange)="taskId.set($event.items[0].dataItem.id)"
-  (dblclick)="nav()"
 >
   <ng-template kendoTreeListToolbarTemplate>
     <wbs-tree-type-button [(view)]="view" />

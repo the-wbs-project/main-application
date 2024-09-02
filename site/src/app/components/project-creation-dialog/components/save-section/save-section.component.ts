@@ -143,10 +143,10 @@ export class SaveSectionComponent {
     }
 
     this.data.projects
-      .putAsync(project)
+      .putProjectAsync(project)
       .pipe(
         switchMap(() =>
-          this.data.projectNodes.putAsync(project.owner, project.id, tasks, [])
+          this.data.projects.putTasksAsync(project.owner, project.id, tasks, [])
         )
       )
       .subscribe(() => {

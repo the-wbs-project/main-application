@@ -32,10 +32,9 @@
       [rowReorderable]="canEdit()"
       [selectable]="{ enabled: true, mode: 'row' }"
       [rowReorderable]="editEnabled"
+      (selectionChange)="selectedTaskId.set($event.items[0].dataItem.id)"
       (add)="addHandler($event.dataItem)"
-      (selectionChange)="selectTask($event)"
       (rowReorder)="rowReordered($event)"
-      (cellClick)="cellClick($event)"
     >
       <ng-template kendoTreeListToolbarTemplate>
         <div class="d-flex row-column align-items-center" style="gap: 10px">
@@ -77,20 +76,12 @@
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <div class="d-inline-block">
             <div class="d-flex flex-align-start">
-              <span>
-                {{ dataItem.levelText }}&nbsp;-&nbsp; {{ dataItem.title }}
-              </span>
               <wbs-library-tree-task-title
                 [task]="dataItem"
+                [saveState]="treeService.getSaveState(dataItem.id)?.()"
                 (edit)="treeService.editTitle(treelist, dataItem, 1)"
                 (menuItemSelected)="menuItemSelected($event, dataItem.id)"
               />
-              @if (treeService.getSaveState(dataItem.id); as saveState) {
-              <wbs-save-message
-                [state]="saveState()"
-                cssClass=" mg-l-15 tx-12"
-              />
-              }
             </div>
           </div>
         </ng-template>
@@ -198,9 +189,8 @@
     </kendo-treelist>
   </kendo-splitter-pane>
   <kendo-splitter-pane min="100px" size="150px" [(wbsHeight)]="taskAreaHeight">
-    <wbs-task-details
+    <wbs-library-task-details
       [task]="selectedTask()"
-      [treeService]="treeService"
       [versionDisciplines]="versionDisciplines"
     />
   </kendo-splitter-pane>

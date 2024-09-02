@@ -7,7 +7,7 @@
 >
   <div
     [(wbsHeight)]="dialogContainerHeight"
-    class="pd-15 d-flex flex-column h-100"
+    class="pd-0 d-flex flex-column h-100"
   >
     @if (view() === 'phases') {
     <wbs-project-phase-tree
@@ -15,7 +15,6 @@
       [showFullscreen]="false"
       [claims]="claims"
       [containerHeight]="dialogContainerHeight()"
-      (navigateToTask)="navigateToTask($event)"
       (goFullScreen)="showDialog.set(true)"
     />
     } @else if (view() === 'disciplines') {
@@ -23,7 +22,6 @@
       [(view)]="view"
       [showFullscreen]="false"
       [containerHeight]="dialogContainerHeight()"
-      (navigateToTask)="navigateToTask($event)"
       (goFullScreen)="showDialog.set(true)"
     />
     }
@@ -37,7 +35,6 @@
     [showFullscreen]="true"
     [claims]="claims"
     [containerHeight]="containerHeight()"
-    (navigateToTask)="navigateToTask($event)"
     (goFullScreen)="showDialog.set(true)"
   />
   } @else if (view() === 'disciplines') {
@@ -45,10 +42,8 @@
     [(view)]="view"
     [showFullscreen]="true"
     [containerHeight]="containerHeight()"
-    (navigateToTask)="navigateToTask($event)"
     (goFullScreen)="showDialog.set(true)"
   />
   }
 </div>
 }
-<router-outlet />

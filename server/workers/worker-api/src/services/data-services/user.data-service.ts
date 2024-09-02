@@ -5,7 +5,7 @@ import { UserViewModel } from '../../view-models';
 export class UserDataService {
   constructor(private readonly authApi: AuthEntrypoint) {}
 
-  async getViewAsync(organizationId: string, userId: string, visibility: string): Promise<UserViewModel | undefined> {
+  async getViewAsync(organizationId: string, userId: string, visibility: 'organization' | 'public'): Promise<UserViewModel | undefined> {
     return (await this.service()).getView(organizationId, userId, visibility);
   }
 

@@ -1,8 +1,8 @@
 import { Injectable, inject } from '@angular/core';
+import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
-import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
@@ -11,10 +11,8 @@ import { MembershipStore, UserStore } from '@wbs/core/store';
 import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { TaskDeleteComponent } from '../components/task-delete';
-import { PROJECT_PAGES } from '../models';
 import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
-import { ProjectNavigationService } from './project-navigation.service';
 import { ProjectImportProcessorService } from './project-import-processor.service';
 import { ProjectService } from './project.service';
 import { ProjectTaskService } from './project-task.service';
@@ -27,7 +25,6 @@ export class ProjectViewService {
   private readonly importProcessor = inject(ProjectImportProcessorService);
   private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
-  private readonly nav = inject(ProjectNavigationService);
   private readonly projectService = inject(ProjectService);
   private readonly projectStore = inject(ProjectStore);
   private readonly store = inject(Store);
@@ -52,27 +49,7 @@ export class ProjectViewService {
     } else if (action === 'downloadAbs') {
       this.downloadTasks(true);
     } else if (action === 'upload') {
-      this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
-    } else if (action === 'addSub') {
-      const sub = TaskCreateComponent.launchAsync(
-        this.dialogService,
-        this.project.disciplines
-      )
-        .pipe(
-          switchMap((results) =>
-            results
-              ? this.taskService.createTask(
-                  taskId,
-                  results.title!,
-                  results.description,
-                  results.disciplineIds
-                )
-              : of()
-          )
-        )
-        .subscribe(() => {
-          sub.unsubscribe();
-        });
+      this.uploadTasks();
     } else if (taskId) {
       if (action === 'cloneTask') {
         this.taskService.cloneTask(taskId).subscribe();
@@ -129,7 +106,16 @@ export class ProjectViewService {
   }
 
   uploadTasks(): void {
-    this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
+    this.store.dispatch(
+      new Navigate([
+        '/',
+        this.owner,
+        'projects',
+        'view',
+        this.project.id,
+        'upload',
+      ])
+    );
   }
 
   downloadTasks(abs: boolean): void {

@@ -11,7 +11,6 @@ import {
   LibraryEntryExportService,
   ProjectActionButtonService,
   ProjectImportProcessorService,
-  ProjectNavigationService,
   ProjectService,
   ProjectTaskService,
   ProjectViewService,
@@ -20,7 +19,7 @@ import {
   projectUrlResolve,
   projectVerifyGuard,
 } from './services';
-import { ProjectApprovalState, ProjectChecklistState } from './states';
+import { ProjectChecklistState } from './states';
 import { ProjectStore } from './stores';
 
 export const routes: Routes = [
@@ -37,7 +36,7 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom([
         DialogModule,
-        NgxsModule.forFeature([ProjectApprovalState, ProjectChecklistState]),
+        NgxsModule.forFeature([ProjectChecklistState]),
       ]),
       ChecklistDataService,
       ChecklistTestService,
@@ -45,7 +44,6 @@ export const routes: Routes = [
       ProjectActivityService,
       ProjectImportProcessorService,
       LibraryEntryExportService,
-      ProjectNavigationService,
       ProjectService,
       ProjectStore,
       ProjectTaskService,
@@ -56,13 +54,9 @@ export const routes: Routes = [
       { path: '', redirectTo: 'about', pathMatch: 'full' },
       {
         path: 'about',
+        canDeactivate: [closeApprovalWindowGuard],
         loadComponent: () =>
           import('./pages/project-about').then((x) => x.ProjectAboutComponent),
-        canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          navSection: 'about',
-          crumbs: ['about'],
-        },
       },
       {
         path: 'tasks',
@@ -70,10 +64,6 @@ export const routes: Routes = [
           import('./pages/project-tasks').then((x) => x.ProjectTasksComponent),
         //loadChildren: () => import('./task-view.routes').then((x) => x.routes),
         canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          navSection: 'tasks',
-          crumbs: ['tasks'],
-        },
         resolve: {
           projectUrl: projectUrlResolve,
         },
@@ -85,10 +75,6 @@ export const routes: Routes = [
             (x) => x.ProjectTimelinePageComponent
           ),
         canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          navSection: 'timeline',
-          crumbs: ['timeline'],
-        },
         resolve: {
           owner: orgResolve,
           projectUrl: projectUrlResolve,
@@ -103,79 +89,6 @@ export const routes: Routes = [
           view: PROJECT_PAGES.UPLOAD,
         },
       },
-      /* {
-        path: 'resources',
-        loadComponent: () =>
-          import('./pages/project-resources-page.component').then(
-            (x) => x.ProjectResourcesPageComponent
-          ),
-        canActivate: [projectNavGuard],
-        canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          navSection: 'resources',
-          crumbs: ['resources'],
-        },
-        resolve: {
-          owner: orgResolve,
-          projectId: projectIdResolve,
-          apiUrlPrefix: projectApiUrlResolve,
-        },
-      },
-      {
-          path: 'discussions',
-          canActivate: [projectViewGuard, ProjectDiscussionGuard],
-          data: {
-            title: 'ProjectUpload.PagesUploadProjectPlan',
-            view: PROJECT_PAGE_VIEW.DISCUSSIONS,
-          },
-          loadChildren: () =>
-            import('../../../discussion-forum/discussion-forum.module').then(
-              (m) => m.DiscussionForumModule
-            ),
-        },*/
-      /*
-      {
-        path: 'settings/general',
-        loadComponent: () =>
-          import('./pages/project-settings-general').then(
-            (x) => x.ProjectSettingsGeneralComponent
-          ),
-        canActivate: [projectNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          navSection: 'settings',
-          crumbs: ['settings', 'general'],
-        },
-      },
-      {
-        path: 'settings/disciplines',
-        loadComponent: () =>
-          import('./pages/project-settings-disciplines.component').then(
-            (x) => x.DisciplinesComponent
-          ),
-        canActivate: [projectNavGuard],
-        canDeactivate: [dirtyGuard],
-        data: {
-          navSection: 'settings',
-          crumbs: ['settings', 'disciplines'],
-        },
-      },
-      {
-        path: 'settings/roles',
-        loadComponent: () =>
-          import('./pages/project-settings-roles').then(
-            (x) => x.RolesComponent
-          ),
-        canActivate: [projectNavGuard],
-        data: {
-          navSection: 'settings',
-          crumbs: ['settings', 'roles'],
-        },
-        resolve: {
-          org: orgResolve,
-          approvalEnabled: approvalEnabledResolve,
-        },
-      },*/
     ],
   },
 ];

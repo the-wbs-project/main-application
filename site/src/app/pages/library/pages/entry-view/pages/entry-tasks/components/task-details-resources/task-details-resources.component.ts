@@ -13,7 +13,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
 import { ResourceRecord } from '@wbs/core/models';
-import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { LibraryResourcesService } from '@wbs/pages/library/services';
 
 @Component({
@@ -89,25 +88,5 @@ export class TaskDetailsResourcesComponent implements OnInit {
       }
       return [...list];
     });
-  }
-
-  private static getApiUrl(
-    apiDomain: string,
-    version: LibraryVersionViewModel,
-    taskId: string
-  ): string {
-    return [
-      apiDomain,
-      'api',
-      'portfolio',
-      version.ownerId,
-      'library',
-      'entries',
-      version.entryId,
-      'versions',
-      version.version,
-      'nodes',
-      taskId,
-    ].join('/');
   }
 }

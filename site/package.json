@@ -13,7 +13,8 @@
     "docker:fa": "npm config set \"@fortawesome:registry\" https://npm.fontawesome.com/ && npm config set \"//npm.fontawesome.com/:_authToken\"",
     "docker:install": "npm install --force",
     "start": "ng serve --configuration development --live-reload false --host 0.0.0.0",
-    "dep": "npx madge src/main.ts --ts-config tsconfig.json --image ./deps.png"
+    "dep": "npx madge src/main.ts --ts-config tsconfig.json --image ./deps.png",
+    "stats": "ng build --stats-json && webpack-bundle-analyzer dist/site/stats.json"
   },
   "private": true,
   "madge": {
@@ -122,6 +123,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "sass": "^1.49.9",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "webpack-cli": "^5.1.4"
   }
 }

@@ -5,44 +5,25 @@
   rounded="small"
   size="small"
   class="mg-y-4"
-  (click)="toggle()"
 >
-  @if (uiVersion() === 'v1') {
-  <fa-icon [icon]="faBoltLightning" class="mg-r-5" />
-  {{ "General.Actions" | translate }}
-  } @else {
   <fa-icon [icon]="menuIcon" />
-  }
 </button>
-@if (show()) {
-<kendo-popup
-  #popup
-  [anchor]="anchor"
-  (anchorViewportLeave)="toggle()"
-  [anchorAlign]="
-    uiVersion() === 'v1'
-      ? { horizontal: 'right', vertical: 'bottom' }
-      : { horizontal: 'left', vertical: 'bottom' }
-  "
-  [popupAlign]="
-    uiVersion() === 'v1'
-      ? { horizontal: 'right', vertical: 'top' }
-      : { horizontal: 'left', vertical: 'bottom' }
-  "
+<kendo-contextmenu
+  showOn="click"
+  [alignToAnchor]="true"
+  [anchorAlign]="{ horizontal: 'left', vertical: 'bottom' }"
+  [target]="anchor"
+  [items]="menu() ?? []"
+  (select)="selected($event.item)"
 >
-  <div class="wd-200">
-    <kendo-menu
-      [items]="menu() ?? []"
-      [vertical]="true"
-      style="display: inline-block"
-    >
-      <ng-template kendoMenuItemTemplate let-item="item">
-        <div class="d-inline-block wd-20 text-center">
-          <fa-icon [icon]="item.faIcon!" />
-        </div>
-        {{ item.text! | translate }}
-      </ng-template>
-    </kendo-menu>
-  </div>
-</kendo-popup>
-}
+  <ng-template kendoMenuItemTemplate let-item="item">
+    <div class="d-flex tx-14" style="margin-left: -5px">
+      @if (item.faIcon) {
+      <div class="wd-30 text-center">
+        <fa-icon [icon]="item.faIcon" />
+      </div>
+      } @if (item.text) { {{ item.text }} } @else if (item.resource) {
+      {{ item.resource | translate }} }
+    </div>
+  </ng-template>
+</kendo-contextmenu>

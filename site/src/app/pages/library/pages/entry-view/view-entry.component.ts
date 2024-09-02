@@ -11,8 +11,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Navigate, RouterState } from '@ngxs/router-plugin';
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { ActionButtonComponent2 } from '@wbs/components/action-button2';
-import { PageHeaderComponent } from '@wbs/components/page-header';
+import { ActionButtonComponent } from '@wbs/components/action-button';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { SaveService, SignalStore, TitleService } from '@wbs/core/services';
 import { EntryService } from '@wbs/core/services/library';
@@ -25,10 +24,9 @@ import { EntryActionButtonService } from './services';
   templateUrl: './view-entry.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ActionButtonComponent2,
+    ActionButtonComponent,
     ActionIconListComponent,
     EntryViewBreadcrumbsPipe,
-    PageHeaderComponent,
     SaveMessageComponent,
     RouterModule,
     TranslateModule,

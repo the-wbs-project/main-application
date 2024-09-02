@@ -26,10 +26,14 @@ export class LibraryEntryExportService {
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
         switchMap((results: LibraryEntryModalResults) =>
-          this.data.projects.exportToLibraryAsync(project.owner, project.id, {
-            author: this.userId()!,
-            ...results,
-          })
+          this.data.projects.exportProjectToLibraryAsync(
+            project.owner,
+            project.id,
+            {
+              author: this.userId()!,
+              ...results,
+            }
+          )
         )
       )
       .subscribe();
@@ -44,7 +48,7 @@ export class LibraryEntryExportService {
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
         switchMap((results: LibraryEntryModalResults) =>
-          this.data.projectNodes.exportToLibraryAsync(
+          this.data.projects.exportTaskToLibraryAsync(
             owner,
             projectId,
             task.id,
@@ -68,7 +72,7 @@ export class LibraryEntryExportService {
       .pipe(
         filter((x) => !(x instanceof DialogCloseResult)),
         switchMap((results: LibraryEntryModalResults) =>
-          this.data.projectNodes.exportToLibraryAsync(
+          this.data.projects.exportTaskToLibraryAsync(
             owner,
             task.projectId,
             task.id,

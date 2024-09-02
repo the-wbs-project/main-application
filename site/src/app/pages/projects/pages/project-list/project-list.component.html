@@ -13,56 +13,46 @@
   <div class="mg-t-20 mg-b-16 flex-grow-1">
     <div class="container-fluid">
       <div class="row mg-b-15 d-none d-lg-flex">
-        <div class="col-8">
-          <div class="d-flex gap-20">
-            <button
-              kendoButton
-              size="small"
-              themeColor="dark"
-              (click)="launchCreateProject()"
-            >
-              <fa-icon [icon]="plusIcon" class="mg-r-5" />
-              {{ "General.Create" | translate }}
-            </button>
-            <wbs-project-view-toggle
-              [view]="view()"
-              (viewChange)="setView($event)"
-            />
-          </div>
-        </div>
-        <div class="col-4">
-          <wbs-page-header />
+        <div class="col-12 d-flex gap-20">
+          <button
+            kendoButton
+            size="small"
+            themeColor="dark"
+            (click)="launchCreateProject()"
+          >
+            <fa-icon [icon]="plusIcon" class="mg-r-5" />
+            {{ "General.Create" | translate }}
+          </button>
+          <wbs-project-view-toggle
+            [view]="view()"
+            (viewChange)="setView($event)"
+          />
         </div>
       </div>
       <div class="row mg-b-15 d-lg-none flex-align-center">
-        <div class="col-8">
-          <div class="d-flex gap-20">
-            <button
-              kendoButton
-              size="small"
-              themeColor="dark"
-              (click)="filterToggle.set(!filterToggle())"
-            >
-              <fa-icon [icon]="filterIcon" />
-            </button>
+        <div class="col-12 d-flex gap-20">
+          <button
+            kendoButton
+            size="small"
+            themeColor="dark"
+            (click)="filterToggle.set(!filterToggle())"
+          >
+            <fa-icon [icon]="filterIcon" />
+          </button>
 
-            <button
-              kendoButton
-              size="small"
-              themeColor="dark"
-              (click)="launchCreateProject()"
-            >
-              <fa-icon [icon]="plusIcon" class="d-none d-sm-inline mg-r-5" />
-              {{ "General.Create" | translate }}
-            </button>
-            <wbs-project-view-toggle
-              [view]="view()"
-              (viewChange)="setView($event)"
-            />
-          </div>
-        </div>
-        <div class="col-4">
-          <wbs-page-header />
+          <button
+            kendoButton
+            size="small"
+            themeColor="dark"
+            (click)="launchCreateProject()"
+          >
+            <fa-icon [icon]="plusIcon" class="d-none d-sm-inline mg-r-5" />
+            {{ "General.Create" | translate }}
+          </button>
+          <wbs-project-view-toggle
+            [view]="view()"
+            (viewChange)="setView($event)"
+          />
         </div>
       </div>
       @if (filterToggle()) {

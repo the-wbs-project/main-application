@@ -7,7 +7,6 @@ import {
   input,
   model,
   output,
-  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
@@ -17,7 +16,7 @@ import {
 } from '@wbs/components/_utils/tree-buttons';
 import { Transformers, TreeService } from '@wbs/core/services';
 import { ProjectStore } from '../../../../stores';
-import { TreeTypeButtonComponent } from '../tree-type-button';
+import { TreeTypeButtonComponent } from '../tree-type-button.component';
 
 @Component({
   standalone: true,
@@ -48,15 +47,11 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   readonly heightOffset = 50;
   readonly rowHeight = 31.5;
   //
-  //  signals/models
-  //
-  readonly taskId = signal<string | undefined>(undefined);
-  //
   //  Computed signals
   //
-  readonly disciplines = computed(() =>
+  readonly tasks = computed(() =>
     this.transformers.nodes.discipline.view.run(
-      this.store.project()?.disciplines ?? [],
+      this.store.projectDisciplines(),
       this.store.tasks() ?? []
     )
   );
@@ -70,16 +65,11 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   //
   //  Outputs
   //
-  readonly navigateToTask = output<string>();
   readonly goFullScreen = output<void>();
 
   ngOnInit(): void {
-    this.treeService.expandedKeys = this.disciplines()
+    this.treeService.expandedKeys = this.tasks()
       .filter((x) => !x.parentId)
       .map((x) => x.id);
-  }
-
-  nav(): void {
-    if (this.taskId()) this.navigateToTask.emit(this.taskId()!);
   }
 }

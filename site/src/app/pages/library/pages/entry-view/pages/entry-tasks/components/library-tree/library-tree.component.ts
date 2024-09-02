@@ -19,26 +19,20 @@ import {
 } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
-import { faEllipsisH, faSave, faXmark } from '@fortawesome/pro-light-svg-icons';
+import { faSave, faXmark } from '@fortawesome/pro-light-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SplitterModule } from '@progress/kendo-angular-layout';
 import {
-  CancelEvent,
-  CellClickEvent,
-  ColumnComponent,
   RowClassArgs,
   RowReorderEvent,
-  SaveEvent,
-  SelectionChangeEvent,
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import {
   TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
@@ -71,11 +65,10 @@ import {
   EntryTaskActionService,
   EntryTaskReorderService,
 } from '../../../../services';
+import { LibraryTaskDetailsComponent } from '../library-task-details';
 import { LibraryTreeTaskTitleComponent } from '../library-tree-task-title';
 import { LibraryTreeTitleLegendComponent } from '../library-tree-title-legend';
-import { TaskDetailsComponent } from '../task-details/task-details.component';
 import { VisibilityIconComponent } from '../visibility-icon.component';
-import { faPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
 
 @UntilDestroy()
 @Component({
@@ -87,17 +80,16 @@ import { faPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
     AlertComponent,
     DisciplineIconListComponent,
     DisciplinesDropdownComponent,
+    LibraryTaskDetailsComponent,
     LibraryTreeTaskTitleComponent,
     LibraryTreeTitleLegendComponent,
     FontAwesomeModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    SaveMessageComponent,
     SplitterModule,
     TextBoxModule,
     TranslateModule,
-    TaskDetailsComponent,
     TaskTitleEditorComponent,
     TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
@@ -122,12 +114,10 @@ export class LibraryTreeComponent implements OnInit {
   readonly width = inject(UiStore).mainContentWidth;
   readonly treeService = new TreeService();
 
-  readonly menuIcon = faEllipsisH;
   readonly addIcon = faPlus;
   readonly cancelIcon = faXmark;
   readonly saveIcon = faSave;
   readonly removeIcon = faTrash;
-  readonly faSpinner = faSpinner;
   readonly heightOffset = 10;
   readonly rowHeight = 30;
   editParentId?: string;
@@ -183,7 +173,6 @@ export class LibraryTreeComponent implements OnInit {
   //
   //  Outputs
   //
-  readonly navigateToTask = output<string>();
   readonly goFullScreen = output<void>();
 
   constructor() {
@@ -203,37 +192,15 @@ export class LibraryTreeComponent implements OnInit {
     this.treeList()!.updateView();
   }
 
-  selectTask(e: SelectionChangeEvent): void {
-    this.selectedTaskId.set(e.items[0].dataItem.id);
-  }
-
   menuItemSelected(action: string, taskId?: string): void {
-    const obsOrVoid = this.actions.onAction(action, taskId, this.treeService);
+    if (!taskId) return;
+
+    const obsOrVoid = this.actions.onAction(action, taskId);
 
     if (obsOrVoid instanceof Observable) {
       if (taskId) this.treeService.callSave(taskId, obsOrVoid);
       else obsOrVoid.subscribe();
     }
-  }
-
-  cellClick(e: CellClickEvent): void {
-    if (!this.canEdit()) return;
-
-    const column = <ColumnComponent>e.sender.columns.get(e.columnIndex);
-
-    if (!e.isEdited && column?.field === 'disciplines') {
-      e.sender.editCell(e.dataItem, e.columnIndex);
-    }
-  }
-
-  nav(): void {
-    const taskId = this.selectedTaskId();
-    //
-    //  Keep this here in case someone double clicks outside a standard row
-    //
-    if (!taskId) return;
-
-    this.navigateToTask.emit(taskId);
   }
 
   rowReordered(e: RowReorderEvent): void {

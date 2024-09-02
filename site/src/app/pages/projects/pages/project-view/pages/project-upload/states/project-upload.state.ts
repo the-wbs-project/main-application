@@ -327,14 +327,11 @@ export class ProjectUploadState {
     }
     const proj = this.project;
 
-    return forkJoin({
-      project: this.data.projects.getAsync(proj.owner, proj.id),
-      existingNodes: this.data.projectNodes.getAllAsync(proj.owner, proj.id),
-    }).pipe(
+    return this.data.projects.getAsync(proj.owner, proj.id).pipe(
       switchMap((data) => {
         const results = this.transformer.nodes.phase.projectImporter.run(
           data.project,
-          data.existingNodes,
+          data.tasks,
           state.action!,
           people,
           nodes
@@ -378,10 +375,10 @@ export class ProjectUploadState {
       switchMap(() =>
         this.activityService.projectUploaded(project.owner, project.id)
       ),
-      switchMap(() =>
-        this.data.projectNodes.getAllAsync(project.owner, project.id)
-      ),
-      tap((tasks) => this.projectStore.setTasks(tasks))
+      switchMap(() => this.data.projects.getAsync(project.owner, project.id)),
+      tap(({ project, tasks, claims }) =>
+        this.projectStore.setAll(project, tasks, claims)
+      )
     );
   }
 

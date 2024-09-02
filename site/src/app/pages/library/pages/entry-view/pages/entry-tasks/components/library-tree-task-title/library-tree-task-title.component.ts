@@ -12,8 +12,10 @@ import { faEllipsisH } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
+import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { LibraryTaskViewModel } from '@wbs/core/view-models';
 import { LibraryTreeMenuService } from '../../services';
+import { SaveState } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -26,6 +28,7 @@ import { LibraryTreeMenuService } from '../../services';
     ContextMenuModule,
     FontAwesomeModule,
     NgClass,
+    SaveMessageComponent,
     TranslateModule,
   ],
 })
@@ -34,6 +37,7 @@ export class LibraryTreeTaskTitleComponent {
 
   readonly menuIcon = faEllipsisH;
   readonly task = input.required<LibraryTaskViewModel>();
+  readonly saveState = input.required<SaveState | undefined>();
   readonly menu = signal<any[]>([]);
   readonly forcedShow = signal<boolean>(false);
   readonly menuItemSelected = output<string>();
