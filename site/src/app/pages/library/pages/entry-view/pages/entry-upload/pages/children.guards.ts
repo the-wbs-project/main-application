@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { Utils } from '@wbs/core/services';
-import { EntryStore, UiStore } from '@wbs/core/store';
 import { of } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { SetAsStarted } from '../actions';
@@ -40,28 +39,4 @@ export const startGuard = () => {
   const store = inject(Store);
 
   return store.dispatch(new SetAsStarted()).pipe(map(() => true));
-};
-
-export const setupGuard = (route: ActivatedRouteSnapshot) => {
-  const entryStore = inject(EntryStore);
-  const entryUrl = getEntryUrl(route);
-
-  inject(UiStore).setBreadcrumbs([
-    {
-      route: ['/', Utils.getParam(route, 'org'), 'library'],
-      text: 'General.Library',
-    },
-    {
-      route: [...entryUrl, 'view'],
-      text: entryStore.version()!.title,
-      isText: true,
-    },
-    {
-      route: [...entryUrl, 'upload'],
-      text: 'General.Upload',
-    },
-    {
-      text: route.data['title'],
-    },
-  ]);
 };

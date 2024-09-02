@@ -56,28 +56,3 @@ export const startPageGuard = () =>
   inject(Store)
     .dispatch(new SetAsStarted())
     .pipe(map(() => true));
-
-export const setupGuard = (route: ActivatedRouteSnapshot) => {
-  const uiStore = inject(UiStore);
-  const projectStore = inject(ProjectStore);
-  const project = projectStore.project()!;
-
-  uiStore.setBreadcrumbs([
-    {
-      route: ['/', project.owner, 'projects'],
-      text: 'General.Projects',
-    },
-    {
-      route: ['/', project.owner, 'projects', 'view', project.id],
-      text: project.title,
-      isText: true,
-    },
-    {
-      route: ['/', project.owner, 'projects', 'upload', project.id],
-      text: 'General.Upload',
-    },
-    {
-      text: route.data['title'],
-    },
-  ]);
-};

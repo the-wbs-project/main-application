@@ -24,7 +24,7 @@ import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../type-text';
 import { ImageDialogComponent } from './components/image-dialog.component';
-import { PdfDialogComponent } from './components/pdf-dialog.component';
+import { PdfDialogComponent } from './components/pdf-dialog';
 
 @Component({
   standalone: true,
@@ -89,8 +89,9 @@ export class RecordResourceListComponent {
     if (record.type === 'image') {
       this.data.staticFiles
         .getResourceFileAsync(this.apiUrlPrefix(), record.id)
-        .subscribe((file) =>
-          ImageDialogComponent.launch(this.dialog, record.name, file)
+        .subscribe(
+          (file) => {}
+          //ImageDialogComponent.launch(this.dialog, record.name, file)
         );
     } else if (record.type === 'pdf') {
       this.data.staticFiles

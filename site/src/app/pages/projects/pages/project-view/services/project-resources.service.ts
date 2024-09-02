@@ -162,7 +162,7 @@ export class ProjectResourcesService {
 
   getApiUrl(taskId?: string): string {
     const project = this.projectStore.project()!;
-    const parts = ['/api', 'portfolio', project.owner, 'projects', project.id];
+    const parts = ['api', 'portfolio', project.owner, 'projects', project.id];
 
     if (taskId) parts.push('nodes', taskId);
 

@@ -3,13 +3,13 @@ import {
   Component,
   OnInit,
   computed,
+  effect,
   inject,
   input,
   output,
   signal,
   viewChild,
 } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
 import {
   FormControl,
   FormGroup,
@@ -21,7 +21,6 @@ import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSave, faXmark } from '@fortawesome/pro-light-svg-icons';
 import { faPlus, faTrash } from '@fortawesome/pro-regular-svg-icons';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SplitterModule } from '@progress/kendo-angular-layout';
@@ -70,7 +69,6 @@ import { LibraryTreeTaskTitleComponent } from '../library-tree-task-title';
 import { LibraryTreeTitleLegendComponent } from '../library-tree-title-legend';
 import { VisibilityIconComponent } from '../visibility-icon.component';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   selector: 'wbs-library-tree',
@@ -176,9 +174,9 @@ export class LibraryTreeComponent implements OnInit {
   readonly goFullScreen = output<void>();
 
   constructor() {
-    toObservable(this.entryStore.viewModels)
-      .pipe(untilDestroyed(this))
-      .subscribe((tasks) => this.treeService.updateState(tasks ?? []));
+    effect(() =>
+      this.treeService.updateState(this.entryStore.viewModels() ?? [])
+    );
   }
 
   ngOnInit(): void {

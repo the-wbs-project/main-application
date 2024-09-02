@@ -1,7 +1,7 @@
 import { Routes } from '@angular/router';
 import { entryUrlResolve } from '../../../services';
 import { disciplineListResolver } from '../services';
-import { setupGuard, startGuard, verifyStartedGuard } from './children.guards';
+import { startGuard, verifyStartedGuard } from './children.guards';
 
 export const routes: Routes = [
   { path: '', redirectTo: 'start', pathMatch: 'full' },
@@ -9,7 +9,7 @@ export const routes: Routes = [
     path: 'start',
     loadComponent: () =>
       import('./start-view.component').then((x) => x.StartViewComponent),
-    canActivate: [startGuard, setupGuard],
+    canActivate: [startGuard],
     data: {
       title: 'ProjectUpload.Page_LetsGetStarted',
     },
@@ -18,7 +18,7 @@ export const routes: Routes = [
     path: 'results',
     loadComponent: () =>
       import('./results-view.component').then((x) => x.ResultsViewComponent),
-    canActivate: [verifyStartedGuard, setupGuard],
+    canActivate: [verifyStartedGuard],
     data: {
       title: 'ProjectUpload.Page_UploadResults',
     },
@@ -27,7 +27,7 @@ export const routes: Routes = [
     path: 'options',
     loadComponent: () =>
       import('./options-view.component').then((x) => x.OptionsViewComponent),
-    canActivate: [verifyStartedGuard, setupGuard],
+    canActivate: [verifyStartedGuard],
     data: {
       title: 'ProjectUpload.Page_Options',
     },
@@ -41,7 +41,7 @@ export const routes: Routes = [
       import('./disciplines-view.component').then(
         (x) => x.DisciplinesViewComponent
       ),
-    canActivate: [verifyStartedGuard, setupGuard],
+    canActivate: [verifyStartedGuard],
     data: {
       title: 'ProjectUpload.Page_Disciplines',
     },
@@ -53,7 +53,7 @@ export const routes: Routes = [
     path: 'saving',
     loadComponent: () =>
       import('./save-view.component').then((x) => x.SaveViewComponent),
-    canActivate: [verifyStartedGuard, setupGuard],
+    canActivate: [verifyStartedGuard],
     data: {
       title: 'ProjectUpload.Page_Saving',
     },
@@ -65,7 +65,7 @@ export const routes: Routes = [
     path: 'ticket/:reasonCode',
     loadComponent: () =>
       import('./ticket-view').then((x) => x.TicketViewComponent),
-    canActivate: [verifyStartedGuard, setupGuard],
+    canActivate: [verifyStartedGuard],
     data: {
       title: 'ProjectUpload.Page_Ticket',
     },

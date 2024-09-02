@@ -1,0 +1,12 @@
+<kendo-dialog
+  [title]="title()"
+  width="90%"
+  height="90%"
+  (close)="dialog.close()"
+>
+  @if (url(); as url) {
+  <div class="pdf-viewer">
+    <object [data]="url" type="application/pdf"></object>
+  </div>
+  }
+</kendo-dialog>

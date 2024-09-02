@@ -72,10 +72,10 @@ export class MembersComponent {
       allowSignalWrites: true,
     });
 
-    this.uiStore.setBreadcrumbs([
+    /* this.uiStore.setBreadcrumbs([
       { text: 'General.Settings' },
       { text: 'General.Members' },
-    ]);
+    ]);*/
     this.title.setTitle([
       { text: 'General.Settings' },
       { text: 'General.Members' },

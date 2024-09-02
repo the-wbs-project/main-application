@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
 import {
   disciplineListResolver,
-  setupGuard,
   startGuard,
   startPageGuard,
   verifyGuard,
@@ -31,7 +30,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'start', pathMatch: 'full' },
       {
         path: 'start',
-        canActivate: [startPageGuard, setupGuard],
+        canActivate: [startPageGuard],
         data: {
           title: 'ProjectUpload.Page_LetsGetStarted',
         },
@@ -42,7 +41,7 @@ export const routes: Routes = [
       },
       {
         path: 'results',
-        canActivate: [verifyStartedGuard, setupGuard],
+        canActivate: [verifyStartedGuard],
         data: {
           title: 'ProjectUpload.Page_UploadResults',
         },
@@ -53,7 +52,7 @@ export const routes: Routes = [
       },
       {
         path: 'options',
-        canActivate: [verifyStartedGuard, setupGuard],
+        canActivate: [verifyStartedGuard],
         data: {
           title: 'ProjectUpload.Page_Options',
         },
@@ -64,7 +63,7 @@ export const routes: Routes = [
       },
       {
         path: 'disciplines',
-        canActivate: [verifyStartedGuard, setupGuard],
+        canActivate: [verifyStartedGuard],
         data: {
           title: 'ProjectUpload.Page_Disciplines',
         },
@@ -78,7 +77,7 @@ export const routes: Routes = [
       },
       {
         path: 'saving',
-        canActivate: [verifyStartedGuard, setupGuard],
+        canActivate: [verifyStartedGuard],
         data: {
           title: 'ProjectUpload.Page_Saving',
         },
@@ -92,7 +91,7 @@ export const routes: Routes = [
       },
       {
         path: 'ticket/:reasonCode',
-        canActivate: [verifyStartedGuard, setupGuard],
+        canActivate: [verifyStartedGuard],
         data: {
           title: 'ProjectUpload.Page_Ticket',
         },
