@@ -22,7 +22,7 @@ export class UsersRpc extends RpcTarget {
     }
   }
 
-  async getView(organizationName: string, userId: string, visibility: string) {
+  async getView(organizationName: string, userId: string, visibility: 'organization' | 'public') {
     try {
       const organizationId = await this.helper.data.organizations.getIdFromNameAsync(organizationName);
 
