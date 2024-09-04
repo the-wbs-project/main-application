@@ -48,9 +48,7 @@ for (const path of ROUTES.RESOURCE_URLS) {
   app.get(path, OriginService.pass);
   //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
 }
-app.get('api/resources/test', OriginService.pass);
-app.get('api/resources/all/:locale', OriginService.pass);
-app.get('api/lists/:type/:locale', kv.lists, Http.metadata.getListsAsync);
+app.get('api/startup', Http.metadata.getStarterKitAsync);
 //
 //  Claims
 //
@@ -63,8 +61,8 @@ const claimsApp = newApp()
 app.route('/', claimsApp);
 
 app.get('api/cache/clear', Http.misc.clearKvAsync);
-app.put('api/resources', kvPurge('RESOURCES'), Http.metadata.putResourcesAsync);
-app.put('api/lists/:type', kvPurge('LISTS'), Http.metadata.putListAsync);
+app.put('api/resources', Http.metadata.putResourcesAsync);
+app.put('api/lists/:type', Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
 
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);

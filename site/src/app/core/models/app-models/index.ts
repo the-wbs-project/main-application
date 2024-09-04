@@ -9,4 +9,5 @@ export * from './menu-item.model';
 export * from './resource.type';
 export * from './route-link.model';
 export * from './routed-breadcrumb-item.model';
+export * from './starter-data.model';
 export * from './tagged-object.model';

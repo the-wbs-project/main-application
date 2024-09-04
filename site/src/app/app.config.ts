@@ -34,6 +34,7 @@ export const appConfig: ApplicationConfig = {
       // The AuthHttpInterceptor configuration
       httpInterceptor: {
         allowedList: [
+          { uri: 'api/startup', allowAnonymous: true },
           { uri: 'api/*', allowAnonymous: false },
           { uri: 'https://ai.pm-empower.com/*', allowAnonymous: false },
         ],

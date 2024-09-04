@@ -2,19 +2,9 @@ import { Context } from '../config';
 
 export const kv = {
   checklists,
-  lists,
-  resources,
   resourceFile,
   resourceFileClear,
 };
-
-function resources(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'RESOURCES|:locale');
-}
-
-function lists(ctx: Context, next: any): Promise<Response | void> {
-  return execute(ctx, next, 'LISTS|:type|:locale');
-}
 
 function checklists(ctx: Context, next: any): Promise<Response | void> {
   return execute(ctx, next, 'CHECKLISTS');
