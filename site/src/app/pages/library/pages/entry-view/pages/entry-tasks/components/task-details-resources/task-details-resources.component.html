@@ -17,7 +17,6 @@
 } @else {
 <wbs-record-resource-list
   [list]="resourceList"
-  [apiUrlPrefix]="apiUrl()"
   [canEdit]="service.canEdit()"
   [canDelete]="service.canDelete()"
   (save)="save($event)"

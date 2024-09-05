@@ -12,7 +12,7 @@ import { faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
-import { ResourceRecord } from '@wbs/core/models';
+import { ContentResource } from '@wbs/core/models';
 import { ProjectResourcesService } from '../../../../services';
 
 @Component({
@@ -35,11 +35,10 @@ export class TaskDetailsResourcesComponent implements OnInit {
   //  Inputs & Signals
   //
   readonly taskId = input.required<string>();
-  readonly list = signal<ResourceRecord[]>([]);
+  readonly list = signal<ContentResource[]>([]);
   //
   //  Computed
   //
-  readonly apiUrl = computed(() => this.service.getApiUrl(this.taskId()));
 
   ngOnInit(): void {
     this.service
@@ -53,13 +52,13 @@ export class TaskDetailsResourcesComponent implements OnInit {
     });
   }
 
-  editRecord(record: ResourceRecord): void {
+  editRecord(record: ContentResource): void {
     this.service.editRecordAsync(this.taskId(), record).subscribe((item) => {
       if (item) this.updateList([item]);
     });
   }
 
-  deleteRecord(record: ResourceRecord): void {
+  deleteRecord(record: ContentResource): void {
     this.service
       .deleteRecordAsync(this.taskId(), record)
       .subscribe((deleted) => {
@@ -68,7 +67,7 @@ export class TaskDetailsResourcesComponent implements OnInit {
       });
   }
 
-  save(records: ResourceRecord[]): void {
+  save(records: ContentResource[]): void {
     this.service
       .saveRecordsAsync(this.taskId(), records)
       .subscribe((newRecords) => {
@@ -76,7 +75,7 @@ export class TaskDetailsResourcesComponent implements OnInit {
       });
   }
 
-  private updateList(records: ResourceRecord[]): void {
+  private updateList(records: ContentResource[]): void {
     this.list.update((list) => {
       for (const r of records) {
         const index = list.findIndex((x) => x.id === r.id);

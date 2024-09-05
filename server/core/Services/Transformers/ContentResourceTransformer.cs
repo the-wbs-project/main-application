@@ -1,27 +1,29 @@
+
 using Microsoft.Data.SqlClient;
+using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 
-namespace Wbs.Core.DataServices;
+namespace Wbs.Core.Services.Transformers;
 
-public class ResourceRecordDataService : BaseSqlDbService
+public class ContentResourceTransformer : SqlHelpers
 {
-    protected async Task<List<ResourceRecord>> ToList(SqlCommand cmd)
+    public static List<ContentResource> ToList(SqlDataReader reader)
     {
-        var results = new List<ResourceRecord>();
+        var results = new List<ContentResource>();
 
-        using (var reader = await cmd.ExecuteReaderAsync())
-        {
-            while (reader.Read())
-                results.Add(ToModel(reader));
-        }
+        while (reader.Read())
+            results.Add(ToModel(reader));
+
         return results;
     }
 
-    protected ResourceRecord ToModel(SqlDataReader reader)
+    public static ContentResource ToModel(SqlDataReader reader)
     {
-        return new ResourceRecord
+        return new ContentResource
         {
             Id = DbValue<string>(reader, "Id"),
+            OwnerId = DbValue<string>(reader, "OwnerId"),
+            ParentId = DbValue<string>(reader, "ParentId"),
             Name = DbValue<string>(reader, "Name"),
             Type = DbValue<string>(reader, "Type"),
             Order = DbValue<int>(reader, "Order"),

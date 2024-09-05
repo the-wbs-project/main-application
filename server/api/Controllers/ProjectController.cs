@@ -13,17 +13,13 @@ public class ProjectController : ControllerBase
     private readonly DbService db;
     private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
-    private readonly ProjectResourceDataService projectResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
-    private readonly ResourceFileStorageService resourceService;
 
-    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectController>();
         this.projectDataService = projectDataService;
-        this.projectResourceDataService = projectResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
-        this.resourceService = resourceService;
         this.db = db;
     }
 
@@ -112,133 +108,6 @@ public class ProjectController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error exporting project {projectId} for owner {owner}", projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{projectId}/resources")]
-    public async Task<IActionResult> GetProjectResources(string owner, string projectId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                return Ok(await projectResourceDataService.GetListAsync(conn, projectId));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting resources for project {projectId} for owner {owner}", projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{projectId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutProjectResources(string owner, string projectId, string resourceId, ResourceRecord resource)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                await projectResourceDataService.SetAsync(conn, owner, projectId, resource);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpDelete("{projectId}/resources/{resourceId}")]
-    public async Task<IActionResult> DeleteProjectResources(string owner, string projectId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                await projectResourceDataService.DeleteAsync(conn, projectId, resourceId);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{projectId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> GetResourceFileAsync(string owner, string projectId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                var record = await projectResourceDataService.GetAsync(conn, projectId, resourceId);
-                var file = await resourceService.GetProjectResourceAsync(owner, projectId, resourceId);
-
-                return File(file, "application/octet-stream", record.Resource);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{projectId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> PutResourceFileAsync(string owner, string projectId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                var record = await projectResourceDataService.GetAsync(conn, projectId, resourceId);
-
-                Request.EnableBuffering();
-                Request.Body.Position = 0;
-                var bytes = new byte[] { };
-
-                using (var stream = new MemoryStream())
-                {
-                    await Request.Body.CopyToAsync(stream);
-
-                    bytes = stream.ToArray();
-                }
-
-                await resourceService.SaveProjectResourceAsync(owner, projectId, resourceId, bytes);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
             return new StatusCodeResult(500);
         }
     }

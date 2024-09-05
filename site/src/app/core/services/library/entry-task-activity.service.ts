@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LIBRARY_TASKS_ACTIONS, ResourceRecord } from '@wbs/core/models';
+import { LIBRARY_TASKS_ACTIONS, ContentResource } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
@@ -182,7 +182,7 @@ export class EntryTaskActivityService {
     entryId: string,
     version: number,
     taskId: string,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(
       entryId,
@@ -216,7 +216,7 @@ export class EntryTaskActivityService {
     entryId: string,
     version: number,
     taskId: string,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(
       entryId,
@@ -233,7 +233,7 @@ export class EntryTaskActivityService {
     entryId: string,
     version: number,
     taskId: string,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(
       entryId,

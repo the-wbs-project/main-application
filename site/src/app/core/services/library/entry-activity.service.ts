@@ -2,7 +2,7 @@ import { Injectable, inject } from '@angular/core';
 import {
   LIBRARY_VERSION_ACTIONS,
   ProjectCategory,
-  ResourceRecord,
+  ContentResource,
 } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { IdService } from '@wbs/core/services';
@@ -167,7 +167,7 @@ export class EntryActivityService {
   resourceAdded(
     entryId: string,
     version: number,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.RESOURCE_ADDED, {
       resource,
@@ -192,7 +192,7 @@ export class EntryActivityService {
   resourceRemoved(
     entryId: string,
     version: number,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(
       entryId,
@@ -207,7 +207,7 @@ export class EntryActivityService {
   resourceUpdated(
     entryId: string,
     version: number,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(
       entryId,

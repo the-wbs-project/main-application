@@ -44,10 +44,6 @@ app.onError(error);
 
 app.options('*', (c) => c.text(''));
 
-for (const path of ROUTES.RESOURCE_URLS) {
-  app.get(path, OriginService.pass);
-  //app.put(path, verifyJwt, verifyMembership, kv.resourceFileClear, OriginService.pass);
-}
 app.get('api/startup', Http.metadata.getStarterKitAsync);
 //
 //  Claims
@@ -138,6 +134,21 @@ orgApp.all('members/:user/roles', verifyAdminAsync()).put(Http.membership.addToR
 
 app.route('/', orgApp);
 //app.delete('api/organizations/:organization/members/*', kv.membersClear, OriginService.pass);
+
+//
+//
+//  Content Resources
+//
+const contentResourceApp = newApp()
+  .basePath('api/portfolio/:owner/content-resources')
+  .get(':parentId', verifyJwt, verifyMembership, Http.contentResources.getListAsync)
+  .get(':parentId/resource/:id', verifyJwt, verifyMembership, Http.contentResources.getFileAsync)
+  .get(':parentId/resource/:id/file', verifyJwt, Http.contentResources.getFileAsync)
+  .put(':parentId/resource/:id', verifyJwt, verifyMembership, Http.contentResources.putOrDeleteAsync)
+  .put(':parentId/resource/:id/file', verifyJwt, verifyMembership, Http.contentResources.putOrDeleteAsync)
+  .delete(':parentId/resource/:id', verifyJwt, verifyMembership, Http.contentResources.putOrDeleteAsync);
+
+app.route('/', contentResourceApp);
 
 app.get('api/chat/:model', verifyJwt, Http.aiChat.getAsync);
 app.put('api/chat/:model', verifyJwt, Http.aiChat.putAsync);

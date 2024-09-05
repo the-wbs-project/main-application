@@ -8,13 +8,13 @@ public class VersioningService
 {
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
-    private readonly ResourceCopyService resourceCopier;
+    private readonly ResourceCopyService resourceCopyService;
 
-    public VersioningService(LibraryEntryVersionDataService versionDataService, LibraryEntryNodeDataService nodeDataService, ResourceCopyService resourceCopier)
+    public VersioningService(LibraryEntryVersionDataService versionDataService, LibraryEntryNodeDataService nodeDataService, ResourceCopyService resourceCopyService)
     {
         this.versionDataService = versionDataService;
         this.nodeDataService = nodeDataService;
-        this.resourceCopier = resourceCopier;
+        this.resourceCopyService = resourceCopyService;
     }
 
     public async Task<int> ReplicateAsync(SqlConnection conn, string owner, string entryId, int version, string alias, string author)
@@ -43,6 +43,10 @@ public class VersioningService
         await versionDataService.SetAsync(conn, owner, newVersion);
         var newTasks = new List<LibraryEntryNode>();
         var idMap = new Dictionary<string, string>();
+        var resources = new Dictionary<string, string>
+        {
+            { entryId + "-" + version, newVersion.EntryId + "-" + newVersion.Version }
+        };
 
         foreach (var t in currentTasks)
         {
@@ -61,6 +65,7 @@ public class VersioningService
             };
             newTasks.Add(task);
             idMap[t.id] = task.id;
+            resources.Add(t.id, task.id);
         }
         //
         //  Now update parent Ids
@@ -72,8 +77,7 @@ public class VersioningService
         }
 
         await nodeDataService.SetAsync(conn, entryId, newVersion.Version, newTasks, []);
-        await resourceCopier.LibraryToLibraryAsync(conn, owner, entryId, version, entryId, newVersion.Version);
-        await resourceCopier.LibraryTasksToLibraryTasksAsync(conn, owner, entryId, version, entryId, newVersion.Version, idMap);
+        await resourceCopyService.CopyAsync(conn, owner, owner, resources);
 
         return newVersion.Version;
     }

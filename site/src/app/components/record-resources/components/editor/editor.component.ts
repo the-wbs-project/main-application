@@ -24,7 +24,7 @@ import { UploaderComponent } from '@wbs/components/uploader';
 import {
   RESOURCE_TYPE_TYPE,
   RESOURCE_TYPES,
-  ResourceRecord,
+  ContentResource,
 } from '@wbs/core/models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -33,7 +33,7 @@ import { RecordResourceValidation } from '../../services';
 import { RecordResourceViewModel } from '../../view-models';
 
 declare type RecordEditResults = {
-  record?: Partial<ResourceRecord>;
+  record?: Partial<ContentResource>;
   file?: FileInfo;
 };
 
@@ -117,7 +117,7 @@ export class RecordResourceEditorComponent extends DialogContentBase {
 
   static launchEditAsync(
     dialog: DialogService,
-    data: ResourceRecord
+    data: ContentResource
   ): Observable<RecordEditResults> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,

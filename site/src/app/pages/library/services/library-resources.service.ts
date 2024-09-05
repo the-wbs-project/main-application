@@ -3,7 +3,7 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { RecordResourceEditorComponent } from '@wbs/components/record-resources/components/editor';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LIBRARY_CLAIMS, ResourceRecord } from '@wbs/core/models';
+import { LIBRARY_CLAIMS, ContentResource } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
 import {
   EntryActivityService,
@@ -44,20 +44,18 @@ export class LibraryResourcesService {
       Utils.contains(this.entryStore.claims(), LIBRARY_CLAIMS.RESOURCES.DELETE)
   );
 
-  getRecordsAsync(taskId?: string): Observable<ResourceRecord[]> {
+  getRecordsAsync(taskId?: string): Observable<ContentResource[]> {
     const version = this.entryStore.version()!;
 
-    return this.data.libraryEntryResources.getAsync(
+    return this.data.contentResources.getAsync(
       version.ownerId,
-      version.entryId,
-      version.version,
-      taskId
+      taskId ?? `${version.entryId}_${version.version}`
     );
   }
 
   launchAddAsync(
     taskId: string | undefined
-  ): Observable<ResourceRecord | undefined> {
+  ): Observable<ContentResource | undefined> {
     const version = this.entryStore.version()!;
 
     return RecordResourceEditorComponent.launchAddAsync(
@@ -90,8 +88,8 @@ export class LibraryResourcesService {
 
   editRecordAsync(
     taskId: string | undefined,
-    record: ResourceRecord
-  ): Observable<ResourceRecord | undefined> {
+    record: ContentResource
+  ): Observable<ContentResource | undefined> {
     const version = this.entryStore.version()!;
 
     return RecordResourceEditorComponent.launchEditAsync(
@@ -125,7 +123,7 @@ export class LibraryResourcesService {
 
   deleteRecordAsync(
     taskId: string | undefined,
-    record: ResourceRecord
+    record: ContentResource
   ): Observable<boolean> {
     const version = this.entryStore.version()!;
 
@@ -134,12 +132,10 @@ export class LibraryResourcesService {
       .pipe(
         switchMap((answer) =>
           answer
-            ? this.data.libraryEntryResources
+            ? this.data.contentResources
                 .deleteAsync(
                   version.ownerId,
-                  version.entryId,
-                  version.version,
-                  taskId,
+                  taskId ?? `${version.entryId}_${version.version}`,
                   record.id
                 )
                 .pipe(
@@ -166,10 +162,10 @@ export class LibraryResourcesService {
 
   saveRecordsAsync(
     taskId: string | undefined,
-    records: Partial<ResourceRecord>[]
-  ): Observable<ResourceRecord[]> {
+    records: Partial<ContentResource>[]
+  ): Observable<ContentResource[]> {
     const version = this.entryStore.version()!;
-    let obs: Observable<ResourceRecord>[] = [];
+    let obs: Observable<ContentResource>[] = [];
 
     for (const record of records) {
       obs.push(this.save(taskId, record));
@@ -194,32 +190,16 @@ export class LibraryResourcesService {
     );
   }
 
-  getApiUrl(taskId?: string): string {
-    const version = this.entryStore.version()!;
-    const parts = [
-      '/api',
-      'portfolio',
-      version.ownerId,
-      'library',
-      'entries',
-      version.entryId,
-      'versions',
-      version.version,
-    ];
-
-    if (taskId) parts.push('nodes', taskId);
-
-    return parts.join('/');
-  }
-
   private save(
     taskId: string | undefined,
-    data: Partial<ResourceRecord>,
+    data: Partial<ContentResource>,
     file?: FileInfo
-  ): Observable<ResourceRecord> {
+  ): Observable<ContentResource> {
     const version = this.entryStore.version()!;
-    const resource: ResourceRecord = {
+    const resource: ContentResource = {
       id: data.id ?? IdService.generate(),
+      ownerId: version.ownerId,
+      parentId: taskId ?? `${version.entryId}_${version.version}`,
       createdOn: data.createdOn ?? new Date(),
       lastModified: new Date(),
       name: data.name!,
@@ -229,34 +209,24 @@ export class LibraryResourcesService {
       order: data.order!, // ?? Math.max(...this.list().map((x) => x.order), 0) + 1,
     };
 
-    return this.data.libraryEntryResources
-      .putAsync(
-        version.ownerId,
-        version.entryId,
-        version.version,
-        taskId,
-        resource
-      )
-      .pipe(
-        switchMap(() => {
-          if (!file) return of(resource);
+    return this.data.contentResources.putAsync(resource).pipe(
+      switchMap(() => {
+        if (!file) return of(resource);
 
-          return Utils.getFileAsync(file).pipe(
-            switchMap((file) =>
-              this.data.libraryEntryResources
-                .putFileAsync(
-                  version.ownerId,
-                  version.entryId,
-                  version.version,
-                  taskId,
-                  resource.id,
-                  file
-                )
-                .pipe(map(() => resource))
-            )
-          );
-        }),
-        map(() => resource)
-      );
+        return Utils.getFileAsync(file).pipe(
+          switchMap((file) =>
+            this.data.contentResources
+              .putFileAsync(
+                version.ownerId,
+                taskId ?? `${version.entryId}_${version.version}`,
+                resource.id,
+                file
+              )
+              .pipe(map(() => resource))
+          )
+        );
+      }),
+      map(() => resource)
+    );
   }
 }

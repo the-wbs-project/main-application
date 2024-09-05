@@ -24,6 +24,19 @@ public class Storage
         return GetFileAsBytesAsync(containerName, string.Join('/', folders, fileName));
     }
 
+    public async Task<List<string>> GetFileNamesAsync(string containerName)
+    {
+        var container = await GetContainerAsync(containerName);
+        var list = new List<string>();
+
+        await foreach (var blob in container.GetBlobsAsync())
+        {
+            list.Add(blob.Name);
+        }
+
+        return list;
+    }
+
     public async Task<byte[]> GetFileAsBytesAsync(string containerName, string fileName)
     {
         var container = await GetContainerAsync(containerName);

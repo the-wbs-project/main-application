@@ -6,7 +6,7 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   PROJECT_CLAIMS,
   PROJECT_STATI,
-  ResourceRecord,
+  ContentResource,
 } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
 import { ProjectActivityService } from '@wbs/pages/projects/services';
@@ -52,19 +52,18 @@ export class ProjectResourcesService {
       )
   );
 
-  getRecordsAsync(taskId?: string): Observable<ResourceRecord[]> {
+  getRecordsAsync(taskId?: string): Observable<ContentResource[]> {
     const project = this.projectStore.project()!;
 
-    return this.data.projectResources.getAsync(
+    return this.data.contentResources.getAsync(
       project.owner,
-      project.id,
-      taskId
+      taskId ?? project.id
     );
   }
 
   launchAddAsync(
     taskId: string | undefined
-  ): Observable<ResourceRecord | undefined> {
+  ): Observable<ContentResource | undefined> {
     const project = this.projectStore.project()!;
 
     return RecordResourceEditorComponent.launchAddAsync(
@@ -86,8 +85,8 @@ export class ProjectResourcesService {
 
   editRecordAsync(
     taskId: string | undefined,
-    record: ResourceRecord
-  ): Observable<ResourceRecord | undefined> {
+    record: ContentResource
+  ): Observable<ContentResource | undefined> {
     const project = this.projectStore.project()!;
 
     return RecordResourceEditorComponent.launchEditAsync(
@@ -110,7 +109,7 @@ export class ProjectResourcesService {
 
   deleteRecordAsync(
     taskId: string | undefined,
-    record: ResourceRecord
+    record: ContentResource
   ): Observable<boolean> {
     const project = this.projectStore.project()!;
 
@@ -119,8 +118,8 @@ export class ProjectResourcesService {
       .pipe(
         switchMap((answer) =>
           answer
-            ? this.data.projectResources
-                .deleteAsync(project.owner, project.id, taskId, record.id)
+            ? this.data.contentResources
+                .deleteAsync(project.owner, taskId ?? project.id, record.id)
                 .pipe(
                   switchMap(() =>
                     this.activity.resourceRemoved(
@@ -138,10 +137,10 @@ export class ProjectResourcesService {
 
   saveRecordsAsync(
     taskId: string | undefined,
-    records: Partial<ResourceRecord>[]
-  ): Observable<ResourceRecord[]> {
+    records: Partial<ContentResource>[]
+  ): Observable<ContentResource[]> {
     const project = this.projectStore.project()!;
-    let obs: Observable<ResourceRecord>[] = [];
+    let obs: Observable<ContentResource>[] = [];
 
     for (const record of records) {
       obs.push(this.save(taskId, record));
@@ -160,23 +159,16 @@ export class ProjectResourcesService {
     );
   }
 
-  getApiUrl(taskId?: string): string {
-    const project = this.projectStore.project()!;
-    const parts = ['api', 'portfolio', project.owner, 'projects', project.id];
-
-    if (taskId) parts.push('nodes', taskId);
-
-    return parts.join('/');
-  }
-
   private save(
     taskId: string | undefined,
-    data: Partial<ResourceRecord>,
+    data: Partial<ContentResource>,
     file?: FileInfo
-  ): Observable<ResourceRecord> {
+  ): Observable<ContentResource> {
     const project = this.projectStore.project()!;
-    const resource: ResourceRecord = {
+    const resource: ContentResource = {
       id: data.id ?? IdService.generate(),
+      ownerId: project.owner,
+      parentId: taskId ?? project.id,
       createdOn: data.createdOn ?? new Date(),
       lastModified: new Date(),
       name: data.name!,
@@ -186,27 +178,24 @@ export class ProjectResourcesService {
       order: data.order!, // ?? Math.max(...this.list().map((x) => x.order), 0) + 1,
     };
 
-    return this.data.projectResources
-      .putAsync(project.owner, project.id, taskId, resource)
-      .pipe(
-        switchMap(() => {
-          if (!file) return of(resource);
+    return this.data.contentResources.putAsync(resource).pipe(
+      switchMap(() => {
+        if (!file) return of(resource);
 
-          return Utils.getFileAsync(file).pipe(
-            switchMap((file) =>
-              this.data.projectResources
-                .putFileAsync(
-                  project.owner,
-                  project.id,
-                  taskId,
-                  resource.id,
-                  file
-                )
-                .pipe(map(() => resource))
-            )
-          );
-        }),
-        map(() => resource)
-      );
+        return Utils.getFileAsync(file).pipe(
+          switchMap((file) =>
+            this.data.contentResources
+              .putFileAsync(
+                project.owner,
+                taskId ?? project.id,
+                resource.id,
+                file
+              )
+              .pipe(map(() => resource))
+          )
+        );
+      }),
+      map(() => resource)
+    );
   }
 }

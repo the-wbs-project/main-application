@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -15,18 +14,14 @@ public class ProjectNodeController : ControllerBase
     private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
-    private readonly ProjectNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
-    private readonly ResourceFileStorageService resourceService;
 
-    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectNodeController>();
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
-        this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
-        this.resourceService = resourceService;
         this.db = db;
     }
 
@@ -85,31 +80,6 @@ public class ProjectNodeController : ControllerBase
         }
     }
 
-
-    [Authorize]
-    [HttpGet("{nodeId}/resources")]
-    public async Task<IActionResult> GetTaskResources(string owner, string projectId, string nodeId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                return Ok(await nodeResourceDataService.GetListAsync(conn, projectId, nodeId));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting project node resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
     [Authorize]
     [HttpPost("{nodeId}/export/libraryEntry")]
     public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string projectId, string nodeId, [FromBody] ProjectNodeToLibraryOptions options)
@@ -126,121 +96,6 @@ public class ProjectNodeController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error exporting project node to library entry");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutTaskResource(string owner, string projectId, string nodeId, string resourceId, ResourceRecord resource)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                await nodeResourceDataService.SetAsync(conn, owner, projectId, nodeId, resource);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving project node resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpDelete("{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> DeleteTaskResource(string owner, string projectId, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                await nodeResourceDataService.DeleteAsync(conn, projectId, nodeId, resourceId);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{nodeId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string projectId, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
-                var file = await resourceService.GetProjectTaskResourceAsync(owner, projectId, nodeId, resourceId);
-
-                return File(file, "application/octet-stream", record.Resource);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
-
-                Request.EnableBuffering();
-                Request.Body.Position = 0;
-                var bytes = new byte[] { };
-
-                using (var stream = new MemoryStream())
-                {
-                    await Request.Body.CopyToAsync(stream);
-
-                    bytes = stream.ToArray();
-                }
-
-                await resourceService.SaveProjectTaskResourceAsync(owner, projectId, nodeId, resourceId, bytes);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
             return new StatusCodeResult(500);
         }
     }

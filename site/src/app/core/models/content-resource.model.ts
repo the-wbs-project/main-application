@@ -1,7 +1,9 @@
 import { RESOURCE_TYPE_TYPE } from './enums';
 
-export interface ResourceRecord {
+export interface ContentResource {
   id: string;
+  ownerId: string;
+  parentId: string;
   type: RESOURCE_TYPE_TYPE;
   name: string;
   description: string;

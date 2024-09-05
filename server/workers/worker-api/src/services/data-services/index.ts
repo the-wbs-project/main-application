@@ -1,5 +1,6 @@
 import { Context } from '../../config';
 import { AiChatDataService } from './ai-chat.data-service';
+import { ContentResourcesDataService } from './content-resources.data-services';
 import { InvitesDataService } from './invites.data-service';
 import { LibraryEntryTaskDataService } from './library-entry-tasks.data-service';
 import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
@@ -16,6 +17,7 @@ import { UserDataService } from './user.data-service';
 
 export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
+  readonly contentResources: ContentResourcesDataService;
   readonly entries: LibraryEntryDataService;
   readonly invites: InvitesDataService;
   readonly libraryEntries: LibraryEntryDataService;
@@ -44,6 +46,7 @@ export class DataServiceFactory {
     //  Simple
     //
     this.aiChat = new AiChatDataService(ctx);
+    this.contentResources = new ContentResourcesDataService(ctx);
     this.entries = new LibraryEntryDataService(ctx);
     this.libraryEntries = new LibraryEntryDataService(ctx);
     this.libraryTasks = new LibraryEntryTaskDataService(ctx);

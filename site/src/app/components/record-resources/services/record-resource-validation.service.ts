@@ -8,7 +8,6 @@ export class RecordResourceValidation {
     vm: RecordResourceViewModel | undefined,
     isNew: boolean
   ): RecordResourceErrors {
-    console.log(vm);
     if (!vm)
       return {
         started: false,

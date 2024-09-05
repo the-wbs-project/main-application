@@ -1,6 +1,7 @@
 import { AiChatHttpService } from './ai-chat.http-service';
 import { ChatHttpService } from './chat.http-service';
 import { ClaimsHttpService } from './claims.http-service';
+import { ContentResourceHttpService } from './content-resources.http-service';
 import { InvitesHttpService } from './invites.http-service';
 import { JiraHttpService } from './jira.http-service';
 import { LibraryEntryHttpService } from './library-entry.http-service';
@@ -19,6 +20,7 @@ export const Http = {
   aiChat: AiChatHttpService,
   chat: ChatHttpService,
   claims: ClaimsHttpService,
+  contentResources: ContentResourceHttpService,
   invites: InvitesHttpService,
   jira: JiraHttpService,
   library: LibraryHttpService,

@@ -6,19 +6,6 @@ import { map } from 'rxjs/operators';
 export class StaticFileDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getResourceFileUrl(prefix: string, resourceId: string): string {
-    return `${prefix}/resources/${resourceId}/blob`;
-  }
-
-  getResourceFileAsync(
-    prefix: string,
-    resourceId: string
-  ): Observable<ArrayBuffer> {
-    return this.http.get(this.getResourceFileUrl(prefix, resourceId), {
-      responseType: 'arraybuffer',
-    });
-  }
-
   downloadAsync(fileId: string, fileName: string): Observable<void> {
     return this.http
       .get(`api/files/${fileId}`, { responseType: 'arraybuffer' })

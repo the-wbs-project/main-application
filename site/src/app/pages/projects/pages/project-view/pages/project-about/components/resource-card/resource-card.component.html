@@ -30,7 +30,6 @@
   <div class="w-100 text-center tx-16">No Resources Found</div>
   } @else {
   <wbs-record-resource-list
-    [apiUrlPrefix]="service.getApiUrl()"
     [canEdit]="service.canEdit()"
     [canDelete]="service.canDelete()"
     [list]="resourceList"

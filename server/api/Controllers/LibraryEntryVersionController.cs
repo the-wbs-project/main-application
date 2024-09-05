@@ -17,18 +17,14 @@ public class LibraryEntryVersionController : ControllerBase
     private readonly LibrarySearchIndexService searchIndexService;
     private readonly LibraryEntryDataService entryDataService;
     private readonly LibraryEntryVersionDataService versionDataService;
-    private readonly LibraryEntryVersionResourceDataService entryResourceDataService;
-    private readonly ResourceFileStorageService resourceService;
     private readonly VersioningService versioningService;
 
-    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryVersionResourceDataService entryResourceDataService, LibrarySearchIndexService searchIndexService, ResourceFileStorageService resourceService, DbService db, VersioningService versioningService)
+    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibrarySearchIndexService searchIndexService, DbService db, VersioningService versioningService)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryVersionController>();
         this.entryDataService = entryDataService;
         this.versionDataService = versionDataService;
         this.searchIndexService = searchIndexService;
-        this.entryResourceDataService = entryResourceDataService;
-        this.resourceService = resourceService;
         this.db = db;
         this.versioningService = versioningService;
     }
@@ -167,136 +163,6 @@ public class LibraryEntryVersionController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving library entry versions");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{entryVersion}/resources")]
-    public async Task<IActionResult> GetResourcesAsync(string owner, string entryId, int entryVersion)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
-                    return BadRequest("Entry Version not found for the owner provided.");
-
-                return Ok(await entryResourceDataService.GetListAsync(conn, entryId, entryVersion));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting library entry version resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{entryVersion}/resources/{resourceId}")]
-    public async Task<IActionResult> PutResourceAsync(string owner, string entryId, int entryVersion, string resourceId, ResourceRecord model)
-    {
-        try
-        {
-            if (model.Id != resourceId) return BadRequest("Id in body must match ResourceId in url");
-
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
-                    return BadRequest("Entry Version not found for the owner provided.");
-
-                await entryResourceDataService.SetAsync(conn, owner, entryId, entryVersion, model);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpDelete("{entryVersion}/resources/{resourceId}")]
-    public async Task<IActionResult> DeleteResourceAsync(string owner, string entryId, int entryVersion, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
-                    return BadRequest("Entry Version not found for the owner provided.");
-
-                await entryResourceDataService.DeleteAsync(conn, entryId, entryVersion, resourceId);
-                await resourceService.DeleteLibraryResourceAsync(owner, entryId, entryVersion, resourceId);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{entryVersion}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> GetResourceFileAsync(string owner, string entryId, int entryVersion, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
-                    return BadRequest("Entry Version not found for the owner provided.");
-
-                var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
-                var file = await resourceService.GetLibraryResourceAsync(owner, entryId, entryVersion, resourceId);
-
-                return File(file, "application/octet-stream", record.Resource);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{entryVersion}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> PutResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
-                    return BadRequest("Entry Version not found for the owner provided.");
-
-                var record = await entryResourceDataService.GetAsync(conn, entryId, entryVersion, resourceId);
-
-                Request.EnableBuffering();
-                Request.Body.Position = 0;
-                var bytes = new byte[] { };
-
-                using (var stream = new MemoryStream())
-                {
-                    await Request.Body.CopyToAsync(stream);
-
-                    bytes = stream.ToArray();
-                }
-
-                await resourceService.SaveLibraryResourceAsync(owner, entryId, entryVersion, resourceId, bytes);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version resources");
             return new StatusCodeResult(500);
         }
     }

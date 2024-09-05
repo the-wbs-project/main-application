@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI_TYPE, ResourceRecord } from '@wbs/core/models';
+import { PROJECT_STATI_TYPE, ContentResource } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { UserStore } from '@wbs/core/store';
 import { UserViewModel } from '@wbs/core/view-models';
@@ -116,7 +116,7 @@ export class ProjectActivityService {
   resourceAdded(
     owner: string,
     projectId: string,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(owner, projectId, PROJECT_ACTIONS.RESOURCE_ADDED, {
       resource,
@@ -136,7 +136,7 @@ export class ProjectActivityService {
   resourceRemoved(
     owner: string,
     projectId: string,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(owner, projectId, PROJECT_ACTIONS.RESOURCE_REMOVED, {
       resource,
@@ -146,7 +146,7 @@ export class ProjectActivityService {
   resourceUpdated(
     owner: string,
     projectId: string,
-    resource: ResourceRecord
+    resource: ContentResource
   ): Observable<void> {
     return this.save(owner, projectId, PROJECT_ACTIONS.RESOURCE_UPDATED, {
       resource,

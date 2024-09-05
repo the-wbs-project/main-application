@@ -12,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { CardHeaderComponent } from '@wbs/components/_utils/card-header.component';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
-import { ResourceRecord } from '@wbs/core/models';
+import { ContentResource } from '@wbs/core/models';
 import { ProjectResourcesService } from '../../../../services';
 
 @Component({
@@ -36,7 +36,7 @@ export class ProjectResourceCardComponent implements OnInit {
   //
   //  Inputs & Signals
   //
-  readonly list = signal<ResourceRecord[]>([]);
+  readonly list = signal<ContentResource[]>([]);
 
   ngOnInit(): void {
     this.service
@@ -50,20 +50,20 @@ export class ProjectResourceCardComponent implements OnInit {
     });
   }
 
-  editRecord(record: ResourceRecord): void {
+  editRecord(record: ContentResource): void {
     this.service.editRecordAsync(undefined, record).subscribe((item) => {
       if (item) this.updateList([item]);
     });
   }
 
-  deleteRecord(record: ResourceRecord): void {
+  deleteRecord(record: ContentResource): void {
     this.service.deleteRecordAsync(undefined, record).subscribe((deleted) => {
       if (deleted)
         this.list.update((list) => list.filter((x) => x.id !== record.id));
     });
   }
 
-  save(records: ResourceRecord[]): void {
+  save(records: ContentResource[]): void {
     this.service
       .saveRecordsAsync(undefined, records)
       .subscribe((newRecords) => {
@@ -71,7 +71,7 @@ export class ProjectResourceCardComponent implements OnInit {
       });
   }
 
-  private updateList(records: ResourceRecord[]): void {
+  private updateList(records: ContentResource[]): void {
     this.list.update((list) => {
       for (const r of records) {
         const index = list.findIndex((x) => x.id === r.id);
