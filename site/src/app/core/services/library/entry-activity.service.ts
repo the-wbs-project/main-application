@@ -5,58 +5,98 @@ import {
   ContentResource,
 } from '@wbs/core/models';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { IdService } from '@wbs/core/services';
-import { UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class EntryActivityService {
   private readonly data = inject(DataServiceFactory);
-  private readonly userId = inject(UserStore).userId;
 
-  entryCreated(entryId: string, type: string, title: string): Observable<void> {
-    return this.save(entryId, 1, LIBRARY_VERSION_ACTIONS.ENTRY_CREATED, {
+  entryCreated(
+    owner: string,
+    entryId: string,
+    type: string,
+    title: string
+  ): Observable<void> {
+    return this.save(owner, entryId, 1, LIBRARY_VERSION_ACTIONS.ENTRY_CREATED, {
       type,
       title,
     });
   }
 
-  versionCreated(entryId: string, version: number): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.CREATED);
+  versionCreated(
+    owner: string,
+    entryId: string,
+    version: number
+  ): Observable<void> {
+    return this.save(owner, entryId, version, LIBRARY_VERSION_ACTIONS.CREATED);
+  }
+
+  importTasks(
+    ownerId: string,
+    entryId: string,
+    version: number,
+    taskIds: string[]
+  ): Observable<void> {
+    return this.save(
+      ownerId,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.IMPORT_TASKS,
+      {
+        taskIds,
+        count: taskIds.length,
+      }
+    );
   }
 
   entryTitleChanged(
+    owner: string,
     entryId: string,
     version: number,
     from: string | undefined,
     to: string | undefined
   ): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.TITLE_CHANGED, {
-      from,
-      to,
-    });
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.TITLE_CHANGED,
+      {
+        from,
+        to,
+      }
+    );
   }
 
   cancelVersion(
+    owner: string,
     entryId: string,
     version: number,
     title: string,
     reason: string
   ): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.CANCEL_VERSION, {
-      title,
-      reason,
-    });
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.CANCEL_VERSION,
+      {
+        title,
+        reason,
+      }
+    );
   }
 
   entryDescriptionChanged(
+    owner: string,
     entryId: string,
     version: number,
     from: string,
     to: string
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.DESCRIPTION_CHANGED,
@@ -65,12 +105,14 @@ export class EntryActivityService {
   }
 
   entryDisciplinesChanged(
+    owner: string,
     entryId: string,
     version: number,
     from: ProjectCategory[] | undefined,
     to: ProjectCategory[] | undefined
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.DISCIPLINES_CHANGED,
@@ -82,12 +124,14 @@ export class EntryActivityService {
   }
 
   contributorsChanged(
+    owner: string,
     entryId: string,
     version: number,
     from: UserViewModel[] | undefined,
     to: UserViewModel[] | undefined
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.CONTRIBUTORS_CHANGED,
@@ -99,12 +143,14 @@ export class EntryActivityService {
   }
 
   versionAliasChanged(
+    owner: string,
     entryId: string,
     version: number,
     from: string | undefined,
     to: string | undefined
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.VERSION_ALIAS_CHANGED,
@@ -116,12 +162,14 @@ export class EntryActivityService {
   }
 
   categoryChanged(
+    owner: string,
     entryId: string,
     version: number,
     from: string | undefined,
     to: string | undefined
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.CATEGORY_CHANGED,
@@ -132,54 +180,99 @@ export class EntryActivityService {
     );
   }
 
-  entryUpload(entryId: string, version: number): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UPLOAD);
+  entryUpload(
+    owner: string,
+    entryId: string,
+    version: number
+  ): Observable<void> {
+    return this.save(owner, entryId, version, LIBRARY_VERSION_ACTIONS.UPLOAD);
   }
 
   setupPhaseEntry(
+    owner: string,
     entryId: string,
     version: number,
     phaseTitle: string
   ): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.SETUP_PHASE, {
-      phaseTitle,
-    });
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.SETUP_PHASE,
+      {
+        phaseTitle,
+      }
+    );
   }
 
   setupTaskEntry(
+    owner: string,
     entryId: string,
     version: number,
     taskTitle: string
   ): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.SETUP_TASK, {
-      taskTitle,
-    });
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.SETUP_TASK,
+      {
+        taskTitle,
+      }
+    );
   }
 
-  publishedVersion(entryId: string, version: number): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.PUBLISHED);
+  publishedVersion(
+    owner: string,
+    entryId: string,
+    version: number
+  ): Observable<void> {
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.PUBLISHED
+    );
   }
 
-  unpublishedVersion(entryId: string, version: number): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.UNPUBLISHED);
+  unpublishedVersion(
+    owner: string,
+    entryId: string,
+    version: number
+  ): Observable<void> {
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.UNPUBLISHED
+    );
   }
 
   resourceAdded(
+    owner: string,
     entryId: string,
     version: number,
     resource: ContentResource
   ): Observable<void> {
-    return this.save(entryId, version, LIBRARY_VERSION_ACTIONS.RESOURCE_ADDED, {
-      resource,
-    });
+    return this.save(
+      owner,
+      entryId,
+      version,
+      LIBRARY_VERSION_ACTIONS.RESOURCE_ADDED,
+      {
+        resource,
+      }
+    );
   }
 
   resourceReordered(
+    owner: string,
     entryId: string,
     version: number,
     ids: string[]
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.RESOURCE_REORDERED,
@@ -190,11 +283,13 @@ export class EntryActivityService {
   }
 
   resourceRemoved(
+    owner: string,
     entryId: string,
     version: number,
     resource: ContentResource
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.RESOURCE_REMOVED,
@@ -205,11 +300,13 @@ export class EntryActivityService {
   }
 
   resourceUpdated(
+    owner: string,
     entryId: string,
     version: number,
     resource: ContentResource
   ): Observable<void> {
     return this.save(
+      owner,
       entryId,
       version,
       LIBRARY_VERSION_ACTIONS.RESOURCE_CHANGED,
@@ -220,20 +317,18 @@ export class EntryActivityService {
   }
 
   private save(
+    owner: string,
     topLevelId: string,
     versionId: number,
     action: string,
     data?: any
   ): Observable<void> {
-    return this.data.activities.saveLibraryEntryAsync([
+    return this.data.activities.postAsync('library', owner, topLevelId, [
       {
-        id: IdService.generate(),
-        timestamp: new Date(),
         action,
         data,
         topLevelId,
         versionId,
-        userId: this.userId()!,
       },
     ]);
   }

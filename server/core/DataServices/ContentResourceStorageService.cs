@@ -26,7 +26,7 @@ public class ContentResourceStorageService
 
             await storage.SaveFileAsync("resources", $"{parts[0]}-{parts[parts.Length - 1]}", bytes);
             await storage.SaveFileAsync("resources-backup", file, bytes);
-            //await storage.DeleteIfExistsAsync("resources", file);
+            await storage.DeleteIfExistsAsync("resources", file);
         }
     }
 

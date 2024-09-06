@@ -369,6 +369,16 @@ export class ProjectTaskService {
     );
   }
 
+  importTasks(tasks: ProjectNode[]): Observable<unknown> {
+    const project = this.getProject();
+
+    return this.saveTasks(project, tasks).pipe(
+      switchMap(() =>
+        this.activity.importTasks(project.owner, project.id, tasks)
+      )
+    );
+  }
+
   private saveReordered(
     originalLevel: string,
     mainTask: ProjectTaskViewModel,

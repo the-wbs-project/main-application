@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { IdService } from '@wbs/core/services';
+import { ProjectNode } from '@wbs/core/models';
 import { UserStore } from '@wbs/core/store';
 import { TASK_ACTIONS } from '@wbs/pages/projects/models';
 import { Observable } from 'rxjs';
@@ -9,6 +9,16 @@ import { Observable } from 'rxjs';
 export class ProjectTaskActivityService {
   private readonly data = inject(DataServiceFactory);
   private readonly userId = inject(UserStore).userId;
+
+  importTasks(
+    owner: string,
+    projectId: string,
+    tasks: ProjectNode[]
+  ): Observable<void> {
+    return this.save(owner, projectId, undefined, TASK_ACTIONS.IMPORTED, {
+      tasks,
+    });
+  }
 
   removeTask(
     owner: string,
@@ -152,19 +162,16 @@ export class ProjectTaskActivityService {
   private save(
     owner: string,
     projectId: string,
-    taskId: string,
+    taskId: string | undefined,
     action: string,
     data?: any
   ): Observable<void> {
-    return this.data.activities.saveProjectAsync(owner, projectId, [
+    return this.data.activities.postAsync('project', owner, this.userId()!, [
       {
-        id: IdService.generate(),
-        timestamp: new Date(),
         action,
         data,
         topLevelId: projectId,
         objectId: taskId,
-        userId: this.userId()!,
       },
     ]);
   }

@@ -52,15 +52,15 @@ public class ProjectNodeController : ControllerBase
     {
         try
         {
-            if (record.upserts == null) record.upserts = new ProjectNode[] { };
-            if (record.removeIds == null) record.removeIds = new string[] { };
+            if (record.upserts == null) record.upserts = [];
+            if (record.removeIds == null) record.removeIds = [];
             //
             //  Make sure all records have same project id as provided above
             //
             foreach (var upsert in record.upserts)
             {
                 if (upsert.projectId != projectId)
-                    return BadRequest("All records must have same project id as provided in url");
+                    return BadRequest("All records must have same project id as provided in url.");
             }
 
             using (var conn = await db.CreateConnectionAsync())
@@ -68,7 +68,7 @@ public class ProjectNodeController : ControllerBase
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                await nodeDataService.SetSaveRecordAsync(conn, owner, projectId, record);
+                await nodeDataService.SetAsync(conn, projectId, record.upserts, record.removeIds);
 
                 return NoContent();
             }

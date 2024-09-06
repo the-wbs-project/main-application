@@ -4,6 +4,7 @@ import {
   faArrowRight,
   faArrowUp,
   faBookArrowRight,
+  faBooks,
   faCheck,
   faCopy,
   faEclipse,
@@ -20,22 +21,25 @@ import {
 
 const taskActions: ActionContextMenuItem[] = [
   {
-    action: 'addSub',
+    action: 'import',
     faIcon: faPlus,
-    resource: 'Projects.AddSubTask',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
-    },
-  },
-  {
-    action: 'import|right',
-    faIcon: faFileImport,
     resource: 'Wbs.ImportSubTask',
     filters: {
-      stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
+      stati: [PROJECT_STATI.PLANNING],
     },
+    items: [
+      {
+        action: 'import|file',
+        faIcon: faFileImport,
+        resource: 'Wbs.ImportFromFile',
+      },
+      {
+        action: 'import|library',
+        faIcon: faBooks,
+        resource: 'Wbs.ImportFromLibrary',
+      },
+    ],
   },
   {
     action: 'other',

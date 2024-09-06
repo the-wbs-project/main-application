@@ -103,7 +103,12 @@ export class EntryService {
             )
           ),
           tap(() =>
-            this.activity.entryCreated(entry.id, entry.type, version.title)
+            this.activity.entryCreated(
+              entry.ownerId,
+              entry.id,
+              entry.type,
+              version.title
+            )
           ),
           map(() => newEntry)
         )
@@ -203,6 +208,7 @@ export class EntryService {
           return this.saveAsync(version).pipe(
             switchMap(() =>
               this.activity.cancelVersion(
+                version.ownerId,
                 version.entryId,
                 version.version,
                 version.title,
@@ -232,6 +238,7 @@ export class EntryService {
     return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.categoryChanged(
+          version.ownerId,
           version.entryId,
           version.version,
           from,
@@ -250,6 +257,7 @@ export class EntryService {
     return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.versionAliasChanged(
+          version.ownerId,
           version.entryId,
           version.version,
           from,
@@ -268,6 +276,7 @@ export class EntryService {
     return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.entryTitleChanged(
+          version.ownerId,
           version.entryId,
           version.version,
           from,
@@ -286,6 +295,7 @@ export class EntryService {
     return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.entryTitleChanged(
+          version.ownerId,
           version.entryId,
           version.version,
           from,
@@ -304,6 +314,7 @@ export class EntryService {
     return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.entryDisciplinesChanged(
+          version.ownerId,
           version.entryId,
           version.version,
           from,
@@ -322,6 +333,7 @@ export class EntryService {
     return this.saveAsync(version).pipe(
       switchMap(() =>
         this.activity.contributorsChanged(
+          version.ownerId,
           version.entryId,
           version.version,
           from,
@@ -347,7 +359,11 @@ export class EntryService {
             .publishAsync(version.ownerId, model)
             .pipe(
               switchMap(() =>
-                this.activity.publishedVersion(version.entryId, version.version)
+                this.activity.publishedVersion(
+                  version.ownerId,
+                  version.entryId,
+                  version.version
+                )
               ),
               tap(() => {
                 version.lastModified = new Date();

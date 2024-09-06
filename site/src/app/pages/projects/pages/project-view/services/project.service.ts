@@ -182,8 +182,8 @@ export class ProjectService {
         this.activity.changeProjectDisciplines(
           project.owner,
           project.id,
-          original,
-          project.disciplines
+          original.map((x) => x.id),
+          project.disciplines.map((x) => x.id)
         )
       ),
       tap(() =>

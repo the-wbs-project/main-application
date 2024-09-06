@@ -65,21 +65,22 @@ export class ProjectResourcesService {
     taskId: string | undefined
   ): Observable<ContentResource | undefined> {
     const project = this.projectStore.project()!;
+    const save: (vm: {
+      record: Partial<ContentResource>;
+      file?: FileInfo;
+    }) => Observable<ContentResource> = (vm) => {
+      return this.save(taskId, vm.record, vm.file).pipe(
+        switchMap((newRecord) =>
+          this.activity
+            .resourceAdded(project.owner, project.id, newRecord)
+            .pipe(map(() => newRecord))
+        )
+      );
+    };
 
     return RecordResourceEditorComponent.launchAddAsync(
-      this.dialogService
-    ).pipe(
-      switchMap((data) =>
-        data.record == undefined
-          ? of(undefined)
-          : this.save(taskId, data.record, data.file).pipe(
-              switchMap((newRecord) =>
-                this.activity
-                  .resourceAdded(project.owner, project.id, newRecord)
-                  .pipe(map(() => newRecord))
-              )
-            )
-      )
+      this.dialogService,
+      save
     );
   }
 
@@ -88,22 +89,23 @@ export class ProjectResourcesService {
     record: ContentResource
   ): Observable<ContentResource | undefined> {
     const project = this.projectStore.project()!;
+    const save: (vm: {
+      record: Partial<ContentResource>;
+      file?: FileInfo;
+    }) => Observable<ContentResource> = (vm) => {
+      return this.save(taskId, vm.record, vm.file).pipe(
+        switchMap((newRecord) =>
+          this.activity
+            .resourceUpdated(project.owner, project.id, newRecord)
+            .pipe(map(() => newRecord))
+        )
+      );
+    };
 
     return RecordResourceEditorComponent.launchEditAsync(
       this.dialogService,
-      record
-    ).pipe(
-      switchMap((data) =>
-        data.record == undefined
-          ? of(undefined)
-          : this.save(taskId, data.record, data.file).pipe(
-              switchMap((newRecord) =>
-                this.activity
-                  .resourceUpdated(project.owner, project.id, newRecord)
-                  .pipe(map(() => newRecord))
-              )
-            )
-      )
+      record,
+      save
     );
   }
 

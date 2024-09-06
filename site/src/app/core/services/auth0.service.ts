@@ -47,7 +47,7 @@ export class Auth0Service {
         });
       }),
       switchMap(() =>
-        this.data.activities.saveAsync(profile.user_id, [
+        this.data.activities.postAsync('user', undefined, profile.user_id, [
           {
             action: 'profile-updated',
             data: {

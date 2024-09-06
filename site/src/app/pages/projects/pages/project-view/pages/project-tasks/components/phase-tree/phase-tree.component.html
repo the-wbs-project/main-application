@@ -1,7 +1,5 @@
 @let list = projectStore.viewModels() ?? [];
 <!---->
-@let project = projectStore.project()!;
-<!---->
 @let editEnabled = canEdit();
 <!---->
 @let projectDisciplines = projectStore.projectDisciplines();
@@ -40,7 +38,7 @@
         <div class="d-flex row-column align-items-center" style="gap: 10px">
           <wbs-tree-type-button [(view)]="view" />
           @if (editEnabled) {
-          <wbs-tree-buttons-add (click)="addPhase()" />
+          <wbs-tree-buttons-add (selected)="addPhase($event)" />
           }
           <wbs-tree-buttons-toggler
             (collapse)="treeService.collapseAll(treelist, list)"
@@ -124,7 +122,7 @@
         headerClass="tx-14"
       >
         <ng-template kendoTreeListHeaderTemplate>
-          <wbs-tree-discipline-legend [list]="project.disciplines" />
+          <wbs-tree-discipline-legend [list]="projectDisciplines" />
         </ng-template>
         <ng-template kendoTreeListCellTemplate let-dataItem>
           <wbs-discipline-icon-list [items]="dataItem.disciplines" />

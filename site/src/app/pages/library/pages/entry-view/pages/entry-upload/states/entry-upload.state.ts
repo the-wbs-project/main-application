@@ -377,7 +377,13 @@ export class EntryUploadState {
         )
       ),
       tap((tasks) => this.entryStore.setTasks(tasks)),
-      tap(() => this.activities.entryUpload(version.entryId, version.version)),
+      tap(() =>
+        this.activities.entryUpload(
+          version.ownerId,
+          version.entryId,
+          version.version
+        )
+      ),
       tap(() => ctx.patchState({ saving: false }))
     );
   }

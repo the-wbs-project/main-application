@@ -1,0 +1,86 @@
+@let page = viewService.page();
+<kendo-dialog
+  width="95%"
+  height="95%"
+  [title]="'Wbs.ImportFromFile' | translate"
+  (close)="dialog.close()"
+>
+  <div class="d-flex flex-column h-100">
+    <kendo-stepper
+      [steps]="viewService.steps()"
+      stepType="full"
+      [currentStep]="page.num"
+      [linear]="false"
+    >
+      <ng-template kendoStepperIndicatorTemplate let-step>
+        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+      </ng-template>
+      <ng-template kendoStepperLabelTemplate let-step>
+        {{ step.label | translate }}
+        @if (step.isOptional) { <span class="mg-l-5">*</span> }
+      </ng-template>
+    </kendo-stepper>
+    <div
+      [appScrollToTop]="page.num"
+      class="tx-center flex-fill pd-t-20 pd-x-10"
+    >
+      @if (page.id === 'start') {
+      <wbs-upload-view
+        [isLoadingFile]="dataService.isLoadingFile()"
+        [fileType]="dataService.extension()"
+        (uploaded)="fileUploaded($event)"
+      />
+      } @else if (page.id === 'disciplines') {
+      <wbs-upload-disciplines-view
+        [disciplines]="disciplines()"
+        [(peopleList)]="dataService.peopleList"
+      />
+      } @else if (page.id === 'tasks') {
+      <div
+        [(wbsHeight)]="containerHeight"
+        class="pd-0 d-flex flex-column h-100"
+      >
+        <wbs-upload-task-view
+          [(tasks)]="dataService.tasks"
+          [disciplines]="disciplines()"
+          [containerHeight]="containerHeight()"
+        />
+      </div>
+      }
+    </div>
+  </div>
+
+  @if (page.id !== 'start') {
+  <kendo-dialog-actions>
+    <div class="flex-grow-1 text-start">
+      <button kendoButton themeColor="primary" (click)="viewService.back()">
+        {{ "General.Back" | translate }}
+      </button>
+    </div>
+    <div class="flex-grow-1 tx-10 text-center pd-t-10 tx-italic">
+      * {{ "General.Optional" | translate }}
+    </div>
+
+    <div class="flex-grow-1 text-end">
+      @if (page.id === 'tasks') {
+      <wbs-save-button
+        [isSaving]="saving()"
+        themeColor="primary"
+        saveLabel="General.Import"
+        savingLabel="General.Importing"
+        (click)="startSaving()"
+      />
+      } @else {
+      <button
+        kendoButton
+        themeColor="primary"
+        [disabled]="viewService.nextDisabled()"
+        (click)="next()"
+      >
+        {{ viewService.nextButtonLabel() | translate }}
+      </button>
+      }
+    </div>
+  </kendo-dialog-actions>
+  }
+</kendo-dialog>

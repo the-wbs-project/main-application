@@ -36,6 +36,7 @@
       "Types": "Types",
       "Library": "Library",
       "Libraries": "Libraries",
+      "Options": "Options",
       "Title": "Title",
       "All": "All",
       "Error": "Error",
@@ -55,6 +56,7 @@
       "SaveAndView": "Save & View",
       "AcceptAndClose": "Accept & Close",
       "Import": "Import",
+      "Importing": "Importing",
       "View": "View",
       "Status": "Status",
       "Task": "Task",
@@ -480,11 +482,10 @@
     }
   },
   {
-    "section": "ProjectUpload",
+    "section": "Upload",
     "locale": "en-US",
     "values": {
-      "FileUpload": "File Upload",
-      "PagesUploadProjectPlan": "Upload Project Plan",
+      "UploadProjectPlan": "Upload Project Plan",
       "PagesOptions": "Options",
       "GetStartedMessage": "To get started upload your project plan using the control below. Once uploaded we will guide you through the rest of the process.",
       "GetStartedMessageLibrary": "To get started upload a work breakdown structure. Once uploaded we will guide you through the rest of the process.",
@@ -522,7 +523,9 @@
       "LoadedExcel": "Loaded Excel File",
       "LoadedProject": "Loaded MS Project File",
       "UploadError": "Unexpected errors occured uploading the file. More explanations of these errors at a later time",
-      "UploadResults": "Upload Results"
+      "UploadResults": "Upload Results",
+      "ReviewTasks": "Review Tasks",
+      "ImportOptions": "Import Options"
     }
   },
   {
@@ -614,6 +617,7 @@
       "RemoveDiscipline": "Remove Discipline",
       "ExportToLibrary": "Export To Library",
       "ImportFromLibrary": "Import From Library",
+      "ImportFromFile": "Import From File",
       "SearchLibrary": "Search Library",
       "SearchContinue": "Select Library Entry To Continue",
       "LibraryFilters": "Library Filters",

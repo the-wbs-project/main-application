@@ -40,8 +40,9 @@ public class ExcelFileImporter : BaseExtractService
                 var obj = new ProjectImportResults();
                 var sync = sheet.GetValue<string>(row, 17)?.ToLower();
 
-                obj.levelText = sheet.GetValue<string>(row, 1)?.Trim();
-                obj.title = sheet.GetValue<string>(row, 18)?.Trim();
+                obj.Id = IdService.Create();
+                obj.LevelText = sheet.GetValue<string>(row, 1)?.Trim();
+                obj.Title = sheet.GetValue<string>(row, 18)?.Trim();
 
                 for (var i = 1; i <= 10; i++)
                 {
@@ -49,7 +50,7 @@ public class ExcelFileImporter : BaseExtractService
 
                     if (!string.IsNullOrEmpty(text))
                     {
-                        obj.title = text;
+                        obj.Title = text;
                         break;
                     }
                 }
@@ -59,10 +60,10 @@ public class ExcelFileImporter : BaseExtractService
 
                     if (string.IsNullOrEmpty(text)) break;
 
-                    if (obj.resources == null)
-                        obj.resources = new List<string> { text };
+                    if (obj.Resources == null)
+                        obj.Resources = new List<string> { text };
                     else
-                        obj.resources.Add(text);
+                        obj.Resources.Add(text);
                 }
                 results.results.Add(obj);
                 row++;

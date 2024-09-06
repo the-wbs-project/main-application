@@ -17,4 +17,5 @@ export enum LIBRARY_VERSION_ACTIONS {
   RESOURCE_CHANGED = 'library-version-resource-changed',
   RESOURCE_REMOVED = 'library-version-resource-removed',
   RESOURCE_REORDERED = 'library-version-resource-reordered',
+  IMPORT_TASKS = 'library-version-import-tasks',
 }

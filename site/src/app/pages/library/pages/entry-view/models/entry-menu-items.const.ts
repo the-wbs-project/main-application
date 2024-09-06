@@ -4,20 +4,34 @@ import {
   faArrowRight,
   faArrowUp,
   faBookArrowRight,
+  faBooks,
   faCopy,
   faFileImport,
+  faPlus,
 } from '@fortawesome/pro-solid-svg-icons';
 import { ActionContextMenuItem, LIBRARY_CLAIMS } from '@wbs/core/models';
 
 const taskActions: ActionContextMenuItem[] = [
   {
-    action: 'import|right',
-    faIcon: faFileImport,
+    action: 'import',
+    faIcon: faPlus,
     resource: 'Wbs.ImportSubTask',
     filters: {
       claim: LIBRARY_CLAIMS.TASKS.CREATE,
       stati: ['draft'],
     },
+    items: [
+      {
+        action: 'import|file',
+        faIcon: faFileImport,
+        resource: 'Wbs.ImportFromFile',
+      },
+      {
+        action: 'import|library',
+        faIcon: faBooks,
+        resource: 'Wbs.ImportFromLibrary',
+      },
+    ],
   },
   {
     action: 'cloneTask',

@@ -10,13 +10,18 @@ export class MainContentDirective {
   constructor(ref: ElementRef) {
     this.elem = ref.nativeElement;
 
-    setTimeout(() => {
-      const width = this.elem.offsetWidth;
+    this.checkSize();
+  }
 
-      if (this.lastSize === width) return;
+  private checkSize(): void {
+    const width = this.elem.offsetWidth;
 
+    if (this.lastSize !== width) {
       this.lastSize = width;
       this.uiStore.setMainContentWidth(width);
-    }, 500);
+    }
+    setTimeout(() => {
+      this.checkSize();
+    }, 250);
   }
 }

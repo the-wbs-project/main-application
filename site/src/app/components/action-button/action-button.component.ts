@@ -29,9 +29,10 @@ import { ActionButtonMenuItem } from '@wbs/core/models';
 export class ActionButtonComponent {
   private readonly store = inject(Store);
 
-  readonly itemClicked = output<string>();
-  readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
   readonly menuIcon = faBars;
+  readonly customContent = input(false);
+  readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
+  readonly itemClicked = output<string>();
 
   selected(item: ActionButtonMenuItem): void {
     if (item.route) {

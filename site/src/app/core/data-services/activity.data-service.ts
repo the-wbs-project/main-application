@@ -48,63 +48,26 @@ export class ActivityDataService {
     );
   }
 
-  saveAsync(userId: string, data: ActivityData[]): Observable<string[]> {
+  postAsync(
+    type: string,
+    owner: string | undefined,
+    userId: string,
+    data: ActivityData[]
+  ): Observable<void> {
     const ids: string[] = [];
-    const toSave: Activity[] = [];
+    const activities: Activity[] = [];
 
     for (const d of data) {
       const id = IdService.generate();
 
       ids.push(id);
-      toSave.push({
+      activities.push({
         ...d,
         id,
         timestamp: new Date(),
         userId: userId,
       });
     }
-    return this.http.post<void>('api/activities', toSave).pipe(map(() => ids));
-  }
-
-  /*saveProjectActivitiesAsync(
-    userId: string,
-    data: Activity[]
-  ): Observable<string[]> {
-    const ids: string[] = [];
-    const toSave: any[] = [];
-
-    for (const d of data) {
-      const id = IdService.generate();
-
-      ids.push(id);
-      toSave.push({
-        activity: {
-          ...d.data,
-          id,
-          timestamp: new Date(),
-          userId: userId,
-        },
-        project: d.project,
-        nodes: d.nodes,
-      });
-    }
-    return this.http
-      .post<void>('api/activities/projects', toSave)
-      .pipe(map(() => ids));
-  }*/
-
-  saveProjectAsync(
-    owner: string,
-    projectId: string,
-    data: Activity[]
-  ): Observable<void> {
-    return this.http.post<void>(
-      `api/activities/projects/${owner}/${projectId}`,
-      data
-    );
-  }
-
-  saveLibraryEntryAsync(data: Activity[]): Observable<void> {
-    return this.http.post<void>('api/activities/library', data);
+    return this.http.post<void>(`api/activities`, { type, owner, activities });
   }
 }

@@ -38,7 +38,11 @@ import {
   TreeButtonsTogglerComponent,
 } from '@wbs/components/_utils/tree-buttons';
 import { HeightDirective } from '@wbs/core/directives/height.directive';
-import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
+import {
+  AddPhaseOptions,
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
+} from '@wbs/core/models';
 import { Messages, TreeService, Utils } from '@wbs/core/services';
 import {
   CategoryViewModel,
@@ -47,9 +51,13 @@ import {
 } from '@wbs/core/view-models';
 import { UiStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import { TaskDeleteComponent } from '../../../../components/task-delete';
-import { ProjectTaskService, ProjectViewService } from '../../../../services';
+import {
+  ProjectImportService,
+  ProjectTaskService,
+  ProjectViewService,
+} from '../../../../services';
 import { ProjectStore } from '../../../../stores';
 import { PhaseTreeReorderService } from '../../services';
 import { PhaseTaskDetailsComponent } from '../phase-task-details';
@@ -94,9 +102,11 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 })
 export class ProjectPhaseTreeComponent implements OnInit {
   private readonly dialogService = inject(DialogService);
+  private readonly importService = inject(ProjectImportService);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(PhaseTreeReorderService);
   private readonly taskService = inject(ProjectTaskService);
+
   readonly width = inject(UiStore).mainContentWidth;
   readonly projectStore = inject(ProjectStore);
   readonly viewService = inject(ProjectViewService);
@@ -152,6 +162,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
       this.rowHeight
     )
   );
+
   //
   //  Outputs
   //
@@ -202,16 +213,17 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
   }
 
-  addPhase(): void {
-    const obsOrVoid = this.viewService.action('addSub');
-
-    if (obsOrVoid instanceof Observable) {
-      //@ts-ignore
-      obsOrVoid.subscribe();
+  addPhase(type: AddPhaseOptions): void {
+    if (type === 'create') {
+      //
+    } else if (type === 'importFile') {
+      this.importService.importFromFileAsync().subscribe();
+    } else if (type === 'importLibrary') {
+      this.importService.importFromLibraryAsync().subscribe();
     }
   }
 
-  menuItemSelected(item: string, taskId?: string): void {
+  menuItemSelected(item: string, taskId: string): void {
     const obsOrVoid = this.viewService.action(item, taskId);
 
     if (obsOrVoid instanceof Observable) {

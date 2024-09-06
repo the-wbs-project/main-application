@@ -2,6 +2,7 @@ import {
   LibraryLink,
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_STATI_TYPE,
+  ProjectCategory,
 } from '../models';
 import { UserViewModel } from './user.view-model';
 
@@ -24,7 +25,7 @@ export interface ProjectViewModel {
   status: PROJECT_STATI_TYPE;
   mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;
-  disciplines: any[];
+  disciplines: ProjectCategory[];
   roles: UserRoleViewModel[];
   libraryLink?: LibraryLink;
 }

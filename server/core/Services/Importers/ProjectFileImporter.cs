@@ -28,9 +28,10 @@ public class ProjectFileImporter
                 }
                 results.Add(new ProjectImportResults
                 {
-                    title = task.getName(),
-                    levelText = task.getOutlineNumber(),
-                    resources = folks
+                    Id = IdService.Create(),
+                    Title = task.getName(),
+                    LevelText = task.getOutlineNumber(),
+                    Resources = folks.Where(x => x != null).ToList()
                 });
             }
             return new UploadResults

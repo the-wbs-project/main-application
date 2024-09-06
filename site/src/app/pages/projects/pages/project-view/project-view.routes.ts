@@ -4,13 +4,12 @@ import { NgxsModule } from '@ngxs/store';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import { orgResolve, userIdResolve } from '@wbs/core/services';
 import { ProjectActivityService } from '../../services';
-import { PROJECT_PAGES } from './models';
 import {
   ChecklistDataService,
   ChecklistTestService,
   LibraryEntryExportService,
   ProjectActionButtonService,
-  ProjectImportProcessorService,
+  ProjectImportService,
   ProjectService,
   ProjectTaskService,
   ProjectViewService,
@@ -40,10 +39,10 @@ export const routes: Routes = [
       ]),
       ChecklistDataService,
       ChecklistTestService,
+      LibraryEntryExportService,
       ProjectActionButtonService,
       ProjectActivityService,
-      ProjectImportProcessorService,
-      LibraryEntryExportService,
+      ProjectImportService,
       ProjectService,
       ProjectStore,
       ProjectTaskService,
@@ -62,7 +61,6 @@ export const routes: Routes = [
         path: 'tasks',
         loadComponent: () =>
           import('./pages/project-tasks').then((x) => x.ProjectTasksComponent),
-        //loadChildren: () => import('./task-view.routes').then((x) => x.routes),
         canDeactivate: [closeApprovalWindowGuard],
         resolve: {
           projectUrl: projectUrlResolve,
@@ -78,15 +76,6 @@ export const routes: Routes = [
         resolve: {
           owner: orgResolve,
           projectUrl: projectUrlResolve,
-        },
-      },
-      {
-        path: 'upload',
-        loadChildren: () =>
-          import('./pages/project-upload/upload.routes').then((x) => x.routes),
-        canDeactivate: [closeApprovalWindowGuard],
-        data: {
-          view: PROJECT_PAGES.UPLOAD,
         },
       },
     ],

@@ -8,7 +8,6 @@ import {
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { Store } from '@ngxs/store';
-import { LoaderModule } from '@progress/kendo-angular-indicators';
 import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { CreateJiraTicket } from '../../actions';
 import { EntryUploadState } from '../../states';
@@ -17,7 +16,7 @@ import { EntryUploadState } from '../../states';
   standalone: true,
   templateUrl: './ticket-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [LoaderModule, NgIf, RouterModule, TextAreaModule, TranslateModule],
+  imports: [NgIf, RouterModule, TextAreaModule, TranslateModule],
 })
 export class TicketViewComponent {
   readonly entryUrl = input.required<string[]>();

@@ -3,7 +3,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LIBRARY_TASKS_REORDER_WAYS,
   LibraryEntryNode,
-  LibraryEntryVersion,
   WbsNode,
 } from '@wbs/core/models';
 import {
@@ -16,10 +15,12 @@ import { EntryStore } from '@wbs/core/store';
 import { LibraryVersionViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { EntryActivityService } from './entry-activity.service';
 import { EntryTaskActivityService } from './entry-task-activity.service';
 
 @Injectable()
 export class EntryTaskService {
+  private readonly versionActivity = inject(EntryActivityService);
   private readonly activity = inject(EntryTaskActivityService);
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
@@ -68,6 +69,21 @@ export class EntryTaskService {
       );
   }
 
+  importTasks(tasks: LibraryEntryNode[]): Observable<unknown> {
+    const version = this.versionObj;
+
+    return this.saveAsync(tasks, []).pipe(
+      switchMap(() =>
+        this.versionActivity.importTasks(
+          this.owner,
+          this.entryId,
+          version.version,
+          tasks.map((x) => x.id)
+        )
+      )
+    );
+  }
+
   titleChangedAsync(taskId: string, title: string): Observable<void> {
     const task = this.getTasks().find((x) => x.id === taskId)!;
     const from = task.title;
@@ -81,6 +97,7 @@ export class EntryTaskService {
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
           this.activity.taskTitleChanged(
+            this.owner,
             this.entryId,
             this.version,
             task.id,
@@ -107,6 +124,7 @@ export class EntryTaskService {
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
           this.activity.taskTitleChanged(
+            this.owner,
             this.entryId,
             this.version,
             task.id,
@@ -145,6 +163,7 @@ export class EntryTaskService {
       const from = task.title;
       activities.push(
         this.activity.taskTitleChanged(
+          this.owner,
           this.entryId,
           this.version,
           task.id,
@@ -160,6 +179,7 @@ export class EntryTaskService {
       const from = task.description;
       activities.push(
         this.activity.descriptionChanged(
+          this.owner,
           this.entryId,
           this.version,
           task.id,
@@ -175,6 +195,7 @@ export class EntryTaskService {
       const from = task.visibility;
       activities.push(
         this.activity.visibilityChanged(
+          this.owner,
           this.entryId,
           this.version,
           task.id,
@@ -219,6 +240,7 @@ export class EntryTaskService {
     return this.saveAsync([task], []).pipe(
       tap(() =>
         this.activity.taskCreated(
+          this.owner,
           this.entryId,
           this.version,
           task.id,
@@ -245,6 +267,7 @@ export class EntryTaskService {
     return this.saveAsync([task], []).pipe(
       tap(() =>
         this.activity.entryDisciplinesChanged(
+          this.owner,
           this.entryId,
           this.version,
           taskId,
@@ -276,6 +299,7 @@ export class EntryTaskService {
     return this.saveAsync([task], []).pipe(
       tap(() =>
         this.activity.entryDisciplinesChanged(
+          this.owner,
           this.entryId,
           this.version,
           taskId,
@@ -336,6 +360,7 @@ export class EntryTaskService {
     return this.saveAsync([newNode], []).pipe(
       tap(() =>
         this.activity.taskCloned(
+          this.owner,
           this.entryId,
           this.version,
           taskId,
@@ -517,6 +542,7 @@ export class EntryTaskService {
     return this.saveAsync(tasks, []).pipe(
       switchMap(() =>
         this.activity.taskReordered(
+          this.owner,
           this.entryId,
           this.version,
           taskId,
@@ -592,6 +618,7 @@ export class EntryTaskService {
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
           this.activity.entryDisciplinesChanged(
+            this.owner,
             version.entryId,
             version.version,
             taskId,
@@ -618,6 +645,7 @@ export class EntryTaskService {
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
           this.activity.visibilityChanged(
+            this.owner,
             this.entryId,
             this.version,
             task.id,

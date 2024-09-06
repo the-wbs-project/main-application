@@ -10,4 +10,5 @@ export enum TASK_ACTIONS {
   RESOURCE_ADDED = 'task-resource-added',
   RESOURCE_UPDATED = 'task-resource-updated',
   RESOURCE_REMOVED = 'task-resource-removed',
+  IMPORTED = 'task-imported',
 }

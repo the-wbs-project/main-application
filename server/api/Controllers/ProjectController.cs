@@ -14,13 +14,15 @@ public class ProjectController : ControllerBase
     private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
+    private readonly ProjectSnapshotDataService projectSnapshotDataService;
 
-    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
+    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ImportLibraryEntryService importLibraryEntryService, ProjectSnapshotDataService projectSnapshotDataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectController>();
         this.projectDataService = projectDataService;
         this.importLibraryEntryService = importLibraryEntryService;
         this.db = db;
+        this.projectSnapshotDataService = projectSnapshotDataService;
     }
 
     [Authorize]
@@ -102,6 +104,27 @@ public class ProjectController : ControllerBase
                 var newId = await importLibraryEntryService.ImportFromProjectAsync(conn, owner, projectId, options);
 
                 return Ok(newId);
+            }
+
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error exporting project {projectId} for owner {owner}", projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpPost("{projectId}/snapshot")]
+    public async Task<IActionResult> SnapshotProject(string owner, string projectId, [FromBody] string activityId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+            {
+                await projectSnapshotDataService.SetAsync(conn, projectId, [activityId]);
+
+                return NoContent();
             }
 
         }

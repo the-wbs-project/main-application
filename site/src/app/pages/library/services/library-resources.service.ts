@@ -57,32 +57,34 @@ export class LibraryResourcesService {
     taskId: string | undefined
   ): Observable<ContentResource | undefined> {
     const version = this.entryStore.version()!;
+    const save: (vm: {
+      record: Partial<ContentResource>;
+      file?: FileInfo;
+    }) => Observable<ContentResource> = (vm) => {
+      return this.save(taskId, vm.record, vm.file).pipe(
+        switchMap((newRecord) =>
+          (taskId
+            ? this.taskActivity.resourceAdded(
+                version.ownerId,
+                version.entryId,
+                version.version,
+                taskId,
+                newRecord
+              )
+            : this.versionActivity.resourceAdded(
+                version.ownerId,
+                version.entryId,
+                version.version,
+                newRecord
+              )
+          ).pipe(map(() => newRecord))
+        )
+      );
+    };
 
     return RecordResourceEditorComponent.launchAddAsync(
-      this.dialogService
-    ).pipe(
-      switchMap((data) =>
-        data.record == undefined
-          ? of(undefined)
-          : this.save(taskId, data.record)
-      ),
-      switchMap((record) =>
-        !record
-          ? of(undefined)
-          : (taskId
-              ? this.taskActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  taskId,
-                  record
-                )
-              : this.versionActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  record
-                )
-            ).pipe(map(() => record))
-      )
+      this.dialogService,
+      save
     );
   }
 
@@ -91,33 +93,35 @@ export class LibraryResourcesService {
     record: ContentResource
   ): Observable<ContentResource | undefined> {
     const version = this.entryStore.version()!;
+    const save: (vm: {
+      record: Partial<ContentResource>;
+      file?: FileInfo;
+    }) => Observable<ContentResource> = (vm) => {
+      return this.save(taskId, vm.record, vm.file).pipe(
+        switchMap((newRecord) =>
+          (taskId
+            ? this.taskActivity.resourceUpdated(
+                version.ownerId,
+                version.entryId,
+                version.version,
+                taskId,
+                newRecord
+              )
+            : this.versionActivity.resourceUpdated(
+                version.ownerId,
+                version.entryId,
+                version.version,
+                newRecord
+              )
+          ).pipe(map(() => newRecord))
+        )
+      );
+    };
 
     return RecordResourceEditorComponent.launchEditAsync(
       this.dialogService,
-      record
-    ).pipe(
-      switchMap((data) =>
-        data.record == undefined
-          ? of(undefined)
-          : this.save(taskId, data.record)
-      ),
-      switchMap((record) =>
-        !record
-          ? of(undefined)
-          : (taskId
-              ? this.taskActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  taskId,
-                  record
-                )
-              : this.versionActivity.resourceUpdated(
-                  version.entryId,
-                  version.version,
-                  record
-                )
-            ).pipe(map(() => record))
-      )
+      record,
+      save
     );
   }
 
@@ -142,12 +146,14 @@ export class LibraryResourcesService {
                   switchMap(() =>
                     taskId
                       ? this.taskActivity.resourceRemoved(
+                          version.ownerId,
                           version.entryId,
                           version.version,
                           taskId,
                           record
                         )
                       : this.versionActivity.resourceRemoved(
+                          version.ownerId,
                           version.entryId,
                           version.version,
                           record
@@ -174,12 +180,14 @@ export class LibraryResourcesService {
       switchMap((records) =>
         (taskId
           ? this.taskActivity.resourceReordered(
+              version.ownerId,
               version.entryId,
               version.version,
               taskId,
               records.map((x) => x.id)
             )
           : this.versionActivity.resourceReordered(
+              version.ownerId,
               version.entryId,
               version.version,
               records.map((x) => x.id)

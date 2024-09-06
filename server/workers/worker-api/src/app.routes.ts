@@ -45,6 +45,7 @@ app.onError(error);
 app.options('*', (c) => c.text(''));
 
 app.get('api/startup', Http.metadata.getStarterKitAsync);
+app.get('api/lists/:type/:locale', Http.metadata.getListsAsync);
 //
 //  Claims
 //
@@ -63,6 +64,8 @@ app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsyn
 
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
+
+app.post('api/activities', verifyJwt, Http.activities.postAsync);
 //
 //  Library calls
 //

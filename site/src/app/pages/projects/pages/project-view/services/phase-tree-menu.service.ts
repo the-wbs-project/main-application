@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { ContextMenuItem } from '@wbs/core/models';
 import { MenuService } from '@wbs/core/services';
-import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
+import { ProjectTaskViewModel } from '@wbs/core/view-models';
 import { PROJECT_TREE_MENU_ITEMS } from '../models';
 import { ProjectStore } from '../stores';
 
@@ -19,8 +19,6 @@ export class PhaseTreeMenuService {
     const project = this.store.project();
     const claims = this.store.claims();
 
-    console.log(task, project, claims);
-
     if (!project) return [];
 
     const status = project.status;
@@ -36,8 +34,6 @@ export class PhaseTreeMenuService {
       status,
       task
     );
-
-    console.log(navActions, phaseActions);
 
     const movers: ContextMenuItem[] = [];
 

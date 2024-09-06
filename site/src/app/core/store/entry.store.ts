@@ -6,6 +6,7 @@ import {
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
 import {
+  CategoryViewModel,
   LibraryTaskViewModel,
   LibraryVersionViewModel,
 } from '@wbs/core/view-models';
@@ -15,6 +16,7 @@ export class EntryStore {
   private readonly categoryService = inject(CategoryService);
   private readonly transformer = inject(Transformers);
 
+  private readonly _disciplines = signal<CategoryViewModel[]>([]);
   private readonly _versions = signal<LibraryEntryVersionBasic[] | undefined>(
     undefined
   );
@@ -33,6 +35,10 @@ export class EntryStore {
 
   get version(): Signal<LibraryVersionViewModel | undefined> {
     return this._version;
+  }
+
+  get versionDisciplines(): Signal<CategoryViewModel[]> {
+    return this._disciplines;
   }
 
   get versions(): Signal<LibraryEntryVersionBasic[] | undefined> {
@@ -107,11 +113,13 @@ export class EntryStore {
     this._version.set(version);
     this._tasks.set(tasks);
     this._claims.set(claims);
+    this._disciplines.set(this.getDisciplines(version));
     this._viewModels.set(this.createViewModels(version, tasks));
   }
 
   setVersion(version: LibraryVersionViewModel): void {
     this._version.set({ ...version });
+    this._disciplines.set(this.getDisciplines(version));
     this._versions.update((list) => {
       const basic = list?.find((x) => x.version === version.version);
 
@@ -160,6 +168,14 @@ export class EntryStore {
     );
   }
 
+  private getDisciplines(
+    version: LibraryVersionViewModel
+  ): CategoryViewModel[] {
+    return version.disciplines.length > 0
+      ? this.categoryService.buildViewModels(version.disciplines)
+      : this.categoryService.buildViewModelsFromDefinitions();
+  }
+
   private createViewModels(
     version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
@@ -167,9 +183,7 @@ export class EntryStore {
     return this.transformer.nodes.phase.view.forLibrary(
       version,
       tasks,
-      version.disciplines.length > 0
-        ? this.categoryService.buildViewModels(version.disciplines)
-        : this.categoryService.buildViewModelsFromDefinitions()
+      this.versionDisciplines()
     );
   }
 

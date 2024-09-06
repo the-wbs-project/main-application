@@ -105,7 +105,12 @@ export class NameVisibilityComponent extends DialogContentBase {
           this.saveState.set('saved');
         }),
         tap((newEntryId) =>
-          this.activities.entryCreated(newEntryId, 'task', this.templateTitle())
+          this.activities.entryCreated(
+            version.ownerId,
+            newEntryId,
+            'task',
+            this.templateTitle()
+          )
         ),
         delay(5000)
       )

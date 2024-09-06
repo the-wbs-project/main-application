@@ -11,17 +11,26 @@ export class EntryTaskActivityService {
   private readonly userId = inject(UserStore).userId;
 
   taskCreated(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     title: string
   ): Observable<void> {
-    return this.save(entryId, version, taskId, LIBRARY_TASKS_ACTIONS.CREATED, {
-      title,
-    });
+    return this.save(
+      ownerId,
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.CREATED,
+      {
+        title,
+      }
+    );
   }
 
   taskTitleChanged(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -29,6 +38,7 @@ export class EntryTaskActivityService {
     to: string | undefined
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -41,6 +51,7 @@ export class EntryTaskActivityService {
   }
 
   descriptionTitleChanged(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -48,6 +59,7 @@ export class EntryTaskActivityService {
     to: string | undefined
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -60,19 +72,28 @@ export class EntryTaskActivityService {
   }
 
   taskCloned(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     title: string,
     level: string
   ): Observable<void> {
-    return this.save(entryId, version, taskId, LIBRARY_TASKS_ACTIONS.CLONED, {
-      title,
-      level,
-    });
+    return this.save(
+      ownerId,
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.CLONED,
+      {
+        title,
+        level,
+      }
+    );
   }
 
   taskReordered(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -82,6 +103,7 @@ export class EntryTaskActivityService {
     how: string
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -96,6 +118,7 @@ export class EntryTaskActivityService {
   }
 
   titleChanged(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -103,6 +126,7 @@ export class EntryTaskActivityService {
     to: string
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -115,6 +139,7 @@ export class EntryTaskActivityService {
   }
 
   descriptionChanged(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -122,6 +147,7 @@ export class EntryTaskActivityService {
     to: string | undefined
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -131,6 +157,7 @@ export class EntryTaskActivityService {
   }
 
   visibilityChanged(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -138,6 +165,7 @@ export class EntryTaskActivityService {
     to: string | undefined
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -147,19 +175,28 @@ export class EntryTaskActivityService {
   }
 
   taskRemoved(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     title: string,
     reason: string
   ): Observable<void> {
-    return this.save(entryId, version, taskId, LIBRARY_TASKS_ACTIONS.REMOVED, {
-      title,
-      reason,
-    });
+    return this.save(
+      ownerId,
+      entryId,
+      version,
+      taskId,
+      LIBRARY_TASKS_ACTIONS.REMOVED,
+      {
+        title,
+        reason,
+      }
+    );
   }
 
   entryDisciplinesChanged(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
@@ -167,6 +204,7 @@ export class EntryTaskActivityService {
     to: string[] | undefined
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -179,12 +217,14 @@ export class EntryTaskActivityService {
   }
 
   resourceAdded(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     resource: ContentResource
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -196,12 +236,14 @@ export class EntryTaskActivityService {
   }
 
   resourceReordered(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     ids: string[]
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -213,12 +255,14 @@ export class EntryTaskActivityService {
   }
 
   resourceRemoved(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     resource: ContentResource
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -230,12 +274,14 @@ export class EntryTaskActivityService {
   }
 
   resourceUpdated(
+    ownerId: string,
     entryId: string,
     version: number,
     taskId: string,
     resource: ContentResource
   ): Observable<void> {
     return this.save(
+      ownerId,
       entryId,
       version,
       taskId,
@@ -247,22 +293,20 @@ export class EntryTaskActivityService {
   }
 
   private save(
+    ownerId: string,
     topLevelId: string,
     versionId: number,
     objectId: string,
     action: string,
     data?: any
   ): Observable<void> {
-    return this.data.activities.saveLibraryEntryAsync([
+    return this.data.activities.postAsync('library', ownerId, this.userId()!, [
       {
-        id: IdService.generate(),
-        timestamp: new Date(),
         action,
         data,
         topLevelId,
         objectId,
         versionId,
-        userId: this.userId()!,
       },
     ]);
   }

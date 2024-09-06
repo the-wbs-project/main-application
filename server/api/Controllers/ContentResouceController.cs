@@ -120,6 +120,7 @@ public class ContentResourcesController : ControllerBase
         {
             using (var conn = await db.CreateConnectionAsync())
             {
+                await storageService.Copy();
                 var record = await dataService.GetAsync(conn, owner, resourceId);
 
                 if (record == null) return NotFound();

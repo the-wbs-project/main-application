@@ -1,0 +1,25 @@
+<wbs-library-list-filters
+  [showLibrary]="true"
+  [includeDrafts]="false"
+  [(library)]="library"
+  [(typeFilters)]="typeFilters"
+  [(authorFilters)]="roleFilters"
+  [(searchText)]="searchText"
+  [expanded]="true"
+  (libraryChange)="retrieve()"
+  (authorFiltersChange)="retrieve()"
+  (searchTextChange)="retrieve()"
+/>
+<wbs-library-list
+  [entries]="entries()"
+  [(selected)]="selected"
+  [showWatchedColumn]="false"
+  (dblClick)="forceNext.emit()"
+/>
+
+@if (loading()) {
+<div class="w-100 text-center pd-b-15">
+  <kendo-loader type="infinite-spinner" themeColor="primary" size="large" />
+  <div class="mg-t-50">{{ "General.Loading" | translate }}...</div>
+</div>
+}

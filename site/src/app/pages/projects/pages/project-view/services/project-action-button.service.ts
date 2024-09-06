@@ -3,7 +3,6 @@ import {
   faBookArrowRight,
   faCheck,
   faCloudDownload,
-  faCloudUpload,
   faPowerOff,
   faStamp,
   faXmarkToSlot,
@@ -39,7 +38,6 @@ export class ProjectActionButtonService {
   private readonly actionApprove = 'approve';
   private readonly actionDownloadWbs = 'downloadWbs';
   private readonly actionDownloadAbs = 'downloadAbs';
-  private readonly actionUpload = 'upload';
   private readonly actionExport = 'export';
 
   buildMenu(project: ProjectViewModel | undefined): ActionButtonMenuItem[] {
@@ -77,17 +75,6 @@ export class ProjectActionButtonService {
         resource: 'Wbs.DownloadAbs',
       }
     );
-
-    if (
-      project.status === stati.PLANNING &&
-      claims.includes(PROJECT_CLAIMS.TASKS.UPDATE)
-    ) {
-      items.push({
-        action: this.actionUpload,
-        faIcon: faCloudUpload,
-        resource: 'Wbs.UploadTasks',
-      });
-    }
 
     if (approvalEnabled) {
       items.push({ separator: true });
@@ -162,10 +149,6 @@ export class ProjectActionButtonService {
 
       case this.actionDownloadWbs:
         this.actions.downloadTasks(false);
-        break;
-
-      case this.actionUpload:
-        this.actions.uploadTasks();
         break;
 
       case this.actionApproval:

@@ -31,15 +31,16 @@ import { map } from 'rxjs/operators';
 import { ResourceTypeTextComponent } from '../type-text';
 import { RecordResourceValidation } from '../../services';
 import { RecordResourceViewModel } from '../../view-models';
+import { IdService } from '@wbs/core/services';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 
 declare type RecordEditResults = {
-  record?: Partial<ContentResource>;
+  record: Partial<ContentResource>;
   file?: FileInfo;
 };
 
 @Component({
   standalone: true,
-  selector: 'wbs-record-resource-editor',
   templateUrl: './editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RecordResourceValidation],
@@ -51,6 +52,7 @@ declare type RecordEditResults = {
     InfoMessageComponent,
     NgClass,
     ResourceTypeTextComponent,
+    SaveButtonComponent,
     TextAreaModule,
     TextBoxModule,
     TranslateModule,
@@ -58,11 +60,16 @@ declare type RecordEditResults = {
   ],
 })
 export class RecordResourceEditorComponent extends DialogContentBase {
+  private saveFunction!: (
+    results: RecordEditResults
+  ) => Observable<ContentResource>;
+
   readonly validator = inject(RecordResourceValidation);
   //
   //  Signals
   //
   readonly isNew = signal(false);
+  readonly isSaving = signal(false);
   readonly title = signal<string>('');
   readonly model = signal<RecordResourceViewModel | undefined>(undefined);
   //
@@ -82,12 +89,16 @@ export class RecordResourceEditorComponent extends DialogContentBase {
     super(dialog);
   }
 
-  static launchAddAsync(dialog: DialogService): Observable<RecordEditResults> {
+  static launchAddAsync(
+    dialog: DialogService,
+    saveFunction: (vm: RecordEditResults) => Observable<ContentResource>
+  ): Observable<ContentResource | undefined> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,
     });
     const component = ref.content.instance as RecordResourceEditorComponent;
 
+    component.saveFunction = saveFunction;
     component.title.set('Resources.AddResource');
     component.isNew.set(true);
     component.model.set({
@@ -97,33 +108,22 @@ export class RecordResourceEditorComponent extends DialogContentBase {
 
     return ref.result.pipe(
       map((x: unknown) =>
-        x instanceof DialogCloseResult ? undefined : <RecordResourceViewModel>x
-      ),
-      map((vm) =>
-        vm
-          ? {
-              record: {
-                type: vm.type,
-                name: vm.name,
-                description: vm.description,
-                resource: vm.url,
-              },
-              file: vm.file,
-            }
-          : {}
+        x instanceof DialogCloseResult ? undefined : <ContentResource>x
       )
     );
   }
 
   static launchEditAsync(
     dialog: DialogService,
-    data: ContentResource
-  ): Observable<RecordEditResults> {
+    data: ContentResource,
+    saveFunction: (vm: RecordEditResults) => Observable<ContentResource>
+  ): Observable<ContentResource | undefined> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,
     });
     const component = ref.content.instance as RecordResourceEditorComponent;
 
+    component.saveFunction = saveFunction;
     component.title.set('Resources.EditResource');
     component.isNew.set(false);
     component.model.set({
@@ -136,18 +136,26 @@ export class RecordResourceEditorComponent extends DialogContentBase {
 
     return ref.result.pipe(
       map((x: unknown) =>
-        x instanceof DialogCloseResult ? undefined : <RecordResourceViewModel>x
-      ),
-      map((vm) => {
-        if (!vm) return {};
+        x instanceof DialogCloseResult ? undefined : <ContentResource>x
+      )
+    );
+  }
 
-        data.name = vm.name;
-        data.description = vm.description;
-        data.resource = vm.url;
-        data.type = vm.type!;
-
-        return { record: data, file: vm.file };
-      })
+  save(): void {
+    this.isSaving.set(true);
+    const values = this.model()!;
+    const model: Partial<ContentResource> = {
+      id: values.id ?? IdService.generate(),
+      name: values.name,
+      description: values.description,
+      resource: values.url,
+      type: values.type!,
+    };
+    this.saveFunction({ record: model, file: values.file }).subscribe(
+      (results) => {
+        this.isSaving.set(false);
+        this.dialog.close(results);
+      }
     );
   }
 

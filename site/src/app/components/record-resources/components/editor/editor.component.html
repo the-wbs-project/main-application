@@ -107,13 +107,12 @@
   </div>
   }
   <kendo-dialog-actions layout="stretched">
-    <button
-      kendoButton
+    <wbs-save-button
       themeColor="primary"
+      cssClass="w-100"
+      [isSaving]="isSaving()"
       [disabled]="!err.valid"
-      (click)="dialog.close(vm)"
-    >
-      {{ "General.Save" | translate }}
-    </button>
+      (click)="save()"
+    />
   </kendo-dialog-actions>
 </kendo-dialog>

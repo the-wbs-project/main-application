@@ -1,3 +1,4 @@
+import { ActivitiesHttpService } from './activities.http-service';
 import { AiChatHttpService } from './ai-chat.http-service';
 import { ChatHttpService } from './chat.http-service';
 import { ClaimsHttpService } from './claims.http-service';
@@ -17,6 +18,7 @@ import { RolesHttpService } from './roles.http-service';
 import { UserHttpService } from './user.http-service';
 
 export const Http = {
+  activities: ActivitiesHttpService,
   aiChat: AiChatHttpService,
   chat: ChatHttpService,
   claims: ClaimsHttpService,

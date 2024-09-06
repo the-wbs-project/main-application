@@ -3,6 +3,15 @@ import { ListItem, Resources } from '../../models';
 import { ResourceService } from '../resource.service';
 
 export class MetadataHttpService {
+  static async getListsAsync(ctx: Context): Promise<Response> {
+    const { type, locale } = ctx.req.param();
+    const [resourceObj, list] = await Promise.all([ctx.var.data.resources.getAsync(locale), ctx.var.data.lists.getAsync(type)]);
+
+    var resources = new ResourceService(resourceObj!);
+
+    return ctx.json(MetadataHttpService.convertCategories(resources, list ?? []));
+  }
+
   static async getStarterKitAsync(ctx: Context): Promise<Response> {
     const key = 'STARTER_DATA';
 
@@ -103,6 +112,10 @@ export class MetadataHttpService {
   private static async getCategoriesAsync(ctx: Context, resources: ResourceService, type: string): Promise<ListItem[]> {
     const list = (await ctx.var.data.lists.getAsync(type)) ?? [];
 
+    return MetadataHttpService.convertCategories(resources, list);
+  }
+
+  private static convertCategories(resources: ResourceService, list: ListItem[]): ListItem[] {
     for (const item of list) {
       if (item.label) item.label = resources.get(item.label);
       if (item.description) item.description = resources.get(item.description);

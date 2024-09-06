@@ -1,3 +1,4 @@
+export * from './add-phase-options.type';
 export * from './context-menu-item.model';
 export * from './db-object.model';
 export * from './device.type';

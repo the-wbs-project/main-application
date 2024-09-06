@@ -6,7 +6,7 @@ import {
   EntryActionButtonService,
   EntryTaskActionService,
   EntryTaskReorderService,
-  LibraryImportProcessorService,
+  LibraryImportService,
   entryUrlResolve,
   ownerIdResolve,
   populateGuard,
@@ -25,7 +25,7 @@ export const routes: Routes = [
       EntryActionButtonService,
       EntryTaskActionService,
       EntryTaskReorderService,
-      LibraryImportProcessorService,
+      LibraryImportService,
     ],
     resolve: {
       owner: ownerIdResolve,

@@ -16,14 +16,16 @@
   [(expandedKeys)]="treeService.expandedKeys"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    <wbs-tree-type-button [(view)]="view" />
-    <wbs-tree-buttons-toggler
-      (collapse)="treeService.collapseAll(treelist, list)"
-      (expand)="treeService.expandAll(treelist, list)"
-    />
-    @if (showFullscreen()) {
-    <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
-    }
+    <div class="d-flex row-column align-items-center" style="gap: 10px">
+      <wbs-tree-type-button [(view)]="view" />
+      <wbs-tree-buttons-toggler
+        (collapse)="treeService.collapseAll(treelist, list)"
+        (expand)="treeService.expandAll(treelist, list)"
+      />
+      @if (showFullscreen()) {
+      <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
+      }
+    </div>
   </ng-template>
   <kendo-treelist-column
     [expandable]="true"

@@ -4,9 +4,13 @@
   themeColor="base"
   rounded="small"
   size="small"
-  class="mg-y-4"
+  class="mg-y-4 border"
 >
+  @if (customContent()) {
+  <ng-content />
+  } @else {
   <fa-icon [icon]="menuIcon" />
+  }
 </button>
 <kendo-contextmenu
   showOn="click"
