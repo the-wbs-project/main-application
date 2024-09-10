@@ -7,7 +7,7 @@
 >
   <div
     [(wbsHeight)]="dialogContainerHeight"
-    class="pd-15 d-flex flex-column h-100"
+    class="pd-0 d-flex flex-column h-100"
   >
     <wbs-library-tree
       [showFullscreen]="false"
@@ -16,7 +16,7 @@
   </div>
 </kendo-dialog>
 } @else {
-<div [(wbsHeight)]="containerHeight" class="pd-15 d-flex flex-column h-100">
+<div [(wbsHeight)]="containerHeight" class="d-flex flex-column h-100">
   <wbs-library-tree
     [showFullscreen]="true"
     [containerHeight]="containerHeight()"

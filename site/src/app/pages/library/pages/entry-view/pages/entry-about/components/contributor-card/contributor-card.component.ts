@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil } from '@fortawesome/pro-solid-svg-icons';
@@ -13,11 +12,10 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserInfoComponent } from '@wbs/components/user-info';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SaveService, sorter } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
-import { LibraryVersionViewModel } from '@wbs/core/view-models';
-import { switchMap } from 'rxjs';
-import { ContributorDialogComponent } from '../contributor-dialog';
 import { EntryStore } from '@wbs/core/store';
+import { switchMap } from 'rxjs';
+import { LibraryService } from '../../../../services';
+import { ContributorDialogComponent } from '../contributor-dialog';
 
 @Component({
   standalone: true,
@@ -35,7 +33,7 @@ import { EntryStore } from '@wbs/core/store';
 export class ContributorCardComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
-  private readonly service = inject(EntryService);
+  private readonly service = inject(LibraryService);
 
   readonly editIcon = faPencil;
   readonly store = inject(EntryStore);

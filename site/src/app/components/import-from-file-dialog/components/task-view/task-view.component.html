@@ -11,10 +11,24 @@
   [pageSize]="pageSize()"
   [height]="containerHeight() - 100"
   scrollable="virtual"
-  [initiallyExpanded]="true"
+  [rowReorderable]="true"
+  [initiallyExpanded]="false"
+  [(expandedKeys)]="treeService.expandedKeys"
   [selectable]="{ enabled: true, mode: 'row' }"
   (cellClick)="service.onCellClick($event)"
+  (rowReorder)="rowReordered($event)"
 >
+  <ng-template kendoTreeListToolbarTemplate>
+    <wbs-tree-buttons-toggler
+      (collapse)="treeService.collapseAll(treelist, tree, 'id')"
+      (expand)="treeService.expandAll(tree, 'id')"
+    />
+    <button kendoButton size="small" (click)="reloadTree.emit()">
+      <fa-icon [icon]="refreshIcon" class="mg-r-5" />
+      {{ "General.Reload" | translate }}
+    </button>
+  </ng-template>
+  <kendo-treelist-rowreorder-column class="bg-gray-200 tx-10" [width]="40" />
   <kendo-treelist-column
     [expandable]="true"
     field="title"
@@ -23,13 +37,9 @@
     [title]="'Wbs.Activity_Title' | translate"
   >
     <ng-template kendoTreeListCellTemplate let-dataItem>
-      <wbs-task-title
-        [canEdit]="true"
-        [showRemove]="true"
-        [level]="dataItem.levelText"
-        [title]="dataItem.title"
-        (edit)="treeService.editTitle(treelist, dataItem, 0)"
-        (remove)="removeTask(dataItem)"
+      <wbs-task-view-title
+        [task]="dataItem"
+        (menuItemSelected)="menuItemSelected(dataItem.id, $event)"
       />
     </ng-template>
     <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
@@ -62,4 +72,11 @@
     </ng-template>
   </kendo-treelist-column>
   }
+  <kendo-treelist-command-column [width]="40" class="tree-column text-center">
+    <ng-template kendoTreeListCellTemplate let-dataItem="dataItem">
+      <a title="Remove" class="pointer" (click)="removeHandler(dataItem)">
+        <fa-icon [icon]="removeIcon" size="sm" />
+      </a>
+    </ng-template>
+  </kendo-treelist-command-column>
 </kendo-treelist>

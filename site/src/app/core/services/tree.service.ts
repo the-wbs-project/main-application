@@ -1,7 +1,6 @@
 import { Injectable, WritableSignal, signal } from '@angular/core';
 import { TreeListComponent } from '@progress/kendo-angular-treelist';
 import { SaveState } from '@wbs/core/models';
-import { TaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 
@@ -38,13 +37,17 @@ export class TreeService {
     this.expandedKeys = keys;
   }
 
-  expandAll(treeList: TreeListComponent, tasks: TaskViewModel[]): void {
-    this.expandedKeys = tasks.map((task) => task.treeId);
+  expandAll<T, K extends keyof T>(tasks: T[], key: K): void {
+    this.expandedKeys = tasks.map((task) => task[key] as string);
   }
 
-  collapseAll(treeList: TreeListComponent, tasks: TaskViewModel[]): void {
+  collapseAll<T, K extends keyof T>(
+    treeList: TreeListComponent,
+    tasks: T[],
+    key: K
+  ): void {
     for (const task of tasks) {
-      if (this.expandedKeys.includes(task.treeId)) {
+      if (this.expandedKeys.includes(task[key] as string)) {
         treeList.collapse(task);
       }
     }
@@ -81,7 +84,7 @@ export class TreeService {
     this.saveStates.get(taskId)?.set(state);
   }
 
-  updateState(tasks: TaskViewModel[]): void {
+  updateState(tasks: { id: string }[]): void {
     for (const task of tasks ?? []) {
       if (!this.saveStates.has(task.id)) {
         this.saveStates.set(task.id, signal('ready'));
@@ -89,15 +92,18 @@ export class TreeService {
     }
   }
 
-  callSave(taskId: string, obs: Observable<any>): void {
+  callSave<T>(
+    taskId: string,
+    obs: Observable<T>,
+    delayMs = 5000
+  ): Observable<T> {
     this.setSaveState(taskId, 'saving');
 
-    obs
-      .pipe(
-        tap((x) => this.setSaveState(taskId, x === false ? 'ready' : 'saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
+    return obs.pipe(
+      tap((x) => this.setSaveState(taskId, x === false ? 'ready' : 'saved')),
+      delay(delayMs),
+      tap(() => this.setSaveState(taskId, 'ready'))
+    );
   }
 
   pageSize(containerHeight: number, offset: number, rowHeight: number): number {

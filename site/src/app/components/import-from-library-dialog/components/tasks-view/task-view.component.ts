@@ -26,7 +26,6 @@ import { TreeButtonsTogglerComponent } from '@wbs/components/_utils/tree-buttons
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
-import { LibraryEntryNode } from '@wbs/core/models';
 import {
   CategoryService,
   Messages,

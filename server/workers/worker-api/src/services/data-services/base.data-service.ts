@@ -19,4 +19,8 @@ export abstract class BaseDataService {
   protected putKv(key: string, data: any): void {
     this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(key, typeof data === 'string' ? data : JSON.stringify(data)));
   }
+
+  protected clearKv(key: string): void {
+    this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.delete(key));
+  }
 }

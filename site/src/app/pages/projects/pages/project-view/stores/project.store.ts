@@ -112,7 +112,11 @@ export class ProjectStore {
 
   setProject(project: ProjectViewModel): void {
     this._project.set(structuredClone(project));
-    this._disciplines.set(this.categories.buildViewModels(project.disciplines));
+    this._disciplines.set(
+      project.disciplines.length > 0
+        ? this.categories.buildViewModels(project.disciplines)
+        : this.categories.buildViewModelsFromDefinitions()
+    );
   }
 
   markProject(project: ProjectViewModel): void {
@@ -166,17 +170,15 @@ export class ProjectStore {
   private rebuildNodeViews(): void {
     const project = this.project();
     const tasks = this._taskModels();
+    const disciplines = this.projectDisciplines();
 
     if (!project || !tasks) return;
 
     this._tasks.set(
-      this.transformers.nodes.phase.view.forProject(tasks, project.disciplines)
+      this.transformers.nodes.phase.view.forProject(tasks, disciplines)
     );
     this._absTasks.set(
-      this.transformers.nodes.phase.view.forAbsProject(
-        tasks,
-        project.disciplines
-      )
+      this.transformers.nodes.phase.view.forAbsProject(tasks, disciplines)
     );
   }
 

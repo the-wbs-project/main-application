@@ -1,0 +1,66 @@
+<kendo-dialog
+  width="80%"
+  height="80%"
+  maxWidth="1000px"
+  [title]="'LibraryCreate.TitleTask' | translate"
+  (close)="dialog.close()"
+>
+  <wbs-dialog-wrapper #wrapper [steps]="steps" [view]="view()">
+    @if (view() === 0) {
+    <div class="d-inline-block w-100 mx-wd-800 tx-left">
+      <div class="pd-x-12">
+        <wbs-title-form
+          [(templateTitle)]="templateTitle"
+          [(mainTaskTitle)]="mainTaskTitle"
+          [(syncTitles)]="syncTitles"
+        />
+
+        <label class="form-label tx-18">
+          {{ "General.Visibility" | translate }}
+        </label>
+        <wbs-visibility-selection [(visibility)]="visibility" />
+      </div>
+    </div>
+    } @else if (view() === 1) {
+
+    <div class="d-inline-block w-100 mx-wd-800 text-center">
+      <div class="pd-y-15 pd-x-30 tx-14">
+        {{ "LibraryCreate.DisciplinesHeader" | translate }}
+      </div>
+      <div class="d-inline-block w-100" style="max-width: 500px">
+        <wbs-discipline-editor [showAdd]="true" [(categories)]="disciplines" />
+      </div>
+    </div>
+    } @else if (view() === 2) {
+
+    <div class="d-inline-block w-100 mx-wd-800">
+      <wbs-versioning [(alias)]="alias" />
+    </div>
+    } @else if (view() === 3) {
+
+    <div class="d-inline-block w-100 mx-wd-800">
+      @let saveState = service.saveState.state(); @if (saveState !== "saving") {
+      <wbs-save-section
+        [disciplines]="disciplines()"
+        [mainTaskTitle]="mainTaskTitle()"
+        [templateTitle]="templateTitle()"
+        [visibility]="visibility()"
+        [versionAlias]="alias()"
+      />
+      }
+      <wbs-saving-entry [saveState]="saveState" />
+    </div>
+    }
+  </wbs-dialog-wrapper>
+  <kendo-dialog-actions>
+    <wbs-dialog-buttons
+      [view]="view()"
+      [canContinue]="canContinue()"
+      [nextButtonLabel]="nextButtonLabel()"
+      [isSaving]="false"
+      [showSave]="false"
+      (next)="next()"
+      (back)="back()"
+    />
+  </kendo-dialog-actions>
+</kendo-dialog>

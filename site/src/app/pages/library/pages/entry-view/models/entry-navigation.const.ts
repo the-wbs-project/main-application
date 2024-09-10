@@ -1,30 +1,14 @@
 import { faInfoCircle, faTasks } from '@fortawesome/pro-solid-svg-icons';
-import { NavigationLink, RouteContextMenuItem } from '@wbs/core/models';
-import { ENTRY_PAGES } from './entry-pages.const';
+import { RouteContextMenuItem } from '@wbs/core/models';
 
-export const ENTRY_NAVIGATION: NavigationLink[] = [
+export const ENTRY_NAVIGATION: RouteContextMenuItem[] = [
   {
-    route: [ENTRY_PAGES.ABOUT],
-    text: 'General.About',
-    section: 'about',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
-  },
-  {
-    route: [ENTRY_PAGES.TASKS],
-    text: 'General.Tasks',
-    section: 'tasks',
-    cssClass: ['d-none', 'd-md-inline', 'nav-item', 'tx-uppercase'],
-  },
-];
-
-export const ENTRY_NAVIGATION2: RouteContextMenuItem[] = [
-  {
-    route: [ENTRY_PAGES.ABOUT],
+    route: ['about'],
     resource: 'General.About',
     faIcon: faInfoCircle,
   },
   {
-    route: [ENTRY_PAGES.TASKS],
+    route: ['tasks'],
     resource: 'General.Tasks',
     faIcon: faTasks,
   },

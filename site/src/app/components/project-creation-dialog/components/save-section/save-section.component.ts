@@ -128,7 +128,6 @@ export class SaveSectionComponent {
         disciplineIds: task.disciplineIds,
         parentId: task.parentId,
         phaseIdAssociation: task.phaseIdAssociation,
-        tags: task.tags,
         absFlag: null,
         libraryTaskLink: { owner, entryId, version, taskId: task.id },
       });

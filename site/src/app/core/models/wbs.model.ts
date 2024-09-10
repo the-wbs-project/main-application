@@ -1,7 +1,6 @@
-import { TaggedObject } from './app-models';
 import { Activity } from './activity.model';
 
-export interface Wbs extends TaggedObject {
+export interface Wbs {
   id: string;
   version: number;
   promoted: boolean;

@@ -31,14 +31,15 @@ import { DisciplineIconLabelComponent } from '@wbs/components/_utils/discipline-
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
-import { SaveService, TreeService } from '@wbs/core/services';
-import { EntryTaskService } from '@wbs/core/services/library';
+import { SaveService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { CategoryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
-import { LibraryTreeMenuService } from '../../services';
-import { EntryTaskActionService } from '../../../../services';
+import {
+  LibraryTaskActionService,
+  LibraryTaskService,
+} from '../../../../services';
 import { TaskDetailsResourcesComponent } from '../task-details-resources';
 
 @Component({
@@ -46,7 +47,7 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
   selector: 'wbs-library-task-details',
   templateUrl: './library-task-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LibraryTreeMenuService],
+  providers: [LibraryTaskActionService],
   imports: [
     ButtonModule,
     ChipModule,
@@ -65,9 +66,8 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
   ],
 })
 export class LibraryTaskDetailsComponent implements OnChanges {
-  private readonly actions = inject(EntryTaskActionService);
-  private readonly menuService = inject(LibraryTreeMenuService);
-  private readonly taskService = inject(EntryTaskService);
+  private readonly actions = inject(LibraryTaskActionService);
+  private readonly taskService = inject(LibraryTaskService);
   readonly entryStore = inject(EntryStore);
 
   readonly addIcon = faPlus;
@@ -156,7 +156,7 @@ export class LibraryTaskDetailsComponent implements OnChanges {
 
     if (!taskId) return;
 
-    const obsOrVoid = this.actions.onAction(action, taskId);
+    const obsOrVoid = this.actions.handleAction(action, taskId);
 
     if (obsOrVoid instanceof Observable) {
       this.menuSave.call(obsOrVoid).subscribe();
@@ -164,6 +164,6 @@ export class LibraryTaskDetailsComponent implements OnChanges {
   }
 
   protected buildMenu(): void {
-    this.menu.set(this.menuService.buildMenu(this.task()));
+    this.menu.set(this.actions.buildMenu(this.task()));
   }
 }

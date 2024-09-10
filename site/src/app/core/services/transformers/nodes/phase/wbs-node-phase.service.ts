@@ -1,36 +1,25 @@
-import {
-  Category,
-  LibraryEntryNode,
-  ProjectCategory,
-  ProjectNode,
-  WbsNode,
-} from '@wbs/core/models';
+import { LibraryEntryNode, ProjectNode, WbsNode } from '@wbs/core/models';
 import { MembershipStore, MetadataStore } from '@wbs/core/store';
 import {
+  CategoryViewModel,
   LibraryTaskViewModel,
+  LibraryVersionViewModel,
   ProjectTaskViewModel,
   TaskViewModel,
-  LibraryVersionViewModel,
 } from '@wbs/core/view-models';
-import { CategoryService } from '../../../category.service';
 import { sorter } from '../../../sorter.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseTransformer {
   constructor(
-    private readonly categoryService: CategoryService,
     private readonly membership: MembershipStore,
     private readonly metadata: MetadataStore
   ) {}
 
-  private get phaseList(): Category[] {
-    return this.metadata.categories.phases;
-  }
-
   forLibrary(
     version: LibraryVersionViewModel | undefined,
     models: LibraryEntryNode[],
-    disciplines: ProjectCategory[]
+    disciplines: CategoryViewModel[]
   ): LibraryTaskViewModel[] {
     if (!version) return [];
 
@@ -69,7 +58,7 @@ export class WbsNodePhaseTransformer {
 
   forProject(
     models: ProjectNode[],
-    disciplines: ProjectCategory[]
+    disciplines: CategoryViewModel[]
   ): ProjectTaskViewModel[] {
     const tasks: ProjectTaskViewModel[] = this.run(
       'project',
@@ -98,7 +87,7 @@ export class WbsNodePhaseTransformer {
 
   forAbsProject(
     models: ProjectNode[],
-    disciplines: ProjectCategory[]
+    disciplines: CategoryViewModel[]
   ): ProjectTaskViewModel[] {
     const tasks = this.forProject(models, disciplines).filter((x) => x.absFlag);
 
@@ -126,9 +115,9 @@ export class WbsNodePhaseTransformer {
   private run(
     parentType: string,
     models: (ProjectNode | LibraryEntryNode)[],
-    disciplines: ProjectCategory[]
+    disciplines: CategoryViewModel[]
   ): TaskViewModel[] {
-    const phases = this.phaseList;
+    const phases = this.metadata.categories.phases;
     const nodes: TaskViewModel[] = [];
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
@@ -141,9 +130,8 @@ export class WbsNodePhaseTransformer {
         children: 0,
         childrenIds: [],
         description: node.description,
-        disciplines: this.categoryService.buildTaskViewModels(
-          disciplines,
-          node?.disciplineIds
+        disciplines: disciplines.filter((x) =>
+          node.disciplineIds?.includes(x.id)
         ),
         id: node.id,
         treeId: node.id,
@@ -189,7 +177,7 @@ export class WbsNodePhaseTransformer {
   }
 
   private getPhaseChildren(
-    disciplines: ProjectCategory[],
+    disciplines: CategoryViewModel[],
     phaseId: string,
     phaseLabel: string,
     parent: TaskViewModel,
@@ -206,9 +194,8 @@ export class WbsNodePhaseTransformer {
         children: 0,
         childrenIds: [],
         description: child.description,
-        disciplines: this.categoryService.buildTaskViewModels(
-          disciplines,
-          child?.disciplineIds
+        disciplines: disciplines.filter((x) =>
+          child.disciplineIds?.includes(x.id)
         ),
         id: child.id,
         treeId: child.id,

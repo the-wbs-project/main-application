@@ -2,12 +2,10 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  inject,
   model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
@@ -21,10 +19,8 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { LibraryEntryVersionBasic } from '@wbs/core/models';
 import { SaveService, sorter } from '@wbs/core/services';
-import { UserStore } from '@wbs/core/store';
 import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { LibraryStatusPipe } from '@wbs/pipes/library-status.pipe';
 import { VersionPipe } from '@wbs/pipes/version.pipe';
@@ -40,7 +36,6 @@ import { map } from 'rxjs/operators';
     ButtonModule,
     DialogModule,
     DropDownListModule,
-    FontAwesomeModule,
     FormsModule,
     LabelModule,
     LibraryStatusPipe,
@@ -50,11 +45,6 @@ import { map } from 'rxjs/operators';
   ],
 })
 export class NewVersionDialogComponent extends DialogContentBase {
-  private readonly data = inject(DataServiceFactory);
-  private readonly userId = inject(UserStore).userId;
-  private ownerId?: string;
-  private entryId?: string;
-
   readonly versions = signal<LibraryEntryVersionBasic[]>([]);
   readonly selected = model<number>();
   readonly alias = model('');
@@ -84,8 +74,6 @@ export class NewVersionDialogComponent extends DialogContentBase {
     });
     const component = ref.content.instance as NewVersionDialogComponent;
 
-    component.ownerId = version.ownerId;
-    component.entryId = version.entryId;
     component.versions.set(versions);
     component.selected.set(
       versions.find((x) => x.status === 'published')?.version ?? version.version

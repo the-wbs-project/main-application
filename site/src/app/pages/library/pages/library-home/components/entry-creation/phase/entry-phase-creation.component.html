@@ -1,0 +1,80 @@
+<kendo-dialog
+  width="80%"
+  height="80%"
+  maxWidth="1000px"
+  [title]="'LibraryCreate.TitlePhase' | translate"
+  (close)="dialog.close()"
+>
+  <wbs-dialog-wrapper #wrapper [steps]="steps" [view]="view()">
+    @if (view() === 0) {
+    <div class="d-inline-block w-100 mx-wd-800 tx-left">
+      <div class="pd-x-12 mb-3">
+        <label for="templateTitle" class="form-label tx-18">
+          {{ "LibraryCreate.TemplateTitle" | translate }}
+        </label>
+        <input
+          kendoTextBox
+          name="templateTitle"
+          id="templateTitle"
+          [(ngModel)]="templateTitle"
+        />
+        <label class="d-inline-block tx-12 tx-italic mg-t-5">
+          {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+        </label>
+      </div>
+      <div class="pd-x-12">
+        <label class="form-label tx-18">
+          {{ "General.Visibility" | translate }}
+        </label>
+        <wbs-visibility-selection [(visibility)]="visibility" />
+      </div>
+    </div>
+    } @else if (view() === 1) {
+    <div class="d-inline-block w-100 mx-wd-800">
+      <wbs-phase-selection [(phase)]="phase" />
+    </div>
+    } @else if (view() === 2) {
+
+    <div class="d-inline-block w-100 mx-wd-800 text-center">
+      <div class="pd-y-15 pd-x-30 tx-14">
+        {{ "LibraryCreate.DisciplinesHeader" | translate }}
+      </div>
+      <div class="d-inline-block w-100" style="max-width: 500px">
+        <wbs-discipline-editor [showAdd]="true" [(categories)]="disciplines" />
+      </div>
+    </div>
+    } @else if (view() === 3) {
+
+    <div class="d-inline-block w-100 mx-wd-800">
+      <wbs-versioning [(alias)]="alias" />
+    </div>
+    } @else if (view() === 4) {
+
+    <div class="d-inline-block w-100 mx-wd-800">
+      @let saveState = service.saveState.state(); @if (saveState !== "saving") {
+      <wbs-save-section
+        [phase]="phase()!"
+        [versionAlias]="alias()"
+        [disciplines]="disciplines()"
+        [templateTitle]="templateTitle()"
+        [visibility]="visibility()"
+        (close)="dialog.close($event)"
+      />
+      }
+      <wbs-saving-entry [saveState]="saveState" />
+    </div>
+    }
+  </wbs-dialog-wrapper>
+
+  <kendo-dialog-actions>
+    <wbs-dialog-buttons
+      [view]="view()"
+      [canContinue]="canContinue()"
+      [nextButtonLabel]="nextButtonLabel()"
+      [isSaving]="false"
+      [showSave]="false"
+      (next)="next()"
+      (back)="back()"
+    />
+  </kendo-dialog-actions>
+</kendo-dialog>

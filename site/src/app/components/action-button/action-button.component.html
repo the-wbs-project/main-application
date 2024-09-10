@@ -2,9 +2,9 @@
   #anchor
   kendoButton
   themeColor="base"
-  rounded="small"
   size="small"
-  class="mg-y-4 border"
+  [rounded]="rounded()"
+  [ngClass]="buttonClass()"
 >
   @if (customContent()) {
   <ng-content />

@@ -68,6 +68,10 @@ export class ProjectActivityService {
     });
   }
 
+  cancelProject(owner: string, projectId: string): Observable<void> {
+    return this.save(owner, projectId, PROJECT_ACTIONS.CANCELLED, {});
+  }
+
   changeProjectDisciplines(
     owner: string,
     projectId: string,

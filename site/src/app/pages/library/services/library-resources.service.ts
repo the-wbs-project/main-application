@@ -5,13 +5,11 @@ import { RecordResourceEditorComponent } from '@wbs/components/record-resources/
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { LIBRARY_CLAIMS, ContentResource } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
-import {
-  EntryActivityService,
-  EntryTaskActivityService,
-} from '@wbs/core/services/library';
 import { EntryStore } from '@wbs/core/store';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
+import { EntryTaskActivityService } from './entry-task-activity.service';
+import { EntryActivityService } from './entry-activity.service';
 
 @Injectable()
 export class LibraryResourcesService {

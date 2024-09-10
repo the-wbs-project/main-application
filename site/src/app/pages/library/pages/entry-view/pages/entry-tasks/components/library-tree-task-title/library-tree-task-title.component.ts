@@ -14,7 +14,7 @@ import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { LibraryTaskViewModel } from '@wbs/core/view-models';
-import { LibraryTreeMenuService } from '../../services';
+import { LibraryTaskActionService } from '../../services';
 import { SaveState } from '@wbs/core/models';
 
 @Component({
@@ -22,7 +22,7 @@ import { SaveState } from '@wbs/core/models';
   selector: 'wbs-library-tree-task-title',
   templateUrl: './library-tree-task-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LibraryTreeMenuService],
+  providers: [LibraryTaskActionService],
   imports: [
     ContextMenuItemComponent,
     ContextMenuModule,
@@ -33,7 +33,7 @@ import { SaveState } from '@wbs/core/models';
   ],
 })
 export class LibraryTreeTaskTitleComponent {
-  private readonly menuService = inject(LibraryTreeMenuService);
+  private readonly actions = inject(LibraryTaskActionService);
 
   readonly menuIcon = faEllipsisH;
   readonly task = input.required<LibraryTaskViewModel>();
@@ -43,6 +43,6 @@ export class LibraryTreeTaskTitleComponent {
   readonly menuItemSelected = output<string>();
 
   protected buildMenu(): void {
-    this.menu.set(this.menuService.buildMenu(this.task()));
+    this.menu.set(this.actions.buildMenu(this.task()));
   }
 }

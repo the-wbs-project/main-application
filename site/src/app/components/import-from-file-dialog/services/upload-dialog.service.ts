@@ -175,7 +175,7 @@ export class UploadDialogService {
     let keepLooking = true;
 
     while (keepLooking) {
-      const levels = [...(parent?.levels ?? []), childLevel.toString()];
+      const levels = [...(parent?.levels ?? []), childLevel];
       const levelText = levels.join('.');
       const item = items.find((x) => x.levelText === levelText);
 
@@ -183,12 +183,17 @@ export class UploadDialogService {
         const node: ImportTask = {
           id: item.id,
           parentId: parent?.id,
-          level: levelText,
+          order: childLevel,
+          levelText: levelText,
           levels: levels,
           title: item.title,
           childrenIds: [],
           resources: [],
           disciplines: [],
+          canMoveLeft: parent != null,
+          canMoveRight: childLevel > 1,
+          canMoveUp: childLevel > 1,
+          canMoveDown: true,
         };
         if (item.resources)
           for (const resource of item.resources) {
@@ -208,6 +213,7 @@ export class UploadDialogService {
         keepLooking = false;
       }
     }
+    this.setMoveDown(nodes);
 
     return nodes;
   }
@@ -223,7 +229,7 @@ export class UploadDialogService {
     let keepLooking = true;
 
     while (keepLooking) {
-      const levels = [...(parent?.levels ?? []), childLevel.toString()];
+      const levels = [...(parent?.levels ?? []), childLevel];
       const levelText = levels.join('.');
       const item = items.find((x) => x.levelText === levelText);
 
@@ -235,12 +241,17 @@ export class UploadDialogService {
         const node: ImportTask = {
           id: item.id,
           parentId: parent?.id,
-          level: levelText,
+          levelText: levelText,
           levels: levels,
+          order: childLevel,
           title: item.title,
           childrenIds: [],
           resources,
           disciplines: this.getDisciples(disciplines, resources),
+          canMoveLeft: parent != null,
+          canMoveRight: childLevel > 1,
+          canMoveUp: childLevel > 1,
+          canMoveDown: true,
         };
         const children = this.convertProjectNodes(items, node);
 
@@ -252,6 +263,7 @@ export class UploadDialogService {
         keepLooking = false;
       }
     }
+    this.setMoveDown(nodes);
 
     return nodes;
   }
@@ -280,5 +292,19 @@ export class UploadDialogService {
       icon: cat.icon!,
       isCustom: false,
     };
+  }
+
+  private setMoveDown(list: ImportTask[]): void {
+    const parentIds = [...new Set(list.map((x) => x.parentId))];
+
+    for (const parentId of parentIds) {
+      const children = list
+        .filter((x) => x.parentId === parentId)
+        .sort((a, b) => sorter(a.order, b.order));
+
+      if (children.length < 2) continue;
+
+      children.at(-1)!.canMoveDown = false;
+    }
   }
 }

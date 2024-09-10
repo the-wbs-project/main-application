@@ -34,6 +34,12 @@ export class ProjectDataService {
     );
   }
 
+  getRecordIdAsync(owner: string, projectId: string): Observable<string> {
+    return this.http.get<string>(
+      `api/portfolio/${owner}/projects/${projectId}/recordId`
+    );
+  }
+
   getAsync(
     owner: string,
     projectId: string
@@ -49,6 +55,12 @@ export class ProjectDataService {
     return this.http.put<void>(
       `api/portfolio/${project.owner}/projects/${project.id}`,
       project
+    );
+  }
+
+  deleteProjectAsync(owner: string, projectId: string): Observable<void> {
+    return this.http.delete<void>(
+      `api/portfolio/${owner}/projects/${projectId}`
     );
   }
 

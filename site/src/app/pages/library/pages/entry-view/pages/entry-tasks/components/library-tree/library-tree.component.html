@@ -45,8 +45,8 @@
           </button>
           }
           <wbs-tree-buttons-toggler
-            (collapse)="treeService.collapseAll(treelist, tree)"
-            (expand)="treeService.expandAll(treelist, tree)"
+            (collapse)="treeService.collapseAll(treelist, tree, 'treeId')"
+            (expand)="treeService.expandAll(tree, 'treeId')"
           />
           @if (showFullscreen()) {
           <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />

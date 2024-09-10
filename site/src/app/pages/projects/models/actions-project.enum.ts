@@ -14,4 +14,5 @@ export enum PROJECT_ACTIONS {
   RESOURCE_UPDATED = 'project-resource-updated',
   RESOURCE_REORDERED = 'project-resource-reordered',
   RESOURCE_REMOVED = 'project-resource-removed',
+  CANCELLED = 'project-cancelled',
 }

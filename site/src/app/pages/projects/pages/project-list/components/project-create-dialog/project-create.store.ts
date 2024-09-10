@@ -4,7 +4,7 @@ import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class ProjectCreateStore {
-  readonly page = signal<number>(1);
+  readonly page = signal<number>(0);
   readonly pageDescription = signal<string>('');
   readonly title = signal<string>('');
   readonly description = signal<string>('');
@@ -18,16 +18,16 @@ export class ProjectCreateStore {
   readonly canContinue = computed(() => {
     const page = this.page();
 
-    if (page === 1) {
+    if (page === 0) {
       return this.title().trim() !== '';
     }
-    if (page === 2) {
+    if (page === 1) {
       return this.category() !== undefined;
     }
-    if (page === 3 || page === 4) {
+    if (page === 2 || page === 3) {
       return true;
     }
-    if (page === 5) {
+    if (page === 4) {
       return this.pms().length > 0;
     }
 

@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
+import { StepperItem } from '@wbs/core/models';
 import {
-  DialogStep,
   STEPS_EXCEL,
   STEPS_PROJECT,
   STEPS_STARTER,
@@ -9,10 +9,17 @@ import {
 
 @Injectable()
 export class UploadDialogViewService {
-  readonly page = signal<DialogStep>(STEPS_STARTER[0]);
+  readonly page = signal<StepperItem>(STEPS_STARTER[0]);
   readonly viewType = signal<'ticket' | 'excel' | 'project' | 'starter'>(
     'starter'
   );
+  readonly view = computed(() => {
+    const page = this.page();
+    const steps = this.steps();
+
+    return steps.findIndex((x) => x.id === page.id);
+  });
+
   readonly steps = computed(() => {
     switch (this.viewType()) {
       case 'ticket':

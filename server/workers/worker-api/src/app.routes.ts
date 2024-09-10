@@ -104,10 +104,12 @@ const projectApp = newApp()
   .get('', verifyJwt, verifyMembership, Http.projects.getByOwnerAsync)
   .get(':project', verifyJwt, verifyMembership, Http.projects.getByIdAsync)
   .get(':project/id', verifyJwt, verifyMembership, Http.projects.getIdAsync)
+  .get(':project/recordId', verifyJwt, verifyMembership, Http.projects.getRecordIdAsync)
   .get(':project/nodes', verifyJwt, verifyMembership, Http.projects.getNodesAsync)
-  .put(':project', verifyJwt, verifyMembership, Http.projects.putAsync)
-  .put(':project/nodes', verifyJwt, verifyMembership, Http.projects.putAsync)
-  .put(':project/approvals', verifyJwt, verifyMembership, Http.projects.putAsync);
+  .put(':project', verifyJwt, verifyMembership, Http.projects.putProjectAsync)
+  .delete(':project', verifyJwt, verifyMembership, Http.projects.deleteProjectAsync)
+  .put(':project/nodes', verifyJwt, verifyMembership, Http.projects.putNodesAsync);
+//.put(':project/approvals', verifyJwt, verifyMembership, Http.projects.putAsync);
 
 app.route('/', projectApp);
 

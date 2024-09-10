@@ -12,11 +12,22 @@ export class ProjectNodeDataService extends BaseDataService {
 
     if (kvData) return kvData;
 
-    const data = await this.origin.getAsync<any[]>(this.getUrl(owner, id));
+    const data = await this.getFromOriginAsync(owner, id);
 
     if (data) this.putKv(this.getKey(owner, id), data);
 
     return data ?? [];
+  }
+
+  async refreshKvAsync(owner: string, id: string): Promise<void> {
+    const data = await this.getFromOriginAsync(owner, id);
+
+    if (data) this.putKv(this.getKey(owner, id), data);
+    else this.clearKv(this.getKey(owner, id));
+  }
+
+  private getFromOriginAsync(owner: string, id: string): Promise<any[] | undefined> {
+    return this.origin.getAsync<any[]>(this.getUrl(owner, id));
   }
 
   private getUrl(owner: string, projectId?: string): string {

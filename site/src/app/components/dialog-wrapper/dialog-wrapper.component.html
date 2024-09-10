@@ -1,0 +1,21 @@
+<div class="d-flex flex-column h-100">
+  <div class="pe-none">
+    <kendo-stepper
+      [linear]="true"
+      stepType="full"
+      [steps]="steps()"
+      [currentStep]="view()"
+    >
+      <ng-template kendoStepperIndicatorTemplate let-step>
+        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+      </ng-template>
+      <ng-template kendoStepperLabelTemplate let-step>
+        {{ step.label | translate }}
+        @if (step.isOptional) { <span class="mg-l-5">*</span> }
+      </ng-template>
+    </kendo-stepper>
+  </div>
+  <div [appScrollToTop]="view()" class="tx-center flex-fill pd-t-20 pd-x-10">
+    <ng-content />
+  </div>
+</div>

@@ -9,11 +9,7 @@ export class WbsNodeTransformers {
     this.categoryService,
     this.wbsService
   );
-  readonly phase = new WbsPhaseNodeTransformers(
-    this.categoryService,
-    this.membership,
-    this.metadata
-  );
+  readonly phase = new WbsPhaseNodeTransformers(this.membership, this.metadata);
 
   constructor(
     private readonly categoryService: CategoryService,

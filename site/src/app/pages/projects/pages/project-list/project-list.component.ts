@@ -26,6 +26,8 @@ import {
   ProjectTableomponent,
   ProjectViewToggleComponent,
 } from './components';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of, switchMap } from 'rxjs';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -49,6 +51,8 @@ export class ProjectListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
   private readonly metadata = inject(MetadataStore);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly storage = inject(Storage);
 
   readonly cactusIcon = faCactus;
@@ -104,13 +108,22 @@ export class ProjectListComponent {
   }
 
   launchCreateProject(): void {
-    const ref = this.dialog.open({
-      content: ProjectCreateDialogComponent,
-    });
+    ProjectCreateDialogComponent.launchAsync(this.dialog)
+      .pipe(
+        switchMap((project) =>
+          project
+            ? this.data.projects.getRecordIdAsync(project.owner, project.id)
+            : of(undefined)
+        )
+      )
+      .subscribe((recordId) => {
+        if (!recordId) return;
 
-    ref.result.subscribe((id) => {
-      if (!id) return;
-    });
+        console.log('recordId', recordId);
+        this.router.navigate(['./', 'view', recordId], {
+          relativeTo: this.route,
+        });
+      });
   }
 
   setView(view: ProjectView): void {

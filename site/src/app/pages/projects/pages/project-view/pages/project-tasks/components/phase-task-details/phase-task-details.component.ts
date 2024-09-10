@@ -115,7 +115,10 @@ export class PhaseTaskDetailsComponent implements OnChanges {
       }
       const task = structuredClone(this.task());
 
-      if (!task) return;
+      if (!task) {
+        this.editTask.set(undefined);
+        return;
+      }
 
       if (task.description === undefined) task.description = '';
 

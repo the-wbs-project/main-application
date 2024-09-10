@@ -15,7 +15,7 @@
   <kendo-splitter-pane [scrollable]="false" min="100px">
     <kendo-treelist
       #treelist
-      class="tx-12"
+      class="tx-12 border bd-gray-500"
       kendoTreeListExpandable
       kendoTreeListSelectable
       [kendoTreeListFlatBinding]="list"
@@ -41,8 +41,8 @@
           <wbs-tree-buttons-add (selected)="addPhase($event)" />
           }
           <wbs-tree-buttons-toggler
-            (collapse)="treeService.collapseAll(treelist, list)"
-            (expand)="treeService.expandAll(treelist, list)"
+            (collapse)="treeService.collapseAll(treelist, list, 'treeId')"
+            (expand)="treeService.expandAll(list, 'treeId')"
           />
           @if (showFullscreen()) {
           <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />

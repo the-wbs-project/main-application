@@ -26,7 +26,7 @@ export class ProjectDataService extends BaseDataService {
 
     if (kvData) return kvData;
 
-    const data = await this.origin.getAsync<Project>(this.getUrl(owner, id));
+    const data = await this.getFromOriginAsync(owner, id);
 
     if (data) {
       this.putKv(this.getKey(owner, data.id), data);
@@ -35,15 +35,45 @@ export class ProjectDataService extends BaseDataService {
     return data;
   }
 
-  async clearKvAsync(owner: string, id: string): Promise<void> {
-    const keys = [this.getListKey(owner)];
+  async refreshKvAsync(owner: string, id: string): Promise<void> {
+    const listKey = this.getListKey(owner);
+    const itemKey = this.getKey(owner, id);
 
-    const keys2 = await this.ctx.env.KV_DATA.list({ prefix: this.getKey(owner, id) });
+    const data = await this.getFromOriginAsync(owner, id);
 
-    for (const key of keys2.keys) {
-      keys.push(key.name);
+    if (!data) return;
+
+    const projects = (await this.getKv<Project[]>(listKey)) ?? [];
+    const index = projects.findIndex((x) => x.id === id);
+
+    if (index === -1) {
+      projects.push(data);
+    } else {
+      projects[index] = data;
     }
-    await Promise.all(keys.map((key) => this.ctx.env.KV_DATA.delete(key)));
+
+    this.putKv(listKey, projects);
+    this.putKv(itemKey, data);
+  }
+
+  async clearKvAsync(owner: string, id: string): Promise<void> {
+    const keysToDelete = await this.ctx.env.KV_DATA.list({ prefix: this.getKey(owner, id) });
+
+    for (const key of keysToDelete.keys) {
+      this.clearKv(key.name);
+    }
+    //
+    //  Remove from list
+    //
+    var projects = (await this.getKv<Project[]>(this.getListKey(owner))) ?? [];
+
+    projects = projects.filter((x) => x.id !== id);
+
+    this.putKv(this.getListKey(owner), projects);
+  }
+
+  private getFromOriginAsync(owner: string, id: string): Promise<Project | undefined> {
+    return this.origin.getAsync<Project>(this.getUrl(owner, id));
   }
 
   private getUrl(owner: string, projectId?: string): string {

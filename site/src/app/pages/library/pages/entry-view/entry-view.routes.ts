@@ -1,17 +1,15 @@
-import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
-import { NgxsModule } from '@ngxs/store';
-import { EntryUploadState } from './pages/entry-upload/states';
 import {
-  EntryActionButtonService,
-  EntryTaskActionService,
   EntryTaskReorderService,
+  LibraryActionService,
   LibraryImportService,
+  LibraryService,
+  LibraryTaskActionService,
+  LibraryTaskService,
   entryUrlResolve,
   ownerIdResolve,
   populateGuard,
   redirectGuard,
-  verifyClaimsGuard,
 } from './services';
 
 export const routes: Routes = [
@@ -21,11 +19,12 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./view-entry.component').then((m) => m.EntryViewComponent),
     providers: [
-      importProvidersFrom(NgxsModule.forFeature([EntryUploadState])),
-      EntryActionButtonService,
-      EntryTaskActionService,
       EntryTaskReorderService,
+      LibraryActionService,
       LibraryImportService,
+      LibraryService,
+      LibraryTaskActionService,
+      LibraryTaskService,
     ],
     resolve: {
       owner: ownerIdResolve,
@@ -50,18 +49,6 @@ export const routes: Routes = [
         resolve: {
           entryUrl: entryUrlResolve,
         },
-      },
-      {
-        path: 'upload',
-        loadComponent: () =>
-          import('./pages/entry-upload/upload-layout.component').then(
-            (x) => x.ProjectUploadLayoutComponent
-          ),
-        canActivate: [verifyClaimsGuard],
-        loadChildren: () =>
-          import('./pages/entry-upload/pages/children.routes').then(
-            (x) => x.routes
-          ),
       },
     ],
   },

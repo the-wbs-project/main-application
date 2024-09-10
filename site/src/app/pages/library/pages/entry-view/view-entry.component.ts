@@ -8,16 +8,13 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate, RouterState } from '@ngxs/router-plugin';
+import { RouterState } from '@ngxs/router-plugin';
 import { ActionIconListComponent } from '@wbs/components/_utils/action-icon-list.component';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { ActionButtonComponent } from '@wbs/components/action-button';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { SaveService, SignalStore, TitleService } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
+import { SignalStore, TitleService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
-import { EntryViewBreadcrumbsPipe } from './pipes/entry-view-breadcrumbs.pipe';
-import { EntryActionButtonService } from './services';
+import { LibraryActionService } from './services';
 
 @Component({
   standalone: true,
@@ -26,29 +23,25 @@ import { EntryActionButtonService } from './services';
   imports: [
     ActionButtonComponent,
     ActionIconListComponent,
-    EntryViewBreadcrumbsPipe,
-    SaveMessageComponent,
     RouterModule,
     TranslateModule,
     WatchIndicatorComponent,
   ],
 })
 export class EntryViewComponent {
-  private readonly entryService = inject(EntryService);
   private readonly store = inject(SignalStore);
 
+  readonly actions = inject(LibraryActionService);
   readonly entryStore = inject(EntryStore);
-  readonly menuService = inject(EntryActionButtonService);
   readonly owner = input.required<string>();
   readonly entryUrl = input.required<string[]>();
 
   readonly url = this.store.select(RouterState.url);
-  readonly titleSaveState = new SaveService();
   readonly canWatch = computed(() =>
     (this.entryStore.versions() ?? []).some((x) => x.status === 'published')
   );
   readonly menu = computed(() =>
-    this.menuService.buildMenu(
+    this.actions.buildMenu(
       this.entryStore.versions()!,
       this.entryStore.version()!,
       this.entryUrl(),
@@ -77,15 +70,5 @@ export class EntryViewComponent {
         ...(version ? [version.title] : []),
       ]);
     });
-  }
-
-  titleChanged(title: string): void {
-    this.titleSaveState
-      .call(this.entryService.titleChangedAsync(title))
-      .subscribe();
-  }
-
-  navigate(route: string[]) {
-    this.store.dispatch(new Navigate([...this.entryUrl(), ...route]));
   }
 }

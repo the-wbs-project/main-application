@@ -43,11 +43,12 @@ export class ProjectImportService {
   ): Observable<unknown> {
     const upserts: ProjectNode[] = [];
     const project = this.store.project()!;
+    const existingTasks = this.store.tasks() ?? [];
 
     for (const task of tasks) {
       if (task.parentId == undefined) {
         task.parentId = taskId;
-        task.order = this.getOrderNumber(tasks, task.parentId);
+        task.order = this.getOrderNumber(existingTasks, task.parentId);
       }
 
       upserts.push({
@@ -164,7 +165,7 @@ export class ProjectImportService {
     tasks: WbsNode[],
     parentId: string | undefined
   ): number {
-    const siblings = tasks.filter((x) => x.parentId === parentId);
+    const siblings = tasks.filter((x) => x.parentId == parentId); //dont use 3 equal signs
 
     return siblings.length === 0
       ? 1

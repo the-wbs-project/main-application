@@ -16,6 +16,19 @@ export class ProjectHttpService {
     }
   }
 
+  static async getRecordIdAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, project } = ctx.req.param();
+      const obj = await ctx.var.data.projects.getByIdAsync(owner, project);
+
+      return obj ? ctx.json(obj.recordId) : ctx.text('Not Found', 404);
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to get a project record ID.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
   static async getByOwnerAsync(ctx: Context): Promise<Response> {
     try {
       const { owner } = ctx.req.param();
@@ -74,10 +87,49 @@ export class ProjectHttpService {
     }
   }
 
-  static async putAsync(ctx: Context): Promise<Response> {
+  static async putProjectAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, project } = ctx.req.param();
-      const [resp] = await Promise.all([OriginService.pass(ctx), ctx.var.data.projects.clearKvAsync(owner, project)]);
+      const resp = await OriginService.pass(ctx);
+
+      if (resp.status < 300) {
+        await ctx.var.data.projects.refreshKvAsync(owner, project);
+      }
+
+      return resp;
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to save a project.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async deleteProjectAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, project } = ctx.req.param();
+      const resp = await OriginService.pass(ctx);
+
+      if (resp.status < 300) {
+        await ctx.var.data.projects.clearKvAsync(owner, project);
+      }
+
+      return resp;
+    } catch (e) {
+      ctx.get('logger').trackException('An error occured trying to delete a project.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async putNodesAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, project } = ctx.req.param();
+      const resp = await OriginService.pass(ctx);
+
+      if (resp.status < 300) {
+        await ctx.var.data.projects.refreshKvAsync(owner, project);
+        await ctx.var.data.projectNodes.refreshKvAsync(owner, project);
+      }
 
       return resp;
     } catch (e) {

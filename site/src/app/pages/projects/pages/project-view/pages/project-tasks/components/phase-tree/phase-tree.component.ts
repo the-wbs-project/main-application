@@ -18,8 +18,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { faSave, faXmark } from '@fortawesome/pro-light-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SplitterModule } from '@progress/kendo-angular-layout';
 import {
@@ -64,13 +67,6 @@ import { PhaseTaskDetailsComponent } from '../phase-task-details';
 import { PhaseTreeTitleLegendComponent } from '../phase-tree-title-legend';
 import { PhaseTreeTaskTitleComponent } from '../phase-tree-task-title';
 import { TreeTypeButtonComponent } from '../tree-type-button.component';
-import {
-  faPlus,
-  faSave,
-  faTrash,
-  faXmark,
-} from '@fortawesome/pro-solid-svg-icons';
-import { DialogService } from '@progress/kendo-angular-dialog';
 
 @Component({
   standalone: true,
@@ -132,7 +128,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   readonly cancelIcon = faXmark;
   readonly saveIcon = faSave;
   readonly removeIcon = faTrash;
-  readonly heightOffset = 50;
+  readonly heightOffset = 10;
   readonly rowHeight = 31.5;
   //
   //  signals/models
@@ -144,11 +140,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //
   //  Computed signals
   //
-  readonly selectedTask = computed(
-    () =>
-      this.projectStore
-        .viewModels()
-        ?.find((x) => x.id === this.selectedTaskId())!
+  readonly selectedTask = computed(() =>
+    this.projectStore.viewModels()?.find((x) => x.id === this.selectedTaskId())
   );
   readonly canEdit = computed(
     () =>
@@ -215,7 +208,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
   addPhase(type: AddPhaseOptions): void {
     if (type === 'create') {
-      //
+      this.addHandler(undefined);
     } else if (type === 'importFile') {
       this.importService.importFromFileAsync().subscribe();
     } else if (type === 'importLibrary') {
@@ -223,13 +216,19 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
   }
 
-  menuItemSelected(item: string, taskId: string): void {
-    const obsOrVoid = this.viewService.action(item, taskId);
+  menuItemSelected(action: string, taskId: string): void {
+    const obsOrVoid = this.viewService.action(action, taskId);
 
     if (obsOrVoid instanceof Observable) {
-      if (taskId) this.treeService.callSave(taskId, obsOrVoid);
-      else {
-        //@ts-ignore
+      if (taskId && action === 'deleteTask') {
+        this.treeService.callSave(taskId, obsOrVoid, 0).subscribe(() => {
+          if (taskId === this.selectedTaskId()) {
+            this.selectedTaskId.set(undefined);
+          }
+        });
+      } else if (taskId) {
+        this.treeService.callSave(taskId, obsOrVoid).subscribe();
+      } else {
         obsOrVoid.subscribe();
       }
     }
@@ -263,7 +262,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
     sender.addRow(this.editForm, parent);
   }
 
-  closeEditor(dataItem = this.editItem): void {
+  closeEditor(): void {
     this.treeList()?.closeRow(undefined, true);
     this.editItem = undefined;
     this.editForm = undefined;
@@ -277,17 +276,19 @@ export class ProjectPhaseTreeComponent implements OnInit {
 
     const disciplines: CategoryViewModel[] = editForm.value.disciplines;
 
-    this.treeService.callSave(
-      this.editParentId!,
-      this.taskService
-        .createTask(
-          editForm.value.parentId,
-          editForm.value.title,
-          undefined,
-          disciplines.map((x) => x.id)
-        )
-        .pipe(tap((taskId) => this.closeEditor()))
-    );
+    this.treeService
+      .callSave(
+        this.editParentId!,
+        this.taskService
+          .createTask(
+            editForm.value.parentId,
+            editForm.value.title,
+            undefined,
+            disciplines.map((x) => x.id)
+          )
+          .pipe(tap((taskId) => this.closeEditor()))
+      )
+      .subscribe();
   }
 
   removeHandler(task: ProjectTaskViewModel): void {
@@ -300,14 +301,23 @@ export class ProjectPhaseTreeComponent implements OnInit {
     TaskDeleteComponent.launchAsync(this.dialogService).subscribe((reason) => {
       if (!reason) return;
 
-      this.treeService.callSave(
-        taskId,
-        this.taskService.remove(taskId, reason).pipe(
-          tap(() => {
-            if (parent) sender.reload(parent);
-          })
+      this.treeService
+        .callSave(
+          taskId,
+          this.taskService.remove(taskId, reason).pipe(
+            tap(() => {
+              if (parent) sender.reload(parent);
+            }),
+            tap(() => {
+              const selected = this.selectedTaskId();
+
+              if (selected === taskId) {
+                this.selectedTaskId.set(undefined);
+              }
+            })
+          )
         )
-      );
+        .subscribe();
     });
   }
 

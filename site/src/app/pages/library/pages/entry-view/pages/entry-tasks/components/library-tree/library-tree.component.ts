@@ -47,7 +47,6 @@ import {
   TreeService,
   Utils,
 } from '@wbs/core/services';
-import { EntryService, EntryTaskService } from '@wbs/core/services/library';
 import {
   EntryStore,
   MembershipStore,
@@ -61,8 +60,10 @@ import {
 } from '@wbs/core/view-models';
 import { Observable, tap } from 'rxjs';
 import {
-  EntryTaskActionService,
+  LibraryService,
   EntryTaskReorderService,
+  LibraryTaskService,
+  LibraryTaskActionService,
 } from '../../../../services';
 import { LibraryTaskDetailsComponent } from '../library-task-details';
 import { LibraryTreeTaskTitleComponent } from '../library-tree-task-title';
@@ -100,14 +101,14 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
 export class LibraryTreeComponent implements OnInit {
   protected readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
 
-  private readonly actions = inject(EntryTaskActionService);
+  private readonly actions = inject(LibraryTaskActionService);
   private readonly category = inject(CategoryService);
   private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
   private readonly membership = inject(MembershipStore);
   private readonly reorderer = inject(EntryTaskReorderService);
-  private readonly taskService = inject(EntryTaskService);
-  readonly entryService = inject(EntryService);
+  private readonly taskService = inject(LibraryTaskService);
+  readonly entryService = inject(LibraryService);
   readonly entryStore = inject(EntryStore);
   readonly width = inject(UiStore).mainContentWidth;
   readonly treeService = new TreeService();
@@ -117,7 +118,7 @@ export class LibraryTreeComponent implements OnInit {
   readonly saveIcon = faSave;
   readonly removeIcon = faTrash;
   readonly heightOffset = 10;
-  readonly rowHeight = 30;
+  readonly rowHeight = 31.5;
   editParentId?: string;
   editItem?: LibraryTaskViewModel;
   editForm?: FormGroup;
@@ -193,10 +194,10 @@ export class LibraryTreeComponent implements OnInit {
   menuItemSelected(action: string, taskId?: string): void {
     if (!taskId) return;
 
-    const obsOrVoid = this.actions.onAction(action, taskId);
+    const obsOrVoid = this.actions.handleAction(action, taskId);
 
     if (obsOrVoid instanceof Observable) {
-      if (taskId) this.treeService.callSave(taskId, obsOrVoid);
+      if (taskId) this.treeService.callSave(taskId, obsOrVoid).subscribe();
       else obsOrVoid.subscribe();
     }
   }
@@ -228,10 +229,12 @@ export class LibraryTreeComponent implements OnInit {
         target,
         e.dropPosition
       );
-      this.treeService.callSave(
-        dragged.id,
-        this.taskService.saveAsync(results, [], 'Wbs.TasksReordered')
-      );
+      this.treeService
+        .callSave(
+          dragged.id,
+          this.taskService.saveAsync(results, [], 'Wbs.TasksReordered')
+        )
+        .subscribe();
     };
     if (validation.confirmMessage) {
       this.messages.confirm
@@ -254,13 +257,15 @@ export class LibraryTreeComponent implements OnInit {
     discipilnes: CategoryViewModel[]
   ) {
     treelist.closeCell();
-    this.treeService.callSave(
-      taskId,
-      this.taskService.disciplinesChangedAsync(
+    this.treeService
+      .callSave(
         taskId,
-        discipilnes.map((x) => x.id)
+        this.taskService.disciplinesChangedAsync(
+          taskId,
+          discipilnes.map((x) => x.id)
+        )
       )
-    );
+      .subscribe();
   }
 
   taskTitleChanged(
@@ -270,10 +275,9 @@ export class LibraryTreeComponent implements OnInit {
   ): void {
     treelist.closeCell();
 
-    this.treeService.callSave(
-      taskId,
-      this.taskService.titleChangedAsync(taskId, title)
-    );
+    this.treeService
+      .callSave(taskId, this.taskService.titleChangedAsync(taskId, title))
+      .subscribe();
   }
 
   rowCallback = (context: RowClassArgs) => {
@@ -328,18 +332,20 @@ export class LibraryTreeComponent implements OnInit {
       disciplineIds: disciplines.map((x) => x.id),
     };
 
-    this.treeService.callSave(
-      this.editParentId!,
-      this.taskService.createTask(task.parentId, task).pipe(
-        tap((taskId) => {
-          this.treeList()?.scrollTo({
-            column: 0,
-            row: -1,
-          });
-          this.closeEditor();
-        })
+    this.treeService
+      .callSave(
+        this.editParentId!,
+        this.taskService.createTask(task.parentId, task).pipe(
+          tap((taskId) => {
+            this.treeList()?.scrollTo({
+              column: 0,
+              row: -1,
+            });
+            this.closeEditor();
+          })
+        )
       )
-    );
+      .subscribe();
   }
 
   removeHandler(task: LibraryTaskViewModel): void {
@@ -349,14 +355,16 @@ export class LibraryTreeComponent implements OnInit {
       ? this.entryStore.viewModels()?.find((x) => x.id === task.parentId)
       : undefined;
 
-    this.treeService.callSave(
-      taskId,
-      this.taskService.removeTask(taskId).pipe(
-        tap(() => {
-          if (parent) sender.reload(parent);
-        })
+    this.treeService
+      .callSave(
+        taskId,
+        this.taskService.removeTask(taskId).pipe(
+          tap(() => {
+            if (parent) sender.reload(parent);
+          })
+        )
       )
-    );
+      .subscribe();
   }
 
   private resetTree(): void {

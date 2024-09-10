@@ -42,12 +42,29 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{projectId}")]
+    public async Task<IActionResult> GetByIdAsync(string owner, string projectId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await projectDataService.GetByIdAsync(conn, projectId));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting project {projectId} for owner {owner}", projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPut("{projectId}")]
-    public async Task<IActionResult> Put(string owner, Project project)
+    public async Task<IActionResult> Put(string owner, string projectId, Project project)
     {
         try
         {
             if (project.Owner != owner) return BadRequest("Owner in url must match owner in body");
+            if (project.Id != projectId) return BadRequest("ProjectId in url must match projectId in body");
 
             using (var conn = await db.CreateConnectionAsync())
                 await projectDataService.SetAsync(conn, project);
@@ -62,17 +79,27 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{projectId}")]
-    public async Task<IActionResult> GetByIdAsync(string owner, string projectId)
+    [HttpDelete("{projectId}")]
+    public async Task<IActionResult> Delete(string owner, string projectId)
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await projectDataService.GetByIdAsync(conn, projectId));
+
+            using var conn = await db.CreateConnectionAsync();
+
+            var project = await projectDataService.GetByIdAsync(conn, projectId);
+
+            if (project == null) return NotFound();
+
+            project.Status = "cancelled";
+
+            await projectDataService.SetAsync(conn, project);
+
+            return Accepted();
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error getting project {projectId} for owner {owner}", projectId, owner);
+            logger.LogError(ex, "Error cancelling project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }

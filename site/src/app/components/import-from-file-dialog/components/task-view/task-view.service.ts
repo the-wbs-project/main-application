@@ -1,28 +1,13 @@
-import { inject, Injectable } from '@angular/core';
-import { Messages } from '@wbs/core/services';
-import { ImportTask } from '../../models';
+import { Injectable } from '@angular/core';
 import {
   CellClickEvent,
   ColumnComponent,
   TreeListComponent,
 } from '@progress/kendo-angular-treelist';
-import { map, Observable } from 'rxjs';
+import { ImportTask } from '../../models';
 
 @Injectable()
 export class TaskViewService {
-  private readonly messages = inject(Messages);
-
-  removeTaskAsync(task: ImportTask): Observable<string[] | undefined> {
-    return this.messages.confirm
-      .show(
-        'General.Confirm',
-        'Are you sure you want to remove this task (and any sub-tasks)?'
-      )
-      .pipe(
-        map((answer) => (answer ? [task.id, ...(task.childrenIds ?? [])] : []))
-      );
-  }
-
   taskTitleChanged(
     treelist: TreeListComponent,
     item: ImportTask,

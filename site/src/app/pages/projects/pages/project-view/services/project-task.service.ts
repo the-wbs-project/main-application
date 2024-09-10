@@ -2,7 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ProjectNode, RebuildResults } from '@wbs/core/models';
-import { IdService, Transformers } from '@wbs/core/services';
+import { IdService, Transformers, WbsNodeService } from '@wbs/core/services';
 import {
   CategoryViewModel,
   ProjectTaskViewModel,
@@ -17,6 +17,7 @@ import { ProjectStore } from '../stores';
 export class ProjectTaskService {
   private readonly activity = inject(ProjectTaskActivityService);
   private readonly data = inject(DataServiceFactory);
+  private readonly wbsService = inject(WbsNodeService);
   protected readonly projectStore = inject(ProjectStore);
   protected readonly store = inject(Store);
   protected readonly transformers = inject(Transformers);
@@ -143,97 +144,44 @@ export class ProjectTaskService {
 
   moveTaskDown(taskId: string): Observable<unknown> {
     const tasks = this.getTasks();
-    const task = tasks.find((x) => x.id === taskId)!;
-    const task2 = tasks.find(
-      (x) => x.parentId === task?.parentId && x.order === task.order + 1
-    );
-    if (!task || !task2) return of('');
+    const [task1, task2] = this.wbsService.moveTaskDown(tasks, taskId);
 
-    task.order++;
-    task2.order--;
+    if (!task1 || !task2) return of('');
 
-    return this.saveReordered(task.levelText, task, [task2]);
+    return this.saveReordered(task1.levelText, task1, [task2]);
   }
 
   moveTaskLeft(taskId: string): Observable<unknown> {
     const tasks = this.getTasks();
-    const task = tasks.find((x) => x.id === taskId)!;
-    const parent = tasks.find((x) => x.id === task?.parentId);
+    let results = this.wbsService.moveTaskLeft(tasks, taskId);
 
-    if (!task || !parent) return of('');
+    if (results.length === 0) return of('');
 
-    const toSave: ProjectTaskViewModel[] = [];
-    //
-    //  Renumber the old siblings
-    //
-    for (const sibling of tasks.filter((x) => x.parentId === parent.id)) {
-      if (sibling.order <= task.order || sibling.id === task.id) continue;
+    const task = results[0];
+    const toSave = results.slice(1);
 
-      sibling.order--;
-      toSave.push(sibling);
-    }
-
-    task.parentId = parent.parentId;
-    task.order = parent.order + 1;
-    //
-    //  Renumber the new siblings
-    //
-    for (const sibling of tasks.filter((x) => x.parentId === parent.parentId)) {
-      if (sibling.order <= parent.order || sibling.id === task.id) continue;
-
-      sibling.order++;
-      toSave.push(sibling);
-    }
     return this.saveReordered(task.levelText, task, toSave);
   }
 
   moveTaskRight(taskId: string): Observable<unknown> {
     const tasks = this.getTasks();
-    const task = tasks.find((x) => x.id === taskId)!;
+    let results = this.wbsService.moveTaskRight(tasks, taskId);
 
-    if (!task) return of('');
+    if (results.length === 0) return of('');
 
-    let newParent: ProjectTaskViewModel | undefined;
-    const oldSiblings = tasks.filter((x) => x.parentId === task.parentId);
-    const toSave: ProjectTaskViewModel[] = [];
-    //
-    //  Find all current siblings which are lower in the order than task and bump them up.
-    //
-    for (const sibling of oldSiblings) {
-      if (sibling.order === task.order - 1) {
-        newParent = sibling;
-        continue;
-      }
-      if (sibling.order <= task.order) continue;
-
-      sibling.order--;
-      toSave.push(sibling);
-    }
-    if (!newParent) return of('');
-
-    const newSiblings = tasks.filter((x) => x.parentId === newParent?.id);
-
-    task.parentId = newParent.id;
-    task.order =
-      (newSiblings.length === 0
-        ? 0
-        : Math.max(...newSiblings.map((x) => x.order))) + 1;
+    const task = results[0];
+    const toSave = results.slice(1);
 
     return this.saveReordered(task.levelText, task, toSave);
   }
 
   moveTaskUp(taskId: string): Observable<unknown> {
     const tasks = this.getTasks();
-    const task = tasks.find((x) => x.id === taskId)!;
-    const task2 = tasks.find(
-      (x) => x.parentId === task?.parentId && x.order === task.order - 1
-    );
-    if (!task || !task2) return of('');
+    const [task1, task2] = this.wbsService.moveTaskUp(tasks, taskId);
 
-    task.order--;
-    task2.order++;
+    if (!task1 || !task2) return of('');
 
-    return this.saveReordered(task.levelText, task, [task2]);
+    return this.saveReordered(task1.levelText, task1, [task2]);
   }
 
   treeReordered(

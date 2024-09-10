@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI_TYPE } from '@wbs/core/models';
+import { PROJECT_STATI, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
 import { ProjectViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
@@ -33,12 +33,9 @@ export class ProjectViewService {
     return this.project.owner;
   }
 
-  action(
-    action: string,
-    taskId: string
-  ): void | Observable<void> | Observable<boolean> {
+  action(action: string, taskId: string): void | Observable<any> {
     if (action === 'cloneTask') {
-      this.taskService.cloneTask(taskId).subscribe();
+      return this.taskService.cloneTask(taskId);
     } else if (action === 'deleteTask') {
       return TaskDeleteComponent.launchAsync(this.dialogService).pipe(
         switchMap((reason) =>
@@ -48,21 +45,17 @@ export class ProjectViewService {
         )
       );
     } else if (action === 'moveLeft') {
-      this.taskService.moveTaskLeft(taskId).subscribe();
+      return this.taskService.moveTaskLeft(taskId);
     } else if (action === 'moveRight') {
-      this.taskService.moveTaskRight(taskId).subscribe();
+      return this.taskService.moveTaskRight(taskId);
     } else if (action === 'moveUp') {
-      this.taskService.moveTaskUp(taskId).subscribe();
+      return this.taskService.moveTaskUp(taskId);
     } else if (action === 'moveDown') {
-      this.taskService.moveTaskDown(taskId).subscribe();
+      return this.taskService.moveTaskDown(taskId);
     } else if (action === 'setAbsFlag') {
-      return this.taskService
-        .changeTaskAbs(taskId, 'set')
-        .pipe(map(() => true));
+      return this.taskService.changeTaskAbs(taskId, 'set');
     } else if (action === 'removeAbsFlag') {
-      return this.taskService
-        .changeTaskAbs(taskId, undefined)
-        .pipe(map(() => true));
+      return this.taskService.changeTaskAbs(taskId, undefined);
     } else if (action === 'exportTask') {
       const task = this.projectStore.tasks()!.find((x) => x.id === taskId)!;
 
@@ -81,15 +74,10 @@ export class ProjectViewService {
 
     const project = this.project;
     const nodes = this.projectStore.tasks()!;
+    const disciplnes = this.projectStore.projectDisciplines();
     let tasks = abs
-      ? this.transformers.nodes.phase.view.forAbsProject(
-          nodes,
-          project.disciplines
-        )
-      : this.transformers.nodes.phase.view.forProject(
-          nodes,
-          project.disciplines
-        );
+      ? this.transformers.nodes.phase.view.forAbsProject(nodes, disciplnes)
+      : this.transformers.nodes.phase.view.forProject(nodes, disciplnes);
 
     this.data.wbsExport
       .runAsync(
@@ -112,13 +100,16 @@ export class ProjectViewService {
         switchMap((answer: boolean) => {
           if (!answer) return of();
 
-          return this.projectService
-            .changeProjectStatus(status)
-            .pipe(
-              tap(() =>
-                this.messages.report.success('General.Success', successMessage)
-              )
-            );
+          const obj =
+            status === PROJECT_STATI.CANCELLED
+              ? this.projectService.cancelProject()
+              : this.projectService.changeProjectStatus(status);
+
+          return obj.pipe(
+            tap(() =>
+              this.messages.report.success('General.Success', successMessage)
+            )
+          );
         })
       )
       .subscribe();

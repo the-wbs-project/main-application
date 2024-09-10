@@ -3,7 +3,6 @@ import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { forkJoin } from 'rxjs';
@@ -65,24 +64,4 @@ export const populateGuard = (route: ActivatedRouteSnapshot) => {
       store.setAll(versions, version, tasks, claims);
     })
   );
-};
-
-export const verifyClaimsGuard = (route: ActivatedRouteSnapshot) => {
-  const data = inject(DataServiceFactory);
-  const org = Utils.getParam(route, 'org');
-  const owner = Utils.getParam(route, 'ownerId');
-  const recordId = Utils.getParam(route, 'recordId');
-  const version = parseInt(Utils.getParam(route, 'versionId'), 10);
-
-  if (!owner || !recordId) return false;
-
-  return data.libraryEntries
-    .getIdAsync(owner, recordId)
-    .pipe(
-      switchMap((entryId) =>
-        data.claims
-          .getLibraryEntryClaimsAsync(org, owner, entryId, version)
-          .pipe(map((claims) => claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE)))
-      )
-    );
 };

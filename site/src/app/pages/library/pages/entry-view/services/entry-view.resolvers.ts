@@ -1,6 +1,6 @@
 import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 import { Utils } from '@wbs/core/services';
-import { EntryService } from '@wbs/core/services/library';
+import { LibraryService } from './library.service';
 
 export const ownerIdResolve: ResolveFn<string> = (
   route: ActivatedRouteSnapshot
@@ -8,4 +8,4 @@ export const ownerIdResolve: ResolveFn<string> = (
 
 export const entryUrlResolve: ResolveFn<string[]> = (
   route: ActivatedRouteSnapshot
-) => EntryService.getEntryUrl(route);
+) => LibraryService.getEntryUrl(route);

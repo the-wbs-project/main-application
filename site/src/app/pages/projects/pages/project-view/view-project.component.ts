@@ -34,8 +34,6 @@ import { ProjectStore } from './stores';
   ],
 })
 export class ProjectViewComponent {
-  private readonly store = inject(SignalStore);
-
   readonly checkIcon = faCheck;
   readonly projectStore = inject(ProjectStore);
   readonly menuService = inject(ProjectActionButtonService);

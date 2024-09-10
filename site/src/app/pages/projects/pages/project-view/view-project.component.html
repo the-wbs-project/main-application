@@ -1,9 +1,11 @@
 @if (projectStore.project(); as project) {
 <div class="d-flex flex-column h-100">
   <div class="mg-y-5">
-    <div class="d-flex flex-align-center">
+    <div class="d-flex flex-align-center gap-10">
       <wbs-action-button
         [menu]="menu()"
+        rounded="small"
+        buttonClass="mg-y-4"
         (itemClicked)="menuService.handleAction($event)"
       />
       @if (project.category | projectCategoryIcon; as url) {

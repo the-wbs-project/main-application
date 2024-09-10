@@ -1,12 +1,7 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { NgxsModule, Store } from '@ngxs/store';
-import { getOwner, ownerIdResolve } from './entry-view.resolvers';
-import {
-  ActivatedRouteSnapshot,
-  RouterModule,
-  RouterStateSnapshot,
-} from '@angular/router';
-import { BehaviorSubject, Subject, delay, of, tap } from 'rxjs';
+import { RouterModule } from '@angular/router';
+import { BehaviorSubject, delay, of } from 'rxjs';
 
 describe('Utils', () => {
   let store: Store;

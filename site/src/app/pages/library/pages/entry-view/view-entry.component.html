@@ -4,7 +4,9 @@
     <div class="d-flex flex-align-center gap-10">
       <wbs-action-button
         [menu]="menu()"
-        (itemClicked)="menuService.handleAction($event)"
+        rounded="small"
+        buttonClass="mg-y-4"
+        (itemClicked)="actions.handleAction($event)"
       />
       @if (canWatch()) {
       <span class="tx-24">
@@ -21,7 +23,6 @@
         {{ version.title }}
         @if (page) { &nbsp;-&nbsp;{{ page | translate }} }
       </span>
-      <wbs-save-message [state]="titleSaveState.state()" cssClass="tx-12" />
     </div>
   </div>
   <div class="flex-fill">

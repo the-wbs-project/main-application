@@ -1,0 +1,29 @@
+@let item = task();
+
+<div class="d-inline-block">
+  <div class="d-flex flex-align-start gap-10">
+    <span> {{ item.levelText }} &nbsp;-&nbsp; {{ task().title }} </span>
+    <span class="child-to-show" [ngClass]="{ nevermind: forcedShow() }">
+      <a #menuTarget class="pointer mg-l-10 pd-h-5">
+        <fa-icon
+          size="sm"
+          [icon]="menuIcon"
+          (click)="buildMenu()"
+          [title]="'General.Options' | translate"
+        />
+      </a>
+    </span>
+  </div>
+</div>
+<kendo-contextmenu
+  showOn="click"
+  [items]="menu()"
+  [target]="menuTarget"
+  (popupOpen)="forcedShow.set(true)"
+  (popupClose)="forcedShow.set(false)"
+  (select)="menuItemSelected.emit($event.item.action)"
+>
+  <ng-template kendoMenuItemTemplate let-item="item">
+    <wbs-context-menu-item [item]="item" />
+  </ng-template>
+</kendo-contextmenu>

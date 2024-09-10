@@ -24,4 +24,10 @@ export class SaveService {
       tap(() => this._state.set('ready'))
     );
   }
+
+  quickCall<T>(obs: Observable<T>): Observable<T> {
+    this._state.set('saving');
+
+    return obs.pipe(tap(() => this._state.set('ready')));
+  }
 }

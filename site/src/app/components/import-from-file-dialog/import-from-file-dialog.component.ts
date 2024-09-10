@@ -1,33 +1,32 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  computed,
   inject,
   signal,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
   DialogModule,
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { StepperModule } from '@progress/kendo-angular-layout';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { HeightDirective } from '@wbs/core/directives/height.directive';
-import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { WbsNode } from '@wbs/core/models';
+import { CategoryService } from '@wbs/core/services';
 import { CategoryViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { DialogButtonsComponent } from '../dialog-buttons';
+import { DialogWrapperComponent } from '../dialog-wrapper';
 import {
   DisciplinesViewComponent,
   TaskViewComponent,
   UploadViewComponent,
 } from './components';
 import { UploadDialogService, UploadDialogViewService } from './services';
-import { SaveButtonComponent } from '../_utils/save-button.component';
 
 @Component({
   standalone: true,
@@ -35,20 +34,18 @@ import { SaveButtonComponent } from '../_utils/save-button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [UploadDialogService, UploadDialogViewService],
   imports: [
-    ButtonModule,
+    DialogButtonsComponent,
     DialogModule,
+    DialogWrapperComponent,
     DisciplinesViewComponent,
-    FontAwesomeModule,
     HeightDirective,
-    SaveButtonComponent,
-    ScrollToTopDirective,
-    StepperModule,
     TaskViewComponent,
     TranslateModule,
     UploadViewComponent,
   ],
 })
 export class ImportFromFileDialogComponent extends DialogContentBase {
+  private readonly categoryService = inject(CategoryService);
   private saveFunc!: (tasks: WbsNode[]) => Observable<boolean>;
   private errors?: string[];
 
@@ -61,6 +58,13 @@ export class ImportFromFileDialogComponent extends DialogContentBase {
   readonly saving = signal(false);
   readonly containerHeight = signal(100);
   readonly disciplines = signal<CategoryViewModel[]>([]);
+  readonly disciplines2 = computed(() => {
+    const disciplines = this.disciplines();
+
+    return disciplines.length > 0
+      ? disciplines
+      : this.categoryService.buildViewModelsFromDefinitions();
+  });
 
   constructor(dialog: DialogRef) {
     super(dialog);
@@ -116,6 +120,10 @@ export class ImportFromFileDialogComponent extends DialogContentBase {
       this.saving.set(false);
       this.dialog.close(result);
     });
+  }
+
+  reloadTree(): void {
+    this.dataService.reload();
   }
 
   next(): void {

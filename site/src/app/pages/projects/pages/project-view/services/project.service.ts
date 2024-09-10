@@ -171,6 +171,19 @@ export class ProjectService {
     );
   }
 
+  cancelProject(): Observable<void> {
+    const project = this.projectStore.project()!;
+
+    project.status = PROJECT_STATI.CANCELLED;
+
+    return this.data.projects
+      .deleteProjectAsync(project.owner, project.id)
+      .pipe(
+        tap(() => this.projectStore.setProject(project)),
+        switchMap(() => this.activity.cancelProject(project.owner, project.id))
+      );
+  }
+
   changeProjectDisciplines(changes: ProjectCategoryChanges): Observable<void> {
     const project = this.projectStore.project()!;
     const original = [...project.disciplines];
