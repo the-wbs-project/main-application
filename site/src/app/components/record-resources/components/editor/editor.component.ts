@@ -20,24 +20,20 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { UploaderComponent } from '@wbs/components/uploader';
 import {
   RESOURCE_TYPE_TYPE,
   RESOURCE_TYPES,
   ContentResource,
 } from '@wbs/core/models';
+import { IdService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResourceTypeTextComponent } from '../type-text';
 import { RecordResourceValidation } from '../../services';
 import { RecordResourceViewModel } from '../../view-models';
-import { IdService } from '@wbs/core/services';
-import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
-
-declare type RecordEditResults = {
-  record: Partial<ContentResource>;
-  file?: FileInfo;
-};
+import { RecordEditResults } from './record-edit-results.model';
 
 @Component({
   standalone: true,

@@ -1,4 +1,6 @@
 export * from './permissions';
+
+export * from './activity.model';
 export * from './chat-comment.model';
 export * from './content-resource.model';
 export * from './id-token.model';

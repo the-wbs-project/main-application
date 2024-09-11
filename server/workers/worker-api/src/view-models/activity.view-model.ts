@@ -1,4 +1,4 @@
-import { Activity } from '../models/activity.model';
+import { Activity } from '../models';
 import { UserViewModel } from './user.view-model';
 
 export interface ActivityViewModel extends Activity {

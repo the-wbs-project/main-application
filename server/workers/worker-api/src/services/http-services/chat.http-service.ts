@@ -27,7 +27,7 @@ export class ChatHttpService {
 
       return ctx.json(await convertMessage(ctx, record));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get chat info', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to save chat info', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

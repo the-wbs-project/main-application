@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
+  effect,
   inject,
   input,
   OnInit,
@@ -13,14 +14,14 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { RecordResourceListComponent } from '@wbs/components/record-resources/components/list';
 import { ContentResource } from '@wbs/core/models';
-import { ProjectResourcesService } from '../../../../services';
+import { ProjectTaskViewModel } from '@wbs/core/view-models';
+import { ProjectTaskResourceService } from '../../../../services';
 
 @Component({
   standalone: true,
   selector: 'wbs-project-task-details-resources',
   templateUrl: './task-details-resources.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [ProjectResourcesService],
   imports: [
     ButtonModule,
     FontAwesomeModule,
@@ -30,49 +31,45 @@ import { ProjectResourcesService } from '../../../../services';
 })
 export class TaskDetailsResourcesComponent implements OnInit {
   readonly addIcon = faPlus;
-  readonly service = inject(ProjectResourcesService);
+  readonly service = inject(ProjectTaskResourceService);
   //
   //  Inputs & Signals
   //
-  readonly taskId = input.required<string>();
+  readonly task = input.required<ProjectTaskViewModel>();
   readonly list = signal<ContentResource[]>([]);
-  //
-  //  Computed
-  //
 
-  ngOnInit(): void {
-    this.service
-      .getRecordsAsync(this.taskId())
-      .subscribe((list) => this.list.set(list));
+  constructor() {
+    effect(() => {
+      this.service.setTask(this.task());
+      this.service.getRecordsAsync().subscribe((list) => this.list.set(list));
+    });
   }
 
+  ngOnInit(): void {}
+
   launchAdd(): void {
-    this.service.launchAddAsync(this.taskId()).subscribe((item) => {
+    this.service.addAsync().subscribe((item) => {
       if (item) this.updateList([item]);
     });
   }
 
   editRecord(record: ContentResource): void {
-    this.service.editRecordAsync(this.taskId(), record).subscribe((item) => {
+    this.service.editAsync(record).subscribe((item) => {
       if (item) this.updateList([item]);
     });
   }
 
   deleteRecord(record: ContentResource): void {
-    this.service
-      .deleteRecordAsync(this.taskId(), record)
-      .subscribe((deleted) => {
-        if (deleted)
-          this.list.update((list) => list.filter((x) => x.id !== record.id));
-      });
+    this.service.deleteAsync(record).subscribe((deleted) => {
+      if (deleted)
+        this.list.update((list) => list.filter((x) => x.id !== record.id));
+    });
   }
 
   save(records: ContentResource[]): void {
-    this.service
-      .saveRecordsAsync(this.taskId(), records)
-      .subscribe((newRecords) => {
-        this.updateList(newRecords);
-      });
+    this.service.reorderAsync(records).subscribe((newRecords) => {
+      this.updateList(newRecords);
+    });
   }
 
   private updateList(records: ContentResource[]): void {

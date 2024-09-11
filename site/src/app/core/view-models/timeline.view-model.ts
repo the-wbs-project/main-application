@@ -1,4 +1,5 @@
 import { TimelineMenuItem } from '../models/app-models/menu-item.model';
+import { UserViewModel } from './user.view-model';
 
 export interface TimelineViewModel {
   id: string;
@@ -7,6 +8,7 @@ export interface TimelineViewModel {
   data: Record<string, any>;
   timestamp: Date;
   userId?: string;
+  user?: UserViewModel;
   userName?: string;
   actionIcon?: string;
   actionTitle?: string;

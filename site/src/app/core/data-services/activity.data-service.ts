@@ -12,13 +12,14 @@ export class ActivityDataService {
   }
 
   getTopLevelAsync(
+    owner: string,
     topLevelId: string,
     skip: number,
     take: number
   ): Observable<Activity[]> {
     return this.http
       .get<Activity[] | undefined>(
-        `api/activities/topLevel/${topLevelId}/${skip}/${take}`
+        `api/activities/topLevel/${owner}/${topLevelId}/${skip}/${take}`
       )
       .pipe(map((list) => list ?? []));
   }

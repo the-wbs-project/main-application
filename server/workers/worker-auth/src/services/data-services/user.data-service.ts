@@ -45,7 +45,7 @@ export class UserDataService extends BaseDataService {
 
     if (!profile) return null;
 
-    const vm = UserTransformer.toViewModel(profile, visibility, roles);
+    const vm = UserTransformer.toViewModel(profile, visibility, roles ?? []);
 
     this.putKv(key, vm);
 

@@ -2,13 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef,
   inject,
   input,
   OnChanges,
   signal,
   SimpleChanges,
-  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -20,14 +18,15 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule, ChipModule } from '@progress/kendo-angular-buttons';
-import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import { DisciplineIconLabelComponent } from '@wbs/components/_utils/discipline-icon-label.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
-import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
+import { TaskDetailsDescriptionEditorComponent } from '@wbs/components/task-details-description-editor';
+import { TaskDetailsTitleEditorComponent } from '@wbs/components/task-details-title-editor';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { SaveService } from '@wbs/core/services';
 import {
   CategoryViewModel,
@@ -60,9 +59,10 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
     FormsModule,
     LabelModule,
     SaveMessageComponent,
+    ScrollToTopDirective,
     TaskDetailsResourcesComponent,
-    TaskTitleEditorComponent,
-    TextAreaModule,
+    TaskDetailsDescriptionEditorComponent,
+    TaskDetailsTitleEditorComponent,
     TranslateModule,
   ],
 })
@@ -75,10 +75,6 @@ export class PhaseTaskDetailsComponent implements OnChanges {
   readonly editIcon = faPencil;
   readonly saveIcon = faSave;
   readonly menuIcon = faBars;
-  //
-  //  Controls
-  //
-  readonly taskDetails = viewChild<ElementRef<HTMLDivElement>>('taskDetails');
   //
   //  Inputs
   //
@@ -110,9 +106,6 @@ export class PhaseTaskDetailsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task']) {
-      if (this.editTask()?.id !== this.task()?.id) {
-        this.taskDetails()?.nativeElement?.scrollTo(0, 0);
-      }
       const task = structuredClone(this.task());
 
       if (!task) {

@@ -38,6 +38,7 @@ export class ActivityTransformer {
       objectId: act.objectId ?? act.topLevelId,
       timestamp: act.timestamp,
       userId: act.userId,
+      user: act.user,
       actionDescription: act.actionDescription,
       actionIcon: act.actionIcon,
       actionTitle: act.actionTitle,

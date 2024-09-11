@@ -263,6 +263,7 @@ export class ProjectTaskService {
           project.owner,
           project.id,
           task.id,
+          task.title,
           from,
           title
         )
@@ -287,6 +288,7 @@ export class ProjectTaskService {
           project.owner,
           project.id,
           task.id,
+          task.title,
           from,
           description
         )
@@ -310,6 +312,7 @@ export class ProjectTaskService {
           project.owner,
           project.id,
           task.id,
+          task.title,
           from,
           abs
         )
@@ -317,12 +320,20 @@ export class ProjectTaskService {
     );
   }
 
-  importTasks(tasks: ProjectNode[]): Observable<unknown> {
+  importTasks(
+    tasks: ProjectNode[],
+    importedFrom: 'file' | 'library'
+  ): Observable<unknown> {
     const project = this.getProject();
 
     return this.saveTasks(project, tasks).pipe(
       switchMap(() =>
-        this.activity.importTasks(project.owner, project.id, tasks)
+        this.activity.importTasks(
+          project.owner,
+          project.id,
+          importedFrom,
+          tasks
+        )
       )
     );
   }

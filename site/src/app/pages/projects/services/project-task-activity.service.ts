@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ProjectNode } from '@wbs/core/models';
+import { ContentResource, ProjectNode } from '@wbs/core/models';
 import { UserStore } from '@wbs/core/store';
 import { TASK_ACTIONS } from '@wbs/pages/projects/models';
 import { Observable } from 'rxjs';
@@ -13,10 +13,12 @@ export class ProjectTaskActivityService {
   importTasks(
     owner: string,
     projectId: string,
+    importedFrom: 'file' | 'library',
     tasks: ProjectNode[]
   ): Observable<void> {
     return this.save(owner, projectId, undefined, TASK_ACTIONS.IMPORTED, {
       tasks,
+      importedFrom,
     });
   }
 
@@ -97,10 +99,12 @@ export class ProjectTaskActivityService {
     owner: string,
     projectId: string,
     taskId: string,
+    taskTitle: string,
     from: string,
     to: string
   ): Observable<void> {
     return this.save(owner, projectId, taskId, TASK_ACTIONS.TITLE_CHANGED, {
+      title: taskTitle,
       from,
       to,
     });
@@ -110,6 +114,7 @@ export class ProjectTaskActivityService {
     owner: string,
     projectId: string,
     taskId: string,
+    taskTitle: string,
     from: string,
     to: string
   ): Observable<void> {
@@ -119,6 +124,7 @@ export class ProjectTaskActivityService {
       taskId,
       TASK_ACTIONS.DESCRIPTION_CHANGED,
       {
+        title: taskTitle,
         from,
         to,
       }
@@ -129,10 +135,12 @@ export class ProjectTaskActivityService {
     owner: string,
     projectId: string,
     taskId: string,
+    taskTitle: string,
     from: 'set' | undefined,
     to: 'set' | undefined
   ): Observable<void> {
     return this.save(owner, projectId, taskId, TASK_ACTIONS.ABS_CHANGED, {
+      title: taskTitle,
       from,
       to,
     });
@@ -157,6 +165,64 @@ export class ProjectTaskActivityService {
         to,
       }
     );
+  }
+
+  resourceAdded(
+    owner: string,
+    projectId: string,
+    taskId: string,
+    taskTitle: string,
+    resource: ContentResource
+  ): Observable<void> {
+    return this.save(owner, projectId, taskId, TASK_ACTIONS.RESOURCE_ADDED, {
+      title: taskTitle,
+      resource,
+    });
+  }
+
+  resourceReordered(
+    owner: string,
+    projectId: string,
+    taskId: string,
+    taskTitle: string,
+    ids: string[]
+  ): Observable<void> {
+    return this.save(
+      owner,
+      projectId,
+      taskId,
+      TASK_ACTIONS.RESOURCE_REORDERED,
+      {
+        title: taskTitle,
+        ids,
+      }
+    );
+  }
+
+  resourceRemoved(
+    owner: string,
+    projectId: string,
+    taskId: string,
+    taskTitle: string,
+    resource: ContentResource
+  ): Observable<void> {
+    return this.save(owner, projectId, taskId, TASK_ACTIONS.RESOURCE_REMOVED, {
+      title: taskTitle,
+      resource,
+    });
+  }
+
+  resourceUpdated(
+    owner: string,
+    projectId: string,
+    taskId: string,
+    taskTitle: string,
+    resource: ContentResource
+  ): Observable<void> {
+    return this.save(owner, projectId, taskId, TASK_ACTIONS.RESOURCE_UPDATED, {
+      title: taskTitle,
+      resource,
+    });
   }
 
   private save(

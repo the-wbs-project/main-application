@@ -57,7 +57,7 @@ export class ProjectImportService {
         absFlag: null,
       });
     }
-    return this.taskService.importTasks(upserts);
+    return this.taskService.importTasks(upserts, 'file');
   }
 
   private saveFromLibraryAsync(
@@ -156,7 +156,7 @@ export class ProjectImportService {
       );
     }
 
-    saves.push(this.taskService.importTasks(upserts));
+    saves.push(this.taskService.importTasks(upserts, 'library'));
 
     return forkJoin(saves);
   }

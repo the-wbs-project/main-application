@@ -9,6 +9,15 @@ export class UserDataService {
     return (await this.service()).getView(organizationId, userId, visibility);
   }
 
+  async getViewsAsync(organizationId: string, userIds: string[], visibility: 'organization' | 'public'): Promise<UserViewModel[]> {
+    const service = await this.service();
+    const calls = userIds.map((id) => service.getView(organizationId, id, visibility));
+
+    const results = await Promise.all(calls);
+
+    return results.filter((x) => x != undefined);
+  }
+
   async getBasicAsync(userId: string): Promise<UserBasic | undefined> {
     return (await this.service()).getBasic(userId);
   }

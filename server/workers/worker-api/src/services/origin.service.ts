@@ -5,7 +5,6 @@ export class OriginService {
   constructor(private readonly ctx: Context) {}
 
   async getResponseAsync(suffix?: string): Promise<Response | undefined> {
-    this.ctx.var.logger.trackEvent('url test', 'Warn', { url: this.getUrl(suffix) });
     await this.ctx.var.datadog.flush();
 
     const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {

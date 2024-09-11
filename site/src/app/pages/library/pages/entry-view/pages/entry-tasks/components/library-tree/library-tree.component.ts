@@ -37,7 +37,6 @@ import {
   TreeButtonsTogglerComponent,
 } from '@wbs/components/_utils/tree-buttons';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
-import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { HeightDirective } from '@wbs/core/directives/height.directive';
 import { LIBRARY_CLAIMS, LibraryEntryNode } from '@wbs/core/models';
@@ -89,7 +88,6 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
     SplitterModule,
     TextBoxModule,
     TranslateModule,
-    TaskTitleEditorComponent,
     TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,

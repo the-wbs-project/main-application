@@ -45,7 +45,7 @@ export class Auth0MembershipService {
     return memberIds;
   }
 
-  async getRolesAsync(organization: string, userId: string): Promise<Role[]> {
+  async getRolesAsync(organization: string, userId: string): Promise<Role[] | undefined> {
     const token = await this.tokenService.getToken();
 
     const resp = await this.fetcher.fetch(`https://${this.env.AUTH_DOMAIN}/api/v2/organizations/${organization}/members/${userId}/roles`, {
@@ -54,13 +54,20 @@ export class Auth0MembershipService {
       redirect: 'follow',
     });
 
+    const body: any = await resp.json();
+
     if (resp.status !== 200) {
+      //
+      //  This is a special case where the the user ID is bad, so send back undefined
+      //
+      if (resp.status === 400 && body.errorCode === 'invalid_uri') return undefined;
+
       this.logger.trackEvent('Failed to get Auth0 organization member roles', 'Error', { status: resp.status, body: await resp.text() });
 
       throw new Error('Failed to get Auth0 organization member roles');
     }
 
-    return await resp.json();
+    return body;
   }
 
   async addAsync(organizationId: string, members: string[]): Promise<void> {

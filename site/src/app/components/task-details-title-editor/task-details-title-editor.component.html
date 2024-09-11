@@ -1,0 +1,47 @@
+<kendo-textbox
+  class="tx-12"
+  size="small"
+  [(ngModel)]="editTitle"
+  [disabled]="saving()"
+  (keydown)="keydown($event)"
+>
+  <ng-template kendoTextBoxSuffixTemplate>
+    <div class="mg-r-5">
+      <wbs-save-message [state]="saveState()" />
+    </div>
+    @if (!saving()) {
+    <button
+      kendoButton
+      size="small"
+      fillMode="clear"
+      class="tx-12"
+      [disabled]="saving()"
+      (click)="save.emit(editTitle())"
+    >
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [animation]="saving() ? 'spin' : undefined"
+        [icon]="saving() ? savingIcon : saveIcon"
+        [title]="'General.Save' | translate"
+      />
+    </button>
+    @if (editTitle() !== title()) {
+    <button
+      kendoButton
+      size="small"
+      fillMode="clear"
+      class="tx-12"
+      (click)="reset()"
+    >
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [animation]="saving() ? 'spin' : undefined"
+        [icon]="saving() ? savingIcon : cancelIcon"
+        [title]="'General.Cancel' | translate"
+      />
+    </button>
+    } }
+  </ng-template>
+</kendo-textbox>

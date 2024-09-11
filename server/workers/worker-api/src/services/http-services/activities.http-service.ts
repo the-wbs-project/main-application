@@ -1,6 +1,25 @@
 import { Context } from '../../config';
+import { Activity } from '../../models';
+import { Transformers } from '../transformers';
 
 export class ActivitiesHttpService {
+  static async getAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, topLevel, skip, take } = ctx.req.param();
+      const url = `api/activities/topLevel/${topLevel}/${skip}/${take}`;
+
+      const list = (await ctx.var.origin.getAsync<Activity[]>(url)) ?? [];
+      const userIds = [...new Set(list.map((x) => x.userId))];
+      const users = await ctx.var.data.users.getViewsAsync(owner, userIds, 'organization');
+
+      return ctx.json(Transformers.activity.toViewModelList(list, users));
+    } catch (e) {
+      console.log(JSON.stringify(e));
+      ctx.get('logger').trackException('An error occured trying to get activities', <Error>e);
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
   static async postAsync(ctx: Context): Promise<Response> {
     try {
       const { type, owner, activities } = await ctx.req.json();
@@ -17,7 +36,7 @@ export class ActivitiesHttpService {
 
       return ctx.newResponse(null, response.status);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get chat info', <Error>e);
+      ctx.get('logger').trackException('An error occured trying to save activities', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

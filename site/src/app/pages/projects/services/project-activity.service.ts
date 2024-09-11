@@ -1,13 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { PROJECT_STATI_TYPE, ContentResource } from '@wbs/core/models';
+import { UserStore } from '@wbs/core/store';
 import { UserViewModel } from '@wbs/core/view-models';
-import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
 import { Observable } from 'rxjs';
+import { PROJECT_ACTIONS } from '../models';
 
 @Injectable()
 export class ProjectActivityService {
   private readonly data = inject(DataServiceFactory);
+  private readonly userId = inject(UserStore).userId;
 
   createProject(
     owner: string,
@@ -160,7 +162,7 @@ export class ProjectActivityService {
     action: string,
     data?: any
   ): Observable<void> {
-    return this.data.activities.postAsync('project', owner, projectId, [
+    return this.data.activities.postAsync('project', owner, this.userId()!, [
       {
         action,
         data,

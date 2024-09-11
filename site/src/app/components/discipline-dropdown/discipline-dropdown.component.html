@@ -16,7 +16,13 @@
 >
   @if (!autoSave()) {
   <ng-template kendoSuffixTemplate>
-    @if (showSave()) {
+    @let state = saveState();
+    <!---->
+    @if (state !== undefined) {
+    <div class="mg-r-5">
+      <wbs-save-message [state]="state" />
+    </div>
+    } @if (!saving()) { @if (showSave()) {
     <button kendoButton size="small" fillMode="clear" (click)="saveSelected()">
       <fa-icon [icon]="saveIcon()" />
     </button>
@@ -24,6 +30,7 @@
     <button kendoButton size="small" fillMode="clear" (click)="cancel.emit()">
       <fa-icon [icon]="cancelIcon" />
     </button>
+    }
   </ng-template>
   }
   <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>

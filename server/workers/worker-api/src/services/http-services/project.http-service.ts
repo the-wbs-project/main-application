@@ -57,10 +57,7 @@ export class ProjectHttpService {
       //  Now get users
       //
       const userIds = [...new Set((projectObj.roles ?? []).map((r) => r.userId))];
-
-      const userCalls = userIds.map((id) => ctx.var.data.users.getViewAsync(owner, id, 'organization'));
-
-      var users = (await Promise.all(userCalls)).filter((u) => u !== undefined);
+      const users = await ctx.var.data.users.getViewsAsync(owner, userIds, 'organization');
 
       return ctx.json({
         project: Transformers.project.toViewModel(projectObj, users),

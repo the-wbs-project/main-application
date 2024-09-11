@@ -19,6 +19,7 @@ export class TimelineService {
 
   loadMore(
     list: TimelineViewModel[],
+    owner: string,
     topLevelId: string,
     objectId?: string
   ): Observable<TimelineViewModel[]> {
@@ -30,6 +31,7 @@ export class TimelineService {
           this.take
         )
       : this.data.activities.getTopLevelAsync(
+          owner,
           topLevelId,
           list.length,
           this.take

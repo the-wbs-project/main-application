@@ -213,7 +213,8 @@
       "Above": "Above",
       "Below": "Below",
       "Author": "Author",
-      "Watching": "Watching"
+      "Watching": "Watching",
+      "UnknownUser": "Unknown User"
     }
   },
   {
@@ -740,13 +741,27 @@
       "TaskDescriptionChangedDescription": "The description for task '{title}' was updated.",
       "TaskRemovedDescription": "The task '{title}' was removed because '{reason}'.",
       "ProjectPhasesChangedDescription": "The project's phases was changed.",
-      "ProjectAddUserDescription": "{user} was given the role of {role}.",
-      "ProjectRemoveUserDescription": "{user} was revoked the role of {role}.",
+      "ProjectAddUserDescription": "{userName} was given the role of {role}.",
+      "ProjectRemoveUserDescription": "{userName} was revoked the role of {role}.",
       "NodeRecordered": "{0} was reordered from {1} to {2}.",
       "ProjectImportedFromLibraryTitle": "Task Imported From Library",
       "ProjectImportedFromLibraryDescription": "Library Entry '{title}' was imported into the project.",
       "TaskAbsFlagChangedTitle": "ABS Flag Changed",
-      "TaskAbsFlagChangedDescription": "The ABS flag for task '{title}' was changed."
+      "TaskAbsFlagChangedDescription": "The ABS flag for task '{title}' was changed.",
+      "ResourceAddedTitle": "Resource Added",
+      "ResourceReorderedTitle": "Resources Reordered",
+      "ResourceUpdatedTitle": "Resource Updated",
+      "ResourceRemovedTitle": "Resource Removed",
+      "ResourceAddedDescriptionProject": "The resource '{resource.name}' was added to the project.",
+      "ResourceAddedDescriptionTask": "The resource '{resource.name}' was added to the task '{title}'.",
+      "ResourceReorderedDescriptionProject": "Resources were reordered in the project.",
+      "ResourceReorderedDescriptionTask": "Resources were reordered in task '{title}'.",
+      "ResourceUpdatedDescriptionProject": "The resource '{resource.name}' was updated in the project.",
+      "ResourceUpdatedDescriptionTask": "The resource '{resource.name}' was updated in task '{title}'.",
+      "ResourceRemovedDescriptionProject": "The resource '{resource.name}' was removed from the project.",
+      "ResourceRemovedDescriptionTask": "The resource '{resource.name}' was removed from task '{title}'.",
+      "TaskImportedTitle": "Task Imported",
+      "TaskImportedDescription": "The {tasks.length} task(s) where imported from {importedFrom:Unknown}."
     }
   },
   {

@@ -65,6 +65,7 @@ app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsyn
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 
+app.get('api/activities/topLevel/:owner/:topLevel/:skip/:take', verifyJwt, verifyMembership, Http.activities.getAsync);
 app.post('api/activities', verifyJwt, Http.activities.postAsync);
 //
 //  Library calls
