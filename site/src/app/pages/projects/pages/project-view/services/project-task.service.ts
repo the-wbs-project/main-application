@@ -320,6 +320,20 @@ export class ProjectTaskService {
     );
   }
 
+  changeTaskAbsBulk(tasks: ProjectTaskViewModel[]): Observable<unknown> {
+    const project = this.getProject();
+
+    return this.saveTaskVms(this.getProject(), tasks).pipe(
+      switchMap(() =>
+        this.activity.changeTaskAbsBulk(
+          project.owner,
+          project.id,
+          tasks.map((x) => x.id)
+        )
+      )
+    );
+  }
+
   importTasks(
     tasks: ProjectNode[],
     importedFrom: 'file' | 'library'

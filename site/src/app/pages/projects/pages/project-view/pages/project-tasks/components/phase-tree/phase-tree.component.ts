@@ -46,7 +46,13 @@ import {
   PROJECT_CLAIMS,
   PROJECT_STATI,
 } from '@wbs/core/models';
-import { Messages, TreeService, Utils } from '@wbs/core/services';
+import {
+  Messages,
+  SaveService,
+  Transformers,
+  TreeService,
+  Utils,
+} from '@wbs/core/services';
 import {
   CategoryViewModel,
   ProjectTaskViewModel,
@@ -63,7 +69,11 @@ import {
 } from '../../../../services';
 import { ProjectStore } from '../../../../stores';
 import { PhaseTreeReorderService } from '../../services';
+import { AbsCheckboxComponent } from '../abs-checkbox.component';
+import { AbsHeaderComponent } from '../abs-header';
+import { AbsIconComponent } from '../abs-icon.component';
 import { PhaseTaskDetailsComponent } from '../phase-task-details';
+import { PhaseTreeOtherButtonComponent } from '../phase-tree-other-button.component';
 import { PhaseTreeTitleLegendComponent } from '../phase-tree-title-legend';
 import { PhaseTreeTaskTitleComponent } from '../phase-tree-task-title';
 import { TreeTypeButtonComponent } from '../tree-type-button.component';
@@ -75,6 +85,9 @@ import { TreeTypeButtonComponent } from '../tree-type-button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PhaseTreeReorderService],
   imports: [
+    AbsCheckboxComponent,
+    AbsHeaderComponent,
+    AbsIconComponent,
     AlertComponent,
     ButtonModule,
     DisciplineIconListComponent,
@@ -82,6 +95,7 @@ import { TreeTypeButtonComponent } from '../tree-type-button.component';
     FontAwesomeModule,
     HeightDirective,
     PhaseTaskDetailsComponent,
+    PhaseTreeOtherButtonComponent,
     PhaseTreeTaskTitleComponent,
     PhaseTreeTitleLegendComponent,
     ReactiveFormsModule,
@@ -102,11 +116,13 @@ export class ProjectPhaseTreeComponent implements OnInit {
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(PhaseTreeReorderService);
   private readonly taskService = inject(ProjectTaskService);
+  private readonly transformers = inject(Transformers);
 
   readonly width = inject(UiStore).mainContentWidth;
   readonly projectStore = inject(ProjectStore);
   readonly viewService = inject(ProjectViewService);
   readonly treeService = new TreeService();
+  readonly absSaveService = new SaveService();
   editParentId?: string;
   editItem?: ProjectTaskViewModel;
   editForm?: FormGroup;
@@ -114,7 +130,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  Inputs
   //
   readonly claims = input.required<string[]>();
-  readonly showFullscreen = input.required<boolean>();
+  readonly isFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
   readonly view = model.required<'phases' | 'disciplines'>();
   //
@@ -134,6 +150,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  signals/models
   //
   readonly taskAreaHeight = signal(0);
+  readonly showAbsEditColumn = signal(false);
   //readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly selectedTaskId = signal<string | undefined>(undefined);
   readonly alert = signal<string | undefined>(undefined);
@@ -160,6 +177,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  Outputs
   //
   readonly goFullScreen = output<void>();
+  readonly exitFullScreen = output<void>();
 
   constructor() {
     effect(() => {
@@ -171,6 +189,16 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.treeService.expandedKeys = (this.projectStore.viewModels() ?? [])
       .filter((x) => !x.parentId)
       .map((x) => x.id);
+  }
+
+  otherItemSelected(action: string, tasks: ProjectTaskViewModel[]): void {
+    if (action === 'goFullScreen') {
+      this.goFullScreen.emit();
+    } else if (action === 'exitFullScreen') {
+      this.exitFullScreen.emit();
+    } else if (action === 'editAbs') {
+      this.setupAbsEditColumn(tasks);
+    }
   }
 
   rowReordered(e: RowReorderEvent): void {
@@ -325,5 +353,38 @@ export class ProjectPhaseTreeComponent implements OnInit {
     this.projectStore.setTasks(
       structuredClone(this.projectStore.tasks() ?? [])
     );
+  }
+
+  protected setupAbsEditColumn(tasks: ProjectTaskViewModel[]): void {
+    for (const task of tasks) {
+      task.absEditFlag = task.absFlag;
+    }
+    this.showAbsEditColumn.set(true);
+  }
+
+  protected absFlagChanged(
+    value: boolean,
+    task: ProjectTaskViewModel,
+    tasks: ProjectTaskViewModel[]
+  ): void {
+    task.absEditFlag = value ? 'set' : undefined;
+    this.transformers.nodes.phase.view.updateAbsFlags(tasks, 'absEditFlag');
+  }
+
+  protected saveAbsEditColumn(tasks: ProjectTaskViewModel[]): void {
+    const toSave = structuredClone(tasks).filter(
+      (x) =>
+        (x.absEditFlag === 'set' || x.absFlag === 'set') &&
+        x.absEditFlag !== x.absFlag
+    );
+
+    for (const task of toSave) {
+      task.absFlag = task.absEditFlag;
+    }
+
+    this.showAbsEditColumn.set(false);
+    this.absSaveService
+      .call(this.taskService.changeTaskAbsBulk(toSave))
+      .subscribe();
   }
 }

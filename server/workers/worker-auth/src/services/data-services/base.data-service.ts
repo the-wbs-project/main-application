@@ -43,16 +43,18 @@ export abstract class BaseDataService {
     return apiData;
   }
 
-  protected async getArrayAsync<T>(kvKey: string, dataCall: () => Promise<T[]>): Promise<T[]> {
+  protected async getArrayAsync<T>(kvKey: string, dataCall: () => Promise<T[] | undefined | null>): Promise<T[]> {
     const kvData = await this.getKv<T[]>(kvKey);
 
     if (kvData) return kvData;
 
     const apiData = await dataCall();
 
+    if (apiData == null || apiData == undefined) return [];
+
     this.putKv(kvKey, apiData);
 
-    return apiData ?? [];
+    return apiData;
   }
 
   protected async updateDataAsync<T>(kvKey: string, dataCall: () => Promise<T | undefined | null>): Promise<void> {

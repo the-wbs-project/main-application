@@ -96,7 +96,8 @@
       "UnexpectedServerError": "An unexpected server error occured.",
       "Previous": "Previous",
       "Next": "Next",
-      "FullScreen": "Full Screen",
+      "FullScreen": "Show Full Screen",
+      "ExitFullScreen": "Exit Full Screen",
       "Public": "Public",
       "Private": "Private",
       "ImpliedPrivate": "Implied Private",
@@ -450,7 +451,8 @@
       "TaskLegend_Title": "Click to edit the task title.",
       "TaskLegend_Menu": "Click to see other actions which can be performed on this task.",
       "TaskLegend_Abs": "Account Breakdown Structure Task",
-      "ManageRoles": "Manage Roles"
+      "ManageRoles": "Manage Roles",
+      "EditAbs": "Edit ABS Tasks"
     }
   },
   {

@@ -38,7 +38,7 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   //
   //  Inputs
   //
-  readonly showFullscreen = input.required<boolean>();
+  readonly isFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
   readonly view = model.required<'phases' | 'disciplines'>();
   //

@@ -4,6 +4,7 @@ export enum TASK_ACTIONS {
   DESCRIPTION_CHANGED = 'task-description-changed',
   DISCIPLINES_CHANGED = 'task-disciplines-changed',
   ABS_CHANGED = 'task-abs-changed',
+  ABS_BULK_CHANGED = 'task-abs-bulk-changed',
   CLONED = 'task-cloned',
   REORDERED = 'task-reordered',
   REMOVED = 'task-removed',

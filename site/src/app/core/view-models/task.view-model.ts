@@ -41,4 +41,5 @@ export interface LibraryTaskViewModel extends TaskViewModel {
 
 export interface ProjectTaskViewModel extends TaskViewModel {
   absFlag?: 'set' | 'implied';
+  absEditFlag?: 'set' | 'implied';
 }

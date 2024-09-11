@@ -44,7 +44,7 @@
             (collapse)="treeService.collapseAll(treelist, list, 'treeId')"
             (expand)="treeService.expandAll(list, 'treeId')"
           />
-          @if (showFullscreen()) {
+          @if (!isFullscreen()) {
           <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
           }
         </div>
@@ -114,6 +114,36 @@
         </ng-template>
       </kendo-treelist-column>
     } -->
+      <kendo-treelist-column
+        [width]="110"
+        [title]="'Approval'"
+        headerClass="tx-14"
+        class="tree-column text-center"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <wbs-abs-header
+            text="abbrev"
+            position="left"
+            [inEditMode]="showAbsEditColumn()"
+            [saveState]="absSaveService.state()"
+            (edit)="setupAbsEditColumn(list)"
+            (save)="saveAbsEditColumn(list)"
+            (cancel)="showAbsEditColumn.set(false)"
+          />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          @if (showAbsEditColumn()) {
+          <wbs-abs-checkbox
+            [implied]="dataItem.absEditFlag === 'implied'"
+            [checked]="dataItem.absEditFlag === 'set'"
+            (checkedChange)="absFlagChanged($event, dataItem, list)"
+          />
+          } @else {
+          <wbs-abs-icon [abs]="dataItem.absFlag" />
+          }
+        </ng-template>
+      </kendo-treelist-column>
+
       @if ((width() ?? 0) > 800) {
       <kendo-treelist-column
         [width]="200"
@@ -144,7 +174,7 @@
           }
         </ng-template>
       </kendo-treelist-column>
-      } @if (editEnabled) {
+      } @if (editEnabled && !showAbsEditColumn()) {
       <kendo-treelist-command-column [width]="50" class="tree-column">
         <ng-template
           kendoTreeListCellTemplate

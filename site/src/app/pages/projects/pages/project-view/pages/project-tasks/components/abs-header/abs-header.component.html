@@ -1,0 +1,57 @@
+<div class="w-100 d-flex align-items-center gap-10">
+  <div class="flex-fill">
+    {{ title() | translate }}
+
+    <a kendoPopoverAnchor [popover]="myPopover" showOn="hover">
+      <fa-duotone-icon [icon]="icon" />
+    </a>
+  </div>
+  @if (inEditMode() || saving()) {
+  <button
+    kendoButton
+    size="small"
+    fillMode="clear"
+    class="p-0 tx-12"
+    [disabled]="saving()"
+    [title]="'General.Save' | translate"
+    (click)="save.emit()"
+  >
+    <fa-icon
+      [icon]="saving() ? savingIcon : saveIcon"
+      [animation]="saving() ? 'spin' : undefined"
+    />
+  </button>
+  <button
+    kendoButton
+    size="small"
+    fillMode="clear"
+    class="p-0 tx-12"
+    [disabled]="saving()"
+    [title]="'General.Cancel' | translate"
+    (click)="cancel.emit()"
+  >
+    <fa-icon [icon]="cancelIcon" />
+  </button>
+  } @else {
+  <button
+    kendoButton
+    size="small"
+    fillMode="clear"
+    class="p-0 tx-12"
+    [title]="'General.Edit' | translate"
+    (click)="edit.emit()"
+  >
+    <fa-icon [icon]="editIcon" />
+  </button>
+  }
+</div>
+<kendo-popover #myPopover [position]="position()" [width]="300">
+  <ng-template kendoPopoverTitleTemplate>
+    <div class="tx-14">{{ "Wbs.ABS-Full" | translate }}</div>
+  </ng-template>
+  <ng-template kendoPopoverBodyTemplate>
+    <div class="w-100 pd-5 tx-12">
+      {{ "Wbs.ABS-Explanation" | translate }}
+    </div>
+  </ng-template>
+</kendo-popover>

@@ -18,7 +18,7 @@ import { TranslateModule } from '@ngx-translate/core';
   imports: [TranslateModule],
 })
 export class AbsIconComponent {
-  readonly abs = input.required<string | undefined>();
+  readonly abs = input.required<'set' | 'implied' | undefined>();
   readonly iconClass = computed(() =>
     this.abs() === 'set'
       ? 'fas fa-check fw-bold'

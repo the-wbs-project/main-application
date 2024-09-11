@@ -146,6 +146,22 @@ export class ProjectTaskActivityService {
     });
   }
 
+  changeTaskAbsBulk(
+    owner: string,
+    projectId: string,
+    taskIds: string[]
+  ): Observable<void> {
+    return this.save(
+      owner,
+      projectId,
+      undefined,
+      TASK_ACTIONS.ABS_BULK_CHANGED,
+      {
+        taskIds,
+      }
+    );
+  }
+
   changeTaskDisciplines(
     owner: string,
     projectId: string,

@@ -22,7 +22,7 @@
         (collapse)="treeService.collapseAll(treelist, list, 'treeId')"
         (expand)="treeService.expandAll(list, 'treeId')"
       />
-      @if (showFullscreen()) {
+      @if (!isFullscreen()) {
       <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
       }
     </div>

@@ -66,23 +66,41 @@ export class WbsNodePhaseTransformer {
       disciplines
     );
 
+    for (const task of models.filter((x) => x.absFlag)) {
+      const vm = tasks.find((x) => x.id === task.id)!;
+
+      vm.absFlag = 'set';
+    }
+
+    this.updateAbsFlags(tasks, 'absFlag');
+
+    return tasks;
+  }
+
+  updateAbsFlags(
+    tasks: ProjectTaskViewModel[],
+    prop: 'absFlag' | 'absEditFlag'
+  ): void {
+    const ids: string[] = [];
+
     const setParent = (taskId: string) => {
       const task = tasks.find((x) => x.id === taskId)!;
 
-      task.absFlag = 'implied';
+      task[prop] = 'implied';
+
+      ids.push(task.id);
 
       if (task.parentId) setParent(task.parentId);
     };
 
-    for (const task of models.filter((x) => x.absFlag)) {
-      const taskVm = tasks.find((x) => x.id === task.id)!;
-
-      taskVm.absFlag = 'set';
-
-      if (task.parentId) setParent(task.parentId);
+    for (const task of tasks.filter((x) => x[prop] === 'set' && x.parentId)) {
+      setParent(task.parentId!);
+      ids.push(task.id);
     }
 
-    return tasks;
+    for (const task of tasks.filter((x) => !ids.includes(x.id))) {
+      task[prop] = undefined;
+    }
   }
 
   forAbsProject(
