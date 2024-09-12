@@ -5,8 +5,8 @@
   kendoTreeListExpandable
   kendoTreeListSelectable
   [kendoTreeListFlatBinding]="list"
-  parentIdField="treeParentId"
-  idField="treeId"
+  parentIdField="parentId"
+  idField="id"
   [rowHeight]="rowHeight"
   [pageSize]="pageSize()"
   [height]="containerHeight() - heightOffset"
@@ -16,11 +16,12 @@
   [(expandedKeys)]="treeService.expandedKeys"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    <div class="d-flex row-column align-items-center" style="gap: 10px">
+    <div class="w-100 d-flex flex-wrap row-column gap-10">
       <wbs-tree-type-button [(view)]="view" />
+      <wbs-abs-button [(view)]="wbsAbs" />
       <wbs-tree-buttons-toggler
-        (collapse)="treeService.collapseAll(treelist, list, 'treeId')"
-        (expand)="treeService.expandAll(list, 'treeId')"
+        (collapse)="treeService.collapseAll(treelist, list, 'id')"
+        (expand)="treeService.expandAll(list, 'id')"
       />
       @if (!isFullscreen()) {
       <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />

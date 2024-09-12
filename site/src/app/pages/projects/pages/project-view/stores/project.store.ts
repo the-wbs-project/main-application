@@ -10,7 +10,6 @@ import { CategoryService, Transformers } from '@wbs/core/services';
 import { MembershipStore } from '@wbs/core/store';
 import {
   CategoryViewModel,
-  LibraryTaskViewModel,
   ProjectTaskViewModel,
   ProjectViewModel,
 } from '@wbs/core/view-models';
@@ -32,6 +31,10 @@ export class ProjectStore {
   );
   private readonly _claims = signal<string[]>([]);
 
+  get absTasks(): Signal<ProjectTaskViewModel[] | undefined> {
+    return this._absTasks;
+  }
+
   get claims(): Signal<string[]> {
     return this._claims;
   }
@@ -52,7 +55,7 @@ export class ProjectStore {
     return this._taskModels;
   }
 
-  get viewModels(): Signal<LibraryTaskViewModel[] | undefined> {
+  get viewModels(): Signal<ProjectTaskViewModel[] | undefined> {
     return this._tasks;
   }
 
@@ -96,7 +99,7 @@ export class ProjectStore {
     );
   }
 
-  getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
+  getTask(taskId: Signal<string>): Signal<ProjectTaskViewModel | undefined> {
     return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
   }
 
@@ -128,6 +131,10 @@ export class ProjectStore {
   setTasks(tasks: ProjectNode[]): void {
     this._taskModels.set(structuredClone(tasks));
     this.rebuildNodeViews();
+  }
+
+  resetTasks(): void {
+    this.setTasks(structuredClone(this.tasks() ?? []));
   }
 
   tasksChanged(upserts: ProjectNode[], removeIds?: string[]): void {

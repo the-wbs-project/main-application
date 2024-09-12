@@ -5,6 +5,7 @@ export * from './ai-chat.service';
 export * from './ai-prompt.service';
 export * from './auth0.service';
 export * from './category.service';
+export * from './dirty-guard.service';
 export * from './id.service';
 export * from './error.service';
 export * from './logger.service';

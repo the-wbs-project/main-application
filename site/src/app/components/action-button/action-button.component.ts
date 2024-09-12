@@ -10,8 +10,6 @@ import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faBars } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
 import { ButtonModule, ButtonRounded } from '@progress/kendo-angular-buttons';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ActionButtonMenuItem } from '@wbs/core/models';
@@ -30,7 +28,6 @@ import { ActionButtonMenuItem } from '@wbs/core/models';
   ],
 })
 export class ActionButtonComponent {
-  private readonly store = inject(Store);
   private readonly router = inject(Router);
 
   readonly menuIcon = faBars;

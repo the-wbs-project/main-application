@@ -1,4 +1,4 @@
-import { computed, inject } from '@angular/core';
+import { inject, Signal } from '@angular/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import {
@@ -6,24 +6,17 @@ import {
   RecordResourceEditorComponent,
 } from '@wbs/components/record-resources/components/editor';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI, ContentResource } from '@wbs/core/models';
+import { ContentResource } from '@wbs/core/models';
 import { IdService, Messages, Utils } from '@wbs/core/services';
 import { forkJoin, Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import { ProjectStore } from '../stores';
 
 export abstract class BaseProjectResourceService {
   protected readonly data = inject(DataServiceFactory);
   protected readonly dialogService = inject(DialogService);
   protected readonly messages = inject(Messages);
-  protected readonly store = inject(ProjectStore);
-  //
-  //  Computed
-  //
-  protected readonly isPlanning = computed(
-    () => this.store.project()?.status === PROJECT_STATI.PLANNING
-  );
 
+  protected abstract getOwner(): string;
   protected abstract getParentId(): string;
 
   protected abstract recordAddedActivity(
@@ -41,10 +34,8 @@ export abstract class BaseProjectResourceService {
   protected abstract recordReorderedActivity(ids: string[]): Observable<void>;
 
   getRecordsAsync(): Observable<ContentResource[]> {
-    const project = this.store.project()!;
-
     return this.data.contentResources.getAsync(
-      project.owner,
+      this.getOwner(),
       this.getParentId()
     );
   }
@@ -85,7 +76,7 @@ export abstract class BaseProjectResourceService {
   }
 
   deleteAsync(record: ContentResource): Observable<boolean> {
-    const project = this.store.project()!;
+    const owner = this.getOwner();
     const parentId = this.getParentId();
 
     return this.messages.confirm
@@ -94,7 +85,7 @@ export abstract class BaseProjectResourceService {
         switchMap((answer) =>
           answer
             ? this.data.contentResources
-                .deleteAsync(project.owner, parentId, record.id)
+                .deleteAsync(owner, parentId, record.id)
                 .pipe(
                   switchMap(() => this.recordRemovedActivity(record)),
                   map(() => true)
@@ -124,12 +115,12 @@ export abstract class BaseProjectResourceService {
     data: Partial<ContentResource>,
     file?: FileInfo
   ): Observable<ContentResource> {
-    const project = this.store.project()!;
+    const owner = this.getOwner();
     const parentId = this.getParentId();
 
     const resource: ContentResource = {
       id: data.id ?? IdService.generate(),
-      ownerId: project.owner,
+      ownerId: owner,
       parentId,
       createdOn: data.createdOn ?? new Date(),
       lastModified: new Date(),
@@ -147,7 +138,7 @@ export abstract class BaseProjectResourceService {
         return Utils.getFileAsync(file).pipe(
           switchMap((file) =>
             this.data.contentResources
-              .putFileAsync(project.owner, parentId, resource.id, file)
+              .putFileAsync(owner, parentId, resource.id, file)
               .pipe(map(() => resource))
           )
         );

@@ -26,7 +26,6 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { SplitterModule } from '@progress/kendo-angular-layout';
 import {
-  RowClassArgs,
   RowReorderEvent,
   TreeListComponent,
   TreeListModule,
@@ -46,13 +45,7 @@ import {
   PROJECT_CLAIMS,
   PROJECT_STATI,
 } from '@wbs/core/models';
-import {
-  Messages,
-  SaveService,
-  Transformers,
-  TreeService,
-  Utils,
-} from '@wbs/core/services';
+import { Messages, TreeService, Utils } from '@wbs/core/services';
 import {
   CategoryViewModel,
   ProjectTaskViewModel,
@@ -69,14 +62,13 @@ import {
 } from '../../../../services';
 import { ProjectStore } from '../../../../stores';
 import { PhaseTreeReorderService } from '../../services';
-import { AbsCheckboxComponent } from '../abs-checkbox.component';
-import { AbsHeaderComponent } from '../abs-header';
-import { AbsIconComponent } from '../abs-icon.component';
+import { AbsDialogComponent } from '../abs-dialog/abs-dialog.component';
 import { PhaseTaskDetailsComponent } from '../phase-task-details';
 import { PhaseTreeOtherButtonComponent } from '../phase-tree-other-button.component';
 import { PhaseTreeTitleLegendComponent } from '../phase-tree-title-legend';
 import { PhaseTreeTaskTitleComponent } from '../phase-tree-task-title';
 import { TreeTypeButtonComponent } from '../tree-type-button.component';
+import { WbsAbsButtonComponent } from '../wbs-abs-button.component';
 
 @Component({
   standalone: true,
@@ -85,9 +77,6 @@ import { TreeTypeButtonComponent } from '../tree-type-button.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [PhaseTreeReorderService],
   imports: [
-    AbsCheckboxComponent,
-    AbsHeaderComponent,
-    AbsIconComponent,
     AlertComponent,
     ButtonModule,
     DisciplineIconListComponent,
@@ -108,6 +97,7 @@ import { TreeTypeButtonComponent } from '../tree-type-button.component';
     TreeDisciplineLegendComponent,
     TreeListModule,
     TreeTypeButtonComponent,
+    WbsAbsButtonComponent,
   ],
 })
 export class ProjectPhaseTreeComponent implements OnInit {
@@ -116,13 +106,11 @@ export class ProjectPhaseTreeComponent implements OnInit {
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(PhaseTreeReorderService);
   private readonly taskService = inject(ProjectTaskService);
-  private readonly transformers = inject(Transformers);
 
   readonly width = inject(UiStore).mainContentWidth;
   readonly projectStore = inject(ProjectStore);
   readonly viewService = inject(ProjectViewService);
   readonly treeService = new TreeService();
-  readonly absSaveService = new SaveService();
   editParentId?: string;
   editItem?: ProjectTaskViewModel;
   editForm?: FormGroup;
@@ -130,9 +118,10 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  Inputs
   //
   readonly claims = input.required<string[]>();
-  readonly isFullscreen = input.required<boolean>();
+  readonly isFullScreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
   readonly view = model.required<'phases' | 'disciplines'>();
+  readonly wbsAbs = model.required<'wbs' | 'abs'>();
   //
   //  components
   //
@@ -150,15 +139,19 @@ export class ProjectPhaseTreeComponent implements OnInit {
   //  signals/models
   //
   readonly taskAreaHeight = signal(0);
-  readonly showAbsEditColumn = signal(false);
   //readonly approvals = this.store.select(ProjectApprovalState.list);
   readonly selectedTaskId = signal<string | undefined>(undefined);
   readonly alert = signal<string | undefined>(undefined);
   //
   //  Computed signals
   //
+  readonly tasks = computed(() =>
+    this.wbsAbs() === 'wbs'
+      ? this.projectStore.viewModels()
+      : this.projectStore.absTasks()
+  );
   readonly selectedTask = computed(() =>
-    this.projectStore.viewModels()?.find((x) => x.id === this.selectedTaskId())
+    this.tasks()?.find((x) => x.id === this.selectedTaskId())
   );
   readonly canEdit = computed(
     () =>
@@ -191,13 +184,16 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .map((x) => x.id);
   }
 
-  otherItemSelected(action: string, tasks: ProjectTaskViewModel[]): void {
+  otherItemSelected(action: string): void {
     if (action === 'goFullScreen') {
       this.goFullScreen.emit();
     } else if (action === 'exitFullScreen') {
       this.exitFullScreen.emit();
     } else if (action === 'editAbs') {
-      this.setupAbsEditColumn(tasks);
+      AbsDialogComponent.launchAsync(
+        this.dialogService,
+        this.treeService.expandedKeys
+      );
     }
   }
 
@@ -261,12 +257,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
       }
     }
   }
-
-  rowCallback = (context: RowClassArgs) => {
-    const vm = context.dataItem as ProjectTaskViewModel;
-
-    return { 'bg-light-blue-f': vm.absFlag != undefined };
-  };
 
   addHandler(parent: ProjectTaskViewModel | undefined): void {
     // Close the current edited row, if any.
@@ -350,41 +340,6 @@ export class ProjectPhaseTreeComponent implements OnInit {
   }
 
   private resetTree(): void {
-    this.projectStore.setTasks(
-      structuredClone(this.projectStore.tasks() ?? [])
-    );
-  }
-
-  protected setupAbsEditColumn(tasks: ProjectTaskViewModel[]): void {
-    for (const task of tasks) {
-      task.absEditFlag = task.absFlag;
-    }
-    this.showAbsEditColumn.set(true);
-  }
-
-  protected absFlagChanged(
-    value: boolean,
-    task: ProjectTaskViewModel,
-    tasks: ProjectTaskViewModel[]
-  ): void {
-    task.absEditFlag = value ? 'set' : undefined;
-    this.transformers.nodes.phase.view.updateAbsFlags(tasks, 'absEditFlag');
-  }
-
-  protected saveAbsEditColumn(tasks: ProjectTaskViewModel[]): void {
-    const toSave = structuredClone(tasks).filter(
-      (x) =>
-        (x.absEditFlag === 'set' || x.absFlag === 'set') &&
-        x.absEditFlag !== x.absFlag
-    );
-
-    for (const task of toSave) {
-      task.absFlag = task.absEditFlag;
-    }
-
-    this.showAbsEditColumn.set(false);
-    this.absSaveService
-      .call(this.taskService.changeTaskAbsBulk(toSave))
-      .subscribe();
+    this.projectStore.resetTasks();
   }
 }

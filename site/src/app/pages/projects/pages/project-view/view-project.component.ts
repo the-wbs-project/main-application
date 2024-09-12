@@ -39,7 +39,6 @@ export class ProjectViewComponent {
   readonly menuService = inject(ProjectActionButtonService);
 
   readonly userId = input.required<string>();
-  readonly projectUrl = input.required<string[]>();
 
   /*readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
   readonly approval = this.store.select(ProjectApprovalState.current);
@@ -57,8 +56,4 @@ export class ProjectViewComponent {
   readonly menu = computed(() =>
     this.menuService.buildMenu(this.projectStore.project())
   );
-
-  navigate(route: string[]): void {
-    //this.store.dispatch(new Navigate([...this.projectUrl(), ...route]));
-  }
 }

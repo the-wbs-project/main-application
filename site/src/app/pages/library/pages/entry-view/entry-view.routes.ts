@@ -7,7 +7,6 @@ import {
   LibraryTaskActionService,
   LibraryTaskService,
   entryUrlResolve,
-  ownerIdResolve,
   populateGuard,
   redirectGuard,
 } from './services';
@@ -27,7 +26,6 @@ export const routes: Routes = [
       LibraryTaskService,
     ],
     resolve: {
-      owner: ownerIdResolve,
       entryUrl: entryUrlResolve,
     },
     children: [

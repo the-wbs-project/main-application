@@ -17,6 +17,7 @@ import {
 import { Transformers, TreeService } from '@wbs/core/services';
 import { ProjectStore } from '../../../../stores';
 import { TreeTypeButtonComponent } from '../tree-type-button.component';
+import { WbsAbsButtonComponent } from '../wbs-abs-button.component';
 
 @Component({
   standalone: true,
@@ -29,6 +30,7 @@ import { TreeTypeButtonComponent } from '../tree-type-button.component';
     TreeButtonsTogglerComponent,
     TreeListModule,
     TreeTypeButtonComponent,
+    WbsAbsButtonComponent,
   ],
 })
 export class ProjectDisciplinesTreeComponent implements OnInit {
@@ -41,6 +43,7 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   readonly isFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
   readonly view = model.required<'phases' | 'disciplines'>();
+  readonly wbsAbs = model.required<'wbs' | 'abs'>();
   //
   //  Constaints
   //
@@ -51,6 +54,7 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   //
   readonly tasks = computed(() =>
     this.transformers.nodes.discipline.view.run(
+      this.wbsAbs(),
       this.store.projectDisciplines(),
       this.store.tasks() ?? []
     )

@@ -202,7 +202,6 @@ export class EntryTaskReorderService {
         if (child.levelText !== levelText) {
           child.levels = level;
           child.levelText = levelText;
-          child.depth = levelText.split('.').length;
           changed = true;
         }
         results.rows.push(child);
@@ -212,8 +211,8 @@ export class EntryTaskReorderService {
           child.children = childrenCount;
           changed = true;
         }
-        if (child.treeParentId !== parentId) {
-          child.treeParentId = parentId;
+        if (child.parentId !== parentId) {
+          child.parentId = parentId;
           changed = true;
         }
 

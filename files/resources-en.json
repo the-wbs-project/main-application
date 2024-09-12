@@ -96,7 +96,7 @@
       "UnexpectedServerError": "An unexpected server error occured.",
       "Previous": "Previous",
       "Next": "Next",
-      "FullScreen": "Show Full Screen",
+      "FullScreen": "Full Screen",
       "ExitFullScreen": "Exit Full Screen",
       "Public": "Public",
       "Private": "Private",
@@ -450,7 +450,7 @@
       "CancelProjectSuccess": "The project was successfully cancelled.",
       "TaskLegend_Title": "Click to edit the task title.",
       "TaskLegend_Menu": "Click to see other actions which can be performed on this task.",
-      "TaskLegend_Abs": "Account Breakdown Structure Task",
+      "TaskLegend_Abs": "Accounting Breakdown Structure Task",
       "ManageRoles": "Manage Roles",
       "EditAbs": "Edit ABS Tasks"
     }
@@ -634,10 +634,10 @@
       "PrivateTooltip": "Private - This task can only be seen within your organization.",
       "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
       "ABS": "ABS",
-      "ABS-Full": "Account Breakdown Structure",
-      "ABS-Full2": "ABS - Account Breakdown Structure",
+      "ABS-Full": "Accounting Breakdown Structure",
+      "ABS-Full2": "ABS - Accounting Breakdown Structure",
       "ABS-Explanation": "The ABS is a hierarchical structure that breaks down the project into smaller, more manageable components. It is used to organize and categorize project costs and resources.",
-      "ABS-Tooltip": "TheditEnabledis task has been marked as ABS. This means none of its children will be included in the Account Breakdown Structure.",
+      "ABS-Tooltip": "TheditEnabledis task has been marked as ABS. This means none of its children will be included in the Accounting Breakdown Structure.",
       "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS.",
       "WBS": "WBS",
       "WBS-Full": "Work Breakdown Structure",
@@ -649,7 +649,10 @@
       "VisibilityHelper": "Who Can See This?",
       "VisibilityPublic": "Everyone",
       "VisibilityPrivate": "Only Co-Workers",
-      "SelectTask": "Select A Task To View Details"
+      "SelectTask": "Select A Task To View Details",
+      "WbsSelect1": "Select the first level of tasks",
+      "WbsSelect2": "Select the first two levels of tasks",
+      "WbsSelect3": "Select the first three levels of tasks"
     }
   },
   {

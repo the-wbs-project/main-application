@@ -23,22 +23,6 @@ export class WbsNodeService {
     b: WbsNode | TaskViewModel | BasicTask
   ) => ((a.order ?? 0) < (b.order ?? 0) ? -1 : 1);
 
-  static getSubTasksForTree(
-    tasks: TaskViewModel[],
-    taskId: string
-  ): TaskViewModel[] {
-    const childrenIds = tasks.find((x) => x.id === taskId)?.childrenIds || [];
-    const children = structuredClone(
-      tasks.filter((x) => childrenIds.includes(x.id))
-    );
-
-    for (const root of children.filter((x) => x.parentId === taskId)) {
-      root.treeParentId = undefined;
-    }
-
-    return children;
-  }
-
   static getSortedChildrenForPhase<
     T extends { parentId?: string; order: number }
   >(parentId: string | undefined, list: T[]): T[] {
@@ -55,13 +39,6 @@ export class WbsNodeService {
       children.push(...WbsNodeService.getChildrenIds(tasks, task.id));
     }
     return children;
-  }
-
-  static getSiblings(tasks: WbsNode[], taskId: string): WbsNode[] {
-    const task = tasks.find((x) => x.id === taskId);
-    return tasks
-      .filter((x) => x.parentId === task?.parentId)
-      .sort(WbsNodeService.sort);
   }
 
   getPhases(tasks: WbsNode[]): ProjectCategory[] {

@@ -1,9 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  inject,
-  signal,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, signal } from '@angular/core';
 import {
   FormControl,
   FormGroup,
@@ -13,17 +8,15 @@ import {
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
-  DialogCloseResult,
   DialogContentBase,
   DialogModule,
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { EditorModule } from '@progress/kendo-angular-editor';
-import { SwitchModule, TextBoxModule } from '@progress/kendo-angular-inputs';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LIBRARY_ENTRY_TYPES_TYPE } from '@wbs/core/models';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { LibraryEntryModalModel, LibraryEntryModalResults } from '../../models';
 import {
   LibraryEntryDescriptionHintPipe,
@@ -41,7 +34,6 @@ import {
     LibraryEntryDescriptionHintPipe,
     LibraryEntryTitleHintPipe,
     ReactiveFormsModule,
-    SwitchModule,
     TextBoxModule,
     TranslateModule,
   ],

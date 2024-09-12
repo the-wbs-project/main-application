@@ -5,6 +5,7 @@ export class ActionButtonMenuItem {
   resource?: string;
   text?: string;
   faIcon?: IconDefinition;
+  iconSpacer?: boolean;
   route?: string[];
   action?: string;
   disabled?: boolean;

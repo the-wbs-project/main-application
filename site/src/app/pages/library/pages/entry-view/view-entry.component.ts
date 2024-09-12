@@ -33,7 +33,6 @@ export class EntryViewComponent {
 
   readonly actions = inject(LibraryActionService);
   readonly entryStore = inject(EntryStore);
-  readonly owner = input.required<string>();
   readonly entryUrl = input.required<string[]>();
 
   readonly url = this.store.select(RouterState.url);

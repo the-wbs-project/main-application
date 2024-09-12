@@ -35,7 +35,6 @@ export class ProjectTimelinePageComponent implements OnInit {
   private readonly timelineService = inject(TimelineService);
   private readonly store = inject(ProjectStore);
 
-  readonly projectUrl = input.required<string[]>();
   readonly loaded = signal(false);
   readonly loading = signal(false);
   readonly timeline = signal<TimelineViewModel[]>([]);

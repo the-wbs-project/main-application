@@ -7,7 +7,7 @@ import {
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog.component';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';

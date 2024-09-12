@@ -13,9 +13,20 @@ import { AiStore } from '@wbs/core/store';
 @Component({
   standalone: true,
   selector: 'wbs-description-ai-dialog',
-  templateUrl: './description-ai-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AiDescriptionChatComponent, DialogModule, TranslateModule],
+  template: `<kendo-dialog
+    height="97%"
+    [title]="'General.AskAi' | translate"
+    (close)="closed.emit()"
+  >
+    <wbs-ai-description-chat
+      [models]="models()"
+      [description]="description()"
+      [startingDialog]="startingDialog()"
+      (descriptionChange)="descriptionChange.emit($event)"
+    />
+  </kendo-dialog> `,
 })
 export class DescriptionAiDialogComponent {
   readonly startingDialog = input.required<string>();

@@ -1,18 +1,27 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { PROJECT_CLAIMS, ContentResource } from '@wbs/core/models';
+import {
+  PROJECT_CLAIMS,
+  ContentResource,
+  PROJECT_STATI,
+} from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
 import { ProjectTaskViewModel } from '@wbs/core/view-models';
 import { ProjectTaskActivityService } from '@wbs/pages/projects/services';
 import { Observable } from 'rxjs';
+import { ProjectStore } from '../stores';
 import { BaseProjectResourceService } from './base-project-resource.service';
 
 @Injectable()
 export class ProjectTaskResourceService extends BaseProjectResourceService {
   private readonly activity = inject(ProjectTaskActivityService);
+  private readonly store = inject(ProjectStore);
   private task?: ProjectTaskViewModel;
   //
   //  Computed
   //
+  readonly isPlanning = computed(
+    () => this.store.project()!.status === PROJECT_STATI.PLANNING
+  );
   readonly canAdd = computed(
     () =>
       this.isPlanning() &&
@@ -37,6 +46,10 @@ export class ProjectTaskResourceService extends BaseProjectResourceService {
         PROJECT_CLAIMS.TASKS.UPDATE,
       ])
   );
+
+  protected getOwner(): string {
+    return this.store.project()!.owner;
+  }
 
   protected getParentId(): string {
     return this.task!.id;

@@ -19,8 +19,8 @@
       kendoTreeListExpandable
       kendoTreeListSelectable
       [kendoTreeListFlatBinding]="tree"
-      parentIdField="treeParentId"
-      idField="treeId"
+      parentIdField="parentId"
+      idField="id"
       [rowHeight]="rowHeight"
       [pageSize]="pageSize()"
       [height]="containerHeight() - heightOffset - taskAreaHeight() - 20"
@@ -45,8 +45,8 @@
           </button>
           }
           <wbs-tree-buttons-toggler
-            (collapse)="treeService.collapseAll(treelist, tree, 'treeId')"
-            (expand)="treeService.expandAll(tree, 'treeId')"
+            (collapse)="treeService.collapseAll(treelist, tree, 'id')"
+            (expand)="treeService.expandAll(tree, 'id')"
           />
           @if (showFullscreen()) {
           <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />

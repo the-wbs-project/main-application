@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
@@ -28,10 +27,10 @@ import { ProjectStore } from '../../stores';
 })
 export class ProjectTasksComponent {
   readonly projectStore = inject(ProjectStore);
-  readonly projectUrl = input.required<string[]>();
 
   readonly showDialog = signal(false);
   readonly containerHeight = signal(100);
   readonly dialogContainerHeight = signal(100);
   readonly view = signal<'phases' | 'disciplines'>('phases');
+  readonly wbsAbs = signal<'wbs' | 'abs'>('wbs');
 }

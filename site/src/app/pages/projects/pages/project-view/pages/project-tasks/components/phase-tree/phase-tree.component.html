@@ -1,4 +1,4 @@
-@let list = projectStore.viewModels() ?? [];
+@let list = tasks() ?? [];
 <!---->
 @let editEnabled = canEdit();
 <!---->
@@ -19,14 +19,13 @@
       kendoTreeListExpandable
       kendoTreeListSelectable
       [kendoTreeListFlatBinding]="list"
-      parentIdField="treeParentId"
-      idField="treeId"
+      parentIdField="parentId"
+      idField="id"
       [rowHeight]="rowHeight"
       [pageSize]="pageSize()"
       [height]="containerHeight() - heightOffset - taskAreaHeight() - 20"
       scrollable="virtual"
       [navigable]="true"
-      [rowClass]="rowCallback"
       [initiallyExpanded]="false"
       [(expandedKeys)]="treeService.expandedKeys"
       [selectable]="{ enabled: true, mode: 'row' }"
@@ -35,18 +34,20 @@
       (rowReorder)="rowReordered($event)"
     >
       <ng-template kendoTreeListToolbarTemplate>
-        <div class="d-flex row-column align-items-center" style="gap: 10px">
+        <div class="w-100 d-flex flex-wrap row-column gap-10">
           <wbs-tree-type-button [(view)]="view" />
+          <wbs-abs-button [(view)]="wbsAbs" />
           @if (editEnabled) {
           <wbs-tree-buttons-add (selected)="addPhase($event)" />
           }
           <wbs-tree-buttons-toggler
-            (collapse)="treeService.collapseAll(treelist, list, 'treeId')"
-            (expand)="treeService.expandAll(list, 'treeId')"
+            (collapse)="treeService.collapseAll(treelist, list, 'id')"
+            (expand)="treeService.expandAll(list, 'id')"
           />
-          @if (!isFullscreen()) {
-          <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
-          }
+          <wbs-phase-tree-other-button
+            [isFullScreen]="isFullScreen()"
+            (selected)="otherItemSelected($event)"
+          />
         </div>
       </ng-template>
       @if (editEnabled) {
@@ -114,36 +115,6 @@
         </ng-template>
       </kendo-treelist-column>
     } -->
-      <kendo-treelist-column
-        [width]="110"
-        [title]="'Approval'"
-        headerClass="tx-14"
-        class="tree-column text-center"
-      >
-        <ng-template kendoTreeListHeaderTemplate>
-          <wbs-abs-header
-            text="abbrev"
-            position="left"
-            [inEditMode]="showAbsEditColumn()"
-            [saveState]="absSaveService.state()"
-            (edit)="setupAbsEditColumn(list)"
-            (save)="saveAbsEditColumn(list)"
-            (cancel)="showAbsEditColumn.set(false)"
-          />
-        </ng-template>
-        <ng-template kendoTreeListCellTemplate let-dataItem>
-          @if (showAbsEditColumn()) {
-          <wbs-abs-checkbox
-            [implied]="dataItem.absEditFlag === 'implied'"
-            [checked]="dataItem.absEditFlag === 'set'"
-            (checkedChange)="absFlagChanged($event, dataItem, list)"
-          />
-          } @else {
-          <wbs-abs-icon [abs]="dataItem.absFlag" />
-          }
-        </ng-template>
-      </kendo-treelist-column>
-
       @if ((width() ?? 0) > 800) {
       <kendo-treelist-column
         [width]="200"
@@ -174,7 +145,7 @@
           }
         </ng-template>
       </kendo-treelist-column>
-      } @if (editEnabled && !showAbsEditColumn()) {
+      } @if (editEnabled) {
       <kendo-treelist-command-column [width]="50" class="tree-column">
         <ng-template
           kendoTreeListCellTemplate

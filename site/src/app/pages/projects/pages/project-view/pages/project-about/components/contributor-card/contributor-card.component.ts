@@ -3,7 +3,6 @@ import {
   Component,
   computed,
   inject,
-  input,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faPencil } from '@fortawesome/pro-solid-svg-icons';

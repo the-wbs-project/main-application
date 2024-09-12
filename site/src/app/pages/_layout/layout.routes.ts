@@ -1,18 +1,18 @@
 import { Routes } from '@angular/router';
 import { authGuardFn } from '@auth0/auth0-angular';
 import {
+  AiChatServiceFactory,
+  Auth0Service,
+  orgClaimsResolve,
+} from '@wbs/core/services';
+import {
   authGuard,
   librarySectionGuard,
   navToOrgGuard,
   orgGuard,
   projectsSectionGuard,
   settingsSectionGuard,
-} from '@wbs/core/guards';
-import {
-  AiChatServiceFactory,
-  Auth0Service,
-  orgClaimsResolve,
-} from '@wbs/core/services';
+} from './guards';
 
 export const routes: Routes = [
   {

@@ -1,8 +1,7 @@
 import { importProvidersFrom } from '@angular/core';
 import { Routes } from '@angular/router';
 import { NgxsModule } from '@ngxs/store';
-import { DialogModule } from '@progress/kendo-angular-dialog';
-import { orgResolve, userIdResolve } from '@wbs/core/services';
+import { userIdResolve } from '@wbs/core/services';
 import { ProjectActivityService } from '../../services';
 import {
   ChecklistDataService,
@@ -16,7 +15,6 @@ import {
   ProjectViewService,
   TimelineService,
   closeApprovalWindowGuard,
-  projectUrlResolve,
   projectVerifyGuard,
 } from './services';
 import { ProjectChecklistState } from './states';
@@ -31,13 +29,9 @@ export const routes: Routes = [
       import('./view-project.component').then((m) => m.ProjectViewComponent),
     resolve: {
       userId: userIdResolve,
-      projectUrl: projectUrlResolve,
     },
     providers: [
-      importProvidersFrom([
-        DialogModule,
-        NgxsModule.forFeature([ProjectChecklistState]),
-      ]),
+      importProvidersFrom([NgxsModule.forFeature([ProjectChecklistState])]),
       ChecklistDataService,
       ChecklistTestService,
       LibraryEntryExportService,
@@ -64,21 +58,14 @@ export const routes: Routes = [
         loadComponent: () =>
           import('./pages/project-tasks').then((x) => x.ProjectTasksComponent),
         canDeactivate: [closeApprovalWindowGuard],
-        resolve: {
-          projectUrl: projectUrlResolve,
-        },
       },
       {
         path: 'timeline',
         loadComponent: () =>
-          import('./pages/project-timeline-page.component').then(
+          import('./pages/project-timeline.component').then(
             (x) => x.ProjectTimelinePageComponent
           ),
         canDeactivate: [closeApprovalWindowGuard],
-        resolve: {
-          owner: orgResolve,
-          projectUrl: projectUrlResolve,
-        },
       },
     ],
   },

@@ -7,7 +7,7 @@ import {
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog.component';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {

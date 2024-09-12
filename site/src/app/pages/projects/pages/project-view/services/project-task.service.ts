@@ -320,16 +320,25 @@ export class ProjectTaskService {
     );
   }
 
-  changeTaskAbsBulk(tasks: ProjectTaskViewModel[]): Observable<unknown> {
+  changeTaskAbsBulk(absTaskIds: string[]): Observable<unknown> {
     const project = this.getProject();
+    const tasks = this.projectStore.tasks() ?? [];
+    const changedIds: string[] = [];
 
-    return this.saveTaskVms(this.getProject(), tasks).pipe(
+    for (const task of tasks) {
+      const flag = absTaskIds.includes(task.id);
+
+      if (task.absFlag !== flag) {
+        task.absFlag = flag;
+        changedIds.push(task.id);
+      }
+    }
+
+    if (changedIds.length === 0) return of();
+
+    return this.saveTasks(project, tasks).pipe(
       switchMap(() =>
-        this.activity.changeTaskAbsBulk(
-          project.owner,
-          project.id,
-          tasks.map((x) => x.id)
-        )
+        this.activity.changeTaskAbsBulk(project.owner, project.id, changedIds)
       )
     );
   }

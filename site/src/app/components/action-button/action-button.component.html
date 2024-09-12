@@ -26,6 +26,8 @@
       <div class="wd-30 text-center">
         <fa-icon [icon]="item.faIcon" />
       </div>
+      } @else if (item.iconSpacer) {
+      <div class="wd-30">&nbsp;</div>
       } @if (item.text) { {{ item.text }} } @else if (item.resource) {
       {{ item.resource | translate }} }
     </div>

@@ -9,8 +9,6 @@ export * from './project-task.service';
 export * from './project-task-resource.service';
 export * from './project-view.guards';
 export * from './project-view.service';
-export * from './project-view.resolvers';
 export * from './project.service';
 export * from './text-compare.service';
 export * from './timeline.service';
-export * from './upload-file.service';
