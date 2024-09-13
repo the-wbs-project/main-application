@@ -61,7 +61,8 @@ export class ProjectViewService {
 
       if (task.parentId == null)
         this.exportService.exportPhase(this.owner, this.project.id, task);
-      else if (task) this.exportService.exportTask(this.owner, task);
+      else if (task)
+        this.exportService.exportTask(this.owner, this.project.id, task);
     } else if (action.startsWith('import|library')) {
       return this.importService.importFromLibraryAsync(taskId);
     } else if (action.startsWith('import|file')) {

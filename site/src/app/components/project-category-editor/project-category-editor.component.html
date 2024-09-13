@@ -15,7 +15,7 @@
   </button>
 </div>
 } @else { @let cat = category();
-<div class="d-flex flex-align-start">
+<div class="w-100 d-flex flex-align-start">
   @if (cat) {
   <span class="mg-r-10"> {{ cat?.label }} </span>
   <span kendoPopoverAnchor [popover]="myPopover" showOn="hover" class="pointer">

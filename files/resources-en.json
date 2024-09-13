@@ -358,6 +358,7 @@
       "UploadTaskErrors": "The following errors found",
       "UploadTaskErrorPrefix": "Please fix and try again.",
       "ExportToLibrary": "Export To Library",
+      "ExportProjectToLibrary": "Export Project To Library",
       "AddSubTask": "Add Sub-Task",
       "EditTask": "Edit Task",
       "CloneTask": "Clone Task",
@@ -766,7 +767,9 @@
       "ResourceRemovedDescriptionProject": "The resource '{resource.name}' was removed from the project.",
       "ResourceRemovedDescriptionTask": "The resource '{resource.name}' was removed from task '{title}'.",
       "TaskImportedTitle": "Task Imported",
-      "TaskImportedDescription": "The {tasks.length} task(s) where imported from {importedFrom:Unknown}."
+      "TaskImportedDescription": "The {tasks.length} task(s) where imported from {importedFrom:Unknown}.",
+      "TaskAbsFlagBulkChangedTitle": "ABS Tasks Changed",
+      "TaskAbsFlagBulkChangedDescription": "The ABS flag for {taskIds.length} task(s) were changed."
     }
   },
   {
@@ -830,13 +833,10 @@
       "TitleHintProject": "The name of the project template you are storing in the library.",
       "TitleHintPhase": "The name of the phase template you are storing in the library.",
       "TitleHintTask": "The name of the task template you are storing in the library.",
-      "DescriptionHintProject": "The name of the project template you are storing in the library.",
-      "DescriptionHintPhase": "The name of the phase template you are storing in the library.",
-      "DescriptionHintTask": "The name of the task template you are storing in the library.",
       "IncludeResources": "Include Resources",
       "IncludeResourcesHint": "Do you want to replicate all associated resources to the template?",
-      "Visibility": "Public Visibility",
-      "VisibilityHint": "Will this template be accessible in the larger community?"
+      "SuccessTitle": "Library Entry Exported",
+      "SuccessMessage": "The record {recordId} has been created."
     }
   },
   {

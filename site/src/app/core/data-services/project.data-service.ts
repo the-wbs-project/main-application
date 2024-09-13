@@ -95,9 +95,12 @@ export class ProjectDataService {
     projectId: string,
     model: ProjectToLibraryOptions
   ): Observable<string> {
-    return this.http.post<string>(
+    return this.http.post(
       `api/portfolio/${owner}/projects/${projectId}/export/libraryEntry`,
-      model
+      model,
+      {
+        responseType: 'text',
+      }
     );
   }
 
@@ -107,9 +110,12 @@ export class ProjectDataService {
     nodeId: string,
     model: ProjectNodeToLibraryOptions
   ): Observable<string> {
-    return this.http.post<string>(
+    return this.http.post(
       `api/portfolio/${owner}/projects/${projectId}/nodes/${nodeId}/export/libraryEntry`,
-      model
+      model,
+      {
+        responseType: 'text',
+      }
     );
   }
 

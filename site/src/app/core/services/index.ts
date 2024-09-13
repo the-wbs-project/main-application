@@ -11,6 +11,7 @@ export * from './error.service';
 export * from './logger.service';
 export * from './menu.service';
 export * from './messages.service';
+export * from './navigation.service';
 export * from './resource.service';
 export * from './save.service';
 export * from './signal-store.service';

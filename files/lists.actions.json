@@ -221,5 +221,13 @@
         "description": "Actions.ResourceRemovedDescriptionTask",
         "icon": "fa-file",
         "order": 0
+    },
+    {
+        "id": "task-abs-bulk-changed",
+        "type": "actions",
+        "label": "Actions.TaskAbsFlagBulkChangedTitle",
+        "description": "Actions.TaskAbsFlagBulkChangedDescription",
+        "icon": "fa-flag",
+        "order": 0
     }
 ]

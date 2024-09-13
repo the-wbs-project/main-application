@@ -39,6 +39,7 @@ import { UploadDialogService, UploadDialogViewService } from './services';
     DialogWrapperComponent,
     DisciplinesViewComponent,
     HeightDirective,
+    
     TaskViewComponent,
     TranslateModule,
     UploadViewComponent,
