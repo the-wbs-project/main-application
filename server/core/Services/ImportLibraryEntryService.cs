@@ -113,7 +113,7 @@ public class ImportLibraryEntryService
         {
             Id = IdService.Create(),
             OwnerId = owner,
-            Type = options.phase != null ? "phase" : "node",
+            Type = options.phase != null ? "phase" : "task",
             Visibility = options.visibility,
         };
         var libraryEntryVersion = new LibraryEntryVersion
@@ -156,7 +156,9 @@ public class ImportLibraryEntryService
             };
             nodeIds.Add(n.id, libraryNode.id);
             libraryEntryNodes.Add(libraryNode);
-            resources.Add(n.id, libraryNode.id);
+
+            if (!resources.ContainsKey(n.id))
+                resources.Add(n.id, libraryNode.id);
         }
         //
         //  Now loop through the nodes and fix the parent ids.
