@@ -2,9 +2,11 @@
   height="90%"
   width="90%"
   maxWidth="1200px"
-  [title]="'General.CreateProject' | translate"
   (close)="dialog.close()"
 >
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "General.CreateProject" | translate }}
+  </kendo-dialog-titlebar>
   <wbs-dialog-wrapper [view]="store.page()" [steps]="steps">
     @if (store.page() === 0) {
     <wbs-project-create-basics />

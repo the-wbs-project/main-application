@@ -1,11 +1,9 @@
 @let page = view();
 
-<kendo-dialog
-  width="95%"
-  height="95%"
-  [title]="'Wbs.ImportFromLibrary' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog width="95%" height="95%" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Wbs.ImportFromLibrary" | translate }}
+  </kendo-dialog-titlebar>
   <div class="d-flex flex-column h-100">
     <kendo-stepper
       [steps]="steps"

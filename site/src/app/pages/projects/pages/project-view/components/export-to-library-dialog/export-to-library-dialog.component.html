@@ -1,8 +1,7 @@
-<kendo-dialog
-  width="80%"
-  [title]="'Projects.ExportProjectToLibrary' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog width="80%" minHeight="200px" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Projects.ExportProjectToLibrary" | translate }}
+  </kendo-dialog-titlebar>
   <div class="w-100">
     <div class="row mg-b-30">
       <label

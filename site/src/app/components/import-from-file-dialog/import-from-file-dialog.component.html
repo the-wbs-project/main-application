@@ -1,11 +1,9 @@
 @let page = viewService.page();
 
-<kendo-dialog
-  width="95%"
-  height="95%"
-  [title]="'Wbs.ImportFromFile' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog width="95%" height="95%" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Wbs.ImportFromFile" | translate }}
+  </kendo-dialog-titlebar>
   <wbs-dialog-wrapper [view]="viewService.view()" [steps]="viewService.steps()">
     @if (page.id === 'start') {
     <wbs-upload-view

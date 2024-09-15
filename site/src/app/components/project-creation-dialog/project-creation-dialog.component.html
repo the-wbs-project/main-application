@@ -1,9 +1,7 @@
-<kendo-dialog
-  height="80%"
-  width="80%"
-  [title]="'LibraryCreate.TitleProject' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog height="80%" width="80%" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "LibraryCreate.TitleProject" | translate }}
+  </kendo-dialog-titlebar>
   <div class="d-flex flex-column h-100">
     <kendo-stepper
       [steps]="steps"
