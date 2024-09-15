@@ -15,7 +15,6 @@ import {
   ProjectViewService,
   TimelineService,
   closeApprovalWindowGuard,
-  projectVerifyGuard,
 } from './services';
 import { ProjectChecklistState } from './states';
 import { ProjectStore } from './stores';
@@ -23,10 +22,9 @@ import { ProjectStore } from './stores';
 export const routes: Routes = [
   {
     path: ':recordId',
-    canActivate: [projectVerifyGuard],
     canDeactivate: [closeApprovalWindowGuard],
     loadComponent: () =>
-      import('./view-project.component').then((m) => m.ProjectViewComponent),
+      import('./project-view.component').then((m) => m.ProjectViewComponent),
     resolve: {
       userId: userIdResolve,
     },
