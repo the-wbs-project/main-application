@@ -192,6 +192,7 @@
       "Discussions": "Discussions",
       "LastModified": "Last Changed",
       "Loading": "Loading",
+      "LoadingItem": "Loading {item}...",
       "Pdf": "PDF",
       "Link": "Link",
       "Image": "Image",
