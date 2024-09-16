@@ -16,7 +16,7 @@ export const routes: Routes = [
     path: ':ownerId/:recordId/:versionId',
     canActivate: [populateGuard],
     loadComponent: () =>
-      import('./view-entry.component').then((m) => m.EntryViewComponent),
+      import('./library-view.component').then((m) => m.LibraryViewComponent),
     providers: [
       EntryTaskReorderService,
       LibraryActionService,

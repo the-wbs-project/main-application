@@ -22,8 +22,8 @@ import { MetadataStore } from '@wbs/core/store';
 
 @Component({
   standalone: true,
-  selector: 'wbs-phase-selection',
-  templateUrl: './phase-selection.component.html',
+  selector: 'wbs-phase-view',
+  templateUrl: './phase-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonGroupModule,
@@ -38,7 +38,7 @@ import { MetadataStore } from '@wbs/core/store';
   ],
   styles: ['.row-header { max-width: 200px; }'],
 })
-export class PhaseSelectionComponent {
+export class PhaseViewComponent {
   readonly faList = faList;
   readonly faPencil = faPencil;
   readonly phases = inject(MetadataStore).categories.phases;

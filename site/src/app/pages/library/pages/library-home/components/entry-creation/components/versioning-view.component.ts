@@ -6,11 +6,12 @@ import { AlertComponent } from '@wbs/components/_utils/alert.component';
 
 @Component({
   standalone: true,
-  selector: 'wbs-versioning',
+  selector: 'wbs-versioning-view',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [AlertComponent, FormsModule, TextBoxModule, TranslateModule],
   host: { class: 'text-start' },
-  template: `<wbs-alert
+  template: `<div class="d-inline-block w-100 mx-wd-800">
+    <wbs-alert
       type="info"
       [dismissible]="false"
       [message]="'LibraryCreate.VersioningHelp' | translate"
@@ -21,8 +22,9 @@ import { AlertComponent } from '@wbs/components/_utils/alert.component';
         {{ 'Wbs.VersionAlias' | translate }}
       </label>
       <input kendoTextBox class="w-100" [(ngModel)]="alias" />
-    </div>`,
+    </div>
+  </div>`,
 })
-export class VersioningComponent {
+export class VersioningViewComponent {
   readonly alias = model.required<string>();
 }

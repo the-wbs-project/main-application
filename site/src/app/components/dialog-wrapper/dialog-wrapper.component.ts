@@ -1,4 +1,10 @@
-import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { NgClass } from '@angular/common';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  input,
+} from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { TranslateModule } from '@ngx-translate/core';
 import { StepperModule } from '@progress/kendo-angular-layout';
@@ -12,6 +18,7 @@ import { StepperItem } from '@wbs/core/models';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     FontAwesomeModule,
+    NgClass,
     ScrollToTopDirective,
     StepperModule,
     TranslateModule,
@@ -20,4 +27,15 @@ import { StepperItem } from '@wbs/core/models';
 export class DialogWrapperComponent {
   readonly view = input.required<number>();
   readonly steps = input.required<StepperItem[]>();
+  readonly mobileSpot = input<'sm' | 'md' | 'lg' | undefined>(undefined);
+  readonly stepLabelClass = computed(() => {
+    const spot = this.mobileSpot();
+    if (!spot) return '';
+    return `d-none d-${spot}-block`;
+  });
+  readonly headerLabelClass = computed(() => {
+    const spot = this.mobileSpot();
+    if (!spot) return '';
+    return `d-block d-${spot}-none`;
+  });
 }

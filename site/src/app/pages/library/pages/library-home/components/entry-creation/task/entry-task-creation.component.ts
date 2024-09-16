@@ -3,10 +3,8 @@ import {
   Component,
   computed,
   inject,
-  model,
   signal,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCodeBranch,
   faFloppyDisk,
@@ -19,17 +17,17 @@ import {
   DialogModule,
   DialogRef,
 } from '@progress/kendo-angular-dialog';
-import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DialogButtonsComponent } from '@wbs/components/dialog-buttons';
 import { DialogWrapperComponent } from '@wbs/components/dialog-wrapper';
-import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
 import { CreationDialogService } from '../../../services';
-import { SaveSectionComponent } from '../components/save-section';
-import { SavingEntryComponent } from '../components/saving-entry.component';
-import { VersioningComponent } from '../components/versioning.component';
-import { TitleFormComponent } from './components/title-form';
+import {
+  DisciplineViewComponent,
+  ReviewViewComponent,
+  VersioningViewComponent,
+} from '../components';
+import { TitleViewComponent } from './components';
 
 @Component({
   standalone: true,
@@ -40,36 +38,40 @@ import { TitleFormComponent } from './components/title-form';
     DialogButtonsComponent,
     DialogModule,
     DialogWrapperComponent,
-    DisciplineEditorComponent,
-    FontAwesomeModule,
-    SaveSectionComponent,
-    SavingEntryComponent,
-    TitleFormComponent,
+    DisciplineViewComponent,
+    ReviewViewComponent,
+    TitleViewComponent,
     TranslateModule,
-    VersioningComponent,
-    VisibilitySelectionComponent,
+    VersioningViewComponent,
   ],
 })
 export class EntryTaskCreationComponent extends DialogContentBase {
   private readonly catService = inject(CategoryService);
   readonly service = inject(CreationDialogService);
-
-  readonly templateTitle = model<string>('');
-  readonly mainTaskTitle = model<string>('');
-  readonly alias = signal<string>('Initial Version');
-  readonly visibility = model<'public' | 'private'>('public');
-  readonly syncTitles = model<boolean>(false);
-  readonly disciplines = model<CategorySelection[]>(
-    this.catService.buildDisciplines([])
-  );
-  readonly view = model<number>(0);
+  //
+  //  Constants
+  //
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
     { label: 'General.Disciplines', icon: faPeople, isOptional: true },
     { label: 'General.Versioning', icon: faCodeBranch, isOptional: true },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
-
+  //
+  //  Signals
+  //
+  readonly templateTitle = signal<string>('');
+  readonly mainTaskTitle = signal<string>('');
+  readonly alias = signal<string>('Initial Version');
+  readonly visibility = signal<'public' | 'private'>('public');
+  readonly syncTitles = signal<boolean>(false);
+  readonly disciplines = signal<CategorySelection[]>(
+    this.catService.buildDisciplines([])
+  );
+  readonly view = signal<number>(0);
+  //
+  //  Computed
+  //
   readonly disciplineReview = computed(() =>
     this.disciplines()
       .filter((x) => x.selected)
@@ -96,16 +98,6 @@ export class EntryTaskCreationComponent extends DialogContentBase {
     return templateTitle !== '' && mainTaskTitle !== '';
   });
 
-  readonly nextButtonLabel = computed(() => {
-    const view = this.view();
-    const hasDisciplines = this.disciplines().some((x) => x.selected);
-
-    if (view === 1) return hasDisciplines ? 'General.Next' : 'General.Skip';
-    if (view === this.steps.length - 1) return 'General.Save';
-
-    return 'General.Next';
-  });
-
   constructor(dialog: DialogRef) {
     super(dialog);
   }
@@ -115,18 +107,18 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   }
 
   next(): void {
-    if (this.view() < this.steps.length - 1) {
-      this.view.update((x) => x + 1);
-    } else {
-      this.service
-        .createTaskEntryAsync(
-          this.templateTitle(),
-          this.mainTaskTitle(),
-          this.alias(),
-          this.visibility(),
-          this.disciplines()
-        )
-        .subscribe(() => this.dialog.close());
-    }
+    this.view.update((x) => x + 1);
+  }
+
+  save(): void {
+    this.service
+      .createTaskEntryAsync(
+        this.templateTitle(),
+        this.mainTaskTitle(),
+        this.alias(),
+        this.visibility(),
+        this.disciplines()
+      )
+      .subscribe(() => this.dialog.close());
   }
 }

@@ -2,65 +2,43 @@
   width="80%"
   height="80%"
   maxWidth="1000px"
-  [title]="'LibraryCreate.TitleTask' | translate"
   (close)="dialog.close()"
 >
-  <wbs-dialog-wrapper #wrapper [steps]="steps" [view]="view()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "LibraryCreate.TitleTask" | translate }}
+  </kendo-dialog-titlebar>
+  <wbs-dialog-wrapper [steps]="steps" [view]="view()" mobileSpot="md">
     @if (view() === 0) {
-    <div class="d-inline-block w-100 mx-wd-800 tx-left">
-      <div class="pd-x-12">
-        <wbs-title-form
-          [(templateTitle)]="templateTitle"
-          [(mainTaskTitle)]="mainTaskTitle"
-          [(syncTitles)]="syncTitles"
-        />
-
-        <label class="form-label tx-18">
-          {{ "General.Visibility" | translate }}
-        </label>
-        <wbs-visibility-selection [(visibility)]="visibility" />
-      </div>
-    </div>
+    <wbs-title-view
+      [(templateTitle)]="templateTitle"
+      [(mainTaskTitle)]="mainTaskTitle"
+      [(syncTitles)]="syncTitles"
+      [(visibility)]="visibility"
+    />
     } @else if (view() === 1) {
-
-    <div class="d-inline-block w-100 mx-wd-800 text-center">
-      <div class="pd-y-15 pd-x-30 tx-14">
-        {{ "LibraryCreate.DisciplinesHeader" | translate }}
-      </div>
-      <div class="d-inline-block w-100" style="max-width: 500px">
-        <wbs-discipline-editor [showAdd]="true" [(categories)]="disciplines" />
-      </div>
-    </div>
+    <wbs-discipline-view [(disciplines)]="disciplines" />
     } @else if (view() === 2) {
-
-    <div class="d-inline-block w-100 mx-wd-800">
-      <wbs-versioning [(alias)]="alias" />
-    </div>
+    <wbs-versioning-view [(alias)]="alias" />
     } @else if (view() === 3) {
 
-    <div class="d-inline-block w-100 mx-wd-800">
-      @let saveState = service.saveState.state(); @if (saveState !== "saving") {
-      <wbs-save-section
-        [disciplines]="disciplines()"
-        [mainTaskTitle]="mainTaskTitle()"
-        [templateTitle]="templateTitle()"
-        [visibility]="visibility()"
-        [versionAlias]="alias()"
-      />
-      }
-      <wbs-saving-entry [saveState]="saveState" />
-    </div>
+    <wbs-review-view
+      [disciplines]="disciplines()"
+      [mainTaskTitle]="mainTaskTitle()"
+      [templateTitle]="templateTitle()"
+      [visibility]="visibility()"
+      [versionAlias]="alias()"
+    />
     }
   </wbs-dialog-wrapper>
   <kendo-dialog-actions>
     <wbs-dialog-buttons
       [view]="view()"
+      [showSave]="view() === 3"
       [canContinue]="canContinue()"
-      [nextButtonLabel]="nextButtonLabel()"
-      [isSaving]="false"
-      [showSave]="false"
+      [isSaving]="service.saveState.isSaving()"
       (next)="next()"
       (back)="back()"
+      (save)="save()"
     />
   </kendo-dialog-actions>
 </kendo-dialog>

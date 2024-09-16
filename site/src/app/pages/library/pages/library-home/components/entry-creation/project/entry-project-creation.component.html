@@ -2,89 +2,42 @@
   width="80%"
   height="80%"
   maxWidth="1000px"
-  [title]="'LibraryCreate.TitleProject' | translate"
   (close)="dialog.close()"
 >
-  <wbs-dialog-wrapper #wrapper [steps]="steps" [view]="view()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "LibraryCreate.TitleProject" | translate }}
+  </kendo-dialog-titlebar>
+  <wbs-dialog-wrapper [steps]="steps" [view]="view()" mobileSpot="lg">
     @if (view() === 0) {
-    <div class="d-inline-block w-100 mx-wd-800 tx-left">
-      <div class="pd-x-12 mb-3">
-        <label for="templateTitle" class="form-label tx-18">
-          {{ "LibraryCreate.TemplateTitle" | translate }}
-        </label>
-        <input
-          kendoTextBox
-          name="templateTitle"
-          id="templateTitle"
-          [(ngModel)]="templateTitle"
-        />
-        <label class="d-inline-block tx-12 tx-italic mg-t-5">
-          {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
-        </label>
-      </div>
-      <div class="pd-x-12 mb-3">
-        <label class="form-label tx-18">
-          {{ "General.Visibility" | translate }}
-        </label>
-        <wbs-visibility-selection [(visibility)]="visibility" />
-      </div>
-      <div class="pd-x-12">
-        <label class="form-label tx-18">
-          {{ "LibraryCreate.ProjectCategory" | translate }}
-        </label>
-        <wbs-project-category-dropdown [(category)]="category" />
-      </div>
-    </div>
+    <wbs-info-view [(title)]="templateTitle" [(visibility)]="visibility" />
     } @else if (view() === 1) {
-    <div class="d-inline-block w-100">
-      <div class="pd-y-15 pd-x-30 tx-14">
-        {{ "LibraryCreate.DisciplinesHeader" | translate }}
-      </div>
-      <div class="text-start">
-        <wbs-phase-editor [(categories)]="phases" />
-      </div>
-    </div>
+    <wbs-category-view [(category)]="category" />
     } @else if (view() === 2) {
-
-    <div class="d-inline-block w-100 mx-wd-800 text-center">
-      <div class="pd-y-15 pd-x-30 tx-14">
-        {{ "LibraryCreate.DisciplinesHeader" | translate }}
-      </div>
-      <div class="d-inline-block w-100" style="max-width: 500px">
-        <wbs-discipline-editor [showAdd]="true" [(categories)]="disciplines" />
-      </div>
-    </div>
+    <wbs-phase-view [(phases)]="phases" />
     } @else if (view() === 3) {
-
-    <div class="d-inline-block w-100 mx-wd-800">
-      <wbs-versioning [(alias)]="alias" />
-    </div>
+    <wbs-discipline-view [(disciplines)]="disciplines" />
     } @else if (view() === 4) {
-
-    <div class="d-inline-block w-100 mx-wd-800">
-      @let saveState = service.saveState.state(); @if (saveState !== "saving") {
-      <wbs-save-section
-        [phases]="phases()"
-        [versionAlias]="alias()"
-        [category]="(categories | findById : category()!)!"
-        [disciplines]="disciplines()"
-        [templateTitle]="templateTitle()"
-        [visibility]="visibility()"
-      />
-      }
-      <wbs-saving-entry [saveState]="saveState" />
-    </div>
+    <wbs-versioning-view [(alias)]="alias" />
+    } @else if (view() === 5) {
+    <wbs-review-view
+      [phases]="phases()"
+      [versionAlias]="alias()"
+      [visibility]="visibility()"
+      [disciplines]="disciplines()"
+      [templateTitle]="templateTitle()"
+      [category]="(categories | findById : category()!)!"
+    />
     }
   </wbs-dialog-wrapper>
   <kendo-dialog-actions>
     <wbs-dialog-buttons
       [view]="view()"
+      [showSave]="view() === 5"
       [canContinue]="canContinue()"
-      [nextButtonLabel]="nextButtonLabel()"
-      [isSaving]="false"
-      [showSave]="false"
+      [isSaving]="service.saveState.isSaving()"
       (next)="next()"
       (back)="back()"
+      (save)="save()"
     />
   </kendo-dialog-actions>
 </kendo-dialog>

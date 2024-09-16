@@ -28,6 +28,7 @@ import {
 } from './components';
 import { ActivatedRoute, Router } from '@angular/router';
 import { of, switchMap } from 'rxjs';
+import { TreeListExampleComponent } from './test.component';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -45,6 +46,7 @@ declare type ProjectView = 'grid' | 'table';
     ProjectTableomponent,
     ProjectViewToggleComponent,
     TranslateModule,
+    TreeListExampleComponent,
   ],
 })
 export class ProjectListComponent {

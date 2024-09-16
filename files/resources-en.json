@@ -914,7 +914,8 @@
       "DisciplinesHeader": "Optionally, you can define what disciplines are apart of this WBS. This will improve the value and understanding of the WBS.",
       "Step_Title": "Title & Visibility",
       "Step_Review": "Review & Save",
-      "VersioningHelp": "You can optionally create an alias for this WBS. This will allow yourself and others to understand what is different between each version."
+      "VersioningHelp": "You can optionally create an alias for this WBS. This will allow yourself and others to understand what is different between each version.",
+      "CategoryHelp": "Select the category that best describes this project WBS."
     }
   },
   {

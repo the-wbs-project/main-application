@@ -18,7 +18,7 @@ import { LibraryActionService } from './services';
 
 @Component({
   standalone: true,
-  templateUrl: './view-entry.component.html',
+  templateUrl: './library-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ActionButtonComponent,
@@ -28,7 +28,7 @@ import { LibraryActionService } from './services';
     WatchIndicatorComponent,
   ],
 })
-export class EntryViewComponent {
+export class LibraryViewComponent {
   private readonly store = inject(SignalStore);
 
   readonly actions = inject(LibraryActionService);

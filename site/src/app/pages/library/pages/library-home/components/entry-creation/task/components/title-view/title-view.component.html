@@ -1,0 +1,57 @@
+<div class="d-inline-block w-100 mx-wd-800 tx-left">
+  <div class="pd-x-12">
+    <div class="mb-3">
+      <label for="templateTitle" class="form-label tx-18">
+        {{ "LibraryCreate.TemplateTitle" | translate }}
+      </label>
+      <input
+        kendoTextBox
+        name="templateTitle"
+        id="templateTitle"
+        [(ngModel)]="templateTitle"
+      />
+      <label class="d-inline-block tx-12 tx-italic mg-t-5">
+        {{ "LibraryCreate.TemplateTitleDescriptionTask" | translate }}
+      </label>
+    </div>
+    <div class="mb-3">
+      <label for="mainTaskTitle" class="form-label">
+        <span class="tx-18">
+          {{ "LibraryCreate.MainTaskTitle" | translate }}
+        </span>
+        <span class="mg-l-15">
+          <input
+            kendoCheckBox
+            type="checkbox"
+            id="syncTitle"
+            name="syncTitle"
+            [checked]="syncTitles()"
+            (change)="syncTitleChanged()"
+          />
+          <label class="mg-l-10 tx-normal" for="syncTitle">
+            {{ "LibraryCreate.SameAsAbove" | translate }}
+          </label>
+        </span>
+      </label>
+      <input
+        kendoTextBox
+        id="mainTaskTitle"
+        name="mainTaskTitle"
+        [disabled]="syncTitles()"
+        [ngModel]="syncTitles() ? templateTitle() : mainTaskTitle()"
+        (ngModelChange)="
+          (syncTitles() ? templateTitle : mainTaskTitle).set($event)
+        "
+      />
+      <label class="tx-12 tx-italic mg-t-5">
+        {{ "LibraryCreate.MainTaskTitleDescription" | translate }}
+      </label>
+    </div>
+    <div>
+      <label class="form-label tx-18">
+        {{ "General.Visibility" | translate }}
+      </label>
+      <wbs-visibility-selection [(visibility)]="visibility" />
+    </div>
+  </div>
+</div>

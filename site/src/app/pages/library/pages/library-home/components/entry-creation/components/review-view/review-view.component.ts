@@ -13,13 +13,13 @@ import { CategorySelection } from '@wbs/core/view-models';
 
 @Component({
   standalone: true,
-  selector: 'wbs-save-section',
-  templateUrl: './save-section.component.html',
+  selector: 'wbs-review-view',
+  templateUrl: './review-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   styles: ['.row-header { max-width: 200px; }'],
   imports: [TranslateModule],
 })
-export class SaveSectionComponent {
+export class ReviewViewComponent {
   private readonly metadata = inject(MetadataStore);
   private readonly resources = inject(Resources);
 

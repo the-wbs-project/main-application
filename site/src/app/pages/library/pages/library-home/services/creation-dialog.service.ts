@@ -1,6 +1,4 @@
 import { inject, Injectable } from '@angular/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LibraryEntry,
@@ -9,7 +7,12 @@ import {
   Phase,
   ProjectCategory,
 } from '@wbs/core/models';
-import { IdService, SaveService } from '@wbs/core/services';
+import {
+  CategoryService,
+  IdService,
+  NavigationService,
+  SaveService,
+} from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { EntryActivityService } from '@wbs/pages/library/services';
@@ -19,13 +22,22 @@ import { map, switchMap, tap } from 'rxjs/operators';
 @Injectable()
 export class CreationDialogService {
   private readonly activity = inject(EntryActivityService);
+  private readonly catService = inject(CategoryService);
   private readonly data = inject(DataServiceFactory);
   private readonly metadata = inject(MetadataStore);
+  private readonly navigate = inject(NavigationService);
   private readonly owner = inject(MembershipStore).membership;
   private readonly userId = inject(UserStore).userId;
-  private readonly store = inject(Store);
 
   readonly saveState = new SaveService();
+
+  createDisciplines(): CategorySelection[] {
+    return this.catService.buildDisciplines([]);
+  }
+
+  createPhases(): CategorySelection[] {
+    return this.catService.buildPhases([]);
+  }
 
   createProjectEntryAsync(
     templateTitle: string,
@@ -34,7 +46,7 @@ export class CreationDialogService {
     categoryId: string,
     phases: CategorySelection[],
     disciplines: CategorySelection[]
-  ): Observable<void> {
+  ): Observable<unknown> {
     const entryDisciplines: ProjectCategory[] = [];
     const owner = this.owner()!.name;
 
@@ -89,7 +101,7 @@ export class CreationDialogService {
 
     return this.saveState
       .call(this.createAsync(entry, version, nodes), 0, 0)
-      .pipe(switchMap((newEntry) => this.navigate(owner, newEntry)));
+      .pipe(switchMap((newEntry) => this.go(owner, newEntry)));
   }
 
   createPhaseEntryAsync(
@@ -98,7 +110,7 @@ export class CreationDialogService {
     visibility: string,
     phase: string | Phase,
     disciplines: CategorySelection[]
-  ): Observable<void> {
+  ): Observable<unknown> {
     const entryDisciplines: ProjectCategory[] = [];
     const owner = this.owner()!.name;
     const phaseDefinitions = this.metadata.categories.phases;
@@ -159,7 +171,7 @@ export class CreationDialogService {
 
     return this.saveState
       .call(this.createAsync(entry, version, [node]), 0, 0)
-      .pipe(switchMap((newEntry) => this.navigate(owner, newEntry)));
+      .pipe(switchMap((newEntry) => this.go(owner, newEntry)));
   }
 
   createTaskEntryAsync(
@@ -168,7 +180,7 @@ export class CreationDialogService {
     versionAlias: string,
     visibility: string,
     disciplines: CategorySelection[]
-  ): Observable<void> {
+  ): Observable<unknown> {
     const entryDisciplines: ProjectCategory[] = [];
     const owner = this.owner()!.name;
 
@@ -213,7 +225,7 @@ export class CreationDialogService {
 
     return this.saveState
       .call(this.createAsync(entry, version, [node]), 0, 0)
-      .pipe(switchMap((newEntry) => this.navigate(owner, newEntry)));
+      .pipe(switchMap((newEntry) => this.go(owner, newEntry)));
   }
 
   private createAsync(
@@ -247,9 +259,7 @@ export class CreationDialogService {
     );
   }
 
-  private navigate(owner: string, entry: LibraryEntry): Observable<void> {
-    return this.store.dispatch(
-      new Navigate(['/', owner, 'library', 'view', owner, entry.recordId, 1])
-    );
+  private go(owner: string, entry: LibraryEntry): Observable<boolean> {
+    return this.navigate.toLibraryEntry(owner, entry.id, 1);
   }
 }
