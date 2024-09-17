@@ -19,11 +19,11 @@ import { ContextMenuItem } from '@wbs/core/models';
       } @if (objIcon(); as icon) {
       <fa-icon [icon]="icon" /> } }
     </span>
-    @if (item.isNotResource) { {{ item.text }} } @else {
-    {{ item.text | translate }}
-    } }`,
+    {{ item.text ?? (item.resource! | translate) }}
+    }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, TranslateModule],
+  host: { class: 'tx-12' },
 })
 export class ContextMenuItemComponent {
   readonly item = input.required<ContextMenuItem>();

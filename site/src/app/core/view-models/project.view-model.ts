@@ -1,17 +1,31 @@
-import { PROJECT_STATI_TYPE, UserRole } from '../models';
-import { CategoryViewModel } from './category.view-model';
+import {
+  LibraryLink,
+  PROJECT_NODE_VIEW_TYPE,
+  PROJECT_STATI_TYPE,
+  ProjectCategory,
+} from '../models';
+import { UserViewModel } from './user.view-model';
+
+export interface UserRoleViewModel {
+  trackId?: string;
+  role: string;
+  user: UserViewModel;
+}
 
 export interface ProjectViewModel {
   id: string;
+  recordId: string;
   owner: string;
-  createdBy: string;
+  createdBy: UserViewModel;
   title: string;
   description: string;
   createdOn: Date;
   lastModified: Date;
   approvalStarted?: boolean;
   status: PROJECT_STATI_TYPE;
+  mainNodeView: PROJECT_NODE_VIEW_TYPE;
   category: string;
-  disciplines: CategoryViewModel[];
-  roles: UserRole[];
+  disciplines: ProjectCategory[];
+  roles: UserRoleViewModel[];
+  libraryLink?: LibraryLink;
 }

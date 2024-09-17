@@ -1,44 +1,41 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 25.0.1706.1
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "server\api\api.csproj", "{668FF458-BD17-4093-8642-ACF5607542BC}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{F210689F-4C9A-4A94-BEE7-27BE7D46260F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "server", "server", "{23B8AC1E-0984-4D15-834F-81FF26FDFB3E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "server\core\core.csproj", "{EFFD1A12-9D15-48C9-880B-4CC00CE69991}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "server\core\core.csproj", "{4251B864-3486-440D-B275-9B34F5B5FDDF}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "server\api\api.csproj", "{FB9F458C-D52A-449A-BCD2-9D76683AF555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "functions", "server\functions\functions.csproj", "{0BF9D01B-8C02-4E81-845C-27F1BF40DA60}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "functions", "server\functions\functions.csproj", "{8247C837-A488-42ED-906F-BF30730C625C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{668FF458-BD17-4093-8642-ACF5607542BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{668FF458-BD17-4093-8642-ACF5607542BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{668FF458-BD17-4093-8642-ACF5607542BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{668FF458-BD17-4093-8642-ACF5607542BC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{4251B864-3486-440D-B275-9B34F5B5FDDF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{4251B864-3486-440D-B275-9B34F5B5FDDF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{4251B864-3486-440D-B275-9B34F5B5FDDF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{4251B864-3486-440D-B275-9B34F5B5FDDF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{0BF9D01B-8C02-4E81-845C-27F1BF40DA60}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0BF9D01B-8C02-4E81-845C-27F1BF40DA60}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0BF9D01B-8C02-4E81-845C-27F1BF40DA60}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0BF9D01B-8C02-4E81-845C-27F1BF40DA60}.Release|Any CPU.Build.0 = Release|Any CPU
-	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {96527BBE-DF70-48C5-8BA4-92A29B53D93D}
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EFFD1A12-9D15-48C9-880B-4CC00CE69991}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EFFD1A12-9D15-48C9-880B-4CC00CE69991}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EFFD1A12-9D15-48C9-880B-4CC00CE69991}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EFFD1A12-9D15-48C9-880B-4CC00CE69991}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8247C837-A488-42ED-906F-BF30730C625C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8247C837-A488-42ED-906F-BF30730C625C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8247C837-A488-42ED-906F-BF30730C625C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8247C837-A488-42ED-906F-BF30730C625C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{4251B864-3486-440D-B275-9B34F5B5FDDF} = {23B8AC1E-0984-4D15-834F-81FF26FDFB3E}
-		{0BF9D01B-8C02-4E81-845C-27F1BF40DA60} = {23B8AC1E-0984-4D15-834F-81FF26FDFB3E}
-		{668FF458-BD17-4093-8642-ACF5607542BC} = {23B8AC1E-0984-4D15-834F-81FF26FDFB3E}
+		{EFFD1A12-9D15-48C9-880B-4CC00CE69991} = {F210689F-4C9A-4A94-BEE7-27BE7D46260F}
+		{FB9F458C-D52A-449A-BCD2-9D76683AF555} = {F210689F-4C9A-4A94-BEE7-27BE7D46260F}
+		{8247C837-A488-42ED-906F-BF30730C625C} = {F210689F-4C9A-4A94-BEE7-27BE7D46260F}
 	EndGlobalSection
 EndGlobal

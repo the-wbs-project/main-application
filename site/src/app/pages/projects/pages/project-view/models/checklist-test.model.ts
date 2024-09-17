@@ -1,4 +1,4 @@
-export type CHECKLIST_OPERATORS = '=' | '!=' | '>' | '>=' | '<' | '<=';
+import { OPERATOR } from '@wbs/core/models';
 
 export interface ChecklistGroup {
   id: string;
@@ -22,8 +22,8 @@ export interface ChecklistValueTest {
   order: number;
   type: 'value' | 'array';
   path: string;
-  pass: { op: CHECKLIST_OPERATORS; value: number };
-  warn?: { op: CHECKLIST_OPERATORS; value: number };
+  pass: { op: OPERATOR; value: number };
+  warn?: { op: OPERATOR; value: number };
   failMessage?: string;
   warnMessage?: string;
 }

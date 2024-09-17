@@ -1,4 +1,3 @@
-using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Configuration.AzureAppConfiguration;
@@ -61,6 +60,7 @@ var host = new HostBuilder()
         services.AddSingleton<LibraryEntryDataService>();
         services.AddSingleton<LibraryEntryNodeDataService>();
         services.AddSingleton<LibraryEntryVersionDataService>();
+        services.AddSingleton<LibraryEntryViewDataService>();
         services.AddSingleton<ListDataService>();
         services.AddSingleton<OrganizationDataService>();
         services.AddSingleton<ResourcesDataService>();
@@ -70,6 +70,8 @@ var host = new HostBuilder()
         //
         //  Services
         //
+        services.AddSingleton<CloudflareApiService>();
+        services.AddSingleton<CloudflareKvService>();
         services.AddSingleton<MailgunService>();
         services.AddSingleton<QueueService>();
         //
@@ -77,7 +79,6 @@ var host = new HostBuilder()
         //
         services.AddSingleton<LibrarySearchIndexService>();
         services.AddSingleton<LibrarySearchService>();
-        services.AddSingleton<SearchStorageService>();
     })
     .Build();
 

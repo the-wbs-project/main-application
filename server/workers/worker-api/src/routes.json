@@ -1,0 +1,34 @@
+{
+    "VERIFY_JWT_GET": [
+        "api/files/*",
+        "api/watchers/*",
+        "api/checklists",
+        "api/activities/*",
+        "api/chat/thread/:threadId/comments/:timestamp/count"
+    ],
+    "VERIFY_JWT_POST": [
+        "api/import/*",
+        "api/export/*",
+        "api/activities",
+        "api/activities/*"
+    ],
+    "VERIFY_JWT_PUT": [
+        "api/watchers/*"
+    ],
+    "VERIFY_JWT_DELETE": [
+        "api/watchers/*"
+    ],
+    "VERIFY_JWT_MEMBERSHIP_GET": [
+        "api/portfolio/:owner/*",
+        "api/watchers"
+    ],
+    "VERIFY_JWT_MEMBERSHIP_POST": [
+        "api/portfolio/:owner/*"
+    ],
+    "VERIFY_JWT_MEMBERSHIP_PUT": [
+        "api/portfolio/:owner/*"
+    ],
+    "VERIFY_JWT_MEMBERSHIP_DELETE": [
+        "api/portfolio/:owner/*"
+    ]
+}

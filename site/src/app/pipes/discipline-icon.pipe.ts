@@ -1,6 +1,7 @@
 import { Pipe, PipeTransform, inject } from '@angular/core';
 import { LISTS, ProjectCategory } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/core/store';
+import { CategoryViewModel } from '@wbs/core/view-models';
 
 const question = 'fa-question';
 
@@ -10,7 +11,7 @@ export class DisciplineIconPipe implements PipeTransform {
 
   transform(
     category: ProjectCategory | string | undefined,
-    categories: ProjectCategory[] | undefined
+    categories: ProjectCategory[] | CategoryViewModel[] | undefined
   ): string {
     if (category == null) return question;
     if (typeof category !== 'string' && category.isCustom)

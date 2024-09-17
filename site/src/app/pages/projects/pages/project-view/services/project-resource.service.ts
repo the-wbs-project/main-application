@@ -1,90 +1,74 @@
-import { Injectable } from '@angular/core';
-import { FileInfo } from '@progress/kendo-angular-upload';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { ResourceRecord } from '@wbs/core/models';
-import { IdService, Messages } from '@wbs/core/services';
+import { computed, inject, Injectable } from '@angular/core';
+import {
+  PROJECT_CLAIMS,
+  ContentResource,
+  PROJECT_STATI,
+} from '@wbs/core/models';
 import { Utils } from '@wbs/core/services';
-import { Observable, forkJoin } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { ProjectActivityService } from '@wbs/pages/projects/services';
+import { Observable } from 'rxjs';
+import { ProjectStore } from '../stores';
+import { BaseProjectResourceService } from './base-project-resource.service';
 
 @Injectable()
-export class ProjectResourceService {
-  constructor(
-    private readonly data: DataServiceFactory,
-    private readonly messages: Messages
-  ) {}
+export class ProjectResourceService extends BaseProjectResourceService {
+  private readonly activity = inject(ProjectActivityService);
+  private readonly store = inject(ProjectStore);
+  //
+  //  Computed
+  //
+  readonly isPlanning = computed(
+    () => this.store.project()!.status === PROJECT_STATI.PLANNING
+  );
+  readonly canAdd = computed(
+    () =>
+      this.isPlanning() &&
+      Utils.contains(this.store.claims(), PROJECT_CLAIMS.RESOURCES.CREATE)
+  );
+  readonly canEdit = computed(
+    () =>
+      this.isPlanning() &&
+      Utils.contains(this.store.claims(), PROJECT_CLAIMS.RESOURCES.UPDATE)
+  );
+  readonly canDelete = computed(
+    () =>
+      this.isPlanning() &&
+      Utils.contains(this.store.claims(), PROJECT_CLAIMS.RESOURCES.DELETE)
+  );
 
-  getRecordsAsync(
-    owner: string,
-    projectId: string,
-    taskId?: string
-  ): Observable<ResourceRecord[]> {
-    return this.data.projectResources.getAsync(owner, projectId, taskId);
+  protected getOwner(): string {
+    return this.store.project()!.owner;
   }
 
-  saveRecordsAsync(
-    owner: string,
-    projectId: string,
-    taskId: string | undefined,
-    records: Partial<ResourceRecord>[]
-  ): Observable<ResourceRecord[]> {
-    let obs: Observable<ResourceRecord>[] = [];
+  protected getParentId(): string {
+    return this.store.project()!.id;
+  }
 
-    //this.messages.block.show('.resource-editor', 'General.Saving');
+  protected recordAddedActivity(record: ContentResource): Observable<void> {
+    const project = this.store.project()!;
 
-    for (const record of records) {
-      obs.push(this.save(owner, projectId, taskId, record));
-    }
-    return forkJoin(obs).pipe(
-      tap(() => this.messages.notify.success('Resources.ResourceSaved'))
+    return this.activity.resourceAdded(project.owner, project.id, record);
+  }
+
+  protected recordUpdatedActivity(record: ContentResource): Observable<void> {
+    const project = this.store.project()!;
+
+    return this.activity.resourceUpdated(project.owner, project.id, record);
+  }
+
+  protected recordRemovedActivity(record: ContentResource): Observable<void> {
+    const project = this.store.project()!;
+
+    return this.activity.resourceRemoved(project.owner, project.id, record);
+  }
+
+  protected recordReorderedActivity(recordIds: string[]): Observable<void> {
+    const project = this.store.project()!;
+
+    return this.activity.resourceReordered(
+      project.owner,
+      project.id,
+      recordIds
     );
-  }
-
-  uploadAndSaveAsync(
-    owner: string,
-    projectId: string,
-    taskId: string | undefined,
-    rawFile: FileInfo,
-    data: Partial<ResourceRecord>
-  ): Observable<ResourceRecord> {
-    if (!data.id) data.id = IdService.generate();
-
-    //this.messages.block.show('.resource-editor', 'General.Saving');
-
-    return Utils.getFileAsync(rawFile).pipe(
-      switchMap((file) =>
-        this.data.projectResources.putFileAsync(
-          owner,
-          projectId,
-          taskId,
-          data.id!,
-          file
-        )
-      ),
-      switchMap(() => this.save(owner, projectId, taskId, data)),
-      tap(() => this.messages.notify.success('Resources.ResourceSaved'))
-    );
-  }
-
-  private save(
-    owner: string,
-    projectId: string,
-    taskId: string | undefined,
-    data: Partial<ResourceRecord>
-  ): Observable<ResourceRecord> {
-    const resource: ResourceRecord = {
-      id: data.id ?? IdService.generate(),
-      createdOn: data.createdOn ?? new Date(),
-      lastModified: new Date(),
-      name: data.name!,
-      description: data.description!,
-      type: data.type!,
-      resource: data.resource,
-      order: data.order!, // ?? Math.max(...this.list().map((x) => x.order), 0) + 1,
-    };
-
-    return this.data.projectResources
-      .putAsync(owner, projectId, taskId, resource)
-      .pipe(map(() => resource));
   }
 }

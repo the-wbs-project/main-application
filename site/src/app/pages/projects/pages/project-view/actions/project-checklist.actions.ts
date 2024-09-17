@@ -1,5 +1,4 @@
-import { Project } from '@wbs/core/models';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 
 export class InitiateChecklist {
   static readonly type = '[Project Checklist] Initiate';
@@ -8,9 +7,9 @@ export class InitiateChecklist {
 export class SetChecklistData {
   static readonly type = '[Project Checklist] Set Checklist Data';
   constructor(
-    readonly project?: Project,
-    readonly disciplines?: WbsNodeView[],
-    readonly phases?: WbsNodeView[]
+    readonly project?: ProjectViewModel,
+    readonly disciplines?: TaskViewModel[],
+    readonly phases?: TaskViewModel[]
   ) {}
 }
 

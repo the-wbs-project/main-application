@@ -1,3 +1,4 @@
+name: pm-empower
 services:
   wbs-api:
     container_name: wbs-api
@@ -10,14 +11,16 @@ services:
       - './server:/usr/src/app'
   
   wbs-worker:
-    container_name: wbs-worker
+    container_name: wbs-workers
     build:
-      context: ./server/worker
+      context: ./server/workers
       dockerfile: Dockerfile-dev
     ports:
       - 88:88
     volumes:
-       - ./server/worker:/usr/src/app/worker
+       - ./server/workers:/usr/src/app/workers/
+       #- ./server/workers/data:/usr/src/app/workers/.data
+       #- worker_data:/usr/src/app/workers/.data
 
   wbs-site:
     container_name: wbs-site
@@ -32,3 +35,8 @@ services:
     volumes:
        - ./site:/usr/src/app/site
        - /usr/src/app/site/node_modules
+
+
+volumes:
+  share:
+    external: true

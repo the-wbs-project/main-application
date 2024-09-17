@@ -2,13 +2,16 @@ namespace Wbs.Core.Models;
 
 public class LibraryEntryVersion
 {
-    public string entryId { get; set; }
-    public int version { get; set; }
-    public string versionAlias { get; set; }
-    public string title { get; set; }
-    public string description { get; set; }
-    public string status { get; set; }
-    public string[] categories { get; set; }
-    public Category[] disciplines { get; set; }
-    public DateTimeOffset lastModified { get; set; }
+    public string EntryId { get; set; }
+    public int Version { get; set; }
+    public string VersionAlias { get; set; }
+    public string Author { get; set; }
+    public string Title { get; set; }
+    public string Description { get; set; }
+    public string Status { get; set; }
+    public string[] Categories { get; set; }
+    public string[] Editors { get; set; }
+    public string ReleaseNotes { get; set; }
+    public Category[] Disciplines { get; set; }
+    public DateTimeOffset LastModified { get; set; }
 }

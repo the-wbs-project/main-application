@@ -1,0 +1,143 @@
+@if (profile(); as model) {
+<div class="container-fluid text-start pd-15">
+  <div class="row mb-5">
+    <div class="col-12 text-center">
+      @if (model.picture) {
+      <kendo-avatar [imageSrc]="model.picture" size="large" />
+      }
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label [for]="email" class="tx-14 col-md-3 col-sm-12">
+      <span class="d-inline-block wd-20 text-center">
+        <fa-icon [icon]="emailIcon" />
+      </span>
+      {{ "General.Email" | translate }}
+    </label>
+    <div class="col-md-9 col-sm-12">
+      <input
+        #email
+        kendoTextBox
+        readonly
+        disabled
+        class="form-control"
+        [value]="model.email"
+      />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label [for]="name" class="tx-14 col-md-3 col-sm-12 col-form-label">
+      <span class="d-inline-block wd-20 text-center">
+        <fa-icon [icon]="nameIcon" />
+      </span>
+      {{ "General.Name" | translate }}
+    </label>
+    <div class="col-md-9 col-sm-12">
+      <input #name kendoTextBox class="form-control" [(ngModel)]="model.name" />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label [for]="name" class="tx-14 col-md-3 col-sm-12 col-form-label">
+      <span class="d-inline-block wd-20 text-center">
+        <fa-icon [icon]="titleIcon" />
+      </span>
+      {{ "General.Title" | translate }}
+    </label>
+    <div class="col-md-9 col-sm-12">
+      <input
+        #name
+        kendoTextBox
+        class="form-control"
+        [(ngModel)]="model.user_metadata.title"
+      />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label [for]="title" class="tx-14 col-md-3 col-sm-12 col-form-label">
+      <span class="d-inline-block wd-20 text-center">
+        <fa-icon [icon]="linkedInIcon" />
+      </span>
+      {{ "Profile.LinkedInUrl" | translate }}
+    </label>
+    <div class="col-md-9 col-sm-12">
+      <input
+        #title
+        kendoTextBox
+        type="url"
+        class="form-control"
+        [(ngModel)]="model.user_metadata.linkedIn"
+      />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label [for]="title" class="tx-14 col-md-3 col-sm-12 col-form-label">
+      <span class="d-inline-block wd-20 text-center">
+        <fa-icon [icon]="twitterIcon" />
+      </span>
+      {{ "Profile.TwitterUrl" | translate }}
+    </label>
+    <div class="col-md-9 col-sm-12">
+      <input
+        #title
+        kendoTextBox
+        type="url"
+        class="form-control"
+        [(ngModel)]="model.user_metadata.twitter"
+      />
+    </div>
+  </div>
+  <div class="row mb-3">
+    <label [for]="title" class="tx-14 col-md-3 col-sm-12 col-form-label">
+      <span class="d-inline-block wd-20 text-center">
+        <fa-icon [icon]="eyeIcon" />
+      </span>
+      {{ "Profile.Visibility" | translate }}
+    </label>
+    <div class="col-md-9 col-sm-12">
+      <button
+        kendoButton
+        size="small"
+        class="mg-r-10"
+        [selected]="model.user_metadata.showExternally.includes('email')"
+        (click)="toggleVisibility(model, 'email')"
+      >
+        <fa-icon [icon]="emailIcon" class="mg-r-5" />
+        {{ "General.Email" | translate }}
+      </button>
+      <button
+        kendoButton
+        size="small"
+        class="mg-r-10"
+        [selected]="model.user_metadata.showExternally.includes('title')"
+        (click)="toggleVisibility(model, 'title')"
+      >
+        <fa-icon [icon]="titleIcon" class="mg-r-5" />
+        {{ "General.Title" | translate }}
+      </button>
+      <button
+        kendoButton
+        size="small"
+        class="mg-r-10"
+        [selected]="model.user_metadata.showExternally.includes('linkedIn')"
+        (click)="toggleVisibility(model, 'linkedIn')"
+      >
+        <fa-icon [icon]="linkedInIcon" class="mg-r-5" />
+        {{ "Profile.LinkedIn" | translate }}
+      </button>
+      <button
+        kendoButton
+        size="small"
+        [selected]="model.user_metadata.showExternally.includes('twitter')"
+        (click)="toggleVisibility(model, 'twitter')"
+      >
+        <fa-icon [icon]="twitterIcon" class="mg-r-5" />
+        {{ "Profile.Twitter" | translate }}
+      </button>
+      <div class="w-100 tx-12 tx-italic pd-t-5">
+        <fa-icon [icon]="infoIcon" class="mg-r-5" />
+        {{ "Profile.VisibilityHelp" | translate }}
+      </div>
+    </div>
+  </div>
+</div>
+}

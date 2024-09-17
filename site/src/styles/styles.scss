@@ -186,6 +186,13 @@ wbs-app {
   flex-wrap: wrap;
 }
 
+.profile-img {
+  width: 37px;
+  height: 37px;
+  border-radius: 50%;
+  box-shadow: 0px 4px 4px 0px #dbe4f9;
+}
+
 .transparent-theme {
   .ng-value {
     color: #fff;
@@ -324,7 +331,11 @@ button:focus:not(:focus-visible) {
   overflow: scroll;
 }
 
-.my-custom-class {
+.scroll-y {
+  overflow-y: scroll;
+}
+
+.z-max {
   z-index: max;
 }
 
@@ -468,4 +479,56 @@ button:focus:not(:focus-visible) {
     background-color: $gray-200;
     text-transform: uppercase;
   }
+}
+
+.tree-column {
+  font-size: 12px;
+}
+
+.wbs-detail-card {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 120px auto;
+
+  > .detail-header {
+    font-weight: 600;
+    text-align: right;
+  }
+}
+
+.wbs-detail-row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  margin-bottom: 6px;
+  font-size: 13px;
+
+  .row-header {
+    width: 150px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .row-value {
+    text-align: left;
+    flex-grow: 1;
+  }
+}
+
+.task-detail-card {
+  padding: 10px;
+  display: grid;
+  gap: 10px;
+  grid-template-columns: 100px auto;
+
+  > .detail-header {
+    font-weight: 600;
+    text-align: right;
+    padding-top: 6px;
+  }
+}
+
+.k-grid-toolbar {
+  background-color: $gray-500;
 }

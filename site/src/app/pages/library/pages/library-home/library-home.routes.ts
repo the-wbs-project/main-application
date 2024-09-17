@@ -1,12 +1,28 @@
 import { inject } from '@angular/core';
-import { Routes } from '@angular/router';
-import { TitleService } from '@wbs/core/services';
-import { UiStore } from '@wbs/core/store';
+import { ActivatedRouteSnapshot, Routes } from '@angular/router';
+import { Navigate } from '@ngxs/router-plugin';
+import { Store } from '@ngxs/store';
+import { orgResolve, TitleService } from '@wbs/core/services';
+import { MembershipStore } from '@wbs/core/store';
+import { WrapperComponent } from '@wbs/pages/wrapper.component';
+import { CreationDialogService, LibraryHomeService } from './services';
 
 export const loadGuard = () => {
-  inject(TitleService).setTitle([{ text: 'General.Library' }]);
-  inject(UiStore).setBreadcrumbs([{ text: 'General.Library' }]);
+  inject(TitleService).setTitle([{ text: 'General.Libraries' }]);
 };
+
+export const redirectGuard = () =>
+  inject(Store).dispatch(
+    new Navigate([
+      inject(MembershipStore).membership()!.name,
+      'library',
+      'home',
+      inject(LibraryHomeService).library(),
+    ])
+  );
+
+export const setLibraryGuard = (route: ActivatedRouteSnapshot) =>
+  inject(LibraryHomeService).setLibrary(route.url[0].path);
 
 export const routes: Routes = [
   {
@@ -14,5 +30,40 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./library-home.component').then((x) => x.LibraryHomeComponent),
     canActivate: [loadGuard],
+    providers: [CreationDialogService, LibraryHomeService],
+    children: [
+      {
+        path: '',
+        canActivate: [redirectGuard],
+        component: WrapperComponent,
+      },
+      {
+        path: 'drafts',
+        loadComponent: () =>
+          import('./pages/drafts.component').then((x) => x.DraftsComponent),
+        canActivate: [setLibraryGuard],
+        resolve: {
+          org: orgResolve,
+        },
+      },
+      {
+        path: 'internal',
+        loadComponent: () =>
+          import('./pages/internal.component').then((x) => x.InternalComponent),
+        canActivate: [setLibraryGuard],
+        resolve: {
+          org: orgResolve,
+        },
+      },
+      {
+        path: 'public',
+        loadComponent: () =>
+          import('./pages/public.component').then((x) => x.PublicComponent),
+        canActivate: [setLibraryGuard],
+        resolve: {
+          org: orgResolve,
+        },
+      },
+    ],
   },
 ];

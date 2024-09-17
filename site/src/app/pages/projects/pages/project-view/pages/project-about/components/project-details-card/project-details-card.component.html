@@ -1,0 +1,39 @@
+@if (store.project(); as project) {
+<div class="card-header">{{ "General.Details" | translate }}</div>
+<div class="card-body">
+  <div class="wbs-detail-row flex-align-center">
+    <div class="row-header">{{ "General.RecordId" | translate }} :</div>
+    <div class="row-value">{{ project.recordId }}</div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Title" | translate }} :</div>
+    <div class="row-value">
+      <wbs-editable-text
+        [viewText]="project.title"
+        [saveState]="saveTitle.state()"
+        [editText]="project.title"
+        (saveText)="titleChanged($event)"
+      />
+    </div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Category" | translate }} :</div>
+    <div class="row-value">
+      <wbs-project-category-editor
+        [canEdit]="store.canEditProject()"
+        [categoryId]="project.category"
+        [saveMode]="saveCategory.state()"
+        (save)="projectCategoryChanged($event)"
+      />
+    </div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "Wbs.TaskCount" | translate }} :</div>
+    <div class="row-value">{{ store.viewModels()?.length ?? 0 }}</div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.LastModified" | translate }} :</div>
+    <div class="row-value">{{ project.lastModified | dateText }}</div>
+  </div>
+</div>
+}

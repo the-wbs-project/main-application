@@ -7,10 +7,13 @@ _theme/Nowa
 **/obj
 **/dist
 **/.mf/
+**/.data/
 **/data/**/config*.*
 .vs/
 .vscode/
+test/**
 
+**/deps.png
 .angular
 .env
 .wrangler
@@ -21,6 +24,4 @@ _theme/Nowa
 /example
 
 **/appsettings.Development.json
-site/package-lock.json
-
-test-app/**
+package-lock.json

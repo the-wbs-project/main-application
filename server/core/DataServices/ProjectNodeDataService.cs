@@ -1,5 +1,6 @@
 using Microsoft.Data.SqlClient;
 using System.Data;
+using System.Text.Json;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
@@ -50,32 +51,29 @@ public class ProjectNodeDataService : BaseSqlDbService
         return false;
     }
 
-    public async Task SetSaveRecordAsync(SqlConnection conn, string owner, string projectId, BulkSaveRecord<ProjectNode> record)
+    public async Task SetAsync(SqlConnection conn, string projectId, IEnumerable<ProjectNode> nodes, IEnumerable<string> removeIds)
     {
-        foreach (var upsert in record.upserts)
-            await SetAsync(conn, owner, upsert);
+        var dbNodes = nodes.Select(n => new
+        {
+            Id = n.id,
+            ParentId = n.parentId,
+            Order = n.order,
+            Title = n.title,
+            Description = n.description,
+            DisciplineIds = JsonSerializer.Serialize(n.disciplineIds),
+            PhaseIdAssociation = n.phaseIdAssociation,
+            LibraryLink = n.libraryLink == null ? null : JsonSerializer.Serialize(n.libraryLink),
+            LibraryTaskLink = n.libraryTaskLink == null ? null : JsonSerializer.Serialize(n.libraryTaskLink),
+            AbsFlag = n.absFlag
+        }).ToArray();
 
-        foreach (var removeId in record.removeIds)
-            await DeleteAsync(conn, owner, projectId, removeId);
-    }
-
-    public async Task SetAsync(SqlConnection conn, string owner, ProjectNode node)
-    {
         var cmd = new SqlCommand("dbo.ProjectNode_Set", conn)
         {
             CommandType = CommandType.StoredProcedure
         };
-        cmd.Parameters.AddWithValue("@Id", node.id);
-        cmd.Parameters.AddWithValue("@ProjectId", node.projectId);
-        cmd.Parameters.AddWithValue("@OwnerId", owner);
-        cmd.Parameters.AddWithValue("@ParentId", DbValue(node.parentId));
-        cmd.Parameters.AddWithValue("@Title", node.title);
-        cmd.Parameters.AddWithValue("@Description", DbValue(node.description));
-        cmd.Parameters.AddWithValue("@PhaseIdAssociation", DbValue(node.phaseIdAssociation));
-        cmd.Parameters.AddWithValue("@Order", node.order);
-        cmd.Parameters.AddWithValue("@DisciplineIds", DbJson(node.disciplineIds));
-        cmd.Parameters.AddWithValue("@LibraryLink", DbJson(node.libraryLink));
-        cmd.Parameters.AddWithValue("@LibraryTaskLink", DbJson(node.libraryTaskLink));
+        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+        cmd.Parameters.AddWithValue("@Upserts", JsonSerializer.Serialize(dbNodes));
+        cmd.Parameters.AddWithValue("@RemoveIds", JsonSerializer.Serialize(removeIds));
 
         await cmd.ExecuteNonQueryAsync();
     }
@@ -114,6 +112,7 @@ public class ProjectNodeDataService : BaseSqlDbService
             disciplineIds = DbJson<string[]>(reader, "DisciplineIds"),
             libraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
             libraryTaskLink = DbJson<LibraryTaskLink>(reader, "LibraryTaskLink"),
+            absFlag = DbValue<bool?>(reader, "AbsFlag"),
             order = DbValue<int>(reader, "Order"),
         };
     }

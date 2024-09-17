@@ -1,0 +1,19 @@
+<div class="container mt-4">
+  <h2>Custom TreeList Example</h2>
+  <app-tree-list
+    [data]="treeData"
+    [columns]="columns"
+    [bufferSize]="10"
+    (selectionChange)="onSelectionChange($event)"
+    (dataChange)="onDataChange($event)"
+  ></app-tree-list>
+
+  <div class="mt-3">
+    <h4>Selected Item:</h4>
+    <ul>
+      @if (selectedItem) {
+      <li>{{ selectedItem.name }}</li>
+      }
+    </ul>
+  </div>
+</div>

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
-using Wbs.Core.Services;
 
 namespace Wbs.Api.Controllers;
 
@@ -15,7 +14,7 @@ public class ProjectApprovalController : ControllerBase
     private readonly ProjectDataService projectDataService;
     private readonly ProjectApprovalDataService approvalDataService;
 
-    public ProjectApprovalController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectApprovalDataService approvalDataService, ProjectResourceDataService projectResourceDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
+    public ProjectApprovalController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectApprovalDataService approvalDataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectApprovalController>();
         this.projectDataService = projectDataService;

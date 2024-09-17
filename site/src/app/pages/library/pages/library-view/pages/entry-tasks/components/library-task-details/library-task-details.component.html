@@ -1,0 +1,163 @@
+<div class="h-100 d-flex flex-column">
+  <div
+    class="d-flex flex-row flex-align-center gap-10 bg-gray-200 border tx-12 pd-l-10 pd-y-5"
+  >
+    @if (task()) {
+    <button
+      #menuTarget
+      kendoButton
+      size="small"
+      fillMode="flat"
+      class="pointer p-0 ht-10"
+    >
+      <fa-icon
+        size="sm"
+        [icon]="menuIcon"
+        (click)="buildMenu()"
+        [title]="'General.Options' | translate"
+      />
+    </button>
+    <kendo-contextmenu
+      showOn="click"
+      [items]="menu()"
+      [target]="menuTarget"
+      (select)="menuItemSelected($event.item.action)"
+    >
+      <ng-template kendoMenuItemTemplate let-item="item">
+        <wbs-context-menu-item [item]="item" />
+      </ng-template>
+    </kendo-contextmenu>
+    }
+    <div class="fw-bold">
+      {{ "General.TaskDetails" | translate }}
+    </div>
+    <wbs-save-message [state]="menuSave.state()" />
+  </div>
+  <div [appScrollToTop]="task()?.id" class="flex-fill scroll-y">
+    @if (editTask(); as t) {
+    <div class="task-detail-card tx-12">
+      <div class="detail-header">
+        {{ "General.Title" | translate }}
+      </div>
+      <div>
+        <wbs-task-details-title-editor
+          [title]="t.title"
+          [saveState]="titleSave.state()"
+          (save)="titleChanged($event)"
+        />
+      </div>
+      <div class="detail-header">
+        @if (!editDisciplines() && t.disciplines.length > 0) {
+        <span
+          class="d-inline-block pointer tx-10 mg-r-5"
+          (click)="editDisciplines.set(true)"
+        >
+          <fa-icon [icon]="editIcon" />
+        </span>
+        }
+        {{ "General.Disciplines" | translate }}
+      </div>
+      <div>
+        @if (editDisciplines() ) {
+        <wbs-discipline-dropdown
+          [saveIcon]="saveIcon"
+          [data]="versionDisciplines()"
+          [values]="t.disciplines"
+          (save)="saveDisciplines($event)"
+          (cancel)="editDisciplines.set(false)"
+        />
+
+        } @else if (t.disciplines.length === 0) {
+
+        <span class="d-inline-block pd-5">
+          <kendo-chip
+            size="small"
+            rounded="full"
+            (contentClick)="editDisciplines.set(true)"
+          >
+            <fa-icon [icon]="addIcon" class="mg-r-5" />
+            Add Disciplines
+          </kendo-chip>
+        </span>
+        } @else {
+        <kendo-chip-list>
+          @for (d of t.disciplines; track d.id) {
+          <kendo-chip
+            size="small"
+            rounded="full"
+            (contentClick)="editDisciplines.set(true)"
+          >
+            <wbs-discipline-icon-label [item]="d" />
+          </kendo-chip>
+          }
+        </kendo-chip-list>
+        @let state = disciplineSave.state();
+        <!---->
+        @if (state === 'saved') {
+        <div class="d-inline-block mg-l-10">
+          <wbs-save-message [state]="state" />
+        </div>
+        } }
+      </div>
+      <div class="detail-header">
+        <label>
+          {{ "General.Description" | translate }}
+        </label>
+      </div>
+      <div>
+        <wbs-task-details-description-editor
+          [description]="t.description ?? ''"
+          [saveState]="descriptionSave.state()"
+          (save)="descriptionChanged($event)"
+        />
+      </div>
+      @if (entryStore.version()?.visibility === 'public') {
+      <div class="detail-header">
+        {{ "General.Visibility" | translate }}
+        <div class="tx-10 fw-normal fst-italic">
+          {{ "Wbs.VisibilityHelper" | translate }}
+        </div>
+      </div>
+      <div>
+        <kendo-chip-list selection="single">
+          <kendo-chip
+            size="small"
+            rounded="full"
+            [disabled]="t.visibility === 'impliedPrivate'"
+            [selected]="(t.visibility ?? 'public') === 'public'"
+            (contentClick)="visibilityChanged('public')"
+          >
+            <fa-icon [icon]="publicIcon" class="mg-r-5" />
+            {{ "Wbs.VisibilityPublic" | translate }}
+          </kendo-chip>
+          <kendo-chip
+            size="small"
+            rounded="full"
+            [disabled]="t.visibility === 'impliedPrivate'"
+            [selected]="(t.visibility ?? 'public') !== 'public'"
+            (contentClick)="visibilityChanged('private')"
+          >
+            <fa-icon [icon]="privateIcon" class="mg-r-5" />
+            {{ "Wbs.VisibilityPrivate" | translate }}
+          </kendo-chip>
+        </kendo-chip-list>
+        <span class="mg-l-10">
+          <wbs-save-message [state]="visibilitySave.state()" />
+        </span>
+      </div>
+      }
+      <div class="detail-header">
+        {{ "General.Resources" | translate }}
+      </div>
+      <div>
+        <wbs-task-details-resources [taskId]="t.id" />
+      </div>
+    </div>
+
+    } @else {
+    <div class="w-100 text-center pd-t-20">
+      {{ "Wbs.SelectTask" | translate }}
+    </div>
+    }
+  </div>
+</div>

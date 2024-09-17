@@ -20,5 +20,5 @@ import { DelayedInputDirective } from '@wbs/core/directives/delayed-input.direct
   />`,
 })
 export class LibrarySearchComponent {
-  readonly searchText = model.required<string>();
+  readonly searchText = model.required<string | undefined>();
 }

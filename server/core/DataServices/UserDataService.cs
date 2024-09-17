@@ -5,52 +5,18 @@ using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.DataServices;
 
 public class UserDataService : BaseAuthDataService
 {
     public UserDataService(ILogger<UserDataService> logger, IAuth0Config config) : base(logger, config) { }
-
-    public async Task<List<Role>> GetRolesAsync()
+    public async Task<Member> GetMemberAsync(string userId)
     {
         var client = await GetClientAsync();
+        var user = await client.Users.GetAsync(userId);
 
-        return new List<Role>(await client.Roles.GetAllAsync(new GetRolesRequest()));
+        return new Member(user);
     }
-
-    public async Task<Member> GetUserAsync(string userId)
-    {
-        var client = await GetClientAsync();
-
-        return new Member(await client.Users.GetAsync(userId));
-    }
-
-    public async Task<List<string>> GetRolesAsync(string userId)
-    {
-        var client = await GetClientAsync();
-        var roles = await client.Users.GetRolesAsync(userId);
-
-        return roles.Select(x => x.Id).ToList();
-    }
-
-    public async Task<IEnumerable<Organization>> GetUserOrganizationsAsync(string userId)
-    {
-        var client = await GetClientAsync();
-        var page = new PaginationInfo(0, 50, false);
-
-        return await client.Users.GetAllOrganizationsAsync(userId, page);
-    }
-
-    public async Task UpdateProfileAsync(Member user)
-    {
-        var client = await GetClientAsync();
-
-        await client.Users.UpdateAsync(user.Id, new UserUpdateRequest
-        {
-            FullName = user.Name
-        });
-    }
-
 
     public async Task<Dictionary<string, UserDocument>> GetUserDocumentsAsync(IEnumerable<string> userIds, Dictionary<string, UserDocument> userCache = null)
     {
@@ -64,7 +30,7 @@ public class UserDataService : BaseAuthDataService
                 users.Add(userId, userCache[userId]);
                 continue;
             }
-            calls.Add(GetUserAsync(userId));
+            calls.Add(GetMemberAsync(userId));
 
             if (calls.Count == 25)
             {

@@ -1,10 +1,10 @@
 <wbs-project-roles
   [members]="members()"
-  [approverIds]="approverIds()"
-  [pmIds]="pmIds()"
-  [smeIds]="smeIds()"
+  [approvers]="approvers()"
+  [pms]="pms()"
+  [smes]="smes()"
   [mustConfirm]="false"
   [approvalEnabled]="approvalEnabled()"
-  (addUserToRole)="add($event.role, $event.user.id)"
-  (removeUserToRole)="remove($event.role, $event.user.id)"
+  (addUserToRole)="add($event.role, $event.user)"
+  (removeUserToRole)="remove($event.role, $event.user)"
 />

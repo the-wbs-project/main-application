@@ -1,46 +1,133 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { LibraryEntry, LibrarySearchFilters } from '../models';
+import {
+  LibraryEntry,
+  LibraryEntryNode,
+  LibraryEntryVersion,
+  LibraryEntryVersionBasic,
+  ProjectNodeToLibraryOptions,
+} from '../models';
 import { Utils } from '../services';
-import { LibraryEntryViewModel } from '../view-models';
+import { LibraryVersionViewModel } from '../view-models';
+
+declare type VersionWithTasksAndClaims = {
+  versions: LibraryEntryVersionBasic[];
+  version: LibraryVersionViewModel;
+  tasks: LibraryEntryNode[];
+  claims: string[];
+};
 
 export class LibraryEntryDataService {
   constructor(private readonly http: HttpClient) {}
 
-  searchAsync(
+  getIdAsync(owner: string, recordId: string): Observable<string> {
+    return this.http.get<string>(this.url(owner, recordId) + '/id');
+  }
+
+  getVersionByIdAsync(
     owner: string,
-    options: LibrarySearchFilters
-  ): Observable<LibraryEntryViewModel[]> {
+    recordId: string,
+    version: number,
+    nodeVisibility: string
+  ): Observable<VersionWithTasksAndClaims> {
     return this.http
-      .post<{ document: LibraryEntryViewModel }[]>(
-        this.url(owner) + '/search',
-        options
+      .get<VersionWithTasksAndClaims>(
+        this.url(owner, recordId, version, nodeVisibility)
       )
-      .pipe(
-        map((list) => list.map((x) => x.document)),
-        map((list) => this.clean(list))
-      );
+      .pipe(map((res) => this.clean(res)));
   }
 
-  getAsync(owner: string, entryId: string): Observable<LibraryEntry> {
-    return this.http.get<LibraryEntry>(this.url(owner, entryId));
+  putEntryAsync(entry: LibraryEntry): Observable<LibraryEntry> {
+    return this.http.put<LibraryEntry>(
+      this.url(entry.ownerId, entry.id),
+      entry
+    );
   }
 
-  putAsync(entry: LibraryEntry): Observable<void> {
-    return this.http.put<void>(this.url(entry.owner, entry.id), entry);
+  putVersionAsync(
+    owner: string,
+    entryVersion: LibraryEntryVersion
+  ): Observable<void> {
+    return this.http.put<void>(
+      this.url(owner, entryVersion.entryId, entryVersion.version),
+      entryVersion
+    );
   }
 
-  private url(owner: string, entryId?: string): string {
-    if (entryId) return `api/portfolio/${owner}/library/entries/${entryId}`;
-
-    return `api/portfolio/${owner}/library/entries`;
+  publishVersionAsync(
+    owner: string,
+    entryVersion: LibraryEntryVersion
+  ): Observable<void> {
+    return this.http.put<void>(
+      this.url(owner, entryVersion.entryId, entryVersion.version, 'publish'),
+      entryVersion
+    );
   }
 
-  private clean<T extends LibraryEntryViewModel | LibraryEntryViewModel[]>(
-    obj: T
-  ): T {
-    Utils.cleanDates(obj, 'lastModified');
+  replicateVersionAsync(
+    owner: string,
+    entryId: string,
+    version: number,
+    alias: string
+  ): Observable<number> {
+    return this.http.put<number>(
+      this.url(owner, entryId, version, 'replicate'),
+      {
+        alias,
+      }
+    );
+  }
+
+  putTasksAsync(
+    owner: string,
+    entryId: string,
+    version: number,
+    upserts: LibraryEntryNode[],
+    removeIds: string[]
+  ): Observable<void> {
+    return this.http.put<void>(this.url(owner, entryId, version, 'nodes'), {
+      upserts,
+      removeIds,
+    });
+  }
+
+  exportTasksAsync(
+    owner: string,
+    entryId: string,
+    version: number,
+    nodeId: string,
+    targetOwnerId: string,
+    model: ProjectNodeToLibraryOptions
+  ): Observable<string> {
+    return this.http.post(
+      this.url(
+        owner,
+        entryId,
+        version,
+        `nodes/${nodeId}/export/${targetOwnerId}`
+      ),
+      model,
+      { responseType: 'text' }
+    );
+  }
+
+  private url(
+    owner: string,
+    entryId: string,
+    version?: number,
+    suffix?: string
+  ): string {
+    const parts = [`api/portfolio/${owner}/library/entries/${entryId}`];
+    if (version) parts.push('versions', version.toString());
+    if (suffix) parts.push(suffix);
+
+    return parts.join('/');
+  }
+
+  private clean(obj: VersionWithTasksAndClaims): VersionWithTasksAndClaims {
+    Utils.cleanDates(obj.version, 'lastModified');
+    Utils.cleanDates(obj.tasks, 'lastModified');
 
     return obj;
   }

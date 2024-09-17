@@ -1,25 +1,20 @@
 import { inject } from '@angular/core';
 import { Routes } from '@angular/router';
-import { TitleService, userIdResolve } from '@wbs/core/services';
-import { UiStore } from '@wbs/core/store';
-import { ProjectListService } from './services';
+import { TitleService, orgResolve, userIdResolve } from '@wbs/core/services';
 
 export const setupGuard = () => {
-  inject(TitleService).setTitle([{ text: 'Pages.Projects' }]);
-  inject(UiStore).setBreadcrumbs([{ text: 'Pages.Projects' }]);
+  inject(TitleService).setTitle([{ text: 'General.Projects' }]);
 };
 
 export const routes: Routes = [
   {
     path: '',
-    loadComponent: () =>
-      import('./project-list.component').then(
-        ({ ProjectListComponent }) => ProjectListComponent
-      ),
     canActivate: [setupGuard],
+    loadComponent: () =>
+      import('./project-list.component').then((x) => x.ProjectListComponent),
     resolve: {
+      orgId: orgResolve,
       userId: userIdResolve,
     },
-    providers: [ProjectListService],
   },
 ];

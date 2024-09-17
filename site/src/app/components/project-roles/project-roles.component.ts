@@ -9,15 +9,13 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
-import { Member } from '@wbs/core/models';
 import { Messages, Resources } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { ProjectUserListComponent } from '../user-list';
-import { RoleUsersService } from './services';
-import { RoleUsersViewModel } from './view-models';
+import { UserViewModel } from '@wbs/core/view-models';
+import { UserListComponent } from '../user-list';
 
 declare type OutputType = {
-  user: Member;
+  user: UserViewModel;
   role: string;
 };
 
@@ -26,40 +24,39 @@ declare type OutputType = {
   selector: 'wbs-project-roles',
   templateUrl: './project-roles.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ProjectUserListComponent, TranslateModule],
-  providers: [RoleUsersService],
+  imports: [UserListComponent, TranslateModule],
 })
 export class ProjectRolesComponent {
   private readonly messages = inject(Messages);
   private readonly metadata = inject(MetadataStore);
   private readonly resources = inject(Resources);
-  private readonly service = inject(RoleUsersService);
 
   readonly mustConfirm = input<boolean>(false);
-  readonly members = input<Member[]>();
-  readonly approverIds = input<string[]>();
-  readonly pmIds = input<string[]>();
-  readonly smeIds = input<string[]>();
+  readonly members = input.required<UserViewModel[]>();
+  readonly approvers = input.required<UserViewModel[]>();
+  readonly pms = input.required<UserViewModel[]>();
+  readonly smes = input.required<UserViewModel[]>();
   readonly approvalEnabled = input.required<boolean>();
 
   readonly addUserToRole = output<OutputType>();
   readonly removeUserToRole = output<OutputType>();
 
   readonly roles = this.metadata.roles.ids;
-  readonly approvers = computed(() =>
-    this.process(this.roles.approver, this.members(), this.approverIds())
+
+  readonly unassignedApprovers = computed(() =>
+    this.unassigned(this.members(), this.approvers())
   );
-  readonly pms = computed(() =>
-    this.process(this.roles.pm, this.members(), this.pmIds())
+  readonly unassignedPms = computed(() =>
+    this.unassigned(this.members(), this.pms())
   );
-  readonly smes = computed(() =>
-    this.process(this.roles.sme, this.members(), this.smeIds())
+  readonly unassignedSmes = computed(() =>
+    this.unassigned(this.members(), this.smes())
   );
 
   readonly minusIcon = minusIcon;
   readonly plusIcon = plusIcon;
 
-  add(role: string, user: Member) {
+  add(role: string, user: UserViewModel) {
     this.run(
       role,
       user,
@@ -68,7 +65,7 @@ export class ProjectRolesComponent {
     );
   }
 
-  remove(role: string, user: Member) {
+  remove(role: string, user: UserViewModel) {
     this.run(
       role,
       user,
@@ -79,7 +76,7 @@ export class ProjectRolesComponent {
 
   private run(
     role: string,
-    user: Member,
+    user: UserViewModel,
     message: string,
     output: OutputEmitterRef<OutputType>
   ): void {
@@ -94,20 +91,19 @@ export class ProjectRolesComponent {
     this.messages.confirm
       .show('General.Confirmation', message, {
         ROLE_NAME: roleTitle,
-        USER_NAME: user.name,
+        USER_NAME: user.fullName,
       })
       .subscribe((answer) => {
         if (answer) output.emit({ user, role });
       });
   }
 
-  private process(
-    role: string,
-    members: Member[] | undefined,
-    approverIds: string[] | undefined
-  ): RoleUsersViewModel | undefined {
-    return approverIds && members
-      ? this.service.get(role, approverIds, members)
-      : undefined;
+  private unassigned(
+    members: UserViewModel[] | undefined,
+    assigned: UserViewModel[] | undefined
+  ): UserViewModel[] {
+    const ids = assigned?.map((x) => x.userId) ?? [];
+
+    return members?.filter((x) => !ids.includes(x.userId)) ?? [];
   }
 }

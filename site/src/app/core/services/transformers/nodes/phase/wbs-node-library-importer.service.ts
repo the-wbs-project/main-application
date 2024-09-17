@@ -1,23 +1,23 @@
 import {
-  LibraryEntryVersion,
-  WbsImportResult,
-  ProjectUploadData,
-  WbsNode,
+  LibraryEntryNode,
   ProjectCategory,
+  ProjectUploadData,
+  WbsImportResult,
+  WbsNode,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
+import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { BaseImporter } from './base-importer.service';
 
 export class WbsNodeLibraryImporter extends BaseImporter {
   run(
-    entryType: string,
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
     people: Map<string, ProjectCategory>,
     nodes: Map<string, WbsImportResult>
-  ): ProjectUploadData {
-    const results: ProjectUploadData = {
+  ): ProjectUploadData<LibraryEntryNode> {
+    const results: ProjectUploadData<LibraryEntryNode> = {
       disciplines: this.getDisciplines(version.disciplines ?? [], people),
       removeIds: [],
       upserts: [],
@@ -27,12 +27,12 @@ export class WbsNodeLibraryImporter extends BaseImporter {
     //
     if (action === 'overwrite') {
       for (const node of existingNodes) {
-        if (entryType === 'project' || node.parentId != undefined)
+        if (version.type === 'project' || node.parentId != undefined)
           results.removeIds.push(node.id);
       }
     }
     let rootParentId =
-      entryType === 'project'
+      version.type === 'project'
         ? undefined
         : existingNodes.find((x) => x.parentId == undefined)?.id;
 

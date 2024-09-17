@@ -1,19 +1,18 @@
 import { Injectable } from '@angular/core';
 import { DropPosition } from '@progress/kendo-angular-treelist';
 import { RebuildResults } from '@wbs/core/models';
-import { WbsNodeService } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import { TaskViewModel } from '@wbs/core/view-models';
+import { WbsNodeService } from './wbs-node.service';
 
 @Injectable()
 export class WbsPhaseService {
   reorder(
-    list: WbsNodeView[],
-    dragged: WbsNodeView,
-    target: WbsNodeView,
+    list: TaskViewModel[],
+    dragged: TaskViewModel,
+    target: TaskViewModel,
     position: DropPosition
   ): RebuildResults {
     dragged.phaseId = target.phaseId;
-    dragged.phaseLabel = target.phaseLabel;
 
     if (position === 'over') {
       //
@@ -35,7 +34,7 @@ export class WbsPhaseService {
     return this.rebuildLevels(list);
   }
 
-  rebuildLevels(list: WbsNodeView[]): RebuildResults {
+  rebuildLevels(list: TaskViewModel[]): RebuildResults {
     const results: RebuildResults = {
       rows: [],
       changedIds: [],
@@ -59,7 +58,6 @@ export class WbsPhaseService {
         if (child.levelText !== levelText) {
           child.levels = level;
           child.levelText = levelText;
-          child.depth = levelText.split('.').length;
           changed = true;
         }
         results.rows.push(child);
@@ -69,8 +67,8 @@ export class WbsPhaseService {
           child.children = childrenCount;
           changed = true;
         }
-        if (child.treeParentId !== parentId) {
-          child.treeParentId = parentId;
+        if (child.parentId !== parentId) {
+          child.parentId = parentId;
           changed = true;
         }
 
@@ -97,8 +95,8 @@ export class WbsPhaseService {
 
   private getSortedVmChildren(
     parentId: string,
-    list: WbsNodeView[]
-  ): WbsNodeView[] {
+    list: TaskViewModel[]
+  ): TaskViewModel[] {
     return list
       .filter((x) => x.parentId === parentId)
       .sort(WbsNodeService.sort);

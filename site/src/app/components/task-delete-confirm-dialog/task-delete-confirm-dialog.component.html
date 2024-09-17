@@ -1,0 +1,30 @@
+<kendo-dialog
+  [title]="'Upload.DeleteConfirm' | translate"
+  (close)="dialog.close()"
+>
+  <p>
+    <button
+      kendoButton
+      class="w-100"
+      [disabled]="!canDelete()"
+      (click)="deleteTask(true)"
+    >
+      {{ "Upload.Delete-WithSubTasks" | translate }}
+    </button>
+  </p>
+  <p>
+    <button
+      kendoButton
+      class="w-100"
+      [disabled]="!canDelete()"
+      (click)="deleteTask(false)"
+    >
+      {{ "Upload.Delete-WithoutSubTasks" | translate }}
+    </button>
+  </p>
+  <p>
+    <button kendoButton class="w-100" (click)="dialog.close()">
+      {{ "General.Nevermind" | translate }}
+    </button>
+  </p>
+</kendo-dialog>

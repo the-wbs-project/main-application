@@ -1,15 +1,8 @@
-import { CategoryService } from '../../../category.service';
 import { WbsNodeService } from '../../../wbs-node.service';
 import { WbsDisciplineNodeTransformer } from './wbs-node-discipline.service';
 
 export class WbsDisciplineNodeTransformers {
-  readonly view = new WbsDisciplineNodeTransformer(
-    this.categoryService,
-    this.wbsService
-  );
+  readonly view = new WbsDisciplineNodeTransformer(this.wbsService);
 
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly wbsService: WbsNodeService
-  ) {}
+  constructor(private readonly wbsService: WbsNodeService) {}
 }

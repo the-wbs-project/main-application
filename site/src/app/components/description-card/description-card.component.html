@@ -1,20 +1,23 @@
 <div class="card-header">
   <div class="d-flex flex-align-center">
     <div>
-      {{ "General.Description" | translate }} &nbsp;
+      <span class="tx-16"> {{ "General.Description" | translate }} </span>
+      &nbsp;
       <wbs-approval-badge [approval]="approval()" />
     </div>
 
     @if (!editMode() && canEdit()) {
     <div class="flex-fill tx-right">
       <wbs-save-message [state]="saveState()" cssClass="mg-r-10" />
-      <fa-icon
-        size="lg"
-        class="pointer"
-        [icon]="faPencil"
+      <button
+        kendoButton
+        size="small"
+        fillMode="flat"
+        class="p-0"
         (click)="edit()"
-        [title]="'General.Edit' | translate"
-      />
+      >
+        <fa-icon [icon]="faPencil" />
+      </button>
     </div>
     }
   </div>
@@ -72,7 +75,7 @@
         </button>
       </div>
     </div>
-    <kendo-editor class="form-control" [(ngModel)]="editDescription" />
+    <wbs-editor cssClass="form-control" [(value)]="editDescription" />
     <div class="w-100 text-start">
       <label class="tx-italic">
         {{ "Library.DescriptionHelpEntry" | translate }}

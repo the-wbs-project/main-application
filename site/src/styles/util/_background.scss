@@ -292,6 +292,14 @@ button.bg-dark {
   background: $black-9;
 }
 
+.bg-light-blue {
+  background: $light-blue;
+}
+
+.bg-light-blue-f {
+  background: $light-blue !important;
+}
+
 .bg-indigo {
   background: $indigo;
 }
@@ -362,88 +370,12 @@ button.bg-dark {
   background-color: rgba(253, 126, 20, 0.2);
 }
 
-.bg-gradient-blue {
-  background-image: linear-gradient(to right, #1976d2 0, #64b5f6 100%);
-}
-
 .bg-primary {
   background-color: $primary !important;
 }
 
 .bg-primary-05 {
   background-color: $primary-05 !important;
-}
-
-.bg-primary-gradient {
-  background-image: $primary-gradient !important;
-}
-
-.bg-danger-gradient {
-  background-image: $danger-gradient !important;
-}
-
-.bg-success-gradient {
-  background-image: $success-gradient !important;
-}
-
-.bg-warning-gradient {
-  background-image: $warning-gradient !important;
-}
-
-.bg-primary-gradient1 {
-  background-image: linear-gradient(
-    to top,
-    #64c5eb 0%,
-    $primary 100%
-  ) !important;
-}
-
-.bg-info-gradient1 {
-  background-image: linear-gradient(
-    to top,
-    #4ec2f0 0%,
-    #31eccd 100%
-  ) !important;
-}
-
-.bg-purple-gradient {
-  background-image: linear-gradient(
-    to right,
-    #673ab7 0%,
-    #ba7bfb 100%
-  ) !important;
-}
-
-.bg-info-gradient {
-  background-image: $info-gradient !important;
-}
-
-.bg-secondary-gradient {
-  background-image: $secondary-gradient !important;
-}
-
-.bg-pink-gradient {
-  background-image: linear-gradient(
-    to right,
-    $pink 0%,
-    #f36eae 100%
-  ) !important;
-}
-
-.bg-purple-gradient {
-  background-image: linear-gradient(
-    to right,
-    $purple 0%,
-    #884af1 100%
-  ) !important;
-}
-
-.bg-teal-gradient {
-  background-image: linear-gradient(
-    to right,
-    $teal 0%,
-    #96e8e8 100%
-  ) !important;
 }
 
 .bg-azure {
@@ -467,48 +399,4 @@ button.bg-dark {
 .bg-green {
   background-color: #2dce89 !important;
   color: $white !important;
-}
-
-.gutters-xs > .col,
-.gutters-xs > [class*="col-"] {
-  padding-right: 0.25rem;
-  padding-left: 0.25rem;
-}
-
-.gutters-xs {
-  margin-top: -25px;
-}
-
-.tag-outline-primary {
-  color: $primary !important;
-  border-color: $primary !important;
-}
-
-.tag-outline-secondary {
-  color: $secondary !important;
-  border-color: $secondary !important;
-}
-
-.tag-outline-success {
-  color: $success !important;
-  border-color: $success !important;
-}
-
-.tag-outline-warning {
-  color: $warning !important;
-  border-color: $warning !important;
-}
-
-.tag-outline-info {
-  color: $info !important;
-  border-color: $info !important;
-}
-
-.tag-outline-danger {
-  color: $danger !important;
-  border-color: $danger !important;
-}
-
-.bg-chartcustom {
-  background-color: #ebeff5;
 }

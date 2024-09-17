@@ -2,21 +2,22 @@ import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Invite } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { MembershipStore } from '@wbs/core/store';
-import { MemberViewModel } from '@wbs/core/view-models';
+import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import { UserViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin } from 'rxjs';
 import { MembersSettingStore } from '../store';
 
 @Injectable()
 export class MemberSettingsService {
   private readonly data = inject(DataServiceFactory);
+  private readonly membership = inject(MembershipStore).membership;
   private readonly messages = inject(Messages);
-  private readonly org = inject(MembershipStore).organization;
+  private readonly metadata = inject(MetadataStore);
   private readonly store = inject(MembersSettingStore);
 
   removeMemberAsync(memberId: string): void {
     this.data.memberships
-      .removeUserFromOrganizationAsync(this.org()!.name, memberId)
+      .removeUserFromOrganizationAsync(this.membership()!.name, memberId)
       .subscribe(() => {
         this.messages.notify.success('OrgSettings.MemberRemoved');
         this.store.removeMember(memberId);
@@ -24,7 +25,7 @@ export class MemberSettingsService {
   }
 
   updateMemberRolesAsync(
-    member: MemberViewModel,
+    member: UserViewModel,
     toAdd: string[],
     toRemove: string[]
   ): void {
@@ -33,8 +34,8 @@ export class MemberSettingsService {
     if (toRemove.length > 0)
       calls.push(
         this.data.memberships.removeUserOrganizationalRolesAsync(
-          this.org()!.name,
-          member.id,
+          this.membership()!.name,
+          member.userId,
           toRemove
         )
       );
@@ -42,8 +43,8 @@ export class MemberSettingsService {
     if (toAdd.length > 0)
       calls.push(
         this.data.memberships.addUserOrganizationalRolesAsync(
-          this.org()!.name,
-          member.id,
+          this.membership()!.name,
+          member.userId,
           toAdd
         )
       );
@@ -52,6 +53,19 @@ export class MemberSettingsService {
 
     forkJoin(calls).subscribe(() => {
       this.messages.notify.success('OrgSettings.MemberRolesUpdated');
+
+      const roleIds = [
+        ...member.roles
+          .map((role) => role.id)
+          .filter((id) => !toRemove.includes(id)),
+        ...toAdd,
+      ];
+
+      const roles = this.metadata.roles.definitions.filter((role) =>
+        roleIds.includes(role.id)
+      );
+      member.roles = structuredClone(roles);
+
       this.store.updateMember(member);
     });
   }
@@ -61,7 +75,7 @@ export class MemberSettingsService {
 
     for (const invitee of emails) {
       saves.push(
-        this.data.memberships.sendInvitesAsync(this.org()!.name, {
+        this.data.memberships.sendInvitesAsync(this.membership()!.name, {
           invitee,
           inviter,
           roles,
@@ -76,7 +90,7 @@ export class MemberSettingsService {
 
   cancelInviteAsync(inviteId: string): void {
     this.data.memberships
-      .cancelInviteAsync(this.org()!.name, inviteId)
+      .cancelInviteAsync(this.membership()!.name, inviteId)
       .subscribe(() => {
         this.messages.notify.success('OrgSettings.InviteCancelled');
         this.store.removeInvite(inviteId);

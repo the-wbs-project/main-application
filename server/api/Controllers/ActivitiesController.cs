@@ -12,14 +12,14 @@ public class ActivitiesController : ControllerBase
     private readonly DbService db;
     private readonly ILogger logger;
     private readonly ActivityDataService dataService;
-    private readonly ProjectSnapshotDataService snapshotDataService;
+    private readonly ProjectDataService projectDataService;
 
-    public ActivitiesController(ILoggerFactory loggerFactory, ActivityDataService dataService, ProjectSnapshotDataService snapshotDataService, DbService db)
+    public ActivitiesController(ILoggerFactory loggerFactory, ActivityDataService dataService, ProjectDataService projectDataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ActivitiesController>();
         this.dataService = dataService;
-        this.snapshotDataService = snapshotDataService;
         this.db = db;
+        this.projectDataService = projectDataService;
     }
 
     [Authorize]
@@ -103,51 +103,6 @@ public class ActivitiesController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving activities");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPost("projects")]
-    public async Task<IActionResult> PostProjects(ProjectActivityRecord[] activities)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                foreach (var data in activities)
-                {
-                    await dataService.InsertAsync(conn, data.activity);
-                    await snapshotDataService.SetAsync(conn, data.activity.id, data.project, data.nodes);
-                }
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving project activities");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPost("library")]
-    public async Task<IActionResult> PostLibraryEntry(Activity[] activities)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                foreach (var activity in activities)
-                    await dataService.InsertAsync(conn, activity);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library activities");
             return new StatusCodeResult(500);
         }
     }

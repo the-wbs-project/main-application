@@ -1,0 +1,24 @@
+<div class="w-100 text-center">
+  <div class="card d-inline-block text-start w-100 mx-wd-500 border rounded">
+    <div class="card-header bg-gray-200">
+      {{ "General.Options" | translate }}
+    </div>
+    <div class="card-body pd-10">
+      @if (libraryType() === 'project') {
+      <div class="d-flex flex-row align-items-center">
+        <div>Do you want to import the project as a task?</div>
+        <div class="flex-fill text-end">
+          <wbs-options-view-button [(flag)]="projectAsTask" />
+        </div>
+      </div>
+      } @else {
+      <div class="d-flex flex-row align-items-center">
+        <div>Do you want to only import the sub-tasks?</div>
+        <div class="flex-fill text-end">
+          <wbs-options-view-button [(flag)]="onlyImportSubtasks" />
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

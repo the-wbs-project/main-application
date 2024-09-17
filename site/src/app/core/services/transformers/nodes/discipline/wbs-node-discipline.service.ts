@@ -1,97 +1,73 @@
-import { WbsNode } from '@wbs/core/models';
-import { CategoryViewModel, WbsNodeView } from '@wbs/core/view-models';
-import { CategoryService } from '../../../category.service';
+import { ProjectNode, WbsNode } from '@wbs/core/models';
+import {
+  CategoryViewModel,
+  DisciplineTaskViewModel,
+} from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsDisciplineNodeTransformer {
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly wbsService: WbsNodeService
-  ) {}
+  constructor(private readonly wbsService: WbsNodeService) {}
 
   run(
+    type: 'wbs' | 'abs',
     disciplines: CategoryViewModel[],
-    projectNodes: WbsNode[]
-  ): WbsNodeView[] {
+    projectNodes: ProjectNode[]
+  ): DisciplineTaskViewModel[] {
     const phases = this.wbsService.getPhases(projectNodes);
-    const nodes: WbsNodeView[] = [];
+    const nodes: DisciplineTaskViewModel[] = [];
+    let dCounter = 1;
 
-    for (let i = 0; i < disciplines.length; i++) {
-      const d = disciplines[i];
-
-      const dView: WbsNodeView = {
-        children: 0,
-        childrenIds: [],
-        disciplines: [d],
+    for (const d of disciplines) {
+      const dView: DisciplineTaskViewModel = {
         id: d.id,
-        treeId: d.id,
-        levels: [i + 1],
-        levelText: (i + 1).toString(),
-        depth: 1,
-        order: i + 1,
+        levelText: dCounter.toString(),
         title: d.label,
-        lastModified: undefined,
-        canMoveDown: false,
-        canMoveUp: false,
-        canMoveLeft: false,
-        canMoveRight: false,
-        subTasks: [],
       };
-      nodes.push(dView);
+      const phaseNodes: DisciplineTaskViewModel[] = [];
 
       let phaseCounter = 1;
 
       for (const p of phases) {
         const pNode = projectNodes.find((x) => x.id === p.id)!;
-        const pLevel = [i + 1, phaseCounter];
+        const pLevel = [dCounter, phaseCounter];
 
         //if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
 
-        const pView: WbsNodeView = {
-          children: 0,
-          childrenIds: [],
-          description: pNode.description,
-          disciplines: [d],
-          id: p.id,
-          treeId: `${d.id}-${p.id}`,
-          levels: pLevel,
+        const pView: DisciplineTaskViewModel = {
+          id: `${d.id}-${p.id}`,
           levelText: pLevel.join('.'),
-          depth: pLevel.length,
-          order: phaseCounter,
           parentId: d.id,
-          treeParentId: d.id,
-          phaseId: p.id,
           title: pNode.title,
-          lastModified: pNode?.lastModified,
-          canMoveDown: false,
-          canMoveUp: false,
-          canMoveLeft: false,
-          canMoveRight: false,
-          subTasks: [],
         };
 
         const children = this.getPhaseChildren(
-          disciplines,
+          type,
           d.id,
           p.id,
           p.id,
           pLevel,
           projectNodes
         );
-        const hasDiscipline = pNode?.disciplineIds?.includes(d.id) ?? false;
-
+        const hasDiscipline = pNode.disciplineIds?.includes(d.id) ?? false;
+        //
+        //  If we have no discipline, and no children, skip it
+        //
         if (!hasDiscipline && children.length === 0) continue;
 
-        pView.children = this.getChildCount(children);
-
-        nodes.push(pView, ...children);
+        phaseNodes.push(pView);
+        //
+        //  IF this is for ABS, and we have hit a ABS node, don't actually add the children
+        //
+        if (type === 'wbs' || !pNode.absFlag) {
+          phaseNodes.push(...children);
+        }
         phaseCounter++;
       }
-      dView.children = phaseCounter - 1;
+      if (phaseNodes.length > 0) {
+        nodes.push(dView, ...phaseNodes);
+        dCounter++;
+      }
     }
-
-    this.setSameAs(nodes);
-
     return nodes;
   }
 
@@ -102,47 +78,28 @@ export class WbsDisciplineNodeTransformer {
   }
 
   private getPhaseChildren(
-    disciplines: CategoryViewModel[],
+    type: 'wbs' | 'abs',
     disciplineId: string,
     phaseId: string,
     parentId: string,
     parentLevel: number[],
     list: WbsNode[]
-  ): WbsNodeView[] {
-    const results: WbsNodeView[] = [];
+  ): DisciplineTaskViewModel[] {
+    const results: DisciplineTaskViewModel[] = [];
     const children = this.getSortedChildren(parentId, list);
     let counter = 1;
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childLevel = [...parentLevel, counter];
-      const node: WbsNodeView = {
-        id: child.id,
-        childrenIds: [],
-        parentId: parentId,
-        treeId: `${disciplineId}-${child.id}`,
-        treeParentId: `${disciplineId}-${parentId}`,
-        disciplines: this.categoryService.buildTaskViewModels(
-          disciplines,
-          child.disciplineIds ?? []
-        ),
-        phaseId: phaseId,
-        order: counter,
-        levels: childLevel,
-        depth: childLevel.length,
+      const node: DisciplineTaskViewModel = {
+        id: `${disciplineId}-${child.id}`,
+        parentId: `${disciplineId}-${parentId}`,
         title: child.title ?? '',
-        description: child.description,
         levelText: childLevel.join('.'),
-        lastModified: child.lastModified,
-        children: 0,
-        canMoveDown: false,
-        canMoveUp: false,
-        canMoveLeft: false,
-        canMoveRight: false,
-        subTasks: [],
       };
       const myChildren = this.getPhaseChildren(
-        disciplines,
+        type,
         disciplineId,
         phaseId,
         child.id,
@@ -153,36 +110,11 @@ export class WbsDisciplineNodeTransformer {
       const hasDiscipline = (child.disciplineIds ?? []).includes(disciplineId);
 
       if (hasDiscipline || myChildren.length > 0) {
-        node.children = this.getChildCount(myChildren);
         counter++;
 
         results.push(node, ...myChildren);
       }
     }
     return results;
-  }
-
-  private setSameAs(rows: WbsNodeView[]): void {
-    const vals = new Map<string, [string, string, number]>();
-
-    for (let i = 0; i < rows.length; i++) {
-      const row = rows[i];
-
-      if (vals.has(row.id)) {
-        const parts = vals.get(row.id)!;
-
-        row.sameAsId = parts[0];
-        row.sameAsIndex = parts[2];
-        row.sameAsLevelText = parts[1];
-      } else {
-        vals.set(row.id, [row.treeId, row.levelText, i]);
-      }
-    }
-  }
-
-  private getChildCount(children: WbsNodeView[]): number {
-    return children
-      .map((x) => x.children + 1)
-      .reduce((partialSum, a) => partialSum + a, 0);
   }
 }

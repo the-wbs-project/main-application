@@ -1,4 +1,5 @@
 import { ProjectCategory, WbsNode } from '@wbs/core/models';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsNodePhaseReorderer {
@@ -16,7 +17,10 @@ export class WbsNodePhaseReorderer {
     return changed;
   }
 
-  run(parentId: string | undefined, nodes: WbsNode[]): string[] {
+  run(
+    parentId: string | undefined,
+    nodes: (WbsNode | TaskViewModel)[]
+  ): string[] {
     const changed: string[] = [];
     const children = WbsNodeService.getSortedChildrenForPhase(parentId, nodes);
 

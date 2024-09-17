@@ -22,27 +22,27 @@
         </tr>
         <tr>
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="minusIcon"
-              [users]="pms()?.assigned"
+              [users]="pms()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.pm, $event)"
             />
           </td>
           @if (approvalEnabled()) {
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="minusIcon"
-              [users]="approvers()?.assigned"
+              [users]="approvers()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.approver, $event)"
             />
           </td>
           }
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="minusIcon"
-              [users]="smes()?.assigned"
+              [users]="smes()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
               (selected)="remove(roles.sme, $event)"
             />
@@ -55,25 +55,25 @@
         </tr>
         <tr>
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="plusIcon"
-              [users]="pms()?.unassigned"
+              [users]="unassignedPms()"
               (selected)="add(roles.pm, $event)"
             />
           </td>
           @if (approvalEnabled()) {
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="plusIcon"
-              [users]="approvers()?.unassigned"
+              [users]="unassignedApprovers()"
               (selected)="add(roles.approver, $event)"
             />
           </td>
           }
           <td class="wd-200 border border-dark pd-5 valign-top">
-            <wbs-project-user-list
+            <wbs-user-list
               [icon]="plusIcon"
-              [users]="smes()?.unassigned"
+              [users]="unassignedSmes()"
               (selected)="add(roles.sme, $event)"
             />
           </td>

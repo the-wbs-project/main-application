@@ -10,28 +10,39 @@ CREATE PROCEDURE [dbo].[LibraryEntryVersion_Set]
     @Description nvarchar(MAX),
     @Status nvarchar(50),
     @Categories nvarchar(MAX),
-    @Disciplines nvarchar(MAX)
+    @Disciplines nvarchar(MAX),
+    @Author nvarchar(100),
+    @Editors nvarchar(MAX),
+    @ReleaseNotes nvarchar(MAX)
 AS
 BEGIN
-    IF EXISTS(SELECT 1 FROM [dbo].[LibraryEntries] WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId)
+    IF EXISTS(SELECT 1
+    FROM [dbo].[LibraryEntries]
+    WHERE [OwnerId] = @OwnerId AND [Id] = @EntryId)
         BEGIN
-            IF EXISTS(SELECT * FROM [dbo].[LibraryEntryVersions] WHERE [EntryId] = @EntryId AND [Version] = @Version)
+        IF EXISTS(SELECT *
+        FROM [dbo].[LibraryEntryVersions]
+        WHERE [EntryId] = @EntryId AND [Version] = @Version)
                 BEGIN
-                    UPDATE [dbo].[LibraryEntryVersions]
+            UPDATE [dbo].[LibraryEntryVersions]
                     SET [VersionAlias] = @VersionAlias,
                         [Title] = @Title,
                         [Description] = @Description,
                         [Status] = @Status,
                         [Categories] = @Categories,
                         [Disciplines] = @Disciplines,
+                        [Author] = @Author,
+                        [Editors] = @Editors,
+                        [ReleaseNotes] = @ReleaseNotes,
                         [LastModified] = GETUTCDATE()
                     WHERE [EntryId] = @EntryId AND [Version] = @Version
-                END
+        END
             ELSE
                 BEGIN
-                    INSERT INTO [dbo].[LibraryEntryVersions]
-                    VALUES (@EntryId, @Version, @VersionAlias, @Title, @Description, @Status, @Categories, @Disciplines, GETUTCDATE())
-                END
+            INSERT INTO [dbo].[LibraryEntryVersions]
+            VALUES
+                (@EntryId, @Version, @VersionAlias, @Title, @Description, @Status, @Categories, @Disciplines, GETUTCDATE(), @Author, @Editors, @ReleaseNotes)
         END
+    END
 END
 GO

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
 import { LoaderModule } from '@progress/kendo-angular-indicators';
 
@@ -13,7 +13,7 @@ import { LoaderModule } from '@progress/kendo-angular-indicators';
   imports: [LoaderModule],
 })
 export class LogoutComponent implements OnInit {
-  constructor(private readonly auth: AuthService) {}
+  private readonly auth = inject(AuthService);
 
   ngOnInit(): void {
     this.auth.logout();

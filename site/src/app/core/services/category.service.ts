@@ -4,12 +4,12 @@ import {
   ProjectCategory,
   ProjectCategoryChanges,
 } from '@wbs/core/models';
-import { MetadataStore } from '@wbs/core/store';
+import { MetadataStore } from '@wbs/core/store/metadata.store';
 import {
   CategoryCancelConfirm,
   CategorySelection,
-  CategoryViewModel,
-} from '@wbs/core/view-models';
+} from '@wbs/core/view-models/category-selection.view-model';
+import { CategoryViewModel } from '@wbs/core/view-models/category.view-model';
 
 const question = 'fa-question';
 
@@ -17,7 +17,11 @@ const question = 'fa-question';
 export class CategoryService {
   private readonly metadata = inject(MetadataStore);
 
-  buildViewModels(disciplines: ProjectCategory[]): CategoryViewModel[] {
+  buildViewModels(
+    disciplines: ProjectCategory[] | undefined
+  ): CategoryViewModel[] {
+    if (!disciplines) return [];
+
     const results: CategoryViewModel[] = [];
 
     for (const discipline of disciplines) {

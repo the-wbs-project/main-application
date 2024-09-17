@@ -1,12 +1,5 @@
-import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  effect,
-  inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
   faDiagramSubtask,
   faGraduationCap,
@@ -14,15 +7,19 @@ import {
   faPeople,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
+  DialogCloseResult,
   DialogContentBase,
   DialogModule,
   DialogRef,
+  DialogService,
 } from '@progress/kendo-angular-dialog';
-import { StepperModule } from '@progress/kendo-angular-layout';
+import { DialogButtonsComponent } from '@wbs/components/dialog-buttons';
+import { DialogWrapperComponent } from '@wbs/components/dialog-wrapper';
+import { Project } from '@wbs/core/models';
+import { SaveService } from '@wbs/core/services';
+import { Observable } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
 import { ProjectCreateService } from './project-create.service';
 import { ProjectCreateStore } from './project-create.store';
 import {
@@ -38,25 +35,23 @@ import {
   templateUrl: './project-create-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ButtonModule,
+    DialogButtonsComponent,
     DialogModule,
+    DialogWrapperComponent,
     FontAwesomeModule,
-    NgClass,
     ProjectCreateBasicsComponent,
     ProjectCreateCategoryComponent,
     ProjectCreateDisciplinesComponent,
     ProjectCreatePhasesComponent,
     ProjectCreateRolesComponent,
-    StepperModule,
     TranslateModule,
   ],
   providers: [ProjectCreateService, ProjectCreateStore],
 })
 export class ProjectCreateDialogComponent extends DialogContentBase {
-  private readonly navStore = inject(Store);
   private readonly service = inject(ProjectCreateService);
 
-  readonly savingIcon = faSpinner;
+  readonly saving = new SaveService();
   readonly store = inject(ProjectCreateStore);
   readonly steps = [
     { label: 'ProjectCreate.Basics_Title', icon: faInfo },
@@ -68,15 +63,6 @@ export class ProjectCreateDialogComponent extends DialogContentBase {
 
   constructor(dialog: DialogRef) {
     super(dialog);
-
-    effect(() => {
-      const page = this.store.page();
-      const elems = document.getElementsByClassName('k-window-content');
-
-      for (let i = 0; i < elems.length; i++) {
-        elems.item(i)?.scrollTo(0, 0);
-      }
-    });
   }
 
   back(): void {
@@ -85,20 +71,23 @@ export class ProjectCreateDialogComponent extends DialogContentBase {
 
   next(): void {
     this.store.page.update((x) => x + 1);
-    if (this.store.page() === 6) {
-      this.service.createAsync().subscribe((project) => {
-        this.navStore.dispatch(
-          new Navigate([
-            '/',
-            project.owner,
-            'projects',
-            'view',
-            project.id,
-            'about',
-          ])
-        );
-        this.dialog.close();
-      });
-    }
+  }
+
+  static launchAsync(dialog: DialogService): Observable<Project | undefined> {
+    return dialog
+      .open({
+        content: ProjectCreateDialogComponent,
+      })
+      .result.pipe(
+        map((x: unknown) =>
+          x instanceof DialogCloseResult ? undefined : (x as Project)
+        )
+      );
+  }
+
+  save(): void {
+    this.saving
+      .quickCall(this.service.createAsync())
+      .subscribe((project) => this.dialog.close(project));
   }
 }

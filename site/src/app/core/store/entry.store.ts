@@ -1,94 +1,149 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
 import {
-  LibraryEntry,
+  LIBRARY_CLAIMS,
   LibraryEntryNode,
-  LibraryEntryVersion,
-  ProjectCategory,
+  LibraryEntryVersionBasic,
 } from '@wbs/core/models';
 import { CategoryService, Transformers } from '@wbs/core/services';
-import { WbsNodeView } from '@wbs/core/view-models';
+import {
+  CategoryViewModel,
+  LibraryTaskViewModel,
+  LibraryVersionViewModel,
+} from '@wbs/core/view-models';
 
 @Injectable({ providedIn: 'root' })
 export class EntryStore {
   private readonly categoryService = inject(CategoryService);
   private readonly transformer = inject(Transformers);
 
-  private readonly _entry = signal<LibraryEntry | undefined>(undefined);
-  private readonly _version = signal<LibraryEntryVersion | undefined>(
+  private readonly _disciplines = signal<CategoryViewModel[]>([]);
+  private readonly _versions = signal<LibraryEntryVersionBasic[] | undefined>(
+    undefined
+  );
+  private readonly _version = signal<LibraryVersionViewModel | undefined>(
     undefined
   );
   private readonly _tasks = signal<LibraryEntryNode[] | undefined>(undefined);
-  private readonly _viewModels = signal<WbsNodeView[] | undefined>(undefined);
-  private readonly _navSectionEntry = signal<string | undefined>(undefined);
-  private readonly _navSectionTask = signal<string | undefined>(undefined);
-
-  get entry(): Signal<LibraryEntry | undefined> {
-    return this._entry;
-  }
-
-  get navSectionEntry(): Signal<string | undefined> {
-    return this._navSectionEntry;
-  }
-
-  get navSectionTask(): Signal<string | undefined> {
-    return this._navSectionTask;
-  }
+  private readonly _viewModels = signal<LibraryTaskViewModel[] | undefined>(
+    undefined
+  );
+  private readonly _claims = signal<string[]>([]);
 
   get tasks(): Signal<LibraryEntryNode[] | undefined> {
     return this._tasks;
   }
 
-  get version(): Signal<LibraryEntryVersion | undefined> {
+  get version(): Signal<LibraryVersionViewModel | undefined> {
     return this._version;
   }
 
-  get viewModels(): Signal<WbsNodeView[] | undefined> {
+  get versionDisciplines(): Signal<CategoryViewModel[]> {
+    return this._disciplines;
+  }
+
+  get versions(): Signal<LibraryEntryVersionBasic[] | undefined> {
+    return this._versions;
+  }
+
+  get viewModels(): Signal<LibraryTaskViewModel[] | undefined> {
     return this._viewModels;
   }
 
-  getTask(taskId: Signal<string>): Signal<WbsNodeView | undefined> {
+  get claims(): Signal<string[]> {
+    return this._claims;
+  }
+
+  get canEditEntry(): Signal<boolean> {
+    return computed(() =>
+      this.claimStatusCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.UPDATE
+      )
+    );
+  }
+
+  get canEditAlias(): Signal<boolean> {
+    return computed(() =>
+      this.claimCheck(this._claims(), LIBRARY_CLAIMS.UPDATE)
+    );
+  }
+
+  get canCreateTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimStatusCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.CREATE
+      )
+    );
+  }
+
+  get canEditTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimStatusCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.UPDATE
+      )
+    );
+  }
+
+  get canDeleteTask(): Signal<boolean> {
+    return computed(() =>
+      this.claimStatusCheck(
+        this.version(),
+        this._claims(),
+        LIBRARY_CLAIMS.TASKS.DELETE
+      )
+    );
+  }
+
+  getTask(taskId: Signal<string>): Signal<LibraryTaskViewModel | undefined> {
     return computed(() => this.viewModels()?.find((t) => t.id === taskId()));
   }
 
   setAll(
-    entry: LibraryEntry,
-    version: LibraryEntryVersion,
-    tasks: LibraryEntryNode[]
+    versions: LibraryEntryVersionBasic[],
+    version: LibraryVersionViewModel,
+    tasks: LibraryEntryNode[],
+    claims: string[]
   ): void {
-    this._entry.set(entry);
+    this._versions.set(versions);
     this._version.set(version);
     this._tasks.set(tasks);
-    this._viewModels.set(
-      this.createViewModels(entry.type, version.disciplines, tasks)
-    );
+    this._claims.set(claims);
+    this._disciplines.set(this.getDisciplines(version));
+    this._viewModels.set(this.createViewModels(version, tasks));
   }
 
-  setNavSectionEntry(value: string): void {
-    this._navSectionEntry.set(value);
-  }
-
-  setNavSectionTask(value: string): void {
-    this._navSectionTask.set(value);
-  }
-
-  setEntry(entry: LibraryEntry): void {
-    this._entry.set({ ...entry });
-  }
-
-  setVersion(version: LibraryEntryVersion): void {
+  setVersion(version: LibraryVersionViewModel): void {
     this._version.set({ ...version });
+    this._disciplines.set(this.getDisciplines(version));
+    this._versions.update((list) => {
+      const basic = list?.find((x) => x.version === version.version);
+
+      if (basic) {
+        basic.versionAlias = version.versionAlias ?? '';
+        basic.title = version.title ?? '';
+        basic.status = version.status ?? '';
+      }
+      return [...(list ?? [])];
+    });
+  }
+
+  setVersions(versions: LibraryEntryVersionBasic[]): void {
+    this._versions.set(structuredClone(versions));
   }
 
   setTasks(tasks: LibraryEntryNode[]): void {
     this._tasks.set([...tasks]);
 
-    const entry = this._entry();
     const version = this._version();
 
-    if (entry && version)
-      this._viewModels.set(
-        this.createViewModels(entry.type, version.disciplines, tasks)
-      );
+    if (!version) return;
+
+    this._viewModels.set(this.createViewModels(version, tasks));
   }
 
   tasksChanged(upserts: LibraryEntryNode[], removeIds?: string[]): void {
@@ -108,19 +163,39 @@ export class EntryStore {
       else list[index] = node;
     }
     this.setTasks(list);
+    this._version.update((v) =>
+      v ? { ...v, lastModified: new Date() } : undefined
+    );
+  }
+
+  private getDisciplines(
+    version: LibraryVersionViewModel
+  ): CategoryViewModel[] {
+    return version.disciplines.length > 0
+      ? this.categoryService.buildViewModels(version.disciplines)
+      : this.categoryService.buildViewModelsFromDefinitions();
   }
 
   private createViewModels(
-    entryType: string,
-    disciplines: ProjectCategory[],
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
-  ): WbsNodeView[] {
-    return this.transformer.nodes.phase.view.run(
+  ): LibraryTaskViewModel[] {
+    return this.transformer.nodes.phase.view.forLibrary(
+      version,
       tasks,
-      entryType,
-      disciplines.length > 0
-        ? this.categoryService.buildViewModels(disciplines)
-        : this.categoryService.buildViewModelsFromDefinitions()
+      this.versionDisciplines()
     );
+  }
+
+  private claimStatusCheck(
+    version: LibraryVersionViewModel | undefined,
+    claims: string[],
+    claim: string
+  ): boolean {
+    return version?.status === 'draft' && this.claimCheck(claims, claim);
+  }
+
+  private claimCheck(claims: string[], claim: string): boolean {
+    return claims.includes(claim);
   }
 }

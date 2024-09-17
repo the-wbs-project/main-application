@@ -1,0 +1,52 @@
+<kendo-multiselect
+  kendoMultiSelectSummaryTag
+  [checkboxes]="true"
+  [autoClose]="false"
+  [filterable]="false"
+  [clearButton]="false"
+  [data]="data()"
+  [(value)]="ids"
+  adaptiveMode="auto"
+  textField="label"
+  valueField="id"
+  size="small"
+  [valuePrimitive]="true"
+  [popupSettings]="{ width: '300px' }"
+  (valueChange)="valueChange($event)"
+>
+  @if (!autoSave()) {
+  <ng-template kendoSuffixTemplate>
+    @let state = saveState();
+    <!---->
+    @if (state !== undefined) {
+    <div class="mg-r-5">
+      <wbs-save-message [state]="state" />
+    </div>
+    } @if (!saving()) { @if (showSave()) {
+    <button kendoButton size="small" fillMode="clear" (click)="saveSelected()">
+      <fa-icon [icon]="saveIcon()" />
+    </button>
+    }
+    <button kendoButton size="small" fillMode="clear" (click)="cancel.emit()">
+      <fa-icon [icon]="cancelIcon" />
+    </button>
+    }
+  </ng-template>
+  }
+  <ng-template kendoMultiSelectGroupTagTemplate let-dataItems>
+    <span class="tx-10">
+      {{ dataItems.length }} {{ "General.Selected" | translate }}
+    </span>
+  </ng-template>
+  <ng-template kendoMultiSelectItemTemplate let-dataItem>
+    <div class="tx-12">
+      <span class="d-inline-block tx-center wd-25">
+        <i
+          class="fa-solid"
+          [ngClass]="dataItem.id | disciplineIcon : data()"
+        ></i>
+      </span>
+      {{ dataItem.label }}
+    </div>
+  </ng-template>
+</kendo-multiselect>

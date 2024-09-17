@@ -2,213 +2,205 @@ import {
   ChangeDetectionStrategy,
   Component,
   OnInit,
-  WritableSignal,
   computed,
+  effect,
   inject,
   input,
+  model,
+  output,
   signal,
   viewChild,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import {
+  FormControl,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faCheck, faPlus } from '@fortawesome/pro-solid-svg-icons';
+import { faSave, faXmark } from '@fortawesome/pro-light-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { Navigate } from '@ngxs/router-plugin';
-import { Actions, ofActionSuccessful } from '@ngxs/store';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { DialogService } from '@progress/kendo-angular-dialog';
+import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { SplitterModule } from '@progress/kendo-angular-layout';
 import {
-  ContextMenuComponent,
-  ContextMenuModule,
-} from '@progress/kendo-angular-menu';
-import {
-  CellClickEvent,
   RowReorderEvent,
-  SelectableSettings,
   TreeListComponent,
   TreeListModule,
 } from '@progress/kendo-angular-treelist';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
-import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
-import { ProgressBarComponent } from '@wbs/components/_utils/progress-bar.component';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
-import { TaskTitleComponent } from '@wbs/components/task-title';
+import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
   TreeButtonsAddComponent,
-  TreeButtonsDownloadComponent,
+  TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
-  TreeButtonsUploadComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { PROJECT_CLAIMS, SaveState } from '@wbs/core/models';
-import { Messages, SignalStore, TreeService } from '@wbs/core/services';
-import { ProjectViewModel, WbsNodeView } from '@wbs/core/view-models';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
-import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
-import { FindThemByIdPipe } from '@wbs/pipes/find-them-by-id.pipe';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
+import {
+  AddPhaseOptions,
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
+} from '@wbs/core/models';
+import { Messages, TreeService, Utils } from '@wbs/core/services';
+import {
+  CategoryViewModel,
+  ProjectTaskViewModel,
+  TaskViewModel,
+} from '@wbs/core/view-models';
 import { UiStore } from '@wbs/core/store';
-import { Observable, delay, tap } from 'rxjs';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+import { TaskDeleteComponent } from '../../../../components/task-delete';
 import {
-  ChangeTaskBasics,
-  CreateTask,
-  TreeReordered,
-} from '../../../../actions';
-import { ApprovalBadgeComponent } from '../../../../components/approval-badge.component';
-import { ChildrenApprovalPipe } from '../../../../pipes/children-approval.pipe';
-import {
-  ProjectNavigationService,
-  ProjectService,
+  ProjectImportService,
+  ProjectTaskService,
   ProjectViewService,
 } from '../../../../services';
-import { ProjectApprovalState, TasksState } from '../../../../states';
-import { PhaseTreeMenuService } from './phase-tree-menu.service';
-import { PhaseTreeReorderService } from './phase-tree-reorder.service';
+import { ProjectStore } from '../../../../stores';
+import { PhaseTreeReorderService } from '../../services';
+import { AbsDialogComponent } from '../abs-dialog/abs-dialog.component';
+import { PhaseTaskDetailsComponent } from '../phase-task-details';
+import { PhaseTreeOtherButtonComponent } from '../phase-tree-other-button.component';
+import { PhaseTreeTitleLegendComponent } from '../phase-tree-title-legend';
+import { PhaseTreeTaskTitleComponent } from '../phase-tree-task-title';
+import { TreeTypeButtonComponent } from '../tree-type-button.component';
+import { WbsAbsButtonComponent } from '../wbs-abs-button.component';
 
-@UntilDestroy()
 @Component({
   standalone: true,
   selector: 'wbs-project-phase-tree',
   templateUrl: './phase-tree.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [PhaseTreeReorderService, PhaseTreeMenuService],
+  providers: [PhaseTreeReorderService],
   imports: [
     AlertComponent,
-    ApprovalBadgeComponent,
     ButtonModule,
-    CheckPipe,
-    ChildrenApprovalPipe,
-    ContextMenuItemComponent,
-    ContextMenuModule,
     DisciplineIconListComponent,
-    FindByIdPipe,
-    FindThemByIdPipe,
+    DisciplinesDropdownComponent,
     FontAwesomeModule,
-    ProgressBarComponent,
-    RouterModule,
-    SaveMessageComponent,
-    TaskTitleComponent,
+    HeightDirective,
+    PhaseTaskDetailsComponent,
+    PhaseTreeOtherButtonComponent,
+    PhaseTreeTaskTitleComponent,
+    PhaseTreeTitleLegendComponent,
+    ReactiveFormsModule,
+    SplitterModule,
+    TextBoxModule,
     TranslateModule,
     TreeButtonsAddComponent,
-    TreeButtonsDownloadComponent,
+    TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
-    TreeButtonsUploadComponent,
     TreeDisciplineLegendComponent,
     TreeListModule,
+    TreeTypeButtonComponent,
+    WbsAbsButtonComponent,
   ],
 })
 export class ProjectPhaseTreeComponent implements OnInit {
-  private readonly projectService = inject(ProjectService);
-  private readonly actions$ = inject(Actions);
-  private readonly menuService = inject(PhaseTreeMenuService);
+  private readonly dialogService = inject(DialogService);
+  private readonly importService = inject(ProjectImportService);
   private readonly messages = inject(Messages);
   private readonly reorderer = inject(PhaseTreeReorderService);
-  private readonly store = inject(SignalStore);
-  readonly navigate = inject(ProjectNavigationService);
-  readonly service = inject(ProjectViewService);
+  private readonly taskService = inject(ProjectTaskService);
+
+  readonly width = inject(UiStore).mainContentWidth;
+  readonly projectStore = inject(ProjectStore);
+  readonly viewService = inject(ProjectViewService);
   readonly treeService = new TreeService();
+  editParentId?: string;
+  editItem?: ProjectTaskViewModel;
+  editForm?: FormGroup;
   //
   //  Inputs
   //
   readonly claims = input.required<string[]>();
-  readonly project = input.required<ProjectViewModel>();
-  readonly projectUrl = input.required<string[]>();
+  readonly isFullScreen = input.required<boolean>();
+  readonly containerHeight = input.required<number>();
+  readonly view = model.required<'phases' | 'disciplines'>();
+  readonly wbsAbs = model.required<'wbs' | 'abs'>();
   //
   //  components
   //
   readonly treeList = viewChild<TreeListComponent>(TreeListComponent);
-  readonly gridContextMenu =
-    viewChild<ContextMenuComponent>(ContextMenuComponent);
-
-  settings: SelectableSettings = {
-    enabled: true,
-    mode: 'row',
-    multiple: false,
-    drag: false,
-    readonly: false,
-  };
-
-  readonly checkIcon = faCheck;
-  readonly plusIcon = faPlus;
-  readonly canEditClaim = PROJECT_CLAIMS.TASKS.UPDATE;
-
-  readonly taskSaveStates: Map<string, WritableSignal<SaveState>> = new Map();
-  readonly tree = signal<WbsNodeView[] | undefined>(undefined);
-  readonly width = inject(UiStore).mainContentWidth;
-  readonly tasks = this.store.select(TasksState.phases);
-  readonly approvals = this.store.select(ProjectApprovalState.list);
-  readonly taskId = signal<string | undefined>(undefined);
+  //
+  //  Constaints
+  //
+  readonly addIcon = faPlus;
+  readonly cancelIcon = faXmark;
+  readonly saveIcon = faSave;
+  readonly removeIcon = faTrash;
+  readonly heightOffset = 10;
+  readonly rowHeight = 31.5;
+  //
+  //  signals/models
+  //
+  readonly taskAreaHeight = signal(0);
+  //readonly approvals = this.store.select(ProjectApprovalState.list);
+  readonly selectedTaskId = signal<string | undefined>(undefined);
   readonly alert = signal<string | undefined>(undefined);
-  readonly task = computed(
-    () => this.tasks()?.find((x) => x.id === this.taskId())!
+  //
+  //  Computed signals
+  //
+  readonly tasks = computed(() =>
+    this.wbsAbs() === 'wbs'
+      ? this.projectStore.viewModels()
+      : this.projectStore.absTasks()
   );
-  readonly menu = computed(() =>
-    this.menuService.buildMenu(this.project(), this.task(), this.claims())
+  readonly selectedTask = computed(() =>
+    this.tasks()?.find((x) => x.id === this.selectedTaskId())
   );
+  readonly canEdit = computed(
+    () =>
+      this.projectStore.project()?.status === PROJECT_STATI.PLANNING &&
+      Utils.contains(this.claims(), PROJECT_CLAIMS.TASKS.CREATE)
+  );
+  readonly pageSize = computed(() =>
+    this.treeService.pageSize(
+      this.containerHeight(),
+      this.heightOffset,
+      this.rowHeight
+    )
+  );
+
+  //
+  //  Outputs
+  //
+  readonly goFullScreen = output<void>();
+  readonly exitFullScreen = output<void>();
+
+  constructor() {
+    effect(() => {
+      this.treeService.updateState(this.projectStore.viewModels() ?? []);
+    });
+  }
 
   ngOnInit(): void {
-    this.store
-      .selectAsync(TasksState.phases)
-      .pipe(untilDestroyed(this))
-      .subscribe((phases) => {
-        this.tree.set(structuredClone(phases));
-        this.updateState(phases ?? []);
-      });
-    /*
-    Is this needed?
-    this.store
-      .selectAsync(ProjectApprovalState.list)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => this.cd.detectChanges());*/
-
-    this.actions$
-      .pipe(ofActionSuccessful(CreateTask), untilDestroyed(this))
-      .subscribe(() => {
-        const phases = this.tasks() ?? [];
-        const taskIndex = phases.findIndex((x) => x.id === this.taskId());
-        if (!taskIndex) return;
-
-        const task = phases[taskIndex];
-
-        if (task) {
-          this.treeList()?.expand(task);
-          this.treeList()?.focusCell(taskIndex, 0);
-        }
-      });
-
-    this.treeService.expandedKeys = this.projectService.getPhaseIds(
-      this.tasks() ?? []
-    );
+    this.treeService.expandedKeys = (this.projectStore.viewModels() ?? [])
+      .filter((x) => !x.parentId)
+      .map((x) => x.id);
   }
 
-  navigateToTask(): void {
-    setTimeout(() => {
-      this.store.dispatch(
-        new Navigate([...this.projectUrl(), 'tasks', this.taskId()!])
+  otherItemSelected(action: string): void {
+    if (action === 'goFullScreen') {
+      this.goFullScreen.emit();
+    } else if (action === 'exitFullScreen') {
+      this.exitFullScreen.emit();
+    } else if (action === 'editAbs') {
+      AbsDialogComponent.launchAsync(
+        this.dialogService,
+        this.treeService.expandedKeys
       );
-    }, 150);
-  }
-
-  onCellClick(e: CellClickEvent): void {
-    this.taskId.set(e.dataItem.id);
-
-    if (e.type === 'contextmenu') {
-      const originalEvent = e.originalEvent;
-      originalEvent.preventDefault();
-
-      this.gridContextMenu()?.show({
-        left: originalEvent.pageX,
-        top: originalEvent.pageY,
-      });
-    } else {
-      this.taskId.set(e.dataItem.id);
     }
   }
 
   rowReordered(e: RowReorderEvent): void {
-    const tree = this.getViewModels();
-    const dragged: WbsNodeView = e.draggedRows[0].dataItem;
-    const target: WbsNodeView = e.dropTargetRow?.dataItem;
+    const tree = structuredClone(this.projectStore.viewModels() ?? []);
+    const dragged: TaskViewModel = e.draggedRows[0].dataItem;
+    const target: TaskViewModel = e.dropTargetRow?.dataItem;
     const validation = this.reorderer.validate(dragged, target, e.dropPosition);
 
     if (!validation.valid) {
@@ -220,10 +212,8 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
     const run = () => {
       const results = this.reorderer.run(tree, dragged, target, e.dropPosition);
-      this.callSave(
-        dragged.id,
-        this.store.dispatch(new TreeReordered(dragged.id, results))
-      );
+
+      this.taskService.treeReordered(dragged.id, results).subscribe();
     };
     if (validation.confirmMessage) {
       this.messages.confirm
@@ -240,67 +230,116 @@ export class ProjectPhaseTreeComponent implements OnInit {
     }
   }
 
-  taskTitleChanged(taskId: string, title: string): void {
-    const task = this.tree()?.find((x) => x.id === taskId);
-
-    if (!task) return;
-
-    this.setSaveState(taskId, 'saving');
-
-    this.store
-      .dispatch(new ChangeTaskBasics(taskId, title, task.description ?? ''))
-      .pipe(
-        tap(() => this.setSaveState(taskId, 'saved')),
-        delay(5000)
-      )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
-  }
-
-  addPhase(): void {
-    const obsOrVoid = this.service.action('addSub');
-
-    if (obsOrVoid instanceof Observable) {
-      obsOrVoid.subscribe();
+  addPhase(type: AddPhaseOptions): void {
+    if (type === 'create') {
+      this.addHandler(undefined);
+    } else if (type === 'importFile') {
+      this.importService.importFromFileAsync().subscribe();
+    } else if (type === 'importLibrary') {
+      this.importService.importFromLibraryAsync().subscribe();
     }
   }
 
-  menuItemSelected(item: string): void {
-    const taskId = this.taskId()!;
-    const obsOrVoid = this.service.action(item, taskId);
+  menuItemSelected(action: string, taskId: string): void {
+    const obsOrVoid = this.viewService.action(action, taskId);
 
     if (obsOrVoid instanceof Observable) {
-      this.callSave(taskId, obsOrVoid);
-    }
-  }
-
-  private setSaveState(taskId: string, state: SaveState): void {
-    this.taskSaveStates.get(taskId)?.set(state);
-  }
-
-  private updateState(tasks: WbsNodeView[]): void {
-    for (const task of tasks ?? []) {
-      if (!this.taskSaveStates.has(task.id)) {
-        this.taskSaveStates.set(task.id, signal('ready'));
+      if (taskId && action === 'deleteTask') {
+        this.treeService.callSave(taskId, obsOrVoid, 0).subscribe(() => {
+          if (taskId === this.selectedTaskId()) {
+            this.selectedTaskId.set(undefined);
+          }
+        });
+      } else if (taskId) {
+        this.treeService.callSave(taskId, obsOrVoid).subscribe();
+      } else {
+        obsOrVoid.subscribe();
       }
     }
   }
 
-  private resetTree(): void {
-    this.tree.set(this.getViewModels());
+  addHandler(parent: ProjectTaskViewModel | undefined): void {
+    // Close the current edited row, if any.
+    this.closeEditor();
+    this.editParentId = parent?.id;
+
+    const sender = this.treeList()!;
+    // Expand the parent.
+    if (parent) {
+      sender.expand(parent);
+    }
+
+    // Define all editable fields validators and default values
+    this.editForm = new FormGroup({
+      parentId: new FormControl(parent?.id),
+      title: new FormControl('', Validators.required),
+      disciplines: new FormControl([]),
+    });
+
+    // Show the new row editor, with the `FormGroup` build above
+    sender.addRow(this.editForm, parent);
   }
 
-  private callSave(taskId: string, obs: Observable<any>): void {
-    this.setSaveState(taskId, 'saving');
+  closeEditor(): void {
+    this.treeList()?.closeRow(undefined, true);
+    this.editItem = undefined;
+    this.editForm = undefined;
+    this.editParentId = undefined;
+  }
 
-    obs
-      .pipe(
-        tap(() => this.setSaveState(taskId, 'saved')),
-        delay(5000)
+  saveHandler(): void {
+    const editForm = this.editForm!;
+
+    if (editForm.invalid) return;
+
+    const disciplines: CategoryViewModel[] = editForm.value.disciplines;
+
+    this.treeService
+      .callSave(
+        this.editParentId!,
+        this.taskService
+          .createTask(
+            editForm.value.parentId,
+            editForm.value.title,
+            undefined,
+            disciplines.map((x) => x.id)
+          )
+          .pipe(tap((taskId) => this.closeEditor()))
       )
-      .subscribe(() => this.setSaveState(taskId, 'ready'));
+      .subscribe();
   }
 
-  private getViewModels(): WbsNodeView[] {
-    return structuredClone(this.store.selectSnapshot(TasksState.phases) ?? []);
+  removeHandler(task: ProjectTaskViewModel): void {
+    const taskId = task.id;
+    const sender = this.treeList()!;
+    const parent = task.parentId
+      ? this.projectStore.viewModels()?.find((x) => x.id === task.parentId)
+      : undefined;
+
+    TaskDeleteComponent.launchAsync(this.dialogService).subscribe((reason) => {
+      if (!reason) return;
+
+      this.treeService
+        .callSave(
+          taskId,
+          this.taskService.remove(taskId, reason).pipe(
+            tap(() => {
+              if (parent) sender.reload(parent);
+            }),
+            tap(() => {
+              const selected = this.selectedTaskId();
+
+              if (selected === taskId) {
+                this.selectedTaskId.set(undefined);
+              }
+            })
+          )
+        )
+        .subscribe();
+    });
+  }
+
+  private resetTree(): void {
+    this.projectStore.resetTasks();
   }
 }

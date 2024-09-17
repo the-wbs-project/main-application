@@ -1,0 +1,9 @@
+<div class="w-100">
+  <img id="image" height="600" [src]="sanitizedUrl()" />
+  <div class="crop-actions">
+    <button kendoButton style="margin-right: 1rem" (click)="reset()">
+      Reset
+    </button>
+    <button kendoButton color="primary" (click)="crop()">Ok</button>
+  </div>
+</div>

@@ -4,117 +4,104 @@ import {
   faArrowRight,
   faArrowUp,
   faBookArrowRight,
+  faBooks,
+  faCheck,
   faCopy,
-  faEye,
+  faEclipse,
   faFileImport,
   faPlus,
   faTrash,
-  faUserMinus,
-  faUserPlus,
+  faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
-  ContextMenuItem,
+  ActionContextMenuItem,
   PROJECT_CLAIMS,
   PROJECT_STATI,
 } from '@wbs/core/models';
 
-const taskActions: ContextMenuItem[] = [
-  {
-    action: 'addSub',
-    faIcon: faPlus,
-    text: 'Projects.AddSubTask',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
-    },
-  },
+const taskActions: ActionContextMenuItem[] = [
   {
     action: 'import',
-    faIcon: faFileImport,
-    text: 'General.Import',
+    faIcon: faPlus,
+    resource: 'Wbs.ImportSubTask',
     filters: {
-      stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
+      stati: [PROJECT_STATI.PLANNING],
     },
     items: [
       {
-        action: 'import|above',
-        faIcon: faArrowUp,
-        text: 'General.Above',
+        action: 'import|file',
+        faIcon: faFileImport,
+        resource: 'Wbs.ImportFromFile',
       },
       {
-        action: 'import|right',
-        faIcon: faArrowRight,
-        text: 'General.SubTask',
-      },
-      {
-        action: 'import|below',
-        faIcon: faArrowDown,
-        text: 'General.Below',
+        action: 'import|library',
+        faIcon: faBooks,
+        resource: 'Wbs.ImportFromLibrary',
       },
     ],
   },
   {
-    action: 'viewTask',
-    faIcon: faEye,
-    text: 'Projects.ViewTask',
+    action: 'other',
+    faIcon: faEclipse,
+    resource: 'Wbs.OtherActions',
     filters: {
-      claim: PROJECT_CLAIMS.TASKS.READ,
-    },
-  },
-  {
-    action: 'cloneTask',
-    faIcon: faCopy,
-    text: 'Projects.CloneTask',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
     },
-  },
-  {
-    action: 'addDiscipline',
-    faIcon: faUserPlus,
-    text: 'Wbs.AddDiscipline',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
-    },
-  },
-  {
-    action: 'removeDiscipline',
-    faIcon: faUserMinus,
-    text: 'Wbs.RemoveDiscipline',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
-    },
-  },
-  {
-    action: 'exportTask',
-    faIcon: faBookArrowRight,
-    text: 'Projects.ExportToLibrary',
-    filters: {
-      //stati: [PROJECT_STATI.PLANNING],
-      //excludeFromCat: true,
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
-    },
-  },
-  {
-    action: 'deleteTask',
-    faIcon: faTrash,
-    text: 'Projects.DeleteTask',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.DELETE,
-    },
+    items: [
+      {
+        action: 'cloneTask',
+        faIcon: faCopy,
+        resource: 'Projects.CloneTask',
+        filters: {
+          stati: [PROJECT_STATI.PLANNING],
+          claim: PROJECT_CLAIMS.TASKS.CREATE,
+        },
+      },
+      {
+        action: 'setAbsFlag',
+        faIcon: faCheck,
+        resource: 'Wbs.MarkAsAbs',
+        filters: {
+          stati: [PROJECT_STATI.PLANNING],
+          claim: PROJECT_CLAIMS.TASKS.UPDATE,
+          props: [{ prop: 'absFlag', op: '!=', value: 'set' }],
+        },
+      },
+      {
+        action: 'removeAbsFlag',
+        faIcon: faX,
+        resource: 'Wbs.RemoveAbsFlag',
+        filters: {
+          stati: [PROJECT_STATI.PLANNING],
+          claim: PROJECT_CLAIMS.TASKS.UPDATE,
+          props: [{ prop: 'absFlag', op: '=', value: 'set' }],
+        },
+      },
+      {
+        action: 'exportTask',
+        faIcon: faBookArrowRight,
+        resource: 'Projects.ExportToLibrary',
+        filters: {},
+      },
+      {
+        action: 'deleteTask',
+        faIcon: faTrash,
+        resource: 'Projects.DeleteTask',
+        filters: {
+          stati: [PROJECT_STATI.PLANNING],
+          claim: PROJECT_CLAIMS.TASKS.DELETE,
+        },
+      },
+    ],
   },
 ];
 
-const reorderTaskActions: ContextMenuItem[] = [
+const reorderTaskActions: ActionContextMenuItem[] = [
   {
     action: 'moveLeft',
     faIcon: faArrowLeft,
-    text: 'Projects.MoveLeft',
+    resource: 'Projects.MoveLeft',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -123,7 +110,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveUp',
     faIcon: faArrowUp,
-    text: 'Projects.MoveUp',
+    resource: 'Projects.MoveUp',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -132,7 +119,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveDown',
     faIcon: faArrowDown,
-    text: 'Projects.MoveDown',
+    resource: 'Projects.MoveDown',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,
@@ -141,7 +128,7 @@ const reorderTaskActions: ContextMenuItem[] = [
   {
     action: 'moveRight',
     faIcon: faArrowRight,
-    text: 'Projects.MoveRight',
+    resource: 'Projects.MoveRight',
     filters: {
       stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.UPDATE,

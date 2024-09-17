@@ -1,21 +1,10 @@
-import { NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  OnInit,
-  inject,
-  input,
-  model,
-} from '@angular/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
-import { LibraryListComponent } from '@wbs/components/library/list';
-import { LibraryListFiltersComponent } from '@wbs/components/library/list-filters';
-import { PageHeaderComponent } from '@wbs/components/page-header';
-import { MembershipStore, UserStore } from '@wbs/core/store';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
-import { EntryCreationService } from '../../services';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { LibraryFilterComponent } from '@wbs/components/library/library-filter.component';
+import { LIBRARY_FILTER_LIBRARIES } from '@wbs/core/models';
 import { LibraryCreateButtonComponent } from './components';
+import { LibraryHomeService } from './services';
+import { WbsBootstrapDialogComponent } from './components/test-dialog/test-dialog.component';
 
 @Component({
   standalone: true,
@@ -23,69 +12,31 @@ import { LibraryCreateButtonComponent } from './components';
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     LibraryCreateButtonComponent,
-    LibraryListFiltersComponent,
-    LibraryListComponent,
-    PageHeaderComponent,
+    LibraryFilterComponent,
+    RouterModule,
+    WbsBootstrapDialogComponent,
   ],
-  providers: [EntryCreationService],
 })
-export class LibraryHomeComponent implements OnInit {
-  private readonly store = inject(Store);
-  private readonly profile = inject(UserStore).profile;
-  public readonly creation = inject(EntryCreationService);
+export class LibraryHomeComponent {
+  readonly service = inject(LibraryHomeService);
+  readonly libraries = LIBRARY_FILTER_LIBRARIES;
+  isDialogVisible: boolean = false;
 
-  readonly organization = inject(MembershipStore).organization;
-  readonly searchText = model<string>('');
-  readonly typeFilters = model<string[]>([]);
-  readonly library = model<string>('');
-
-  ngOnInit(): void {
-    this.library.set('personal');
-    this.typeFilters.set([]);
+  openDialog() {
+    this.isDialogVisible = true;
   }
 
-  create(type: string, list: LibraryListComponent): void {
-    this.creation
-      .runAsync(this.organization()!.name, type)
-      .subscribe((results) => {
-        console.log(results);
-        if (results == undefined) return;
-
-        const vm: LibraryEntryViewModel = {
-          authorId: results.entry.author,
-          authorName: this.profile()!.name,
-          entryId: results.entry.id,
-          title: results.version.title,
-          type: results.entry.type,
-          visibility: results.entry.visibility,
-          version: results.version.version,
-          lastModified: results.version.lastModified,
-          description: results.version.description,
-          ownerId: results.entry.owner,
-          ownerName: this.organization()!.display_name,
-          status: results.version.status,
-        };
-        if (results.action === 'close') {
-          list.entryAdded(vm);
-        } else {
-          this.nav(vm, results.action);
-        }
-      });
+  closeDialog() {
+    this.isDialogVisible = false;
   }
 
-  nav(vm: LibraryEntryViewModel | undefined, action?: string): void {
-    if (!vm) return;
+  confirmDialog() {
+    // Handle confirm action
+    this.isDialogVisible = false;
+  }
 
-    this.store.dispatch(
-      new Navigate([
-        '/' + this.organization()!.name,
-        'library',
-        'view',
-        vm.ownerId,
-        vm.entryId,
-        vm.version,
-        ...(action === 'upload' ? [action] : []), // Don't send the view since 'view' should actually go to 'about'
-      ])
-    );
+  cancelDialog() {
+    // Handle cancel action
+    this.isDialogVisible = false;
   }
 }

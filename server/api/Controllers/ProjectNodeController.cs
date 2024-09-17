@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -15,21 +14,15 @@ public class ProjectNodeController : ControllerBase
     private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService nodeDataService;
-    private readonly ProjectNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
-    private readonly ResourceFileStorageService resourceService;
-    private readonly LibrarySearchIndexService searchIndexService;
 
-    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ProjectNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db, LibrarySearchIndexService searchIndexService)
+    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectNodeController>();
         this.nodeDataService = nodeDataService;
         this.projectDataService = projectDataService;
-        this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
-        this.resourceService = resourceService;
         this.db = db;
-        this.searchIndexService = searchIndexService;
     }
 
     [Authorize]
@@ -59,15 +52,15 @@ public class ProjectNodeController : ControllerBase
     {
         try
         {
-            if (record.upserts == null) record.upserts = new ProjectNode[] { };
-            if (record.removeIds == null) record.removeIds = new string[] { };
+            if (record.upserts == null) record.upserts = [];
+            if (record.removeIds == null) record.removeIds = [];
             //
             //  Make sure all records have same project id as provided above
             //
             foreach (var upsert in record.upserts)
             {
                 if (upsert.projectId != projectId)
-                    return BadRequest("All records must have same project id as provided in url");
+                    return BadRequest("All records must have same project id as provided in url.");
             }
 
             using (var conn = await db.CreateConnectionAsync())
@@ -75,7 +68,7 @@ public class ProjectNodeController : ControllerBase
                 if (!await projectDataService.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                await nodeDataService.SetSaveRecordAsync(conn, owner, projectId, record);
+                await nodeDataService.SetAsync(conn, projectId, record.upserts, record.removeIds);
 
                 return NoContent();
             }
@@ -83,31 +76,6 @@ public class ProjectNodeController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error saving project nodes");
-            return new StatusCodeResult(500);
-        }
-    }
-
-
-    [Authorize]
-    [HttpGet("{nodeId}/resources")]
-    public async Task<IActionResult> GetTaskResources(string owner, string projectId, string nodeId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                return Ok(await nodeResourceDataService.GetListAsync(conn, projectId, nodeId));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting project node resources");
             return new StatusCodeResult(500);
         }
     }
@@ -122,102 +90,12 @@ public class ProjectNodeController : ControllerBase
             {
                 var entryId = await importLibraryEntryService.ImportFromProjectNodeAsync(conn, owner, projectId, nodeId, options);
 
-                searchIndexService.AddToLibraryQueue(owner, entryId);
-
                 return Ok(entryId);
             }
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error exporting project node to library entry");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutTaskResource(string owner, string projectId, string nodeId, string resourceId, ResourceRecord resource)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                await nodeResourceDataService.SetAsync(conn, owner, projectId, nodeId, resource);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving project node resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{nodeId}/resources/{resourceId}/file")]
-    public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string projectId, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
-                var file = await resourceService.GetProjectTaskResourceAsync(owner, projectId, nodeId, resourceId);
-
-                return File(file, "application/octet-stream", record.Resource);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}/file")]
-    public async Task<IActionResult> PutTaskResourceFile(string owner, string projectId, string nodeId, string resourceId, IFormFile file)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                if (!await nodeDataService.VerifyAsync(conn, projectId, nodeId))
-                    return BadRequest("Node not found for the project provided.");
-
-                var record = await nodeResourceDataService.GetAsync(conn, projectId, nodeId, resourceId);
-                var bytes = new byte[] { };
-
-                using (var stream = file.OpenReadStream())
-                {
-                    bytes = new byte[stream.Length];
-                    await stream.ReadAsync(bytes, 0, bytes.Length);
-                }
-
-                await resourceService.SaveProjectTaskResourceAsync(owner, projectId, nodeId, resourceId, bytes);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
             return new StatusCodeResult(500);
         }
     }

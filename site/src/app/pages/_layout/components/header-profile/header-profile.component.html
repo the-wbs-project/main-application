@@ -1,0 +1,42 @@
+<div #target class="pointer">
+  <wbs-header-profile-picture [picture]="user().picture" />
+</div>
+<kendo-contextmenu
+  showOn="click"
+  [target]="target"
+  [alignToAnchor]="true"
+  [anchorAlign]="{ horizontal: 'right', vertical: 'bottom' }"
+  (select)="itemClicked($event)"
+>
+  <kendo-menu-item [disabled]="true" cssClass="opacity-1">
+    <ng-template kendoMenuItemTemplate>
+      <wbs-header-profile-header [user]="user()" [roles]="roles() ?? []" />
+    </ng-template>
+  </kendo-menu-item>
+  <kendo-menu-item data="profile">
+    <ng-template kendoMenuItemTemplate>
+      <fa-icon [icon]="faUser" class="mg-r-5" />
+      {{ "Profile.Title" | translate }}
+    </ng-template>
+  </kendo-menu-item>
+  @if (roles() | check : ADMIN_ROLE) {
+  <kendo-menu-item>
+    <ng-template kendoMenuItemTemplate>
+      <fa-icon [icon]="faCogs" class="mg-r-5" />
+      {{ "Profile.AdminTasks" | translate }}
+    </ng-template>
+    <kendo-menu-item data="clearCache">
+      <ng-template kendoMenuItemTemplate>
+        <fa-icon [icon]="faCogs" class="mg-r-5" />
+        Clear KV Cache
+      </ng-template>
+    </kendo-menu-item>
+  </kendo-menu-item>
+  }
+  <kendo-menu-item url="/logout">
+    <ng-template kendoMenuItemTemplate>
+      <fa-icon [icon]="faRightFromBracket" class="mg-r-5" />
+      {{ "General.LogOut" | translate }}
+    </ng-template>
+  </kendo-menu-item>
+</kendo-contextmenu>

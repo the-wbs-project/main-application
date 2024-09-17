@@ -1,0 +1,84 @@
+<kendo-dialog width="80%" minHeight="200px" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Projects.ExportProjectToLibrary" | translate }}
+  </kendo-dialog-titlebar>
+  <div class="w-100">
+    <div class="row mg-b-30">
+      <label
+        [for]="titleInput"
+        class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+      >
+        {{ "General.Title" | translate }}
+      </label>
+      <div class="col-md-10 col-sm-12">
+        <input
+          #titleInput
+          kendoTextBox
+          [(ngModel)]="title"
+          class="form-control"
+          aria-describedby="titleHelp"
+        />
+        <wbs-info-message [message]="titleHint() | translate" />
+      </div>
+    </div>
+    <div class="row mg-b-30">
+      <label
+        [for]="aliasInput"
+        class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+      >
+        {{ "Wbs.VersionAlias" | translate }}
+      </label>
+      <div class="col-md-10 col-sm-12">
+        <input
+          #aliasInput
+          kendoTextBox
+          [(ngModel)]="alias"
+          class="form-control"
+          aria-describedby="titleHelp"
+        />
+      </div>
+    </div>
+    <div class="row mg-b-30">
+      <label class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold">
+        {{ "General.Visibility" | translate }}
+      </label>
+      <div class="col-md-10 col-sm-12">
+        <wbs-visibility-selection [(visibility)]="visibility" />
+      </div>
+    </div>
+    <div class="row">
+      <label
+        [for]="resourceSwitch"
+        class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+      >
+        {{ "LibraryExport.IncludeResources" | translate }}
+      </label>
+      <div class="col-md-10 col-sm-12 pd-t-5">
+        <kendo-switch
+          #resourceSwitch
+          [(ngModel)]="includeResources"
+          aria-describedby="includeResourcesHelp"
+        >
+        </kendo-switch>
+        <div>
+          <wbs-info-message
+            [message]="'LibraryExport.IncludeResourcesHint' | translate"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+  <kendo-dialog-actions>
+    <div class="d-flex justify-content-end gap-10">
+      <button kendoButton themeColor="base" (click)="dialog.close()">
+        {{ "General.Cancel" | translate }}
+      </button>
+      <wbs-save-button
+        themeColor="primary"
+        [disabled]="!isValid()"
+        [isSaving]="saveState.state() === 'saving'"
+        (click)="save()"
+      />
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

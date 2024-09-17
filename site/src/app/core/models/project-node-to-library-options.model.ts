@@ -1,8 +1,7 @@
-import { ProjectCategory } from './project-category.type';
-
 export interface ProjectNodeToLibraryOptions {
   author: string;
   title: string;
+  alias?: string;
   description?: string;
   includeResources: boolean;
   categories?: string[];

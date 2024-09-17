@@ -24,12 +24,12 @@ import {
   InvitationFormComponent,
   InvitationListComponent,
   MemberListComponent,
+  MemberListSwitchComponent,
   MembershipRollupComponent,
   RoleFilterListComponent,
 } from './components';
 import { MemberSettingsService } from './services';
 import { MembersSettingStore } from './store';
-import { MemberListSwitchComponent } from './components/member-list-switch/member-list-switch.component';
 
 @Component({
   standalone: true,
@@ -58,7 +58,7 @@ export class MembersComponent {
   private readonly uiStore = inject(UiStore);
   private readonly profile = inject(UserStore).profile;
 
-  readonly organization = inject(MembershipStore).organization;
+  readonly membership = inject(MembershipStore).membership;
   readonly store = inject(MembersSettingStore);
   readonly roleFilters = signal<string[]>([]);
   readonly view = signal<'members' | 'invites'>('members');
@@ -68,14 +68,14 @@ export class MembersComponent {
   textFilter = '';
 
   constructor() {
-    effect(() => this.store.initialize(this.organization()), {
+    effect(() => this.store.initialize(this.membership()), {
       allowSignalWrites: true,
     });
 
-    this.uiStore.setBreadcrumbs([
+    /* this.uiStore.setBreadcrumbs([
       { text: 'General.Settings' },
       { text: 'General.Members' },
-    ]);
+    ]);*/
     this.title.setTitle([
       { text: 'General.Settings' },
       { text: 'General.Members' },

@@ -7,7 +7,7 @@ import { CategoryViewModel } from '@wbs/core/view-models';
   standalone: true,
   selector: 'wbs-discipline-icon',
   template: `<span class="mg-r-5" kendoTooltip [title]="item().label">
-    <i class="fa-solid fa-sm" [ngClass]="item().icon"></i>
+    <i class="fa-solid" [ngClass]="item().icon"></i>
   </span>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [NgClass, TooltipModule],

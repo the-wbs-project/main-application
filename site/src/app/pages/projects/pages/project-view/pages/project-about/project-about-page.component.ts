@@ -4,33 +4,37 @@ import {
   Component,
   computed,
   inject,
-  input,
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
-import { PROJECT_CLAIMS } from '@wbs/core/models';
-import { AiPromptService, SaveService, SignalStore } from '@wbs/core/services';
-import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog.component';
 import { DescriptionCardComponent } from '@wbs/components/description-card';
 import { DisciplineCardComponent } from '@wbs/components/discipline-card';
+import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
+import {
+  AiPromptService,
+  CategoryService,
+  SaveService,
+  SignalStore,
+} from '@wbs/core/services';
+import { CategorySelection } from '@wbs/core/view-models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
-import { tap } from 'rxjs/operators';
-import { ChangeProjectBasics } from '../../actions';
+import { of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
 import { ApprovalBadgeComponent } from '../../components/approval-badge.component';
-import { ProjectChecklistComponent } from '../../components/project-checklist';
-import {
-  ProjectApprovalState,
-  ProjectChecklistState,
-  ProjectState,
-  TasksState,
-} from '../../states';
 import { ProjectApprovalCardComponent } from './components/project-approval-card';
+import { ProjectChecklistComponent } from '../../components/project-checklist';
+import { ProjectDetailsCardComponent } from './components/project-details-card';
 import { ProjectStatusCardComponent } from './components/project-status-card';
+import { ProjectService, ProjectTaskService } from '../../services';
+import { ProjectChecklistState } from '../../states';
+import { ProjectStore } from '../../stores';
+import { ProjectResourceCardComponent } from './components/resource-card';
+import { ProjectContributorCardComponent } from './components/contributor-card';
 
 @Component({
   standalone: true,
@@ -47,6 +51,9 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
     NgClass,
     ProjectApprovalCardComponent,
     ProjectChecklistComponent,
+    ProjectContributorCardComponent,
+    ProjectDetailsCardComponent,
+    ProjectResourceCardComponent,
     ProjectStatusCardComponent,
     ResizedCssDirective,
     RoleListPipe,
@@ -56,42 +63,66 @@ import { ProjectStatusCardComponent } from './components/project-status-card';
   providers: [AiPromptService],
 })
 export class ProjectAboutComponent {
+  private readonly category = inject(CategoryService);
+  private readonly projectService = inject(ProjectService);
+  private readonly taskService = inject(ProjectTaskService);
   private readonly prompt = inject(AiPromptService);
   private readonly store = inject(SignalStore);
-
-  readonly claims = input.required<string[]>();
-
+  //
+  //  Public Services
+  //
+  readonly projectStore = inject(ProjectStore);
+  readonly disciplineSave = new SaveService();
+  readonly descriptionSave = new SaveService();
+  //
+  //  Public Models & Siganls
+  //
   readonly askAi = model(false);
   readonly descriptionEditMode = model(false);
-  readonly descriptionSave = new SaveService();
-  readonly descriptionAiStartingDialog = computed(() =>
-    this.prompt.projectDescription(this.project(), this.tasks())
-  );
-  readonly project = this.store.select(ProjectState.current);
-  readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
-  readonly tasks = this.store.select(TasksState.phases);
-  readonly taskCount = this.store.select(TasksState.taskCount);
-  readonly users = this.store.select(ProjectState.users);
   readonly checklist = this.store.select(ProjectChecklistState.results);
-  readonly approvalStats = this.store.select(ProjectApprovalState.stats);
-  readonly approvals = this.store.select(ProjectApprovalState.list);
-
-  readonly UPDATE_CLAIM = PROJECT_CLAIMS.UPDATE;
+  //readonly approvalEnabled = this.store.select(ProjectApprovalState.enabled);
+  //readonly approvalStats = this.store.select(ProjectApprovalState.stats);
+  //readonly approvals = this.store.select(ProjectApprovalState.list);
+  //
+  //  Computed
+  //
+  readonly descriptionAiStartingDialog = computed(() =>
+    this.prompt.projectDescription(
+      this.projectStore.project(),
+      this.projectStore.viewModels()
+    )
+  );
+  readonly taskCount = computed(
+    () => this.projectStore.viewModels()?.length ?? 0
+  );
+  readonly editDisciplines = computed(() =>
+    this.category.buildDisciplines(this.projectStore.project()?.disciplines)
+  );
 
   descriptionChange(description: string): void {
-    const project = this.project()!;
+    this.projectService
+      .changeProjectDescription(description)
+      .pipe(tap(() => this.descriptionEditMode.set(false)))
+      .subscribe();
+  }
 
-    this.descriptionSave
-      .call(
-        this.store
-          .dispatch(
-            new ChangeProjectBasics(
-              project.title,
-              description,
-              project.category
-            )
-          )
-          .pipe(tap(() => this.descriptionEditMode.set(false)))
+  saveDisciplines(disciplines: CategorySelection[]): void {
+    const project = this.projectStore.project()!;
+    const disciplinesResults = this.category.extract(
+      disciplines,
+      project.disciplines ?? []
+    );
+
+    this.disciplineSave
+      .call(this.projectService.changeProjectDisciplines(disciplinesResults))
+      .pipe(
+        switchMap(() =>
+          disciplinesResults.removedIds.length === 0
+            ? of('')
+            : this.taskService.removeDisciplinesFromTasks(
+                disciplinesResults.removedIds
+              )
+        )
       )
       .subscribe();
   }

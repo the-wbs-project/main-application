@@ -1,7 +1,6 @@
-import { Activity } from '../models';
+import { Activity } from '../models/activity.model';
+import { UserViewModel } from './user.view-model';
 
 export interface ActivityViewModel extends Activity {
-  actionIcon?: string;
-  actionTitle?: string;
-  actionDescription?: string;
+  user?: UserViewModel;
 }

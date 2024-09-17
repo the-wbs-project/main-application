@@ -2,47 +2,35 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  input,
   signal,
 } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { SignalStore, WbsPhaseService } from '@wbs/core/services';
-import { ProjectState } from '../../states';
+import { TranslateModule } from '@ngx-translate/core';
+import { DialogModule } from '@progress/kendo-angular-dialog';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
+import { WbsPhaseService } from '@wbs/core/services';
 import { ProjectDisciplinesTreeComponent } from './components/discipline-tree';
 import { ProjectPhaseTreeComponent } from './components/phase-tree';
-import { TreeTypeButtonComponent } from './components/tree-type-button/tree-type-button.component';
+import { ProjectStore } from '../../stores';
 
 @Component({
   standalone: true,
+  templateUrl: './tasks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [WbsPhaseService],
   imports: [
+    DialogModule,
+    HeightDirective,
     ProjectDisciplinesTreeComponent,
     ProjectPhaseTreeComponent,
-    RouterModule,
-    TreeTypeButtonComponent,
+    TranslateModule,
   ],
-  template: `<div class="w-100 tx-center pd-t-15">
-      <wbs-tree-type-button [(view)]="view" />
-    </div>
-    <div class="pd-15">
-      @if (view() === 'phases') {
-      <wbs-project-phase-tree
-        [claims]="claims()"
-        [project]="project()!"
-        [projectUrl]="projectUrl()"
-      />
-      } @else if (view() === 'disciplines') {
-      <wbs-project-discipline-tree [project]="project()!" />
-      }
-    </div>
-    <router-outlet />`,
 })
 export class ProjectTasksComponent {
-  private readonly store = inject(SignalStore);
+  readonly projectStore = inject(ProjectStore);
 
-  readonly claims = input.required<string[]>();
-  readonly projectUrl = input.required<string[]>();
+  readonly showDialog = signal(false);
+  readonly containerHeight = signal(100);
+  readonly dialogContainerHeight = signal(100);
   readonly view = signal<'phases' | 'disciplines'>('phases');
-  readonly project = this.store.select(ProjectState.current);
+  readonly wbsAbs = signal<'wbs' | 'abs'>('wbs');
 }

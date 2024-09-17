@@ -2,65 +2,34 @@
   #anchor
   kendoButton
   themeColor="base"
-  rounded="small"
   size="small"
-  class="mg-y-4"
-  (click)="toggle()"
+  [rounded]="rounded()"
+  [ngClass]="buttonClass()"
 >
-  <fa-icon [icon]="faBoltLightning" class="mg-r-5" />
-  {{ "General.Actions" | translate }}
+  @if (customContent()) {
+  <ng-content />
+  } @else {
+  <fa-icon [icon]="menuIcon" />
+  }
 </button>
-@if (show()) {
-<kendo-popup
-  #popup
-  [anchor]="anchor"
-  (anchorViewportLeave)="toggle()"
-  [anchorAlign]="{ horizontal: 'right', vertical: 'bottom' }"
-  [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
+<kendo-contextmenu
+  showOn="click"
+  [alignToAnchor]="true"
+  [anchorAlign]="{ horizontal: 'left', vertical: 'bottom' }"
+  [target]="anchor"
+  [items]="menu() ?? []"
+  (select)="selected($event.item)"
 >
-  <div class="wd-200">
-    <ul
-      role="menu"
-      aria-orientation="vertical"
-      class="k-context-menu k-menu-group k-menu-group-md"
-    >
-      @for (item of menu(); track index; let index = $index) { @if
-      (item.separator) {
-      <li aria-hidden="true" class="k-separator k-item mg-y-2-f">&nbsp;</li>
-      } @else if (item.route) {
-      <li
-        tabindex="-1"
-        role="menuitem"
-        class="k-item k-menu-item tx-12-f"
-        [class.k-last]="menu.length === index + 1"
-        [attr.aria-label]="item.text! | translate"
-        (click)="goto(item.route!)"
-      >
-        <span role="presentation" class="k-link k-menu-link">
-          <div class="d-inline-block wd-20 text-center">
-            <fa-icon [icon]="item.icon!" />
-          </div>
-          {{ item.text! | translate }}
-        </span>
-      </li>
-      } @else {
-      <li
-        tabindex="-1"
-        role="menuitem"
-        class="k-item k-menu-item tx-12-f"
-        [class.k-last]="menu.length === index + 1"
-        [attr.aria-label]="item.text! | translate"
-        (click)="itemClicked.emit(item.action!)"
-      >
-        <span role="presentation" class="k-link k-menu-link">
-          <div class="d-inline-block wd-20 text-center">
-            <fa-icon [icon]="item.icon!" />
-          </div>
-          {{ item.text! | translate }}
-        </span>
-      </li>
-      } }
-    </ul>
-  </div>
-</kendo-popup>
-}
+  <ng-template kendoMenuItemTemplate let-item="item">
+    <div class="d-flex tx-14" style="margin-left: -5px">
+      @if (item.faIcon) {
+      <div class="wd-30 text-center">
+        <fa-icon [icon]="item.faIcon" />
+      </div>
+      } @else if (item.iconSpacer) {
+      <div class="wd-30">&nbsp;</div>
+      } @if (item.text) { {{ item.text }} } @else if (item.resource) {
+      {{ item.resource | translate }} }
+    </div>
+  </ng-template>
+</kendo-contextmenu>

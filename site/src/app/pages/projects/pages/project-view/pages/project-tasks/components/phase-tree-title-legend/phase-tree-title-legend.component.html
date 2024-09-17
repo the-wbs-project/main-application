@@ -1,0 +1,28 @@
+<a kendoPopoverAnchor [popover]="popover" showOn="hover">
+  <fa-duotone-icon [icon]="infoIcon" />
+</a>
+<kendo-popover #popover position="bottom" [width]="500">
+  <ng-template kendoPopoverTitleTemplate>
+    <div class="tx-14">
+      {{ "General.Legend" | translate }}
+    </div>
+  </ng-template>
+  <ng-template kendoPopoverBodyTemplate>
+    <div class="mg-t-20 tx-12">
+      @if (canEdit()) {
+      <div class="mb-4">
+        <span class="d-inline-block wd-50 text-center">
+          <fa-icon [icon]="editIcon" />
+        </span>
+        {{ "Projects.TaskLegend_Title" | translate }}
+      </div>
+      }
+      <div class="mb-4">
+        <span class="d-inline-block wd-50 text-center">
+          <fa-icon [icon]="menuIcon" />
+        </span>
+        {{ "Projects.TaskLegend_Menu" | translate }}
+      </div>
+    </div>
+  </ng-template>
+</kendo-popover>

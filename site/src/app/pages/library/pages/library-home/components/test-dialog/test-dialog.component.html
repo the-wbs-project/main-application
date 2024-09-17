@@ -1,0 +1,43 @@
+<div
+  class="modal fade"
+  tabindex="-1"
+  [ngClass]="{ 'show d-block': isVisible }"
+  [style.display]="isVisible ? 'block' : 'none'"
+  role="dialog"
+>
+  <div class="modal-dialog" [ngClass]="'modal-' + size" role="document">
+    <div class="modal-content bg-white">
+      <div class="modal-header d-flex pd-y-0 bg-gray-200">
+        <h5 class="modal-title">{{ title }}</h5>
+        @if (showClose) {
+        <div class="flex-fill text-end">
+          <button
+            kendoButton
+            fillMode="flat"
+            type="button"
+            class="close"
+            aria-label="Close"
+            (click)="onClose()"
+          >
+            <fa-icon [icon]="closeIcon" class="tx-14" />
+          </button>
+        </div>
+        }
+      </div>
+      <div class="modal-body">
+        <ng-content></ng-content>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="onCancel()">
+          Cancel
+        </button>
+        <button type="button" class="btn btn-primary" (click)="onConfirm()">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+@if (isVisible) {
+<div class="modal-backdrop fade show"></div>
+}

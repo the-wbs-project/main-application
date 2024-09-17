@@ -12,8 +12,8 @@ import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import {
   faFloppyDisk,
   faInfo,
-  faLock,
   faPeople,
+  faWrench,
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
@@ -31,14 +31,14 @@ import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
-import {
-  LibraryEntryNode,
-  LibraryEntryVersion,
-  Member,
-} from '@wbs/core/models';
+import { LibraryEntryNode } from '@wbs/core/models';
 import { CategoryService, IdService } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
-import { CategorySelection } from '@wbs/core/view-models';
+import {
+  CategorySelection,
+  LibraryVersionViewModel,
+  UserViewModel,
+} from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -77,11 +77,11 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly view = model<number>(0);
   readonly newId = IdService.generate();
   readonly owner = signal<string | undefined>(undefined);
-  readonly version = signal<LibraryEntryVersion | undefined>(undefined);
-  readonly members = signal<Member[]>([]);
-  readonly approverIds = signal<string[]>([]);
-  readonly pmIds = signal<string[]>([]);
-  readonly smeIds = signal<string[]>([]);
+  readonly version = signal<LibraryVersionViewModel | undefined>(undefined);
+  readonly members = signal<UserViewModel[]>([]);
+  readonly approvers = signal<UserViewModel[]>([]);
+  readonly pms = signal<UserViewModel[]>([]);
+  readonly smes = signal<UserViewModel[]>([]);
   readonly categories = this.metadata.categories.projectCategories;
   readonly tasks = signal<LibraryEntryNode[]>([]);
   readonly projectTitle = model<string>('');
@@ -93,8 +93,8 @@ export class ProjectCreationComponent extends DialogContentBase {
   );
   steps = [
     { label: 'LibraryCreate.Step_Title', icon: faInfo },
-    { label: 'General.Disciplines', icon: faPeople },
-    { label: 'General.Roles', icon: faLock },
+    { label: 'General.Disciplines', icon: faWrench },
+    { label: 'General.Roles', icon: faPeople },
     { label: 'LibraryCreate.Step_Review', icon: faFloppyDisk },
   ];
 
@@ -112,7 +112,7 @@ export class ProjectCreationComponent extends DialogContentBase {
   static launchAsync(
     dialog: DialogService,
     org: string,
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
   ): Observable<any | undefined> {
     const ref = dialog.open({
@@ -129,13 +129,13 @@ export class ProjectCreationComponent extends DialogContentBase {
 
   setup(
     org: string,
-    version: LibraryEntryVersion,
+    version: LibraryVersionViewModel,
     tasks: LibraryEntryNode[]
   ): void {
     this.data.memberships.getMembershipUsersAsync(org).subscribe((members) => {
       this.members.set(members);
       this.tasks.set(tasks);
-      this.pmIds.set([this.userId()!]);
+      this.pms.set([members.find((x) => x.userId === this.userId())!]);
       this.owner.set(org);
       this.version.set(version);
       this.projectTitle.set(version.title);

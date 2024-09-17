@@ -1,0 +1,39 @@
+<div class="card-header tx-16">
+  <div class="d-flex flex-align-center">
+    <div>{{ "General.Contributors" | translate }}</div>
+    @if (store.canEditEntry()) {
+    <div class="flex-fill tx-right">
+      <button
+        kendoButton
+        size="small"
+        fillMode="flat"
+        class="p-0"
+        (click)="launchEdit()"
+      >
+        <fa-icon [icon]="editIcon" />
+      </button>
+    </div>
+    }
+  </div>
+</div>
+<div class="card-body d-flex flex-row flex-wrap gap-20">
+  <div class="card border text-start">
+    <wbs-user-info
+      [user]="store.version()!.author"
+      [secondaryTitle]="'General.Author' | translate"
+    />
+  </div>
+  @for (contributor of contributors(); track contributor.userId) {
+  <div class="card border text-start">
+    <div class="card-header bg-light-blue-f">
+      {{ "General.Contributor" | translate }}
+    </div>
+    <div class="card-body">
+      <wbs-user-info
+        [user]="contributor"
+        [secondaryTitle]="'General.Contributor' | translate"
+      />
+    </div>
+  </div>
+  }
+</div>

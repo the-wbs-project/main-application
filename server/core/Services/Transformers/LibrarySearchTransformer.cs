@@ -2,58 +2,37 @@
 using Auth0.ManagementApi.Models;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
-using Wbs.Core.ViewModels;
 
 namespace Wbs.Core.Services.Transformers;
 
 public static class LibrarySearchTransformer
 {
     public static LibrarySearchDocument CreateDocument(
-        LibraryEntryViewModel entry,
+        LibraryEntry entry,
+        LibraryEntryVersion version,
         Organization owner,
         string typeName,
-        IEnumerable<string> watcherIds,
-        IEnumerable<LibraryEntryNode> entryTasks,
-        IEnumerable<string> disciplines,
-        Dictionary<string, UserDocument> users)
+        string authorName,
+        IEnumerable<string> disciplines)
     {
         var doc = new LibrarySearchDocument
         {
-            EntryId = entry.EntryId,
-            Version = entry.Version,
+            EntryId = entry.Id,
+            RecordId = entry.RecordId,
+            Version = version.Version,
             OwnerId = entry.OwnerId,
             OwnerName = owner.DisplayName,
-            Title_En = entry.Title,
-            Description_En = entry.Description,
+            Title = version.Title,
             TypeId = entry.Type,
             TypeName = typeName,
-            LastModified = entry.LastModified,
-            StatusId = entry.Status,
-            Visibility = entry.Visibility,
+            LastModified = version.LastModified,
+            StatusId = version.Status,
             Disciplines_En = disciplines.ToArray(),
-            //
-            //  Users
-            //
-            Author = users.ContainsKey(entry.AuthorId) ? new SortableUserDocument(users[entry.AuthorId]) : null,
-            Watchers = watcherIds
-                .Where(x => users.ContainsKey(x))
-                .Select(x => users[x])
-                .ToArray(),
+            AuthorId = version.Author,
+            AuthorName = authorName,
+            VersionAlias = version.VersionAlias,
+            Visibility = entry.Visibility
         };
-
-        var tasks = new List<TaskSearchDocument>();
-
-        foreach (var entryTask in entryTasks)
-        {
-            tasks.Add(new TaskSearchDocument
-            {
-                TaskId = entryTask.id,
-                Title_En = entryTask.title,
-                Description_En = entryTask.description,
-            });
-        }
-
-        doc.Tasks = tasks.ToArray();
 
         return doc;
     }

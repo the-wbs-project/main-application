@@ -1,21 +1,17 @@
+import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  ElementRef,
-  HostListener,
   inject,
   input,
   output,
-  signal,
-  viewChild,
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faBoltLightning } from '@fortawesome/pro-solid-svg-icons';
+import { faBars } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { PopupModule } from '@progress/kendo-angular-popup';
+import { ButtonModule, ButtonRounded } from '@progress/kendo-angular-buttons';
+import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ActionButtonMenuItem } from '@wbs/core/models';
 
 @Component({
@@ -23,48 +19,29 @@ import { ActionButtonMenuItem } from '@wbs/core/models';
   selector: 'wbs-action-button',
   templateUrl: './action-button.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [ButtonModule, FontAwesomeModule, PopupModule, TranslateModule],
+  imports: [
+    ButtonModule,
+    ContextMenuModule,
+    NgClass,
+    FontAwesomeModule,
+    TranslateModule,
+  ],
 })
 export class ActionButtonComponent {
-  private readonly store = inject(Store);
+  private readonly router = inject(Router);
 
-  readonly popup = viewChild<ElementRef>('popup');
-  readonly anchor = viewChild<ElementRef>('anchor');
-  readonly itemClicked = output<string>();
-  readonly show = signal(false);
-
+  readonly menuIcon = faBars;
+  readonly customContent = input(false);
+  readonly rounded = input<ButtonRounded>('none');
+  readonly buttonClass = input<string>();
   readonly menu = input.required<ActionButtonMenuItem[] | undefined>();
-  readonly faBoltLightning = faBoltLightning;
+  readonly itemClicked = output<string>();
 
-  @HostListener('document:keydown', ['$event'])
-  public keydown(event: KeyboardEvent): void {
-    if (event.code === 'Escape') {
-      this.toggle(false);
+  selected(item: ActionButtonMenuItem): void {
+    if (item.route) {
+      this.router.navigate(item.route);
+    } else if (item.action) {
+      this.itemClicked.emit(item.action);
     }
-  }
-
-  @HostListener('document:click', ['$event'])
-  public documentClick(event: KeyboardEvent): void {
-    if (!this.contains(event.target)) {
-      this.toggle(false);
-    }
-  }
-
-  toggle(show: boolean = !this.show()): void {
-    this.show.set(show);
-  }
-
-  goto(route: string[]): void {
-    this.store.dispatch(new Navigate(route));
-  }
-
-  private contains(target: EventTarget | null): boolean {
-    const anchor = this.anchor()?.nativeElement;
-
-    if (anchor && anchor.contains(target)) return true;
-
-    const popup = this.popup()?.nativeElement;
-
-    return popup && popup.contains(target);
   }
 }

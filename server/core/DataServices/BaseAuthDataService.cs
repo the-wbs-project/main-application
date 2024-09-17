@@ -5,12 +5,12 @@ using System.Text;
 using System.Text.Json;
 using Wbs.Core.Configuration;
 
-namespace Wbs.Core.Services;
+namespace Wbs.Core.DataServices;
 
 public abstract class BaseAuthDataService
 {
-    protected string mgmtToken;
-    protected DateTime? expiration;
+    private string mgmtToken;
+    private DateTime? expiration;
     protected ManagementApiClient client;
     protected readonly IAuth0Config config;
     private readonly ILogger logger;
@@ -27,20 +27,31 @@ public abstract class BaseAuthDataService
 
         if (client == null)
         {
-            var token = await PullManagementTokenAsync();
+            var token = await GetToken();
 
-            mgmtToken = token.access_token;
-            expiration = DateTime.Now.AddMinutes(30);
-
-            client = new ManagementApiClient(mgmtToken, new Uri($"https://{config.Domain}/api/v2"));
+            client = new ManagementApiClient(token, new Uri($"https://{config.Domain}/api/v2"));
         }
 
         return client;
     }
 
+    protected async Task<string> GetToken()
+    {
+        VerifyToken();
+
+        if (mgmtToken != null) return mgmtToken;
+
+        var token = await PullManagementTokenAsync();
+        mgmtToken = token.access_token;
+        expiration = DateTime.Now.AddMinutes(15);
+
+        return mgmtToken;
+    }
+
     private void VerifyToken()
     {
         if (expiration == null) return;
+        if (expiration > DateTime.Now) return;
         if (expiration < DateTime.Now)
         {
             client = null;

@@ -20,27 +20,11 @@
         {{ "General.Email" | translate }} &nbsp;
         <wbs-sort-arrow [sort]="sort()" field="email" />
       </th>
-      <th
-        scope="col"
-        class="pointer"
-        [sortable]="'loginCount'"
-        [(sortColumns)]="sort"
-      >
-        {{ "OrgSettings.LoginCount" | translate }}
-      </th>
-      <th
-        scope="col"
-        class="pointer"
-        [sortable]="'lastLogin'"
-        [(sortColumns)]="sort"
-      >
-        {{ "OrgSettings.LastLogin" | translate }}
-      </th>
       <th scope="col">{{ "General.Roles" | translate }}</th>
     </tr>
   </thead>
   <tbody>
-    @for (member of data() ; track member.id) {
+    @for (member of data() ; track member.userId) {
     <tr>
       <td>
         <wbs-action-icon-list
@@ -51,10 +35,8 @@
           (itemClicked)="userActionClicked(member, $event)"
         />
       </td>
-      <td>{{ member.name }}</td>
+      <td>{{ member.fullName }}</td>
       <td class="d-none d-lg-table-cell">{{ member.email }}</td>
-      <td>{{ member.loginCount }}</td>
-      <td>{{ member.lastLogin | dateText }}</td>
       <td>{{ member.roles | roleList : true }}</td>
     </tr>
     }

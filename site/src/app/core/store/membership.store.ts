@@ -1,26 +1,22 @@
-import { Injectable, Signal, computed, signal } from '@angular/core';
-import { Organization } from '@wbs/core/models';
+import { Injectable, Signal, computed, inject, signal } from '@angular/core';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import { Organization, Role } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
+import { Observable, map, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MembershipStore {
-  private readonly _orgs = signal<Organization[] | undefined>(undefined);
-  private readonly _org = signal<Organization | undefined>(undefined);
-  private readonly _list = signal<Record<string, string[]> | undefined>(
-    undefined
-  );
+  private readonly data = inject(DataServiceFactory);
+  private readonly _memberships = signal<Organization[] | undefined>(undefined);
+  private readonly _membership = signal<Organization | undefined>(undefined);
   private readonly _roles = signal<string[] | undefined>(undefined);
 
-  get organization(): Signal<Organization | undefined> {
-    return this._org;
+  get membership(): Signal<Organization | undefined> {
+    return this._membership;
   }
 
-  get organizations(): Signal<Organization[] | undefined> {
-    return this._orgs;
-  }
-
-  get orgRoleList(): Signal<Record<string, string[]> | undefined> {
-    return this._list;
+  get memberships(): Signal<Organization[] | undefined> {
+    return this._memberships;
   }
 
   get roles(): Signal<string[] | undefined> {
@@ -29,27 +25,27 @@ export class MembershipStore {
 
   get projectApprovalRequired(): Signal<boolean> {
     return computed(
-      () => this.organization()?.metadata.projectApprovalRequired ?? false
+      () => this.membership()?.metadata?.projectApprovalRequired ?? false
     );
   }
 
-  initialize(
-    organizations: Organization[],
-    orgList: Record<string, string[]>
-  ): void {
-    for (const org of organizations)
-      if (org.metadata == undefined) org.metadata = {};
-      else if (typeof org.metadata.projectApprovalRequired === 'string') {
-        org.metadata.projectApprovalRequired =
-          org.metadata.projectApprovalRequired === 'true';
-      }
+  initializeAsync(): Observable<any> {
+    if ((this.memberships() ?? []).length > 0) return of('nothing');
 
-    this._orgs.set(organizations.sort((a, b) => sorter(a.name, b.name)));
-    this._list.set(orgList);
+    return this.data.memberships.getMembershipsAsync().pipe(
+      map((memberships) => {
+        this._memberships.set(
+          memberships.sort((a, b) => sorter(a.name, b.name))
+        );
+      })
+    );
   }
 
-  setOrganization(org: Organization): void {
-    this._org.set(org);
-    this._roles.set(this._list()![org.name]);
+  setMembership(membership: Organization): void {
+    this._membership.set(membership);
+  }
+
+  setRoles(roles: Role[]): void {
+    this._roles.set(roles.map((r) => r.name));
   }
 }

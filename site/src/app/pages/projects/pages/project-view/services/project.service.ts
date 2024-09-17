@@ -1,33 +1,58 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Store } from '@ngxs/store';
-import { AppConfiguration, ProjectNode } from '@wbs/core/models';
-import { IdService, Utils } from '@wbs/core/services';
+import { DataServiceFactory } from '@wbs/core/data-services';
+import {
+  PROJECT_STATI,
+  PROJECT_STATI_TYPE,
+  ProjectCategoryChanges,
+  ProjectNode,
+} from '@wbs/core/models';
+import { Transformers, Utils } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { WbsNodeView } from '@wbs/core/view-models';
+import {
+  ProjectViewModel,
+  TaskViewModel,
+  UserViewModel,
+} from '@wbs/core/view-models';
+import { Observable, of } from 'rxjs';
+import { switchMap, tap } from 'rxjs/operators';
+import { ProjectActivityService } from '../../../services';
+import { SetChecklistData } from '../actions';
+import { ProjectStore } from '../stores';
+import { ProjectTaskService } from './project-task.service';
 
 @Injectable()
 export class ProjectService {
+  private readonly activity = inject(ProjectActivityService);
+  private readonly data = inject(DataServiceFactory);
   private readonly metadata = inject(MetadataStore);
+  protected readonly projectStore = inject(ProjectStore);
   protected readonly store = inject(Store);
+  protected readonly taskService = inject(ProjectTaskService);
+  protected readonly transformers = inject(Transformers);
 
-  static getProjectUrl(route: ActivatedRouteSnapshot): string[] {
-    return [
-      '/',
-      Utils.getParam(route, 'org'),
-      'projects',
-      'view',
-      Utils.getParam(route, 'projectId'),
-    ];
+  static getProjectUrl(route: ProjectViewModel): string[];
+  static getProjectUrl(route: ActivatedRouteSnapshot): string[];
+  static getProjectUrl(
+    item: ActivatedRouteSnapshot | ProjectViewModel
+  ): string[] {
+    if (item instanceof ActivatedRouteSnapshot) {
+      return [
+        '/',
+        Utils.getParam(item, 'org'),
+        'projects',
+        'view',
+        Utils.getParam(item, 'projectId'),
+      ];
+    } else {
+      return ['/', item.owner, 'projects', 'view', item.id];
+    }
   }
 
-  static getProjectApiUrl(
-    appConfig: AppConfiguration,
-    route: ActivatedRouteSnapshot
-  ): string {
+  static getProjectApiUrl(route: ActivatedRouteSnapshot): string {
     return [
-      appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       Utils.getParam(route, 'org'),
       'projects',
@@ -43,13 +68,9 @@ export class ProjectService {
     ];
   }
 
-  static getTaskApiUrl(
-    appConfig: AppConfiguration,
-    route: ActivatedRouteSnapshot
-  ): string {
+  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
     return [
-      appConfig.api_domain,
-      'api',
+      '/api',
       'portfolio',
       Utils.getParam(route, 'org'),
       'projects',
@@ -72,29 +93,167 @@ export class ProjectService {
     return useAbbreviations ? definition.abbreviation : definition.description;
   }
 
-  getPhaseIds(nodes: ProjectNode[] | WbsNodeView[]): string[] {
+  getPhaseIds(nodes: ProjectNode[] | TaskViewModel[]): string[] {
     return nodes.filter((x) => x.parentId == null).map((x) => x.id);
   }
 
-  createTask(
-    projectId: string,
-    parentId: string | undefined,
-    model: Partial<ProjectNode>,
-    nodes: ProjectNode[]
-  ): ProjectNode {
-    const ts = new Date();
-    const siblings = nodes?.filter((x) => x.parentId == parentId) ?? [];
-    let order =
-      siblings.length === 0 ? 1 : Math.max(...siblings.map((x) => x.order)) + 1;
+  changeTitle(title: string): Observable<void> {
+    const project = this.projectStore.project()!;
+    const from = project.title;
 
-    return <ProjectNode>{
-      ...model,
-      id: IdService.generate(),
-      parentId,
-      projectId,
-      order,
-      createdOn: ts,
-      lastModified: ts,
-    };
+    project.title = title;
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.changeProjectTitle(project.owner, project.id, from, title)
+      )
+    );
+  }
+
+  changeProjectDescription(description: string): Observable<void> {
+    const project = this.projectStore.project()!;
+    const from = project.description;
+
+    project.description = description;
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.changeProjectDescription(
+          project.owner,
+          project.id,
+          from,
+          description
+        )
+      )
+    );
+  }
+
+  changeProjectCategory(category: string): Observable<void> {
+    const project = this.projectStore.project()!;
+    const from = project.category;
+
+    project.category = category;
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.changeProjectCategory(
+          project.owner,
+          project.id,
+          from,
+          category
+        )
+      )
+    );
+  }
+
+  changeProjectStatus(status: PROJECT_STATI_TYPE): Observable<void> {
+    const project = this.projectStore.project()!;
+    const original = project.status;
+
+    project.status = status;
+
+    if (status === PROJECT_STATI.APPROVAL) {
+      //
+      //  If the status is approval, set to true.  If its not true leave it alone (don't set to false).
+      //
+      project.approvalStarted = true;
+    }
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.changeProjectStatus(
+          project.owner,
+          project.id,
+          original,
+          status
+        )
+      )
+    );
+  }
+
+  cancelProject(): Observable<void> {
+    const project = this.projectStore.project()!;
+
+    project.status = PROJECT_STATI.CANCELLED;
+
+    return this.data.projects
+      .deleteProjectAsync(project.owner, project.id)
+      .pipe(
+        tap(() => this.projectStore.setProject(project)),
+        switchMap(() => this.activity.cancelProject(project.owner, project.id))
+      );
+  }
+
+  changeProjectDisciplines(changes: ProjectCategoryChanges): Observable<void> {
+    const project = this.projectStore.project()!;
+    const original = [...project.disciplines];
+
+    project.disciplines = changes.categories;
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.changeProjectDisciplines(
+          project.owner,
+          project.id,
+          original.map((x) => x.id),
+          project.disciplines.map((x) => x.id)
+        )
+      ),
+      tap(() =>
+        changes.removedIds.length == 0
+          ? of('')
+          : this.taskService.removeDisciplinesFromTasks(changes.removedIds)
+      )
+    );
+  }
+
+  addUserToRole(role: string, user: UserViewModel): Observable<void> {
+    const project = this.projectStore.project()!;
+
+    project.roles.push({ role, user });
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.addUserToRole(
+          project.owner,
+          project.id,
+          user,
+          this.getRoleTitle(role, false)
+        )
+      )
+    );
+  }
+
+  removeUserFromRole(role: string, user: UserViewModel): Observable<unknown> {
+    const project = this.projectStore.project()!;
+    const index = project.roles.findIndex(
+      (x) => x.role === role && x.user.userId === user.userId
+    );
+
+    if (index === -1) return of('');
+
+    project.roles.splice(index, 1);
+
+    return this.saveProject(project).pipe(
+      switchMap(() =>
+        this.activity.removeUserToRole(
+          project.owner,
+          project.id,
+          user,
+          this.getRoleTitle(role, false)
+        )
+      )
+    );
+  }
+
+  private saveProject(project: ProjectViewModel): Observable<void> {
+    const model = this.transformers.projects.toModel(project);
+
+    return this.data.projects.putProjectAsync(model).pipe(
+      tap(() => this.projectStore.markProject(project)),
+      tap(() =>
+        this.store.dispatch(new SetChecklistData(project, undefined, undefined))
+      )
+    );
   }
 }

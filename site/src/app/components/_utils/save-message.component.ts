@@ -29,9 +29,9 @@ import { SaveState } from '@wbs/core/models';
     [@fade]="show() ? 'in' : 'out'"
   >
     @if (showSaving()) {
-    <fa-duotone-icon [icon]="spinnerIcon" class="mg-r-5" [spin]="true" />
+    <fa-duotone-icon [icon]="spinnerIcon" class="mg-r-5" animation="spin" />
     {{ 'General.Saving' | translate }}
-    } @else {
+    } @else if (showSaved()) {
     <fa-icon [icon]="checkIcon" class="mg-r-5" />
     {{ 'General.Saved' | translate }}
     }

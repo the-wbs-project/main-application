@@ -5,15 +5,30 @@ namespace Wbs.Core.DataServices;
 
 public class ProjectSnapshotDataService : BaseSqlDbService
 {
-    public async Task SetAsync(SqlConnection conn, string activityId, Project project, ProjectNode[] nodes)
+    private readonly ProjectDataService projectDataService;
+    private readonly ProjectNodeDataService projectNodeDataService;
+
+    public ProjectSnapshotDataService(ProjectDataService projectDataService, ProjectNodeDataService projectNodeDataService)
     {
-        var cmd = new SqlCommand("INSERT INTO [dbo].[ProjectSnapshots] ([ActivityId], [ProjectId], [Timestamp], [Project], [Nodes]) VALUES (@ActivityId, @ProjectId, GETUTCDATE(), @Project, @Nodes)", conn);
+        this.projectDataService = projectDataService;
+        this.projectNodeDataService = projectNodeDataService;
+    }
 
-        cmd.Parameters.AddWithValue("@ActivityId", activityId);
-        cmd.Parameters.AddWithValue("@ProjectId", project.id);
-        cmd.Parameters.AddWithValue("@Project", DbJson(project));
-        cmd.Parameters.AddWithValue("@Nodes", DbJson(nodes));
+    public async Task SetAsync(SqlConnection conn, string projectId, IEnumerable<string> activityIds)
+    {
+        var project = await projectDataService.GetByIdAsync(conn, projectId);
+        var nodes = await projectNodeDataService.GetByProjectAsync(conn, projectId);
 
-        await cmd.ExecuteNonQueryAsync();
+        foreach (var activityId in activityIds)
+        {
+            var cmd = new SqlCommand("INSERT INTO [dbo].[ProjectSnapshots] ([ActivityId], [ProjectId], [Timestamp], [Project], [Nodes]) VALUES (@ActivityId, @ProjectId, GETUTCDATE(), @Project, @Nodes)", conn);
+
+            cmd.Parameters.AddWithValue("@ActivityId", activityId);
+            cmd.Parameters.AddWithValue("@ProjectId", project.Id);
+            cmd.Parameters.AddWithValue("@Project", DbJson(project));
+            cmd.Parameters.AddWithValue("@Nodes", DbJson(nodes));
+
+            await cmd.ExecuteNonQueryAsync();
+        }
     }
 }

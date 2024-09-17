@@ -1,4 +1,5 @@
 using Microsoft.Data.SqlClient;
+using Microsoft.Extensions.Logging;
 using System.Data;
 using Wbs.Core.Models;
 using Wbs.Core.ViewModels;
@@ -7,6 +8,13 @@ namespace Wbs.Core.DataServices;
 
 public class ActivityDataService : BaseSqlDbService
 {
+    private readonly ILogger logger;
+
+    public ActivityDataService(ILoggerFactory loggerFactory)
+    {
+        logger = loggerFactory.CreateLogger<ActivityDataService>();
+    }
+
     public async Task<int> GetCountForTopLevelAsync(SqlConnection conn, string topLevel)
     {
         var cmd = new SqlCommand("SELECT COUNT(*) FROM [dbo].[ActivitiesView] WHERE [TopLevelId] = @TopLevel", conn);
@@ -33,6 +41,8 @@ public class ActivityDataService : BaseSqlDbService
             while (reader.Read())
                 results.Add(this.ToViewModel(reader));
         }
+        ValidateList(results);
+
         return results;
     }
 
@@ -66,6 +76,8 @@ public class ActivityDataService : BaseSqlDbService
             while (await reader.ReadAsync())
                 results.Add(ToViewModel(reader));
         }
+        ValidateList(results);
+
         return results;
     }
 
@@ -117,5 +129,23 @@ public class ActivityDataService : BaseSqlDbService
             actionIcon = DbValue<string>(reader, "ActionIcon"),
             actionTitle = DbValue<string>(reader, "ActionTitle"),
         };
+    }
+
+    private void ValidateList(IEnumerable<ActivityViewModel> activities)
+    {
+        var issues = new List<string>();
+
+        foreach (var activity in activities)
+        {
+            if ((activity.actionIcon == null || activity.actionTitle == null) && !issues.Contains(activity.action))
+            {
+                issues.Add(activity.action);
+
+            }
+        }
+
+        if (issues.Count == 0) return;
+
+        logger.LogWarning("The following actions are missing title or icon: " + string.Join(',', issues));
     }
 }

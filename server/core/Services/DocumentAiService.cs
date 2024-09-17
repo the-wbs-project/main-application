@@ -32,13 +32,13 @@ public class DocumentAiService
             var spaceIndex = node.IndexOf(' ');
             var level = node.Substring(0, spaceIndex).TrimEnd('.');
 
-            obj.levelText = node;
-            obj.title = node;
+            obj.LevelText = node;
+            obj.Title = node;
 
             nodes.Add(new ProjectImportResults
             {
-                levelText = level,
-                title = node.Substring(spaceIndex + 1)
+                LevelText = level,
+                Title = node.Substring(spaceIndex + 1)
             });
         }
 

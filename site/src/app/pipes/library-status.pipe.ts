@@ -6,6 +6,7 @@ export class LibraryStatusPipe implements PipeTransform {
     if (status === 'draft') return 'General.Draft';
     if (status === 'published') return 'General.Published';
     if (status === 'retired') return 'General.Retired';
+    if (status === 'cancelled') return 'General.Cancelled';
     return '';
   }
 }

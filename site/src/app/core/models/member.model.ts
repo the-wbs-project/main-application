@@ -1,5 +1,9 @@
-import { User } from './user.model';
+import { Role } from './role.model';
 
-export interface Member extends User {
-  roles: string[];
+export interface Member {
+  userId: string;
+  email: string;
+  picture?: string;
+  fullName: string;
+  roles: Role[];
 }

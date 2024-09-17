@@ -1,7 +1,6 @@
-import { TaggedObject } from './app-models';
 import { LibraryLink, LibraryTaskLink } from './library-link.model';
 
-export interface WbsNode extends TaggedObject {
+export interface WbsNode {
   id: string;
   title: string;
   parentId?: string;

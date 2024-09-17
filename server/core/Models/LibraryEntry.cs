@@ -2,11 +2,10 @@ namespace Wbs.Core.Models;
 
 public class LibraryEntry
 {
-    public string id { get; set; }
-    public string owner { get; set; }
-    public int? publishedVersion { get; set; }
-    public string type { get; set; }
-    public string author { get; set; }
-    public string visibility { get; set; }
-    public string[] editors { get; set; }
+    public string Id { get; set; }
+    public string OwnerId { get; set; }
+    public string RecordId { get; set; }
+    public int? PublishedVersion { get; set; }
+    public string Type { get; set; }
+    public string Visibility { get; set; }
 }

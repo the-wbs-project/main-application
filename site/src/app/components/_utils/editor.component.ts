@@ -1,46 +1,36 @@
 import { ChangeDetectionStrategy, Component, model } from '@angular/core';
-import {
-  EditorModule,
-  EditorComponent as EC,
-} from '@progress/kendo-angular-editor';
-import { EditorCommand } from '@progress/kendo-angular-editor/common/commands';
-import { ToolBarComponent } from '@progress/kendo-angular-toolbar';
+import { FormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   standalone: true,
   selector: 'wbs-editor',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [EditorModule],
-  template: `<kendo-editor [class]="cssClass()" [(value)]="value">
-    <kendo-toolbar size="small">
-      <kendo-toolbar-buttongroup>
-        <kendo-toolbar-button kendoEditorBoldButton />
-        <kendo-toolbar-button kendoEditorItalicButton />
-        <kendo-toolbar-button kendoEditorUnderlineButton />
-      </kendo-toolbar-buttongroup>
-
-      <kendo-toolbar-dropdownlist kendoEditorFormat />
-      <kendo-toolbar-buttongroup>
-        <kendo-toolbar-button kendoEditorAlignLeftButton />
-        <kendo-toolbar-button kendoEditorAlignCenterButton />
-        <kendo-toolbar-button kendoEditorAlignRightButton />
-        <kendo-toolbar-button kendoEditorAlignJustifyButton />
-      </kendo-toolbar-buttongroup>
-      <kendo-toolbar-buttongroup>
-        <kendo-toolbar-button kendoEditorInsertUnorderedListButton />
-        <kendo-toolbar-button kendoEditorInsertOrderedListButton />
-        <kendo-toolbar-button kendoEditorIndentButton />
-        <kendo-toolbar-button kendoEditorOutdentButton />
-      </kendo-toolbar-buttongroup>
-      <kendo-toolbar-button kendoEditorCreateLinkButton />
-    </kendo-toolbar>
-  </kendo-editor>`,
+  imports: [FormsModule, QuillModule],
+  template: `<quill-editor
+    [class]="cssClass()"
+    [modules]="modules"
+    [(ngModel)]="value"
+  />`,
 })
 export class EditorComponent {
   readonly value = model.required<string>();
   readonly cssClass = model<string>();
+  readonly modules = {
+    toolbar: [
+      ['bold', 'italic', 'underline', 'strike'], // toggled buttons
 
-  constructor() {
-    let editor: EC;
-  }
+      [{ header: 1 }, { header: 2 }], // custom button values
+      [{ list: 'ordered' }, { list: 'bullet' }],
+      [{ indent: '-1' }, { indent: '+1' }], // outdent/indent
+
+      [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+      [{ color: [] }, { background: [] }], // dropdown with defaults from theme
+      [{ font: [] }],
+      [{ align: [] }],
+
+      ['clean'], // remove formatting button
+    ],
+  };
 }

@@ -13,7 +13,7 @@ import {
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { Invite, Member, Role } from '@wbs/core/models';
+import { Invite, Role } from '@wbs/core/models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { InviteFormResults } from './invite-form-results.model';
@@ -22,6 +22,7 @@ import {
   ButtonGroupModule,
   ButtonModule,
 } from '@progress/kendo-angular-buttons';
+import { UserViewModel } from '@wbs/core/view-models';
 
 declare type InviteError = { email?: string; error: string };
 
@@ -44,7 +45,7 @@ export class InvitationFormComponent extends DialogContentBase {
 
   readonly roles = signal<string[]>([]);
   errors: InviteError[] = [];
-  members!: Member[];
+  members!: UserViewModel[];
   invites!: Invite[];
   roleDefinitions!: Role[];
 
@@ -55,7 +56,7 @@ export class InvitationFormComponent extends DialogContentBase {
   static launchAsync(
     dialog: DialogService,
     invites: Invite[],
-    members: Member[],
+    members: UserViewModel[],
     roles: Role[]
   ): Observable<InviteFormResults | undefined> {
     const ref = dialog.open({

@@ -1,0 +1,26 @@
+<kendo-dialog width="80%" maxWidth="800px" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Wbs.PublishToLibrary" | translate }}
+  </kendo-dialog-titlebar>
+  <div class="pd-x-12 mb-3">
+    <label [for]="releaseNotesInput" class="form-label tx-18">
+      {{ "Wbs.ReleaseNotes" | translate }}
+    </label>
+    <textarea
+      #releaseNotesInput
+      rows="3"
+      class="form-control w-100"
+      [(ngModel)]="releaseNotes"
+    ></textarea>
+  </div>
+
+  <kendo-dialog-actions>
+    <div class="w-100 text-end">
+      <wbs-save-button
+        size="small"
+        [isSaving]="saveService.isSaving()"
+        (click)="save()"
+      />
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

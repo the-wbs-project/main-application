@@ -1,0 +1,19 @@
+@if (userVm(); as user) {
+<div class="pointer">
+  <a kendoPopoverAnchor [popover]="popover">
+    {{ user.fullName }}
+  </a>
+</div>
+
+<kendo-popover #popover [position]="position()">
+  <ng-template kendoPopoverTitleTemplate>
+    <div class="popover-title">
+      {{ "General.UserInformation" | translate }}
+    </div>
+  </ng-template>
+
+  <ng-template kendoPopoverBodyTemplate>
+    <wbs-user-info [user]="user" />
+  </ng-template>
+</kendo-popover>
+}

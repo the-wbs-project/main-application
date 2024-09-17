@@ -1,24 +1,31 @@
 <div class="d-flex h-100 justify-content-center">
-  <div class="d-flex flex-column w-100 h-100 mg-b-16 mg-t-10 mx-wd-1200">
+  <div class="d-flex flex-column w-100 h-100 pd-t-10 pd-b-10 mx-wd-1200">
     <div class="d-flex w-100 flex-align-center">
-      <wbs-library-create-button (typeChosen)="create($event, list)" />
-      <div class="flex-fill text-end">
-        <wbs-page-header />
+      <wbs-library-create-button (typeChosen)="service.createDraft($event)" />
+      <div class="mg-l-10">
+        <wbs-library-filter
+          [buttons]="libraries"
+          [selection]="service.library()"
+          (selectionChanged)="service.libraryChanged($event!)"
+        />
       </div>
     </div>
-    <wbs-library-list-filters
-      [showCreateButton]="true"
-      [(library)]="library"
-      [(typeFilters)]="typeFilters"
-      [(searchText)]="searchText"
-    />
-    <wbs-library-list
-      #list
-      [org]="organization()!.name"
-      [library]="library()"
-      [searchText]="searchText()"
-      [typeFilters]="typeFilters()"
-      (selectedChange)="nav($event)"
-    />
+    <!--<div>
+      <button type="button" class="btn btn-primary" (click)="openDialog()">
+        Open Dialog
+      </button>
+
+      <wbs-test-dialog
+        [title]="'Confirmation'"
+        [size]="'lg'"
+        [isVisible]="isDialogVisible"
+        (close)="closeDialog()"
+        (confirm)="confirmDialog()"
+        (cancel)="cancelDialog()"
+      >
+        <p>Are you sure you want to proceed?</p>
+      </wbs-test-dialog>
+    </div>-->
+    <router-outlet />
   </div>
 </div>

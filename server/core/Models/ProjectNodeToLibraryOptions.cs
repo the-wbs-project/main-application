@@ -2,6 +2,7 @@ namespace Wbs.Core.Models;
 
 public class ProjectNodeToLibraryOptions
 {
+    public string alias { get; set; }
     public string author { get; set; }
     public string title { get; set; }
     public string description { get; set; }

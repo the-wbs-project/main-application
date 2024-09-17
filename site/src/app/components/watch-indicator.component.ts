@@ -20,14 +20,11 @@ import { UserStore } from '@wbs/core/store';
   template: `<div
     kendoTooltip
     class="tx-primary pointer"
-    [ngClass]="{ 'hover-visible': !watched() && !alwaysShow() }"
     [position]="tooltipPosition()"
     [title]="watched() ? 'Remove From Watched List' : 'Add To Watched List'"
     (click)="changed($event)"
   >
-    <span class="child-to-show">
-      <fa-icon [icon]="icon()" [spin]="saving()" />
-    </span>
+    <fa-icon [icon]="icon()" [animation]="saving() ? 'spin' : undefined" />
   </div>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, TooltipModule],
@@ -40,7 +37,6 @@ export class WatchIndicatorComponent {
   readonly source = input.required<'library' | 'project'>();
   readonly owner = input.required<string>();
   readonly entityId = input.required<string>();
-  readonly alwaysShow = input(true);
   readonly saving = signal(false);
 
   private watchSource = computed(() => {

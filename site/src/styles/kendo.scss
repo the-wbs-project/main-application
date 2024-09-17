@@ -17,7 +17,7 @@ $kendo-input-border-width: 1;
   top: 50px !important;
 }
 
-.k-chip-solid-base {
+.k-chip-solid-base:not(.k-selected) {
   border-color: #bcbebf !important;
   color: #212529 !important;
   background-color: #edeeee !important;
@@ -46,3 +46,8 @@ $kendo-input-border-width: 1;
   -moz-osx-font-smoothing: grayscale;
   -webkit-font-smoothing: antialiased;
 }
+
+.k-grid-toolbar {
+  background-color: $gray-500;
+}
+// This hasn't been implemented since Kendo changed things

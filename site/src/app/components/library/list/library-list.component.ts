@@ -2,23 +2,17 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnChanges,
-  SimpleChanges,
-  inject,
   input,
   model,
   output,
-  signal,
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPenRuler } from '@fortawesome/pro-duotone-svg-icons';
+import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { UserStore } from '@wbs/core/store';
-import { LibraryEntryViewModel } from '@wbs/core/view-models';
+import { LibraryViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { EntryTypeIconPipe } from '@wbs/pipes/entry-type-icon.pipe';
 import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
@@ -42,45 +36,12 @@ import { EntryTypeTitlePipe } from '@wbs/pipes/entry-type-title.pipe';
     WatchIndicatorComponent,
   ],
 })
-export class LibraryListComponent implements OnChanges {
-  private readonly data = inject(DataServiceFactory);
-  private readonly userId = inject(UserStore).userId;
-
-  readonly draftIcon = faPenRuler;
-  readonly org = input.required<string>();
-  readonly typeFilters = input<string[]>();
-  readonly library = input.required<string>();
-  readonly searchText = input.required<string>();
+export class LibraryListComponent {
+  readonly loadingIcon = faSpinner;
+  readonly showLoading = input(false);
   readonly showWatchedColumn = input(true);
-  readonly selected = model<LibraryEntryViewModel | undefined>(undefined);
-  readonly entries = signal<LibraryEntryViewModel[]>([]);
+  readonly selected = model<LibraryViewModel | undefined>(undefined);
+  readonly entries = input.required<LibraryViewModel[]>();
+  readonly showOwner = input(false);
   readonly dblClick = output<void>();
-
-  ngOnChanges(changes: SimpleChanges): void {
-    if (
-      changes['searchText'] ||
-      changes['library'] ||
-      changes['typeFilters'] ||
-      changes['org']
-    ) {
-      this.retrieve();
-    }
-  }
-
-  entryAdded(vm: LibraryEntryViewModel): void {
-    this.entries.set([vm, ...this.entries()]);
-  }
-
-  private retrieve(): void {
-    this.data.libraryEntries
-      .searchAsync(this.org(), {
-        userId: this.userId()!,
-        library: this.library(),
-        searchText: this.searchText(),
-        typeFilters: this.typeFilters(),
-      })
-      .subscribe((entries) => {
-        this.entries.set(entries);
-      });
-  }
 }

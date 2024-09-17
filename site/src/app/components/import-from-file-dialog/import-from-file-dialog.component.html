@@ -1,0 +1,51 @@
+@let page = viewService.page();
+
+<kendo-dialog
+  width="95%"
+  height="95%"
+  maxWidth="800px"
+  (close)="dialog.close()"
+>
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Wbs.ImportFromFile" | translate }}
+  </kendo-dialog-titlebar>
+  <wbs-dialog-wrapper [view]="viewService.view()" [steps]="viewService.steps()">
+    @if (page.id === 'start') {
+    <wbs-upload-view
+      [isLoadingFile]="dataService.isLoadingFile()"
+      [fileType]="dataService.extension()"
+      (uploaded)="fileUploaded($event)"
+    />
+    } @else if (page.id === 'disciplines') {
+    <wbs-upload-disciplines-view
+      [disciplines]="disciplines2()"
+      [(peopleList)]="dataService.peopleList"
+    />
+    } @else if (page.id === 'tasks') {
+    <div [(wbsHeight)]="containerHeight" class="pd-0 d-flex flex-column h-100">
+      <wbs-upload-task-view
+        [(tasks)]="dataService.tasks"
+        [disciplines]="disciplines2()"
+        [containerHeight]="containerHeight()"
+        (reloadTree)="reloadTree()"
+      />
+    </div>
+    }
+  </wbs-dialog-wrapper>
+
+  @if (page.id !== 'start') {
+  <kendo-dialog-actions>
+    <wbs-dialog-buttons
+      [view]="viewService.view()"
+      [canContinue]="!viewService.nextDisabled()"
+      [showSave]="page.id === 'tasks'"
+      saveLabel="General.Import"
+      savingLabel="General.Importing"
+      [isSaving]="saving()"
+      (back)="viewService.back()"
+      (next)="next()"
+      (save)="startSaving()"
+    />
+  </kendo-dialog-actions>
+  }
+</kendo-dialog>
