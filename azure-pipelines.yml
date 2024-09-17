@@ -1,8 +1,3 @@
-# Node.js with Angular
-# Build a Node.js project that uses Angular.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
 trigger:
   - project-upgrade
 
@@ -52,37 +47,6 @@ jobs:
           includeRootFolder: false
           archiveType: "zip"
           archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Api.zip"
-          replaceExistingArchive: true
-        displayName: "Zip"
-
-      - task: PublishBuildArtifacts@1
-        inputs:
-          PathtoPublish: "$(Build.ArtifactStagingDirectory)"
-          ArtifactName: "drop"
-          publishLocation: "Container"
-        displayName: "Publish"
-
-  - job: functions_job
-    pool:
-      vmImage: ubuntu-latest
-    displayName: Azure Functions
-    steps:
-      - task: DotNetCoreCLI@2
-        inputs:
-          command: "publish"
-          publishWebProjects: false
-          projects: "./server/functions/functions.csproj"
-          arguments: "-o ./server/functions/dist"
-          zipAfterPublish: false
-          modifyOutputPath: true
-        displayName: "Build"
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "server/functions/dist/functions"
-          includeRootFolder: false
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Functions.zip"
           replaceExistingArchive: true
         displayName: "Zip"
 

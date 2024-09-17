@@ -8,18 +8,17 @@ namespace Wbs.Functions;
 
 public class LibraryIndexQueue
 {
-        private readonly DbService db;
-        private readonly ILogger _logger;
-        private readonly LibrarySearchIndexService searchIndexService;
-        private readonly OrganizationDataService organizationDataService;
-        private readonly LibraryEntryViewDataService entryViewDataService;
-        private readonly LibrarySearchService searchSearch;
+    private readonly DbService db;
+    private readonly ILogger _logger;
+    private readonly LibrarySearchIndexService searchIndexService;
+    private readonly OrganizationDataService organizationDataService;
+    private readonly LibraryEntryViewDataService entryViewDataService;
+    private readonly LibrarySearchService searchSearch;
 
-    public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchService, LibraryEntryDataService dataService, DbService db)
+
+    public LibraryIndexQueue(ILoggerFactory loggerFactory, DbService db)
     {
         _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
-        this.dataService = dataService;
-        this.searchService = searchService;
         this.db = db;
     }
 
@@ -37,31 +36,31 @@ public class LibraryIndexQueue
         }
     }
 
-        [Function("LibraryIndex-ReBuild")]
-        public async Task RunReBuild([QueueTrigger("search-library-rebuild", Connection = "")] string message)
+    [Function("LibraryIndex-ReBuild")]
+    public async Task RunReBuild([QueueTrigger("search-library-rebuild", Connection = "")] string message)
+    {
+        try
         {
-            try
+            await searchIndexService.DeleteIndexAsync();
+            await searchIndexService.VerifyIndexAsync();
+            var orgs = await organizationDataService.GetAllAsync();
+
+            using (var conn = await db.CreateConnectionAsync())
             {
-                await searchIndexService.DeleteIndexAsync();
-                await searchIndexService.VerifyIndexAsync();
-                var orgs = await organizationDataService.GetAllAsync();
-
-                using (var conn = await db.CreateConnectionAsync())
+                foreach (var org in orgs)
                 {
-                    foreach (var org in orgs)
-                    {
-                        var entries = await entryViewDataService.GetAllAsync(conn, org.Name);
+                    var entries = await entryViewDataService.GetAllAsync(conn, org.Name);
 
-                        await searchIndexService.PushToSearchAsync(conn, org.Name, entries.Select(e => e.EntryId).ToArray());
-                    }
+                    await searchIndexService.PushToSearchAsync(conn, org.Name, entries.Select(e => e.EntryId).ToArray());
                 }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error rebuilding library entry index");
-                throw;
-            }
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error rebuilding library entry index");
+            throw;
+        }
+    }
 
 
     [Function("LibraryIndex-Item")]
@@ -93,45 +92,42 @@ public class LibraryIndexQueue
         {
             using (var conn = await db.CreateConnectionAsync())
             {
-                using (var conn = await db.CreateConnectionAsync())
-                {
-                    var entries = await entryViewDataService.GetAllAsync(conn, owner);
+                var entries = await entryViewDataService.GetAllAsync(conn, owner);
 
-                    await searchIndexService.VerifyIndexAsync();
-                    await searchIndexService.PushToSearchAsync(conn, owner, entries.Select(e => e.EntryId).ToArray());
-                }
+                await searchIndexService.VerifyIndexAsync();
+                await searchIndexService.PushToSearchAsync(conn, owner, entries.Select(e => e.EntryId).ToArray());
             }
             catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing all library entries by owner " + owner);
+            throw;
+        }
+    }
+
+
+    [Function("LibraryIndex-Clean")]
+    public async Task RunClean([QueueTrigger("search-library-clean", Connection = "")] string owner)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
             {
-                _logger.LogError(ex, "Error processing all library entries by owner " + owner);
-                throw;
+                await searchIndexService.VerifyIndexAsync();
+
+                var entries = await entryViewDataService.GetAllAsync(conn, owner);
+                var search = await searchSearch.GetAllAsync(owner);
+                var toRemove = search
+                    .Where(d => !entries.Any(e => e.EntryId == d.EntryId && e.Version == d.Version))
+                    .ToList();
+
+                if (toRemove.Count > 0)
+                    await searchIndexService.RemoveAsync(toRemove);
             }
         }
-
-
-        [Function("LibraryIndex-Clean")]
-        public async Task RunClean([QueueTrigger("search-library-clean", Connection = "")] string owner)
+        catch (Exception ex)
         {
-            try
-            {
-                using (var conn = await db.CreateConnectionAsync())
-                {
-                    await searchIndexService.VerifyIndexAsync();
-
-                    var entries = await entryViewDataService.GetAllAsync(conn, owner);
-                    var search = await searchSearch.GetAllAsync(owner);
-                    var toRemove = search
-                        .Where(d => !entries.Any(e => e.EntryId == d.EntryId && e.Version == d.Version))
-                        .ToList();
-
-                    if (toRemove.Count > 0)
-                        await searchIndexService.RemoveAsync(toRemove);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing all library entries by owner " + owner);
-                throw;
-            }
+            _logger.LogError(ex, "Error processing all library entries by owner " + owner);
+            throw;
+        }
     }
 }
