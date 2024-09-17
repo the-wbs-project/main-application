@@ -12,6 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { QuillConfig, QuillModule } from 'ngx-quill';
 import { environment } from 'src/env';
 import { routes } from './app.routes';
 import { DataServiceFactory } from './core/data-services';
@@ -47,6 +48,7 @@ export const appConfig: ApplicationConfig = {
       }),
       NgxsModule.forRoot([]),
       NgxsRouterPluginModule.forRoot(),
+      QuillModule.forRoot(),
       TranslateModule.forRoot(),
     ]),
     {

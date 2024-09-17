@@ -16,6 +16,7 @@ import { Observable, of } from 'rxjs';
 import { filter, map, switchMap, tap } from 'rxjs/operators';
 import { EntryActivityService } from '../../../services/entry-activity.service';
 import { NewVersionDialogComponent } from '../components/new-version-dialog';
+import { PublishVersionDialogComponent } from '../components/publish-version-dialog';
 
 @Injectable()
 export class LibraryService {
@@ -129,7 +130,7 @@ export class LibraryService {
       .pipe(
         filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
         switchMap((data) =>
-          this.data.libraryEntryVersions.replicateAsync(
+          this.data.libraryEntries.replicateVersionAsync(
             version.ownerId,
             version.entryId,
             data!.version,
@@ -188,8 +189,8 @@ export class LibraryService {
   saveAsync(version: LibraryVersionViewModel): Observable<void> {
     const model = this.transformers.libraryVersions.toModel(version);
 
-    return this.data.libraryEntryVersions
-      .putAsync(version.ownerId, model)
+    return this.data.libraryEntries
+      .putVersionAsync(version.ownerId, model)
       .pipe(map(() => this.entryStore.setVersion(version)));
   }
 
@@ -308,40 +309,43 @@ export class LibraryService {
   }
 
   publish(): void {
-    this.messages.confirm
-      .show('General.Confirm', 'Wbs.ConfirmPublishToLibrary')
-      .pipe(
-        switchMap((answer) => {
-          if (!answer) return of(answer);
+    const saveFunction = (notes: string) => {
+      const version = this.version;
+      version.status = 'published';
+      version.releaseNotes = notes;
 
-          const version = this.version;
-          version.status = 'published';
+      const model = this.transformers.libraryVersions.toModel(version);
 
-          const model = this.transformers.libraryVersions.toModel(version);
+      return this.data.libraryEntries
+        .publishVersionAsync(version.ownerId, model)
+        .pipe(
+          switchMap(() =>
+            this.activity.publishedVersion(
+              version.ownerId,
+              version.entryId,
+              version.version
+            )
+          ),
+          map(() => {
+            return version;
+          })
+        );
+    };
 
-          return this.data.libraryEntryVersions
-            .publishAsync(version.ownerId, model)
-            .pipe(
-              switchMap(() =>
-                this.activity.publishedVersion(
-                  version.ownerId,
-                  version.entryId,
-                  version.version
-                )
-              ),
-              tap(() => {
-                version.lastModified = new Date();
+    PublishVersionDialogComponent.launchAsync(
+      this.dialogService,
+      saveFunction
+    ).subscribe((version) => {
+      if (!version) return;
 
-                this.messages.report.success(
-                  'General.Success',
-                  'Wbs.PublishedToLibraryMessage'
-                );
-                this.entryStore.setVersion(version);
-              })
-            );
-        })
-      )
-      .subscribe();
+      version.lastModified = new Date();
+
+      this.messages.report.success(
+        'General.Success',
+        'Wbs.PublishedToLibraryMessage'
+      );
+      this.entryStore.setVersion(version);
+    });
   }
 
   unpublish(): void {

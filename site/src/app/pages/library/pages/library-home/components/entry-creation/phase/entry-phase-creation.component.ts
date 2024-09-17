@@ -22,6 +22,7 @@ import { DialogButtonsComponent } from '@wbs/components/dialog-buttons';
 import { DialogWrapperComponent } from '@wbs/components/dialog-wrapper';
 import { Phase } from '@wbs/core/models';
 import { CategorySelection } from '@wbs/core/view-models';
+import { environment } from 'src/env';
 import { CreationDialogService } from '../../../services';
 import {
   DisciplineViewComponent,
@@ -63,7 +64,7 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   //  Signals
   //
   readonly templateTitle = signal<string>('');
-  readonly alias = signal<string>('Initial Version');
+  readonly alias = signal<string>(environment.initialVersionAlias);
   readonly phase = signal<string | Phase | undefined>(undefined);
   readonly visibility = signal<'public' | 'private'>('public');
   readonly disciplines = signal<CategorySelection[]>(

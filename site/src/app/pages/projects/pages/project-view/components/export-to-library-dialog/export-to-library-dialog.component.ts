@@ -31,6 +31,7 @@ import { SaveService } from '@wbs/core/services';
 import { ExportResults } from './export-results.model';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
+import { environment } from 'src/env';
 import { ExportToLibraryDataModel } from './export-to-library-data.model';
 import { ExportToLibraryDialogService } from './export-to-library-dialog.service';
 
@@ -63,6 +64,7 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
   readonly saveState = new SaveService();
 
   readonly title = signal('');
+  readonly alias = signal(environment.initialVersionAlias);
   readonly includeResources = signal(true);
   readonly visibility = signal('public');
   readonly titleHint = computed(() => {
@@ -103,6 +105,7 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
 
   save(): void {
     const model: ExportResults = {
+      alias: this.alias(),
       title: this.title(),
       includeResources: this.includeResources(),
       visibility: this.visibility(),

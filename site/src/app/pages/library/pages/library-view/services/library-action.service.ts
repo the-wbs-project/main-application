@@ -147,14 +147,6 @@ export class LibraryActionService {
       resource: 'Wbs.DownloadWbs',
     });
 
-    if (version.status === 'draft' && canUpdateTasks) {
-      items.push({
-        faIcon: faCloudUpload,
-        resource: 'Wbs.UploadTasks',
-        route: [...entryUrl, 'upload'],
-      });
-    }
-
     return items.length === 0 ? undefined : items;
   }
 

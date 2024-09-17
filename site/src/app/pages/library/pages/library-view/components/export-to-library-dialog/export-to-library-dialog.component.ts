@@ -2,7 +2,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +9,7 @@ import { RouterModule } from '@angular/router';
 import { faCheck } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { Navigate } from '@ngxs/router-plugin';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
   DialogModule,
@@ -17,24 +17,28 @@ import {
   DialogService,
 } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
+import { LabelModule } from '@progress/kendo-angular-label';
 import { FadingMessageComponent } from '@wbs/components/_utils/fading-message.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { VisibilitySelectionComponent } from '@wbs/components/_utils/visiblity-selection';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { SignalStore } from '@wbs/core/services';
-import { TaskViewModel } from '@wbs/core/view-models';
 import { EntryStore, MembershipStore, UserStore } from '@wbs/core/store';
+import { TaskViewModel } from '@wbs/core/view-models';
 import { EntryActivityService } from '@wbs/pages/library/services';
 import { delay, tap } from 'rxjs/operators';
+import { environment } from 'src/env';
 
 @Component({
   standalone: true,
   templateUrl: './export-to-library-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
+    ButtonModule,
     DialogModule,
     FadingMessageComponent,
     FormsModule,
+    LabelModule,
     RouterModule,
     SaveButtonComponent,
     TextBoxModule,
@@ -53,8 +57,9 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
 
   readonly checkIcon = faCheck;
   readonly newEntryId = signal<string | undefined>(undefined);
-  readonly templateTitle = model<string>('');
-  readonly visibility = model<'public' | 'private'>('public');
+  readonly templateTitle = signal<string>('');
+  readonly alias = signal<string>(environment.initialVersionAlias);
+  readonly visibility = signal<'public' | 'private'>('public');
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
   );
@@ -84,13 +89,15 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
 
     const version = this.entryStore.version()!;
 
-    this.data.libraryEntryNodes
-      .exportAsync(
+    this.data.libraryEntries
+      .exportTasksAsync(
         version.ownerId,
         version.entryId,
         version.version,
         this.task.id,
+        this.membership.membership()!.name,
         {
+          alias: this.alias(),
           author: this.userId()!,
           includeResources: true,
           title: this.templateTitle(),

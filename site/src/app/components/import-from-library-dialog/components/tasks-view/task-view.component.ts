@@ -169,33 +169,23 @@ export class TaskViewComponent implements OnChanges, OnInit {
 
     const visibility = this.org()?.name === vm.ownerId ? 'private' : 'public';
 
-    forkJoin({
-      version: this.data.libraryEntryVersions.getByIdAsync(
-        vm.ownerId,
-        vm.entryId,
-        vm.version
-      ),
-      tasks: this.data.libraryEntryNodes.getAllAsync(
-        vm.ownerId,
-        vm.entryId,
-        vm.version,
-        visibility
-      ),
-    }).subscribe(({ version, tasks }) => {
-      const disciplines = this.categoryService.buildViewModels(
-        this.version()?.disciplines
-      );
+    this.data.libraryEntries
+      .getVersionByIdAsync(vm.ownerId, vm.entryId, vm.version, visibility)
+      .subscribe(({ version, tasks }) => {
+        const disciplines = this.categoryService.buildViewModels(
+          this.version()?.disciplines
+        );
 
-      this.version.set(version);
-      this.versionDisciplines.set(disciplines);
-      this.tasks.set(
-        this.transformer.nodes.phase.view.forLibrary(
-          version,
-          tasks,
-          disciplines
-        )
-      );
-      this.loadingTree.set(false);
-    });
+        this.version.set(version);
+        this.versionDisciplines.set(disciplines);
+        this.tasks.set(
+          this.transformer.nodes.phase.view.forLibrary(
+            version,
+            tasks,
+            disciplines
+          )
+        );
+        this.loadingTree.set(false);
+      });
   }
 }

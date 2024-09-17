@@ -12,6 +12,7 @@ export class LibraryVersionTransformer {
       description: vm.description,
       disciplines: vm.disciplines,
       status: vm.status,
+      releaseNotes: vm.releaseNotes,
       author: vm.author.userId,
       categories: vm.category == null ? [] : [vm.category],
       editors: vm.editors.map((x) => x.userId),

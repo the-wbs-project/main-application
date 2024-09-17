@@ -5,6 +5,9 @@ main = "src/index.ts"
 workers_dev = false
 logpush = true
 
+[placement]
+mode = "smart"
+
 [env.dev]
 name = "pm-empower-auth-dev"
 kv_namespaces = [

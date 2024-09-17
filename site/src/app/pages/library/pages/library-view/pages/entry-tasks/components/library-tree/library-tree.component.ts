@@ -33,13 +33,18 @@ import {
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { DisciplineIconListComponent } from '@wbs/components/_utils/discipline-icon-list.component';
 import {
+  TreeButtonsAddComponent,
   TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
 } from '@wbs/components/_utils/tree-buttons';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import { HeightDirective } from '@wbs/core/directives/height.directive';
-import { LIBRARY_CLAIMS, LibraryEntryNode } from '@wbs/core/models';
+import {
+  AddPhaseOptions,
+  LIBRARY_CLAIMS,
+  LibraryEntryNode,
+} from '@wbs/core/models';
 import {
   CategoryService,
   Messages,
@@ -63,6 +68,7 @@ import {
   EntryTaskReorderService,
   LibraryTaskService,
   LibraryTaskActionService,
+  LibraryImportService,
 } from '../../../../services';
 import { LibraryTaskDetailsComponent } from '../library-task-details';
 import { LibraryTreeTaskTitleComponent } from '../library-tree-task-title';
@@ -88,6 +94,7 @@ import { VisibilityIconComponent } from '../visibility-icon.component';
     SplitterModule,
     TextBoxModule,
     TranslateModule,
+    TreeButtonsAddComponent,
     TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,
@@ -101,6 +108,7 @@ export class LibraryTreeComponent implements OnInit {
 
   private readonly actions = inject(LibraryTaskActionService);
   private readonly category = inject(CategoryService);
+  private readonly importService = inject(LibraryImportService);
   private readonly metadata = inject(MetadataStore);
   private readonly messages = inject(Messages);
   private readonly membership = inject(MembershipStore);
@@ -197,6 +205,16 @@ export class LibraryTreeComponent implements OnInit {
     if (obsOrVoid instanceof Observable) {
       if (taskId) this.treeService.callSave(taskId, obsOrVoid).subscribe();
       else obsOrVoid.subscribe();
+    }
+  }
+
+  addPhase(type: AddPhaseOptions): void {
+    if (type === 'create') {
+      this.addHandler(undefined);
+    } else if (type === 'importFile') {
+      this.importService.importFromFileAsync().subscribe();
+    } else if (type === 'importLibrary') {
+      this.importService.importFromLibraryAsync().subscribe();
     }
   }
 

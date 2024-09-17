@@ -78,7 +78,9 @@ public class ImportLibraryEntryService
             };
             nodeIds.Add(n.id, libraryNode.id);
             libraryEntryNodes.Add(libraryNode);
-            resources.Add(n.id, libraryNode.id);
+
+            if (!resources.ContainsKey(n.id))
+                resources.Add(n.id, libraryNode.id);
         }
         //
         //  Now loop through the nodes and fix the parent ids.
@@ -203,6 +205,7 @@ public class ImportLibraryEntryService
         {
             Version = 1,
             Status = "draft",
+            VersionAlias = options.alias,
             Author = options.author,
             EntryId = libraryEntry.Id,
             LastModified = DateTimeOffset.Now,
@@ -239,7 +242,9 @@ public class ImportLibraryEntryService
             };
             nodeIds.Add(n.id, libraryNode.id);
             libraryEntryNodes.Add(libraryNode);
-            resources.Add(n.id, libraryNode.id);
+
+            if (!resources.ContainsKey(n.id))
+                resources.Add(n.id, libraryNode.id);
         }
         //
         //  Now loop through the nodes and fix the parent ids.

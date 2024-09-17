@@ -17,14 +17,6 @@
     "stats": "ng build --stats-json && webpack-bundle-analyzer dist/site/stats.json"
   },
   "private": true,
-  "madge": {
-    "fontSize": "10px",
-    "graphVizOptions": {
-      "G": {
-        "rankdir": "LR"
-      }
-    }
-  },
   "dependencies": {
     "@angular/animations": "^18.1.4",
     "@angular/cdk": "^18.1.4",

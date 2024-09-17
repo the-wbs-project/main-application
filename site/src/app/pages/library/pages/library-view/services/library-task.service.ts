@@ -62,8 +62,8 @@ export class LibraryTaskService {
   ): Observable<void> {
     for (const t of upserts) t.lastModified = new Date();
 
-    return this.data.libraryEntryNodes
-      .putAsync(this.owner, this.entryId, this.version, upserts, removeIds)
+    return this.data.libraryEntries
+      .putTasksAsync(this.owner, this.entryId, this.version, upserts, removeIds)
       .pipe(
         tap(() => {
           if (saveMessage) this.messages.notify.success(saveMessage, false);
@@ -94,8 +94,8 @@ export class LibraryTaskService {
     task.title = title;
     task.lastModified = new Date();
 
-    return this.data.libraryEntryNodes
-      .putAsync(this.owner, this.entryId, this.version, [task], [])
+    return this.data.libraryEntries
+      .putTasksAsync(this.owner, this.entryId, this.version, [task], [])
       .pipe(
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
@@ -121,8 +121,8 @@ export class LibraryTaskService {
     task.description = description;
     task.lastModified = new Date();
 
-    return this.data.libraryEntryNodes
-      .putAsync(this.owner, this.entryId, this.version, [task], [])
+    return this.data.libraryEntries
+      .putTasksAsync(this.owner, this.entryId, this.version, [task], [])
       .pipe(
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
@@ -212,8 +212,8 @@ export class LibraryTaskService {
     }
     if (activities.length === 0) return of();
 
-    return this.data.libraryEntryNodes
-      .putAsync(this.owner, this.entryId, this.version, [task], [])
+    return this.data.libraryEntries
+      .putTasksAsync(this.owner, this.entryId, this.version, [task], [])
       .pipe(
         tap(() => this.store.tasksChanged([task])),
         switchMap(() => forkJoin(activities)),
@@ -614,8 +614,14 @@ export class LibraryTaskService {
     task.disciplineIds = disciplineIds;
     task.lastModified = new Date();
 
-    return this.data.libraryEntryNodes
-      .putAsync(version.ownerId, version.entryId, version.version, [task], [])
+    return this.data.libraryEntries
+      .putTasksAsync(
+        version.ownerId,
+        version.entryId,
+        version.version,
+        [task],
+        []
+      )
       .pipe(
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>
@@ -641,8 +647,8 @@ export class LibraryTaskService {
     task.visibility = visibility === 'public' ? undefined : 'private';
     task.lastModified = new Date();
 
-    return this.data.libraryEntryNodes
-      .putAsync(this.owner, this.entryId, this.version, [task], [])
+    return this.data.libraryEntries
+      .putTasksAsync(this.owner, this.entryId, this.version, [task], [])
       .pipe(
         tap(() => this.store.tasksChanged([task])),
         switchMap(() =>

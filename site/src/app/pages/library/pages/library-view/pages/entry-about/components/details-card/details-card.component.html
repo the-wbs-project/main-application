@@ -69,5 +69,11 @@
     <div class="row-header">{{ "General.LastModified" | translate }} :</div>
     <div class="row-value">{{ version.lastModified | dateText }}</div>
   </div>
+  @if (version.releaseNotes) {
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "Wbs.ReleaseNotes" | translate }} :</div>
+    <div class="row-value">{{ version.releaseNotes }}</div>
+  </div>
+  }
 </div>
 }

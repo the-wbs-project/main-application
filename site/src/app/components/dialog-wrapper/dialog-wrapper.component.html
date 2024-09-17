@@ -18,12 +18,14 @@
     </kendo-stepper>
   </div>
   <div [appScrollToTop]="view()" class="tx-center flex-fill pd-t-20 pd-x-10">
+    @if (mobileSpot()) {
     <div
       [ngClass]="headerLabelClass()"
       class="w-100 text-center fw-bold pd-y-10 border-top border-bottom d-block d-lg-none mg-b-10"
     >
       {{ steps()[view()].label | translate }}
     </div>
+    }
     <ng-content />
   </div>
 </div>

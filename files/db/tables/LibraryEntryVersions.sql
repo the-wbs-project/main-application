@@ -12,6 +12,7 @@ CREATE TABLE [dbo].[LibraryEntryVersions]
     [LastModified] datetimeoffset NOT NULL,
     [Author] nvarchar(100) NOT NULL,
     [Editors] nvarchar(MAX) NULL,
+    [ReleaseNotes] nvarchar(MAX) NULL,
     CONSTRAINT [LibraryEntryVersions_PK] PRIMARY KEY CLUSTERED ([EntryId] ASC, [Version] ASC),
     CONSTRAINT [LibraryEntryVersions_EntryId] FOREIGN KEY ([EntryId]) REFERENCES [dbo].[LibraryEntries] ([Id]) ON DELETE CASCADE
 )

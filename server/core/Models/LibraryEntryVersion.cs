@@ -11,6 +11,7 @@ public class LibraryEntryVersion
     public string Status { get; set; }
     public string[] Categories { get; set; }
     public string[] Editors { get; set; }
+    public string ReleaseNotes { get; set; }
     public Category[] Disciplines { get; set; }
     public DateTimeOffset LastModified { get; set; }
 }

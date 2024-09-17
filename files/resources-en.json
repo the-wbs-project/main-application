@@ -615,6 +615,7 @@
       "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
       "PublishVersion": "Publish Version",
+      "ReleaseNotes": "Release Notes",
       "UnpublishForEditing": "Unpublish For Editting",
       "ConfirmPublishToLibrary": "Are you sure you are ready to publish this to your organization's library?",
       "PublishedToLibraryMessage": "This WBS has been published. It may take up to 15 minutes for the WBS to appear in the library.",

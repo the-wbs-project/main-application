@@ -39,10 +39,7 @@
       <ng-template kendoTreeListToolbarTemplate>
         <div class="d-flex row-column align-items-center" style="gap: 10px">
           @if (canCreate() && entryStore.version()?.type === 'project') {
-          <button kendoTreeListAddCommand kendoButton size="small">
-            <fa-icon [icon]="addIcon" class="mg-r-5" />
-            {{ "Wbs.AddPhase" | translate }}
-          </button>
+          <wbs-tree-buttons-add (selected)="addPhase($event)" />
           }
           <wbs-tree-buttons-toggler
             (collapse)="treeService.collapseAll(treelist, tree, 'id')"

@@ -21,6 +21,7 @@ import { DialogButtonsComponent } from '@wbs/components/dialog-buttons';
 import { DialogWrapperComponent } from '@wbs/components/dialog-wrapper';
 import { CategoryService } from '@wbs/core/services';
 import { CategorySelection } from '@wbs/core/view-models';
+import { environment } from 'src/env';
 import { CreationDialogService } from '../../../services';
 import {
   DisciplineViewComponent,
@@ -62,7 +63,7 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   //
   readonly templateTitle = signal<string>('');
   readonly mainTaskTitle = signal<string>('');
-  readonly alias = signal<string>('Initial Version');
+  readonly alias = signal<string>(environment.initialVersionAlias);
   readonly visibility = signal<'public' | 'private'>('public');
   readonly syncTitles = signal<boolean>(false);
   readonly disciplines = signal<CategorySelection[]>(

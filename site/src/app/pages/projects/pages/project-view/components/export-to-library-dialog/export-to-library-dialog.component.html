@@ -5,20 +5,37 @@
   <div class="w-100">
     <div class="row mg-b-30">
       <label
-        for="title"
+        [for]="titleInput"
         class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
       >
         {{ "General.Title" | translate }}
       </label>
       <div class="col-md-10 col-sm-12">
         <input
-          id="title"
+          #titleInput
           kendoTextBox
           [(ngModel)]="title"
           class="form-control"
           aria-describedby="titleHelp"
         />
         <wbs-info-message [message]="titleHint() | translate" />
+      </div>
+    </div>
+    <div class="row mg-b-30">
+      <label
+        [for]="aliasInput"
+        class="col-form-label col-md-2 col-sm-12 tx-md-normal tx-bold"
+      >
+        {{ "Wbs.VersionAlias" | translate }}
+      </label>
+      <div class="col-md-10 col-sm-12">
+        <input
+          #aliasInput
+          kendoTextBox
+          [(ngModel)]="alias"
+          class="form-control"
+          aria-describedby="titleHelp"
+        />
       </div>
     </div>
     <div class="row mg-b-30">

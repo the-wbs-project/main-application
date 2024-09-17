@@ -233,11 +233,11 @@ export class CreationDialogService {
     version: LibraryEntryVersion,
     tasks: LibraryEntryNode[]
   ): Observable<LibraryEntry> {
-    return this.data.libraryEntries.putAsync(entry).pipe(
+    return this.data.libraryEntries.putEntryAsync(entry).pipe(
       switchMap((newEntry) =>
-        this.data.libraryEntryVersions.putAsync(entry.ownerId, version).pipe(
+        this.data.libraryEntries.putVersionAsync(entry.ownerId, version).pipe(
           switchMap(() =>
-            this.data.libraryEntryNodes.putAsync(
+            this.data.libraryEntries.putTasksAsync(
               entry.ownerId,
               entry.id,
               version.version,

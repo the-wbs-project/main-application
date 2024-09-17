@@ -51,6 +51,7 @@ export class ExportToLibraryDialogService {
       projectId,
       taskId,
       {
+        alias: results.alias,
         author: this.userId()!,
         includeResources: results.includeResources,
         visibility: results.visibility,
@@ -70,6 +71,7 @@ export class ExportToLibraryDialogService {
       projectId,
       taskId,
       {
+        alias: results.alias,
         author: this.userId()!,
         includeResources: results.includeResources,
         visibility: results.visibility,

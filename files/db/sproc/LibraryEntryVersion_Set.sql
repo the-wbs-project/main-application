@@ -12,7 +12,8 @@ CREATE PROCEDURE [dbo].[LibraryEntryVersion_Set]
     @Categories nvarchar(MAX),
     @Disciplines nvarchar(MAX),
     @Author nvarchar(100),
-    @Editors nvarchar(MAX)
+    @Editors nvarchar(MAX),
+    @ReleaseNotes nvarchar(MAX)
 AS
 BEGIN
     IF EXISTS(SELECT 1
@@ -32,6 +33,7 @@ BEGIN
                         [Disciplines] = @Disciplines,
                         [Author] = @Author,
                         [Editors] = @Editors,
+                        [ReleaseNotes] = @ReleaseNotes,
                         [LastModified] = GETUTCDATE()
                     WHERE [EntryId] = @EntryId AND [Version] = @Version
         END
@@ -39,7 +41,7 @@ BEGIN
                 BEGIN
             INSERT INTO [dbo].[LibraryEntryVersions]
             VALUES
-                (@EntryId, @Version, @VersionAlias, @Title, @Description, @Status, @Categories, @Disciplines, GETUTCDATE(), @Author, @Editors)
+                (@EntryId, @Version, @VersionAlias, @Title, @Description, @Status, @Categories, @Disciplines, GETUTCDATE(), @Author, @Editors, @ReleaseNotes)
         END
     END
 END

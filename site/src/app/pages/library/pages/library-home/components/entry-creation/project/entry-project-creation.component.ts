@@ -23,6 +23,7 @@ import { DialogWrapperComponent } from '@wbs/components/dialog-wrapper';
 import { MetadataStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
+import { environment } from 'src/env';
 import { CreationDialogService } from '../../../services';
 import {
   DisciplineViewComponent,
@@ -73,7 +74,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   //
   readonly templateTitle = signal<string>('');
   readonly category = signal<string | undefined>(undefined);
-  readonly alias = signal<string>('Initial Version');
+  readonly alias = signal<string>(environment.initialVersionAlias);
   readonly visibility = signal<'public' | 'private'>('public');
   readonly phases = signal<CategorySelection[]>(this.service.createPhases());
   readonly disciplines = signal<CategorySelection[]>(

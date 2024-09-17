@@ -2,11 +2,7 @@ import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { Utils } from '@wbs/core/services';
-import { EntryStore } from '@wbs/core/store';
-import { forkJoin } from 'rxjs';
-import { map, switchMap } from 'rxjs/operators';
 
 export const redirectGuard = (route: ActivatedRouteSnapshot) => {
   const store = inject(Store);
@@ -22,46 +18,5 @@ export const redirectGuard = (route: ActivatedRouteSnapshot) => {
       Utils.getParam(route, 'versionId'),
       'about',
     ])
-  );
-};
-
-export const populateGuard = (route: ActivatedRouteSnapshot) => {
-  const data = inject(DataServiceFactory);
-  const store = inject(EntryStore);
-  const org = Utils.getParam(route, 'org');
-  const owner = Utils.getParam(route, 'ownerId');
-  const recordId = Utils.getParam(route, 'recordId');
-  const versionId = parseInt(Utils.getParam(route, 'versionId'), 10);
-
-  if (!owner || !recordId || !versionId || isNaN(versionId)) return false;
-
-  const visibility = org === owner ? 'private' : 'public';
-
-  return data.libraryEntries.getIdAsync(owner, recordId).pipe(
-    switchMap((entryId) =>
-      forkJoin({
-        versions: data.libraryEntryVersions.getAsync(owner, entryId),
-        version: data.libraryEntryVersions.getByIdAsync(
-          owner,
-          entryId,
-          versionId
-        ),
-        tasks: data.libraryEntryNodes.getAllAsync(
-          owner,
-          entryId,
-          versionId,
-          visibility
-        ),
-        claims: data.claims.getLibraryEntryClaimsAsync(
-          org,
-          owner,
-          entryId,
-          versionId
-        ),
-      })
-    ),
-    map(({ versions, version, tasks, claims }) => {
-      store.setAll(versions, version, tasks, claims);
-    })
   );
 };

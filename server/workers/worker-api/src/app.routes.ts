@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cors, kv, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error } from './middle';
+import { cors, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error } from './middle';
 import {
   DataServiceFactory,
   Fetcher,
@@ -52,8 +52,7 @@ app.get('api/lists/:type/:locale', Http.metadata.getListsAsync);
 const claimsApp = newApp()
   .basePath('api/claims')
   .use('*', verifyJwt)
-  .get('organization/:organization', Http.claims.getForOrganizationAsync)
-  .get('libraryEntry/:organization/:owner/:entry/:version', Http.claims.getForLibraryEntryAsync);
+  .get('organization/:organization', Http.claims.getForOrganizationAsync);
 
 app.route('/', claimsApp);
 
@@ -84,16 +83,13 @@ app.route('/', libApp);
 const entryApp = newApp()
   .basePath('api/portfolio/:owner/library/entries/:entry')
   .get('id', verifyJwt, Http.library.getIdAsync)
-  .get('versions', verifyJwt, Http.libraryVersions.getAsync)
-  .get('versions/:version', verifyJwt, Http.libraryVersions.getByIdAsync)
-  .get('versions/:version/nodes/public', verifyJwt, Http.libraryTasks.getPublicAsync)
-  .get('versions/:version/nodes/private', verifyJwt, verifyMembership, Http.libraryTasks.getInternalAsync)
+  .get('versions/:version/:visibility', verifyJwt, Http.libraryEntries.getVersionByIdAsync)
 
-  .put('', verifyJwt, Http.libraryEntries.putAsync)
-  .put('versions/:version', verifyJwt, Http.libraryVersions.putAsync)
-  .put('versions/:version/publish', verifyJwt, Http.libraryVersions.publishAsync)
-  .put('versions/:version/replicate', verifyJwt, Http.libraryVersions.publishAsync)
-  .put('versions/:version/nodes', verifyJwt, Http.libraryTasks.putAsync);
+  .put('', verifyJwt, Http.libraryEntries.putEntryAsync)
+  .put('versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync)
+  .put('versions/:version/publish', verifyJwt, Http.libraryEntries.putVersionAsync)
+  .put('versions/:version/replicate', verifyJwt, Http.libraryEntries.putVersionAsync)
+  .put('versions/:version/nodes', verifyJwt, Http.libraryEntries.putTasksAsync);
 
 app.route('/', entryApp);
 //

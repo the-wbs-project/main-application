@@ -19,4 +19,5 @@ export interface LibraryEntryVersion {
   categories: string[];
   disciplines: ProjectCategory[];
   lastModified: Date;
+  releaseNotes?: string;
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map, tap } from 'rxjs/operators';
+import { tap } from 'rxjs/operators';
 import {
   Project,
   ProjectApproval,
@@ -9,8 +9,8 @@ import {
   ProjectNodeToLibraryOptions,
   ProjectToLibraryOptions,
 } from '../models';
-import { ProjectViewModel } from '../view-models';
 import { Utils } from '../services';
+import { ProjectViewModel } from '../view-models';
 
 declare type ProjectWithNodesAndApprovals = {
   project: ProjectViewModel;

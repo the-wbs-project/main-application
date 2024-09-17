@@ -7,9 +7,7 @@ import { ChatDataService } from './chat.data-service';
 import { ClaimsDataService } from './claims.data-service';
 import { JiraDataService } from './jira.data-service';
 import { LibraryEntryDataService } from './library-entry.data-service';
-import { LibraryEntryNodeDataService } from './library-entry-node.data-service';
 import { ContentResourcesDataService } from './content-resources.data-service';
-import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
 import { LibraryEntryWatcherDataService } from './library-entry-watcher.data-service';
 import { MembershipDataService } from './membership.data-service';
 import { MetdataDataService } from './metdata.data-service';
@@ -36,8 +34,6 @@ export class DataServiceFactory {
   readonly jira = new JiraDataService(this.http);
   readonly library = new LibraryDataService(this.http);
   readonly libraryEntries = new LibraryEntryDataService(this.http);
-  readonly libraryEntryNodes = new LibraryEntryNodeDataService(this.http);
-  readonly libraryEntryVersions = new LibraryEntryVersionDataService(this.http);
   readonly libraryEntryWatchers = new LibraryEntryWatcherDataService(this.http);
   readonly memberships = new MembershipDataService(this.http);
   readonly metdata = new MetdataDataService(this.http);

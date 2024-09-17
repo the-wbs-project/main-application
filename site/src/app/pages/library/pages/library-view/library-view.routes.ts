@@ -7,14 +7,12 @@ import {
   LibraryTaskActionService,
   LibraryTaskService,
   entryUrlResolve,
-  populateGuard,
   redirectGuard,
 } from './services';
 
 export const routes: Routes = [
   {
     path: ':ownerId/:recordId/:versionId',
-    canActivate: [populateGuard],
     loadComponent: () =>
       import('./library-view.component').then((m) => m.LibraryViewComponent),
     providers: [

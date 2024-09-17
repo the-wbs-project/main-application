@@ -1,5 +1,14 @@
 import { Context } from '../config';
-import { LIBRARY_PERMISSIONS, LIBRARY_ROLES, ORGANZIATION_PERMISSIONS, Permissions, Project, PROJECT_PERMISSIONS, ROLES } from '../models';
+import {
+  LIBRARY_PERMISSIONS,
+  LIBRARY_ROLES,
+  LibraryEntryVersion,
+  ORGANZIATION_PERMISSIONS,
+  Permissions,
+  Project,
+  PROJECT_PERMISSIONS,
+  ROLES,
+} from '../models';
 import { DataServiceFactory } from './data-services';
 
 export class ClaimsService {
@@ -35,17 +44,12 @@ export class ClaimsService {
     return this.getClaims(PROJECT_PERMISSIONS, roles);
   }
 
-  async getForLibraryEntryAsync(): Promise<string[]> {
-    const { organization, owner, entry, version } = this.ctx.req.param();
+  async getForLibraryEntry(organization: string, owner: string, version: LibraryEntryVersion): Promise<string[]> {
     const roles = [LIBRARY_ROLES.VIEWER];
 
     if (organization === owner) {
-      const model = await this.data.libraryVersions.getByIdAsync(owner, entry, parseInt(version));
-
-      if (model) {
-        if (model.author === this.userId) roles.push(LIBRARY_ROLES.OWNER);
-        if (model.editors?.includes(this.userId)) roles.push(LIBRARY_ROLES.EDITOR);
-      }
+      if (version.author === this.userId) roles.push(LIBRARY_ROLES.OWNER);
+      if (version.editors?.includes(this.userId)) roles.push(LIBRARY_ROLES.EDITOR);
     }
 
     return this.getClaims(LIBRARY_PERMISSIONS, roles);
