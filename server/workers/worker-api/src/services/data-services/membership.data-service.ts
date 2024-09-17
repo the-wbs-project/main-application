@@ -1,15 +1,11 @@
 import { AuthEntrypoint, MembershipsEntrypoint } from '../../config';
-import { Member } from '../../models';
+import { UserViewModel } from '../../view-models';
 
 export class MembershipDataService {
   constructor(private readonly authApi: AuthEntrypoint) {}
 
-  async getAllAsync(name: string): Promise<Member[]> {
+  async getAllAsync(name: string): Promise<UserViewModel[]> {
     return (await this.service()).getAll(name);
-  }
-
-  async getAsync(name: string, userId: string): Promise<Member | undefined> {
-    return (await this.service()).get(name, userId);
   }
 
   async addAsync(name: string, members: string[]): Promise<void> {

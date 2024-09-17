@@ -19,12 +19,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ResourceRecord } from '@wbs/core/models';
+import { ContentResource } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../type-text';
 import { ImageDialogComponent } from './components/image-dialog.component';
-import { PdfDialogComponent } from './components/pdf-dialog.component';
+import { PdfDialogComponent } from './components/pdf-dialog';
 
 @Component({
   standalone: true,
@@ -52,16 +52,15 @@ export class RecordResourceListComponent {
   readonly deleteIcon = faTrash;
   readonly infoIcon = faQuestionCircle;
 
-  readonly apiUrlPrefix = input.required<string>();
   readonly canEdit = input.required<boolean>();
   readonly canDelete = input.required<boolean>();
-  readonly list = model.required<ResourceRecord[]>();
+  readonly list = model.required<ContentResource[]>();
   //
   //  Outputs
   //
-  readonly delete = output<ResourceRecord>();
-  readonly edit = output<ResourceRecord>();
-  readonly save = output<ResourceRecord[]>();
+  readonly delete = output<ContentResource>();
+  readonly edit = output<ContentResource>();
+  readonly save = output<ContentResource[]>();
 
   onDrop({ previousIndex, currentIndex }: CdkDragDrop<any, any>): void {
     this.list.update((list) => {
@@ -85,19 +84,15 @@ export class RecordResourceListComponent {
     });
   }
 
-  open(record: ResourceRecord): void {
-    if (record.type === 'image') {
-      this.data.staticFiles
-        .getResourceFileAsync(this.apiUrlPrefix(), record.id)
-        .subscribe((file) =>
-          ImageDialogComponent.launch(this.dialog, record.name, file)
-        );
-    } else if (record.type === 'pdf') {
-      this.data.staticFiles
-        .getResourceFileAsync(this.apiUrlPrefix(), record.id)
-        .subscribe((file) =>
-          PdfDialogComponent.launch(this.dialog, record.name, file)
-        );
-    }
+  open(record: ContentResource): void {
+    this.data.contentResources
+      .getFileAsync(record.ownerId, record.parentId, record.id)
+      .subscribe((file) => {
+        if (record.type === 'image') {
+          //ImageDialogComponent.launch(this.dialog, record.name, file)
+        } else if (record.type === 'pdf') {
+          PdfDialogComponent.launch(this.dialog, record.name, file);
+        }
+      });
   }
 }

@@ -17,13 +17,9 @@
     <link rel="preconnect" href="https://ka-p.fontawesome.com" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://imagedelivery.net" />
-    <!--SERVER-->
 
-    <script>
-      window.appConfig = JSON.parse(
-        document.getElementById("edge_config").innerHTML
-      );
-    </script>
+    <link rel="prefetch" href="/api/startup" as="data" />
+
     <script>
       (function (h, o, u, n, d) {
         h = h[d] = h[d] || {
@@ -46,10 +42,10 @@
       );
       window.DD_LOGS.onReady(function () {
         window.DD_LOGS.init({
-          clientToken: window.appConfig["datadog_logs_client_token"],
+          clientToken: "pubd0e9b67a9b76d45b8156a8ce603286d7",
           site: "us5.datadoghq.com",
           service: "pm-empower-site",
-          env: window.appConfig["environment"],
+          env: "development",
           forwardErrorsToLogs: false,
           sessionSampleRate: 100,
           beforeSend: (log) => {
@@ -90,13 +86,11 @@
       );
       window.DD_RUM.onReady(function () {
         window.DD_RUM.init({
-          clientToken: window.appConfig["datadog_rum_client_token"],
-          applicationId: window.appConfig["datadog_rum_application_id"],
-          // `site` refers to the Datadog site parameter of your organization
-          // see https://docs.datadoghq.com/getting_started/site/
+          clientToken: "pub4836b33b585d8355b1541625cecdcf5b",
+          applicationId: "efa2e736-603b-4e4a-93f6-ee893b7a557b",
           site: "us5.datadoghq.com",
           service: "pm-empower",
-          env: window.appConfig["environment"],
+          env: "development",
           // Specify a version number to identify the deployed version of your application in Datadog
           // version: '1.0.0',
           sessionSampleRate: 100,
@@ -110,20 +104,26 @@
     </script>
     <link rel="stylesheet" href="/assets/notiflix-3.2.6.min.css" async />
     <link rel="stylesheet" href="/assets/css/kendo.css" />
-
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.core.min.css"
+      integrity="sha512-rvP2ghMACNMJ0HoDaJdeQ0eVwDCLyQCbHCmoBBaCKGF/GkA+NExPuXQdnK4h40sQFyIvfVsiwh4bO3lJdkL01Q=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      defer
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/quill/2.0.2/quill.snow.min.css"
+      integrity="sha512-UmV2ARg2MsY8TysMjhJvXSQHYgiYSVPS5ULXZCsTP3RgiMmBJhf8qP93vEyJgYuGt3u9V6wem73b11/Y8GVcOg=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
     <script
       src="https://kit.fontawesome.com/c1cae0062a.js"
       crossorigin="anonymous"
       async
     ></script>
-    <link
-      defer
-      rel="stylesheet"
-      href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css"
-      integrity="sha512-UtLOu9C7NuThQhuXXrGwx9Jb/z9zPQJctuAgNUBK3Z6kkSYT9wJ+2+dh6klS+TDBCV9kNPBbAxbVD+vCcfGPaA=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    />
   </head>
   <body class="ltr main-body app sidebar-mini">
     <wbs-app></wbs-app>
@@ -136,13 +136,6 @@
     <script
       src="https://cdnjs.cloudflare.com/ajax/libs/hammer.js/2.0.8/hammer.min.js"
       integrity="sha512-UXumZrZNiOwnTcZSHLOfcTs0aos2MzBWHXOHOuB0J/R44QB0dwY5JgfbvljXcklVf65Gc4El6RjZ+lnwd2az2g=="
-      crossorigin="anonymous"
-      referrerpolicy="no-referrer"
-    ></script>
-    <script
-      defer
-      src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"
-      integrity="sha512-JyCZjCOZoyeQZSd5+YEAcFgz2fowJ1F1hyJOXgtKu4llIa0KneLcidn5bwfutiehUTiOuK87A986BZJMko0eWQ=="
       crossorigin="anonymous"
       referrerpolicy="no-referrer"
     ></script>

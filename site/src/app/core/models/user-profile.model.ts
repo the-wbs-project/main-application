@@ -13,6 +13,7 @@ export interface User {
     title?: string;
     linkedIn?: string;
     twitter?: string;
+    onboarded?: 'v1';
     showExternally: string[];
   };
 }

@@ -149,5 +149,85 @@
         "description": "Actions.TaskAbsFlagChangedDescription",
         "icon": "fa-flag",
         "order": 0
+    },
+    {
+        "id": "task-imported",
+        "type": "actions",
+        "label": "Actions.TaskImportedTitle",
+        "description": "Actions.TaskImportedDescription",
+        "icon": "fa-file-import",
+        "order": 0
+    },
+    {
+        "id": "project-resource-added",
+        "type": "actions",
+        "label": "Actions.ResourceAddedTitle",
+        "description": "Actions.ResourceAddedDescriptionProject",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "task-resource-added",
+        "type": "actions",
+        "label": "Actions.ResourceAddedTitle",
+        "description": "Actions.ResourceAddedDescriptionTask",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "project-resource-reordered",
+        "type": "actions",
+        "label": "Actions.ResourceReorderedTitle",
+        "description": "Actions.ResourceReorderedDescriptionProject",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "task-resource-reordered",
+        "type": "actions",
+        "label": "Actions.ResourceReorderedTitle",
+        "description": "Actions.ResourceReorderedDescriptionTask",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "project-resource-updated",
+        "type": "actions",
+        "label": "Actions.ResourceUpdatedTitle",
+        "description": "Actions.ResourceUpdatedDescriptionProject",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "task-resource-updated",
+        "type": "actions",
+        "label": "Actions.ResourceUpdatedTitle",
+        "description": "Actions.ResourceUpdatedDescriptionTask",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "project-resource-removed",
+        "type": "actions",
+        "label": "Actions.ResourceRemovedTitle",
+        "description": "Actions.ResourceRemovedDescriptionProject",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "task-resource-removed",
+        "type": "actions",
+        "label": "Actions.ResourceRemovedTitle",
+        "description": "Actions.ResourceRemovedDescriptionTask",
+        "icon": "fa-file",
+        "order": 0
+    },
+    {
+        "id": "task-abs-bulk-changed",
+        "type": "actions",
+        "label": "Actions.TaskAbsFlagBulkChangedTitle",
+        "description": "Actions.TaskAbsFlagBulkChangedDescription",
+        "icon": "fa-flag",
+        "order": 0
     }
 ]

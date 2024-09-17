@@ -1,9 +1,9 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
-import { EditorModule } from '@progress/kendo-angular-editor';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { EditorComponent } from '@wbs/components/_utils/editor.component';
 import { ProjectCreateStore } from '../project-create.store';
 
 @Component({
@@ -23,15 +23,11 @@ import { ProjectCreateStore } from '../project-create.store';
     />
     <br />
     <br />
-    <kendo-editor
-      #descriptionEditor
-      [(ngModel)]="store.description"
-      [placeholder]="'Projects.ProjectDescription' | translate"
-    />`,
+    <wbs-editor cssClass="w-100" [(value)]="store.description" />`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AlertComponent,
-    EditorModule,
+    EditorComponent,
     FormsModule,
     TextBoxModule,
     TranslateModule,

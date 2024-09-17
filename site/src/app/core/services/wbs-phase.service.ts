@@ -13,7 +13,6 @@ export class WbsPhaseService {
     position: DropPosition
   ): RebuildResults {
     dragged.phaseId = target.phaseId;
-    dragged.phaseLabel = target.phaseLabel;
 
     if (position === 'over') {
       //
@@ -59,7 +58,6 @@ export class WbsPhaseService {
         if (child.levelText !== levelText) {
           child.levels = level;
           child.levelText = levelText;
-          child.depth = levelText.split('.').length;
           changed = true;
         }
         results.rows.push(child);
@@ -69,8 +67,8 @@ export class WbsPhaseService {
           child.children = childrenCount;
           changed = true;
         }
-        if (child.treeParentId !== parentId) {
-          child.treeParentId = parentId;
+        if (child.parentId !== parentId) {
+          child.parentId = parentId;
           changed = true;
         }
 

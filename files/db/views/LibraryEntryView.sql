@@ -14,7 +14,8 @@ AS
         v.[Title],
         v.[VersionAlias],
         v.[LastModified],
-        v.[Status]
+        v.[Status],
+        v.[ReleaseNotes]
     FROM
         [dbo].[LibraryEntries] e INNER JOIN
         [dbo].[LibraryEntryVersions] v ON e.[Id] = v.[EntryId] AND v.[Version] = ISNULL(e.[PublishedVersion], 1)

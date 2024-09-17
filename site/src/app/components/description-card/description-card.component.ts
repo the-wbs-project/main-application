@@ -15,7 +15,6 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
-import { EditorModule } from '@progress/kendo-angular-editor';
 import { ProjectApproval, SaveState } from '@wbs/core/models';
 import { AiButtonComponent } from '@wbs/components/_utils/ai-button.component';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
@@ -23,6 +22,7 @@ import { ApprovalBadgeComponent } from '@wbs/components/_utils/approval-badge.co
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
+import { EditorComponent } from '../_utils/editor.component';
 
 @Component({
   standalone: true,
@@ -35,7 +35,7 @@ import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
     AlertComponent,
     ApprovalBadgeComponent,
     ButtonModule,
-    EditorModule,
+    EditorComponent,
     FontAwesomeModule,
     FormsModule,
     SafeHtmlPipe,

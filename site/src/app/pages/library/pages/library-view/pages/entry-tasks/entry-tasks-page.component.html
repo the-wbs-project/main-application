@@ -1,0 +1,26 @@
+@if (showDialog()) {
+<kendo-dialog
+  height="95%"
+  width="95%"
+  [title]="'General.Tasks' | translate"
+  (close)="showDialog.set(false)"
+>
+  <div
+    [(wbsHeight)]="dialogContainerHeight"
+    class="pd-0 d-flex flex-column h-100"
+  >
+    <wbs-library-tree
+      [showFullscreen]="false"
+      [containerHeight]="dialogContainerHeight()"
+    />
+  </div>
+</kendo-dialog>
+} @else {
+<div [(wbsHeight)]="containerHeight" class="d-flex flex-column h-100">
+  <wbs-library-tree
+    [showFullscreen]="true"
+    [containerHeight]="containerHeight()"
+    (goFullScreen)="showDialog.set(true)"
+  />
+</div>
+}

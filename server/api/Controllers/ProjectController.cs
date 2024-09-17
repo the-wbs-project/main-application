@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
 using Wbs.Core.Services;
-using Wbs.Core.Services.Search;
 
 namespace Wbs.Api.Controllers;
 
@@ -14,18 +13,16 @@ public class ProjectController : ControllerBase
     private readonly DbService db;
     private readonly ILogger logger;
     private readonly ProjectDataService projectDataService;
-    private readonly ProjectResourceDataService projectResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
-    private readonly ResourceFileStorageService resourceService;
+    private readonly ProjectSnapshotDataService projectSnapshotDataService;
 
-    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectResourceDataService projectResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ImportLibraryEntryService importLibraryEntryService, ProjectSnapshotDataService projectSnapshotDataService, DbService db)
     {
         logger = loggerFactory.CreateLogger<ProjectController>();
         this.projectDataService = projectDataService;
-        this.projectResourceDataService = projectResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
-        this.resourceService = resourceService;
         this.db = db;
+        this.projectSnapshotDataService = projectSnapshotDataService;
     }
 
     [Authorize]
@@ -40,26 +37,6 @@ public class ProjectController : ControllerBase
         catch (Exception ex)
         {
             logger.LogError(ex, "Error getting projects for owner {owner}", owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{projectId}")]
-    public async Task<IActionResult> Put(string owner, Project project)
-    {
-        try
-        {
-            if (project.owner != owner) return BadRequest("Owner in url must match owner in body");
-
-            using (var conn = await db.CreateConnectionAsync())
-                await projectDataService.SetAsync(conn, project);
-
-            return Accepted();
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error setting project {projectId} for owner {owner}", project.id, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -81,38 +58,64 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
+    [HttpPut("{projectId}")]
+    public async Task<IActionResult> Put(string owner, string projectId, Project project)
+    {
+        try
+        {
+            if (project.Owner != owner) return BadRequest("Owner in url must match owner in body");
+            if (project.Id != projectId) return BadRequest("ProjectId in url must match projectId in body");
+
+            using (var conn = await db.CreateConnectionAsync())
+                await projectDataService.SetAsync(conn, project);
+
+            return Accepted();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error setting project {projectId} for owner {owner}", project.Id, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpDelete("{projectId}")]
+    public async Task<IActionResult> Delete(string owner, string projectId)
+    {
+        try
+        {
+
+            using var conn = await db.CreateConnectionAsync();
+
+            var project = await projectDataService.GetByIdAsync(conn, projectId);
+
+            if (project == null) return NotFound();
+
+            project.Status = "cancelled";
+
+            await projectDataService.SetAsync(conn, project);
+
+            return Accepted();
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error cancelling project {projectId} for owner {owner}", projectId, owner);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpGet("{projectId}/roles")]
     public async Task<IActionResult> GetRolesByIdAsync(string owner, string projectId)
     {
         try
         {
             using (var conn = await db.CreateConnectionAsync())
-                return Ok((await projectDataService.GetByIdAsync(conn, projectId)).roles ?? new ProjectRole[] { });
+                return Ok((await projectDataService.GetByIdAsync(conn, projectId)).Roles ?? new ProjectRole[] { });
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error getting roles for project {projectId} for owner {owner}", projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{projectId}/resources")]
-    public async Task<IActionResult> GetProjectResources(string owner, string projectId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                return Ok(await projectResourceDataService.GetListAsync(conn, projectId));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting resources for project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }
@@ -139,84 +142,22 @@ public class ProjectController : ControllerBase
     }
 
     [Authorize]
-    [HttpPut("{projectId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutProjectResources(string owner, string projectId, string resourceId, ResourceRecord resource)
+    [HttpPost("{projectId}/snapshot")]
+    public async Task<IActionResult> SnapshotProject(string owner, string projectId, [FromBody] string activityId)
     {
         try
         {
             using (var conn = await db.CreateConnectionAsync())
             {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                await projectResourceDataService.SetAsync(conn, owner, projectId, resource);
+                await projectSnapshotDataService.SetAsync(conn, projectId, [activityId]);
 
                 return NoContent();
             }
+
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error setting resource {resourceId} for project {projectId} for owner {owner}", resourceId, projectId, owner);
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{projectId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> GetResourceFileAsync(string owner, string projectId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                var record = await projectResourceDataService.GetAsync(conn, projectId, resourceId);
-                var file = await resourceService.GetProjectResourceAsync(owner, projectId, resourceId);
-
-                return File(file, "application/octet-stream", record.Resource);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{projectId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> PutResourceFileAsync(string owner, string projectId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
-                    return BadRequest("Project not found for the owner provided.");
-
-                var record = await projectResourceDataService.GetAsync(conn, projectId, resourceId);
-
-                Request.EnableBuffering();
-                Request.Body.Position = 0;
-                var bytes = new byte[] { };
-
-                using (var stream = new MemoryStream())
-                {
-                    await Request.Body.CopyToAsync(stream);
-
-                    bytes = stream.ToArray();
-                }
-
-                await resourceService.SaveProjectResourceAsync(owner, projectId, resourceId, bytes);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
+            logger.LogError(ex, "Error exporting project {projectId} for owner {owner}", projectId, owner);
             return new StatusCodeResult(500);
         }
     }

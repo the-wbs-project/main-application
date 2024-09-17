@@ -3,28 +3,33 @@ import {
   faBookArrowRight,
   faCheck,
   faCloudDownload,
-  faCloudUpload,
   faPowerOff,
   faStamp,
   faXmarkToSlot,
+  IconDefinition,
 } from '@fortawesome/pro-solid-svg-icons';
-import { Store } from '@ngxs/store';
-import { PROJECT_CLAIMS, PROJECT_STATI } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
+import {
+  ActionButtonMenuItem,
+  PROJECT_CLAIMS,
+  PROJECT_STATI,
+} from '@wbs/core/models';
+import { MenuService, Messages } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
 import { ProjectViewModel } from '@wbs/core/view-models';
-import { ProjectAction } from '../models';
-import { ProjectState } from '../states';
+import { PROJECT_NAVIGATION } from '../models';
+import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
 import { ProjectViewService } from './project-view.service';
+import { ProjectService } from './project.service';
 
 @Injectable()
 export class ProjectActionButtonService {
   private readonly actions = inject(ProjectViewService);
   private readonly exportService = inject(LibraryEntryExportService);
+  private readonly menuService = inject(MenuService);
   private readonly messages = inject(Messages);
   private readonly metadata = inject(MetadataStore);
-  private readonly store = inject(Store);
+  private readonly store = inject(ProjectStore);
 
   private readonly actionApproval = 'approval';
   private readonly actionCancel = 'cancel';
@@ -33,39 +38,43 @@ export class ProjectActionButtonService {
   private readonly actionApprove = 'approve';
   private readonly actionDownloadWbs = 'downloadWbs';
   private readonly actionDownloadAbs = 'downloadAbs';
-  private readonly actionUpload = 'upload';
   private readonly actionExport = 'export';
 
-  buildMenu(
-    project: ProjectViewModel,
-    claims: string[],
-    approvalEnabled: boolean
-  ): ProjectAction[] | undefined {
+  buildMenu(project: ProjectViewModel | undefined): ActionButtonMenuItem[] {
+    if (!project) return [];
+
+    const claims = this.store.claims();
+    const projectUrl = ProjectService.getProjectUrl(project);
+    const approvalEnabled = this.store.isApprovalEnabled();
+    const items: ActionButtonMenuItem[] = [this.header('General.Views')];
     const stati = PROJECT_STATI;
-    const items: ProjectAction[] = [
-      { separator: true },
+
+    for (const view of this.menuService.filterList(
+      PROJECT_NAVIGATION,
+      claims,
+      project.status,
+      project
+    )) {
+      items.push({
+        resource: view.resource,
+        faIcon: view.faIcon as IconDefinition | undefined,
+        route: [...projectUrl, ...view.route!],
+      });
+    }
+
+    items.push(
+      this.header('General.Actions'),
       {
         action: this.actionDownloadWbs,
-        icon: faCloudDownload,
-        text: 'Wbs.DownloadWbs',
+        faIcon: faCloudDownload,
+        resource: 'Wbs.DownloadWbs',
       },
       {
         action: this.actionDownloadAbs,
-        icon: faCloudDownload,
-        text: 'Wbs.DownloadAbs',
-      },
-    ];
-
-    if (
-      project.status === stati.PLANNING &&
-      claims.includes(PROJECT_CLAIMS.TASKS.UPDATE)
-    ) {
-      items.push({
-        action: this.actionUpload,
-        icon: faCloudUpload,
-        text: 'Wbs.UploadTasks',
-      });
-    }
+        faIcon: faCloudDownload,
+        resource: 'Wbs.DownloadAbs',
+      }
+    );
 
     if (approvalEnabled) {
       items.push({ separator: true });
@@ -73,30 +82,30 @@ export class ProjectActionButtonService {
       if (project.status === stati.PLANNING) {
         if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
           items.push({
-            text: 'Projects.SubmitForApproval',
-            icon: faCheck,
+            resource: 'Projects.SubmitForApproval',
+            faIcon: faCheck,
             action: this.actionApproval,
           });
         }
       } else if (project.status === stati.APPROVAL) {
         if (claims.includes(PROJECT_CLAIMS.STATI.CAN_RETURN_TO_PLANNING)) {
           items.push({
-            text: 'Projects.ReturnToPlanning',
-            icon: faStamp,
+            resource: 'Projects.ReturnToPlanning',
+            faIcon: faStamp,
             action: this.actionReturnPlanning,
           });
         }
         if (claims.includes(PROJECT_CLAIMS.STATI.CAN_APPROVE)) {
           items.push({
-            text: 'Projects.ApproveProject',
-            icon: faStamp,
+            resource: 'Projects.ApproveProject',
+            faIcon: faStamp,
             action: this.actionApprove,
           });
         }
         if (claims.includes(PROJECT_CLAIMS.STATI.CAN_REJECT)) {
           items.push({
-            text: 'Projects.RejectProject',
-            icon: faXmarkToSlot,
+            resource: 'Projects.RejectProject',
+            faIcon: faXmarkToSlot,
             action: this.actionReject,
           });
         }
@@ -107,8 +116,8 @@ export class ProjectActionButtonService {
 
         if (claims.includes(PROJECT_CLAIMS.STATI.CAN_SUBMIT_FOR_APPROVAL)) {
           items.push({
-            text: 'Projects.SubmitForExecution',
-            icon: faCheck,
+            resource: 'Projects.SubmitForExecution',
+            faIcon: faCheck,
             action: this.actionApprove,
           });
         }
@@ -116,23 +125,23 @@ export class ProjectActionButtonService {
     }
 
     items.push({
-      text: 'Projects.ExportToLibrary',
-      icon: faBookArrowRight,
+      resource: 'Projects.ExportToLibrary',
+      faIcon: faBookArrowRight,
       action: this.actionExport,
     });
 
     if (claims.includes(PROJECT_CLAIMS.STATI.CAN_CANCEL)) {
       if (items.length > 0) items.push({ separator: true });
       items.push({
-        text: 'Projects.CancelProject',
-        icon: faPowerOff,
+        resource: 'Projects.CancelProject',
+        faIcon: faPowerOff,
         action: this.actionCancel,
       });
     }
-    return items.length === 0 ? undefined : items;
+    return items;
   }
 
-  handleAction(action: string, approvalEnabled: boolean): void {
+  handleAction(action: string): void {
     switch (action) {
       case this.actionDownloadAbs:
         this.actions.downloadTasks(true);
@@ -140,10 +149,6 @@ export class ProjectActionButtonService {
 
       case this.actionDownloadWbs:
         this.actions.downloadTasks(false);
-        break;
-
-      case this.actionUpload:
-        this.actions.uploadTasks();
         break;
 
       case this.actionApproval:
@@ -163,7 +168,7 @@ export class ProjectActionButtonService {
         break;
 
       case this.actionApprove:
-        this.approve(approvalEnabled);
+        //this.approve(approvalEnabled);
         break;
 
       case this.actionExport:
@@ -173,9 +178,7 @@ export class ProjectActionButtonService {
   }
 
   private export(): void {
-    this.exportService.exportProject(
-      this.store.selectSnapshot(ProjectState.current)!
-    );
+    this.exportService.exportProject(this.store.project()!);
   }
 
   private cancel(): void {
@@ -189,9 +192,9 @@ export class ProjectActionButtonService {
   private approval(): void {
     const role = this.metadata.roles.ids.approver;
     const approvals = this.store
-      .selectSnapshot(ProjectState.current)!
+      .project()!
       .roles.filter((r) => r.role === role)
-      .map((r) => r.userId);
+      .map((r) => r.user.userId);
 
     if (approvals.length === 0) {
       this.messages.report.failure(
@@ -233,5 +236,14 @@ export class ProjectActionButtonService {
         ? 'Projects.ApproveProjectSuccess'
         : 'Projects.SubmitForExecutionSuccess'
     );
+  }
+
+  private header(resource: string): ActionButtonMenuItem {
+    return {
+      resource,
+      disabled: true,
+      isHeader: true,
+      cssClass: ['bg-gray-400', 'fs-italic'],
+    };
   }
 }

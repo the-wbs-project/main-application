@@ -1,26 +1,26 @@
-import {
-  Project,
-  WbsImportResult,
-  ProjectUploadData,
-  WbsNode,
-  ProjectCategory,
-} from '@wbs/core/models';
-import { IdService } from '@wbs/core/services';
-import { BaseImporter } from './base-importer.service';
 import { inject } from '@angular/core';
-import { WbsNodeService } from '@wbs/core/services/wbs-node.service';
+import {
+  ProjectCategory,
+  ProjectNode,
+  ProjectUploadData,
+  WbsImportResult,
+  WbsNode,
+} from '@wbs/core/models';
+import { IdService, WbsNodeService } from '@wbs/core/services';
+import { ProjectViewModel } from '@wbs/core/view-models';
+import { BaseImporter } from './base-importer.service';
 
 export class WbsNodePhaseProjectImporter extends BaseImporter {
   private readonly wbsService = inject(WbsNodeService);
 
   run(
-    project: Project,
+    project: ProjectViewModel,
     existingNodes: WbsNode[],
     action: 'append' | 'overwrite',
     people: Map<string, ProjectCategory>,
     nodes: Map<string, WbsImportResult>
-  ): ProjectUploadData {
-    const results: ProjectUploadData = {
+  ): ProjectUploadData<ProjectNode> {
+    const results: ProjectUploadData<ProjectNode> = {
       disciplines: this.getDisciplines(project.disciplines ?? [], people),
       removeIds: [],
       upserts: [],
@@ -50,16 +50,23 @@ export class WbsNodePhaseProjectImporter extends BaseImporter {
         nodes
       );
       const now = new Date();
-      const node: WbsNode = {
+      const node: ProjectNode = {
         id: phaseId,
         order: counter + phaseDelta,
         title: info.title,
         createdOn: now,
         lastModified: now,
         disciplineIds: this.getDisciplineFromPeople(info, people),
+        projectId: project.id,
+        absFlag: false,
       };
+      const projectChildren: ProjectNode[] = children.map((child) => ({
+        ...child,
+        projectId: project.id,
+        absFlag: false,
+      }));
 
-      results.upserts.push(node, ...children);
+      results.upserts.push(node, ...projectChildren);
       counter++;
     }
 

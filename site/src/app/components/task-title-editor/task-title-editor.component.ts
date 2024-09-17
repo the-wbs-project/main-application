@@ -31,8 +31,8 @@ export class TaskTitleEditorComponent implements OnChanges {
   readonly faFloppyDisk = faFloppyDisk;
   readonly faXmark = faXmark;
   readonly title = input.required<string>();
-  readonly save = output<string>();
   readonly editTitle = signal<string>('');
+  readonly save = output<string>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['title']) this.reset();

@@ -13,4 +13,9 @@ export enum LIBRARY_VERSION_ACTIONS {
   UNPUBLISHED = 'library-version-unpublished',
   CANCEL_VERSION = 'library-version-cancel',
   CONTRIBUTORS_CHANGED = 'library-version-contributors-changed',
+  RESOURCE_ADDED = 'library-version-resources-added',
+  RESOURCE_CHANGED = 'library-version-resource-changed',
+  RESOURCE_REMOVED = 'library-version-resource-removed',
+  RESOURCE_REORDERED = 'library-version-resource-reordered',
+  IMPORT_TASKS = 'library-version-import-tasks',
 }

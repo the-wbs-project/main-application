@@ -1,0 +1,17 @@
+<div class="d-inline-block w-100 mx-wd-800 tx-left">
+  <div class="pd-x-12 mb-3">
+    <label [for]="templateTitle" class="form-label tx-18">
+      {{ "LibraryCreate.TemplateTitle" | translate }}
+    </label>
+    <input kendoTextBox #templateTitle [(ngModel)]="title" />
+    <label class="d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+    </label>
+  </div>
+  <div class="pd-x-12 mb-3">
+    <label class="form-label tx-18">
+      {{ "General.Visibility" | translate }}
+    </label>
+    <wbs-visibility-selection [(visibility)]="visibility" />
+  </div>
+</div>

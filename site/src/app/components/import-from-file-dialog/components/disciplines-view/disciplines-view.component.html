@@ -1,0 +1,36 @@
+@let people = peopleList();
+
+<div class="d-flex justify-content-center">
+  <div class="pd-15 text-start">
+    <wbs-alert
+      type="info"
+      [dismissible]="false"
+      heading="Upload.Why"
+      message="Upload.DisciplineMessage"
+    />
+    <div class="list-group text-start w-100 pd-t-20">
+      @for (person of people; track i; let i = $index) {
+      <div class="list-group-item d-flex flex-row flex-align-center">
+        <div class="pd-t-1 wd-60 d-inline-block">
+          <fa-layers [fixedWidth]="true">
+            <fa-icon size="2x" [icon]="circleIcon" />
+            <fa-layers-text
+              [content]="(i + 1).toString()"
+              transform="right-6"
+            />
+          </fa-layers>
+        </div>
+        <div style="font-size: 12px; padding-right: 30px">
+          {{ person.name }}
+        </div>
+        <div class="flex-grow-1 text-end tx-10">
+          <wbs-category-match-list
+            [categories]="disciplines()"
+            [(value)]="person.discipline"
+          />
+        </div>
+      </div>
+      }
+    </div>
+  </div>
+</div>

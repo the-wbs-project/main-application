@@ -2,7 +2,8 @@
 
 public class ProjectImportResults
 {
-    public string levelText { get; set; }
-    public string title { get; set; }
-    public List<string> resources { get; set; }
+    public string Id { get; set; }
+    public string LevelText { get; set; }
+    public string Title { get; set; }
+    public List<string> Resources { get; set; }
 }

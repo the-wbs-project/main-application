@@ -14,18 +14,14 @@ public class LibraryEntryNodeController : ControllerBase
     private readonly ILogger logger;
     private readonly LibraryEntryVersionDataService versionDataService;
     private readonly LibraryEntryNodeDataService nodeDataService;
-    private readonly LibraryEntryNodeResourceDataService nodeResourceDataService;
     private readonly ImportLibraryEntryService importLibraryEntryService;
-    private readonly ResourceFileStorageService resourceService;
 
-    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, LibraryEntryNodeResourceDataService nodeResourceDataService, ImportLibraryEntryService importLibraryEntryService, ResourceFileStorageService resourceService, DbService db)
+    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryNodeController>();
         this.nodeDataService = nodeDataService;
         this.versionDataService = versionDataService;
-        this.nodeResourceDataService = nodeResourceDataService;
         this.importLibraryEntryService = importLibraryEntryService;
-        this.resourceService = resourceService;
         this.db = db;
     }
 
@@ -81,145 +77,14 @@ public class LibraryEntryNodeController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{nodeId}/resources")]
-    public async Task<IActionResult> GetNodeResourcesAsync(string owner, string entryId, int entryVersion, string nodeId)
+    [HttpPost("{nodeId}/export/{targetOwnerId}")]
+    public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string entryId, int entryVersion, string nodeId, string targetOwnerId, [FromBody] ProjectNodeToLibraryOptions options)
     {
         try
         {
             using (var conn = await db.CreateConnectionAsync())
             {
-                if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
-                    return BadRequest("Entry Node not found for the credentails provided.");
-
-                return Ok(await nodeResourceDataService.GetListAsync(conn, entryId, entryVersion, nodeId));
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error getting library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> PutNodeResourceAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId, ResourceRecord model)
-    {
-        try
-        {
-            if (model.Id != resourceId) return BadRequest("Id in body must match ResourceId in url");
-
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
-                    return BadRequest("Entry Node not found for the credentails provided.");
-
-                await nodeResourceDataService.SetAsync(conn, owner, entryId, entryVersion, nodeId, model);
-                await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpDelete("{nodeId}/resources/{resourceId}")]
-    public async Task<IActionResult> DeleteResourceAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
-                    return BadRequest("Entry Version not found for the owner provided.");
-
-                await nodeResourceDataService.DeleteAsync(conn, entryId, entryVersion, nodeId, resourceId);
-                await resourceService.DeleteLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpGet("{nodeId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> GetNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
-                    return BadRequest("Entry Node not found for the credentails provided.");
-
-                var record = await nodeResourceDataService.GetAsync(conn, entryId, entryVersion, nodeId, resourceId);
-                var file = await resourceService.GetLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId);
-
-                return File(file, "application/octet-stream", record.Resource);
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPut("{nodeId}/resources/{resourceId}/blob")]
-    public async Task<IActionResult> PutNodeResourceFileAsync(string owner, string entryId, int entryVersion, string nodeId, string resourceId)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                if (!await nodeDataService.VerifyAsync(conn, owner, entryId, entryVersion, nodeId))
-                    return BadRequest("Entry Node not found for the credentails provided.");
-
-                var record = await nodeResourceDataService.GetAsync(conn, entryId, entryVersion, nodeId, resourceId);
-
-                Request.EnableBuffering();
-                Request.Body.Position = 0;
-                var bytes = new byte[] { };
-
-                using (var stream = new MemoryStream())
-                {
-                    await Request.Body.CopyToAsync(stream);
-
-                    bytes = stream.ToArray();
-                }
-
-                await resourceService.SaveLibraryTaskResourceAsync(owner, entryId, entryVersion, nodeId, resourceId, bytes);
-
-                return NoContent();
-            }
-        }
-        catch (Exception ex)
-        {
-            logger.LogError(ex, "Error saving library entry version task resources");
-            return new StatusCodeResult(500);
-        }
-    }
-
-    [Authorize]
-    [HttpPost("{nodeId}/export")]
-    public async Task<IActionResult> ExportProjectNodeToLibraryEntry(string owner, string entryId, int entryVersion, string nodeId, [FromBody] ProjectNodeToLibraryOptions options)
-    {
-        try
-        {
-            using (var conn = await db.CreateConnectionAsync())
-            {
-                var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, owner, entryId, entryVersion, nodeId, options);
+                var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, targetOwnerId, owner, entryId, entryVersion, nodeId, options);
 
                 return Ok(newId);
             }

@@ -1,0 +1,40 @@
+@if (loaded()) {
+<div class="w-100 text-center pd-t-50">
+  <wbs-loading
+    [message]="
+      'General.LoadingItem' | translate | textTransform : { item: recordId }
+    "
+  />
+</div>
+} @else { @if (store.version(); as version) {
+<div class="d-flex flex-column h-100">
+  <div class="mg-y-5">
+    <div class="d-flex flex-align-center gap-10">
+      <wbs-action-button
+        [menu]="menu()"
+        rounded="small"
+        buttonClass="mg-y-4"
+        (itemClicked)="actions.handleAction($event)"
+      />
+      @if (canWatch()) {
+      <span class="tx-24">
+        <wbs-watch-indicator
+          source="library"
+          [owner]="version.ownerId"
+          [entityId]="version.entryId"
+        />
+      </span>
+      }
+      <span class="tx-20 tx-medium mg-r-10">
+        @let page = pageLabel();
+
+        {{ version.title }}
+        @if (page) { &nbsp;-&nbsp;{{ page | translate }} }
+      </span>
+    </div>
+  </div>
+  <div class="flex-fill">
+    <router-outlet />
+  </div>
+</div>
+} }

@@ -1,12 +1,11 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { BehaviorSubject, Observable } from 'rxjs';
-import { APP_CONFIG_TOKEN, AppConfiguration } from '../models';
+import { environment } from 'src/env';
 import { Resources } from './resource.service';
 
 @Injectable({ providedIn: 'root' })
 export class TitleService {
-  readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
   private readonly _title$ = new BehaviorSubject<string | null>(null);
 
   constructor(
@@ -30,7 +29,7 @@ export class TitleService {
   }
 
   private titleText(texts: string[]) {
-    const title = [this.appConfig.app_title, ...texts].join(' - ');
+    const title = [environment.appTitle, ...texts].join(' - ');
     this.title.setTitle(title);
     this._title$.next(title);
   }

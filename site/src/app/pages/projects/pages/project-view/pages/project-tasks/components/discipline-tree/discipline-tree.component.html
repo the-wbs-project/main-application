@@ -1,12 +1,12 @@
-@let list = disciplines();
+@let list = tasks();
 <kendo-treelist
   #treelist
   class="tx-12"
   kendoTreeListExpandable
   kendoTreeListSelectable
   [kendoTreeListFlatBinding]="list"
-  parentIdField="treeParentId"
-  idField="treeId"
+  parentIdField="parentId"
+  idField="id"
   [rowHeight]="rowHeight"
   [pageSize]="pageSize()"
   [height]="containerHeight() - heightOffset"
@@ -14,19 +14,19 @@
   [navigable]="true"
   [initiallyExpanded]="false"
   [(expandedKeys)]="treeService.expandedKeys"
-  [selectable]="{ enabled: true, mode: 'row' }"
-  (selectionChange)="taskId.set($event.items[0].dataItem.id)"
-  (dblclick)="nav()"
 >
   <ng-template kendoTreeListToolbarTemplate>
-    <wbs-tree-type-button [(view)]="view" />
-    <wbs-tree-buttons-toggler
-      (collapse)="treeService.collapseAll(treelist, list)"
-      (expand)="treeService.expandAll(treelist, list)"
-    />
-    @if (showFullscreen()) {
-    <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
-    }
+    <div class="w-100 d-flex flex-wrap row-column gap-10">
+      <wbs-tree-type-button [(view)]="view" />
+      <wbs-abs-button [(view)]="wbsAbs" />
+      <wbs-tree-buttons-toggler
+        (collapse)="treeService.collapseAll(treelist, list, 'id')"
+        (expand)="treeService.expandAll(list, 'id')"
+      />
+      @if (!isFullscreen()) {
+      <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
+      }
+    </div>
   </ng-template>
   <kendo-treelist-column
     [expandable]="true"

@@ -1,0 +1,108 @@
+<div class="d-inline-block w-100 mx-wd-800">
+  <div class="text-start tx-12">
+    <wbs-alert
+      type="info"
+      message="LibraryCreate.PhaseHeader"
+      [dismissible]="false"
+    />
+  </div>
+  <div class="w-100 d-flex">
+    <div class="flex-grow-1 pd-r-20">
+      <button
+        kendoButton
+        class="w-100"
+        [themeColor]="phaseType() === 'predefined' ? 'dark' : 'base'"
+        (click)="typeChosen('predefined')"
+      >
+        <fa-icon [icon]="faList" class="mg-r-5" />
+        {{ "LibraryCreate.PredefinedPhase" | translate }}
+      </button>
+
+      <wbs-info-message
+        cssClass="w-100 text-center d-inline-block mg-t-5"
+        message="LibraryCreate.PredefinedPhaseDescription"
+      />
+    </div>
+    <div class="flex-grow-1 pd-l-20">
+      <button
+        kendoButton
+        class="w-100"
+        [themeColor]="phaseType() === 'custom' ? 'dark' : 'base'"
+        (click)="typeChosen('custom')"
+      >
+        <fa-icon [icon]="faPencil" class="mg-r-5" />
+        {{ "LibraryCreate.CustomPhase" | translate }}
+      </button>
+      <wbs-info-message
+        cssClass="w-100 text-center d-inline-block mg-t-5"
+        message="LibraryCreate.CustomPhaseDescription"
+      />
+    </div>
+  </div>
+  @if (phaseType() === "predefined") {
+  <div class="w-100 text-start mg-t-20 pd-x-20">
+    @for (cat of phases; track cat.id) {
+    <div class="rr-item rr-list-item">
+      <div
+        class="list-group-item pd-10 flex-align-center d-none d-sm-flex flex-1 flex-align-center"
+      >
+        <div class="flex-grow-1">
+          <div class="tx-16">
+            {{ cat.label | translate }}
+          </div>
+          <div class="tx-10 font-italic">
+            {{ cat.description ?? "" | translate }}
+          </div>
+        </div>
+        <div class="text-end wd-80 pd-l-5" style="min-width: 110px">
+          <wbs-select-button
+            buttonClass="w-100 tx-12"
+            [selected]="phase() === cat.id"
+            (clicked)="predefinedChosen(cat.id)"
+          />
+        </div>
+      </div>
+      <div
+        class="list-group-item pd-5 flex-align-center d-grid d-sm-none"
+        style="gap: 5px; grid-template-columns: auto"
+      >
+        <div class="tx-left">
+          <div class="d-flex tx-16 w-100 flex-align-center">
+            <div class="flex-grow-1">
+              {{ cat.label | translate }}
+            </div>
+
+            <div class="text-end wd-80 pd-l-5" style="min-width: 110px">
+              <wbs-select-button
+                buttonClass="w-100 tx-12"
+                [selected]="phase() === cat.id"
+                (clicked)="predefinedChosen(cat.id)"
+              />
+            </div>
+          </div>
+          <div class="tx-10 font-italic">
+            {{ cat.description ?? "" | translate }}
+          </div>
+        </div>
+      </div>
+    </div>
+    }
+  </div>
+  } @else if (phaseType() === 'custom') {
+
+  <div class="pd-t-25 text-start">
+    <label [for]="customTitle" class="form-label tx-18">
+      {{ "LibraryCreate.PhaseTitle" | translate }}
+    </label>
+    <input
+      #customTitle
+      kendoTextBox
+      [value]="phaseText()"
+      (change)="textChanged(customTitle.value)"
+    />
+    <label class="d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.PhaseTitleDescription" | translate }}
+    </label>
+  </div>
+  }
+</div>

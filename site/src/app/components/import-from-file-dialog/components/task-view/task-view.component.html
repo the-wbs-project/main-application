@@ -1,0 +1,82 @@
+@let tree = tasks();
+<kendo-treelist
+  #treelist
+  class="tx-12"
+  kendoTreeListExpandable
+  kendoTreeListSelectable
+  [kendoTreeListFlatBinding]="tree"
+  parentIdField="parentId"
+  idField="id"
+  [rowHeight]="31.5"
+  [pageSize]="pageSize()"
+  [height]="containerHeight()"
+  scrollable="virtual"
+  [rowReorderable]="true"
+  [initiallyExpanded]="false"
+  [(expandedKeys)]="treeService.expandedKeys"
+  [selectable]="{ enabled: true, mode: 'row' }"
+  (cellClick)="service.onCellClick($event)"
+  (rowReorder)="rowReordered($event)"
+>
+  <ng-template kendoTreeListToolbarTemplate>
+    <wbs-tree-buttons-toggler
+      (collapse)="treeService.collapseAll(treelist, tree, 'id')"
+      (expand)="treeService.expandAll(tree, 'id')"
+    />
+    <button kendoButton size="small" (click)="reloadTree.emit()">
+      <fa-icon [icon]="refreshIcon" class="mg-r-5" />
+      {{ "General.Reload" | translate }}
+    </button>
+  </ng-template>
+  <kendo-treelist-rowreorder-column class="bg-gray-200 tx-10" [width]="40" />
+  <kendo-treelist-column
+    [expandable]="true"
+    field="title"
+    class="child-hoverer tree-column"
+    headerClass="tx-14"
+    [title]="'Wbs.Activity_Title' | translate"
+  >
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-task-view-title
+        [task]="dataItem"
+        (menuItemSelected)="menuItemSelected(dataItem.id, $event)"
+      />
+    </ng-template>
+    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+      <wbs-task-title-editor
+        [title]="dataItem.title"
+        (cancel)="treelist.closeCell()"
+        (save)="service.taskTitleChanged(treelist, dataItem, $event)"
+      />
+    </ng-template>
+  </kendo-treelist-column>
+  @if ((width() ?? 0) > 800) {
+  <kendo-treelist-column
+    [width]="200"
+    field="disciplines"
+    class="tree-column tx-13-f"
+    headerClass="tx-14"
+  >
+    <ng-template kendoTreeListHeaderTemplate>
+      <wbs-tree-discipline-legend [list]="disciplines()" />
+    </ng-template>
+    <ng-template kendoTreeListCellTemplate let-dataItem>
+      <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+    </ng-template>
+    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
+      <wbs-discipline-dropdown
+        [data]="disciplines()"
+        [values]="dataItem.disciplines"
+        (save)="updateDisciplines(dataItem, $event)"
+      />
+    </ng-template>
+  </kendo-treelist-column>
+  }
+  <kendo-treelist-command-column [width]="40" class="tree-column text-center">
+    <ng-template kendoTreeListCellTemplate let-dataItem="dataItem">
+      <a title="Remove" class="pointer" (click)="removeHandler(dataItem)">
+        <fa-icon [icon]="removeIcon" size="sm" />
+      </a>
+    </ng-template>
+  </kendo-treelist-command-column>
+</kendo-treelist>

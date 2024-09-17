@@ -1,90 +1,50 @@
-<div class="w-100 text-center h-100">
+@if (projectStore.project(); as project) {
+<!---->
+@let canEdit = projectStore.canEditProject();
+
+<div class="w-100 text-center">
   <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
-    <div class="two-column-grid pd-20 mn-ht-100p" resizedCss>
-      <wbs-project-details-card [project]="project()!" [tasks]="tasks()!" />
+    <div class="two-column-grid mn-ht-100p" resizedCss>
+      <wbs-project-details-card />
       <wbs-discipline-card
         [splitLimit]="650"
-        [canEdit]="canEdit()"
-        [items]="project()?.disciplines ?? []"
+        [canAdd]="true"
+        [canEdit]="canEdit"
+        [items]="projectStore.projectDisciplines()"
+        [editItems]="editDisciplines()"
+        [saveState]="disciplineSave.state()"
         noDisciplinesLabel="Projects.NoDisciplinesProject"
+        (save)="saveDisciplines($event)"
       />
-      <wbs-project-status-card
-        [project]="project()!"
+      <!--<wbs-project-status-card
+        [project]="project"
         [approvalEnabled]="approvalEnabled()!"
         [ngClass]="{ 'double-item': approvalEnabled() }"
       />
       @if (approvalEnabled()) {
       <wbs-project-approval-card [stats]="approvalStats()" />
-      }
+      }-->
       <wbs-description-card
         [(askAi)]="askAi"
-        [canEdit]="canEdit()"
+        [canEdit]="canEdit"
         [(editMode)]="descriptionEditMode"
         [saveState]="descriptionSave.state()"
-        [description]="project()?.description ?? ''"
+        [description]="project.description"
         noDescriptionLabel="Library.NoDescriptionEntry"
-        [approval]="approvals() | findById : 'project-description'"
         (descriptionChange)="descriptionChange($event)"
       />
+      <!--[approval]="approvals() | findById : 'project-description'"-->
+      <wbs-project-resource-card />
+      <wbs-project-contributor-card />
     </div>
   </div>
 </div>
 
 @if (askAi()) {
 <wbs-description-ai-dialog
-  [description]="project()!.description"
+  [description]="project.description"
   [startingDialog]="descriptionAiStartingDialog()"
   (descriptionChange)="aiChangeSaved($event)"
   (closed)="askAi.set(false)"
 />
-}
-<!--
-@if (project(); as project) {
-<div class="about-page-grid pd-20" resizedCss>
-
-    <wbs-description-card
-      [project]="project"
-      [ngClass]="'card border full-item'"
-      [approval]="approvals() | findById : 'project-description'"
-      (descriptionChange)="descriptionChange($event)"
-    />
-    <div class="card border double-item">
-      <div class="card-header">
-        {{ "General.Contacts" | translate | uppercase }}
-        &nbsp;
-        <wbs-approval-badge
-          [approval]="approvals() | findById : 'project-roles'"
-        />
-      </div>
-      <div class="card-body">
-        <ul class="list-group">
-          @for (user of users(); track user.id) {
-          <li class="list-group-item bd-gray-400 bd-t-1-f">
-            <div class="d-inline-block wd-40">
-              @if (user.picture){
-              <img
-                class="rounded-circle wd-30 ht-30 object-fit-cover"
-                [src]="user.picture"
-                alt="avatar"
-              />
-              }
-            </div>
-            {{ user.name }} - {{ user.roles | roleList : true }}
-          </li>
-          }
-        </ul>
-      </div>
-    </div>
-
-    <div class="card border double-item">
-      <div class="card-header">
-        {{ "Projects.PathToSuccess" | translate }}
-      </div>
-      <div class="card-body">
-        <wbs-project-checklist [checklist]="checklist()" />
-      </div>
-    </div>
-  </div>
-</div>
-}
--->
+} }

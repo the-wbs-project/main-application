@@ -15,7 +15,7 @@
   </tr>
   <tbody>
     @for (project of projects(); track project.id) {
-    <tr class="pointer" [routerLink]="['view', project.id]">
+    <tr class="pointer" [routerLink]="['view', project.recordId]">
       <td>{{ project.title }}</td>
       <td>{{ project.category | projectCategoryLabel }}</td>
       <td>{{ project.status | projectStatus | translate }}</td>

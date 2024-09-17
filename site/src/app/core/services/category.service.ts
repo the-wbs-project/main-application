@@ -17,7 +17,11 @@ const question = 'fa-question';
 export class CategoryService {
   private readonly metadata = inject(MetadataStore);
 
-  buildViewModels(disciplines: ProjectCategory[]): CategoryViewModel[] {
+  buildViewModels(
+    disciplines: ProjectCategory[] | undefined
+  ): CategoryViewModel[] {
+    if (!disciplines) return [];
+
     const results: CategoryViewModel[] = [];
 
     for (const discipline of disciplines) {

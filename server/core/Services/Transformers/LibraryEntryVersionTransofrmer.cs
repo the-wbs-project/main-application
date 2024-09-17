@@ -31,6 +31,7 @@ public class LibraryEntryVersionTransformer : SqlHelpers
             Categories = DbJson<string[]>(reader, "Categories"),
             Editors = DbJson<string[]>(reader, "Editors"),
             Disciplines = DbJson<Category[]>(reader, "Disciplines"),
+            ReleaseNotes = DbValue<string>(reader, "ReleaseNotes"),
             LastModified = DbValue<DateTimeOffset>(reader, "LastModified"),
         };
     }

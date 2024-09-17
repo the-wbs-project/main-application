@@ -1,0 +1,44 @@
+<kendo-dialog
+  width="80%"
+  height="80%"
+  maxWidth="1000px"
+  (close)="dialog.close()"
+>
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "LibraryCreate.TitleTask" | translate }}
+  </kendo-dialog-titlebar>
+  <wbs-dialog-wrapper [steps]="steps" [view]="view()" mobileSpot="md">
+    @if (view() === 0) {
+    <wbs-title-view
+      [(templateTitle)]="templateTitle"
+      [(mainTaskTitle)]="mainTaskTitle"
+      [(syncTitles)]="syncTitles"
+      [(visibility)]="visibility"
+    />
+    } @else if (view() === 1) {
+    <wbs-discipline-view [(disciplines)]="disciplines" />
+    } @else if (view() === 2) {
+    <wbs-versioning-view [(alias)]="alias" />
+    } @else if (view() === 3) {
+
+    <wbs-review-view
+      [disciplines]="disciplines()"
+      [mainTaskTitle]="mainTaskTitle()"
+      [templateTitle]="templateTitle()"
+      [visibility]="visibility()"
+      [versionAlias]="alias()"
+    />
+    }
+  </wbs-dialog-wrapper>
+  <kendo-dialog-actions>
+    <wbs-dialog-buttons
+      [view]="view()"
+      [showSave]="view() === 3"
+      [canContinue]="canContinue()"
+      [isSaving]="service.saveState.isSaving()"
+      (next)="next()"
+      (back)="back()"
+      (save)="save()"
+    />
+  </kendo-dialog-actions>
+</kendo-dialog>

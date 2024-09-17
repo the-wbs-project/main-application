@@ -21,17 +21,20 @@ export class Auth0UserService {
       redirect: 'follow',
     });
 
+    const body: any = await resp.json();
+
     if (resp.status === 404) return undefined;
+    if (resp.status === 400 && body.errorCode === 'invalid_uri') return undefined;
     if (resp.status !== 200) {
       this.logger.trackEvent('Failed to get Auth0 user', 'Error', { status: resp.status, body: await resp.text() });
 
       throw new Error('Failed to get Auth0 user');
     }
 
-    return await resp.json();
+    return body;
   }
 
-  async getSiteRolesAsync(userId: string): Promise<Role[]> {
+  async getSiteRolesAsync(userId: string): Promise<Role[] | undefined> {
     const token = await this.tokenService.getToken();
 
     const resp = await this.fetcher.fetch(`https://${this.env.AUTH_DOMAIN}/api/v2/users/${userId}/roles`, {
@@ -40,16 +43,19 @@ export class Auth0UserService {
       redirect: 'follow',
     });
 
+    const body: any = await resp.json();
+
+    if (resp.status === 400 && body.errorCode === 'invalid_uri') return undefined;
     if (resp.status !== 200) {
       this.logger.trackEvent('Failed to get Auth0 user site roles', 'Error', { status: resp.status, body: await resp.text() });
 
       throw new Error('Failed to get Auth0 user site roles');
     }
 
-    return await resp.json();
+    return body;
   }
 
-  async getMembershipsAsync(userId: string): Promise<Organization[]> {
+  async getMembershipsAsync(userId: string): Promise<Organization[] | undefined> {
     const token = await this.tokenService.getToken();
 
     const resp = await this.fetcher.fetch(`https://${this.env.AUTH_DOMAIN}/api/v2/users/${userId}/organizations`, {
@@ -58,13 +64,16 @@ export class Auth0UserService {
       redirect: 'follow',
     });
 
+    const body: any = await resp.json();
+
+    if (resp.status === 400 && body.errorCode === 'invalid_uri') return undefined;
     if (resp.status !== 200) {
       this.logger.trackEvent('Failed to get Auth0 user memberships', 'Error', { status: resp.status, body: await resp.text() });
 
       throw new Error('Failed to get Auth0 user memberships');
     }
 
-    return await resp.json();
+    return body;
   }
 
   async updateAsync(user: User): Promise<void> {

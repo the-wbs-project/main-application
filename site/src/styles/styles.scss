@@ -483,13 +483,6 @@ button:focus:not(:focus-visible) {
 
 .tree-column {
   font-size: 12px;
-  padding-block: 6px !important;
-  padding-inline: 8px !important;
-
-  .k-svg-icon {
-    padding-left: 1px !important;
-    padding-right: 1px !important;
-  }
 }
 
 .wbs-detail-card {
@@ -500,6 +493,26 @@ button:focus:not(:focus-visible) {
   > .detail-header {
     font-weight: 600;
     text-align: right;
+  }
+}
+
+.wbs-detail-row {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 15px;
+  margin-bottom: 6px;
+  font-size: 13px;
+
+  .row-header {
+    width: 150px;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .row-value {
+    text-align: left;
+    flex-grow: 1;
   }
 }
 

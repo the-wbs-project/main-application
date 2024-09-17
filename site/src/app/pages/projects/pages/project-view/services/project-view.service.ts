@@ -1,180 +1,91 @@
 import { Injectable, inject } from '@angular/core';
-import { Store } from '@ngxs/store';
 import { DialogService } from '@progress/kendo-angular-dialog';
-import { LibraryListModalComponent } from '@wbs/components/library/list-modal';
-import { TaskCreateComponent } from '@wbs/components/task-create';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI_TYPE } from '@wbs/core/models';
+import { PROJECT_STATI, PROJECT_STATI_TYPE } from '@wbs/core/models';
 import { Messages, Transformers } from '@wbs/core/services';
-import { LibraryImportResults, ProjectViewModel } from '@wbs/core/view-models';
-import { MembershipStore, UserStore } from '@wbs/core/store';
-import { Observable, forkJoin, of } from 'rxjs';
+import { ProjectViewModel } from '@wbs/core/view-models';
+import { Observable, of } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
-import {
-  AddDisciplineToTask,
-  ChangeProjectStatus,
-  ChangeTaskAbsFlag,
-  CloneTask,
-  CreateTask,
-  MoveTaskDown,
-  MoveTaskLeft,
-  MoveTaskRight,
-  MoveTaskUp,
-  RemoveDisciplineToTask,
-  RemoveTask,
-} from '../actions';
 import { TaskDeleteComponent } from '../components/task-delete';
-import { PROJECT_PAGES, TASK_PAGES } from '../models';
-import { ProjectState, TasksState } from '../states';
+import { ProjectStore } from '../stores';
 import { LibraryEntryExportService } from './library-entry-export.service';
-import { ProjectNavigationService } from './project-navigation.service';
-import { ProjectImportProcessorService } from './project-import-processor.service';
+import { ProjectService } from './project.service';
+import { ProjectImportService } from './project-import.service';
+import { ProjectTaskService } from './project-task.service';
 
 @Injectable()
 export class ProjectViewService {
   private readonly data = inject(DataServiceFactory);
   private readonly dialogService = inject(DialogService);
   private readonly exportService = inject(LibraryEntryExportService);
-  private readonly importProcessor = inject(ProjectImportProcessorService);
-  private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
-  private readonly nav = inject(ProjectNavigationService);
-  private readonly store = inject(Store);
+  private readonly projectService = inject(ProjectService);
+  private readonly projectStore = inject(ProjectStore);
+  private readonly taskService = inject(ProjectTaskService);
   private readonly transformers = inject(Transformers);
-  private readonly userId = inject(UserStore).userId;
+  private readonly importService = inject(ProjectImportService);
 
   private get project(): ProjectViewModel {
-    return this.store.selectSnapshot(ProjectState.current)!;
+    return this.projectStore.project()!;
   }
 
   private get owner(): string {
     return this.project.owner;
   }
 
-  action(
-    action: string,
-    taskId?: string
-  ): void | Observable<void> | Observable<boolean> {
-    if (action === 'downloadWbs') {
-      this.downloadTasks(false);
-    } else if (action === 'downloadAbs') {
-      this.downloadTasks(true);
-    } else if (action === 'upload') {
-      this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
-    } else if (action === 'addSub') {
-      const sub = TaskCreateComponent.launchAsync(
-        this.dialogService,
-        this.project.disciplines
-      )
-        .pipe(
-          switchMap((results) =>
-            results
-              ? this.store.dispatch(new CreateTask(taskId, results, false))
-              : of()
-          )
+  action(action: string, taskId: string): void | Observable<any> {
+    if (action === 'cloneTask') {
+      return this.taskService.cloneTask(taskId);
+    } else if (action === 'deleteTask') {
+      return TaskDeleteComponent.launchAsync(this.dialogService).pipe(
+        switchMap((reason) =>
+          reason
+            ? this.taskService.remove(taskId, reason).pipe(map(() => true))
+            : of(false)
         )
-        .subscribe(() => {
-          sub.unsubscribe();
-        });
-    } else if (taskId) {
-      if (action === 'cloneTask') {
-        this.store.dispatch(new CloneTask(taskId));
-      } else if (action === 'viewTask') {
-        this.nav.toTaskPage(taskId, TASK_PAGES.ABOUT);
-      } else if (action === 'deleteTask') {
-        return TaskDeleteComponent.launchAsync(this.dialogService).pipe(
-          switchMap((reason) =>
-            reason
-              ? this.store
-                  .dispatch(new RemoveTask(taskId, reason))
-                  .pipe(map(() => true))
-              : of(false)
-          )
-        );
-      } else if (action === 'moveLeft') {
-        this.store.dispatch(new MoveTaskLeft(taskId));
-      } else if (action === 'moveRight') {
-        this.store.dispatch(new MoveTaskRight(taskId));
-      } else if (action === 'moveUp') {
-        this.store.dispatch(new MoveTaskUp(taskId));
-      } else if (action === 'moveDown') {
-        this.store.dispatch(new MoveTaskDown(taskId));
-      } else if (action === 'setAbsFlag') {
-        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, true));
-      } else if (action === 'removeAbsFlag') {
-        return this.store.dispatch(new ChangeTaskAbsFlag(taskId, false));
-      } else if (action === 'exportTask') {
-        const task = this.store
-          .selectSnapshot(TasksState.nodes)!
-          .find((x) => x.id === taskId)!;
+      );
+    } else if (action === 'moveLeft') {
+      return this.taskService.moveTaskLeft(taskId);
+    } else if (action === 'moveRight') {
+      return this.taskService.moveTaskRight(taskId);
+    } else if (action === 'moveUp') {
+      return this.taskService.moveTaskUp(taskId);
+    } else if (action === 'moveDown') {
+      return this.taskService.moveTaskDown(taskId);
+    } else if (action === 'setAbsFlag') {
+      return this.taskService.changeTaskAbs(taskId, 'set');
+    } else if (action === 'removeAbsFlag') {
+      return this.taskService.changeTaskAbs(taskId, undefined);
+    } else if (action === 'exportTask') {
+      const task = this.projectStore.tasks()!.find((x) => x.id === taskId)!;
 
-        if (task.parentId == null)
-          this.exportService.exportPhase(this.owner, this.project.id, task);
-        else if (task) this.exportService.exportTask(this.owner, task);
-      } else if (action.startsWith('addDiscipline|')) {
-        const discipline = action.split('|')[1];
-
-        return this.store
-          .dispatch(new AddDisciplineToTask(taskId!, discipline))
-          .pipe(map(() => true));
-      } else if (action.startsWith('removeDiscipline|')) {
-        const discipline = action.split('|')[1];
-
-        return this.store
-          .dispatch(new RemoveDisciplineToTask(taskId!, discipline))
-          .pipe(map(() => true));
-      } else if (action.startsWith('import|')) {
-        const direction = action.split('|')[1]!;
-
-        return LibraryListModalComponent.launchAsync(
-          this.dialogService,
-          this.membership.membership()!.name,
-          this.userId()!,
-          'personal'
-        ).pipe(
-          switchMap((results: LibraryImportResults | undefined) =>
-            !results
-              ? of(false)
-              : this.importProcessor
-                  .importAsync(taskId, direction, results)
-                  .pipe(map(() => true))
-          )
-        );
-      }
+      if (task.parentId == null)
+        this.exportService.exportPhase(this.owner, this.project.id, task);
+      else if (task)
+        this.exportService.exportTask(this.owner, this.project.id, task);
+    } else if (action.startsWith('import|library')) {
+      return this.importService.importFromLibraryAsync(taskId);
+    } else if (action.startsWith('import|file')) {
+      return this.importService.importFromFileAsync(taskId);
     }
-  }
-
-  uploadTasks(): void {
-    this.nav.toProjectPage(PROJECT_PAGES.UPLOAD);
   }
 
   downloadTasks(abs: boolean): void {
     this.messages.notify.info('General.RetrievingData');
 
-    forkJoin([
-      this.store.selectOnce(ProjectState.current),
-      this.store.selectOnce(TasksState.nodes),
-    ])
-      .pipe(
-        map(([project, nodes]) => ({ project: project!, nodes: nodes! })),
-        switchMap(({ project, nodes }) => {
-          let tasks = abs
-            ? this.transformers.nodes.phase.view.forAbsProject(
-                nodes,
-                project.disciplines
-              )
-            : this.transformers.nodes.phase.view.forProject(
-                nodes,
-                project.disciplines
-              );
+    const project = this.project;
+    const nodes = this.projectStore.tasks()!;
+    const disciplnes = this.projectStore.projectDisciplines();
+    let tasks = abs
+      ? this.transformers.nodes.phase.view.forAbsProject(nodes, disciplnes)
+      : this.transformers.nodes.phase.view.forProject(nodes, disciplnes);
 
-          return this.data.wbsExport.runAsync(
-            project.title,
-            'xlsx',
-            project.disciplines.filter((x) => x.isCustom),
-            tasks
-          );
-        })
+    this.data.wbsExport
+      .runAsync(
+        project.title,
+        'xlsx',
+        project.disciplines.filter((x) => x.isCustom),
+        tasks
       )
       .subscribe();
   }
@@ -190,13 +101,16 @@ export class ProjectViewService {
         switchMap((answer: boolean) => {
           if (!answer) return of();
 
-          return this.store
-            .dispatch(new ChangeProjectStatus(status))
-            .pipe(
-              tap(() =>
-                this.messages.report.success('General.Success', successMessage)
-              )
-            );
+          const obj =
+            status === PROJECT_STATI.CANCELLED
+              ? this.projectService.cancelProject()
+              : this.projectService.changeProjectStatus(status);
+
+          return obj.pipe(
+            tap(() =>
+              this.messages.report.success('General.Success', successMessage)
+            )
+          );
         })
       )
       .subscribe();

@@ -9,6 +9,8 @@
   [popupSettings]="{ width: popupWidth() }"
 >
   <ng-template kendoDropDownListItemTemplate let-dataItem>
-    <wbs-project-category-description [category]="dataItem" />
+    <div class="pd-l-10">
+      <wbs-project-category-description [category]="dataItem" />
+    </div>
   </ng-template>
 </kendo-dropdownlist>

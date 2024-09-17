@@ -15,7 +15,6 @@ import {
   ButtonGroupModule,
   ButtonModule,
 } from '@progress/kendo-angular-buttons';
-import { EditorModule } from '@progress/kendo-angular-editor';
 import { EditorComponent } from '../../components/_utils/editor.component';
 
 @Component({
@@ -27,7 +26,6 @@ import { EditorComponent } from '../../components/_utils/editor.component';
     ButtonGroupModule,
     ButtonModule,
     EditorComponent,
-    EditorModule,
     FontAwesomeModule,
     TranslateModule,
   ],

@@ -1,8 +1,9 @@
 import {
-  WbsImportResult,
-  ProjectUploadData,
-  WbsNode,
+  LibraryEntryNode,
   ProjectCategory,
+  ProjectUploadData,
+  WbsImportResult,
+  WbsNode,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
 import { LibraryVersionViewModel } from '@wbs/core/view-models';
@@ -15,8 +16,8 @@ export class WbsNodeLibraryImporter extends BaseImporter {
     action: 'append' | 'overwrite',
     people: Map<string, ProjectCategory>,
     nodes: Map<string, WbsImportResult>
-  ): ProjectUploadData {
-    const results: ProjectUploadData = {
+  ): ProjectUploadData<LibraryEntryNode> {
+    const results: ProjectUploadData<LibraryEntryNode> = {
       disciplines: this.getDisciplines(version.disciplines ?? [], people),
       removeIds: [],
       upserts: [],

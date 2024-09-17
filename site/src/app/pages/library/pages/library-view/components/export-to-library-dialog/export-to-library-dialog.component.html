@@ -1,0 +1,48 @@
+<kendo-dialog width="80%" maxWidth="800px" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "LibraryCreate.TitleTask" | translate }}
+  </kendo-dialog-titlebar>
+  <div class="pd-x-12 mb-3">
+    <label [for]="titleInput" class="form-label tx-18">
+      {{ "LibraryCreate.TemplateTitle" | translate }}
+    </label>
+    <input #titleInput kendoTextBox class="w-100" [(ngModel)]="templateTitle" />
+    <label class="d-inline-block tx-12 tx-italic mg-t-5">
+      {{ "LibraryCreate.TemplateTitleDescriptionPhase" | translate }}
+    </label>
+  </div>
+  <div class="pd-x-12">
+    <label class="form-label tx-18">
+      {{ "General.Visibility" | translate }}
+    </label>
+    <wbs-visibility-selection [(visibility)]="visibility" />
+  </div>
+  <div class="pd-x-12 mb-3">
+    <label [for]="aliasInput" class="form-label tx-18">
+      {{ "Wbs.VersionAlias" | translate }}
+    </label>
+    <input #aliasInput kendoTextBox class="w-100" [(ngModel)]="alias" />
+  </div>
+
+  <kendo-dialog-actions>
+    <div class="w-100 text-end">
+      <wbs-fading-message
+        [icon]="checkIcon"
+        message="General.Saved"
+        [show]="saveState() === 'saved'"
+        cssClass="tx-success tx-12 mg-r-10"
+      />
+      @if (newEntryId(); as newEntryId) {
+      <button kendoButton themeColor="primary" class="mg-l-5" (click)="nav()">
+        {{ "General.View" | translate }}
+      </button>
+      } @else {
+      <wbs-save-button
+        size="small"
+        [isSaving]="saveState() === 'saving'"
+        (click)="save()"
+      />
+      }
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

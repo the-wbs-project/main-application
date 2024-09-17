@@ -9,10 +9,23 @@
           (selectionChanged)="service.libraryChanged($event!)"
         />
       </div>
-      <div class="flex-fill text-end">
-        <wbs-page-header />
-      </div>
     </div>
+    <!--<div>
+      <button type="button" class="btn btn-primary" (click)="openDialog()">
+        Open Dialog
+      </button>
+
+      <wbs-test-dialog
+        [title]="'Confirmation'"
+        [size]="'lg'"
+        [isVisible]="isDialogVisible"
+        (close)="closeDialog()"
+        (confirm)="confirmDialog()"
+        (cancel)="cancelDialog()"
+      >
+        <p>Are you sure you want to proceed?</p>
+      </wbs-test-dialog>
+    </div>-->
     <router-outlet />
   </div>
 </div>

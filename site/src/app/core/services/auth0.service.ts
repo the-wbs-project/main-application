@@ -30,28 +30,7 @@ export class Auth0Service {
       .subscribe((isAuthenticated) => {
         if (!isAuthenticated) return;
 
-        forkJoin([
-          this.data.users.getProfileAsync(),
-          this.data.users.getSiteRolesAsync(),
-        ]).subscribe(([profile, siteRoles]) => {
-          if (!profile) return;
-
-          this.aiStore.setUserInfo({
-            id: profile.user_id,
-            name: profile.name,
-            avatarUrl: profile.picture,
-          });
-          this.userStore.set(profile);
-          this.memberships.setRoles(siteRoles);
-          this.logger.setGlobalContext({
-            'usr.id': profile.user_id,
-            'usr.name': profile.name,
-            'usr.email': profile.email,
-          });
-
-          this.userStore.set(profile);
-          this._isInitiated.next(true);
-        });
+        this.initializeData();
       });
   }
 
@@ -68,7 +47,7 @@ export class Auth0Service {
         });
       }),
       switchMap(() =>
-        this.data.activities.saveAsync(profile.user_id, [
+        this.data.activities.postAsync('user', undefined, profile.user_id, [
           {
             action: 'profile-updated',
             data: {
@@ -80,5 +59,32 @@ export class Auth0Service {
         ])
       )
     );
+  }
+
+  private initializeData(): void {
+    if (this._isInitiated.getValue()) return;
+
+    forkJoin([
+      this.data.users.getProfileAsync(),
+      this.data.users.getSiteRolesAsync(),
+    ]).subscribe(([profile, siteRoles]) => {
+      if (!profile) return;
+
+      this.aiStore.setUserInfo({
+        id: profile.user_id,
+        name: profile.name,
+        avatarUrl: profile.picture,
+      });
+      this.userStore.set(profile);
+      this.memberships.setRoles(siteRoles);
+      this.logger.setGlobalContext({
+        'usr.id': profile.user_id,
+        'usr.name': profile.name,
+        'usr.email': profile.email,
+      });
+
+      this.userStore.set(profile);
+      this._isInitiated.next(true);
+    });
   }
 }

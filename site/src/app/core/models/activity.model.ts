@@ -10,4 +10,7 @@ export interface Activity extends ActivityData {
   id: string;
   timestamp: Date;
   userId: string;
+  actionIcon?: string;
+  actionTitle?: string;
+  actionDescription?: string;
 }

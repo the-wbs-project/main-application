@@ -19,7 +19,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   Category,
   LibraryEntryNode,
-  Member,
   PROJECT_NODE_VIEW,
   PROJECT_STATI,
   Project,
@@ -29,9 +28,9 @@ import {
   CategoryService,
   IdService,
   Resources,
-  UserService,
+  sorter,
 } from '@wbs/core/services';
-import { CategorySelection } from '@wbs/core/view-models';
+import { CategorySelection, UserViewModel } from '@wbs/core/view-models';
 import { UserStore } from '@wbs/core/store';
 import { switchMap } from 'rxjs/operators';
 
@@ -47,7 +46,6 @@ export class SaveSectionComponent {
   private readonly categoryService = inject(CategoryService);
   private readonly data = inject(DataServiceFactory);
   private readonly resources = inject(Resources);
-  private readonly userService = inject(UserService);
   private readonly userId = inject(UserStore).userId;
 
   readonly faCheck = faCheck;
@@ -62,10 +60,9 @@ export class SaveSectionComponent {
   readonly category = input.required<Category>();
   readonly disciplines = input.required<CategorySelection[]>();
   readonly tasks = input.required<LibraryEntryNode[]>();
-  readonly approverIds = input.required<string[]>();
-  readonly pmIds = input.required<string[]>();
-  readonly smeIds = input.required<string[]>();
-  readonly members = input.required<Member[]>();
+  readonly approvers = input.required<UserViewModel[]>();
+  readonly pms = input.required<UserViewModel[]>();
+  readonly smes = input.required<UserViewModel[]>();
   readonly approvalEnabled = input.required<boolean>();
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
@@ -80,13 +77,9 @@ export class SaveSectionComponent {
           .map((x) => x.label)
           .join(', ');
   });
-  readonly approvers = computed(() =>
-    this.getUserList(this.members(), this.approverIds())
-  );
-  readonly pms = computed(() => this.getUserList(this.members(), this.pmIds()));
-  readonly smes = computed(() =>
-    this.getUserList(this.members(), this.smeIds())
-  );
+  readonly approverList = computed(() => this.getUserList(this.approvers()));
+  readonly pmList = computed(() => this.getUserList(this.pms()));
+  readonly smeList = computed(() => this.getUserList(this.smes()));
 
   save(): void {
     this.saveState.set('saving');
@@ -105,6 +98,7 @@ export class SaveSectionComponent {
       id: this.newId(),
       owner: this.owner(),
       category: this.category().id,
+      recordId: '',
       title: this.templateTitle(),
       disciplines,
       createdOn: now,
@@ -134,7 +128,6 @@ export class SaveSectionComponent {
         disciplineIds: task.disciplineIds,
         parentId: task.parentId,
         phaseIdAssociation: task.phaseIdAssociation,
-        tags: task.tags,
         absFlag: null,
         libraryTaskLink: { owner, entryId, version, taskId: task.id },
       });
@@ -149,10 +142,10 @@ export class SaveSectionComponent {
     }
 
     this.data.projects
-      .putAsync(project)
+      .putProjectAsync(project)
       .pipe(
         switchMap(() =>
-          this.data.projectNodes.putAsync(project.owner, project.id, tasks, [])
+          this.data.projects.putTasksAsync(project.owner, project.id, tasks, [])
         )
       )
       .subscribe(() => {
@@ -160,12 +153,12 @@ export class SaveSectionComponent {
       });
   }
 
-  getUserList(members: Member[], userIds: string[]): string | undefined {
-    if (userIds.length === 0) return undefined;
+  getUserList(users: UserViewModel[]): string | undefined {
+    if (users.length === 0) return undefined;
 
-    return this.userService
-      .getSortedUsers(members, userIds)
-      .map((x) => x.name)
+    return users
+      .sort((a, b) => sorter(a.fullName, b.fullName))
+      .map((x) => x.fullName)
       .join(', ');
   }
 }

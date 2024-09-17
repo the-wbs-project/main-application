@@ -4,15 +4,7 @@ import {
   faListCheck,
   faStamp,
 } from '@fortawesome/pro-solid-svg-icons';
-import {
-  APP_CONFIG_TOKEN,
-  AppConfiguration,
-  Category,
-  LISTS,
-  Role,
-  RoleIds,
-  ROLES,
-} from '@wbs/core/models';
+import { Category, LISTS, Role, RoleIds, ROLES } from '@wbs/core/models';
 import { Resources, sorter } from '@wbs/core/services';
 
 export const ROLE_ICONS = {
@@ -24,17 +16,12 @@ export const ROLE_ICONS = {
 @Injectable({ providedIn: 'root' })
 export class MetadataStore {
   private readonly resources = inject(Resources);
-  private readonly appConfig: AppConfiguration = inject(APP_CONFIG_TOKEN);
 
-  readonly categories = new CategoryState(this.appConfig);
-  readonly roles = new RolesState(this.appConfig, this.resources);
+  readonly categories = new CategoryState();
+  readonly roles = new RolesState(this.resources);
 }
 
 class CategoryState {
-  constructor(private readonly appConfig: AppConfiguration) {
-    this.initiate();
-  }
-
   private _icons = new Map<string, Map<string, string>>();
   private _list = new Map<string, Category[]>();
   private _names = new Map<string, Map<string, string>>();
@@ -85,17 +72,19 @@ class CategoryState {
     return this._list.get(LISTS.PROJECT_CATEGORIES)!;
   }
 
-  private initiate(): void {
-    let projectCats = [...this.appConfig.project_categories];
-    let discipline = [...this.appConfig.disciplines];
-    let phase = [...this.appConfig.phases];
-
+  initiate(
+    projectCats: Category[],
+    disciplines: Category[],
+    phases: Category[]
+  ): void {
     const categoryList = new Map<string, Category[]>();
     const categoryIcons = new Map<string, Map<string, string>>();
     const categoryNames = new Map<string, Map<string, string>>();
 
-    discipline = discipline.sort((a, b) => sorter(a.order ?? 0, b.order ?? 0));
-    phase = phase.sort((a, b) => sorter(a.order ?? 0, b.order ?? 0));
+    disciplines = disciplines.sort((a, b) =>
+      sorter(a.order ?? 0, b.order ?? 0)
+    );
+    phases = phases.sort((a, b) => sorter(a.order ?? 0, b.order ?? 0));
     projectCats = projectCats.sort((a, b) =>
       sorter(a.order ?? 0, b.order ?? 0)
     );
@@ -108,8 +97,8 @@ class CategoryState {
     categoryNames.set(LISTS.PHASE, new Map<string, string>());
     categoryNames.set(LISTS.PROJECT_CATEGORIES, new Map<string, string>());
 
-    categoryList.set(LISTS.DISCIPLINE, discipline);
-    categoryList.set(LISTS.PHASE, phase);
+    categoryList.set(LISTS.DISCIPLINE, disciplines);
+    categoryList.set(LISTS.PHASE, phases);
     categoryList.set(LISTS.PROJECT_CATEGORIES, projectCats);
 
     for (const cat of projectCats) {
@@ -120,7 +109,7 @@ class CategoryState {
       if (cat.icon) categoryIcons.get(type)!.set(cat.id, cat.icon);
     }
 
-    for (const cat of discipline) {
+    for (const cat of disciplines) {
       const type = LISTS.DISCIPLINE;
 
       categoryNames.get(type)!.set(cat.id, cat.label);
@@ -128,7 +117,7 @@ class CategoryState {
       if (cat.icon) categoryIcons.get(type)!.set(cat.id, cat.icon);
     }
 
-    for (const cat of phase) {
+    for (const cat of phases) {
       const type = LISTS.PHASE;
 
       categoryNames.get(type)!.set(cat.id, cat.label);
@@ -143,9 +132,7 @@ class CategoryState {
 }
 
 class RolesState {
-  constructor(appConfig: AppConfiguration, resources: Resources) {
-    this.initiate(appConfig, resources);
-  }
+  constructor(private readonly resources: Resources) {}
 
   private _ids: RoleIds | undefined;
   private _definitions: Role[] = [];
@@ -158,27 +145,25 @@ class RolesState {
     return this._definitions;
   }
 
-  private initiate(appConfig: AppConfiguration, resources: Resources): void {
-    const definitions = [...appConfig.roles];
-
+  initiate(definitions: Role[]): void {
     const pm = definitions.find((x) => x.name === ROLES.PM)!;
     const approver = definitions.find((x) => x.name === ROLES.APPROVER)!;
     const sme = definitions.find((x) => x.name === ROLES.SME)!;
     const admin = definitions.find((x) => x.name === ROLES.ADMIN)!;
 
-    admin.description = resources.get('General.Admin-Full');
-    admin.abbreviation = resources.get('General.Admin');
+    admin.description = this.resources.get('General.Admin-Full');
+    admin.abbreviation = this.resources.get('General.Admin');
 
-    approver.description = resources.get('General.Approver');
-    approver.abbreviation = resources.get('General.Approver');
+    approver.description = this.resources.get('General.Approver');
+    approver.abbreviation = this.resources.get('General.Approver');
     approver.icon = ROLE_ICONS.approver;
 
-    pm.description = resources.get('General.PM-Full');
-    pm.abbreviation = resources.get('General.PM');
+    pm.description = this.resources.get('General.PM-Full');
+    pm.abbreviation = this.resources.get('General.PM');
     pm.icon = ROLE_ICONS.pm;
 
-    sme.description = resources.get('General.SME-Full');
-    sme.abbreviation = resources.get('General.SME');
+    sme.description = this.resources.get('General.SME-Full');
+    sme.abbreviation = this.resources.get('General.SME');
     sme.icon = ROLE_ICONS.sme;
 
     this._ids = {

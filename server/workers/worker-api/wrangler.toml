@@ -15,6 +15,7 @@ services = [
 
 [env.dev.vars]
 DEBUG = "true"
+ORIGIN = "http://wbs-api"
 DATADOG_ENV = "development"
 DATADOG_HOST = "localhost:88"
 CORS_ORIGINS = "http://localhost:4200"
@@ -71,5 +72,4 @@ AUTH_DOMAIN = "auth.pm-empower.com"
 
 [dev]
 port = 88
-host = "wbs-api"
 ip = "*"

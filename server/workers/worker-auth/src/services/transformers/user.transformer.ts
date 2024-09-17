@@ -1,11 +1,11 @@
-import { User, UserViewModel } from '../../models';
+import { Role, User, UserViewModel } from '../../models';
 
 export class UserTransformer {
   static getDocumentId(organization: string, userId: string, visibility: string): string {
     return `${organization}_${userId.split('|')[0]}_${visibility}`;
   }
 
-  static toViewModel(user: User, visibility: string, roles: string[]): UserViewModel {
+  static toViewModel(user: User, visibility: string, roles: Role[]): UserViewModel {
     const showExternal = user.user_metadata?.showExternally ?? [];
     return {
       userId: user.user_id,

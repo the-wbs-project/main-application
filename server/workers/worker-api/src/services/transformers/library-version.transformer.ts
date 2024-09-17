@@ -27,6 +27,7 @@ export class LibraryVersionTransformer {
       type: entry.type,
       visibility: entry.visibility,
       status: version.status,
+      releaseNotes: version.releaseNotes,
       author: users.find((u) => u.userId === version.author)!,
       category: (version.categories ?? [])[0],
       disciplines: version.disciplines,

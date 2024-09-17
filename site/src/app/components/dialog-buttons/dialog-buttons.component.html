@@ -1,0 +1,32 @@
+<div class="d-flex w-100 align-items-center">
+  <div class="flex-grow-1 text-start">
+    @if (view() > 0) {
+    <button kendoButton themeColor="warning" (click)="back.emit()">
+      {{ "General.Back" | translate }}
+    </button>
+    }
+  </div>
+  <div class="flex-grow-1 tx-10 text-center tx-italic">
+    * {{ "General.Optional" | translate }}
+  </div>
+
+  <div class="flex-grow-1 text-end">
+    @if (showSave()) {
+    <wbs-save-button
+      [isSaving]="isSaving()"
+      [saveLabel]="saveLabel()"
+      [savingLabel]="savingLabel()"
+      (click)="save.emit()"
+    />
+    } @else {
+    <button
+      kendoButton
+      themeColor="primary"
+      [disabled]="!canContinue()"
+      (click)="next.emit()"
+    >
+      {{ nextButtonLabel() | translate }}
+    </button>
+    }
+  </div>
+</div>

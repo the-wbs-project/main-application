@@ -15,16 +15,16 @@ export class ListDataService {
   }
 
   async getAsync(type: string): Promise<ListItem[] | undefined> {
+    const key = this.key(type);
     if (!this.byPass) {
-      const kvData = await this.ctx.env.KV_DATA.get<ListItem[]>(this.key(type), 'json');
+      const kvData = await this.ctx.env.KV_DATA.get<ListItem[]>(key, 'json');
 
       if (kvData) return kvData;
     }
 
     const data = await this.origin.getAsync<ListItem[]>(`lists/${type}`);
 
-    if (data && data.length > 0 && !this.byPass)
-      this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(this.key(type), JSON.stringify(data)));
+    if (data && data.length > 0 && !this.byPass) this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(key, JSON.stringify(data)));
 
     return data;
   }

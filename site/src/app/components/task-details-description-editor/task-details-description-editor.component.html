@@ -1,0 +1,50 @@
+<kendo-textarea
+  class="w-100"
+  size="small"
+  [rows]="5"
+  flow="horizontal"
+  resizable="none"
+  [(ngModel)]="editDescription"
+  [disabled]="saving()"
+  (keydown)="keydown($event)"
+>
+  <kendo-textarea-suffix>
+    <div class="mg-r-5">
+      <wbs-save-message [state]="saveState()" />
+    </div>
+    @if (!saving()) {
+    <button
+      kendoButton
+      size="small"
+      fillMode="clear"
+      class="tx-12"
+      [disabled]="saving()"
+      (click)="save.emit(editDescription())"
+    >
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [animation]="saving() ? 'spin' : undefined"
+        [icon]="saving() ? savingIcon : saveIcon"
+        [title]="'General.Save' | translate"
+      />
+    </button>
+    @if (editDescription() !== description()) {
+    <button
+      kendoButton
+      size="small"
+      fillMode="clear"
+      class="tx-12"
+      (click)="reset()"
+    >
+      <fa-icon
+        size="sm"
+        class="pointer"
+        [animation]="saving() ? 'spin' : undefined"
+        [icon]="saving() ? savingIcon : cancelIcon"
+        [title]="'General.Cancel' | translate"
+      />
+    </button>
+    } }
+  </kendo-textarea-suffix>
+</kendo-textarea>

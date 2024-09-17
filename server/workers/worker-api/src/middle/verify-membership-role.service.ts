@@ -11,7 +11,7 @@ export function verifyMembershipRole(role: string): (ctx: Context, next: any) =>
 
     if (!toCheck) return ctx.text('Missing Parameters', 500);
 
-    const memberships = await ctx.var.data.memberships.getAsync(toCheck, ctx.var.idToken.userId);
+    const memberships = await ctx.var.data.users.getViewAsync(toCheck, ctx.var.idToken.userId, 'organization');
     const orgRoles = memberships?.roles?.map((x) => x.name) ?? [];
 
     if (!orgRoles.includes(role)) return ctx.text('Unauthorized', 403);

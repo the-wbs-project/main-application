@@ -10,7 +10,7 @@ export async function verifyMembership(ctx: Context, next: any): Promise<Respons
 
   if (!toCheck) return ctx.text('Missing Parameters', 500);
 
-  const membership = await ctx.var.data.memberships.getAsync(toCheck, userId);
+  const membership = await ctx.var.data.users.getViewAsync(toCheck, userId, 'organization');
 
   if (!membership) return ctx.text('Unauthorized', 403);
 

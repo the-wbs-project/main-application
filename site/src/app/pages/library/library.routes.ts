@@ -3,11 +3,10 @@ import { Routes } from '@angular/router';
 import { DialogModule } from '@progress/kendo-angular-dialog';
 import {
   EntryActivityService,
-  EntryService,
   EntryTaskActivityService,
-  EntryTaskService,
-} from '@wbs/core/services/library';
-import { watcherGuard } from './services';
+  LibraryResourcesService,
+  watcherGuard,
+} from './services';
 import { Store } from '@ngxs/store';
 import { Navigate } from '@ngxs/router-plugin';
 
@@ -21,9 +20,8 @@ export const routes: Routes = [
     providers: [
       importProvidersFrom([DialogModule]),
       EntryActivityService,
-      EntryService,
       EntryTaskActivityService,
-      EntryTaskService,
+      LibraryResourcesService,
     ],
     children: [
       {
@@ -41,14 +39,7 @@ export const routes: Routes = [
       {
         path: 'view',
         loadChildren: () =>
-          import('./pages/entry-view/entry-view.routes').then((x) => x.routes),
-      },
-      {
-        path: 'import',
-        loadChildren: () =>
-          import('./pages/library-import/library-import.routes').then(
-            (x) => x.routes
-          ),
+          import('./pages/library-view/library-view.routes').then((x) => x.routes),
       },
     ],
   },

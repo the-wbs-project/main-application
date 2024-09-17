@@ -23,21 +23,21 @@
       <td class="row-header tx-semi wd-150">
         {{ "General.PMs" | translate }}
       </td>
-      <td>{{ pms() ?? ("General.None" | translate) }}</td>
+      <td>{{ pmList() ?? ("General.None" | translate) }}</td>
     </tr>
     @if (approvalEnabled()) {
     <tr>
       <td class="row-header tx-semi wd-150">
         {{ "General.Approvers" | translate }}
       </td>
-      <td>{{ approvers() ?? ("General.None" | translate) }}</td>
+      <td>{{ approverList() ?? ("General.None" | translate) }}</td>
     </tr>
     }
     <tr>
       <td class="row-header tx-semi wd-150">
         {{ "General.SMEs" | translate }}
       </td>
-      <td>{{ smes() ?? ("General.None" | translate) }}</td>
+      <td>{{ smeList() ?? ("General.None" | translate) }}</td>
     </tr>
   </tbody>
 </table>

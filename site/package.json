@@ -9,24 +9,14 @@
     "deploy": "ng build --configuration production",
     "styles:kendo": "sass src/styles/kendo.scss src/assets/css/kendo.css -I node_modules",
     "kendo:auth": "npx kendo-ui-license activate",
-    "docker:globals": "npm install @angular/cli wrangler -g",
+    "docker:globals": "npm install @angular/cli -g",
     "docker:fa": "npm config set \"@fortawesome:registry\" https://npm.fontawesome.com/ && npm config set \"//npm.fontawesome.com/:_authToken\"",
     "docker:install": "npm install --force",
-    "start:setup": "mkdir -p dist && cp src/_worker.js dist/_worker.js",
-    "start:server": "wrangler pages dev --log-level warn",
-    "start:site": "ng build --watch --configuration development --output-path dist",
-    "start": "npm run start:setup && npm run start:server & npm run start:site",
-    "dep": "npx madge src/main.ts --ts-config tsconfig.json --image ./deps.png"
+    "start": "ng serve --configuration development --live-reload false --host 0.0.0.0",
+    "dep": "npx madge src/main.ts --ts-config tsconfig.json --image ./deps.png",
+    "stats": "ng build --stats-json && webpack-bundle-analyzer dist/site/stats.json"
   },
   "private": true,
-  "madge": {
-    "fontSize": "10px",
-    "graphVizOptions": {
-      "G": {
-        "rankdir": "LR"
-      }
-    }
-  },
   "dependencies": {
     "@angular/animations": "^18.1.4",
     "@angular/cdk": "^18.1.4",
@@ -99,6 +89,7 @@
     "date-fns": "^2.29.3",
     "hammerjs": "^2.0.8",
     "jspath": "^0.4.0",
+    "ngx-quill": "^26.0.8",
     "rxjs": "^7.8.1",
     "tslib": "^2.3.0",
     "zone.js": "^0.14.0"
@@ -125,6 +116,7 @@
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.1.0",
     "sass": "^1.49.9",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "webpack-cli": "^5.1.4"
   }
 }

@@ -4,6 +4,7 @@ export type Env = {
   readonly KV_DATA: KVNamespace;
 
   readonly AUTH_API: AuthEntrypoint;
+  readonly ORIGIN: string;
 
   readonly AUTH_URL: string;
   readonly AUTH_AUDIENCE: string;

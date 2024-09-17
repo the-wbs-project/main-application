@@ -1,18 +1,11 @@
-import { AsyncPipe, NgClass } from '@angular/common';
-import {
-  ChangeDetectionStrategy,
-  Component,
-  computed,
-  inject,
-  input,
-} from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserComponent } from '@wbs/components/user';
-import { MetadataStore } from '@wbs/core/store';
-import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
+import { EditableTextComponent } from '@wbs/components/editable-text';
+import { ProjectCategoryEditorComponent } from '@wbs/components/project-category-editor';
+import { SaveService } from '@wbs/core/services';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
-import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
+import { ProjectService } from '../../../../services';
+import { ProjectStore } from '../../../../stores';
 
 @Component({
   standalone: true,
@@ -21,29 +14,26 @@ import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { class: 'card dashboard-card' },
   imports: [
-    AsyncPipe,
     DateTextPipe,
-    NgClass,
-    ProjectCategoryLabelPipe,
+    EditableTextComponent,
+    ProjectCategoryEditorComponent,
     TranslateModule,
-    UserComponent,
-    UserNamePipe,
   ],
 })
 export class ProjectDetailsCardComponent {
-  private roleIds = inject(MetadataStore).roles.ids;
+  private readonly service = inject(ProjectService);
 
-  readonly project = input.required<ProjectViewModel>();
-  readonly tasks = input.required<ProjectTaskViewModel[]>();
-  readonly pms = computed(() => this.getUsers(this.project(), this.roleIds.pm));
-  readonly approvers = computed(() =>
-    this.getUsers(this.project(), this.roleIds.approver)
-  );
-  readonly smes = computed(() =>
-    this.getUsers(this.project(), this.roleIds.sme)
-  );
+  readonly store = inject(ProjectStore);
+  readonly saveCategory = new SaveService();
+  readonly saveTitle = new SaveService();
 
-  private getUsers(project: ProjectViewModel, role: string): string[] {
-    return project.roles.filter((x) => x.role === role).map((x) => x.userId);
+  titleChanged(title: string): void {
+    this.saveTitle.call(this.service.changeTitle(title ?? '')).subscribe();
+  }
+
+  projectCategoryChanged(categoryId: string) {
+    this.saveCategory
+      .call(this.service.changeProjectCategory(categoryId))
+      .subscribe();
   }
 }

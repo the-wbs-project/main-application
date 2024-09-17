@@ -12,7 +12,15 @@ export const routes: Routes = [
       import('./pages/logout.component').then((x) => x.LogoutComponent),
   },
   {
+    path: 'onboard',
+    loadComponent: () =>
+      import('./pages/onboard/onboard.component').then(
+        (x) => x.OnboardComponent
+      ),
+  },
+  {
     path: '',
-    loadChildren: () => import('./layout/layout.routes').then((m) => m.routes),
+    loadChildren: () =>
+      import('./pages/_layout/layout.routes').then((m) => m.routes),
   },
 ];

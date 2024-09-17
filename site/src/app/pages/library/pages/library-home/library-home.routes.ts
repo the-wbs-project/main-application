@@ -3,13 +3,12 @@ import { ActivatedRouteSnapshot, Routes } from '@angular/router';
 import { Navigate } from '@ngxs/router-plugin';
 import { Store } from '@ngxs/store';
 import { orgResolve, TitleService } from '@wbs/core/services';
-import { MembershipStore, UiStore } from '@wbs/core/store';
+import { MembershipStore } from '@wbs/core/store';
 import { WrapperComponent } from '@wbs/pages/wrapper.component';
-import { LibraryHomeService } from './services';
+import { CreationDialogService, LibraryHomeService } from './services';
 
 export const loadGuard = () => {
   inject(TitleService).setTitle([{ text: 'General.Libraries' }]);
-  inject(UiStore).setBreadcrumbs([{ text: 'General.Libraries' }]);
 };
 
 export const redirectGuard = () =>
@@ -31,7 +30,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./library-home.component').then((x) => x.LibraryHomeComponent),
     canActivate: [loadGuard],
-    providers: [LibraryHomeService],
+    providers: [CreationDialogService, LibraryHomeService],
     children: [
       {
         path: '',

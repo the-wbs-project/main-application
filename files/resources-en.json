@@ -36,6 +36,7 @@
       "Types": "Types",
       "Library": "Library",
       "Libraries": "Libraries",
+      "Options": "Options",
       "Title": "Title",
       "All": "All",
       "Error": "Error",
@@ -55,6 +56,7 @@
       "SaveAndView": "Save & View",
       "AcceptAndClose": "Accept & Close",
       "Import": "Import",
+      "Importing": "Importing",
       "View": "View",
       "Status": "Status",
       "Task": "Task",
@@ -95,6 +97,7 @@
       "Previous": "Previous",
       "Next": "Next",
       "FullScreen": "Full Screen",
+      "ExitFullScreen": "Exit Full Screen",
       "Public": "Public",
       "Private": "Private",
       "ImpliedPrivate": "Implied Private",
@@ -116,6 +119,7 @@
       "Back": "Back",
       "Owner": "Owner",
       "Create": "Create",
+      "Creating": "Creating",
       "Continue": "Continue",
       "Association": "Association",
       "AssignedToMe": "Assigned To Me",
@@ -188,6 +192,7 @@
       "Discussions": "Discussions",
       "LastModified": "Last Changed",
       "Loading": "Loading",
+      "LoadingItem": "Loading {item}...",
       "Pdf": "PDF",
       "Link": "Link",
       "Image": "Image",
@@ -210,7 +215,8 @@
       "Above": "Above",
       "Below": "Below",
       "Author": "Author",
-      "Watching": "Watching"
+      "Watching": "Watching",
+      "UnknownUser": "Unknown User"
     }
   },
   {
@@ -353,6 +359,7 @@
       "UploadTaskErrors": "The following errors found",
       "UploadTaskErrorPrefix": "Please fix and try again.",
       "ExportToLibrary": "Export To Library",
+      "ExportProjectToLibrary": "Export Project To Library",
       "AddSubTask": "Add Sub-Task",
       "EditTask": "Edit Task",
       "CloneTask": "Clone Task",
@@ -445,7 +452,9 @@
       "CancelProjectSuccess": "The project was successfully cancelled.",
       "TaskLegend_Title": "Click to edit the task title.",
       "TaskLegend_Menu": "Click to see other actions which can be performed on this task.",
-      "TaskLegend_Abs": "Account Breakdown Structure Task"
+      "TaskLegend_Abs": "Accounting Breakdown Structure Task",
+      "ManageRoles": "Manage Roles",
+      "EditAbs": "Edit ABS Tasks"
     }
   },
   {
@@ -479,11 +488,10 @@
     }
   },
   {
-    "section": "ProjectUpload",
+    "section": "Upload",
     "locale": "en-US",
     "values": {
-      "FileUpload": "File Upload",
-      "PagesUploadProjectPlan": "Upload Project Plan",
+      "UploadProjectPlan": "Upload Project Plan",
       "PagesOptions": "Options",
       "GetStartedMessage": "To get started upload your project plan using the control below. Once uploaded we will guide you through the rest of the process.",
       "GetStartedMessageLibrary": "To get started upload a work breakdown structure. Once uploaded we will guide you through the rest of the process.",
@@ -521,7 +529,9 @@
       "LoadedExcel": "Loaded Excel File",
       "LoadedProject": "Loaded MS Project File",
       "UploadError": "Unexpected errors occured uploading the file. More explanations of these errors at a later time",
-      "UploadResults": "Upload Results"
+      "UploadResults": "Upload Results",
+      "ReviewTasks": "Review Tasks",
+      "ImportOptions": "Import Options"
     }
   },
   {
@@ -586,6 +596,9 @@
       "DeleteList_Sub": "Subcontractor Will Perform",
       "DeleteList_Prime": "Prime Will Perform",
       "DeleteList_Client": "Client Will Perform",
+      "DeleteConfirm": "Delete Confirmation",
+      "Delete-WithSubTasks": "Delete Task & All Sub-Tasks",
+      "Delete-WithoutSubTasks": "Delete Task (But Not Sub-Tasks)",
       "PleaseSpecify": "Please Specify",
       "AddSubTask": "Add Sub Task",
       "LetsGetStarted": "Lets Get Started",
@@ -602,6 +615,7 @@
       "TasksReordered": "The task(s) has been reordered",
       "PublishToLibrary": "Publish To Library",
       "PublishVersion": "Publish Version",
+      "ReleaseNotes": "Release Notes",
       "UnpublishForEditing": "Unpublish For Editting",
       "ConfirmPublishToLibrary": "Are you sure you are ready to publish this to your organization's library?",
       "PublishedToLibraryMessage": "This WBS has been published. It may take up to 15 minutes for the WBS to appear in the library.",
@@ -613,6 +627,7 @@
       "RemoveDiscipline": "Remove Discipline",
       "ExportToLibrary": "Export To Library",
       "ImportFromLibrary": "Import From Library",
+      "ImportFromFile": "Import From File",
       "SearchLibrary": "Search Library",
       "SearchContinue": "Select Library Entry To Continue",
       "LibraryFilters": "Library Filters",
@@ -622,10 +637,10 @@
       "PrivateTooltip": "Private - This task can only be seen within your organization.",
       "ImpliedPrivateTooltip": "Implied Private - This task can only be seen within your organizatio because a parent task has been set to private.",
       "ABS": "ABS",
-      "ABS-Full": "Account Breakdown Structure",
-      "ABS-Full2": "ABS - Account Breakdown Structure",
+      "ABS-Full": "Accounting Breakdown Structure",
+      "ABS-Full2": "ABS - Accounting Breakdown Structure",
       "ABS-Explanation": "The ABS is a hierarchical structure that breaks down the project into smaller, more manageable components. It is used to organize and categorize project costs and resources.",
-      "ABS-Tooltip": "TheditEnabledis task has been marked as ABS. This means none of its children will be included in the Account Breakdown Structure.",
+      "ABS-Tooltip": "TheditEnabledis task has been marked as ABS. This means none of its children will be included in the Accounting Breakdown Structure.",
       "ABS-ImpliedTooltip": "This task will be included in the ABS because one of its descendants was marked as ABS.",
       "WBS": "WBS",
       "WBS-Full": "Work Breakdown Structure",
@@ -637,7 +652,10 @@
       "VisibilityHelper": "Who Can See This?",
       "VisibilityPublic": "Everyone",
       "VisibilityPrivate": "Only Co-Workers",
-      "SelectTask": "Select A Task To View Details"
+      "SelectTask": "Select A Task To View Details",
+      "WbsSelect1": "Select the first level of tasks",
+      "WbsSelect2": "Select the first two levels of tasks",
+      "WbsSelect3": "Select the first three levels of tasks"
     }
   },
   {
@@ -731,13 +749,29 @@
       "TaskDescriptionChangedDescription": "The description for task '{title}' was updated.",
       "TaskRemovedDescription": "The task '{title}' was removed because '{reason}'.",
       "ProjectPhasesChangedDescription": "The project's phases was changed.",
-      "ProjectAddUserDescription": "{user} was given the role of {role}.",
-      "ProjectRemoveUserDescription": "{user} was revoked the role of {role}.",
+      "ProjectAddUserDescription": "{userName} was given the role of {role}.",
+      "ProjectRemoveUserDescription": "{userName} was revoked the role of {role}.",
       "NodeRecordered": "{0} was reordered from {1} to {2}.",
       "ProjectImportedFromLibraryTitle": "Task Imported From Library",
       "ProjectImportedFromLibraryDescription": "Library Entry '{title}' was imported into the project.",
       "TaskAbsFlagChangedTitle": "ABS Flag Changed",
-      "TaskAbsFlagChangedDescription": "The ABS flag for task '{title}' was changed."
+      "TaskAbsFlagChangedDescription": "The ABS flag for task '{title}' was changed.",
+      "ResourceAddedTitle": "Resource Added",
+      "ResourceReorderedTitle": "Resources Reordered",
+      "ResourceUpdatedTitle": "Resource Updated",
+      "ResourceRemovedTitle": "Resource Removed",
+      "ResourceAddedDescriptionProject": "The resource '{resource.name}' was added to the project.",
+      "ResourceAddedDescriptionTask": "The resource '{resource.name}' was added to the task '{title}'.",
+      "ResourceReorderedDescriptionProject": "Resources were reordered in the project.",
+      "ResourceReorderedDescriptionTask": "Resources were reordered in task '{title}'.",
+      "ResourceUpdatedDescriptionProject": "The resource '{resource.name}' was updated in the project.",
+      "ResourceUpdatedDescriptionTask": "The resource '{resource.name}' was updated in task '{title}'.",
+      "ResourceRemovedDescriptionProject": "The resource '{resource.name}' was removed from the project.",
+      "ResourceRemovedDescriptionTask": "The resource '{resource.name}' was removed from task '{title}'.",
+      "TaskImportedTitle": "Task Imported",
+      "TaskImportedDescription": "The {tasks.length} task(s) where imported from {importedFrom:Unknown}.",
+      "TaskAbsFlagBulkChangedTitle": "ABS Tasks Changed",
+      "TaskAbsFlagBulkChangedDescription": "The ABS flag for {taskIds.length} task(s) were changed."
     }
   },
   {
@@ -801,13 +835,10 @@
       "TitleHintProject": "The name of the project template you are storing in the library.",
       "TitleHintPhase": "The name of the phase template you are storing in the library.",
       "TitleHintTask": "The name of the task template you are storing in the library.",
-      "DescriptionHintProject": "The name of the project template you are storing in the library.",
-      "DescriptionHintPhase": "The name of the phase template you are storing in the library.",
-      "DescriptionHintTask": "The name of the task template you are storing in the library.",
       "IncludeResources": "Include Resources",
       "IncludeResourcesHint": "Do you want to replicate all associated resources to the template?",
-      "Visibility": "Public Visibility",
-      "VisibilityHint": "Will this template be accessible in the larger community?"
+      "SuccessTitle": "Library Entry Exported",
+      "SuccessMessage": "The record {recordId} has been created."
     }
   },
   {
@@ -884,7 +915,8 @@
       "DisciplinesHeader": "Optionally, you can define what disciplines are apart of this WBS. This will improve the value and understanding of the WBS.",
       "Step_Title": "Title & Visibility",
       "Step_Review": "Review & Save",
-      "VersioningHelp": "You can optionally create an alias for this WBS. This will allow yourself and others to understand what is different between each version."
+      "VersioningHelp": "You can optionally create an alias for this WBS. This will allow yourself and others to understand what is different between each version.",
+      "CategoryHelp": "Select the category that best describes this project WBS."
     }
   },
   {

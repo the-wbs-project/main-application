@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
-import { Project } from '@wbs/core/models';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
 import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
@@ -20,5 +20,5 @@ import { ProjectStatusPipe } from '@wbs/pipes/project-status.pipe';
   ],
 })
 export class ProjectTableomponent {
-  readonly projects = input.required<Project[]>();
+  readonly projects = input.required<ProjectViewModel[]>();
 }

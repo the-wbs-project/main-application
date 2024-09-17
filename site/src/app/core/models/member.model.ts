@@ -1,9 +1,9 @@
 import { Role } from './role.model';
 
 export interface Member {
-  user_id: string;
+  userId: string;
   email: string;
   picture?: string;
-  name: string;
+  fullName: string;
   roles: Role[];
 }

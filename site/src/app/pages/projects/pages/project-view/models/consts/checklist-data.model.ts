@@ -1,8 +1,7 @@
-import { Project } from '@wbs/core/models';
-import { TaskViewModel } from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 
 export interface ChecklistDataModel {
-  project?: Project;
+  project?: ProjectViewModel;
   disciplines?: TaskViewModel[];
   phases?: TaskViewModel[];
 }

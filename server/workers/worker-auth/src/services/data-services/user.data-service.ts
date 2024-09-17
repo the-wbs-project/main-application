@@ -31,7 +31,11 @@ export class UserDataService extends BaseDataService {
     return basic;
   }
 
-  public async getAsync(organization: string, userId: string, visibility: string): Promise<UserViewModel | null | undefined> {
+  public async getAsync(
+    organization: string,
+    userId: string,
+    visibility: 'organization' | 'public',
+  ): Promise<UserViewModel | null | undefined> {
     const key = this.key('USERS', userId, 'ORGS', organization, 'VIS', visibility);
     const kvData = await this.getKv<UserViewModel>(key);
 
@@ -41,13 +45,7 @@ export class UserDataService extends BaseDataService {
 
     if (!profile) return null;
 
-    const vm = UserTransformer.toViewModel(
-      profile,
-      visibility,
-      roles.map((x) => x.name),
-    );
-
-    this.logger.trackEvent('UserTransformer.toViewModel', 'Info', { profile, visibility, roles, vm });
+    const vm = UserTransformer.toViewModel(profile, visibility, roles ?? []);
 
     this.putKv(key, vm);
 

@@ -1,0 +1,79 @@
+@if (store.version()!; as version) {
+<div class="card-header tx-16">{{ "General.Details" | translate }}</div>
+<div class="card-body tx-14">
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Organization" | translate }} :</div>
+    <div class="row-value">{{ version.ownerName }}</div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.RecordId" | translate }} :</div>
+    <div class="row-value">{{ version.recordId }}</div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Title" | translate }} :</div>
+    <div class="row-value">
+      <wbs-editable-text
+        [viewText]="version.title"
+        [saveState]="saveTitle.state()"
+        [editText]="version.title"
+        (saveText)="titleChanged($event)"
+      />
+    </div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Version" | translate }} :</div>
+    <div class="row-value">
+      <wbs-editable-text
+        [viewText]="[version.version, version.versionAlias] | version"
+        [saveState]="saveAlias.state()"
+        [editText]="version.versionAlias"
+        (saveText)="aliasChanged($event)"
+      />
+    </div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Visibility" | translate }} :</div>
+    <div class="row-value">
+      <wbs-visibility-text [visibility]="version.visibility" />
+    </div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Type" | translate }} :</div>
+    <div class="row-value">{{ version.type | entryTypeTitle | translate }}</div>
+  </div>
+
+  @if (version.type === 'project') {
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Category" | translate }} :</div>
+    <div class="row-value">
+      <wbs-project-category-editor
+        [canEdit]="store.canEditEntry()"
+        [categoryId]="version.category"
+        [saveMode]="saveAlias.state()"
+        (save)="projectCategoryChanged($event)"
+      />
+    </div>
+  </div>
+  }
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.Status" | translate }} :</div>
+    <div class="row-value">
+      {{ version.status | libraryStatus | translate }}
+    </div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "Wbs.TaskCount" | translate }} :</div>
+    <div class="row-value">{{ store.tasks()!.length | kendoNumber }}</div>
+  </div>
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "General.LastModified" | translate }} :</div>
+    <div class="row-value">{{ version.lastModified | dateText }}</div>
+  </div>
+  @if (version.releaseNotes) {
+  <div class="wbs-detail-row">
+    <div class="row-header">{{ "Wbs.ReleaseNotes" | translate }} :</div>
+    <div class="row-value">{{ version.releaseNotes }}</div>
+  </div>
+  }
+</div>
+}

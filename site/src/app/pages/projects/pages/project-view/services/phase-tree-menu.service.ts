@@ -1,21 +1,26 @@
 import { inject, Injectable } from '@angular/core';
 import { ContextMenuItem } from '@wbs/core/models';
 import { MenuService } from '@wbs/core/services';
-import { ProjectTaskViewModel, ProjectViewModel } from '@wbs/core/view-models';
+import { ProjectTaskViewModel } from '@wbs/core/view-models';
 import { PROJECT_TREE_MENU_ITEMS } from '../models';
+import { ProjectStore } from '../stores';
 
 declare type Seperator = { separator: true };
 
 @Injectable()
 export class PhaseTreeMenuService {
   private menuService = inject(MenuService);
+  private readonly store = inject(ProjectStore);
 
   buildMenu(
-    project: ProjectViewModel,
-    task: ProjectTaskViewModel | undefined,
-    claims: string[]
+    task: ProjectTaskViewModel | undefined
   ): (ContextMenuItem | Seperator)[] {
     if (!task) return [];
+    const project = this.store.project();
+    const claims = this.store.claims();
+
+    if (!project) return [];
+
     const status = project.status;
     const navActions = this.menuService.filterList(
       structuredClone(PROJECT_TREE_MENU_ITEMS.reorderTaskActions),
@@ -43,66 +48,8 @@ export class PhaseTreeMenuService {
         if (task.canMoveDown) movers.push(item);
       }
     }
-    //
-    //  Now add disciplines
-    //
-    const add = phaseActions.find((a) => a.action === 'addDiscipline');
-    const remove = phaseActions.find((a) => a.action === 'removeDiscipline');
-
-    if (add) {
-      add.items = this.getDisciplinesToAdd(project, task);
-
-      if (add.items.length === 0) {
-        phaseActions.splice(phaseActions.indexOf(add), 1);
-      }
-    }
-
-    if (remove) {
-      remove.items = this.getDisciplinesToRemove(task);
-
-      if (remove.items.length === 0) {
-        phaseActions.splice(phaseActions.indexOf(remove), 1);
-      }
-    }
-
     return movers.length === 0
       ? phaseActions
       : [...phaseActions, { separator: true }, ...movers];
-  }
-
-  private getDisciplinesToAdd(
-    project: ProjectViewModel,
-    task: ProjectTaskViewModel
-  ): ContextMenuItem[] {
-    const existing = task.disciplines.map((x) => x.id);
-    const results: ContextMenuItem[] = [];
-
-    for (const discipline of project.disciplines) {
-      if (existing.includes(discipline.id)) continue;
-
-      results.push({
-        action: 'addDiscipline|' + discipline.id,
-        faIcon: discipline.icon ?? 'fa-question',
-        text: discipline.label,
-      });
-    }
-
-    return results;
-  }
-
-  private getDisciplinesToRemove(
-    task: ProjectTaskViewModel
-  ): ContextMenuItem[] {
-    const results: ContextMenuItem[] = [];
-
-    for (const discipline of task.disciplines) {
-      results.push({
-        action: 'removeDiscipline|' + discipline.id,
-        faIcon: discipline.icon,
-        text: discipline.label,
-      });
-    }
-
-    return results;
   }
 }

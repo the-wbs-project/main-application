@@ -61,7 +61,8 @@
               </div>
               @if (activity.userId; as userId) {
               <label class="tx-italic tx-10">
-                <wbs-user [userId]="userId" [organization]="owner()" />
+                @if (activity.user) { <wbs-user [user]="activity.user" /> }
+                @else { {{ "General.UnknownUser" | translate }} }
               </label>
               }
             </div>

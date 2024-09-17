@@ -1,0 +1,36 @@
+<div class="d-flex justify-content-center">
+  @if (isLoadingFile()) {
+  <div class="text-center">
+    <fa-duotone-icon [icon]="spinnerIcon" size="5x" animation="spin" />
+    <h3 class="pd-t-20">
+      @if (fileType() === 'xlsx') {
+      {{ "Upload.LoadingExcel" | translate }}
+      } @else if (fileType() === 'mpp') {
+      {{ "Upload.LoadingProject" | translate }}
+      }
+    </h3>
+  </div>
+  } @else {
+  <div class="w-100 mx-wd-800 mg-15">
+    <wbs-alert
+      type="info"
+      [dismissible]="false"
+      message="Upload.UploadInstruction"
+    />
+    <wbs-uploader
+      [zoneMessage]="'Upload.UploadInstruction' | translate"
+      (uploaded)="uploaded.emit($event)"
+    />
+
+    <button
+      kendoButton
+      themeColor="dark"
+      class="w-100 mg-t-20 fs-5"
+      (click)="downloadTemplate()"
+    >
+      <fa-icon [icon]="excelIcon" class="mg-r-10" />
+      {{ "Upload.DownloadTemplate" | translate }}
+    </button>
+  </div>
+  }
+</div>

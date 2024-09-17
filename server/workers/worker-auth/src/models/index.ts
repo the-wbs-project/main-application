@@ -1,6 +1,5 @@
 export * from './id-token.model';
 export * from './invite.model';
-export * from './member.model';
 export * from './organization.model';
 export * from './role.model';
 export * from './roles.enum';

@@ -1,8 +1,8 @@
 @let list = tasks() ?? [];
 <!---->
-@let project = currentProject();
-<!---->
 @let editEnabled = canEdit();
+<!---->
+@let projectDisciplines = projectStore.projectDisciplines();
 <!---->
 @if (alert(); as alertText) {
 <wbs-alert
@@ -11,147 +11,179 @@
   (closed)="alert.set(undefined)"
 />
 }
-<kendo-treelist
-  #treelist
-  class="tx-12"
-  kendoTreeListExpandable
-  kendoTreeListSelectable
-  [kendoTreeListFlatBinding]="list"
-  parentIdField="treeParentId"
-  idField="treeId"
-  [rowHeight]="rowHeight"
-  [pageSize]="pageSize()"
-  [height]="containerHeight() - heightOffset"
-  scrollable="virtual"
-  [navigable]="true"
-  [rowClass]="rowCallback"
-  [initiallyExpanded]="false"
-  [(expandedKeys)]="treeService.expandedKeys"
-  [selectable]="{ enabled: true, mode: 'row' }"
-  [rowReorderable]="canEdit()"
-  (selectionChange)="taskId.set($event.items[0].dataItem.id)"
-  (rowReorder)="rowReordered($event)"
-  (cellClick)="onCellClick($event)"
-  (dblclick)="nav()"
->
-  <ng-template kendoTreeListToolbarTemplate>
-    <wbs-tree-type-button [(view)]="view" />
-    @if (canEdit()) {
-    <wbs-tree-buttons-add (click)="addPhase()" />
-    }
-    <wbs-tree-buttons-toggler
-      (collapse)="treeService.collapseAll(treelist, list)"
-      (expand)="treeService.expandAll(treelist, list)"
-    />
-    <wbs-tree-buttons-download
-      [dropdownItems]="downloadMenuItems"
-      (itemClick)="service.action($event)"
-    />
-    @if (editEnabled) {
-    <a [routerLink]="['../', 'upload']">
-      <wbs-tree-buttons-upload />
-    </a>
-    } @if (showFullscreen()) {
-    <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
-    }
-  </ng-template>
-  @if (canEdit()) {
-  <kendo-treelist-rowreorder-column [width]="40" class="tree-column" />
-  }
-  <kendo-treelist-column
-    [expandable]="true"
-    field="title"
-    class="child-hoverer tree-column"
-    headerClass="tx-14"
-  >
-    <ng-template kendoTreeListHeaderTemplate>
-      {{ "Wbs.Activity_Title" | translate }}
-      <wbs-phase-tree-title-legend [canEdit]="editEnabled" />
-    </ng-template>
-    <ng-template kendoTreeListCellTemplate let-dataItem>
-      <wbs-phase-task-title
-        [task]="dataItem"
-        [project]="project"
-        [claims]="claims()"
-        [canEdit]="editEnabled"
-        (edit)="treeService.editTitle(treelist, dataItem, 1)"
-        (menuItemSelected)="menuItemSelected($event, dataItem.id)"
-      />
-      @if (treeService.getSaveState(dataItem.id); as saveState) {
-      <wbs-save-message [state]="saveState()" cssClass=" mg-l-15 tx-12" />
-      }
-    </ng-template>
-    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
-      <wbs-task-title-editor
-        [title]="dataItem.title"
-        (save)="taskTitleChanged(treelist, dataItem.id, $event)"
-        (cancel)="treelist.closeCell()"
-      />
-    </ng-template>
-  </kendo-treelist-column>
-  @if (project.approvalStarted) {
-  <kendo-treelist-column
-    [width]="175"
-    [title]="'Approval'"
-    headerClass="tx-14"
-    class="tree-column"
-  >
-    <ng-template kendoTreeListCellTemplate let-dataItem>
-      <div class="tx-12 w-100 d-flex flex-row flex-align-center">
-        <wbs-approval-badge
-          [fontSize]="11"
-          [childrenIds]="dataItem.childrenIds"
-          [approval]="approvals() | findById : dataItem.id"
-        />
-        @if (approvals() | findThemById : dataItem.childrenIds |
-        childrenApproval; as stats) {
-        <div class="d-inline-block wd-100 mg-l-10" [title]="stats.totalCount">
-          <wbs-progress-bar
-            [passPercent]="stats.passedPercent"
-            [failPercent]="stats.failedPercent"
+<kendo-splitter orientation="vertical">
+  <kendo-splitter-pane [scrollable]="false" min="100px">
+    <kendo-treelist
+      #treelist
+      class="tx-12 border bd-gray-500"
+      kendoTreeListExpandable
+      kendoTreeListSelectable
+      [kendoTreeListFlatBinding]="list"
+      parentIdField="parentId"
+      idField="id"
+      [rowHeight]="rowHeight"
+      [pageSize]="pageSize()"
+      [height]="containerHeight() - heightOffset - taskAreaHeight() - 20"
+      scrollable="virtual"
+      [navigable]="true"
+      [initiallyExpanded]="false"
+      [(expandedKeys)]="treeService.expandedKeys"
+      [selectable]="{ enabled: true, mode: 'row' }"
+      [rowReorderable]="editEnabled"
+      (selectionChange)="selectedTaskId.set($event.items[0].dataItem.id)"
+      (rowReorder)="rowReordered($event)"
+    >
+      <ng-template kendoTreeListToolbarTemplate>
+        <div class="w-100 d-flex flex-wrap row-column gap-10">
+          <wbs-tree-type-button [(view)]="view" />
+          <wbs-abs-button [(view)]="wbsAbs" />
+          @if (editEnabled) {
+          <wbs-tree-buttons-add (selected)="addPhase($event)" />
+          }
+          <wbs-tree-buttons-toggler
+            (collapse)="treeService.collapseAll(treelist, list, 'id')"
+            (expand)="treeService.expandAll(list, 'id')"
+          />
+          <wbs-phase-tree-other-button
+            [isFullScreen]="isFullScreen()"
+            (selected)="otherItemSelected($event)"
           />
         </div>
-        }
-      </div>
-    </ng-template>
-  </kendo-treelist-column>
-  } @if ((width() ?? 0) > 800) {
-  <kendo-treelist-column
-    [width]="200"
-    field="disciplines"
-    class="tree-column tx-13-f"
-    headerClass="tx-14"
-  >
-    <ng-template kendoTreeListHeaderTemplate>
-      <wbs-tree-discipline-legend [list]="project.disciplines" />
-    </ng-template>
-    <ng-template kendoTreeListCellTemplate let-dataItem>
-      @defer (on idle) {
-      <wbs-discipline-icon-list [items]="dataItem.disciplines" />
-      } @placeholder {
-      <span class="tx-8">{{ "General.Loading" | translate }}...</span>
-      }
-    </ng-template>
-    <ng-template kendoTreeListEditTemplate let-dataItem="dataItem">
-      <wbs-discipline-dropdown
-        [data]="project.disciplines"
-        [values]="dataItem.disciplines"
-        (save)="disciplinesChanged(treelist, dataItem.id, $event)"
+      </ng-template>
+      @if (editEnabled) {
+      <kendo-treelist-rowreorder-column
+        class="bg-gray-200 tx-10"
+        [width]="40"
       />
-    </ng-template>
-  </kendo-treelist-column>
-  }
-</kendo-treelist>
+      }
+      <kendo-treelist-column
+        [expandable]="true"
+        field="title"
+        class="child-hoverer tree-column"
+        headerClass="tx-14"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          {{ "Wbs.Activity_Title" | translate }} &nbsp;
+          <wbs-phase-tree-title-legend [canEdit]="editEnabled" />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-phase-tree-task-title
+            [task]="dataItem"
+            [saveState]="treeService.getSaveState(dataItem.id)?.()"
+            (menuItemSelected)="menuItemSelected($event, dataItem.id)"
+          />
+        </ng-template>
+        <ng-template
+          kendoTreeListEditTemplate
+          let-column="column"
+          let-formGroup="formGroup"
+          let-isNew="isNew"
+        >
+          <kendo-textbox
+            size="small"
+            [formControl]="formGroup.get(column.field)"
+          />
+        </ng-template>
+      </kendo-treelist-column>
+      <!--@if (project.approvalStarted) {
+      <kendo-treelist-column
+        [width]="175"
+        [title]="'Approval'"
+        headerClass="tx-14"
+        class="tree-column"
+      >
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <div class="tx-12 w-100 d-flex flex-row flex-align-center">
+            <wbs-approval-badge
+              [fontSize]="11"
+              [childrenIds]="dataItem.childrenIds"
+              [approval]="approvals() | findById : dataItem.id"
+            />
+            @if (approvals() | findThemById : dataItem.childrenIds |
+            childrenApproval; as stats) {
+            <div
+              class="d-inline-block wd-100 mg-l-10"
+              [title]="stats.totalCount"
+            >
+              <wbs-progress-bar
+                [passPercent]="stats.passedPercent"
+                [failPercent]="stats.failedPercent"
+              />
+            </div>
+            }
+          </div>
+        </ng-template>
+      </kendo-treelist-column>
+    } -->
+      @if ((width() ?? 0) > 800) {
+      <kendo-treelist-column
+        [width]="200"
+        field="disciplines"
+        class="tree-column tx-13-f"
+        headerClass="tx-14"
+      >
+        <ng-template kendoTreeListHeaderTemplate>
+          <wbs-tree-discipline-legend [list]="projectDisciplines" />
+        </ng-template>
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-discipline-icon-list [items]="dataItem.disciplines" />
+        </ng-template>
+        <ng-template
+          kendoTreeListEditTemplate
+          let-column="column"
+          let-dataItem="dataItem"
+          let-formGroup="formGroup"
+          let-isNew="isNew"
+        >
+          @if (isNew) {
+          <wbs-discipline-dropdown
+            [autoSave]="true"
+            [data]="projectDisciplines"
+            [values]="[]"
+            (save)="formGroup.get(column.field).setValue($event)"
+          />
+          }
+        </ng-template>
+      </kendo-treelist-column>
+      } @if (editEnabled) {
+      <kendo-treelist-command-column [width]="50" class="tree-column">
+        <ng-template
+          kendoTreeListCellTemplate
+          let-isNew="isNew"
+          let-dataItem="dataItem"
+          let-cellContext="cellContext"
+        >
+          <div
+            class="d-flex flex-row align-items-center justify-content-center gap-15"
+          >
+            @if (dataItem.id !== editItem?.id && !editForm) {
+            <a class="pointer" title="Add Child" (click)="addHandler(dataItem)">
+              <fa-icon [icon]="addIcon" size="sm" />
+            </a>
+            <a title="Remove" class="pointer" (click)="removeHandler(dataItem)">
+              <fa-icon [icon]="removeIcon" size="sm" />
+            </a>
+            } @if (!dataItem.id && editForm) {
+            <!-- "Save" command directive, will be visible only in edit mode -->
+            <a title="Save" class="pointer" (click)="saveHandler()">
+              <fa-icon [icon]="saveIcon" size="sm" />
+            </a>
 
-@if (list.length === 0) {
-<div class="mg-t-30 text-center">
-  <button
-    kendoButton
-    [size]="'large'"
-    [themeColor]="'primary'"
-    (click)="menuItemSelected('addSub')"
-  >
-    {{ "Wbs.AddFirstPhase" | translate }}
-  </button>
-</div>
-}
+            <!-- "Cancel" command directive, will be visible only in edit mode -->
+            <a title="Cancel" class="pointer" (click)="closeEditor()">
+              <fa-icon [icon]="cancelIcon" size="sm" />
+            </a>
+            }
+          </div>
+        </ng-template>
+      </kendo-treelist-command-column>
+      }
+    </kendo-treelist>
+  </kendo-splitter-pane>
+  <kendo-splitter-pane min="100px" size="150px" [(wbsHeight)]="taskAreaHeight">
+    <wbs-phase-task-details
+      [projectDisciplines]="projectDisciplines"
+      [task]="selectedTask()"
+    />
+  </kendo-splitter-pane>
+</kendo-splitter>

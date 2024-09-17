@@ -1,7 +1,6 @@
 import { Injectable, Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Member } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { skipWhile, tap } from 'rxjs/operators';
@@ -42,11 +41,5 @@ export class UserService {
     return this.data.users
       .getAsync(organization, userId)
       .pipe(tap((user) => this.users.get(key)!.next(user)));
-  }
-
-  getSortedUsers(allMembers: Member[], userIds: string[]): Member[] {
-    return allMembers
-      .filter((x) => userIds.includes(x.user_id))
-      .sort((a, b) => sorter(a.name, b.name));
   }
 }

@@ -19,6 +19,7 @@ export class Fetcher {
     }
     const start = new Date();
     let end: Date;
+
     const request = new Request(input, init);
     let response: Response | undefined;
 

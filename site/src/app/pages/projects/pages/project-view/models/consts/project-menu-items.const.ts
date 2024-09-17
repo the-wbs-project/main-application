@@ -4,15 +4,13 @@ import {
   faArrowRight,
   faArrowUp,
   faBookArrowRight,
+  faBooks,
   faCheck,
   faCopy,
   faEclipse,
-  faEye,
   faFileImport,
   faPlus,
   faTrash,
-  faUserMinus,
-  faUserPlus,
   faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
@@ -23,65 +21,25 @@ import {
 
 const taskActions: ActionContextMenuItem[] = [
   {
-    action: 'addSub',
-    faIcon: faPlus,
-    resource: 'Projects.AddSubTask',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.CREATE,
-    },
-  },
-  {
     action: 'import',
-    faIcon: faFileImport,
-    resource: 'General.Import',
+    faIcon: faPlus,
+    resource: 'Wbs.ImportSubTask',
     filters: {
-      stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
+      stati: [PROJECT_STATI.PLANNING],
     },
     items: [
       {
-        action: 'import|above',
-        faIcon: faArrowUp,
-        resource: 'General.Above',
+        action: 'import|file',
+        faIcon: faFileImport,
+        resource: 'Wbs.ImportFromFile',
       },
       {
-        action: 'import|right',
-        faIcon: faArrowRight,
-        resource: 'General.SubTask',
-      },
-      {
-        action: 'import|below',
-        faIcon: faArrowDown,
-        resource: 'General.Below',
+        action: 'import|library',
+        faIcon: faBooks,
+        resource: 'Wbs.ImportFromLibrary',
       },
     ],
-  },
-  {
-    action: 'viewTask',
-    faIcon: faEye,
-    resource: 'Projects.ViewTask',
-    filters: {
-      claim: PROJECT_CLAIMS.TASKS.READ,
-    },
-  },
-  {
-    action: 'addDiscipline',
-    faIcon: faUserPlus,
-    resource: 'Wbs.AddDiscipline',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
-    },
-  },
-  {
-    action: 'removeDiscipline',
-    faIcon: faUserMinus,
-    resource: 'Wbs.RemoveDiscipline',
-    filters: {
-      stati: [PROJECT_STATI.PLANNING],
-      claim: PROJECT_CLAIMS.TASKS.UPDATE,
-    },
   },
   {
     action: 'other',

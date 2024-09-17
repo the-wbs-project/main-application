@@ -30,8 +30,8 @@ import { TranslateModule } from '@ngx-translate/core';
       <div class="flex-fill">
         @if (heading(); as heading) {
         <h4 class="alert-heading">{{ heading | translate }}</h4>
-        }
-        {{ message() | translate }}
+        } @if (message(); as message) { {{ message | translate }} } @else {
+        <ng-content /> }
       </div>
     </div>
   </ngb-alert>`,
@@ -41,7 +41,7 @@ import { TranslateModule } from '@ngx-translate/core';
 export class AlertComponent {
   readonly type = input.required<'success' | 'danger' | 'warning' | 'info'>();
   readonly heading = input<string>();
-  readonly message = input.required<string>();
+  readonly message = input<string | undefined>();
   readonly animation = input<boolean>(true);
   readonly dismissible = input<boolean>(true);
   readonly icon = computed(() => {

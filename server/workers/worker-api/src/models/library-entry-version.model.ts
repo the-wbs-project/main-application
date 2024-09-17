@@ -17,4 +17,5 @@ export interface LibraryEntryVersion {
   editors: string[];
   disciplines: any[];
   lastModified: Date;
+  releaseNotes?: string;
 }

@@ -1,0 +1,47 @@
+<div class="tree-list">
+  <div class="tree-list-header d-flex">
+    <div class="tree-list-header-cell" *ngFor="let column of columns">
+      {{ column | titlecase }}
+    </div>
+  </div>
+  <cdk-virtual-scroll-viewport
+    [itemSize]="rowHeight"
+    class="tree-list-viewport"
+  >
+    <div
+      cdkDropList
+      (cdkDropListDropped)="drop($event)"
+      class="tree-list-drop-list"
+    >
+      <div
+        *cdkVirtualFor="let item of flattenedData(); trackBy: trackById"
+        class="tree-list-row d-flex align-items-center"
+        [class.selected]="selectedItemId() === item.id"
+        cdkDrag
+        (click)="toggleSelection(item)"
+      >
+        <div class="tree-list-cell" *ngFor="let column of columns">
+          <span [style.padding-left.px]="(item.level || 0) * 20">
+            <!-- Expand/Collapse Button -->
+            <button
+              *ngIf="hasChildren(item.id)"
+              class="btn btn-sm btn-link p-0 me-2"
+              (click)="toggleExpand(item.id, $event)"
+              [attr.aria-label]="item.expanded ? 'Collapse Row' : 'Expand Row'"
+            >
+              <i
+                class="fas"
+                [ngClass]="{
+                  'fa-chevron-down': item.expanded,
+                  'fa-chevron-right': !item.expanded
+                }"
+              ></i>
+            </button>
+            <!-- Column Data -->
+            {{ item[column] }}
+          </span>
+        </div>
+      </div>
+    </div>
+  </cdk-virtual-scroll-viewport>
+</div>

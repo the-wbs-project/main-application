@@ -9,6 +9,7 @@ export interface UserRole {
 
 export interface Project {
   id: string;
+  recordId: string;
   owner: string;
   createdBy: string;
   title: string;

@@ -1,0 +1,45 @@
+<kendo-dialog
+  width="80%"
+  height="80%"
+  maxWidth="1000px"
+  (close)="dialog.close()"
+>
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "LibraryCreate.TitlePhase" | translate }}
+  </kendo-dialog-titlebar>
+  <wbs-dialog-wrapper [steps]="steps" [view]="view()" mobileSpot="md">
+    @if (view() === 0) {
+    <wbs-info-view
+      [(templateTitle)]="templateTitle"
+      [(visibility)]="visibility"
+    />
+    } @else if (view() === 1) {
+    <wbs-phase-view [(phase)]="phase" />
+    } @else if (view() === 2) {
+    <wbs-discipline-view [(disciplines)]="disciplines" />
+    } @else if (view() === 3) {
+    <wbs-versioning-view [(alias)]="alias" />
+    } @else if (view() === 4) {
+    <wbs-review-view
+      [phase]="phase()!"
+      [versionAlias]="alias()"
+      [disciplines]="disciplines()"
+      [templateTitle]="templateTitle()"
+      [visibility]="visibility()"
+      (close)="dialog.close($event)"
+    />
+    }
+  </wbs-dialog-wrapper>
+
+  <kendo-dialog-actions>
+    <wbs-dialog-buttons
+      [view]="view()"
+      [showSave]="view() === 4"
+      [canContinue]="canContinue()"
+      [isSaving]="service.saveState.isSaving()"
+      (next)="next()"
+      (back)="back()"
+      (save)="save()"
+    />
+  </kendo-dialog-actions>
+</kendo-dialog>

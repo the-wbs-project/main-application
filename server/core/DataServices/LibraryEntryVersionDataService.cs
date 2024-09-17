@@ -72,6 +72,7 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Title", entryVersion.Title);
         cmd.Parameters.AddWithValue("@Description", DbValue(entryVersion.Description));
         cmd.Parameters.AddWithValue("@Status", entryVersion.Status);
+        cmd.Parameters.AddWithValue("@ReleaseNotes", DbValue(entryVersion.ReleaseNotes));
         cmd.Parameters.AddWithValue("@Editors", DbJson(entryVersion.Editors));
         cmd.Parameters.AddWithValue("@Categories", DbJson(entryVersion.Categories));
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(entryVersion.Disciplines));

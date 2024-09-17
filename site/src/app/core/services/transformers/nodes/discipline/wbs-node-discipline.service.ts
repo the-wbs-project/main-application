@@ -1,40 +1,29 @@
-import { WbsNode } from '@wbs/core/models';
-import { CategoryViewModel, TaskViewModel } from '@wbs/core/view-models';
-import { CategoryService } from '../../../category.service';
+import { ProjectNode, WbsNode } from '@wbs/core/models';
+import {
+  CategoryViewModel,
+  DisciplineTaskViewModel,
+} from '@wbs/core/view-models';
 import { WbsNodeService } from '../../../wbs-node.service';
 
 export class WbsDisciplineNodeTransformer {
-  constructor(
-    private readonly categoryService: CategoryService,
-    private readonly wbsService: WbsNodeService
-  ) {}
+  constructor(private readonly wbsService: WbsNodeService) {}
 
   run(
+    type: 'wbs' | 'abs',
     disciplines: CategoryViewModel[],
-    projectNodes: WbsNode[]
-  ): TaskViewModel[] {
+    projectNodes: ProjectNode[]
+  ): DisciplineTaskViewModel[] {
     const phases = this.wbsService.getPhases(projectNodes);
-    const nodes: TaskViewModel[] = [];
+    const nodes: DisciplineTaskViewModel[] = [];
     let dCounter = 1;
 
     for (const d of disciplines) {
-      const dView: TaskViewModel = {
-        children: 0,
-        childrenIds: [],
-        disciplines: [d],
+      const dView: DisciplineTaskViewModel = {
         id: d.id,
-        treeId: d.id,
-        levels: [dCounter],
         levelText: dCounter.toString(),
-        depth: 1,
-        order: dCounter,
         title: d.label,
-        lastModified: undefined,
-        canMoveDown: false,
-        canMoveUp: false,
-        canMoveLeft: false,
-        canMoveRight: false,
       };
+      const phaseNodes: DisciplineTaskViewModel[] = [];
 
       let phaseCounter = 1;
 
@@ -44,53 +33,41 @@ export class WbsDisciplineNodeTransformer {
 
         //if ((pNode?.disciplineIds ?? []).indexOf(d.id) === -1) continue;
 
-        const pView: TaskViewModel = {
-          children: 0,
-          childrenIds: [],
-          description: pNode.description,
-          disciplines: [d],
-          id: p.id,
-          treeId: `${d.id}-${p.id}`,
-          levels: pLevel,
+        const pView: DisciplineTaskViewModel = {
+          id: `${d.id}-${p.id}`,
           levelText: pLevel.join('.'),
-          depth: pLevel.length,
-          order: phaseCounter,
           parentId: d.id,
-          treeParentId: d.id,
-          phaseId: p.id,
           title: pNode.title,
-          lastModified: pNode?.lastModified,
-          canMoveDown: false,
-          canMoveUp: false,
-          canMoveLeft: false,
-          canMoveRight: false,
         };
 
         const children = this.getPhaseChildren(
-          disciplines,
+          type,
           d.id,
           p.id,
           p.id,
           pLevel,
           projectNodes
         );
-        const hasDiscipline = pNode?.disciplineIds?.includes(d.id) ?? false;
-
+        const hasDiscipline = pNode.disciplineIds?.includes(d.id) ?? false;
+        //
+        //  If we have no discipline, and no children, skip it
+        //
         if (!hasDiscipline && children.length === 0) continue;
 
-        pView.children = this.getChildCount(children);
-
-        nodes.push(pView, ...children);
+        phaseNodes.push(pView);
+        //
+        //  IF this is for ABS, and we have hit a ABS node, don't actually add the children
+        //
+        if (type === 'wbs' || !pNode.absFlag) {
+          phaseNodes.push(...children);
+        }
         phaseCounter++;
       }
-      dView.children = phaseCounter - 1;
-
-      if (dView.children > 0) {
-        nodes.push(dView);
+      if (phaseNodes.length > 0) {
+        nodes.push(dView, ...phaseNodes);
         dCounter++;
       }
     }
-
     return nodes;
   }
 
@@ -101,46 +78,28 @@ export class WbsDisciplineNodeTransformer {
   }
 
   private getPhaseChildren(
-    disciplines: CategoryViewModel[],
+    type: 'wbs' | 'abs',
     disciplineId: string,
     phaseId: string,
     parentId: string,
     parentLevel: number[],
     list: WbsNode[]
-  ): TaskViewModel[] {
-    const results: TaskViewModel[] = [];
+  ): DisciplineTaskViewModel[] {
+    const results: DisciplineTaskViewModel[] = [];
     const children = this.getSortedChildren(parentId, list);
     let counter = 1;
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
       const childLevel = [...parentLevel, counter];
-      const node: TaskViewModel = {
-        id: child.id,
-        childrenIds: [],
-        parentId: parentId,
-        treeId: `${disciplineId}-${child.id}`,
-        treeParentId: `${disciplineId}-${parentId}`,
-        disciplines: this.categoryService.buildTaskViewModels(
-          disciplines,
-          child.disciplineIds ?? []
-        ),
-        phaseId: phaseId,
-        order: counter,
-        levels: childLevel,
-        depth: childLevel.length,
+      const node: DisciplineTaskViewModel = {
+        id: `${disciplineId}-${child.id}`,
+        parentId: `${disciplineId}-${parentId}`,
         title: child.title ?? '',
-        description: child.description,
         levelText: childLevel.join('.'),
-        lastModified: child.lastModified,
-        children: 0,
-        canMoveDown: false,
-        canMoveUp: false,
-        canMoveLeft: false,
-        canMoveRight: false,
       };
       const myChildren = this.getPhaseChildren(
-        disciplines,
+        type,
         disciplineId,
         phaseId,
         child.id,
@@ -151,18 +110,11 @@ export class WbsDisciplineNodeTransformer {
       const hasDiscipline = (child.disciplineIds ?? []).includes(disciplineId);
 
       if (hasDiscipline || myChildren.length > 0) {
-        node.children = this.getChildCount(myChildren);
         counter++;
 
         results.push(node, ...myChildren);
       }
     }
     return results;
-  }
-
-  private getChildCount(children: TaskViewModel[]): number {
-    return children
-      .map((x) => x.children + 1)
-      .reduce((partialSum, a) => partialSum + a, 0);
   }
 }

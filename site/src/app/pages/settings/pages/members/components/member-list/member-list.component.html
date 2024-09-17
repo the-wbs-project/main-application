@@ -24,7 +24,7 @@
     </tr>
   </thead>
   <tbody>
-    @for (member of data() ; track member.user_id) {
+    @for (member of data() ; track member.userId) {
     <tr>
       <td>
         <wbs-action-icon-list
@@ -35,7 +35,7 @@
           (itemClicked)="userActionClicked(member, $event)"
         />
       </td>
-      <td>{{ member.name }}</td>
+      <td>{{ member.fullName }}</td>
       <td class="d-none d-lg-table-cell">{{ member.email }}</td>
       <td>{{ member.roles | roleList : true }}</td>
     </tr>

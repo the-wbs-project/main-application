@@ -20,21 +20,23 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextAreaModule, TextBoxModule } from '@progress/kendo-angular-inputs';
 import { FileInfo } from '@progress/kendo-angular-upload';
 import { InfoMessageComponent } from '@wbs/components/_utils/info-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { UploaderComponent } from '@wbs/components/uploader';
 import {
   RESOURCE_TYPE_TYPE,
   RESOURCE_TYPES,
-  ResourceRecord,
+  ContentResource,
 } from '@wbs/core/models';
+import { IdService } from '@wbs/core/services';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ResourceTypeTextComponent } from '../type-text';
 import { RecordResourceValidation } from '../../services';
 import { RecordResourceViewModel } from '../../view-models';
+import { RecordEditResults } from './record-edit-results.model';
 
 @Component({
   standalone: true,
-  selector: 'wbs-record-resource-editor',
   templateUrl: './editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   providers: [RecordResourceValidation],
@@ -46,6 +48,7 @@ import { RecordResourceViewModel } from '../../view-models';
     InfoMessageComponent,
     NgClass,
     ResourceTypeTextComponent,
+    SaveButtonComponent,
     TextAreaModule,
     TextBoxModule,
     TranslateModule,
@@ -53,16 +56,24 @@ import { RecordResourceViewModel } from '../../view-models';
   ],
 })
 export class RecordResourceEditorComponent extends DialogContentBase {
+  private saveFunction!: (
+    results: RecordEditResults
+  ) => Observable<ContentResource>;
+
   readonly validator = inject(RecordResourceValidation);
   //
   //  Signals
   //
+  readonly isNew = signal(false);
+  readonly isSaving = signal(false);
   readonly title = signal<string>('');
   readonly model = signal<RecordResourceViewModel | undefined>(undefined);
   //
   //  Computed
   //
-  readonly errors = computed(() => this.validator.validate(this.model()));
+  readonly errors = computed(() =>
+    this.validator.validate(this.model(), this.isNew())
+  );
 
   readonly typeList = [
     RESOURCE_TYPES.PDF,
@@ -75,14 +86,17 @@ export class RecordResourceEditorComponent extends DialogContentBase {
   }
 
   static launchAddAsync(
-    dialog: DialogService
-  ): Observable<[Partial<ResourceRecord>, FileInfo | undefined] | undefined> {
+    dialog: DialogService,
+    saveFunction: (vm: RecordEditResults) => Observable<ContentResource>
+  ): Observable<ContentResource | undefined> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,
     });
     const component = ref.content.instance as RecordResourceEditorComponent;
 
+    component.saveFunction = saveFunction;
     component.title.set('Resources.AddResource');
+    component.isNew.set(true);
     component.model.set({
       description: '',
       name: '',
@@ -90,34 +104,24 @@ export class RecordResourceEditorComponent extends DialogContentBase {
 
     return ref.result.pipe(
       map((x: unknown) =>
-        x instanceof DialogCloseResult ? undefined : <RecordResourceViewModel>x
-      ),
-      map((vm) =>
-        vm
-          ? [
-              {
-                type: vm.type,
-                name: vm.name,
-                description: vm.description,
-                resource: vm.url,
-              },
-              vm.file,
-            ]
-          : undefined
+        x instanceof DialogCloseResult ? undefined : <ContentResource>x
       )
     );
   }
 
   static launchEditAsync(
     dialog: DialogService,
-    data: ResourceRecord
-  ): Observable<[ResourceRecord, FileInfo | undefined] | undefined> {
+    data: ContentResource,
+    saveFunction: (vm: RecordEditResults) => Observable<ContentResource>
+  ): Observable<ContentResource | undefined> {
     const ref = dialog.open({
       content: RecordResourceEditorComponent,
     });
     const component = ref.content.instance as RecordResourceEditorComponent;
 
+    component.saveFunction = saveFunction;
     component.title.set('Resources.EditResource');
+    component.isNew.set(false);
     component.model.set({
       id: data.id,
       name: data.name,
@@ -128,18 +132,26 @@ export class RecordResourceEditorComponent extends DialogContentBase {
 
     return ref.result.pipe(
       map((x: unknown) =>
-        x instanceof DialogCloseResult ? undefined : <RecordResourceViewModel>x
-      ),
-      map((vm) => {
-        if (!vm) return undefined;
+        x instanceof DialogCloseResult ? undefined : <ContentResource>x
+      )
+    );
+  }
 
-        data.name = vm.name;
-        data.description = vm.description;
-        data.resource = vm.url;
-        data.type = vm.type!;
-
-        return [data, vm.file];
-      })
+  save(): void {
+    this.isSaving.set(true);
+    const values = this.model()!;
+    const model: Partial<ContentResource> = {
+      id: values.id ?? IdService.generate(),
+      name: values.name,
+      description: values.description,
+      resource: values.url,
+      type: values.type!,
+    };
+    this.saveFunction({ record: model, file: values.file }).subscribe(
+      (results) => {
+        this.isSaving.set(false);
+        this.dialog.close(results);
+      }
     );
   }
 

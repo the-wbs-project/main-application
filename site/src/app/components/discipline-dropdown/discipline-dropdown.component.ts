@@ -18,8 +18,10 @@ import {
   MultiSelectComponent,
   MultiSelectModule,
 } from '@progress/kendo-angular-dropdowns';
+import { SaveState } from '@wbs/core/models';
 import { CategoryViewModel } from '@wbs/core/view-models';
 import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
+import { SaveMessageComponent } from '../_utils/save-message.component';
 
 @Component({
   standalone: true,
@@ -32,25 +34,37 @@ import { DisciplineIconPipe } from '@wbs/pipes/discipline-icon.pipe';
     FontAwesomeModule,
     MultiSelectModule,
     NgClass,
+    SaveMessageComponent,
     TranslateModule,
   ],
 })
 export class DisciplinesDropdownComponent implements OnChanges {
   readonly multiselect = viewChild<MultiSelectComponent>(MultiSelectComponent);
+  readonly cancelIcon = faXmark;
+  //
+  //  Inputs
+  //
   readonly data = input.required<CategoryViewModel[]>();
   readonly values = input.required<CategoryViewModel[]>();
+  readonly saveState = input<SaveState | undefined>();
   readonly saveIcon = input(faCheck);
   readonly autoSave = input(false);
-  readonly save = output<CategoryViewModel[]>();
-  readonly cancel = output<void>();
+  //
+  //  Signals
+  //
   readonly ids = signal<string[]>([]);
+  readonly saving = computed(() => this.saveState() === 'saving');
   readonly showSave = computed(() => {
     const vals = this.values();
     const ids = this.ids();
 
     return vals.length !== ids.length || vals.some((v) => !ids.includes(v.id));
   });
-  readonly cancelIcon = faXmark;
+  //
+  //  Outputs
+  //
+  readonly save = output<CategoryViewModel[]>();
+  readonly cancel = output<void>();
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['values']) {

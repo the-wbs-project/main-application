@@ -4,30 +4,54 @@ import { ResourceService } from '../resource.service';
 
 export class MetadataHttpService {
   static async getListsAsync(ctx: Context): Promise<Response> {
-    const types = ['project_category', 'categories_phase', 'categories_discipline'];
     const { type, locale } = ctx.req.param();
-    const list = await ctx.var.data.lists.getAsync(type);
+    const [resourceObj, list] = await Promise.all([ctx.var.data.resources.getAsync(locale), ctx.var.data.lists.getAsync(type)]);
 
-    if (!types.includes(type)) return ctx.json(list);
+    var resources = new ResourceService(resourceObj!);
 
-    const resourceObj = await ctx.var.data.resources.getAsync(locale);
-    const resources = new ResourceService(resourceObj!);
-
-    for (const item of list!) {
-      if (item.label) item.label = resources.get(item.label);
-      if (item.description) item.description = resources.get(item.description);
-    }
-
-    return ctx.json(list);
+    return ctx.json(MetadataHttpService.convertCategories(resources, list ?? []));
   }
+
+  static async getStarterKitAsync(ctx: Context): Promise<Response> {
+    const key = 'STARTER_DATA';
+
+    const kvData = await ctx.env.KV_DATA.get<any>(key, 'json');
+
+    if (kvData) return ctx.json(kvData);
+
+    const resources = await ctx.var.data.resources.getAsync('en-US');
+    const resourceService = new ResourceService(resources!);
+
+    const [projectCategories, phases, disciplines, roles] = await Promise.all([
+      MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'project_category'),
+      MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'categories_phase'),
+      MetadataHttpService.getCategoriesAsync(ctx, resourceService, 'categories_discipline'),
+      ctx.var.data.roles.getAllAsync(),
+    ]);
+
+    const data = {
+      resources,
+      projectCategories,
+      phases,
+      disciplines,
+      roles,
+    };
+
+    await ctx.env.KV_DATA.put(key, JSON.stringify(data));
+
+    return ctx.json(data);
+  }
+
   static async putResourcesAsync(ctx: Context): Promise<Response> {
     try {
-      const data = ctx.get('data').resources;
+      const data = ctx.var.data.resources;
       const resources: Resources[] = await ctx.req.json();
 
       for (const r of resources) {
         ctx.executionCtx.waitUntil(data.putAsync(r));
       }
+      await ctx.env.KV_DATA.delete('STARTER_DATA');
+
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
@@ -59,8 +83,9 @@ export class MetadataHttpService {
       //  Delete any items that were not in the new list
       //
       for (const id of existingIds) {
-        ctx.executionCtx.waitUntil(data.deleteAsync(type, id));
+        await data.deleteAsync(type, id);
       }
+      await ctx.env.KV_DATA.delete('STARTER_DATA');
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
@@ -82,5 +107,20 @@ export class MetadataHttpService {
 
       return ctx.text('Internal Server Error', 500);
     }
+  }
+
+  private static async getCategoriesAsync(ctx: Context, resources: ResourceService, type: string): Promise<ListItem[]> {
+    const list = (await ctx.var.data.lists.getAsync(type)) ?? [];
+
+    return MetadataHttpService.convertCategories(resources, list);
+  }
+
+  private static convertCategories(resources: ResourceService, list: ListItem[]): ListItem[] {
+    for (const item of list) {
+      if (item.label) item.label = resources.get(item.label);
+      if (item.description) item.description = resources.get(item.description);
+    }
+
+    return list;
   }
 }

@@ -16,8 +16,8 @@ export class QueueService {
       let promises: Promise<any>[] = [];
 
       for (const member of members) {
-        promises.push(this.data.users.getAsync(org.id, member.user_id, 'public'));
-        promises.push(this.data.users.getAsync(org.id, member.user_id, 'organization'));
+        //promises.push(this.data.users.getAsync(org.id, member.user_id, 'public'));
+        //promises.push(this.data.users.getAsync(org.id, member.user_id, 'organization'));
 
         if (promises.length >= 20) {
           await Promise.all(promises);

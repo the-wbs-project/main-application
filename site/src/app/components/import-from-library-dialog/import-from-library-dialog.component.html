@@ -1,0 +1,83 @@
+@let page = view();
+
+<kendo-dialog width="95%" height="95%" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Wbs.ImportFromLibrary" | translate }}
+  </kendo-dialog-titlebar>
+  <div class="d-flex flex-column h-100">
+    <kendo-stepper
+      [steps]="steps"
+      stepType="full"
+      [currentStep]="page"
+      [linear]="false"
+    >
+      <ng-template kendoStepperIndicatorTemplate let-step>
+        @if (step.icon) { <fa-icon [icon]="step.icon" /> }
+      </ng-template>
+      <ng-template kendoStepperLabelTemplate let-step>
+        {{ step.label | translate }}
+        @if (step.isOptional) { <span class="mg-l-5">*</span> }
+      </ng-template>
+    </kendo-stepper>
+    <div
+      [appScrollToTop]="page"
+      class="tx-center flex-fill pd-t-20 pd-x-10 fs-6"
+    >
+      @if (page === 0) {
+      <wbs-library-view [(selected)]="selected" (forceNext)="next()" />
+      } @else if (page === 1) {
+      <wbs-options-view
+        [libraryType]="selected()!.type"
+        [(projectAsTask)]="projectAsTask"
+        [(onlyImportSubtasks)]="onlyImportSubtasks"
+      />
+      } @else if (page === 2) {
+      <wbs-task-view
+        [(tasks)]="tasks"
+        [(version)]="version"
+        [(versionDisciplines)]="versionDisciplines"
+        [selected]="selected()!"
+      />
+      }
+    </div>
+  </div>
+  <kendo-dialog-actions>
+    <div class="ht-40">
+      @if (page === 0 && selected() == undefined) {
+      <div class="w-100 text-center">
+        <h4 class="mg-t-5">{{ "Wbs.SearchContinue" | translate }}</h4>
+      </div>
+      } @else {
+      <div class="d-flex">
+        @if (page > 0) {
+        <div class="flex-1">
+          <button kendoButton themeColor="primary" (click)="back()">
+            {{ "General.Back" | translate }}
+          </button>
+        </div>
+        }
+        <div class="flex-1 text-end">
+          @if (page < 2) {
+          <button
+            kendoButton
+            themeColor="primary"
+            [disabled]="isNextDisabled()"
+            (click)="next()"
+          >
+            {{ "General.Next" | translate }}
+          </button>
+          } @else {
+          <wbs-save-button
+            [isSaving]="saving()"
+            themeColor="primary"
+            saveLabel="General.Import"
+            savingLabel="General.Importing"
+            (click)="startSaving()"
+          />
+          }
+        </div>
+      </div>
+      }
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

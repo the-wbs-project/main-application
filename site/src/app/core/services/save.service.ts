@@ -1,4 +1,4 @@
-import { Signal, signal } from '@angular/core';
+import { computed, Signal, signal } from '@angular/core';
 import { Observable } from 'rxjs';
 import { delay, tap } from 'rxjs/operators';
 import { SaveState } from '../models';
@@ -8,6 +8,10 @@ export class SaveService {
 
   get state(): Signal<SaveState> {
     return this._state;
+  }
+
+  get isSaving(): Signal<boolean> {
+    return computed(() => this._state() === 'saving');
   }
 
   call<T>(
@@ -23,5 +27,11 @@ export class SaveService {
       delay(finishDelay),
       tap(() => this._state.set('ready'))
     );
+  }
+
+  quickCall<T>(obs: Observable<T>): Observable<T> {
+    this._state.set('saving');
+
+    return obs.pipe(tap(() => this._state.set('ready')));
   }
 }

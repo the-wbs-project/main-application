@@ -1,0 +1,29 @@
+<div class="card-header tx-16">
+  <div class="d-flex flex-align-center">
+    <div>{{ "General.Contributors" | translate }}</div>
+    @if (store.canEditProject()) {
+    <div class="flex-fill tx-right">
+      <button
+        kendoButton
+        size="small"
+        fillMode="flat"
+        class="p-0"
+        (click)="launchEdit()"
+      >
+        <fa-icon [icon]="editIcon" />
+      </button>
+    </div>
+    }
+  </div>
+</div>
+<div class="card-body d-flex flex-row flex-wrap gap-20">
+  @for (x of contributors(); track x.trackId) {
+  <wbs-user-card
+    [user]="x.user"
+    [cardHeader]="x.role | roleTitle"
+    cardClass="text-start border shadow"
+    cardHeaderClass="bg-light-blue-f"
+    cardBodyClass="pd-0"
+  />
+  }
+</div>

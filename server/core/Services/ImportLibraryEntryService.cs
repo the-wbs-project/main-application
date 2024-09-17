@@ -12,12 +12,12 @@ public class ImportLibraryEntryService
 
     private readonly ProjectDataService projectDataService;
     private readonly ProjectNodeDataService projectNodeDataService;
-    private readonly ResourceCopyService resourceCopier;
+    private readonly ResourceCopyService copyService;
     private readonly DbService db;
 
     public ImportLibraryEntryService(
         DbService db,
-        ResourceCopyService resourceCopier,
+        ResourceCopyService copyService,
         LibraryEntryDataService entryDataService,
         LibraryEntryNodeDataService entryNodeDataService,
         LibraryEntryVersionDataService entryVersionDataService,
@@ -25,7 +25,7 @@ public class ImportLibraryEntryService
         ProjectNodeDataService projectNodeDataService)
     {
         this.db = db;
-        this.resourceCopier = resourceCopier;
+        this.copyService = copyService;
         this.entryDataService = entryDataService;
         this.entryNodeDataService = entryNodeDataService;
         this.entryVersionDataService = entryVersionDataService;
@@ -50,15 +50,18 @@ public class ImportLibraryEntryService
             EntryId = libraryEntry.Id,
             Version = 1,
             Author = options.author,
-            Title = options.title ?? project.title,
-            Description = options.description ?? project.description,
+            Title = options.title ?? project.Title,
+            Description = options.description ?? project.Description,
             LastModified = DateTimeOffset.Now,
-            Disciplines = project.disciplines,
+            Disciplines = project.Disciplines,
             Status = "draft"
         };
 
         var libraryEntryNodes = new List<LibraryEntryNode>();
         var nodeIds = new Dictionary<string, string>();
+        var resources = new Dictionary<string, string> {
+            { project.Id, libraryEntry.Id + "-" + libraryEntryVersion.Version },
+        };
 
         foreach (var n in projectNodes)
         {
@@ -75,6 +78,9 @@ public class ImportLibraryEntryService
             };
             nodeIds.Add(n.id, libraryNode.id);
             libraryEntryNodes.Add(libraryNode);
+
+            if (!resources.ContainsKey(n.id))
+                resources.Add(n.id, libraryNode.id);
         }
         //
         //  Now loop through the nodes and fix the parent ids.
@@ -94,8 +100,7 @@ public class ImportLibraryEntryService
 
         if (options.includeResources)
         {
-            await resourceCopier.ProjectToLibraryAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version);
-            await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version, nodeIds);
+            await copyService.CopyAsync(conn, owner, owner, resources);
         }
         return newEntry.RecordId;
     }
@@ -110,7 +115,7 @@ public class ImportLibraryEntryService
         {
             Id = IdService.Create(),
             OwnerId = owner,
-            Type = options.phase != null ? "phase" : "node",
+            Type = options.phase != null ? "phase" : "task",
             Visibility = options.visibility,
         };
         var libraryEntryVersion = new LibraryEntryVersion
@@ -127,6 +132,11 @@ public class ImportLibraryEntryService
         var libraryEntryNodes = new List<LibraryEntryNode>();
         var nodeIds = new Dictionary<string, string>();
         var nodes = new List<ProjectNode> { projectNode };
+        var resources = new Dictionary<string, string>
+        {
+            { projectNode.id, libraryEntry.Id + "-" + libraryEntryVersion.Version },
+        };
+
         nodes.AddRange(GetProjectNodes(projectNodes, nodeId));
         //
         //  Change the order of the main node to 1.
@@ -148,6 +158,9 @@ public class ImportLibraryEntryService
             };
             nodeIds.Add(n.id, libraryNode.id);
             libraryEntryNodes.Add(libraryNode);
+
+            if (!resources.ContainsKey(n.id))
+                resources.Add(n.id, libraryNode.id);
         }
         //
         //  Now loop through the nodes and fix the parent ids.
@@ -159,7 +172,7 @@ public class ImportLibraryEntryService
             else
                 n.parentId = null;
         }
-        libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.disciplines,
+        libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.Disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds).Distinct());
 
         var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
@@ -169,13 +182,13 @@ public class ImportLibraryEntryService
 
         if (options.includeResources)
         {
-            await resourceCopier.ProjectTaskToLibraryAsync(conn, owner, projectId, nodeId, libraryEntry.Id, libraryEntryVersion.Version);
-            await resourceCopier.ProjectTasksToLibraryTasksAsync(conn, owner, projectId, libraryEntry.Id, libraryEntryVersion.Version, nodeIds);
+            await copyService.CopyAsync(conn, owner, owner, resources);
         }
+
         return newEntry.RecordId;
     }
 
-    public async Task<string> ImportFromEntryNodeAsync(SqlConnection conn, string owner, string entryId, int versionId, string nodeId, ProjectNodeToLibraryOptions options)
+    public async Task<string> ImportFromEntryNodeAsync(SqlConnection conn, string targetOwner, string entryOwner, string entryId, int versionId, string nodeId, ProjectNodeToLibraryOptions options)
     {
         var currentVersion = await entryVersionDataService.GetByIdAsync(conn, entryId, versionId);
         var currentTasks = await entryNodeDataService.GetListAsync(conn, entryId, versionId);
@@ -184,7 +197,7 @@ public class ImportLibraryEntryService
         var libraryEntry = new LibraryEntry
         {
             Id = IdService.Create(),
-            OwnerId = owner,
+            OwnerId = targetOwner,
             Type = task.parentId == null ? "phase" : "task",
             Visibility = options.visibility,
         };
@@ -192,6 +205,7 @@ public class ImportLibraryEntryService
         {
             Version = 1,
             Status = "draft",
+            VersionAlias = options.alias,
             Author = options.author,
             EntryId = libraryEntry.Id,
             LastModified = DateTimeOffset.Now,
@@ -202,6 +216,11 @@ public class ImportLibraryEntryService
         var libraryEntryNodes = new List<LibraryEntryNode>();
         var nodeIds = new Dictionary<string, string>();
         var nodes = new List<LibraryEntryNode> { task };
+        var resources = new Dictionary<string, string>
+        {
+            { task.id, libraryEntry.Id + "-" + version.Version },
+        };
+
         nodes.AddRange(GetLibraryNodes(currentTasks, nodeId));
         //
         //  Change the order of the main node to 1.
@@ -223,6 +242,9 @@ public class ImportLibraryEntryService
             };
             nodeIds.Add(n.id, libraryNode.id);
             libraryEntryNodes.Add(libraryNode);
+
+            if (!resources.ContainsKey(n.id))
+                resources.Add(n.id, libraryNode.id);
         }
         //
         //  Now loop through the nodes and fix the parent ids.
@@ -239,13 +261,12 @@ public class ImportLibraryEntryService
 
         var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
 
-        await entryVersionDataService.SetAsync(conn, owner, version);
+        await entryVersionDataService.SetAsync(conn, targetOwner, version);
         await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
-            await resourceCopier.LibraryTaskToLibraryAsync(conn, owner, entryId, versionId, nodeId, libraryEntry.Id, version.Version);
-            await resourceCopier.LibraryTasksToLibraryTasksAsync(conn, owner, entryId, versionId, libraryEntry.Id, version.Version, nodeIds);
+            await copyService.CopyAsync(conn, entryOwner, targetOwner, resources);
         }
         return newEntry.RecordId;
     }

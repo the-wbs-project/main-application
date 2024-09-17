@@ -16,5 +16,6 @@ export interface LibraryVersionViewModel {
   category: string;
   editors: UserViewModel[];
   disciplines: any[];
+  releaseNotes?: string;
   lastModified: Date;
 }

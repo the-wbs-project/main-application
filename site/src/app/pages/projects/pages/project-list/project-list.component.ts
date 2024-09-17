@@ -2,7 +2,6 @@ import { NgClass } from '@angular/common';
 import {
   ChangeDetectionStrategy,
   Component,
-  OnInit,
   computed,
   effect,
   inject,
@@ -13,13 +12,13 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faCactus } from '@fortawesome/pro-thin-svg-icons';
 import { faFilters, faPlus } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
+import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
-import { PageHeaderComponent } from '@wbs/components/page-header';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI, Project } from '@wbs/core/models';
+import { PROJECT_STATI } from '@wbs/core/models';
 import { sorter, Storage } from '@wbs/core/services';
-import { MembershipStore, MetadataStore } from '@wbs/core/store';
-import { ProjectListService } from './services';
+import { MetadataStore } from '@wbs/core/store';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import {
   ProjectCreateDialogComponent,
   ProjectGridComponent,
@@ -27,7 +26,9 @@ import {
   ProjectTableomponent,
   ProjectViewToggleComponent,
 } from './components';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
+import { ActivatedRoute, Router } from '@angular/router';
+import { of, switchMap } from 'rxjs';
+import { TreeListExampleComponent } from './test.component';
 
 declare type ProjectView = 'grid' | 'table';
 
@@ -40,29 +41,29 @@ declare type ProjectView = 'grid' | 'table';
     DialogModule,
     FontAwesomeModule,
     NgClass,
-    PageHeaderComponent,
     ProjectGridComponent,
     ProjectListFiltersComponent,
     ProjectTableomponent,
     ProjectViewToggleComponent,
     TranslateModule,
+    TreeListExampleComponent,
   ],
 })
-export class ProjectListComponent implements OnInit {
+export class ProjectListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
-  private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
-  private readonly service = inject(ProjectListService);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   private readonly storage = inject(Storage);
 
   readonly cactusIcon = faCactus;
   readonly filterIcon = faFilters;
   readonly plusIcon = faPlus;
   readonly loading = signal(true);
-  readonly projects = signal<Project[]>([]);
-  readonly owner = computed(() => this.membership.membership()!.name);
+  readonly projects = signal<ProjectViewModel[]>([]);
   readonly userId = input.required<string>();
+  readonly orgId = input.required<string>();
   readonly view = signal<ProjectView>(this.getView() ?? 'table');
   readonly assignedToMe = signal(false);
   readonly stati = signal([
@@ -91,7 +92,7 @@ export class ProjectListComponent implements OnInit {
   constructor() {
     effect(
       () => {
-        const owner = this.owner();
+        const owner = this.orgId();
         this.loading.set(true);
         this.data.projects.getAllAsync(owner).subscribe((projects) => {
           this.projects.set(
@@ -108,16 +109,23 @@ export class ProjectListComponent implements OnInit {
     );
   }
 
-  ngOnInit(): void {}
-
   launchCreateProject(): void {
-    const ref = this.dialog.open({
-      content: ProjectCreateDialogComponent,
-    });
+    ProjectCreateDialogComponent.launchAsync(this.dialog)
+      .pipe(
+        switchMap((project) =>
+          project
+            ? this.data.projects.getRecordIdAsync(project.owner, project.id)
+            : of(undefined)
+        )
+      )
+      .subscribe((recordId) => {
+        if (!recordId) return;
 
-    ref.result.subscribe((id) => {
-      if (!id) return;
-    });
+        console.log('recordId', recordId);
+        this.router.navigate(['./', 'view', recordId], {
+          relativeTo: this.route,
+        });
+      });
   }
 
   setView(view: ProjectView): void {
@@ -126,30 +134,57 @@ export class ProjectListComponent implements OnInit {
   }
 
   private filter(
-    list: Project[],
+    list: ProjectViewModel[],
     userId: string,
     search: string | undefined,
     assignedToMe: boolean,
     stati: PROJECT_STATI[],
     categories: string[]
-  ): Project[] {
+  ): ProjectViewModel[] {
     if (list == null || list.length === 0) return list;
 
-    if (search) list = this.service.filterByName(list, search);
+    if (search) list = this.filterByName(list, search);
 
     if (assignedToMe) {
       list = list.filter(
         (project) =>
-          project.roles?.some((role) => role.userId === userId) ?? false
+          project.roles?.some((role) => role.user.userId === userId) ?? false
       );
     }
-    list = this.service.filterByStati(list, stati);
-    list = this.service.filterByCategories(list, categories);
+    list = this.filterByStati(list, stati);
+    list = this.filterByCategories(list, categories);
 
     return list;
   }
 
   private getView(): ProjectView | undefined {
     return this.storage.local.get('projectListView') as ProjectView;
+  }
+
+  private filterByStati(
+    projects: ProjectViewModel[] | null | undefined,
+    stati: string[]
+  ): ProjectViewModel[] {
+    if (!projects || stati.length === 0) return [];
+
+    return projects.filter((x) => stati.includes(x.status));
+  }
+
+  private filterByCategories(
+    projects: ProjectViewModel[] | null | undefined,
+    categories: string[]
+  ): ProjectViewModel[] {
+    if (!projects || categories.length === 0) return [];
+
+    return projects.filter((x) => categories.includes(x.category));
+  }
+
+  private filterByName(
+    projects: ProjectViewModel[] | null | undefined,
+    text: string
+  ): ProjectViewModel[] {
+    return (projects ?? []).filter((x) =>
+      (x.title ?? '').toLowerCase().includes(text.toLowerCase())
+    );
   }
 }

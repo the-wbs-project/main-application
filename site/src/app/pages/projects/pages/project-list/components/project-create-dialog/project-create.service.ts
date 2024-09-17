@@ -9,7 +9,7 @@ import {
   UserRole,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
-import { PROJECT_ACTIONS } from '@wbs/pages/projects/models';
+import { ProjectActivityService } from '@wbs/pages/projects/services';
 import { Observable } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 import { ProjectCreateStore } from './project-create.store';
@@ -20,6 +20,7 @@ export class ProjectCreateService {
   private readonly membership = inject(MembershipStore);
   private readonly metadata = inject(MetadataStore);
   private readonly pcStore = inject(ProjectCreateStore);
+  private readonly activities = inject(ProjectActivityService);
   private readonly userId = inject(UserStore).userId;
 
   createAsync(): Observable<Project> {
@@ -40,6 +41,7 @@ export class ProjectCreateService {
       title: this.pcStore.title(),
       createdOn: now,
       lastModified: now,
+      recordId: '',
     };
     const nodes: ProjectNode[] = [];
 
@@ -76,53 +78,32 @@ export class ProjectCreateService {
       }
     }
 
-    return this.data.projects.putAsync(project).pipe(
+    return this.data.projects.putProjectAsync(project).pipe(
       switchMap(() =>
-        this.data.projectNodes.putAsync(project.owner, project.id, nodes, [])
+        this.data.projects.putTasksAsync(project.owner, project.id, nodes, [])
       ),
       switchMap(() =>
-        this.data.activities.saveProjectActivitiesAsync(this.userId()!, [
-          {
-            data: {
-              action: PROJECT_ACTIONS.CREATED,
-              topLevelId: project.id,
-              data: {
-                title: project.title,
-                id: project.id,
-              },
-            },
-            project,
-            nodes,
-          },
-        ])
+        this.activities.createProject(project.owner, project.id, project.title)
       ),
       map(() => project)
     );
   }
 
   private getRoles(): UserRole[] {
-    const roles: UserRole[] = [];
-
-    for (const userId of this.pcStore.pmIds()) {
-      roles.push({
+    const roles: UserRole[] = [
+      ...this.pcStore.pms().map((x) => ({
         role: this.metadata.roles.ids.pm,
-        userId,
-      });
-    }
-
-    for (const userId of this.pcStore.smeIds()) {
-      roles.push({
+        userId: x.userId,
+      })),
+      ...this.pcStore.smes().map((x) => ({
         role: this.metadata.roles.ids.sme,
-        userId,
-      });
-    }
-
-    for (const userId of this.pcStore.approverIds()) {
-      roles.push({
+        userId: x.userId,
+      })),
+      ...this.pcStore.approvers().map((x) => ({
         role: this.metadata.roles.ids.approver,
-        userId,
-      });
-    }
+        userId: x.userId,
+      })),
+    ];
 
     return roles;
   }

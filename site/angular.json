@@ -37,13 +37,10 @@
               "src/assets"
             ],
             "styles": [
-              "animate.css/animate.css",
               "src/styles/bootstrap.scss",
               "src/styles/timeline.scss",
               "src/styles/styles.scss"
-            ],
-            "scripts": [],
-            "allowedCommonJsDependencies": []
+            ]
           },
           "configurations": {
             "production": {
@@ -62,9 +59,7 @@
               "outputHashing": "all"
             },
             "development": {
-              "buildOptimizer": false,
               "optimization": false,
-              "vendorChunk": false,
               "extractLicenses": false,
               "sourceMap": true,
               "namedChunks": true
@@ -79,7 +74,8 @@
               "buildTarget": "site:build:production"
             },
             "development": {
-              "buildTarget": "site:build:development"
+              "buildTarget": "site:build:development",
+              "proxyConfig": "src/proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"

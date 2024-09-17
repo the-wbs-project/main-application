@@ -1,0 +1,81 @@
+@let list = tasks();
+<kendo-dialog
+  height="95%"
+  width="95%"
+  [title]="'Wbs.ABS-Full' | translate"
+  (close)="dialog.close()"
+>
+  <div [(wbsHeight)]="containerHeight" class="pd-0 d-flex flex-column h-100">
+    <div class="tx-12">
+      <wbs-alert type="info" [dismissible]="false">
+        Select the tasks you want to be part of the Accounting Breakdown
+        Structure. Selecting a child task will include all parent tasks.
+      </wbs-alert>
+    </div>
+    <kendo-treelist
+      #treelist
+      class="tx-12 border bd-gray-500"
+      kendoTreeListExpandable
+      kendoTreeListSelectable
+      [kendoTreeListFlatBinding]="list"
+      parentIdField="parentId"
+      idField="id"
+      [rowHeight]="rowHeight"
+      [pageSize]="pageSize()"
+      [height]="containerHeight() - heightOffset - 70"
+      scrollable="virtual"
+      [navigable]="true"
+      [initiallyExpanded]="false"
+      [selectable]="{ enabled: true, mode: 'row' }"
+      [(expandedKeys)]="treeService.expandedKeys"
+      [rowReorderable]="false"
+    >
+      <ng-template kendoTreeListToolbarTemplate>
+        <div class="d-flex align-items-center gap-10">
+          <wbs-tree-buttons-toggler
+            (collapse)="treeService.collapseAll(treelist, list, 'id')"
+            (expand)="treeService.expandAll(list, 'id')"
+          />
+          <wbs-abs-select-button (selected)="selectLevels($event)" />
+        </div>
+      </ng-template>
+      <kendo-treelist-column
+        [width]="60"
+        headerClass="tx-14"
+        class="tree-column text-center"
+        title=""
+      >
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          <wbs-abs-checkbox
+            [implied]="dataItem.absFlag === 'implied'"
+            [checked]="dataItem.absFlag === 'set'"
+            (checkedChange)="absFlagChanged($event, dataItem, list)"
+          />
+        </ng-template>
+      </kendo-treelist-column>
+      <kendo-treelist-column
+        [expandable]="true"
+        field="title"
+        class="child-hoverer tree-column"
+        headerClass="tx-14"
+        [title]="'Wbs.Activity_Title' | translate"
+      >
+        <ng-template kendoTreeListCellTemplate let-dataItem>
+          {{ dataItem.levelText }}&nbsp;-&nbsp; {{ dataItem.title }}
+        </ng-template>
+      </kendo-treelist-column>
+    </kendo-treelist>
+  </div>
+  <kendo-dialog-actions>
+    <div class="d-flex justify-content-end gap-10">
+      <button kendoButton themeColor="base" (click)="dialog.close()">
+        {{ "General.Cancel" | translate }}
+      </button>
+      <wbs-save-button
+        themeColor="primary"
+        [isSaving]="saveService.state() === 'saving'"
+        (click)="save()"
+      />
+    </div>
+  </kendo-dialog-actions>
+</kendo-dialog>

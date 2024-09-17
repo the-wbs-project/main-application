@@ -1,0 +1,39 @@
+<div class="w-100 text-center">
+  <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
+    <div class="two-column-grid mn-ht-100p" resizedCss>
+      @let version = store.version();
+
+      <wbs-details-card />
+      <wbs-discipline-card
+        [splitLimit]="650"
+        [canAdd]="true"
+        [items]="disciplines()"
+        [editItems]="editDisciplines()"
+        [canEdit]="store.canEditEntry()"
+        [saveState]="disciplineSave.state()"
+        noDisciplinesLabel="Library.NoDisciplinesEntry"
+        (save)="saveDisciplines($event)"
+      />
+      <wbs-description-card
+        [(askAi)]="askAi"
+        [canEdit]="store.canEditEntry()"
+        [(editMode)]="descriptionEditMode"
+        [saveState]="descriptionSave.state()"
+        [description]="version?.description ?? ''"
+        noDescriptionLabel="Library.NoDescriptionEntry"
+        (descriptionChange)="descriptionChange($event)"
+      />
+      <wbs-resource-card />
+      <wbs-contributor-card />
+    </div>
+  </div>
+
+  @if (askAi()) {
+  <wbs-description-ai-dialog
+    [description]="version?.description ?? ''"
+    [startingDialog]="descriptionAiStartingDialog()"
+    (descriptionChange)="aiChangeSaved($event)"
+    (closed)="askAi.set(false)"
+  />
+  }
+</div>

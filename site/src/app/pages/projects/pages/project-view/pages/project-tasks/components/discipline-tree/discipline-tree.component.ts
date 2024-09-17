@@ -7,7 +7,6 @@ import {
   input,
   model,
   output,
-  signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { TreeListModule } from '@progress/kendo-angular-treelist';
@@ -15,10 +14,10 @@ import {
   TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
 } from '@wbs/components/_utils/tree-buttons';
-import { SignalStore, Transformers, TreeService } from '@wbs/core/services';
-import { ProjectViewModel } from '@wbs/core/view-models';
-import { TasksState } from '../../../../states';
-import { TreeTypeButtonComponent } from '../tree-type-button';
+import { Transformers, TreeService } from '@wbs/core/services';
+import { ProjectStore } from '../../../../stores';
+import { TreeTypeButtonComponent } from '../tree-type-button.component';
+import { WbsAbsButtonComponent } from '../wbs-abs-button.component';
 
 @Component({
   standalone: true,
@@ -31,36 +30,33 @@ import { TreeTypeButtonComponent } from '../tree-type-button';
     TreeButtonsTogglerComponent,
     TreeListModule,
     TreeTypeButtonComponent,
+    WbsAbsButtonComponent,
   ],
 })
 export class ProjectDisciplinesTreeComponent implements OnInit {
-  private readonly store = inject(SignalStore);
+  private readonly store = inject(ProjectStore);
   private readonly transformers = inject(Transformers);
   readonly treeService = new TreeService();
   //
   //  Inputs
   //
-  readonly showFullscreen = input.required<boolean>();
+  readonly isFullscreen = input.required<boolean>();
   readonly containerHeight = input.required<number>();
   readonly view = model.required<'phases' | 'disciplines'>();
-  readonly currentProject = input.required<ProjectViewModel>();
+  readonly wbsAbs = model.required<'wbs' | 'abs'>();
   //
   //  Constaints
   //
   readonly heightOffset = 50;
   readonly rowHeight = 31.5;
   //
-  //  signals/models
-  //
-  readonly taskId = signal<string | undefined>(undefined);
-  readonly nodes = this.store.select(TasksState.nodes);
-  //
   //  Computed signals
   //
-  readonly disciplines = computed(() =>
+  readonly tasks = computed(() =>
     this.transformers.nodes.discipline.view.run(
-      this.currentProject().disciplines,
-      this.nodes()!
+      this.wbsAbs(),
+      this.store.projectDisciplines(),
+      this.store.tasks() ?? []
     )
   );
   readonly pageSize = computed(() =>
@@ -73,16 +69,11 @@ export class ProjectDisciplinesTreeComponent implements OnInit {
   //
   //  Outputs
   //
-  readonly navigateToTask = output<string>();
   readonly goFullScreen = output<void>();
 
   ngOnInit(): void {
-    this.treeService.expandedKeys = this.disciplines()
+    this.treeService.expandedKeys = this.tasks()
       .filter((x) => !x.parentId)
       .map((x) => x.id);
-  }
-
-  nav(): void {
-    if (this.taskId()) this.navigateToTask.emit(this.taskId()!);
   }
 }

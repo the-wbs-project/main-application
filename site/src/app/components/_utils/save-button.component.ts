@@ -4,13 +4,16 @@ import {
   Component,
   computed,
   input,
-  output,
 } from '@angular/core';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule, ButtonSize } from '@progress/kendo-angular-buttons';
+import {
+  ButtonModule,
+  ButtonSize,
+  ButtonThemeColor,
+} from '@progress/kendo-angular-buttons';
 
 @Component({
   standalone: true,
@@ -18,16 +21,16 @@ import { ButtonModule, ButtonSize } from '@progress/kendo-angular-buttons';
   template: `<button
     kendoButton
     [size]="size()"
-    themeColor="success"
+    [themeColor]="themeColor()"
     [ngClass]="buttonClass()"
     [disabled]="disabled() || isSaving()"
   >
     @if (isSaving()) {
     <fa-duotone-icon [icon]="faSpinner" animation="spin" class="mg-r-5" />
-    {{ 'General.Saving' | translate }}
+    {{ savingLabel() | translate }}
     } @else {
     <fa-icon [icon]="faFloppyDisk" class="mg-r-5" />
-    {{ 'General.Save' | translate }}
+    {{ saveLabel() | translate }}
     }
   </button>`,
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -37,10 +40,12 @@ export class SaveButtonComponent {
   readonly faFloppyDisk = faFloppyDisk;
   readonly faSpinner = faSpinner;
   readonly disabled = input(false);
+  readonly themeColor = input<ButtonThemeColor>('success');
   readonly cssClass = input<string | string[]>();
   readonly size = input<ButtonSize>('medium');
   readonly isSaving = input.required<boolean>();
-  readonly click = output<void>();
+  readonly saveLabel = input('General.Save');
+  readonly savingLabel = input('General.Saving');
   readonly buttonClass = computed(() => {
     const results: string[] = [];
     const size = this.size();

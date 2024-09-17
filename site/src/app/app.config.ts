@@ -12,36 +12,31 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
+import { QuillConfig, QuillModule } from 'ngx-quill';
+import { environment } from 'src/env';
 import { routes } from './app.routes';
-import { UiStore } from './core/store';
-import { APP_CONFIG_TOKEN, AppConfiguration } from './core/models';
-import {
-  AppInitializerFactory,
-  GlobalErrorHandler,
-  apiRequestInterceptor,
-} from './setup';
-
-const config: AppConfiguration = (window as any)['appConfig'];
+import { DataServiceFactory } from './core/data-services';
+import { Resources } from './core/services';
+import { MetadataStore, UiStore } from './core/store';
+import { AppInitializerFactory, GlobalErrorHandler } from './setup';
 
 export const appConfig: ApplicationConfig = {
   providers: [
-    { provide: APP_CONFIG_TOKEN, useValue: config },
-    provideHttpClient(
-      withInterceptors([apiRequestInterceptor, authHttpInterceptorFn])
-    ),
+    provideHttpClient(withInterceptors([authHttpInterceptorFn])),
     provideRouter(routes, withComponentInputBinding()),
     provideAuth0({
       domain: 'auth.pm-empower.com',
-      clientId: config.auth_clientId,
+      clientId: environment.authClientId,
       authorizationParams: {
         connection: 'Username-Password-Authentication',
         audience: 'https://pm-empower.us.auth0.com/api/v2/',
-        redirect_uri: `${window.location.protocol}//${window.location.host}`,
+        redirect_uri: environment.authRedirectUri,
       },
       // The AuthHttpInterceptor configuration
       httpInterceptor: {
         allowedList: [
-          { uri: config.api_domain + '/*', allowAnonymous: false },
+          { uri: 'api/startup', allowAnonymous: true },
+          { uri: 'api/*', allowAnonymous: false },
           { uri: 'https://ai.pm-empower.com/*', allowAnonymous: false },
         ],
       },
@@ -53,12 +48,13 @@ export const appConfig: ApplicationConfig = {
       }),
       NgxsModule.forRoot([]),
       NgxsRouterPluginModule.forRoot(),
+      QuillModule.forRoot(),
       TranslateModule.forRoot(),
     ]),
     {
       provide: APP_INITIALIZER,
       useFactory: AppInitializerFactory.run,
-      deps: [UiStore],
+      deps: [DataServiceFactory, MetadataStore, Resources, UiStore],
       multi: true,
     },
     { provide: ErrorHandler, useClass: GlobalErrorHandler },

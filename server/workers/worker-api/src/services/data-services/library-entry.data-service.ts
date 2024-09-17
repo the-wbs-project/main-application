@@ -13,7 +13,7 @@ export class LibraryEntryDataService extends BaseDataService {
 
     if (kvData) return kvData;
 
-    const data = await this.origin.getAsync<LibraryEntry>(this.getBaseUrl(owner, entry));
+    const data = await this.getFromOriginAsync(owner, entry);
 
     if (data) {
       this.putKv(this.getKey(owner, data.id), data);
@@ -22,8 +22,28 @@ export class LibraryEntryDataService extends BaseDataService {
     return data;
   }
 
-  async clearKvAsync(owner: string, entry: string): Promise<void> {
-    await this.ctx.env.KV_DATA.delete(this.getKey(owner, entry));
+  async refreshKvAsync(owner: string, id: string): Promise<void> {
+    const data = await this.getFromOriginAsync(owner, id);
+
+    if (!data) return;
+
+    const idKey = this.getKey(owner, id);
+    const recordIdKey = this.getKey(owner, data.recordId);
+
+    this.putKv(idKey, data);
+    this.putKv(recordIdKey, data);
+  }
+
+  async clearKvAsync(owner: string, id: string): Promise<void> {
+    const keysToDelete = await this.ctx.env.KV_DATA.list({ prefix: this.getKey(owner, id) });
+
+    for (const key of keysToDelete.keys) {
+      this.clearKv(key.name);
+    }
+  }
+
+  private getFromOriginAsync(owner: string, entry: string): Promise<LibraryEntry | undefined> {
+    return this.origin.getAsync<LibraryEntry>(this.getBaseUrl(owner, entry));
   }
 
   private getBaseUrl(owner: string, entry: string): string {

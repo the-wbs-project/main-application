@@ -1,44 +1,28 @@
 import { Injectable, Signal, computed, inject, signal } from '@angular/core';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterDataResolved } from '@ngxs/router-plugin';
 import { Actions, ofActionSuccessful } from '@ngxs/store';
-import { RoutedBreadcrumbItem } from '@wbs/core/models';
-import { timer } from 'rxjs';
+import { map } from 'rxjs/operators';
 
-@UntilDestroy()
 @Injectable({ providedIn: 'root' })
 export class UiStore {
   private readonly actions$ = inject(Actions);
-  private readonly menuCutoff = 1000;
   private readonly _activeSection = signal<string | undefined>(undefined);
-  private readonly _breadcrumbs = signal<RoutedBreadcrumbItem[] | undefined>(
-    undefined
-  );
-  private readonly _isLoading = signal<boolean>(false);
   private readonly _isMobile = isMobile();
-  private readonly _isSidebarExpanded = signal<boolean | undefined>(undefined);
   private readonly _mainContentWidth = signal<number | undefined>(undefined);
-  private readonly _path = signal<string | undefined>(undefined);
-  private lastWindowCheck?: number;
+  private readonly _path = toSignal(
+    this.actions$.pipe(
+      ofActionSuccessful(RouterDataResolved<any>),
+      map((action) => action.routerState.url)
+    )
+  );
 
   get activeSection(): Signal<string | undefined> {
     return this._activeSection;
   }
 
-  get breadcrumbs(): Signal<RoutedBreadcrumbItem[] | undefined> {
-    return this._breadcrumbs;
-  }
-
-  get isLoading(): Signal<boolean> {
-    return this._isLoading;
-  }
-
   get isMobile(): boolean {
     return this._isMobile;
-  }
-
-  get isSidebarExpanded(): Signal<boolean | undefined> {
-    return this._isSidebarExpanded;
   }
 
   get mainContentWidth(): Signal<number | undefined> {
@@ -61,54 +45,15 @@ export class UiStore {
     });
   }
 
-  setActiveSection(activeSection: string | undefined): void {
-    this._activeSection.set(activeSection);
-  }
-
-  setBreadcrumbs(breadcrumbs: RoutedBreadcrumbItem[] | undefined): void {
-    this._breadcrumbs.set(breadcrumbs);
+  setActiveSection(section: string | undefined): void {
+    this._activeSection.set(section);
   }
 
   setMainContentWidth(width: number | undefined): void {
     this._mainContentWidth.set(width);
   }
 
-  toggleSidebar(): void {
-    this._isSidebarExpanded.update((expanded) => !expanded);
-  }
-
-  setup(): void {
-    const width = this.getWidth();
-    this._isSidebarExpanded.set(width > this.menuCutoff);
-    this.lastWindowCheck = width;
-
-    this.actions$
-      .pipe(ofActionSuccessful(RouterDataResolved<any>), untilDestroyed(this))
-      .subscribe((action: RouterDataResolved) =>
-        this._path.set(action.routerState.url)
-      );
-
-    timer(0, 500)
-      .pipe(untilDestroyed(this))
-      .subscribe(() => {
-        const lastWindowCheck = this.lastWindowCheck;
-        const newWindowCheck = this.getWidth();
-
-        if (lastWindowCheck === newWindowCheck) return;
-
-        this.lastWindowCheck = newWindowCheck;
-        this._isSidebarExpanded.update((isExpanded) =>
-          lastWindowCheck! > this.menuCutoff &&
-          newWindowCheck <= this.menuCutoff
-            ? false
-            : isExpanded
-        );
-      });
-  }
-
-  private getWidth(): number {
-    return window.innerWidth;
-  }
+  setup(): void {}
 }
 
 function isMobile() {
