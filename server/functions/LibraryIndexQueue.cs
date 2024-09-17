@@ -4,10 +4,10 @@ using Wbs.Core.DataServices;
 using Wbs.Core.Models.Search;
 using Wbs.Core.Services.Search;
 
-namespace functions
+namespace Wbs.Functions;
+
+public class LibraryIndexQueue
 {
-    public class LibraryIndexQueue
-    {
         private readonly DbService db;
         private readonly ILogger _logger;
         private readonly LibrarySearchIndexService searchIndexService;
@@ -15,29 +15,27 @@ namespace functions
         private readonly LibraryEntryViewDataService entryViewDataService;
         private readonly LibrarySearchService searchSearch;
 
-        public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchIndexService, DbService db, LibrarySearchService searchSearch, LibraryEntryViewDataService entryViewDataService, OrganizationDataService organizationDataService)
-        {
-            _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
-            this.searchIndexService = searchIndexService;
-            this.db = db;
-            this.searchSearch = searchSearch;
-            this.entryViewDataService = entryViewDataService;
-            this.organizationDataService = organizationDataService;
-        }
+    public LibraryIndexQueue(ILoggerFactory loggerFactory, LibrarySearchIndexService searchService, LibraryEntryDataService dataService, DbService db)
+    {
+        _logger = loggerFactory.CreateLogger<LibraryIndexQueue>();
+        this.dataService = dataService;
+        this.searchService = searchService;
+        this.db = db;
+    }
 
-        [Function("LibraryIndex-Build")]
-        public async Task RunBuild([QueueTrigger("search-library-build", Connection = "")] string message)
+    [Function("LibraryIndex-Build")]
+    public async Task RunBuild([QueueTrigger("search-library-build", Connection = "")] string message)
+    {
+        try
         {
-            try
-            {
-                await searchIndexService.VerifyIndexAsync();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing library entry");
-                throw;
-            }
+            await searchService.VerifyIndexAsync();
         }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error processing library entry");
+            throw;
+        }
+    }
 
         [Function("LibraryIndex-ReBuild")]
         public async Task RunReBuild([QueueTrigger("search-library-rebuild", Connection = "")] string message)
@@ -66,32 +64,34 @@ namespace functions
         }
 
 
-        [Function("LibraryIndex-Item")]
-        public async Task RunItem([QueueTrigger("search-library-item", Connection = "")] string message)
+    [Function("LibraryIndex-Item")]
+    public async Task RunItem([QueueTrigger("search-library-item", Connection = "")] string message)
+    {
+        try
         {
-            try
+            using (var conn = await db.CreateConnectionAsync())
             {
-                using (var conn = await db.CreateConnectionAsync())
-                {
-                    var parts = message.Split('|');
-                    var owner = parts[0];
-                    var entryId = parts[1];
-                    await searchIndexService.VerifyIndexAsync();
-                    await searchIndexService.PushToSearchAsync(conn, owner, [entryId]);
-                }
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Error processing library entry");
-                throw;
+                var parts = message.Split('|');
+                var owner = parts[0];
+                var entryId = parts[1];
+                await searchService.VerifyIndexAsync();
+                await searchService.PushToSearchAsync(conn, owner, [entryId]);
             }
         }
-
-
-        [Function("LibraryIndex-Owner")]
-        public async Task RunOrg([QueueTrigger("search-library-owner", Connection = "")] string owner)
+        catch (Exception ex)
         {
-            try
+            _logger.LogError(ex, "Error processing library entry");
+            throw;
+        }
+    }
+
+
+    [Function("LibraryIndex-Owner")]
+    public async Task RunOrg([QueueTrigger("search-library-owner", Connection = "")] string owner)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
             {
                 using (var conn = await db.CreateConnectionAsync())
                 {
@@ -133,6 +133,5 @@ namespace functions
                 _logger.LogError(ex, "Error processing all library entries by owner " + owner);
                 throw;
             }
-        }
     }
 }
