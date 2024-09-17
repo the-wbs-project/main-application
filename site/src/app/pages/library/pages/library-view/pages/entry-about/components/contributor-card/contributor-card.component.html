@@ -18,22 +18,17 @@
 </div>
 <div class="card-body d-flex flex-row flex-wrap gap-20">
   <div class="card border text-start">
-    <wbs-user-info
-      [user]="store.version()!.author"
-      [secondaryTitle]="'General.Author' | translate"
-    />
+    <div class="card-header bg-light-blue-f">
+      {{ "General.Author" | translate }}
+    </div>
+    <wbs-user-info [user]="store.version()!.author" />
   </div>
   @for (contributor of contributors(); track contributor.userId) {
   <div class="card border text-start">
     <div class="card-header bg-light-blue-f">
       {{ "General.Contributor" | translate }}
     </div>
-    <div class="card-body">
-      <wbs-user-info
-        [user]="contributor"
-        [secondaryTitle]="'General.Contributor' | translate"
-      />
-    </div>
+    <wbs-user-info [user]="contributor" />
   </div>
   }
 </div>

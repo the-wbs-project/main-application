@@ -18,8 +18,8 @@
           size="small"
           [data]="filteredPossibleEditors()"
           [filterable]="true"
-          textField="name"
-          valueField="user_id"
+          textField="fullName"
+          valueField="userId"
           [(ngModel)]="editorToAdd"
           (filterChange)="editorFilter.set($event)"
         />
