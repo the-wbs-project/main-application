@@ -33,14 +33,18 @@
     </div>
     <wbs-save-message [state]="menuSave.state()" />
   </div>
-  <div #taskDetails class="flex-fill scroll-y">
+  <div [appScrollToTop]="task()?.id" class="flex-fill scroll-y">
     @if (editTask(); as t) {
     <div class="task-detail-card tx-12">
       <div class="detail-header">
         {{ "General.Title" | translate }}
       </div>
       <div>
-        <wbs-task-title-editor [title]="t.title" />
+        <wbs-task-details-title-editor
+          [title]="t.title"
+          [saveState]="titleSave.state()"
+          (save)="titleChanged($event)"
+        />
       </div>
       <div class="detail-header">
         @if (!editDisciplines() && t.disciplines.length > 0) {
@@ -87,38 +91,25 @@
           </kendo-chip>
           }
         </kendo-chip-list>
-        <wbs-save-message [state]="disciplineSave.state()" />
-        }
+        @let state = disciplineSave.state();
+        <!---->
+        @if (state === 'saved') {
+        <div class="d-inline-block mg-l-10">
+          <wbs-save-message [state]="state" />
+        </div>
+        } }
       </div>
       <div class="detail-header">
-        <label [for]="descriptionBox">
+        <label>
           {{ "General.Description" | translate }}
         </label>
-        <div class="fw-normal">
-          <wbs-save-message [state]="descriptionSave.state()" />
-        </div>
       </div>
       <div>
-        <kendo-textarea
-          #descriptionBox
-          class="w-100"
-          [style.width.px]="200"
-          [(ngModel)]="t.description"
-          [rows]="5"
-          flow="horizontal"
-          resizable="none"
-        >
-          <kendo-textarea-suffix>
-            <button
-              kendoButton
-              class="suffix-clear-button"
-              fillMode="clear"
-              (click)="descriptionChanged(t.description!)"
-            >
-              <fa-icon [icon]="saveIcon" />
-            </button>
-          </kendo-textarea-suffix>
-        </kendo-textarea>
+        <wbs-task-details-description-editor
+          [description]="t.description ?? ''"
+          [saveState]="descriptionSave.state()"
+          (save)="descriptionChanged($event)"
+        />
       </div>
       @if (entryStore.version()?.visibility === 'public') {
       <div class="detail-header">

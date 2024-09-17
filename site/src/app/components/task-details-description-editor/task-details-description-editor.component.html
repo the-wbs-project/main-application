@@ -8,7 +8,7 @@
   [disabled]="saving()"
   (keydown)="keydown($event)"
 >
-  <ng-template kendoTextBoxSuffixTemplate>
+  <kendo-textarea-suffix>
     <div class="mg-r-5">
       <wbs-save-message [state]="saveState()" />
     </div>
@@ -46,5 +46,5 @@
       />
     </button>
     } }
-  </ng-template>
+  </kendo-textarea-suffix>
 </kendo-textarea>

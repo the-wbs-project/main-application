@@ -2,13 +2,11 @@ import {
   ChangeDetectionStrategy,
   Component,
   computed,
-  ElementRef,
   inject,
   input,
   OnChanges,
   signal,
   SimpleChanges,
-  viewChild,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
@@ -23,14 +21,15 @@ import {
 } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule, ChipModule } from '@progress/kendo-angular-buttons';
-import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import { DisciplineIconLabelComponent } from '@wbs/components/_utils/discipline-icon-label.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdown';
-import { TaskTitleEditorComponent } from '@wbs/components/task-title-editor';
+import { TaskDetailsDescriptionEditorComponent } from '@wbs/components/task-details-description-editor';
+import { TaskDetailsTitleEditorComponent } from '@wbs/components/task-details-title-editor';
+import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
 import { SaveService } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { CategoryViewModel, LibraryTaskViewModel } from '@wbs/core/view-models';
@@ -59,9 +58,10 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
     FormsModule,
     LabelModule,
     SaveMessageComponent,
+    ScrollToTopDirective,
+    TaskDetailsDescriptionEditorComponent,
     TaskDetailsResourcesComponent,
-    TaskTitleEditorComponent,
-    TextAreaModule,
+    TaskDetailsTitleEditorComponent,
     TranslateModule,
   ],
 })
@@ -78,10 +78,6 @@ export class LibraryTaskDetailsComponent implements OnChanges {
   readonly publicIcon = faEarth;
   readonly privateIcon = faBuilding;
   //
-  //  Controls
-  //
-  readonly taskDetails = viewChild<ElementRef<HTMLDivElement>>('taskDetails');
-  //
   //  Inputs
   //
   readonly versionDisciplines = input.required<CategoryViewModel[]>();
@@ -93,6 +89,7 @@ export class LibraryTaskDetailsComponent implements OnChanges {
   readonly editTask = signal<LibraryTaskViewModel | undefined>(undefined);
   readonly editDisciplines = signal(false);
   readonly menuSave = new SaveService();
+  readonly titleSave = new SaveService();
   readonly descriptionSave = new SaveService();
   readonly disciplineSave = new SaveService();
   readonly visibilitySave = new SaveService();
@@ -111,9 +108,6 @@ export class LibraryTaskDetailsComponent implements OnChanges {
 
   ngOnChanges(changes: SimpleChanges): void {
     if (changes['task']) {
-      if (this.editTask()?.id !== this.task()?.id) {
-        this.taskDetails()?.nativeElement?.scrollTo(0, 0);
-      }
       const task = structuredClone(this.task());
 
       if (!task) return;
@@ -122,6 +116,12 @@ export class LibraryTaskDetailsComponent implements OnChanges {
 
       this.editTask.set(task);
     }
+  }
+
+  titleChanged(title: string) {
+    this.titleSave
+      .call(this.taskService.titleChangedAsync(this.task()!.id, title))
+      .subscribe();
   }
 
   descriptionChanged(description: string) {
