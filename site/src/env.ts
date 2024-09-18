@@ -7,15 +7,15 @@ export const environment = {
     locationHost.indexOf('localhost') > -1
       ? '44pcQ5Xo33vimvBb4G8eZfjFaGIsyWfg'
       : locationHost.indexOf('test') > -1
-      ? '44pcQ5Xo33vimvBb4G8eZfjFaGIsyWfg'
-      : '44pcQ5Xo33vimvBb4G8eZfjFaGIsyWfg',
+      ? 'zfvKgtPltxHsUGNPMYvF6JRljlp6xDuC'
+      : 'raHHzPliW4kekFgknuejtzKStyG8X9oi',
 
   authRedirectUri:
     locationHost.indexOf('localhost') > -1
       ? 'http://localhost:4200'
       : locationHost.indexOf('test') > -1
-      ? 'https://test.pmempower.com'
-      : 'https://app.pmempower.com',
+      ? 'https://test.pm-empower.com'
+      : 'https://app.pm-empower.com',
 
   initialVersionAlias: 'Initial Version',
   canTestAi: [''],
