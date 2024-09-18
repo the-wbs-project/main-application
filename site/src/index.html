@@ -21,11 +21,11 @@
     <link rel="prefetch" href="/api/startup" as="data" />
 
     <script>
-      const location = window.location.host;
-      const environment =
-        location.indexOf("localhost") > -1
+      var locationHost = window.location.host;
+      var environment =
+        locationHost.indexOf("localhost") > -1
           ? "development"
-          : location.indexOf("test") > -1
+          : locationHost.indexOf("test") > -1
           ? "test"
           : "production";
 
