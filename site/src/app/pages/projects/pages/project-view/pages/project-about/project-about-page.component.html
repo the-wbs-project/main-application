@@ -2,21 +2,20 @@
 <!---->
 @let canEdit = projectStore.canEditProject();
 
-<div class="w-100 text-center">
-  <div class="d-inline-block text-start w-100 h-100 mx-wd-1200">
-    <div class="two-column-grid mn-ht-100p" resizedCss>
-      <wbs-project-details-card />
-      <wbs-discipline-card
-        [splitLimit]="650"
-        [canAdd]="true"
-        [canEdit]="canEdit"
-        [items]="projectStore.projectDisciplines()"
-        [editItems]="editDisciplines()"
-        [saveState]="disciplineSave.state()"
-        noDisciplinesLabel="Projects.NoDisciplinesProject"
-        (save)="saveDisciplines($event)"
-      />
-      <!--<wbs-project-status-card
+<div class="w-100 h-100 mx-wd-1200">
+  <div class="two-column-grid mn-ht-100p" resizedCss>
+    <wbs-project-details-card />
+    <wbs-discipline-card
+      [splitLimit]="650"
+      [canAdd]="true"
+      [canEdit]="canEdit"
+      [items]="projectStore.projectDisciplines()"
+      [editItems]="editDisciplines()"
+      [saveState]="disciplineSave.state()"
+      noDisciplinesLabel="Projects.NoDisciplinesProject"
+      (save)="saveDisciplines($event)"
+    />
+    <!--<wbs-project-status-card
         [project]="project"
         [approvalEnabled]="approvalEnabled()!"
         [ngClass]="{ 'double-item': approvalEnabled() }"
@@ -24,19 +23,18 @@
       @if (approvalEnabled()) {
       <wbs-project-approval-card [stats]="approvalStats()" />
       }-->
-      <wbs-description-card
-        [(askAi)]="askAi"
-        [canEdit]="canEdit"
-        [(editMode)]="descriptionEditMode"
-        [saveState]="descriptionSave.state()"
-        [description]="project.description"
-        noDescriptionLabel="Library.NoDescriptionEntry"
-        (descriptionChange)="descriptionChange($event)"
-      />
-      <!--[approval]="approvals() | findById : 'project-description'"-->
-      <wbs-project-resource-card />
-      <wbs-project-contributor-card />
-    </div>
+    <wbs-description-card
+      [(askAi)]="askAi"
+      [canEdit]="canEdit"
+      [(editMode)]="descriptionEditMode"
+      [saveState]="descriptionSave.state()"
+      [description]="project.description"
+      noDescriptionLabel="Library.NoDescriptionEntry"
+      (descriptionChange)="descriptionChange($event)"
+    />
+    <!--[approval]="approvals() | findById : 'project-description'"-->
+    <wbs-project-resource-card />
+    <wbs-project-contributor-card />
   </div>
 </div>
 

@@ -88,12 +88,17 @@ export class ProjectHttpService {
     try {
       const { owner, project } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
+      const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
-        await ctx.var.data.projects.refreshKvAsync(owner, project);
+        exec.waitUntil(ctx.var.data.projects.refreshKvAsync(owner, project));
       }
 
-      return resp;
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a project.', <Error>e);
 
@@ -105,12 +110,17 @@ export class ProjectHttpService {
     try {
       const { owner, project } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
+      const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
-        await ctx.var.data.projects.clearKvAsync(owner, project);
+        exec.waitUntil(ctx.var.data.projects.clearKvAsync(owner, project));
       }
 
-      return resp;
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to delete a project.', <Error>e);
 
@@ -122,13 +132,18 @@ export class ProjectHttpService {
     try {
       const { owner, project } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
+      const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
-        await ctx.var.data.projects.refreshKvAsync(owner, project);
-        await ctx.var.data.projectNodes.refreshKvAsync(owner, project);
+        exec.waitUntil(ctx.var.data.projects.refreshKvAsync(owner, project));
+        exec.waitUntil(ctx.var.data.projectNodes.refreshKvAsync(owner, project));
       }
 
-      return resp;
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a project or project node.', <Error>e);
 

@@ -46,18 +46,8 @@ export class ProjectService {
         Utils.getParam(item, 'projectId'),
       ];
     } else {
-      return ['/', item.owner, 'projects', 'view', item.id];
+      return ['/', item.owner, 'projects', 'view', item.recordId];
     }
-  }
-
-  static getProjectApiUrl(route: ActivatedRouteSnapshot): string {
-    return [
-      '/api',
-      'portfolio',
-      Utils.getParam(route, 'org'),
-      'projects',
-      Utils.getParam(route, 'projectId'),
-    ].join('/');
   }
 
   static getTaskUrl(route: ActivatedRouteSnapshot): string[] {

@@ -77,12 +77,17 @@ export class LibraryEntryHttpService {
     try {
       const { owner, entry } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
+      const exec = ctx.executionCtx;
 
-      if (resp.status !== 200) return ctx.text(resp.statusText, resp.status);
+      if (resp.status < 300) {
+        exec.waitUntil(ctx.var.data.libraryEntries.refreshKvAsync(owner, entry));
+      }
 
-      await ctx.var.data.libraryEntries.refreshKvAsync(owner, entry);
-
-      return resp;
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a library entry.', <Error>e);
 
@@ -95,10 +100,18 @@ export class LibraryEntryHttpService {
       const { owner, entry, version } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
       const version2 = parseInt(version);
+      const exec = ctx.executionCtx;
 
-      await ctx.var.data.libraryVersions.refreshKvAsync(owner, entry, version2);
+      if (resp.status < 300) {
+        exec.waitUntil(ctx.var.data.libraryEntries.refreshKvAsync(owner, entry));
+        exec.waitUntil(ctx.var.data.libraryVersions.refreshKvAsync(owner, entry, version2));
+      }
 
-      return resp;
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save a library entry version.', <Error>e);
 
@@ -111,10 +124,19 @@ export class LibraryEntryHttpService {
       const { owner, entry, version } = ctx.req.param();
       const version2 = parseInt(version);
       const resp = await OriginService.pass(ctx);
+      const exec = ctx.executionCtx;
 
-      await ctx.var.data.libraryTasks.refreshKvAsync(owner, entry, version2);
+      if (resp.status < 300) {
+        exec.waitUntil(ctx.var.data.libraryEntries.refreshKvAsync(owner, entry));
+        exec.waitUntil(ctx.var.data.libraryVersions.refreshKvAsync(owner, entry, version2));
+        exec.waitUntil(ctx.var.data.libraryTasks.refreshKvAsync(owner, entry, version2));
+      }
 
-      return resp;
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save library entry tasks.', <Error>e);
 
