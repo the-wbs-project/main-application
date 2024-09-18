@@ -30,7 +30,7 @@ kv_namespaces = [
 
 [env.test.vars]
 DATADOG_ENV = "test"
-DATADOG_HOST = "test-api.pm-empower.com"
+DATADOG_HOST = "test.pm-empower.com"
 CORS_ORIGINS = "https://test.pm-empower.com"
 AUTH_DOMAIN = "auth.pm-empower.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
