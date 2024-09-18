@@ -29,12 +29,8 @@ BEGIN
         e.[OwnerId] = @OwnerId AND
         (v.[Author] = @UserId OR v.[Editors] LIKE '%' + @UserId + '%') AND
         v.[Status] = 'draft' AND
-        CASE
-            WHEN ISNULL(@Types, '') = 'all' THEN 1
-            WHEN e.[Type] IN (SELECT [value]
-        FROM #Types) THEN 1
-            ELSE 0
-        END = 1
+        (ISNULL(@Types, '') = 'all' OR e.[Type] IN (SELECT [value]
+        FROM #Types))
     ORDER BY [LastModified] DESC
 
     DROP TABLE #Types

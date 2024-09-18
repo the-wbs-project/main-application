@@ -59,8 +59,8 @@ GO
 --  Populate the new table
 --
 INSERT INTO [dbo].[ContentResources]
-SELECT [Id], [OwnerId], [EntryId] + '-' + CAST([EntryVersion] AS nvarchar(10)), [Name], [Type], [Order], [CreatedOn], [LastModified], [Resource], [Description], [Visibility]
-FROM [dbo].[LibraryEntryVersionResources]
+SELECT r.[Id], e.[OwnerId], r.[EntryId] + '-' + CAST(r.[EntryVersion] AS nvarchar(10)), r.[Name], r.[Type], r.[Order], r.[CreatedOn], r.[LastModified], r.[Resource], r.[Description], NULL
+FROM [dbo].[LibraryEntryVersionResources] r LEFT JOIN [dbo].[LibraryEntries] e ON r.EntryId = e.Id
 
 INSERT INTO [dbo].[ContentResources]
 SELECT [Id], [OwnerId], [EntryNodeId], [Name], [Type], [Order], [CreatedOn], [LastModified], [Resource], [Description], [Visibility]

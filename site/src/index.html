@@ -21,6 +21,14 @@
     <link rel="prefetch" href="/api/startup" as="data" />
 
     <script>
+      const location = window.location.host;
+      const environment =
+        location.indexOf("localhost") > -1
+          ? "development"
+          : location.indexOf("test") > -1
+          ? "test"
+          : "production";
+
       (function (h, o, u, n, d) {
         h = h[d] = h[d] || {
           q: [],
@@ -45,7 +53,7 @@
           clientToken: "pubd0e9b67a9b76d45b8156a8ce603286d7",
           site: "us5.datadoghq.com",
           service: "pm-empower-site",
-          env: "development",
+          env: environment,
           forwardErrorsToLogs: false,
           sessionSampleRate: 100,
           beforeSend: (log) => {
@@ -90,7 +98,7 @@
           applicationId: "efa2e736-603b-4e4a-93f6-ee893b7a557b",
           site: "us5.datadoghq.com",
           service: "pm-empower",
-          env: "development",
+          env: environment,
           // Specify a version number to identify the deployed version of your application in Datadog
           // version: '1.0.0',
           sessionSampleRate: 100,

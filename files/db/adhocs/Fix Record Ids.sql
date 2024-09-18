@@ -1,6 +1,8 @@
+DECLARE @RecordId NVARCHAR(100) = 'L-367393'
+
 SELECT COUNT(*)
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578'
+WHERE RecordId = @RecordId
 
 DECLARE @Id VARCHAR(10)
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
@@ -10,7 +12,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
@@ -20,7 +22,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
@@ -30,7 +32,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
@@ -40,7 +42,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
 
@@ -49,7 +51,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
 
@@ -58,7 +60,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
 
@@ -67,7 +69,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
 
@@ -76,7 +78,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
 
@@ -85,7 +87,7 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)
 
 EXEC [dbo].[LibraryEntry_GetNewId] @Id OUTPUT
 
@@ -94,4 +96,4 @@ SET RecordId = @Id
 WHERE Id IN (SELECT TOP 1
     Id
 FROM [dbo].[LibraryEntries]
-WHERE RecordId = 'L-940578')
+WHERE RecordId = @RecordId)

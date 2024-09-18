@@ -174,18 +174,31 @@ jobs:
           KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
         displayName: "Setup - Kendo UI License"
 
-      - script: npm run deploy
+      - script: npm run deploy:test
         workingDirectory: "site"
-        displayName: "Build"
+        displayName: "Build Test"
 
       - task: ArchiveFiles@2
         inputs:
           rootFolderOrFile: "site/dist/site"
           includeRootFolder: false
           archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site.zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site-Test.zip"
           replaceExistingArchive: true
-        displayName: "Zip"
+        displayName: "Zip Test"
+
+      - script: npm run deploy:production
+        workingDirectory: "site"
+        displayName: "Build Production"
+
+      - task: ArchiveFiles@2
+        inputs:
+          rootFolderOrFile: "site/dist/site"
+          includeRootFolder: false
+          archiveType: "zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site-Production.zip"
+          replaceExistingArchive: true
+        displayName: "Zip Production"
 
       - task: PublishBuildArtifacts@1
         inputs:
