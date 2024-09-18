@@ -80,8 +80,8 @@
               "outputHashing": "all",
               "fileReplacements": [
                 {
-                  "replace": "src/index.html",
-                  "with": "src/index.production.html"
+                  "replace": "src/env.ts",
+                  "with": "src/env.production.ts"
                 }
               ]
             },
