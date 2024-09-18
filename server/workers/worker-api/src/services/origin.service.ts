@@ -35,7 +35,7 @@ export class OriginService {
     const req = ctx.req;
     const url = OriginService.getUrl(ctx.env.ORIGIN, new URL(req.url).pathname);
     const res = await ctx.get('fetcher').fetch(url, {
-      body: req.raw.body,
+      body: await req.arrayBuffer(),
       headers: req.raw.headers,
       method: req.method,
     });
@@ -56,7 +56,7 @@ export class OriginService {
   }
 
   async putAsync(body: any, suffix?: string): Promise<Response> {
-    return await fetch(this.getUrl(suffix), {
+    return await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
       method: 'PUT',
       body: JSON.stringify(body),
       headers: {
@@ -67,7 +67,7 @@ export class OriginService {
   }
 
   async postAsync(body: any, suffix?: string): Promise<Response> {
-    return await fetch(this.getUrl(suffix), {
+    return await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
       method: 'POST',
       body: JSON.stringify(body),
       headers: {
@@ -78,7 +78,7 @@ export class OriginService {
   }
 
   async deleteAsync(suffix?: string): Promise<Response> {
-    return await fetch(this.getUrl(suffix), {
+    return await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
       method: 'DELETE',
       headers: {
         Authorization: this.ctx.req.raw.headers.get('Authorization')!,

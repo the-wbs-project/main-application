@@ -40,7 +40,7 @@ services = [
 
 [env.test.vars]
 DEBUG = "false"
-ORIGIN = "http://test-api.pm-empower.com"
+ORIGIN = "https://test-api.pm-empower.com"
 DATADOG_ENV = "test"
 DATADOG_HOST = "test.pm-empower.com"
 CORS_ORIGINS = "https://test.pm-empower.com"
