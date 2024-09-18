@@ -36,7 +36,7 @@ export const routes: Routes = [
             path: 'library',
             canActivate: [librarySectionGuard],
             loadChildren: () =>
-              import('../library/library.routes').then((m) => m.routes),
+              import('../library.routes').then((m) => m.routes),
           },
           {
             path: 'projects',

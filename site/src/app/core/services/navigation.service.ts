@@ -18,21 +18,29 @@ export class NavigationService {
     );
   }
 
+  getLibraryEntryUrl(
+    owner: string,
+    recordId: string,
+    version: number
+  ): string[] {
+    return [
+      ...this.prefix(),
+      'library',
+      'view',
+      owner,
+      recordId,
+      version.toString(),
+      'about',
+    ];
+  }
+
   toLibraryEntry(
     owner: string,
     recordId: string,
     version: number
   ): Observable<boolean> {
     return from(
-      this.router.navigate([
-        ...this.prefix(),
-        'library',
-        'view',
-        owner,
-        recordId,
-        version,
-        'about',
-      ])
+      this.router.navigate(this.getLibraryEntryUrl(owner, recordId, version))
     );
   }
 
