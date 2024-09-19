@@ -36,6 +36,7 @@ import { DisciplinesDropdownComponent } from '@wbs/components/discipline-dropdow
 import { TreeDisciplineLegendComponent } from '@wbs/components/tree-discipline-legend';
 import {
   TreeButtonsAddComponent,
+  TreeButtonsEditAbsComponent,
   TreeButtonsFullscreenComponent,
   TreeButtonsTogglerComponent,
 } from '@wbs/components/_utils/tree-buttons';
@@ -92,6 +93,7 @@ import { WbsAbsButtonComponent } from '../wbs-abs-button.component';
     TextBoxModule,
     TranslateModule,
     TreeButtonsAddComponent,
+    TreeButtonsEditAbsComponent,
     TreeButtonsFullscreenComponent,
     TreeButtonsTogglerComponent,
     TreeDisciplineLegendComponent,
@@ -184,17 +186,11 @@ export class ProjectPhaseTreeComponent implements OnInit {
       .map((x) => x.id);
   }
 
-  otherItemSelected(action: string): void {
-    if (action === 'goFullScreen') {
-      this.goFullScreen.emit();
-    } else if (action === 'exitFullScreen') {
-      this.exitFullScreen.emit();
-    } else if (action === 'editAbs') {
-      AbsDialogComponent.launchAsync(
-        this.dialogService,
-        this.treeService.expandedKeys
-      );
-    }
+  launchAbsDialog(): void {
+    AbsDialogComponent.launchAsync(
+      this.dialogService,
+      this.treeService.expandedKeys
+    );
   }
 
   rowReordered(e: RowReorderEvent): void {

@@ -51,7 +51,7 @@ export class TaskDetailsDescriptionEditorComponent implements OnChanges {
   readonly save = output<string>();
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['title']) this.reset();
+    if (changes['description']) this.reset();
   }
 
   keydown({ key }: { key: string }): void {

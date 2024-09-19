@@ -15,14 +15,14 @@ import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-it
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { SaveState } from '@wbs/core/models';
 import { LibraryTaskViewModel } from '@wbs/core/view-models';
-import { PhaseTreeMenuService } from '../../../../services';
+import { ProjectTaskMenuService } from '../../../../services';
 
 @Component({
   standalone: true,
   selector: 'wbs-phase-tree-task-title',
   templateUrl: './phase-tree-task-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [PhaseTreeMenuService],
+  providers: [ProjectTaskMenuService],
   imports: [
     ContextMenuItemComponent,
     ContextMenuModule,
@@ -33,7 +33,7 @@ import { PhaseTreeMenuService } from '../../../../services';
   ],
 })
 export class PhaseTreeTaskTitleComponent {
-  private readonly menuService = inject(PhaseTreeMenuService);
+  private readonly menuService = inject(ProjectTaskMenuService);
 
   readonly menuIcon = faEllipsisH;
   readonly task = input.required<LibraryTaskViewModel>();

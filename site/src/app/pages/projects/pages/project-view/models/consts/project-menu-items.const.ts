@@ -5,13 +5,10 @@ import {
   faArrowUp,
   faBookArrowRight,
   faBooks,
-  faCheck,
   faCopy,
-  faEclipse,
   faFileImport,
   faPlus,
   faTrash,
-  faX,
 } from '@fortawesome/pro-solid-svg-icons';
 import {
   ActionContextMenuItem,
@@ -42,58 +39,28 @@ const taskActions: ActionContextMenuItem[] = [
     ],
   },
   {
-    action: 'other',
-    faIcon: faEclipse,
-    resource: 'Wbs.OtherActions',
+    action: 'cloneTask',
+    faIcon: faCopy,
+    resource: 'Projects.CloneTask',
     filters: {
+      stati: [PROJECT_STATI.PLANNING],
       claim: PROJECT_CLAIMS.TASKS.CREATE,
     },
-    items: [
-      {
-        action: 'cloneTask',
-        faIcon: faCopy,
-        resource: 'Projects.CloneTask',
-        filters: {
-          stati: [PROJECT_STATI.PLANNING],
-          claim: PROJECT_CLAIMS.TASKS.CREATE,
-        },
-      },
-      {
-        action: 'setAbsFlag',
-        faIcon: faCheck,
-        resource: 'Wbs.MarkAsAbs',
-        filters: {
-          stati: [PROJECT_STATI.PLANNING],
-          claim: PROJECT_CLAIMS.TASKS.UPDATE,
-          props: [{ prop: 'absFlag', op: '!=', value: 'set' }],
-        },
-      },
-      {
-        action: 'removeAbsFlag',
-        faIcon: faX,
-        resource: 'Wbs.RemoveAbsFlag',
-        filters: {
-          stati: [PROJECT_STATI.PLANNING],
-          claim: PROJECT_CLAIMS.TASKS.UPDATE,
-          props: [{ prop: 'absFlag', op: '=', value: 'set' }],
-        },
-      },
-      {
-        action: 'exportTask',
-        faIcon: faBookArrowRight,
-        resource: 'Projects.ExportToLibrary',
-        filters: {},
-      },
-      {
-        action: 'deleteTask',
-        faIcon: faTrash,
-        resource: 'Projects.DeleteTask',
-        filters: {
-          stati: [PROJECT_STATI.PLANNING],
-          claim: PROJECT_CLAIMS.TASKS.DELETE,
-        },
-      },
-    ],
+  },
+  {
+    action: 'exportTask',
+    faIcon: faBookArrowRight,
+    resource: 'Projects.ExportToLibrary',
+    filters: {},
+  },
+  {
+    action: 'deleteTask',
+    faIcon: faTrash,
+    resource: 'Projects.DeleteTask',
+    filters: {
+      stati: [PROJECT_STATI.PLANNING],
+      claim: PROJECT_CLAIMS.TASKS.DELETE,
+    },
   },
 ];
 

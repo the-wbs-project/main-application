@@ -37,17 +37,17 @@
         <div class="w-100 d-flex flex-wrap row-column gap-10">
           <wbs-tree-type-button [(view)]="view" />
           <wbs-abs-button [(view)]="wbsAbs" />
-          @if (editEnabled) {
-          <wbs-tree-buttons-add (selected)="addPhase($event)" />
-          }
           <wbs-tree-buttons-toggler
             (collapse)="treeService.collapseAll(treelist, list, 'id')"
             (expand)="treeService.expandAll(list, 'id')"
           />
-          <wbs-phase-tree-other-button
-            [isFullScreen]="isFullScreen()"
-            (selected)="otherItemSelected($event)"
-          />
+          @if (editEnabled && wbsAbs() === 'wbs') {
+          <wbs-tree-buttons-add (selected)="addPhase($event)" />
+          } @if (editEnabled && wbsAbs() === 'abs') {
+          <wbs-tree-buttons-edit-abs (click)="launchAbsDialog()" />
+          } @if (!isFullScreen()) {
+          <wbs-tree-buttons-fullscreen (click)="goFullScreen.emit()" />
+          }
         </div>
       </ng-template>
       @if (editEnabled) {

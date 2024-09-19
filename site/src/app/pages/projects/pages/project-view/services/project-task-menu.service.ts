@@ -8,7 +8,7 @@ import { ProjectStore } from '../stores';
 declare type Seperator = { separator: true };
 
 @Injectable()
-export class PhaseTreeMenuService {
+export class ProjectTaskMenuService {
   private menuService = inject(MenuService);
   private readonly store = inject(ProjectStore);
 

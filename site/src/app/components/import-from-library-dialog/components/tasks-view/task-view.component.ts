@@ -31,6 +31,7 @@ import {
   Messages,
   Transformers,
   TreeService,
+  WbsNodeService,
   sorter,
 } from '@wbs/core/services';
 import { MembershipStore, UiStore } from '@wbs/core/store';
@@ -73,6 +74,7 @@ export class TaskViewComponent implements OnChanges, OnInit {
   private readonly data = inject(DataServiceFactory);
   private readonly messages = inject(Messages);
   private readonly transformer = inject(Transformers);
+  private readonly wbsService = inject(WbsNodeService);
   private readonly org = inject(MembershipStore).membership;
 
   readonly treeService = new TreeService();
@@ -147,7 +149,7 @@ export class TaskViewComponent implements OnChanges, OnInit {
           for (let i = 0; i < siblings.length; i++) {
             siblings[i].order = i + 1;
           }
-          return [...tasks];
+          return structuredClone(this.wbsService.rebuildLevels(tasks));
         });
       });
   }

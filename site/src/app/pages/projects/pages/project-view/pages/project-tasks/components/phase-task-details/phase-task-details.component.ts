@@ -36,7 +36,7 @@ import {
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
-  PhaseTreeMenuService,
+  ProjectTaskMenuService,
   ProjectTaskService,
   ProjectViewService,
 } from '../../../../services';
@@ -47,7 +47,7 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
   selector: 'wbs-phase-task-details',
   templateUrl: './phase-task-details.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [PhaseTreeMenuService],
+  providers: [ProjectTaskMenuService],
   imports: [
     ButtonModule,
     ChipModule,
@@ -67,7 +67,7 @@ import { TaskDetailsResourcesComponent } from '../task-details-resources';
   ],
 })
 export class PhaseTaskDetailsComponent implements OnChanges {
-  private readonly menuService = inject(PhaseTreeMenuService);
+  private readonly menuService = inject(ProjectTaskMenuService);
   private readonly taskService = inject(ProjectTaskService);
   private readonly viewService = inject(ProjectViewService);
 

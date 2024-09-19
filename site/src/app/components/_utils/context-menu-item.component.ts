@@ -19,7 +19,9 @@ import { ContextMenuItem } from '@wbs/core/models';
       } @if (objIcon(); as icon) {
       <fa-icon [icon]="icon" /> } }
     </span>
-    {{ item.text ?? (item.resource! | translate) }}
+    <span class="d-inline-block wd-80">
+      {{ item.text ?? (item.resource! | translate) }}
+    </span>
     }`,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [FontAwesomeModule, NgClass, TranslateModule],
