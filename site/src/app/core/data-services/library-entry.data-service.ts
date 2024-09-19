@@ -25,6 +25,10 @@ export class LibraryEntryDataService {
     return this.http.get<string>(this.url(owner, recordId) + '/id');
   }
 
+  getRecordIdAsync(owner: string, recordId: string): Observable<string> {
+    return this.http.get<string>(this.url(owner, recordId) + '/recordId');
+  }
+
   getVersionByIdAsync(
     owner: string,
     recordId: string,

@@ -25,13 +25,7 @@
     @for (entry of entries(); track (entry.entryId + "-" + entry.version)) {
     <tr class="pointer" (click)="selected.emit(entry)">
       <td class="wd-100">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon
-            [icon]="entry.type | entryTypeIcon"
-            class="d-none d-sm-inline mg-r-5"
-          />
-        </span>
-        {{ entry.type | entryTypeTitle | translate }}
+        <wbs-library-type-text [type]="entry.type" />
       </td>
       <td>{{ entry.recordId }}</td>
       <td>{{ entry.title }}</td>
@@ -46,6 +40,6 @@
 </table>
 @if (showLoading()) {
 <div class="w-100 text-center pd-t-40">
-  <fa-duotone-icon [icon]="loadingIcon" size="5x" animation="spin" />
+  <wbs-loading />
 </div>
 }

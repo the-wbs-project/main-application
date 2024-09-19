@@ -39,7 +39,9 @@
   </div>
   <div class="wbs-detail-row">
     <div class="row-header">{{ "General.Type" | translate }} :</div>
-    <div class="row-value">{{ version.type | entryTypeTitle | translate }}</div>
+    <div class="row-value">
+      <wbs-library-type-text [type]="version.type" />
+    </div>
   </div>
 
   @if (version.type === 'project') {

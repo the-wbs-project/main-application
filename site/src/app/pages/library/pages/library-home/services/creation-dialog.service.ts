@@ -260,6 +260,12 @@ export class CreationDialogService {
   }
 
   private go(owner: string, entry: LibraryEntry): Observable<boolean> {
-    return this.navigate.toLibraryEntry(owner, entry.id, 1);
+    return this.data.libraryEntries
+      .getRecordIdAsync(owner, entry.id)
+      .pipe(
+        switchMap((recordId) =>
+          this.navigate.toLibraryEntry(owner, recordId, 1)
+        )
+      );
   }
 }

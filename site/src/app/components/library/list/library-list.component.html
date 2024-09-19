@@ -41,13 +41,7 @@
       </td>
       }
       <td class="wd-100">
-        <span class="d-inline-block wd-20 text-center">
-          <fa-icon
-            [icon]="entry.type | entryTypeIcon"
-            class="d-none d-sm-inline"
-          />
-        </span>
-        {{ entry.type | entryTypeTitle | translate }}
+        <wbs-library-type-text [type]="entry.type" />
       </td>
       <td>
         {{ entry.title }}
@@ -65,6 +59,6 @@
 </table>
 @if (showLoading()) {
 <div class="w-100 text-center pd-t-40">
-  <fa-duotone-icon [icon]="loadingIcon" size="5x" animation="spin" />
+  <wbs-loading />
 </div>
 }

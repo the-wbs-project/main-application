@@ -50,9 +50,9 @@ export class WatchIndicatorComponent {
   readonly watched = computed(() => {
     const source = this.watchSource();
 
-    return source
-      .items()
-      .some((w) => w.ownerId === this.owner() && w.id === this.entityId());
+    return (source.items() ?? []).some(
+      (w) => w.ownerId === this.owner() && w.id === this.entityId()
+    );
   });
 
   protected changed(event: Event): void {

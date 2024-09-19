@@ -1,10 +1,8 @@
-import { Injectable, Signal, computed, inject, signal } from '@angular/core';
+import { Injectable, Signal, computed, signal } from '@angular/core';
 import { EntityId, User } from '@wbs/core/models';
-import { UserService } from '@wbs/core/services';
 
 @Injectable({ providedIn: 'root' })
 export class UserStore {
-  private readonly userService = inject(UserService);
   private readonly _profile = signal<User | undefined>(undefined);
 
   readonly watchers = new WatcherStore();
@@ -34,9 +32,9 @@ export class WatcherStore {
 }
 
 export class WatcherByItemStore {
-  private _items = signal<EntityId[]>([]);
+  private _items = signal<EntityId[] | undefined>(undefined);
 
-  get items(): Signal<EntityId[]> {
+  get items(): Signal<EntityId[] | undefined> {
     return this._items;
   }
 
@@ -45,11 +43,13 @@ export class WatcherByItemStore {
   }
 
   add(item: EntityId): void {
-    this._items.update((list) => [...list, item]);
+    this._items.update((list) => [...(list ?? []), item]);
   }
 
   remove(item: EntityId): void {
     this._items.update((list) => {
+      if (!list) return list;
+
       let index = list.findIndex(
         (x) => x.id === item.id && x.ownerId === item.ownerId
       );

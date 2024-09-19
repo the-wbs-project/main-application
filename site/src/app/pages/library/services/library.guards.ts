@@ -6,6 +6,8 @@ import { map } from 'rxjs/operators';
 export const watcherGuard = () => {
   const store = inject(UserStore);
 
+  if (store.watchers.library.items() != undefined) return true;
+
   return inject(DataServiceFactory)
     .libraryEntryWatchers.getEntriesAsync(store.userId()!)
     .pipe(
