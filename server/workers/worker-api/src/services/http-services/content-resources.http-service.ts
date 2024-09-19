@@ -28,9 +28,16 @@ export class ContentResourceHttpService {
   static async putOrDeleteAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, parentId, id } = ctx.req.param();
-      const [resp, nothing] = await Promise.all([OriginService.pass(ctx), ctx.var.data.contentResources.clearKvAsync(owner, parentId)]);
+      const resp = await OriginService.pass(ctx);
 
-      return resp;
+      if (resp.status < 300) {
+        ctx.executionCtx.waitUntil(ctx.var.data.contentResources.clearKvAsync(owner, parentId));
+      }
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
     } catch (error) {
       ctx.get('logger').trackException('An error occured trying to put or delete content resource.', <Error>error);
       return ctx.text('Internal Server Error', 500);

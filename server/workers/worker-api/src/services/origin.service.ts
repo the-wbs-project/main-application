@@ -33,12 +33,23 @@ export class OriginService {
 
   static async pass(ctx: Context): Promise<Response> {
     const req = ctx.req;
+    const method = req.method;
     const url = OriginService.getUrl(ctx.env.ORIGIN, new URL(req.url).pathname);
-    const res = await ctx.get('fetcher').fetch(url, {
-      body: await req.arrayBuffer(),
-      headers: req.raw.headers,
-      method: req.method,
-    });
+    const res = await ctx.get('fetcher').fetch(
+      url,
+      method === 'GET' || method === 'HEAD'
+        ? {
+            method: method,
+            headers: req.raw.headers,
+            redirect: req.raw.redirect,
+          }
+        : {
+            method: method,
+            headers: req.raw.headers,
+            redirect: req.raw.redirect,
+            body: req.raw.body
+          },
+    );
 
     const body = res.status === 202 || res.status === 204 ? null : await res.arrayBuffer();
 

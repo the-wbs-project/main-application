@@ -71,10 +71,9 @@ app.post('api/activities', verifyJwt, Http.activities.postAsync);
 //
 const libApp = newApp()
   .basePath('api/libraries')
-  .use('*', verifyJwt)
-  .get('/drafts/:owner/:types', verifyMembership, Http.library.getDraftsAsync)
-  .post('internal/:owner', verifyMembership, OriginService.pass)
-  .post('public', OriginService.pass);
+  .get('drafts/:owner/:types', verifyJwt, verifyMembership, Http.library.getDraftsAsync)
+  .post('internal/:owner', verifyJwt, verifyMembership, OriginService.pass)
+  .post('public', verifyJwt, OriginService.pass);
 
 app.route('/', libApp);
 //
@@ -83,6 +82,7 @@ app.route('/', libApp);
 const entryApp = newApp()
   .basePath('api/portfolio/:owner/library/entries/:entry')
   .get('id', verifyJwt, Http.library.getIdAsync)
+  .get('recordId', verifyJwt, Http.library.getRecordIdAsync)
   .get('versions/:version/:visibility', verifyJwt, Http.libraryEntries.getVersionByIdAsync)
 
   .put('', verifyJwt, Http.libraryEntries.putEntryAsync)
@@ -179,9 +179,9 @@ for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_POST) app.post(path, verifyJwt, 
 for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_PUT) app.put(path, verifyJwt, verifyMembership, OriginService.pass);
 for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_DELETE) app.delete(path, verifyJwt, verifyMembership, OriginService.pass);
 
-app.get('/api/*', verifyJwt, OriginService.pass);
-app.put('/api/*', verifyJwt, OriginService.pass);
-app.post('/api/*', verifyJwt, OriginService.pass);
-app.delete('/api/*', verifyJwt, OriginService.pass);
+app.get('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
+app.put('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
+app.post('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
+app.delete('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
 
 export const APP_ROUTES = app;
