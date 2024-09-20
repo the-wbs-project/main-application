@@ -27,7 +27,10 @@ import { PdfDialogComponent } from './components/pdf-dialog';
 
 declare type BrowserMin = { name: string; version?: number };
 
-const pdfBrowsers: BrowserMin[] = [{ name: 'chrome' }, { name: 'firefox' }];
+const pdfBrowsers: BrowserMin[] = [
+  { name: 'chrome' },
+  { name: 'firefox', version: 106 },
+];
 
 //Safari no
 
@@ -104,7 +107,7 @@ export class RecordResourceListComponent {
 
     console.log('browser', browser, showDialog);
 
-    if (showDialog && record.type === 'pdf') {
+    if (record.type === 'pdf') {
       this.data.contentResources
         .getFileAsync(record.ownerId, record.parentId, record.id)
         .subscribe((file) =>
