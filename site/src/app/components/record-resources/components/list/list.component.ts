@@ -20,11 +20,16 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ContentResource } from '@wbs/core/models';
-import { CheckPipe } from '@wbs/pipes/check.pipe';
+import { UiStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../type-text';
-import { ImageDialogComponent } from './components/image-dialog.component';
 import { PdfDialogComponent } from './components/pdf-dialog';
+
+declare type BrowserMin = { name: string; version?: number };
+
+const pdfBrowsers: BrowserMin[] = [{ name: 'chrome' }, { name: 'firefox' }];
+
+//Safari no
 
 @Component({
   standalone: true,
@@ -33,7 +38,6 @@ import { PdfDialogComponent } from './components/pdf-dialog';
   styleUrl: './list.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    CheckPipe,
     DateTextPipe,
     DragDropModule,
     FontAwesomeModule,
@@ -45,6 +49,7 @@ import { PdfDialogComponent } from './components/pdf-dialog';
 export class RecordResourceListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
+  private readonly uiStore = inject(UiStore);
 
   readonly reorderIcon = faBars;
   readonly viewIcon = faEye;
@@ -85,14 +90,35 @@ export class RecordResourceListComponent {
   }
 
   open(record: ContentResource): void {
-    this.data.contentResources
-      .getFileAsync(record.ownerId, record.parentId, record.id)
-      .subscribe((file) => {
-        if (record.type === 'image') {
-          //ImageDialogComponent.launch(this.dialog, record.name, file)
-        } else if (record.type === 'pdf') {
-          PdfDialogComponent.launch(this.dialog, record.name, file);
-        }
-      });
+    const browser = this.uiStore.browser;
+
+    if (!browser) return;
+
+    const showDialog =
+      !browser.isMobile &&
+      pdfBrowsers.some(
+        (x) =>
+          x.name === browser.name &&
+          (x.version ? x.version > browser.version : true)
+      );
+
+    console.log('browser', browser, showDialog);
+
+    if (showDialog && record.type === 'pdf') {
+      this.data.contentResources
+        .getFileAsync(record.ownerId, record.parentId, record.id)
+        .subscribe((file) =>
+          PdfDialogComponent.launch(this.dialog, record.name, file)
+        );
+    } else {
+      window.open(
+        this.data.contentResources.getFileUrl(
+          record.ownerId,
+          record.parentId,
+          record.id
+        ),
+        '_blank'
+      );
+    }
   }
 }

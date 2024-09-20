@@ -12,6 +12,10 @@ export class ContentResourcesDataService {
       .pipe(map((list) => this.cleanList(list)));
   }
 
+  getFileUrl(owner: string, parentId: string, resourceId: string): string {
+    return this.getUrl(owner, parentId, resourceId, true);
+  }
+
   getFileAsync(
     owner: string,
     parentId: string,

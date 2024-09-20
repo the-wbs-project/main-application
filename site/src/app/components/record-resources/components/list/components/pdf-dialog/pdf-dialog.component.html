@@ -6,7 +6,12 @@
 >
   @if (url(); as url) {
   <div class="pdf-viewer">
-    <object [data]="url" type="application/pdf"></object>
+    <object
+      [title]="title()"
+      [name]="title()"
+      [data]="url"
+      type="application/pdf"
+    ></object>
   </div>
   }
 </kendo-dialog>

@@ -5,6 +5,7 @@ export * from './enums';
 export * from './activity.model';
 export * from './ai-log.model';
 export * from './ai-model.model';
+export * from './browser-info.model';
 export * from './category.model';
 export * from './category-dialog-results.model';
 export * from './chat-comment.model';
