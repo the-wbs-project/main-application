@@ -112,13 +112,14 @@ export class EntryTaskCreationComponent extends DialogContentBase {
   }
 
   save(): void {
+    const disciplines = this.disciplines().filter((x) => x.selected);
     this.service
       .createTaskEntryAsync(
         this.templateTitle(),
         this.mainTaskTitle(),
         this.alias(),
         this.visibility(),
-        this.disciplines()
+        disciplines
       )
       .subscribe(() => this.dialog.close());
   }

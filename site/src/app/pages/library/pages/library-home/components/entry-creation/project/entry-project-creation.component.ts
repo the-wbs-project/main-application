@@ -86,7 +86,6 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   //
   readonly canContinue = computed(() => {
     const view = this.view();
-    const category = this.category();
     const title = this.templateTitle();
 
     if (view === 0) {
@@ -115,6 +114,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
   }
 
   save(): void {
+    const disciplines = this.disciplines().filter((x) => x.selected);
     this.service
       .createProjectEntryAsync(
         this.templateTitle(),
@@ -122,7 +122,7 @@ export class EntryProjectCreationComponent extends DialogContentBase {
         this.visibility(),
         this.category()!,
         this.phases(),
-        this.disciplines()
+        disciplines
       )
       .subscribe(() => this.dialog.close());
   }

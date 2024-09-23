@@ -115,13 +115,14 @@ export class EntryPhaseCreationComponent extends DialogContentBase {
   }
 
   save(): void {
+    const disciplines = this.disciplines().filter((x) => x.selected);
     this.service
       .createPhaseEntryAsync(
         this.templateTitle(),
         this.alias(),
         this.visibility(),
         this.phase()!,
-        this.disciplines()
+        disciplines
       )
       .subscribe(() => this.dialog.close());
   }
