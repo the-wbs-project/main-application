@@ -1,4 +1,4 @@
-import { Context } from '../../config';
+import { Context, ContextLocal } from '../../config';
 import { AiChatDataService } from './ai-chat.data-service';
 import { ContentResourcesDataService } from './content-resources.data-services';
 import { InvitesDataService } from './invites.data-service';
@@ -19,6 +19,7 @@ export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
   readonly contentResources: ContentResourcesDataService;
   readonly entries: LibraryEntryDataService;
+  readonly fileViewer: FileViewerDataService;
   readonly invites: InvitesDataService;
   readonly libraryEntries: LibraryEntryDataService;
   readonly libraryTasks: LibraryEntryTaskDataService;
@@ -33,7 +34,7 @@ export class DataServiceFactory {
   readonly roles: RolesDataService;
   readonly users: UserDataService;
 
-  constructor(ctx: Context) {
+  constructor(ctx: ContextLocal) {
     //
     //  Auth
     //

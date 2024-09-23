@@ -5,7 +5,7 @@ export class JiraHttpService {
     try {
       const { description, organization, user } = await ctx.req.json();
 
-      const issueId = await ctx.get('jira').createUploadIssueAsync(ctx, description, organization, user);
+      const issueId = await ctx.get('jira').createUploadIssueAsync(description, organization, user);
 
       return ctx.text(issueId);
     } catch (e) {
@@ -22,7 +22,7 @@ export class JiraHttpService {
       const fileName = ctx.req.raw.headers.get('x-filename')!; // could I guess be based on a wildcard route too: /uploads/cat.png
       const file = await ctx.req.arrayBuffer();
 
-      await ctx.get('jira').attachFileAsync(ctx, jiraIssueId, fileName, file);
+      await ctx.get('jira').attachFileAsync(jiraIssueId, fileName, file);
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {

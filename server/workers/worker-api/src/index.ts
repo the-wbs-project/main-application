@@ -1,7 +1,7 @@
-import { APP_ROUTES } from './app.routes';
+import { API_ROUTES } from './app.routes';
 
 export default {
-  fetch: APP_ROUTES.fetch,
+  fetch: API_ROUTES.fetch,
 };
 /*
 export default {

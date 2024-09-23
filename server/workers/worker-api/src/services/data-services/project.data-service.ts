@@ -1,9 +1,9 @@
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 import { Project } from '../../models';
 import { BaseDataService } from './base.data-service';
 
 export class ProjectDataService extends BaseDataService {
-  constructor(ctx: Context) {
+  constructor(ctx: ContextLocal) {
     super(ctx);
   }
 

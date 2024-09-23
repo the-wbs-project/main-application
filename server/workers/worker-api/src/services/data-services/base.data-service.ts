@@ -1,10 +1,11 @@
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 import { OriginService } from '../origin.service';
 
 export abstract class BaseDataService {
-  constructor(protected readonly ctx: Context) {}
+  constructor(protected readonly ctx: ContextLocal) {}
 
   protected get origin(): OriginService {
+    
     return this.ctx.var.origin;
   }
 

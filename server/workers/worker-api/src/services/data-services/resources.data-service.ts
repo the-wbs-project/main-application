@@ -1,12 +1,12 @@
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 import { Resources } from '../../models';
 import { OriginService } from '../origin.service';
 
 export class ResourcesDataService {
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: ContextLocal) {}
 
   private get origin(): OriginService {
-    return this.ctx.get('origin');
+    return this.ctx.var.origin;
   }
 
   async getAsync(locale: string): Promise<Record<string, Record<string, string>> | undefined> {

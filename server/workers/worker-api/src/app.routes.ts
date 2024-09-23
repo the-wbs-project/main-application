@@ -2,15 +2,15 @@ import { Hono } from 'hono';
 import { Env, Variables } from './config';
 import { cors, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error } from './middle';
 import {
+  ClaimsService,
+  DataDogService,
   DataServiceFactory,
   Fetcher,
   Http,
-  JiraService,
   HttpLogger,
+  JiraService,
   MailGunService,
   OriginService,
-  DataDogService,
-  ClaimsService,
 } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -144,7 +144,6 @@ app.route('/', orgApp);
 const contentResourceApp = newApp()
   .basePath('api/portfolio/:owner/content-resources')
   .get(':parentId', verifyJwt, verifyMembership, Http.contentResources.getListAsync)
-  .get(':parentId/resource/:id', verifyJwt, verifyMembership, Http.contentResources.getFileAsync)
   .get(':parentId/resource/:id/file', verifyJwt, Http.contentResources.getFileAsync)
   .put(':parentId/resource/:id', verifyJwt, verifyMembership, Http.contentResources.putOrDeleteAsync)
   .put(':parentId/resource/:id/file', verifyJwt, verifyMembership, Http.contentResources.putOrDeleteAsync)
@@ -184,4 +183,4 @@ app.put('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.
 app.post('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
 app.delete('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
 
-export const APP_ROUTES = app;
+export const API_ROUTES = app;

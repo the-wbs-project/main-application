@@ -1,7 +1,7 @@
-import { Context } from '../config';
+import { ContextLocal } from '../config';
 
 export class Fetcher {
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: ContextLocal) {}
 
   async fetch(input: RequestInfo, init?: RequestInit<RequestInitCfProperties>): Promise<Response> {
     let method: string | undefined;
@@ -34,7 +34,7 @@ export class Fetcher {
       throw e;
     } finally {
       const duration = end!.getTime() - start.getTime();
-      this.ctx.get('logger').trackDependency(url, method, duration, request, response);
+      this.ctx.var.logger.trackDependency(url, method, duration, request, response);
     }
   }
 }

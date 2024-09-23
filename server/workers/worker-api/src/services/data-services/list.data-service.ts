@@ -1,4 +1,4 @@
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 import { ListItem } from '../../models';
 import { OriginService } from '../origin.service';
 
@@ -6,12 +6,12 @@ export class ListDataService {
   private readonly prefix = 'LISTS';
   private readonly byPass: boolean;
 
-  constructor(private readonly ctx: Context) {
+  constructor(private readonly ctx: ContextLocal) {
     this.byPass = (ctx.env.KV_BYPASS ?? '').split(',').indexOf(this.prefix) > -1;
   }
 
   private get origin(): OriginService {
-    return this.ctx.get('origin');
+    return this.ctx.var.origin;
   }
 
   async getAsync(type: string): Promise<ListItem[] | undefined> {

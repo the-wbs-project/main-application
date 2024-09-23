@@ -4,15 +4,19 @@ import { Context } from '../config';
 export class OriginService {
   constructor(private readonly ctx: Context) {}
 
-  async getResponseAsync(suffix?: string): Promise<Response | undefined> {
+  async getResponseAsync(suffix?: string): Promise<Response> {
     await this.ctx.var.datadog.flush();
 
-    const res = await this.ctx.get('fetcher').fetch(this.getUrl(suffix), {
+    return await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
       headers: {
         Authorization: this.ctx.req.header('Authorization') ?? '',
       },
       method: 'GET',
     });
+  }
+
+  async getTextAsync(suffix?: string): Promise<string | undefined> {
+    const res = await this.getResponseAsync(suffix);
 
     if (res.status === 204) {
       return undefined;
@@ -20,15 +24,19 @@ export class OriginService {
     if (res.status !== 200) {
       throw new Error(res.statusText);
     }
-    return res;
-  }
-
-  async getTextAsync(suffix?: string): Promise<string | undefined> {
-    return (await this.getResponseAsync(suffix))?.text();
+    return res.text();
   }
 
   async getAsync<T>(suffix?: string): Promise<T | undefined> {
-    return <T>(await this.getResponseAsync(suffix))?.json();
+    const res = await this.getResponseAsync(suffix);
+
+    if (res.status === 204) {
+      return undefined;
+    }
+    if (res.status !== 200) {
+      throw new Error(res.statusText);
+    }
+    return <T>res.json();
   }
 
   static async pass(ctx: Context): Promise<Response> {
@@ -47,7 +55,7 @@ export class OriginService {
             method: method,
             headers: req.raw.headers,
             redirect: req.raw.redirect,
-            body: req.raw.body
+            body: req.raw.body,
           },
     );
 

@@ -1,9 +1,9 @@
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 
 export class AiChatDataService {
   private readonly prefix = 'CHAT';
 
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: ContextLocal) {}
 
   async getAsync(model: string): Promise<any[]> {
     return (await this.ctx.env.KV_DATA.get<any[]>(this.key(model), 'json')) ?? [];
@@ -18,6 +18,6 @@ export class AiChatDataService {
   }
 
   private key(model: string): string {
-    return [this.prefix, this.ctx.get('idToken').userId.replace('auth0|', ''), model].join('|');
+    return [this.prefix, this.ctx.var.idToken.userId.replace('auth0|', ''), model].join('|');
   }
 }

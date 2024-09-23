@@ -1,11 +1,10 @@
 import { ReadableStream } from '@cloudflare/workers-types';
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 import { ContentResource } from '../../models';
-import { OriginService } from '../origin.service';
 import { BaseDataService } from './base.data-service';
 
 export class ContentResourcesDataService extends BaseDataService {
-  constructor(ctx: Context) {
+  constructor(ctx: ContextLocal) {
     super(ctx);
   }
 
@@ -22,19 +21,31 @@ export class ContentResourcesDataService extends BaseDataService {
     return data ?? [];
   }
 
+  async getByIdAsync(owner: string, parentId: string, id: string): Promise<ContentResource | null> {
+    const list = await this.getListAsync(owner, parentId);
+
+    return list.find((x) => x.id === id) ?? null;
+  }
+
   async getFileAsync(owner: string, parentId: string, id: string): Promise<ReadableStream<any> | null> {
     const key = this.getResourceFileKey(owner, parentId, id);
 
     const kvBody = await this.ctx.env.KV_DATA.get(key, 'stream');
 
-    if (kvBody) return kvBody;
+    //if (kvBody) return kvBody;
 
-    const resp = await OriginService.pass(this.ctx);
+    const resp = await this.origin.getResponseAsync(this.getFileUrl(owner, parentId, id));
 
     if (resp.status === 200 && resp.body) {
       this.ctx.env.KV_DATA.put(key, resp.body);
     }
     return resp.body;
+  }
+
+  async getFileResponseAsync(owner: string, parentId: string, id: string): Promise<Response> {
+    const resp = await this.origin.getResponseAsync(this.getFileUrl(owner, parentId, id));
+
+    return resp;
   }
 
   async clearKvAsync(owner: string, parentId: string): Promise<void> {
@@ -53,5 +64,9 @@ export class ContentResourcesDataService extends BaseDataService {
 
   private getBaseUrl(owner: string, parentId: string): string {
     return `portfolio/${owner}/content-resources/${parentId}`;
+  }
+
+  private getFileUrl(owner: string, parentId: string, id: string): string {
+    return `portfolio/${owner}/content-resources/${parentId}/resource/${id}/file`;
   }
 }

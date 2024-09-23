@@ -1,8 +1,8 @@
-import { Context } from '../../config';
+import { ContextLocal } from '../../config';
 import { BaseDataService } from './base.data-service';
 
 export class ProjectNodeDataService extends BaseDataService {
-  constructor(ctx: Context) {
+  constructor(ctx: ContextLocal) {
     super(ctx);
   }
 

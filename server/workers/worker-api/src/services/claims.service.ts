@@ -1,4 +1,4 @@
-import { Context } from '../config';
+import { ContextLocal } from '../config';
 import {
   LIBRARY_PERMISSIONS,
   LIBRARY_ROLES,
@@ -12,7 +12,7 @@ import {
 import { DataServiceFactory } from './data-services';
 
 export class ClaimsService {
-  constructor(private readonly ctx: Context) {}
+  constructor(private readonly ctx: ContextLocal) {}
 
   private get data(): DataServiceFactory {
     return this.ctx.var.data;
@@ -22,8 +22,7 @@ export class ClaimsService {
     return this.ctx.var.idToken.userId;
   }
 
-  async getForOrganizationAsync(): Promise<string[]> {
-    const { organization } = this.ctx.req.param();
+  async getForOrganizationAsync(organization: string): Promise<string[]> {
     const user = await this.data.users.getViewAsync(organization, this.userId, 'organization');
     const roles = user?.roles?.map((x) => x.name) ?? [];
 
