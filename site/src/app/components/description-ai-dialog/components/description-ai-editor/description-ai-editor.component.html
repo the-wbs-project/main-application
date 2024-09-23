@@ -1,0 +1,36 @@
+<div class="card dashboard-card" [style.height.px]="containerHeight()">
+  <div class="card-header text-start ht-52 d-flex align-items-center">
+    {{ "General.Description" | translate }}
+  </div>
+  <div class="card-body scroll-y">
+    <wbs-editor [(value)]="proposal" />
+    <div class="ht-40">
+      <kendo-buttongroup class="w-100">
+        <button
+          kendoButton
+          class="pd-8 w-100"
+          (click)="actionSelected.emit('clear')"
+        >
+          <fa-icon [icon]="faEraser" class="mg-r-5" />
+          Clear
+        </button>
+        <button
+          kendoButton
+          class="pd-8 w-100"
+          (click)="actionSelected.emit('revert')"
+        >
+          <fa-icon [icon]="faArrowRotateBack" class="mg-r-5" />
+          Revert
+        </button>
+        <button
+          kendoButton
+          class="pd-8 w-100"
+          (click)="actionSelected.emit('accept')"
+        >
+          <fa-icon [icon]="faThumbsUp" class="mg-r-5" />
+          Accept & Close
+        </button>
+      </kendo-buttongroup>
+    </div>
+  </div>
+</div>

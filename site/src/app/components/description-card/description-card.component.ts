@@ -5,7 +5,6 @@ import {
   model,
   output,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import {
   faCheck,
@@ -37,7 +36,6 @@ import { EditorComponent } from '../_utils/editor.component';
     ButtonModule,
     EditorComponent,
     FontAwesomeModule,
-    FormsModule,
     SafeHtmlPipe,
     SaveButtonComponent,
     SaveMessageComponent,

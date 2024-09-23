@@ -1,0 +1,59 @@
+<kendo-dialog
+  height="97%"
+  [title]="'General.AskAi' | translate"
+  (close)="closed.emit()"
+>
+  <div [(wbsHeight)]="containerHeight" class="d-flex h-100">
+    <div class="d-none d-xl-flex gap-10">
+      <div class="wd-550">
+        <wbs-description-ai-chat
+          [containerHeight]="containerHeight()"
+          [startingDialog]="startingDialog()"
+          (append)="setProposal($event, true)"
+          (replace)="setProposal($event, false)"
+        />
+      </div>
+      <div class="flex-fill">
+        <wbs-ai-description-editor
+          [(proposal)]="proposal"
+          [containerHeight]="containerHeight()"
+          (actionSelected)="actionSelected($event)"
+        />
+      </div>
+    </div>
+    <div class="d-xl-none h-100 w-500 wd-md-700">
+      <kendo-tabstrip
+        class="h-100 w-100"
+        (tabSelect)="tabChanged($event.index)"
+      >
+        <kendo-tabstrip-tab title="Chat" [selected]="view() === 'chat'">
+          <ng-template kendoTabContent>
+            <div class="w-100 h-100 text-center">
+              <div class="h-100 d-inline-block text-start">
+                <wbs-description-ai-chat
+                  [containerHeight]="containerHeight() - 80"
+                  [startingDialog]="startingDialog()"
+                  (append)="setProposal($event, true)"
+                  (replace)="setProposal($event, false)"
+                />
+              </div>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+        <kendo-tabstrip-tab title="Editor" [selected]="view() === 'editor'">
+          <ng-template kendoTabContent>
+            <div class="d-flex w-100 h-100">
+              <div class="flex-fill">
+                <wbs-ai-description-editor
+                  [(proposal)]="proposal"
+                  [containerHeight]="containerHeight() - 80"
+                  (actionSelected)="actionSelected($event)"
+                />
+              </div>
+            </div>
+          </ng-template>
+        </kendo-tabstrip-tab>
+      </kendo-tabstrip>
+    </div>
+  </div>
+</kendo-dialog>

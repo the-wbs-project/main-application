@@ -21,6 +21,7 @@ import { AiChatService } from '@wbs/core/services';
     [user]="you()"
     [class]="chatCss()"
     [messages]="feed()"
+    [style.height.px]="height()"
     (sendMessage)="send.emit($event.message)"
     (executeAction)="actionSelected.emit($event.action.value)"
   />`,
@@ -29,6 +30,7 @@ export class AiChatComponent {
   readonly chatCss = input<string | undefined>();
   readonly feed = input.required<Message[]>();
   readonly you = input.required<User>();
+  readonly height = input<number | undefined>();
   readonly send = output<Message>();
   readonly actionSelected = output<string>();
 }

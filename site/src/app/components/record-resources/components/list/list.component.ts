@@ -20,7 +20,6 @@ import { DialogService } from '@progress/kendo-angular-dialog';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ContentResource } from '@wbs/core/models';
-import { UiStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../type-text';
 import { PdfDialogComponent } from '../pdf-dialog.component';
@@ -52,7 +51,6 @@ const pdfBrowsers: BrowserMin[] = [
 export class RecordResourceListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
-  private readonly uiStore = inject(UiStore);
 
   readonly reorderIcon = faBars;
   readonly viewIcon = faEye;
@@ -93,18 +91,6 @@ export class RecordResourceListComponent {
   }
 
   open(record: ContentResource): void {
-    const browser = this.uiStore.browser;
-
-    if (!browser) return;
-
-    const showDialog =
-      !browser.isMobile &&
-      pdfBrowsers.some(
-        (x) =>
-          x.name === browser.name &&
-          (x.version ? x.version > browser.version : true)
-      );
-
     if (record.type === 'pdf') {
       this.data.contentResources
         .getFileAsync(record.ownerId, record.parentId, record.id)

@@ -1,6 +1,7 @@
 import {
   ChangeDetectionStrategy,
   Component,
+  input,
   model,
   output,
 } from '@angular/core';
@@ -15,12 +16,12 @@ import {
   ButtonGroupModule,
   ButtonModule,
 } from '@progress/kendo-angular-buttons';
-import { EditorComponent } from '../../components/_utils/editor.component';
+import { EditorComponent } from '@wbs/components/_utils/editor.component';
 
 @Component({
   standalone: true,
   selector: 'wbs-ai-description-editor',
-  templateUrl: './ai-description-editor.component.html',
+  templateUrl: './description-ai-editor.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     ButtonGroupModule,
@@ -30,7 +31,8 @@ import { EditorComponent } from '../../components/_utils/editor.component';
     TranslateModule,
   ],
 })
-export class AiDescriptionEditorComponent {
+export class DescriptionAiEditorComponent {
+  readonly containerHeight = input.required<number>();
   readonly proposal = model.required<string>();
   readonly actionSelected = output<string>();
 

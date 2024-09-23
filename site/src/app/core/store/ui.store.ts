@@ -3,14 +3,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterDataResolved } from '@ngxs/router-plugin';
 import { Actions, ofActionSuccessful } from '@ngxs/store';
 import { map } from 'rxjs/operators';
-import { BrowserInfo } from '../models';
-import { detect } from '../services';
 
 @Injectable({ providedIn: 'root' })
 export class UiStore {
   private readonly actions$ = inject(Actions);
   private readonly _activeSection = signal<string | undefined>(undefined);
-  private readonly _browser = detect();
   private readonly _mainContentWidth = signal<number | undefined>(undefined);
   private readonly _path = toSignal(
     this.actions$.pipe(
@@ -21,10 +18,6 @@ export class UiStore {
 
   get activeSection(): Signal<string | undefined> {
     return this._activeSection;
-  }
-
-  get browser(): BrowserInfo | null {
-    return this._browser;
   }
 
   get mainContentWidth(): Signal<number | undefined> {

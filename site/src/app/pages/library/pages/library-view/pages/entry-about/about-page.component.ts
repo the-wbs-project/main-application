@@ -7,7 +7,9 @@ import {
   model,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog.component';
+import { DescriptionAiDialogComponent } from '@wbs/components/description-ai-dialog';
+import { DescriptionCardComponent } from '@wbs/components/description-card';
+import { DisciplineCardComponent } from '@wbs/components/discipline-card';
 import { ResizedCssDirective } from '@wbs/core/directives/resize-css.directive';
 import { LIBRARY_CLAIMS } from '@wbs/core/models';
 import {
@@ -15,11 +17,9 @@ import {
   CategoryService,
   SaveService,
 } from '@wbs/core/services';
-import { DescriptionCardComponent } from '@wbs/components/description-card';
-import { DisciplineCardComponent } from '@wbs/components/discipline-card';
-import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { EntryStore } from '@wbs/core/store';
 import { CategorySelection } from '@wbs/core/view-models';
+import { SafeHtmlPipe } from '@wbs/pipes/safe-html.pipe';
 import { of } from 'rxjs';
 import { delay, switchMap, tap } from 'rxjs/operators';
 import { LibraryService, LibraryTaskService } from '../../services';

@@ -4,70 +4,59 @@ import {
   OnInit,
   inject,
   input,
-  model,
   output,
   signal,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
+import { DropDownButtonModule } from '@progress/kendo-angular-buttons';
+import { DialogModule } from '@progress/kendo-angular-dialog';
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TabStripModule } from '@progress/kendo-angular-layout';
 import { AiChatComponent } from '@wbs/components/_utils/ai-chat.component';
-import { AiDescriptionEditorComponent } from '@wbs/components/ai-description-editor';
+import { HeightDirective } from '@wbs/core/directives/height.directive';
 import { AiModel } from '@wbs/core/models';
 import { AiChatService } from '@wbs/core/services';
 import { AiStore } from '@wbs/core/store';
+import {
+  DescriptionAiChatComponent,
+  DescriptionAiEditorComponent,
+} from './components';
 
 @Component({
   standalone: true,
-  selector: 'wbs-ai-description-chat',
-  templateUrl: './ai-description-chat.component.html',
+  selector: 'wbs-description-ai-dialog',
+  templateUrl: './description-ai-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
     AiChatComponent,
-    AiDescriptionEditorComponent,
-    DropDownListModule,
+    DescriptionAiChatComponent,
+    DescriptionAiEditorComponent,
+    DialogModule,
+    HeightDirective,
     TabStripModule,
     TranslateModule,
   ],
 })
-export class AiDescriptionChatComponent implements OnInit {
-  private readonly store = inject(AiStore);
-  readonly service = inject(AiChatService);
-
-  readonly models = input.required<AiModel[]>();
+export class DescriptionAiDialogComponent implements OnInit {
+  //
+  //  Inputs
+  //
   readonly description = input.required<string | undefined>();
   readonly startingDialog = input.required<string | undefined>();
-  readonly model = model<AiModel>();
-  readonly proposal = model('');
+  //
+  //  Signals
+  //
+  readonly proposal = signal('');
+  readonly containerHeight = signal(0);
   readonly view = signal<'chat' | 'editor'>('chat');
-
+  //
+  //  Outputs
+  //
+  readonly closed = output<void>();
   readonly descriptionChange = output<string>();
-
-  constructor() {
-    this.service.verifyUserId();
-    this.service.setActions([
-      {
-        type: 'action',
-        title: 'Append',
-        value: 'append',
-      },
-      {
-        type: 'action',
-        title: 'Set/Replace',
-        value: 'set',
-      },
-    ]);
-  }
 
   ngOnInit(): void {
     this.proposal.set(this.description() ?? '');
-    this.changeModel(this.store.model()!);
-  }
-
-  changeModel(model: AiModel): void {
-    this.model.set(model);
-    this.store.setModel(model);
-    this.service.start(model, this.startingDialog());
   }
 
   actionSelected(action: string): void {
@@ -80,10 +69,8 @@ export class AiDescriptionChatComponent implements OnInit {
     }
   }
 
-  setProposal(action: string): void {
-    const append = action === 'append';
+  setProposal(message: string, append: boolean): void {
     const current = this.proposal();
-    const message = this.service.getLastMessage();
     this.proposal.set(
       append && current.length > 0 ? `${current}<br/><br/>${message}` : message
     );

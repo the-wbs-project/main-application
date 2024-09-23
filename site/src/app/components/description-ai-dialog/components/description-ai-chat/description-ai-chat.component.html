@@ -1,0 +1,28 @@
+<div class="card dashboard-card" [style.height.px]="containerHeight()">
+  <div class="card-header text-start d-flex align-items-center">
+    <div>
+      {{ model()!.title }}
+    </div>
+    <div class="flex-fill text-end">
+      <kendo-dropdownbutton
+        [data]="models()"
+        size="small"
+        valueField="model"
+        textField="title"
+        (itemClick)="changeModel($event)"
+      >
+        {{ "General.Change" | translate }}
+      </kendo-dropdownbutton>
+    </div>
+  </div>
+  <div class="card-body">
+    <wbs-ai-chat
+      chatCss="wd-500"
+      [feed]="service.feed()"
+      [you]="service.you"
+      [height]="containerHeight() - 90"
+      (send)="service.send($event)"
+      (actionSelected)="setProposal($event)"
+    />
+  </div>
+</div>
