@@ -19,7 +19,6 @@ export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
   readonly contentResources: ContentResourcesDataService;
   readonly entries: LibraryEntryDataService;
-  readonly fileViewer: FileViewerDataService;
   readonly invites: InvitesDataService;
   readonly libraryEntries: LibraryEntryDataService;
   readonly libraryTasks: LibraryEntryTaskDataService;
