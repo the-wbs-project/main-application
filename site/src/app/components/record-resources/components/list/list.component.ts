@@ -22,7 +22,6 @@ import { DataServiceFactory } from '@wbs/core/data-services';
 import { ContentResource } from '@wbs/core/models';
 import { UiStore } from '@wbs/core/store';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
-import { FileViewerService } from '../../services';
 import { ResourceTypeTextComponent } from '../type-text';
 import { PdfDialogComponent } from '../pdf-dialog.component';
 
@@ -54,7 +53,6 @@ export class RecordResourceListComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
   private readonly uiStore = inject(UiStore);
-  private readonly viewerService = inject(FileViewerService);
 
   readonly reorderIcon = faBars;
   readonly viewIcon = faEye;
