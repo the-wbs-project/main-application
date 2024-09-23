@@ -5,28 +5,36 @@ import {
   inject,
   signal,
 } from '@angular/core';
-import { FormsModule } from '@angular/forms';
-import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import {
   DialogContentBase,
   DialogModule,
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
+import { PDFViewerModule } from '@progress/kendo-angular-pdfviewer';
 
 @Component({
   standalone: true,
-  templateUrl: './pdf-dialog.component.html',
-  styleUrl: './pdf-dialog.component.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  imports: [DialogModule, FormsModule],
+  imports: [DialogModule, PDFViewerModule],
+  template: `<kendo-dialog
+    [title]="title()"
+    width="90%"
+    height="90%"
+    (close)="dialog.close()"
+  >
+    <kendo-pdfviewer
+      [data]="url()"
+      [saveFileName]="downloadTitle()"
+      style="height: 100%; width: 100%"
+    />
+  </kendo-dialog>`,
 })
 export class PdfDialogComponent extends DialogContentBase {
-  private readonly _sanitizer = inject(DomSanitizer);
-
   protected title = signal<string>('');
   protected file = signal<ArrayBuffer | undefined>(undefined);
   protected readonly url = computed(() => this.transformImage(this.file()));
+  protected readonly downloadTitle = computed(() => `${this.title()}.pdf`);
 
   constructor(dialogRef: DialogRef) {
     super(dialogRef);
@@ -44,7 +52,7 @@ export class PdfDialogComponent extends DialogContentBase {
 
   protected transformImage(
     buffer: ArrayBuffer | undefined
-  ): SafeUrl | undefined {
+  ): string | undefined {
     if (!buffer) return undefined;
 
     let TYPED_ARRAY = new Uint8Array(buffer);
@@ -53,8 +61,6 @@ export class PdfDialogComponent extends DialogContentBase {
     }, '');
     let base64String = btoa(STRING_CHAR);
 
-    return this._sanitizer.bypassSecurityTrustResourceUrl(
-      'data:application/pdf;base64, ' + base64String
-    );
+    return 'data:application/pdf;base64, ' + base64String;
   }
 }

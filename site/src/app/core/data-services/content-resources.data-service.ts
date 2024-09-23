@@ -13,7 +13,7 @@ export class ContentResourcesDataService {
   }
 
   getFileUrl(owner: string, parentId: string, resourceId: string): string {
-    return this.getUrl(owner, parentId, resourceId, true);
+    return this.getUrl(owner, parentId, resourceId, 'file');
   }
 
   getFileAsync(
@@ -21,7 +21,7 @@ export class ContentResourcesDataService {
     parentId: string,
     resourceId: string
   ): Observable<ArrayBuffer> {
-    return this.http.get(this.getUrl(owner, parentId, resourceId, true), {
+    return this.http.get(this.getFileUrl(owner, parentId, resourceId), {
       responseType: 'arraybuffer',
     });
   }
@@ -40,7 +40,7 @@ export class ContentResourcesDataService {
     file: ArrayBuffer
   ): Observable<void> {
     return this.http.put<void>(
-      this.getUrl(owner, parentId, resourceId, true),
+      this.getUrl(owner, parentId, resourceId, 'file'),
       file
     );
   }
@@ -68,12 +68,12 @@ export class ContentResourcesDataService {
     owner: string,
     parentId: string,
     resourceId?: string,
-    isFile?: boolean
+    suffix?: string
   ): string {
     let url = ['api', 'portfolio', owner, 'content-resources', parentId];
 
     if (resourceId) url.push('resource', resourceId);
-    if (isFile) url.push('file');
+    if (suffix) url.push(suffix);
 
     return url.join('/');
   }

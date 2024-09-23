@@ -62,6 +62,7 @@
     "@progress/kendo-angular-navigation": "16.7.1",
     "@progress/kendo-angular-pager": "16.7.1",
     "@progress/kendo-angular-pdf-export": "16.7.1",
+    "@progress/kendo-angular-pdfviewer": "^16.7.1",
     "@progress/kendo-angular-popup": "16.7.1",
     "@progress/kendo-angular-progressbar": "16.7.1",
     "@progress/kendo-angular-scrollview": "16.7.1",
