@@ -373,7 +373,7 @@ export class LibraryTaskService {
     );
   }
 
-  moveTaskLeft(taskId: string): Observable<void> {
+  moveTaskLeft(taskId: string): Observable<boolean> {
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId);
     const parent = tasks.find((x) => x.id === task?.parentId);
@@ -414,24 +414,24 @@ export class LibraryTaskService {
         tolevel,
         LIBRARY_TASKS_REORDER_WAYS.MOVE_LEFT,
         toSave
-      );
+      ).pipe(map(() => true));
     };
     if (parent.parentId == undefined) {
       return this.messages.confirm
         .show('General.Confirm', 'ReorderMessages.TaskToPhase')
-        .pipe(switchMap((results) => (results ? run() : of())));
+        .pipe(switchMap((results) => (results ? run() : of(false))));
     } else {
       return run();
     }
   }
 
-  moveTaskUp(taskId: string): Observable<void> {
+  moveTaskUp(taskId: string): Observable<boolean> {
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
     const task2 = tasks.find(
       (x) => x.parentId === task?.parentId && x.order === task.order - 1
     );
-    if (!task || !task2) return of();
+    if (!task || !task2) return of(false);
 
     const fromLevel = this.getTaskViewModel(taskId)!.levelText;
     const toLevel = this.getTaskViewModel(task2!.id)!.levelText;
@@ -446,10 +446,10 @@ export class LibraryTaskService {
       toLevel,
       LIBRARY_TASKS_REORDER_WAYS.MOVE_UP,
       [task, task2]
-    );
+    ).pipe(map(() => true));
   }
 
-  moveTaskRight(taskId: string): Observable<string | void> {
+  moveTaskRight(taskId: string): Observable<boolean> {
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId);
     const taskVm = this.getTaskViewModel(taskId);
@@ -472,7 +472,7 @@ export class LibraryTaskService {
         toSave.push(sibling);
       }
 
-      if (!newParent) return of();
+      if (!newParent) return of(false);
 
       const newSiblings = tasks.filter((x) => x.parentId === newParent!.id);
 
@@ -492,19 +492,19 @@ export class LibraryTaskService {
         toLevel,
         LIBRARY_TASKS_REORDER_WAYS.MOVE_RIGHT,
         [task, ...toSave]
-      ).pipe(map(() => task.parentId!));
+      ).pipe(map(() => true));
     };
 
     if (task.parentId == undefined) {
       return this.messages.confirm
         .show('General.Confirm', 'ReorderMessages.PhaseToTask')
-        .pipe(switchMap((results) => (results ? run() : of())));
+        .pipe(switchMap((results) => (results ? run() : of(false))));
     } else {
       return run();
     }
   }
 
-  moveTaskDown(taskId: string): Observable<void> {
+  moveTaskDown(taskId: string): Observable<boolean> {
     const tasks = this.getTasks();
     const task = tasks.find((x) => x.id === taskId)!;
     const task2 = tasks.find(
@@ -528,7 +528,7 @@ export class LibraryTaskService {
       to,
       LIBRARY_TASKS_REORDER_WAYS.MOVE_DOWN,
       [task, task2]
-    );
+    ).pipe(map(() => true));
   }
 
   reordered(
