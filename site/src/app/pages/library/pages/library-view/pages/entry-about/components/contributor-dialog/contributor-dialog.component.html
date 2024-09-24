@@ -2,9 +2,11 @@
   minWidth="600px"
   maxWidth="800px"
   width="75%"
-  [title]="'Library.ManageContributors' | translate"
   (close)="dialog.close()"
 >
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Library.ManageContributors" | translate }}
+  </kendo-dialog-titlebar>
   <wbs-alert
     type="warning"
     [dismissible]="false"
@@ -58,14 +60,11 @@
     </li>
     }
   </ul>
-  <kendo-dialog-actions layout="stretched">
-    <button
-      kendoButton
-      type="button"
-      themeColor="primary"
-      (click)="dialog.close(editors())"
-    >
-      {{ "General.Save" | translate }}
-    </button>
+  <kendo-dialog-actions layout="end">
+    <wbs-save-button
+      cssClass="w-100"
+      [isSaving]="saveState.isSaving()"
+      (click)="save()"
+    />
   </kendo-dialog-actions>
 </kendo-dialog>

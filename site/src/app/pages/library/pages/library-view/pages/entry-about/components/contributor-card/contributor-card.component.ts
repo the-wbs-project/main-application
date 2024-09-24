@@ -11,9 +11,8 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { UserInfoComponent } from '@wbs/components/user-info';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { SaveService, sorter } from '@wbs/core/services';
+import { sorter } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
-import { switchMap } from 'rxjs';
 import { LibraryService } from '../../../../services';
 import { ContributorDialogComponent } from '../contributor-dialog';
 
@@ -37,7 +36,6 @@ export class ContributorCardComponent {
 
   readonly editIcon = faPencil;
   readonly store = inject(EntryStore);
-  readonly saveState = new SaveService();
 
   readonly contributors = computed(
     () =>
@@ -51,22 +49,14 @@ export class ContributorCardComponent {
 
     this.data.memberships
       .getMembershipUsersAsync(version.ownerId)
-      .pipe(
-        switchMap((members) =>
-          ContributorDialogComponent.launchAsync(
-            this.dialog,
-            version.author,
-            version.editors,
-            members
-          )
+      .subscribe((members) =>
+        ContributorDialogComponent.launch(
+          this.dialog,
+          version.author,
+          version.editors,
+          members,
+          (users) => this.service.contributorsChangedAsync(users)
         )
-      )
-      .subscribe((x) => {
-        if (!x) return;
-
-        this.saveState
-          .call(this.service.contributorsChangedAsync(x))
-          .subscribe();
-      });
+      );
   }
 }

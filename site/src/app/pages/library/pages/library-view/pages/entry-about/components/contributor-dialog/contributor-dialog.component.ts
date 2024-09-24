@@ -3,12 +3,11 @@ import {
   Component,
   computed,
   inject,
-  model,
   signal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faPencil, faPlus, faTrash } from '@fortawesome/pro-solid-svg-icons';
+import { faPlus, faTrash } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
@@ -21,8 +20,9 @@ import {
 import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { UserComponent } from '@wbs/components/user';
-import { Messages, sorter } from '@wbs/core/services';
+import { Messages, SaveService, sorter } from '@wbs/core/services';
 import { UserViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
@@ -41,12 +41,14 @@ import { map } from 'rxjs/operators';
     FontAwesomeModule,
     FormsModule,
     LabelModule,
+    SaveButtonComponent,
     TranslateModule,
     UserComponent,
   ],
 })
 export class ContributorDialogComponent extends DialogContentBase {
   private readonly messages = inject(Messages);
+  private saveMethod!: (users: UserViewModel[]) => Observable<void>;
 
   private readonly members = signal<UserViewModel[]>([]);
   private readonly authorId = signal<string | undefined>(undefined);
@@ -71,6 +73,7 @@ export class ContributorDialogComponent extends DialogContentBase {
 
   readonly plusIcon = faPlus;
   readonly deleteIcon = faTrash;
+  readonly saveState = new SaveService();
 
   constructor(dialog: DialogRef) {
     super(dialog);
@@ -86,12 +89,13 @@ export class ContributorDialogComponent extends DialogContentBase {
     this.members.set(members);
   }
 
-  static launchAsync(
+  static launch(
     dialog: DialogService,
     author: UserViewModel,
     editors: UserViewModel[],
-    members: UserViewModel[]
-  ): Observable<UserViewModel[] | undefined> {
+    members: UserViewModel[],
+    save: (users: UserViewModel[]) => Observable<void>
+  ): void {
     const ref = dialog.open({
       content: ContributorDialogComponent,
     });
@@ -100,10 +104,7 @@ export class ContributorDialogComponent extends DialogContentBase {
     comp.editors.set(editors.sort((a, b) => sorter(a.fullName, b.fullName)));
     comp.authorId.set(author.userId);
     comp.members.set(members);
-
-    return ref.result.pipe(
-      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
-    );
+    comp.saveMethod = save;
   }
 
   addEditor(): void {
@@ -134,5 +135,11 @@ export class ContributorDialogComponent extends DialogContentBase {
           return editors.filter((e) => e.userId !== editorId);
         });
       });
+  }
+
+  save(): void {
+    this.saveState
+      .quickCall(this.saveMethod(this.editors()))
+      .subscribe(() => this.dialog.close());
   }
 }

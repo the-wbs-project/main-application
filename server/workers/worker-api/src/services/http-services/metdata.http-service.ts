@@ -2,6 +2,8 @@ import { Context } from '../../config';
 import { ListItem, Resources } from '../../models';
 import { ResourceService } from '../resource.service';
 
+const STARTER_DATA_KEY = 'STARTER_DATA';
+
 export class MetadataHttpService {
   static async getListsAsync(ctx: Context): Promise<Response> {
     const { type, locale } = ctx.req.param();
@@ -13,9 +15,7 @@ export class MetadataHttpService {
   }
 
   static async getStarterKitAsync(ctx: Context): Promise<Response> {
-    const key = 'STARTER_DATA';
-
-    const kvData = await ctx.env.KV_DATA.get<any>(key, 'json');
+    const kvData = await ctx.env.KV_DATA.get<any>(STARTER_DATA_KEY, 'json');
 
     if (kvData) return ctx.json(kvData);
 
@@ -37,7 +37,7 @@ export class MetadataHttpService {
       roles,
     };
 
-    await ctx.env.KV_DATA.put(key, JSON.stringify(data));
+    await ctx.env.KV_DATA.put(STARTER_DATA_KEY, JSON.stringify(data));
 
     return ctx.json(data);
   }
@@ -48,9 +48,9 @@ export class MetadataHttpService {
       const resources: Resources[] = await ctx.req.json();
 
       for (const r of resources) {
-        ctx.executionCtx.waitUntil(data.putAsync(r));
+        await data.putAsync(r);
       }
-      await ctx.env.KV_DATA.delete('STARTER_DATA');
+      await ctx.env.KV_DATA.delete(STARTER_DATA_KEY);
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
@@ -85,7 +85,7 @@ export class MetadataHttpService {
       for (const id of existingIds) {
         await data.deleteAsync(type, id);
       }
-      await ctx.env.KV_DATA.delete('STARTER_DATA');
+      await ctx.env.KV_DATA.delete(STARTER_DATA_KEY);
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
