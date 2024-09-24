@@ -30,10 +30,15 @@ export class LibraryImportService {
   }
 
   importFromFileAsync(taskId?: string): Observable<boolean> {
+    const startingOrder = this.getOrderNumber(this.store.tasks()!, taskId);
+
     return ImportFromFileDialogComponent.launchAsync(
       this.dialogService,
       this.store.versionDisciplines(),
-      (tasks) => this.saveFromFileAsync(taskId, tasks).pipe(map(() => true))
+      (tasks) =>
+        this.saveFromFileAsync(taskId, tasks, startingOrder).pipe(
+          map(() => true)
+        )
     );
   }
 
@@ -122,14 +127,16 @@ export class LibraryImportService {
 
   private saveFromFileAsync(
     taskId: string | undefined,
-    tasks: WbsNode[]
+    tasks: WbsNode[],
+    startingOrder: number
   ): Observable<unknown> {
     const upserts: LibraryEntryNode[] = [];
 
     for (const task of tasks) {
       if (task.parentId == undefined) {
         task.parentId = taskId;
-        task.order = this.getOrderNumber(tasks, task.parentId);
+        task.order = startingOrder;
+        startingOrder++;
       }
 
       upserts.push(task);

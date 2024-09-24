@@ -300,7 +300,7 @@ export class ProjectPhaseTreeComponent implements OnInit {
             undefined,
             disciplines.map((x) => x.id)
           )
-          .pipe(tap((taskId) => this.closeEditor()))
+          .pipe(tap(() => this.closeEditor()))
       )
       .subscribe();
   }

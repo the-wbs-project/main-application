@@ -139,7 +139,7 @@ export class WbsNodePhaseTransformer {
     const nodes: TaskViewModel[] = [];
     const rootNodes: WbsNode[] = models
       .filter((x) => !x.parentId)
-      .sort((a, b) => a.order! - b.order!);
+      .sort((a, b) => sorter(a.order, b.order));
 
     for (let i = 0; i < rootNodes.length; i++) {
       const parentlevel = [i + 1];
@@ -200,7 +200,7 @@ export class WbsNodePhaseTransformer {
 
     for (let i = 0; i < children.length; i++) {
       const child = children[i];
-      const childLevel = [...parent.levels, child.order];
+      const childLevel = [...parent.levels, i + 1];
       const node: TaskViewModel = {
         children: 0,
         childrenIds: [],
@@ -211,7 +211,7 @@ export class WbsNodePhaseTransformer {
         id: child.id,
         levels: childLevel,
         levelText: childLevel.join('.'),
-        order: child.order ?? 0,
+        order: i + 1,
         parentId: parent.id,
         title: child.title ?? '',
         createdOn: child.createdOn,

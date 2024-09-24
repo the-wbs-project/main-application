@@ -218,7 +218,6 @@ export class ProjectTaskService {
     disciplineIds?: string[]
   ): Observable<unknown> {
     const tasks = this.getTasks();
-    const ts = new Date();
     const siblings = tasks.filter((x) => x.parentId == parentId) ?? [];
     let order =
       siblings.length === 0 ? 1 : Math.max(...siblings.map((x) => x.order)) + 1;
