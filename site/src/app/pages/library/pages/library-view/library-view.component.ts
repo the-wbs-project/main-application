@@ -5,22 +5,27 @@ import {
   effect,
   inject,
   input,
-  OnInit,
   signal,
 } from '@angular/core';
-import { ActivatedRoute, RouterModule } from '@angular/router';
+import {
+  ActivatedRoute,
+  NavigationEnd,
+  Router,
+  RouterModule,
+} from '@angular/router';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
-import { RouterState } from '@ngxs/router-plugin';
 import { LoadingComponent } from '@wbs/components/_utils/loading.component';
 import { ActionButtonComponent } from '@wbs/components/action-button';
 import { WatchIndicatorComponent } from '@wbs/components/watch-indicator.component';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { SignalStore, TitleService, Utils } from '@wbs/core/services';
+import { TitleService, Utils } from '@wbs/core/services';
 import { EntryStore } from '@wbs/core/store';
 import { TextTransformPipe } from '@wbs/pipes/text-transform.pipe';
-import { switchMap } from 'rxjs/operators';
+import { filter, switchMap } from 'rxjs/operators';
 import { LibraryActionService } from './services';
 
+@UntilDestroy()
 @Component({
   standalone: true,
   templateUrl: './library-view.component.html',
@@ -34,22 +39,24 @@ import { LibraryActionService } from './services';
     WatchIndicatorComponent,
   ],
 })
-export class LibraryViewComponent implements OnInit {
+export class LibraryViewComponent {
   private readonly data = inject(DataServiceFactory);
-  private readonly store2 = inject(SignalStore);
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
   readonly actions = inject(LibraryActionService);
   readonly store = inject(EntryStore);
-  readonly route = inject(ActivatedRoute);
-  readonly recordId = Utils.getParam(this.route.snapshot, 'recordId');
   //
   //  Inputs
   //
   readonly entryUrl = input.required<string[]>();
+  readonly ownerId = input.required<string>();
+  readonly recordId = input.required<string>();
+  readonly versionId = input.required<string>();
   //
   //  Signal
   //
   readonly loaded = signal(true);
-  readonly url = this.store2.select(RouterState.url);
+  readonly pageLabel = signal<string | undefined>(undefined);
   //
   //  Computed
   //
@@ -64,20 +71,11 @@ export class LibraryViewComponent implements OnInit {
       this.store.claims()
     )
   );
-  readonly pageLabel = computed(() => {
-    const version = this.store.version()!;
-    const url = this.url()?.split('/') ?? [];
-    const index = url.indexOf(version.entryId);
-    const page = url[index + 2];
-
-    return page === 'tasks'
-      ? 'General.Tasks'
-      : page === 'resources'
-      ? 'General.Resources'
-      : undefined;
-  });
 
   constructor(title: TitleService) {
+    //
+    //  Setup title
+    //
     effect(() => {
       const version = this.store.version();
 
@@ -86,20 +84,47 @@ export class LibraryViewComponent implements OnInit {
         ...(version ? [version.title] : []),
       ]);
     });
+    //
+    //  Setup data
+    //
+    effect(() => {
+      const org = Utils.getParam(this.route.snapshot, 'org');
+      const owner = this.ownerId();
+      const recordId = this.recordId();
+      const versionId = parseInt(this.versionId(), 10);
+
+      console.log(org, owner, recordId, versionId);
+
+      if (!owner || !recordId || !versionId || isNaN(versionId)) return;
+
+      this.setupData(org, owner, recordId, versionId);
+    });
+    //
+    //  Setup page label
+    //
+    this.router.events
+      .pipe(
+        filter((val) => val instanceof NavigationEnd),
+        untilDestroyed(this)
+      )
+      .subscribe((val: NavigationEnd) => {
+        const parts = val.url.split('/');
+        this.pageLabel.set(
+          parts.includes('tasks') ? 'General.Tasks' : undefined
+        );
+      });
   }
 
-  ngOnInit(): void {
-    const route = this.route.snapshot;
-    const org = Utils.getParam(route, 'org');
-    const owner = Utils.getParam(route, 'ownerId');
-    const versionId = parseInt(Utils.getParam(route, 'versionId'), 10);
-
-    if (!owner || !this.recordId || !versionId || isNaN(versionId)) return;
-
+  private setupData(
+    org: string,
+    owner: string,
+    recordId: string,
+    versionId: number
+  ) {
     const visibility = org === owner ? 'private' : 'public';
 
     this.data.libraryEntries
-      .getIdAsync(owner, this.recordId)
+      .getIdAsync(owner, recordId)
       .pipe(
         switchMap((entryId) =>
           this.data.libraryEntries.getVersionByIdAsync(

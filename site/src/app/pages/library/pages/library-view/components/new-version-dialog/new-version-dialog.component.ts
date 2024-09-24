@@ -19,6 +19,7 @@ import { DropDownListModule } from '@progress/kendo-angular-dropdowns';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { LibraryEntryVersionBasic } from '@wbs/core/models';
 import { SaveService, sorter } from '@wbs/core/services';
 import { LibraryVersionViewModel } from '@wbs/core/view-models';
@@ -39,12 +40,15 @@ import { map } from 'rxjs/operators';
     FormsModule,
     LabelModule,
     LibraryStatusPipe,
+    SaveButtonComponent,
     TextBoxModule,
     TranslateModule,
     VersionPipe,
   ],
 })
 export class NewVersionDialogComponent extends DialogContentBase {
+  private saveMethod!: (version: number, alias: string) => Observable<void>;
+
   readonly versions = signal<LibraryEntryVersionBasic[]>([]);
   readonly selected = model<number>();
   readonly alias = model('');
@@ -64,11 +68,12 @@ export class NewVersionDialogComponent extends DialogContentBase {
     super(dialog);
   }
 
-  static launchAsync(
+  static launch(
     dialog: DialogService,
     versions: LibraryEntryVersionBasic[],
-    version: LibraryVersionViewModel
-  ): Observable<{ version: number; alias: string } | undefined> {
+    version: LibraryVersionViewModel,
+    save: (version: number, alias: string) => Observable<void>
+  ): void {
     const ref = dialog.open({
       content: NewVersionDialogComponent,
     });
@@ -78,13 +83,16 @@ export class NewVersionDialogComponent extends DialogContentBase {
     component.selected.set(
       versions.find((x) => x.status === 'published')?.version ?? version.version
     );
-
-    return ref.result.pipe(
-      map((x: unknown) => (x instanceof DialogCloseResult ? undefined : <any>x))
-    );
+    component.saveMethod = save;
   }
 
   create(): void {
-    this.dialog.close({ version: this.selected(), alias: this.alias() });
+    const version = this.selected();
+    const alias = this.alias();
+    if (!version) return;
+
+    this.saveState
+      .quickCall(this.saveMethod(version, alias))
+      .subscribe(() => this.dialog.close());
   }
 }

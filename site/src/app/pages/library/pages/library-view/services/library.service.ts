@@ -1,7 +1,5 @@
 import { Injectable, inject } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
-import { Navigate } from '@ngxs/router-plugin';
-import { Store } from '@ngxs/store';
 import {
   DialogCloseResult,
   DialogService,
@@ -9,11 +7,16 @@ import {
 import { ProjectCreationComponent } from '@wbs/components/project-creation-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ProjectCategory } from '@wbs/core/models';
-import { Messages, Transformers, Utils } from '@wbs/core/services';
+import {
+  Messages,
+  NavigationService,
+  Transformers,
+  Utils,
+} from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
 import { LibraryVersionViewModel, UserViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
-import { filter, map, switchMap, tap } from 'rxjs/operators';
+import { filter, map, switchMap } from 'rxjs/operators';
 import { EntryActivityService } from '../../../services/entry-activity.service';
 import { NewVersionDialogComponent } from '../components/new-version-dialog';
 import { PublishVersionDialogComponent } from '../components/publish-version-dialog';
@@ -25,8 +28,8 @@ export class LibraryService {
   private readonly dialogService = inject(DialogService);
   private readonly membership = inject(MembershipStore);
   private readonly messages = inject(Messages);
+  private readonly navigate = inject(NavigationService);
   private readonly entryStore = inject(EntryStore);
-  private readonly store = inject(Store);
   private readonly transformers = inject(Transformers);
 
   private get version(): LibraryVersionViewModel {
@@ -43,42 +46,6 @@ export class LibraryService {
       Utils.getParam(route, 'recordId'),
       Utils.getParam(route, 'versionId'),
     ];
-  }
-
-  static getEntryApiUrl(route: ActivatedRouteSnapshot): string {
-    const version = inject(EntryStore).version();
-
-    if (!version) return '';
-
-    return [
-      '/api',
-      'portfolio',
-      Utils.getParam(route, 'org'),
-      'library',
-      'entries',
-      version.entryId,
-      'versions',
-      version.version,
-    ].join('/');
-  }
-
-  static getTaskApiUrl(route: ActivatedRouteSnapshot): string {
-    const version = inject(EntryStore).version();
-
-    if (!version) return '';
-
-    return [
-      '/api',
-      'portfolio',
-      Utils.getParam(route, 'org'),
-      'library',
-      'entries',
-      version.entryId,
-      'versions',
-      version.version,
-      'nodes',
-      Utils.getParam(route, 'taskId'),
-    ].join('/');
   }
 
   downloadTasks(): void {
@@ -111,45 +78,33 @@ export class LibraryService {
     )
       .pipe(
         filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
-        map((id) => <string>id),
-        switchMap((id) =>
-          this.store.dispatch(new Navigate(['/', org, 'projects', 'view', id]))
-        )
+        map((id) => <string>id)
       )
-      .subscribe();
+      .subscribe((id) => this.navigate.toProject(id));
   }
 
   createNewVersion(): void {
-    const version = this.version;
-
-    NewVersionDialogComponent.launchAsync(
+    NewVersionDialogComponent.launch(
       this.dialogService,
       this.entryStore.versions()!,
-      version
-    )
+      this.version,
+      (version: number, alias: string) => {
+        return this.saveNewVersion(version, alias);
+      }
+    );
+  }
+
+  saveNewVersion(version: number, alias: string): Observable<void> {
+    const owner = this.version.ownerId;
+    const entryId = this.version.entryId;
+    const recordId = this.version.recordId;
+
+    return this.data.libraryEntries
+      .replicateVersionAsync(owner, entryId, version, alias)
       .pipe(
-        filter((x) => x != undefined && !(x instanceof DialogCloseResult)),
-        switchMap((data) =>
-          this.data.libraryEntries.replicateVersionAsync(
-            version.ownerId,
-            version.entryId,
-            data!.version,
-            data!.alias
-          )
-        )
-      )
-      .subscribe((newVersion) =>
-        this.store.dispatch(
-          new Navigate([
-            '/',
-            version.ownerId,
-            'library',
-            'view',
-            version.ownerId,
-            version.recordId,
-            newVersion,
-          ])
-        )
+        map((newVersion) => {
+          this.navigate.toLibraryEntry(owner, recordId, newVersion);
+        })
       );
   }
 

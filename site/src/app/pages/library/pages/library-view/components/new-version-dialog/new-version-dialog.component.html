@@ -41,15 +41,14 @@
     </label>
     <input #newAlias kendoTextBox class="w-100" [(ngModel)]="alias" />
   </div>
-  <kendo-dialog-actions layout="stretched">
-    <button
-      kendoButton
-      type="button"
-      themeColor="primary"
+  <kendo-dialog-actions layout="end">
+    <wbs-save-button
+      cssClass="w-100"
       [disabled]="!alias() || !selected()"
+      [isSaving]="saveState.isSaving()"
+      saveLabel="General.Create"
+      savingLabel="General.Creating"
       (click)="create()"
-    >
-      {{ "General.Create" | translate }}
-    </button>
+    />
   </kendo-dialog-actions>
 </kendo-dialog>

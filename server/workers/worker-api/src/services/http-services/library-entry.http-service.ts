@@ -97,14 +97,15 @@ export class LibraryEntryHttpService {
 
   static async putVersionAsync(ctx: Context): Promise<Response> {
     try {
-      const { owner, entry, version } = ctx.req.param();
+      const { owner, entry } = ctx.req.param();
       const resp = await OriginService.pass(ctx);
-      const version2 = parseInt(version);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
-        exec.waitUntil(ctx.var.data.libraryEntries.refreshKvAsync(owner, entry));
-        exec.waitUntil(ctx.var.data.libraryVersions.refreshKvAsync(owner, entry, version2));
+        await Promise.all([
+          ctx.var.data.libraryEntries.refreshKvAsync(owner, entry),
+          ctx.var.data.libraryVersions.refreshKvAsync(owner, entry),
+        ]);
       }
 
       return ctx.newResponse(resp.body, {
@@ -128,7 +129,7 @@ export class LibraryEntryHttpService {
 
       if (resp.status < 300) {
         exec.waitUntil(ctx.var.data.libraryEntries.refreshKvAsync(owner, entry));
-        exec.waitUntil(ctx.var.data.libraryVersions.refreshKvAsync(owner, entry, version2));
+        exec.waitUntil(ctx.var.data.libraryVersions.refreshKvAsync(owner, entry));
         exec.waitUntil(ctx.var.data.libraryTasks.refreshKvAsync(owner, entry, version2));
       }
 
