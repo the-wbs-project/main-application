@@ -3,6 +3,7 @@
   (cdkDropListDropped)="onDrop($event)"
   kendoTooltip
   filter=".title-info"
+  [tooltipTemplate]="tooltipTemplate"
 >
   <div class="rr-item rr-list-header">
     @if (canEdit()) {
@@ -32,7 +33,10 @@
     <div class="name-item">
       {{ dataItem.name }}
       @if (dataItem.description) {
-      <span class="title-info mg-l-15" [title]="dataItem.description">
+      <span
+        class="title-info mg-l-15"
+        [attr.resource-description]="dataItem.description"
+      >
         <fa-icon [icon]="infoIcon" />
       </span>
       }
@@ -78,3 +82,9 @@
   </div>
   }
 </div>
+
+<ng-template #tooltipTemplate let-anchor>
+  <div class="resource-tooltip">
+    {{ anchor.nativeElement.getAttribute("resource-description") }}
+  </div>
+</ng-template>

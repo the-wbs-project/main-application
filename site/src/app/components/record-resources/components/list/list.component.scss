@@ -52,6 +52,10 @@
   justify-content: space-evenly;
 }
 
+.resource-tooltip {
+  white-space: pre-line;
+}
+
 @media (max-width: 768px) {
   .modified-item {
     display: none;
