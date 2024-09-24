@@ -13,7 +13,7 @@
       [editItems]="editDisciplines()"
       [saveState]="disciplineSave.state()"
       noDisciplinesLabel="Projects.NoDisciplinesProject"
-      (save)="saveDisciplines($event)"
+      (save)="disciplinesChanged($event)"
     />
     <!--<wbs-project-status-card
         [project]="project"
@@ -30,7 +30,7 @@
       [saveState]="descriptionSave.state()"
       [description]="project.description"
       noDescriptionLabel="Library.NoDescriptionEntry"
-      (descriptionChange)="descriptionChange($event)"
+      (descriptionChange)="descriptionChanged($event)"
     />
     <!--[approval]="approvals() | findById : 'project-description'"-->
     <wbs-project-resource-card />

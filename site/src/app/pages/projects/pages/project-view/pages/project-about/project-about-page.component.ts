@@ -99,7 +99,7 @@ export class ProjectAboutComponent {
     this.category.buildDisciplines(this.projectStore.project()?.disciplines)
   );
 
-  descriptionChange(description: string): void {
+  descriptionChanged(description: string): void {
     this.descriptionSave
       .call(
         this.projectService
@@ -109,12 +109,14 @@ export class ProjectAboutComponent {
       .subscribe();
   }
 
-  saveDisciplines(disciplines: CategorySelection[]): void {
+  disciplinesChanged(disciplines: CategorySelection[]): void {
     const project = this.projectStore.project()!;
     const disciplinesResults = this.category.extract(
       disciplines,
       project.disciplines ?? []
     );
+
+    console.log('disciplinesResults', disciplinesResults);
 
     this.disciplineSave
       .call(this.projectService.changeProjectDisciplines(disciplinesResults))
@@ -133,6 +135,6 @@ export class ProjectAboutComponent {
   aiChangeSaved(description: string): void {
     this.askAi.set(false);
     this.descriptionEditMode.set(false);
-    this.descriptionChange(description);
+    this.descriptionChanged(description);
   }
 }

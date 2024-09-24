@@ -125,7 +125,7 @@ export class ProjectStore {
   markProject(project: ProjectViewModel): void {
     project.lastModified = new Date();
 
-    this._project.set(structuredClone(project));
+    this.setProject(project);
   }
 
   setTasks(tasks: ProjectNode[]): void {

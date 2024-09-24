@@ -24,15 +24,6 @@ import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../type-text';
 import { PdfDialogComponent } from '../pdf-dialog.component';
 
-declare type BrowserMin = { name: string; version?: number };
-
-const pdfBrowsers: BrowserMin[] = [
-  { name: 'chrome' },
-  { name: 'firefox', version: 106 },
-];
-
-//Safari no
-
 @Component({
   standalone: true,
   selector: 'wbs-record-resource-list',
