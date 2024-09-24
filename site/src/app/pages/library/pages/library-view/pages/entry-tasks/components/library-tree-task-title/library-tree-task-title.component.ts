@@ -14,15 +14,14 @@ import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { ContextMenuItemComponent } from '@wbs/components/_utils/context-menu-item.component';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { LibraryTaskViewModel } from '@wbs/core/view-models';
-import { LibraryTaskActionService } from '../../services';
 import { SaveState } from '@wbs/core/models';
+import { LibraryTaskActionService } from '../../../../services';
 
 @Component({
   standalone: true,
   selector: 'wbs-library-tree-task-title',
   templateUrl: './library-tree-task-title.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  providers: [LibraryTaskActionService],
   imports: [
     ContextMenuItemComponent,
     ContextMenuModule,

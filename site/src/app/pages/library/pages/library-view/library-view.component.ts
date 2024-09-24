@@ -93,8 +93,6 @@ export class LibraryViewComponent {
       const recordId = this.recordId();
       const versionId = parseInt(this.versionId(), 10);
 
-      console.log(org, owner, recordId, versionId);
-
       if (!owner || !recordId || !versionId || isNaN(versionId)) return;
 
       this.setupData(org, owner, recordId, versionId);
