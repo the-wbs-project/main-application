@@ -1,10 +1,8 @@
 @let list = tasks();
-<kendo-dialog
-  height="95%"
-  width="95%"
-  [title]="'Wbs.ABS-Full' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog height="95%" width="95%" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Wbs.ABS-Full" | translate }}
+  </kendo-dialog-titlebar>
   <div [(wbsHeight)]="containerHeight" class="pd-0 d-flex flex-column h-100">
     <div class="tx-12">
       <wbs-alert type="info" [dismissible]="false">

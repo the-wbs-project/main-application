@@ -100,9 +100,12 @@ export class ProjectAboutComponent {
   );
 
   descriptionChange(description: string): void {
-    this.projectService
-      .changeProjectDescription(description)
-      .pipe(tap(() => this.descriptionEditMode.set(false)))
+    this.descriptionSave
+      .call(
+        this.projectService
+          .changeProjectDescription(description)
+          .pipe(tap(() => this.descriptionEditMode.set(false)))
+      )
       .subscribe();
   }
 

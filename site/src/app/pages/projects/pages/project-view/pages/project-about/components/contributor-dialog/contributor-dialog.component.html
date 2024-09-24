@@ -2,9 +2,11 @@
   minWidth="600px"
   maxWidth="800px"
   width="75%"
-  [title]="'Projects.ManageRoles' | translate"
   (close)="dialog.close()"
 >
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Projects.ManageRoles" | translate }}
+  </kendo-dialog-titlebar>
   <div class="w-100 text-center pd-b-5">
     <wbs-save-message [state]="saving.state()" />
   </div>
