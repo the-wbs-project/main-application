@@ -7,7 +7,7 @@
       <th class="wd-100 bg-dark text-white pd-10 fw-normal">
         {{ "General.Type" | translate }}
       </th>
-      <th class="bg-dark text-white pd-10 fw-normal">
+      <th class="bg-dark text-white text-start pd-10 fw-normal">
         {{ "General.Title" | translate }}
       </th>
       <th class="bg-dark text-white pd-10 fw-normal d-none d-md-table-cell">
@@ -43,7 +43,7 @@
       <td class="wd-100">
         <wbs-library-type-text [type]="entry.type" />
       </td>
-      <td>
+      <td class="text-start">
         {{ entry.title }}
       </td>
       <td class="d-none d-md-table-cell">
