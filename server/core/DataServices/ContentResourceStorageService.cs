@@ -53,6 +53,9 @@ public class ContentResourceStorageService
     public async Task CopyResourceAsync(string fromOwner, string fromId, string toOwner, string toId)
     {
         var file = await storage.GetFileAsBytesAsync("resources", $"{fromOwner}-{fromId}");
+
+        if (file == null) return;
+
         await storage.SaveFileAsync("resources", $"{toOwner}-{toId}", file);
     }
 }
