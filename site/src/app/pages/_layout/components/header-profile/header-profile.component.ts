@@ -52,10 +52,10 @@ export class HeaderProfileComponent {
 
   itemClicked(e: any): void {
     if (e.item.data === 'profile') {
-      ProfileEditorDialogComponent.launchAsync(
+      ProfileEditorDialogComponent.launch(
         this.dialog,
         structuredClone(this.user())
-      ).subscribe();
+      );
     } else if (e.item.data === 'clearCache') {
       this.data.misc
         .clearKvCache()

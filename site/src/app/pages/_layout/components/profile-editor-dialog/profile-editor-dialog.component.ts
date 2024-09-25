@@ -2,67 +2,48 @@ import {
   ChangeDetectionStrategy,
   Component,
   inject,
-  model,
   signal,
 } from '@angular/core';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { faFloppyDisk } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
-import { ButtonModule } from '@progress/kendo-angular-buttons';
 import {
   DialogContentBase,
   DialogModule,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { ProfileEditorComponent } from '@wbs/components/profile-editor';
-import { SaveState, User } from '@wbs/core/models';
-import { Auth0Service } from '@wbs/core/services';
-import { Observable } from 'rxjs';
-import { delay, map, tap } from 'rxjs/operators';
+import { User } from '@wbs/core/models';
+import { Auth0Service, SaveService } from '@wbs/core/services';
 
 @Component({
   standalone: true,
-  selector: 'wbs-profile-editor-dialog',
   templateUrl: './profile-editor-dialog.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [
-    ButtonModule,
     DialogModule,
-    FontAwesomeModule,
     ProfileEditorComponent,
-    SaveMessageComponent,
+    SaveButtonComponent,
     TranslateModule,
   ],
 })
 export class ProfileEditorDialogComponent extends DialogContentBase {
   private readonly service = inject(Auth0Service);
 
-  readonly saveIcon = faFloppyDisk;
-  readonly saving = signal<SaveState>('ready');
-  readonly profile = model.required<User>();
+  readonly saveState = new SaveService();
+  readonly profile = signal<User | undefined>(undefined);
 
-  static launchAsync(dialog: DialogService, profile: User): Observable<void> {
+  static launch(dialog: DialogService, profile: User): void {
     const ref = dialog.open({
       content: ProfileEditorDialogComponent,
     });
     const component = ref.content.instance as ProfileEditorDialogComponent;
 
     component.profile.set(profile);
-
-    return ref.result.pipe(map(() => {}));
   }
 
   saveProfile(): void {
-    this.saving.set('saving');
-    this.service
-      .saveProfile(this.profile())
-      .pipe(
-        tap(() => {
-          this.saving.set('saved');
-        }),
-        delay(5000)
-      )
-      .subscribe(() => this.saving.set('ready'));
+    this.saveState
+      .call(this.service.saveProfile(this.profile()!))
+      .subscribe(() => this.dialog.close());
   }
 }

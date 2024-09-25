@@ -2,20 +2,18 @@
   width="75%"
   [minWidth]="600"
   [maxWidth]="800"
-  minHeight="80%"
+  minHeight="60%"
   maxHeight="95%"
   (close)="dialog.close()"
-  [title]="'Profile.Title' | translate"
 >
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Profile.Title" | translate }}
+  </kendo-dialog-titlebar>
   <wbs-profile-editor [(profile)]="profile" />
-  <kendo-dialog-actions>
-    <div class="w-100 text-end">
-      <div class="d-inline-block mg-r-20">
-        <wbs-save-message [state]="saving()" />
-      </div>
-      <button kendoButton type="button" theme="primary" (click)="saveProfile()">
-        {{ "General.Save" | translate }}
-      </button>
-    </div>
+  <kendo-dialog-actions layout="end">
+    <wbs-save-button
+      [isSaving]="saveState.isSaving()"
+      (click)="saveProfile()"
+    />
   </kendo-dialog-actions>
 </kendo-dialog>
