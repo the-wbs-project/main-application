@@ -2,9 +2,10 @@ import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { Invite } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { MembershipStore, MetadataStore } from '@wbs/core/store';
+import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import { UserViewModel } from '@wbs/core/view-models';
 import { Observable, forkJoin } from 'rxjs';
+import { map, switchMap, tap } from 'rxjs/operators';
 import { MembersSettingStore } from '../store';
 
 @Injectable()
@@ -14,6 +15,7 @@ export class MemberSettingsService {
   private readonly messages = inject(Messages);
   private readonly metadata = inject(MetadataStore);
   private readonly store = inject(MembersSettingStore);
+  private readonly profile = inject(UserStore).profile;
 
   removeMemberAsync(memberId: string): void {
     this.data.memberships
@@ -70,22 +72,28 @@ export class MemberSettingsService {
     });
   }
 
-  sendInvitesAsync(emails: string[], roles: string[], inviter: string): void {
-    const saves: Observable<Invite>[] = [];
+  sendInvitesAsync(emails: string[], roles: string[]): Observable<void> {
+    const saves: Observable<void>[] = [];
+    const inviter = this.profile()!.name;
 
     for (const invitee of emails) {
       saves.push(
-        this.data.memberships.sendInvitesAsync(this.membership()!.name, {
+        this.data.memberships.sendInviteAsync(this.membership()!.name, {
           invitee,
           inviter,
           roles,
         })
       );
     }
-    forkJoin(saves).subscribe((invites) => {
-      this.messages.notify.success('OrgSettings.InvitesSent');
-      this.store.addInvites(invites);
-    });
+    return forkJoin(saves).pipe(
+      tap(() => this.messages.notify.success('OrgSettings.InvitesSent')),
+      switchMap(() =>
+        this.data.memberships.getInvitesAsync(this.membership()!.name)
+      ),
+      map((invites) => {
+        this.store.addInvites(invites);
+      })
+    );
   }
 
   cancelInviteAsync(inviteId: string): void {

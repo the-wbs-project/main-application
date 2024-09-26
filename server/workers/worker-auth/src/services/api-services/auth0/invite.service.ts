@@ -67,8 +67,8 @@ export class Auth0InviteService {
         invitee: {
           email: inviteBody.invitee,
         },
-        client_id: this.env.AUTH_M2M_CLIENT_ID,
-        connection_id: 'Username-Password-Authentication',
+        client_id: this.env.AUTH_CLIENT_ID, // 'zfvKgtPltxHsUGNPMYvF6JRljlp6xDuC',
+        connection_id: this.env.AUTH_CONNECTION_ID, // 'con_ml51wd0RzfD8tDcq',
         ttl_sec: 0,
         roles: inviteBody.roles,
         send_invitation_email: true,
@@ -96,7 +96,7 @@ export class Auth0InviteService {
       },
     );
 
-    if (resp.status !== 200) {
+    if (resp.status >= 300) {
       this.logger.trackEvent('Failed to delete invite', 'Error', { status: resp.status, body: await resp.text() });
 
       throw new Error('Failed to cancel invite.');

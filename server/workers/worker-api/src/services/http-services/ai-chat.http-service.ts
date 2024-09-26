@@ -20,7 +20,7 @@ export class AiChatHttpService {
 
       await ctx.get('data').aiChat.putAsync(model, history);
 
-      return ctx.text('', 202);
+      return ctx.newResponse(null, 202);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to save AI chat history.', <Error>e);
 
@@ -34,7 +34,7 @@ export class AiChatHttpService {
 
       await ctx.get('data').aiChat.deleteAsync(model);
 
-      return ctx.text('', 202);
+      return ctx.newResponse(null, 202);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to delete AI chat history.', <Error>e);
 

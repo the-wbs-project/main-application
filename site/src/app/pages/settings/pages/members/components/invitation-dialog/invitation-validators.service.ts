@@ -3,7 +3,7 @@ import { Invite } from '@wbs/core/models';
 import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
-export class InviteValidators {
+export class InvitationValidators {
   checkIfAnyInvalid(emails: string[]): string[] {
     const invalid: string[] = [];
 

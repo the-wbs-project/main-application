@@ -20,7 +20,7 @@ export class InvitesHttpService {
 
       await ctx.var.data.invites.sendAsync(organization, body);
 
-      return ctx.text('Invite sent', 202);
+      return ctx.newResponse(null, 202);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to send a invite.', <Error>e);
 
@@ -34,7 +34,7 @@ export class InvitesHttpService {
 
       await ctx.var.data.invites.deleteAsync(organization, inviteId);
 
-      return ctx.text('Invite cancelled', 202);
+      return ctx.newResponse(null, 202);
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to cancel a invite.', <Error>e);
 

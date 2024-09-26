@@ -28,11 +28,11 @@ export class MembershipDataService {
     return this.http.get<Invite[]>(`api/organizations/${organization}/invites`);
   }
 
-  sendInvitesAsync(
+  sendInviteAsync(
     organization: string,
     inviteBody: InviteBody
-  ): Observable<Invite> {
-    return this.http.post<Invite>(
+  ): Observable<void> {
+    return this.http.post<void>(
       `api/organizations/${organization}/invites`,
       inviteBody
     );

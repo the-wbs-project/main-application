@@ -18,6 +18,7 @@ kv_namespaces = [
 DATADOG_ENV = "development"
 DATADOG_HOST = "auth-api.pm-empower.com"
 AUTH_DOMAIN = "auth.pm-empower.com"
+AUTH_CLIENT_ID = "44pcQ5Xo33vimvBb4G8eZfjFaGIsyWfg"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 CORS_ORIGINS = "http://localhost:4200,https://test.pm-empower.com,https://app.pm-empower.com"
 
@@ -33,6 +34,7 @@ DATADOG_ENV = "test"
 DATADOG_HOST = "test.pm-empower.com"
 CORS_ORIGINS = "https://test.pm-empower.com"
 AUTH_DOMAIN = "auth.pm-empower.com"
+AUTH_CLIENT_ID = "zfvKgtPltxHsUGNPMYvF6JRljlp6xDuC"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 
 [env.prod]
@@ -47,6 +49,7 @@ DATADOG_ENV = "production"
 DATADOG_HOST = "api.pm-empower.com"
 CORS_ORIGINS = "https://app.pm-empower.com"
 AUTH_DOMAIN = "auth.pm-empower.com"
+AUTH_CLIENT_ID = "fcglfNwfePIkurCZYGTE7lkIxbfPnyWk"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 
 [dev]

@@ -13,7 +13,7 @@ import {
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { ProfileEditorComponent } from '@wbs/components/profile-editor';
 import { User } from '@wbs/core/models';
-import { Auth0Service, SaveService } from '@wbs/core/services';
+import { Auth0Service, Messages, SaveService } from '@wbs/core/services';
 
 @Component({
   standalone: true,
@@ -28,6 +28,7 @@ import { Auth0Service, SaveService } from '@wbs/core/services';
 })
 export class ProfileEditorDialogComponent extends DialogContentBase {
   private readonly service = inject(Auth0Service);
+  private readonly messages = inject(Messages);
 
   readonly saveState = new SaveService();
   readonly profile = signal<User | undefined>(undefined);
@@ -43,7 +44,10 @@ export class ProfileEditorDialogComponent extends DialogContentBase {
 
   saveProfile(): void {
     this.saveState
-      .call(this.service.saveProfile(this.profile()!))
-      .subscribe(() => this.dialog.close());
+      .quickCall(this.service.saveProfile(this.profile()!))
+      .subscribe(() => {
+        this.dialog.close();
+        this.messages.notify.success('Profile.ProfileUpdated');
+      });
   }
 }

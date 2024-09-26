@@ -1,19 +1,14 @@
-<kendo-dialog
-  [title]="'OrgSettings.SendInvite' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog width="500px" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "OrgSettings.SendInvite" | translate }}
+  </kendo-dialog-titlebar>
   <div class="container-fluid">
     <div class="row mb-3">
-      <label for="emails" class="col-sm-2 col-form-label">
+      <label [for]="emails" class="col-sm-2 col-form-label">
         {{ "General.Emails" | translate }}
       </label>
       <div class="col-sm-10">
-        <textarea
-          #emails
-          class="form-control"
-          class="w-100"
-          rows="5"
-        ></textarea>
+        <textarea #emails kendoTextArea class="w-100" rows="5"></textarea>
         <div id="emailHelp" class="form-text">
           {{ "OrgSettings.InviteEmailHint" | translate }}
         </div>
@@ -25,11 +20,11 @@
       </label>
       <div class="col-sm-10">
         <kendo-buttongroup selection="multiple">
-          @for (role of roleDefinitions; track role.id) {
+          @for (role of roles; track role.id) {
           <button
             kendoButton
             size="small"
-            [selected]="roles().includes(role.id)"
+            [selected]="selectedRoles().includes(role.id)"
             (click)="toggleRole(role.id)"
           >
             {{ role.abbreviation | translate }}
@@ -38,7 +33,9 @@
         </kendo-buttongroup>
       </div>
     </div>
-    @if (errors.length > 0) {
+    @let errorList = errors();
+    <!---->
+    @if (errorList.length > 0) {
     <div class="row mb-3 tx-danger">
       <label class="col-sm-2">
         {{ "General.Errors" | translate }}
@@ -46,7 +43,7 @@
       <div class="col-sm-10">
         <p>{{ "OrgSettings.InviteErrorHeader" | translate }}:</p>
         <ul>
-          @for (error of errors; track $index) {
+          @for (error of errorList; track $index) {
           <li>
             {{ error.email ? error.email + ": " : "" }}
             {{ error.error | translate }}
@@ -58,16 +55,11 @@
     }
   </div>
   <kendo-dialog-actions layout="end">
-    <button kendoButton size="small" (click)="dialog.close()">
-      {{ "General.Close" | translate }}
-    </button>
-    <button
-      kendoButton
-      size="small"
-      themeColor="primary"
+    <wbs-save-button
+      saveLabel="OrgSettings.SendInvite"
+      savingLabel="OrgSettings.Sending"
+      [isSaving]="saveState.isSaving()"
       (click)="submit(emails.value)"
-    >
-      {{ "OrgSettings.SendInvite" | translate }}
-    </button>
+    />
   </kendo-dialog-actions>
 </kendo-dialog>

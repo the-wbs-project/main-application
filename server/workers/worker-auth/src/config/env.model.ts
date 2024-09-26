@@ -6,6 +6,8 @@ export type Env = {
   readonly AUTH_URL: string;
   readonly AUTH_AUDIENCE: string;
   readonly AUTH_DOMAIN: string;
+  readonly AUTH_CLIENT_ID: string;
+  readonly AUTH_CONNECTION_ID: string;
   readonly AUTH_M2M_CLIENT_ID: string;
   readonly AUTH_M2M_CLIENT_SECRET: string;
 

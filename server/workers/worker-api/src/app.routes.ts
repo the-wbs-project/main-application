@@ -122,17 +122,17 @@ app.all('api/profile', verifyJwt).get(Http.users.getProfileAsync).put(Http.users
 
 const orgApp = new Hono<{ Bindings: Env; Variables: Variables }>().basePath('api/organizations/:organization');
 
-orgApp.use('*', verifyJwt);
-orgApp.get('', Http.organizations.getByNameAsync);
-orgApp
-  .all('invites', verifyMembership, verifyAdminAsync())
-  .get(Http.invites.getAllAsync)
-  .post(Http.invites.sendAsync)
-  .delete(':inviteId', Http.invites.deleteAsync);
+orgApp.get('', verifyJwt, Http.organizations.getByNameAsync);
+orgApp.get('invites', verifyJwt, verifyMembership, verifyAdminAsync(), Http.invites.getAllAsync);
+orgApp.post('invites', verifyJwt, verifyMembership, verifyAdminAsync(), Http.invites.sendAsync);
+orgApp.delete('invites/:inviteId', verifyJwt, verifyMembership, verifyAdminAsync(), Http.invites.deleteAsync);
 
-orgApp.all('members', verifyMembership).get(Http.membership.getAllAsync);
-orgApp.all('members/:user', verifyMembership).delete(Http.membership.deleteAsync);
-orgApp.all('members/:user/roles', verifyAdminAsync()).put(Http.membership.addToRolesAsync).delete(Http.membership.deleteFromRolesAsync);
+orgApp.all('members', verifyJwt, verifyMembership).get(Http.membership.getAllAsync);
+orgApp.all('members/:user', verifyJwt, verifyMembership).delete(Http.membership.deleteAsync);
+orgApp
+  .all('members/:user/roles', verifyJwt, verifyAdminAsync())
+  .put(Http.membership.addToRolesAsync)
+  .delete(Http.membership.deleteFromRolesAsync);
 
 app.route('/', orgApp);
 //app.delete('api/organizations/:organization/members/*', kv.membersClear, OriginService.pass);

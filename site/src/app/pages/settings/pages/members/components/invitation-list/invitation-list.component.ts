@@ -67,7 +67,7 @@ export class InvitationListComponent {
     },
   ];
 
-  userActionClicked(invite: InviteViewModel, action: string): void {
+  actionClicked(invite: InviteViewModel, action: string): void {
     if (action === 'cancel') {
       this.cancelInvite(invite);
     }

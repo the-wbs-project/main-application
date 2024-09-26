@@ -14,21 +14,15 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { TitleService } from '@wbs/core/services';
+import { MembershipStore } from '@wbs/core/store';
 import {
-  MembershipStore,
-  MetadataStore,
-  UiStore,
-  UserStore,
-} from '@wbs/core/store';
-import {
-  InvitationFormComponent,
+  InvitationDialogComponent,
   InvitationListComponent,
   MemberListComponent,
   MemberListSwitchComponent,
   MembershipRollupComponent,
   RoleFilterListComponent,
 } from './components';
-import { MemberSettingsService } from './services';
 import { MembersSettingStore } from './store';
 
 @Component({
@@ -40,7 +34,7 @@ import { MembersSettingStore } from './store';
     DialogModule,
     FontAwesomeModule,
     FormsModule,
-    InvitationFormComponent,
+    InvitationDialogComponent,
     InvitationListComponent,
     MemberListComponent,
     MemberListSwitchComponent,
@@ -52,11 +46,7 @@ import { MembersSettingStore } from './store';
 })
 export class MembersComponent {
   private readonly dialog = inject(DialogService);
-  private readonly memberService = inject(MemberSettingsService);
-  private readonly metadata = inject(MetadataStore);
   private readonly title = inject(TitleService);
-  private readonly uiStore = inject(UiStore);
-  private readonly profile = inject(UserStore).profile;
 
   readonly membership = inject(MembershipStore).membership;
   readonly store = inject(MembersSettingStore);
@@ -83,17 +73,10 @@ export class MembersComponent {
   }
 
   startInvite(): void {
-    InvitationFormComponent.launchAsync(
+    InvitationDialogComponent.launch(
       this.dialog,
       this.store.invites() ?? [],
-      this.store.members() ?? [],
-      this.metadata.roles.definitions
-    ).subscribe((results) => {
-      if (!results) return;
-
-      const name = this.profile()!.name;
-
-      this.memberService.sendInvitesAsync(results.emails, results.roles, name);
-    });
+      this.store.members() ?? []
+    );
   }
 }

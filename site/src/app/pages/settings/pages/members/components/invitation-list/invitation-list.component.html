@@ -53,6 +53,7 @@
           fillMode="link"
           [mainIcon]="faGear"
           [menuItems]="menu"
+          (itemClicked)="actionClicked(invite, $event)"
         />
       </td>
       <td>{{ invite.invitee }}</td>
