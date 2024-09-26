@@ -23,8 +23,13 @@ import { MainContentDirective } from './directives/main-content.directive';
         [roles]="membershipStore.roles()!"
         [activeSection]="activeSection()"
       />
-      <div appMainContent class="scroll pd-x-20 flex-fill">
-        <router-outlet />
+      <div
+        appMainContent
+        class="scroll pd-x-20 flex-fill d-flex w-100 pd-x-20 justify-content-center"
+      >
+        <div class="w-100 mx-wd-1200">
+          <router-outlet />
+        </div>
       </div>
       <wbs-footer />
     </div>

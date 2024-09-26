@@ -1,69 +1,77 @@
-<header class="w-100 d-flex bg-white ht-55 pd-x-20 flex-align-center">
-  <div class="header-title wd-240 tx-24 tx-semibold">
-    <img class="w-100" [alt]="title" src="assets/pm-empower-logo.png" />
-  </div>
-  <div class="tx-right flex-1">
-    <div class="d-inline-block wd-60">
-      @if (user(); as user) {
-      <wbs-header-profile [user]="user" [roles]="roles()" />
-      }
+<header class="d-flex w-100 bg-white pd-x-20 justify-content-center">
+  <div class="d-flex w-100 mx-wd-1200 flex-align-center ht-55">
+    <div class="header-title wd-240 tx-24 tx-semibold">
+      <img class="w-100" [alt]="title" src="assets/pm-empower-logo.png" />
+    </div>
+    <div class="tx-right flex-1">
+      <div class="d-inline-block wd-60">
+        @if (user(); as user) {
+        <wbs-header-profile [user]="user" [roles]="roles()" />
+        }
+      </div>
     </div>
   </div>
 </header>
-<nav
-  class="navbar navbar-expand navbar-dark bg-dark d-none d-sm-flex"
-  [ngClass]="{
-    'p-0': orgs().length > 0
-  }"
+<div
+  class="d-none d-sm-flex w-100 bg-dark pd-x-20 text-center justify-content-center"
 >
-  <div class="container-fluid">
-    <span class="navbar-brand">
-      <wbs-header-organization-list [org]="orgObj()" [orgs]="orgs()" />
-    </span>
-    <div class="navbar-collapse">
-      <ul class="navbar-nav">
-        @for (parentItem of menu(); track parentItem.label) { @if (claims() |
-        check : parentItem.claim) { @if (parentItem.type === 'sub') {
-        <li class="nav-item" ngbDropdown>
-          <a
-            class="nav-link dropdown-toggle tx-uppercase"
-            [ngClass]="{ active: parentItem.section === activeSection() }"
-            ngbDropdownToggle
-            role="button"
-          >
-            {{ parentItem.label | translate }}
-          </a>
-          <div ngbDropdownMenu class="py-0">
-            @for (link of parentItem.items; track link.label) { @switch
-            (link.type) { @case ('header') {
-            <h6
-              class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
-            >
-              {{ link.label | translate }}
-            </h6>
-            } @case ('link') {
-            <a ngbDropdownItem [routerLink]="link.route" class="lh-5">
-              {{ link.label | translate }}
-            </a>
+  <div class="d-flex w-100 mx-wd-1200 flex-align-center">
+    <nav
+      class="navbar navbar-expand navbar-dark"
+      [ngClass]="{
+        'p-0': orgs().length > 0
+      }"
+    >
+      <div class="container-fluid pd-x-0">
+        <span class="navbar-brand">
+          <wbs-header-organization-list [org]="orgObj()" [orgs]="orgs()" />
+        </span>
+        <div class="navbar-collapse">
+          <ul class="navbar-nav">
+            @for (parentItem of menu(); track parentItem.label) { @if (claims()
+            | check : parentItem.claim) { @if (parentItem.type === 'sub') {
+            <li class="nav-item" ngbDropdown>
+              <a
+                class="nav-link dropdown-toggle tx-uppercase"
+                [ngClass]="{ active: parentItem.section === activeSection() }"
+                ngbDropdownToggle
+                role="button"
+              >
+                {{ parentItem.label | translate }}
+              </a>
+              <div ngbDropdownMenu class="py-0">
+                @for (link of parentItem.items; track link.label) { @switch
+                (link.type) { @case ('header') {
+                <h6
+                  class="dropdown-header tx-uppercase tx-11 tx-bold tx-inverse tx-spacing-1 bg-black-1"
+                >
+                  {{ link.label | translate }}
+                </h6>
+                } @case ('link') {
+                <a ngbDropdownItem [routerLink]="link.route" class="lh-5">
+                  {{ link.label | translate }}
+                </a>
+                } } }
+              </div>
+            </li>
+            } @else {
+            <li class="nav-item">
+              <a
+                class="nav-link tx-uppercase"
+                [ngClass]="{ active: parentItem.section === activeSection() }"
+                aria-current="page"
+                [routerLink]="parentItem.route"
+              >
+                {{ parentItem.label | translate }}
+              </a>
+            </li>
             } } }
-          </div>
-        </li>
-        } @else {
-        <li class="nav-item">
-          <a
-            class="nav-link tx-uppercase"
-            [ngClass]="{ active: parentItem.section === activeSection() }"
-            aria-current="page"
-            [routerLink]="parentItem.route"
-          >
-            {{ parentItem.label | translate }}
-          </a>
-        </li>
-        } } }
-      </ul>
-    </div>
+          </ul>
+        </div>
+      </div>
+    </nav>
   </div>
-</nav>
+</div>
 
 <nav
   class="navbar navbar-expand-sm navbar-dark bg-dark d-flex d-sm-none"
