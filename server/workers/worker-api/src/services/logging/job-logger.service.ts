@@ -3,7 +3,7 @@ import { DataDogService } from './data-dog.service';
 import { Logger } from './logger.service';
 
 export class JobLogger implements Logger {
-  constructor(private readonly env: Env, private readonly datadog: DataDogService, private readonly hostname: string) {}
+  constructor(private readonly env: Env, private readonly datadog: DataDogService) {}
 
   trackRequest(duration: number): void {}
 
@@ -53,8 +53,8 @@ export class JobLogger implements Logger {
     return {
       ddsource: 'worker',
       ddtags: `env:${this.env.DATADOG_ENV},app:pm-empower`,
-      hostname: this.hostname,
-      service: 'pm-empower-api',
+      hostname: this.env.DATADOG_HOST,
+      service: 'pm-empower-worker',
       data,
     };
   }

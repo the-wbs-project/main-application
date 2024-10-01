@@ -38,6 +38,9 @@ services = [
   { binding = "AUTH_API", service = "pm-empower-auth-test" }
 ]
 
+[env.test.triggers]
+crons = [ "*/10 * * * *" ]
+
 [env.test.vars]
 DEBUG = "false"
 ORIGIN = "https://test-api.pm-empower.com"
@@ -62,6 +65,9 @@ kv_namespaces = [
 services = [
   { binding = "AUTH_API", service = "pm-empower-auth-prod" }
 ]
+
+[env.prod.triggers]
+crons = [ "*/10 * * * *" ]
 
 [env.prod.vars]
 DEBUG = "false"
