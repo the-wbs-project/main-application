@@ -45,6 +45,7 @@ app.onError(error);
 app.options('*', (c) => c.text(''));
 
 app.get('api/startup', Http.metadata.getStarterKitAsync);
+app.get('api/wakeup', Http.metadata.wakeUpAsync);
 app.get('api/lists/:type/:locale', Http.metadata.getListsAsync);
 //
 //  Claims

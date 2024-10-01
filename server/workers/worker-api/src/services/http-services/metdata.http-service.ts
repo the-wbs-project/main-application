@@ -5,6 +5,12 @@ import { ResourceService } from '../resource.service';
 const STARTER_DATA_KEY = 'STARTER_DATA';
 
 export class MetadataHttpService {
+  static async wakeUpAsync(ctx: Context): Promise<Response> {
+    await ctx.var.data.resources.getFromOriginAsync('en-US');
+
+    return ctx.newResponse(null, { status: 204 });
+  }
+
   static async getListsAsync(ctx: Context): Promise<Response> {
     const { type, locale } = ctx.req.param();
     const [resourceObj, list] = await Promise.all([ctx.var.data.resources.getAsync(locale), ctx.var.data.lists.getAsync(type)]);

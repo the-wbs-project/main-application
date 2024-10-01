@@ -15,13 +15,17 @@ export class ResourcesDataService {
     const data = await this.ctx.env.KV_DATA.get(key);
     if (data) return JSON.parse(data);
 
-    const result = await this.origin.getAsync<Record<string, Record<string, string>>>(`resources/all/${locale}`);
+    const result = await this.getFromOriginAsync(locale);
 
     if (result) {
       await this.ctx.env.KV_DATA.put(key, JSON.stringify(result));
     }
 
     return result;
+  }
+
+  getFromOriginAsync(locale: string): Promise<Record<string, Record<string, string>> | undefined> {
+    return this.origin.getAsync<Record<string, Record<string, string>>>(`resources/all/${locale}`);
   }
 
   async putAsync(resources: Resources): Promise<void> {
