@@ -1,5 +1,5 @@
 import { IdToken } from '../models';
-import { ClaimsService, DataDogService, DataServiceFactory, Fetcher, HttpLogger, JiraService, OriginService } from '../services';
+import { ClaimsService, DataDogService, DataServiceFactory, Fetcher, HttpLogger, JiraService, HttpOriginService } from '../services';
 
 export type Variables = {
   claims: ClaimsService;
@@ -8,6 +8,6 @@ export type Variables = {
   jira: JiraService;
   fetcher: Fetcher;
   logger: HttpLogger;
-  origin: OriginService;
+  origin: HttpOriginService;
   idToken: IdToken;
 };

@@ -1,7 +1,8 @@
 import { StatusCode } from 'hono/utils/http-status';
-import { Context } from '../config';
+import { Context } from '../../config';
+import { OriginService } from './origin.service';
 
-export class OriginService {
+export class HttpOriginService implements OriginService {
   constructor(private readonly ctx: Context) {}
 
   async getResponseAsync(suffix?: string): Promise<Response> {
@@ -42,7 +43,7 @@ export class OriginService {
   static async pass(ctx: Context): Promise<Response> {
     const req = ctx.req;
     const method = req.method;
-    const url = OriginService.getUrl(ctx.env.ORIGIN, new URL(req.url).pathname);
+    const url = HttpOriginService.getUrl(ctx.env.ORIGIN, new URL(req.url).pathname);
     const res = await ctx.get('fetcher').fetch(
       url,
       method === 'GET' || method === 'HEAD'
@@ -61,7 +62,7 @@ export class OriginService {
 
     const body = res.status === 202 || res.status === 204 ? null : await res.arrayBuffer();
 
-    return ctx.newResponse(body, <StatusCode>res.status, OriginService.headers(res));
+    return ctx.newResponse(body, <StatusCode>res.status, HttpOriginService.headers(res));
   }
 
   static headers(res: Response): Record<string, string | string[]> {
@@ -116,6 +117,6 @@ export class OriginService {
   private getUrl(pathName?: string): string {
     const suffix = pathName ?? new URL(this.ctx.req.url).pathname;
 
-    return OriginService.getUrl(this.ctx.env.ORIGIN, suffix);
+    return HttpOriginService.getUrl(this.ctx.env.ORIGIN, suffix);
   }
 }

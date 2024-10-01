@@ -1,31 +1,30 @@
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
 import { Resources } from '../../models';
-import { OriginService } from '../origin.service';
+import { OriginService } from '../origin-services';
+import { BaseDataService } from './base.data-service';
 
-export class ResourcesDataService {
-  constructor(private readonly ctx: ContextLocal) {}
-
-  private get origin(): OriginService {
-    return this.ctx.var.origin;
+export class ResourcesDataService extends BaseDataService {
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
-  async getAsync(locale: string): Promise<Record<string, Record<string, string>> | undefined> {
+  async getAsync(locale: string): Promise<Resources | undefined> {
     const key = 'RESOURCES|' + locale;
 
-    const data = await this.ctx.env.KV_DATA.get(key);
-    if (data) return JSON.parse(data);
+    const data = await this.getKv<Resources>(key);
+    if (data) return data;
 
     const result = await this.getFromOriginAsync(locale);
 
     if (result) {
-      await this.ctx.env.KV_DATA.put(key, JSON.stringify(result));
+      await this.putKv(key, result);
     }
 
     return result;
   }
 
-  getFromOriginAsync(locale: string): Promise<Record<string, Record<string, string>> | undefined> {
-    return this.origin.getAsync<Record<string, Record<string, string>>>(`resources/all/${locale}`);
+  getFromOriginAsync(locale: string): Promise<Resources | undefined> {
+    return this.origin.getAsync<Resources>(`resources/all/${locale}`);
   }
 
   async putAsync(resources: Resources): Promise<void> {
@@ -34,9 +33,9 @@ export class ResourcesDataService {
 
   private async clearKvCacheAsync(): Promise<void> {
     const prefix = 'RESOURCES|';
-    const keys = await this.ctx.env.KV_DATA.list({ prefix });
+    const keys = await this.kv.list({ prefix });
     for (const key of keys.keys) {
-      await this.ctx.env.KV_DATA.delete(key.name);
+      await this.kv.delete(key.name);
     }
   }
 }

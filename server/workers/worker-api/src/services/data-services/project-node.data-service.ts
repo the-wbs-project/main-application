@@ -1,9 +1,10 @@
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
+import { OriginService } from '../origin-services';
 import { BaseDataService } from './base.data-service';
 
 export class ProjectNodeDataService extends BaseDataService {
-  constructor(ctx: ContextLocal) {
-    super(ctx);
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
   async getAsync(owner: string, id: string): Promise<any[]> {

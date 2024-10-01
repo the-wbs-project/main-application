@@ -1,27 +1,22 @@
-import { ContextLocal } from '../../config';
-import { OriginService } from '../origin.service';
+import { Env } from '../../config';
+import { OriginService } from '../origin-services';
 
 export abstract class BaseDataService {
-  constructor(protected readonly ctx: ContextLocal) {}
-
-  protected get origin(): OriginService {
-    
-    return this.ctx.var.origin;
-  }
+  constructor(protected readonly env: Env, protected readonly executionCtx: ExecutionContext, protected readonly origin: OriginService) {}
 
   protected get kv(): KVNamespace {
-    return this.ctx.env.KV_DATA;
+    return this.env.KV_DATA;
   }
 
   protected getKv<T>(key: string): Promise<T | null> {
-    return this.ctx.env.KV_DATA.get<T>(key, 'json');
+    return this.env.KV_DATA.get<T>(key, 'json');
   }
 
   protected putKv(key: string, data: any): void {
-    this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.put(key, typeof data === 'string' ? data : JSON.stringify(data)));
+    this.executionCtx.waitUntil(this.env.KV_DATA.put(key, typeof data === 'string' ? data : JSON.stringify(data)));
   }
 
   protected clearKv(key: string): void {
-    this.ctx.executionCtx.waitUntil(this.ctx.env.KV_DATA.delete(key));
+    this.executionCtx.waitUntil(this.env.KV_DATA.delete(key));
   }
 }

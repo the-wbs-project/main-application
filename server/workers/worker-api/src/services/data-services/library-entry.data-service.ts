@@ -1,10 +1,11 @@
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
 import { LibraryEntry } from '../../models';
+import { OriginService } from '../origin-services';
 import { BaseDataService } from './base.data-service';
 
 export class LibraryEntryDataService extends BaseDataService {
-  constructor(ctx: ContextLocal) {
-    super(ctx);
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
   async getByIdAsync(owner: string, entry: string): Promise<LibraryEntry | undefined> {
@@ -35,7 +36,7 @@ export class LibraryEntryDataService extends BaseDataService {
   }
 
   async clearKvAsync(owner: string, id: string): Promise<void> {
-    const keysToDelete = await this.ctx.env.KV_DATA.list({ prefix: this.getKey(owner, id) });
+    const keysToDelete = await this.kv.list({ prefix: this.getKey(owner, id) });
 
     for (const key of keysToDelete.keys) {
       this.clearKv(key.name);

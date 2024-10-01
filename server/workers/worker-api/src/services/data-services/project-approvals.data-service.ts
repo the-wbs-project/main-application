@@ -1,10 +1,11 @@
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
 import { ProjectApproval } from '../../models';
+import { OriginService } from '../origin-services';
 import { BaseDataService } from './base.data-service';
 
 export class ProjectApprovalsDataService extends BaseDataService {
-  constructor(ctx: ContextLocal) {
-    super(ctx);
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
   async getAsync(owner: string, projectId: string): Promise<ProjectApproval[]> {

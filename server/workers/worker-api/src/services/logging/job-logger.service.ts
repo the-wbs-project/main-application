@@ -1,8 +1,11 @@
 import { Env } from '../../config';
 import { DataDogService } from './data-dog.service';
+import { Logger } from './logger.service';
 
-export class JobLogger {
+export class JobLogger implements Logger {
   constructor(private readonly env: Env, private readonly datadog: DataDogService, private readonly hostname: string) {}
+
+  trackRequest(duration: number): void {}
 
   trackEvent(message: string, status: 'Error' | 'Info' | 'Warn' | 'Notice', data?: Record<string, any>): void {
     this.datadog.appendLog({

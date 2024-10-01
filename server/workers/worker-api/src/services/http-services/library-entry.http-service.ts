@@ -1,6 +1,6 @@
 import { Context } from '../../config';
 import { UserViewModel } from '../../view-models';
-import { OriginService } from '../origin.service';
+import { HttpOriginService } from '../origin-services/http-origin.service';
 import { Transformers } from '../transformers';
 
 export class LibraryEntryHttpService {
@@ -47,7 +47,8 @@ export class LibraryEntryHttpService {
 
       if (!entryObj || !versionObj) return ctx.text('Not Found', 404);
 
-      const claims = await ctx.var.claims.getForLibraryEntry(owner, owner, versionObj);
+      const userId = ctx.var.idToken.userId;
+      const claims = await ctx.var.claims.getForLibraryEntry(owner, userId, owner, versionObj);
       //
       //  Now get users
       //
@@ -76,7 +77,7 @@ export class LibraryEntryHttpService {
   static async putEntryAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
@@ -98,7 +99,7 @@ export class LibraryEntryHttpService {
   static async putVersionAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, entry } = ctx.req.param();
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
@@ -124,7 +125,7 @@ export class LibraryEntryHttpService {
     try {
       const { owner, entry, version } = ctx.req.param();
       const version2 = parseInt(version);
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {

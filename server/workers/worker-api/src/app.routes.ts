@@ -10,7 +10,7 @@ import {
   HttpLogger,
   JiraService,
   MailGunService,
-  OriginService,
+  HttpOriginService,
 } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -25,13 +25,21 @@ const app = newApp();
 //  Dependency Injection
 //
 app.use('*', async (ctx, next) => {
-  ctx.set('datadog', new DataDogService(ctx.env));
-  ctx.set('logger', new HttpLogger(ctx));
-  ctx.set('fetcher', new Fetcher(ctx));
-  ctx.set('jira', new JiraService(ctx));
-  ctx.set('origin', new OriginService(ctx));
-  ctx.set('claims', new ClaimsService(ctx));
-  ctx.set('data', new DataServiceFactory(ctx));
+  var datadog = new DataDogService(ctx.env);
+  var logger = new HttpLogger(ctx);
+  var fetcher = new Fetcher(logger);
+  var origin = new HttpOriginService(ctx);
+  var data = new DataServiceFactory(ctx.env, ctx.executionCtx, origin);
+  var claims = new ClaimsService(data);
+  var jira = new JiraService(ctx.env, fetcher, logger);
+
+  ctx.set('datadog', datadog);
+  ctx.set('logger', logger);
+  ctx.set('fetcher', fetcher);
+  ctx.set('jira', jira);
+  ctx.set('origin', origin);
+  ctx.set('claims', claims);
+  ctx.set('data', data);
 
   await next();
 });
@@ -73,8 +81,8 @@ app.post('api/activities', verifyJwt, Http.activities.postAsync);
 const libApp = newApp()
   .basePath('api/libraries')
   .get('drafts/:owner/:types', verifyJwt, verifyMembership, Http.library.getDraftsAsync)
-  .post('internal/:owner', verifyJwt, verifyMembership, OriginService.pass)
-  .post('public', verifyJwt, OriginService.pass);
+  .post('internal/:owner', verifyJwt, verifyMembership, HttpOriginService.pass)
+  .post('public', verifyJwt, HttpOriginService.pass);
 
 app.route('/', libApp);
 //
@@ -169,15 +177,15 @@ app.get('api/queue/test', (ctx) => {
   return ctx.text('OK');
 });
 
-for (const path of ROUTES.VERIFY_JWT_GET) app.get(path, verifyJwt, OriginService.pass);
-for (const path of ROUTES.VERIFY_JWT_POST) app.post(path, verifyJwt, OriginService.pass);
-for (const path of ROUTES.VERIFY_JWT_PUT) app.put(path, verifyJwt, OriginService.pass);
-for (const path of ROUTES.VERIFY_JWT_DELETE) app.delete(path, verifyJwt, OriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_GET) app.get(path, verifyJwt, HttpOriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_POST) app.post(path, verifyJwt, HttpOriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_PUT) app.put(path, verifyJwt, HttpOriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_DELETE) app.delete(path, verifyJwt, HttpOriginService.pass);
 
-for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_GET) app.get(path, verifyJwt, verifyMembership, OriginService.pass);
-for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_POST) app.post(path, verifyJwt, verifyMembership, OriginService.pass);
-for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_PUT) app.put(path, verifyJwt, verifyMembership, OriginService.pass);
-for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_DELETE) app.delete(path, verifyJwt, verifyMembership, OriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_GET) app.get(path, verifyJwt, verifyMembership, HttpOriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_POST) app.post(path, verifyJwt, verifyMembership, HttpOriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_PUT) app.put(path, verifyJwt, verifyMembership, HttpOriginService.pass);
+for (const path of ROUTES.VERIFY_JWT_MEMBERSHIP_DELETE) app.delete(path, verifyJwt, verifyMembership, HttpOriginService.pass);
 
 app.get('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);
 app.put('/api/*', verifyJwt, (x) => x.text('Not Found', 404)); // OriginService.pass);

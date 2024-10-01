@@ -1,11 +1,12 @@
 import { ReadableStream } from '@cloudflare/workers-types';
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
 import { ContentResource } from '../../models';
 import { BaseDataService } from './base.data-service';
+import { OriginService } from '../origin-services';
 
 export class ContentResourcesDataService extends BaseDataService {
-  constructor(ctx: ContextLocal) {
-    super(ctx);
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
   async getListAsync(owner: string, parentId: string): Promise<ContentResource[]> {
@@ -14,7 +15,7 @@ export class ContentResourcesDataService extends BaseDataService {
 
     if (kvData) return kvData;
 
-    const data = await this.ctx.var.origin.getAsync<ContentResource[]>(this.getBaseUrl(owner, parentId));
+    const data = await this.origin.getAsync<ContentResource[]>(this.getBaseUrl(owner, parentId));
 
     if (data) this.putKv(key, data);
 
@@ -30,14 +31,14 @@ export class ContentResourcesDataService extends BaseDataService {
   async getFileAsync(owner: string, parentId: string, id: string): Promise<ReadableStream<any> | null> {
     const key = this.getResourceFileKey(owner, parentId, id);
 
-    const kvBody = await this.ctx.env.KV_DATA.get(key, 'stream');
+    const kvBody = await this.kv.get(key, 'stream');
 
     //if (kvBody) return kvBody;
 
     const resp = await this.origin.getResponseAsync(this.getFileUrl(owner, parentId, id));
 
     if (resp.status === 200 && resp.body) {
-      this.ctx.env.KV_DATA.put(key, resp.body);
+      this.putKv(key, resp.body);
     }
     return resp.body;
   }
@@ -49,9 +50,9 @@ export class ContentResourcesDataService extends BaseDataService {
   }
 
   async clearKvAsync(owner: string, parentId: string): Promise<void> {
-    const keys = await this.ctx.env.KV_DATA.list({ prefix: this.getResourcesKey(owner, parentId) });
+    const keys = await this.kv.list({ prefix: this.getResourcesKey(owner, parentId) });
 
-    await Promise.all(keys.keys.map((key) => this.ctx.env.KV_DATA.delete(key.name)));
+    await Promise.all(keys.keys.map((key) => this.kv.delete(key.name)));
   }
 
   private getResourcesKey(owner: string, parentId: string): string {

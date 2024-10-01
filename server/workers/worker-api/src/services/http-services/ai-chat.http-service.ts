@@ -5,7 +5,8 @@ export class AiChatHttpService {
     try {
       const { model } = ctx.req.param();
 
-      return ctx.json(await ctx.get('data').aiChat.getAsync(model));
+      const userId = ctx.var.idToken.userId;
+      return ctx.json(await ctx.var.data.aiChat.getAsync(model, userId));
     } catch (e) {
       ctx.get('logger').trackException('An error occured trying to get AI chat history.', <Error>e);
 
@@ -18,7 +19,8 @@ export class AiChatHttpService {
       const { model } = ctx.req.param();
       const history = await ctx.req.json();
 
-      await ctx.get('data').aiChat.putAsync(model, history);
+      const userId = ctx.var.idToken.userId;
+      await ctx.get('data').aiChat.putAsync(model, userId, history);
 
       return ctx.newResponse(null, 202);
     } catch (e) {
@@ -32,7 +34,8 @@ export class AiChatHttpService {
     try {
       const { model } = ctx.req.param();
 
-      await ctx.get('data').aiChat.deleteAsync(model);
+      const userId = ctx.var.idToken.userId;
+      await ctx.var.data.aiChat.deleteAsync(model, userId);
 
       return ctx.newResponse(null, 202);
     } catch (e) {

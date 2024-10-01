@@ -1,4 +1,3 @@
-import { ContextLocal } from '../config';
 import {
   LIBRARY_PERMISSIONS,
   LIBRARY_ROLES,
@@ -12,26 +11,18 @@ import {
 import { DataServiceFactory } from './data-services';
 
 export class ClaimsService {
-  constructor(private readonly ctx: ContextLocal) {}
+  constructor(private readonly data: DataServiceFactory) {}
 
-  private get data(): DataServiceFactory {
-    return this.ctx.var.data;
-  }
-
-  private get userId(): string {
-    return this.ctx.var.idToken.userId;
-  }
-
-  async getForOrganizationAsync(organization: string): Promise<string[]> {
-    const user = await this.data.users.getViewAsync(organization, this.userId, 'organization');
+  async getForOrganizationAsync(organization: string, userId: string): Promise<string[]> {
+    const user = await this.data.users.getViewAsync(organization, userId, 'organization');
     const roles = user?.roles?.map((x) => x.name) ?? [];
 
     return this.getClaims(ORGANZIATION_PERMISSIONS, roles);
   }
 
-  async getForProjectAsync(project: Project): Promise<string[]> {
+  async getForProjectAsync(project: Project, userId: string): Promise<string[]> {
     const [user, definitions] = await Promise.all([
-      this.data.users.getViewAsync(project.owner, this.userId, 'organization'),
+      this.data.users.getViewAsync(project.owner, userId, 'organization'),
       this.data.roles.getAllAsync(),
     ]);
 
@@ -43,12 +34,12 @@ export class ClaimsService {
     return this.getClaims(PROJECT_PERMISSIONS, roles);
   }
 
-  async getForLibraryEntry(organization: string, owner: string, version: LibraryEntryVersion): Promise<string[]> {
+  async getForLibraryEntry(organization: string, userId: string, owner: string, version: LibraryEntryVersion): Promise<string[]> {
     const roles = [LIBRARY_ROLES.VIEWER];
 
     if (organization === owner) {
-      if (version.author === this.userId) roles.push(LIBRARY_ROLES.OWNER);
-      if (version.editors?.includes(this.userId)) roles.push(LIBRARY_ROLES.EDITOR);
+      if (version.author === userId) roles.push(LIBRARY_ROLES.OWNER);
+      if (version.editors?.includes(userId)) roles.push(LIBRARY_ROLES.EDITOR);
     }
 
     return this.getClaims(LIBRARY_PERMISSIONS, roles);

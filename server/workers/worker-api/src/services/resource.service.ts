@@ -1,7 +1,7 @@
 import { Resources } from '../models';
 
 export class ResourceService {
-  constructor(private readonly resources: Record<string, Record<string, string>>) {}
+  constructor(private readonly resources: Resources) {}
 
   get(resource: string, defaultValue?: string): string {
     if (resource == null) return 'EMPTY';

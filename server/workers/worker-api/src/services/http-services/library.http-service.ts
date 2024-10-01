@@ -1,6 +1,6 @@
 import { Context } from '../../config';
 import { LibraryDraftViewModel } from '../../view-models';
-import { OriginService } from '../origin.service';
+import { HttpOriginService } from '../origin-services/http-origin.service';
 
 export class LibraryHttpService {
   static async getIdAsync(ctx: Context): Promise<Response> {
@@ -31,7 +31,7 @@ export class LibraryHttpService {
 
   static async getDraftsAsync(ctx: Context): Promise<Response> {
     try {
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const results = (await resp.json<LibraryDraftViewModel[]>()) ?? [];
 
       await LibraryHttpService.setAuthorNameAsync(results, ctx);

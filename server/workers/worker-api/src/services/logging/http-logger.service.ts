@@ -1,11 +1,12 @@
 import { Context } from '../../config';
 import { DataDogService } from './data-dog.service';
+import { Logger } from './logger.service';
 
-export class HttpLogger {
+export class HttpLogger implements Logger {
   constructor(private readonly ctx: Context) {}
 
   private get datadog(): DataDogService {
-    return this.ctx.get('datadog');
+    return this.ctx.var.datadog;
   }
 
   trackRequest(duration: number): void {

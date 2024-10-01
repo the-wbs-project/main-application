@@ -1,5 +1,5 @@
 import { Context } from '../../config';
-import { OriginService } from '../origin.service';
+import { HttpOriginService } from '../origin-services/http-origin.service';
 
 export class ContentResourceHttpService {
   static async getListAsync(ctx: Context): Promise<Response> {
@@ -28,7 +28,7 @@ export class ContentResourceHttpService {
   static async putOrDeleteAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, parentId, id } = ctx.req.param();
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
 
       if (resp.status < 300) {
         ctx.executionCtx.waitUntil(ctx.var.data.contentResources.clearKvAsync(owner, parentId));

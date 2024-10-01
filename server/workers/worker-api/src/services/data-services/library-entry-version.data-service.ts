@@ -1,10 +1,11 @@
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
 import { LibraryEntryVersion } from '../../models';
+import { OriginService } from '../origin-services';
 import { BaseDataService } from './base.data-service';
 
 export class LibraryEntryVersionDataService extends BaseDataService {
-  constructor(ctx: ContextLocal) {
-    super(ctx);
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
   async getAsync(owner: string, entry: string): Promise<LibraryEntryVersion[]> {
@@ -80,7 +81,7 @@ export class LibraryEntryVersionDataService extends BaseDataService {
   }
 
   private async getIdsFromKeysAsync(owner: string, entry: string): Promise<string[]> {
-    const keys = await this.ctx.env.KV_DATA.list({ prefix: `PORTFOLIO|${owner}|LIBRARY|${entry}|VERSION|` });
+    const keys = await this.kv.list({ prefix: `PORTFOLIO|${owner}|LIBRARY|${entry}|VERSION|` });
 
     return keys.keys
       .map((x) => x.name.split('|'))

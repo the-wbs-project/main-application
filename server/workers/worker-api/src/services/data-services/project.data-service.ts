@@ -1,10 +1,11 @@
-import { ContextLocal } from '../../config';
+import { Env } from '../../config';
 import { Project } from '../../models';
+import { OriginService } from '../origin-services';
 import { BaseDataService } from './base.data-service';
 
 export class ProjectDataService extends BaseDataService {
-  constructor(ctx: ContextLocal) {
-    super(ctx);
+  constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
+    super(env, executionCtx, origin);
   }
 
   async getByOwnerAsync(owner: string): Promise<Project[]> {
@@ -57,7 +58,7 @@ export class ProjectDataService extends BaseDataService {
   }
 
   async clearKvAsync(owner: string, id: string): Promise<void> {
-    const keysToDelete = await this.ctx.env.KV_DATA.list({ prefix: this.getKey(owner, id) });
+    const keysToDelete = await this.kv.list({ prefix: this.getKey(owner, id) });
 
     for (const key of keysToDelete.keys) {
       this.clearKv(key.name);

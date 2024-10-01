@@ -1,5 +1,5 @@
 import { Context } from '../../config';
-import { OriginService } from '../origin.service';
+import { HttpOriginService } from '../origin-services/http-origin.service';
 import { Transformers } from '../transformers';
 
 export class ProjectHttpService {
@@ -52,7 +52,8 @@ export class ProjectHttpService {
 
       if (!projectObj) return ctx.text('Not Found', 404);
 
-      const claims = await ctx.var.claims.getForProjectAsync(projectObj);
+      const userId = ctx.var.idToken.userId;
+      const claims = await ctx.var.claims.getForProjectAsync(projectObj, userId);
       //
       //  Now get users
       //
@@ -87,7 +88,7 @@ export class ProjectHttpService {
   static async putProjectAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, project } = ctx.req.param();
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
@@ -109,7 +110,7 @@ export class ProjectHttpService {
   static async deleteProjectAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, project } = ctx.req.param();
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
@@ -131,7 +132,7 @@ export class ProjectHttpService {
   static async putNodesAsync(ctx: Context): Promise<Response> {
     try {
       const { owner, project } = ctx.req.param();
-      const resp = await OriginService.pass(ctx);
+      const resp = await HttpOriginService.pass(ctx);
       const exec = ctx.executionCtx;
 
       if (resp.status < 300) {

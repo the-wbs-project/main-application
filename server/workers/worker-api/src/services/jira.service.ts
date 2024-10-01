@@ -1,8 +1,10 @@
-import { ContextLocal } from '../config';
+import { Env } from '../config';
 import { User } from '../models';
+import { Fetcher } from './fetcher.service';
+import { Logger } from './logging';
 
 export class JiraService {
-  constructor(private readonly ctx: ContextLocal) {}
+  constructor(private readonly env: Env, private readonly fetcher: Fetcher, private readonly logger: Logger) {}
 
   async createUploadIssueAsync(description: string, organization: string, user: User): Promise<string> {
     const bodyData = {
@@ -39,7 +41,7 @@ export class JiraService {
       update: {},
     };
 
-    const response = await fetch(`https://${this.ctx.env.JIRA_DOMAIN}/rest/api/3/issue`, {
+    const response = await this.fetcher.fetch(`https://${this.env.JIRA_DOMAIN}/rest/api/3/issue`, {
       method: 'POST',
       headers: {
         Authorization: this.getAuthHeader(),
@@ -53,7 +55,7 @@ export class JiraService {
     const responseBody: any = await response.json();
 
     if (response.status !== 201) {
-      this.ctx.var.logger.trackException('An error occured trying to create a Jira issue.', <Error>responseBody);
+      this.logger.trackException('An error occured trying to create a Jira issue.', <Error>responseBody);
 
       throw new Error('An error occured trying to create a Jira issue.');
     }
@@ -65,7 +67,7 @@ export class JiraService {
 
     form.append('file', new Blob([file]), fileName);
 
-    const response = await fetch(`https://${this.ctx.env.JIRA_DOMAIN}/rest/api/3/issue/${issueIdOrKey}/attachments`, {
+    const response = await this.fetcher.fetch(`https://${this.env.JIRA_DOMAIN}/rest/api/3/issue/${issueIdOrKey}/attachments`, {
       method: 'POST',
       body: form,
       headers: {
@@ -78,13 +80,13 @@ export class JiraService {
     const responseBody: any = await response.json();
 
     if (response.status !== 200) {
-      this.ctx.var.logger.trackException('An error occured trying to attach a file to a Jira issue.', <Error>responseBody);
+      this.logger.trackException('An error occured trying to attach a file to a Jira issue.', <Error>responseBody);
 
       throw new Error('An error occured trying to attach a file to a Jira issue.');
     }
   }
 
   private getAuthHeader(): string {
-    return 'Basic ' + btoa(`${this.ctx.env.JIRA_EMAIL}:${this.ctx.env.JIRA_API_KEY}`);
+    return 'Basic ' + btoa(`${this.env.JIRA_EMAIL}:${this.env.JIRA_API_KEY}`);
   }
 }
