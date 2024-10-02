@@ -7,4 +7,8 @@ export class MiscDataService {
   clearKvCache(): Observable<void> {
     return this.http.get<void>('api/cache/clear');
   }
+
+  rebuildSearchIndex(): Observable<void> {
+    return this.http.get<void>('api/tools/rebuild');
+  }
 }

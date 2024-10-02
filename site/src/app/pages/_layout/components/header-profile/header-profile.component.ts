@@ -60,6 +60,12 @@ export class HeaderProfileComponent {
       this.data.misc
         .clearKvCache()
         .subscribe(() => this.messages.notify.success('Cache cleared', false));
+    } else if (e.item.data === 'rebuildSearchIndex') {
+      this.data.misc
+        .rebuildSearchIndex()
+        .subscribe(() =>
+          this.messages.notify.success('Search index rebuilt', false)
+        );
     }
   }
 }

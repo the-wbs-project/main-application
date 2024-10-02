@@ -1,5 +1,5 @@
 import { Env } from './config';
-import { DataDogService, DataServiceFactory, Fetcher, JobLogger, JobOriginService, MailGunService } from './services';
+import { DataDogService, DataServiceFactory, Fetcher, JobLogger, JobOriginService } from './services';
 
 export const APP_SCHEDULED = {
   async run(event: any, env: Env, ctx: ExecutionContext): Promise<void> {

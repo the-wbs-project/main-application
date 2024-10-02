@@ -101,6 +101,7 @@ builder.Services.AddSingleton<VersioningService>();
 //
 builder.Services.AddSingleton<LibrarySearchIndexService>();
 builder.Services.AddSingleton<LibrarySearchService>();
+builder.Services.AddSingleton<LibrarySearchToolService>();
 
 var app = builder.Build();
 

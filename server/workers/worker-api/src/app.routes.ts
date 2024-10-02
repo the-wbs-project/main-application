@@ -1,6 +1,6 @@
 import { Hono } from 'hono';
 import { Env, Variables } from './config';
-import { cors, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error } from './middle';
+import { cors, kvPurge, ddLogger, verifyAdminAsync, verifyJwt, verifyMembership, error, verifySiteAdmin } from './middle';
 import {
   ClaimsService,
   DataDogService,
@@ -72,6 +72,9 @@ app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsyn
 
 app.post('api/send', MailGunService.handleHomepageInquiryAsync);
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
+
+app.get('api/tools/rebuild', verifyJwt, verifySiteAdmin, HttpOriginService.pass);
+app.get('api/tools/rebuild/:organization', verifyJwt, verifySiteAdmin, HttpOriginService.pass);
 
 app.get('api/activities/topLevel/:owner/:topLevel/:skip/:take', verifyJwt, verifyMembership, Http.activities.getAsync);
 app.post('api/activities', verifyJwt, Http.activities.postAsync);
