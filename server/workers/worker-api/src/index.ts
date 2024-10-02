@@ -1,7 +1,9 @@
 import { API_ROUTES } from './app.routes';
+import { APP_SCHEDULED } from './app.scheduled';
 
 export default {
   fetch: API_ROUTES.fetch,
+  scheduled: APP_SCHEDULED.run,
 };
 /*
 export default {
