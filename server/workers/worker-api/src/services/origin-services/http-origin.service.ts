@@ -44,7 +44,7 @@ export class HttpOriginService implements OriginService {
     const req = ctx.req;
     const method = req.method;
     const url = HttpOriginService.getUrl(ctx.env.ORIGIN, new URL(req.url).pathname);
-    const res = await ctx.get('fetcher').fetch(
+    const res = await ctx.var.fetcher.fetch(
       url,
       method === 'GET' || method === 'HEAD'
         ? {

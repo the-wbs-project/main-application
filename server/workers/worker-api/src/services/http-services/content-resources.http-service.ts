@@ -8,7 +8,7 @@ export class ContentResourceHttpService {
       const data = await ctx.var.data.contentResources.getListAsync(owner, parentId);
       return new Response(JSON.stringify(data));
     } catch (error) {
-      ctx.get('logger').trackException('An error occured trying to get content resources.', <Error>error);
+      ctx.var.logger.trackException('An error occured trying to get content resources.', <Error>error);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -20,7 +20,7 @@ export class ContentResourceHttpService {
       const data = await ctx.var.data.contentResources.getFileAsync(owner, parentId, id);
       return ctx.newResponse(data);
     } catch (error) {
-      ctx.get('logger').trackException('An error occured trying to get content resource file.', <Error>error);
+      ctx.var.logger.trackException('An error occured trying to get content resource file.', <Error>error);
       return ctx.text('Internal Server Error', 500);
     }
   }
@@ -39,7 +39,7 @@ export class ContentResourceHttpService {
         headers: resp.headers,
       });
     } catch (error) {
-      ctx.get('logger').trackException('An error occured trying to put or delete content resource.', <Error>error);
+      ctx.var.logger.trackException('An error occured trying to put or delete content resource.', <Error>error);
       return ctx.text('Internal Server Error', 500);
     }
   }

@@ -10,7 +10,7 @@ export class LibraryHttpService {
 
       return entryObj ? ctx.json(entryObj.id) : ctx.text('Not Found', 404);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a library entry ID from record locator.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a library entry ID from record locator.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -23,7 +23,7 @@ export class LibraryHttpService {
 
       return entryObj ? ctx.json(entryObj.recordId) : ctx.text('Not Found', 404);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a library entry Record Id from id.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a library entry Record Id from id.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -38,7 +38,7 @@ export class LibraryHttpService {
 
       return ctx.json(results);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get library drafts.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get library drafts.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

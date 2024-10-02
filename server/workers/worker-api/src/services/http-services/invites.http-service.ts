@@ -7,7 +7,7 @@ export class InvitesHttpService {
 
       return ctx.json(await ctx.var.data.invites.getAllAsync(organization));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get all the invites of the organization.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get all the invites of the organization.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -22,7 +22,7 @@ export class InvitesHttpService {
 
       return ctx.newResponse(null, 202);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to send a invite.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to send a invite.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -36,7 +36,7 @@ export class InvitesHttpService {
 
       return ctx.newResponse(null, 202);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to cancel a invite.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to cancel a invite.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

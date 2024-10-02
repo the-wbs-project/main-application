@@ -10,7 +10,7 @@ export class ProjectHttpService {
 
       return obj ? ctx.json(obj.id) : ctx.text('Not Found', 404);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a project ID from record locator.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a project ID from record locator.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -23,7 +23,7 @@ export class ProjectHttpService {
 
       return obj ? ctx.json(obj.recordId) : ctx.text('Not Found', 404);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a project record ID.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a project record ID.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -35,7 +35,7 @@ export class ProjectHttpService {
 
       return ctx.json(await ctx.var.data.projects.getByOwnerAsync(owner));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get projects.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get projects.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -52,7 +52,7 @@ export class ProjectHttpService {
 
       if (!projectObj) return ctx.text('Not Found', 404);
 
-      const userId = ctx.var.idToken.userId;
+      const userId = ctx.var.userId;
       const claims = await ctx.var.claims.getForProjectAsync(projectObj, userId);
       //
       //  Now get users
@@ -67,7 +67,7 @@ export class ProjectHttpService {
         claims,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get project by id.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get project by id.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -79,7 +79,7 @@ export class ProjectHttpService {
 
       return ctx.json(await ctx.var.data.projectNodes.getAsync(owner, project));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get project nodes.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get project nodes.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -101,7 +101,7 @@ export class ProjectHttpService {
         headers: resp.headers,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save a project.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save a project.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -123,7 +123,7 @@ export class ProjectHttpService {
         headers: resp.headers,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to delete a project.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to delete a project.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -146,7 +146,7 @@ export class ProjectHttpService {
         headers: resp.headers,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save a project or project node.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save a project or project node.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

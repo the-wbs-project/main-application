@@ -7,9 +7,9 @@ export async function ddLogger(ctx: Context, next: any) {
 
   const duration = Math.abs(new Date().getTime() - start.getTime());
 
-  const logger = ctx.get('logger');
+  const logger = ctx.var.logger;
 
   logger.trackRequest(duration);
 
-  ctx.executionCtx.waitUntil(ctx.get('datadog').flush());
+  ctx.executionCtx.waitUntil(ctx.var.datadog.flush());
 }

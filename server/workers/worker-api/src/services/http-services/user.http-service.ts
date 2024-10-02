@@ -9,7 +9,7 @@ export class UserHttpService {
 
       return ctx.json(await ctx.var.data.users.getViewAsync(organization, user, isMember ? 'organization' : 'public'));
     } catch (e) {
-      ctx.get('logger').trackException("An error occured trying to get a user's information.", <Error>e);
+      ctx.var.logger.trackException("An error occured trying to get a user's information.", <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -21,7 +21,7 @@ export class UserHttpService {
 
       return ctx.json(await ctx.var.data.users.getProfileAsync(user));
     } catch (e) {
-      ctx.get('logger').trackException("An error occured trying to get a user's site roles.", <Error>e);
+      ctx.var.logger.trackException("An error occured trying to get a user's site roles.", <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -33,7 +33,7 @@ export class UserHttpService {
 
       return ctx.json(await ctx.var.data.users.getSiteRolesAsync(user));
     } catch (e) {
-      ctx.get('logger').trackException("An error occured trying to get a user's site roles.", <Error>e);
+      ctx.var.logger.trackException("An error occured trying to get a user's site roles.", <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -45,7 +45,7 @@ export class UserHttpService {
 
       return ctx.json(await ctx.var.data.users.getMembershipsAsync(user));
     } catch (e) {
-      ctx.get('logger').trackException("An error occured trying to get a user's site memberships.", <Error>e);
+      ctx.var.logger.trackException("An error occured trying to get a user's site memberships.", <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -62,7 +62,7 @@ export class UserHttpService {
 
       return ctx.newResponse(null, 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to update a user profile.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to update a user profile.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

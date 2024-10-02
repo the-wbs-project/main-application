@@ -108,7 +108,7 @@ export class HttpLogger implements Logger {
         },
       },
       usr: {
-        id: this.ctx.get('idToken')?.userId,
+        id: this.ctx.var.userId,
       },
       ...(info.duration
         ? {

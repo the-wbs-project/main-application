@@ -15,7 +15,7 @@ export class ActivitiesHttpService {
       return ctx.json(Transformers.activity.toViewModelList(list, users));
     } catch (e) {
       console.log(JSON.stringify(e));
-      ctx.get('logger').trackException('An error occured trying to get activities', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get activities', <Error>e);
       return ctx.text('Internal Server Error', 500);
     }
   }
@@ -36,7 +36,7 @@ export class ActivitiesHttpService {
 
       return ctx.newResponse(null, response.status);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save activities', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save activities', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

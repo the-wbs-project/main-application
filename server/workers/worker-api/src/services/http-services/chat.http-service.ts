@@ -4,7 +4,7 @@ import { ChatComment, Message, MessageUser } from '../../models';
 export class ChatHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
     try {
-      const list = (await ctx.get('origin').getAsync<ChatComment[]>()) ?? [];
+      const list = (await ctx.var.origin.getAsync<ChatComment[]>()) ?? [];
       const names = new Map<string, MessageUser>();
       const messages: Message[] = [];
 
@@ -14,7 +14,7 @@ export class ChatHttpService {
 
       return ctx.json(messages);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get chat info', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get chat info', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -22,12 +22,12 @@ export class ChatHttpService {
   static async postAsync(ctx: Context): Promise<Response> {
     try {
       const body = await ctx.req.json();
-      const response = await ctx.get('origin').postAsync(body);
+      const response = await ctx.var.origin.postAsync(body);
       const record: ChatComment = await response.json();
 
       return ctx.json(await convertMessage(ctx, record));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save chat info', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save chat info', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

@@ -5,11 +5,11 @@ export class JiraHttpService {
     try {
       const { description, organization, user } = await ctx.req.json();
 
-      const issueId = await ctx.get('jira').createUploadIssueAsync(description, organization, user);
+      const issueId = await ctx.var.jira.createUploadIssueAsync(description, organization, user);
 
       return ctx.text(issueId);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to create upload issue JIRA ticket.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to create upload issue JIRA ticket.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -22,11 +22,11 @@ export class JiraHttpService {
       const fileName = ctx.req.raw.headers.get('x-filename')!; // could I guess be based on a wildcard route too: /uploads/cat.png
       const file = await ctx.req.arrayBuffer();
 
-      await ctx.get('jira').attachFileAsync(jiraIssueId, fileName, file);
+      await ctx.var.jira.attachFileAsync(jiraIssueId, fileName, file);
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to create upload an attachment to JIRA issue.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to create upload an attachment to JIRA issue.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

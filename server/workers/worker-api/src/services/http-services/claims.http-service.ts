@@ -7,7 +7,7 @@ export class ClaimsHttpService {
 
       return ctx.json(await ctx.var.claims.getForOrganizationAsync(organization, ctx.var.idToken.userId));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get claims for organization.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get claims for organization.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

@@ -7,7 +7,7 @@ export class MembershipHttpService {
 
       return ctx.json(await ctx.var.data.memberships.getAllAsync(organization));
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get all the members of the organization.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get all the members of the organization.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -22,7 +22,7 @@ export class MembershipHttpService {
 
       return ctx.newResponse(null, 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to add a member to an organization', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to add a member to an organization', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -36,7 +36,7 @@ export class MembershipHttpService {
 
       return ctx.newResponse(null, 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to add a remove to an organization', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to add a remove to an organization', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -51,7 +51,7 @@ export class MembershipHttpService {
 
       return ctx.newResponse(null, 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to add roles to a member', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to add roles to a member', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -66,7 +66,7 @@ export class MembershipHttpService {
 
       return ctx.newResponse(null, 204);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to delete roles to a member', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to delete roles to a member', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

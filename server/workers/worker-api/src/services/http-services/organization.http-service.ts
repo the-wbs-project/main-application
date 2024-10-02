@@ -10,7 +10,7 @@ export class OrganizationHttpService {
 
       return ctx.json(data);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get an organization.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get an organization.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

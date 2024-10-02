@@ -11,7 +11,7 @@ export class LibraryEntryHttpService {
 
       return obj ? ctx.json(obj.id) : ctx.text('Not Found', 404);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a library entry ID from record locator.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a library entry ID from record locator.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -24,7 +24,7 @@ export class LibraryEntryHttpService {
 
       return obj ? ctx.json(obj.recordId) : ctx.text('Not Found', 404);
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a library entry record ID.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a library entry record ID.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -68,7 +68,7 @@ export class LibraryEntryHttpService {
         claims,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get a library entry.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get a library entry.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -90,7 +90,7 @@ export class LibraryEntryHttpService {
         headers: resp.headers,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save a library entry.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save a library entry.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -115,7 +115,7 @@ export class LibraryEntryHttpService {
         headers: resp.headers,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save a library entry version.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save a library entry version.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -140,7 +140,7 @@ export class LibraryEntryHttpService {
         headers: resp.headers,
       });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to save library entry tasks.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to save library entry tasks.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }

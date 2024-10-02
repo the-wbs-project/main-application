@@ -40,7 +40,7 @@ export class MailGunService {
   static async sendMail(ctx: Context, data: EmailData): Promise<Response> {
     const dataUrlEncoded = this.urlEncodeObject(data);
 
-    return ctx.get('fetcher').fetch(`${ctx.env.MAILGUN_ENDPOINT}/messages`, {
+    return ctx.var.fetcher.fetch(`${ctx.env.MAILGUN_ENDPOINT}/messages`, {
       method: 'POST',
       headers: {
         //Authorization: 'Basic ' + Buffer.from('api:' + ctx.env.MAILGUN_KEY).toString(),

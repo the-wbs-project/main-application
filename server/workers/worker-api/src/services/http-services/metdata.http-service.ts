@@ -60,7 +60,7 @@ export class MetadataHttpService {
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get resources.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -72,7 +72,7 @@ export class MetadataHttpService {
 
       if (!type) return ctx.text('Missing Parameters', 500);
 
-      const data = ctx.get('data').lists;
+      const data = ctx.var.data.lists;
       const list: ListItem[] = await ctx.req.json();
       const existing = (await data.getAsync(type)) ?? [];
 
@@ -95,7 +95,7 @@ export class MetadataHttpService {
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to get resources.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to get resources.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
@@ -105,11 +105,11 @@ export class MetadataHttpService {
     try {
       const data = await ctx.req.json();
 
-      await ctx.get('origin').putAsync(data, 'checklists');
+      await ctx.var.origin.putAsync(data, 'checklists');
 
       return ctx.newResponse(null, { status: 204 });
     } catch (e) {
-      ctx.get('logger').trackException('An error occured trying to set checklists.', <Error>e);
+      ctx.var.logger.trackException('An error occured trying to set checklists.', <Error>e);
 
       return ctx.text('Internal Server Error', 500);
     }
