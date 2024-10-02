@@ -6,7 +6,7 @@ export class HttpLogger implements Logger {
   constructor(private readonly ctx: Context) {}
 
   private get datadog(): DataDogService {
-    return this.ctx.get('datadog');
+    return this.ctx.var.datadog;
   }
 
   trackRequest(duration: number): void {
@@ -108,7 +108,7 @@ export class HttpLogger implements Logger {
         },
       },
       usr: {
-        id: this.ctx.get('idToken')?.userId,
+        id: this.ctx.var.idToken?.userId,
       },
       ...(info.duration
         ? {

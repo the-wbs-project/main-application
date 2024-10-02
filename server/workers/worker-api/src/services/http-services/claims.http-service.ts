@@ -5,7 +5,7 @@ export class ClaimsHttpService {
     try {
       const { organization } = ctx.req.param();
 
-      return ctx.json(await ctx.var.claims.getForOrganizationAsync(organization, ctx.var.idToken.userId));
+      return ctx.json(await ctx.var.claims.getForOrganizationAsync(organization, ctx.var.userId));
     } catch (e) {
       ctx.var.logger.trackException('An error occured trying to get claims for organization.', <Error>e);
 

@@ -3,7 +3,6 @@ export * from './permissions';
 export * from './activity.model';
 export * from './chat-comment.model';
 export * from './content-resource.model';
-export * from './id-token.model';
 export * from './invite.model';
 export * from './library-entry.model';
 export * from './library-entry-node.model';

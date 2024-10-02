@@ -41,13 +41,13 @@ export class LibraryEntryHttpService {
         ctx.var.data.libraryVersions.getAsync(owner, entry),
         ctx.var.data.libraryVersions.getByIdAsync(owner, entry, version2),
         ctx.var.data.libraryTasks.getAsync(owner, entry, version2, visibility),
-        ctx.var.data.users.isMemberAsync(owner, ctx.var.idToken.userId),
+        ctx.var.data.users.isMemberAsync(owner, ctx.var.userId),
         ctx.var.data.organizations.getByNameAsync(owner),
       ]);
 
       if (!entryObj || !versionObj) return ctx.text('Not Found', 404);
 
-      const userId = ctx.var.idToken.userId;
+      const userId = ctx.var.userId;
       const claims = await ctx.var.claims.getForLibraryEntry(owner, userId, owner, versionObj);
       //
       //  Now get users

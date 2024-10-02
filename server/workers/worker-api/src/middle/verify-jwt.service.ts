@@ -16,11 +16,7 @@ export async function verifyJwt(ctx: Context, next: any): Promise<Response | voi
     console.log(result.reason); // Invalid issuer/audience, expired, etc
     return ctx.text(result.reason, 403);
   }
-  ctx.set('idToken', {
-    token: jwt,
-    userId: result.payload.sub,
-    siteRoles: (result.payload as any)['http://www.pm-empower.com/site-roles'],
-  });
+  ctx.set('userId', result.payload.sub);
 
   await next();
 }

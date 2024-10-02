@@ -6,7 +6,7 @@ export async function verifyMembership(ctx: Context, next: any): Promise<Respons
   //  Check either owner or organization, whichever is present
   //
   const toCheck = owner ?? organization;
-  const userId = ctx.var.idToken.userId;
+  const userId = ctx.var.userId;
 
   if (!toCheck) return ctx.text('Missing Parameters', 500);
 

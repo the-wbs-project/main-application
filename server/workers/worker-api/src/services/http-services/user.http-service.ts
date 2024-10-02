@@ -17,7 +17,7 @@ export class UserHttpService {
 
   static async getProfileAsync(ctx: Context): Promise<Response> {
     try {
-      const user = ctx.var.idToken.userId;
+      const user = ctx.var.userId;
 
       return ctx.json(await ctx.var.data.users.getProfileAsync(user));
     } catch (e) {
@@ -29,7 +29,7 @@ export class UserHttpService {
 
   static async getSiteRolesAsync(ctx: Context): Promise<Response> {
     try {
-      const user = ctx.var.idToken.userId;
+      const user = ctx.var.userId;
 
       return ctx.json(await ctx.var.data.users.getSiteRolesAsync(user));
     } catch (e) {
@@ -41,7 +41,7 @@ export class UserHttpService {
 
   static async getMembershipsAsync(ctx: Context): Promise<Response> {
     try {
-      const user = ctx.var.idToken.userId;
+      const user = ctx.var.userId;
 
       return ctx.json(await ctx.var.data.users.getMembershipsAsync(user));
     } catch (e) {
@@ -53,7 +53,7 @@ export class UserHttpService {
 
   static async updateAsync(ctx: Context): Promise<Response> {
     try {
-      const user = ctx.var.idToken.userId;
+      const user = ctx.var.userId;
       const body: User = await ctx.req.json();
 
       if (body?.user_id !== user) return ctx.text('Bad Request', 400);
