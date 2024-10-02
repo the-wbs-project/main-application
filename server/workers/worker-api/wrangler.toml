@@ -4,6 +4,9 @@ compatibility_date = "2024-05-02"
 main = "src/index.ts"
 logpush = true
 
+[observability]
+enabled = true
+
 [env.dev]
 name = "pm-empower-api-dev"
 kv_namespaces = [

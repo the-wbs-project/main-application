@@ -8,6 +8,9 @@ logpush = true
 [placement]
 mode = "smart"
 
+[observability]
+enabled = true
+
 [env.dev]
 name = "pm-empower-auth-dev"
 kv_namespaces = [

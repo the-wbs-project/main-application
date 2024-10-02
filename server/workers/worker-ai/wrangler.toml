@@ -7,6 +7,8 @@ routes = [
 kv_namespaces = [
   { binding = "KV", id = "c244e1d094dc433d9653ad666a687f6d", preview_id = "c244e1d094dc433d9653ad666a687f6d" },
 ]
+[observability]
+enabled = true
 
 [vars]
 AI_GATEWAY = "test-gateway"
