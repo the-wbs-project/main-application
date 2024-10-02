@@ -17,12 +17,10 @@ import { PDFViewerModule } from '@progress/kendo-angular-pdfviewer';
   standalone: true,
   changeDetection: ChangeDetectionStrategy.OnPush,
   imports: [DialogModule, PDFViewerModule],
-  template: `<kendo-dialog
-    [title]="title()"
-    width="90%"
-    height="90%"
-    (close)="dialog.close()"
-  >
+  template: `<kendo-dialog width="90%" height="90%" (close)="dialog.close()">
+    <kendo-dialog-titlebar class="bg-gray-200">
+      {{ title() }}
+    </kendo-dialog-titlebar>
     <kendo-pdfviewer
       [data]="url()"
       [saveFileName]="downloadTitle()"
