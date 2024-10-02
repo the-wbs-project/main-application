@@ -28,4 +28,7 @@ export type Env = {
   readonly CORS_ORIGINS: string;
   readonly DEBUG: string;
   readonly KV_BYPASS?: string;
+
+  readonly EMAIL_ADMIN: string;
+  readonly EMAIL_FROM: string;
 };

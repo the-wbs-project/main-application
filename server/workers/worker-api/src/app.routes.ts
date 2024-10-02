@@ -32,6 +32,7 @@ app.use('*', async (ctx, next) => {
   var data = new DataServiceFactory(ctx.env, ctx.executionCtx, origin);
   var claims = new ClaimsService(data);
   var jira = new JiraService(ctx.env, fetcher, logger);
+  var mailgun = new MailGunService(ctx.env, fetcher, logger);
 
   ctx.set('datadog', datadog);
   ctx.set('logger', logger);
@@ -40,6 +41,7 @@ app.use('*', async (ctx, next) => {
   ctx.set('origin', origin);
   ctx.set('claims', claims);
   ctx.set('data', data);
+  ctx.set('mailgun', mailgun);
 
   await next();
 });
@@ -70,7 +72,7 @@ app.put('api/resources', Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
 
-app.post('api/send', MailGunService.handleHomepageInquiryAsync);
+app.post('api/send', (ctx) => ctx.var.mailgun.handleHomepageInquiryAsync(ctx));
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 
 app.get('api/tools/rebuild', verifyJwt, verifySiteAdmin, HttpOriginService.pass);
