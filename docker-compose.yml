@@ -36,6 +36,16 @@ services:
        - ./site:/usr/src/app/site
        - /usr/src/app/site/node_modules
 
+  wbs-db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    ports:
+      - 1433:1433
+    volumes:
+      - ./_db/data:/var/opt/mssql/data
+      - ./_db/log:/var/opt/mssql/log
+      - ./_db/secrets:/var/opt/mssql/secrets
+    environment:
+      - ACCEPT_EULA=Y
 
 volumes:
   share:
