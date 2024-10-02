@@ -19,7 +19,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { TooltipModule } from '@progress/kendo-angular-tooltip';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ContentResource } from '@wbs/core/models';
+import { ContentResource, RESOURCE_TYPES } from '@wbs/core/models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { ResourceTypeTextComponent } from '../type-text';
 import { PdfDialogComponent } from '../pdf-dialog.component';
@@ -82,13 +82,7 @@ export class RecordResourceListComponent {
   }
 
   open(record: ContentResource): void {
-    if (record.type === 'pdf') {
-      this.data.contentResources
-        .getFileAsync(record.ownerId, record.parentId, record.id)
-        .subscribe((file) =>
-          PdfDialogComponent.launch(this.dialog, record.name, file)
-        );
-    } else {
+    if (record.type === RESOURCE_TYPES.LINK) {
       window.open(
         this.data.contentResources.getFileUrl(
           record.ownerId,
@@ -97,6 +91,12 @@ export class RecordResourceListComponent {
         ),
         '_blank'
       );
+    } else {
+      this.data.contentResources
+        .getFileAsync(record.ownerId, record.parentId, record.id)
+        .subscribe((file) =>
+          PdfDialogComponent.launch(this.dialog, record.name, file)
+        );
     }
   }
 }

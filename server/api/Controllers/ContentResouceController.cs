@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models;
+using Wbs.Core.Services;
 
 [ApiController]
 [Route("api/portfolio/{owner}/content-resources")]
@@ -163,6 +164,8 @@ public class ContentResourcesController : ControllerBase
 
                     bytes = stream.ToArray();
                 }
+                if (record.Type == "image")
+                    bytes = ImageConverterService.AddImageFromStream(bytes);
 
                 await storageService.SaveAsync(owner, resourceId, bytes);
 

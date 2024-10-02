@@ -79,7 +79,6 @@ public class DatadogService : IDisposable
 
                 if (response.StatusCode == HttpStatusCode.Accepted)
                 {
-                    Console.WriteLine("Saved!");
                 }
                 else
                 {

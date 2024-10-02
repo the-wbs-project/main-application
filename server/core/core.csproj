@@ -18,7 +18,9 @@
     <PackageReference Include="Microsoft.Azure.Cosmos" Version="3.39.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="5.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging" Version="8.0.0" />
+		<PackageReference Include="PDFSharp" Version="6.1.1" />
     <PackageReference Include="shortid" Version="3.0.0" />
 		<PackageReference Include="net.sf.mpxj" Version="12.9.0" />
+		<PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
   </ItemGroup>
 </Project>
