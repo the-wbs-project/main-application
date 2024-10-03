@@ -3,7 +3,7 @@ export enum ROLES {
   APPROVER = 'approver',
   SME = 'sme',
   ADMIN = 'admin',
-  SITE_ADMIN = 'site-admin',
+  SITE_ADMIN = 'site_admin',
 }
 export const ROLES_CONST = {
   PM: ROLES.PM,
