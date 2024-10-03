@@ -1,8 +1,7 @@
-<kendo-dialog
-  width="400px"
-  [title]="'Projects.DeleteTask' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog width="400px" (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Projects.DeleteTask" | translate }}
+  </kendo-dialog-titlebar>
   <div class="p-1">
     <kendo-label [for]="reasonDropdown">
       {{ "Wbs.DeleteTaskMessage" | translate }}

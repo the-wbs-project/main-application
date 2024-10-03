@@ -1,7 +1,7 @@
-<kendo-dialog
-  [title]="'Upload.DeleteConfirm' | translate"
-  (close)="dialog.close()"
->
+<kendo-dialog (close)="dialog.close()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Upload.DeleteConfirm" | translate }}
+  </kendo-dialog-titlebar>
   <p>
     <button
       kendoButton
