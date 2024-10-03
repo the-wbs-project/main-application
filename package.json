@@ -16,6 +16,7 @@
     "db:restore": "unzip -d _db \"_db_backups/$(ls -t _db_backups | head -1)\"",
     "start": "docker-compose up",
     "stop": "docker-compose stop",
+    "stop2": "docker-compose stop",
     "upload": "cd files && yarn run upload:local",
     "upload:qa": "cd files && yarn run upload:qa",
     "upload:prod": "cd files && yarn run upload:prod",
