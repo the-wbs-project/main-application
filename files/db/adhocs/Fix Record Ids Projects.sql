@@ -1,4 +1,4 @@
-DECLARE @RecordId NVARCHAR(100) = 'L-487929'
+DECLARE @RecordId NVARCHAR(100) = 'P-807126'
 
 SELECT COUNT(*)
 FROM [dbo].[Projects]

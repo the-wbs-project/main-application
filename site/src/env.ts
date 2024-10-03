@@ -8,7 +8,7 @@ export const environment = {
       ? '44pcQ5Xo33vimvBb4G8eZfjFaGIsyWfg'
       : locationHost.indexOf('test') > -1
       ? 'zfvKgtPltxHsUGNPMYvF6JRljlp6xDuC'
-      : 'raHHzPliW4kekFgknuejtzKStyG8X9oi',
+      : 'fcglfNwfePIkurCZYGTE7lkIxbfPnyWk',
 
   authRedirectUri:
     locationHost.indexOf('localhost') > -1

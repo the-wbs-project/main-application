@@ -46,7 +46,7 @@ DECLARE @Max INT = 999999
 
 INSERT INTO [dbo].[Projects]
     ([Id], [RecordId], [OwnerId], [CreatedBy], [CreatedOn],[Title],[Description],[LastModified],[Status],[MainNodeView],[Category],[Disciplines],[Roles],[ApprovalStarted],[LibraryLink])
-SELECT [Id], 'L-' + RIGHT('0000' + CAST(FLOOR(RAND() * (@Max - @Min) + @Min) AS VARCHAR(10)), 6), [OwnerId], [CreatedBy], [CreatedOn], [Title], [Description], [LastModified], [Status], [MainNodeView], [Category], [Disciplines], [Roles], [ApprovalStarted], [LibraryLink]
+SELECT [Id], 'P-' + RIGHT('0000' + CAST(FLOOR(RAND() * (@Max - @Min) + @Min) AS VARCHAR(10)), 6), [OwnerId], [CreatedBy], [CreatedOn], [Title], [Description], [LastModified], [Status], [MainNodeView], [Category], [Disciplines], [Roles], [ApprovalStarted], [LibraryLink]
 FROM #Projects
 GO
 

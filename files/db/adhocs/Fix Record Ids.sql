@@ -1,4 +1,4 @@
-DECLARE @RecordId NVARCHAR(100) = 'L-367393'
+DECLARE @RecordId NVARCHAR(100) = 'L-435313'
 
 SELECT COUNT(*)
 FROM [dbo].[LibraryEntries]
