@@ -2,9 +2,11 @@
   minWidth="600px"
   maxWidth="800px"
   width="75%"
-  [title]="'Library.CreateNewVersion' | translate"
   (close)="dialog.close()"
 >
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "Library.CreateNewVersion" | translate }}
+  </kendo-dialog-titlebar>
   <wbs-alert
     type="info"
     [dismissible]="false"

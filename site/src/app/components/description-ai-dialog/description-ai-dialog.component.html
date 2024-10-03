@@ -1,8 +1,7 @@
-<kendo-dialog
-  height="97%"
-  [title]="'General.AskAi' | translate"
-  (close)="closed.emit()"
->
+<kendo-dialog height="97%" (close)="closed.emit()">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "General.AskAi" | translate }}
+  </kendo-dialog-titlebar>
   <div [(wbsHeight)]="containerHeight" class="d-flex h-100">
     <div class="d-none d-xl-flex gap-10">
       <div class="wd-550">

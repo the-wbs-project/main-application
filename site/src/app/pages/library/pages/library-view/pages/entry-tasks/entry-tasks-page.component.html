@@ -1,10 +1,8 @@
 @if (showDialog()) {
-<kendo-dialog
-  height="95%"
-  width="95%"
-  [title]="'General.Tasks' | translate"
-  (close)="showDialog.set(false)"
->
+<kendo-dialog height="95%" width="95%" (close)="showDialog.set(false)">
+  <kendo-dialog-titlebar class="bg-gray-200">
+    {{ "General.Tasks" | translate }}
+  </kendo-dialog-titlebar>
   <div
     [(wbsHeight)]="dialogContainerHeight"
     class="pd-0 d-flex flex-column h-100"
