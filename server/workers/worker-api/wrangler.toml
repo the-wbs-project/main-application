@@ -60,7 +60,7 @@ JIRA_DOMAIN = "cw-software.atlassian.net"
 name = "pm-empower-api-prod"
 workers_dev = false
 routes = [
-	{ pattern = "api.pm-empower.com/*", zone_name = "pm-empower.com" }
+	{ pattern = "app.pm-empower.com/api/*", zone_name = "pm-empower.com" }
 ]
 kv_namespaces = [
   { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
@@ -74,12 +74,15 @@ crons = [ "*/10 * * * *" ]
 
 [env.prod.vars]
 DEBUG = "false"
+ORIGIN = "https://api.pm-empower.com"
 DATADOG_ENV = "production"
-DATADOG_HOST = "api.pm-empower.com"
+DATADOG_HOST = "app.pm-empower.com"
 CORS_ORIGINS = "https://app.pm-empower.com"
 MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
 
 [dev]
 port = 88
