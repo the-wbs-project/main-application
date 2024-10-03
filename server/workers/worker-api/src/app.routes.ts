@@ -11,6 +11,7 @@ import {
   JiraService,
   MailGunService,
   HttpOriginService,
+  MailBuilderService,
 } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -33,6 +34,7 @@ app.use('*', async (ctx, next) => {
   var claims = new ClaimsService(data);
   var jira = new JiraService(ctx.env, fetcher, logger);
   var mailgun = new MailGunService(ctx.env, fetcher, logger);
+  var mailbuilder = new MailBuilderService(ctx.env);
 
   ctx.set('datadog', datadog);
   ctx.set('logger', logger);
@@ -42,7 +44,7 @@ app.use('*', async (ctx, next) => {
   ctx.set('claims', claims);
   ctx.set('data', data);
   ctx.set('mailgun', mailgun);
-
+  ctx.set('mailbuilder', mailbuilder);
   await next();
 });
 //
@@ -72,7 +74,7 @@ app.put('api/resources', Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
 
-app.post('api/send', (ctx) => ctx.var.mailgun.handleHomepageInquiryAsync(ctx));
+app.post('api/send', (ctx) => ctx.var.mailbuilder.handleHomepageInquiryAsync(ctx));
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 
 app.get('api/tools/rebuild', verifyJwt, verifySiteAdmin, HttpOriginService.pass);
@@ -107,6 +109,14 @@ const entryApp = newApp()
 
 app.route('/', entryApp);
 //
+// Watchers
+//
+const watcherApp = newApp()
+  .get('entries', verifyJwt, Http.watchers.getWatchedAsync)
+  .get('users/:owner/:id', verifyJwt, Http.watchers.getWatchersAsync)
+  .get('users/:owner/:id/count', verifyJwt, Http.watchers.getWatcherCountAsync);
+
+app.route('api/watchers', watcherApp);
 //
 //  Project calls
 //

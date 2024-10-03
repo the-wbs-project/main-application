@@ -23,7 +23,7 @@ public class WatchersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("library/watcher/{watcherId}")]
+    [HttpGet("entries/{watcherId}")]
     public async Task<IActionResult> GetEntriesAsync(string watcherId)
     {
         try
@@ -39,7 +39,23 @@ public class WatchersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("library/count/{ownerId}/{entryId}")]
+    [HttpGet("watchers/{ownerId}/{entryId}")]
+    public async Task<IActionResult> GetWatchersAsync(string ownerId, string entryId)
+    {
+        try
+        {
+            using (var conn = await db.CreateConnectionAsync())
+                return Ok(await libraryDataService.GetUsersAsync(conn, ownerId, entryId));
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting library watchers");
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
+    [HttpGet("watchers/{ownerId}/{entryId}/count")]
     public async Task<IActionResult> GetCountAsync(string ownerId, string entryId)
     {
         try

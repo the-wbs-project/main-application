@@ -16,6 +16,18 @@ services = [
   { binding = "AUTH_API", service = "pm-empower-auth-dev" }
 ]
 
+[env.dev.queues]
+producers = [
+  { queue = "send-mail", binding = "SEND_MAIL" },
+]
+consumers = [
+  { queue = "send-mail", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "send-mail-dlq" },
+]
+
+
+[env.dev.triggers]
+crons = [ "0 0 * * *" ]
+
 [env.dev.vars]
 DEBUG = "true"
 ORIGIN = "http://wbs-api"

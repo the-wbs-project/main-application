@@ -14,6 +14,7 @@ import { OrganizationHttpService } from './organization.http-service';
 import { ProjectHttpService } from './project.http-service';
 import { RolesHttpService } from './roles.http-service';
 import { UserHttpService } from './user.http-service';
+import { WatcherHttpService } from './watcher.http-service';
 
 export const Http = {
   activities: ActivitiesHttpService,
@@ -32,4 +33,5 @@ export const Http = {
   projects: ProjectHttpService,
   roles: RolesHttpService,
   users: UserHttpService,
+  watchers: WatcherHttpService,
 };

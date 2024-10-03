@@ -1,50 +1,12 @@
-import { Context, Env } from '../config';
-import { EMAILS } from '../emails';
+import { Env } from '../config';
+import { MailMessage } from '../models';
 import { Fetcher } from './fetcher.service';
 import { Logger } from './logging';
 
 export class MailGunService {
   constructor(private readonly env: Env, private readonly fetcher: Fetcher, private readonly logger: Logger) {}
 
-  async handleHomepageInquiryAsync(ctx: Context): Promise<Response> {
-    const blob = await ctx.req.json();
-    const html = `
-    <p>Name: ${blob.name}</p>
-    <p>Subject: ${blob.subject}</p>
-    <p>Messasge: ${blob.message}</p>`;
-
-    const success = await this.sendMailAsync([this.env.EMAIL_ADMIN], 'New Inquiry From Homepage', html);
-
-    return ctx.newResponse(null, success ? 204 : 500);
-  }
-
-  async sendWatcherEmail(data: any[]): Promise<boolean> {
-    const html = EMAILS.WATCHER;
-
-    return this.sendMailAsync([this.env.EMAIL_ADMIN], 'Rick Rater - Daily Test Email', html);
-  }
-
-  async sendTestEmail(data: any[]): Promise<void> {
-    let html = '<html><body>';
-
-    for (const item of data) {
-      html += `<p>${item.header}: `;
-
-      if (item.passes) {
-        html += `<span style="color: green;">Pass</span>`;
-      } else {
-        html += `<span style="color: red;">Failed - ${item.error}</span>`;
-      }
-
-      html += '</p>';
-    }
-
-    html += '</body></html>';
-
-    await this.sendMailAsync([this.env.EMAIL_ADMIN], 'Rick Rater - Daily Test Email', html);
-  }
-
-  private async sendMailAsync(toList: string[], subject: string, html: string): Promise<boolean> {
+  async send({ toList, subject, html }: MailMessage): Promise<boolean> {
     const to = toList.join(',');
     const data: any = {
       to,

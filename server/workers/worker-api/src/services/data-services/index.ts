@@ -15,6 +15,7 @@ import { ProjectDataService } from './project.data-service';
 import { ResourcesDataService } from './resources.data-service';
 import { RolesDataService } from './roles.data-service';
 import { UserDataService } from './user.data-service';
+import { WatcherDataService } from './watcher.data-service';
 
 export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
@@ -33,7 +34,7 @@ export class DataServiceFactory {
   readonly resources: ResourcesDataService;
   readonly roles: RolesDataService;
   readonly users: UserDataService;
-
+  readonly watchers: WatcherDataService;
   constructor(env: Env, executionCtx: ExecutionContext, origin: OriginService) {
     //
     //  Auth
@@ -57,6 +58,7 @@ export class DataServiceFactory {
     this.projectNodes = new ProjectNodeDataService(env, executionCtx, origin);
     this.projects = new ProjectDataService(env, executionCtx, origin);
     this.resources = new ResourcesDataService(env, executionCtx, origin);
+    this.watchers = new WatcherDataService(env, executionCtx, origin);
     //
     //  Complex
     //

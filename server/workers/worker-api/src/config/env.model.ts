@@ -2,6 +2,7 @@ import { AuthEntrypoint } from './entrypoints';
 
 export type Env = {
   readonly KV_DATA: KVNamespace;
+  readonly SEND_MAIL: Queue;
 
   readonly AUTH_API: AuthEntrypoint;
   readonly ORIGIN: string;

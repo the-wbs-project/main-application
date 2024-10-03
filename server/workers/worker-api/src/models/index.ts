@@ -9,6 +9,7 @@ export * from './library-entry-node.model';
 export * from './library-entry-version.model';
 export * from './library-link.model';
 export * from './list-item.model';
+export * from './mail-message.model';
 export * from './message.model';
 export * from './organization.model';
 export * from './project.model';

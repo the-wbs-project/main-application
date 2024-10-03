@@ -7,6 +7,7 @@ import {
   JiraService,
   HttpOriginService,
   MailGunService,
+  MailBuilderService,
 } from '../services';
 
 export type Variables = {
@@ -16,6 +17,7 @@ export type Variables = {
   fetcher: Fetcher;
   jira: JiraService;
   logger: HttpLogger;
+  mailbuilder: MailBuilderService;
   mailgun: MailGunService;
   origin: HttpOriginService;
   userId: string;
