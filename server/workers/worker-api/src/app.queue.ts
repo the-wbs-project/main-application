@@ -13,6 +13,7 @@ import {
 const QUEUES = {
   SEND_MAIL: 'send-mail',
   VERSION_PUBLISHED: 'version-published',
+  PROJECT_CREATED: 'project-created',
 };
 
 export const APP_QUEUE = {
@@ -23,7 +24,7 @@ export const APP_QUEUE = {
     const origin = new JobOriginService(env, fetcher);
     const data = new DataServiceFactory(env, ctx, origin);
     const mailgun = new MailGunService(env, fetcher, logger);
-    const mailBuilder = new MailBuilderService(data, env);
+    const mailBuilder = new MailBuilderService(data, env, mailgun);
     const queue = new QueueService(env, logger, mailBuilder, mailgun);
 
     console.log(`${batch.queue}: Starting (${batch.messages.length})`);
@@ -32,6 +33,8 @@ export const APP_QUEUE = {
       await queue.sendMail(batch);
     } else if (batch.queue === QUEUES.VERSION_PUBLISHED) {
       await queue.versionPublished(batch);
+    } else if (batch.queue === QUEUES.PROJECT_CREATED) {
+      await queue.projectCreated(batch);
     }
 
     console.log(`${batch.queue}: Done`);

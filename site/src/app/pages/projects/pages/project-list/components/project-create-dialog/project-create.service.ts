@@ -78,10 +78,7 @@ export class ProjectCreateService {
       }
     }
 
-    return this.data.projects.putProjectAsync(project).pipe(
-      switchMap(() =>
-        this.data.projects.putTasksAsync(project.owner, project.id, nodes, [])
-      ),
+    return this.data.projects.createProjectAsync(project, nodes).pipe(
       switchMap(() =>
         this.activities.createProject(project.owner, project.id, project.title)
       ),

@@ -1,10 +1,11 @@
 import { Context, Env } from '../config';
 import { EMAILS } from '../emails';
-import { MailMessage, PublishedEmailQueueMessage } from '../models';
+import { MailMessage, ProjectCreatedQueueMessage, PublishedEmailQueueMessage } from '../models';
 import { DataServiceFactory } from './data-services';
+import { MailGunService } from './mail-gun.service';
 
 export class MailBuilderService {
-  constructor(private readonly data: DataServiceFactory, private readonly env: Env) {}
+  constructor(private readonly data: DataServiceFactory, private readonly env: Env, private readonly mailgun: MailGunService) {}
 
   async handleHomepageInquiryAsync(ctx: Context): Promise<Response> {
     const blob = await ctx.req.json();
@@ -47,16 +48,52 @@ export class MailBuilderService {
     //  Now get the user Ids
     //
     const users = await Promise.all(userIds.map((id) => this.data.users.getBasicAsync(id)));
+    const bccList: string[] = [];
 
     for (const user of users) {
       if (!user) continue;
-
-      await this.queue({
-        toList: [user.email],
-        subject: 'PM Empower - New Library Version Published',
-        html,
-      });
+      bccList.push(user.email);
     }
+    await this.queue(
+      {
+        html,
+        bccList,
+        subject: 'PM Empower - New Library Version Published',
+      },
+      true,
+    );
+  }
+
+  async projectCreated(message: ProjectCreatedQueueMessage): Promise<void> {
+    const html = EMAILS.PROJECT_CREATED;
+
+    const userWithRoles = new Map<string, string[]>();
+    //
+    //  Add roles
+    //
+    for (const role of message.project.roles ?? []) {
+      if (userWithRoles.has(role.userId)) userWithRoles.get(role.userId)!.push(role.role);
+      else userWithRoles.set(role.userId, [role.role]);
+    }
+    if (userWithRoles.size === 0) return;
+    //
+    //  Now get the user Ids
+    //
+    const users = await Promise.all([...userWithRoles.keys()].map((id) => this.data.users.getBasicAsync(id)));
+    const toList: string[] = [];
+
+    for (const user of users) {
+      if (!user) continue;
+      toList.push(user.email);
+    }
+    await this.queue(
+      {
+        html,
+        toList,
+        subject: 'PM Empower - Project Created',
+      },
+      true,
+    );
   }
 
   async sendTestEmail(data: any[]): Promise<void> {
@@ -83,12 +120,22 @@ export class MailBuilderService {
     });
   }
 
-  private async queue(message: MailMessage): Promise<void> {
-    if (this.env.EMAIL_SUPRESS === 'true') {
-      message.toList = message.toList.filter((to) => to !== this.env.EMAIL_ADMIN);
-    }
-    if (message.toList.length === 0) return;
+  private async queue(message: MailMessage, sendNow = false): Promise<void> {
+    console.log('to list', message.toList);
+    console.log('bcc list', message.bccList);
 
-    return await this.env.SEND_MAIL_QUEUE.send(message);
+    if (this.env.EMAIL_SUPRESS === 'true') {
+      message.toList = message.toList?.filter((to) => to === this.env.EMAIL_ADMIN);
+      message.bccList = message.bccList?.filter((to) => to === this.env.EMAIL_ADMIN);
+    }
+    console.log('to list', message.toList);
+    console.log('bcc list', message.bccList);
+
+    if ([...(message.toList ?? []), ...(message.bccList ?? [])].length === 0) return;
+    if (sendNow) {
+      await this.mailgun.send(message);
+    } else {
+      await this.env.SEND_MAIL_QUEUE.send(message);
+    }
   }
 }

@@ -1,5 +1,5 @@
 import { Env } from '../config';
-import { MailMessage, PublishedEmailQueueMessage } from '../models';
+import { MailMessage, ProjectCreatedQueueMessage, PublishedEmailQueueMessage } from '../models';
 import { Logger } from './logging';
 import { MailBuilderService } from './mail-builder.service';
 import { MailGunService } from './mail-gun.service';
@@ -51,6 +51,26 @@ export class QueueService {
       } catch (e) {
         console.log('Error processing published version for email', <Error>e);
         this.logger.trackException('Error processing published version for email', <Error>e);
+
+        message.retry({
+          delaySeconds: 60, // delay 1 minute
+        });
+      }
+    }
+  }
+
+  async projectCreated(batch: MessageBatch): Promise<void> {
+    //
+    //    We are sending emails!!
+    //
+    for (const message of batch.messages) {
+      try {
+        await this.mailBuilder.projectCreated(message.body as ProjectCreatedQueueMessage);
+
+        message.ack();
+      } catch (e) {
+        console.log('Error processing project created for email', <Error>e);
+        this.logger.trackException('Error processing project created for email', <Error>e);
 
         message.retry({
           delaySeconds: 60, // delay 1 minute

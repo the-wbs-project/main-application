@@ -58,6 +58,13 @@ export class ProjectDataService {
     );
   }
 
+  createProjectAsync(project: Project, tasks: ProjectNode[]): Observable<void> {
+    return this.http.put<void>(
+      `api/portfolio/${project.owner}/projects/${project.id}/create`,
+      { project, tasks }
+    );
+  }
+
   deleteProjectAsync(owner: string, projectId: string): Observable<void> {
     return this.http.delete<void>(
       `api/portfolio/${owner}/projects/${projectId}`

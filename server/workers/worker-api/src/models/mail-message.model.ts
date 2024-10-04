@@ -1,5 +1,6 @@
 export interface MailMessage {
-  toList: string[];
+  toList?: string[];
+  bccList?: string[];
   subject: string;
   html: string;
 }

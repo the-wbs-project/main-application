@@ -21,6 +21,8 @@ export class DataDogService {
         },
       });
 
+      console.log('log flush status: ' + res.status);
+
       return res;
     } catch (e) {
       //@ts-ignore

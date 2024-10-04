@@ -14,6 +14,7 @@ export * from './message.model';
 export * from './organization.model';
 export * from './project.model';
 export * from './project-approval.model';
+export * from './project-created-queue-message.model';
 export * from './project-role.model';
 export * from './published-email-queue-message.model';
 export * from './resources.model';

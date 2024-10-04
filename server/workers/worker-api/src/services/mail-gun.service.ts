@@ -6,18 +6,22 @@ import { Logger } from './logging';
 export class MailGunService {
   constructor(private readonly env: Env, private readonly fetcher: Fetcher, private readonly logger: Logger) {}
 
-  async send({ toList, subject, html }: MailMessage): Promise<boolean> {
-    const to = toList.join(',');
+  async send({ toList, bccList, subject, html }: MailMessage): Promise<boolean> {
+    if (toList == null) toList = [];
+    if (bccList == null) bccList = [];
+
+    if (this.env.EMAIL_ADMIN && !toList.includes(this.env.EMAIL_ADMIN)) {
+      bccList.push(this.env.EMAIL_ADMIN);
+    }
+
     const data: any = {
-      to,
       html,
       subject,
+      to: toList.join(','),
+      bcc: bccList.join(','),
       from: this.env.EMAIL_FROM,
       'h:sender': this.env.EMAIL_FROM,
     };
-    if (this.env.EMAIL_ADMIN && !to.includes(this.env.EMAIL_ADMIN)) {
-      data.bcc = this.env.EMAIL_ADMIN;
-    }
     const dataUrlEncoded = this.urlEncodeObject(data);
 
     const resp = await this.fetcher.fetch(`${this.env.MAILGUN_ENDPOINT}/messages`, {

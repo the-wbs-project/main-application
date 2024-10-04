@@ -1,4 +1,5 @@
 import { Context } from '../../config';
+import { Project, ProjectCreatedQueueMessage } from '../../models';
 import { HttpOriginService } from '../origin-services/http-origin.service';
 import { Transformers } from '../transformers';
 
@@ -100,6 +101,48 @@ export class ProjectHttpService {
         statusText: resp.statusText,
         headers: resp.headers,
       });
+    } catch (e) {
+      ctx.var.logger.trackException('An error occured trying to save a project.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async createProjectAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, project } = ctx.req.param();
+      const body: { project: Project; tasks: any[] } = await ctx.req.json();
+      //
+      //  SaveProject
+      //
+      const projectResponse = await ctx.var.origin.putAsync(body.project, `portfolio/${owner}/projects/${project}`);
+
+      if (projectResponse.status >= 300) {
+        return ctx.newResponse(projectResponse.body, projectResponse.status);
+      }
+      //
+      //  Save Tasks
+      //
+      const tasksResponse = await ctx.var.origin.putAsync({ upserts: body.tasks }, `portfolio/${owner}/projects/${project}/nodes`);
+
+      if (tasksResponse.status >= 300) {
+        return ctx.newResponse(tasksResponse.body, tasksResponse.status);
+      }
+      //
+      //  Now refresh KVs
+      //
+      const exec = ctx.executionCtx;
+
+      exec.waitUntil(ctx.var.data.projects.refreshKvAsync(owner, project));
+      //
+      //  Now send email to the contributors
+      //
+      await ctx.env.PROJECT_CREATED_QUEUE.send({
+        project: body.project,
+        createdBy: ctx.var.userId,
+      });
+
+      return ctx.newResponse(null, 204);
     } catch (e) {
       ctx.var.logger.trackException('An error occured trying to save a project.', <Error>e);
 

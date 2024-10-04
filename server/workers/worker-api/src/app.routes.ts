@@ -34,7 +34,7 @@ app.use('*', async (ctx, next) => {
   var claims = new ClaimsService(data);
   var jira = new JiraService(ctx.env, fetcher, logger);
   var mailgun = new MailGunService(ctx.env, fetcher, logger);
-  var mailbuilder = new MailBuilderService(data, ctx.env);
+  var mailbuilder = new MailBuilderService(data, ctx.env, mailgun);
 
   ctx.set('datadog', datadog);
   ctx.set('logger', logger);
@@ -128,6 +128,7 @@ const projectApp = newApp()
   .get(':project/recordId', verifyJwt, verifyMembership, Http.projects.getRecordIdAsync)
   .get(':project/nodes', verifyJwt, verifyMembership, Http.projects.getNodesAsync)
   .put(':project', verifyJwt, verifyMembership, Http.projects.putProjectAsync)
+  .put(':project/create', verifyJwt, verifyMembership, Http.projects.createProjectAsync)
   .delete(':project', verifyJwt, verifyMembership, Http.projects.deleteProjectAsync)
   .put(':project/nodes', verifyJwt, verifyMembership, Http.projects.putNodesAsync);
 //.put(':project/approvals', verifyJwt, verifyMembership, Http.projects.putAsync);
