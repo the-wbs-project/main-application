@@ -108,6 +108,18 @@ export class LibraryActionService {
         })),
       });
     }
+    var retired = versions.filter((v) => v.status === 'retired');
+
+    if (retired.length > 0) {
+      items.push({
+        faIcon: faCodeBranch,
+        resource: 'General.Archived',
+        items: retired.map((v) => ({
+          text: this.versionName(v),
+          route: [...entryUrl.slice(0, -1), v.version.toString()],
+        })),
+      });
+    }
 
     if (canUpdate) {
       if (version.status === 'draft') {
