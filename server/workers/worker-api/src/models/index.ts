@@ -15,6 +15,7 @@ export * from './organization.model';
 export * from './project.model';
 export * from './project-approval.model';
 export * from './project-role.model';
+export * from './published-email-queue-message.model';
 export * from './resources.model';
 export * from './role.model';
 export * from './roles.enum';

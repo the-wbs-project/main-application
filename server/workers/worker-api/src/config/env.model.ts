@@ -1,8 +1,10 @@
+import { MailMessage, PublishedEmailQueueMessage } from '../models';
 import { AuthEntrypoint } from './entrypoints';
 
 export type Env = {
   readonly KV_DATA: KVNamespace;
-  readonly SEND_MAIL: Queue;
+  readonly SEND_MAIL_QUEUE: Queue<MailMessage>;
+  readonly VERSION_PUBLISHED_QUEUE: Queue<PublishedEmailQueueMessage>;
 
   readonly AUTH_API: AuthEntrypoint;
   readonly ORIGIN: string;

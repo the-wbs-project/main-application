@@ -1,6 +1,6 @@
 import { Context, Env } from '../config';
 import { EMAILS } from '../emails';
-import { MailMessage } from '../models';
+import { MailMessage, PublishedEmailQueueMessage } from '../models';
 import { DataServiceFactory } from './data-services';
 
 export class MailBuilderService {
@@ -22,9 +22,9 @@ export class MailBuilderService {
     return ctx.newResponse(null, 202);
   }
 
-  async libraryVersionPublished(owner: string, entryId: string, versionId: number): Promise<void> {
+  async libraryVersionPublished(message: PublishedEmailQueueMessage): Promise<void> {
     const html = EMAILS.LIBRARY_VERSION_PUBLISHED;
-    const version = await this.data.libraryVersions.getByIdAsync(owner, entryId, versionId);
+    const version = message.version;
 
     if (!version) return;
 
@@ -39,7 +39,7 @@ export class MailBuilderService {
     //
     //  Add watchers
     //
-    for (const watcher of (await this.data.watchers.getWatchersAsync(owner, entryId)) ?? []) {
+    for (const watcher of message.watchers ?? []) {
       if (userIds.includes(watcher)) continue;
       userIds.push(watcher);
     }
@@ -89,6 +89,6 @@ export class MailBuilderService {
     }
     if (message.toList.length === 0) return;
 
-    return await this.env.SEND_MAIL.send(message);
+    return await this.env.SEND_MAIL_QUEUE.send(message);
   }
 }

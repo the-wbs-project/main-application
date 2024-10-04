@@ -134,7 +134,12 @@ export class LibraryEntryHttpService {
         ]);
       }
 
-      await ctx.var.mailBuilder.libraryVersionPublished(owner, entry, parseInt(version));
+      const [versionObj, watchers] = await Promise.all([
+        ctx.var.data.libraryVersions.getByIdAsync(owner, entry, parseInt(version)),
+        ctx.var.data.watchers.getWatchersAsync(owner, entry),
+      ]);
+
+      await ctx.env.VERSION_PUBLISHED_QUEUE.send({ version: versionObj!, watchers: watchers ?? [] });
 
       return ctx.newResponse(resp.body, {
         status: resp.status,

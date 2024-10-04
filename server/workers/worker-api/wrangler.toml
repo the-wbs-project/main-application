@@ -18,10 +18,12 @@ services = [
 
 [env.dev.queues]
 producers = [
-  { queue = "send-mail", binding = "SEND_MAIL" },
+  { queue = "send-mail", binding = "SEND_MAIL_QUEUE" },
+  { queue = "version-published", binding = "VERSION_PUBLISHED_QUEUE" }
 ]
 consumers = [
   { queue = "send-mail", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "send-mail-dlq" },
+  { queue = "version-published", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "version-published-dlq" },
 ]
 
 
@@ -40,7 +42,7 @@ AUTH_DOMAIN = "auth.pm-empower.com"
 JIRA_EMAIL = "chriswalton@cwsoftware.biz"
 JIRA_DOMAIN = "cw-software.atlassian.net"
 EMAIL_ADMIN = "chriswalton@cwsoftware.biz"
-EMAIL_FROM = "noreply@pm-empower.com"
+EMAIL_FROM = "noreply@thewbsproject.com"
 EMAIL_SUPRESS = "true"
 
 [env.test]

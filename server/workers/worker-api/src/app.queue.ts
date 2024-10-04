@@ -1,44 +1,40 @@
 import { Env } from './config';
-import { MailMessage } from './models';
-import { DataDogService, Fetcher, MailGunService, JobLogger } from './services';
+import {
+  DataDogService,
+  Fetcher,
+  MailGunService,
+  JobLogger,
+  QueueService,
+  MailBuilderService,
+  DataServiceFactory,
+  JobOriginService,
+} from './services';
 
 const QUEUES = {
   SEND_MAIL: 'send-mail',
+  VERSION_PUBLISHED: 'version-published',
 };
 
 export const APP_QUEUE = {
   async run(batch: MessageBatch, env: Env, ctx: ExecutionContext): Promise<void> {
-    console.log('Running queue');
-    var datadog = new DataDogService(env);
-    var logger = new JobLogger(env, datadog);
-    var fetcher = new Fetcher(logger);
-    var mailgun = new MailGunService(env, fetcher, logger);
+    const datadog = new DataDogService(env);
+    const logger = new JobLogger(env, datadog);
+    const fetcher = new Fetcher(logger);
+    const origin = new JobOriginService(env, fetcher);
+    const data = new DataServiceFactory(env, ctx, origin);
+    const mailgun = new MailGunService(env, fetcher, logger);
+    const mailBuilder = new MailBuilderService(data, env);
+    const queue = new QueueService(env, logger, mailBuilder, mailgun);
+
+    console.log(`${batch.queue}: Starting (${batch.messages.length})`);
 
     if (batch.queue === QUEUES.SEND_MAIL) {
-      //
-      //    We are sending emails!!
-      //
-      for (const message of batch.messages) {
-        try {
-          const mailMessage = message.body as MailMessage;
-
-          const success = await mailgun.send(mailMessage);
-
-          if (success) {
-            message.ack();
-          } else {
-            message.retry({
-              delaySeconds: 60, // delay 1 minute
-            });
-          }
-        } catch (e) {
-          logger.trackException('Error sending mail', <Error>e);
-
-          message.retry({
-            delaySeconds: 60, // delay 1 minute
-          });
-        }
-      }
+      await queue.sendMail(batch);
+    } else if (batch.queue === QUEUES.VERSION_PUBLISHED) {
+      await queue.versionPublished(batch);
     }
+
+    console.log(`${batch.queue}: Done`);
+    await datadog.flush();
   },
 };
