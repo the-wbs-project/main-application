@@ -5,15 +5,13 @@ import { EntityId } from '../models';
 export class LibraryEntryWatcherDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getEntriesAsync(watcherId: string): Observable<EntityId[]> {
-    return this.http.get<EntityId[]>(
-      `api/watchers/library/watcher/${watcherId}`
-    );
+  getEntriesAsync(): Observable<EntityId[]> {
+    return this.http.get<EntityId[]>('api/watchers/entries');
   }
 
   getCountAsync(ownerId: string, entryId: string): Observable<number> {
     return this.http.get<number>(
-      `api/watchers/library/count/${ownerId}/${entryId}`
+      `api/watchers/users/${ownerId}/${entryId}/count`
     );
   }
 

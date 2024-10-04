@@ -5,7 +5,7 @@ export async function verifySiteAdmin(ctx: Context, next: any): Promise<Response
   const userId = ctx.var.userId;
   const roles = await ctx.var.data.users.getSiteRolesAsync(userId);
 
-  if (roles.every((r) => r.name !== ROLES.SITE_ADMIN)) return ctx.status(401);
+  if (roles.every((r) => r.name !== ROLES.SITE_ADMIN)) return ctx.newResponse(null, 401);
 
   await next();
 }

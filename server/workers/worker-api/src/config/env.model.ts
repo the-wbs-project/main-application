@@ -32,4 +32,6 @@ export type Env = {
 
   readonly EMAIL_ADMIN: string;
   readonly EMAIL_FROM: string;
+
+  readonly EMAIL_SUPRESS: string;
 };

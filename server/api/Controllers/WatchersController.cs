@@ -39,7 +39,7 @@ public class WatchersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("watchers/{ownerId}/{entryId}")]
+    [HttpGet("users/{ownerId}/{entryId}")]
     public async Task<IActionResult> GetWatchersAsync(string ownerId, string entryId)
     {
         try
@@ -55,7 +55,7 @@ public class WatchersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("watchers/{ownerId}/{entryId}/count")]
+    [HttpGet("users/{ownerId}/{entryId}/count")]
     public async Task<IActionResult> GetCountAsync(string ownerId, string entryId)
     {
         try

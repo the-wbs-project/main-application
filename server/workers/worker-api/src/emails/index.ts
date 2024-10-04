@@ -1,5 +1,5 @@
-import * as WATCHER_TEMPLATE from './water.html';
+import * as LIBRARY_VERSION_PUBLISHED from './library-version-published.html';
 
 export const EMAILS = {
-  WATCHER: WATCHER_TEMPLATE.default,
+  LIBRARY_VERSION_PUBLISHED: LIBRARY_VERSION_PUBLISHED.default,
 };

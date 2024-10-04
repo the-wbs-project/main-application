@@ -9,10 +9,6 @@ export const watcherGuard = () => {
   if (store.watchers.library.items() != undefined) return true;
 
   return inject(DataServiceFactory)
-    .libraryEntryWatchers.getEntriesAsync(store.userId()!)
-    .pipe(
-      map((list) => {
-        store.watchers.library.set(list);
-      })
-    );
+    .libraryEntryWatchers.getEntriesAsync()
+    .pipe(map((list) => store.watchers.library.set(list)));
 };

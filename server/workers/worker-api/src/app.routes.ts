@@ -34,7 +34,7 @@ app.use('*', async (ctx, next) => {
   var claims = new ClaimsService(data);
   var jira = new JiraService(ctx.env, fetcher, logger);
   var mailgun = new MailGunService(ctx.env, fetcher, logger);
-  var mailbuilder = new MailBuilderService(ctx.env);
+  var mailbuilder = new MailBuilderService(data, ctx.env);
 
   ctx.set('datadog', datadog);
   ctx.set('logger', logger);
@@ -44,7 +44,7 @@ app.use('*', async (ctx, next) => {
   ctx.set('claims', claims);
   ctx.set('data', data);
   ctx.set('mailgun', mailgun);
-  ctx.set('mailbuilder', mailbuilder);
+  ctx.set('mailBuilder', mailbuilder);
   await next();
 });
 //
@@ -74,7 +74,7 @@ app.put('api/resources', Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
 
-app.post('api/send', (ctx) => ctx.var.mailbuilder.handleHomepageInquiryAsync(ctx));
+app.post('api/send', (ctx) => ctx.var.mailBuilder.handleHomepageInquiryAsync(ctx));
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 
 app.get('api/tools/rebuild', verifyJwt, verifySiteAdmin, HttpOriginService.pass);
@@ -103,7 +103,7 @@ const entryApp = newApp()
 
   .put('', verifyJwt, Http.libraryEntries.putEntryAsync)
   .put('versions/:version', verifyJwt, Http.libraryEntries.putVersionAsync)
-  .put('versions/:version/publish', verifyJwt, Http.libraryEntries.putVersionAsync)
+  .put('versions/:version/publish', verifyJwt, Http.libraryEntries.publishVersionAsync)
   .put('versions/:version/replicate', verifyJwt, Http.libraryEntries.putVersionAsync)
   .put('versions/:version/nodes', verifyJwt, Http.libraryEntries.putTasksAsync);
 

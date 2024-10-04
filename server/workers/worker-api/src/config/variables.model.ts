@@ -17,7 +17,7 @@ export type Variables = {
   fetcher: Fetcher;
   jira: JiraService;
   logger: HttpLogger;
-  mailbuilder: MailBuilderService;
+  mailBuilder: MailBuilderService;
   mailgun: MailGunService;
   origin: HttpOriginService;
   userId: string;

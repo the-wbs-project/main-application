@@ -100,7 +100,6 @@ export class LibraryEntryHttpService {
     try {
       const { owner, entry } = ctx.req.param();
       const resp = await HttpOriginService.pass(ctx);
-      const exec = ctx.executionCtx;
 
       if (resp.status < 300) {
         await Promise.all([
@@ -108,6 +107,34 @@ export class LibraryEntryHttpService {
           ctx.var.data.libraryVersions.refreshKvAsync(owner, entry),
         ]);
       }
+
+      return ctx.newResponse(resp.body, {
+        status: resp.status,
+        statusText: resp.statusText,
+        headers: resp.headers,
+      });
+    } catch (e) {
+      ctx.var.logger.trackException('An error occured trying to save a library entry version.', <Error>e);
+
+      return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  static async publishVersionAsync(ctx: Context): Promise<Response> {
+    try {
+      const { owner, entry, version } = ctx.req.param();
+      const resp = await HttpOriginService.pass(ctx);
+
+      if (isNaN(parseInt(version))) return ctx.text('Bad Request', 400);
+
+      if (resp.status < 300) {
+        await Promise.all([
+          ctx.var.data.libraryEntries.refreshKvAsync(owner, entry),
+          ctx.var.data.libraryVersions.refreshKvAsync(owner, entry),
+        ]);
+      }
+
+      await ctx.var.mailBuilder.libraryVersionPublished(owner, entry, parseInt(version));
 
       return ctx.newResponse(resp.body, {
         status: resp.status,
