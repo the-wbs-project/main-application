@@ -10,7 +10,7 @@ public class ExcelFileImporter : BaseExtractService
 {
     private readonly ILogger<ExcelFileImporter> logger;
 
-    public ExcelFileImporter(IDatabaseConfig config, ILogger<ExcelFileImporter> logger, ListDataService listDataService, ResourcesDataService resourceDataService) : base(config, listDataService, resourceDataService)
+    public ExcelFileImporter(IDatabaseConfig config, ILogger<ExcelFileImporter> logger, DataServiceFactory data) : base(config, data)
     {
         this.logger = logger;
     }

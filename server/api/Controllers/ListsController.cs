@@ -8,15 +8,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ListsController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ListDataService dataService;
+    private readonly DataServiceFactory data;
 
-    public ListsController(ILoggerFactory loggerFactory, ListDataService dataService, DbService db)
+    public ListsController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ListsController>();
-        this.dataService = dataService;
-        this.db = db;
+        this.data = data;
     }
 
     [HttpGet("{type}")]
@@ -24,8 +22,8 @@ public class ListsController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetAsync(conn, type));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Lists.GetAsync(conn, type));
         }
         catch (Exception ex)
         {
@@ -39,8 +37,8 @@ public class ListsController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                await dataService.SetAsync(conn, resource);
+            using (var conn = await data.CreateConnectionAsync())
+                await data.Lists.SetAsync(conn, resource);
 
             return NoContent();
         }
@@ -56,8 +54,8 @@ public class ListsController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                await dataService.DeleteAsync(conn, type, id);
+            using (var conn = await data.CreateConnectionAsync())
+                await data.Lists.DeleteAsync(conn, type, id);
 
             return NoContent();
         }

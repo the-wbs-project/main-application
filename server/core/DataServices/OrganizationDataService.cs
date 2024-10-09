@@ -1,48 +1,41 @@
-using Auth0.ManagementApi.Models;
-using Auth0.ManagementApi.Paging;
+using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Logging;
-using Wbs.Core.Configuration;
+using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
-public class OrganizationDataService : BaseAuthDataService
+public class OrganizationDataService : BaseSqlDbService
 {
     private readonly ILogger<OrganizationDataService> logger;
-    protected Dictionary<string, string> orgIds = new Dictionary<string, string>();
 
-    public OrganizationDataService(ILogger<OrganizationDataService> logger, IAuth0Config config) : base(logger, config)
+    public async Task<List<Organization>> GetAllAsync(SqlConnection conn)
     {
-        this.logger = logger;
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[Organization]", conn);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        return OrganizationTransformer.ToModelList(reader);
     }
 
-    public async Task<List<Organization>> GetAllAsync()
+    public async Task<Organization> GetByIdAsync(SqlConnection conn, string id)
     {
-        var client = await GetClientAsync();
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[Organization] WHERE [Id] = @Id", conn);
 
-        return (await client.Organizations.GetAllAsync(new PaginationInfo())).ToList();
+        cmd.Parameters.AddWithValue("@Id", id);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        return OrganizationTransformer.ToModel(reader);
     }
 
-    public async Task<Organization> GetOrganizationByNameAsync(string name)
+    public async Task SetAsync(SqlConnection conn, Organization organization)
     {
-        var client = await GetClientAsync();
+        var cmd = new SqlCommand("dbo.Organization_Set", conn);
 
-        return await client.Organizations.GetByNameAsync(name);
-    }
+        cmd.Parameters.AddWithValue("@Id", organization.Id);
+        cmd.Parameters.AddWithValue("@Name", organization.Name);
+        cmd.Parameters.AddWithValue("@AiModels", DbJson(organization.AiModels));
 
-    public async Task<string> GetOrganizationIdByNameAsync(string orgName)
-    {
-        if (orgIds.ContainsKey(orgName))
-            return orgIds[orgName];
-
-        var client = await GetClientAsync();
-        var org = await client.Organizations.GetByNameAsync(orgName);
-
-        try
-        {
-            orgIds.Add(orgName, org.Id);
-        }
-        catch (ArgumentException) { }
-
-        return org.Id;
+        await cmd.ExecuteNonQueryAsync();
     }
 }

@@ -8,15 +8,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ChecklistsController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ChecklistDataService dataService;
+    private readonly DataServiceFactory data;
 
-    public ChecklistsController(ILoggerFactory loggerFactory, ChecklistDataService dataService, DbService db)
+    public ChecklistsController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ChecklistsController>();
-        this.dataService = dataService;
-        this.db = db;
+        this.data = data;
     }
 
     [HttpGet]
@@ -24,8 +22,8 @@ public class ChecklistsController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetAsync(conn));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Checklists.GetAsync(conn));
         }
         catch (Exception ex)
         {
@@ -39,9 +37,9 @@ public class ChecklistsController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                await dataService.SetAsync(conn, groups);
+                await data.Checklists.SetAsync(conn, groups);
 
                 return NoContent();
             }

@@ -6,22 +6,20 @@ namespace Wbs.Core.Services;
 
 public class VersioningService
 {
-    private readonly LibraryEntryVersionDataService versionDataService;
-    private readonly LibraryEntryNodeDataService nodeDataService;
+    private readonly DataServiceFactory data;
     private readonly ResourceCopyService resourceCopyService;
 
-    public VersioningService(LibraryEntryVersionDataService versionDataService, LibraryEntryNodeDataService nodeDataService, ResourceCopyService resourceCopyService)
+    public VersioningService(DataServiceFactory data, ResourceCopyService resourceCopyService)
     {
-        this.versionDataService = versionDataService;
-        this.nodeDataService = nodeDataService;
+        this.data = data;
         this.resourceCopyService = resourceCopyService;
     }
 
     public async Task<int> ReplicateAsync(SqlConnection conn, string owner, string entryId, int version, string alias, string author)
     {
-        var versions = await versionDataService.GetListAsync(conn, entryId);
+        var versions = await data.LibraryVersions.GetListAsync(conn, entryId);
+        var currentTasks = await data.LibraryNodes.GetListAsync(conn, entryId, version);
         var current = versions.FirstOrDefault(v => v.Version == version);
-        var currentTasks = await nodeDataService.GetListAsync(conn, entryId, version);
 
         if (current == null)
             throw new Exception("Version not found");
@@ -40,7 +38,7 @@ public class VersioningService
             Title = current.Title,
         };
 
-        await versionDataService.SetAsync(conn, owner, newVersion);
+        await data.LibraryVersions.SetAsync(conn, owner, newVersion);
         var newTasks = new List<LibraryEntryNode>();
         var idMap = new Dictionary<string, string>();
         var resources = new Dictionary<string, string>
@@ -76,7 +74,7 @@ public class VersioningService
                 t.parentId = idMap[t.parentId];
         }
 
-        await nodeDataService.SetAsync(conn, entryId, newVersion.Version, newTasks, []);
+        await data.LibraryNodes.SetAsync(conn, entryId, newVersion.Version, newTasks, []);
         await resourceCopyService.CopyAsync(conn, owner, owner, resources);
 
         return newVersion.Version;

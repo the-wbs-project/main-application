@@ -40,4 +40,23 @@ public class ProjectTransformer : SqlHelpers
             ApprovalStarted = DbValue<bool?>(reader, "ApprovalStarted"),
         };
     }
+
+    public static ProjectRole[] ToRoleArray(SqlDataReader reader)
+    {
+        var list = new List<ProjectRole>();
+
+        while (reader.Read())
+            list.Add(ToRole(reader));
+
+        return list.ToArray();
+    }
+
+    public static ProjectRole ToRole(SqlDataReader reader)
+    {
+        return new ProjectRole
+        {
+            Role = DbValue<string>(reader, "Role"),
+            UserId = DbValue<string>(reader, "UserId"),
+        };
+    }
 }

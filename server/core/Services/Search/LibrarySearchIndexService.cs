@@ -1,4 +1,3 @@
-using Auth0.ManagementApi.Models;
 using Azure;
 using Azure.Search.Documents.Indexes;
 using Azure.Search.Documents.Indexes.Models;
@@ -14,22 +13,12 @@ namespace Wbs.Core.Services.Search;
 public class LibrarySearchIndexService
 {
     private readonly IAzureAiSearchConfig searchConfig;
-    private readonly UserDataService userDataService;
-    private readonly OrganizationDataService organizationDataService;
-    private readonly LibraryEntryDataService libraryEntryDataService;
-    private readonly LibraryEntryVersionDataService libraryEntryVersionDataService;
-    private readonly ResourcesDataService resourcesDataService;
-    private readonly ListDataService listDataService;
+    private readonly DataServiceFactory data;
 
-    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, UserDataService userDataService, OrganizationDataService organizationDataService, LibraryEntryDataService libraryEntryDataService, LibraryEntryVersionDataService libraryEntryVersionDataService, ResourcesDataService resourcesDataService, ListDataService listDataService)
+    public LibrarySearchIndexService(IAzureAiSearchConfig searchConfig, DataServiceFactory data)
     {
         this.searchConfig = searchConfig;
-        this.userDataService = userDataService;
-        this.organizationDataService = organizationDataService;
-        this.libraryEntryDataService = libraryEntryDataService;
-        this.libraryEntryVersionDataService = libraryEntryVersionDataService;
-        this.resourcesDataService = resourcesDataService;
-        this.listDataService = listDataService;
+        this.data = data;
     }
 
     public async Task RemoveAsync(IEnumerable<LibrarySearchDocument> docs)
@@ -40,11 +29,11 @@ public class LibrarySearchIndexService
 
     public async Task PushToSearchAsync(SqlConnection conn, string owner, string[] entryIds)
     {
-        var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
-        var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
+        var resourceObj = await data.Resources.GetAllAsync(conn, "en-US");
+        var disciplineLabels = await data.Lists.GetLabelsAsync(conn, "categories_discipline");
         var resources = new Resources(resourceObj);
         var pushes = new List<Task>();
-        var ownerObj = await organizationDataService.GetOrganizationByNameAsync(owner);
+        var ownerObj = await data.Organizations.GetByIdAsync(conn, owner);
         //
         //  Get discipline labels
         //
@@ -53,12 +42,12 @@ public class LibrarySearchIndexService
 
         foreach (var entryId in entryIds)
         {
-            var entry = await libraryEntryDataService.GetByIdAsync(conn, owner, entryId);
+            var entry = await data.LibraryEntries.GetByIdAsync(conn, owner, entryId);
 
             if (entry == null || !entry.PublishedVersion.HasValue) continue;
 
-            var version = await libraryEntryVersionDataService.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
-            var author = await userDataService.GetMemberAsync(version.Author);
+            var version = await data.LibraryVersions.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
+            var author = await data.Users.GetMemberAsync(version.Author);
 
             pushes.Add(PushToSearchAsync(resources, ownerObj, entry, version, author.Name, disciplineLabels));
 
@@ -73,11 +62,11 @@ public class LibrarySearchIndexService
 
     public async Task PushToSearchAsync(SqlConnection conn, LibraryEntry entry, LibraryEntryVersion version)
     {
-        var resourceObj = await resourcesDataService.GetAllAsync(conn, "en-US");
-        var disciplineLabels = await listDataService.GetLabelsAsync(conn, "categories_discipline");
+        var resourceObj = await data.Resources.GetAllAsync(conn, "en-US");
+        var disciplineLabels = await data.Lists.GetLabelsAsync(conn, "categories_discipline");
         var resources = new Resources(resourceObj);
-        var ownerObj = await organizationDataService.GetOrganizationByNameAsync(entry.OwnerId);
-        var author = await userDataService.GetMemberAsync(version.Author);
+        var ownerObj = await data.Organizations.GetByIdAsync(conn, entry.OwnerId);
+        var author = await data.Users.GetMemberAsync(version.Author);
         //
         //  Get discipline labels
         //
@@ -102,7 +91,7 @@ public class LibrarySearchIndexService
             disciplines.Add(discipline.isCustom ? discipline.label : disciplineLabels[discipline.id]);
 
         var results = await GetIndexClient().GetSearchClient(searchConfig.LibraryIndex)
-            .MergeOrUploadDocumentsAsync(new[] { LibrarySearchTransformer.CreateDocument(entry, version, owner, typeLabel, authorName, disciplines) });
+            .MergeOrUploadDocumentsAsync([LibrarySearchTransformer.CreateDocument(entry, version, owner, typeLabel, authorName, disciplines)]);
     }
 
     public async Task VerifyIndexAsync()

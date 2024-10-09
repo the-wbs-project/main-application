@@ -5,20 +5,16 @@ namespace Wbs.Core.Services;
 
 public class ResourceCopyService
 {
-    private readonly ContentResourceDataService dataService;
-    private readonly ContentResourceStorageService storage;
+    private readonly DataServiceFactory data;
 
-    public ResourceCopyService(
-        ContentResourceDataService dataService,
-        ContentResourceStorageService storage)
+    public ResourceCopyService(DataServiceFactory data)
     {
-        this.dataService = dataService;
-        this.storage = storage;
+        this.data = data;
     }
 
     public async Task CopyAsync(SqlConnection conn, string fromOwner, string toOwner, Dictionary<string, string> copyInfo)
     {
-        var resources = await dataService.GetListAsync(conn, fromOwner, copyInfo.Keys);
+        var resources = await data.ContentResources.GetListAsync(conn, fromOwner, copyInfo.Keys);
 
         if (resources.Count == 0) return;
 
@@ -32,8 +28,8 @@ public class ResourceCopyService
             resource.Id = toId;
             resource.ParentId = copyInfo[resource.ParentId];
 
-            saves.Add(dataService.SetAsync(conn, resource));
-            saves.Add(storage.CopyResourceAsync(fromOwner, fromId, toOwner, toId));
+            saves.Add(data.ContentResources.SetAsync(conn, resource));
+            saves.Add(data.ContentResourceStorage.CopyResourceAsync(fromOwner, fromId, toOwner, toId));
 
             if (saves.Count == 10)
             {

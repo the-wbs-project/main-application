@@ -9,7 +9,7 @@ public class ExcelFileExporter : BaseExtractService
 {
     private readonly Storage storage;
 
-    public ExcelFileExporter(IDatabaseConfig config, ListDataService listDataService, ResourcesDataService resourceDataService, Storage storage) : base(config, listDataService, resourceDataService)
+    public ExcelFileExporter(IDatabaseConfig config, DataServiceFactory data, Storage storage) : base(config, data)
     {
         this.storage = storage;
     }

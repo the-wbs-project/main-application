@@ -9,15 +9,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ChatController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ChatDataService dataService;
+    private readonly DataServiceFactory data;
 
-    public ChatController(ILoggerFactory loggerFactory, ChatDataService dataService, DbService db)
+    public ChatController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ChatController>();
-        this.dataService = dataService;
-        this.db = db;
+        this.data = data;
     }
 
     [Authorize]
@@ -26,8 +24,8 @@ public class ChatController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetPageAsync(conn, threadId, skip, take));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Chats.GetPageAsync(conn, threadId, skip, take));
         }
         catch (Exception ex)
         {
@@ -42,8 +40,8 @@ public class ChatController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetNewCommentCount(conn, threadId, timestamp));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Chats.GetNewCommentCount(conn, threadId, timestamp));
         }
         catch (Exception ex)
         {
@@ -61,9 +59,9 @@ public class ChatController : ControllerBase
             if (threadId != comment.threadId)
                 return BadRequest();
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                await dataService.InsertAsync(conn, comment);
+                await data.Chats.InsertAsync(conn, comment);
 
                 comment.timestamp = DateTimeOffset.UtcNow;
                 return Ok(comment);

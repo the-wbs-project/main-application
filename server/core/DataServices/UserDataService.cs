@@ -1,5 +1,3 @@
-using Auth0.ManagementApi.Models;
-using Auth0.ManagementApi.Paging;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.Models;
@@ -9,7 +7,8 @@ namespace Wbs.Core.DataServices;
 
 public class UserDataService : BaseAuthDataService
 {
-    public UserDataService(ILogger<UserDataService> logger, IAuth0Config config) : base(logger, config) { }
+    public UserDataService(ILoggerFactory loggerFactory, IAuth0Config config) : base(loggerFactory.CreateLogger<UserDataService>(), config) { }
+
     public async Task<Member> GetMemberAsync(string userId)
     {
         var client = await GetClientAsync();

@@ -9,12 +9,12 @@ namespace Wbs.Api.Controllers;
 public class FilesController : ControllerBase
 {
     private readonly ILogger logger;
-    private readonly Storage storage;
+    private readonly DataServiceFactory data;
 
-    public FilesController(ILoggerFactory loggerFactory, Storage storage)
+    public FilesController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<FilesController>();
-        this.storage = storage;
+        this.data = data;
     }
 
     [Authorize]
@@ -23,7 +23,7 @@ public class FilesController : ControllerBase
     {
         try
         {
-            var file = await storage.GetFileAsBytesAsync("templates", fileName);
+            var file = await data.Storage.GetFileAsBytesAsync("templates", fileName);
 
             return File(file, "application/octet-stream");
         }

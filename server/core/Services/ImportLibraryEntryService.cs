@@ -6,37 +6,21 @@ namespace Wbs.Core.Services;
 
 public class ImportLibraryEntryService
 {
-    private readonly LibraryEntryDataService entryDataService;
-    private readonly LibraryEntryNodeDataService entryNodeDataService;
-    private readonly LibraryEntryVersionDataService entryVersionDataService;
-
-    private readonly ProjectDataService projectDataService;
-    private readonly ProjectNodeDataService projectNodeDataService;
+    private readonly DataServiceFactory data;
     private readonly ResourceCopyService copyService;
-    private readonly DbService db;
 
     public ImportLibraryEntryService(
-        DbService db,
-        ResourceCopyService copyService,
-        LibraryEntryDataService entryDataService,
-        LibraryEntryNodeDataService entryNodeDataService,
-        LibraryEntryVersionDataService entryVersionDataService,
-        ProjectDataService projectDataService,
-        ProjectNodeDataService projectNodeDataService)
+        DataServiceFactory data,
+        ResourceCopyService copyService)
     {
-        this.db = db;
+        this.data = data;
         this.copyService = copyService;
-        this.entryDataService = entryDataService;
-        this.entryNodeDataService = entryNodeDataService;
-        this.entryVersionDataService = entryVersionDataService;
-        this.projectDataService = projectDataService;
-        this.projectNodeDataService = projectNodeDataService;
     }
 
     public async Task<string> ImportFromProjectAsync(SqlConnection conn, string owner, string projectId, ProjectToLibraryOptions options)
     {
-        var project = await projectDataService.GetByIdAsync(conn, projectId);
-        var projectNodes = await projectNodeDataService.GetByProjectAsync(conn, projectId);
+        var project = await data.Projects.GetByIdAsync(conn, projectId);
+        var projectNodes = await data.ProjectNodes.GetByProjectAsync(conn, projectId);
 
         var libraryEntry = new LibraryEntry
         {
@@ -93,10 +77,10 @@ public class ImportLibraryEntryService
                 n.parentId = null;
         }
 
-        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await data.LibraryEntries.SetAsync(conn, libraryEntry);
 
-        await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
-        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
+        await data.LibraryVersions.SetAsync(conn, owner, libraryEntryVersion);
+        await data.LibraryNodes.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
@@ -107,8 +91,8 @@ public class ImportLibraryEntryService
 
     public async Task<string> ImportFromProjectNodeAsync(SqlConnection conn, string owner, string projectId, string nodeId, ProjectNodeToLibraryOptions options)
     {
-        var project = await projectDataService.GetByIdAsync(conn, projectId);
-        var projectNodes = await projectNodeDataService.GetByProjectAsync(conn, projectId);
+        var project = await data.Projects.GetByIdAsync(conn, projectId);
+        var projectNodes = await data.ProjectNodes.GetByProjectAsync(conn, projectId);
         var projectNode = projectNodes.SingleOrDefault(x => x.id == nodeId);
 
         var libraryEntry = new LibraryEntry
@@ -175,10 +159,10 @@ public class ImportLibraryEntryService
         libraryEntryVersion.Disciplines = GetDisciplinesForNode(project.Disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds).Distinct());
 
-        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await data.LibraryEntries.SetAsync(conn, libraryEntry);
 
-        await entryVersionDataService.SetAsync(conn, owner, libraryEntryVersion);
-        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
+        await data.LibraryVersions.SetAsync(conn, owner, libraryEntryVersion);
+        await data.LibraryNodes.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {
@@ -190,8 +174,8 @@ public class ImportLibraryEntryService
 
     public async Task<string> ImportFromEntryNodeAsync(SqlConnection conn, string targetOwner, string entryOwner, string entryId, int versionId, string nodeId, ProjectNodeToLibraryOptions options)
     {
-        var currentVersion = await entryVersionDataService.GetByIdAsync(conn, entryId, versionId);
-        var currentTasks = await entryNodeDataService.GetListAsync(conn, entryId, versionId);
+        var currentVersion = await data.LibraryVersions.GetByIdAsync(conn, entryId, versionId);
+        var currentTasks = await data.LibraryNodes.GetListAsync(conn, entryId, versionId);
         var task = currentTasks.SingleOrDefault(x => x.id == nodeId);
 
         var libraryEntry = new LibraryEntry
@@ -259,10 +243,10 @@ public class ImportLibraryEntryService
         version.Disciplines = GetDisciplinesForNode(currentVersion.Disciplines,
             libraryEntryNodes.SelectMany(x => x.disciplineIds ?? []).Distinct());
 
-        var newEntry = await entryDataService.SetAsync(conn, libraryEntry);
+        var newEntry = await data.LibraryEntries.SetAsync(conn, libraryEntry);
 
-        await entryVersionDataService.SetAsync(conn, targetOwner, version);
-        await entryNodeDataService.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
+        await data.LibraryVersions.SetAsync(conn, targetOwner, version);
+        await data.LibraryNodes.SetAsync(conn, libraryEntry.Id, 1, libraryEntryNodes, []);
 
         if (options.includeResources)
         {

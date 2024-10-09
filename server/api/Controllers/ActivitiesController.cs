@@ -9,17 +9,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ActivitiesController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ActivityDataService dataService;
-    private readonly ProjectDataService projectDataService;
+    private readonly DataServiceFactory data;
 
-    public ActivitiesController(ILoggerFactory loggerFactory, ActivityDataService dataService, ProjectDataService projectDataService, DbService db)
+    public ActivitiesController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ActivitiesController>();
-        this.dataService = dataService;
-        this.db = db;
-        this.projectDataService = projectDataService;
+        this.data = data;
     }
 
     [Authorize]
@@ -28,8 +24,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetCountForTopLevelAsync(conn, topLevel));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Activities.GetCountForTopLevelAsync(conn, topLevel));
         }
         catch (Exception ex)
         {
@@ -44,8 +40,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetForTopLevelAsync(conn, topLevel, skip, take));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Activities.GetForTopLevelAsync(conn, topLevel, skip, take));
         }
         catch (Exception ex)
         {
@@ -60,8 +56,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetCountForChildAsync(conn, topLevel, child));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Activities.GetCountForChildAsync(conn, topLevel, child));
         }
         catch (Exception ex)
         {
@@ -76,8 +72,8 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetForChildAsync(conn, topLevel, child, skip, take));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Activities.GetForChildAsync(conn, topLevel, child, skip, take));
         }
         catch (Exception ex)
         {
@@ -92,10 +88,10 @@ public class ActivitiesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                foreach (var data in activities)
-                    await dataService.InsertAsync(conn, data);
+                foreach (var activityData in activities)
+                    await data.Activities.InsertAsync(conn, activityData);
 
                 return NoContent();
             }

@@ -10,19 +10,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects/{projectId}/nodes")]
 public class ProjectNodeController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ProjectDataService projectDataService;
-    private readonly ProjectNodeDataService nodeDataService;
-    private readonly ImportLibraryEntryService importLibraryEntryService;
+    private readonly DataServiceFactory data;
+    private readonly ImportLibraryEntryService importService;
 
-    public ProjectNodeController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectNodeDataService nodeDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
+    public ProjectNodeController(ILoggerFactory loggerFactory, DataServiceFactory data, ImportLibraryEntryService importService)
     {
         logger = loggerFactory.CreateLogger<ProjectNodeController>();
-        this.nodeDataService = nodeDataService;
-        this.projectDataService = projectDataService;
-        this.importLibraryEntryService = importLibraryEntryService;
-        this.db = db;
+        this.importService = importService;
+        this.data = data;
     }
 
     [Authorize]
@@ -31,12 +27,12 @@ public class ProjectNodeController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                if (!await data.Projects.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                return Ok(await nodeDataService.GetByProjectAsync(conn, projectId));
+                return Ok(await data.ProjectNodes.GetByProjectAsync(conn, projectId));
             }
         }
         catch (Exception ex)
@@ -63,12 +59,12 @@ public class ProjectNodeController : ControllerBase
                     return BadRequest("All records must have same project id as provided in url.");
             }
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                if (!await data.Projects.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                await nodeDataService.SetAsync(conn, projectId, record.upserts, record.removeIds);
+                await data.ProjectNodes.SetAsync(conn, projectId, record.upserts, record.removeIds);
 
                 return NoContent();
             }
@@ -86,9 +82,9 @@ public class ProjectNodeController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                var entryId = await importLibraryEntryService.ImportFromProjectNodeAsync(conn, owner, projectId, nodeId, options);
+                var entryId = await importService.ImportFromProjectNodeAsync(conn, owner, projectId, nodeId, options);
 
                 return Ok(entryId);
             }

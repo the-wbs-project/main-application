@@ -12,7 +12,6 @@ CREATE PROCEDURE [dbo].[Project_Set]
     @MainNodeView nvarchar(20),
     @Category nvarchar(50),
     @Disciplines nvarchar(MAX),
-    @Roles nvarchar(MAX),
     @ApprovalStarted bit = NULL,
     @LibraryLink nvarchar(MAX)
 AS
@@ -31,7 +30,6 @@ BEGIN
             [MainNodeView] = @MainNodeView,
             [Category] = @Category,
             [Disciplines] = @Disciplines,
-            [Roles] = @Roles,
             [ApprovalStarted] = @ApprovalStarted,
             [LibraryLink] = @LibraryLink
         WHERE [Id] = @Id
@@ -40,7 +38,7 @@ ELSE
     BEGIN
         INSERT INTO [dbo].[Projects]
         VALUES
-            (@Id, @RecordId, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @Roles, @ApprovalStarted, @LibraryLink)
+            (@Id, @RecordId, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @ApprovalStarted, @LibraryLink)
     END
 END
 GO

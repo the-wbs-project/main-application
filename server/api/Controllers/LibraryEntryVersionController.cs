@@ -12,20 +12,16 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/library/entries/{entryId}/versions")]
 public class LibraryEntryVersionController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
     private readonly LibrarySearchIndexService searchIndexService;
-    private readonly LibraryEntryDataService entryDataService;
-    private readonly LibraryEntryVersionDataService versionDataService;
+    private readonly DataServiceFactory data;
     private readonly VersioningService versioningService;
 
-    public LibraryEntryVersionController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, LibraryEntryVersionDataService versionDataService, LibrarySearchIndexService searchIndexService, DbService db, VersioningService versioningService)
+    public LibraryEntryVersionController(ILoggerFactory loggerFactory, DataServiceFactory data, LibrarySearchIndexService searchIndexService, VersioningService versioningService)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryVersionController>();
-        this.entryDataService = entryDataService;
-        this.versionDataService = versionDataService;
+        this.data = data;
         this.searchIndexService = searchIndexService;
-        this.db = db;
         this.versioningService = versioningService;
     }
 
@@ -35,12 +31,12 @@ public class LibraryEntryVersionController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                if (!await data.LibraryEntries.VerifyAsync(conn, owner, entryId))
                     return BadRequest("Library Entry not found for the credentials provided.");
 
-                return Ok(await versionDataService.GetListAsync(conn, entryId));
+                return Ok(await data.LibraryVersions.GetListAsync(conn, entryId));
             }
         }
         catch (Exception ex)
@@ -56,12 +52,12 @@ public class LibraryEntryVersionController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                if (!await data.LibraryEntries.VerifyAsync(conn, owner, entryId))
                     return BadRequest("Library Entry not found for the credentials provided.");
 
-                return Ok(await versionDataService.GetByIdAsync(conn, entryId, entryVersion));
+                return Ok(await data.LibraryVersions.GetByIdAsync(conn, entryId, entryVersion));
             }
         }
         catch (Exception ex)
@@ -80,12 +76,12 @@ public class LibraryEntryVersionController : ControllerBase
             if (model.EntryId != entryId) return BadRequest("EntryId in body must match EntryId in url");
             if (model.Version != entryVersion) return BadRequest("Version in body must match Version in url");
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                if (!await data.LibraryEntries.VerifyAsync(conn, owner, entryId))
                     return BadRequest("Library Entry not found for the credentials provided.");
 
-                await versionDataService.SetAsync(conn, owner, model);
+                await data.LibraryVersions.SetAsync(conn, owner, model);
 
                 return NoContent();
             }
@@ -103,12 +99,12 @@ public class LibraryEntryVersionController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                if (!await data.LibraryEntries.VerifyAsync(conn, owner, entryId))
                     return BadRequest("Library Entry not found for the credentials provided.");
 
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                if (!await data.LibraryVersions.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
 
@@ -133,28 +129,28 @@ public class LibraryEntryVersionController : ControllerBase
             if (model.EntryId != entryId) return BadRequest("EntryId in body must match EntryId in url");
             if (model.Version != entryVersion) return BadRequest("Version in body must match Version in url");
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await entryDataService.VerifyAsync(conn, owner, entryId))
+                if (!await data.LibraryEntries.VerifyAsync(conn, owner, entryId))
                     return BadRequest("Library Entry not found for the credentials provided.");
 
 
-                var entry = await entryDataService.GetByIdAsync(conn, owner, entryId);
+                var entry = await data.LibraryEntries.GetByIdAsync(conn, owner, entryId);
                 //
                 //  Retire any existing published version
                 //
                 if (entry.PublishedVersion.HasValue && entry.PublishedVersion.Value != entryVersion)
                 {
-                    var otherVersion = await versionDataService.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
+                    var otherVersion = await data.LibraryVersions.GetByIdAsync(conn, entryId, entry.PublishedVersion.Value);
 
                     otherVersion.Status = "retired";
-                    await versionDataService.SetAsync(conn, owner, otherVersion);
+                    await data.LibraryVersions.SetAsync(conn, owner, otherVersion);
                 }
                 model.LastModified = DateTime.UtcNow;
                 entry.PublishedVersion = entryVersion;
 
-                await versionDataService.SetAsync(conn, owner, model);
-                await entryDataService.SetAsync(conn, entry);
+                await data.LibraryVersions.SetAsync(conn, owner, model);
+                await data.LibraryEntries.SetAsync(conn, entry);
                 await searchIndexService.PushToSearchAsync(conn, entry, model);
 
                 return NoContent();
