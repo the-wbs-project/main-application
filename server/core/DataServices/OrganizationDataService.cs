@@ -1,12 +1,10 @@
 using Microsoft.Data.SqlClient;
-using Microsoft.Extensions.Logging;
 using Wbs.Core.Models;
 
 namespace Wbs.Core.DataServices;
 
 public class OrganizationDataService : BaseSqlDbService
 {
-    private readonly ILogger<OrganizationDataService> logger;
 
     public async Task<List<Organization>> GetAllAsync(SqlConnection conn)
     {
