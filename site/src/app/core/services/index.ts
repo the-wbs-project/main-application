@@ -22,7 +22,6 @@ export * from './table-helper.service';
 export * from './task-model.service';
 export * from './title.service';
 export * from './tree.service';
-export * from './user.service';
 export * from './utils.service';
 export * from './wbs-node.service';
 export * from './wbs-phase.service';

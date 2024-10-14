@@ -5,8 +5,8 @@
     </div>
     <div class="tx-right flex-1">
       <div class="d-inline-block wd-60">
-        @if (user(); as user) {
-        <wbs-header-profile [user]="user" [roles]="roles()" />
+        @if (profile(); as profile) {
+        <wbs-header-profile [profile]="profile" [roles]="roles()" />
         }
       </div>
     </div>

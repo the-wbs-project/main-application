@@ -19,6 +19,7 @@ public class DataServiceFactory
         Checklists = new ChecklistDataService();
         ContentResources = new ContentResourceDataService();
         ContentResourceStorage = new ContentResourceStorageService(Storage);
+        Invites = new InviteDataService();
         LibraryEntries = new LibraryEntryDataService();
         LibraryVersions = new LibraryEntryVersionDataService();
         LibraryNodes = new LibraryEntryNodeDataService();
@@ -40,6 +41,7 @@ public class DataServiceFactory
     public ChecklistDataService Checklists { get; private set; }
     public ContentResourceDataService ContentResources { get; private set; }
     public ContentResourceStorageService ContentResourceStorage { get; private set; }
+    public InviteDataService Invites { get; private set; }
     public LibraryEntryDataService LibraryEntries { get; private set; }
     public LibraryEntryVersionDataService LibraryVersions { get; private set; }
     public LibraryEntryNodeDataService LibraryNodes { get; private set; }

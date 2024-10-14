@@ -6,6 +6,8 @@ public interface IAuth0Config
     string Audience { get; }
     string ClientId { get; }
     string Connection { get; }
+    string ConnectionId { get; }
     string M2MClientId { get; }
     string M2MClientSecret { get; }
+    string PasswordRedirect { get; }
 }

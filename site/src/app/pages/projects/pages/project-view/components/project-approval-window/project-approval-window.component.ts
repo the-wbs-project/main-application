@@ -18,7 +18,6 @@ import {
 import { PROJECT_CLAIMS, ProjectApproval } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { TextTransformPipe } from '@wbs/pipes/text-transform.pipe';
-import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
 import {
   ApprovalChanged,
   SendApprovalMessage,
@@ -46,7 +45,6 @@ import { TaskNamePipe } from '../../pipes/task-name.pipe';
     TaskNamePipe,
     TextTransformPipe,
     TranslateModule,
-    UserNamePipe,
   ],
 })
 export class ProjectApprovalWindowComponent {

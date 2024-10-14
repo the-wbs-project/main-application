@@ -6,6 +6,7 @@ import {
   PROJECT_STATI,
   Project,
   ProjectNode,
+  ROLES,
   UserRole,
 } from '@wbs/core/models';
 import { IdService } from '@wbs/core/services';
@@ -30,7 +31,7 @@ export class ProjectCreateService {
 
     const project: Project = {
       id: IdService.generate(),
-      owner: this.membership.membership()!.name,
+      owner: this.membership.membership()!.id,
       createdBy: this.userId()!,
       disciplines: this.pcStore.disciplines(),
       category: this.pcStore.category()!,
@@ -92,15 +93,15 @@ export class ProjectCreateService {
   private getRoles(): UserRole[] {
     const roles: UserRole[] = [
       ...this.pcStore.pms().map((x) => ({
-        role: this.metadata.roles.ids.pm,
+        role: ROLES.PM,
         userId: x.userId,
       })),
       ...this.pcStore.smes().map((x) => ({
-        role: this.metadata.roles.ids.sme,
+        role: ROLES.SME,
         userId: x.userId,
       })),
       ...this.pcStore.approvers().map((x) => ({
-        role: this.metadata.roles.ids.approver,
+        role: ROLES.APPROVER,
         userId: x.userId,
       })),
     ];

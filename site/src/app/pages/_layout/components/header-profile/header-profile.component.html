@@ -1,5 +1,5 @@
 <div #target class="pointer">
-  <wbs-header-profile-picture [picture]="user().picture" />
+  <wbs-header-profile-picture [picture]="profile().picture" />
 </div>
 <kendo-contextmenu
   showOn="click"
@@ -10,7 +10,7 @@
 >
   <kendo-menu-item [disabled]="true" cssClass="opacity-1">
     <ng-template kendoMenuItemTemplate>
-      <wbs-header-profile-header [user]="user()" [roles]="roles() ?? []" />
+      <wbs-header-profile-header [user]="profile()" [roles]="roles() ?? []" />
     </ng-template>
   </kendo-menu-item>
   <kendo-menu-item data="profile">

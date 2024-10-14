@@ -7,11 +7,8 @@ namespace Wbs.Core.Services.Exporters;
 
 public class ExcelFileExporter : BaseExtractService
 {
-    private readonly Storage storage;
-
-    public ExcelFileExporter(IDatabaseConfig config, DataServiceFactory data, Storage storage) : base(config, data)
+    public ExcelFileExporter(IDatabaseConfig config, DataServiceFactory data) : base(config, data)
     {
-        this.storage = storage;
     }
 
     public async Task<byte[]> RunAsync(IEnumerable<ExportDataTask> nodes, List<Category> customDisciplines, string culture)

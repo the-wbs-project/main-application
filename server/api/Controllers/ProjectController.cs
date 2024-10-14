@@ -107,7 +107,7 @@ public class ProjectController : ControllerBase
         try
         {
             using (var conn = await data.CreateConnectionAsync())
-                return Ok((await data.Projects.GetByIdAsync(conn, projectId)).Roles ?? new ProjectRole[] { });
+                return Ok((await data.Projects.GetByIdAsync(conn, projectId)).Roles ?? new UserRole[] { });
         }
         catch (Exception ex)
         {

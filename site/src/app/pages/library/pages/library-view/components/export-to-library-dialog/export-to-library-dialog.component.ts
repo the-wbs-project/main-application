@@ -95,7 +95,7 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
         version.entryId,
         version.version,
         this.task.id,
-        this.membership.membership()!.name,
+        this.membership.membership()!.id,
         {
           alias: this.alias(),
           author: this.userId()!,
@@ -128,7 +128,7 @@ export class ExportToLibraryDialogComponent extends DialogContentBase {
       .dispatch(
         new Navigate([
           '/',
-          this.membership.membership()!.name,
+          this.membership.membership()!.id,
           'library',
           'view',
           this.entryStore.version()?.ownerId,

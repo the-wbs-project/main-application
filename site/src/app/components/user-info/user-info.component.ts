@@ -4,7 +4,7 @@ import { faLinkedin, faXTwitter } from '@fortawesome/free-brands-svg-icons';
 import { faEnvelope } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import { AvatarModule } from '@progress/kendo-angular-layout';
-import { UserViewModel } from '@wbs/core/view-models';
+import { User } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -21,6 +21,6 @@ export class UserInfoComponent {
 
   readonly organization = input<string>();
   readonly userId = input<string>();
-  readonly user = input<UserViewModel>();
+  readonly user = input<User>();
   readonly secondaryTitle = input<string>();
 }

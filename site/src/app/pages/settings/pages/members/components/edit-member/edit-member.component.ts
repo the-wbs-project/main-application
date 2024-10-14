@@ -17,9 +17,8 @@ import {
   DialogRef,
   DialogService,
 } from '@progress/kendo-angular-dialog';
-import { Role } from '@wbs/core/models';
+import { Role, User } from '@wbs/core/models';
 import { MetadataStore } from '@wbs/core/store';
-import { UserViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -36,7 +35,7 @@ import { map } from 'rxjs/operators';
   ],
 })
 export class EditMemberComponent extends DialogContentBase {
-  readonly member = signal<UserViewModel | undefined>(undefined);
+  readonly member = signal<User | undefined>(undefined);
   readonly roles = inject(MetadataStore).roles.definitions;
 
   constructor(dialog: DialogRef) {
@@ -45,8 +44,8 @@ export class EditMemberComponent extends DialogContentBase {
 
   static launchAsync(
     dialog: DialogService,
-    member: UserViewModel
-  ): Observable<UserViewModel | undefined> {
+    member: User
+  ): Observable<User | undefined> {
     const ref = dialog.open({
       content: EditMemberComponent,
     });
@@ -56,19 +55,19 @@ export class EditMemberComponent extends DialogContentBase {
 
     return ref.result.pipe(
       map((x: unknown) =>
-        x instanceof DialogCloseResult ? undefined : <UserViewModel>x
+        x instanceof DialogCloseResult ? undefined : <User>x
       )
     );
   }
 
-  doesUserHaveRole(member: UserViewModel, role: Role): boolean {
-    return member.roles.some((r) => r.id === role.id);
+  doesUserHaveRole(member: User, role: Role): boolean {
+    return member.roles.some((r) => r === role.id);
   }
 
-  toggleRole(member: UserViewModel, role: Role): void {
-    const index = member.roles.map((x) => x.id).indexOf(role.id);
+  toggleRole(member: User, role: Role): void {
+    const index = member.roles.indexOf(role.id);
 
     if (index > -1) member.roles.splice(index, 1);
-    else member.roles = [...member.roles, role];
+    else member.roles = [...member.roles, role.id];
   }
 }

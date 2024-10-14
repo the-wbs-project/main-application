@@ -50,7 +50,7 @@ export class LibraryHomeService {
     const parts = [library];
 
     this.store.dispatch(
-      new Navigate(['/' + this.membership()!.name, 'library', 'home', ...parts])
+      new Navigate(['/' + this.membership()!.id, 'library', 'home', ...parts])
     );
   }
 
@@ -59,7 +59,7 @@ export class LibraryHomeService {
 
     this.store.dispatch(
       new Navigate([
-        '/' + this.membership()!.name,
+        '/' + this.membership()!.id,
         'library',
         'view',
         vm.ownerId,

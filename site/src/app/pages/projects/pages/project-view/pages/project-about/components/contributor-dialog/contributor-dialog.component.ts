@@ -15,10 +15,9 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { SaveMessageComponent } from '@wbs/components/_utils/save-message.component';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
-import { ROLES } from '@wbs/core/models';
+import { ROLES, User } from '@wbs/core/models';
 import { SaveService } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/core/store';
-import { ProjectViewModel, UserViewModel } from '@wbs/core/view-models';
+import { ProjectViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { ProjectService } from '../../../../services';
@@ -36,11 +35,10 @@ import { ProjectStore } from '../../../../stores';
   ],
 })
 export class ContributorDialogComponent extends DialogContentBase {
-  private readonly roles = inject(MetadataStore).roles.definitions;
   private readonly service = inject(ProjectService);
   private readonly project = inject(ProjectStore).project;
 
-  readonly members = signal<UserViewModel[]>([]);
+  readonly members = signal<User[]>([]);
   readonly approvalEnabled = signal(false);
   readonly saving = new SaveService();
   //
@@ -59,8 +57,8 @@ export class ContributorDialogComponent extends DialogContentBase {
   static launchAsync(
     dialog: DialogService,
     approvalEnabled: boolean,
-    members: UserViewModel[]
-  ): Observable<UserViewModel[] | undefined> {
+    members: User[]
+  ): Observable<User[] | undefined> {
     const ref = dialog.open({
       content: ContributorDialogComponent,
     });
@@ -74,20 +72,18 @@ export class ContributorDialogComponent extends DialogContentBase {
     );
   }
 
-  add(role: string, user: UserViewModel) {
+  add(role: string, user: User) {
     this.saving.call(this.service.addUserToRole(role, user)).subscribe();
   }
 
-  remove(role: string, user: UserViewModel) {
+  remove(role: string, user: User) {
     this.saving.call(this.service.removeUserFromRole(role, user)).subscribe();
   }
 
   private getUsers(
-    roleName: string,
+    role: string,
     project: ProjectViewModel | undefined
-  ): UserViewModel[] {
-    const role = this.roles.find((r) => r.name === roleName)?.id;
-
+  ): User[] {
     return (project?.roles ?? [])
       .filter((r) => r.role === role)
       .map((r) => r.user);

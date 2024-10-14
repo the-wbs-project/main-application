@@ -12,7 +12,7 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { ProfileEditorComponent } from '@wbs/components/profile-editor';
-import { User } from '@wbs/core/models';
+import { UserProfile } from '@wbs/core/models';
 import { Auth0Service, Messages, SaveService } from '@wbs/core/services';
 
 @Component({
@@ -31,9 +31,9 @@ export class ProfileEditorDialogComponent extends DialogContentBase {
   private readonly messages = inject(Messages);
 
   readonly saveState = new SaveService();
-  readonly profile = signal<User | undefined>(undefined);
+  readonly profile = signal<UserProfile | undefined>(undefined);
 
-  static launch(dialog: DialogService, profile: User): void {
+  static launch(dialog: DialogService, profile: UserProfile): void {
     const ref = dialog.open({
       content: ProfileEditorDialogComponent,
     });

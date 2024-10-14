@@ -9,7 +9,7 @@ import { NgbDropdownModule } from '@ng-bootstrap/ng-bootstrap';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { menuIcon } from '@progress/kendo-svg-icons';
-import { Organization, User } from '@wbs/core/models';
+import { Membership, UserProfile } from '@wbs/core/models';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { environment } from 'src/env';
 import { HEADER_ROUTE_ITEMS, HeaderRouteItem } from '../../models';
@@ -33,15 +33,15 @@ import { OrganizationListComponent } from '../organization-list.component';
 })
 export class HeaderComponent {
   readonly title = environment.appTitle;
-  readonly user = input.required<User>();
+  readonly profile = input.required<UserProfile>();
   readonly roles = input.required<string[]>();
   readonly claims = input.required<string[]>();
   readonly org = input.required<string>();
-  readonly orgs = input.required<Organization[]>();
+  readonly orgs = input.required<Membership[]>();
   readonly activeSection = input.required<string | undefined>();
   readonly menu = computed(() => this.createMenu(this.org()));
   readonly orgObj = computed(
-    () => this.orgs().find((x) => x.name === this.org())!
+    () => this.orgs().find((x) => x.id === this.org())!
   );
   readonly menuIcon = menuIcon;
 

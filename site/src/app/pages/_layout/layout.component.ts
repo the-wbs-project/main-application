@@ -19,8 +19,8 @@ import { MainContentDirective } from './directives/main-content.directive';
         [claims]="claims()"
         [org]="org"
         [orgs]="membershipStore.memberships()!"
-        [user]="user()!"
-        [roles]="membershipStore.roles()!"
+        [profile]="profile()!"
+        [roles]="membershipStore.siteRoles()!"
         [activeSection]="activeSection()"
       />
       <div
@@ -49,6 +49,6 @@ export class LayoutComponent {
   readonly claims = input.required<string[]>();
   readonly membershipStore = inject(MembershipStore);
 
-  readonly user = inject(UserStore).profile;
+  readonly profile = inject(UserStore).profile;
   readonly activeSection = inject(UiStore).activeSection;
 }

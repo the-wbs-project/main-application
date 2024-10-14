@@ -15,8 +15,7 @@ export const orgGuard = (route: ActivatedRouteSnapshot) => {
       if (list.length === 0) {
         return of(false);
       }
-      const org =
-        list.find((org) => org.name === route.params['org']) ?? list[0];
+      const org = list.find((org) => org.id === route.params['org']) ?? list[0];
 
       store.setMembership(org);
 

@@ -106,7 +106,7 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
 
     private async Task<string[]> GetEditorsAsync(SqlConnection conn, string entryId, int version)
     {
-        var cmd = new SqlCommand("SELECT [EditorId] FROM [dbo].[LibraryEntryVersionEditors] WHERE [EntryId] = @EntryId AND [Version] = @Version", conn);
+        var cmd = new SqlCommand("SELECT [UserId] FROM [dbo].[LibraryEntryVersionEditors] WHERE [EntryId] = @EntryId AND [Version] = @Version", conn);
         cmd.Parameters.AddWithValue("@EntryId", entryId);
         cmd.Parameters.AddWithValue("@Version", version);
 

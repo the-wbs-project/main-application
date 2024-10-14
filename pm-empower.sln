@@ -9,8 +9,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "core", "server\core\core.cs
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "api", "server\api\api.csproj", "{FB9F458C-D52A-449A-BCD2-9D76683AF555}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "functions", "server\functions\functions.csproj", "{8247C837-A488-42ED-906F-BF30730C625C}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -28,14 +26,9 @@ Global
 		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FB9F458C-D52A-449A-BCD2-9D76683AF555}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8247C837-A488-42ED-906F-BF30730C625C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8247C837-A488-42ED-906F-BF30730C625C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8247C837-A488-42ED-906F-BF30730C625C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8247C837-A488-42ED-906F-BF30730C625C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{EFFD1A12-9D15-48C9-880B-4CC00CE69991} = {F210689F-4C9A-4A94-BEE7-27BE7D46260F}
 		{FB9F458C-D52A-449A-BCD2-9D76683AF555} = {F210689F-4C9A-4A94-BEE7-27BE7D46260F}
-		{8247C837-A488-42ED-906F-BF30730C625C} = {F210689F-4C9A-4A94-BEE7-27BE7D46260F}
 	EndGlobalSection
 EndGlobal

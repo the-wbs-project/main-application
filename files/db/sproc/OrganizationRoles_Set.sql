@@ -11,13 +11,11 @@ BEGIN
     DECLARE @ExistingRoles NVARCHAR(MAX)
 
     -- Retrieve existing roles as a JSON array
-    SELECT @ExistingRoles = (
-        SELECT Role
-        FROM [dbo].[OrganizationRoles]
-        WHERE [OrganizationId] = @OrganizationId
-        FOR JSON PATH, WITHOUT_ARRAY_WRAPPER
-        --FOR JSON PATH, ROOT('Roles'), WITHOUT_ARRAY_WRAPPER
-        )
+    SELECT @ExistingRoles = '[' + STRING_AGG('"' + Role + '"', ',') + ']'
+    FROM [dbo].[OrganizationRoles]
+    WHERE [OrganizationId] = @OrganizationId AND [UserId] = @UserId
+    --FOR JSON PATH, ROOT('Roles')
+    --FOR JSON PATH, ROOT('Roles'), WITHOUT_ARRAY_WRAPPER
 
     -- Insert history with existing and new roles
     INSERT INTO [dbo].[OrganizationRoleHistory]
@@ -26,7 +24,7 @@ BEGIN
             @OrganizationId,
             @UserId,
             GETUTCDATE(),
-            @ExistingRoles,
+            ISNULL(@ExistingRoles, '[]'),
             @Roles
         )
 

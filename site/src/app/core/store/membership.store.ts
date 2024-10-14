@@ -1,51 +1,35 @@
-import { Injectable, Signal, computed, inject, signal } from '@angular/core';
-import { DataServiceFactory } from '@wbs/core/data-services';
-import { Organization, Role } from '@wbs/core/models';
+import { Injectable, Signal, computed, signal } from '@angular/core';
+import { Membership } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
-import { Observable, map, of } from 'rxjs';
 
 @Injectable({ providedIn: 'root' })
 export class MembershipStore {
-  private readonly data = inject(DataServiceFactory);
-  private readonly _memberships = signal<Organization[] | undefined>(undefined);
-  private readonly _membership = signal<Organization | undefined>(undefined);
-  private readonly _roles = signal<string[] | undefined>(undefined);
+  private readonly _memberships = signal<Membership[] | undefined>(undefined);
+  private readonly _membership = signal<Membership | undefined>(undefined);
+  private readonly _siteRoles = signal<string[] | undefined>(undefined);
 
-  get membership(): Signal<Organization | undefined> {
+  get membership(): Signal<Membership | undefined> {
     return this._membership;
   }
 
-  get memberships(): Signal<Organization[] | undefined> {
+  get memberships(): Signal<Membership[] | undefined> {
     return this._memberships;
   }
 
-  get roles(): Signal<string[] | undefined> {
-    return this._roles;
+  get siteRoles(): Signal<string[] | undefined> {
+    return this._siteRoles;
   }
 
   get projectApprovalRequired(): Signal<boolean> {
-    return computed(
-      () => this.membership()?.metadata?.projectApprovalRequired ?? false
-    );
+    return computed(() => this.membership()?.projectApprovalRequired ?? false);
   }
 
-  initializeAsync(): Observable<any> {
-    if ((this.memberships() ?? []).length > 0) return of('nothing');
-
-    return this.data.memberships.getMembershipsAsync().pipe(
-      map((memberships) => {
-        this._memberships.set(
-          memberships.sort((a, b) => sorter(a.name, b.name))
-        );
-      })
-    );
+  initialize(memberships: Membership[], siteRoles: string[]): void {
+    this._memberships.set(memberships.sort((a, b) => sorter(a.name, b.name)));
+    this._siteRoles.set(siteRoles);
   }
 
-  setMembership(membership: Organization): void {
+  setMembership(membership: Membership): void {
     this._membership.set(membership);
-  }
-
-  setRoles(roles: Role[]): void {
-    this._roles.set(roles.map((r) => r.name));
   }
 }

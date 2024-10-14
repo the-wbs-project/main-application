@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { User } from '@wbs/core/models';
+import { User, UserProfile } from '@wbs/core/models';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
 
@@ -11,6 +11,6 @@ import { HeaderProfilePictureComponent } from '../header-profile-picture.compone
   imports: [HeaderProfilePictureComponent, RoleListPipe],
 })
 export class HeaderProfileHeaderComponent {
-  readonly user = input.required<User>();
+  readonly user = input.required<User | UserProfile>();
   readonly roles = input.required<string[]>();
 }

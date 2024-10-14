@@ -26,7 +26,7 @@
               [icon]="minusIcon"
               [users]="pms()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles.pm, $event)"
+              (selected)="remove('pm', $event)"
             />
           </td>
           @if (approvalEnabled()) {
@@ -35,7 +35,7 @@
               [icon]="minusIcon"
               [users]="approvers()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles.approver, $event)"
+              (selected)="remove('approver', $event)"
             />
           </td>
           }
@@ -44,7 +44,7 @@
               [icon]="minusIcon"
               [users]="smes()"
               noUsersLabel="ProjectSettings.NobodyAssigned"
-              (selected)="remove(roles.sme, $event)"
+              (selected)="remove('sme', $event)"
             />
           </td>
         </tr>
@@ -58,7 +58,7 @@
             <wbs-user-list
               [icon]="plusIcon"
               [users]="unassignedPms()"
-              (selected)="add(roles.pm, $event)"
+              (selected)="add('pm', $event)"
             />
           </td>
           @if (approvalEnabled()) {
@@ -66,7 +66,7 @@
             <wbs-user-list
               [icon]="plusIcon"
               [users]="unassignedApprovers()"
-              (selected)="add(roles.approver, $event)"
+              (selected)="add('approver', $event)"
             />
           </td>
           }
@@ -74,7 +74,7 @@
             <wbs-user-list
               [icon]="plusIcon"
               [users]="unassignedSmes()"
-              (selected)="add(roles.sme, $event)"
+              (selected)="add('sme', $event)"
             />
           </td>
         </tr>

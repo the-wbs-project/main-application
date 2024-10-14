@@ -62,7 +62,7 @@ export class LibraryEntryExportService {
       )
       .subscribe((result) => {
         if (result)
-          this.navigate.toLibraryEntry(this.membership()!.name, recordId, 1);
+          this.navigate.toLibraryEntry(this.membership()!.id, recordId, 1);
       });
   }
 }

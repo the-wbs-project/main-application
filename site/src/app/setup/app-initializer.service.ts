@@ -19,7 +19,7 @@ export class AppInitializerFactory {
             data.disciplines,
             data.phases
           );
-          metadata.roles.initiate(data.roles);
+          metadata.roles.initiate();
 
           uiStore.setup();
         })

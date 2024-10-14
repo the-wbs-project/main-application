@@ -9,7 +9,7 @@ export class NavigationService {
   private readonly router = inject(Router);
 
   private get org(): string {
-    return this.membership.membership()!.name;
+    return this.membership.membership()!.id;
   }
 
   toProject(projectId: string): Observable<boolean> {

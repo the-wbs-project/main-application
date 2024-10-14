@@ -1,7 +1,7 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, Organization } from '@wbs/core/models';
-import { InviteViewModel, UserViewModel } from '@wbs/core/view-models';
+import { Invite, Membership, User } from '@wbs/core/models';
+import { InviteViewModel } from '@wbs/core/view-models';
 import { forkJoin } from 'rxjs';
 
 @Injectable()
@@ -9,7 +9,7 @@ export class MembersSettingStore {
   private readonly data = inject(DataServiceFactory);
 
   private readonly _invites = signal<InviteViewModel[] | undefined>(undefined);
-  private readonly _members = signal<UserViewModel[] | undefined>(undefined);
+  private readonly _members = signal<User[] | undefined>(undefined);
   private readonly _capacity = signal<number | undefined>(undefined);
   private readonly _remaining = signal<number | undefined>(undefined);
   private readonly _isLoading = signal<boolean>(true);
@@ -31,7 +31,7 @@ export class MembersSettingStore {
     return this._invites;
   }
 
-  get members(): Signal<UserViewModel[] | undefined> {
+  get members(): Signal<User[] | undefined> {
     return this._members;
   }
 
@@ -39,14 +39,14 @@ export class MembersSettingStore {
     return this._isLoading;
   }
 
-  initialize(membership: Organization | undefined): void {
+  initialize(membership: Membership | undefined): void {
     if (!membership) return;
 
-    const org = membership.name;
+    const org = membership.id;
 
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(org),
-      invites: this.data.memberships.getInvitesAsync(org),
+      invites: this.data.invites.getAsync(org),
     }).subscribe(({ members, invites }) => {
       this._members.set(
         members.map((m) => {
@@ -64,7 +64,7 @@ export class MembersSettingStore {
           };
         })
       );
-      const capacity = membership.metadata?.seatCount;
+      const capacity = undefined; // membership.metadata?.seatCount;
       const remaining = capacity
         ? capacity - members.length - invites.length
         : undefined;
@@ -76,7 +76,7 @@ export class MembersSettingStore {
     });
   }
 
-  updateMember(member: UserViewModel): void {
+  updateMember(member: User): void {
     this._members.update((members) => {
       if (!members) return [];
 

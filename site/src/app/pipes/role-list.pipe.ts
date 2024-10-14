@@ -19,9 +19,7 @@ export class RoleListPipe implements PipeTransform {
     for (const role of roles) {
       const roleId = typeof role === 'string' ? role : role.id;
 
-      const definition = defintions.find(
-        (x) => x.id === roleId || x.name === roleId
-      );
+      const definition = defintions.find((x) => x.id === roleId);
 
       if (!definition) continue;
 

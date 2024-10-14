@@ -23,7 +23,7 @@ export class WbsNodePhaseTransformer {
   ): LibraryTaskViewModel[] {
     if (!version) return [];
 
-    const org = this.membership.membership()!.name;
+    const org = this.membership.membership()!.id;
     const owner = version.ownerId;
     //
     //  Just in case somehow the unthinkable happen, return NOTHING!

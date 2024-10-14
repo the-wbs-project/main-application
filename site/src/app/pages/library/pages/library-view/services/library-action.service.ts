@@ -45,7 +45,7 @@ export class LibraryActionService {
     const canUpdate = claims.includes(LIBRARY_CLAIMS.UPDATE);
     const canUpdateTasks = claims.includes(LIBRARY_CLAIMS.TASKS.UPDATE);
     const items: ActionButtonMenuItem[] = [this.header('General.Views')];
-    const org = this.membership.membership()!.name;
+    const org = this.membership.membership()!.id;
     const urlPrefix = [
       '/',
       org,

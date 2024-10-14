@@ -60,6 +60,7 @@ builder.Services.AddSingleton<IStorageConfig, AzureStorageConfig>();
 //  Data Services
 //
 builder.Services.AddSingleton<DataServiceFactory>();
+builder.Services.AddSingleton<DocumentProcessDataService>();
 //
 //  Importers and Exporters
 //
@@ -69,8 +70,8 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 //
 //  Services
 //
+builder.Services.AddSingleton<AuthConverterService>();
 builder.Services.AddSingleton<CloudflareApiService>();
-builder.Services.AddSingleton<CloudflareKvService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
 builder.Services.AddSingleton<ResourceCopyService>();

@@ -7,14 +7,11 @@ import {
   PROJECT_STATI_TYPE,
   ProjectCategoryChanges,
   ProjectNode,
+  User,
 } from '@wbs/core/models';
 import { Transformers, Utils } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import {
-  ProjectViewModel,
-  TaskViewModel,
-  UserViewModel,
-} from '@wbs/core/view-models';
+import { ProjectViewModel, TaskViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { switchMap, tap } from 'rxjs/operators';
 import { ProjectActivityService } from '../../../services';
@@ -197,7 +194,7 @@ export class ProjectService {
     );
   }
 
-  addUserToRole(role: string, user: UserViewModel): Observable<void> {
+  addUserToRole(role: string, user: User): Observable<void> {
     const project = this.projectStore.project()!;
 
     project.roles.push({ role, user });
@@ -214,7 +211,7 @@ export class ProjectService {
     );
   }
 
-  removeUserFromRole(role: string, user: UserViewModel): Observable<unknown> {
+  removeUserFromRole(role: string, user: User): Observable<unknown> {
     const project = this.projectStore.project()!;
     const index = project.roles.findIndex(
       (x) => x.role === role && x.user.userId === user.userId

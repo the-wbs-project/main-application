@@ -1,7 +1,7 @@
 import { NgClass } from '@angular/common';
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { UserViewModel } from '@wbs/core/view-models';
+import { User } from '@wbs/core/models';
 import { UserInfoComponent } from '../user-info';
 
 @Component({
@@ -12,7 +12,7 @@ import { UserInfoComponent } from '../user-info';
   imports: [NgClass, TranslateModule, UserInfoComponent],
 })
 export class UserCardComponent {
-  readonly user = input<UserViewModel>();
+  readonly user = input<User>();
   readonly cardHeader = input.required<string>();
   readonly cardClass = input<string | string[]>();
   readonly cardHeaderClass = input<string | string[]>();

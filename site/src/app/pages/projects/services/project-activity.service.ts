@@ -1,8 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { PROJECT_STATI_TYPE, ContentResource } from '@wbs/core/models';
+import { PROJECT_STATI_TYPE, ContentResource, User } from '@wbs/core/models';
 import { UserStore } from '@wbs/core/store';
-import { UserViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
 import { PROJECT_ACTIONS } from '../models';
 
@@ -89,7 +88,7 @@ export class ProjectActivityService {
   addUserToRole(
     owner: string,
     projectId: string,
-    user: UserViewModel,
+    user: User,
     roleTitle: string
   ): Observable<void> {
     return this.save(owner, projectId, PROJECT_ACTIONS.ADDED_USER, {
@@ -102,7 +101,7 @@ export class ProjectActivityService {
   removeUserToRole(
     owner: string,
     projectId: string,
-    user: UserViewModel,
+    user: User,
     roleTitle: string
   ): Observable<void> {
     return this.save(owner, projectId, PROJECT_ACTIONS.REMOVED_USER, {

@@ -99,7 +99,7 @@ public class ProjectDataService : BaseSqlDbService
         return output.Value.ToString();
     }
 
-    private async Task<ProjectRole[]> GetRolesAsync(SqlConnection conn, string projectId)
+    private async Task<UserRole[]> GetRolesAsync(SqlConnection conn, string projectId)
     {
         var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectRoles] WHERE [ProjectId] = @ProjectId", conn);
         cmd.Parameters.AddWithValue("@ProjectId", projectId);
@@ -109,7 +109,7 @@ public class ProjectDataService : BaseSqlDbService
         return ProjectTransformer.ToRoleArray(reader);
     }
 
-    private async Task SetRolesAsync(SqlConnection conn, string projectId, ProjectRole[] roles)
+    private async Task SetRolesAsync(SqlConnection conn, string projectId, UserRole[] roles)
     {
         var cmd = new SqlCommand("dbo.ProjectRoles_Set", conn)
         {

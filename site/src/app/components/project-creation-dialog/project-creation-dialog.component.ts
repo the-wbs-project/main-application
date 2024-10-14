@@ -31,13 +31,12 @@ import { DisciplineEditorComponent } from '@wbs/components/discipline-editor';
 import { ProjectCategoryDropdownComponent } from '@wbs/components/project-category-dropdown';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ScrollToTopDirective } from '@wbs/core/directives/scrollToTop.directive';
-import { LibraryEntryNode } from '@wbs/core/models';
+import { LibraryEntryNode, User } from '@wbs/core/models';
 import { CategoryService, IdService } from '@wbs/core/services';
 import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
 import {
   CategorySelection,
   LibraryVersionViewModel,
-  UserViewModel,
 } from '@wbs/core/view-models';
 import { FindByIdPipe } from '@wbs/pipes/find-by-id.pipe';
 import { Observable } from 'rxjs';
@@ -78,10 +77,10 @@ export class ProjectCreationComponent extends DialogContentBase {
   readonly newId = IdService.generate();
   readonly owner = signal<string | undefined>(undefined);
   readonly version = signal<LibraryVersionViewModel | undefined>(undefined);
-  readonly members = signal<UserViewModel[]>([]);
-  readonly approvers = signal<UserViewModel[]>([]);
-  readonly pms = signal<UserViewModel[]>([]);
-  readonly smes = signal<UserViewModel[]>([]);
+  readonly members = signal<User[]>([]);
+  readonly approvers = signal<User[]>([]);
+  readonly pms = signal<User[]>([]);
+  readonly smes = signal<User[]>([]);
   readonly categories = this.metadata.categories.projectCategories;
   readonly tasks = signal<LibraryEntryNode[]>([]);
   readonly projectTitle = model<string>('');

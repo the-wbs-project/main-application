@@ -1,3 +1,4 @@
+using System.Data;
 using Microsoft.Data.SqlClient;
 using Wbs.Core.Models;
 
@@ -23,15 +24,17 @@ public class OrganizationDataService : BaseSqlDbService
 
         using var reader = await cmd.ExecuteReaderAsync();
 
-        return OrganizationTransformer.ToModel(reader);
+        return reader.Read() ? OrganizationTransformer.ToModel(reader) : null;
     }
 
     public async Task SetAsync(SqlConnection conn, Organization organization)
     {
         var cmd = new SqlCommand("dbo.Organization_Set", conn);
 
+        cmd.CommandType = CommandType.StoredProcedure;
         cmd.Parameters.AddWithValue("@Id", organization.Id);
         cmd.Parameters.AddWithValue("@Name", organization.Name);
+        cmd.Parameters.AddWithValue("@ProjectApprovalRequired", organization.ProjectApprovalRequired);
         cmd.Parameters.AddWithValue("@AiModels", DbJson(organization.AiModels));
 
         await cmd.ExecuteNonQueryAsync();

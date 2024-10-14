@@ -1,25 +1,25 @@
 import { Injectable, Signal, computed, signal } from '@angular/core';
-import { EntityId, User } from '@wbs/core/models';
+import { EntityId, UserProfile } from '@wbs/core/models';
 
 @Injectable({ providedIn: 'root' })
 export class UserStore {
-  private readonly _profile = signal<User | undefined>(undefined);
+  private readonly _profile = signal<UserProfile | undefined>(undefined);
 
   readonly watchers = new WatcherStore();
 
-  get profile(): Signal<User | undefined> {
+  get profile(): Signal<UserProfile | undefined> {
     return this._profile;
   }
 
   get displayName(): Signal<string | undefined> {
-    return computed(() => this.profile()?.name);
+    return computed(() => this.profile()?.fullName);
   }
 
   get userId(): Signal<string | undefined> {
-    return computed(() => this.profile()?.user_id);
+    return computed(() => this.profile()?.userId);
   }
 
-  set(user: User | undefined): void {
+  set(user: UserProfile | undefined): void {
     this._profile.set(user);
 
     //if (user) this.userService.addUsers(user);

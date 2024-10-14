@@ -15,6 +15,8 @@ public abstract class BaseExtractService
         this.data = data;
     }
 
+    protected Storage storage { get { return data.Storage; } }
+
     public bool TestFormat(string x)
     {
         foreach (var c in x)

@@ -1,10 +1,9 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite } from '@wbs/core/models';
+import { User } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
-import { MembershipStore, MetadataStore, UserStore } from '@wbs/core/store';
-import { UserViewModel } from '@wbs/core/view-models';
-import { Observable, forkJoin } from 'rxjs';
+import { MembershipStore, UserStore } from '@wbs/core/store';
+import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
 import { MembersSettingStore } from '../store';
 
@@ -13,95 +12,72 @@ export class MemberSettingsService {
   private readonly data = inject(DataServiceFactory);
   private readonly membership = inject(MembershipStore).membership;
   private readonly messages = inject(Messages);
-  private readonly metadata = inject(MetadataStore);
   private readonly store = inject(MembersSettingStore);
   private readonly profile = inject(UserStore).profile;
 
   removeMemberAsync(memberId: string): void {
     this.data.memberships
-      .removeUserFromOrganizationAsync(this.membership()!.name, memberId)
+      .putUserRolesAsync(this.membership()!.id, memberId, [])
       .subscribe(() => {
         this.messages.notify.success('OrgSettings.MemberRemoved');
         this.store.removeMember(memberId);
       });
   }
 
-  updateMemberRolesAsync(
-    member: UserViewModel,
-    toAdd: string[],
-    toRemove: string[]
-  ): void {
-    const calls: Observable<void>[] = [];
+  updateMemberRolesAsync(member: User, roles: string[]): void {
+    this.data.memberships
+      .putUserRolesAsync(this.membership()!.id, member.userId, roles)
+      .subscribe(() => {
+        this.messages.notify.success('OrgSettings.MemberRolesUpdated');
 
-    if (toRemove.length > 0)
-      calls.push(
-        this.data.memberships.removeUserOrganizationalRolesAsync(
-          this.membership()!.name,
-          member.userId,
-          toRemove
-        )
-      );
+        member.roles = structuredClone(roles);
 
-    if (toAdd.length > 0)
-      calls.push(
-        this.data.memberships.addUserOrganizationalRolesAsync(
-          this.membership()!.name,
-          member.userId,
-          toAdd
-        )
-      );
-
-    if (calls.length === 0) return;
-
-    forkJoin(calls).subscribe(() => {
-      this.messages.notify.success('OrgSettings.MemberRolesUpdated');
-
-      const roleIds = [
-        ...member.roles
-          .map((role) => role.id)
-          .filter((id) => !toRemove.includes(id)),
-        ...toAdd,
-      ];
-
-      const roles = this.metadata.roles.definitions.filter((role) =>
-        roleIds.includes(role.id)
-      );
-      member.roles = structuredClone(roles);
-
-      this.store.updateMember(member);
-    });
+        this.store.updateMember(member);
+      });
   }
 
   sendInvitesAsync(emails: string[], roles: string[]): Observable<void> {
-    const saves: Observable<void>[] = [];
-    const inviter = this.profile()!.name;
+    const organizationId = this.membership()!.id;
+    const invitedById = this.profile()!.userId;
+    //
+    //  Don't do an array with forkJoin because we want them to be send one after another
+    //
 
-    for (const invitee of emails) {
-      saves.push(
-        this.data.memberships.sendInviteAsync(this.membership()!.name, {
-          invitee,
-          inviter,
-          roles,
-        })
+    let obs: Observable<any> = this.data.invites.createAsync({
+      email: emails[0],
+      organizationId,
+      invitedById,
+      roles,
+    });
+
+    for (let i = 1; i < emails.length; i++) {
+      obs = obs.pipe(
+        switchMap(() =>
+          this.data.invites.createAsync({
+            email: emails[i],
+            organizationId,
+            invitedById,
+            roles,
+          })
+        )
       );
     }
-    return forkJoin(saves).pipe(
+
+    return obs.pipe(
       tap(() => this.messages.notify.success('OrgSettings.InvitesSent')),
-      switchMap(() =>
-        this.data.memberships.getInvitesAsync(this.membership()!.name)
-      ),
+      switchMap(() => this.data.invites.getAsync(this.membership()!.id)),
       map((invites) => {
         this.store.addInvites(invites);
       })
     );
   }
 
-  cancelInviteAsync(inviteId: string): void {
-    this.data.memberships
-      .cancelInviteAsync(this.membership()!.name, inviteId)
+  cancelInviteAsync(userId: string): void {
+    this.data.invites
+      .cancelAsync(this.membership()!.id, userId)
       .subscribe(() => {
         this.messages.notify.success('OrgSettings.InviteCancelled');
-        this.store.removeInvite(inviteId);
+        this.store.removeInvite(userId);
       });
   }
 }

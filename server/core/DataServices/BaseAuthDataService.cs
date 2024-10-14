@@ -11,9 +11,9 @@ public abstract class BaseAuthDataService
 {
     private string mgmtToken;
     private DateTime? expiration;
-    protected ManagementApiClient client;
+    private ManagementApiClient client;
     protected readonly IAuth0Config config;
-    private readonly ILogger logger;
+    protected readonly ILogger logger;
 
     public BaseAuthDataService(ILogger logger, IAuth0Config config)
     {

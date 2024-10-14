@@ -23,6 +23,7 @@ import {
   PROJECT_STATI,
   Project,
   ProjectNode,
+  User,
 } from '@wbs/core/models';
 import {
   CategoryService,
@@ -30,8 +31,8 @@ import {
   Resources,
   sorter,
 } from '@wbs/core/services';
-import { CategorySelection, UserViewModel } from '@wbs/core/view-models';
 import { UserStore } from '@wbs/core/store';
+import { CategorySelection } from '@wbs/core/view-models';
 import { switchMap } from 'rxjs/operators';
 
 @Component({
@@ -60,9 +61,9 @@ export class SaveSectionComponent {
   readonly category = input.required<Category>();
   readonly disciplines = input.required<CategorySelection[]>();
   readonly tasks = input.required<LibraryEntryNode[]>();
-  readonly approvers = input.required<UserViewModel[]>();
-  readonly pms = input.required<UserViewModel[]>();
-  readonly smes = input.required<UserViewModel[]>();
+  readonly approvers = input.required<User[]>();
+  readonly pms = input.required<User[]>();
+  readonly smes = input.required<User[]>();
   readonly approvalEnabled = input.required<boolean>();
   readonly saveState = signal<'saving' | 'saved' | 'error' | undefined>(
     undefined
@@ -153,7 +154,7 @@ export class SaveSectionComponent {
       });
   }
 
-  getUserList(users: UserViewModel[]): string | undefined {
+  getUserList(users: User[]): string | undefined {
     if (users.length === 0) return undefined;
 
     return users

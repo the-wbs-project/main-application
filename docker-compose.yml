@@ -4,23 +4,21 @@ services:
     container_name: wbs-api
     build:
       context: ./server
-      dockerfile: ./api/Dockerfile-dev
+      dockerfile: Dockerfile-dev
     ports:
       - 5216:5216
     volumes:
       - './server:/usr/src/app'
   
   wbs-worker:
-    container_name: wbs-workers
+    container_name: wbs-worker
     build:
-      context: ./server/workers
+      context: ./worker
       dockerfile: Dockerfile-dev
     ports:
       - 88:88
     volumes:
-       - ./server/workers:/usr/src/app/workers/
-       #- ./server/workers/data:/usr/src/app/workers/.data
-       #- worker_data:/usr/src/app/workers/.data
+       - ./worker:/usr/src/app/worker
 
   wbs-site:
     container_name: wbs-site
@@ -36,16 +34,16 @@ services:
        - ./site:/usr/src/app/site
        - /usr/src/app/site/node_modules
 
-  wbs-db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    ports:
-      - 1433:1433
-    volumes:
-      - ./_db/data:/var/opt/mssql/data
-      - ./_db/log:/var/opt/mssql/log
-      - ./_db/secrets:/var/opt/mssql/secrets
-    environment:
-      - ACCEPT_EULA=Y
+  #wbs-db:
+  #  image: mcr.microsoft.com/mssql/server:2022-latest
+  #  ports:
+  #    - 1433:1433
+  #  volumes:
+  #    - ./_db/data:/var/opt/mssql/data
+  #    - ./_db/log:/var/opt/mssql/log
+  #    - ./_db/secrets:/var/opt/mssql/secrets
+  #  environment:
+  #    - ACCEPT_EULA=Y
 
 volumes:
   share:

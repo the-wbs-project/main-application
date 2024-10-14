@@ -1,12 +1,12 @@
 import { Injectable, inject } from '@angular/core';
+import { DataServiceFactory } from '@wbs/core/data-services';
 import {
   LIBRARY_VERSION_ACTIONS,
   ProjectCategory,
   ContentResource,
+  User,
 } from '@wbs/core/models';
-import { DataServiceFactory } from '@wbs/core/data-services';
 import { Observable } from 'rxjs';
-import { UserViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class EntryActivityService {
@@ -127,8 +127,8 @@ export class EntryActivityService {
     owner: string,
     entryId: string,
     version: number,
-    from: UserViewModel[] | undefined,
-    to: UserViewModel[] | undefined
+    from: User[] | undefined,
+    to: User[] | undefined
   ): Observable<void> {
     return this.save(
       owner,

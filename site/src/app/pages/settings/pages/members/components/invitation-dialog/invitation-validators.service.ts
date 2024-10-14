@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Invite } from '@wbs/core/models';
-import { UserViewModel } from '@wbs/core/view-models';
+import { Invite, User } from '@wbs/core/models';
 
 @Injectable()
 export class InvitationValidators {
@@ -15,7 +14,7 @@ export class InvitationValidators {
     return invalid;
   }
 
-  checkIfAnyExists(members: UserViewModel[], emails: string[]): string[] {
+  checkIfAnyExists(members: User[], emails: string[]): string[] {
     const existing: string[] = [];
 
     for (const email of emails) {
@@ -30,13 +29,7 @@ export class InvitationValidators {
     const existing: string[] = [];
 
     for (const email of emails) {
-      if (
-        invites.some(
-          (x) =>
-            x.invitee.toLowerCase() === email.toLowerCase() &&
-            new Date(x.expiresAt) > new Date()
-        )
-      ) {
+      if (invites.some((x) => x.email.toLowerCase() === email.toLowerCase())) {
         existing.push(email);
       }
     }

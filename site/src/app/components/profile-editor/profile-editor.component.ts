@@ -14,7 +14,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { AvatarModule } from '@progress/kendo-angular-layout';
-import { User } from '@wbs/core/models';
+import { UserProfile } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -31,7 +31,7 @@ import { User } from '@wbs/core/models';
   ],
 })
 export class ProfileEditorComponent {
-  readonly profile = model.required<User | undefined>();
+  readonly profile = model.required<UserProfile | undefined>();
   readonly eyeIcon = faEye;
   readonly infoIcon = faInfo;
   readonly nameIcon = faUser;
@@ -42,10 +42,10 @@ export class ProfileEditorComponent {
   readonly linkedInIcon = faLinkedin;
   file: string = '';
 
-  toggleVisibility(profile: User, item: string) {
-    let list = profile.user_metadata.showExternally;
+  toggleVisibility(profile: UserProfile, item: string) {
+    let list = [...profile.showExternally];
 
-    profile.user_metadata.showExternally = list.includes(item)
+    profile.showExternally = profile.showExternally.includes(item)
       ? list.filter((v) => v !== item)
       : [...list, item];
   }

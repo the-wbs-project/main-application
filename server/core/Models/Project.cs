@@ -14,7 +14,7 @@ public class Project
     public string MainNodeView { get; set; }
     public string Category { get; set; }
     public Category[] Disciplines { get; set; }
-    public ProjectRole[] Roles { get; set; }
+    public UserRole[] Roles { get; set; }
     public LibraryLink LibraryLink { get; set; }
     public bool? ApprovalStarted { get; set; }
 }

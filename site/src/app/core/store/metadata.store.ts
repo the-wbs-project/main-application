@@ -4,7 +4,7 @@ import {
   faListCheck,
   faStamp,
 } from '@fortawesome/pro-solid-svg-icons';
-import { Category, LISTS, Role, RoleIds, ROLES } from '@wbs/core/models';
+import { Category, LISTS, Role, ROLES } from '@wbs/core/models';
 import { Resources, sorter } from '@wbs/core/services';
 
 export const ROLE_ICONS = {
@@ -134,44 +134,32 @@ class CategoryState {
 class RolesState {
   constructor(private readonly resources: Resources) {}
 
-  private _ids: RoleIds | undefined;
-  private _definitions: Role[] = [];
+  readonly definitions: Role[] = [];
 
-  get ids(): RoleIds {
-    return this._ids!;
-  }
-
-  get definitions(): Role[] {
-    return this._definitions;
-  }
-
-  initiate(definitions: Role[]): void {
-    const pm = definitions.find((x) => x.name === ROLES.PM)!;
-    const approver = definitions.find((x) => x.name === ROLES.APPROVER)!;
-    const sme = definitions.find((x) => x.name === ROLES.SME)!;
-    const admin = definitions.find((x) => x.name === ROLES.ADMIN)!;
-
-    admin.description = this.resources.get('General.Admin-Full');
-    admin.abbreviation = this.resources.get('General.Admin');
-
-    approver.description = this.resources.get('General.Approver');
-    approver.abbreviation = this.resources.get('General.Approver');
-    approver.icon = ROLE_ICONS.approver;
-
-    pm.description = this.resources.get('General.PM-Full');
-    pm.abbreviation = this.resources.get('General.PM');
-    pm.icon = ROLE_ICONS.pm;
-
-    sme.description = this.resources.get('General.SME-Full');
-    sme.abbreviation = this.resources.get('General.SME');
-    sme.icon = ROLE_ICONS.sme;
-
-    this._ids = {
-      admin: admin.id,
-      pm: pm.id,
-      approver: approver.id,
-      sme: sme.id,
-    };
-    this._definitions = [pm, approver, sme, admin];
+  initiate(): void {
+    this.definitions.push({
+      id: ROLES.PM,
+      description: this.resources.get('General.PM-Full'),
+      abbreviation: this.resources.get('General.PM'),
+      icon: ROLE_ICONS.pm,
+    });
+    this.definitions.push({
+      id: ROLES.APPROVER,
+      description: this.resources.get('General.Approver'),
+      abbreviation: this.resources.get('General.Approver'),
+      icon: ROLE_ICONS.approver,
+    });
+    this.definitions.push({
+      id: ROLES.SME,
+      description: this.resources.get('General.SME-Full'),
+      abbreviation: this.resources.get('General.SME'),
+      icon: ROLE_ICONS.approver,
+    });
+    this.definitions.push({
+      id: ROLES.ADMIN,
+      description: this.resources.get('General.Admin-Full'),
+      abbreviation: this.resources.get('General.Admin'),
+      icon: ROLE_ICONS.approver,
+    });
   }
 }

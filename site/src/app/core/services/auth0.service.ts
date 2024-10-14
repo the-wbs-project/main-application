@@ -1,14 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { AuthService } from '@auth0/auth0-angular';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DataServiceFactory } from '@wbs/core/data-services';
+import { User, UserProfile } from '@wbs/core/models';
 import { Logger } from '@wbs/core/services';
 import { AiStore, MembershipStore, UserStore } from '@wbs/core/store';
 import { BehaviorSubject, forkJoin, Observable } from 'rxjs';
-import { switchMap, tap } from 'rxjs/operators';
-import { User } from '../models';
+import { map, switchMap, tap } from 'rxjs/operators';
 
-@UntilDestroy()
 @Injectable()
 export class Auth0Service {
   private readonly aiStore = inject(AiStore);
@@ -21,70 +19,61 @@ export class Auth0Service {
   private readonly _isInitiated = new BehaviorSubject<boolean>(false);
 
   get isInitiated(): Observable<boolean> {
-    return this._isInitiated.asObservable();
+    return this.auth.isAuthenticated$;
   }
 
-  initiate(): void {
-    this.auth.isAuthenticated$
-      .pipe(untilDestroyed(this))
-      .subscribe((isAuthenticated) => {
-        if (!isAuthenticated) return;
-
-        this.initializeData();
-      });
-  }
-
-  saveProfile(profile: User): Observable<any> {
+  saveProfile(profile: UserProfile): Observable<any> {
     const originalProfile = this.userStore.profile()!;
 
-    return this.data.users.putAsync(profile).pipe(
+    return this.data.users.putProfileAsync(profile).pipe(
       tap(() => {
         this.userStore.set(profile);
         this.aiStore.setUserInfo({
-          id: profile.user_id,
-          name: profile.name,
+          id: profile.userId,
+          name: profile.fullName,
           avatarUrl: profile.picture,
         });
       }),
       switchMap(() =>
-        this.data.activities.postAsync('user', undefined, profile.user_id, [
+        this.data.activities.postAsync('user', undefined, profile.userId, [
           {
             action: 'profile-updated',
             data: {
               from: originalProfile,
               to: profile,
             },
-            topLevelId: profile.user_id,
+            topLevelId: profile.userId,
           },
         ])
       )
     );
   }
 
-  private initializeData(): void {
-    if (this._isInitiated.getValue()) return;
-
-    forkJoin([
+  initializeDataAsync(): Observable<void> {
+    return forkJoin([
       this.data.users.getProfileAsync(),
       this.data.users.getSiteRolesAsync(),
-    ]).subscribe(([profile, siteRoles]) => {
-      if (!profile) return;
+      this.data.memberships.getMembershipsAsync(),
+    ]).pipe(
+      map(([profile, siteRoles, memberships]) => {
+        if (!profile) return;
 
-      this.aiStore.setUserInfo({
-        id: profile.user_id,
-        name: profile.name,
-        avatarUrl: profile.picture,
-      });
-      this.userStore.set(profile);
-      this.memberships.setRoles(siteRoles);
-      this.logger.setGlobalContext({
-        'usr.id': profile.user_id,
-        'usr.name': profile.name,
-        'usr.email': profile.email,
-      });
+        this.aiStore.setUserInfo({
+          id: profile.userId,
+          name: profile.fullName,
+          avatarUrl: profile.picture,
+        });
+        this.userStore.set(profile);
+        this.memberships.initialize(memberships, siteRoles);
+        this.logger.setGlobalContext({
+          'usr.id': profile.userId,
+          'usr.name': profile.fullName,
+          'usr.email': profile.email,
+        });
 
-      this.userStore.set(profile);
-      this._isInitiated.next(true);
-    });
+        this.userStore.set(profile);
+        this._isInitiated.next(true);
+      })
+    );
   }
 }
