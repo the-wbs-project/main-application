@@ -1,0 +1,257 @@
+<div class="d-flex flex-column vh-100">
+  <header class="d-flex w-100 pd-x-20 justify-content-center">
+    <div class="d-flex w-100 mx-wd-800 flex-align-center ht-55">
+      <div class="header-title wd-240">
+        <img class="w-100" [alt]="title" src="assets/pm-empower-logo.png" />
+      </div>
+    </div>
+  </header>
+  <div
+    appMainContent
+    class="scroll pd-x-20 flex-fill d-flex w-100 pd-x-20 justify-content-center"
+  >
+    <div class="w-100 mx-wd-800 text-center">
+      @if (!loaded()) {
+      <wbs-loading />
+      } @else { @if (isCancelled()) {
+      <div
+        class="d-inline-block card border-1 border-dark wd-300 pd-y-20 mg-t-50"
+      >
+        <h1>Invite Cancelled</h1>
+        <p>The invite has been cancelled.</p>
+      </div>
+      } @else {
+      <div class="d-inline-block card dashboard-card w-100 mg-t-25">
+        <div class="card-header">Registration</div>
+        <div class="card-body text-start">
+          <p>
+            Welcome! You have been invited to join PM Empower. Please fill out
+            the following information to complete your registration.
+          </p>
+          <form #form [formGroup]="registerForm">
+            <div class="row mb-3">
+              <label [for]="organization" class="tx-14 col-md-3 col-sm-12">
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="emailIcon" />
+                </span>
+                {{ "General.Organization" | translate }}
+              </label>
+              <div class="col-md-9 col-sm-12">
+                <kendo-textbox
+                  #organization
+                  formControlName="organization"
+                  [readonly]="true"
+                >
+                  <ng-template kendoTextBoxSuffixTemplate>
+                    <div class="mg-r-10">
+                      <fa-duotone-icon [icon]="lockIcon" />
+                    </div>
+                  </ng-template>
+                </kendo-textbox>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label [for]="email" class="tx-14 col-md-3 col-sm-12">
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="emailIcon" />
+                </span>
+                {{ "General.Email" | translate }}
+              </label>
+              <div class="col-md-9 col-sm-12">
+                <kendo-textbox
+                  #email
+                  [readonly]="true"
+                  formControlName="email"
+                  [inputAttributes]="{ autocomplete: 'email' }"
+                >
+                  <ng-template kendoTextBoxSuffixTemplate>
+                    <div class="mg-r-10">
+                      <fa-duotone-icon [icon]="lockIcon" />
+                    </div>
+                  </ng-template>
+                </kendo-textbox>
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                [for]="passwordBox"
+                class="tx-14 col-md-3 col-sm-12 col-form-label"
+              >
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="passwordIcon" />
+                </span>
+                {{ "General.Password" | translate }} &nbsp;*
+              </label>
+              <div #passwordWrapper class="col-md-9 col-sm-12">
+                <kendo-textbox
+                  #passwordBox
+                  required
+                  type="password"
+                  formControlName="password"
+                  [inputAttributes]="{ autocomplete: 'new-password' }"
+                >
+                  <ng-template kendoTextBoxSuffixTemplate>
+                    @if (passwordBox.type === 'password') {
+                    <button
+                      kendoButton
+                      fillMode="clear"
+                      (click)="passwordBox.type = 'text'"
+                    >
+                      <fa-icon [icon]="eyeIcon" />
+                    </button>
+                    } @else {
+                    <button
+                      kendoButton
+                      fillMode="clear"
+                      (click)="passwordBox.type = 'password'"
+                    >
+                      <fa-icon [icon]="eyeSlashIcon" />
+                    </button>
+                    }
+                  </ng-template>
+                </kendo-textbox>
+                @if (passwordBox.isFocused) {
+                <kendo-popup
+                  [anchor]="passwordBox.hostElement"
+                  [anchorAlign]="{ horizontal: 'right', vertical: 'bottom' }"
+                  [popupAlign]="{ horizontal: 'right', vertical: 'top' }"
+                >
+                  <div class="pd-10 tx-12 wd-300">
+                    <wbs-password-hint [password]="passwordBox.value" />
+                  </div>
+                </kendo-popup>
+                }
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                [for]="fullName"
+                class="tx-14 col-md-3 col-sm-12 col-form-label"
+              >
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="nameIcon" />
+                </span>
+                {{ "General.Name" | translate }}
+                &nbsp;*
+              </label>
+              <div class="col-md-9 col-sm-12">
+                <kendo-textbox #fullName formControlName="fullName" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                [for]="title"
+                class="tx-14 col-md-3 col-sm-12 col-form-label"
+              >
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="titleIcon" />
+                </span>
+                {{ "General.Title" | translate }}
+              </label>
+              <div class="col-md-9 col-sm-12">
+                <kendo-textbox #title formControlName="title" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                [for]="linkedIn"
+                class="tx-14 col-md-3 col-sm-12 col-form-label"
+              >
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="linkedInIcon" />
+                </span>
+                {{ "Profile.LinkedInUrl" | translate }}
+              </label>
+              <div class="col-md-9 col-sm-12">
+                <kendo-textbox #linkedIn formControlName="linkedIn" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                [for]="twitter"
+                class="tx-14 col-md-3 col-sm-12 col-form-label"
+              >
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="twitterIcon" />
+                </span>
+                {{ "Profile.TwitterUrl" | translate }}
+              </label>
+              <div class="col-md-9 col-sm-12">
+                <kendo-textbox #twitter formControlName="twitter" />
+              </div>
+            </div>
+            <div class="row mb-3">
+              <label
+                [for]="title"
+                class="tx-14 col-md-3 col-sm-12 col-form-label"
+              >
+                <span class="d-inline-block wd-20 text-center">
+                  <fa-icon [icon]="eyesIcon" />
+                </span>
+                {{ "Profile.Visibility" | translate }}
+              </label>
+              <div class="col-md-9 col-sm-12">
+                @let showList = showExternally();
+
+                <button
+                  kendoButton
+                  class="mg-r-10"
+                  [selected]="showList.includes('email')"
+                  (click)="toggleVisibility('email')"
+                >
+                  <fa-icon [icon]="emailIcon" class="mg-r-5" />
+                  {{ "General.Email" | translate }}
+                </button>
+                <button
+                  kendoButton
+                  class="mg-r-10"
+                  [selected]="showList.includes('title')"
+                  (click)="toggleVisibility('title')"
+                >
+                  <fa-icon [icon]="titleIcon" class="mg-r-5" />
+                  {{ "General.Title" | translate }}
+                </button>
+                <button
+                  kendoButton
+                  class="mg-r-10"
+                  [selected]="showList.includes('linkedIn')"
+                  (click)="toggleVisibility('linkedIn')"
+                >
+                  <fa-icon [icon]="linkedInIcon" class="mg-r-5" />
+                  {{ "Profile.LinkedIn" | translate }}
+                </button>
+                <button
+                  kendoButton
+                  [selected]="showList.includes('twitter')"
+                  (click)="toggleVisibility('twitter')"
+                >
+                  <fa-icon [icon]="twitterIcon" class="mg-r-5" />
+                  {{ "Profile.Twitter" | translate }}
+                </button>
+                <div class="w-100 tx-12 tx-italic pd-t-5">
+                  <fa-icon [icon]="infoIcon" class="mg-r-5" />
+                  {{ "Profile.VisibilityHelp" | translate }}
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-12 text-end">
+                <div class="d-inline-block mg-r-25">* - Required</div>
+                <wbs-save-button
+                  themeColor="primary"
+                  saveLabel="General.Register"
+                  savingLabel="General.Registering"
+                  [disabled]="registerForm.invalid"
+                  [isSaving]="saveState.isSaving()"
+                  (click)="registerUser()"
+                />
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+      } }
+    </div>
+  </div>
+  <wbs-footer />
+</div>

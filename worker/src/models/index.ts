@@ -12,6 +12,7 @@ export * from './library-link.model';
 export * from './list-item.model';
 export * from './membership.model';
 export * from './message.model';
+export * from './onboarding-record.model';
 export * from './organization.model';
 export * from './project.model';
 export * from './project-approval.model';

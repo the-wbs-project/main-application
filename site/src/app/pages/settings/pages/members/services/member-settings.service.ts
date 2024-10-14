@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { User } from '@wbs/core/models';
-import { Messages } from '@wbs/core/services';
+import { IdService, Messages } from '@wbs/core/services';
 import { MembershipStore, UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
 import { map, switchMap, tap } from 'rxjs/operators';
@@ -44,6 +44,7 @@ export class MemberSettingsService {
     //
 
     let obs: Observable<any> = this.data.invites.createAsync({
+      id: IdService.generate(),
       email: emails[0],
       organizationId,
       invitedById,
@@ -54,6 +55,7 @@ export class MemberSettingsService {
       obs = obs.pipe(
         switchMap(() =>
           this.data.invites.createAsync({
+            id: IdService.generate(),
             email: emails[i],
             organizationId,
             invitedById,
@@ -65,10 +67,7 @@ export class MemberSettingsService {
 
     return obs.pipe(
       tap(() => this.messages.notify.success('OrgSettings.InvitesSent')),
-      switchMap(() => this.data.invites.getAsync(this.membership()!.id)),
-      map((invites) => {
-        this.store.addInvites(invites);
-      })
+      switchMap(() => this.store.refreshInvites())
     );
   }
 

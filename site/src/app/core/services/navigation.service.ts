@@ -36,6 +36,13 @@ export class NavigationService {
     );
   }
 
+  redirectToJoin(
+    organizationId: string,
+    inviteId: string
+  ): Observable<boolean> {
+    return from(this.router.navigate(['/', organizationId, 'join', inviteId]));
+  }
+
   private prefix(): string[] {
     return ['/', this.org];
   }

@@ -19,7 +19,8 @@ BEGIN
         [InvitedById],
         [CreationDate],
         [LastModifiedDate],
-        [Roles]
+        [Roles],
+        [Cancelled]
         )
     VALUES
         (
@@ -29,7 +30,8 @@ BEGIN
             @InvitedById,
             @ts,
             @ts,
-            @Roles
+            @Roles,
+            0
         )
 END
 GO

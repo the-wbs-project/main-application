@@ -9,7 +9,7 @@ CREATE PROCEDURE [dbo].[LibraryEntryVersionEditors_Set]
 AS
 BEGIN
     -- Parse the JSON array into a temporary table
-    SELECT [value] AS EditorId
+    SELECT [value] AS UserId
     INTO #EditorsTable
     FROM OPENJSON(@Editors)
 
@@ -18,10 +18,10 @@ BEGIN
     USING #EditorsTable AS source
         ON target.[EntryId] = @EntryId
         AND target.[Version] = @Version
-        AND target.[EditorId] = source.EditorId
+        AND target.[UserId] = source.UserId
     WHEN NOT MATCHED BY TARGET THEN
-        INSERT ([EntryId], [Version], [EditorId])
-        VALUES (@EntryId, @Version, source.EditorId)
+        INSERT ([EntryId], [Version], [UserId])
+        VALUES (@EntryId, @Version, source.UserId)
     WHEN NOT MATCHED BY SOURCE AND target.[EntryId] = @EntryId AND target.[Version] = @Version THEN
         DELETE;
 

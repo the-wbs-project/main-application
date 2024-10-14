@@ -64,45 +64,10 @@ export class UsersDataService extends BaseDataService {
   }
 
   private async getFromOriginAsync(userIds: string[]): Promise<UserProfile[]> {
-    return (await this.origin.getAsync<UserProfile[]>('users/' + encodeURIComponent(userIds.join(',')))) ?? [];
+    return (await this.origin.getAsync<UserProfile[]>('users/byIds/' + encodeURIComponent(userIds.join(',')))) ?? [];
   }
 
   private getKey(id: string): string {
     return 'USERS|' + id;
   }
-
-  /*
-  async getViewAsync(userId: string, visibility: 'organization' | 'public'): Promise<UserViewModel | undefined> {
-    return (await this.service()).getView(userId, visibility);
-  }
-
-  async getViewsAsync(userIds: string[], visibility: 'organization' | 'public'): Promise<UserViewModel[]> {
-    const service = await this.service();
-    const calls = userIds.map((id) => service.getView(id, visibility));
-
-    const results = await Promise.all(calls);
-
-    return results.filter((x) => x != undefined);
-  }
-
-  async getBasicAsync(userId: string): Promise<UserBasic | undefined> {
-    return (await this.service()).getBasic(userId);
-  }
-
-  async getProfileAsync(userId: string): Promise<User | undefined> {
-    return (await this.service()).getProfile(userId);
-  }
-
-  async isMemberAsync(organization: string, user: string): Promise<boolean> {
-    const memberships = await this.getMembershipsAsync(user);
-    return memberships.some((m) => m.name === organization);
-  }
-
-  async updateAsync(user: User): Promise<void> {
-    return (await this.service()).update(user);
-  }
-
-  private async service(): Promise<UsersEntrypoint> {
-    return this.authApi.users();
-  }*/
 }

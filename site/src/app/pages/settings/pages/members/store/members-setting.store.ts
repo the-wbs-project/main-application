@@ -1,12 +1,15 @@
 import { Injectable, Signal, inject, signal } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { Invite, Membership, User } from '@wbs/core/models';
+import { Invite, User } from '@wbs/core/models';
+import { MembershipStore } from '@wbs/core/store';
 import { InviteViewModel } from '@wbs/core/view-models';
-import { forkJoin } from 'rxjs';
+import { forkJoin, Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
 
 @Injectable()
 export class MembersSettingStore {
   private readonly data = inject(DataServiceFactory);
+  private readonly membership = inject(MembershipStore).membership;
 
   private readonly _invites = signal<InviteViewModel[] | undefined>(undefined);
   private readonly _members = signal<User[] | undefined>(undefined);
@@ -39,28 +42,24 @@ export class MembersSettingStore {
     return this._isLoading;
   }
 
-  initialize(membership: Membership | undefined): void {
+  initialize(): void {
+    const membership = this.membership();
+
     if (!membership) return;
 
     const org = membership.id;
 
     forkJoin({
       members: this.data.memberships.getMembershipUsersAsync(org),
-      invites: this.data.invites.getAsync(org),
+      invites: this.data.invites.getAsync(org, false),
     }).subscribe(({ members, invites }) => {
+      this.setInvites(invites);
+
       this._members.set(
         members.map((m) => {
           return {
             ...m,
             roleList: m.roles.join(','),
-          };
-        })
-      );
-      this._invites.set(
-        invites.map((i) => {
-          return {
-            ...i,
-            roleList: i.roles.join(','),
           };
         })
       );
@@ -96,14 +95,10 @@ export class MembersSettingStore {
     });
   }
 
-  addInvites(invites: Invite[]): void {
-    this._invites.update((list) => [
-      ...invites.map((i) => ({
-        ...i,
-        roleList: i.roles.join(','),
-      })),
-      ...(list ?? []),
-    ]);
+  refreshInvites(): Observable<void> {
+    return this.data.invites
+      .getAsync(this.membership()!.id, false)
+      .pipe(map((invites) => this.setInvites(invites)));
   }
 
   removeInvite(inviteId: string): void {
@@ -114,5 +109,16 @@ export class MembersSettingStore {
       invites.splice(index, 1);
       return [...invites];
     });
+  }
+
+  private setInvites(invites: Invite[]): void {
+    this._invites.set(
+      invites.map((i) => {
+        return {
+          ...i,
+          roleList: i.roles.join(','),
+        };
+      })
+    );
   }
 }

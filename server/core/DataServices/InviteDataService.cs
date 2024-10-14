@@ -25,6 +25,18 @@ public class InviteDataService : BaseSqlDbService
         return InviteTransformer.ToModelList(reader);
     }
 
+    public async Task<Invite> GetByIdAsync(SqlConnection conn, string organizationId, string inviteId)
+    {
+        var cmd = new SqlCommand("SELECT TOP 1 * FROM [dbo].[Invites] WHERE [OrganizationId] = @OrganizationId AND [Id] = @Id", conn);
+
+        cmd.Parameters.AddWithValue("@OrganizationId", organizationId);
+        cmd.Parameters.AddWithValue("@Id", inviteId);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        return reader.Read() ? InviteTransformer.ToModel(reader) : null;
+    }
+
     public async Task CreateAsync(SqlConnection conn, Invite invite)
     {
         var cmd = new SqlCommand("dbo.Invite_Create", conn)
@@ -55,11 +67,12 @@ public class InviteDataService : BaseSqlDbService
         await cmd.ExecuteNonQueryAsync();
     }
 
-    public async Task CancelAsync(SqlConnection conn, string id)
+    public async Task CancelAsync(SqlConnection conn, string organizationId, string inviteId)
     {
-        var cmd = new SqlCommand("UPDATE [dbo].[Invites] SET [Cancelled] = 1 WHERE [Id] = @Id", conn);
+        var cmd = new SqlCommand("UPDATE [dbo].[Invites] SET [Cancelled] = 1 WHERE [OrganizationId] = @OrganizationId AND [Id] = @Id", conn);
 
-        cmd.Parameters.AddWithValue("@Id", id);
+        cmd.Parameters.AddWithValue("@OrganizationId", organizationId);
+        cmd.Parameters.AddWithValue("@Id", inviteId);
 
         await cmd.ExecuteNonQueryAsync();
     }

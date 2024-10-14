@@ -132,11 +132,16 @@ app.route('/', projectApp);
 //
 //  Invites
 //
-app.get('api/invites/:organization', verifyJwt, verifyAdminAsync, Http.invites.getAsync);
-app.get('api/invites/:organization/:userId/resend', verifyJwt, verifyAdminAsync, HttpOriginService.pass);
+app.get('api/invites/:organization/includeAll/:includeAll', verifyJwt, verifyAdminAsync, Http.invites.getAsync);
+app.get('api/invites/:organization/:inviteId/resend', verifyJwt, verifyAdminAsync, HttpOriginService.pass);
 app.post('api/invites/:organization', verifyJwt, verifyAdminAsync, Http.invites.postAsync);
-app.put('api/invites/:organization/:userId', verifyJwt, verifyAdminAsync, Http.invites.putAsync);
-app.delete('api/invites/:organization/:userId', verifyJwt, verifyAdminAsync, Http.invites.deleteAsync);
+app.put('api/invites/:organization/:inviteId', verifyJwt, verifyAdminAsync, Http.invites.putAsync);
+app.delete('api/invites/:organization/:inviteId', verifyJwt, verifyAdminAsync, Http.invites.deleteAsync);
+//
+//  Onboarding (no auth)
+//
+app.get('api/onboard/:organization/:inviteId', Http.onboard.getAsync);
+app.post('api/onboard/:organization/:inviteId', Http.onboard.postAsync);
 //
 //  Organization calls
 //

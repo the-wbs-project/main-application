@@ -4,23 +4,22 @@ import { tap } from 'rxjs/operators';
 import { Invite, NewInvite } from '../models';
 import { Utils } from '../services';
 
+const clean = (invite: Invite | Invite[]) =>
+  Utils.cleanDates(
+    invite,
+    'lastInviteSentDate',
+    'signupDate',
+    'creationDate',
+    'lastModifiedDate'
+  );
+
 export class InviteDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(organizationId: string): Observable<Invite[]> {
+  getAsync(organizationId: string, includeAll: boolean): Observable<Invite[]> {
     return this.http
-      .get<Invite[]>(`api/invites/${organizationId}`)
-      .pipe(
-        tap((list) =>
-          Utils.cleanDates(
-            list,
-            'lastInviteSentDate',
-            'signupDate',
-            'creationDate',
-            'lastModifiedDate'
-          )
-        )
-      );
+      .get<Invite[]>(`api/invites/${organizationId}/includeAll/${includeAll}`)
+      .pipe(tap((list) => clean(list)));
   }
 
   resendAsync(organizationId: string, userId: string): Observable<void> {

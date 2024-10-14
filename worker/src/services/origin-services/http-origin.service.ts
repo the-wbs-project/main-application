@@ -8,25 +8,11 @@ export class HttpOriginService implements OriginService {
   async getResponseAsync(suffix?: string): Promise<Response> {
     return await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
       headers: {
+        'Worker-Auth': this.ctx.env.WORKER_AUTH_KEY,
         Authorization: this.ctx.req.header('Authorization') ?? '',
       },
       method: 'GET',
     });
-  }
-
-  async getWorkerDataAsync<T>(suffix: string): Promise<T | undefined> {
-    const res = await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
-      headers: { 'Worker-Auth': this.ctx.env.WORKER_AUTH_KEY },
-      method: 'GET',
-    });
-
-    if (res.status === 204) {
-      return undefined;
-    }
-    if (res.status !== 200) {
-      throw new Error(res.statusText);
-    }
-    return <T>res.json();
   }
 
   async getTextAsync(suffix?: string): Promise<string | undefined> {
@@ -94,6 +80,7 @@ export class HttpOriginService implements OriginService {
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
+        'Worker-Auth': this.ctx.env.WORKER_AUTH_KEY,
         Authorization: this.ctx.req.raw.headers.get('Authorization')!,
       },
     });
@@ -105,6 +92,7 @@ export class HttpOriginService implements OriginService {
       body: JSON.stringify(body),
       headers: {
         'Content-Type': 'application/json',
+        'Worker-Auth': this.ctx.env.WORKER_AUTH_KEY,
         Authorization: this.ctx.req.raw.headers.get('Authorization')!,
       },
     });
@@ -114,6 +102,7 @@ export class HttpOriginService implements OriginService {
     return await this.ctx.var.fetcher.fetch(this.getUrl(suffix), {
       method: 'DELETE',
       headers: {
+        'Worker-Auth': this.ctx.env.WORKER_AUTH_KEY,
         Authorization: this.ctx.req.raw.headers.get('Authorization')!,
       },
     });

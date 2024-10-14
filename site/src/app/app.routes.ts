@@ -13,10 +13,8 @@ export const routes: Routes = [
   },
   {
     path: 'onboard',
-    loadComponent: () =>
-      import('./pages/onboard/onboard.component').then(
-        (x) => x.OnboardComponent
-      ),
+    loadChildren: () =>
+      import('./pages/onboard/onboard.routes').then((m) => m.routes),
   },
   {
     path: '',

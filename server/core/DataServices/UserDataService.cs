@@ -47,6 +47,19 @@ public class UserDataService : BaseAuthDataService
         return results.ToArray();
     }
 
+    public async Task<User> GetByEmailAsync(string email)
+    {
+        var client = await GetClientAsync();
+
+        var results = await client.Users.GetAllAsync(new GetUsersRequest
+        {
+            Query = $"email:\"{email}\"",
+            Fields = "created_at,user_id,name,picture,last_login,email,email_verified,logins_count,updated_at,app_metadata,user_metadata"
+        });
+
+        return results.FirstOrDefault();
+    }
+
     public async Task<User> GetAsync(string userId)
     {
         var client = await GetClientAsync();
@@ -57,6 +70,27 @@ public class UserDataService : BaseAuthDataService
     public async Task<Member> GetMemberAsync(string userId)
     {
         return new Member(await GetAsync(userId));
+    }
+
+    public async Task<User> CreateAsync(UserViewModel user, string password)
+    {
+        var client = await GetClientAsync();
+
+        return await client.Users.CreateAsync(new UserCreateRequest
+        {
+            Connection = config.Connection,
+            Email = user.Email,
+            Password = password,
+            FullName = user.FullName,
+            UserMetadata = new
+            {
+                title = user.Title,
+                picture = user.Picture,
+                linkedIn = user.LinkedIn,
+                twitter = user.Twitter,
+                showExternally = user.ShowExternally
+            }
+        });
     }
 
     public async Task UpdateAsync(UserViewModel user)

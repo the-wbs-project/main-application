@@ -19,14 +19,14 @@ public class InvitesController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{organizationId}/{all}")]
-    public async Task<IActionResult> GetInvites(string organizationId, bool all)
+    [HttpGet("{organizationId}/includeAll/{includeAll}")]
+    public async Task<IActionResult> GetInvites(string organizationId, bool includeAll)
     {
         try
         {
             var conn = await data.CreateConnectionAsync();
 
-            var invites = await data.Invites.GetAsync(conn, organizationId, all);
+            var invites = await data.Invites.GetAsync(conn, organizationId, includeAll);
 
             return Ok(invites);
         }
@@ -36,7 +36,6 @@ public class InvitesController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
-
 
     [Authorize]
     [HttpPost("{organizationId}")]
@@ -87,7 +86,7 @@ public class InvitesController : ControllerBase
         {
             var conn = await data.CreateConnectionAsync();
 
-            await data.Invites.CancelAsync(conn, inviteId);
+            await data.Invites.CancelAsync(conn, organizationId, inviteId);
 
             return Accepted();
         }

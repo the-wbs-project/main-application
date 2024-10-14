@@ -37,6 +37,7 @@ BEGIN
 ELSE
     BEGIN
         INSERT INTO [dbo].[Projects]
+            ([Id], [RecordId], [OwnerId], [CreatedBy], [CreatedOn], [Title], [Description], [LastModified], [Status], [MainNodeView], [Category], [Disciplines], [ApprovalStarted], [LibraryLink])
         VALUES
             (@Id, @RecordId, @OwnerId, @CreatedBy, GETUTCDATE(), @Title, @Description, GETUTCDATE(), @Status, @MainNodeView, @Category, @Disciplines, @ApprovalStarted, @LibraryLink)
     END

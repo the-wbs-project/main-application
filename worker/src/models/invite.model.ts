@@ -1,11 +1,9 @@
-import { User } from './user.model';
-
 export interface Invite {
   id: string;
   email: string;
   organizationId: string;
   invitedById: string;
-  invitedBy?: User;
+  invitedByName?: string;
   creationDate?: string;
   lastModifiedDate?: string;
   lastInviteSentDate?: string;

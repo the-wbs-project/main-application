@@ -38,6 +38,7 @@ BEGIN
             ELSE
                 BEGIN
             INSERT INTO [dbo].[LibraryEntryVersions]
+                ([EntryId], [Version], [VersionAlias], [Title], [Description], [Status], [Categories], [Disciplines], [LastModified], [Author], [ReleaseNotes])
             VALUES
                 (@EntryId, @Version, @VersionAlias, @Title, @Description, @Status, @Categories, @Disciplines, GETUTCDATE(), @Author, @ReleaseNotes)
         END

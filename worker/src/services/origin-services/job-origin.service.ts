@@ -8,23 +8,10 @@ export class JobOriginService implements OriginService {
   async getResponseAsync(suffix?: string): Promise<Response> {
     return await this.fetcher.fetch(this.getUrl(suffix!), {
       method: 'GET',
-      headers: {},
+      headers: {
+        'Worker-Auth': this.env.WORKER_AUTH_KEY,
+      },
     });
-  }
-
-  async getWorkerDataAsync<T>(suffix: string): Promise<T | undefined> {
-    const res = await this.fetcher.fetch(this.getUrl(suffix), {
-      headers: { 'Worker-Auth': this.env.WORKER_AUTH_KEY },
-      method: 'GET',
-    });
-
-    if (res.status === 204) {
-      return undefined;
-    }
-    if (res.status !== 200) {
-      throw new Error(res.statusText);
-    }
-    return <T>res.json();
   }
 
   async getTextAsync(suffix?: string): Promise<string | undefined> {
@@ -65,7 +52,7 @@ export class JobOriginService implements OriginService {
     return await this.fetcher.fetch(this.getUrl(suffix!), {
       method: 'PUT',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Worker-Auth': this.env.WORKER_AUTH_KEY },
     });
   }
 
@@ -73,13 +60,14 @@ export class JobOriginService implements OriginService {
     return await this.fetcher.fetch(this.getUrl(suffix!), {
       method: 'POST',
       body: JSON.stringify(body),
-      headers: { 'Content-Type': 'application/json' },
+      headers: { 'Content-Type': 'application/json', 'Worker-Auth': this.env.WORKER_AUTH_KEY },
     });
   }
 
   async deleteAsync(suffix?: string): Promise<Response> {
     return await this.fetcher.fetch(this.getUrl(suffix!), {
       method: 'DELETE',
+      headers: { 'Worker-Auth': this.env.WORKER_AUTH_KEY },
     });
   }
 

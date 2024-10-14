@@ -11,6 +11,7 @@ import { LibraryHttpService } from './library.http-service';
 import { MembersHttpService } from './members.http-service';
 import { MetadataHttpService } from './metdata.http-service';
 import { MiscHttpService } from './misc.http-service';
+import { OnboardHttpService } from './onboard.http-service';
 import { ProjectHttpService } from './project.http-service';
 import { UserHttpService } from './user.http-service';
 
@@ -28,6 +29,7 @@ export const Http = {
   members: MembersHttpService,
   metadata: MetadataHttpService,
   misc: MiscHttpService,
+  onboard: OnboardHttpService,
   projects: ProjectHttpService,
   users: UserHttpService,
 };

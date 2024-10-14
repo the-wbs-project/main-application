@@ -15,7 +15,7 @@ public sealed class WorkerAuthorizeAttribute : Attribute, IAuthorizationFilter
         {
             var config = context.HttpContext.RequestServices.GetService<IConfiguration>();
             var workerKey = config["WorkerAuthKey"];
-            var workerAuth = context.HttpContext.Request.Headers["Worker-Auth"].First();
+            var workerAuth = context.HttpContext.Request.Headers["Worker-Auth"].FirstOrDefault();
 
             if (workerAuth != workerKey)
             {

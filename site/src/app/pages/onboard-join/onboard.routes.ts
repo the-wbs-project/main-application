@@ -4,6 +4,6 @@ export const routes: Routes = [
   {
     path: ':organizationId/:inviteId',
     loadComponent: () =>
-      import('./onboard.component').then((x) => x.OnboardComponent),
+      import('./onboard-join.component').then((x) => x.OnboardJoinComponent),
   },
 ];

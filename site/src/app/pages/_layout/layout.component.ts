@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { FooterComponent } from '@wbs/components/footer.component';
 import { MembershipStore, UiStore, UserStore } from '@wbs/core/store';
-import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header';
 import { MainContentDirective } from './directives/main-content.directive';
 

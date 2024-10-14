@@ -61,7 +61,7 @@ export class MembersDataService extends BaseDataService {
   }
 
   private async setupSiteRolesAsync(): Promise<RoleRollup> {
-    const siteRoles = (await this.origin.getWorkerDataAsync<UserRole[]>('members/site-roles')) ?? [];
+    const siteRoles = (await this.origin.getAsync<UserRole[]>('members/site-roles')) ?? [];
     const userIds = [...new Set(siteRoles.map((x) => x.userId))];
     const data: RoleRollup = {};
 
@@ -90,7 +90,7 @@ export class MembersDataService extends BaseDataService {
 
     if (kvData) return kvData;
 
-    const apiData = (await this.origin.getWorkerDataAsync<OrganizationRole[]>('members')) ?? [];
+    const apiData = (await this.origin.getAsync<OrganizationRole[]>('members')) ?? [];
 
     if (apiData) this.putKv(this.listKey, apiData);
 

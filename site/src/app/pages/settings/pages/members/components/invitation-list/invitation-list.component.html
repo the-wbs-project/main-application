@@ -5,21 +5,30 @@
       <th
         scope="col"
         class="pointer"
-        [sortable]="'invitee'"
+        [sortable]="'email'"
         [(sortColumns)]="sort"
       >
         {{ "General.Email" | translate }} &nbsp;
-        <wbs-sort-arrow [sort]="sort()" field="invitee" />
+        <wbs-sort-arrow [sort]="sort()" field="email" />
+      </th>
+      <th
+        scope="col"
+        class="pointer d-none d-lg-table-cell"
+        [sortable]="'invitedByName'"
+        [(sortColumns)]="sort"
+      >
+        {{ "OrgSettings.Inviter" | translate }} &nbsp;
+        <wbs-sort-arrow [sort]="sort()" field="invitedByName" />
       </th>
 
       <th
         scope="col"
         class="pointer"
-        [sortable]="'createdAt'"
+        [sortable]="'lastInviteSentDate'"
         [(sortColumns)]="sort"
       >
         {{ "OrgSettings.TimeSent" | translate }} &nbsp;
-        <wbs-sort-arrow [sort]="sort()" field="createdAt" />
+        <wbs-sort-arrow [sort]="sort()" field="lastInviteSentDate" />
       </th>
 
       <th scope="col">{{ "General.Roles" | translate }}</th>
@@ -38,6 +47,7 @@
         />
       </td>
       <td>{{ invite.email }}</td>
+      <td class="d-none d-lg-table-cell">{{ invite.invitedByName }}</td>
       <td>{{ invite.lastInviteSentDate | dateText }}</td>
       <td>{{ invite.roles | roleList : true }}</td>
     </tr>

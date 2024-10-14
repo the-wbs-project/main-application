@@ -20,7 +20,7 @@ public class UsersController : ControllerBase
     }
 
     [Authorize]
-    [HttpGet("{userIds}")]
+    [HttpGet("byIds/{userIds}")]
     public async Task<IActionResult> GetUser(string userIds)
     {
         try
@@ -55,5 +55,6 @@ public class UsersController : ControllerBase
             return new StatusCodeResult(500);
         }
     }
+
 }
 
