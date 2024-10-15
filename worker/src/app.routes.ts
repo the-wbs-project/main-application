@@ -129,6 +129,7 @@ const projectApp = newApp()
   .get(':project/recordId', verifyJwt, verifyMembership, Http.projects.getRecordIdAsync)
   .get(':project/nodes', verifyJwt, verifyMembership, Http.projects.getNodesAsync)
   .put(':project', verifyJwt, verifyMembership, Http.projects.putProjectAsync)
+  .post(':project/activities', verifyJwt, verifyMembership, Http.projectActivities.postAsync)
   .delete(':project', verifyJwt, verifyMembership, Http.projects.deleteProjectAsync)
   .put(':project/nodes', verifyJwt, verifyMembership, Http.projects.putNodesAsync);
 //.put(':project/approvals', verifyJwt, verifyMembership, Http.projects.putAsync);

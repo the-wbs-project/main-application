@@ -51,4 +51,8 @@ export class LayoutComponent {
 
   readonly profile = inject(UserStore).profile;
   readonly activeSection = inject(UiStore).activeSection;
+
+  constructor() {
+    console.log('layout');
+  }
 }

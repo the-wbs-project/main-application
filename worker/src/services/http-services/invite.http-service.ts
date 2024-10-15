@@ -26,25 +26,13 @@ export class InviteHttpService {
   static async resendAsync(ctx: Context): Promise<Response> {
     try {
       const { organization, inviteId } = ctx.req.param();
-      const { invite, onboardUrl }: { invite: Invite; onboardUrl: string } = await ctx.req.json();
+      const invite: Invite = await ctx.req.json();
 
       if (organization !== invite.organizationId || inviteId !== invite.id) {
         return ctx.text('Bad Request', 400);
       }
 
-      const org = await ctx.var.data.organizations.getByIdAsync(invite.organizationId);
-
-      if (org) {
-        await ctx.env.SEND_MAIL_QUEUE.send({
-          type: 'template',
-          templateId: ctx.env.EMAIL_TEMPLATE_INVITE,
-          toList: [invite.email],
-          data: {
-            organization: org.name,
-            link: onboardUrl,
-          },
-        });
-      }
+      await InviteHttpService.sendEmail(ctx, invite);
 
       invite.lastInviteSentDate = new Date().toISOString();
 
@@ -60,7 +48,7 @@ export class InviteHttpService {
   static async postAsync(ctx: Context): Promise<Response> {
     try {
       const { organization } = ctx.req.param();
-      const { invite, onboardUrl }: { invite: Invite; onboardUrl: string } = await ctx.req.json();
+      const invite: Invite = await ctx.req.json();
 
       if (organization !== invite.organizationId) {
         return ctx.text('Bad Request', 400);
@@ -68,19 +56,7 @@ export class InviteHttpService {
 
       await ctx.var.data.invites.createAsync(invite);
 
-      const org = await ctx.var.data.organizations.getByIdAsync(invite.organizationId);
-
-      if (org) {
-        await ctx.env.SEND_MAIL_QUEUE.send({
-          type: 'template',
-          templateId: ctx.env.EMAIL_TEMPLATE_INVITE,
-          toList: [invite.email],
-          data: {
-            organization: org.name,
-            link: onboardUrl,
-          },
-        });
-      }
+      await InviteHttpService.sendEmail(ctx, invite);
 
       return ctx.newResponse(null, 204);
     } catch (error) {
@@ -120,6 +96,25 @@ export class InviteHttpService {
     } catch (error) {
       ctx.var.logger.trackException('An error occured trying to cancel an invite.', <Error>error);
       return ctx.text('Internal Server Error', 500);
+    }
+  }
+
+  private static async sendEmail(ctx: Context, invite: Invite) {
+    const org = await ctx.var.data.organizations.getByIdAsync(invite.organizationId);
+
+    if (org) {
+      const link = `${ctx.env.SITE_URL}/onboard/${org.id}/${invite.id}`;
+
+      await ctx.env.SEND_MAIL_QUEUE.send({
+        type: 'template',
+        subject: "You've been invited!",
+        templateId: ctx.env.EMAIL_TEMPLATE_INVITE,
+        toList: [invite.email],
+        data: {
+          link,
+          organization: org.name,
+        },
+      });
     }
   }
 }

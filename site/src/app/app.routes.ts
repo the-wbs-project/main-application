@@ -12,6 +12,11 @@ export const routes: Routes = [
       import('./pages/logout.component').then((x) => x.LogoutComponent),
   },
   {
+    path: 'callback',
+    loadComponent: () =>
+      import('./pages/callback.component').then((x) => x.CallbackComponent),
+  },
+  {
     path: 'onboard',
     loadChildren: () =>
       import('./pages/onboard/onboard.routes').then((m) => m.routes),

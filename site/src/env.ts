@@ -12,7 +12,7 @@ export const environment = {
 
   authRedirectUri:
     locationHost.indexOf('localhost') > -1
-      ? 'http://localhost:4200'
+      ? 'http://localhost:4200/callback'
       : locationHost.indexOf('test') > -1
       ? 'https://test.pm-empower.com'
       : 'https://app.pm-empower.com',

@@ -22,21 +22,15 @@ export class InviteDataService {
       .pipe(tap((list) => clean(list)));
   }
 
-  resendAsync(invite: NewInvite, onboardUrl: string): Observable<void> {
+  resendAsync(invite: NewInvite): Observable<void> {
     return this.http.post<void>(
       `api/invites/${invite.organizationId}/${invite.id}/resend`,
-      {
-        invite,
-        onboardUrl,
-      }
+      invite
     );
   }
 
-  createAsync(invite: NewInvite, onboardUrl: string): Observable<void> {
-    return this.http.post<void>(`api/invites/${invite.organizationId}`, {
-      invite,
-      onboardUrl,
-    });
+  createAsync(invite: NewInvite): Observable<void> {
+    return this.http.post<void>(`api/invites/${invite.organizationId}`, invite);
   }
 
   updateAsync(invite: Invite): Observable<void> {

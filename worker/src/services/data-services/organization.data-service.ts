@@ -24,8 +24,8 @@ export class OrganizationDataService extends BaseDataService {
     return apiData;
   }
 
-  async getByIdAsync(id: string): Promise<Organization | null> {
-    return (await this.getAllAsync()).find((x) => x.id === id) ?? null;
+  async getByIdAsync(id: string): Promise<Organization | undefined> {
+    return (await this.getAllAsync()).find((x) => x.id === id);
   }
 
   async update(organization: Organization): Promise<void> {

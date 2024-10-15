@@ -1,3 +1,4 @@
+export * from './actions';
 export * from './permissions';
 
 export * from './activity.model';
@@ -19,6 +20,7 @@ export * from './organization.model';
 export * from './organization-role.model';
 export * from './project.model';
 export * from './project-approval.model';
+export * from './project-assignment-queue-message.model';
 export * from './project-created-queue-message.model';
 export * from './published-email-queue-message.model';
 export * from './resources.model';

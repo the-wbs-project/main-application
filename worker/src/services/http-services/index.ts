@@ -12,6 +12,7 @@ import { MembersHttpService } from './members.http-service';
 import { MetadataHttpService } from './metdata.http-service';
 import { MiscHttpService } from './misc.http-service';
 import { OnboardHttpService } from './onboard.http-service';
+import { ProjectActivitiesHttpService } from './project-activities.http-service';
 import { ProjectHttpService } from './project.http-service';
 import { UserHttpService } from './user.http-service';
 
@@ -31,5 +32,6 @@ export const Http = {
   misc: MiscHttpService,
   onboard: OnboardHttpService,
   projects: ProjectHttpService,
+  projectActivities: ProjectActivitiesHttpService,
   users: UserHttpService,
 };

@@ -59,26 +59,20 @@ export class MailGunService {
     }
   }
 
-  private async sendTemplateMessage({ toList, bccList, templateId, data }: TemplateMailMessage): Promise<boolean> {
+  private async sendTemplateMessage({ toList, bccList, templateId, data, subject }: TemplateMailMessage): Promise<boolean> {
     if (toList == null) toList = [];
     if (bccList == null) bccList = [];
 
     if (this.env.EMAIL_ADMIN && !toList.includes(this.env.EMAIL_ADMIN)) {
       bccList.push(this.env.EMAIL_ADMIN);
     }
-    /*curl -s --user 'api:ENTER_API_KEY_HERE' \
-	 https://api.mailgun.net/v3/email.pm-empower.com/messages \
-	 -F from='Mailgun Sandbox <postmaster@email.pm-empower.com>' \
-	 -F to='Christopher Walton <chrisw@thewbsproject.com>' \
-	 -F subject='Hello Christopher Walton' \
-	 -F template='invite' \
-	 -F h:X-Mailgun-Variables='{"test": "test"}'
-   */
+
     return this.sendToApi({
       template: templateId,
       to: toList.join(','),
       bcc: bccList.join(','),
       from: this.env.EMAIL_FROM,
+      subject,
       'h:sender': this.env.EMAIL_FROM,
       'h:X-Mailgun-Variables': JSON.stringify(data),
     });

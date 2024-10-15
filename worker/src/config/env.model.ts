@@ -1,10 +1,11 @@
-import { MailMessage, ProjectCreatedQueueMessage, PublishedEmailQueueMessage } from '../models';
+import { MailMessage, ProjectAssignmentQueueMessage, ProjectCreatedQueueMessage, PublishedEmailQueueMessage } from '../models';
 
 export type Env = {
   readonly KV_DATA: KVNamespace;
   readonly SEND_MAIL_QUEUE: Queue<MailMessage>;
   readonly VERSION_PUBLISHED_QUEUE: Queue<PublishedEmailQueueMessage>;
   readonly PROJECT_CREATED_QUEUE: Queue<ProjectCreatedQueueMessage>;
+  readonly PROJECT_ASSIGNMENT_QUEUE: Queue<ProjectAssignmentQueueMessage>;
 
   readonly ORIGIN: string;
 
@@ -31,7 +32,7 @@ export type Env = {
   readonly JIRA_SYNC_QUEUE: Queue;
   readonly JIRA_SYNC_URL: string;
 
-  readonly CORS_ORIGINS: string;
+  readonly SITE_URL: string;
   readonly KV_BYPASS?: string;
   readonly WORKER_AUTH_KEY: string;
 
@@ -41,4 +42,5 @@ export type Env = {
   readonly EMAIL_SUPRESS: string;
 
   readonly EMAIL_TEMPLATE_INVITE: string;
+  readonly EMAIL_TEMPLATE_PROJECT_ASSIGNED: string;
 };

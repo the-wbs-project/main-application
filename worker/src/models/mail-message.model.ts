@@ -11,6 +11,7 @@ export interface TemplateMailMessage {
   bccList?: string[];
   type: 'template';
   templateId: string;
+  subject: string;
   data: any;
 }
 

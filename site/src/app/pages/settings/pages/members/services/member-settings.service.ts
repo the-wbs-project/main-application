@@ -75,12 +75,10 @@ export class MemberSettingsService {
   }
 
   resendInviteAsync(invite: InviteViewModel): void {
-    this.data.invites
-      .resendAsync(invite, this.getOnboardUrl(invite.organizationId, invite.id))
-      .subscribe(() => {
-        invite.lastInviteSentDate = new Date();
-        this.store.updateInvite(invite);
-      });
+    this.data.invites.resendAsync(invite).subscribe(() => {
+      invite.lastInviteSentDate = new Date();
+      this.store.updateInvite(invite);
+    });
   }
 
   private sendInviteAsync(
@@ -91,19 +89,12 @@ export class MemberSettingsService {
   ): Observable<void> {
     const inviteId = IdService.generate();
 
-    return this.data.invites.createAsync(
-      {
-        id: inviteId,
-        email,
-        organizationId,
-        invitedById,
-        roles,
-      },
-      this.getOnboardUrl(organizationId, inviteId)
-    );
-  }
-
-  private getOnboardUrl(organizationId: string, inviteId: string): string {
-    return `${window.location.origin}/onboard/${organizationId}/${inviteId}`;
+    return this.data.invites.createAsync({
+      id: inviteId,
+      email,
+      organizationId,
+      invitedById,
+      roles,
+    });
   }
 }
