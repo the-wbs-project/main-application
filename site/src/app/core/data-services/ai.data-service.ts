@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  AiLog,
   AiModel,
   OpenAiRequest,
   OpenAiResults,
@@ -14,7 +13,7 @@ export class AiDataService {
   constructor(private readonly http: HttpClient) {}
 
   getModelsAsync(type: 'text'): Observable<AiModel[]> {
-    return this.http.get<AiModel[]>('api/models/' + type);
+    return this.http.get<AiModel[]>('api/ai/models/' + type);
   }
 
   runWorkerAiAsync(

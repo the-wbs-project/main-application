@@ -9,8 +9,9 @@ import {
   Http,
   HttpLogger,
   JiraService,
-  MailGunService,
   HttpOriginService,
+  MailBuilderService,
+  MailGunService,
 } from './services';
 import * as ROUTE_FILE from './routes.json';
 import { Routes } from './models';
@@ -32,6 +33,8 @@ app.use('*', async (ctx, next) => {
   var data = new DataServiceFactory(ctx.env, ctx.executionCtx, origin);
   var claims = new ClaimsService(data);
   var jira = new JiraService(ctx.env, fetcher, logger);
+  var mailgun = new MailGunService(ctx.env, fetcher, logger);
+  var mailBuilder = new MailBuilderService(data, ctx.env, mailgun);
 
   ctx.set('datadog', datadog);
   ctx.set('logger', logger);
@@ -40,6 +43,8 @@ app.use('*', async (ctx, next) => {
   ctx.set('origin', origin);
   ctx.set('claims', claims);
   ctx.set('data', data);
+  ctx.set('mailBuilder', mailBuilder);
+  ctx.set('mailgun', mailgun);
 
   await next();
 });
@@ -58,7 +63,7 @@ app.get('api/lists/:type/:locale', Http.metadata.getListsAsync);
 //
 //  AI models
 //
-app.get('api/ai/models', verifyJwt, Http.ai.getModelsAsync);
+app.get('api/ai/models/text', verifyJwt, Http.ai.getModelsAsync);
 app.post('api/ai/run/worker-ai', verifyJwt, Http.ai.runWorkerAiAsync);
 app.post('api/ai/run/open-ai', verifyJwt, Http.ai.runOpenAiAsync);
 
@@ -77,7 +82,8 @@ app.put('api/resources', Http.metadata.putResourcesAsync);
 app.put('api/lists/:type', Http.metadata.putListAsync);
 app.put('api/checklists', kvPurge('CHECKLISTS'), Http.metadata.putChecklistsAsync);
 
-app.post('api/send', MailGunService.handleHomepageInquiryAsync);
+//app.get('api/mailgun/template/:templateId/:version', (ctx) => ctx.var.mailgun.getTemplate(ctx));
+app.post('api/send', (ctx) => ctx.var.mailBuilder.handleHomepageInquiryAsync(ctx));
 app.get('api/edge-data/clear', Http.misc.clearKvAsync);
 
 app.get('api/tools/rebuild', verifyJwt, verifySiteAdmin, HttpOriginService.pass);
@@ -133,7 +139,7 @@ app.route('/', projectApp);
 //  Invites
 //
 app.get('api/invites/:organization/includeAll/:includeAll', verifyJwt, verifyAdminAsync, Http.invites.getAsync);
-app.get('api/invites/:organization/:inviteId/resend', verifyJwt, verifyAdminAsync, HttpOriginService.pass);
+app.post('api/invites/:organization/:inviteId/resend', verifyJwt, verifyAdminAsync, Http.invites.resendAsync);
 app.post('api/invites/:organization', verifyJwt, verifyAdminAsync, Http.invites.postAsync);
 app.put('api/invites/:organization/:inviteId', verifyJwt, verifyAdminAsync, Http.invites.putAsync);
 app.delete('api/invites/:organization/:inviteId', verifyJwt, verifyAdminAsync, Http.invites.deleteAsync);

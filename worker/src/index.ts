@@ -1,8 +1,10 @@
+import { APP_QUEUE } from './app.queue';
 import { API_ROUTES } from './app.routes';
 import { APP_SCHEDULED } from './app.scheduled';
 
 export default {
   fetch: API_ROUTES.fetch,
+  queue: APP_QUEUE.run,
   scheduled: APP_SCHEDULED.run,
 };
 /*

@@ -1,5 +1,5 @@
 import { Env } from './config';
-import { DataDogService, DataServiceFactory, Fetcher, JobLogger, JobOriginService } from './services';
+import { DataDogService, DataServiceFactory, Fetcher, JobLogger, JobOriginService, MailGunService } from './services';
 
 export const APP_SCHEDULED = {
   async run(event: any, env: Env, ctx: ExecutionContext): Promise<void> {
@@ -8,9 +8,10 @@ export const APP_SCHEDULED = {
     var fetcher = new Fetcher(logger);
     var origin = new JobOriginService(env, fetcher);
     var data = new DataServiceFactory(env, ctx, origin);
+    var mailgun = new MailGunService(env, fetcher, logger);
 
     try {
-      const whatever = await data.resources.getFromOriginAsync('en-US');
+      await mailgun.getEventsAsync();
     } catch (e) {
       logger.trackException('An error occured trying to get resources.', <Error>e);
     }

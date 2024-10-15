@@ -1,10 +1,9 @@
-export interface Registration {
-  inviteId: string;
+export interface OnboardResults {
   email: string;
   password: string;
   fullName: string;
   title?: string;
-  twitter?: string;
   linkedIn?: string;
+  twitter?: string;
   showExternally: string[];
 }

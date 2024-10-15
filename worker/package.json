@@ -5,7 +5,7 @@
   "scripts": {
     "setup": "yarn",
     "check": "tsc --noEmit",
-    "start": "wrangler dev --env dev --inspector-port 0",
+    "start": "wrangler dev --env dev --inspector-port 0 --test-scheduled",
     "publish": "wrangler publish --env prod"
   },
   "author": "author",

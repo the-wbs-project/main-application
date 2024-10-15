@@ -2,6 +2,7 @@ import { Env } from '../../config';
 import { OriginService } from '../origin-services';
 import { AiChatDataService } from './ai-chat.data-service';
 import { ContentResourcesDataService } from './content-resources.data-services';
+import { InviteDataService } from './invite.data-service';
 import { LibraryEntryTaskDataService } from './library-entry-tasks.data-service';
 import { LibraryEntryVersionDataService } from './library-entry-version.data-service';
 import { LibraryEntryDataService } from './library-entry.data-service';
@@ -18,6 +19,7 @@ export class DataServiceFactory {
   readonly aiChat: AiChatDataService;
   readonly contentResources: ContentResourcesDataService;
   readonly entries: LibraryEntryDataService;
+  readonly invites: InviteDataService;
   readonly libraryEntries: LibraryEntryDataService;
   readonly libraryTasks: LibraryEntryTaskDataService;
   readonly libraryVersions: LibraryEntryVersionDataService;
@@ -34,6 +36,7 @@ export class DataServiceFactory {
     this.aiChat = new AiChatDataService(env, executionCtx);
     this.contentResources = new ContentResourcesDataService(env, executionCtx, origin);
     this.entries = new LibraryEntryDataService(env, executionCtx, origin);
+    this.invites = new InviteDataService(env, executionCtx, origin);
     this.libraryEntries = new LibraryEntryDataService(env, executionCtx, origin);
     this.libraryTasks = new LibraryEntryTaskDataService(env, executionCtx, origin);
     this.libraryVersions = new LibraryEntryVersionDataService(env, executionCtx, origin);

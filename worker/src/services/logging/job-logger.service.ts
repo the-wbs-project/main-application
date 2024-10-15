@@ -7,9 +7,15 @@ export class JobLogger implements Logger {
 
   trackRequest(duration: number): void {}
 
-  trackEvent(message: string, status: 'Error' | 'Info' | 'Warn' | 'Notice', data?: Record<string, any>): void {
+  trackEvent(
+    message: string,
+    status: 'Error' | 'Info' | 'Warn' | 'Notice',
+    data?: Record<string, any>,
+    ddsource?: string,
+    service?: string,
+  ): void {
     this.datadog.appendLog({
-      ...this.basics({ data }),
+      ...this.basics({ data }, ddsource, service),
       status,
       message: message,
     });
@@ -49,12 +55,12 @@ export class JobLogger implements Logger {
     });
   }
 
-  private basics(data?: any | undefined): any {
+  private basics(data?: any | undefined, ddsource = 'worker', service = 'pm-empower-worker'): any {
     return {
-      ddsource: 'worker',
+      ddsource,
       ddtags: `env:${this.env.DATADOG_ENV},app:pm-empower`,
       hostname: this.env.DATADOG_HOST,
-      service: 'pm-empower-worker',
+      service,
       data,
     };
   }

@@ -1,5 +1,10 @@
+import { MailMessage, ProjectCreatedQueueMessage, PublishedEmailQueueMessage } from '../models';
+
 export type Env = {
   readonly KV_DATA: KVNamespace;
+  readonly SEND_MAIL_QUEUE: Queue<MailMessage>;
+  readonly VERSION_PUBLISHED_QUEUE: Queue<PublishedEmailQueueMessage>;
+  readonly PROJECT_CREATED_QUEUE: Queue<ProjectCreatedQueueMessage>;
 
   readonly ORIGIN: string;
 
@@ -29,4 +34,11 @@ export type Env = {
   readonly CORS_ORIGINS: string;
   readonly KV_BYPASS?: string;
   readonly WORKER_AUTH_KEY: string;
+
+  readonly EMAIL_ADMIN: string;
+  readonly EMAIL_FROM: string;
+
+  readonly EMAIL_SUPRESS: string;
+
+  readonly EMAIL_TEMPLATE_INVITE: string;
 };

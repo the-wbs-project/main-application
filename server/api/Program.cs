@@ -74,6 +74,7 @@ builder.Services.AddSingleton<AuthConverterService>();
 builder.Services.AddSingleton<CloudflareApiService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
+builder.Services.AddSingleton<OnboardService>();
 builder.Services.AddSingleton<ResourceCopyService>();
 builder.Services.AddSingleton<VersioningService>();
 //

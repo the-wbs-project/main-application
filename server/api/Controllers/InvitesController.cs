@@ -38,6 +38,25 @@ public class InvitesController : ControllerBase
     }
 
     [Authorize]
+    [HttpGet("{organizationId}/{inviteId}")]
+    public async Task<IActionResult> GetInvite(string organizationId, string inviteId)
+    {
+        try
+        {
+            var conn = await data.CreateConnectionAsync();
+
+            var invite = await data.Invites.GetByIdAsync(conn, organizationId, inviteId);
+
+            return Ok(invite);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error getting invite {orgId} {inviteId}", organizationId, inviteId);
+            return new StatusCodeResult(500);
+        }
+    }
+
+    [Authorize]
     [HttpPost("{organizationId}")]
     public async Task<IActionResult> CreateInvite(string organizationId, Invite invite)
     {

@@ -5,6 +5,8 @@ export * from './logging';
 export * from './fetcher.service';
 export * from './http-services';
 export * from './jira.service';
+export * from './mail-builder.service';
 export * from './mail-gun.service';
 export * from './origin-services';
+export * from './queue.service';
 export * from './resource.service';

@@ -1,11 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { User } from '@wbs/core/models';
+import { Invite, User } from '@wbs/core/models';
 import { IdService, Messages } from '@wbs/core/services';
 import { MembershipStore, UserStore } from '@wbs/core/store';
 import { Observable } from 'rxjs';
-import { map, switchMap, tap } from 'rxjs/operators';
+import { switchMap, tap } from 'rxjs/operators';
 import { MembersSettingStore } from '../store';
+import { InviteViewModel } from '@wbs/core/view-models';
 
 @Injectable()
 export class MemberSettingsService {
@@ -43,24 +44,17 @@ export class MemberSettingsService {
     //  Don't do an array with forkJoin because we want them to be send one after another
     //
 
-    let obs: Observable<any> = this.data.invites.createAsync({
-      id: IdService.generate(),
-      email: emails[0],
+    let obs = this.sendInviteAsync(
       organizationId,
       invitedById,
-      roles,
-    });
+      emails[0],
+      roles
+    );
 
     for (let i = 1; i < emails.length; i++) {
       obs = obs.pipe(
         switchMap(() =>
-          this.data.invites.createAsync({
-            id: IdService.generate(),
-            email: emails[i],
-            organizationId,
-            invitedById,
-            roles,
-          })
+          this.sendInviteAsync(organizationId, invitedById, emails[i], roles)
         )
       );
     }
@@ -78,5 +72,38 @@ export class MemberSettingsService {
         this.messages.notify.success('OrgSettings.InviteCancelled');
         this.store.removeInvite(userId);
       });
+  }
+
+  resendInviteAsync(invite: InviteViewModel): void {
+    this.data.invites
+      .resendAsync(invite, this.getOnboardUrl(invite.organizationId, invite.id))
+      .subscribe(() => {
+        invite.lastInviteSentDate = new Date();
+        this.store.updateInvite(invite);
+      });
+  }
+
+  private sendInviteAsync(
+    organizationId: string,
+    invitedById: string,
+    email: string,
+    roles: string[]
+  ): Observable<void> {
+    const inviteId = IdService.generate();
+
+    return this.data.invites.createAsync(
+      {
+        id: inviteId,
+        email,
+        organizationId,
+        invitedById,
+        roles,
+      },
+      this.getOnboardUrl(organizationId, inviteId)
+    );
+  }
+
+  private getOnboardUrl(organizationId: string, inviteId: string): string {
+    return `${window.location.origin}/onboard/${organizationId}/${inviteId}`;
   }
 }

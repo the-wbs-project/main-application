@@ -1,6 +1,6 @@
 namespace Wbs.Core.Models;
 
-public class OnboardingRecord
+public class OnboardRecord
 {
     public string InviteId { get; set; }
     public string Email { get; set; }

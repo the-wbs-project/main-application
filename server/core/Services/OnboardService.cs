@@ -15,7 +15,7 @@ public class OnboardService
         _logger = logger.CreateLogger<OnboardService>();
     }
 
-    public async Task<OnboardingRecord> GetRecordAsync(string organizationId, string inviteId)
+    public async Task<OnboardRecord> GetRecordAsync(string organizationId, string inviteId)
     {
         var conn = await data.CreateConnectionAsync();
         var invite = await data.Invites.GetByIdAsync(conn, organizationId, inviteId);
@@ -24,7 +24,7 @@ public class OnboardService
 
         var user = await data.Users.GetByEmailAsync(invite.Email);
 
-        return new OnboardingRecord
+        return new OnboardRecord
         {
             InviteId = invite.Id,
             Email = invite.Email,
@@ -35,12 +35,16 @@ public class OnboardService
         };
     }
 
-    public async Task<User> OnboardAsync(string organizationId, string inviteId, OnboardingResults results)
+    public async Task<User> OnboardAsync(string organizationId, string inviteId, OnboardResults results)
     {
         var conn = await data.CreateConnectionAsync();
         var invite = await data.Invites.GetByIdAsync(conn, organizationId, inviteId);
 
+        Console.WriteLine("invite", invite?.Id);
         if (invite == null) return null;
+
+        Console.WriteLine("Invite", invite.Id);
+        Console.WriteLine("Creating user");
 
         var user = await data.Users.CreateAsync(new UserViewModel
         {
@@ -49,9 +53,11 @@ public class OnboardService
             Title = results.Title,
             LinkedIn = results.LinkedIn,
             Twitter = results.Twitter,
-            Picture = results.Picture,
+            //Picture = results.Picture,
             ShowExternally = results.ShowExternally,
         }, results.Password);
+
+        Console.WriteLine("User created", user.UserId);
         //
         //  Add the roles for the user.
         //

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { OnboardingRecord } from '../models';
+import { OnboardRecord, OnboardResults } from '../models';
 
 export class OnboardDataService {
   constructor(private readonly http: HttpClient) {}
@@ -8,9 +8,20 @@ export class OnboardDataService {
   getRecordAsync(
     organizationId: string,
     inviteId: string
-  ): Observable<OnboardingRecord> {
-    return this.http.get<OnboardingRecord>(
-      `api/onboard/record/${organizationId}/${inviteId}`
+  ): Observable<OnboardRecord> {
+    return this.http.get<OnboardRecord>(
+      `api/onboard/${organizationId}/${inviteId}`
+    );
+  }
+
+  sendResultsAsync(
+    organizationId: string,
+    inviteId: string,
+    results: OnboardResults
+  ): Observable<void> {
+    return this.http.post<void>(
+      `api/onboard/${organizationId}/${inviteId}`,
+      results
     );
   }
 }

@@ -85,6 +85,16 @@ export class MembersSettingStore {
     });
   }
 
+  updateInvite(invite: InviteViewModel): void {
+    this._invites.update((invites) => {
+      if (!invites) return [];
+
+      const index = invites.findIndex((i) => i.id === invite.id);
+      invites[index] = invite;
+      return [...invites];
+    });
+  }
+
   removeMember(memberId: string): void {
     this._members.update((members) => {
       if (!members) return [];

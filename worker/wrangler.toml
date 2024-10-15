@@ -13,6 +13,21 @@ kv_namespaces = [
   { binding = "KV_DATA", id = "123" },
 ]
 
+[env.dev.queues]
+producers = [
+  { queue = "send-mail", binding = "SEND_MAIL_QUEUE" },
+  { queue = "version-published", binding = "VERSION_PUBLISHED_QUEUE" },
+  { queue = "project-created", binding = "PROJECT_CREATED_QUEUE" }
+]
+consumers = [
+  { queue = "send-mail", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "send-mail-dlq" },
+  { queue = "version-published", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "version-published-dlq" },
+  { queue = "project-created", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "project-created-dlq" }
+]
+
+[env.dev.triggers]
+crons = [ "0 0 * * *" ]
+
 [env.dev.vars]
 DEBUG = "true"
 ORIGIN = "http://wbs-api"
@@ -20,11 +35,15 @@ AI_GATEWAY = "test-gateway"
 DATADOG_ENV = "development"
 DATADOG_HOST = "localhost:88"
 CORS_ORIGINS = "http://localhost:4200"
-MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/email.pm-empower.com"
 AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
 AUTH_DOMAIN = "auth.pm-empower.com"
 JIRA_EMAIL = "chriswalton@cwsoftware.biz"
 JIRA_DOMAIN = "cw-software.atlassian.net"
+EMAIL_ADMIN = "chrisw@thewbsproject.com"
+EMAIL_FROM = "noreply@thewbsproject.com"
+EMAIL_SUPRESS = "true"
+EMAIL_TEMPLATE_INVITE = "invite"
 
 [env.test]
 name = "pm-empower-api-test"

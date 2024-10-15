@@ -1,11 +1,10 @@
 import { Context } from '../../config';
-import { OnboardingRecord } from '../../models';
-import { HttpOriginService } from '../origin-services';
+import { OnboardRecord } from '../../models';
 
 export class OnboardHttpService {
   static async getAsync(ctx: Context): Promise<Response> {
     try {
-      const record = await ctx.var.origin.getAsync<OnboardingRecord>();
+      const record = await ctx.var.origin.getAsync<OnboardRecord>();
 
       if (!record) return ctx.text('Not Found', 404);
 
@@ -25,20 +24,21 @@ export class OnboardHttpService {
 
   static async postAsync(ctx: Context): Promise<Response> {
     try {
-      const { organizationId, inviteId } = await ctx.req.param();
-      const record = await ctx.var.origin.getAsync<OnboardingRecord>();
+      const { organization, inviteId } = await ctx.req.param();
+      const record = await ctx.var.origin.getAsync<OnboardRecord>();
+      const results = await ctx.req.json();
 
       if (!record) return ctx.text('Not Found', 404);
 
-      const resp = await HttpOriginService.pass(ctx);
+      const resp = await ctx.var.origin.postAsync(results, `onboard/${organization}/${inviteId}`);
 
       if (resp.status !== 200) throw new Error('Failed to pass to origin');
 
-      const userId: string = await resp.json();
+      const userId: string = await resp.text();
       //
       //  Now save the roles
       //
-      await ctx.var.data.members.putRolesAsync(organizationId, userId, record.roles);
+      ctx.executionCtx.waitUntil(ctx.var.data.members.updateRolesInKv(organization, userId, record.roles));
 
       return ctx.newResponse(null, 204);
     } catch (error) {

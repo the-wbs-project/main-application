@@ -82,6 +82,8 @@ public class UserDataService : BaseAuthDataService
             Email = user.Email,
             Password = password,
             FullName = user.FullName,
+            EmailVerified = false,
+            VerifyEmail = false,
             UserMetadata = new
             {
                 title = user.Title,

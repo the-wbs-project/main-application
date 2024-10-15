@@ -29,14 +29,12 @@ import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { StepperModule } from '@progress/kendo-angular-layout';
 import { PopupModule } from '@progress/kendo-angular-popup';
 import { LoadingComponent } from '@wbs/components/_utils/loading.component';
+import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { FooterComponent } from '@wbs/components/footer.component';
-import { ProfileEditorComponent } from '@wbs/components/profile-editor';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { NavigationService, SaveService } from '@wbs/core/services';
 import { environment } from 'src/env';
-import { PasswordHintComponent } from './components/password-hint/password-hint.component';
-import { Registration } from '@wbs/core/models';
-import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
+import { PasswordHintComponent } from './components';
 
 @Component({
   standalone: true,
@@ -49,7 +47,6 @@ import { SaveButtonComponent } from '@wbs/components/_utils/save-button.componen
     LoadingComponent,
     PasswordHintComponent,
     PopupModule,
-    ProfileEditorComponent,
     ReactiveFormsModule,
     SaveButtonComponent,
     StepperModule,
@@ -155,15 +152,19 @@ export class OnboardComponent implements OnInit {
     //  Register the user
     //
     const formValues = this.registerForm.value;
-    const record: Registration = {
-      inviteId: this.inviteId(),
-      email: formValues.email!,
-      password: formValues.password!,
-      fullName: formValues.fullName!,
-      title: formValues.title ?? undefined,
-      twitter: formValues.twitter ?? undefined,
-      linkedIn: formValues.linkedIn ?? undefined,
-      showExternally: this.showExternally(),
-    };
+
+    this.data.onboard
+      .sendResultsAsync(this.organizationId(), this.inviteId(), {
+        email: formValues.email!,
+        password: formValues.password!,
+        fullName: formValues.fullName!,
+        title: formValues.title ?? undefined,
+        twitter: formValues.twitter ?? undefined,
+        linkedIn: formValues.linkedIn ?? undefined,
+        showExternally: this.showExternally(),
+      })
+      .subscribe(() => {
+        this.router.navigate(['']);
+      });
   }
 }

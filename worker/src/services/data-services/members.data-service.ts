@@ -73,7 +73,7 @@ export class MembersDataService extends BaseDataService {
     return data;
   }
 
-  private async updateRolesInKv(organizationId: string, userId: string, roles: string[]): Promise<void> {
+  async updateRolesInKv(organizationId: string, userId: string, roles: string[]): Promise<void> {
     const list = (await this.getKv<OrganizationRole[]>(this.listKey))!;
     const newList: OrganizationRole[] = [
       ...list.filter((x) => !(x.organizationId === organizationId && x.userId === userId)),

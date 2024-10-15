@@ -37,17 +37,20 @@ public class OnboardController : ControllerBase
     }
 
     [HttpPost("{organizationId}/{inviteId}")]
-    public async Task<IActionResult> CreateUser(string organizationId, string inviteId, OnboardingResults results)
+    public async Task<IActionResult> CreateUser(string organizationId, string inviteId, OnboardResults results)
     {
         try
         {
             var user = await service.OnboardAsync(organizationId, inviteId, results);
 
+            Console.WriteLine("User created", user?.UserId);
+
             return Ok(user.UserId);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error getting org {id} invites", organizationId);
+            Console.WriteLine(ex.ToString());
+            logger.LogError(ex, "Error trying to onboard user");
             return new StatusCodeResult(500);
         }
     }

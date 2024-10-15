@@ -3,7 +3,7 @@ import { Router } from '@angular/router';
 import { FooterComponent } from '@wbs/components/footer.component';
 import { ProfileEditorComponent } from '@wbs/components/profile-editor';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { OnboardingRecord } from '@wbs/core/models';
+import { OnboardRecord } from '@wbs/core/models';
 import { NavigationService } from '@wbs/core/services';
 import { environment } from 'src/env';
 
@@ -18,7 +18,7 @@ export class OnboardJoinComponent implements OnInit {
   readonly title = environment.appTitle;
   readonly organizationId = input.required<string>();
   readonly inviteId = input.required<string>();
-  readonly record = signal<OnboardingRecord | undefined>(undefined);
+  readonly record = signal<OnboardRecord | undefined>(undefined);
   readonly loaded = signal(false);
 
   ngOnInit(): void {

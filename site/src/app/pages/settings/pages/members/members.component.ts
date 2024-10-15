@@ -68,6 +68,7 @@ export class MembersComponent {
       { text: 'General.Settings' },
       { text: 'General.Members' },
     ]);
+    console.log(this.getOnboardUrl('acme_engineering', '123'));
   }
 
   startInvite(): void {
@@ -76,5 +77,9 @@ export class MembersComponent {
       this.store.invites() ?? [],
       this.store.members() ?? []
     );
+  }
+
+  private getOnboardUrl(organizationId: string, inviteId: string): string {
+    return `${window.location.origin}/onboard/${organizationId}/${inviteId}`;
   }
 }

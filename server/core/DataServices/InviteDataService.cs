@@ -60,8 +60,8 @@ public class InviteDataService : BaseSqlDbService
         };
 
         cmd.Parameters.AddWithValue("@Id", invite.Id);
-        cmd.Parameters.AddWithValue("@LastInviteSentDate", invite.LastInviteSentDate);
-        cmd.Parameters.AddWithValue("@SignupDate", invite.SignupDate);
+        cmd.Parameters.AddWithValue("@LastInviteSentDate", DbValue(invite.LastInviteSentDate));
+        cmd.Parameters.AddWithValue("@SignupDate", DbValue(invite.SignupDate));
         cmd.Parameters.AddWithValue("@Roles", DbJson(invite.Roles));
 
         await cmd.ExecuteNonQueryAsync();

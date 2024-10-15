@@ -1,4 +1,4 @@
-export interface OnboardingRecord {
+export interface OnboardRecord {
   inviteId: string;
   email: string;
   organizationId: string;

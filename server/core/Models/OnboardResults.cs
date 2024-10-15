@@ -1,6 +1,6 @@
 namespace Wbs.Core.Models;
 
-public class OnboardingResults
+public class OnboardResults
 {
     public string Email { get; set; }
     public string Password { get; set; }
@@ -8,6 +8,5 @@ public class OnboardingResults
     public string Title { get; set; }
     public string LinkedIn { get; set; }
     public string Twitter { get; set; }
-    public string Picture { get; set; }
     public string[] ShowExternally { get; set; }
 }

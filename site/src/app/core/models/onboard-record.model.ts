@@ -1,4 +1,4 @@
-export interface OnboardingRecord {
+export interface OnboardRecord {
   inviteId: string;
   inviteStatus: 'Active' | 'Completed' | 'Cancelled';
   email: string;
