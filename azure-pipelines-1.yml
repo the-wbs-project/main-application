@@ -1,0 +1,63 @@
+# Node.js with Angular
+# Build a Node.js project that uses Angular.
+# Add steps that analyze code, save build artifacts, deploy, and more:
+# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
+
+trigger:
+  branches:
+    include:
+      - main
+  paths:
+    include:
+      - site/*
+      - azure-pipelines-site.yml
+
+pool:
+  vmImage: ubuntu-latest
+
+steps:
+  - task: NodeTool@0
+    inputs:
+      versionSpec: "20.9"
+    displayName: "Install Node.js"
+
+  - script: |
+      echo "$(FA_LICENSE)"
+      npm config set "@fortawesome:registry" https://npm.fontawesome.com/ && npm config set "//npm.fontawesome.com/:_authToken" $(FA_LICENSE)
+    workingDirectory: "site"
+    env:
+      FA_LICENSE: $(FA_LICENSE)
+    displayName: "Setup - Font Awesome Registry"
+
+  - script: npm install --global @angular/cli
+    displayName: "Setup - Angular CLI"
+
+  - script: npm install --force
+    workingDirectory: "site"
+    displayName: "Setup - Site Packages"
+
+  - script: npx kendo-ui-license activate
+    workingDirectory: "site"
+    env:
+      KENDO_UI_LICENSE: $(KENDO_UI_LICENSE)
+    displayName: "Setup - Kendo UI License"
+
+  - script: npm run deploy
+    workingDirectory: "site"
+    displayName: "Build"
+
+  - task: ArchiveFiles@2
+    inputs:
+      rootFolderOrFile: "site/dist/site"
+      includeRootFolder: false
+      archiveType: "zip"
+      archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Site.zip"
+      replaceExistingArchive: true
+    displayName: "Zip"
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: "$(Build.ArtifactStagingDirectory)"
+      ArtifactName: "drop"
+      publishLocation: "Container"
+    displayName: "Publish"
