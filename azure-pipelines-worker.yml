@@ -6,7 +6,7 @@
 trigger:
  branches:
    include:
-   - org-db
+   - main
  paths:
    include:
    - worker/*
