@@ -23,7 +23,7 @@ producers = [
 consumers = [
   { queue = "send-mail", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "send-mail-dlq" },
   { queue = "version-published", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "version-published-dlq" },
-  { queue = "project-created", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "project-created-dlq" }
+  { queue = "project-created", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "project-created-dlq" },
   { queue = "project-assignment", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "project-assignment-dlq" }
 ]
 
