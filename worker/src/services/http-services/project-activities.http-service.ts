@@ -15,7 +15,7 @@ export class ProjectActivitiesHttpService {
       //
       //  Now get the snapshot for each activity
       //
-      ctx.executionCtx.waitUntil(this.saveSnapshots(ctx, owner, projectId, activities));
+      ctx.executionCtx.waitUntil(ProjectActivitiesHttpService.saveSnapshots(ctx, owner, projectId, activities));
       //
       //  Now we check for activities which need emails
       //    THIS FUNCTIONALITY IS INCOMPLETE

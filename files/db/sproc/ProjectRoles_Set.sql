@@ -6,29 +6,18 @@ CREATE PROCEDURE [dbo].[ProjectRoles_Set]
     @UserRoles NVARCHAR(MAX)
 AS
 BEGIN
-    -- Parse the JSON array into a temporary table
+    DELETE [dbo].[ProjectRoles]
+    WHERE [ProjectId] = @ProjectId
+
+    INSERT INTO [dbo].[ProjectRoles] ([ProjectId], [UserId], [Role])
     SELECT
-        JSONData.userId,
-        JSONData.roleId
-    INTO #UserRoles
+        @ProjectId,
+        JSONData.UserId,
+        JSONData.Role
     FROM OPENJSON(@UserRoles)
     WITH (
-        userId NVARCHAR(100) '$.userId',
-        roleId NVARCHAR(100) '$.roleId'
+        UserId NVARCHAR(100) '$.UserId',
+        Role NVARCHAR(100) '$.Role'
     ) AS JSONData
-
-    -- Merge insert and delete operations
-    MERGE [dbo].[ProjectRoles] AS target
-    USING #UserRoles AS source
-        ON target.[ProjectId] = @ProjectId
-        AND target.[UserId] = source.userId
-        AND target.[Role] = source.roleId
-    WHEN NOT MATCHED BY TARGET THEN
-        INSERT ([ProjectId], [UserId], [Role])
-        VALUES (@ProjectId, source.userId, source.roleId)
-    WHEN NOT MATCHED BY SOURCE AND target.[ProjectId] = @ProjectId THEN
-        DELETE;
-
-    DROP TABLE #UserRoles
 END
 GO

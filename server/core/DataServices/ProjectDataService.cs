@@ -116,7 +116,7 @@ public class ProjectDataService : BaseSqlDbService
             CommandType = CommandType.StoredProcedure
         };
         cmd.Parameters.AddWithValue("@ProjectId", projectId);
-        cmd.Parameters.AddWithValue("@Roles", DbJson(roles));
+        cmd.Parameters.AddWithValue("@UserRoles", DbJson(roles));
 
         await cmd.ExecuteNonQueryAsync();
     }
