@@ -18,10 +18,9 @@ import {
 import { TextAreaModule } from '@progress/kendo-angular-inputs';
 import { LabelModule } from '@progress/kendo-angular-label';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
-import { Invite } from '@wbs/core/models';
+import { Invite, User } from '@wbs/core/models';
 import { SaveService } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { UserViewModel } from '@wbs/core/view-models';
 import { MemberSettingsService } from '../../services';
 import { InvitationValidators } from './invitation-validators.service';
 
@@ -45,7 +44,7 @@ declare type InviteError = { email?: string; error: string };
 export class InvitationDialogComponent extends DialogContentBase {
   private readonly validators = inject(InvitationValidators);
   private readonly memberService = inject(MemberSettingsService);
-  private members!: UserViewModel[];
+  private members!: User[];
   private invites!: Invite[];
 
   readonly saveState = new SaveService();
@@ -61,7 +60,7 @@ export class InvitationDialogComponent extends DialogContentBase {
   static launch(
     dialog: DialogService,
     invites: Invite[],
-    members: UserViewModel[]
+    members: User[]
   ): void {
     const ref = dialog.open({
       content: InvitationDialogComponent,

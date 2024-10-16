@@ -1,10 +1,10 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { MenuItem } from '@wbs/core/models';
-import { UserViewModel } from '../models';
+import { User } from '../models';
 
 @Pipe({ name: 'userMgmtItems', pure: false, standalone: true })
 export class UserMgmtItemsPipe implements PipeTransform {
-  transform(user: UserViewModel): MenuItem[] {
+  transform(user: User): MenuItem[] {
     const items: MenuItem[] = [
       {
         id: 'view',

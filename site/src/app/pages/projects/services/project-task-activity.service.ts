@@ -248,13 +248,18 @@ export class ProjectTaskActivityService {
     action: string,
     data?: any
   ): Observable<void> {
-    return this.data.activities.postAsync('project', owner, this.userId()!, [
-      {
-        action,
-        data,
-        topLevelId: projectId,
-        objectId: taskId,
-      },
-    ]);
+    return this.data.projects.postActivitiesAsync(
+      owner,
+      projectId,
+      this.userId()!,
+      [
+        {
+          action,
+          data,
+          topLevelId: projectId,
+          objectId: taskId,
+        },
+      ]
+    );
   }
 }

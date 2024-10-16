@@ -15,12 +15,12 @@ public class LibrarySearchService
 {
     private readonly ILogger logger;
     private readonly IAzureAiSearchConfig config;
-    private readonly WatcherLibraryEntryDataService watchDataService;
+    private readonly DataServiceFactory data;
 
-    public LibrarySearchService(IAzureAiSearchConfig config, ILoggerFactory loggerFactory, WatcherLibraryEntryDataService watchDataService)
+    public LibrarySearchService(IAzureAiSearchConfig config, ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         this.config = config;
-        this.watchDataService = watchDataService;
+        this.data = data;
         logger = loggerFactory.CreateLogger<LibrarySearchService>();
     }
 
@@ -33,7 +33,7 @@ public class LibrarySearchService
 
         if (filters.Roles.Contains("watching"))
         {
-            watchIds = (await watchDataService.GetEntriesAsync(conn, userId))
+            watchIds = (await data.WatcherLibraryEntries.GetEntriesAsync(conn, userId))
                 .Where(x => x.OwnerId == owner)
                 .Select(x => x.Id)
                 .ToList();
@@ -80,7 +80,7 @@ public class LibrarySearchService
 
         if (filters.Roles.Contains("watching"))
         {
-            watchIds = (await watchDataService.GetEntriesAsync(conn, userId)).Select(x => x.Id).ToList();
+            watchIds = (await data.WatcherLibraryEntries.GetEntriesAsync(conn, userId)).Select(x => x.Id).ToList();
         }
         if (filters.Roles.Contains("author"))
         {

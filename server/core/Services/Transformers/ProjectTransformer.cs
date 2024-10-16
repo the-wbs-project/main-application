@@ -34,10 +34,29 @@ public class ProjectTransformer : SqlHelpers
             Category = DbValue<string>(reader, "Category"),
 
             Disciplines = DbJson<Category[]>(reader, "Disciplines"),
-            Roles = DbJson<ProjectRole[]>(reader, "Roles"),
+            Roles = DbJson<UserRole[]>(reader, "Roles"),
             LibraryLink = DbJson<LibraryLink>(reader, "LibraryLink"),
 
             ApprovalStarted = DbValue<bool?>(reader, "ApprovalStarted"),
+        };
+    }
+
+    public static UserRole[] ToRoleArray(SqlDataReader reader)
+    {
+        var list = new List<UserRole>();
+
+        while (reader.Read())
+            list.Add(ToRole(reader));
+
+        return list.ToArray();
+    }
+
+    public static UserRole ToRole(SqlDataReader reader)
+    {
+        return new UserRole
+        {
+            Role = DbValue<string>(reader, "Role"),
+            UserId = DbValue<string>(reader, "UserId"),
         };
     }
 }

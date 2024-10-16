@@ -1,6 +1,6 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { ProjectViewModel } from '@wbs/core/view-models';
+import { Project } from '@wbs/core/models';
 import { EditedDateTextPipe } from '@wbs/pipes/edited-date-text.pipe';
 import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe';
 
@@ -12,5 +12,5 @@ import { ProjectCategoryLabelPipe } from '@wbs/pipes/project-category-label.pipe
   imports: [EditedDateTextPipe, ProjectCategoryLabelPipe, RouterModule],
 })
 export class ProjectGridComponent {
-  readonly projects = input.required<ProjectViewModel[]>();
+  readonly projects = input.required<Project[]>();
 }

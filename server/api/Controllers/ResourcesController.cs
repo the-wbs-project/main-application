@@ -8,15 +8,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class ResourcesController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ResourcesDataService dataService;
+    private readonly DataServiceFactory data;
 
-    public ResourcesController(ILoggerFactory loggerFactory, ResourcesDataService dataService, DbService db)
+    public ResourcesController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ResourcesController>();
-        this.dataService = dataService;
-        this.db = db;
+        this.data = data;
     }
 
     [HttpGet("categories")]
@@ -24,8 +22,8 @@ public class ResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetCategoriesAsync(conn));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Resources.GetCategoriesAsync(conn));
         }
         catch (Exception ex)
         {
@@ -39,8 +37,8 @@ public class ResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetAllAsync(conn, locale));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Resources.GetAllAsync(conn, locale));
         }
         catch (Exception ex)
         {
@@ -56,8 +54,8 @@ public class ResourcesController : ControllerBase
         {
             logger.LogInformation($"GetBySection: {section}, {locale}");
 
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await dataService.GetBySectionAsync(conn, locale, section));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Resources.GetBySectionAsync(conn, locale, section));
         }
         catch (Exception ex)
         {
@@ -71,8 +69,8 @@ public class ResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                await dataService.SetAsync(conn, resource.locale, resource.section, resource.values); ;
+            using (var conn = await data.CreateConnectionAsync())
+                await data.Resources.SetAsync(conn, resource.locale, resource.section, resource.values); ;
 
             return NoContent();
         }

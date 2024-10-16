@@ -7,9 +7,9 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { SVGIconModule, SVGIcon } from '@progress/kendo-angular-icons';
+import { User } from '@wbs/core/models';
 import { sorter } from '@wbs/core/services';
-import { UserViewModel } from '@wbs/core/view-models';
-import { UserComponent } from '../user/user.component';
+import { UserComponent } from '../user';
 
 @Component({
   standalone: true,
@@ -19,10 +19,10 @@ import { UserComponent } from '../user/user.component';
   imports: [SVGIconModule, TranslateModule, UserComponent],
 })
 export class UserListComponent {
-  readonly selected = output<UserViewModel>();
+  readonly selected = output<User>();
 
   readonly icon = input.required<SVGIcon>();
-  readonly users = input.required<UserViewModel[] | undefined>();
+  readonly users = input.required<User[] | undefined>();
   readonly noUsersLabel = input<string>();
 
   readonly sortedUsers = computed(() =>

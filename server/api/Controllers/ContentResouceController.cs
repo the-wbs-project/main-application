@@ -10,16 +10,12 @@ using Wbs.Core.Services;
 public class ContentResourcesController : ControllerBase
 {
     private readonly ILogger logger;
-    private readonly DbService db;
-    private readonly ContentResourceDataService dataService;
-    private readonly ContentResourceStorageService storageService;
+    private readonly DataServiceFactory data;
 
-    public ContentResourcesController(ILoggerFactory loggerFactory, DbService db, ContentResourceDataService dataService, ContentResourceStorageService storageService)
+    public ContentResourcesController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ContentResourcesController>();
-        this.db = db;
-        this.dataService = dataService;
-        this.storageService = storageService;
+        this.data = data;
     }
 
     [Authorize]
@@ -28,9 +24,9 @@ public class ContentResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                return Ok(await dataService.GetListAsync(conn, owner, parentId));
+                return Ok(await data.ContentResources.GetListAsync(conn, owner, parentId));
             }
         }
         catch (Exception ex)
@@ -46,9 +42,9 @@ public class ContentResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                var record = await dataService.GetAsync(conn, owner, resourceId);
+                var record = await data.ContentResources.GetAsync(conn, owner, resourceId);
 
                 if (record == null) return NotFound();
                 if (record.ParentId != parentId) return BadRequest();
@@ -73,9 +69,9 @@ public class ContentResourcesController : ControllerBase
             if (record.ParentId != parentId) return BadRequest("The Parent Id is invalid");
             if (record.OwnerId != owner) return BadRequest("The Owner Id is invalid");
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                await dataService.SetAsync(conn, record);
+                await data.ContentResources.SetAsync(conn, record);
 
                 return NoContent();
             }
@@ -93,15 +89,15 @@ public class ContentResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                var record = await dataService.GetAsync(conn, owner, resourceId);
+                var record = await data.ContentResources.GetAsync(conn, owner, resourceId);
 
                 if (record == null) return NotFound();
                 if (record.ParentId != parentId) return BadRequest();
 
-                await dataService.DeleteAsync(conn, owner, resourceId);
-                await storageService.DeleteAsync(owner, resourceId);
+                await data.ContentResources.DeleteAsync(conn, owner, resourceId);
+                await data.ContentResourceStorage.DeleteAsync(owner, resourceId);
 
                 return NoContent();
             }
@@ -119,16 +115,16 @@ public class ContentResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                await storageService.Copy();
-                var record = await dataService.GetAsync(conn, owner, resourceId);
+                await data.ContentResourceStorage.Copy();
+                var record = await data.ContentResources.GetAsync(conn, owner, resourceId);
 
                 if (record == null) return NotFound();
                 if (record.ParentId != parentId) return BadRequest();
                 if (record.OwnerId != owner) return BadRequest();
 
-                var file = await storageService.GetResourceAsync(owner, resourceId);
+                var file = await data.ContentResourceStorage.GetResourceAsync(owner, resourceId);
 
                 return File(file, "application/octet-stream", record.Resource);
             }
@@ -146,9 +142,9 @@ public class ContentResourcesController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                var record = await dataService.GetAsync(conn, owner, resourceId);
+                var record = await data.ContentResources.GetAsync(conn, owner, resourceId);
 
                 if (record == null) return NotFound();
                 if (record.ParentId != parentId) return BadRequest();
@@ -167,7 +163,7 @@ public class ContentResourcesController : ControllerBase
                 if (record.Type == "image")
                     bytes = ImageConverterService.AddImageFromStream(bytes);
 
-                await storageService.SaveAsync(owner, resourceId, bytes);
+                await data.ContentResourceStorage.SaveAsync(owner, resourceId, bytes);
 
                 return NoContent();
             }

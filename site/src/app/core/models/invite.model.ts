@@ -1,11 +1,21 @@
-export interface InviteBody {
-  inviter: string;
-  invitee: string;
+export interface NewInvite {
+  id: string;
+  email: string;
+  organizationId: string;
+  invitedById: string;
   roles: string[];
 }
 
-export interface Invite extends InviteBody {
+export interface Invite {
   id: string;
-  createdAt: Date;
-  expiresAt: Date;
+  email: string;
+  organizationId: string;
+  invitedById: string;
+  invitedByName?: string;
+  creationDate?: Date;
+  lastModifiedDate?: Date;
+  lastInviteSentDate?: Date;
+  signupDate?: Date;
+  roles: string[];
+  cancelled: boolean;
 }

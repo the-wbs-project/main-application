@@ -14,7 +14,6 @@ import { ButtonModule } from '@progress/kendo-angular-buttons';
 import { DialogModule, DialogService } from '@progress/kendo-angular-dialog';
 import { TextBoxModule } from '@progress/kendo-angular-inputs';
 import { TitleService } from '@wbs/core/services';
-import { MembershipStore } from '@wbs/core/store';
 import {
   InvitationDialogComponent,
   InvitationListComponent,
@@ -48,7 +47,6 @@ export class MembersComponent {
   private readonly dialog = inject(DialogService);
   private readonly title = inject(TitleService);
 
-  readonly membership = inject(MembershipStore).membership;
   readonly store = inject(MembersSettingStore);
   readonly roleFilters = signal<string[]>([]);
   readonly view = signal<'members' | 'invites'>('members');
@@ -58,7 +56,7 @@ export class MembersComponent {
   textFilter = '';
 
   constructor() {
-    effect(() => this.store.initialize(this.membership()), {
+    effect(() => this.store.initialize(), {
       allowSignalWrites: true,
     });
 
@@ -70,6 +68,7 @@ export class MembersComponent {
       { text: 'General.Settings' },
       { text: 'General.Members' },
     ]);
+    console.log(this.getOnboardUrl('acme_engineering', '123'));
   }
 
   startInvite(): void {
@@ -78,5 +77,9 @@ export class MembersComponent {
       this.store.invites() ?? [],
       this.store.members() ?? []
     );
+  }
+
+  private getOnboardUrl(organizationId: string, inviteId: string): string {
+    return `${window.location.origin}/onboard/${organizationId}/${inviteId}`;
   }
 }

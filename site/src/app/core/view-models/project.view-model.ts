@@ -3,20 +3,20 @@ import {
   PROJECT_NODE_VIEW_TYPE,
   PROJECT_STATI_TYPE,
   ProjectCategory,
+  User,
 } from '../models';
-import { UserViewModel } from './user.view-model';
 
 export interface UserRoleViewModel {
   trackId?: string;
   role: string;
-  user: UserViewModel;
+  user: User;
 }
 
 export interface ProjectViewModel {
   id: string;
   recordId: string;
   owner: string;
-  createdBy: UserViewModel;
+  createdBy: User;
   title: string;
   description: string;
   createdOn: Date;

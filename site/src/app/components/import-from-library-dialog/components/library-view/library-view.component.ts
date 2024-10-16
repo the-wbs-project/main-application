@@ -65,7 +65,7 @@ export class LibraryViewComponent implements OnInit {
             roles: this.roleFilters(),
             types: this.typeFilters(),
           })
-        : this.data.library.getInternalAsync(this.org()!.name, {
+        : this.data.library.getInternalAsync(this.org()!.id, {
             searchText: this.searchText(),
             roles: this.roleFilters(),
             types: this.typeFilters(),

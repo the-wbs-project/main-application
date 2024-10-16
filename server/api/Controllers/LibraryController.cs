@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.ObjectPool;
 using Wbs.Core.DataServices;
 using Wbs.Core.Models.Search;
 using Wbs.Core.Services.Search;
@@ -11,17 +10,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/libraries")]
 public class LibraryController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
+    private readonly DataServiceFactory data;
     private readonly LibrarySearchService searchService;
-    private readonly LibraryEntryViewDataService viewDataService;
 
-    public LibraryController(ILoggerFactory loggerFactory, LibrarySearchService searchService, DbService db, LibraryEntryViewDataService viewDataService)
+    public LibraryController(ILoggerFactory loggerFactory, LibrarySearchService searchService, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryController>();
         this.searchService = searchService;
-        this.db = db;
-        this.viewDataService = viewDataService;
+        this.data = data;
     }
 
     [Authorize]
@@ -30,9 +27,9 @@ public class LibraryController : ControllerBase
     {
         try
         {
-            using var conn = await db.CreateConnectionAsync();
+            using var conn = await data.CreateConnectionAsync();
 
-            return Ok(await viewDataService.GetDraftsAsync(conn, owner, User.Identity.Name, types));
+            return Ok(await data.LibraryViews.GetDraftsAsync(conn, owner, User.Identity.Name, types));
         }
         catch (Exception ex)
         {
@@ -47,7 +44,7 @@ public class LibraryController : ControllerBase
     {
         try
         {
-            using var conn = await db.CreateConnectionAsync();
+            using var conn = await data.CreateConnectionAsync();
 
             var userId = User.Identity.Name;
 
@@ -66,7 +63,7 @@ public class LibraryController : ControllerBase
     {
         try
         {
-            using var conn = await db.CreateConnectionAsync();
+            using var conn = await data.CreateConnectionAsync();
 
             var userId = User.Identity.Name;
 

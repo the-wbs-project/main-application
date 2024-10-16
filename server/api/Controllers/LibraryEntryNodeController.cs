@@ -10,19 +10,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/library/entries/{entryId}/versions/{entryVersion}/nodes")]
 public class LibraryEntryNodeController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly LibraryEntryVersionDataService versionDataService;
-    private readonly LibraryEntryNodeDataService nodeDataService;
-    private readonly ImportLibraryEntryService importLibraryEntryService;
+    private readonly DataServiceFactory data;
+    private readonly ImportLibraryEntryService importService;
 
-    public LibraryEntryNodeController(ILoggerFactory loggerFactory, LibraryEntryNodeDataService nodeDataService, LibraryEntryVersionDataService versionDataService, ImportLibraryEntryService importLibraryEntryService, DbService db)
+    public LibraryEntryNodeController(ILoggerFactory loggerFactory, DataServiceFactory data, ImportLibraryEntryService importService)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryNodeController>();
-        this.nodeDataService = nodeDataService;
-        this.versionDataService = versionDataService;
-        this.importLibraryEntryService = importLibraryEntryService;
-        this.db = db;
+        this.data = data;
+        this.importService = importService;
     }
 
     [Authorize]
@@ -31,12 +27,12 @@ public class LibraryEntryNodeController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                if (!await data.LibraryVersions.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
-                return Ok(await nodeDataService.GetListAsync(conn, entryId, entryVersion));
+                return Ok(await data.LibraryNodes.GetListAsync(conn, entryId, entryVersion));
             }
         }
         catch (Exception ex)
@@ -55,16 +51,16 @@ public class LibraryEntryNodeController : ControllerBase
             if (record.upserts == null) record.upserts = [];
             if (record.removeIds == null) record.removeIds = [];
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
                 //
                 //  Make the version actually exists
                 //
-                if (!await versionDataService.VerifyAsync(conn, owner, entryId, entryVersion))
+                if (!await data.LibraryVersions.VerifyAsync(conn, owner, entryId, entryVersion))
                     return BadRequest("Library Entry Version not found for the credentials provided.");
 
-                await nodeDataService.SetAsync(conn, entryId, entryVersion, record.upserts ?? [], record.removeIds ?? []);
-                await versionDataService.MarkAsUpdatedAsync(conn, entryId, entryVersion);
+                await data.LibraryNodes.SetAsync(conn, entryId, entryVersion, record.upserts ?? [], record.removeIds ?? []);
+                await data.LibraryVersions.MarkAsUpdatedAsync(conn, entryId, entryVersion);
 
                 return NoContent();
             }
@@ -82,9 +78,9 @@ public class LibraryEntryNodeController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                var newId = await importLibraryEntryService.ImportFromEntryNodeAsync(conn, targetOwnerId, owner, entryId, entryVersion, nodeId, options);
+                var newId = await importService.ImportFromEntryNodeAsync(conn, targetOwnerId, owner, entryId, entryVersion, nodeId, options);
 
                 return Ok(newId);
             }

@@ -9,17 +9,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects/{projectId}/approvals")]
 public class ProjectApprovalController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ProjectDataService projectDataService;
-    private readonly ProjectApprovalDataService approvalDataService;
+    private readonly DataServiceFactory data;
 
-    public ProjectApprovalController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ProjectApprovalDataService approvalDataService, DbService db)
+    public ProjectApprovalController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ProjectApprovalController>();
-        this.projectDataService = projectDataService;
-        this.approvalDataService = approvalDataService;
-        this.db = db;
+        this.data = data;
     }
 
     [Authorize]
@@ -28,12 +24,12 @@ public class ProjectApprovalController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                if (!await data.Projects.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                return Ok(await approvalDataService.GetByProjectAsync(conn, projectId));
+                return Ok(await data.ProjectApprovals.GetByProjectAsync(conn, projectId));
             }
         }
         catch (Exception ex)
@@ -52,12 +48,12 @@ public class ProjectApprovalController : ControllerBase
             if (approval.projectId != projectId)
                 return BadRequest("The project id in the body must match the project id in the url");
 
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                if (!await projectDataService.VerifyAsync(conn, owner, projectId))
+                if (!await data.Projects.VerifyAsync(conn, owner, projectId))
                     return BadRequest("Project not found for the owner provided.");
 
-                await approvalDataService.SetAsync(conn, owner, approval);
+                await data.ProjectApprovals.SetAsync(conn, owner, approval);
 
                 return NoContent();
             }

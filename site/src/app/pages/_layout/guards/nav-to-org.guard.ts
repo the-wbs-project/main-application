@@ -13,7 +13,7 @@ export const navToOrgGuard = () => {
     skipWhile((x) => x == undefined),
     first(),
     tap((orgs) =>
-      store.dispatch(new Navigate(['/', orgs![0].name, 'library', 'home']))
+      store.dispatch(new Navigate(['/', orgs![0].id, 'library', 'home']))
     )
   );
 };

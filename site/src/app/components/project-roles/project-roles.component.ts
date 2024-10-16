@@ -9,13 +9,13 @@ import {
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { minusIcon, plusIcon } from '@progress/kendo-svg-icons';
+import { User } from '@wbs/core/models';
 import { Messages, Resources } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
-import { UserViewModel } from '@wbs/core/view-models';
 import { UserListComponent } from '../user-list';
 
 declare type OutputType = {
-  user: UserViewModel;
+  user: User;
   role: string;
 };
 
@@ -32,16 +32,14 @@ export class ProjectRolesComponent {
   private readonly resources = inject(Resources);
 
   readonly mustConfirm = input<boolean>(false);
-  readonly members = input.required<UserViewModel[]>();
-  readonly approvers = input.required<UserViewModel[]>();
-  readonly pms = input.required<UserViewModel[]>();
-  readonly smes = input.required<UserViewModel[]>();
+  readonly members = input.required<User[]>();
+  readonly approvers = input.required<User[]>();
+  readonly pms = input.required<User[]>();
+  readonly smes = input.required<User[]>();
   readonly approvalEnabled = input.required<boolean>();
 
   readonly addUserToRole = output<OutputType>();
   readonly removeUserToRole = output<OutputType>();
-
-  readonly roles = this.metadata.roles.ids;
 
   readonly unassignedApprovers = computed(() =>
     this.unassigned(this.members(), this.approvers())
@@ -56,7 +54,7 @@ export class ProjectRolesComponent {
   readonly minusIcon = minusIcon;
   readonly plusIcon = plusIcon;
 
-  add(role: string, user: UserViewModel) {
+  add(role: string, user: User) {
     this.run(
       role,
       user,
@@ -65,7 +63,7 @@ export class ProjectRolesComponent {
     );
   }
 
-  remove(role: string, user: UserViewModel) {
+  remove(role: string, user: User) {
     this.run(
       role,
       user,
@@ -76,7 +74,7 @@ export class ProjectRolesComponent {
 
   private run(
     role: string,
-    user: UserViewModel,
+    user: User,
     message: string,
     output: OutputEmitterRef<OutputType>
   ): void {
@@ -99,9 +97,9 @@ export class ProjectRolesComponent {
   }
 
   private unassigned(
-    members: UserViewModel[] | undefined,
-    assigned: UserViewModel[] | undefined
-  ): UserViewModel[] {
+    members: User[] | undefined,
+    assigned: User[] | undefined
+  ): User[] {
     const ids = assigned?.map((x) => x.userId) ?? [];
 
     return members?.filter((x) => !ids.includes(x.userId)) ?? [];

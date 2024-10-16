@@ -15,7 +15,12 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
 
         using var reader = await cmd.ExecuteReaderAsync();
 
-        return LibraryEntryVersionTransformer.ToList(reader);
+        var list = LibraryEntryVersionTransformer.ToList(reader);
+
+        foreach (var item in list)
+            item.Editors = await GetEditorsAsync(conn, item.EntryId, item.Version);
+
+        return list;
     }
 
     public async Task<LibraryEntryVersion> GetByIdAsync(SqlConnection conn, string entryId, int entryVersion)
@@ -28,9 +33,14 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         using (var reader = await cmd.ExecuteReaderAsync())
         {
             if (await reader.ReadAsync())
-                return LibraryEntryVersionTransformer.ToModel(reader);
-            else
-                return null;
+            {
+                var item = LibraryEntryVersionTransformer.ToModel(reader);
+
+                item.Editors = await GetEditorsAsync(conn, item.EntryId, item.Version);
+
+                return item;
+            }
+            return null;
         }
     }
 
@@ -73,10 +83,40 @@ public class LibraryEntryVersionDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@Description", DbValue(entryVersion.Description));
         cmd.Parameters.AddWithValue("@Status", entryVersion.Status);
         cmd.Parameters.AddWithValue("@ReleaseNotes", DbValue(entryVersion.ReleaseNotes));
-        cmd.Parameters.AddWithValue("@Editors", DbJson(entryVersion.Editors));
         cmd.Parameters.AddWithValue("@Categories", DbJson(entryVersion.Categories));
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(entryVersion.Disciplines));
 
         await cmd.ExecuteNonQueryAsync();
+
+        await SetEditorsAsync(conn, entryVersion.EntryId, entryVersion.Version, entryVersion.Editors);
+    }
+
+    private async Task SetEditorsAsync(SqlConnection conn, string entryId, int version, IEnumerable<string> editors)
+    {
+        var cmd = new SqlCommand("dbo.LibraryEntryVersionEditors_Set", conn)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@Version", version);
+        cmd.Parameters.AddWithValue("@Editors", DbJson(editors));
+
+        await cmd.ExecuteNonQueryAsync();
+    }
+
+    private async Task<string[]> GetEditorsAsync(SqlConnection conn, string entryId, int version)
+    {
+        var cmd = new SqlCommand("SELECT [UserId] FROM [dbo].[LibraryEntryVersionEditors] WHERE [EntryId] = @EntryId AND [Version] = @Version", conn);
+        cmd.Parameters.AddWithValue("@EntryId", entryId);
+        cmd.Parameters.AddWithValue("@Version", version);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        var list = new List<string>();
+
+        while (await reader.ReadAsync())
+            list.Add(reader.GetString(0));
+
+        return list.ToArray();
     }
 }

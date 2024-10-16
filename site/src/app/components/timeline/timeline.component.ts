@@ -15,7 +15,6 @@ import { Messages } from '@wbs/core/services';
 import { TimelineViewModel } from '@wbs/core/view-models';
 import { DateTextPipe } from '@wbs/pipes/date-text.pipe';
 import { TextTransformPipe } from '@wbs/pipes/text-transform.pipe';
-import { UserNamePipe } from '@wbs/pipes/user-name.pipe';
 import { UserComponent } from '../user';
 
 @Component({
@@ -32,7 +31,6 @@ import { UserComponent } from '../user';
     TextTransformPipe,
     TranslateModule,
     UserComponent,
-    UserNamePipe,
     WaitNotifyDirective,
   ],
 })

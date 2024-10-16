@@ -14,7 +14,7 @@ export const loadGuard = () => {
 export const redirectGuard = () =>
   inject(Store).dispatch(
     new Navigate([
-      inject(MembershipStore).membership()!.name,
+      inject(MembershipStore).membership()!.id,
       'library',
       'home',
       inject(LibraryHomeService).library(),

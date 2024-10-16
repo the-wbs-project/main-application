@@ -7,15 +7,15 @@ namespace Wbs.Core.Services;
 public abstract class BaseExtractService
 {
     private readonly IDatabaseConfig dbConfig;
-    private readonly ListDataService listDataService;
-    private readonly ResourcesDataService resourceDataService;
+    private readonly DataServiceFactory data;
 
-    public BaseExtractService(IDatabaseConfig dbConfig, ListDataService listDataService, ResourcesDataService resourceDataService)
+    public BaseExtractService(IDatabaseConfig dbConfig, DataServiceFactory data)
     {
         this.dbConfig = dbConfig;
-        this.listDataService = listDataService;
-        this.resourceDataService = resourceDataService;
+        this.data = data;
     }
+
+    protected Storage storage { get { return data.Storage; } }
 
     public bool TestFormat(string x)
     {
@@ -55,8 +55,8 @@ public abstract class BaseExtractService
         {
             await conn.OpenAsync();
 
-            var resourcesObj = await resourceDataService.GetAllAsync(conn, culture);
-            var disciplineList = await listDataService.GetAsync(conn, "categories_discipline");
+            var resourcesObj = await data.Resources.GetAllAsync(conn, culture);
+            var disciplineList = await data.Lists.GetAsync(conn, "categories_discipline");
             var resources = new Resources();
 
             resources.Add(resourcesObj);

@@ -12,6 +12,7 @@ import {
   ActionButtonMenuItem,
   PROJECT_CLAIMS,
   PROJECT_STATI,
+  ROLES,
 } from '@wbs/core/models';
 import { MenuService, Messages } from '@wbs/core/services';
 import { MetadataStore } from '@wbs/core/store';
@@ -190,10 +191,9 @@ export class ProjectActionButtonService {
   }
 
   private approval(): void {
-    const role = this.metadata.roles.ids.approver;
     const approvals = this.store
       .project()!
-      .roles.filter((r) => r.role === role)
+      .roles.filter((r) => r.role === ROLES.APPROVER)
       .map((r) => r.user.userId);
 
     if (approvals.length === 0) {

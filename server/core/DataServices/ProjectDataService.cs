@@ -15,7 +15,12 @@ public class ProjectDataService : BaseSqlDbService
 
         using var reader = await cmd.ExecuteReaderAsync();
 
-        return ProjectTransformer.ToModelList(reader);
+        var projects = ProjectTransformer.ToModelList(reader);
+
+        foreach (var project in projects)
+            project.Roles = await GetRolesAsync(conn, project.Id);
+
+        return projects;
     }
 
     public async Task<Project> GetByIdAsync(SqlConnection conn, string id)
@@ -27,9 +32,14 @@ public class ProjectDataService : BaseSqlDbService
         using var reader = await cmd.ExecuteReaderAsync();
 
         if (await reader.ReadAsync())
-            return ProjectTransformer.ToModel(reader);
-        else
-            return null;
+        {
+            var project = ProjectTransformer.ToModel(reader);
+
+            project.Roles = await GetRolesAsync(conn, project.Id);
+
+            return project;
+        }
+        return null;
     }
 
     public async Task<bool> VerifyAsync(SqlConnection conn, string owner, string id)
@@ -63,11 +73,12 @@ public class ProjectDataService : BaseSqlDbService
         cmd.Parameters.AddWithValue("@MainNodeView", project.MainNodeView);
         cmd.Parameters.AddWithValue("@Category", project.Category);
         cmd.Parameters.AddWithValue("@Disciplines", DbJson(project.Disciplines));
-        cmd.Parameters.AddWithValue("@Roles", DbJson(project.Roles));
         cmd.Parameters.AddWithValue("@LibraryLink", DbJson(project.LibraryLink));
         cmd.Parameters.AddWithValue("@ApprovalStarted", DbValue(project.ApprovalStarted));
 
         await cmd.ExecuteNonQueryAsync();
+
+        await SetRolesAsync(conn, project.Id, project.Roles);
     }
 
     private async Task<string> GetNewRecordIdAsync(SqlConnection conn)
@@ -86,5 +97,27 @@ public class ProjectDataService : BaseSqlDbService
         await cmd.ExecuteNonQueryAsync();
 
         return output.Value.ToString();
+    }
+
+    private async Task<UserRole[]> GetRolesAsync(SqlConnection conn, string projectId)
+    {
+        var cmd = new SqlCommand("SELECT * FROM [dbo].[ProjectRoles] WHERE [ProjectId] = @ProjectId", conn);
+        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+
+        using var reader = await cmd.ExecuteReaderAsync();
+
+        return ProjectTransformer.ToRoleArray(reader);
+    }
+
+    private async Task SetRolesAsync(SqlConnection conn, string projectId, UserRole[] roles)
+    {
+        var cmd = new SqlCommand("dbo.ProjectRoles_Set", conn)
+        {
+            CommandType = CommandType.StoredProcedure
+        };
+        cmd.Parameters.AddWithValue("@ProjectId", projectId);
+        cmd.Parameters.AddWithValue("@UserRoles", DbJson(roles));
+
+        await cmd.ExecuteNonQueryAsync();
     }
 }

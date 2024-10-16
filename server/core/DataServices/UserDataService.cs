@@ -1,21 +1,105 @@
 using Auth0.ManagementApi.Models;
-using Auth0.ManagementApi.Paging;
 using Microsoft.Extensions.Logging;
 using Wbs.Core.Configuration;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
+using Wbs.Core.Services.Transformers;
+using Wbs.Core.ViewModels;
 
 namespace Wbs.Core.DataServices;
 
 public class UserDataService : BaseAuthDataService
 {
-    public UserDataService(ILogger<UserDataService> logger, IAuth0Config config) : base(logger, config) { }
-    public async Task<Member> GetMemberAsync(string userId)
+    public UserDataService(ILoggerFactory loggerFactory, IAuth0Config config) : base(loggerFactory.CreateLogger<UserDataService>(), config) { }
+
+    public async Task<User[]> GetUsersAsync(IEnumerable<string> userIds)
     {
         var client = await GetClientAsync();
-        var user = await client.Users.GetAsync(userId);
+        var results = new List<User>();
+        var queries = new List<string>();
 
-        return new Member(user);
+        foreach (var id in userIds)
+        {
+            queries.Add($"user_id:\"{id}\"");
+
+            if (queries.Count == 15)
+            {
+                var pageResults = await client.Users.GetAllAsync(new GetUsersRequest
+                {
+                    Query = string.Join(" OR ", queries.ToArray())
+                });
+
+                results.AddRange(pageResults);
+                queries.Clear();
+            }
+        }
+        if (queries.Count > 0)
+        {
+            var pageResults = await client.Users.GetAllAsync(new GetUsersRequest
+            {
+                Query = string.Join(" OR ", queries.ToArray()),
+                Fields = "created_at,user_id,name,picture,last_login,email,email_verified,logins_count,updated_at,app_metadata,user_metadata"
+            });
+
+            results.AddRange(pageResults);
+        }
+
+        return results.ToArray();
+    }
+
+    public async Task<User> GetByEmailAsync(string email)
+    {
+        var client = await GetClientAsync();
+
+        var results = await client.Users.GetAllAsync(new GetUsersRequest
+        {
+            Query = $"email:\"{email}\"",
+            Fields = "created_at,user_id,name,picture,last_login,email,email_verified,logins_count,updated_at,app_metadata,user_metadata"
+        });
+
+        return results.FirstOrDefault();
+    }
+
+    public async Task<User> GetAsync(string userId)
+    {
+        var client = await GetClientAsync();
+
+        return await client.Users.GetAsync(userId);
+    }
+
+    public async Task<Member> GetMemberAsync(string userId)
+    {
+        return new Member(await GetAsync(userId));
+    }
+
+    public async Task<User> CreateAsync(UserViewModel user, string password)
+    {
+        var client = await GetClientAsync();
+
+        return await client.Users.CreateAsync(new UserCreateRequest
+        {
+            Connection = config.Connection,
+            Email = user.Email,
+            Password = password,
+            FullName = user.FullName,
+            EmailVerified = false,
+            VerifyEmail = false,
+            UserMetadata = new
+            {
+                title = user.Title,
+                picture = user.Picture,
+                linkedIn = user.LinkedIn,
+                twitter = user.Twitter,
+                showExternally = user.ShowExternally
+            }
+        });
+    }
+
+    public async Task UpdateAsync(UserViewModel user)
+    {
+        var client = await GetClientAsync();
+
+        await client.Users.UpdateAsync(user.UserId, UserTransformer.ToUpdateUserRequest(user));
     }
 
     public async Task<Dictionary<string, UserDocument>> GetUserDocumentsAsync(IEnumerable<string> userIds, Dictionary<string, UserDocument> userCache = null)
@@ -61,6 +145,4 @@ public class UserDataService : BaseAuthDataService
 
         return users;
     }
-
-
 }

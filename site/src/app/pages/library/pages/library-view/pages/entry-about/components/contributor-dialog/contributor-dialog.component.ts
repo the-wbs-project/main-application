@@ -22,10 +22,9 @@ import { LabelModule } from '@progress/kendo-angular-label';
 import { AlertComponent } from '@wbs/components/_utils/alert.component';
 import { SaveButtonComponent } from '@wbs/components/_utils/save-button.component';
 import { UserComponent } from '@wbs/components/user';
+import { User } from '@wbs/core/models';
 import { Messages, SaveService, sorter } from '@wbs/core/services';
-import { UserViewModel } from '@wbs/core/view-models';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 
 @Component({
   standalone: true,
@@ -48,9 +47,9 @@ import { map } from 'rxjs/operators';
 })
 export class ContributorDialogComponent extends DialogContentBase {
   private readonly messages = inject(Messages);
-  private saveMethod!: (users: UserViewModel[]) => Observable<void>;
+  private saveMethod!: (users: User[]) => Observable<void>;
 
-  private readonly members = signal<UserViewModel[]>([]);
+  private readonly members = signal<User[]>([]);
   private readonly authorId = signal<string | undefined>(undefined);
   private readonly possibleEditors = computed(() => {
     const editors = this.editors().map((e) => e.userId);
@@ -62,8 +61,8 @@ export class ContributorDialogComponent extends DialogContentBase {
       .sort((a, b) => sorter(a.fullName, b.fullName));
   });
 
-  readonly editorToAdd = signal<UserViewModel | null>(null);
-  readonly editors = signal<UserViewModel[]>([]);
+  readonly editorToAdd = signal<User | null>(null);
+  readonly editors = signal<User[]>([]);
   readonly editorFilter = signal('');
   readonly filteredPossibleEditors = computed(() => {
     return this.possibleEditors().filter((e) =>
@@ -79,11 +78,7 @@ export class ContributorDialogComponent extends DialogContentBase {
     super(dialog);
   }
 
-  setup(
-    author: UserViewModel,
-    editors: UserViewModel[],
-    members: UserViewModel[]
-  ) {
+  setup(author: User, editors: User[], members: User[]) {
     this.editors.set(editors.sort((a, b) => sorter(a.fullName, b.fullName)));
     this.authorId.set(author.userId);
     this.members.set(members);
@@ -91,10 +86,10 @@ export class ContributorDialogComponent extends DialogContentBase {
 
   static launch(
     dialog: DialogService,
-    author: UserViewModel,
-    editors: UserViewModel[],
-    members: UserViewModel[],
-    save: (users: UserViewModel[]) => Observable<void>
+    author: User,
+    editors: User[],
+    members: User[],
+    save: (users: User[]) => Observable<void>
   ): void {
     const ref = dialog.open({
       content: ContributorDialogComponent,
@@ -109,7 +104,7 @@ export class ContributorDialogComponent extends DialogContentBase {
 
   addEditor(): void {
     const member = this.editorToAdd()!;
-    const user: UserViewModel = {
+    const user: User = {
       userId: member.userId,
       fullName: member.fullName,
       email: member.email,

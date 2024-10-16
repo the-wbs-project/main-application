@@ -2,6 +2,8 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 import {
+  Activity,
+  ActivityData,
   Project,
   ProjectApproval,
   ProjectApprovalSaveRecord,
@@ -9,7 +11,7 @@ import {
   ProjectNodeToLibraryOptions,
   ProjectToLibraryOptions,
 } from '../models';
-import { Utils } from '../services';
+import { IdService, Utils } from '../services';
 import { ProjectViewModel } from '../view-models';
 
 declare type ProjectWithNodesAndApprovals = {
@@ -22,9 +24,9 @@ declare type ProjectWithNodesAndApprovals = {
 export class ProjectDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAllAsync(owner: string): Observable<ProjectViewModel[]> {
+  getAllAsync(owner: string): Observable<Project[]> {
     return this.http
-      .get<ProjectViewModel[]>(`api/portfolio/${owner}/projects`)
+      .get<Project[]>(`api/portfolio/${owner}/projects`)
       .pipe(tap((list) => this.cleanList(list)));
   }
 
@@ -119,7 +121,29 @@ export class ProjectDataService {
     );
   }
 
-  private cleanList(projects: ProjectViewModel[]): void {
+  postActivitiesAsync(
+    owner: string,
+    projectId: string,
+    userId: string,
+    data: ActivityData[]
+  ): Observable<void> {
+    const activities: Activity[] = [];
+
+    for (const d of data) {
+      activities.push({
+        ...d,
+        id: IdService.generate(),
+        timestamp: new Date(),
+        userId: userId,
+      });
+    }
+    return this.http.post<void>(
+      `api/portfolio/${owner}/projects/${projectId}/activities`,
+      activities
+    );
+  }
+
+  private cleanList(projects: (ProjectViewModel | Project)[]): void {
     Utils.cleanDates(projects, 'createdOn', 'lastModified');
   }
 

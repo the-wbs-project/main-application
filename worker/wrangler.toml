@@ -1,0 +1,105 @@
+name = "pm-empower-api"
+account_id = "004dc1af737b22a8aa83b3550fa9b9d3"
+compatibility_date = "2024-05-02"
+main = "src/index.ts"
+logpush = true
+
+[observability]
+enabled = true
+
+[env.dev]
+name = "pm-empower-api-dev"
+kv_namespaces = [
+  { binding = "KV_DATA", id = "123" },
+]
+
+[env.dev.queues]
+producers = [
+  { queue = "send-mail", binding = "SEND_MAIL_QUEUE" },
+  { queue = "version-published", binding = "VERSION_PUBLISHED_QUEUE" },
+  { queue = "project-created", binding = "PROJECT_CREATED_QUEUE" },
+  { queue = "project-assignment", binding = "PROJECT_ASSIGNMENT_QUEUE" }
+]
+consumers = [
+  { queue = "send-mail", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "send-mail-dlq" },
+  { queue = "version-published", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "version-published-dlq" },
+  { queue = "project-created", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "project-created-dlq" },
+  { queue = "project-assignment", max_batch_size = 10, max_batch_timeout = 10, max_retries = 5, dead_letter_queue = "project-assignment-dlq" }
+]
+
+[env.dev.triggers]
+crons = [ "0 0 * * *" ]
+
+[env.dev.vars]
+DEBUG = "true"
+ORIGIN = "http://wbs-api"
+AI_GATEWAY = "test-gateway"
+DATADOG_ENV = "development"
+DATADOG_HOST = "localhost:88"
+SITE_URL = "http://localhost:4200"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
+EMAIL_ADMIN = "chrisw@thewbsproject.com"
+EMAIL_FROM = "PM Empower Team <support@thewbsproject.com>"
+EMAIL_SUPRESS = "true"
+EMAIL_TEMPLATE_INVITE = "invite"
+EMAIL_TEMPLATE_PROJECT_ASSIGNED = "project-assigned"
+
+[env.test]
+name = "pm-empower-api-test"
+workers_dev = false
+routes = [
+	{ pattern = "test.pm-empower.com/api/*", zone_name = "pm-empower.com" }
+]
+kv_namespaces = [
+  { binding = "KV_DATA", id = "e8f2ec367ae74d309737ca76a34055a9", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
+]
+
+[env.test.triggers]
+crons = [ "*/10 * * * *" ]
+
+[env.test.vars]
+DEBUG = "false"
+AI_GATEWAY = "test-gateway"
+ORIGIN = "https://test-api.pm-empower.com"
+DATADOG_ENV = "test"
+DATADOG_HOST = "test.pm-empower.com"
+SITE_URL = "https://test.pm-empower.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
+
+[env.prod]
+name = "pm-empower-api-prod"
+workers_dev = false
+routes = [
+	{ pattern = "app.pm-empower.com/api/*", zone_name = "pm-empower.com" }
+]
+kv_namespaces = [
+  { binding = "KV_DATA", id = "4d97dfa226134e77862c476a360bb8cb", preview_id = "5af4598e11804d4aaa0de359a55c6453" },
+]
+
+[env.prod.triggers]
+crons = [ "*/10 * * * *" ]
+
+[env.prod.vars]
+DEBUG = "false"
+AI_GATEWAY = "test-gateway"
+ORIGIN = "https://api.pm-empower.com"
+DATADOG_ENV = "production"
+DATADOG_HOST = "app.pm-empower.com"
+SITE_URL = "https://app.pm-empower.com"
+MAILGUN_ENDPOINT = "https://api.mailgun.net/v3/mg.thewbsproject.com"
+AUTH_AUDIENCE = "https://pm-empower.us.auth0.com/api/v2/"
+AUTH_DOMAIN = "auth.pm-empower.com"
+JIRA_EMAIL = "chriswalton@cwsoftware.biz"
+JIRA_DOMAIN = "cw-software.atlassian.net"
+
+[dev]
+port = 88
+ip = "*"

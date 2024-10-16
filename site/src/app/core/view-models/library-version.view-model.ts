@@ -1,4 +1,4 @@
-import { UserViewModel } from './user.view-model';
+import { User } from '../models';
 
 export interface LibraryVersionViewModel {
   entryId: string;
@@ -9,12 +9,12 @@ export interface LibraryVersionViewModel {
   visibility: string;
   version: number;
   versionAlias?: string;
-  author: UserViewModel;
+  author: User;
   title: string;
   description?: string;
   status: string;
   category: string;
-  editors: UserViewModel[];
+  editors: User[];
   disciplines: any[];
   releaseNotes?: string;
   lastModified: Date;

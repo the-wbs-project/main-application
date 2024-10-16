@@ -5,40 +5,30 @@
       <th
         scope="col"
         class="pointer"
-        [sortable]="'invitee'"
+        [sortable]="'email'"
         [(sortColumns)]="sort"
       >
-        {{ "OrgSettings.Invitee" | translate }} &nbsp;
-        <wbs-sort-arrow [sort]="sort()" field="invitee" />
+        {{ "General.Email" | translate }} &nbsp;
+        <wbs-sort-arrow [sort]="sort()" field="email" />
       </th>
       <th
         scope="col"
         class="pointer d-none d-lg-table-cell"
-        [sortable]="'inviter'"
+        [sortable]="'invitedByName'"
         [(sortColumns)]="sort"
       >
         {{ "OrgSettings.Inviter" | translate }} &nbsp;
-        <wbs-sort-arrow [sort]="sort()" field="inviter" />
+        <wbs-sort-arrow [sort]="sort()" field="invitedByName" />
       </th>
 
       <th
         scope="col"
         class="pointer"
-        [sortable]="'createdAt'"
+        [sortable]="'lastInviteSentDate'"
         [(sortColumns)]="sort"
       >
         {{ "OrgSettings.TimeSent" | translate }} &nbsp;
-        <wbs-sort-arrow [sort]="sort()" field="createdAt" />
-      </th>
-
-      <th
-        scope="col"
-        class="pointer"
-        [sortable]="'expiredAt'"
-        [(sortColumns)]="sort"
-      >
-        {{ "OrgSettings.TimeTilExpires" | translate }} &nbsp;
-        <wbs-sort-arrow [sort]="sort()" field="expiredAt" />
+        <wbs-sort-arrow [sort]="sort()" field="lastInviteSentDate" />
       </th>
 
       <th scope="col">{{ "General.Roles" | translate }}</th>
@@ -56,17 +46,9 @@
           (itemClicked)="actionClicked(invite, $event)"
         />
       </td>
-      <td>{{ invite.invitee }}</td>
-      <td class="d-none d-lg-table-cell">{{ invite.inviter }}</td>
-      <td>{{ invite.createdAt | dateText }}</td>
-
-      @if (invite.expiresAt | isExpired) {
-      <td class="tx-danger-f">{{ "General.Expired" | translate }}</td>
-      } @else {
-      <td>
-        {{ invite.expiresAt | dateText : true }}
-      </td>
-      }
+      <td>{{ invite.email }}</td>
+      <td class="d-none d-lg-table-cell">{{ invite.invitedByName }}</td>
+      <td>{{ invite.lastInviteSentDate | dateText }}</td>
       <td>{{ invite.roles | roleList : true }}</td>
     </tr>
     }

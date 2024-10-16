@@ -6,7 +6,7 @@ import {
   input,
   signal,
 } from '@angular/core';
-import { faGear, faX } from '@fortawesome/pro-solid-svg-icons';
+import { faEnvelopeOpen, faGear, faX } from '@fortawesome/pro-solid-svg-icons';
 import { TranslateModule } from '@ngx-translate/core';
 import {
   CompositeFilterDescriptor,
@@ -61,6 +61,11 @@ export class InvitationListComponent {
   readonly faGear = faGear;
   readonly menu = [
     {
+      text: 'OrgSettings.ResendInvite',
+      icon: faEnvelopeOpen,
+      action: 'resend',
+    },
+    {
       text: 'OrgSettings.CancelInvite',
       icon: faX,
       action: 'cancel',
@@ -70,6 +75,8 @@ export class InvitationListComponent {
   actionClicked(invite: InviteViewModel, action: string): void {
     if (action === 'cancel') {
       this.cancelInvite(invite);
+    } else if (action === 'resend') {
+      this.service.resendInviteAsync(invite);
     }
   }
 

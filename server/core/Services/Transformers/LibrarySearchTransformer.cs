@@ -1,5 +1,4 @@
 
-using Auth0.ManagementApi.Models;
 using Wbs.Core.Models;
 using Wbs.Core.Models.Search;
 
@@ -21,7 +20,7 @@ public static class LibrarySearchTransformer
             RecordId = entry.RecordId,
             Version = version.Version,
             OwnerId = entry.OwnerId,
-            OwnerName = owner.DisplayName,
+            OwnerName = owner.Name,
             Title = version.Title,
             TypeId = entry.Type,
             TypeName = typeName,

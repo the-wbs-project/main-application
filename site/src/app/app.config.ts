@@ -12,7 +12,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NgxsModule } from '@ngxs/store';
 import { NgxsLoggerPluginModule } from '@ngxs/logger-plugin';
 import { NgxsRouterPluginModule } from '@ngxs/router-plugin';
-import { QuillConfig, QuillModule } from 'ngx-quill';
+import { QuillModule } from 'ngx-quill';
 import { environment } from 'src/env';
 import { routes } from './app.routes';
 import { DataServiceFactory } from './core/data-services';
@@ -36,8 +36,8 @@ export const appConfig: ApplicationConfig = {
       httpInterceptor: {
         allowedList: [
           { uri: 'api/startup', allowAnonymous: true },
+          { uri: 'api/onboard/*', allowAnonymous: true },
           { uri: 'api/*', allowAnonymous: false },
-          { uri: 'https://ai.pm-empower.com/*', allowAnonymous: false },
         ],
       },
     }),

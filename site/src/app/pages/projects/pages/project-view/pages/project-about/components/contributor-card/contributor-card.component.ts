@@ -13,7 +13,6 @@ import { UserCardComponent } from '@wbs/components/user-card';
 import { DataServiceFactory } from '@wbs/core/data-services';
 import { ROLES } from '@wbs/core/models';
 import { IdService, SaveService, sorter } from '@wbs/core/services';
-import { MetadataStore } from '@wbs/core/store';
 import { ProjectViewModel, UserRoleViewModel } from '@wbs/core/view-models';
 import { RoleTitlePipe } from '@wbs/pipes/role-title.pipe';
 import { switchMap } from 'rxjs';
@@ -37,7 +36,6 @@ import { ContributorDialogComponent } from '../contributor-dialog';
 export class ProjectContributorCardComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
-  private readonly metadata = inject(MetadataStore);
 
   readonly editIcon = faPencil;
   readonly store = inject(ProjectStore);
@@ -78,12 +76,8 @@ export class ProjectContributorCardComponent {
     project: ProjectViewModel,
     role: string
   ): UserRoleViewModel[] {
-    const roleId = this.metadata.roles.definitions.find(
-      (x) => x.name === role
-    )?.id;
-
     return project.roles
-      .filter((x) => x.role === roleId)
+      .filter((x) => x.role === role)
       .sort((a, b) => sorter(a.user.fullName, b.user.fullName))
       .map((x) => ({ ...x, trackId: IdService.generate() }));
   }

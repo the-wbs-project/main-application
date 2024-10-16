@@ -10,19 +10,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/projects")]
 public class ProjectController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly ProjectDataService projectDataService;
-    private readonly ImportLibraryEntryService importLibraryEntryService;
-    private readonly ProjectSnapshotDataService projectSnapshotDataService;
+    private readonly DataServiceFactory data;
+    private readonly ImportLibraryEntryService importService;
 
-    public ProjectController(ILoggerFactory loggerFactory, ProjectDataService projectDataService, ImportLibraryEntryService importLibraryEntryService, ProjectSnapshotDataService projectSnapshotDataService, DbService db)
+    public ProjectController(ILoggerFactory loggerFactory, DataServiceFactory data, ImportLibraryEntryService importService)
     {
         logger = loggerFactory.CreateLogger<ProjectController>();
-        this.projectDataService = projectDataService;
-        this.importLibraryEntryService = importLibraryEntryService;
-        this.db = db;
-        this.projectSnapshotDataService = projectSnapshotDataService;
+        this.data = data;
+        this.importService = importService;
     }
 
     [Authorize]
@@ -31,8 +27,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await projectDataService.GetByOwnerAsync(conn, owner));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Projects.GetByOwnerAsync(conn, owner));
         }
         catch (Exception ex)
         {
@@ -47,8 +43,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await projectDataService.GetByIdAsync(conn, projectId));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.Projects.GetByIdAsync(conn, projectId));
         }
         catch (Exception ex)
         {
@@ -66,8 +62,8 @@ public class ProjectController : ControllerBase
             if (project.Owner != owner) return BadRequest("Owner in url must match owner in body");
             if (project.Id != projectId) return BadRequest("ProjectId in url must match projectId in body");
 
-            using (var conn = await db.CreateConnectionAsync())
-                await projectDataService.SetAsync(conn, project);
+            using (var conn = await data.CreateConnectionAsync())
+                await data.Projects.SetAsync(conn, project);
 
             return Accepted();
         }
@@ -85,15 +81,15 @@ public class ProjectController : ControllerBase
         try
         {
 
-            using var conn = await db.CreateConnectionAsync();
+            using var conn = await data.CreateConnectionAsync();
 
-            var project = await projectDataService.GetByIdAsync(conn, projectId);
+            var project = await data.Projects.GetByIdAsync(conn, projectId);
 
             if (project == null) return NotFound();
 
             project.Status = "cancelled";
 
-            await projectDataService.SetAsync(conn, project);
+            await data.Projects.SetAsync(conn, project);
 
             return Accepted();
         }
@@ -110,8 +106,8 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok((await projectDataService.GetByIdAsync(conn, projectId)).Roles ?? new ProjectRole[] { });
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok((await data.Projects.GetByIdAsync(conn, projectId)).Roles ?? new UserRole[] { });
         }
         catch (Exception ex)
         {
@@ -126,9 +122,9 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                var newId = await importLibraryEntryService.ImportFromProjectAsync(conn, owner, projectId, options);
+                var newId = await importService.ImportFromProjectAsync(conn, owner, projectId, options);
 
                 return Ok(newId);
             }
@@ -147,9 +143,9 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
-                await projectSnapshotDataService.SetAsync(conn, projectId, [activityId]);
+                await data.ProjectSnapshots.SetAsync(conn, projectId, [activityId]);
 
                 return NoContent();
             }

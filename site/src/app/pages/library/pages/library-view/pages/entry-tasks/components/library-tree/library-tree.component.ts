@@ -153,7 +153,7 @@ export class LibraryTreeComponent implements OnInit {
     return this.category.buildViewModels(d);
   });
   readonly showInternal = computed(() => {
-    const org = this.membership.membership()?.name;
+    const org = this.membership.membership()?.id;
     const version = this.entryStore.version()!;
 
     return version.visibility === 'public' && org === version.ownerId;

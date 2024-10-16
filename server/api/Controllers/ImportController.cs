@@ -11,21 +11,17 @@ namespace Wbs.Api.Controllers;
 [Route("api/import")]
 public class ImportController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
     private readonly ProjectFileImporter mppImporter;
     private readonly ExcelFileImporter xlsxImporter;
-    private readonly DocumentAiService aiService;
-    private readonly Storage storage;
+    private readonly DataServiceFactory data;
 
-    public ImportController(ILoggerFactory loggerFactory, ProjectFileImporter mppImporter, ExcelFileImporter xlsxImporter, DocumentAiService aiService, Storage storage, DbService db)
+    public ImportController(ILoggerFactory loggerFactory, ProjectFileImporter mppImporter, ExcelFileImporter xlsxImporter, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<ImportController>();
         this.mppImporter = mppImporter;
         this.xlsxImporter = xlsxImporter;
-        this.aiService = aiService;
-        this.storage = storage;
-        this.db = db;
+        this.data = data;
     }
 
     [Authorize]
@@ -90,9 +86,9 @@ public class ImportController : ControllerBase
 
                 fileName = $"{DateTime.Now:yyyyMMddHHmmss}-${owner}-${fileName}";
 
-                await storage.SaveFileAsync("aistorage", fileName, stream.ToArray());
+                await data.Storage.SaveFileAsync("aistorage", fileName, stream.ToArray());
 
-                var blob = await storage.GetFileAsBytesAsync("aistorage", fileName);
+                var blob = await data.Storage.GetFileAsBytesAsync("aistorage", fileName);
 
                 return Ok(""); //await aiService.GetResultsAsync(owner, blob.Uri.ToString()));
             }

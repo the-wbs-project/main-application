@@ -15,10 +15,11 @@ import { TranslateModule } from '@ngx-translate/core';
 import { DialogService } from '@progress/kendo-angular-dialog';
 import { ContextMenuModule } from '@progress/kendo-angular-menu';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { User } from '@wbs/core/models';
+import { UserProfile } from '@wbs/core/models';
 import { Messages } from '@wbs/core/services';
 import { CheckPipe } from '@wbs/pipes/check.pipe';
 import { RoleListPipe } from '@wbs/pipes/role-list.pipe';
+import { delay, switchMap } from 'rxjs';
 import { HeaderProfileHeaderComponent } from '../header-profile-header';
 import { HeaderProfilePictureComponent } from '../header-profile-picture.component';
 import { ProfileEditorDialogComponent } from '../profile-editor-dialog';
@@ -43,7 +44,7 @@ export class HeaderProfileComponent {
   private readonly data = inject(DataServiceFactory);
   private readonly dialog = inject(DialogService);
   private readonly messages = inject(Messages);
-  readonly user = input.required<User>();
+  readonly profile = input.required<UserProfile>();
   readonly roles = input.required<string[] | undefined>();
   readonly faRightFromBracket = faRightFromBracket;
   readonly faUser = faUser;
@@ -54,11 +55,16 @@ export class HeaderProfileComponent {
     if (e.item.data === 'profile') {
       ProfileEditorDialogComponent.launch(
         this.dialog,
-        structuredClone(this.user())
+        structuredClone(this.profile())
       );
     } else if (e.item.data === 'clearCache') {
       this.data.misc
         .clearKvCache()
+        .pipe(
+          delay(1000),
+          switchMap(() => this.data.misc.setupMemberships()),
+          switchMap(() => this.data.metdata.getStarterDataAsync())
+        )
         .subscribe(() => this.messages.notify.success('Cache cleared', false));
     } else if (e.item.data === 'rebuildSearchIndex') {
       this.data.misc

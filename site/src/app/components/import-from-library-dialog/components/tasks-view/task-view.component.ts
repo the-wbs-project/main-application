@@ -169,7 +169,7 @@ export class TaskViewComponent implements OnChanges, OnInit {
 
     this.loadingTree.set(true);
 
-    const visibility = this.org()?.name === vm.ownerId ? 'private' : 'public';
+    const visibility = this.org()?.id === vm.ownerId ? 'private' : 'public';
 
     this.data.libraryEntries
       .getVersionByIdAsync(vm.ownerId, vm.entryId, vm.version, visibility)

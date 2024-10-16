@@ -6,7 +6,7 @@ import {
 } from '@progress/kendo-angular-dialog';
 import { ProjectCreationComponent } from '@wbs/components/project-creation-dialog';
 import { DataServiceFactory } from '@wbs/core/data-services';
-import { ProjectCategory } from '@wbs/core/models';
+import { ProjectCategory, User } from '@wbs/core/models';
 import {
   Messages,
   NavigationService,
@@ -14,7 +14,7 @@ import {
   Utils,
 } from '@wbs/core/services';
 import { EntryStore, MembershipStore } from '@wbs/core/store';
-import { LibraryVersionViewModel, UserViewModel } from '@wbs/core/view-models';
+import { LibraryVersionViewModel } from '@wbs/core/view-models';
 import { Observable, of } from 'rxjs';
 import { filter, map, switchMap } from 'rxjs/operators';
 import { EntryActivityService } from '../../../services/entry-activity.service';
@@ -68,7 +68,7 @@ export class LibraryService {
   }
 
   createProject(): void {
-    const org = this.membership.membership()!.name;
+    const org = this.membership.membership()!.id;
 
     ProjectCreationComponent.launchAsync(
       this.dialogService,
@@ -244,7 +244,7 @@ export class LibraryService {
     );
   }
 
-  contributorsChangedAsync(contributors: UserViewModel[]): Observable<void> {
+  contributorsChangedAsync(contributors: User[]): Observable<void> {
     const version = this.version;
     const from = version.editors;
 

@@ -9,15 +9,13 @@ namespace Wbs.Api.Controllers;
 [Route("api/portfolio/{owner}/library/entries")]
 public class LibraryEntryController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
-    private readonly LibraryEntryDataService entryDataService;
+    private readonly DataServiceFactory data;
 
-    public LibraryEntryController(ILoggerFactory loggerFactory, LibraryEntryDataService entryDataService, DbService db)
+    public LibraryEntryController(ILoggerFactory loggerFactory, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<LibraryEntryController>();
-        this.entryDataService = entryDataService;
-        this.db = db;
+        this.data = data;
     }
 
     [Authorize]
@@ -27,8 +25,9 @@ public class LibraryEntryController : ControllerBase
         try
         {
 
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await entryDataService.GetByIdAsync(conn, owner, entryId));
+            using var conn = await data.CreateConnectionAsync();
+
+            return Ok(await data.LibraryEntries.GetByIdAsync(conn, owner, entryId));
         }
         catch (Exception ex)
         {
@@ -46,9 +45,9 @@ public class LibraryEntryController : ControllerBase
             if (entry.OwnerId != owner) return BadRequest("Owner in url must match owner in body");
             if (entry.Id != entryId) return BadRequest("Id in url must match owner in body");
 
-            using var conn = await db.CreateConnectionAsync();
+            using var conn = await data.CreateConnectionAsync();
 
-            var entryObj = await entryDataService.SetAsync(conn, entry);
+            var entryObj = await data.LibraryEntries.SetAsync(conn, entry);
 
             return Ok(entryObj);
         }

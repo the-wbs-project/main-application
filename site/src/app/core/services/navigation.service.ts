@@ -9,7 +9,7 @@ export class NavigationService {
   private readonly router = inject(Router);
 
   private get org(): string {
-    return this.membership.membership()!.name;
+    return this.membership.membership()!.id;
   }
 
   toProject(projectId: string): Observable<boolean> {
@@ -34,6 +34,13 @@ export class NavigationService {
         'about',
       ])
     );
+  }
+
+  redirectToJoin(
+    organizationId: string,
+    inviteId: string
+  ): Observable<boolean> {
+    return from(this.router.navigate(['/', organizationId, 'join', inviteId]));
   }
 
   private prefix(): string[] {

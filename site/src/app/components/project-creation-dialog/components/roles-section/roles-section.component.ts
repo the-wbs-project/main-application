@@ -1,15 +1,13 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  inject,
   input,
   model,
   WritableSignal,
 } from '@angular/core';
 import { faSpinner } from '@fortawesome/pro-duotone-svg-icons';
 import { ProjectRolesComponent } from '@wbs/components/project-roles';
-import { MetadataStore } from '@wbs/core/store';
-import { UserViewModel } from '@wbs/core/view-models';
+import { ROLES, User } from '@wbs/core/models';
 
 @Component({
   standalone: true,
@@ -19,43 +17,38 @@ import { UserViewModel } from '@wbs/core/view-models';
   imports: [ProjectRolesComponent],
 })
 export class RolesSectionComponent {
-  private readonly ids = inject(MetadataStore).roles.ids;
-
   readonly faSpinner = faSpinner;
-  readonly approvers = model.required<UserViewModel[]>();
-  readonly pms = model.required<UserViewModel[]>();
-  readonly smes = model.required<UserViewModel[]>();
-  readonly members = input.required<UserViewModel[]>();
+  readonly approvers = model.required<User[]>();
+  readonly pms = model.required<User[]>();
+  readonly smes = model.required<User[]>();
+  readonly members = input.required<User[]>();
   readonly approvalEnabled = input.required<boolean>();
 
-  add(role: string, user: UserViewModel) {
-    if (role === this.ids.approver) {
+  add(role: string, user: User) {
+    if (role === ROLES.APPROVER) {
       this.addUser(this.approvers, user);
-    } else if (role === this.ids.pm) {
+    } else if (role === ROLES.PM) {
       this.addUser(this.pms, user);
-    } else if (role === this.ids.sme) {
+    } else if (role === ROLES.SME) {
       this.addUser(this.smes, user);
     }
   }
 
-  remove(role: string, user: UserViewModel) {
-    if (role === this.ids.approver) {
+  remove(role: string, user: User) {
+    if (role === ROLES.APPROVER) {
       this.removeUser(this.approvers, user);
-    } else if (role === this.ids.pm) {
+    } else if (role === ROLES.PM) {
       this.removeUser(this.pms, user);
-    } else if (role === this.ids.sme) {
+    } else if (role === ROLES.SME) {
       this.removeUser(this.smes, user);
     }
   }
 
-  private addUser(list: WritableSignal<UserViewModel[]>, user: UserViewModel) {
+  private addUser(list: WritableSignal<User[]>, user: User) {
     list.set([...list(), user]);
   }
 
-  private removeUser(
-    list: WritableSignal<UserViewModel[]>,
-    user: UserViewModel
-  ) {
+  private removeUser(list: WritableSignal<User[]>, user: User) {
     const list2 = list();
     const index = list2.findIndex((x) => x.userId === user.userId);
 

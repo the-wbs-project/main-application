@@ -7,9 +7,8 @@ export class RoleTitlePipe implements PipeTransform {
 
   transform(role: string): string {
     return (
-      this.metadata.roles.definitions.find(
-        (x) => x.id === role || x.name === role
-      )?.description ?? 'Unknown'
+      this.metadata.roles.definitions.find((x) => x.id === role)?.description ??
+      'Unknown'
     );
   }
 }

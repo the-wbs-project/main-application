@@ -50,6 +50,12 @@ export const routes: Routes = [
             loadChildren: () =>
               import('../settings/settings.routes').then((m) => m.routes),
           },
+          {
+            path: 'join',
+            canActivate: [],
+            loadChildren: () =>
+              import('../onboard-join/onboard.routes').then((m) => m.routes),
+          },
         ],
         resolve: {
           claims: orgClaimsResolve,

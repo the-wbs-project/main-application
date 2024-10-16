@@ -2,7 +2,6 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 import {
-  AiLog,
   AiModel,
   OpenAiRequest,
   OpenAiResults,
@@ -14,9 +13,7 @@ export class AiDataService {
   constructor(private readonly http: HttpClient) {}
 
   getModelsAsync(type: 'text'): Observable<AiModel[]> {
-    return this.http.get<AiModel[]>(
-      'https://ai.pm-empower.com/api/models/' + type
-    );
+    return this.http.get<AiModel[]>('api/ai/models/' + type);
   }
 
   runWorkerAiAsync(
@@ -24,7 +21,7 @@ export class AiDataService {
     body: WorkerAiRequest
   ): Observable<WorkerAiResults> {
     return this.http
-      .post<WorkerAiResults>('https://ai.pm-empower.com/api/run/worker-ai', {
+      .post<WorkerAiResults>('api/ai/run/worker-ai', {
         model,
         body,
       })
@@ -39,26 +36,24 @@ export class AiDataService {
   }
 
   runOpenAiWorkerAsync(body: OpenAiRequest): Observable<OpenAiResults> {
-    return this.http
-      .post<OpenAiResults>('https://ai.pm-empower.com/api/run/open-ai', body)
-      .pipe(
-        map((answer) => {
-          if (answer.choices) {
-            for (const choice of answer.choices) {
-              if (choice.message.content)
-                choice.message.content = choice.message.content.trim();
-            }
+    return this.http.post<OpenAiResults>('api/ai/run/open-ai', body).pipe(
+      map((answer) => {
+        if (answer.choices) {
+          for (const choice of answer.choices) {
+            if (choice.message.content)
+              choice.message.content = choice.message.content.trim();
           }
-          return answer;
-        })
-      );
+        }
+        return answer;
+      })
+    );
   }
 
-  getLogsAsync(): Observable<AiLog[]> {
-    return this.http.get<AiLog[]>('https://ai.pm-empower.com/api/logs');
-  }
+  //getLogsAsync(): Observable<AiLog[]> {
+  //  return this.http.get<AiLog[]>('https://ai.pm-empower.com/api/logs');
+  //}
 
-  putLogAsync(log: AiLog): Observable<void> {
-    return this.http.post<void>('https://ai.pm-empower.com/api/logs', log);
-  }
+  //putLogAsync(log: AiLog): Observable<void> {
+  //  return this.http.post<void>('https://ai.pm-empower.com/api/logs', log);
+  //}
 }

@@ -59,28 +59,8 @@ builder.Services.AddSingleton<IStorageConfig, AzureStorageConfig>();
 //
 //  Data Services
 //
-builder.Services.AddSingleton<DbService>();
-builder.Services.AddSingleton<ActivityDataService>();
-builder.Services.AddSingleton<ChatDataService>();
-builder.Services.AddSingleton<ChecklistDataService>();
-builder.Services.AddSingleton<ContentResourceDataService>();
+builder.Services.AddSingleton<DataServiceFactory>();
 builder.Services.AddSingleton<DocumentProcessDataService>();
-builder.Services.AddSingleton<JiraHelpDeskDataService>();
-builder.Services.AddSingleton<LibraryEntryDataService>();
-builder.Services.AddSingleton<LibraryEntryNodeDataService>();
-builder.Services.AddSingleton<LibraryEntryVersionDataService>();
-builder.Services.AddSingleton<LibraryEntryViewDataService>();
-builder.Services.AddSingleton<ListDataService>();
-builder.Services.AddSingleton<OrganizationDataService>();
-builder.Services.AddSingleton<ProjectApprovalDataService>();
-builder.Services.AddSingleton<ProjectDataService>();
-builder.Services.AddSingleton<ProjectNodeDataService>();
-builder.Services.AddSingleton<ProjectSnapshotDataService>();
-builder.Services.AddSingleton<ResourcesDataService>();
-builder.Services.AddSingleton<ContentResourceStorageService>();
-builder.Services.AddSingleton<Storage>();
-builder.Services.AddSingleton<UserDataService>();
-builder.Services.AddSingleton<WatcherLibraryEntryDataService>();
 //
 //  Importers and Exporters
 //
@@ -90,10 +70,11 @@ builder.Services.AddSingleton<ProjectFileImporter>();
 //
 //  Services
 //
+builder.Services.AddSingleton<AuthConverterService>();
 builder.Services.AddSingleton<CloudflareApiService>();
-builder.Services.AddSingleton<CloudflareKvService>();
 builder.Services.AddSingleton<DocumentAiService>();
 builder.Services.AddSingleton<ImportLibraryEntryService>();
+builder.Services.AddSingleton<OnboardService>();
 builder.Services.AddSingleton<ResourceCopyService>();
 builder.Services.AddSingleton<VersioningService>();
 //

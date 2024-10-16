@@ -48,7 +48,7 @@ export class CreationDialogService {
     disciplines: CategorySelection[]
   ): Observable<unknown> {
     const entryDisciplines: ProjectCategory[] = [];
-    const owner = this.owner()!.name;
+    const owner = this.owner()!.id;
 
     for (const discipline of disciplines) {
       if (!discipline.selected) continue;
@@ -112,7 +112,7 @@ export class CreationDialogService {
     disciplines: CategorySelection[]
   ): Observable<unknown> {
     const entryDisciplines: ProjectCategory[] = [];
-    const owner = this.owner()!.name;
+    const owner = this.owner()!.id;
     const phaseDefinitions = this.metadata.categories.phases;
     let phaseId: string | undefined;
     let phaseLabel: string | undefined;
@@ -182,7 +182,7 @@ export class CreationDialogService {
     disciplines: CategorySelection[]
   ): Observable<unknown> {
     const entryDisciplines: ProjectCategory[] = [];
-    const owner = this.owner()!.name;
+    const owner = this.owner()!.id;
 
     for (const discipline of disciplines) {
       if (!discipline.selected) continue;

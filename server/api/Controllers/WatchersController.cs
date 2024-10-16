@@ -9,17 +9,15 @@ namespace Wbs.Api.Controllers;
 [Route("api/[controller]")]
 public class WatchersController : ControllerBase
 {
-    private readonly DbService db;
     private readonly ILogger logger;
+    private readonly DataServiceFactory data;
     private readonly LibrarySearchIndexService searchIndexService;
-    private readonly WatcherLibraryEntryDataService libraryDataService;
 
-    public WatchersController(ILoggerFactory loggerFactory, WatcherLibraryEntryDataService libraryDataService, LibrarySearchIndexService searchIndexService, DbService db)
+    public WatchersController(ILoggerFactory loggerFactory, LibrarySearchIndexService searchIndexService, DataServiceFactory data)
     {
         logger = loggerFactory.CreateLogger<WatchersController>();
-        this.libraryDataService = libraryDataService;
         this.searchIndexService = searchIndexService;
-        this.db = db;
+        this.data = data;
     }
 
     [Authorize]
@@ -28,8 +26,8 @@ public class WatchersController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await libraryDataService.GetEntriesAsync(conn, watcherId));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.WatcherLibraryEntries.GetEntriesAsync(conn, watcherId));
         }
         catch (Exception ex)
         {
@@ -44,8 +42,8 @@ public class WatchersController : ControllerBase
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
-                return Ok(await libraryDataService.GetCountAsync(conn, ownerId, entryId));
+            using (var conn = await data.CreateConnectionAsync())
+                return Ok(await data.WatcherLibraryEntries.GetCountAsync(conn, ownerId, entryId));
         }
         catch (Exception ex)
         {
@@ -56,21 +54,21 @@ public class WatchersController : ControllerBase
 
     [Authorize]
     [HttpPut("library")]
-    public async Task<IActionResult> SetLibraryWatcherAsync([FromBody] WatcherInfo data)
+    public async Task<IActionResult> SetLibraryWatcherAsync([FromBody] WatcherInfo watcherData)
     {
         try
         {
-            using (var conn = await db.CreateConnectionAsync())
+            using (var conn = await data.CreateConnectionAsync())
             {
                 //
                 //  Delete not using delete verb because it technically doesn't supports a body, so put and delete would look too different
                 //
-                if (data.action == "add")
-                    await libraryDataService.SetAsync(conn, data.ownerId, data.entryId, data.watcherId);
-                else if (data.action == "delete")
-                    await libraryDataService.DeleteAsync(conn, data.ownerId, data.entryId, data.watcherId);
+                if (watcherData.action == "add")
+                    await data.WatcherLibraryEntries.SetAsync(conn, watcherData.ownerId, watcherData.entryId, watcherData.watcherId);
+                else if (watcherData.action == "delete")
+                    await data.WatcherLibraryEntries.DeleteAsync(conn, watcherData.ownerId, watcherData.entryId, watcherData.watcherId);
 
-                await searchIndexService.PushToSearchAsync(conn, data.ownerId, [data.entryId]);
+                await searchIndexService.PushToSearchAsync(conn, watcherData.ownerId, [watcherData.entryId]);
             }
             return NoContent();
         }

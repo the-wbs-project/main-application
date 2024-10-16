@@ -76,34 +76,21 @@ jobs:
         displayName: "Install TypeScript"
 
       - script: npm run deploy:install
-        workingDirectory: "server/workers"
+        workingDirectory: "worker"
         displayName: "Install"
 
       - script: npm run check
-        workingDirectory: "server/workers/worker-auth"
-        displayName: "Check Auth"
-
-      - script: npm run check
-        workingDirectory: "server/workers/worker-api"
-        displayName: "Check API"
+        workingDirectory: "worker"
+        displayName: "Check"
 
       - task: ArchiveFiles@2
         inputs:
-          rootFolderOrFile: "server/workers/worker-auth"
+          rootFolderOrFile: "worker"
           includeRootFolder: false
           archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker-Auth.zip"
+          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker.zip"
           replaceExistingArchive: true
-        displayName: "Zip Auth"
-
-      - task: ArchiveFiles@2
-        inputs:
-          rootFolderOrFile: "server/workers/worker-api"
-          includeRootFolder: false
-          archiveType: "zip"
-          archiveFile: "$(Build.ArtifactStagingDirectory)/$(Build.BuildId)-Worker-Api.zip"
-          replaceExistingArchive: true
-        displayName: "Zip API"
+        displayName: "Zip"
 
       - task: PublishBuildArtifacts@1
         inputs:

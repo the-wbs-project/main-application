@@ -1,29 +1,28 @@
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Role, User } from '../models';
-import { UserViewModel } from '../view-models';
+import { tap } from 'rxjs/operators';
+import { User, UserProfile } from '../models';
 
 export class UserDataService {
   constructor(private readonly http: HttpClient) {}
 
-  getAsync(
-    organization: string,
-    userId: string
-  ): Observable<UserViewModel | undefined> {
-    return this.http.get<UserViewModel | undefined>(
-      `api/users/${organization}/${userId}`
+  getProfileAsync(): Observable<UserProfile> {
+    return this.http.get<UserProfile>('api/profile').pipe(
+      tap((user) => {
+        if (!user.showExternally) user.showExternally = [];
+      })
     );
   }
 
-  getProfileAsync(): Observable<User> {
-    return this.http.get<User>('api/profile');
-  }
-
-  getSiteRolesAsync(): Observable<Role[]> {
-    return this.http.get<Role[]>('api/site-roles');
+  getSiteRolesAsync(): Observable<string[]> {
+    return this.http.get<string[]>('api/site-roles');
   }
 
   putAsync(user: User): Observable<void> {
+    return this.http.put<void>('api/profile', user);
+  }
+
+  putProfileAsync(user: UserProfile): Observable<void> {
     return this.http.put<void>('api/profile', user);
   }
 }

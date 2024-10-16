@@ -6,8 +6,8 @@ import {
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { DialogModule } from '@progress/kendo-angular-dialog';
+import { FooterComponent } from '@wbs/components/footer.component';
 import { MembershipStore, UiStore, UserStore } from '@wbs/core/store';
-import { FooterComponent } from './components/footer.component';
 import { HeaderComponent } from './components/header';
 import { MainContentDirective } from './directives/main-content.directive';
 
@@ -19,8 +19,8 @@ import { MainContentDirective } from './directives/main-content.directive';
         [claims]="claims()"
         [org]="org"
         [orgs]="membershipStore.memberships()!"
-        [user]="user()!"
-        [roles]="membershipStore.roles()!"
+        [profile]="profile()!"
+        [roles]="membershipStore.siteRoles()!"
         [activeSection]="activeSection()"
       />
       <div
@@ -49,6 +49,10 @@ export class LayoutComponent {
   readonly claims = input.required<string[]>();
   readonly membershipStore = inject(MembershipStore);
 
-  readonly user = inject(UserStore).profile;
+  readonly profile = inject(UserStore).profile;
   readonly activeSection = inject(UiStore).activeSection;
+
+  constructor() {
+    console.log('layout');
+  }
 }
