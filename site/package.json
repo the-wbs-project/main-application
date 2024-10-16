@@ -2,7 +2,7 @@
   "name": "pm-empower",
   "version": "0.0.0",
   "scripts": {
-    "setup": "npm",
+    "setup": "npm install",
     "build": "ng build",
     "purge": "rm -r .angular",
     "watch": "ng build --watch --configuration development --output-path dist",
