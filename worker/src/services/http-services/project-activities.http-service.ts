@@ -1,6 +1,5 @@
 import { Context } from '../../config';
-import { Activity, PROJECT_ACTIONS, UserProfile } from '../../models';
-import { ProjectActivitiesService } from '../activities';
+import { Activity } from '../../models';
 
 export class ProjectActivitiesHttpService {
   static async postAsync(ctx: Context): Promise<Response> {
@@ -19,10 +18,11 @@ export class ProjectActivitiesHttpService {
       ctx.executionCtx.waitUntil(this.saveSnapshots(ctx, owner, projectId, activities));
       //
       //  Now we check for activities which need emails
+      //    THIS FUNCTIONALITY IS INCOMPLETE
       //
-      const activityService = new ProjectActivitiesService();
+      //const activityService = new ProjectActivitiesService();
 
-      ctx.executionCtx.waitUntil(activityService.processAsync(ctx, owner, projectId, activities));
+      //ctx.executionCtx.waitUntil(activityService.processAsync(ctx, owner, projectId, activities));
 
       return ctx.newResponse(null, response.status);
     } catch (e) {
@@ -39,43 +39,5 @@ export class ProjectActivitiesHttpService {
     for (const activity of activities) {
       await ctx.var.origin.postAsync(activity.id, `api/portfolio/${owner}/projects/${projectId}/snapshot`);
     }
-  }
-
-  private static async checkActivitiesForEmails(ctx: Context, owner: string, projectId: string, activities: Activity[]) {
-    const project = await ctx.var.data.projects.getByIdAsync(owner, projectId);
-    const organization = await ctx.var.data.organizations.getByIdAsync(owner);
-    let users = new Map<string, UserProfile>();
-
-    for (const activity of activities) {
-      if (activity.action === PROJECT_ACTIONS.ADDED_USER) {
-        const userId = activity.data.user;
-        const role = activity.data.role;
-        let user: UserProfile | undefined;
-
-        if (users.has(userId)) {
-          user = users.get(userId);
-        } else {
-          user = await ctx.var.data.users.getUserAsync(userId);
-          users.set(userId, user);
-        }
-        await ctx.env.PROJECT_ASSIGNMENT_QUEUE.send({
-          role,
-          user: user!,
-          assignment: 'added',
-          organizationName: organization!.name,
-          projectName: project!.title,
-          link: `${ctx.env.SITE_URL}/portfolio/${owner}/projects/${projectId}`,
-        });
-        /*{
-  role: roleTitle,
-  user: user.userId,
-  userName: user.fullName,
-}*/
-        //
-      } else if (activity.action === PROJECT_ACTIONS.REMOVED_USER) {
-        //
-      }
-    }
-    //
   }
 }
