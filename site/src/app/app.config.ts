@@ -27,6 +27,7 @@ export const appConfig: ApplicationConfig = {
     provideAuth0({
       domain: 'auth.pm-empower.com',
       clientId: environment.authClientId,
+      errorPath: '/callback',
       authorizationParams: {
         connection: 'Username-Password-Authentication',
         audience: 'https://pm-empower.us.auth0.com/api/v2/',

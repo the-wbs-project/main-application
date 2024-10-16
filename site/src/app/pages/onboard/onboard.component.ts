@@ -153,16 +153,22 @@ export class OnboardComponent implements OnInit {
     //
     const formValues = this.registerForm.value;
 
-    this.data.onboard
-      .sendResultsAsync(this.organizationId(), this.inviteId(), {
-        email: formValues.email!,
-        password: formValues.password!,
-        fullName: formValues.fullName!,
-        title: formValues.title ?? undefined,
-        twitter: formValues.twitter ?? undefined,
-        linkedIn: formValues.linkedIn ?? undefined,
-        showExternally: this.showExternally(),
-      })
+    this.saveState
+      .quickCall(
+        this.data.onboard.sendResultsAsync(
+          this.organizationId(),
+          this.inviteId(),
+          {
+            email: formValues.email!,
+            password: formValues.password!,
+            fullName: formValues.fullName!,
+            title: formValues.title ?? undefined,
+            twitter: formValues.twitter ?? undefined,
+            linkedIn: formValues.linkedIn ?? undefined,
+            showExternally: this.showExternally(),
+          }
+        )
+      )
       .subscribe(() => {
         this.router.navigate(['']);
       });

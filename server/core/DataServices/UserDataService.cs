@@ -83,7 +83,7 @@ public class UserDataService : BaseAuthDataService
             Password = password,
             FullName = user.FullName,
             EmailVerified = false,
-            VerifyEmail = false,
+            VerifyEmail = true,
             UserMetadata = new
             {
                 title = user.Title,

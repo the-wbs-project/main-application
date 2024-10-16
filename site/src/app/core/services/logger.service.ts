@@ -22,18 +22,18 @@ export class Logger {
   }
 
   debug(message: string, context?: Context): void {
-    Logger.DD_LOGS.logger.debug(message, context);
+    Logger.DD_LOGS.logger?.debug(message, context);
   }
 
   info(message: string, context?: Context): void {
-    Logger.DD_LOGS.logger.info(message, context);
+    Logger.DD_LOGS.logger?.info(message, context);
   }
 
   warn(message: string, context?: Context): void {
-    Logger.DD_LOGS.logger.warn(message, context);
+    Logger.DD_LOGS.logger?.warn(message, context);
   }
 
   error(message: string, context?: Context): void {
-    Logger.DD_LOGS.logger.error(message, context);
+    Logger.DD_LOGS.logger?.error(message, context);
   }
 }
